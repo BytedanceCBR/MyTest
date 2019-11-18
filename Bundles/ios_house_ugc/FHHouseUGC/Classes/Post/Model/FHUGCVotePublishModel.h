@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define OPTION_LENGTH_LIMIT      15
 #define TITLE_LENGTH_LIMIT       40
 #define DESCRIPTION_LENGTH_LIMIT 100
+#define OPTION_COUNT_MAX         10
+#define OPTION_COUNT_MIN         2
 
 
 typedef NS_ENUM(NSInteger, VoteType) {

@@ -57,10 +57,15 @@
         UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
         cancelButton.titleLabel.font = [UIFont themeFontRegular:16];
-        [cancelButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [cancelButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
         [cancelButton sizeToFit];
         [cancelButton addTarget:self action:@selector(dateCancelAction:) forControlEvents:UIControlEventTouchUpInside];
         
+        UILabel *titleLabel = [UILabel new];
+        titleLabel.text = @"选择投票截止日期";
+        titleLabel.textColor = [UIColor themeGray1];
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        titleLabel.font = [UIFont themeFontRegular:16];
         
         UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [confirmButton setTitle:@"确定" forState:UIControlStateNormal];
@@ -70,16 +75,25 @@
         [confirmButton addTarget:self action:@selector(dateConfirmAction:) forControlEvents:UIControlEventTouchUpInside];
         
         [_dateSelectView addSubview:cancelButton];
+        [_dateSelectView addSubview:titleLabel];
         [_dateSelectView addSubview:confirmButton];
         
         [cancelButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_dateSelectView).offset(20);
             make.top.equalTo(_dateSelectView).offset(10);
+            make.width.mas_offset(50);
+        }];
+        
+        [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self.dateSelectView);
+            make.centerY.equalTo(cancelButton);
+            make.height.equalTo(cancelButton);
         }];
         
         [confirmButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(_dateSelectView).offset(-20);
             make.top.equalTo(_dateSelectView).offset(10);
+            make.width.mas_offset(50);
         }];
         
         [_dateSelectView addSubview:self.datePicker];
@@ -442,7 +456,12 @@
     NSMutableArray<FHUGCVotePublishOption *> *options = [NSMutableArray arrayWithArray:self.model.options];
     [options addObject:[FHUGCVotePublishOption defaultOption]];
     
-    if(options.count > 2) {
+    if(options.count > OPTION_COUNT_MAX) {
+        [[ToastManager manager] showToast:[NSString stringWithFormat:@"最多添加%@个选项", @(OPTION_COUNT_MAX)]];
+        return;
+    }
+
+    if(options.count > OPTION_COUNT_MIN) {
         [options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
             option.isValid = YES;
         }];
@@ -463,7 +482,7 @@
     if(indexPath.row >= optionStartIndex) {
         NSUInteger index = MIN(MAX(indexPath.row - optionStartIndex, 0), options.count);
         
-        if(self.model.options.count <= 3) {
+        if(self.model.options.count <= OPTION_COUNT_MIN + 1) {
             [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
                 option.isValid = NO;
             }];
