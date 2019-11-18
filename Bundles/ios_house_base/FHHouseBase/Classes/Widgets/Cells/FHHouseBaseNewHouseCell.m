@@ -519,7 +519,7 @@
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(5);
-        layout.marginLeft = YGPointValue(0);
+        layout.marginLeft = YGPointValue(-2);
         layout.height = YGPointValue(14);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
     }];
@@ -534,7 +534,7 @@
         layout.alignItems = YGAlignFlexStart;
     }];
     
-    
+
     self.bottomRecommendViewBack = [[UIView alloc] init];
     self.bottomRecommendViewBack.layer.borderColor = [UIColor themeGray5].CGColor;
     self.bottomRecommendViewBack.layer.borderWidth = 1;
@@ -648,24 +648,19 @@
         self.bottomRecommendLabel.hidden = YES;
     }
     
-    
     if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
-        
         self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
         self.imageTagLabel.text = commonModel.houseImageTag.text;
         self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
         self.imageTagLabelBgView.hidden = NO;
     }else {
-        
         self.imageTagLabelBgView.hidden = YES;
     }
-    
-    [self.bottomRecommendViewBack setFrame:CGRectMake(0.0f, 0.0f, 100, 15)];
-    
     
     [self hideRecommendReason];
     [self updateTitlesLayout:attributeString.length > 0];
     
+    [self.bottomRecommendLabel.yoga markDirty];    
     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
 }
 
