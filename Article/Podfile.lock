@@ -462,7 +462,7 @@ PODS:
   - TTPostBase (0.1.4)
   - TTPreloaderSDK (1.4.20-rc.0)
   - TTPushManager (0.0.13.4)
-  - TTPushSDK (0.1.1.1-binary)
+  - TTPushSDK (0.1.1)
   - TTReachability (0.6.2.1-binary)
   - TTRegistry (7.4.0.3)
   - TTReporter (0.2.1.1-binary)
@@ -683,7 +683,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `8d0a248e7ff340e90caa271846770f17b1b455f8`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `fd1edf1bb7a7f8eada3c481df454127da309aa2f`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -826,7 +826,7 @@ DEPENDENCIES:
   - TTPostBase (from `../AKPlugins/TTPostBase`)
   - TTPreloaderSDK (= 1.4.20-rc.0)
   - TTPushManager (= 0.0.13.4)
-  - TTPushSDK (= 0.1.1.1-binary)
+  - TTPushSDK (= 0.1.1)
   - TTReachability (= 0.6.2.1-binary)
   - TTRegistry (= 7.4.0.3)
   - TTReporter (= 0.2.1.1-binary)
@@ -920,7 +920,7 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_im:
-    :commit: 8d0a248e7ff340e90caa271846770f17b1b455f8
+    :commit: fd1edf1bb7a7f8eada3c481df454127da309aa2f
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
@@ -986,7 +986,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   ios_house_im:
-    :commit: 8d0a248e7ff340e90caa271846770f17b1b455f8
+    :commit: fd1edf1bb7a7f8eada3c481df454127da309aa2f
     :git: git@code.byted.org:fproject/ios_house_im.git
 
 SPEC CHECKSUMS:
@@ -1144,7 +1144,7 @@ SPEC CHECKSUMS:
   TTPostBase: 91071b89ed5d95c7ac3d96354a31c65d77a6c94e
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
   TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
-  TTPushSDK: 3302f3e57c39cf8e14233769b28cb07d5f403966
+  TTPushSDK: 1736aa62b2b94b34f2084cc81f66d387259e80a8
   TTReachability: 7e6a58fa568af74e428e24394899caa3d8bddb00
   TTRegistry: da0948df15bacc1b90bb9ff8eb621b812ea9eebb
   TTReporter: 55c6785c79fb8b35a44105d760ac3493cc2ed365
@@ -1186,6 +1186,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: e2cffd545dcaa48c5103325128f75076ab5ee7dc
+PODFILE CHECKSUM: 7ecfb5aadff656e25a04b187660f16b508d14d93
 
 COCOAPODS: 1.4.0
