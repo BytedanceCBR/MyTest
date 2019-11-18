@@ -295,6 +295,8 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         if (self.commute) {
             return [FHHouseBaseItemCell class];
+        }else if(self.houseType == FHHouseTypeNewHouse) {
+            return [FHHouseBaseNewHouseCell class];
         }else {
             return [FHHouseBaseSmallItemCell class];
         }
@@ -536,7 +538,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHHouseListAPI searchNewHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHNewHouseListResponseModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchNewHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;
@@ -554,7 +556,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     __weak typeof(self) wself = self;
 
-    TTHttpTask *task = [FHHouseListAPI searchNeighborhoodList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHHouseNeighborModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchNeighborhoodList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;
@@ -1523,9 +1525,9 @@ extern NSString *const INSTANT_DATA_KEY;
         identifier = [self cellIdentifierForEntity:data];
     }
     
-    if (self.houseType == FHHouseTypeNewHouse) {
-        identifier = NSStringFromClass([FHHouseBaseNewHouseCell class]);
-    }
+//    if (self.houseType == FHHouseTypeNewHouse) {
+//        identifier = NSStringFromClass([FHHouseBaseNewHouseCell class]);
+//    }
     
     __weak typeof(self)wself = self;
     if (identifier.length > 0) {
@@ -1646,9 +1648,9 @@ extern NSString *const INSTANT_DATA_KEY;
         identifier = [self cellIdentifierForEntity:data];
     }
     //新房单独处理
-    if (self.houseType == FHHouseTypeNewHouse) {
-        identifier = NSStringFromClass([FHHouseBaseNewHouseCell class]);
-    }
+//    if (self.houseType == FHHouseTypeNewHouse) {
+//        identifier = NSStringFromClass([FHHouseBaseNewHouseCell class]);
+//    }
     
     if (identifier.length > 0) {
         FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
