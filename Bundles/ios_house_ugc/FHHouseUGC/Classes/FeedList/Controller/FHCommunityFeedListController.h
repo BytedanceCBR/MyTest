@@ -67,6 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 //空态页具体顶部offset
 @property (nonatomic, assign) CGFloat errorViewTopOffset;
 @property (nonatomic, assign) CGFloat errorViewHeight;
+@property (nonatomic, assign) BOOL notLoadDateWhenEmpty;
 //圈子信息
 //@property(nonatomic, strong) FHUGCScialGroupDataModel *scialGroupData;
 

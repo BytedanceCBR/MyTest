@@ -360,6 +360,7 @@
     if(self.dataList.count > 0){
         [self updateTableViewWithMoreData:self.tableView.hasMore];
         self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
+        self.tableView.backgroundColor = [UIColor themeGray7];
     }else{
         if([self isNotInAllTab]){
             [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
@@ -369,6 +370,7 @@
             self.tableView.tableFooterView = self.errorView;
         }
         self.refreshFooter.hidden = YES;
+        self.tableView.backgroundColor = [UIColor whiteColor];
     }
     [self.tableView reloadData];
 }

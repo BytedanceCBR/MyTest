@@ -391,6 +391,7 @@
         errorViewHeight -= kSegmentViewHeight;
     }
     feedListController.errorViewHeight = errorViewHeight;
+    feedListController.notLoadDateWhenEmpty = YES;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
     [self.subVCs addObject:feedListController];

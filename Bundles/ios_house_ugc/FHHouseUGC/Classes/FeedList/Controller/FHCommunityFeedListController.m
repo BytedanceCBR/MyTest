@@ -68,7 +68,7 @@
 - (void)viewWillAppear {
     [self.viewModel viewWillAppear];
     
-    if(self.viewModel.dataList.count > 0){
+    if(self.viewModel.dataList.count > 0 || self.notLoadDateWhenEmpty){
         if (self.needReloadData) {
             self.needReloadData = NO;
             [self scrollToTopAndRefreshAllData];
