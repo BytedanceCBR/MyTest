@@ -296,7 +296,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     } else if (scrollView.contentOffset.y < -self.segmentViewHeight) {
         scrollView.contentOffset = CGPointMake(0, - self.segmentTopSpace - self.segmentViewHeight);
     } else {
-
+        
     }
 }
 
