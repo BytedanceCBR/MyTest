@@ -95,7 +95,6 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 @interface TTHorizontalPagingView ()<UICollectionViewDataSource,UICollectionViewDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic, assign) NSInteger section;
-@property (nonatomic, assign) BOOL isSwitching;
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *,UIScrollView *> *contentViewDict;
 @property (nonatomic, assign) NSInteger lastPageIndex;
 @property (nonatomic, strong) UIPanGestureRecognizer *headerViewPanGestureRecognizer;
@@ -363,12 +362,12 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 
 - (void)setHeaderView:(UIView *)headerView
 {
-    if(self.headerShowHeight <= self.segmentTopSpace){
+    if(self.headerShowHeight <= self.segmentTopSpace || _headerView.superview == self){
         return;
     }
+    NSLog(@"space3___%@",self.headerView.superview);
     [_headerView removeFromSuperview];
     _headerView = headerView;
-    NSLog(@"space3___%f",self.headerShowHeight);
     _headerView.frame = CGRectMake(0, self.headerShowHeight - self.headerViewHeight, self.width, self.headerViewHeight);
     [self addSubview:_headerView];
     
@@ -400,7 +399,8 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    self.isSwitching = YES;
+    self.isSwitching = YES;
+    self.segmentView.isSwitching = YES;
     NSString *identifier = [self collectionViewCellIdentifierWithIndex:indexPath.item];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     UIScrollView *scrollView = [self scrollViewAtIndex:indexPath.row];
@@ -441,6 +441,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     [self adjustContentViewOffsetWithScrollView:self.currentContentView];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0)), dispatch_get_main_queue(), ^{
         self.isSwitching = NO;
+        self.segmentView.isSwitching = NO;
     });
 }
 
@@ -683,6 +684,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     self.horizontalCollectionView.frame = self.bounds;
     self.horizontalCollectionView.contentInset = UIEdgeInsetsZero;
     self.isSwitching = NO;
+    self.segmentView.isSwitching = NO;
 }
 
 @end
