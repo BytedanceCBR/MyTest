@@ -28,6 +28,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deleteOptionCell: (FHUGCVotePublishOptionCell *)optionCell;
 @end
 
+@interface FHUGCVotePublishTextView: UITextView
+@property (nonatomic, copy)NSString *placeholder;
+@end
+
 @interface FHUGCVotePublishBaseCell: UITableViewCell
 
 @property (nonatomic, weak) id<FHUGCVotePublishBaseCellDelegate> delegate;
@@ -45,7 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UITextField *contentTextField;
 @end
 
-@interface FHUGCVotePublishDescriptionCell: FHUGCVotePublishBaseCell
+@interface FHUGCVotePublishDescriptionCell: FHUGCVotePublishBaseCell <UITextViewDelegate>
+//@property (nonatomic, strong) FHUGCVotePublishTextView *contentTextView;
 @property (nonatomic, strong) UITextField *contentTextField;
 @end
 

@@ -347,16 +347,12 @@
 // MARK: FHUGCVotePublishBaseCellDelegate
 
 - (void)voteTitleCell:(FHUGCVotePublishTitleCell *)titleCell didInputText:(NSString *)text {
-    NSString *limitedVoteTitle = [text substringToIndex:MIN(text.length, TITLE_LENGTH_LIMIT)];
-    self.model.voteTitle = limitedVoteTitle;
-    titleCell.contentTextField.text = limitedVoteTitle;
+    self.model.voteTitle = text;
     [self checkIfEnablePublish];
 }
 
 - (void)descriptionCell:(FHUGCVotePublishDescriptionCell *)descriptionCell didInputText:(NSString *)text {
-    NSString *limitVoteDescription = [text substringToIndex:MIN(text.length, DESCRIPTION_LENGTH_LIMIT)];
-    self.model.voteDescription = limitVoteDescription;
-    descriptionCell.contentTextField.text = limitVoteDescription;
+    self.model.voteDescription = text;
     [self checkIfEnablePublish];
 }
 
@@ -365,9 +361,7 @@
     NSInteger optionStartIndex = OPTION_START_INDEX;
     NSUInteger index = MIN(MAX(indexPath.row - optionStartIndex, 0), self.model.options.count);
     if(index < self.model.options.count) {
-        NSString *limitedText = [text substringToIndex:MIN(text.length, OPTION_LENGTH_LIMIT)];
-        optionCell.optionTextField.text = limitedText;
-        self.model.options[index].content = limitedText;
+        self.model.options[index].content = text;
         [self checkIfEnablePublish];
     }
 }
