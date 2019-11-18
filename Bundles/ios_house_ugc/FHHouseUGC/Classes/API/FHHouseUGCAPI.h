@@ -49,10 +49,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTHttpTask *)requestUGCConfig:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion;
 
 // 删除帖子
-+ (TTHttpTask *)postDelete:(NSString *)groupId socialGroupId:(NSString *)socialGroupId enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void(^)(bool success , NSError *error))completion;
++ (TTHttpTask *)postDelete:(NSString *)groupId cellType:(NSInteger)cellType socialGroupId:(NSString *)socialGroupId enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void(^)(bool success , NSError *error))completion;
 
 // 管理员操作帖子
-+ (TTHttpTask *)postOperation:(NSString *)groupId socialGroupId:(NSString *)socialGroupId operationCode:(NSString *)operationCode enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void (^ _Nonnull)(id<FHBaseModelProtocol> model, NSError *error))completion;
++ (TTHttpTask *)postOperation:(NSString *)groupId cellType:(NSInteger)cellType socialGroupId:(NSString *)socialGroupId operationCode:(NSString *)operationCode enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void (^ _Nonnull)(id<FHBaseModelProtocol> model, NSError *error))completion;
 
 // 评论详情
 + (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id socialGroupId:(NSString *)socialGroupId  class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
