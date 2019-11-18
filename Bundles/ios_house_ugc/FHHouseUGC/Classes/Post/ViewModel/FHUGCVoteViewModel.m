@@ -19,6 +19,7 @@
 #import "FHUGCVoteBottomPopView.h"
 #import <WDDefines.h>
 #import "FHUGCVoteModel.h"
+#import "HMDTTMonitor.h"
 
 #define OPTION_START_INDEX  2
 #define DATEPICKER_HEIGHT 200
@@ -56,10 +57,15 @@
         UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
         cancelButton.titleLabel.font = [UIFont themeFontRegular:16];
-        [cancelButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [cancelButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
         [cancelButton sizeToFit];
         [cancelButton addTarget:self action:@selector(dateCancelAction:) forControlEvents:UIControlEventTouchUpInside];
         
+        UILabel *titleLabel = [UILabel new];
+        titleLabel.text = @"选择投票截止日期";
+        titleLabel.textColor = [UIColor themeGray1];
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        titleLabel.font = [UIFont themeFontRegular:16];
         
         UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [confirmButton setTitle:@"确定" forState:UIControlStateNormal];
@@ -69,16 +75,25 @@
         [confirmButton addTarget:self action:@selector(dateConfirmAction:) forControlEvents:UIControlEventTouchUpInside];
         
         [_dateSelectView addSubview:cancelButton];
+        [_dateSelectView addSubview:titleLabel];
         [_dateSelectView addSubview:confirmButton];
         
         [cancelButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_dateSelectView).offset(20);
             make.top.equalTo(_dateSelectView).offset(10);
+            make.width.mas_offset(50);
+        }];
+        
+        [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self.dateSelectView);
+            make.centerY.equalTo(cancelButton);
+            make.height.equalTo(cancelButton);
         }];
         
         [confirmButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(_dateSelectView).offset(-20);
             make.top.equalTo(_dateSelectView).offset(10);
+            make.width.mas_offset(50);
         }];
         
         [_dateSelectView addSubview:self.datePicker];
@@ -273,19 +288,26 @@
         if(indexPath.row == 0) {
             cell = [tableView dequeueReusableCellWithIdentifier:[FHUGCVotePublishCityCell reusedIdentifier] forIndexPath:indexPath];
             NSInteger count = self.model.cityInfos.count;
+            FHUGCVotePublishCityCell* cityCell = (FHUGCVotePublishCityCell *)cell;
+            
             NSMutableString *title = @"未设置";
+            cityCell.cityLabel.textColor = [UIColor themeGray3];
+            
             if(self.model.isAllSelected) {
-                title = @"全部关注圈子可见";
+                title = @"全部关注圈子";
+                cityCell.cityLabel.textColor = [UIColor themeGray1];
             }
             else if(self.model.isPartialSelected) {
                 if(count > 1) {
-                    title = [NSMutableString stringWithFormat:@"%@等%@个圈子可见", self.model.cityInfos.firstObject.socialGroupName, @(count)];
+                    title = [NSMutableString stringWithFormat:@"%@等%@个圈子", self.model.cityInfos.firstObject.socialGroupName, @(count)];
+                    cityCell.cityLabel.textColor = [UIColor themeGray1];
                 }
                 else if(count == 0) {
                     // 默认未设置
                 }
                 else {
-                    title = [NSMutableString stringWithFormat:@"%@可见", self.model.cityInfos.firstObject.socialGroupName];
+                    title = [NSMutableString stringWithFormat:@"%@", self.model.cityInfos.firstObject.socialGroupName];
+                    cityCell.cityLabel.textColor = [UIColor themeGray1];
                 }
             }
             ((FHUGCVotePublishCityCell *)cell).cityLabel.text = title;
@@ -314,8 +336,7 @@
             NSInteger index = indexPath.row - OPTION_START_INDEX;
             if(index >= 0 && index < self.model.options.count) {
                 FHUGCVotePublishOptionCell *optionCell = (FHUGCVotePublishOptionCell *)cell;
-                optionCell.optionTextField.text = self.model.options[index].content;
-                [optionCell updateImageViewWithOption:self.model.options[index]];
+                [optionCell updateWithOption:self.model.options[index]];
             }
         }
     }
@@ -326,16 +347,12 @@
 // MARK: FHUGCVotePublishBaseCellDelegate
 
 - (void)voteTitleCell:(FHUGCVotePublishTitleCell *)titleCell didInputText:(NSString *)text {
-    NSString *limitedVoteTitle = [text substringToIndex:MIN(text.length, TITLE_LENGTH_LIMIT)];
-    self.model.voteTitle = limitedVoteTitle;
-    titleCell.contentTextField.text = limitedVoteTitle;
+    self.model.voteTitle = text;
     [self checkIfEnablePublish];
 }
 
 - (void)descriptionCell:(FHUGCVotePublishDescriptionCell *)descriptionCell didInputText:(NSString *)text {
-    NSString *limitVoteDescription = [text substringToIndex:MIN(text.length, DESCRIPTION_LENGTH_LIMIT)];
-    self.model.voteDescription = limitVoteDescription;
-    descriptionCell.contentTextField.text = limitVoteDescription;
+    self.model.voteDescription = text;
     [self checkIfEnablePublish];
 }
 
@@ -344,9 +361,7 @@
     NSInteger optionStartIndex = OPTION_START_INDEX;
     NSUInteger index = MIN(MAX(indexPath.row - optionStartIndex, 0), self.model.options.count);
     if(index < self.model.options.count) {
-        NSString *limitedText = [text substringToIndex:MIN(text.length, OPTION_LENGTH_LIMIT)];
-        optionCell.optionTextField.text = limitedText;
-        self.model.options[index].content = limitedText;
+        self.model.options[index].content = text;
         [self checkIfEnablePublish];
     }
 }
@@ -407,8 +422,10 @@
     WeakSelf;
     [FHHouseUGCAPI requestVotePublishWithParam:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
+        // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
         if(error) {
             [[ToastManager manager] showToast:@"发布投票失败!"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(1)} extra:nil];
             return;
         }
         if([model isKindOfClass:[FHUGCVoteModel class]]) {
@@ -421,9 +438,11 @@
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHVotePublishNotificationName object:nil userInfo:userInfo];
                 [self exitPage];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(0)} extra:nil];
             }
             else {
                 [[ToastManager manager] showToast:@"发布投票失败!"];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(2)} extra:nil];
             }
         }
     }];
@@ -437,7 +456,12 @@
     NSMutableArray<FHUGCVotePublishOption *> *options = [NSMutableArray arrayWithArray:self.model.options];
     [options addObject:[FHUGCVotePublishOption defaultOption]];
     
-    if(options.count > 2) {
+    if(options.count > OPTION_COUNT_MAX) {
+        [[ToastManager manager] showToast:[NSString stringWithFormat:@"最多添加%@个选项", @(OPTION_COUNT_MAX)]];
+        return;
+    }
+
+    if(options.count > OPTION_COUNT_MIN) {
         [options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
             option.isValid = YES;
         }];
@@ -458,7 +482,7 @@
     if(indexPath.row >= optionStartIndex) {
         NSUInteger index = MIN(MAX(indexPath.row - optionStartIndex, 0), options.count);
         
-        if(self.model.options.count <= 3) {
+        if(self.model.options.count <= OPTION_COUNT_MIN + 1) {
             [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
                 option.isValid = NO;
             }];

@@ -89,7 +89,7 @@
 }
 
 - (NSAttributedString *)generateText {
-//    @"点击✌️进入小区圈，查看更多新鲜事";
+//    @"点击✌️进入圈子，查看更多新鲜事";
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@"点击"];
     
     NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
@@ -98,7 +98,7 @@
     NSAttributedString *attachmentAStr = [NSAttributedString attributedStringWithAttachment:attachment];
     [desc appendAttributedString:attachmentAStr];
     
-    NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:@"进入小区圈，查看更多新鲜事"];
+    NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:@"进入圈子，查看更多新鲜事"];
     [desc appendAttributedString:distanceAStr];
     
     return desc;

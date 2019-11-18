@@ -320,7 +320,7 @@
     if ([TTAccountManager isLogin]) {
         [self goPostDetail];
     } else {
-        [self gotoLogin:0];
+        [self gotoLogin:FHUGCLoginFrom_POST];
     }
 }
 
@@ -329,7 +329,7 @@
     if ([TTAccountManager isLogin]) {
         [self gotoVoteVC];
     } else {
-        [self gotoLogin:1];
+        [self gotoLogin:FHUGCLoginFrom_VOTE];
     }
 }
 
@@ -435,7 +435,7 @@
             [self tryJoinConversation];
         }
     } else {
-        [self gotoLogin:1];
+        [self gotoLogin:FHUGCLoginFrom_GROUPCHAT];
     }
 }
 
@@ -531,7 +531,7 @@
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
-- (void)gotoLogin:(NSUInteger *)from {
+- (void)gotoLogin:(FHUGCLoginFrom *)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setObject:@"community_group_detail" forKey:@"enter_from"];
     [params setObject:@"feed_like" forKey:@"enter_type"];
@@ -543,12 +543,16 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                if (from == 0) {
+                if (from == FHUGCLoginFrom_POST) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [wSelf goPostDetail];
                     });
-                } else {
+                } else if(from == FHUGCLoginFrom_GROUPCHAT){
                     [wSelf onLoginIn];
+                } else if(from == FHUGCLoginFrom_VOTE) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [wSelf gotoVoteVC];
+                    });
                 }
             }
         }
@@ -955,7 +959,7 @@
     tracer[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     // 埋点
     [infoDict setValue:tracer forKey:@"tracer"];
-    // NSString *name = [NSString stringWithFormat:@"%@小区圈",item.socialGroupName];
+    // NSString *name = [NSString stringWithFormat:@"%@圈子",item.socialGroupName];
     infoDict[@"title"] = item.socialGroupName;
     infoDict[@"social_group_id"] = item.socialGroupId;
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];

@@ -329,7 +329,7 @@
     if ([TTAccountManager isLogin]) {
         [self gotoVoteVC];
     } else {
-        [self gotoLogin:1];
+        [self gotoLogin:FHUGCLoginFrom_VOTE];
     }
 }
 
@@ -338,11 +338,11 @@
     if ([TTAccountManager isLogin]) {
         [self gotoPostVC];
     } else {
-        [self gotoLogin:0];
+        [self gotoLogin:FHUGCLoginFrom_POST];
     }
 }
 
-- (void)gotoLogin:(NSInteger)from {
+- (void)gotoLogin:(FHUGCLoginFrom)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *page_type = @"nearby_list";
     if (self.listType == FHCommunityFeedListTypeMyJoin) {
@@ -360,12 +360,12 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                if (from == 0) {
+                if (from == FHUGCLoginFrom_POST) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                        [wSelf gotoPostVC];
                                    });
                 
-                } else if(from == 1) {
+                } else if(from == FHUGCLoginFrom_VOTE) {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [wSelf gotoVoteVC];
                     });
@@ -394,7 +394,7 @@
     } else  if (self.listType == FHCommunityFeedListTypeNearby) {
         page_type = @"nearby_list";
     }
-    tracerDict[@"page_type"] = page_type;// “附近”：’nearby_list‘；“我加入的”：’my_join_list‘；'小区圈子详情页‘：community_group_detail‘
+    tracerDict[@"page_type"] = page_type;// “附近”：’nearby_list‘；“我加入的”：’my_join_list‘；'圈子子详情页‘：community_group_detail‘
     [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;

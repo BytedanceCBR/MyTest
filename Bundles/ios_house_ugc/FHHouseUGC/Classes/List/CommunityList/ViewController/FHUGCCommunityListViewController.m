@@ -39,7 +39,7 @@
         if (paramObj.allParams[@"select_district_tab"]) {
             self.defaultSelectDistrictTab = [paramObj.allParams[@"select_district_tab"] integerValue];
         }
-        self.title = @"全部小区圈";
+        self.title = @"全部圈子";
         if (paramObj.allParams[@"title"]) {
             self.title = paramObj.allParams[@"title"];
         }
@@ -70,7 +70,7 @@
 
 - (void)initView {
     self.searchBar.backgroundColor = [UIColor themeWhite];
-    self.searchBar.searchTint = @"搜索小区圈";
+    self.searchBar.searchTint = @"搜索圈子";
     WeakSelf;
     self.searchBar.searchClickBlk = ^() {
         StrongSelf;

@@ -143,7 +143,7 @@ static NSInteger const kMaxPostImageCount = 9;
             self.outerInputRichSpanText = self.richSpanText;
             
             self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
-            // 选中小区圈
+            // 选中圈子
             self.selectGroupId = [params tt_stringValueForKey:@"select_group_id"];
             self.selectGroupName = [params tt_stringValueForKey:@"select_group_name"];
             if (!(self.selectGroupId.length > 0 && self.selectGroupName.length > 0)) {
@@ -593,7 +593,7 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
-    // 外部传入小区圈，不跳转
+    // 外部传入圈子，不跳转
     if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
         return;
     }
@@ -1451,7 +1451,7 @@ static NSInteger const kMaxPostImageCount = 9;
         self.firstAppear = NO;
         [self.inputTextView becomeFirstResponder];
     } else {
-        // 选择小区圈子
+        // 选择圈子子
         __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if (weakSelf.keyboardVisibleBeforePresent) {
@@ -1539,7 +1539,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 #pragma mark - FHUGCFollowListDelegate
 - (void)selectedItem:(FHUGCScialGroupDataModel *)item {
-    // 选择 小区圈子
+    // 选择 圈子子
     if (item) {
         self.selectView.groupId = item.socialGroupId;
         self.selectView.communityName = item.socialGroupName;
@@ -1561,7 +1561,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 #pragma mark - FHPostUGCSelectedGroupHistoryViewDelegate
 -(void)selectedHistoryGroup:(FHPostUGCSelectedGroupModel *)item {
-    // 选择 小区圈子
+    // 选择 圈子子
     self.selectedGrouplHistoryView.hidden = YES;
     if (item) {
         self.selectView.groupId = item.socialGroupId;
