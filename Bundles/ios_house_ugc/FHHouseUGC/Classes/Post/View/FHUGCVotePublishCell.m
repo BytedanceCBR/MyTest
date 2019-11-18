@@ -280,7 +280,6 @@
         [self.contentView addSubview:self.typeLabel];
         [self.contentView addSubview:self.rightArrow];
         
-        
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.contentView);
             make.left.equalTo(self.contentView).offset(PADDING);
