@@ -403,6 +403,19 @@
     }
 }
 
+- (void)showCustomErrorView:(FHEmptyMaskViewType)type {
+    if(self.dataList.count <= 0){
+        [self.errorView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight)];
+        tableFooterView.backgroundColor = [UIColor whiteColor];
+        [tableFooterView addSubview:self.errorView];
+        self.tableView.tableFooterView = tableFooterView;
+        self.refreshFooter.hidden = YES;
+        self.tableView.backgroundColor = [UIColor whiteColor];
+        [self.tableView reloadData];
+    }
+}
+
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableView.mj_footer.hidden = NO;
     if (hasMore) {

@@ -263,7 +263,11 @@
         [_viewModel requestData:YES first:YES];
     } else {
         if(!self.hasValidateData){
-            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            if(!self.showErrorView && self.errorViewHeight > 0){
+                [self.viewModel showCustomErrorView:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }else{
+                [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         }
     }
 }
@@ -273,7 +277,11 @@
         [_viewModel requestData:YES first:isFirst];
     } else {
         if(!self.hasValidateData){
-            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            if(!self.showErrorView && self.errorViewHeight > 0){
+                [self.viewModel showCustomErrorView:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }else{
+                [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         }
     }
 }
