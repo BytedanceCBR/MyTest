@@ -71,6 +71,10 @@ typedef NS_ENUM(NSInteger, FHUGCMyJoinType)
     FHUGCMyJoinTypeEmpty,                               //空页面
 };
 
-
+typedef NS_ENUM(NSUInteger, FHUGCLoginFrom) {
+    FHUGCLoginFrom_POST = 0,
+    FHUGCLoginFrom_GROUPCHAT = 1,
+    FHUGCLoginFrom_VOTE = 2,
+};
 
 #endif /* FHHouseUGCHeader_h */

@@ -343,10 +343,12 @@
 }
 
 - (void)postMenuViewWillShow {
+    self.bageView.alpha = 0;
     self.groupChatBtn.hidden = YES;
 }
 
 - (void)postMenuDidHide {
+    self.bageView.alpha = 1;
     self.groupChatBtn.hidden = NO;
 }
 
