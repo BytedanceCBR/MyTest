@@ -19,6 +19,7 @@
 #import "FHUGCVoteBottomPopView.h"
 #import <WDDefines.h>
 #import "FHUGCVoteModel.h"
+#import "HMDTTMonitor.h"
 
 #define OPTION_START_INDEX  2
 #define DATEPICKER_HEIGHT 200
@@ -407,8 +408,10 @@
     WeakSelf;
     [FHHouseUGCAPI requestVotePublishWithParam:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
+        // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
         if(error) {
             [[ToastManager manager] showToast:@"发布投票失败!"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(1)} extra:nil];
             return;
         }
         if([model isKindOfClass:[FHUGCVoteModel class]]) {
@@ -421,9 +424,11 @@
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHVotePublishNotificationName object:nil userInfo:userInfo];
                 [self exitPage];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(0)} extra:nil];
             }
             else {
                 [[ToastManager manager] showToast:@"发布投票失败!"];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(2)} extra:nil];
             }
         }
     }];
