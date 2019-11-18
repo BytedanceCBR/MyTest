@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL needReloadData;
 //当前定位的位置
 @property(nonatomic, strong) CLLocation *currentLocaton;
-//小区详情页进入需要传这个参数，小区圈子id
+//小区详情页进入需要传这个参数，圈子子id
 @property(nonatomic, strong) NSString *forumId;
 //tab的名字,调用接口时候会传给服务器
 @property(nonatomic, strong) NSString *tabName;

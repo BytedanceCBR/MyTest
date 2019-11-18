@@ -74,7 +74,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
                 if(model.data.socialGroupFollowStatus == 0 && model.data.socialGroupId){
                     if ([TTAccountManager isLogin]) {
-                        // 修改逻辑 登录状态下 自动关注小区圈
+                        // 修改逻辑 登录状态下 自动关注圈子
                         [[FHUGCConfig sharedInstance] followUGCBy:model.data.socialGroupId isFollow:YES completion:nil];
                     }
                 }
@@ -155,7 +155,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
                 if(model.data.socialGroupFollowStatus == 0 && model.data.socialGroupId){
                     if ([TTAccountManager isLogin]) {
-                        // 修改逻辑 登录状态下 自动关注小区圈
+                        // 修改逻辑 登录状态下 自动关注圈子
                         [[FHUGCConfig sharedInstance] followUGCBy:model.data.socialGroupId isFollow:YES completion:nil];
                     }
                 }

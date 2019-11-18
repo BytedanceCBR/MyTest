@@ -74,7 +74,7 @@ typedef enum : NSUInteger {
         self.isReadOnly = [paramObj.allParams[@"isReadOnly"] boolValue];
         self.content = paramObj.allParams[@"content"];
         self.callback = paramObj.allParams[@"callback"];
-        self.title = self.isReadOnly ? @"小区圈公告" : @"编辑公告";
+        self.title = self.isReadOnly ? @"圈子公告" : @"编辑公告";
         self.socialGroupId = paramObj.allParams[@"socialGroupId"];
     }
     return self;
@@ -164,11 +164,11 @@ typedef enum : NSUInteger {
     self.textView.internalGrowingTextView.tintColor = [UIColor themeRed1];
     [self.view addSubview:self.textView];
     
-    // 小区圈公告，只读模式
+    // 圈子公告，只读模式
     if(self.isReadOnly) {
         [self configContentForReadOnly];
     }
-    // 小区圈公告，编辑模式
+    // 圈子公告，编辑模式
     else {
         [self configContentForEdit];
     }

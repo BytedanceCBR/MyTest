@@ -95,7 +95,7 @@
 
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = [[TTAccountManager userID] isEqualToString:self.userId] ? @"我关注的小区圈" : @"TA关注的小区圈";
+    self.customNavBarView.title.text = [[TTAccountManager userID] isEqualToString:self.userId] ? @"我关注的圈子" : @"TA关注的圈子";
     
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
