@@ -67,7 +67,7 @@
         [cancelButton addTarget:self action:@selector(dateCancelAction:) forControlEvents:UIControlEventTouchUpInside];
         
         UILabel *titleLabel = [UILabel new];
-        titleLabel.text = @"选择投票截止日期";
+        titleLabel.text = @"投票截止日期";
         titleLabel.textColor = [UIColor themeGray1];
         titleLabel.textAlignment = NSTextAlignmentCenter;
         titleLabel.font = [UIFont themeFontRegular:16];
@@ -428,6 +428,18 @@
     }];
     params[@"options"] = optionList;
     
+    // 判断是否有重复的选项内容
+    if(optionList.count > 0) {
+        for(int i = 0; i < optionList.count - 1; i++) {
+            for(int j = i + 1; j < optionList.count; j++) {
+                if([optionList[i][@"title"] isEqualToString:optionList[j][@"title"]]) {
+                    [[ToastManager manager] showToast:@"存在相同选项"];
+                    return;
+                }
+            }
+        }
+    }
+    // 判断网络是否连接
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;

@@ -35,7 +35,7 @@
 - (UILabel *)titleLabel {
     if(!_titleLabel) {
         _titleLabel = [UILabel new];
-        _titleLabel.text = @"选择可见范围: ";
+        _titleLabel.text = @"选择可见范围";
         _titleLabel.font = [UIFont themeFontRegular:16];
         _titleLabel.textColor = [UIColor themeGray1];
         
@@ -208,7 +208,7 @@
 - (UITextField *)optionTextField {
     if(!_optionTextField) {
         _optionTextField = [UITextField new];
-        _optionTextField.placeholder = @"选填";
+        _optionTextField.placeholder = @"选项";
         [_optionTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
         _optionTextField.font = [UIFont themeFontRegular:16];
         _optionTextField.textColor = [UIColor themeGray1];
@@ -235,8 +235,8 @@
         [self.contentView addSubview:self.optionTextField];
         
         [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.height.mas_offset(18);
-            make.left.equalTo(self.contentView).offset(PADDING);
+            make.width.height.mas_offset(40);
+            make.left.equalTo(self.contentView).offset(PADDING - 11);
             make.centerY.equalTo(self.optionTextField);
         }];
         
@@ -352,7 +352,7 @@
 - (NSDateFormatter *)dateFormatter {
     if(!_dateFormatter) {
         _dateFormatter = [[NSDateFormatter alloc] init];
-        _dateFormatter.dateFormat = @"yyyy-MM-dd hh:mm";
+        _dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
     }
     return _dateFormatter;
 }
