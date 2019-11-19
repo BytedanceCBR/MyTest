@@ -13,6 +13,8 @@
 #import <TTVFeedCellAction.h>
 #import <TTRichSpanText+Comment.h>
 #import "YYText.h"
+#import "TTRichSpanText+Link.h"
+#import "TTUGCEmojiParser.h"
 
 @implementation FHUGCCellHelper
 
@@ -126,8 +128,9 @@
 }
 
 + (void)setRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    
     TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
-    TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:model.content richSpans:richSpans];
+    TTRichSpanText *richContent = [[[TTRichSpanText alloc] initWithText:model.content richSpans:richSpans] replaceWhitelistLinks];
     
     TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
     
