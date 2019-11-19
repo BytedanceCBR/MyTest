@@ -51,6 +51,7 @@
 
 - (void)registerNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidChangeFrame:) name:UIKeyboardDidChangeFrameNotification object:nil];
 }
 
 - (void)keyboardWillChangeFrame: (NSNotification *)notification {
@@ -68,7 +69,12 @@
     }
     
     self.tableView.frame = tableViewFrame;
-    
+}
+
+- (void)keyboardDidChangeFrame: (NSNotification *)notification {
+    CGRect beginFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    BOOL isShrinking = beginFrame.origin.y < endFrame.origin.y;
     if(!isShrinking) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] - 1 inSection:1];
         [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];

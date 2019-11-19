@@ -579,6 +579,22 @@
                 [optionCell updateWithOption:self.model.options[indexPath.row - optionStartIndex]];
             }];
         }
+        // 删除的Cell本身是当前键盘输入点，删除前转移焦点, 防止键盘消失引起抖动
+        if([optionCell.optionTextField isFirstResponder]) {
+            
+            NSIndexPath *nextResponderCellIndexPath = nil;
+            // 如果删除的不是最后一个Cell，焦点转移到下一个Cell， 是最后一个Cell，则焦点转移到上一个Cell
+            if(index == 0) {
+                nextResponderCellIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
+            } else if(index == options.count - 1) {
+                nextResponderCellIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
+            } else {
+                nextResponderCellIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
+            }
+            
+            FHUGCVotePublishOptionCell *nextResponderCell = [self.tableView cellForRowAtIndexPath:nextResponderCellIndexPath];
+            [nextResponderCell.optionTextField becomeFirstResponder];
+        }
         
         [options removeObjectAtIndex:index];
         self.model.options = options;
