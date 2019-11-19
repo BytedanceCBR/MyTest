@@ -55,7 +55,7 @@
         if (numberOfLines > 0) {
             parseEmojiCount = (100 * (numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
@@ -145,7 +145,7 @@
         if (model.numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
@@ -192,7 +192,7 @@
         if (model.numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
@@ -335,7 +335,7 @@
         if (model.numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             
@@ -511,7 +511,7 @@
     
     if (!isEmptyString(richContent.text)) {
         NSInteger parseEmojiCount = -1;
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:richContent.text fontSize:16 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:richContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             mutableAttributedString = [attrStr mutableCopy];
