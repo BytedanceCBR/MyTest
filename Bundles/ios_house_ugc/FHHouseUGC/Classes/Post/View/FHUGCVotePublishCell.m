@@ -352,7 +352,7 @@
 - (NSDateFormatter *)dateFormatter {
     if(!_dateFormatter) {
         _dateFormatter = [[NSDateFormatter alloc] init];
-        _dateFormatter.dateFormat = @"yyyy-MM-dd hh:mm";
+        _dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
     }
     return _dateFormatter;
 }

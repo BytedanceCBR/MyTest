@@ -67,7 +67,7 @@
         [cancelButton addTarget:self action:@selector(dateCancelAction:) forControlEvents:UIControlEventTouchUpInside];
         
         UILabel *titleLabel = [UILabel new];
-        titleLabel.text = @"选择投票截止日期";
+        titleLabel.text = @"投票截止日期";
         titleLabel.textColor = [UIColor themeGray1];
         titleLabel.textAlignment = NSTextAlignmentCenter;
         titleLabel.font = [UIFont themeFontRegular:16];

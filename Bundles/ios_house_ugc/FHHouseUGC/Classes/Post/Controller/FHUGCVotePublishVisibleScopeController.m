@@ -206,15 +206,17 @@
 - (UITableView *)tableView {
     if(!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, kNavigationBarHeight, SCREEN_WIDTH, self.view.bounds.size.height - kNavigationBarHeight) style:UITableViewStylePlain];
+        
         _tableView.delegate = self;
         _tableView.dataSource = self;
         
         [_tableView registerClass:[FHUGCVotePublishVisibleScopeHeaderCell class] forCellReuseIdentifier:[FHUGCVotePublishVisibleScopeHeaderCell reuseIdentifier]];
         [_tableView registerClass:[FHUGCVotePublishVisibleScopeSocialGroupCell class] forCellReuseIdentifier:[FHUGCVotePublishVisibleScopeSocialGroupCell reuseIdentifier]];
         
-        _tableView.backgroundColor = [UIColor themeGray7];
+        _tableView.backgroundColor = [UIColor themeWhite];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.bounces = NO;
+        
         
     }
     return _tableView;
@@ -223,6 +225,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.view.backgroundColor = [UIColor themeWhite];
     
     [self.view addSubview: self.tableView];
     
@@ -387,7 +391,7 @@
 
 - (void)setIsFoldSocialGroupList:(BOOL)isFoldSocialGroupList {
     _isFoldSocialGroupList = isFoldSocialGroupList;
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationFade];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -437,6 +441,7 @@
         if(title.length > 0) {
             socialGroupCell.titleLabel.text = title;
             socialGroupCell.checkButton.selected = isSelected;
+            socialGroupCell.backgroundColor = isSelected ? [UIColor themeGray7] : [UIColor themeWhite];
             
             // 可见圈子展现埋点
             if(![self.elementShowSet containsObject:model.socialGroupId]) {
