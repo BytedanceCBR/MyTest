@@ -482,9 +482,6 @@
 
 - (void)postTopSuccess:(NSNotification *)noti {
     //多个tab时候，仅仅强插在全部页面
-    if([self isNotInAllTab]){
-        return;
-    }
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
@@ -829,11 +826,9 @@
     NSInteger row = [self getCellIndex:cellModel];
     if(row < self.dataList.count && row >= 0){
         [self.dataList removeObjectAtIndex:row];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
-        if (self.dataList.count == 0) {
-            [self reloadTableViewData];
-        }
+//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        [self reloadTableViewData];
     }
 }
 

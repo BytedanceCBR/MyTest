@@ -153,6 +153,15 @@
 // 删帖成功通知
 - (void)delPostThreadSuccess:(NSNotification *)noti {
     NSString *groupId = noti.userInfo[@"social_group_id"];
+    
+    if([groupId isEqualToString:self.viewController.communityId]){
+        //多于1个tab的时候
+        if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
+            FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
+            feedVC.needReloadData = YES;
+        }
+    }
+    
     if (groupId.length > 0) {
         __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -663,6 +672,11 @@
         self.shareButton.hidden = YES;
     }
     [self.viewController.customNavBarView refreshAlpha:alpha];
+
+    NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
+    if(tabArray && tabArray.count > 1) {
+        self.viewController.customNavBarView.seperatorLine.hidden = YES;
+    }
 }
 
 // 关注状态改变
