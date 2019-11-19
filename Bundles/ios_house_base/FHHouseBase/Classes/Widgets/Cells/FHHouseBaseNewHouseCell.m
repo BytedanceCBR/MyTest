@@ -448,7 +448,7 @@
         layout.height = YGPointValue(22);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
     }];
-
+    
     [_priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.flexDirection = YGFlexDirectionRow;
@@ -515,11 +515,11 @@
         layout.alignItems = YGAlignFlexStart;
     }];
     
-
+    
     self.bottomRecommendViewBack = [[UIView alloc] init];
     self.bottomRecommendViewBack.layer.borderColor = [UIColor themeGray5].CGColor;
     self.bottomRecommendViewBack.layer.borderWidth = 1;
-//    self.bottomRecommendViewBack.layer.masksToBounds = YES;
+    //    self.bottomRecommendViewBack.layer.masksToBounds = YES;
     self.bottomRecommendViewBack.layer.cornerRadius = 2;
     [self.bottomRecommendView addSubview:self.bottomRecommendViewBack];
     [self.bottomRecommendViewBack configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -553,7 +553,7 @@
         layout.marginRight = YGPointValue(3);
         layout.height = YGPointValue(13);
     }];
-
+    
     
     [_rightInfoView addSubview:self.recReasonView];
     [_recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -581,15 +581,14 @@
     if (![commonModel isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
         return;
     }
-
+    
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
     NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:commonModel.tags];
     self.tagLabel.attributedText =  attributeString;
     self.priceLabel.text = commonModel.displayPricePerSqm;
-    //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
-        FHImageModel *imageModel = commonModel.images.firstObject;
+    FHImageModel *imageModel = commonModel.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
     _priceLabel.font = [UIFont themeFontSemibold:16];
@@ -635,27 +634,25 @@
     [self hideRecommendReason];
     [self updateTitlesLayout:attributeString.length > 0];
     
-    [self.bottomRecommendLabel.yoga markDirty];
     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
 }
 
 -(void)updateHouseListNewHouseCellModel:(FHSearchHouseItemModel *)commonModel
 {
-     if (![commonModel isKindOfClass:[FHSearchHouseItemModel class]]) {
-         return ;
-     }
-     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
-     self.mainTitleLabel.text = commonModel.displayTitle;
-     self.subTitleLabel.text = commonModel.displayDescription;
-     NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:commonModel.tags];
-     self.tagLabel.attributedText =  attributeString;
-     self.priceLabel.text = commonModel.displayPricePerSqm;
-     //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
-     FHImageModel *imageModel = commonModel.images.firstObject;
-     [self updateMainImageWithUrl:imageModel.url];
+    if (![commonModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+        return ;
+    }
     
-     _priceLabel.font = [UIFont themeFontSemibold:16];
+    self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
+    self.mainTitleLabel.text = commonModel.displayTitle;
+    self.subTitleLabel.text = commonModel.displayDescription;
+    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:commonModel.tags];
+    self.tagLabel.attributedText =  attributeString;
+    self.priceLabel.text = commonModel.displayPricePerSqm;
+    FHImageModel *imageModel = commonModel.images.firstObject;
+    [self updateMainImageWithUrl:imageModel.url];
     
+    _priceLabel.font = [UIFont themeFontSemibold:16];
     
     if(commonModel.advantageDescription)
     {
@@ -687,32 +684,18 @@
     }
     
     if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
-        
         self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
         self.imageTagLabel.text = commonModel.houseImageTag.text;
         self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
         self.imageTagLabelBgView.hidden = NO;
     }else {
-        
         self.imageTagLabelBgView.hidden = YES;
     }
     
+    [self hideRecommendReason];
+    [self updateTitlesLayout:attributeString.length > 0];
     
-     if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
-         
-         self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
-         self.imageTagLabel.text = commonModel.houseImageTag.text;
-         self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
-         self.imageTagLabelBgView.hidden = NO;
-     }else {
-         self.imageTagLabelBgView.hidden = YES;
-     }
-    
-    
-     [self hideRecommendReason];
-     [self updateTitlesLayout:attributeString.length > 0];
-    
-     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
+    [self.contentView.yoga applyLayoutPreservingOrigin:NO];
 }
 
 
@@ -795,7 +778,8 @@
     [self.rightInfoView.yoga markDirty];
     [self.tagLabel.yoga markDirty];
     [self.priceLabel.yoga markDirty];
-//    [self.pricePerSqmLabel.yoga markDirty];
+    [self.bottomRecommendLabel.yoga markDirty];
+    //    [self.pricePerSqmLabel.yoga markDirty];
     [self.priceBgView.yoga markDirty];
 }
 

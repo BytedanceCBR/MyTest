@@ -384,6 +384,9 @@
         if ([TTReachability isNetworkConnected] && !self.locationBar.isLocationSuccess) {
             [self requestCurrentLocationWithToast:NO needSwitchCity:NO];
         }
+    }else
+    {
+        self.locationBar.isLocationSuccess = NO;
     }
 }
 
