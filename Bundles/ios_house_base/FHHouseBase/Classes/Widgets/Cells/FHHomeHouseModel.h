@@ -226,6 +226,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, copy , nullable) NSString *backgroundColor;
 @property (nonatomic, copy , nullable) NSString *textColor;
+@property (nonatomic, copy , nullable) NSString *borderColor;
 
 @end
 
