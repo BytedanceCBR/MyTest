@@ -350,13 +350,17 @@
 
 // MARK: FHUGCVotePublishBaseCellDelegate
 
+- (NSString *)validStringConvertWith:(NSString *)originString {
+    return [[originString stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+}
+
 - (void)voteTitleCell:(FHUGCVotePublishTitleCell *)titleCell didInputText:(NSString *)text {
-    self.model.voteTitle = text;
+    self.model.voteTitle = [self validStringConvertWith:text];
     [self checkIfEnablePublish];
 }
 
 - (void)descriptionCell:(FHUGCVotePublishDescriptionCell *)descriptionCell didInputText:(NSString *)text {
-    self.model.voteDescription = text;
+    self.model.voteDescription = [self validStringConvertWith:text];
     [self checkIfEnablePublish];
 }
 
@@ -365,7 +369,7 @@
     NSInteger optionStartIndex = OPTION_START_INDEX;
     NSUInteger index = MIN(MAX(indexPath.row - optionStartIndex, 0), self.model.options.count);
     if(index < self.model.options.count) {
-        self.model.options[index].content = text;
+        self.model.options[index].content = [self validStringConvertWith:text];
         [self checkIfEnablePublish];
     }
 }
@@ -605,6 +609,7 @@
     BOOL isEnablePublish = hasTitle && hasOption && hasVisibleScope && hasVoteType;
     [self.viewController enablePublish: isEnablePublish];
 }
+
 
 - (void)dateCancelAction:(UIButton *)sender {
     [self.bottomPopView hide];
