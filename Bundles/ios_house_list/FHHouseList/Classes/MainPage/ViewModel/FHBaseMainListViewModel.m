@@ -566,14 +566,6 @@ extern NSString *const INSTANT_DATA_KEY;
         FHListSearchHouseDataModel *recommendHouseDataModel = nil;
         BOOL fromRecommend = NO;
 
-//        if ([model isKindOfClass:[FHRecommendSecondhandHouseModel class]]) { //推荐
-//            recommendHouseDataModel = ((FHRecommendSecondhandHouseModel *)model).data;
-//            self.recommendSearchId = recommendHouseDataModel.searchId;
-//            hasMore = recommendHouseDataModel.hasMore;
-//            recommendItems = recommendHouseDataModel.items;
-//            self.currentRecommendHouseDataModel = recommendHouseDataModel;
-//            fromRecommend = YES;
-//        } else
         if ([model isKindOfClass:[FHListSearchHouseModel class]]) { // 列表页
             
             if (isRecommendSearch) {
@@ -648,6 +640,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [self updateRedirectTipInfo];
         
         __weak typeof(self)wself = self;
+        __block id lastObj = nil;
         NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
         if (wself.stayTraceDict) {
             [traceDictParams addEntriesFromDictionary:wself.stayTraceDict];
@@ -661,6 +654,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = theItemModel;
                     itemModel.isLastCell = (idx == items.count - 1);
+                    if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+                        itemModel.topMargin = 0;
+                    }
                     theItemModel = itemModel;
                 }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]] && isRefresh) {
                     // 展示经纪人信息
@@ -683,6 +679,9 @@ extern NSString *const INSTANT_DATA_KEY;
                     agencyModel.tracerDict = traceDictParams;
                     agencyModel.belongsVC = wself.viewController;
                     theItemModel = agencyModel;
+                }
+                if (theItemModel) {
+                    lastObj = theItemModel;
                 }
             }
         }];

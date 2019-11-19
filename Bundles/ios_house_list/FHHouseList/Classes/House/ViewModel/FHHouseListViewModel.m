@@ -832,17 +832,7 @@ extern NSString *const INSTANT_DATA_KEY;
         FHHouseNeighborAgencyModel *neighbourAgencyCardModel;//小区搜索卡片
         BOOL needUploadMapFindHouseUrlEvent = NO;
         BOOL fromRecommend = NO;
-        
-//        if ([model isKindOfClass:[FHRecommendSecondhandHouseModel class]]) {
-//            recommendHouseDataModel = ((FHRecommendSecondhandHouseModel *)model).data;
-//            self.recommendSearchId = recommendHouseDataModel.searchId;
-//            hasMore = recommendHouseDataModel.hasMore;
-//            if (recommendHouseDataModel.items) {
-//                [recommendItemArray addObjectsFromArray:recommendHouseDataModel.items];
-//            }
-//            self.currentRecommendHouseDataModel = recommendHouseDataModel;
-//            fromRecommend = YES;
-//        } else
+
         if ([model isKindOfClass:[FHListSearchHouseModel class]]) {
 
             if (isRecommendSearch) {
@@ -975,6 +965,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([wself categoryLogDict]) {
             [traceDictParams addEntriesFromDictionary:[wself categoryLogDict]];
         }
+        __block id lastObj = nil;
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull itemDict, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([itemDict isKindOfClass:[NSDictionary class]]) {
                 id theItemModel = [[wself class] searchItemModelByDict:itemDict];
@@ -984,6 +975,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = theItemModel;
                     itemModel.isLastCell = (idx == itemArray.count - 1);
+                    if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+                        itemModel.topMargin = 0;
+                    }
                     theItemModel = itemModel;
                 }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]] && wself.isRefresh) {
                     // 展示经纪人信息
@@ -1006,6 +1000,9 @@ extern NSString *const INSTANT_DATA_KEY;
                     agencyModel.tracerDict = traceDictParams;
                     agencyModel.belongsVC = wself.listVC;
                     theItemModel = agencyModel;
+                }
+                if (theItemModel) {
+                    lastObj = theItemModel;
                 }
             }
         }];
@@ -1507,36 +1504,26 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
     BOOL isLastCell = NO;
-    BOOL isFirstCell = NO;// todo zjing
-    
+
     NSString *identifier = @"";
     id data = nil;
     if (indexPath.section == 0) {
         data = self.self.houseList[indexPath.row];
-        
     } else {
         isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
         if (indexPath.row < self.sugesstHouseList.count) {
             data = self.sugesstHouseList[indexPath.row];
+            
         }
     }
-    isFirstCell = (indexPath.row == 0);
     if (data) {
         identifier = [self cellIdentifierForEntity:data];
     }
-    
-//    if (self.houseType == FHHouseTypeNewHouse) {
-//        identifier = NSStringFromClass([FHHouseBaseNewHouseCell class]);
-//    }
-    
+
     __weak typeof(self)wself = self;
     if (identifier.length > 0) {
         FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-        if([cell isKindOfClass:[FHHouseBaseSmallItemCell class]]){
-            FHHouseBaseSmallItemCell *theCell = (FHHouseBaseSmallItemCell *)cell;
-            [theCell refreshTopMargin: 10];// todo zjing
-        }
-        
+
         if ([cell isKindOfClass:[FHHouseBaseNewHouseCell class]]) {
             FHHouseBaseNewHouseCell *theCell = (FHHouseBaseNewHouseCell *)cell;
             [theCell updateHouseListNewHouseCellModel:data];

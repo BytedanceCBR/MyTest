@@ -40,6 +40,7 @@ typedef NS_ENUM(NSUInteger, FHSearchCardType) {
 
 @property (nonatomic, assign) NSInteger cellType;
 @property (nonatomic, assign) NSInteger cellStyle;
+@property (nonatomic, assign) CGFloat topMargin;
 
 
 @end

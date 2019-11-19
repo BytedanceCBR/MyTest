@@ -62,6 +62,9 @@
 
 - (void)initUI {
 
+    self.contentView.clipsToBounds = NO;
+    self.clipsToBounds = NO;
+
     _shadowView = [[FHShadowView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_shadowView];
 
@@ -155,7 +158,7 @@
         make.left.mas_equalTo(self).mas_offset(20);
         make.right.mas_equalTo(self).mas_offset(-20);
         make.top.mas_equalTo(self).offset(20);
-        make.bottom.mas_equalTo(self).offset(0);
+        make.bottom.mas_equalTo(self).offset(-10);
     }];
 
     [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -210,7 +213,7 @@
     [self.bottomInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.dividerView.mas_bottom);
         make.height.mas_equalTo(69);
-        make.width.mas_equalTo(self.containerView);
+        make.left.right.mas_equalTo(self.containerView);
     }];
 
 
@@ -298,7 +301,7 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 169;
+    return 169 + 10;
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel *)contact {
