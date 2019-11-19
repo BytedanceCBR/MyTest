@@ -433,7 +433,7 @@
         for(int i = 0; i < optionList.count - 1; i++) {
             for(int j = i + 1; j < optionList.count; j++) {
                 if([optionList[i][@"title"] isEqualToString:optionList[j][@"title"]]) {
-                    [[ToastManager manager] showToast:@"不能有重复选项!"];
+                    [[ToastManager manager] showToast:@"存在相同选项"];
                     return;
                 }
             }
