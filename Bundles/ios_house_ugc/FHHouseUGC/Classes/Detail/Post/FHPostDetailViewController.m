@@ -99,6 +99,12 @@
             if (!err && [dic isKindOfClass:[NSDictionary class]] && dic.count > 0) {
                 self.tracerDict[@"log_pb"] = dic;
             }
+        } else if ([log_pb_str isKindOfClass:[NSDictionary class]]) {
+            self.tracerDict[@"log_pb"] = (NSDictionary *)log_pb_str;
+        }
+        // report_prarms
+        if (self.report_params_dic && self.report_params_dic[@"social_group_id"]) {
+            self.lastPageSocialGroupId = [params objectForKey:@"social_group_id"];
         }
     }
     return self;

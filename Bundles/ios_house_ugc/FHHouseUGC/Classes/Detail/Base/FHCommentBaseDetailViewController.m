@@ -77,9 +77,41 @@
         }
         NSString *report_params = paramObj.allParams[@"report_params"];
         if ([report_params isKindOfClass:[NSString class]]) {
-            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
-            if (report_params_dic) {
-                [self.tracerDict addEntriesFromDictionary:report_params_dic];
+            NSDictionary *params = [self getDictionaryFromJSONString:report_params];
+            if ([params isKindOfClass:[NSDictionary class]]) {
+                self.report_params_dic = params;
+                NSString *enter_from = params[@"enter_from"];
+                if (enter_from.length > 0) {
+                    self.tracerDict[@"enter_from"] = enter_from;
+                }
+                NSString *enter_type = params[@"enter_type"];
+                if (enter_type.length > 0) {
+                    self.tracerDict[@"enter_type"] = enter_type;
+                }
+                NSString *element_from = params[@"element_from"];
+                if (element_from.length > 0) {
+                    self.tracerDict[@"element_from"] = element_from;
+                }
+                NSString *log_pb_str = params[@"log_pb"];
+                if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
+                    NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
+                    NSError *err = nil;
+                    NSDictionary *dic = nil;
+                    @try {
+                        dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                              options:NSJSONReadingMutableContainers
+                                                                error:&err];
+                    } @catch (NSException *exception) {
+                        
+                    } @finally {
+                        
+                    }
+                    if (!err && [dic isKindOfClass:[NSDictionary class]] && dic.count > 0) {
+                        self.tracerDict[@"log_pb"] = dic;
+                    }
+                } else if ([log_pb_str isKindOfClass:[NSDictionary class]]) {
+                    self.tracerDict[@"log_pb"] = (NSDictionary *)log_pb_str;
+                }
             }
         }
     }
