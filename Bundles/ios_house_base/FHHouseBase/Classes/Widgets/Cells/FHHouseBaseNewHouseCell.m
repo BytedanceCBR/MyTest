@@ -555,6 +555,7 @@
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(3);
         layout.marginLeft = YGPointValue(5);
+        layout.maxWidth = YGPointValue([UIScreen mainScreen].bounds.size.width - MAIN_IMG_WIDTH - 73);
         layout.marginRight = YGPointValue(3);
         layout.height = YGPointValue(13);
     }];
@@ -593,6 +594,11 @@
     NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:commonModel.tags];
     self.tagLabel.attributedText =  attributeString;
     self.priceLabel.text = commonModel.displayPricePerSqm;
+    
+    if ([commonModel.displayPricePerSqm isKindOfClass:[NSString class]] && [commonModel.displayPricePerSqm isEqualToString:@"暂无报价"]) {
+        self.priceLabel.textColor = [UIColor themeGray3];
+    }
+    
     FHImageModel *imageModel = commonModel.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
@@ -660,6 +666,11 @@
     self.priceLabel.text = commonModel.displayPricePerSqm;
     FHImageModel *imageModel = commonModel.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
+    
+    
+    if ([commonModel.displayPricePerSqm isKindOfClass:[NSString class]] && [commonModel.displayPricePerSqm isEqualToString:@"暂无报价"]) {
+        self.priceLabel.textColor = [UIColor themeGray3];
+    }
     
     _priceLabel.font = [UIFont themeFontSemibold:16];
     
