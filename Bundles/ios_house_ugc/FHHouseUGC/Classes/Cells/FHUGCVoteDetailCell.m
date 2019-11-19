@@ -120,6 +120,7 @@
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30 * 2, 0)];
     _contentLabel.numberOfLines = 0;
+    _contentLabel.font = [UIFont themeFontRegular:16];
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
     NSDictionary *linkAttributes = @{
@@ -319,9 +320,9 @@
         voteInfo.deadLineContent = @"";
         if (!voteInfo.hasReloadForVoteExpired) {
             // 过期也要发送通知
-            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-            [userInfo setObject:voteInfo forKey:@"vote_info"];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
+//            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+//            [userInfo setObject:voteInfo forKey:@"vote_info"];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
         }
     } else {
         NSInteger val = deadline - intver;
@@ -721,7 +722,7 @@
         }
     }];
     __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         weakSelf.voteInfo.needAnimateShow = NO;
     });
     if (self.voteInfo.voteState == FHUGCVoteStateExpired) {
@@ -969,12 +970,15 @@
         NSString *perStr = [NSString stringWithFormat:@"%.0f%%",per * 100];
         self.percentLabel.text = perStr;
         if (self.mainView.voteInfo.needAnimateShow) {
-            [UIView animateWithDuration:0.3 animations:^{
+            self.percentLabel.alpha = 0.0;
+            [UIView animateWithDuration:0.5 animations:^{
+                self.percentLabel.alpha = 1.0;
                 self.bgView.width = wid * per;
                 self.contentLabel.left = 10;
                 self.selectedIcon.left = self.contentLabel.right;
             }];
         } else {
+            self.percentLabel.alpha = 1.0;
             self.bgView.width = wid * per;
             self.contentLabel.left = 10;
             self.selectedIcon.left = self.contentLabel.right;
