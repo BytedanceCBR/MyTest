@@ -164,6 +164,8 @@
 
     [self.topInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.containerView);
+        make.left.mas_equalTo(self.containerView.mas_left);
+        make.right.mas_equalTo(self.containerView.mas_right);
         make.width.mas_equalTo(self.containerView);
         make.height.mas_equalTo(79);
     }];
@@ -209,6 +211,8 @@
 
     [self.bottomInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.dividerView.mas_bottom);
+        make.left.mas_equalTo(self.containerView.mas_left);
+        make.right.mas_equalTo(self.containerView.mas_right);
         make.height.mas_equalTo(69);
         make.width.mas_equalTo(self.containerView);
     }];
