@@ -24,6 +24,7 @@
 #import "FHUserTracker.h"
 #import "BTDJSONHelper.h"
 #import "FHFeedUGCCellModel.h"
+#import "FHPostUGCViewController.h"
 
 #define OPTION_START_INDEX  2
 #define DATEPICKER_HEIGHT 200
@@ -350,13 +351,17 @@
 
 // MARK: FHUGCVotePublishBaseCellDelegate
 
+- (NSString *)validStringConvertWith:(NSString *)originString {
+    return [[originString stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+}
+
 - (void)voteTitleCell:(FHUGCVotePublishTitleCell *)titleCell didInputText:(NSString *)text {
-    self.model.voteTitle = text;
+    self.model.voteTitle = [self validStringConvertWith:text];
     [self checkIfEnablePublish];
 }
 
 - (void)descriptionCell:(FHUGCVotePublishDescriptionCell *)descriptionCell didInputText:(NSString *)text {
-    self.model.voteDescription = text;
+    self.model.voteDescription = [self validStringConvertWith:text];
     [self checkIfEnablePublish];
 }
 
@@ -365,7 +370,7 @@
     NSInteger optionStartIndex = OPTION_START_INDEX;
     NSUInteger index = MIN(MAX(indexPath.row - optionStartIndex, 0), self.model.options.count);
     if(index < self.model.options.count) {
-        self.model.options[index].content = text;
+        self.model.options[index].content = [self validStringConvertWith:text];
         [self checkIfEnablePublish];
     }
 }
@@ -448,6 +453,9 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHVotePublishNotificationName object:nil userInfo:userInfo];
                 [self exitPage];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(0)} extra:nil];
+                
+                // 如何是在附近列表，发布投票完成后，跳转到关注页面
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil];
             }
             else {
                 [[ToastManager manager] showToast:@"发布投票失败!"];
@@ -605,6 +613,7 @@
     BOOL isEnablePublish = hasTitle && hasOption && hasVisibleScope && hasVoteType;
     [self.viewController enablePublish: isEnablePublish];
 }
+
 
 - (void)dateCancelAction:(UIButton *)sender {
     [self.bottomPopView hide];
