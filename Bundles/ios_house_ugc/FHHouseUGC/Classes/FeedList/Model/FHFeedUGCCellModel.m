@@ -490,6 +490,13 @@
         if (cellModel.voteInfo == nil || cellModel.voteInfo.items.count < 2) {
             return nil;
         }
+        if ([cellModel.voteInfo.voteType isEqualToString:@"1"]) {
+            // 单选
+            cellModel.voteInfo.title = [NSString stringWithFormat:@"【单选】%@",cellModel.voteInfo.title];
+        } else if ([cellModel.voteInfo.voteType isEqualToString:@"2"]) {
+            // 多选
+            cellModel.voteInfo.title = [NSString stringWithFormat:@"【多选】%@",cellModel.voteInfo.title];
+        }
         cellModel.voteInfo.voteState = FHUGCVoteStateNone;
         cellModel.voteInfo.needFold = NO;
         cellModel.voteInfo.isFold = NO;

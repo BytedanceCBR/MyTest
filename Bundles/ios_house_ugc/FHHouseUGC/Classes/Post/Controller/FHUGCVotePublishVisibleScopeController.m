@@ -13,6 +13,7 @@
 #import <FHHouseUGCAPI.h>
 #import <FHUGCCommunityListModel.h>
 #import "FHUGCVotePublishModel.h"
+#import "FHUserTracker.h"
 
 @interface FHUGCVotePublishVisibleScopeHeaderCell: UITableViewCell
 @property (nonatomic, strong) UIImageView *checkImageView;
@@ -186,6 +187,7 @@
 @property (nonatomic, strong) NSArray<FHUGCVotePublishCityInfo *> *selectedSocialGroup;
 @property (nonatomic, assign) BOOL isAllSelected;
 @property (nonatomic, assign) BOOL isPartialSelected;
+@property (nonatomic, strong) NSMutableSet<NSString *> *elementShowSet;
 @end
 
 @implementation FHUGCVotePublishVisibleScopeController
@@ -196,6 +198,7 @@
         self.selectedSocialGroup = paramObj.allParams[@"selectedSocialGroup"];
         self.isAllSelected = [paramObj.allParams[@"isAllSelected"] boolValue];
         self.isPartialSelected = [paramObj.allParams[@"isPartialSelected"] boolValue];
+        self.elementShowSet = [NSMutableSet set];
     }
     return self;
 }
@@ -221,9 +224,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self configNavigation];
-    
     [self.view addSubview: self.tableView];
+    
+    [self configNavigation];
     
     [self addDefaultEmptyViewFullScreen];
     
@@ -337,8 +340,6 @@
 // MARK: UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    
-    
     NSIndexPath *allGroupHeaderCellIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     FHUGCVotePublishVisibleScopeHeaderCell *allGroupHeaderCell = [tableView cellForRowAtIndexPath: allGroupHeaderCellIndexPath];
     
@@ -369,6 +370,14 @@
         else if(indexPath.row > 0) {
             FHUGCVotePublishVisibleScopeModel *model = self.socialGroupList[MAX(indexPath.row - 1, 0)];
             model.isSelected = !model.isSelected;
+            
+            
+            // 点击选择想要发布的小区埋点
+            NSMutableDictionary *params = @{}.mutableCopy;
+            params[UT_PAGE_TYPE] = @"vote_publisher";
+            params[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+            params[@"click_position"] = @"select_like_publisher_neighborhood";
+            TRACK_EVENT(@"click_like_publisher_neighborhood", params);
 
         }
     }
@@ -391,6 +400,11 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if(self.socialGroupList.count == 0) {
+        return 0;
+    }
+    
     if(section == 0) {
         return 1;
     } else {
@@ -423,6 +437,18 @@
         if(title.length > 0) {
             socialGroupCell.titleLabel.text = title;
             socialGroupCell.checkButton.selected = isSelected;
+            
+            // 可见圈子展现埋点
+            if(![self.elementShowSet containsObject:model.socialGroupId]) {
+                [self.elementShowSet addObject:model.socialGroupId];
+                
+                NSMutableDictionary *params = @{}.mutableCopy;
+                params[UT_ELEMENT_TYPE] = @"select_like_publisher_neighborhood";
+                params[UT_PAGE_TYPE] = @"vote_publisher";
+                params[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+                params[@"group_id"] = model.socialGroupId;
+                TRACK_EVENT(@"element_show", params);
+            }
         }
         return socialGroupCell;
     }
@@ -471,7 +497,7 @@
         if(self.socialGroupList.count > 0) {
             [self.tableView reloadData];
         } else {
-            [self.emptyView showEmptyWithTip:@"您还没有关注圈子，快去关注吧" errorImage:nil showRetry:NO];
+            [self.emptyView showEmptyWithTip:@"您还没有关注圈子，快去关注吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
         }
     }];
 }

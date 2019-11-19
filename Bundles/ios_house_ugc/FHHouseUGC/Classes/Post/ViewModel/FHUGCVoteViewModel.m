@@ -20,6 +20,11 @@
 #import <WDDefines.h>
 #import "FHUGCVoteModel.h"
 #import "HMDTTMonitor.h"
+#import <TTReachability.h>
+#import "FHUserTracker.h"
+#import "BTDJSONHelper.h"
+#import "FHFeedUGCCellModel.h"
+#import "FHPostUGCViewController.h"
 
 #define OPTION_START_INDEX  2
 #define DATEPICKER_HEIGHT 200
@@ -346,13 +351,17 @@
 
 // MARK: FHUGCVotePublishBaseCellDelegate
 
+- (NSString *)validStringConvertWith:(NSString *)originString {
+    return [[originString stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+}
+
 - (void)voteTitleCell:(FHUGCVotePublishTitleCell *)titleCell didInputText:(NSString *)text {
-    self.model.voteTitle = text;
+    self.model.voteTitle = [self validStringConvertWith:text];
     [self checkIfEnablePublish];
 }
 
 - (void)descriptionCell:(FHUGCVotePublishDescriptionCell *)descriptionCell didInputText:(NSString *)text {
-    self.model.voteDescription = text;
+    self.model.voteDescription = [self validStringConvertWith:text];
     [self checkIfEnablePublish];
 }
 
@@ -361,7 +370,7 @@
     NSInteger optionStartIndex = OPTION_START_INDEX;
     NSUInteger index = MIN(MAX(indexPath.row - optionStartIndex, 0), self.model.options.count);
     if(index < self.model.options.count) {
-        self.model.options[index].content = text;
+        self.model.options[index].content = [self validStringConvertWith:text];
         [self checkIfEnablePublish];
     }
 }
@@ -419,6 +428,11 @@
     }];
     params[@"options"] = optionList;
     
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    
     WeakSelf;
     [FHHouseUGCAPI requestVotePublishWithParam:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
@@ -439,6 +453,9 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHVotePublishNotificationName object:nil userInfo:userInfo];
                 [self exitPage];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(0)} extra:nil];
+                
+                // 如何是在附近列表，发布投票完成后，跳转到关注页面
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil];
             }
             else {
                 [[ToastManager manager] showToast:@"发布投票失败!"];
@@ -456,23 +473,30 @@
     NSMutableArray<FHUGCVotePublishOption *> *options = [NSMutableArray arrayWithArray:self.model.options];
     [options addObject:[FHUGCVotePublishOption defaultOption]];
     
-    if(options.count > OPTION_COUNT_MAX) {
-        [[ToastManager manager] showToast:[NSString stringWithFormat:@"最多添加%@个选项", @(OPTION_COUNT_MAX)]];
-        return;
-    }
-
     if(options.count > OPTION_COUNT_MIN) {
         [options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
             option.isValid = YES;
         }];
         
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:OPTION_START_INDEX inSection:1], [NSIndexPath indexPathForRow: OPTION_START_INDEX + 1 inSection:1] ] withRowAnimation:UITableViewRowAnimationFade];
+        FHUGCVotePublishOptionCell *optionCell0 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:OPTION_START_INDEX inSection:1]];
+        [optionCell0 updateWithOption:options[0]];
+        
+        FHUGCVotePublishOptionCell *optionCell1 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow: OPTION_START_INDEX + 1 inSection:1]];
+        
+        [optionCell1 updateWithOption:options[1]];
     }
     
-    self.model.options = options;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] inSection:1];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    if(options.count <= OPTION_COUNT_MAX) {
+        self.model.options = options;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] inSection:1];
+        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        if(options.count == OPTION_COUNT_MAX) {
+            self.addOptionFooterView.alpha = 0;
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        } else {
+             [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        }
+    }
 }
 
 - (void)deleteOptionCell:(FHUGCVotePublishOptionCell *)optionCell {
@@ -497,24 +521,46 @@
                 [indexPaths addObject:indexPath];
             }
             
-            [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+            [indexPaths enumerateObjectsUsingBlock:^(NSIndexPath *  _Nonnull indexPath, NSUInteger idx, BOOL * _Nonnull stop) {
+                FHUGCVotePublishOptionCell *optionCell = [self.tableView cellForRowAtIndexPath:indexPath];
+                [optionCell updateWithOption:self.model.options[indexPath.row - optionStartIndex]];
+            }];
+        }
+        // 删除的Cell本身是当前键盘输入点，删除前转移焦点, 防止键盘消失引起抖动
+        if([optionCell.optionTextField isFirstResponder]) {
+            
+            NSIndexPath *nextResponderCellIndexPath = nil;
+            // 如果删除的不是最后一个Cell，焦点转移到下一个Cell， 是最后一个Cell，则焦点转移到上一个Cell
+            if(index == 0) {
+                nextResponderCellIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
+            } else if(index == options.count - 1) {
+                nextResponderCellIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
+            } else {
+                nextResponderCellIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
+            }
+            
+            FHUGCVotePublishOptionCell *nextResponderCell = [self.tableView cellForRowAtIndexPath:nextResponderCellIndexPath];
+            [nextResponderCell.optionTextField becomeFirstResponder];
         }
         
         [options removeObjectAtIndex:index];
         self.model.options = options;
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        if(self.model.options.count < OPTION_COUNT_MAX) {
+            self.addOptionFooterView.alpha = 1;
+        }
     }
 }
 
 - (void)gotoVoteVisibleScopePage {
+    
     NSMutableDictionary *dict = @{}.mutableCopy;
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    dict[TRACER_KEY] = traceParam;
-    WeakSelf;
     dict[@"isAllSelected"] = @(self.model.isAllSelected);
     dict[@"isPartialSelected"] = @(self.model.isPartialSelected);
     dict[@"visiableType"] = @(self.model.visibleType);
     dict[@"selectedSocialGroup"] = self.model.cityInfos;
+    WeakSelf;
     dict[@"resultBlock"] = ^(NSArray<FHUGCVotePublishCityInfo *> *cityInfos, BOOL isAllSelected, BOOL isPartialSelected) {
         StrongSelf;
 
@@ -525,6 +571,10 @@
         [self reloadTableView];
         [self checkIfEnablePublish];
     };
+    NSMutableDictionary *tracer = @{}.mutableCopy;
+    tracer[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM];
+    tracer[UT_PAGE_TYPE] = @"vote_publisher";
+    dict[TRACER_KEY] = tracer;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_vote_publish_visible_scope"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
@@ -564,6 +614,7 @@
     [self.viewController enablePublish: isEnablePublish];
 }
 
+
 - (void)dateCancelAction:(UIButton *)sender {
     [self.bottomPopView hide];
 }
@@ -573,5 +624,31 @@
     [self.tableView reloadRowsAtIndexPaths:@[datePickCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.bottomPopView hide];
     [self checkIfEnablePublish];
+}
+
+- (BOOL)isEditedVote {
+    
+    __block BOOL ret = NO;
+    
+    if(self.model.voteTitle.length > 0) {
+        ret = YES;
+    }
+    
+    if(self.model.voteDescription.length > 0) {
+        ret = YES;
+    }
+    
+    [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
+        if(option.content.length > 0) {
+            ret = YES;
+            *stop = YES;
+        }
+    }];
+    
+    if(self.model.isAllSelected || self.model.isPartialSelected) {
+        ret = YES;
+    }
+    
+    return ret;
 }
 @end

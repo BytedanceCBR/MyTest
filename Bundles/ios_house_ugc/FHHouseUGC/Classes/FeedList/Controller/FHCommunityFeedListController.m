@@ -330,9 +330,20 @@
         return;
     }
     [self gotoPostThreadVC];
+    
+    
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ELEMENT_TYPE] = @"feed_icon";
+    params[UT_PAGE_TYPE] = [self pageType];
+    TRACK_EVENT(@"click_options", params);
 }
 
 - (void)gotoVotePublish {
+    
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ELEMENT_TYPE] = @"vote_icon";
+    params[UT_PAGE_TYPE] = [self pageType];
+    TRACK_EVENT(@"click_options", params);
     
     if ([TTAccountManager isLogin]) {
         [self gotoVoteVC];
@@ -350,6 +361,15 @@
     }
 }
 
+- (NSString *)pageType {
+    NSString *page_type = UT_BE_NULL;
+    if (self.listType == FHCommunityFeedListTypeMyJoin) {
+        page_type = @"my_join_list";
+    } else  if (self.listType == FHCommunityFeedListTypeNearby) {
+        page_type = @"nearby_list";
+    }
+    return page_type;
+}
 - (void)gotoLogin:(FHUGCLoginFrom)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *page_type = @"nearby_list";
@@ -386,7 +406,11 @@
 // 跳转到投票发布器
 - (void)gotoVoteVC {
     NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{}];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[UT_ENTER_FROM] = [self pageType];
+    dict[TRACER_KEY] = tracerDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
 }
 
