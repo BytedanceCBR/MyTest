@@ -619,6 +619,8 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *userDigg;
 @property (nonatomic, copy , nullable) NSString *distance;
 @property (nonatomic, copy , nullable) NSString *distanceInfo;
+// 是否被删除
+@property (nonatomic, copy)     NSString       *status;
 
 @end
 

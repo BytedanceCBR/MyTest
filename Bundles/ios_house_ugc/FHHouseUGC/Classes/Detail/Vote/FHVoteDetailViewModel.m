@@ -313,7 +313,14 @@
                         if (jsonData) {
                             Class cls = [FHFeedContentRawDataModel class];
                             FHFeedContentRawDataModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedContentRawDataModel class] error:&jsonParseError];
-                            if (model && model.voteInfo) {
+                            if (model && [model.status isEqualToString:@"0"]) {
+                                // 被删除
+                                error = [NSError errorWithDomain:NSURLErrorDomain code:-10001 userInfo:nil];
+                                [self.detailController remove_comment_vc];
+                                self.tableView.hidden = YES;
+                                // 显示空页面
+                                [self.detailController.emptyView showEmptyWithTip:@"该内容已被删除" errorImageName:kFHErrorMaskNoListDataImageName showRetry:NO];
+                            } else if (model && model.voteInfo) {
                                 // 有投票数据
                                 // social_group data
                                 FHUGCScialGroupDataModel * groupData = nil;
@@ -327,11 +334,8 @@
                                 [self processWithData:model socialGroup:groupData];
                             } else {
                                 // 暂定被删除
-                                error = [NSError errorWithDomain:NSURLErrorDomain code:-10001 userInfo:nil];
-                                [self.detailController remove_comment_vc];
+                                error = [NSError errorWithDomain:NSURLErrorDomain code:-3 userInfo:nil];
                                 self.tableView.hidden = YES;
-                                // 显示空页面
-                                [self.detailController.emptyView showEmptyWithTip:@"该内容已被删除" errorImageName:kFHErrorMaskNoListDataImageName showRetry:NO];
                             }
                         } else {
                              //不该出现这种情况
