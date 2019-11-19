@@ -498,7 +498,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         [self scrollViewPanDidChangeWithNewValue:newState];
     } else if (context == TTHorizontalPagingViewOffsetContext) {
         if (self.isSwitching || object != self.currentContentView || self.horizontalCollectionView.isDragging) return;
-        self.currentContentView.contentSize = CGSizeMake(0, self.currentContentView.contentSize.height);
+//        self.currentContentView.contentSize = CGSizeMake(0, self.currentContentView.contentSize.height);
         CGFloat oldOffsetY = [change[NSKeyValueChangeOldKey] CGPointValue].y;
         CGFloat newOffsetY = [change[NSKeyValueChangeNewKey] CGPointValue].y;
         [self scrollViewContentOffsetDidChangeWithOldValue:oldOffsetY newValue:newOffsetY headerDisplayHeight:self.headerShowHeight];

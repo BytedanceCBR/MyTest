@@ -12,6 +12,7 @@
 #import "TTVFeedListItem.h"
 #import <TTVFeedCellAction.h>
 #import <TTRichSpanText+Comment.h>
+#import "YYText.h"
 
 @implementation FHUGCCellHelper
 
@@ -429,10 +430,25 @@
         label.numberOfLines = numberOfLines;
         label.font = [UIFont themeFontRegular:16];
         //设置字间距0.4
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:model.voteInfo.title attributes:@{NSKernAttributeName:@(0.4),NSForegroundColorAttributeName : [UIColor themeGray1],NSFontAttributeName : [UIFont themeFontRegular:16]}];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:model.voteInfo.title attributes:@{NSForegroundColorAttributeName : [UIColor themeGray1],NSFontAttributeName : [UIFont themeFontRegular:16]}];
         label.attributedText = attributedString;
         
+        YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:CGSizeMake(width, MAXFLOAT) text:attributedString];
+        CGFloat height= layout.textBoundingSize.height;
+        // 下面这种方法对系统表情计算高度兼容性不好，用YYTextLayout吧
         CGSize size = [label sizeThatFits:CGSizeMake(width, MAXFLOAT)];
+        // 好傻的逻辑 为了兼容 系统表情 展示
+        if (numberOfLines == 2) {
+            if (height >= 45) {
+                // 说明是两行
+                size.height = 53;// 两行
+            } else {
+                size.height = height;
+            }
+        } else {
+            // 全部展示
+            size.height = height;
+        }
         model.voteInfo.contentAStr = attributedString;
         model.voteInfo.contentHeight = size.height;
     }else{

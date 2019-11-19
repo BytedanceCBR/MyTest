@@ -450,8 +450,13 @@
         NSInteger diggCount = self.digg_count;
         NSInteger groupType = [userInfo[@"group_type"] integerValue];
         NSString *groupId = userInfo[@"group_id"];
-        
-        if(groupType == FHDetailDiggTypeTHREAD && [groupId isEqualToString:self.groupModel.groupID]){
+        FHDetailDiggType diggType = FHDetailDiggTypeTHREAD;
+        if (self.postType == FHUGCPostTypePost) {
+            diggType = FHDetailDiggTypeTHREAD;
+        } else if (self.postType == FHUGCPostTypeVote) {
+            diggType = FHDetailDiggTypeVote;
+        }
+        if(groupType == diggType && [groupId isEqualToString:self.groupModel.groupID]){
             // 刷新UI
             if(user_digg == 0){
                 //取消点赞
