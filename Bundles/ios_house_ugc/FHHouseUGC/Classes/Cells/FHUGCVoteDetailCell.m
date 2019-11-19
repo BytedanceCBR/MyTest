@@ -319,9 +319,9 @@
         voteInfo.deadLineContent = @"";
         if (!voteInfo.hasReloadForVoteExpired) {
             // 过期也要发送通知
-            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-            [userInfo setObject:voteInfo forKey:@"vote_info"];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
+//            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+//            [userInfo setObject:voteInfo forKey:@"vote_info"];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
         }
     } else {
         NSInteger val = deadline - intver;
