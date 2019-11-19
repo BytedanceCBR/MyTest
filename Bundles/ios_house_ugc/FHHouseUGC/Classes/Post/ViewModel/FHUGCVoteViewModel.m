@@ -40,7 +40,6 @@
 @property (nonatomic, strong) FHUGCVoteBottomPopView *bottomPopView;
 @property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) UIView *dateSelectView;
-@property (nonatomic, assign) BOOL cityElementShow;
 @end
 
 @implementation FHUGCVoteViewModel
@@ -291,17 +290,6 @@
     
     if(indexPath.section == 0) {
         if(indexPath.row == 0) {
-            
-            if(!self.cityElementShow) {
-                self.cityElementShow = YES;
-                NSMutableDictionary *params = @{}.mutableCopy;
-                params[UT_ELEMENT_TYPE] = @"select_like_publisher_neighborhood";
-                params[UT_PAGE_TYPE] = @"vote_publisher";
-                params[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
-                //            params[@"group_id"] = @"";
-                TRACK_EVENT(@"element_show", params);
-            }
-            
             cell = [tableView dequeueReusableCellWithIdentifier:[FHUGCVotePublishCityCell reusedIdentifier] forIndexPath:indexPath];
             NSInteger count = self.model.cityInfos.count;
             FHUGCVotePublishCityCell* cityCell = (FHUGCVotePublishCityCell *)cell;
@@ -447,12 +435,6 @@
         if(error) {
             [[ToastManager manager] showToast:@"发布投票失败!"];
             [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(1)} extra:nil];
-            
-            NSMutableDictionary *params = @{}.mutableCopy;
-            params[UT_PAGE_TYPE] = @"vote_publisher";
-            params[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
-            params[@"publish_type"] = @"publish_failed";
-            TRACK_EVENT(@"feed_publish_failed", params);
             return;
         }
         if([model isKindOfClass:[FHUGCVoteModel class]]) {
@@ -466,54 +448,10 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHVotePublishNotificationName object:nil userInfo:userInfo];
                 [self exitPage];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(0)} extra:nil];
-                
-    
-                // 模型转换
-                NSDictionary *dic = [voteModel.data JSONValue];
-                FHFeedUGCCellModel *cellModel = nil;
-                if (dic && [dic isKindOfClass:[NSDictionary class]]) {
-                    NSDictionary * rawDataDic = dic[@"raw_data"];
-                    NSError *jsonParseError;
-                    if (rawDataDic && [rawDataDic isKindOfClass:[NSDictionary class]]) {
-                        FHFeedContentRawDataModel *model = [[FHFeedContentRawDataModel alloc] initWithDictionary:rawDataDic error:&jsonParseError];
-                        if (model && model.voteInfo) {
-                            FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
-                            ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeUGCVoteInfo];
-                            ugcContent.title = model.title;
-                            ugcContent.isStick = model.isStick;
-                            ugcContent.stickStyle = model.stickStyle;
-                            ugcContent.diggCount = model.diggCount;
-                            ugcContent.commentCount = model.commentCount;
-                            ugcContent.userDigg = model.userDigg;
-                            ugcContent.groupId = model.groupId;
-                            ugcContent.logPb = model.logPb;
-                            ugcContent.community = model.community;
-                            ugcContent.rawData = model;
-                            // FHFeedUGCCellModel
-                            cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
-                            cellModel.isFromDetail = NO;
-                            cellModel.tableView = self.tableView;
-                            
-                            // 发布成功埋点
-                            NSMutableDictionary *params = @{}.mutableCopy;
-                            params[UT_PAGE_TYPE] = @"vote_publisher";
-                            params[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
-                            params[@"publish_type"] = @"publish_success";
-                            params[@"group_id"] = ugcContent.groupId;
-                            TRACK_EVENT(@"feed_publish_success", params);
-                        }
-                    }
-                }
             }
             else {
                 [[ToastManager manager] showToast:@"发布投票失败!"];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(2)} extra:nil];
-                
-                NSMutableDictionary *params = @{}.mutableCopy;
-                params[UT_PAGE_TYPE] = @"vote_publisher";
-                params[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
-                params[@"publish_type"] = @"publish_failed";
-                TRACK_EVENT(@"feed_publish_failed", params);
             }
         }
     }];
@@ -540,15 +478,16 @@
         [optionCell1 updateWithOption:options[1]];
     }
     
-    if(options.count > OPTION_COUNT_MAX) {
-        self.addOptionFooterView.alpha = 0;
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] - 1 inSection:1];
-        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-    } else {
+    if(options.count <= OPTION_COUNT_MAX) {
         self.model.options = options;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] inSection:1];
         [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        if(options.count == OPTION_COUNT_MAX) {
+            self.addOptionFooterView.alpha = 0;
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        } else {
+             [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        }
     }
 }
 
@@ -624,16 +563,13 @@
         [self reloadTableView];
         [self checkIfEnablePublish];
     };
+    NSMutableDictionary *tracer = @{}.mutableCopy;
+    tracer[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM];
+    tracer[UT_PAGE_TYPE] = @"vote_publisher";
+    dict[TRACER_KEY] = tracer;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_vote_publish_visible_scope"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    
-    // 点击选择想要发布的小区埋点
-    NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_PAGE_TYPE] = @"vote_publisher";
-    params[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
-    params[@"click_position"] = @"select_like_publisher_neighborhood";
-    TRACK_EVENT(@"click_like_publisher_neighborhood", params);
 }
 
 - (void)gotoVoteTypeSelectPage {
