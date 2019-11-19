@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithTableView:(UITableView *)tableView ViewController:(FHUGCVotePublishViewController *)viewController;
 - (void)publish;
 - (void)reloadTableView;
+- (BOOL)isEditedVote;
 @end
 
 NS_ASSUME_NONNULL_END

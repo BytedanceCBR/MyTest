@@ -20,6 +20,10 @@
 #import <WDDefines.h>
 #import "FHUGCVoteModel.h"
 #import "HMDTTMonitor.h"
+#import <TTReachability.h>
+#import "FHUserTracker.h"
+#import "BTDJSONHelper.h"
+#import "FHFeedUGCCellModel.h"
 
 #define OPTION_START_INDEX  2
 #define DATEPICKER_HEIGHT 200
@@ -36,6 +40,7 @@
 @property (nonatomic, strong) FHUGCVoteBottomPopView *bottomPopView;
 @property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) UIView *dateSelectView;
+@property (nonatomic, assign) BOOL cityElementShow;
 @end
 
 @implementation FHUGCVoteViewModel
@@ -286,6 +291,17 @@
     
     if(indexPath.section == 0) {
         if(indexPath.row == 0) {
+            
+            if(!self.cityElementShow) {
+                self.cityElementShow = YES;
+                NSMutableDictionary *params = @{}.mutableCopy;
+                params[UT_ELEMENT_TYPE] = @"select_like_publisher_neighborhood";
+                params[UT_PAGE_TYPE] = @"vote_publisher";
+                params[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+                //            params[@"group_id"] = @"";
+                TRACK_EVENT(@"element_show", params);
+            }
+            
             cell = [tableView dequeueReusableCellWithIdentifier:[FHUGCVotePublishCityCell reusedIdentifier] forIndexPath:indexPath];
             NSInteger count = self.model.cityInfos.count;
             FHUGCVotePublishCityCell* cityCell = (FHUGCVotePublishCityCell *)cell;
@@ -419,6 +435,11 @@
     }];
     params[@"options"] = optionList;
     
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    
     WeakSelf;
     [FHHouseUGCAPI requestVotePublishWithParam:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
@@ -426,6 +447,12 @@
         if(error) {
             [[ToastManager manager] showToast:@"发布投票失败!"];
             [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(1)} extra:nil];
+            
+            NSMutableDictionary *params = @{}.mutableCopy;
+            params[UT_PAGE_TYPE] = @"vote_publisher";
+            params[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+            params[@"publish_type"] = @"publish_failed";
+            TRACK_EVENT(@"feed_publish_failed", params);
             return;
         }
         if([model isKindOfClass:[FHUGCVoteModel class]]) {
@@ -439,10 +466,54 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHVotePublishNotificationName object:nil userInfo:userInfo];
                 [self exitPage];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(0)} extra:nil];
+                
+    
+                // 模型转换
+                NSDictionary *dic = [voteModel.data JSONValue];
+                FHFeedUGCCellModel *cellModel = nil;
+                if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary * rawDataDic = dic[@"raw_data"];
+                    NSError *jsonParseError;
+                    if (rawDataDic && [rawDataDic isKindOfClass:[NSDictionary class]]) {
+                        FHFeedContentRawDataModel *model = [[FHFeedContentRawDataModel alloc] initWithDictionary:rawDataDic error:&jsonParseError];
+                        if (model && model.voteInfo) {
+                            FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
+                            ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeUGCVoteInfo];
+                            ugcContent.title = model.title;
+                            ugcContent.isStick = model.isStick;
+                            ugcContent.stickStyle = model.stickStyle;
+                            ugcContent.diggCount = model.diggCount;
+                            ugcContent.commentCount = model.commentCount;
+                            ugcContent.userDigg = model.userDigg;
+                            ugcContent.groupId = model.groupId;
+                            ugcContent.logPb = model.logPb;
+                            ugcContent.community = model.community;
+                            ugcContent.rawData = model;
+                            // FHFeedUGCCellModel
+                            cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+                            cellModel.isFromDetail = NO;
+                            cellModel.tableView = self.tableView;
+                            
+                            // 发布成功埋点
+                            NSMutableDictionary *params = @{}.mutableCopy;
+                            params[UT_PAGE_TYPE] = @"vote_publisher";
+                            params[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+                            params[@"publish_type"] = @"publish_success";
+                            params[@"group_id"] = ugcContent.groupId;
+                            TRACK_EVENT(@"feed_publish_success", params);
+                        }
+                    }
+                }
             }
             else {
                 [[ToastManager manager] showToast:@"发布投票失败!"];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(2)} extra:nil];
+                
+                NSMutableDictionary *params = @{}.mutableCopy;
+                params[UT_PAGE_TYPE] = @"vote_publisher";
+                params[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+                params[@"publish_type"] = @"publish_failed";
+                TRACK_EVENT(@"feed_publish_failed", params);
             }
         }
     }];
@@ -456,23 +527,29 @@
     NSMutableArray<FHUGCVotePublishOption *> *options = [NSMutableArray arrayWithArray:self.model.options];
     [options addObject:[FHUGCVotePublishOption defaultOption]];
     
-    if(options.count > OPTION_COUNT_MAX) {
-        [[ToastManager manager] showToast:[NSString stringWithFormat:@"最多添加%@个选项", @(OPTION_COUNT_MAX)]];
-        return;
-    }
-
     if(options.count > OPTION_COUNT_MIN) {
         [options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
             option.isValid = YES;
         }];
         
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:OPTION_START_INDEX inSection:1], [NSIndexPath indexPathForRow: OPTION_START_INDEX + 1 inSection:1] ] withRowAnimation:UITableViewRowAnimationFade];
+        FHUGCVotePublishOptionCell *optionCell0 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:OPTION_START_INDEX inSection:1]];
+        [optionCell0 updateWithOption:options[0]];
+        
+        FHUGCVotePublishOptionCell *optionCell1 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow: OPTION_START_INDEX + 1 inSection:1]];
+        
+        [optionCell1 updateWithOption:options[1]];
     }
     
-    self.model.options = options;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] inSection:1];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    if(options.count > OPTION_COUNT_MAX) {
+        self.addOptionFooterView.alpha = 0;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] - 1 inSection:1];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    } else {
+        self.model.options = options;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] inSection:1];
+        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
 }
 
 - (void)deleteOptionCell:(FHUGCVotePublishOptionCell *)optionCell {
@@ -497,24 +574,46 @@
                 [indexPaths addObject:indexPath];
             }
             
-            [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+            [indexPaths enumerateObjectsUsingBlock:^(NSIndexPath *  _Nonnull indexPath, NSUInteger idx, BOOL * _Nonnull stop) {
+                FHUGCVotePublishOptionCell *optionCell = [self.tableView cellForRowAtIndexPath:indexPath];
+                [optionCell updateWithOption:self.model.options[indexPath.row - optionStartIndex]];
+            }];
+        }
+        // 删除的Cell本身是当前键盘输入点，删除前转移焦点, 防止键盘消失引起抖动
+        if([optionCell.optionTextField isFirstResponder]) {
+            
+            NSIndexPath *nextResponderCellIndexPath = nil;
+            // 如果删除的不是最后一个Cell，焦点转移到下一个Cell， 是最后一个Cell，则焦点转移到上一个Cell
+            if(index == 0) {
+                nextResponderCellIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
+            } else if(index == options.count - 1) {
+                nextResponderCellIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
+            } else {
+                nextResponderCellIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
+            }
+            
+            FHUGCVotePublishOptionCell *nextResponderCell = [self.tableView cellForRowAtIndexPath:nextResponderCellIndexPath];
+            [nextResponderCell.optionTextField becomeFirstResponder];
         }
         
         [options removeObjectAtIndex:index];
         self.model.options = options;
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        if(self.model.options.count < OPTION_COUNT_MAX) {
+            self.addOptionFooterView.alpha = 1;
+        }
     }
 }
 
 - (void)gotoVoteVisibleScopePage {
+    
     NSMutableDictionary *dict = @{}.mutableCopy;
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    dict[TRACER_KEY] = traceParam;
-    WeakSelf;
     dict[@"isAllSelected"] = @(self.model.isAllSelected);
     dict[@"isPartialSelected"] = @(self.model.isPartialSelected);
     dict[@"visiableType"] = @(self.model.visibleType);
     dict[@"selectedSocialGroup"] = self.model.cityInfos;
+    WeakSelf;
     dict[@"resultBlock"] = ^(NSArray<FHUGCVotePublishCityInfo *> *cityInfos, BOOL isAllSelected, BOOL isPartialSelected) {
         StrongSelf;
 
@@ -528,6 +627,13 @@
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_vote_publish_visible_scope"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    
+    // 点击选择想要发布的小区埋点
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_PAGE_TYPE] = @"vote_publisher";
+    params[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+    params[@"click_position"] = @"select_like_publisher_neighborhood";
+    TRACK_EVENT(@"click_like_publisher_neighborhood", params);
 }
 
 - (void)gotoVoteTypeSelectPage {
@@ -573,5 +679,31 @@
     [self.tableView reloadRowsAtIndexPaths:@[datePickCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.bottomPopView hide];
     [self checkIfEnablePublish];
+}
+
+- (BOOL)isEditedVote {
+    
+    __block BOOL ret = NO;
+    
+    if(self.model.voteTitle.length > 0) {
+        ret = YES;
+    }
+    
+    if(self.model.voteDescription.length > 0) {
+        ret = YES;
+    }
+    
+    [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
+        if(option.content.length > 0) {
+            ret = YES;
+            *stop = YES;
+        }
+    }];
+    
+    if(self.model.isAllSelected || self.model.isPartialSelected) {
+        ret = YES;
+    }
+    
+    return ret;
 }
 @end
