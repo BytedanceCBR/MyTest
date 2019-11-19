@@ -120,6 +120,7 @@
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30 * 2, 0)];
     _contentLabel.numberOfLines = 0;
+    _contentLabel.font = [UIFont themeFontRegular:16];
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
     NSDictionary *linkAttributes = @{
