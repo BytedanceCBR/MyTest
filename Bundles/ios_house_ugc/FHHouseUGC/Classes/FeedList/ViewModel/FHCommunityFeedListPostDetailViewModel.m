@@ -738,7 +738,7 @@
         dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
         NSMutableDictionary *traceParam = @{}.mutableCopy;
         traceParam[@"enter_from"] = @"community_group_detail";
-        traceParam[@"enter_type"] = @"click";
+        traceParam[@"enter_type"] = enterType;
         traceParam[@"rank"] = cellModel.tracerDic[@"rank"] ?: @"be_null";
         traceParam[@"log_pb"] = cellModel.logPb;
         dict[TRACER_KEY] = traceParam;

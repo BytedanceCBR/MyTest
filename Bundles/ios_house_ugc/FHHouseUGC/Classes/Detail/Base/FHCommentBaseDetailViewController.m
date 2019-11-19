@@ -75,8 +75,30 @@
         if(paramObj.allParams[@"begin_show_comment"]) {
             self.beginShowComment = [paramObj.allParams[@"begin_show_comment"] boolValue];
         }
+        NSString *report_params = paramObj.allParams[@"report_params"];
+        if ([report_params isKindOfClass:[NSString class]]) {
+            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+            if (report_params_dic) {
+                [self.tracerDict addEntriesFromDictionary:report_params_dic];
+            }
+        }
     }
     return self;
+}
+
+- (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
+    NSMutableDictionary *retDic = nil;
+    if (jsonString.length > 0) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        retDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if ([retDic isKindOfClass:[NSDictionary class]] && error == nil) {
+            return retDic;
+        } else {
+            return nil;
+        }
+    }
+    return retDic;
 }
 
 - (void)viewDidLoad {
