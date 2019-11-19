@@ -596,6 +596,15 @@
 
 @implementation  FHSearchHouseItemModel
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.topMargin = 10;
+    }
+    return self;
+}
+
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{

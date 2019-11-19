@@ -763,6 +763,7 @@
     }else if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
 
         FHSearchHouseItemModel *commonModel = (FHSearchHouseItemModel *)data;
+        [self refreshTopMargin:commonModel.topMargin];
         FHHouseType houseType = commonModel.houseType.integerValue;
         self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
         self.mainTitleLabel.text = commonModel.displayTitle;
@@ -867,7 +868,7 @@
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
         isLastCell = model.isLastCell;
         CGFloat reasonHeight = [model showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0;
-        return (isLastCell ? 95 : 75)+reasonHeight;
+        return (isLastCell ? 95 : 75) + reasonHeight + (model.topMargin - 10);
     }
 }
 
