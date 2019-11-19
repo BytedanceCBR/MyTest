@@ -68,8 +68,15 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 }
 
 - (void)loadCurrentLocationData {
-    self.currentReGeocode = [self.locationCache objectForKey:@"fh_currentReGeocode"];
-    self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
+    
+    if (self.isHaveLocationAuthorization) {
+        self.currentReGeocode = [self.locationCache objectForKey:@"fh_currentReGeocode"];
+        self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
+    }else
+    {
+        [self cleanLocationData];
+    }
+
     self.isLocationSuccess = [(NSNumber *)[self.locationCache objectForKey:@"fh_isLocationSuccess"] boolValue];
     self.retryConfigCount = 3;
     self.isShowSwitch = YES;
@@ -84,6 +91,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     if (self.currentLocaton) {
         [self.locationCache setObject:self.currentLocaton forKey:@"fh_currentLocaton"];
     }
+}
+
+- (void)cleanLocationData{
+    [self.locationCache removeObjectForKey:@"fh_currentLocaton"];
+    [self.locationCache removeObjectForKey:@"fh_currentReGeocode"];
 }
 
 - (void)setIsLocationSuccess:(BOOL)isLocationSuccess {
