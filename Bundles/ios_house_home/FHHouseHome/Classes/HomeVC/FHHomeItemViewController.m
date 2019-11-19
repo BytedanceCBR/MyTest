@@ -532,7 +532,10 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
             return [self getHeightShowNoData];
         }
         if (self.houseType == FHHouseTypeNewHouse) {
-            return [FHHouseBaseNewHouseCell heightForData:nil];
+            if (indexPath.row < self.houseDataItemsModel.count) {
+                JSONModel *model = self.houseDataItemsModel[indexPath.row];
+                return [FHHouseBaseNewHouseCell heightForData:model];
+            }
         }
         return 75;
     }

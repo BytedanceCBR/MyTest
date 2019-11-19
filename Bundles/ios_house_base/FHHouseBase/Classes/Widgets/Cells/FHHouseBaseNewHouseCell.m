@@ -23,13 +23,14 @@
 #import "FHHouseDislikeView.h"
 #import <Lottie/LOTAnimationView.h>
 #import <UIColor+Theme.h>
+#import <FHSearchHouseModel.h>
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
 #define MAIN_IMG_WIDTH      106
 #define MAIN_IMG_HEIGHT     80
 #define MAIN_IMG_BACK_WIDTH  117
-#define MAIN_IMG_BACK_HEIGHT  92
+#define MAIN_IMG_BACK_HEIGHT  89
 #define MAIN_TAG_BG_WIDTH   48
 #define MAIN_TAG_BG_HEIGHT  16
 #define MAIN_TAG_WIDTH      46
@@ -112,7 +113,13 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 130;
+    if ([data isKindOfClass:[JSONModel class]]) {
+        FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)data;
+        if (itemModel.advantageDescription.text) {
+            return 130;
+        }
+    }
+    return 118;
 }
 
 - (void)awakeFromNib {
@@ -344,7 +351,7 @@
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(MAIN_IIMAGE_TOP - 6);
+        layout.top = YGPointValue(MAIN_IIMAGE_TOP - 1);
         layout.left = YGPointValue(-4.5);
         layout.width = YGPointValue(MAIN_IMG_BACK_WIDTH);
         layout.height = YGPointValue(MAIN_IMG_BACK_HEIGHT);
@@ -517,9 +524,7 @@
     
     
     self.bottomRecommendViewBack = [[UIView alloc] init];
-    self.bottomRecommendViewBack.layer.borderColor = [UIColor themeGray5].CGColor;
-    self.bottomRecommendViewBack.layer.borderWidth = 1;
-    //    self.bottomRecommendViewBack.layer.masksToBounds = YES;
+    self.bottomRecommendViewBack.layer.borderWidth = 0.5;
     self.bottomRecommendViewBack.layer.cornerRadius = 2;
     [self.bottomRecommendView addSubview:self.bottomRecommendViewBack];
     [self.bottomRecommendViewBack configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -617,6 +622,10 @@
         if (commonModel.advantageDescription.textColor) {
             self.bottomRecommendLabel.textColor = [UIColor colorWithHexStr:commonModel.advantageDescription.textColor];
         }
+        
+        if (commonModel.advantageDescription.borderColor) {
+            self.bottomRecommendViewBack.layer.borderColor = [UIColor colorWithHexStr:commonModel.advantageDescription.borderColor].CGColor;
+        }
     }else
     {
         self.bottomRecommendLabel.hidden = YES;
@@ -677,6 +686,10 @@
         self.bottomRecommendLabel.text = commonModel.advantageDescription.text;
         if (commonModel.advantageDescription.textColor) {
             self.bottomRecommendLabel.textColor = [UIColor colorWithHexStr:commonModel.advantageDescription.textColor];
+        }
+        
+        if (commonModel.advantageDescription.borderColor) {
+            self.bottomRecommendViewBack.layer.borderColor = [UIColor colorWithHexStr:commonModel.advantageDescription.borderColor].CGColor;
         }
     }else
     {
