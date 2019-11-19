@@ -24,6 +24,7 @@
 #import "FHUserTracker.h"
 #import "BTDJSONHelper.h"
 #import "FHFeedUGCCellModel.h"
+#import "FHPostUGCViewController.h"
 
 #define OPTION_START_INDEX  2
 #define DATEPICKER_HEIGHT 200
@@ -452,6 +453,9 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHVotePublishNotificationName object:nil userInfo:userInfo];
                 [self exitPage];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(0)} extra:nil];
+                
+                // 如何是在附近列表，发布投票完成后，跳转到关注页面
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil];
             }
             else {
                 [[ToastManager manager] showToast:@"发布投票失败!"];
