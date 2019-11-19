@@ -36,6 +36,7 @@
 @interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @property(nonatomic, strong) FHErrorView *errorView;
+@property(nonatomic, assign) NSInteger retryCount;
 
 @end
 
@@ -258,6 +259,7 @@
     
     if(isFirst){
         [self.viewController startLoading];
+        self.retryCount = 0;
     }
     
     __weak typeof(self) wself = self;
@@ -360,6 +362,13 @@
             }
             
             wself.viewController.hasValidateData = wself.dataList.count > 0;
+            
+            //第一次拉取数据过少时，在多拉一次loadmore
+            if(self.dataList.count > 0 && self.dataList.count < 5 && self.tableView.hasMore && self.retryCount < 1){
+                self.retryCount += 1;
+                [self requestData:NO first:NO];
+                return;
+            }
         
             [wself reloadTableViewData];
             
@@ -411,6 +420,7 @@
         self.tableView.backgroundColor = [UIColor whiteColor];
         [self.tableView reloadData];
     }
+    self.retryCount = 0;
 }
 
 - (void)showCustomErrorView:(FHEmptyMaskViewType)type {
