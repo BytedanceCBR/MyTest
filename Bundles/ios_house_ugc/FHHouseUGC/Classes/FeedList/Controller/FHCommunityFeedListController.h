@@ -65,9 +65,13 @@ NS_ASSUME_NONNULL_BEGIN
 //当接口返回空数据的时候是否显示空态页，默认为YES
 @property(nonatomic, assign) BOOL showErrorView;
 //空态页具体顶部offset
+
+//圈子详情页使用
 @property (nonatomic, assign) CGFloat errorViewTopOffset;
 @property (nonatomic, assign) CGFloat errorViewHeight;
 @property (nonatomic, assign) BOOL notLoadDateWhenEmpty;
+@property (nonatomic, assign) BOOL segmentViewHeight;
+@property(nonatomic, copy) void(^beforeInsertPostBlock)(void);
 //圈子信息
 //@property(nonatomic, strong) FHUGCScialGroupDataModel *scialGroupData;
 

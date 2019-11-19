@@ -187,21 +187,31 @@
                     *stop = YES;
                 }
             }];
-            // 插入在置顶贴的下方
-            [self.dataList insertObject:cellModel atIndex:index];
-            [self reloadTableViewData];
-            [self.tableView layoutIfNeeded];
-            self.needRefreshCell = NO;
-            // JOKER: 发贴成功插入贴子后，滚动使露出
-            if(index == 0) {
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-//                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
-            } else {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
-                rect.origin.y -= [TTDeviceHelper isIPhoneXDevice] ? 88 : 64; // 白色导航条的高度
-                [self.tableView setContentOffset:rect.origin animated:YES];
+            
+            if(self.viewController.beforeInsertPostBlock){
+                self.viewController.beforeInsertPostBlock();
             }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                // 插入在置顶贴的下方
+                [self.dataList insertObject:cellModel atIndex:index];
+                [self reloadTableViewData];
+                [self.tableView layoutIfNeeded];
+                self.needRefreshCell = NO;
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            });
+            
+//            // JOKER: 发贴成功插入贴子后，滚动使露出
+//            if(index == 0) {
+//                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+////                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+//            } else {
+//                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+////                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+////                CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+////                rect.origin.y -= ([TTDeviceHelper isIPhoneXDevice] ? 88 : 64); // 白色导航条的高度
+////                rect.origin.y += self.viewController.segmentViewHeight;
+////                [self.tableView setContentOffset:rect.origin animated:YES];
+//            }
         }
     });
 }
@@ -369,12 +379,12 @@
 
 - (void)reloadTableViewData {
     if(self.dataList.count > 0){
-        [self.tableView reloadData];
         [self updateTableViewWithMoreData:self.tableView.hasMore];
         self.tableView.backgroundColor = [UIColor themeGray7];
         
         CGFloat height = [self getVisibleHeight:5];
         if(height < self.viewController.errorViewHeight && height > 0 && self.viewController.errorViewHeight > 0){
+            [self.tableView reloadData];
             CGFloat refreshFooterBottomHeight = self.tableView.mj_footer.height;
             if ([TTDeviceHelper isIPhoneXSeries]) {
                 refreshFooterBottomHeight += 34;

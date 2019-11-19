@@ -107,9 +107,26 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
     // 加精或取消加精成功
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
+    // 发投票成功
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postVoteSuccess:) name:@"kFHVotePublishNotificationName" object:nil];
 }
 
 - (void)postGoodSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *social_group_ids = userInfo[@"social_group_ids"];
+        
+        if(social_group_ids.length > 0 && [social_group_ids containsString:self.viewController.communityId]){
+            //多于1个tab的时候
+            if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
+                FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
+                feedVC.needReloadData = YES;
+            }
+        }
+    }
+}
+
+- (void)postVoteSuccess:(NSNotification *)noti {
     if (noti && noti.userInfo) {
         NSDictionary *userInfo = noti.userInfo;
         FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
@@ -126,11 +143,11 @@
 
 // 发帖成功通知
 - (void)postThreadSuccess:(NSNotification *)noti {
-    //如果是多tab，并且当前不在全部tab，这个时候要先切tab
-    if(self.selectedIndex != 0){
-        self.isFirstEnter = YES;
-        self.viewController.segmentView.selectedIndex = 0;
-    }
+//    //如果是多tab，并且当前不在全部tab，这个时候要先切tab
+//    if(self.selectedIndex != 0){
+//        self.isFirstEnter = YES;
+//        self.viewController.segmentView.selectedIndex = 0;
+//    }
     
     if (noti) {
         NSString *groupId = noti.userInfo[@"social_group_id"];
@@ -418,6 +435,7 @@
     feedListController.forumId = self.viewController.communityId;
     feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
+    feedListController.segmentViewHeight = kSegmentViewHeight;
     //错误页高度
     CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
     if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1){
@@ -427,6 +445,14 @@
     feedListController.notLoadDateWhenEmpty = YES;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
+    feedListController.beforeInsertPostBlock = ^{
+        //如果是多tab，并且当前不在全部tab，这个时候要先切tab
+        if(wself.selectedIndex != 0){
+            wself.isFirstEnter = YES;
+            wself.viewController.segmentView.selectedIndex = 0;
+        }
+    };
+    
     [self.subVCs addObject:feedListController];
 }
 
@@ -1060,7 +1086,7 @@
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"enter_type"] =  @"click";
     params[@"click_position"] = position;
-    [FHUserTracker writeEvent:@"community_publisher_popup_click" params:params];
+    [FHUserTracker writeEvent:@"click_options" params:params];
 }
 
 // 帐号切换
