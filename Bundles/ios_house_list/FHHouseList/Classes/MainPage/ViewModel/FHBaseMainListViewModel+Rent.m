@@ -22,11 +22,16 @@
 {
     NSInteger offset = 0;
     if (!isHead) {
-        offset = self.currentRentDataModel.offset;
-//        offset = self.houseList.count;
+        if ([self.houseDataModel isKindOfClass:[FHListSearchHouseDataModel class]]) {
+            FHListSearchHouseDataModel *model = (FHListSearchHouseDataModel *)self.houseDataModel;
+            offset = model.offset;
+        }else if ([self.houseDataModel isKindOfClass:[FHHouseRentDataModel class]]) {
+            FHHouseRentDataModel *model = (FHHouseRentDataModel *)self.houseDataModel;
+            offset = model.offset;
+        }
     }
     NSDictionary *params = @{CHANNEL_ID:CHANNEL_ID_SEARCH_RENT_WITH_BANNER};
-    return   [FHMainApi searchRent:query params:params offset:offset searchId:self.searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error) {
+    return [FHMainApi searchRent:query params:params offset:offset searchId:self.searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error) {
         if (completion) {
             completion(model,error);
         }

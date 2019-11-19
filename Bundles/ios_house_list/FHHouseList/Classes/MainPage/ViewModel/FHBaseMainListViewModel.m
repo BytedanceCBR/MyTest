@@ -98,8 +98,7 @@ extern NSString *const INSTANT_DATA_KEY;
         _showHouseDict = [NSMutableDictionary new];
         
         _currentRecommendHouseDataModel = nil;
-        _currentHouseDataModel = nil;
-        _currentRentDataModel = nil;
+        _houseDataModel = nil;
         
         self.tableView = tableView;
         self.houseType = houseType;
@@ -579,7 +578,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 FHListSearchHouseDataModel *houseModel = ((FHListSearchHouseModel *)model).data;
                 self.houseListOpenUrl = houseModel.houseListOpenUrl;
                 self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
-                self.currentHouseDataModel = houseModel;
+                self.houseDataModel = houseModel;
                 hasMore = houseModel.hasMore;
                 refreshTip = houseModel.refreshTip;
                 if (houseModel.items.count > 0) {
@@ -600,7 +599,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }else if ([model isKindOfClass:[FHHouseRentModel class]]){ //租房大类页
             FHHouseRentDataModel *rentModel = [(FHHouseRentModel *)model data];
-            self.currentRentDataModel = rentModel;
+            self.houseDataModel = rentModel;
             self.houseListOpenUrl = rentModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = rentModel.mapFindHouseOpenUrl;
             

@@ -49,11 +49,15 @@
         self.searchId = nil;
     } else {
         if (isFromRecommend) {
-            offset = self.currentRecommendHouseDataModel.offset;
-//            offset = self.sugesstHouseList.count - 1;
+            if ([self.houseDataModel isKindOfClass:[FHListSearchHouseDataModel class]]) {
+                FHListSearchHouseDataModel *model = (FHListSearchHouseDataModel *)self.currentRecommendHouseDataModel;
+                offset = model.offset;
+            }
         } else {
-            offset = self.currentHouseDataModel.offset;
-//            offset = self.houseList.count;
+            if ([self.houseDataModel isKindOfClass:[FHListSearchHouseDataModel class]]) {
+                FHListSearchHouseDataModel *model = (FHListSearchHouseDataModel *)self.houseDataModel;
+                offset = model.offset;
+            }
         }
     }
     
