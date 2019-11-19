@@ -735,6 +735,14 @@
         }
         NSMutableDictionary *dict = @{@"begin_show_comment":@(jump_comment)}.mutableCopy;
         dict[@"data"] = cellModel;
+        dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = @"community_group_detail";
+        traceParam[@"enter_type"] = @"click";
+        traceParam[@"rank"] = cellModel.tracerDic[@"rank"] ?: @"be_null";
+        traceParam[@"log_pb"] = cellModel.logPb;
+        dict[TRACER_KEY] = traceParam;
+        
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
