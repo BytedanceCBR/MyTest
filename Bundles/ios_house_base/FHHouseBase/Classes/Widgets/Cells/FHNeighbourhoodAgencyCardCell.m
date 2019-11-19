@@ -330,7 +330,7 @@
             imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
             imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodAladdin];
             imExtra[@"im_open_url"] = contact.imOpenUrl;
-            [self.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
+            [self.phoneCallViewModel imchatActionWithPhone:contact realtorRank:@"0" extraDic:imExtra];
         }
     }
 
@@ -357,7 +357,7 @@
         contactConfig.houseId = self.modelData.id;
         contactConfig.phone = contact.phone;
         contactConfig.realtorId = contact.realtorId;
-
+        contactConfig.pageType = @"old_list";
         if (self.modelData.logPb) {
             contactConfig.searchId = self.modelData.logPb[@"search_id"];
             contactConfig.imprId = self.modelData.logPb[@"impr_id"];

@@ -994,7 +994,16 @@ extern NSString *const INSTANT_DATA_KEY;
                     }
                 }else if ([theItemModel isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
                     FHHouseNeighborAgencyModel *agencyModel = theItemModel;
-                    agencyModel.tracerDict = traceDictParams;
+                    NSMutableDictionary *traceParam = [NSMutableDictionary new];
+                    traceParam[@"card_type"] = @"left_pic";
+                    traceParam[@"enter_from"] = [self pageTypeString];
+                    traceParam[@"element_from"] = [self elementTypeString];
+                    traceParam[@"search_id"] = self.searchId;
+                    traceParam[@"log_pb"] = agencyModel.logPb;
+                    traceParam[@"origin_from"] = self.originFrom;
+                    traceParam[@"origin_search_id"] = self.originSearchId;
+                    traceParam[@"rank"] = @(0);
+                    agencyModel.tracerDict = traceParam;
                     agencyModel.belongsVC = wself.listVC;
                     theItemModel = agencyModel;
                 }
@@ -1025,7 +1034,16 @@ extern NSString *const INSTANT_DATA_KEY;
                     theItemModel = infoModel;
                 }else if ([theItemModel isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
                     FHHouseNeighborAgencyModel *agencyModel = theItemModel;
-                    agencyModel.tracerDict = traceDictParams;
+                    NSMutableDictionary *traceParam = [NSMutableDictionary new];
+                    traceParam[@"card_type"] = @"left_pic";
+                    traceParam[@"enter_from"] = [self pageTypeString];
+                    traceParam[@"element_from"] = [self elementTypeString];
+                    traceParam[@"search_id"] = self.searchId;
+                    traceParam[@"log_pb"] = agencyModel.logPb;
+                    traceParam[@"origin_from"] = self.originFrom;
+                    traceParam[@"origin_search_id"] = self.originSearchId;
+                    traceParam[@"rank"] = @(0);
+                    agencyModel.tracerDict = traceParam;
                     agencyModel.belongsVC = wself.listVC;
                     theItemModel = agencyModel;
                 }
@@ -2032,6 +2050,7 @@ extern NSString *const INSTANT_DATA_KEY;
         tracerDict[@"origin_from"] = originFrom;
         tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
         tracerDict[@"log_pb"] = agencyCM.logPb ? : @"be_null";
+        tracerDict[@"house_type"] = @"neighborhood";
         [FHUserTracker writeEvent:@"house_show" params:tracerDict];
     }
 
