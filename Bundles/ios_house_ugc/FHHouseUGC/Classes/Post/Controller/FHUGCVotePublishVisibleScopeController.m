@@ -124,7 +124,7 @@
 - (UIButton *)checkButton {
     if(!_checkButton) {
         _checkButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        
+        _checkButton.userInteractionEnabled = NO;
         [_checkButton setImage:[UIImage imageNamed:@"fh_ugc_vote_publish_type_normal"] forState: UIControlStateNormal];
         [_checkButton setImage:[UIImage imageNamed:@"fh_ugc_vote_publish_type_selected"] forState:UIControlStateSelected];
     }

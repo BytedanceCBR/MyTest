@@ -208,7 +208,7 @@
 - (UITextField *)optionTextField {
     if(!_optionTextField) {
         _optionTextField = [UITextField new];
-        _optionTextField.placeholder = @"选填";
+        _optionTextField.placeholder = @"选项";
         [_optionTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
         _optionTextField.font = [UIFont themeFontRegular:16];
         _optionTextField.textColor = [UIColor themeGray1];
