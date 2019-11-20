@@ -114,7 +114,7 @@
 - (void)postGoodSuccess:(NSNotification *)noti {
     if (noti && noti.userInfo) {
         NSDictionary *userInfo = noti.userInfo;
-        NSString *social_group_ids = userInfo[@"social_group_ids"];
+        NSString *social_group_ids = userInfo[@"social_group_ids"] ? userInfo[@"social_group_ids"] : userInfo[@"social_group_id"];
         
         if(social_group_ids.length > 0 && [social_group_ids containsString:self.viewController.communityId]){
             //多于1个tab的时候
