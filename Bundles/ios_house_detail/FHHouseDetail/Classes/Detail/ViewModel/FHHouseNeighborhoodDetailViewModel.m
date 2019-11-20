@@ -41,7 +41,6 @@
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
 @property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodRentHouseData;// 同小区房源，租房
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
-@property (nonatomic, weak , nullable) FHDetailAgentListModel *agentListModel;
 
 
 @end
@@ -400,7 +399,7 @@
         agentListModel.houseType = self.houseType;
 
         [self.items addObject:agentListModel];
-        self.agentListModel = agentListModel;
+//        self.agentListModel = agentListModel;
     }
 
     if (model.isInstantData) {
