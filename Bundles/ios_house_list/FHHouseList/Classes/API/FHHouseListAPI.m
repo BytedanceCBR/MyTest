@@ -55,7 +55,7 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestRelatedHouseSearchWithQuery:(NSString *)query houseId:(NSString *)houseId offset:(NSInteger)offset count:(NSInteger)count class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
++ (TTHttpTask *)requestRelatedHouseSearchWithQuery:(NSString *)query houseId:(NSString *)houseId searchId:(NSString *)searchId offset:(NSInteger)offset count:(NSInteger)count class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
 {
     NSString *queryPath = @"/f100/api/related_house";
     queryPath = [NSString stringWithFormat:@"%@?house_id=%@&offset=%ld",queryPath, houseId ?: @"",offset];
@@ -64,6 +64,7 @@
     }
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"house_id"] = houseId ?: @"";
+    paramDic[@"search_id"] = searchId ?: @"";
     paramDic[@"offset"] = @(offset);
     paramDic[@"count"] = @(count);
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_HOUSE;
