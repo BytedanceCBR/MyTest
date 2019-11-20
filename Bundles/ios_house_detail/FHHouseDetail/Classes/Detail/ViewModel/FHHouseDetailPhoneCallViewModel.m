@@ -280,6 +280,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
     dict[@"from"] = @"app_realtor_mainpage";
     dict[@"realtor_logpb"] = contactPhone.realtorLogpb;
+    if (extra[@"enter_from"]) {
+        dict[@"enter_from"] = extra[@"enter_from"];
+    }
 
     IMConversation* conv = [[[IMManager shareInstance] chatService] conversationWithUserId:contactPhone.realtorId];
     if ([conv.identifier isEqualToString:@"-1"]) {

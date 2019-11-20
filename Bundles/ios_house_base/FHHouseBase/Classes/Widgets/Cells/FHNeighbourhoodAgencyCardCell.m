@@ -285,7 +285,11 @@
             BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
             [self.licenceIcon setHidden:isLicenceIconHidden];
 
-            self.phoneCallViewModel.tracerDict = self.traceParams.mutableCopy;
+            NSMutableDictionary *tracerDict = @{}.mutableCopy;
+            if (self.traceParams) {
+                [tracerDict addEntriesFromDictionary:self.traceParams];
+            }
+            self.phoneCallViewModel.tracerDict = tracerDict;
             //TODO fengbo  check this, seems like there`s no need to add view_controller?
             self.phoneCallViewModel.belongsVC = model.belongsVC;
         } else {
@@ -326,7 +330,7 @@
             NSMutableDictionary *imExtra = @{}.mutableCopy;
             imExtra[@"realtor_position"] = @"neighborhood_expert_card";
             imExtra[@"from"] = @"app_neighborhood_aladdin";
-            imExtra[@"element_from"] = @"neighborhood_expert_card";
+//            imExtra[@"enter_from"] = self.traceParams[@"enter_from"];
             imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
             imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodAladdin];
             imExtra[@"im_open_url"] = contact.imOpenUrl;
@@ -348,7 +352,7 @@
         extraDict[@"realtor_rank"] = @"be_null";
         extraDict[@"realtor_position"] = @"neighborhood_expert_card";
         extraDict[@"realtor_logpb"] = contact.realtorLogpb;
-        extraDict[@"element_from"] = @"neighborhood_expert_card";
+//        extraDict[@"element_from"] = @"neighborhood_expert_card";
         extraDict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         extraDict[kFHCluePage] = @(FHClueCallPageTypeCNeighborhoodAladdin);
         
@@ -382,6 +386,8 @@
         NSMutableDictionary *extraDict = @{}.mutableCopy;
         extraDict[@"realtor_position"] = @"neighborhood_expert_card";
         extraDict[@"element_from"] = @"neighborhood_expert_card";
+        extraDict[@"enter_from"] = self.traceParams[@"page_type"];
+        extraDict[@"page_type"] = nil;
 //        extraDict[@"realtor_rank"] = @"be_null";
 //        extraDict[@"realtor_logpb"] = contact.realtorLogpb;
         if (self.phoneCallViewModel) {
@@ -393,7 +399,14 @@
     if (self.modelData) {
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", self.modelData.id]];
 
-        NSMutableDictionary *dict = @{@"house_type": @(FHHouseTypeNeighborhood), @"tracer": self.traceParams}.mutableCopy;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        if (self.traceParams) {
+            [tracerDict addEntriesFromDictionary:self.traceParams];
+        }
+        tracerDict[@"element_from"] = @"neighborhood_expert_card";
+        tracerDict[@"enter_from"] = self.traceParams[@"page_type"];
+        tracerDict[@"page_type"] = nil;
+        NSMutableDictionary *dict = @{@"house_type": @(FHHouseTypeNeighborhood), @"tracer": tracerDict}.mutableCopy;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
