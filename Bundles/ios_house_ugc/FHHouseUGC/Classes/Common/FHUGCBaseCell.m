@@ -54,6 +54,7 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.isFromDetail = NO;
     }
     return self;
 }

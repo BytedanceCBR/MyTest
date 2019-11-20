@@ -41,6 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)setVoteContentString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 
+// UGC 新投票类型
++ (void)setUGCVoteContentString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
+
 + (CGSize)sizeThatFitsAttributedString:(NSAttributedString *)attrStr
                        withConstraints:(CGSize)size
                       maxNumberOfLines:(NSUInteger)maxLine

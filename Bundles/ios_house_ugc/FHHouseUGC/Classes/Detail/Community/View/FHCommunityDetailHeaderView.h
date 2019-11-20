@@ -3,6 +3,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHCommunityDetailRefreshHeader.h"
 
 #define PublicationsContentLabel_numberOfLines 2
 #define PublicationsContentLabel_lineHeight 20
@@ -35,11 +36,14 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 @property(nonatomic, copy) GotoOperationDetailBlock gotoOperationBlock;
 @property(nonatomic, strong) UIImageView *operationBannerImageView;
 
+@property (nonatomic, strong) FHCommunityDetailRefreshHeader *refreshHeader;
+@property (nonatomic, assign) BOOL scrollViewDidEndDrag;
+
 - (void)startRefresh;
 
 - (void)stopRefresh;
 
-- (void)updateWhenScrolledWithContentOffset:(CGPoint)contentOffset isScrollTop:(BOOL)isScrollTop;
+- (void)updateWhenScrolledWithContentOffset:(CGFloat)offset isScrollTop:(BOOL)isScrollTop scrollView:(UIScrollView *)scrollView;
 
 - (void)updateOperationInfo:(BOOL)isShow whRatio:(CGFloat)whRatio;
 
@@ -47,4 +51,5 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 
 // 非管理员状态，判断如果没有查看详情按钮时公告内容标签的布局是否超过两行
 -(BOOL)isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow;
+
 @end

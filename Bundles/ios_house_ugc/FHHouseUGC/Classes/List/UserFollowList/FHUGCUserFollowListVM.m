@@ -196,7 +196,7 @@
                 v.sectionLabel.text = [NSString stringWithFormat:@"管理员（%ld人）",self.adminCount];
             }
             if (section == 1) {
-                v.sectionLabel.text = [NSString stringWithFormat:@"小区圈成员（%ld人）",self.followCount];
+                v.sectionLabel.text = [NSString stringWithFormat:@"圈子成员（%ld人）",self.followCount];
             }
         } else if (self.mergedArray.count == 1) {
             // 只有一个section
@@ -204,7 +204,7 @@
                 v.sectionLabel.text = [NSString stringWithFormat:@"管理员（%ld人）",self.adminCount];
             }
             if (self.followList.count > 0) {
-                v.sectionLabel.text = [NSString stringWithFormat:@"小区圈成员（%ld人）",self.followCount];
+                v.sectionLabel.text = [NSString stringWithFormat:@"圈子成员（%ld人）",self.followCount];
             }
         }
     }

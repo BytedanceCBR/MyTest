@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM (NSInteger , FHUGCPostType){
     FHUGCPostTypePost       = 1, // 帖子
     FHUGCPostTypeWenDa      = 2, // 问答
+    FHUGCPostTypeVote       = 3, // 投票
 };
 
 @class FHCommentBaseDetailViewModel;
@@ -31,6 +32,7 @@ typedef NS_ENUM (NSInteger , FHUGCPostType){
 @property (nonatomic, assign)   NSInteger       user_digg;// 当前用户是否点赞
 @property (nonatomic, assign) BOOL beginShowComment;// 点击评论按钮
 @property (nonatomic, assign)  BOOL fromUGC;//来源是ugc模块新功能，区别以前的评论部分
+@property (nonatomic, copy)     NSDictionary       *report_params_dic;
 
 - (void)commentCountChanged;
 - (void)headerInfoChanged;

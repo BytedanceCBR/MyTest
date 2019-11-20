@@ -15,4 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHHomePlaceHolderCellModel : NSObject
+
+
+@end
+
 NS_ASSUME_NONNULL_END
