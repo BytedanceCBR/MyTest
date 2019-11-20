@@ -199,6 +199,7 @@
         ugcContent.rawData = model;
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
         cellModel.isFromDetail = YES;
+        cellModel.contentDecoration = nil;
         if (self.detailData) {
             cellModel.feedVC = self.detailData.feedVC;
             cellModel.isStick = self.detailData.isStick;
