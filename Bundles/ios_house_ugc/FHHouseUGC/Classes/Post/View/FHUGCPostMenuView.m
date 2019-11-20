@@ -150,7 +150,7 @@
         [self.delegate postMenuViewWillShow];
     }
     
-    [UIView animateWithDuration:ANIMATION_DURATION delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:5 options:UIViewAnimationOptionCurveLinear animations:^{
+    [UIView animateWithDuration:ANIMATION_DURATION delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:5 options:UIViewAnimationCurveEaseOut animations:^{
         self.backgroupView.alpha = 1;
         self.closeButton.transform = CGAffineTransformIdentity;
         self.pubVoteButton.alpha = 1;
