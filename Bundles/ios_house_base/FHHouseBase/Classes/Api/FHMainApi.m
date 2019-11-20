@@ -28,9 +28,9 @@
 #define API_WRONG_DATA  10002
 
 typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
-    FHNetworkMonitorTypeSuccess = 0, //成功
-    FHNetworkMonitorTypeBizFailed = 1, //返回数据成功 status 非0
-    FHNetworkMonitorTypeNetFailed = 2, //数据返回失败
+    FHNetworkMonitorTypeSuccess = 100000, //成功
+    FHNetworkMonitorTypeBizFailed = 110000, //返回数据成功 status 非0
+    FHNetworkMonitorTypeNetFailed = 120000, //数据返回失败
 };
 
 
@@ -192,7 +192,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                     
                     code = [status integerValue];
                     errMsg = error.domain;
-                    resultType = FHNetworkMonitorTypeBizFailed;
+                    resultType = status.integerValue;
                 }
             }
         }
@@ -332,7 +332,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                             extraDict[@"error"] = error.domain;
                         }
                         code = [status integerValue];
-                        resultType = FHNetworkMonitorTypeBizFailed;
+                        resultType = status.integerValue;
                         errMsg = error.domain;
                     }
                 }
@@ -395,7 +395,9 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                         
                         code = [status integerValue];
                         errMsg = error.domain;
-                        resultType = FHNetworkMonitorTypeBizFailed;
+                        
+                        NSInteger houseType = [[param valueForKey:@"house_type"] integerValue];
+                        resultType = FHNetworkMonitorTypeBizFailed+houseType;
                         exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
                     }
                 }
@@ -472,7 +474,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
     NSDictionary *cat = @{@"status":@(type)};
     [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
     
-    if (type == FHNetworkMonitorTypeBizFailed) {
+    if (type != FHNetworkMonitorTypeSuccess && type != FHNetworkMonitorTypeNetFailed) {
         NSMutableDictionary *filterDict = [NSMutableDictionary new];
         filterDict[@"path"] = key;
         NSMutableDictionary *customDict = [NSMutableDictionary new];
@@ -533,7 +535,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                 
                 code = backError.code;
                 errMsg = [backError description];
-                resultType = FHNetworkMonitorTypeBizFailed;
+                resultType = status;
             }
             
             [self addRequestLog:response.URL.path startDate:startDate backDate:requestDoneDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
@@ -604,7 +606,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                         extraDict[@"status"] = status;
                         code = [status integerValue];
                         errMsg = error.domain;
-                        resultType = FHNetworkMonitorTypeBizFailed;
+                        resultType = status.integerValue;
                     }
                 }
             }else{
@@ -669,6 +671,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
                         extraDict[@"status"] = @(status);
+                        resultType = status;
                     }
                 }
             }
@@ -717,6 +720,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
                         extraDict[@"status"] = @(status);
+                        resultType = status;
                     }
                 }
             }
@@ -766,6 +770,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
                         extraDict[@"status"] = @(status);
+                        resultType = status;
                     }
                 }
             }

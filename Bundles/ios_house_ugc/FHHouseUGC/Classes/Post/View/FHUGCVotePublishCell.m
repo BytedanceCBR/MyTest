@@ -91,12 +91,12 @@
 
 -(UITextField *)contentTextField {
     if(!_contentTextField) {
-        _contentTextField = [[UITextField alloc] initWithFrame:CGRectMake(PADDING, 24, SCREEN_WIDTH - 2 * PADDING, 30)];
+        _contentTextField = [[UITextField alloc] initWithFrame:CGRectMake(PADDING, 23, SCREEN_WIDTH - 2 * PADDING, 32)];
         _contentTextField.placeholder = @"投票标题";
         [_contentTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
-        _contentTextField.textAlignment = NSTextAlignmentLeft;
         _contentTextField.font = [UIFont themeFontRegular:22];
         _contentTextField.textColor = [UIColor themeGray1];
+        _contentTextField.clipsToBounds = YES;
         [_contentTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     }
     return _contentTextField;
@@ -124,21 +124,11 @@
 // MARK: 投票描述Cell
 @implementation FHUGCVotePublishDescriptionCell
 
-//- (FHUGCVotePublishTextView *)contentTextView {
-//    if(!_contentTextView) {
-//        _contentTextView = [FHUGCVotePublishTextView new];
-//        _contentTextView.placeholder = @"补充描述(选填)";
-//        _contentTextView.font = [UIFont themeFontRegular:18];
-//        _contentTextView.textColor = [UIColor themeGray1];
-//        _contentTextView.delegate = self;
-//    }
-//    return _contentTextView;
-//}
-
 -(UITextField *)contentTextField {
     if(!_contentTextField) {
-        _contentTextField = [UITextField new];
+        _contentTextField = [[UITextField alloc] initWithFrame:CGRectMake(PADDING, 20, SCREEN_WIDTH - 2 * PADDING, 33)];
         _contentTextField.placeholder = @"补充描述(选填)";
+        _contentTextField.clipsToBounds = YES;
         [_contentTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
         _contentTextField.textAlignment = NSTextAlignmentLeft;
         _contentTextField.font = [UIFont themeFontRegular:18];
@@ -157,35 +147,10 @@
         [self.delegate descriptionCell:self didInputText:textField.text];
     }
 }
-//
-//- (void)textViewDidChange:(UITextView *)textView {
-//    if(textView.text.length > DESCRIPTION_LENGTH_LIMIT) {
-//        textView.text = [textView.text substringToIndex:DESCRIPTION_LENGTH_LIMIT];
-//    }
-//
-//    if([self.delegate respondsToSelector:@selector(descriptionCell:didInputText:)]) {
-//        [self.delegate descriptionCell:self didInputText:textView.text];
-//    }
-//}
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-
         [self.contentView addSubview:self.contentTextField];
-        [self.contentTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView).offset(24);
-            make.bottom.equalTo(self.contentView).offset(-16);
-            make.left.equalTo(self.contentView).offset(PADDING);
-            make.right.equalTo(self.contentView).offset(-PADDING);
-        }];
-//        [self.contentView addSubview:self.contentTextView];
-//        [self.contentTextView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.left.equalTo(self.contentView).offset(PADDING);
-//            make.right.equalTo(self.contentView).offset(-PADDING);
-//            make.top.equalTo(self.contentView).offset(24);
-//            make.bottom.equalTo(self.contentView).offset(-16);
-//        }];
-        
     }
     return self;
 }
@@ -212,6 +177,7 @@
         [_optionTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
         _optionTextField.font = [UIFont themeFontRegular:16];
         _optionTextField.textColor = [UIColor themeGray1];
+        _optionTextField.clipsToBounds = YES;
         [_optionTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     }
     return _optionTextField;

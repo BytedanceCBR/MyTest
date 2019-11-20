@@ -50,7 +50,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHUGCVotePublishDescriptionCell: FHUGCVotePublishBaseCell <UITextViewDelegate>
-//@property (nonatomic, strong) FHUGCVotePublishTextView *contentTextView;
 @property (nonatomic, strong) UITextField *contentTextField;
 @end
 
