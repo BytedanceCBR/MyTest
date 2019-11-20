@@ -618,7 +618,15 @@
 - (void)checkIfEnablePublish {
     
     BOOL hasTitle = self.model.voteTitle.length > 0;
-    BOOL hasOption = self.model.options.count >= 2 && self.model.options[0].content.length > 0 && self.model.options[1].content.length > 0;
+    
+    NSMutableArray<NSString *> *validOptions = [NSMutableArray array];
+    [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
+        if(option.content.length > 0) {
+            [validOptions addObject:option.content];
+        }
+    }];
+    
+    BOOL hasOption = validOptions.count >= 2;
     BOOL hasVisibleScope = self.model.isAllSelected || self.model.isPartialSelected;
     BOOL hasVoteType = self.model.type != VoteType_Unknown;
     
