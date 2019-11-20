@@ -364,7 +364,28 @@
         // 选项开始
         height += 10;
         // 选项（高度） + 多少人参与 + 按钮（高度）
-        height += (cellModel.voteInfo.voteHeight);
+        if (cellModel.voteInfo.voteHeight > 0) {
+            height += (cellModel.voteInfo.voteHeight);
+        } else {
+            // 计算 绘制之前的高度---提前计算
+            if (cellModel.voteInfo.needFold) {
+                if (cellModel.voteInfo.isFold) {
+                    // 折叠
+                    height += 48 * [cellModel.voteInfo.displayCount integerValue];
+                } else {
+                    // 展开
+                    height += 48 * cellModel.voteInfo.items.count;
+                }
+            } else {
+                height += 48 * cellModel.voteInfo.items.count;
+            }
+            if (cellModel.voteInfo.needFold) {
+                height += 28;
+            }
+            height += 10;
+            height += 38;
+            height += 22;
+        }
         // 按钮底部 + 20
         height += 20;
         // 圈子底部
