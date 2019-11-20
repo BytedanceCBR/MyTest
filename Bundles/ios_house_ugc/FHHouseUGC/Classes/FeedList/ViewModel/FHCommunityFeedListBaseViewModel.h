@@ -69,6 +69,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)endDisplay;
 
+- (void)showCustomErrorView:(FHEmptyMaskViewType)type;
+
 @end
 
 NS_ASSUME_NONNULL_END

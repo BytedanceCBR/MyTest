@@ -213,7 +213,7 @@
         
     }else if(view.selectdWord.type == FHFeedOperationWordTypeTop){
         [self trackClickWithEvent:@"click_top_feed" position:@"top_feed"];
-        [self showAlert:@"确认要将帖子在对应的小区圈置顶？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+        [self showAlert:@"确认要将帖子在对应的圈子置顶？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"confirm_topfeed_popup_click" isCancel:YES];
         } confirmBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"confirm_topfeed_popup_click" isCancel:NO];
@@ -222,7 +222,7 @@
         [self trackConfirmPopupShow:@"confirm_topfeed_popup_show"];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeCancelTop){
         [self trackClickWithEvent:@"click_cancel_topfeed" position:@"cancel_top_feed"];
-        [self showAlert:@"确认要将帖子在对应的小区圈取消置顶？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+        [self showAlert:@"确认要将帖子在对应的圈子取消置顶？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"cancel_topfeed_popup_click" isCancel:YES];
         } confirmBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"cancel_topfeed_popup_click" isCancel:NO];
@@ -231,7 +231,7 @@
         [self trackConfirmPopupShow:@"cancel_topfeed_popup_show"];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeGood){
         [self trackClickWithEvent:@"click_essence_feed" position:@"essence_feed"];
-        [self showAlert:@"确认要给帖子在对应的小区圈加精？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+        [self showAlert:@"确认要给帖子在对应的圈子加精？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"essence_feed_popup_click" isCancel:YES];
         } confirmBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"essence_feed_popup_click" isCancel:NO];
@@ -240,7 +240,7 @@
         [self trackConfirmPopupShow:@"essence_feed_popup_show"];
     }else if(view.selectdWord.type == FHFeedOperationWordTypeCancelGood){
         [self trackClickWithEvent:@"click_cancel_essence" position:@"cancel_essence_feed"];
-        [self showAlert:@"确认要给帖子在对应的小区圈取消加精？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+        [self showAlert:@"确认要给帖子在对应的圈子取消加精？" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"cancel_essence_popup_click" isCancel:YES];
         } confirmBlock:^{
             [wself trackConfirmPopupClickWithEvent:@"cancel_essence_popup_click" isCancel:NO];
@@ -288,7 +288,7 @@
 
 - (void)postDelete:(NSString *)operationCode {
     __weak typeof(self) wself = self;
-    [FHHouseUGCAPI postOperation:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI postOperation:self.cellModel.groupId cellType:self.cellModel.cellType socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
             if(wself.deleteCellBlock){
@@ -333,7 +333,7 @@
 
 - (void)setOperationSelfLook:(NSString *)operationCode {
     __weak typeof(self) wself = self;
-    [FHHouseUGCAPI postOperation:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI postOperation:self.cellModel.groupId cellType:self.cellModel.cellType socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
             if(wself.deleteCellBlock){
@@ -356,7 +356,7 @@
 
 - (void)setOperationTop:(BOOL)isTop operationCode:(NSString *)operationCode {
     __weak typeof(self) wself = self;
-    [FHHouseUGCAPI postOperation:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI postOperation:self.cellModel.groupId cellType:self.cellModel.cellType socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
             FHFeedOperationResultModel *resultModel = (FHFeedOperationResultModel *)model;
@@ -380,7 +380,7 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCTopPostNotification object:nil userInfo:dic];
             
             NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
-            if([pageType isEqualToString:@"feed_detail"]){
+            if(self.cellModel.isFromDetail){
                 if(isTop){
                     [[ToastManager manager] showToast:@"置顶成功"];
                 }else{
@@ -400,7 +400,7 @@
 
 - (void)setOperationGood:(BOOL)isGood operationCode:(NSString *)operationCode {
     __weak typeof(self) wself = self;
-    [FHHouseUGCAPI postOperation:self.cellModel.groupId socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI postOperation:self.cellModel.groupId cellType:self.cellModel.cellType socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
             FHFeedOperationResultModel *resultModel = (FHFeedOperationResultModel *)model;
@@ -424,7 +424,7 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCGoodPostNotification object:nil userInfo:dic];
             
             NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
-            if([pageType isEqualToString:@"feed_detail"]){
+            if(self.cellModel.isFromDetail){
                 if(isGood){
                     [[ToastManager manager] showToast:@"加精成功"];
                 }else{

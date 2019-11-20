@@ -39,6 +39,7 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
     FHUGCFeedListCellSubTypeUGCVote,                               //投票pk
     FHUGCFeedListCellSubTypeUGCVideo,                              //视频
     FHUGCFeedListCellSubTypeUGCSmallVideo,                         //小视频
+    FHUGCFeedListCellSubTypeUGCVoteDetail,                         //新投票类型
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
@@ -55,6 +56,7 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
     FHUGCFeedListCellTypeUGCHotTopic = 1104,               //热门话题
     FHUGCFeedListCellTypeUGCVote = 1103,                   //投票pk
     FHUGCFeedListCellTypeUGCSmallVideo = 333,              //小视频
+    FHUGCFeedListCellTypeUGCVoteInfo = 1107,               //UGC投票，新投票类型
 };
 
 typedef NS_ENUM(NSInteger, FHUGCMyInterestedType)
@@ -69,6 +71,10 @@ typedef NS_ENUM(NSInteger, FHUGCMyJoinType)
     FHUGCMyJoinTypeEmpty,                               //空页面
 };
 
-
+typedef NS_ENUM(NSUInteger, FHUGCLoginFrom) {
+    FHUGCLoginFrom_POST = 0,
+    FHUGCLoginFrom_GROUPCHAT = 1,
+    FHUGCLoginFrom_VOTE = 2,
+};
 
 #endif /* FHHouseUGCHeader_h */
