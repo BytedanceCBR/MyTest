@@ -597,6 +597,9 @@
     
     if ([commonModel.displayPricePerSqm isKindOfClass:[NSString class]] && [commonModel.displayPricePerSqm isEqualToString:@"暂无报价"]) {
         self.priceLabel.textColor = [UIColor themeGray3];
+    }else
+    {
+        self.priceLabel.textColor = [UIColor themeRed1];
     }
     
     FHImageModel *imageModel = commonModel.images.firstObject;
@@ -670,6 +673,9 @@
     
     if ([commonModel.displayPricePerSqm isKindOfClass:[NSString class]] && [commonModel.displayPricePerSqm isEqualToString:@"暂无报价"]) {
         self.priceLabel.textColor = [UIColor themeGray3];
+    }else
+    {
+        self.priceLabel.textColor = [UIColor themeRed1];
     }
     
     _priceLabel.font = [UIFont themeFontSemibold:16];
