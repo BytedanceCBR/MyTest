@@ -176,6 +176,7 @@
             self.shareInfo = model.shareInfo;
         }
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+        cellModel.isFromDetail = YES;
         cellModel.feedVC = self.detailData.feedVC;
         cellModel.isStick = self.detailData.isStick;
         cellModel.stickStyle = self.detailData.stickStyle;
