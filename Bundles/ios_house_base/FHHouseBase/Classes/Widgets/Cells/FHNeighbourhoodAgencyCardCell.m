@@ -382,6 +382,8 @@
         NSMutableDictionary *extraDict = @{}.mutableCopy;
         extraDict[@"realtor_position"] = @"neighborhood_expert_card";
         extraDict[@"element_from"] = @"neighborhood_expert_card";
+        extraDict[@"realtor_rank"] = @"be_null";
+        extraDict[@"realtor_logpb"] = contact.realtorLogpb;
         if (self.phoneCallViewModel) {
             [self.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:YES extra:extraDict];
         }
