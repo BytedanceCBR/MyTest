@@ -165,4 +165,6 @@ swipeView是否开启水平bounce效果，默认为 NO
 
 - (void)reloadHeaderShowHeight;
 
+- (void)reloadHeaderViewHeight:(CGFloat)height;
+
 @end

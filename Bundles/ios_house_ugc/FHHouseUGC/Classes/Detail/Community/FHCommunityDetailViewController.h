@@ -10,7 +10,7 @@
 #import "UIViewAdditions.h"
 #import "FHCommunityDetailHeaderView.h"
 #import "FHCommunityDetailSegmentView.h"
-#import "FHCommunityDetailHorizontalPagingView.h"
+#import "TTHorizontalPagingView.h"
 #import "TTBadgeNumberView.h"
 
 @class FHCommunityFeedListController;

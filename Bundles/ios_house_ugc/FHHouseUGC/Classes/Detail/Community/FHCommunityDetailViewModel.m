@@ -29,7 +29,7 @@
 #import "TTAccount.h"
 #import "TTAccount+Multicast.h"
 #import "TTAccountManager.h"
-#import "FHCommunityDetailHorizontalPagingView.h"
+#import "TTHorizontalPagingView.h"
 #import "IMManager.h"
 #import <TTThemedAlertController.h>
 #import "FHFeedUGCCellModel.h"
@@ -45,7 +45,7 @@
 @property (nonatomic, assign) BOOL isViewAppear;
 @property (nonatomic, assign) BOOL isLoginSatusChangeFromGroupChat;
 @property (nonatomic, assign) BOOL isLogin;
-@property (nonatomic, strong) FHCommunityDetailHorizontalPagingView *pagingView;
+@property (nonatomic, strong) TTHorizontalPagingView *pagingView;
 @property (nonatomic, strong) NSMutableArray *subVCs;
 @property (nonatomic, strong) NSMutableArray *segmentTitles;
 @property (nonatomic, copy) NSString *currentSegmentType;
@@ -114,7 +114,7 @@
 - (void)postGoodSuccess:(NSNotification *)noti {
     if (noti && noti.userInfo) {
         NSDictionary *userInfo = noti.userInfo;
-        NSString *social_group_ids = userInfo[@"social_group_ids"];
+        NSString *social_group_ids = userInfo[@"social_group_ids"] ? userInfo[@"social_group_ids"] : userInfo[@"social_group_id"];
         
         if(social_group_ids.length > 0 && [social_group_ids containsString:self.viewController.communityId]){
             //多于1个tab的时候
@@ -1113,9 +1113,9 @@
 
 #pragma mark - lazy load
 
-- (FHCommunityDetailHorizontalPagingView *)pagingView {
+- (TTHorizontalPagingView *)pagingView {
     if(!_pagingView) {
-        _pagingView = [[FHCommunityDetailHorizontalPagingView alloc] init];
+        _pagingView = [[TTHorizontalPagingView alloc] init];
         _pagingView.delegate = self;
         _pagingView.frame = self.viewController.view.bounds;
         _pagingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
