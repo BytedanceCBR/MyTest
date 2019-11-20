@@ -16,6 +16,7 @@
 #import "FHEnvContext.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTReachability/TTReachability.h>
+#import <FHHouseBase/FHHouseContactDefines.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -97,7 +98,20 @@
                                           phone:(NSString*)phone
                                            from:(NSString*)from
                                      agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
-                                     completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion {
+                                     completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
+{
+    [self requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:agencyList completion:completion];
+}
+// 详情页线索提交表单
++ (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
+                                          phone:(NSString*)phone
+                                           from:(NSString*)from
+                                       cluePage:(NSNumber*)cluePage
+                                   clueEndpoint:(NSNumber*)clueEndpoint
+                                     targetType:(NSNumber *)targetType
+                                     agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
+                                     completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
+{
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/call_report"];
     NSString *userName = [TTAccount sharedAccount].user.name ? : [TTInstallIDManager sharedInstance].deviceID; //如果没有名字，则取did
@@ -111,7 +125,13 @@
     if (phone.length > 0) {
         paramDic[@"user_phone"] = phone;
     }
-    if (from.length > 0) {
+    if (targetType) {
+        paramDic[@"target_type"] = targetType;
+    }
+    if (cluePage) {
+        paramDic[@"page"] = cluePage;
+        paramDic[@"endpoint"] = clueEndpoint ? clueEndpoint : @(FHClueEndPointTypeC);
+    }else if (from.length > 0) {
         paramDic[@"from"] = from;
     }
     if (agencyList.count > 0) {
@@ -164,6 +184,17 @@
     }];
 }
 
++ (TTHttpTask*)requestVirtualNumber:(NSString*)realtorId
+                            houseId:(NSString*)houseId
+                          houseType:(FHHouseType)houseType
+                           searchId:(NSString*)searchId
+                             imprId:(NSString*)imprId
+                               from:(NSString*)fromStr
+                         completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion
+{
+    [self requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId from:fromStr cluePage:nil clueEndpoint:nil completion:completion];
+}
+
 // 中介转接电话
 + (TTHttpTask*)requestVirtualNumber:(NSString*)realtorId
                             houseId:(NSString*)houseId
@@ -171,6 +202,8 @@
                            searchId:(NSString*)searchId
                              imprId:(NSString*)imprId
                              from:(NSString*)fromStr
+                               cluePage:(NSNumber*)cluePage
+                               clueEndpoint:(NSNumber*)clueEndpoint
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
@@ -188,7 +221,11 @@
     if (imprId.length > 0) {
         paramDic[@"impr_id"] = imprId;
     }
-    if (fromStr.length > 0) {
+
+    if (cluePage) {
+        paramDic[@"page"] = cluePage;
+        paramDic[@"endpoint"] = clueEndpoint ? clueEndpoint : @(FHClueEndPointTypeC);
+    }else if (fromStr.length > 0) {
         paramDic[@"enterfrom"] = fromStr;
     }
 

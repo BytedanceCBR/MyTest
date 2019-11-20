@@ -7,12 +7,13 @@
 
 #import <UIKit/UIKit.h>
 #import <JSONModel.h>
+#import <FHHouseBase/FHListBaseCell.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 static NSString * const kFHSuggestionSubscribeNotificationKey = @"kFHSuggestionSubscribeNotificationKey";
 
-@interface FHSuggestionSubscribCell : UITableViewCell
+@interface FHSuggestionSubscribCell : FHListBaseCell
 
 @property (nonatomic, strong)   UILabel       *titleLabel;
 @property (nonatomic, strong)   UILabel       *subTitleLabel;
