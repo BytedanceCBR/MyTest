@@ -114,7 +114,6 @@
     if (sugParam) {
         qparam[@"suggestion_params"] = sugParam;
     }
-//    return [self querySearchData:queryPath uploadLog:YES params:qparam method:GET logPath:@"search_second" completion:completion];
     return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls logPath:@"search_second" completion:completion];
     
 }
@@ -395,57 +394,6 @@
     }
     
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
-}
-
-#pragma mark - 统一处理search请求json to model
-+ (TTHttpTask *)querySearchData:(NSString *_Nullable)queryPath uploadLog:(BOOL)uploadLog params:(NSDictionary *_Nullable)param method:(NSString *)method logPath:(NSString *)logPath completion:(void(^_Nullable)(FHSearchHouseModel *model , NSError *error))completion
-{
-    NSString *url = QURL(queryPath);
-    
-    NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:method needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
-        NSDate *backDate = [NSDate date];
-        
-        __block NSError *backError = error;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            FHSearchHouseModel *model = (FHSearchHouseModel *)[self generateSearchModel:obj error:&backError];
-            NSDate *serDate = [NSDate date];
-            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
-            NSInteger code = 0;
-            NSString *errMsg = nil;
-            NSMutableDictionary *extraDict = nil;
-            
-            BOOL success = NO;
-            if (response.statusCode == 200 ) {
-                if ([model respondsToSelector:@selector(status)]) {
-                    NSString *status = [model performSelector:@selector(status)];
-                    if (status.integerValue != 0 || error != nil) {
-                        if (uploadLog) {
-                            extraDict = @{}.mutableCopy;
-                            extraDict[@"request_url"] = response.URL.absoluteString;
-                            extraDict[@"response_headers"] = response.allHeaderFields;
-                            extraDict[@"error"] = error.domain;
-                        }
-                        code = [status integerValue];
-                        resultType = FHNetworkMonitorTypeBizFailed;
-                        errMsg = error.domain;
-                    }
-                }
-            }else{
-                code = response.statusCode;
-                resultType = FHNetworkMonitorTypeNetFailed;
-            }
-            
-            [FHMainApi addRequestLog:logPath?:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
-            
-            if (completion) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(model,backError);
-                });
-            }
-        });
-        
-    }];
 }
 
 + (FHSearchHouseModel *)generateSearchModel:(NSData *)jsonData error:(NSError *__autoreleasing *)error

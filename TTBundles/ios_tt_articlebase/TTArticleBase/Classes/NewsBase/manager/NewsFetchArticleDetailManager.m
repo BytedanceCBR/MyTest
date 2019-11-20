@@ -246,8 +246,9 @@ static NewsFetchArticleDetailManager * sharedManager;
             }
         }
     }];
-    
-    [self.operations addObject:task];
+    if (task) {
+        [self.operations addObject:task];
+    }
     
     // 直接使用NSURLSessionTaskPriorityLow赋值给task.priority在iOS8.x上会EXEC_BAD_ACCESS，NSURLSessionTaskPriorityLow不是一个float
     if ([task respondsToSelector:@selector(setPriority:)]) {
@@ -384,7 +385,9 @@ static NewsFetchArticleDetailManager * sharedManager;
         }
     }];
 
-    [self.operations addObject:task];
+    if (task) {
+        [self.operations addObject:task];
+    }
 
     // 直接使用NSURLSessionTaskPriorityLow赋值给task.priority在iOS8.x上会EXEC_BAD_ACCESS，NSURLSessionTaskPriorityLow不是一个float
     if ([task respondsToSelector:@selector(setPriority:)]) {
@@ -796,7 +799,9 @@ static NewsFetchArticleDetailManager * sharedManager;
         }
     }];
 
-    [self.operations addObject:task];
+    if (task) {
+        [self.operations addObject:task];
+    }
 
     // 直接使用NSURLSessionTaskPriorityLow赋值给task.priority在iOS8.x上会EXEC_BAD_ACCESS，NSURLSessionTaskPriorityLow不是一个float
     if ([task respondsToSelector:@selector(setPriority:)]) {

@@ -27,6 +27,11 @@
 #define API_NO_DATA     10001
 #define API_WRONG_DATA  10002
 
+typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
+    FHNetworkMonitorTypeSuccess = 100000, //成功
+    FHNetworkMonitorTypeBizFailed = 110000, //返回数据成功 status 非0
+    FHNetworkMonitorTypeNetFailed = 120000, //数据返回失败
+};
 
 
 #define QURL(QPATH) [[self host] stringByAppendingString:QPATH]
@@ -187,7 +192,7 @@
                     
                     code = [status integerValue];
                     errMsg = error.domain;
-                    resultType = FHNetworkMonitorTypeBizFailed;
+                    resultType = status.integerValue;
                 }
             }
         }
@@ -327,7 +332,7 @@
                             extraDict[@"error"] = error.domain;
                         }
                         code = [status integerValue];
-                        resultType = FHNetworkMonitorTypeBizFailed;
+                        resultType = status.integerValue;
                         errMsg = error.domain;
                     }
                 }
@@ -390,7 +395,9 @@
                         
                         code = [status integerValue];
                         errMsg = error.domain;
-                        resultType = FHNetworkMonitorTypeBizFailed;
+                        
+                        NSInteger houseType = [[param valueForKey:@"house_type"] integerValue];
+                        resultType = FHNetworkMonitorTypeBizFailed+houseType;
                         exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
                     }
                 }
@@ -467,7 +474,7 @@
     NSDictionary *cat = @{@"status":@(type)};
     [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
     
-    if (type == FHNetworkMonitorTypeBizFailed) {
+    if (type != FHNetworkMonitorTypeSuccess && type != FHNetworkMonitorTypeNetFailed) {
         NSMutableDictionary *filterDict = [NSMutableDictionary new];
         filterDict[@"path"] = key;
         NSMutableDictionary *customDict = [NSMutableDictionary new];
@@ -528,7 +535,7 @@
                 
                 code = backError.code;
                 errMsg = [backError description];
-                resultType = FHNetworkMonitorTypeBizFailed;
+                resultType = status;
             }
             
             [self addRequestLog:response.URL.path startDate:startDate backDate:requestDoneDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
@@ -599,7 +606,7 @@
                         extraDict[@"status"] = status;
                         code = [status integerValue];
                         errMsg = error.domain;
-                        resultType = FHNetworkMonitorTypeBizFailed;
+                        resultType = status.integerValue;
                     }
                 }
             }else{
@@ -664,6 +671,7 @@
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
                         extraDict[@"status"] = @(status);
+                        resultType = status;
                     }
                 }
             }
@@ -712,6 +720,7 @@
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
                         extraDict[@"status"] = @(status);
+                        resultType = status;
                     }
                 }
             }
@@ -761,6 +770,7 @@
                         extraDict[@"response_headers"] = response.allHeaderFields;
                         extraDict[@"error"] = error.domain;
                         extraDict[@"status"] = @(status);
+                        resultType = status;
                     }
                 }
             }

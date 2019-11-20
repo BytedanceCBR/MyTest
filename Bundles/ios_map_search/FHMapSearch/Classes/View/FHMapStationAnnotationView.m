@@ -35,7 +35,7 @@
         _backgroundView = [[UIImageView alloc] initWithImage:bgImage];
         _arrowView = [[UIImageView alloc] initWithImage:arrowImage];
         
-        _stationView = [[UIImageView alloc] initWithImage:SYS_IMG(@"mapsearch_train")];
+//        _stationView = [[UIImageView alloc] initWithImage:SYS_IMG(@"mapsearch_train")];
         
         _contentLabel = [[UILabel alloc] init];
         _contentLabel.textColor = [UIColor themeGray1];
@@ -44,7 +44,7 @@
         
         [self addSubview:_backgroundView];
         [self addSubview:_arrowView];
-        [self addSubview:_stationView];
+//        [self addSubview:_stationView];
         [self addSubview:_contentLabel];
         
         [self updateStyle];
@@ -69,7 +69,7 @@
     
     CGFloat maxWidth = MIN(_contentLabel.width, 171);
     CGRect frame = self.frame;
-    frame.size = CGSizeMake(maxWidth+72, 67);
+    frame.size = CGSizeMake(maxWidth+60, 67);
     self.frame = frame;
     
 //    [self changeSelectMode:[(FHHouseAnnotation *)annotation type]];
@@ -100,9 +100,8 @@
     self.backgroundView.frame = self.bounds;
     CGFloat arrowWidth = 7;
     self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 42-arrowWidth/2, arrowWidth, arrowWidth);
-    self.contentLabel.frame = CGRectMake(36, 21, self.width-60, 17);
-    self.stationView.frame = CGRectMake(26, 24, 10, 11);
-    
+    self.contentLabel.frame = CGRectMake(30, 21, self.width-60, 17);
+//    self.stationView.frame = CGRectMake(26, 24, 10, 11);    
 }
 
 /*
