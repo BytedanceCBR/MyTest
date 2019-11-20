@@ -300,29 +300,29 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [imdic setValue:contactPhone.realtorId forKey:@"target_user_id"];
     [imdic setValue:contactPhone.realtorName forKey:@"chat_title"];
     imdic[@"source"] = @"app_realtor_mainpage";
-    imdic[kFHCluePage] = @(FHClueIMPageTypeCExpertDetail);// todo zjing
-    imdic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-    NSURL *url = [NSURL URLWithString:contactPhone.realtorDetailUrl];
-    if (url) {
-        NSURLComponents* components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
-        NSMutableArray<NSURLQueryItem *> *queryItems = [components.queryItems mutableCopy];
-        NSURLQueryItem *imQueryItem;
-        for(NSURLQueryItem *queryItem in components.queryItems){
-            if([queryItem.name isEqualToString:@"im_params"]){
-                imQueryItem = queryItem;
-                break;
-            }
-        }
-        if (imQueryItem.value.length > 0) {
-            NSError *err;
-            NSString *imParamStr = [imQueryItem.value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            NSData *jsondata = [imParamStr dataUsingEncoding:NSUTF8StringEncoding];
-            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsondata options:NSJSONReadingMutableContainers error:&err];
-            if (!err && dic) {
-                [imdic addEntriesFromDictionary:dic];
-            }
-        }
-    }
+//    imdic[kFHCluePage] = @(FHClueIMPageTypeCExpertDetail);// todo zjing
+//    imdic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+//    NSURL *url = [NSURL URLWithString:contactPhone.realtorDetailUrl];
+//    if (url) {
+//        NSURLComponents* components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+//        NSMutableArray<NSURLQueryItem *> *queryItems = [components.queryItems mutableCopy];
+//        NSURLQueryItem *imQueryItem;
+//        for(NSURLQueryItem *queryItem in components.queryItems){
+//            if([queryItem.name isEqualToString:@"im_params"]){
+//                imQueryItem = queryItem;
+//                break;
+//            }
+//        }
+//        if (imQueryItem.value.length > 0) {
+//            NSError *err;
+//            NSString *imParamStr = [imQueryItem.value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//            NSData *jsondata = [imParamStr dataUsingEncoding:NSUTF8StringEncoding];
+//            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsondata options:NSJSONReadingMutableContainers error:&err];
+//            if (!err && dic) {
+//                [imdic addEntriesFromDictionary:dic];
+//            }
+//        }
+//    }
     NSString *imParams = nil;
     NSError *imParseError = nil;
     NSData *imJsonData = [NSJSONSerialization dataWithJSONObject:imdic options:0 error:&imParseError];
