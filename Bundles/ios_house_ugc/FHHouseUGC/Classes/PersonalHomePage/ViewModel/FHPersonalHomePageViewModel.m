@@ -722,7 +722,7 @@
         NSMutableDictionary *dict = @{@"begin_show_comment":@(jump_comment)}.mutableCopy;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
         traceParam[@"enter_from"] = [self pageType];
-        traceParam[@"enter_type"] = @"click";
+        traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
         traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
         traceParam[@"log_pb"] = cellModel.logPb;
         // traceParam[@"concern_id"] = @(self.cid);
