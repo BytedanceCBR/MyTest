@@ -377,16 +377,12 @@
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
-        if(model.rawData.originType){
+        if(model.rawData.originType.length > 0){
             originItemModel.type = [NSString stringWithFormat:@"[%@]",model.rawData.originType];
-        }else if(model.originType){
+        }else if(model.originType.length > 0){
             originItemModel.type = [NSString stringWithFormat:@"[%@]",model.originType];
         }else{
-            if([model.rawData.commentBase.repostParams.repostType integerValue] == 223){
-                originItemModel.type = @"[视频]";
-            }else{
-                originItemModel.type = @"[文章]";
-            }
+            
         }
         if(model.rawData.originGroup){
             originItemModel.content = model.rawData.originGroup.title;
