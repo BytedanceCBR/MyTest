@@ -446,7 +446,7 @@ def appPods
     #-----头条日志库-----
     pod_binary 'TTTracker', '10.0.5'
     #-----头条推送SDK----
-    pod 'TTPushSDK', '0.1.1'
+    pod_binary 'TTPushSDK', '0.1.1'
     
     #-----路由-----
     pod 'TTRoute','1.1.3-rc.0-f100' # git:'git@code.byted.org:TTIOS/tt_pods_route.git', :branch => 'f100'
