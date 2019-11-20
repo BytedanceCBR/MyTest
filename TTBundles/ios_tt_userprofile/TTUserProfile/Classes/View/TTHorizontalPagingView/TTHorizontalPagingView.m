@@ -11,26 +11,6 @@
 #import <objc/runtime.h>
 #import <TTBaseLib/UIViewAdditions.h>
 
-//@interface TTDynamicItem : NSObject<UIDynamicItem>
-//
-//@property (nonatomic, assign) CGPoint center;
-//@property (nonatomic, assign, readonly) CGRect bounds;
-//@property (nonatomic, assign) CGAffineTransform transform;
-//
-//@end
-//
-//@implementation TTDynamicItem
-//
-//- (instancetype)init
-//{
-//    if (self = [super init]) {
-//        _bounds = CGRectMake(0, 0, 1, 1);
-//    }
-//    return self;
-//}
-//
-//@end
-
 @interface TTHorizontalPagingCollectionView : UICollectionView <UIGestureRecognizerDelegate>
 
 @end
@@ -95,18 +75,12 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 @interface TTHorizontalPagingView ()<UICollectionViewDataSource,UICollectionViewDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic, assign) NSInteger section;
-@property (nonatomic, strong) NSMutableDictionary<NSNumber *,UIScrollView *> *contentViewDict;
 @property (nonatomic, assign) NSInteger lastPageIndex;
-//@property (nonatomic, strong) UIPanGestureRecognizer *headerViewPanGestureRecognizer;
-//@property (nonatomic, strong) UIPanGestureRecognizer *segmentViewPanGestureRecognizer;
+@property (nonatomic, strong) NSMutableDictionary<NSNumber *,UIScrollView *> *contentViewDict;
 @property (nonatomic, assign) CGFloat lastHeaderViewTop;
 @property (nonatomic, assign) BOOL segmentCanPan;
 @property (nonatomic, assign) CGFloat headerShowHeight;
 @property (nonatomic, assign) BOOL isFirstLoad;
-// 用于模拟scrollView滚动
-
-//@property (nonatomic, strong) UIDynamicAnimator *animator;
-//@property (nonatomic, strong) UIDynamicItemBehavior *inertialBehavior;
 
 @end
 
@@ -237,32 +211,6 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 {
     return self.headerViewHeight + self.segmentViewHeight;
 }
-
-//- (UIPanGestureRecognizer *)headerViewPanGestureRecognizer
-//{
-//    if(!_headerViewPanGestureRecognizer) {
-//        _headerViewPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
-//        _headerViewPanGestureRecognizer.delegate = self;
-//    }
-//    return _headerViewPanGestureRecognizer;
-//}
-//
-//- (UIPanGestureRecognizer *)segmentViewPanGestureRecognizer
-//{
-//    if(!_segmentViewPanGestureRecognizer) {
-//        _segmentViewPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panS:)];
-//        _segmentViewPanGestureRecognizer.delegate = self;
-//    }
-//    return _segmentViewPanGestureRecognizer;
-//}
-
-//- (UIDynamicAnimator *)animator
-//{
-//    if (!_animator) {
-//        _animator = [[UIDynamicAnimator alloc] init];
-//    }
-//    return _animator;
-//}
 
 - (UIView *)movingView {
     if(!_movingView){
@@ -602,6 +550,24 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     self.horizontalCollectionView.contentInset = UIEdgeInsetsZero;
     self.isSwitching = NO;
     self.segmentView.isSwitching = NO;
+}
+
+- (void)reloadHeaderViewHeight:(CGFloat)height {
+    if(self.headerViewHeight == height) return;
+    CGFloat delta = self.headerViewHeight - height;
+    CGFloat offsetY = self.currentContentView.contentOffset.y + delta;
+    [self setValue:@(height) forKeyPath:@"headerViewHeight"];
+    self.headerView.height = height;
+    
+    for (UIScrollView *scrollView in [self.contentViewDict allValues]) {
+        scrollView.contentOffset = CGPointMake(0,offsetY);
+        scrollView.contentInset = UIEdgeInsetsMake(self.headerViewHeight + self.segmentViewHeight, 0, scrollView.contentInset.bottom, 0);
+    }
+    
+    //    self.currentContentView.contentOffset = CGPointMake(0,offsetY);
+    //    self.currentContentView.contentInset = UIEdgeInsetsMake(self.headerViewHeight + self.segmentViewHeight, 0, self.currentContentView.contentInset.bottom, 0);
+    self.movingView.frame = CGRectMake(0, - self.currentContentViewTopInset, self.width, self.currentContentViewTopInset);
+    self.segmentView.frame = CGRectMake(0, self.headerView.bottom, self.width, self.segmentViewHeight);
 }
 
 @end
