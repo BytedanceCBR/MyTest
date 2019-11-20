@@ -380,7 +380,7 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCTopPostNotification object:nil userInfo:dic];
             
             NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
-            if([pageType isEqualToString:@"feed_detail"]){
+            if(self.cellModel.isFromDetail){
                 if(isTop){
                     [[ToastManager manager] showToast:@"置顶成功"];
                 }else{
@@ -424,7 +424,7 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCGoodPostNotification object:nil userInfo:dic];
             
             NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
-            if([pageType isEqualToString:@"feed_detail"]){
+            if(self.cellModel.isFromDetail){
                 if(isGood){
                     [[ToastManager manager] showToast:@"加精成功"];
                 }else{
