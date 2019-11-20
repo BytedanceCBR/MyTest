@@ -719,7 +719,16 @@
         if (showComment) {
             jump_comment = YES;
         }
-        NSDictionary *dict = @{@"begin_show_comment":@(jump_comment)};
+        NSMutableDictionary *dict = @{@"begin_show_comment":@(jump_comment)}.mutableCopy;
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = [self pageType];
+        traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+        traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+        traceParam[@"log_pb"] = cellModel.logPb;
+        // traceParam[@"concern_id"] = @(self.cid);
+        dict[TRACER_KEY] = traceParam;
+        dict[@"data"] = cellModel;
+        dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
