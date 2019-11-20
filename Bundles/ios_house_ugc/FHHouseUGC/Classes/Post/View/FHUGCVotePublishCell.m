@@ -96,6 +96,7 @@
         [_contentTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
         _contentTextField.font = [UIFont themeFontRegular:22];
         _contentTextField.textColor = [UIColor themeGray1];
+        _contentTextField.clipsToBounds = YES;
         [_contentTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     }
     return _contentTextField;
@@ -127,6 +128,7 @@
     if(!_contentTextField) {
         _contentTextField = [[UITextField alloc] initWithFrame:CGRectMake(PADDING, 20, SCREEN_WIDTH - 2 * PADDING, 33)];
         _contentTextField.placeholder = @"补充描述(选填)";
+        _contentTextField.clipsToBounds = YES;
         [_contentTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
         _contentTextField.textAlignment = NSTextAlignmentLeft;
         _contentTextField.font = [UIFont themeFontRegular:18];
@@ -175,6 +177,7 @@
         [_optionTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
         _optionTextField.font = [UIFont themeFontRegular:16];
         _optionTextField.textColor = [UIColor themeGray1];
+        _optionTextField.clipsToBounds = YES;
         [_optionTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     }
     return _optionTextField;
