@@ -35,7 +35,7 @@
     _rightImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fh_ugc_arrow_feed"]];
     [self addSubview:_rightImageView];
     _nameLabel = [[UILabel alloc] init];
-    _nameLabel.text = @"小区：";
+    _nameLabel.text = @"发布到：";
     _nameLabel.textColor = [UIColor themeGray1];
     _nameLabel.font = [UIFont themeFontRegular:16];
     _nameLabel.textAlignment = NSTextAlignmentLeft;
@@ -60,7 +60,7 @@
         make.centerY.equalTo(self);
         make.left.equalTo(self).offset(20);
         make.height.mas_equalTo(22);
-        make.width.mas_equalTo(48);
+        make.width.mas_equalTo(66);
     }];
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self);
@@ -83,14 +83,14 @@
         self.valueLabel.text = communityName;
         self.valueLabel.textColor = [UIColor themeGray1];
         [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(65);
+            make.width.mas_equalTo(66);
         }];
     } else {
-        self.nameLabel.text = @"小区：";
+        self.nameLabel.text = @"发布到：";
         self.valueLabel.text = @"选择想要发布帖子的圈子";
         self.valueLabel.textColor = [UIColor themeGray3];
         [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(49);
+            make.width.mas_equalTo(66);
         }];
     }
 }
