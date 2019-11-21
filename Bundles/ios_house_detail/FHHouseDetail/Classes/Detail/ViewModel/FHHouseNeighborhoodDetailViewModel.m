@@ -390,7 +390,12 @@
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:self.houseId];
         //TODO fengbo important! generate IM Params
 //        [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title :imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
-        agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        agentListModel.phoneCallViewModel.tracerDict = paramsDict;
 //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
 //        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;

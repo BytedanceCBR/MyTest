@@ -98,6 +98,8 @@
 
 - (void)cancelAction: (UIButton *)cancelBtn {
     
+    [self.tableView endEditing:YES];
+    
     NSMutableDictionary *params = @{}.mutableCopy;
     params[UT_PAGE_TYPE] = @"vote_publisher";
     params[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;

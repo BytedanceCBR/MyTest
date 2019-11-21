@@ -2052,6 +2052,7 @@ extern NSString *const INSTANT_DATA_KEY;
         tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
         tracerDict[@"log_pb"] = agencyCM.logPb ? : @"be_null";
         tracerDict[@"house_type"] = @"neighborhood";
+        tracerDict[@"realtor_logpb"] = agencyCM.contactModel.realtorLogpb ? : @"be_null";
         [FHUserTracker writeEvent:@"house_show" params:tracerDict];
     }
 
