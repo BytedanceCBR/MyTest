@@ -206,14 +206,14 @@
                     traceParam[@"origin_from"] = origin_from ? : @"be_null";
                     traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
                     traceParam[@"search_id"] = self.searchId;
-                     topRealCell.tracerDict = traceParam;
+//                     topRealCell.tracerDict = traceParam;
                     
                     __weak typeof(self) weakSelf = self;
                     NSString *stringQuery = [NSString stringWithFormat:@"neighborhood_id=%@",self.neiborHoorId];
                     if (self.condition) {
                         stringQuery = [stringQuery stringByAppendingString:self.condition];
                     }
-                    topRealCell.searchQuery = stringQuery;
+//                    topRealCell.searchQuery = stringQuery;
                     
                     return topRealCell;
                 }
@@ -436,7 +436,7 @@
     }
     __weak typeof(self) wself = self;
     // condition添加请求参数到url后面
-    self.httpTask = [FHHouseListAPI requestRelatedHouseSearchWithQuery:self.condition houseId:houseId offset:offset count:15 class:[FHRelatedHouseResponse class] completion:^(FHRelatedHouseResponse * _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHouseListAPI requestRelatedHouseSearchWithQuery:self.condition houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHRelatedHouseResponse class] completion:^(FHRelatedHouseResponse * _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];
 }

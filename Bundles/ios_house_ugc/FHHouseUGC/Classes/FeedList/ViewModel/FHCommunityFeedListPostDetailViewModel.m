@@ -31,8 +31,12 @@
 #import <TTVPlayVideo.h>
 #import <TTVFeedCellWillDisplayContext.h>
 #import <TTVFeedCellAction.h>
+#import "FHUGCEmptyCell.h"
 
 @interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
+
+@property(nonatomic, strong) FHErrorView *errorView;
+@property(nonatomic, assign) NSInteger retryCount;
 
 @end
 
@@ -53,6 +57,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postTopSuccess:) name:kFHUGCTopPostNotification object:nil];
         // 加精或取消加精成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
+        // 发投票成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postVoteSuccess:) name:@"kFHVotePublishNotificationName" object:nil];
     }
     
     return self;
@@ -62,8 +68,17 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (BOOL)isNotInAllTab {
+    return self.tabName && ![self.tabName isEqualToString:@"all"];
+}
+
 // 发帖成功，插入数据
 - (void)postThreadSuccess:(NSNotification *)noti {
+    //多个tab时候，仅仅强插在全部页面
+    if([self isNotInAllTab]){
+        return;
+    }
+    
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         NSString *social_group_id = userInfo[@"social_group_id"];
@@ -80,39 +95,8 @@
                         Class cls = [FHFeedUGCContentModel class];
                         FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
                         if (model && jsonParseError == nil) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-                                cellModel.showCommunity = NO;
-                                cellModel.feedVC = self.viewController;
-                                if (cellModel && [cellModel.community.socialGroupId isEqualToString:self.viewController.forumId]) {
-                                    //去重逻辑
-                                    [self removeDuplicaionModel:cellModel.groupId];
-                                    // JOKER: 找到第一个非置顶贴的下标
-                                    __block NSUInteger index = self.dataList.count;
-                                    [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                                        
-                                        BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
-                                        
-                                        if(!isStickTop) {
-                                            index = idx;
-                                            *stop = YES;
-                                        }
-                                    }];
-                                    // 插入在置顶贴的下方
-                                    [self.dataList insertObject:cellModel atIndex:index];
-                                    [self reloadTableViewData];
-                                    [self.tableView layoutIfNeeded]; self.needRefreshCell = NO;
-                                    // JOKER: 发贴成功插入贴子后，滚动使露出
-                                    if(index == 0) {
-                                        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
-                                    } else {
-                                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                        CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
-                                        rect.origin.y -= [TTDeviceHelper isIPhoneXDevice] ? 88 : 64; // 白色导航条的高度
-                                        [self.tableView setContentOffset:rect.origin animated:YES];
-                                    }
-                                }
-                            });
+                            FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+                            [self insertPostData:cellModel socialGroupIds:nil];
                         }
                     }
                 }
@@ -121,6 +105,117 @@
     }
 }
 
+// 发投票成功，插入数据
+- (void)postVoteSuccess:(NSNotification *)noti {
+    //多个tab时候，仅仅强插在全部页面
+    if([self isNotInAllTab]){
+        return;
+    }
+    
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *vote_data = userInfo[@"voteData"];
+        NSString *social_group_ids = userInfo[@"social_group_ids"];
+        if ([vote_data isKindOfClass:[NSString class]] && vote_data.length > 0) {
+            // 模型转换
+            NSDictionary *dic = [vote_data JSONValue];
+            FHFeedUGCCellModel *cellModel = nil;
+            if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+                NSDictionary * rawDataDic = dic[@"raw_data"];
+                // 先转成rawdata
+                NSError *jsonParseError;
+                if (rawDataDic && [rawDataDic isKindOfClass:[NSDictionary class]]) {
+                    FHFeedContentRawDataModel *model = [[FHFeedContentRawDataModel alloc] initWithDictionary:rawDataDic error:&jsonParseError];
+                    if (model && model.voteInfo) {
+                        // 有投票数据
+                        // social_group data
+                        /*
+                        FHUGCScialGroupDataModel * groupData = nil;
+                        if (rawDataDic[@"community"]) {
+                            // 继续解析小区头部
+                            NSDictionary *social_group = [rawDataDic tt_dictionaryValueForKey:@"community"];
+                            NSError *groupError = nil;
+                            groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
+                        }
+                         */
+                        FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
+                        ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeUGCVoteInfo];
+                        ugcContent.title = model.title;
+                        ugcContent.isStick = model.isStick;
+                        ugcContent.stickStyle = model.stickStyle;
+                        ugcContent.diggCount = model.diggCount;
+                        ugcContent.commentCount = model.commentCount;
+                        ugcContent.userDigg = model.userDigg;
+                        ugcContent.groupId = model.groupId;
+                        ugcContent.logPb = model.logPb;
+                        ugcContent.community = model.community;
+                        ugcContent.rawData = model;
+                        // FHFeedUGCCellModel
+                        cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+                        cellModel.isFromDetail = NO;
+                        cellModel.tableView = self.tableView;
+                    }
+                }
+            }
+            [self insertPostData:cellModel socialGroupIds:social_group_ids];
+        }
+    }
+}
+// 发帖和发投票后插入逻辑 social_group_ids 为空直接用cellModel.community.socialGroupId
+- (void)insertPostData:(FHFeedUGCCellModel *)cellModel socialGroupIds:(NSString *)social_group_ids {
+    if (cellModel == nil) {
+        return;
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        cellModel.showCommunity = NO;
+        cellModel.feedVC = self.viewController;
+        // 判断是否是需要插入的圈子,关注直接插入 不需要判断逻辑
+        NSString *socialGroups = social_group_ids;
+        if (socialGroups.length <= 0) {
+            socialGroups = cellModel.community.socialGroupId;
+        }
+        if (cellModel && self.viewController.forumId.length > 0 && [socialGroups containsString:self.viewController.forumId]) {
+            //去重逻辑
+            [self removeDuplicaionModel:cellModel.groupId];
+            // JOKER: 找到第一个非置顶贴的下标
+            __block NSUInteger index = self.dataList.count;
+            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
+                
+                if(!isStickTop) {
+                    index = idx;
+                    *stop = YES;
+                }
+            }];
+            
+            if(self.viewController.beforeInsertPostBlock){
+                self.viewController.beforeInsertPostBlock();
+            }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                // 插入在置顶贴的下方
+                [self.dataList insertObject:cellModel atIndex:index];
+                [self reloadTableViewData];
+                [self.tableView layoutIfNeeded];
+                self.needRefreshCell = NO;
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            });
+            
+//            // JOKER: 发贴成功插入贴子后，滚动使露出
+//            if(index == 0) {
+//                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+////                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+//            } else {
+//                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+////                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+////                CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+////                rect.origin.y -= ([TTDeviceHelper isIPhoneXDevice] ? 88 : 64); // 白色导航条的高度
+////                rect.origin.y += self.viewController.segmentViewHeight;
+////                [self.tableView setContentOffset:rect.origin animated:YES];
+//            }
+        }
+    });
+}
 
 - (void)configTableView {
     self.tableView.delegate = self;
@@ -142,11 +237,19 @@
     }
 }
 
+- (FHErrorView *)errorView {
+    if(!_errorView){
+        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 400)];
+    }
+    return _errorView;
+}
+
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     if(self.viewController.isLoadingData){
         return;
     }
     
+    self.viewController.needReloadData = NO;
     self.viewController.isLoadingData = YES;
     
     if(self.isRefreshingTip){
@@ -156,6 +259,7 @@
     
     if(isFirst){
         [self.viewController startLoading];
+        self.retryCount = 0;
     }
     
     __weak typeof(self) wself = self;
@@ -195,6 +299,9 @@
     }
     if(lastGroupId){
         [extraDic setObject:lastGroupId forKey:@"last_group_id"];
+    }
+    if(self.tabName){
+        [extraDic setObject:self.tabName forKey:@"tab_name"];
     }
     
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
@@ -255,6 +362,13 @@
             }
             
             wself.viewController.hasValidateData = wself.dataList.count > 0;
+            
+            //第一次拉取数据过少时，在多拉一次loadmore
+            if(self.dataList.count > 0 && self.dataList.count < 5 && self.tableView.hasMore && self.retryCount < 1){
+                self.retryCount += 1;
+                [self requestData:NO first:NO];
+                return;
+            }
         
             [wself reloadTableViewData];
             
@@ -275,14 +389,51 @@
 - (void)reloadTableViewData {
     if(self.dataList.count > 0){
         [self updateTableViewWithMoreData:self.tableView.hasMore];
-        [self.viewController.emptyView hideEmptyView];
-        self.viewController.tableView.scrollEnabled = YES;
+        self.tableView.backgroundColor = [UIColor themeGray7];
+        
+        CGFloat height = [self getVisibleHeight:5];
+        if(height < self.viewController.errorViewHeight && height > 0 && self.viewController.errorViewHeight > 0){
+            [self.tableView reloadData];
+            CGFloat refreshFooterBottomHeight = self.tableView.mj_footer.height;
+            if ([TTDeviceHelper isIPhoneXSeries]) {
+                refreshFooterBottomHeight += 34;
+            }
+            UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight - height - refreshFooterBottomHeight)];
+            tableFooterView.backgroundColor = [UIColor themeGray7];
+            self.tableView.tableFooterView = tableFooterView;
+        }else{
+            self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
+            [self.tableView reloadData];
+        }
     }else{
-        [self.viewController.emptyView showEmptyWithTip:@"该圈子还没有内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        if([self isNotInAllTab]){
+            [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        }else{
+            [self.errorView showEmptyWithTip:@"该圈子还没有内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        }
+        
+        UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight)];
+        tableFooterView.backgroundColor = [UIColor whiteColor];
+        [tableFooterView addSubview:self.errorView];
+        self.tableView.tableFooterView = tableFooterView;
         self.refreshFooter.hidden = YES;
-        self.viewController.tableView.scrollEnabled = NO;
+        self.tableView.backgroundColor = [UIColor whiteColor];
+        [self.tableView reloadData];
     }
-    [self.tableView reloadData];
+    self.retryCount = 0;
+}
+
+- (void)showCustomErrorView:(FHEmptyMaskViewType)type {
+    if(self.dataList.count <= 0){
+        [self.errorView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight)];
+        tableFooterView.backgroundColor = [UIColor whiteColor];
+        [tableFooterView addSubview:self.errorView];
+        self.tableView.tableFooterView = tableFooterView;
+        self.refreshFooter.hidden = YES;
+        self.tableView.backgroundColor = [UIColor whiteColor];
+        [self.tableView reloadData];
+    }
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -293,6 +444,19 @@
         [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
+}
+
+- (CGFloat)getVisibleHeight:(NSInteger)maxCount {
+    CGFloat height = 0;
+    if(self.dataList.count <= maxCount){
+        for (FHFeedUGCCellModel *cellModel in self.dataList) {
+            Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
+            if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
+                height += [cellClass heightForData:cellModel];
+            }
+        }
+    }
+    return height;
 }
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
@@ -337,6 +501,7 @@
 }
 
 - (void)postTopSuccess:(NSNotification *)noti {
+    //多个tab时候，仅仅强插在全部页面
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
         FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
@@ -474,10 +639,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    self.currentCellModel = cellModel;
-    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-    [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        self.currentCellModel = cellModel;
+        self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+        [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    }
 }
 
 #pragma UISCrollViewDelegate
@@ -489,6 +656,10 @@
             [self.viewController.notifyBarView performSelector:@selector(hideIfNeeds) withObject:nil];
         }
     }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [self.viewController.scrollViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:YES];
 }
 
 - (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
@@ -576,6 +747,25 @@
         
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
+    } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo) {
+        // 投票
+        BOOL jump_comment = NO;
+        if (showComment) {
+            jump_comment = YES;
+        }
+        NSMutableDictionary *dict = @{@"begin_show_comment":@(jump_comment)}.mutableCopy;
+        dict[@"data"] = cellModel;
+        dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = @"community_group_detail";
+        traceParam[@"enter_type"] = enterType;
+        traceParam[@"rank"] = cellModel.tracerDic[@"rank"] ?: @"be_null";
+        traceParam[@"log_pb"] = cellModel.logPb;
+        dict[TRACER_KEY] = traceParam;
+        
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
@@ -664,11 +854,9 @@
     NSInteger row = [self getCellIndex:cellModel];
     if(row < self.dataList.count && row >= 0){
         [self.dataList removeObjectAtIndex:row];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
-        if (self.dataList.count == 0) {
-            [self reloadTableViewData];
-        }
+//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        [self reloadTableViewData];
     }
 }
 
@@ -700,9 +888,14 @@
             traceParam[@"enter_type"] = @"click";
             traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
             traceParam[@"log_pb"] = cellModel.logPb;
-        } else if([url.absoluteString containsString:@"profile"]) {
+        }
+        else if([url.absoluteString containsString:@"profile"]) {
             // JOKER:
-        } else {
+        }
+        else if([url.absoluteString containsString:@"webview"]) {
+            
+        }
+        else {
             isOpen = NO;
         }
         

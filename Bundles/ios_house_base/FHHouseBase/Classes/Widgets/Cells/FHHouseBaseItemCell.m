@@ -72,7 +72,7 @@
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 @property(nonatomic, strong) FHCornerItemLabel *tagTitleLabel; //降 新 榜等标签
-
+@property (nonatomic, assign) CGSize titleSize;
 @end
 
 @implementation FHHouseBaseItemCell
@@ -1003,6 +1003,7 @@
 // 子类需要重写的方法，根据数据源刷新当前Cell，以及布局
 - (void)refreshWithData:(id)data
 {
+    self.currentData = data;
     if([data isKindOfClass:[FHNewHouseItemModel class]])
     {
         FHNewHouseItemModel *model = (FHNewHouseItemModel *)data;
@@ -1015,6 +1016,135 @@
         self.priceLabel.text = model.displayPricePerSqm;
         FHImageModel *imageModel = model.images.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
+    }else if ([data isKindOfClass:[FHSearchHouseItemModel class]])
+    {
+        FHSearchHouseItemModel *commonModel = (FHSearchHouseItemModel *)data;
+        self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
+        self.mainTitleLabel.text = commonModel.displayTitle;
+        self.subTitleLabel.text = commonModel.displayDescription;
+        NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:commonModel.tags];
+        self.tagLabel.attributedText =  attributeString;
+        
+        self.priceLabel.text = commonModel.displayPricePerSqm;
+        //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
+        FHImageModel *imageModel = commonModel.images.firstObject;
+        [self updateMainImageWithUrl:imageModel.url];
+        
+        FHHouseType houseType = commonModel.houseType.integerValue;
+        if (houseType == FHHouseTypeSecondHandHouse) {
+            FHImageModel *imageModel = commonModel.houseImage.firstObject;
+            [self updateMainImageWithUrl:imageModel.url];
+            self.subTitleLabel.text = commonModel.displaySubtitle;
+            self.priceLabel.text = commonModel.displayPrice;
+            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+            if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
+                self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
+                self.imageTagLabel.text = commonModel.houseImageTag.text;
+                self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
+                self.imageTagLabelBgView.hidden = NO;
+            }else {
+                
+                self.imageTagLabelBgView.hidden = YES;
+            }
+            
+        } else if (houseType == FHHouseTypeRentHouse) {
+            
+            NSArray *firstRow = [commonModel.bottomText firstObject];
+            NSDictionary *bottomText = nil;
+            if ([firstRow isKindOfClass:[NSArray class]]) {
+                NSDictionary *info = [firstRow firstObject];
+                if ([info isKindOfClass:[NSDictionary class]]) {
+                    bottomText = info;
+                }
+            }
+            [self updateBottomText:bottomText];
+
+            self.mainTitleLabel.text = commonModel.title;
+            self.subTitleLabel.text = commonModel.subtitle;
+            self.priceLabel.text = commonModel.pricing;
+            self.pricePerSqmLabel.text = nil;
+            FHImageModel *imageModel = [commonModel.houseImage firstObject];
+            [self updateMainImageWithUrl:imageModel.url];
+            
+            if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
+                self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
+                self.imageTagLabel.text = commonModel.houseImageTag.text;
+                self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
+                self.imageTagLabelBgView.hidden = NO;
+            }else {
+                self.imageTagLabelBgView.hidden = YES;
+            }
+        } else {
+            self.pricePerSqmLabel.text = @"";
+        }
+        
+        [self hideRecommendReason];
+        self.titleSize = [[self class]titleSizeWithTagList:commonModel.tags titleStr:commonModel.title];
+        [self updateTitlesLayout:attributeString.length > 0];
+        
+        [self.contentView.yoga applyLayoutPreservingOrigin:NO];
+    }
+}
+
+- (void)updateBottomText:(NSDictionary *)bottomText
+{
+    if (![bottomText isKindOfClass:[NSDictionary class]]) {
+        return;
+    }
+    NSString *infoText = bottomText[@"text"];
+    
+    if (bottomText && bottomText[@"color"] && !IS_EMPTY_STRING(infoText)) {
+        
+        NSMutableAttributedString *commuteAttr = [[NSMutableAttributedString alloc]init];
+        
+        UIImage *clockImg =  SYS_IMG(@"clock_small");
+        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+        attachment.image = clockImg;
+        attachment.bounds = CGRectMake(0, -1.5, 12, 12);
+        
+        NSAttributedString *clockAttr = [NSAttributedString attributedStringWithAttachment:attachment];
+        
+        [commuteAttr appendAttributedString:clockAttr];
+        
+        UIColor *textColor = [UIColor colorWithHexStr:bottomText[@"color"]]?:[UIColor themeGray3];
+        
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:textColor};
+        NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",infoText] attributes:attr];
+        
+        [commuteAttr appendAttributedString:timeAttr];
+        
+        self.distanceLabel.attributedText = commuteAttr;
+        
+        if (!_distanceLabel){
+            [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                layout.isEnabled = YES;
+                layout.marginLeft = YGPointValue(10);
+                layout.alignSelf = YGAlignCount;
+                layout.flexGrow = 1;
+            }];
+        }
+        [self.priceBgView addSubview:self.distanceLabel];
+        //因为有表情 强制计算宽度
+        [self.distanceLabel sizeToFit];
+        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.width = YGPointValue(ceil(self.distanceLabel.frame.size.width));//x 设备上会出现因为小数计算显示不全的，改为上取整
+        }];
+        _priceBgView.yoga.justifyContent = YGJustifySpaceBetween;
+        [self.distanceLabel.yoga markDirty];
+    }else{
+        [_distanceLabel removeFromSuperview];
+        _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
+    }
+}
+
++ (CGFloat)heightForData:(id)data
+{
+    BOOL isLastCell = NO;
+    if([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+        isLastCell = model.isLastCell;
+        CGFloat reasonHeight = [model showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+        return (isLastCell ? 125 : 105) + reasonHeight;
     }
 }
 
@@ -1095,7 +1225,6 @@
         }];
     }
     
-    
     NSArray *firstRow = [model.bottomText firstObject];
     NSDictionary *bottomText = nil;
     if ([firstRow isKindOfClass:[NSArray class]]) {
@@ -1104,51 +1233,7 @@
             bottomText = info;
         }
     }
-    
-    NSString *infoText = bottomText[@"text"];
-    
-    if (bottomText && bottomText[@"color"] && !IS_EMPTY_STRING(infoText)) {
-        
-        NSMutableAttributedString *commuteAttr = [[NSMutableAttributedString alloc]init];
-        
-        UIImage *clockImg =  SYS_IMG(@"clock_small");
-        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
-        attachment.image = clockImg;
-        attachment.bounds = CGRectMake(0, -1.5, 12, 12);
-        
-        NSAttributedString *clockAttr = [NSAttributedString attributedStringWithAttachment:attachment];
-        
-        [commuteAttr appendAttributedString:clockAttr];
-        
-        UIColor *textColor = [UIColor colorWithHexStr:bottomText[@"color"]]?:[UIColor themeGray3];
-        
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:textColor};
-        NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",infoText] attributes:attr];
-        
-        [commuteAttr appendAttributedString:timeAttr];
-        
-        self.distanceLabel.attributedText = commuteAttr;
-        
-        if (!_distanceLabel){
-            [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                layout.isEnabled = YES;
-                layout.marginLeft = YGPointValue(10);
-                layout.alignSelf = YGAlignCount;
-                layout.flexGrow = 1;
-            }];
-        }
-        [self.priceBgView addSubview:self.distanceLabel];
-        //因为有表情 强制计算宽度
-        [self.distanceLabel sizeToFit];
-        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.width = YGPointValue(ceil(self.distanceLabel.frame.size.width));//x 设备上会出现因为小数计算显示不全的，改为上取整
-        }];
-        _priceBgView.yoga.justifyContent = YGJustifySpaceBetween;
-        [self.distanceLabel.yoga markDirty];
-    }else{
-        [_distanceLabel removeFromSuperview];
-        _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
-    }
+    [self updateBottomText:bottomText];
     
     FHImageModel *imageModel = [model.houseImage firstObject];
     [self updateMainImageWithUrl:imageModel.url];
@@ -1195,9 +1280,9 @@
 
 -(void)updateTitlesLayout:(BOOL)showTags
 {
+    CGSize titleSize = self.cellModel ? self.cellModel.titleSize : self.titleSize;
     self.mainTitleLabel.numberOfLines = showTags?1:2;
-    
-    BOOL oneRow = showTags || self.cellModel.titleSize.height < 30;
+    BOOL oneRow = showTags || titleSize.height < 30;
     
     [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.marginTop = YGPointValue(oneRow?-2:-5);
@@ -1362,6 +1447,22 @@
     if (dirty) {
         [self.contentView.yoga applyLayoutPreservingOrigin:NO];
     }
+}
+
++ (CGSize)titleSizeWithTagList:(NSArray<FHHouseTagsModel *> *)tagList titleStr:(NSString *)titleStr {
+    
+    UILabel *majorTitle = [[UILabel alloc]init];
+    majorTitle.font = [UIFont themeFontRegular:16];
+    majorTitle.textColor = [UIColor themeGray1];
+    if (tagList.count < 1) {
+        
+        majorTitle.numberOfLines = 2;
+    }else {
+        majorTitle.numberOfLines = 1;
+    }
+    majorTitle.text = titleStr;
+    CGSize fitSize = [majorTitle sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width * ([UIScreen mainScreen].bounds.size.width > 376 ? 0.61 : [UIScreen mainScreen].bounds.size.width > 321 ? 0.56 : 0.48), 0)];
+    return fitSize;
 }
 #pragma mark 字符串处理
 -(NSAttributedString *)originPriceAttr:(NSString *)originPrice {

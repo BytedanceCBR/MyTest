@@ -25,6 +25,7 @@
 #import "HTSVideoPageParamHeader.h"
 #import "FHUGCSmallVideoCell.h"
 #import "AWEVideoConstants.h"
+#import "HMDTTMonitor.h"
 
 @interface FHTopicDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -139,6 +140,11 @@
             } else {
                 // 强制endLoading
                 wSelf.loadDataSuccessCount += 1;
+                
+                // 成功埋点 status = 0 成功（不上报） status = 1：header data error
+                NSMutableDictionary *metric = @{}.mutableCopy;
+                metric[@"topic_id"] = cidStr;
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_topic_detail_error" metric:metric category:@{@"status":@(1)} extra:nil];
             }
         }
         [wSelf processLoadingState];
@@ -225,6 +231,11 @@
                 wSelf.hasMore = feedList.hasMore;
                 wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
                 wSelf.appExtraParams = feedList.apiBaseInfo.appExtraParams;
+            } else {
+                // 成功埋点 status = 0 成功（不上报） status = 2：list data error
+                NSMutableDictionary *metric = @{}.mutableCopy;
+                metric[@"topic_id"] = cidStr;
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_topic_detail_error" metric:metric category:@{@"status":@(2)} extra:nil];
             }
         }
         [wSelf processLoadingState];
@@ -584,9 +595,14 @@
             traceParam[@"enter_type"] = @"click";
             traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
             traceParam[@"log_pb"] = cellModel.logPb;
-        } else if([url.absoluteString containsString:@"profile"]) {
+        }
+        else if([url.absoluteString containsString:@"profile"]) {
             // JOKER:
-        } else {
+        }
+        else if([url.absoluteString containsString:@"webview"]) {
+            
+        }
+        else {
             isOpen = NO;
         }
 

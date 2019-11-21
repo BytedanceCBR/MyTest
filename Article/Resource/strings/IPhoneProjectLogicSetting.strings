@@ -194,6 +194,10 @@
 "ugc_focus_list" = "FHUGCFollowListController"; //关注列表页
 "ugc_comment_list" = "FHUGCCommentListController"; //评论列表页
 "ugc_follow_user_list" = "FHUGCUserFollowListController";//圈子关注用户列表
+"ugc_vote_publish" = "FHUGCVotePublishViewController"; // 投票发布器
+"ugc_vote_publish_type_select" = "FHUGCVotePublishTypeSelectViewController"; // 投票发布器投票类型选择页
+"ugc_vote_publish_visible_scope" = "FHUGCVotePublishVisibleScopeController"; // 投票发布器投票可见范围
+"ugc_vote_detail" = "FHVoteDetailViewController";// 投票详情页
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";

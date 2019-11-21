@@ -196,7 +196,7 @@
     imExtra[@"source_from"] = @"house_ask_question";
     imExtra[@"im_open_url"] = model.openUrl;
     imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHCluePageTypeCQuickQuestion];
+    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCQuickQuestion];
     imExtra[@"question_id"] = model.id;
     [self.contactViewModel onlineActionWithExtraDict:imExtra];
 }
@@ -464,6 +464,28 @@
 }
 
 #pragma mark - 埋点
+
+- (NSString *)pageTypeString
+{
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return @"new_detail";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_detail";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent_detail";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_detail";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
 - (void)addGoDetailLog
 {
 //    1. event_type ：house_app2c_v2

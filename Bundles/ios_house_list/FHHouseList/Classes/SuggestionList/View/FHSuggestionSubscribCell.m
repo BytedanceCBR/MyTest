@@ -171,6 +171,16 @@
     _subscribeBtn.userInteractionEnabled = YES;
 }
 
+- (void)refreshWithData:(id)data
+{
+    [self refreshUI:data];
+}
+
++ (CGFloat)heightForData:(id)data
+{
+    return 121;
+}
+
 - (void)refreshUI:(JSONModel *)data
 {
     if ([data isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {

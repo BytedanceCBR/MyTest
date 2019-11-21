@@ -121,3 +121,9 @@
 
 
 @end
+
+@implementation FHHomePlaceHolderCellModel
+
+
+
+@end
