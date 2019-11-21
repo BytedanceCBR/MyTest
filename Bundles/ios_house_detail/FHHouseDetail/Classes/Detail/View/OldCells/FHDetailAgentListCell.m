@@ -160,6 +160,7 @@
         model.phoneCallViewModel.belongsVC = model.belongsVC;
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         dict[@"element_from"] = [self elementTypeStringByHouseType:self.baseViewModel.houseType];
+        dict[@"enter_from"] = [self.baseViewModel pageTypeString];
         [model.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:dict];
     }
 }

@@ -393,7 +393,12 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
-        agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        agentListModel.phoneCallViewModel.tracerDict = paramsDict;
 //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
 //        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;
