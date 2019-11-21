@@ -1501,6 +1501,10 @@ extern NSString *const INSTANT_DATA_KEY;
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (_showPlaceHolder) {
+        if (self.houseType == FHHouseTypeNewHouse) {
+            FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+            return cell;
+        }
 
         if(self.commute){
             FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListPlaceholderCellId];
@@ -1622,6 +1626,9 @@ extern NSString *const INSTANT_DATA_KEY;
         height = 105;
     }
     if (_showPlaceHolder) {
+        if (self.houseType == FHHouseTypeNewHouse) {
+            return 118;
+        }
         return height;
     }
     NSString *identifier = @"";
