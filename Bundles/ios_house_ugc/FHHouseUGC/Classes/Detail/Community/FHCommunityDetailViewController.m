@@ -230,12 +230,14 @@
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.titleContainer);
+        make.top.mas_equalTo(self.titleContainer);
+        make.centerX.mas_equalTo(self.customNavBarView);
         make.height.mas_equalTo(20);
     }];
     
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self.titleContainer);
+        make.bottom.mas_equalTo(self.titleContainer);
+        make.centerX.mas_equalTo(self.titleLabel);
         make.height.mas_equalTo(14);
     }];
     
