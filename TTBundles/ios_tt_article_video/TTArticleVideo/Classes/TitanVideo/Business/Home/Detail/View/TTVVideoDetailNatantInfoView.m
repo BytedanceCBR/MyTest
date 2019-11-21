@@ -877,7 +877,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
     if (self.shareManager && [self.shareManager respondsToSelector:@selector(_detailCentrelDirectShareItemAction:)]) {
         [self.shareManager _detailCentrelDirectShareItemAction:btn.activityType];
         //评分视图，发个通知就行
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"share"}];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"share"}];
     }
 }
 

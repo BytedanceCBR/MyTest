@@ -198,6 +198,7 @@
 
 // 二手房-周边房源
 +(TTHttpTask*)requestRelatedHouseSearch:(NSString*)houseId
+                                 searchId:(NSString *)searchId
                                  offset:(NSString *)offset
                                   query:(NSString*)query
                                   count:(NSInteger)count
@@ -211,6 +212,7 @@
     if (![url containsString:@"count"]) {
         paramDic[@"count"] = @(count);
     }
+    paramDic[@"search_id"] = searchId ?: @"";
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_HOUSE;
     __weak typeof(self)wself = self;
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedHouseResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {

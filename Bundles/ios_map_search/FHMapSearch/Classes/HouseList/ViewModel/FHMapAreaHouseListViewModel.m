@@ -260,7 +260,7 @@
 {
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:isHead?0:self.currentRentModel.offset searchId:self.searchId sugParam:nil completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
+    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:isHead?0:self.currentRentModel.offset searchId:self.searchId sugParam:nil class:[FHHouseRentModel class] completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
         
         if (!wself) {
             return ;

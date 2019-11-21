@@ -309,7 +309,7 @@
             NSString * placeHolderStr = fullText;
             NSString *pageType = [self pageTypeString];
             NSString *queryText = placeHolderStr.length > 0 ? placeHolderStr : @"be_null";
-            NSString *openUrl = [NSString stringWithFormat:@"fschema://neighborhood_deal_list?house_type=%ld&full_text=%@",self.houseType,placeHolderStr];
+            NSString *openUrl = [NSString stringWithFormat:@"sslocal://neighborhood_deal_list?house_type=%ld&full_text=%@",self.houseType,placeHolderStr];
             NSString *queryType = @"enter";
             NSDictionary *houseSearchParams = @{
                                                 @"enter_query":queryText,
