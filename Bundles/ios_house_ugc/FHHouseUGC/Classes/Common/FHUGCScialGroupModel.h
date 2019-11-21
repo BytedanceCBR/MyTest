@@ -45,6 +45,16 @@ typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
 
 @end
 
+@protocol FHUGCScialGroupDataTabInfoModel<NSObject>
+@end
+
+@interface FHUGCScialGroupDataTabInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *tabName;
+@property (nonatomic, copy , nullable) NSString *showName;
+@property (nonatomic, assign) BOOL isDefault;
+@end
+
 @interface FHUGCScialGroupDataModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *announcement;
@@ -63,6 +73,7 @@ typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
 @property (nonatomic, copy , nullable) NSDictionary *logPb;
 @property (nonatomic, strong) FHUGCScialGroupDataChatStatusModel *chatStatus;
 @property (nonatomic, strong, nullable)   FHUGCShareInfoModel *shareInfo;
+@property (nonatomic, strong , nullable) NSArray<FHUGCScialGroupDataTabInfoModel> *tabInfo;
 
 @end
 

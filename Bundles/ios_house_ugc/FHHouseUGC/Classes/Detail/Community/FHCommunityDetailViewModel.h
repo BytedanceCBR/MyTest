@@ -10,7 +10,7 @@
 
 
 @interface FHCommunityDetailViewModel : NSObject <UIScrollViewDelegate>
-@property(nonatomic , strong) NSMutableDictionary *tracerDict;
+@property (nonatomic , strong) NSMutableDictionary *tracerDict;
 @property (nonatomic, weak)     UIButton       *shareButton;
 @property (nonatomic, strong)   FHUGCShareInfoModel *shareInfo;// 分享信息，服务端返回
 @property (nonatomic, copy)     NSDictionary       *shareTracerDict;// 分享埋点数据
@@ -25,9 +25,20 @@
 
 - (void)viewWillDisappear;
 
--(void)addGoDetailLog;
+- (void)addGoDetailLog;
 
--(void)addStayPageLog:(NSTimeInterval)stayTime;
+- (void)addStayPageLog:(NSTimeInterval)stayTime;
 
 - (void)addPublicationsShowLog;
+
+- (void)refreshBasicInfo;
+
+- (void)gotoSocialFollowUserList;
+
+- (void)gotoPostThreadVC;
+
+- (void)gotoVotePublish;
+
+- (void)gotoGroupChat;
+
 @end

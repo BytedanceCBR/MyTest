@@ -55,6 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 二手房-周边房源
 +(TTHttpTask*)requestRelatedHouseSearch:(NSString*)houseId
+                               searchId:(NSString *)searchId
                                   offset:(NSString *)offset
                                   query:(NSString*)query
                                   count:(NSInteger)count

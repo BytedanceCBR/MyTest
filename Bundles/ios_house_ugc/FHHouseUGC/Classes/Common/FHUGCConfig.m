@@ -17,6 +17,7 @@
 #import "FHEnvContext.h"
 #import <TTBusinessManager+StringUtils.h>
 #import <FHUtils.h>
+#import "HMDTTMonitor.h"
 
 //默认轮训间隔时间5分钟
 #define defaultFocusTimerInterval 300
@@ -34,7 +35,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 static const NSString *kFHUGCPublisherHistoryCacheKey = @"key_ugc_publisher_history_cache";
 static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_history_Data";
 
-// 小区圈子数据统一内存数据缓存
+// 圈子子数据统一内存数据缓存
 @interface FHUGCSocialGroupData : NSObject
 
 + (instancetype)sharedInstance;
@@ -297,7 +298,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 }
 
 - (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id {
-    // 先去小区圈专门内存中取（包含关注列表中的数据，优化后）
+    // 先去圈子专门内存中取（包含关注列表中的数据，优化后）
     FHUGCScialGroupDataModel * model = [[FHUGCSocialGroupData sharedInstance] socialGroupData:social_group_id];
     if (model) {
         return model;
@@ -393,7 +394,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 
 - (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model {
     [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:model];
-    // 通知 附近 可能感兴趣的小区圈 帖子数变化
+    // 通知 附近 可能感兴趣的圈子 帖子数变化
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCSicialGroupDataChangeKey" object:nil];
     // 我关注的列表数据修改
     NSString *social_group_id = model.socialGroupId;
@@ -493,10 +494,12 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                         if ([tModel isKindOfClass:[FHUGCFollowModel class]]) {
                             [self followSuccessWith:tModel.data];
                         }
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"follow_community" metric:nil category:@{@"status":@(0)} extra:nil];
                     } else {
                         // [[ToastManager manager] showToast:@"取消关注成功"];
                         // 取消关注成功
                         [self cancelFollowSuccessWith:social_group_id];
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"unfollow_community" metric:nil category:@{@"status":@(0)} extra:nil];
                     }
                     // 关注或者取消关注后 重新拉取 关注列表
                     isSuccess = YES;
@@ -527,8 +530,10 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         } else {
             if (follow) {
                 // [[ToastManager manager] showToast:@"关注失败"];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"follow_community" metric:nil category:@{@"status":@(2)} extra:nil];
             } else {
                 // [[ToastManager manager] showToast:@"取消关注失败"];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"unfollow_community" metric:nil category:@{@"status":@(2)} extra:nil];
             }
             if (completion) {
                 completion(NO);

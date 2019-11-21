@@ -63,6 +63,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshMessageDot;
 
++ (NSInteger)searchOffsetByhouseModel:(JSONModel *)houseModel;
+
 @end
 
 NS_ASSUME_NONNULL_END

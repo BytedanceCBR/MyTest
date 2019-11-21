@@ -37,6 +37,8 @@
 #import "FHMapSubwayPickerView.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import "FHMapStationAnnotationView.h"
+#import "FHMapStationIconAnnotationView.h"
+#import "FHMapSearchStationIconAnnotation.h"
 #import "FHMapSearchFilterView.h"
 #import "FHMapAreaHouseListViewController.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
@@ -764,6 +766,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotation;
                 removeAnnotationDict[houseAnnotation.houseData.nid] = annotation;
                 [currentHouseAnnotations addObject:annotation];//站点有重复的
+            }else if([annotation isKindOfClass:[FHMapSearchStationIconAnnotation class]]){
+                [self.mapView removeAnnotation:annotation];
             }
         }
 
@@ -813,6 +817,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 houseAnnotation.type = FHHouseAnnotationTypeNormal;
             }
             [annotations addObject:houseAnnotation];
+            
+            if ([info.type integerValue] == FHMapSearchTypeFakeStation) {
+                //地铁站增加 火车头icon
+                FHMapSearchStationIconAnnotation *stationIconAnnotation = [FHMapSearchStationIconAnnotation new];
+                stationIconAnnotation.coordinate = CLLocationCoordinate2DMake(lat, lon);
+                [annotations addObject:stationIconAnnotation];
+            }
         }
         NSArray *needRemoveAnnotations = [removeAnnotationDict allValues];
         [self.mapView removeAnnotations:currentHouseAnnotations];
@@ -879,7 +890,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (self.subwayLines) {
         [self.mapView removeOverlays:self.subwayLines];
     }    
-    [self.mapView addOverlays:lines];
+    [self.mapView addOverlays:lines level:MAOverlayLevelAboveRoads];
     self.subwayLines = lines;
     
     if (move) {
@@ -1146,8 +1157,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 stationView.annotation = houseAnnotation;
             }
             //设置中心点偏移，使得标注底部中间点成为经纬度对应点
-            stationView.centerOffset = CGPointMake(0, -22);
+            stationView.centerOffset = CGPointMake(0, -24);
             stationView.canShowCallout = NO;
+            stationView.zIndex = 1;
             return stationView;
             
         }else{
@@ -1172,11 +1184,20 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                     annotationView.zIndex = 10;
                     break;
                 default:
-                    annotationView.zIndex = 0;
+                    annotationView.zIndex = 2;
                     break;
             }
             return annotationView;
         }
+    }else if ([annotation isKindOfClass:[FHMapSearchStationIconAnnotation class]]){
+        static NSString *reuseIndetifier = @"StationIconAnnotationIndetifier";
+        FHMapStationIconAnnotationView *annotationView = (FHMapStationIconAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:reuseIndetifier];
+        if (annotationView == nil) {
+            annotationView = [[FHMapStationIconAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:reuseIndetifier];
+        }
+        annotationView.enabled = NO;
+        
+        return annotationView;
     }
     
     return nil;

@@ -38,7 +38,7 @@ PODS:
   - BDAlogProtocol (0.1.7)
   - BDAssert/Core (2.0.0)
   - BDMobileRuntime (0.3.38)
-  - BDSSOAuthSDK (1.0.8)
+  - BDSSOAuthSDK (1.1.0)
   - BDTArticle (0.2.3)
   - BDTBasePlayer (0.3.47)
   - BDTExploreOrderedData (0.1.7)
@@ -94,7 +94,7 @@ PODS:
   - Fabric (1.10.2.1-binary)
   - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.7-alpha.0)
+  - FHCommonUI (0.0.8-alpha.0)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -171,7 +171,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.13-rc.2)
+  - ios_house_im (0.1.14-alpha.3-autotext)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -632,7 +632,7 @@ DEPENDENCIES:
   - Fabric (= 1.10.2.1-binary)
   - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.7-alpha.0)
+  - FHCommonUI (= 0.0.8-alpha.0)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -683,7 +683,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.13-rc.2)
+  - ios_house_im (= 0.1.14-alpha.3-autotext)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -1001,7 +1001,7 @@ SPEC CHECKSUMS:
   BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
   BDMobileRuntime: 83175e738acd91083ea560cf0fd4e34612987b80
-  BDSSOAuthSDK: 58a6720a0f1cebdba65e1309d986ec2f17305521
+  BDSSOAuthSDK: 50464c9dd31869a9fe999723f68b931e8acab644
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
@@ -1026,7 +1026,7 @@ SPEC CHECKSUMS:
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
   FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: 9aa45a281cf69135cabeddb213274d5ed91bab94
+  FHCommonUI: 9d66b1470dc6076aa30742d6f7e571eb7398f38a
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1052,7 +1052,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 13c7d4c304007982aaf7f1cf68543353e5f2eba2
+  ios_house_im: bd8c01c3a26533321418fb5fffeeba4cd2fd1017
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1178,6 +1178,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 17a556c71630c6690cd5e39fcd1916ed2327f21e
+PODFILE CHECKSUM: 64f83e52e6801b998da80f34bc7035d82a8e1ec4
 
 COCOAPODS: 1.4.0

@@ -88,7 +88,8 @@
                  type == FHUGCFeedListCellTypeArticleComment2 ||
                  type == FHUGCFeedListCellTypeUGCHotTopic ||
                  type == FHUGCFeedListCellTypeUGCVote ||
-                 type == FHUGCFeedListCellTypeUGCSmallVideo){
+                 type == FHUGCFeedListCellTypeUGCSmallVideo ||
+                 type == FHUGCFeedListCellTypeUGCVoteInfo){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -164,7 +165,7 @@
     cellModel.contentDecoration = [self contentDecorationFromString:(model.contentDecoration.length > 0 ? model.contentDecoration : model.rawData.contentDecoration)];
     cellModel.originData = model;
     //目前仅支持话题类型
-    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt)];
+    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt), @(TTRichSpanLinkTypeLink)];
     //处理圈子信息
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     if(model.community){
@@ -376,16 +377,12 @@
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
-        if(model.rawData.originType){
+        if(model.rawData.originType.length > 0){
             originItemModel.type = [NSString stringWithFormat:@"[%@]",model.rawData.originType];
-        }else if(model.originType){
+        }else if(model.originType.length > 0){
             originItemModel.type = [NSString stringWithFormat:@"[%@]",model.originType];
         }else{
-            if([model.rawData.commentBase.repostParams.repostType integerValue] == 223){
-                originItemModel.type = @"[视频]";
-            }else{
-                originItemModel.type = @"[文章]";
-            }
+            
         }
         if(model.rawData.originGroup){
             originItemModel.content = model.rawData.originGroup.title;
@@ -480,6 +477,55 @@
         cellModel.vote = vote;
         
         [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
+    } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo){
+        // UGC 投票
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVoteDetail;
+        cellModel.groupId = model.rawData.voteInfo.voteId;
+        
+        cellModel.voteInfo = model.rawData.voteInfo;
+        if (cellModel.voteInfo == nil || cellModel.voteInfo.items.count < 2) {
+            return nil;
+        }
+        if ([cellModel.voteInfo.voteType isEqualToString:@"1"]) {
+            // 单选
+            cellModel.voteInfo.title = [NSString stringWithFormat:@"【单选】%@",cellModel.voteInfo.title];
+        } else if ([cellModel.voteInfo.voteType isEqualToString:@"2"]) {
+            // 多选
+            cellModel.voteInfo.title = [NSString stringWithFormat:@"【多选】%@",cellModel.voteInfo.title];
+        }
+        cellModel.voteInfo.voteState = FHUGCVoteStateNone;
+        cellModel.voteInfo.needFold = NO;
+        cellModel.voteInfo.isFold = NO;
+        cellModel.voteInfo.hasReloadForVoteExpired = NO;
+        cellModel.voteInfo.needAnimateShow = NO;
+        cellModel.openUrl = model.rawData.detailSchema;
+        if (cellModel.voteInfo.selected) {
+            cellModel.voteInfo.voteState = FHUGCVoteStateComplete;
+        }
+        NSInteger displayCount = [cellModel.voteInfo.displayCount integerValue];
+        if (displayCount <= 0 || displayCount >= cellModel.voteInfo.items.count) {
+            cellModel.voteInfo.needFold = NO;
+        } else {
+            cellModel.voteInfo.needFold = YES;
+            cellModel.voteInfo.isFold = YES;// 默认折叠，后续点击按钮修改
+        }
+        
+        FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.name = model.rawData.user.info.name;
+        user.avatarUrl = model.rawData.user.info.avatarUrl;
+        user.userId = model.rawData.user.info.userId;
+        user.schema = model.rawData.user.info.schema;
+        cellModel.user = user;
+        
+        // 时间以及距离
+        cellModel.desc = [self generateUGCDescFromRawData:model.rawData];
+        
+        cellModel.diggCount = model.rawData.diggCount;
+        cellModel.commentCount = model.rawData.commentCount;
+        cellModel.userDigg = model.rawData.userDigg;
+        
+        [FHUGCCellHelper setUGCVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
+        cellModel.voteInfo.descHeight = 17;
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
@@ -542,7 +588,7 @@
     cellModel.needLinkSpan = YES;
     cellModel.numberOfLines = 3;
     //目前仅支持话题类型
-    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt)];
+    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt), @(TTRichSpanLinkTypeLink)];
     
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;
@@ -592,6 +638,33 @@
 }
 
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
+    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
+    double time = [model.createTime doubleValue];
+    
+    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+    
+    if(![publishTime isEqualToString:@""]){
+        NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
+        [desc appendAttributedString:publishTimeAStr];
+    }
+    
+    // 法务合规，如果没有定位权限，不展示位置信息
+    if(!isEmptyString(model.distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
+        NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
+        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+        attachment.bounds = CGRectMake(8, 0, 8, 8);
+        attachment.image = [UIImage imageNamed:@"fh_ugc_location"];
+        NSAttributedString *attachmentAStr = [NSAttributedString attributedStringWithAttachment:attachment];
+        [desc appendAttributedString:attachmentAStr];
+        
+        NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:distance];
+        [desc appendAttributedString:distanceAStr];
+    }
+    
+    return desc;
+}
+
++ (NSAttributedString *)generateUGCDescFromRawData:(FHFeedContentRawDataModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [model.createTime doubleValue];
     

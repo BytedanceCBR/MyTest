@@ -16,6 +16,7 @@
 #import "TTVideoArticleService+Action.h"
 #import "TTVideoArticleServiceMessage.h"
 #import "TTVFeedUserOpDataSyncMessage.h"
+#import "HMDTTMonitor.h"
 
 @implementation FHCommonApi
 
@@ -55,9 +56,18 @@
         paramDic[@"page_type"] = page_type;
         query = [NSString stringWithFormat:@"%@&element_from=%@&enter_from=%@&page_type=%@",query,element_from,enter_from,page_type];
     }
+    NSString *serviceName = action > 0 ? @"digg_action" : @"undigg_action";
     return [FHMainApi postRequest:queryPath query:query params:paramDic jsonClass:[FHDetailDiggModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion(model,error);
+        }
+        // 接口事件埋点
+        if (error) {
+            // 点赞/取消点赞 失败
+            [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(1)} extra:nil];
+        } else {
+            // 点赞/取消点赞 成功
+            [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(0)} extra:nil];
         }
     }];
 }
@@ -75,16 +85,32 @@
     
     if (action) {
         // 点赞
+        NSString *serviceName = action > 0 ? @"digg_action" : @"undigg_action";
          [service digg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
              if (completion) {
                  completion(response,error);
              }
+             if (error) {
+                 // 点赞 失败
+                 [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(1)} extra:nil];
+             } else {
+                 // 点赞 成功
+                 [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(0)} extra:nil];
+             }
         }];
     } else {
         // 取消点赞
+        NSString *serviceName = action > 0 ? @"digg_action" : @"undigg_action";
         [service cancelDigg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
             if (completion) {
                 completion(response,error);
+            }
+            if (error) {
+                // 取消点赞 失败
+                [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(1)} extra:nil];
+            } else {
+                // 取消点赞 成功
+                [[HMDTTMonitor defaultManager] hmdTrackService:serviceName metric:nil category:@{@"status":@(0)} extra:nil];
             }
         }];
     }

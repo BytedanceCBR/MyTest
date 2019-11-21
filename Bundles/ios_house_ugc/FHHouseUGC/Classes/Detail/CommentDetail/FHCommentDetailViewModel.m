@@ -31,6 +31,7 @@
 #import "FHPostDetailCell.h"
 #import "FHUGCCellHelper.h"
 #import <TTBusinessManager+StringUtils.h>
+#import "HMDTTMonitor.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
@@ -183,6 +184,7 @@
             rawData.originGroup = model.commentDetail.originGroup;
             rawData.originThread = model.commentDetail.originThread;
             rawData.originUgcVideo = model.commentDetail.originUgcVideo;
+            rawData.originCommonContent = model.commentDetail.originCommonContent;
             rawData.originType = model.commentDetail.originType;
             FHFeedContentModel *feedContent = [[FHFeedContentModel alloc] init];
             feedContent.logPb = model.logPb;
@@ -207,6 +209,9 @@
             cellModel.stickStyle = self.detailController.detailData.stickStyle;
             cellModel.tracerDic = self.detailController.tracerDict.mutableCopy;
             [self.detailController refreshUI];
+        } else {
+            // 成功埋点 status = 0 成功（不上报） status = 1：commentDetail错误
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_comment_detail_error" metric:nil category:@{@"status":@(1)} extra:nil];
         }
         // 圈子详情数据
         FHUGCScialGroupDataModel *socialGroupModel = model.social_group;
@@ -531,6 +536,7 @@
             if (identifier.length > 0) {
                 FHUGCBaseCell *cell = (FHUGCBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
                 cell.baseViewModel = self;
+                cell.delegate = self;
                 [cell refreshWithData:data];
                 return cell;
             }
@@ -717,6 +723,36 @@
     tracerDict[@"click_position"] = @"reply_dislike";
     tracerDict[@"comment_id"] = comment_id ?: @"be_null";
     [FHUserTracker writeEvent:@"click_reply_dislike" params:tracerDict];
+}
+
+# pragma mark - FHUGCBaseCellDelegate
+
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    // 埋点
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    dict[TRACER_KEY] = traceParam;
+    
+    if (url) {
+        BOOL isOpen = YES;
+        if ([url.absoluteString containsString:@"concern"]) {
+            // 话题
+            traceParam[@"enter_from"] = self.detailController.tracerDict[@"page_type"];
+            traceParam[@"element_from"] = @"feed_topic";
+            traceParam[@"enter_type"] = @"click";
+            traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+            traceParam[@"log_pb"] = cellModel.logPb;
+        } else if([url.absoluteString containsString:@"profile"]) {
+            // JOKER:
+        } else {
+            isOpen = NO;
+        }
+        
+        if(isOpen) {
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+    }
 }
 
 @end

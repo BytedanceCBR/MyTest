@@ -22,7 +22,7 @@
 
 
 
-@class FHRecommendSecondhandHouseDataModel,FHSearchHouseDataModel,FHHouseRentDataModel;
+@class FHSearchHouseDataModel,FHHouseRentDataModel;
 
 @interface FHBaseMainListViewModel ()<UITableViewDelegate,UITableViewDataSource,FHConditionFilterViewModelDelegate,FHMainRentTopViewDelegate,FHMainOldTopViewDelegate>
 
@@ -70,9 +70,8 @@
 @property(nonatomic , assign) BOOL animateShowNotify;
 @property(nonatomic , copy)  void(^showNotifyDoneBlock)();
 
-@property (nonatomic, strong) FHRecommendSecondhandHouseDataModel *currentRecommendHouseDataModel;
-@property (nonatomic, strong) FHSearchHouseDataModel *currentHouseDataModel;
-@property (nonatomic, strong) FHHouseRentDataModel *currentRentDataModel;
+@property (nonatomic, strong) JSONModel *currentRecommendHouseDataModel;
+@property (nonatomic, strong) JSONModel *houseDataModel;
 
 -(void)showErrorMask:(BOOL)show tip:(FHEmptyMaskViewType )type enableTap:(BOOL)enableTap showReload:(BOOL)showReload;
 
