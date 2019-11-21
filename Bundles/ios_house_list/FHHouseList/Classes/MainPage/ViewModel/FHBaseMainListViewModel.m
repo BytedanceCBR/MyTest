@@ -30,7 +30,6 @@
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleModel.h>
 //#import <FHHouseBase/FHSingleImageInfoCellModel.h>
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleCell.h>
-//#import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <FHHouseBase/FHHouseBaseSmallItemCell.h>
 #import <FHHouseBase/FHHomePlaceHolderCell.h>
 #import <FHHouseBase/FHMapSearchOpenUrlDelegate.h>
