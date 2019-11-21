@@ -106,6 +106,17 @@
         if (self.report_params_dic && self.report_params_dic[@"social_group_id"]) {
             self.lastPageSocialGroupId = [params objectForKey:@"social_group_id"];
         }
+        
+        // social_group_id 筛入 logpb中
+        NSDictionary *temp_log_pb = self.tracerDict[@"log_pb"];
+        if (self.lastPageSocialGroupId.length > 0) {
+            NSMutableDictionary *mutLogPb = [NSMutableDictionary new];
+            if ([temp_log_pb isKindOfClass:[NSDictionary class]]) {
+                [mutLogPb addEntriesFromDictionary:temp_log_pb];
+            }
+            mutLogPb[@"social_group_id"] = self.lastPageSocialGroupId;
+            self.tracerDict[@"log_pb"] = mutLogPb;
+        }
     }
     return self;
 }
