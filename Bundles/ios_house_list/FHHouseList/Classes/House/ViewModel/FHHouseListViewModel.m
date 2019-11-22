@@ -966,9 +966,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull itemDict, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([itemDict isKindOfClass:[NSDictionary class]]) {
                 id theItemModel = [[wself class] searchItemModelByDict:itemDict];
-                if (theItemModel) {
-                    [wself.houseList addObject:theItemModel];
-                }
+
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = theItemModel;
                     itemModel.isLastCell = (idx == itemArray.count - 1);
@@ -976,10 +974,17 @@ extern NSString *const INSTANT_DATA_KEY;
                         itemModel.topMargin = 0;
                     }
                     theItemModel = itemModel;
-                }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]] && wself.isRefresh) {
-                    // 展示经纪人信息
-                    wself.showRealHouseTop = YES;
-                }else if ([theItemModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]] && _isRefresh) {
+                }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
+                    FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
+                    if (agencyInfoModel.agencyTotal.integerValue != 0 && agencyInfoModel.houseTotal.integerValue != 0) {
+                        if (wself.isRefresh) {
+                            // 展示经纪人信息
+                            wself.showRealHouseTop = YES;
+                        }
+                    }else {
+                        theItemModel = nil;
+                    }
+                }else if ([theItemModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]] && wself.isRefresh) {
                     // 展示搜索订阅卡片
                     wself.isShowSubscribeCell = YES;
                 }else if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
@@ -1009,6 +1014,9 @@ extern NSString *const INSTANT_DATA_KEY;
                     theItemModel = agencyModel;
                 }
                 if (theItemModel) {
+                    [wself.houseList addObject:theItemModel];
+                }
+                if (theItemModel) {
                     lastObj = theItemModel;
                 }
             }
@@ -1024,15 +1032,17 @@ extern NSString *const INSTANT_DATA_KEY;
                     itemModel.isLastCell = (idx == itemArray.count - 1);
                     theItemModel = itemModel;
                 }
-                if (theItemModel) {
-                    [wself.sugesstHouseList addObject:theItemModel];
-                }
                 if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
                     FHSugListRealHouseTopInfoModel *infoModel = theItemModel;
                     infoModel.searchId = wself.searchId;
                     infoModel.tracerDict = traceDictParams;
                     infoModel.searchQuery = wself.subScribeQuery;
                     theItemModel = infoModel;
+                }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
+                    FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
+                    if (agencyInfoModel.agencyTotal.integerValue == 0 || agencyInfoModel.houseTotal.integerValue == 0) {
+                        theItemModel = nil;
+                    }
                 }else if ([theItemModel isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
                     FHHouseNeighborAgencyModel *agencyModel = theItemModel;
                     NSMutableDictionary *traceParam = [NSMutableDictionary new];
@@ -1047,6 +1057,9 @@ extern NSString *const INSTANT_DATA_KEY;
                     agencyModel.tracerDict = traceParam;
                     agencyModel.belongsVC = wself.listVC;
                     theItemModel = agencyModel;
+                }
+                if (theItemModel) {
+                    [wself.sugesstHouseList addObject:theItemModel];
                 }
             }
         }];
