@@ -951,6 +951,7 @@ TTFeedCollectionCellDelegate>
 {
     if (!_refreshView) {
         _refreshView = [[TTFeedRefreshView alloc] init];
+        _refreshView.hidden = YES;
         [_refreshView.arrowBtn addTarget:self action:@selector(refreshButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _refreshView;
