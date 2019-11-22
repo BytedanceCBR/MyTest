@@ -35,6 +35,7 @@
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
+extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @interface FHHouseRentDetailViewModel ()
 
