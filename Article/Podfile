@@ -53,9 +53,9 @@ def fhPods
 #    pod 'FHCommonUI', :path => '../../ios_common_ui'
     pod 'FHCommonUI', '0.0.8-alpha.0'
 
-     pod 'ios_house_im', '0.1.14-alpha.3-autotext'
-#     pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im'
-#     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '8b77e85aec0e32d6faa013504da62ab432a99434'
+     pod 'ios_house_im', '0.1.14-alpha.4'
+#     pod 'ios_house_im' , :path => '../../ios_house_im'
+#     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => 'be082192f5dc1d7f1131b11f63acfc9aafb71075'
 
 
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
