@@ -248,7 +248,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://realtor_detail?realtor_id=%@",contactPhone.realtorId]];
 
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    if (extra[@"enter_from"]) {
+        dict[@"enter_from"] = extra[@"enter_from"];
+    }else {
+        dict[@"enter_from"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    }
     dict[@"element_from"] = extra[@"element_from"] ? : [self elementTypeStringByHouseType:self.houseType];
     dict[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     id logPb = self.tracerDict[@"log_pb"];

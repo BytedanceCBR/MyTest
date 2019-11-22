@@ -464,6 +464,28 @@
 }
 
 #pragma mark - 埋点
+
+- (NSString *)pageTypeString
+{
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return @"new_detail";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_detail";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent_detail";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_detail";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
 - (void)addGoDetailLog
 {
 //    1. event_type ：house_app2c_v2
