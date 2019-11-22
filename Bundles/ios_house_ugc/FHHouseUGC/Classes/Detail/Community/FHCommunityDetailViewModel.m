@@ -317,6 +317,8 @@
                     [self initSegment];
                     //初始化vc
                     [self initSubVC];
+                }else{
+                    [self updateVC];
                 }
                 
                 if (self.isLoginSatusChangeFromGroupChat) {
@@ -454,6 +456,12 @@
     };
     
     [self.subVCs addObject:feedListController];
+}
+
+- (void)updateVC {
+    for (FHCommunityFeedListController *feedListController in self.subVCs) {
+        feedListController.operations = self.socialGroupModel.data.permission;
+    }
 }
 
 - (void)gotoGroupChat {
