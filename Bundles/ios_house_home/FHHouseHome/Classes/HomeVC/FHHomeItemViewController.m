@@ -27,6 +27,7 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import <FHHouseBaseNewHouseCell.h>
+#import <FHPlaceHolderCell.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -180,6 +181,8 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
     [self.tableView  registerClass:[FHHomeBaseTableCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBaseTableCell class])];
     
     [self.tableView  registerClass:[FHhomeHouseTypeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
+    
+    [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
 }
@@ -537,6 +540,11 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
                 return [FHHouseBaseNewHouseCell heightForData:model];
             }
         }
+        
+        if (self.showPlaceHolder && self.houseType == FHHouseTypeNewHouse) {
+            return 118;
+        }
+        
         return 75;
     }
 }
@@ -637,6 +645,10 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
         }
         
         if (self.showPlaceHolder) {
+            if (self.houseType == FHHouseTypeNewHouse) {
+                FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+                return cell;
+            }
             FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
             return cell;
         }
