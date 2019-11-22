@@ -310,7 +310,7 @@ static inline CGFloat navigationBarTop() {
                 
                 CGRect fromVCFrame = CGRectMake(0, 0, CGRectGetWidth(fromViewController.view.frame), CGRectGetHeight(fromViewController.view.frame));
                 fromViewController.view.frame = fromVCFrame;
-                fromViewController.view.userInteractionEnabled = NO;
+//                fromViewController.view.userInteractionEnabled = NO;
                 viewController.view.left = CGRectGetWidth(viewController.view.frame);
                 viewController.view.top = fromViewController.view.top;
                 
