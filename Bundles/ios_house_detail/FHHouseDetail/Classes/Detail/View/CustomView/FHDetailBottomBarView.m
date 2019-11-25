@@ -136,6 +136,7 @@
     [self.contactBtn addTarget:self action:@selector(contactBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.licenceIcon addTarget:self action:@selector(licenseBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.imChatBtn addTarget:self action:@selector(imBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.groupChatBtn addTarget:self action:@selector(groupBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     self.leftView.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jump2RealtorDetail)];
     [self.leftView addGestureRecognizer:tap];
@@ -165,6 +166,12 @@
 - (void)imBtnClick:(UIButton *)btn {
     if (self.bottomBarImBlock) {
         self.bottomBarImBlock();
+    }
+}
+
+- (void)groupBtnClick:(UIButton *)btn {
+    if (self.bottomBarGroupChatBlock) {
+        self.bottomBarGroupChatBlock();
     }
 }
 
@@ -474,14 +481,16 @@
     if (!_groupChatBtn) {
         _groupChatBtn = [[UIButton alloc] init];
         _groupChatBtn.layer.cornerRadius = 4;
-        _groupChatBtn.backgroundColor = [UIColor themeIMOrange];
+        _groupChatBtn.backgroundColor = [UIColor themeWhite];
+        _groupChatBtn.layer.borderWidth = 1;
+        _groupChatBtn.layer.borderColor = [UIColor themeRed1].CGColor;
         if ([TTDeviceHelper is568Screen]) {
             _groupChatBtn.titleLabel.font = [UIFont themeFontRegular:14];
         } else {
             _groupChatBtn.titleLabel.font = [UIFont themeFontRegular:16];
         }
-        [_groupChatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_groupChatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [_groupChatBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [_groupChatBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
         [_groupChatBtn setTitle:@"加群看房" forState:UIControlStateNormal];
         [_groupChatBtn setTitle:@"加群看房" forState:UIControlStateHighlighted];
     }

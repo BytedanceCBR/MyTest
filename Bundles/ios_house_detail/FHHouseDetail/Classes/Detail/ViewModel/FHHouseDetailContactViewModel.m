@@ -105,6 +105,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _bottomBar.bottomBarImBlock = ^{
             [wself imAction];
         };
+        
+        _bottomBar.bottomBarGroupChatBlock = ^{
+            [wself groupChatAction];
+        };
  
         _navBar.collectActionBlock = ^(BOOL followStatus){
             if (!followStatus) {
@@ -623,6 +627,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
     }
     [self onlineActionWithExtraDict:extraDic];
+}
+
+// 新房群聊按钮点击
+- (void)groupChatAction {
+    [[ToastManager manager] showToast:@"加群看房 点击"];
 }
 
 // 回调方法
