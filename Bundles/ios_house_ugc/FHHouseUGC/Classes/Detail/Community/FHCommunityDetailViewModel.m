@@ -272,6 +272,10 @@
 }
 
 - (void)requestData:(BOOL) userPull refreshFeed:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed showToast:(BOOL) showToast{
+    if(self.isFirstEnter){
+        [self.viewController tt_startUpdate];
+    }
+    
     if (![TTReachability isNetworkConnected]) {
         [self onNetworError:showEmptyIfFailed showToast:showToast];
         if(userPull){
@@ -1098,16 +1102,13 @@
 }
 
 // 帐号切换
-- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
-{
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
     if (_isLogin != TTAccountManager.isLogin) {
-        [_viewController tt_startUpdate];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-             [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+            [self refreshBasicInfo];
         });
         _isLogin = TTAccountManager.isLogin;
     }
-    
 }
 
 - (void)onLoginIn {
