@@ -375,21 +375,19 @@
         return;
     }
     
-    if(!self.floatIconAnimation){
-        self.floatIconAnimation = YES;
-        FHDetailQuestionButton *questionBtn = self.questionBtn;
-        CGFloat btnWidth = [questionBtn totalWidth];
-        [UIView animateWithDuration:0.2f animations:^{
-
-            CGFloat right = isShow ? -20 : btnWidth - 26;
-            [self.questionBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(right);
-            }];
-            [self.detailController.view layoutIfNeeded];
-        } completion:^(BOOL finished) {
-            self.floatIconAnimation = NO;
+    self.floatIconAnimation = YES;
+    FHDetailQuestionButton *questionBtn = self.questionBtn;
+    CGFloat btnWidth = [questionBtn totalWidth];
+    [UIView animateWithDuration:0.2f animations:^{
+        
+        CGFloat right = isShow ? -20 : btnWidth - 26;
+        [self.questionBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(right);
         }];
-    }
+        [self.detailController.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        self.floatIconAnimation = NO;
+    }];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
