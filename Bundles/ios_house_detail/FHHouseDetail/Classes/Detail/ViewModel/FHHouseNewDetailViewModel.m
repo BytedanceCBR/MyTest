@@ -27,12 +27,16 @@
 #import <HMDTTMonitor.h>
 #import <FHHouseBase/FHCommonDefines.h>
 #import "FHDetailNewUGCSocialCell.h"
+#import "FHDetailSocialEntranceView.h"
+#import "FHHouseFillFormHelper.h"
 
 @interface FHHouseNewDetailViewModel ()
 
 @property (nonatomic, strong , nullable) FHDetailRelatedCourtModel *relatedHouseData;
 
 @property (nonatomic, strong , nullable) FHDetailNewModel *dataModel;
+
+@property (nonatomic, assign)   BOOL       hasRegisterNoti;
 //@property (nonatomic, strong , nullable) FHDetailNewModel *newDetailDataModel;
 
 @end
@@ -125,9 +129,41 @@
     return NSStringFromClass(cls);
 }
 
+- (void)registerNoti {
+    if (!self.hasRegisterNoti && self.socialEntranceView) {
+        self.hasRegisterNoti = YES;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ugcSocialEntranceNoti:) name:@"kFHDetailUGCSocialEntranceNoti" object:nil];
+    }
+}
+
+- (void)ugcSocialEntranceNoti:(NSNotification *)notification {
+    if (notification && self.houseType == FHHouseTypeNewHouse && self.socialEntranceView) {
+        NSDictionary *userInfo = notification.userInfo[@"user_info"];
+        if (userInfo && [userInfo isKindOfClass:[NSDictionary class]]) {
+            // 填表单
+            FHHouseFillFormConfigModel *configModel = userInfo[@"config_model"];
+            if ([configModel isKindOfClass:[FHHouseFillFormConfigModel class]]) {
+                FHHouseType houseType = configModel.houseType;
+                NSString *houseId = configModel.houseId;
+                if (houseId.length > 0 && houseType == self.houseType && [self.houseId isEqualToString:houseId]) {
+                    // add by zyk 显示
+                    self.socialEntranceView.hidden = NO;
+                }
+            }
+            // 拨打电话 // add by zyk
+        }
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)startLoadData
 {
     __weak typeof(self) wSelf = self;
+    [self registerNoti];
     [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             if (model.data) {

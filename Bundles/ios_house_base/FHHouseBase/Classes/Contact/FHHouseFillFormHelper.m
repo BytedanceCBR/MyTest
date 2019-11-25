@@ -253,6 +253,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phone forKey:kFHPhoneNumberCacheKey];
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
+            // add by zyk
+            NSMutableDictionary *userInfo = @{}.mutableCopy;
+            userInfo[@"config_model"] = configModel;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHDetailUGCSocialEntranceNoti" object:nil userInfo:@{@"user_info":userInfo}];
         }else {
             NSString *message = model.message ? : @"提交失败";
             [[ToastManager manager] showToast:message];

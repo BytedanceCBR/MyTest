@@ -16,6 +16,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import "FHDetailHalfPopLayer.h"
 #import "FHDetailQuestionButton.h"
+#import "FHDetailSocialEntranceView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -50,6 +51,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 @property (nonatomic, strong)   NSObject       *detailData; // 详情页数据：FHDetailOldDataModel等
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property(nonatomic , weak) FHDetailQuestionButton *questionBtn;
+@property (nonatomic, weak) FHDetailSocialEntranceView *socialEntranceView;// 新房 填表单后入口
 
 // 子类实现
 - (void)registerCellClasses;
