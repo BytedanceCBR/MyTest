@@ -158,6 +158,10 @@
     if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
         type = FHFakeInputNavbarTypeMap;
     }
+    // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        type = FHFakeInputNavbarTypeMessageAndMap;
+    }
     if ([self.paramObj.sourceURL.host rangeOfString:@"commute_list"].location != NSNotFound) {
         //通勤找房不显示地图
         type = FHFakeInputNavbarTypeDefault;
@@ -178,6 +182,9 @@
     };
     _navbar.showMapAction = ^{
         [wself.viewModel showMapSearch];
+    };
+    _navbar.messageActionBlock = ^{
+        [wself.viewModel showMessageList];
     };
     
     _navbar.tapInputBar = ^{
@@ -438,7 +445,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-
+    [self.viewModel refreshMessageDot];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -526,6 +533,7 @@
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
     self.viewModel.searchType = self.searchType;
     self.viewModel.listVC = self;
+    [self.viewModel addNotiWithNaviBar:self.navbar];
     [self initFilter];
     [self setupViewModelBlock];
 
@@ -541,9 +549,13 @@
 
 -(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder inputText:(NSString *)inputText{
     
-    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute )|| houseType == FHHouseTypeSecondHandHouse) {
-        
-        [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMap];
+    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute ) || houseType == FHHouseTypeSecondHandHouse) {
+        if (houseType == FHHouseTypeSecondHandHouse) {
+            // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
+            [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageAndMap];
+        } else {
+            [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMap];
+        }
     }else {
 
         [self.navbar refreshNavbarType:FHFakeInputNavbarTypeDefault];

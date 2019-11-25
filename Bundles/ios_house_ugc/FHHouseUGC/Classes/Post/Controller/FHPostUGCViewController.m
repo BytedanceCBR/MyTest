@@ -143,7 +143,7 @@ static NSInteger const kMaxPostImageCount = 9;
             self.outerInputRichSpanText = self.richSpanText;
             
             self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
-            // 选中小区圈
+            // 选中圈子
             self.selectGroupId = [params tt_stringValueForKey:@"select_group_id"];
             self.selectGroupName = [params tt_stringValueForKey:@"select_group_name"];
             if (!(self.selectGroupId.length > 0 && self.selectGroupName.length > 0)) {
@@ -502,6 +502,8 @@ static NSInteger const kMaxPostImageCount = 9;
     self.inputTextView.textLenDelegate = self;
     // 配置话题按钮
     [self configTopicBtnOnToolBar];
+    // 配置@人按钮
+    [self configAtBtnOnToolBar];
 }
 
 - (void)configTopicBtnOnToolBar {
@@ -547,8 +549,51 @@ static NSInteger const kMaxPostImageCount = 9;
     }
 }
 
+- (void)configAtBtnOnToolBar {
+    BOOL isShowAtBtn = YES;
+    self.toolbar.banAtInput = !isShowAtBtn;
+    self.inputTextView.isBanAt = self.toolbar.banAtInput;
+    if(isShowAtBtn) {
+        WeakSelf;
+        self.textViewMediator.atBtnClickBlock = ^(BOOL didInputAt) {
+            StrongSelf;
+            self.keyboardVisibleBeforePresent = NO;// 不显示键盘了
+            [self endEditing];
+            
+            NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_at_list"];
+            NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.selectView.groupId;
+            NSURLQueryItem *groudIPItem = [NSURLQueryItem queryItemWithName:@"groupId" value:groupId];
+            
+            NSURL *url = components.URL;
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            param[@"delegate"] = self.textViewMediator;
+            param[@"isPushOutAtListController"] = @(YES);
+            param[@"isShowCancelNavigationBar"] = @(YES);
+            
+            NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+            
+            tracer[UT_ELEMENT_FROM] = didInputAt ? @"write_label" : @"publisher_at";
+            tracer[UT_ENTER_FROM] = @"feed_publisher";
+            tracer[UT_ENTER_TYPE] = @"click";
+            param[TRACER_KEY] = tracer;
+            
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+            
+            if(!didInputAt) {
+                // 发布器内点击“@”按钮
+                NSMutableDictionary *param = self.tracerDict.mutableCopy;
+                param[@"click_position"] = @"publisher_at";
+                TRACK_EVENT(@"click_options", param);
+            }
+        };
+    } else {
+        self.textViewMediator.atBtnClickBlock = nil;
+    }
+}
+
 - (void)selectCommunityViewClick:(UITapGestureRecognizer *)sender {
-    // 外部传入小区圈，不跳转
+    // 外部传入圈子，不跳转
     if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
         return;
     }
@@ -795,7 +840,7 @@ static NSInteger const kMaxPostImageCount = 9;
     } else {
         // 先关注
         __weak typeof(self) weakSelf = self;
-        [[FHUGCConfig sharedInstance] followUGCBy:self.selectView.groupId isFollow:YES completion:^(BOOL isSuccess) {
+        [[FHUGCConfig sharedInstance] followUGCBy:self.selectView.groupId isFollow:YES enterFrom:@"feed_publisher" enterType:@"click" completion:^(BOOL isSuccess) {
             if (isSuccess) {
                 [weakSelf postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
             } else {
@@ -1406,7 +1451,7 @@ static NSInteger const kMaxPostImageCount = 9;
         self.firstAppear = NO;
         [self.inputTextView becomeFirstResponder];
     } else {
-        // 选择小区圈子
+        // 选择圈子子
         __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if (weakSelf.keyboardVisibleBeforePresent) {
@@ -1494,7 +1539,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 #pragma mark - FHUGCFollowListDelegate
 - (void)selectedItem:(FHUGCScialGroupDataModel *)item {
-    // 选择 小区圈子
+    // 选择 圈子子
     if (item) {
         self.selectView.groupId = item.socialGroupId;
         self.selectView.communityName = item.socialGroupName;
@@ -1516,7 +1561,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 #pragma mark - FHPostUGCSelectedGroupHistoryViewDelegate
 -(void)selectedHistoryGroup:(FHPostUGCSelectedGroupModel *)item {
-    // 选择 小区圈子
+    // 选择 圈子子
     self.selectedGrouplHistoryView.hidden = YES;
     if (item) {
         self.selectView.groupId = item.socialGroupId;

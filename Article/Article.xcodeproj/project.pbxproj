@@ -123,6 +123,8 @@
 		B373CF022174587A008F9905 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C000AF16F7426D00FC365B /* AssetsLibrary.framework */; };
 		B388CB272142652A00653188 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E32142652800653188 /* Assets.xcassets */; };
 		B388CB292142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
+		D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
+		D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		EB988F3EBE29F7D165C85289 /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A95054107C5636D5192DC02 /* libPods-NewsLiteInHouse.a */; };
 		FEFA59C3205FB1A8001F50D8 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		FEFA59C7205FB1A8001F50D8 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
@@ -366,6 +368,7 @@
 		D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = FrameworkResource.xcassets; sourceTree = "<group>"; };
 		D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CommonResource.xcassets; sourceTree = "<group>"; };
+		D48E93C0233CF142005A42CD /* VRImageLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VRImageLoading.json; sourceTree = "<group>"; };
 		D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoResource.xcassets; sourceTree = "<group>"; };
 		EF3B84B5173BDC690017F4E7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		EF666EEB1962EEB700E39BBE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -691,6 +694,7 @@
 			isa = PBXGroup;
 			children = (
 				7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */,
+				D48E93C0233CF142005A42CD /* VRImageLoading.json */,
 				3D7D2F3722704CAA00A95FAF /* AppIcon */,
 				8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */,
 				01FA60521E9F5D7300CE6FD3 /* area.plist */,
@@ -976,6 +980,7 @@
 				3D83DD132306A933008B583E /* gaode_style_extra.data in Resources */,
 				B373CEA62174587A008F9905 /* Weather.xcassets in Resources */,
 				3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */,
+				D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */,
 				B373CEAA2174587A008F9905 /* sound3.caf in Resources */,
 				3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				B373CEAF2174587A008F9905 /* CommonResource.xcassets in Resources */,
@@ -1026,6 +1031,7 @@
 				FEFA59D6205FB1A8001F50D8 /* sound4.caf in Resources */,
 				FEFA59DB205FB1A8001F50D8 /* sound1.caf in Resources */,
 				6114B09E21B3E78C00331D12 /* house_refresh.json in Resources */,
+				D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */,
 				FEFA59E3205FB1A8001F50D8 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				FEFA59EE205FB1A8001F50D8 /* PushNotification.xcassets in Resources */,
 				FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
@@ -1070,13 +1076,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP-User] sgmpreaction";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1089,15 +1091,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-f100-checkManifestLockResult.txt",
 			);
@@ -1137,11 +1135,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-			);
-			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
@@ -1154,11 +1148,7 @@
 			buildActionMask = 12;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-			);
-			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
@@ -1171,13 +1161,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1190,13 +1176,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP-User] sgmpreaction";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1208,8 +1190,6 @@
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-resources.sh",
@@ -1285,6 +1265,7 @@
 				"${PODS_ROOT}/../../TTBundles/ios_tt_aikan/TTAiKan/Assets/ThirdParty.xcassets",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/RootTab.storyboard",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/transparent_1px@2x.png",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTAppStoreStarManager/TTAppStoreStarManager.bundle",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/Settings.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button.png",
@@ -1328,8 +1309,6 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShare.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WDResource.xcassets",
@@ -1403,6 +1382,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ThirdParty.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RootTab.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/transparent_1px@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAppStoreStarManager.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Settings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button.png",
@@ -1455,15 +1435,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-NewsLiteInHouse-checkManifestLockResult.txt",
 			);
@@ -1534,13 +1510,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1552,8 +1524,6 @@
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-resources.sh",
@@ -1629,6 +1599,7 @@
 				"${PODS_ROOT}/../../TTBundles/ios_tt_aikan/TTAiKan/Assets/ThirdParty.xcassets",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/RootTab.storyboard",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/transparent_1px@2x.png",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTAppStoreStarManager/TTAppStoreStarManager.bundle",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/Settings.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button.png",
@@ -1671,8 +1642,6 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShare.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WDResource.xcassets",
@@ -1746,6 +1715,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ThirdParty.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RootTab.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/transparent_1px@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAppStoreStarManager.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Settings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button.png",
@@ -2279,6 +2249,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client;
@@ -2366,6 +2337,7 @@
 				);
 				LLVM_LTO = NO;
 				ONLY_ACTIVE_ARCH = NO;
+				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client;
@@ -2446,6 +2418,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
@@ -2536,6 +2509,7 @@
 				);
 				LLVM_LTO = NO;
 				ONLY_ACTIVE_ARCH = NO;
+				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;

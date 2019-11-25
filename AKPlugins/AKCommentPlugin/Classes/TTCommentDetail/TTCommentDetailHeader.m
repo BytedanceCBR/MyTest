@@ -29,7 +29,8 @@
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
 #import <TTUGCFoundation/TTRichSpanText+Emoji.h>
-
+#import <UIColor+Theme.h>
+#import "TTRichSpanText+Link.h"
 
 @interface TTCommentDetailHeaderUIHelper : NSObject
 
@@ -236,6 +237,8 @@
         richSpanText = [[TTRichSpanText alloc] initWithText:model.content
                                         richSpansJSONString:model.contentRichSpanJSONString];
     }
+    
+    richSpanText = [richSpanText replaceWhitelistLinks];
 
     NSMutableAttributedString *attributedString = [[TTUGCEmojiParser parseInCoreTextContext:richSpanText.text
                                                                                    fontSize:[TTCommentDetailHeaderUIHelper contentLabelFont].pointSize] mutableCopy];
@@ -249,7 +252,7 @@
     self.contentLabel.text = attributedString;
     self.richSpanText = richSpanText;
     
-    if(!self.fromUGC){
+//    if(!self.fromUGC){
         NSArray <TTRichSpanLink *> *richSpanLinks = [richSpanText richSpanLinksOfAttributedString];
         for (TTRichSpanLink *richSpanLink in richSpanLinks) {
             NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
@@ -261,7 +264,7 @@
                 }
             }
         }
-    }
+//    }
 
     self.digButton.selected = model.userDigg;
     [self.digButton setDiggCount:model.diggCount];
@@ -621,8 +624,7 @@
 //        [_avatarView setupVerifyViewForLength:[TTCommentDetailHeaderUIHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
 //            return [TTCommentDetailHeaderUIHelper verifyLogoSize:standardSize];
 //        }];
-        // add by zjing 去掉头像点击
-//        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }
     return _avatarView;
 }
@@ -693,7 +695,7 @@
 
         NSDictionary *linkAttributes = @{
             NSParagraphStyleAttributeName: [TTCommentDetailHeaderUIHelper contentLabelParagraphStyle],
-            NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
+            NSForegroundColorAttributeName : [UIColor themeRed3],
             NSFontAttributeName : [TTCommentDetailHeaderUIHelper contentLabelFont]
         };
         _contentLabel.linkAttributes = linkAttributes;

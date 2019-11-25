@@ -124,7 +124,12 @@ UITableViewDataSource
             [self.popupController pushView:keywordSelectorView animated:true];
         }
             break;
-        case FHFeedOperationOptionTypeDelete: {
+        case FHFeedOperationOptionTypeDelete:
+        case FHFeedOperationOptionTypeTop:
+        case FHFeedOperationOptionTypeCancelTop:
+        case FHFeedOperationOptionTypeGood:
+        case FHFeedOperationOptionTypeCancelGood:
+        case FHFeedOperationOptionTypeSelfLook: {
             [self finishWithKeyword:option.words.firstObject optionType:option.type];
         }
             break;

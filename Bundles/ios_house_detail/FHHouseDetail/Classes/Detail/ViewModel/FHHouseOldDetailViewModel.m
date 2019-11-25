@@ -52,9 +52,12 @@
 #import "FHDetailUserHouseCommentCell.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
+#import <TTBaseLib/UIViewAdditions.h>
+#import "FHDetailQuestionPopView.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
+extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -177,6 +180,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model{
+    
     self.detailData = model;
     if (model.data.status != -1) {
         [self addDetailCoreInfoExcetionLog];
@@ -185,11 +189,17 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.items removeAllObjects];
     // 添加头滑动图片 && 视频
     BOOL hasVideo = NO;
+    BOOL hasVR = NO;
     BOOL isInstant = model.isInstantData;
     if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
         hasVideo = YES;
     }
-    if (model.data.houseImageDictList.count > 0 || hasVideo) {
+    
+    if (model.data.vrData && model.data.vrData.hasVr) {
+        hasVR = YES;
+    }
+    
+    if (model.data.houseImageDictList.count > 0 || hasVideo || hasVR) {
         FHMultiMediaItemModel *itemModel = nil;
         if (hasVideo) {
             FHVideoHouseVideoVideoInfosModel *info = model.data.houseVideo.videoInfos[0];
@@ -228,6 +238,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             FHDetailOldDataHouseImageDictListModel *imgModel = [headerCellModel.houseImageDictList firstObject];
             imgModel.instantHouseImageList = [self instantHouseImages];
         }
+        headerCellModel.vrModel = model.data.vrData;
         headerCellModel.vedioModel = itemModel;// 添加视频模型数据
         headerCellModel.contactViewModel = self.contactViewModel;
         headerCellModel.isInstantData = model.isInstantData;
@@ -248,6 +259,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         headerCellModel.isInstantData = model.isInstantData;
         [self.items addObject:headerCellModel];
         
+    }
+    if (model.data.quickQuestion.questionItems.count > 0) {
+        self.questionBtn.hidden = NO;
+        [self.questionBtn updateTitle:model.data.quickQuestion.buttonContent];
     }
     // 添加标题
     if (model.data) {
@@ -277,6 +292,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         propertyModel.baseInfo = model.data.baseInfo;
         propertyModel.certificate = model.data.certificate;
         propertyModel.extraInfo = model.data.baseExtra;
+        propertyModel.contactViewModel = self.contactViewModel;
         [self.items addObject:propertyModel];
     }
     
@@ -378,7 +394,12 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
-        agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        agentListModel.phoneCallViewModel.tracerDict = paramsDict;
 //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
 //        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;
@@ -438,6 +459,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
         infoModel.tableView = self.tableView;
+        infoModel.contactViewModel = self.contactViewModel;
         [self.items addObject:infoModel];
     }
     // 小区评测
@@ -537,6 +559,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     
     [self.detailController updateLayout:model.isInstantData];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"old_detail"}];
+    });
     
 }
 
@@ -639,7 +665,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 // 周边房源
 - (void)requestRelatedHouseSearch {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestRelatedHouseSearch:self.houseId offset:@"0" query:nil count:5 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestRelatedHouseSearch:self.houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
         wSelf.relatedHouseData = model.data;
         [wSelf processDetailRelatedData];
@@ -672,7 +698,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseId = self.houseId;
     NSString *from = @"app_oldhouse_subscription";
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+
+    
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
@@ -680,7 +708,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
             
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
-            [subscribeHouseCache setObject:@"1" forKey:self.houseId];
+            [subscribeHouseCache setObject:@"1" forKey:wself.houseId];
             
             [wself.items removeObject:subscribeModel];
             [wself reloadData];

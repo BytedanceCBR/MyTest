@@ -39,6 +39,8 @@
 @property(nonatomic , strong) UITableView *tableView;
 @property(nonatomic , weak)   FHMapAreaHouseListViewController *listController;
 @property(nonatomic , strong) NSMutableArray *houseList;
+@property(nonatomic , strong) FHSearchHouseDataModel *currentHouseModel;
+@property(nonatomic , strong) FHHouseRentDataModel *currentRentModel;
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) NSString *originSearchId;
 @property(nonatomic , strong) NSMutableDictionary * houseShowTracerDic; // 埋点key记录
@@ -244,7 +246,7 @@
 -(TTHttpTask *)requsetSecondHouse:(NSString *)query param:(NSDictionary *)param isHead:(BOOL)isHead
 {
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:isHead?0:self.houseList.count needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
+    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:isHead?0:self.currentHouseModel.offset needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
         if (!wself) {
             return ;
         }
@@ -258,7 +260,7 @@
 {
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:isHead?0:self.houseList.count searchId:self.searchId sugParam:nil completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
+    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:isHead?0:self.currentRentModel.offset searchId:self.searchId sugParam:nil class:[FHHouseRentModel class] completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
         
         if (!wself) {
             return ;
@@ -285,6 +287,7 @@
             items = dataModel.items;
             refreshTip = dataModel.refreshTip;
             openUrl = dataModel.houseListOpenUrl;
+            self.currentHouseModel = dataModel;
         }else if ([model isKindOfClass:[FHHouseRentDataModel class]]){
             FHHouseRentDataModel *dataModel = (FHHouseRentDataModel *)model;
             searchId = dataModel.searchId;
@@ -292,6 +295,7 @@
             items = dataModel.items;
             refreshTip = dataModel.refreshTip;
             openUrl = dataModel.houseListOpenUrl;
+            self.currentRentModel = dataModel;
         }
         
         if (searchId.length > 0) {
@@ -301,7 +305,8 @@
 //            if (openUrl) {
 //                [self overwriteFilter:openUrl];
 //            }
-        
+            self.currentRentModel = nil;
+            self.currentHouseModel = nil;
             [self.houseList removeAllObjects];
             [self.houseShowTracerDic removeAllObjects];
         }

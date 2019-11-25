@@ -27,7 +27,6 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor whiteColor];
         [self initView];
         [self initConstains];
     }
@@ -46,6 +45,7 @@
 }
 
 - (void)initView {
+    self.backgroundColor = [UIColor whiteColor];
     self.layer.masksToBounds = YES;
     self.layer.cornerRadius = 4;
     
@@ -93,6 +93,8 @@
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
     label.textColor = textColor;
+    label.layer.masksToBounds = YES;
+    label.backgroundColor = [UIColor whiteColor];
     return label;
 }
 

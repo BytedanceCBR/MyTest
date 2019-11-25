@@ -14,6 +14,8 @@
 #import "UILabel+House.h"
 #import "FHAgencyNameInfoView.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import "FHHouseDetailContactViewModel.h"
+#import <FHHouseBase/FHHouseContactDefines.h>
 
 extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
@@ -145,6 +147,57 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     if (model.extraInfo) {
         
         FHDetailExtarInfoRowView *rowView = nil;
+        if (model.extraInfo.neighborhoodInfo) {
+            rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
+            [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
+            [rowView updateWithNeighborhoodInfoData:model.extraInfo.neighborhoodInfo];
+            [self.contentView addSubview:rowView];
+            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (lastView) {
+                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+                }else{
+                    make.top.mas_equalTo(10);
+                }
+                make.left.mas_equalTo(20);
+                make.right.mas_equalTo(-20);
+                make.height.mas_equalTo(20);
+            }];
+            lastView = rowView;
+        }
+        if (model.extraInfo.budget) {
+            rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
+            [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
+            [rowView updateWithBudgetData:model.extraInfo.budget];
+            [self.contentView addSubview:rowView];
+            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (lastView) {
+                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+                }else{
+                    make.top.mas_equalTo(10);
+                }
+                make.left.mas_equalTo(20);
+                make.right.mas_equalTo(-20);
+                make.height.mas_equalTo(20);
+            }];
+            lastView = rowView;
+        }
+        if (model.extraInfo.floorInfo) {
+            rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
+            [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
+            [rowView updateWithFloorInfo:model.extraInfo.floorInfo];
+            [self.contentView addSubview:rowView];
+            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (lastView) {
+                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+                }else{
+                    make.top.mas_equalTo(10);
+                }
+                make.left.mas_equalTo(20);
+                make.right.mas_equalTo(-20);
+                make.height.mas_equalTo(20);
+            }];
+            lastView = rowView;
+        }
         if (model.extraInfo.official) {
             rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
             [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -268,6 +321,66 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     [[NSNotificationCenter defaultCenter] postNotificationName:DETAIL_SHOW_POP_LAYER_NOTIFICATION object:nil userInfo:@{@"cell":self,@"model":view.data?:@""}];
 }
 
+
+- (void)jump2Page:(FHDetailExtarInfoRowView *)view
+{
+    NSString *positionStr = @"be_null";
+    if ([view.data isKindOfClass:[FHDetailDataBaseExtraNeighborhoodModel class]]) {
+        // 二手房详情下发小区字段
+        FHDetailDataBaseExtraNeighborhoodModel *neighborhoodModel = (FHDetailDataBaseExtraNeighborhoodModel *)view.data;
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        // tracerDic[@"card_type"] = @"no_pic";
+        tracerDic[@"element_from"] = @"neighborhood_type";
+        tracerDic[@"enter_from"] = @"old_detail";
+        [tracerDic removeObjectForKey:@"rank"];
+        [tracerDic removeObjectForKey:@"card_type"];
+        if (!tracerDic) {
+            tracerDic = @{};
+        }
+        NSDictionary *userInfoDict = @{@"tracer":tracerDic};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        NSString *openUrl = neighborhoodModel.openUrl;
+        if (openUrl.length > 0) {
+            NSURL *url = [NSURL URLWithString:openUrl];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+        positionStr = @"neighborhood_type";
+    } else if ([view.data isKindOfClass:[FHDetailDataBaseExtraBudgetModel class]]) {
+        FHDetailDataBaseExtraBudgetModel *budgetModel = (FHDetailDataBaseExtraBudgetModel *)view.data;
+        NSDictionary *userInfoDict = @{@"tracer":@{}};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        NSString *openUrl = budgetModel.openUrl;
+        if (openUrl.length > 0) {
+            NSURL *url = [NSURL URLWithString:openUrl];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+        positionStr = @"debit_calculator";
+    }else if ([view.data isKindOfClass:[FHDetailDataBaseExtraFloorInfoModel class]]) {
+        FHDetailDataBaseExtraFloorInfoModel *floorInfo = (FHDetailDataBaseExtraFloorInfoModel *)view.data;
+        [self imAction:floorInfo.openUrl];
+        positionStr = @"floor_type";
+    }
+    if (self.baseViewModel) {
+        [self.baseViewModel addClickOptionLog:positionStr];
+    }
+}
+
+- (void)imAction:(NSString *)openUrl
+{
+    if (openUrl.length < 1) {
+        return;
+    }
+    FHDetailPropertyListModel *propertyModel = (FHDetailPropertyListModel *)self.currentData;
+    NSMutableDictionary *imExtra = @{}.mutableCopy;
+    imExtra[@"from"] = @"app_oldhouse_floor";
+    imExtra[@"source"] = @"app_oldhouse_floor";
+    imExtra[@"source_from"] = @"floor_type";
+    imExtra[@"im_open_url"] = openUrl;
+    imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
+    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldFloor];
+    [propertyModel.contactViewModel onlineActionWithExtraDict:imExtra];
+}
+
 @end
 
 
@@ -342,13 +455,14 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     [self addSubview:_infoLabel];
     _infoLabel.textAlignment = NSTextAlignmentLeft;
     
-    UIImage *img = ICON_FONT_IMG(14, @"\U0000e670", nil); //@"detail_entrance_arrow"
+    UIImage *img = ICON_FONT_IMG(14, @"\U0000e670", [UIColor themeGray3]); //@"detail_entrance_arrow"
+
     _logoImageView = [[UIImageView alloc] init];
     _logoImageView.image = img;
     _logoImageView.contentMode = UIViewContentModeScaleAspectFit;
     
-    _indicatorLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
-    _indicatorLabel.font = [UIFont themeFontMedium:12];
+    _indicatorLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _indicatorLabel.font = [UIFont themeFontRegular:14];
     _indicatorLabel.textColor = [UIColor themeRed1];
     
     _indicator = [[UIImageView alloc]initWithImage:img];
@@ -483,6 +597,70 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-(31+size.width));
         make.size.mas_equalTo(CGSizeMake(15, 15));
+    }];
+    
+}
+
+-(void)updateWithNeighborhoodInfoData:(FHDetailDataBaseExtraNeighborhoodModel *)neighborModel
+{
+    self.data = neighborModel;
+    _nameLabel.text = neighborModel.baseTitle;
+    
+    NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
+    if (!IS_EMPTY_STRING(neighborModel.subName)) {
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:neighborModel.subName attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
+        [minfoAttrStr appendAttributedString:infoStr];
+    }
+    _infoLabel.attributedText = minfoAttrStr;
+    
+    _logoImageView.hidden = YES;
+    _indicatorLabel.hidden = YES;
+}
+
+-(void)updateWithBudgetData:(FHDetailDataBaseExtraBudgetModel *)budgetmodel
+{
+    self.data = budgetmodel;
+    _nameLabel.text = budgetmodel.baseTitle;
+    
+    NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
+    if (!IS_EMPTY_STRING(budgetmodel.baseContent)) {
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:budgetmodel.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor themeRed1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
+        [minfoAttrStr appendAttributedString:infoStr];
+    }
+    _infoLabel.attributedText = minfoAttrStr;
+    
+    _logoImageView.hidden = YES;
+    _indicatorLabel.hidden = YES;
+}
+
+-(void)updateWithFloorInfo:(FHDetailDataBaseExtraFloorInfoModel *)floorInfo
+{
+    self.data = floorInfo;
+    _nameLabel.text = floorInfo.baseTitle;
+    
+    NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
+    if (!IS_EMPTY_STRING(floorInfo.baseContent)) {
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:floorInfo.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
+        [minfoAttrStr appendAttributedString:infoStr];
+    }
+    _infoLabel.attributedText = minfoAttrStr;
+    
+    _logoImageView.hidden = YES;
+
+    _indicatorLabel.text = floorInfo.extraContent;
+    
+    [_indicatorLabel sizeToFit];
+    
+    CGSize size = _indicatorLabel.bounds.size;
+    _indicatorLabel.hidden = NO;
+    
+    [_indicatorLabel  mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(size.width);
+    }];
+    
+    [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-(31+size.width));
+        make.size.mas_equalTo(CGSizeZero);
     }];
     
 }

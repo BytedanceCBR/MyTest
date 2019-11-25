@@ -17,6 +17,7 @@
 #import "FHEnvContext.h"
 #import <TTBusinessManager+StringUtils.h>
 #import <FHUtils.h>
+#import "HMDTTMonitor.h"
 
 //默认轮训间隔时间5分钟
 #define defaultFocusTimerInterval 300
@@ -34,7 +35,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 static const NSString *kFHUGCPublisherHistoryCacheKey = @"key_ugc_publisher_history_cache";
 static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_history_Data";
 
-// 小区圈子数据统一内存数据缓存
+// 圈子子数据统一内存数据缓存
 @interface FHUGCSocialGroupData : NSObject
 
 + (instancetype)sharedInstance;
@@ -254,6 +255,14 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
             if (findData) {
                 [sGroups removeObject:findData];
                 findData.hasFollow = @"0";
+                NSString *followCountStr = findData.followerCount;
+                NSInteger followCount = [findData.followerCount integerValue];
+                followCount -= 1;
+                if (followCount < 0) {
+                    followCount = 0;
+                }
+                NSString *replaceFollowCountStr = [TTBusinessManager formatCommentCount:followCount];
+                findData.followerCount = replaceFollowCountStr;
                 [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:findData];
             }
         }
@@ -289,7 +298,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 }
 
 - (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id {
-    // 先去小区圈专门内存中取（包含关注列表中的数据，优化后）
+    // 先去圈子专门内存中取（包含关注列表中的数据，优化后）
     FHUGCScialGroupDataModel * model = [[FHUGCSocialGroupData sharedInstance] socialGroupData:social_group_id];
     if (model) {
         return model;
@@ -319,17 +328,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                 NSInteger followCount = [model.followerCount integerValue];
                 followCount += 1;
                 NSString *replaceFollowCountStr = [TTBusinessManager formatCommentCount:followCount];
-                NSString *countText = model.countText;
-                // 替换第一个 关注数字
-                NSRange range = [countText rangeOfString:followCountStr];
-                // 有数据而且是起始位置的数据
-                if (range.location == 0 && range.length > 0) {
-                    countText = [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
-                    model.followerCount = replaceFollowCountStr;
-                } else {
-                    model.followerCount = followCountStr;
-                }
-                model.countText = countText;
+                model.followerCount = replaceFollowCountStr;
             }
         } else {
             // 看是否 - 1
@@ -342,16 +341,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                     followCount = 0;
                 }
                 NSString *replaceFollowCountStr = [TTBusinessManager formatCommentCount:followCount];
-                NSString *countText = model.countText;
-                // 替换第一个 关注数字
-                NSRange range = [countText rangeOfString:followCountStr];
-                if (range.location == 0 && range.length > 0) {
-                    countText = [countText stringByReplacingCharactersInRange:range withString:replaceFollowCountStr];
-                    model.followerCount = replaceFollowCountStr;
-                } else {
-                    model.followerCount = followCountStr;
-                }
-                model.countText = countText;
+                model.followerCount = replaceFollowCountStr;
             }
         }
     }
@@ -404,7 +394,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 
 - (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model {
     [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:model];
-    // 通知 附近 可能感兴趣的小区圈 帖子数变化
+    // 通知 附近 可能感兴趣的圈子 帖子数变化
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCSicialGroupDataChangeKey" object:nil];
     // 我关注的列表数据修改
     NSString *social_group_id = model.socialGroupId;
@@ -425,6 +415,52 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         socialData.contentCount = model.contentCount;
     }
 }
+
+// 关注前先登录 逻辑
+- (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow enterFrom:(NSString *)enter_from enterType:(NSString *)enter_type completion:(void (^ _Nullable)(BOOL isSuccess))completion {
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        if (completion) {
+            completion(NO);
+        }
+        return;
+    }
+    // 登录 或者 是取消关注(取关可以不登录)
+    if ([TTAccountManager isLogin] || !follow) {
+        [self followUGCBy:social_group_id isFollow:follow completion:completion];
+    } else {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        if (enter_from.length <= 0) {
+            enter_from = @"be_null";
+        }
+        if (enter_type.length <= 0) {
+            enter_type = @"be_null";
+        }
+        [params setObject:enter_from forKey:@"enter_from"];
+        [params setObject:enter_type forKey:@"enter_type"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        params[@"from_ugc"] = @(YES);
+        __weak typeof(self) wSelf = self;
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    [wSelf followUGCBy:social_group_id isFollow:follow completion:completion];
+                } else {
+                    if (completion) {
+                        completion(NO);
+                    }
+                }
+            } else {
+                if (completion) {
+                    completion(NO);
+                }
+            }
+        }];
+    }
+}
+
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 - (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion {
@@ -458,13 +494,21 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                         if ([tModel isKindOfClass:[FHUGCFollowModel class]]) {
                             [self followSuccessWith:tModel.data];
                         }
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"follow_community" metric:nil category:@{@"status":@(0)} extra:nil];
                     } else {
                         // [[ToastManager manager] showToast:@"取消关注成功"];
                         // 取消关注成功
                         [self cancelFollowSuccessWith:social_group_id];
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"unfollow_community" metric:nil category:@{@"status":@(0)} extra:nil];
                     }
                     // 关注或者取消关注后 重新拉取 关注列表
                     isSuccess = YES;
+                } else if([model.status isEqualToString:@"1"]) {
+                    // 管理员 - 禁止取消关注 - toast 提示
+                    if ([model.message isKindOfClass:[NSString class]] && model.message.length > 0) {
+                        NSString *messageStr = model.message;
+                        [[ToastManager manager] showToast:messageStr];
+                    }
                 }
                 if (completion) {
                     completion(isSuccess);
@@ -486,8 +530,10 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         } else {
             if (follow) {
                 // [[ToastManager manager] showToast:@"关注失败"];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"follow_community" metric:nil category:@{@"status":@(2)} extra:nil];
             } else {
                 // [[ToastManager manager] showToast:@"取消关注失败"];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"unfollow_community" metric:nil category:@{@"status":@(2)} extra:nil];
             }
             if (completion) {
                 completion(NO);
@@ -755,6 +801,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
             socialData.hasFollow = model.hasFollow;
             socialData.followerCount = model.followerCount;
             socialData.contentCount = model.contentCount;
+            socialData.permission = model.permission;
         } else {
             [_groupDataDic setObject:model forKey:model.socialGroupId];
         }

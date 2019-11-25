@@ -40,7 +40,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property(nonatomic , copy) NSString *searchId;
 @property(nonatomic , strong) FHFalseListTopHeaderView *topHeader;
 @property(nonatomic , weak) TTHttpTask * requestTask;
-@property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
+@property(nonatomic , weak) FHRefreshCustomFooter *refreshFooter;
 @property (nonatomic, weak) FHFalseHouseListViewController *currentViewController;
 @property (nonatomic , strong) UIView *bottomView;
 @property (nonatomic , strong) UIButton *buttonOpenMore;
@@ -195,7 +195,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     } else {
         paramsSearch[@"search_query"] = @"be_null";
     }
-    
+    paramsSearch[@"growth_deepevent"] = @(1);
     [FHEnvContext recordEvent:paramsSearch andEventKey:@"house_search"];
 }
 

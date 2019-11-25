@@ -10,6 +10,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
+#import <TTImageView+TrafficSave.h>
 
 #define maxLines 3
 #define bottomViewHeight 39
@@ -62,6 +63,8 @@
 - (void)initViews {
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
+    _contentLabel.layer.masksToBounds = YES;
+    _contentLabel.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_contentLabel];
     
     self.imageViewContainer = [[UIView alloc] init];
@@ -79,9 +82,9 @@
     [self.bottomView.positionView addGestureRecognizer:tap];
     
     for (NSInteger i = 0; i < 3; i++) {
-        UIImageView *imageView = [[UIImageView alloc] init];
+        TTImageView *imageView = [[TTImageView alloc] initWithFrame:CGRectZero];
         imageView.clipsToBounds = YES;
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
         imageView.layer.borderWidth = 0.5;
@@ -163,11 +166,17 @@
     //图片
     NSArray *imageList = cellModel.imageList;
     for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-        UIImageView *imageView = self.imageViewList[i];
+        TTImageView *imageView = self.imageViewList[i];
         if(i < imageList.count){
             FHFeedContentImageListModel *imageModel = imageList[i];
             imageView.hidden = NO;
-            [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+            if (imageModel && imageModel.url.length > 0) {
+                TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
+                __weak typeof(imageView) wImageView = imageView;
+                [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
+                    [wImageView setImage:nil];
+                }];
+            }
         }else{
             imageView.hidden = YES;
         }

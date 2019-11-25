@@ -61,6 +61,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** 是否支持长按保存，默认YES */
 @property (nonatomic, assign)BOOL longPressToSave;
 
+/** 是否显示所有按钮，默认YES */
+@property (nonatomic, assign)BOOL isShowAllBtns;
+
 // Extended by lizhuoli to support drag down and drag up to close
 
 /** 是否禁止上拉和下拉关闭，默认NO */
@@ -99,6 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return YES / NO
  */
 + (BOOL)photoBrowserAtTop;
+
 
 @end
 

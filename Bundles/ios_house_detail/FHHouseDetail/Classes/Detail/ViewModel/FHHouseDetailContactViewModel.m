@@ -45,6 +45,7 @@
 #import <FHIESGeckoManager.h>
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import "FHHouseDetailViewController.h"
+#import <FHHouseBase/FHHouseContactDefines.h>
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -453,12 +454,30 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"realtor_position"] = realtor_pos;
     imExtra[@"from"] = params[@"from"] ?: (self.contactPhone.realtorType == FHRealtorTypeNormal ? @"app_oldhouse" : @"app_oldhouse_expert");
+    if (params[@"source"]) {
+        imExtra[@"source"] = params[@"source"];
+    }
     if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]) {
         if (extraDict[@"element_from"]) {
             imExtra[@"element_from"] = extraDict[@"element_from"];
         }
         if (extraDict[@"item_id"]) {
             imExtra[@"item_id"] = extraDict[@"item_id"];
+        }
+        if (extraDict[@"im_open_url"]) {
+            imExtra[@"im_open_url"] = extraDict[@"im_open_url"];
+        }
+        if (extraDict[@"source_from"]) {
+            imExtra[@"source_from"] = extraDict[@"source_from"];
+        }
+        if (extraDict[kFHClueEndpoint]) {
+            imExtra[kFHClueEndpoint] = extraDict[kFHClueEndpoint];
+        }
+        if (extraDict[kFHCluePage]) {
+            imExtra[kFHCluePage] = extraDict[kFHCluePage];
+        }
+        if (extraDict[@"question_id"]) {
+            imExtra[@"question_id"] = extraDict[@"question_id"];
         }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
@@ -476,6 +495,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.houseType == FHHouseTypeNeighborhood) {
         fillFormConfig.title = @"咨询经纪人";
         fillFormConfig.btnTitle = @"提交";
+        fillFormConfig.cluePage = @(FHClueFormPageTypeCNeighborhood);
     }
     NSMutableDictionary *params = [self baseParams].mutableCopy;
     if (extraDict.count > 0) {
@@ -555,6 +575,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     contactConfig.showLoading = YES;
     contactConfig.realtorLogpb = self.contactPhone.realtorLogpb;
     contactConfig.realtorType = self.contactPhone.realtorType;
+    if (self.houseType == FHHouseTypeNeighborhood) {
+        contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhood);
+    }
     if (extraDict[@"from"]) {
         contactConfig.from = extraDict[@"from"];
     }
@@ -584,6 +607,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
         extraDic[@"position"] = @"online";
         extraDic[@"realtor_position"] = @"online";
+    }
+    if (self.houseType == FHHouseTypeNeighborhood) {
+        extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+        extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
     }
     [self onlineActionWithExtraDict:extraDic];
 }
@@ -637,11 +664,27 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     self.shareExtraDic = nil;// 分享都会走当前方法
 }
 
+- (NSString *)elementTypeStringByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_detail_button";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_detail_button";
+            break;
+            
+        default:
+            break;
+    }
+    return @"be_null";
+}
+
 - (void)addRealtorShowLog:(FHDetailContactModel *)contactPhone
 {
     NSMutableDictionary *tracerDic = @{}.mutableCopy;
     tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
-    tracerDic[@"element_type"] = @"old_detail_button";
+    tracerDic[@"element_type"] = [self elementTypeStringByHouseType:self.houseType];
     tracerDic[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
     tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     tracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
@@ -675,7 +718,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSMutableDictionary *tracerDic = @{}.mutableCopy;
     tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
     tracerDic[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
-    tracerDic[@"element_type"] = @"old_detail_button";
+    tracerDic[@"element_type"] = [self elementTypeStringByHouseType:self.houseType];
     tracerDic[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
     tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     tracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";

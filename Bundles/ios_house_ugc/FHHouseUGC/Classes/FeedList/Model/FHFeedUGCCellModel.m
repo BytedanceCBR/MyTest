@@ -12,6 +12,7 @@
 #import "FHUGCCellHelper.h"
 #import <TTVideoApiModel.h>
 #import "TTVFeedItem+Extension.h"
+#import "FHLocManager.h"
 
 @implementation FHFeedUGCCellCommunityModel
 
@@ -87,7 +88,8 @@
                  type == FHUGCFeedListCellTypeArticleComment2 ||
                  type == FHUGCFeedListCellTypeUGCHotTopic ||
                  type == FHUGCFeedListCellTypeUGCVote ||
-                 type == FHUGCFeedListCellTypeUGCSmallVideo){
+                 type == FHUGCFeedListCellTypeUGCSmallVideo ||
+                 type == FHUGCFeedListCellTypeUGCVoteInfo){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -125,6 +127,10 @@
 
 + (FHFeedUGCCellContentDecorationModel *)contentDecorationFromString:(NSString *)contentDecoration {
     
+    if(contentDecoration.length == 0){
+        return nil;
+    }
+    
     NSData *jsonData = [contentDecoration dataUsingEncoding:NSUTF8StringEncoding];
     NSError *err;
     NSDictionary *dic = nil;
@@ -154,12 +160,12 @@
     cellModel.aggrType = model.aggrType;
     cellModel.needLinkSpan = YES;
     cellModel.behotTime = model.behotTime;
-    cellModel.isStick = model.isStick;
-    cellModel.stickStyle = model.stickStyle;
-    cellModel.contentDecoration = [self contentDecorationFromString:model.contentDecoration];
+    cellModel.isStick = (model.isStick || model.rawData.isStick);
+    cellModel.stickStyle = ((model.stickStyle != FHFeedContentStickStyleUnknown) ? model.stickStyle : model.rawData.stickStyle);
+    cellModel.contentDecoration = [self contentDecorationFromString:(model.contentDecoration.length > 0 ? model.contentDecoration : model.rawData.contentDecoration)];
     cellModel.originData = model;
     //目前仅支持话题类型
-    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
+    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt), @(TTRichSpanLinkTypeLink)];
     //处理圈子信息
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     if(model.community){
@@ -188,6 +194,7 @@
             user.name = model.userInfo.name;
             user.avatarUrl = model.userInfo.avatarUrl;
             user.userId = model.userInfo.userId;
+            user.schema = model.userInfo.schema;
             cellModel.user = user;
             
             [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
@@ -259,7 +266,8 @@
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
             }
         }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         cellModel.groupId = model.rawData.groupId;
         cellModel.title = model.rawData.content.question.title;
         cellModel.openUrl = model.rawData.content.question.questionListSchema;
@@ -289,7 +297,8 @@
         }else{
             cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
         }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         cellModel.groupId = model.rawData.groupId;
         cellModel.content = model.rawData.content.answer.abstractText;
         cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
@@ -312,6 +321,7 @@
         user.name = model.rawData.content.user.uname;
         user.avatarUrl = model.rawData.content.user.avatarUrl;
         user.userId = model.rawData.content.user.userId;
+        user.schema = model.rawData.content.user.userSchema;
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
@@ -339,9 +349,11 @@
         }
         
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         cellModel.groupId = model.rawData.commentBase.id;
         cellModel.content = model.rawData.commentBase.content;
+        cellModel.contentRichSpan = model.rawData.commentBase.contentRichSpan;
         cellModel.openUrl = model.rawData.commentBase.detailSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
@@ -361,20 +373,35 @@
         user.name = model.rawData.commentBase.user.info.name;
         user.avatarUrl = model.rawData.commentBase.user.info.avatarUrl;
         user.userId = model.rawData.commentBase.user.info.userId;
+        user.schema = model.rawData.commentBase.user.info.schema;
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
-        if([model.rawData.commentBase.repostParams.repostType integerValue] == 223){
-            originItemModel.type = @"[视频]";
+        if(model.rawData.originType.length > 0){
+            originItemModel.type = [NSString stringWithFormat:@"[%@]",model.rawData.originType];
+        }else if(model.originType.length > 0){
+            originItemModel.type = [NSString stringWithFormat:@"[%@]",model.originType];
         }else{
-            originItemModel.type = @"[文章]";
+            
         }
         if(model.rawData.originGroup){
             originItemModel.content = model.rawData.originGroup.title;
+            originItemModel.contentRichSpan = model.rawData.originGroup.titleRichSpan;
             originItemModel.openUrl = model.rawData.originGroup.schema;
             originItemModel.imageModel = model.rawData.originGroup.middleImage;
+        }else if(model.rawData.originThread){
+            originItemModel.content = model.rawData.originThread.content;
+            originItemModel.contentRichSpan = model.rawData.originThread.contentRichSpan;
+            originItemModel.openUrl = model.rawData.originThread.schema;
+            originItemModel.imageModel = [model.rawData.originThread.thumbImageList firstObject];
+        }else if(model.rawData.originUgcVideo){
+            originItemModel.content = model.rawData.originUgcVideo.rawData.title;
+            originItemModel.contentRichSpan = model.rawData.originUgcVideo.rawData.titleRichSpan;
+            originItemModel.openUrl = model.rawData.originUgcVideo.rawData.detailSchema;
+            originItemModel.imageModel = [model.rawData.originUgcVideo.rawData.thumbImageList firstObject];
         }else{
             originItemModel.content = model.rawData.originCommonContent.title;
+            originItemModel.contentRichSpan = model.rawData.originCommonContent.titleRichSpan;
             originItemModel.openUrl = model.rawData.originCommonContent.schema;
             originItemModel.imageModel = model.rawData.originCommonContent.coverImage;
         }
@@ -398,7 +425,8 @@
         }
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
         
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
         cellModel.groupId = model.rawData.groupId;
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBanner;
         
@@ -413,7 +441,8 @@
         }else{
             cellModel.openUrl = model.rawData.operation.url;
         }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
         cellModel.groupId = model.rawData.groupId;
         if(model.recommendSocialGroupList){
@@ -422,7 +451,8 @@
             cellModel.recommendSocialGroupList = model.rawData.recommendSocialGroupList;
         }
         cellModel.elementFrom = @"like_neighborhood";
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotTopic;
         cellModel.groupId = model.rawData.groupId;
         cellModel.hotTopicList = model.rawData.hotTopicList;
@@ -430,7 +460,8 @@
         if(cellModel.hotTopicList.count <= 0){
             return nil;
         }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVote;
         cellModel.groupId = model.rawData.vote.voteId;
         
@@ -446,7 +477,57 @@
         cellModel.vote = vote;
         
         [FHUGCCellHelper setVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 78) numberOfLines:2];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
+    } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo){
+        // UGC 投票
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVoteDetail;
+        cellModel.groupId = model.rawData.voteInfo.voteId;
+        
+        cellModel.voteInfo = model.rawData.voteInfo;
+        if (cellModel.voteInfo == nil || cellModel.voteInfo.items.count < 2) {
+            return nil;
+        }
+        if ([cellModel.voteInfo.voteType isEqualToString:@"1"]) {
+            // 单选
+            cellModel.voteInfo.title = [NSString stringWithFormat:@"【单选】%@",cellModel.voteInfo.title];
+        } else if ([cellModel.voteInfo.voteType isEqualToString:@"2"]) {
+            // 多选
+            cellModel.voteInfo.title = [NSString stringWithFormat:@"【多选】%@",cellModel.voteInfo.title];
+        }
+        cellModel.voteInfo.voteState = FHUGCVoteStateNone;
+        cellModel.voteInfo.needFold = NO;
+        cellModel.voteInfo.isFold = NO;
+        cellModel.voteInfo.hasReloadForVoteExpired = NO;
+        cellModel.voteInfo.needAnimateShow = NO;
+        cellModel.openUrl = model.rawData.detailSchema;
+        if (cellModel.voteInfo.selected) {
+            cellModel.voteInfo.voteState = FHUGCVoteStateComplete;
+        }
+        NSInteger displayCount = [cellModel.voteInfo.displayCount integerValue];
+        if (displayCount <= 0 || displayCount >= cellModel.voteInfo.items.count) {
+            cellModel.voteInfo.needFold = NO;
+        } else {
+            cellModel.voteInfo.needFold = YES;
+            cellModel.voteInfo.isFold = YES;// 默认折叠，后续点击按钮修改
+        }
+        
+        FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.name = model.rawData.user.info.name;
+        user.avatarUrl = model.rawData.user.info.avatarUrl;
+        user.userId = model.rawData.user.info.userId;
+        user.schema = model.rawData.user.info.schema;
+        cellModel.user = user;
+        
+        // 时间以及距离
+        cellModel.desc = [self generateUGCDescFromRawData:model.rawData];
+        
+        cellModel.diggCount = model.rawData.diggCount;
+        cellModel.commentCount = model.rawData.commentCount;
+        cellModel.userDigg = model.rawData.userDigg;
+        
+        [FHUGCCellHelper setUGCVoteContentString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
+        cellModel.voteInfo.descHeight = 17;
+    }
+    else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
         cellModel.groupId = model.rawData.groupId;
         cellModel.openUrl = model.rawData.detailSchema;
@@ -463,6 +544,7 @@
         user.name = model.rawData.user.info.name;
         user.avatarUrl = model.rawData.user.info.avatarUrl;
         user.userId = model.rawData.user.info.userId;
+        user.schema = model.rawData.user.info.schema;
         cellModel.user = user;
         
         cellModel.diggCount = model.rawData.action.diggCount;
@@ -506,7 +588,7 @@
     cellModel.needLinkSpan = YES;
     cellModel.numberOfLines = 3;
     //目前仅支持话题类型
-    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag)];
+    cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt), @(TTRichSpanLinkTypeLink)];
     
     FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
     community.name = model.community.name;
@@ -518,6 +600,7 @@
     user.name = model.user.name;
     user.avatarUrl = model.user.avatarUrl;
     user.userId = model.user.userId;
+    user.schema = model.user.schema;
     cellModel.user = user;
     
     NSMutableArray *cellImageList = [NSMutableArray array];
@@ -565,7 +648,35 @@
         [desc appendAttributedString:publishTimeAStr];
     }
     
-    if(!isEmptyString(model.distanceInfo)){
+    // 法务合规，如果没有定位权限，不展示位置信息
+    if(!isEmptyString(model.distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
+        NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
+        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+        attachment.bounds = CGRectMake(8, 0, 8, 8);
+        attachment.image = [UIImage imageNamed:@"fh_ugc_location"];
+        NSAttributedString *attachmentAStr = [NSAttributedString attributedStringWithAttachment:attachment];
+        [desc appendAttributedString:attachmentAStr];
+        
+        NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:distance];
+        [desc appendAttributedString:distanceAStr];
+    }
+    
+    return desc;
+}
+
++ (NSAttributedString *)generateUGCDescFromRawData:(FHFeedContentRawDataModel *)model {
+    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
+    double time = [model.createTime doubleValue];
+    
+    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+    
+    if(![publishTime isEqualToString:@""]){
+        NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
+        [desc appendAttributedString:publishTimeAStr];
+    }
+    
+    // 法务合规，如果没有定位权限，不展示位置信息
+    if(!isEmptyString(model.distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
         NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.bounds = CGRectMake(8, 0, 8, 8);

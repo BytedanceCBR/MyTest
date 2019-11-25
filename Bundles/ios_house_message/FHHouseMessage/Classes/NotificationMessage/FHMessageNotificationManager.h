@@ -9,6 +9,9 @@
 #import "TTMessageNotificationModel.h"
 #import "FHMessageNotificationMacro.h"
 
+
+#define kPeriodicalFetchUnreadMessage @"kPeriodicalFetchUnreadMessage"
+
 @class FHUnreadMsgDataUnreadModel;
 
 @interface FHMessageNotificationManager : NSObject

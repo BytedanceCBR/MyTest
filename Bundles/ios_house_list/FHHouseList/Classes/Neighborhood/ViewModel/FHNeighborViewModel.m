@@ -206,14 +206,14 @@
                     traceParam[@"origin_from"] = origin_from ? : @"be_null";
                     traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
                     traceParam[@"search_id"] = self.searchId;
-                     topRealCell.tracerDict = traceParam;
+//                     topRealCell.tracerDict = traceParam;
                     
                     __weak typeof(self) weakSelf = self;
                     NSString *stringQuery = [NSString stringWithFormat:@"neighborhood_id=%@",self.neiborHoorId];
                     if (self.condition) {
                         stringQuery = [stringQuery stringByAppendingString:self.condition];
                     }
-                    topRealCell.searchQuery = stringQuery;
+//                    topRealCell.searchQuery = stringQuery;
                     
                     return topRealCell;
                 }
@@ -318,14 +318,17 @@
             searchId = ((FHSameNeighborhoodHouseResponse *)model).data.searchId;
             hasMore = ((FHSameNeighborhoodHouseResponse *)model).data.hasMore;
             items = ((FHSameNeighborhoodHouseResponse *)model).data.items;
+            self.currentOffset = ((FHSameNeighborhoodHouseResponse *)model).data.offset;
         } else if ([model isKindOfClass:[FHHouseRentModel class]]) {
             searchId = ((FHHouseRentModel *)model).data.searchId;
             hasMore = ((FHHouseRentModel *)model).data.hasMore;
             items = ((FHHouseRentModel *)model).data.items;
+            self.currentOffset = ((FHHouseRentModel *)model).data.offset;
         } else if ([model isKindOfClass:[FHRelatedHouseResponse class]]) {
             searchId = ((FHRelatedHouseResponse *)model).data.searchId;
             hasMore = ((FHRelatedHouseResponse *)model).data.hasMore;
             items = ((FHRelatedHouseResponse *)model).data.items;
+            self.currentOffset = ((FHRelatedHouseResponse *)model).data.offset;
         }
         if (searchId.length > 0) {
             self.searchId = searchId;
@@ -433,7 +436,7 @@
     }
     __weak typeof(self) wself = self;
     // condition添加请求参数到url后面
-    self.httpTask = [FHHouseListAPI requestRelatedHouseSearchWithQuery:self.condition houseId:houseId offset:offset count:15 class:[FHRelatedHouseResponse class] completion:^(FHRelatedHouseResponse * _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHouseListAPI requestRelatedHouseSearchWithQuery:self.condition houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHRelatedHouseResponse class] completion:^(FHRelatedHouseResponse * _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];
 }

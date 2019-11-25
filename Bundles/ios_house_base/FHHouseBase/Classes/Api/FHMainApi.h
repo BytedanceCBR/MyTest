@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMainApi : NSObject
 
++(NSString *)host;
+
 /*
  * search config 废弃，接口合并
  
@@ -41,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param: searchId 请求id
  *  @param: sugParam  suggestion params
  */
-+(TTHttpTask *)searchRent:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam completion:(void(^_Nullable)(FHHouseRentModel *model , NSError *error))completion;
++(TTHttpTask *)searchRent:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion;
 
 
 /**
@@ -69,6 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(TTHttpTask *)queryData:(NSString *_Nullable)queryPath uploadLog:(BOOL)uploadLog params:(NSDictionary *_Nullable)param class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 
++(TTHttpTask *)queryData:(NSString *_Nullable)queryPath uploadLog:(BOOL)uploadLog params:(NSDictionary *_Nullable)param class:(Class)cls logPath:(NSString *)logPath completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 /*
  * 基础GET 方法
  * @param: path 请求的path
@@ -104,6 +107,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @completion: 完成回调
  */
 +(TTHttpTask *_Nullable)postJsonRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion;
+   
++(TTHttpTask *)postJsonRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param jsonClass:(Class _Nonnull)clazz completion:(void(^_Nullable)(JSONModel *_Nullable model , NSError *_Nullable error))completion;
 
 #pragma mark 找房频道首页相关 =================
 /**
@@ -123,6 +128,19 @@ NS_ASSUME_NONNULL_BEGIN
 +(TTHttpTask *)requestHomeCategoryMessage:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
 
 +(JSONModel *)generateModel:(NSData *)jsonData class:(Class)class error:(NSError *__autoreleasing *)error;
+
+/**
+ UGC推广 增加植入种子
+ */
+
++(TTHttpTask *_Nullable)uploadUGCPostPromotionparams:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion;
+
+
+/**
+ UGC推广 获取种子
+ */
+
++(TTHttpTask *_Nullable)checkUGCPostPromotionparams:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion;
 
 @end
 

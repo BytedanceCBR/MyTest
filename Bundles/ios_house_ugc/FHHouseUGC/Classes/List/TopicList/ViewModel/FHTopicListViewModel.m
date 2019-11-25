@@ -116,16 +116,30 @@
             NSMutableDictionary *dict = @{}.mutableCopy;
             // 埋点
             NSMutableDictionary *traceParam = @{}.mutableCopy;
-            traceParam[UT_ENTER_FROM] = @"topic_list";
-            traceParam[UT_ELEMENT_FROM] = UT_BE_NULL;
-            traceParam[UT_ENTER_TYPE] = @"click";
-            traceParam[UT_LOG_PB] = UT_BE_NULL;
-            traceParam[@"rank"] = @(indexPath.row);
+
             dict[TRACER_KEY] = traceParam;
             
             if (url) {
+                BOOL isOpen = YES;
                 if ([url.absoluteString containsString:@"concern"]) {
                     // 话题
+                    traceParam[UT_ENTER_FROM] = [self categoryName];
+                    traceParam[UT_ELEMENT_FROM] = UT_BE_NULL;
+                    traceParam[UT_ENTER_TYPE] = @"click";
+                    traceParam[UT_LOG_PB] = UT_BE_NULL;
+                    traceParam[@"rank"] = @(indexPath.row);
+                }
+                else if([url.absoluteString containsString:@"profile"]) {
+                    // JOKER:
+                }
+                else if([url.absoluteString containsString:@"webview"]) {
+                    
+                }
+                else {
+                    isOpen = NO;
+                }
+                
+                if(isOpen) {
                     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
                     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
                 }

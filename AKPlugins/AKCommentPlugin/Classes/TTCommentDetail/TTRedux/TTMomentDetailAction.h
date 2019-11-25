@@ -65,7 +65,7 @@ typedef enum : NSUInteger {
 + (instancetype)actionWithType:(TTMomentDetailActionType)type payload:(NSDictionary *)payload;
 + (instancetype)actionWithType:(TTMomentDetailActionType)type comment:(id<TTCommentModelProtocol>)commentModel;
 
-+ (instancetype)enterProfileActionWithUserID:(NSString *)userID;
++ (instancetype)enterProfileActionWithUserID:(NSString *)userID fromPage:(NSString *)fromPage;
 
 + (instancetype)digActionWithReplyCommentModel:(TTCommentDetailReplyCommentModel *)model;
 

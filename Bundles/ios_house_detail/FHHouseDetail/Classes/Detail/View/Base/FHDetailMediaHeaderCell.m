@@ -14,6 +14,9 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "FHMultiMediaVideoCell.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
+#import <NSString+URLEncoding.h>
+#import <FHUtils.h>
+#import "FHMultiMediaModel.h"
 
 @interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -118,10 +121,27 @@
     NSMutableArray *itemArray = [NSMutableArray array];
     NSArray *houseImageDict = ((FHDetailMediaHeaderModel *)self.currentData).houseImageDictList;
     FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
+    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)self.currentData).vrModel;
+    
+    if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
+        FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];
+        itemModelVR.mediaType = FHMultiMediaTypeVRPicture;
+        
+        if (vrModel.vrImage.url) {
+            itemModelVR.imageUrl = vrModel.vrImage.url;
+        }
+        itemModelVR.groupType = @"VR";
+        [itemArray addObject:itemModelVR];
+        [self.imageList addObject:itemModelVR];
+        
+        [self trackVRElementShow];
+    }
+    
     if (vedioModel && vedioModel.videoID.length > 0) {
         self.vedioCount = 1;
         [itemArray addObject:vedioModel];
     }
+    
     for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
         if (listModel.houseImageTypeName.length > 0) {
             NSString *groupType = nil;
@@ -133,6 +153,8 @@
             
             NSInteger index = 0;
             NSArray<FHImageModel> *instantHouseImageList = listModel.instantHouseImageList;
+
+            
             for (FHImageModel *imageModel in listModel.houseImageList) {
                 if (imageModel.url.length > 0) {
                     FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
@@ -161,10 +183,54 @@
 -(void)showImagesWithCurrentIndex:(NSInteger)index
 {
     NSArray *images = self.imageList;
+    
+    if([images.firstObject isKindOfClass:[FHMultiMediaItemModel class]])
+    {
+        FHMultiMediaItemModel *model = (FHMultiMediaItemModel *)images.firstObject;
+        if (model.mediaType == FHMultiMediaTypeVRPicture) {
+            NSMutableArray *imageListArray = [NSMutableArray arrayWithArray:images];
+            [imageListArray removeObjectAtIndex:0];
+            images = imageListArray;
+            index = index - 1;
+        }
+    }
+    
+    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)self.currentData).vrModel;
+    //VR
+    if (index < 0 && vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
+        if (![TTReachability isNetworkConnected]) {
+            [[ToastManager manager] showToast:@"网络异常"];
+            return;
+        }
+        
+        if (vrModel.openUrl) {
+            
+            [self trackClickOptions:@"house_vr_icon"];
+            
+            NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
+            NSMutableDictionary *param = [NSMutableDictionary new];
+            param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
+            param[@"enter_from"] = tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+            param[UT_ELEMENT_FROM] = tracerDict[UT_ELEMENT_FROM]?:UT_BE_NULL;
+            param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+            param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
+            param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;
+            NSString *reportParams = [FHUtils getJsonStrFrom:param];
+            NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@",vrModel.openUrl,reportParams];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[openUrl URLEncodedString]]]];
+        }
+        
+        return;
+    }
+    
+    
+    FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
+
     if (index < 0 || index >= (images.count + self.vedioCount)) {
         return;
     }
-    if (index < self.vedioCount) {
+    
+    if (index < self.vedioCount && vedioModel.cellHouseType != FHMultiMediaCellHouseNeiborhood) {
         // 视频
         if (self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStateStopped || self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStatePaused) {
             // 第一次 非播放状态直接播放即可
@@ -172,17 +238,23 @@
             return;
         }
     }
+    
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
     vc.topVC = self.baseViewModel.detailController;
+    
+//    if (FHVideoModel.cellhou == FHCellt) {
+//        <#statements#>
+//    }
+    
+
     // 获取图片需要的房源信息数据
     if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
         // 二手房数据
         FHDetailOldModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
         NSString *priceStr = @"";
         NSString *infoStr = @"";
-        FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
         if (vedioModel && vedioModel.videoID.length > 0) {
             priceStr = vedioModel.infoTitle;
             infoStr = vedioModel.infoSubTitle;
@@ -191,8 +263,15 @@
         vc.houseId = houseId;
         vc.priceStr = priceStr;
         vc.infoStr = infoStr;
+
         vc.followStatus = self.baseViewModel.contactViewModel.followStatus;
     }
+    
+    //如果是小区，移除按钮
+    if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
+        vc.isShowAllBtns = NO;
+    }
+    
     // 分享
     vc.shareActionBlock = ^{
         NSString *v_id = @"be_null";
@@ -247,7 +326,15 @@
         if (currentIndex >= 0 && currentIndex < weakSelf.model.medias.count) {
             weakSelf.currentIndex = currentIndex;
             weakSelf.isLarge = YES;
-            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
+            
+            NSInteger vrOffset = 0;
+            FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)weakSelf.currentData).vrModel;
+            //VR增加偏移
+            if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr)
+            {
+                vrOffset = 1;
+            }
+            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 + vrOffset inSection:0];
             [weakSelf.mediaView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
             [weakSelf.mediaView updateItemAndInfoLabel];
             [weakSelf.mediaView updateVideoState];
@@ -255,11 +342,13 @@
     };
     self.mediaView.isShowenPictureVC = YES;
     [vc presentPhotoScrollViewWithDismissBlock:^{
+        
+        
         weakSelf.mediaView.isShowenPictureVC = NO;
         if ([weakSelf.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
-            // 当前是视频
             [weakSelf resetVideoCell:frame];
         }
+        
         weakSelf.isLarge = NO;
         [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
@@ -280,14 +369,25 @@
     __weak typeof(self) weakSelf = self;
     if ([self.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
         FHMultiMediaVideoCell *tempCell = self.mediaView.currentMediaCell;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            weakSelf.mediaView.videoVC.view.frame = bound;
-            weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
-            weakSelf.mediaView.videoVC.model.isShowControl = NO;
-            weakSelf.mediaView.videoVC.model.isShowMiniSlider = YES;
-            weakSelf.mediaView.videoVC.model.isShowStartBtnWhenPause = YES;
-            [weakSelf.mediaView.videoVC updateData:weakSelf.mediaView.videoVC.model];
-        });
+        FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
+        if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                weakSelf.mediaView.videoVC.view.frame = bound;
+                [weakSelf.mediaView.videoVC pause];
+                weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
+                [tempCell showCoverView];
+            });
+        }else
+        {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                weakSelf.mediaView.videoVC.view.frame = bound;
+                weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
+                weakSelf.mediaView.videoVC.model.isShowControl = NO;
+                weakSelf.mediaView.videoVC.model.isShowMiniSlider = YES;
+                weakSelf.mediaView.videoVC.model.isShowStartBtnWhenPause = YES;
+                [weakSelf.mediaView.videoVC updateData:weakSelf.mediaView.videoVC.model];
+            });
+        }
     }
 }
 
@@ -384,6 +484,10 @@
             dict[@"click_position"] = @"house_model";
         }else if([str isEqualToString:@"视频"]){
             dict[@"click_position"] = @"video";
+        }else if([str isEqualToString:@"house_vr_icon"]){
+            dict[@"click_position"] = @"house_vr_icon";
+        }else if([str isEqualToString:@"VR"]){
+            dict[@"click_position"] = @"house_vr";
         }
 
         dict[@"rank"] = @"be_null";
@@ -430,6 +534,7 @@
 #pragma mark - FHMultiMediaScrollViewDelegate
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
+    
     if ([(FHDetailMediaHeaderModel *)self.currentData isInstantData]) {
         //列表页带入的数据不响应
         return;
@@ -467,6 +572,20 @@
     TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
 }
 
+- (void)trackVRElementShow
+{
+    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_ELEMENT_TYPE] = @"house_vr";
+    param[UT_PAGE_TYPE] = tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+    param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+    param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
+    param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;
+    param[UT_RANK] = tracerDict[UT_RANK]?:UT_BE_NULL;
+    param[UT_ENTER_FROM] = tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+    TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
+}
+
 #pragma mark - FHDetailScrollViewDidScrollProtocol
 
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
@@ -495,6 +614,7 @@
 //    if (self.vcParentView) {
 //        [self fhDetail_scrollViewDidScroll:self.vcParentView];
 //    }
+    [self.mediaView checkVRLoadingAnimate];
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {

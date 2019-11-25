@@ -93,7 +93,7 @@ Pod::Spec.new do |s|
         ss.dependency 'TTPlatformUIModel/HPGrowingTextView'
         ss.dependency 'TTPlatformUIModel/TTModel'
         ss.dependency 'TTPlatformBaseLib/TTURLDomainHelper'
-        ss.dependency 'TTPlatformUIModel/TTSeachBarView'
+#        ss.dependency 'TTPlatformUIModel/TTSeachBarView'
     end
     
     s.subspec 'TTUGCImage' do |ss|

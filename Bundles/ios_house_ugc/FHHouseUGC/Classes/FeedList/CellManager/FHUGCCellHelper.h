@@ -13,6 +13,7 @@
 #import "FHFeedUGCContentModel.h"
 #import "FHFeedUGCCellModel.h"
 #import <TTVFeedListItem.h>
+#import <AWECommentModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,14 +35,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model;
 
++ (void)setOriginRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model;
+
 + (void)setOriginContentAttributeString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 
 + (void)setVoteContentString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
+
+// UGC 新投票类型
++ (void)setUGCVoteContentString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 
 + (CGSize)sizeThatFitsAttributedString:(NSAttributedString *)attrStr
                        withConstraints:(CGSize)size
                       maxNumberOfLines:(NSUInteger)maxLine
                 limitedToNumberOfLines:(NSUInteger *)numberOfLines;
+
++ (NSAttributedString *)convertRichContentWithModel:(AWECommentModel *)model;
 
 //cellModel转视频模型
 + (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel;

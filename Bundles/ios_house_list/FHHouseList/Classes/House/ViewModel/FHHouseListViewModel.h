@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FHHouseListRedirectTipView;
 @class FHHouseListCommuteTipView;
+@class FHFakeInputNavbar;
 @interface FHHouseListViewModel : FHBaseHouseListViewModel <FHHouseSuggestionDelegate>
 
 @property (nonatomic , copy) NSString *houseListOpenUrl;
@@ -57,6 +58,12 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)addModifyCommuteLog:(BOOL)showOrHide;
 
 -(void)commuteFilterUpdated;
+
+- (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar;
+
+- (void)refreshMessageDot;
+
++ (NSInteger)searchOffsetByhouseModel:(JSONModel *)houseModel;
 
 @end
 

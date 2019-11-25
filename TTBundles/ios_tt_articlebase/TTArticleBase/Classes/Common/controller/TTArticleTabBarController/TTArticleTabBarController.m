@@ -239,8 +239,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 //    [self addKVO];
     [[TSVTabTipManager sharedManager] setupShortVideoTabRedDotWhenStartupIfNeeded];
-    
-    [self addClientABTestLog];
 }
 
 - (void)addUgcGuide {
@@ -258,19 +256,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(x, self.view.frame.size.height - self.tabbarHeight - height + 3, width, height) andType:FHUGCGuideViewTypeSecondTab];
     }
     return _guideView;
-}
-
-// add by zjing 测试客户端AB分流清空
-- (void)addClientABTestLog
-{
-    id res1 = [BDABTestManager getExperimentValueForKey:@"show_house" withExposure:YES];
-    NSInteger status = -1;
-    if ([res1 respondsToSelector:@selector(integerValue)]) {
-        status = [res1 integerValue];
-    }
-    if (status != -1) {
-        [[HMDTTMonitor defaultManager]hmdTrackService:@"abtest_show_house" status:status extra:nil];
-    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

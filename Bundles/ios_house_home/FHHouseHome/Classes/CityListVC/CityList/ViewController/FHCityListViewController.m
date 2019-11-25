@@ -384,6 +384,9 @@
         if ([TTReachability isNetworkConnected] && !self.locationBar.isLocationSuccess) {
             [self requestCurrentLocationWithToast:NO needSwitchCity:NO];
         }
+    }else
+    {
+        self.locationBar.isLocationSuccess = NO;
     }
 }
 
@@ -418,6 +421,13 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[FHEnvContext sharedInstance] checkZLink];
+    if (self.disablePanGesture) {
+        // 取消禁止滑动手势
+        if (self.weakNavVC && self.weakNavVC.panRecognizer.delegate == nil) {
+            self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
+            [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
+        }
+    }
 }
 
 #pragma mark - FHIndexSectionDelegate

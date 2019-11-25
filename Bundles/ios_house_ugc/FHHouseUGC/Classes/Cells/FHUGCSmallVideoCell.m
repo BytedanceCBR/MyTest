@@ -15,6 +15,7 @@
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
 #import <TTBusinessManager+StringUtils.h>
+#import <UIViewAdditions.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -24,7 +25,6 @@
 #define bottomViewHeight 49
 #define guideViewHeight 17
 #define topMargin 20
-#define originViewHeight 80
 
 @interface FHUGCSmallVideoCell ()<TTUGCAttributedLabelDelegate>
 
@@ -32,7 +32,6 @@
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
-@property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
 @property(nonatomic ,assign) CGFloat imageViewheight;
 @property(nonatomic ,assign) CGFloat imageViewWidth;
 @property (nonatomic, strong)   UIImageView       *playIcon;
@@ -65,11 +64,13 @@
 }
 
 - (void)initViews {
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     [self.contentView addSubview:_userInfoView];
     
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _contentLabel.numberOfLines = maxLines;
+    _contentLabel.layer.masksToBounds = YES;
+    _contentLabel.backgroundColor = [UIColor whiteColor];
     NSDictionary *linkAttributes = @{
                                      NSForegroundColorAttributeName : [UIColor themeRed3],
                                      NSFontAttributeName : [UIFont themeFontRegular:16]
@@ -80,17 +81,16 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.videoImageView = [[TTImageView alloc] initWithFrame:CGRectZero];
+    self.imageViewheight = 200;
+    self.imageViewWidth = 150;
+    self.videoImageView = [[TTImageView alloc] initWithFrame:CGRectMake(0, 0, self.imageViewWidth, self.imageViewheight)];
     _videoImageView.backgroundColor = [UIColor themeGray7];
     _videoImageView.layer.masksToBounds = YES;
+    _videoImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _videoImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
     _videoImageView.layer.borderWidth = 0.5;
     _videoImageView.layer.cornerRadius = 4;
-    _videoImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
-    _videoImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.contentView addSubview:_videoImageView];
-    self.imageViewheight = 200;
-    self.imageViewWidth = 150;
     
     self.playIcon = [[UIImageView alloc] init];
     self.playIcon.image = [UIImage imageNamed:@"fh_ugc_icon_videoplay"];
@@ -106,11 +106,7 @@
     self.timeLabel.textAlignment = NSTextAlignmentCenter;
     [self.timeBgView addSubview:self.timeLabel];
     
-    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
-    _originView.hidden = YES;
-    [self.contentView addSubview:_originView];
-    
-    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectZero];
+    self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
@@ -120,55 +116,43 @@
 }
 
 - (void)initConstraints {
-    [self.userInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(20);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(40);
-    }];
+    self.userInfoView.top = topMargin;
+    self.userInfoView.left = 0;
+    self.userInfoView.width = [UIScreen mainScreen].bounds.size.width;
+    self.userInfoView.height = userInfoViewHeight;
     
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-    }];
+    self.contentLabel.top = self.userInfoView.bottom + 10;
+    self.contentLabel.left = leftMargin;
+    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.contentLabel.height = 0;
     
-    [self.videoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        make.height.mas_equalTo(self.imageViewheight);
-    }];
+    self.videoImageView.top = self.userInfoView.bottom + 10;
+    self.videoImageView.left = leftMargin;
+    self.videoImageView.width = self.imageViewWidth;
+    self.videoImageView.height = self.imageViewheight;
+
+    self.bottomView.top = self.videoImageView.bottom + 10;
+    self.bottomView.left = 0;
+    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomView.height = bottomViewHeight;
     
     [self.playIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(self.videoImageView);
         make.width.height.mas_equalTo(44);
     }];
-    
+
     [self.timeBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.videoImageView.mas_right).offset(-4);
         make.bottom.mas_equalTo(self.videoImageView.mas_bottom).offset(-4);
         make.height.mas_equalTo(20);
         make.width.mas_greaterThanOrEqualTo(44);
     }];
-    
+
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(self.timeBgView);
         make.height.mas_equalTo(14);
         make.left.mas_equalTo(6);
         make.right.mas_equalTo(-6);
-    }];
-    
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.videoImageView.mas_bottom).offset(10);
-        make.height.mas_equalTo(49);
-        make.left.right.mas_equalTo(self.contentView);
-    }];
-    
-    [self.originView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.videoImageView.mas_bottom).offset(10);
-        make.height.mas_equalTo(originViewHeight);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
     }];
 }
 
@@ -183,9 +167,14 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
-    self.currentData = data;
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    
+    self.currentData = data;
     self.cellModel = cellModel;
     //设置userInfo
     self.userInfoView.cellModel = cellModel;
@@ -221,6 +210,9 @@
             self.imageViewWidth = 270;
         }
         
+        self.videoImageView.width = self.imageViewWidth;
+        self.videoImageView.height = self.imageViewheight;
+        
         if (imageModel && imageModel.url.length > 0) {
             TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
             __weak typeof(self) wSelf = self;
@@ -254,39 +246,16 @@
     
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
-        [self.videoImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.width.mas_equalTo(self.imageViewWidth);
-            make.height.mas_equalTo(self.imageViewheight);
-        }];
+        self.contentLabel.height = 0;
+        self.videoImageView.top = self.userInfoView.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
-        [self.videoImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-            make.left.mas_equalTo(self.contentView).offset(leftMargin);
-            make.width.mas_equalTo(self.imageViewWidth);
-            make.height.mas_equalTo(self.imageViewheight);
-        }];
+        self.contentLabel.height = cellModel.contentHeight;
+        self.videoImageView.top = self.contentLabel.bottom + 10;
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
     }
-    //origin
-    if(cellModel.originItemModel){
-        self.originView.hidden = NO;
-        [self.originView refreshWithdata:cellModel];
-        [self.originView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(cellModel.originItemHeight);
-        }];
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.videoImageView.mas_bottom).offset(cellModel.originItemHeight + 20);
-        }];
-    }else{
-        self.originView.hidden = YES;
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.videoImageView.mas_bottom).offset(10);
-        }];
-    }
     
+    self.bottomView.top = self.videoImageView.bottom + 10;
     [self showGuideView];
 }
 
@@ -328,13 +297,9 @@
 
 - (void)showGuideView {
     if(_cellModel.isInsertGuideCell){
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(66);
-        }];
+        self.bottomView.height = bottomViewHeight + guideViewHeight;
     }else{
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(49);
-        }];
+        self.bottomView.height = bottomViewHeight;
     }
 }
 

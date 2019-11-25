@@ -46,7 +46,7 @@
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 举报成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
     }
     
     return self;
@@ -513,6 +513,23 @@
         
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
+    }  else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo) {
+        // 投票
+        BOOL jump_comment = NO;
+        if (showComment) {
+            jump_comment = YES;
+        }
+        NSMutableDictionary *dict = @{@"begin_show_comment":@(jump_comment)}.mutableCopy;
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = @"hot_discuss_feed";
+        traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+        traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+        traceParam[@"log_pb"] = cellModel.logPb;
+        dict[@"tracer"] = traceParam;
+        dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
@@ -541,7 +558,6 @@
     
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    self.needRefreshCell = YES;
 }
 
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
@@ -578,16 +594,6 @@
         [self.tableView layoutIfNeeded];
         [self.tableView endUpdates];
     }
-}
-
-- (NSInteger)getCellIndex:(FHFeedUGCCellModel *)cellModel {
-    for (NSInteger i = 0; i < self.dataList.count; i++) {
-        FHFeedUGCCellModel *model = self.dataList[i];
-        if([model.groupId isEqualToString:cellModel.groupId]){
-            return i;
-        }
-    }
-    return -1;
 }
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
@@ -630,16 +636,29 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = @"hot_discuss_feed";
-    traceParam[@"element_from"] = @"feed_topic";
-    traceParam[@"enter_type"] = @"click";
-    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
-    traceParam[@"log_pb"] = cellModel.logPb;
     dict[TRACER_KEY] = traceParam;
     
     if (url) {
+        BOOL isOpen = YES;
         if ([url.absoluteString containsString:@"concern"]) {
             // 话题
+            traceParam[@"enter_from"] = [self pageType];
+            traceParam[@"element_from"] = @"feed_topic";
+            traceParam[@"enter_type"] = @"click";
+            traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+            traceParam[@"log_pb"] = cellModel.logPb;
+        }
+        else if([url.absoluteString containsString:@"profile"]) {
+            // JOKER:
+        }
+        else if([url.absoluteString containsString:@"webview"]) {
+            
+        }
+        else {
+            isOpen = NO;
+        }
+        
+        if(isOpen) {
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }

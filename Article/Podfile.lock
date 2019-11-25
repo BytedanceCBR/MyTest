@@ -43,8 +43,9 @@ PODS:
   - BDTBasePlayer (0.3.47)
   - BDTExploreOrderedData (0.1.7)
   - BDTFactoryConfigurator (0.1.0.1-binary)
+  - BDTrackerProtocol (2.1.1.1-binary)
   - BDTSharedHeaders (0.1.0)
-  - BDUGAccountOnekeyLogin (1.1.3)
+  - BDUGAccountOnekeyLogin (1.1.6-rc.1)
   - BDUGContainer (1.1.2)
   - BDUGDeepLink (1.1.1)
   - BDUGKit (1.3.3):
@@ -94,8 +95,9 @@ PODS:
   - Crashlytics (3.12.0.1-binary)
   - EAccountApiSDK (1.1.1.1-binary)
   - Fabric (1.10.2.1-binary)
+  - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.3)
+  - FHCommonUI (0.0.8-alpha.0)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -172,7 +174,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.10-rc.1)
+  - ios_house_im (0.1.14-alpha.4)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -225,6 +227,7 @@ PODS:
   - MBProgressHUD (1.1.0.1-binary)
   - MJExtension (3.0.12.1-binary)
   - MJRefresh (3.1.15.7.1-binary)
+  - MLeaksFinder/Core (1.0.2-rc.0.1.binary)
   - OHHTTPStubs (4.2.1.1-binary):
     - OHHTTPStubs/Core (= 4.2.1.1-binary)
     - OHHTTPStubs/Default (= 4.2.1.1-binary)
@@ -271,21 +274,21 @@ PODS:
   - SDWebImage/Core (4.4.1.1-binary)
   - SDWebImage/GIF (4.4.1.1-binary)
   - SDWebImage/WebP (4.4.1.1-binary)
-  - SecGuard (0.8.14.5):
-    - SecGuard/Base (= 0.8.14.5)
-    - SecGuard/Core (= 0.8.14.5)
-    - SecGuard/Encrypt (= 0.8.14.5)
-    - SecGuard/ForceCrash (= 0.8.14.5)
-    - SecGuard/Selas (= 0.8.14.5)
-  - SecGuard/Base (0.8.14.5)
-  - SecGuard/Core (0.8.14.5)
-  - SecGuard/Encrypt (0.8.14.5)
-  - SecGuard/ForceCrash (0.8.14.5)
-  - SecGuard/Selas (0.8.14.5)
+  - SecGuard (0.8.16.2):
+    - SecGuard/Base (= 0.8.16.2)
+    - SecGuard/Core (= 0.8.16.2)
+    - SecGuard/Encrypt (= 0.8.16.2)
+    - SecGuard/ForceCrash (= 0.8.16.2)
+    - SecGuard/Selas (= 0.8.16.2)
+  - SecGuard/Base (0.8.16.2)
+  - SecGuard/Core (0.8.16.2)
+  - SecGuard/Encrypt (0.8.16.2)
+  - SecGuard/ForceCrash (0.8.16.2)
+  - SecGuard/Selas (0.8.16.2)
   - SocketRocket (0.5.1.1-binary)
   - SQLiteRepairKit (1.2.1.1-binary)
   - SSZipArchive (1.6.3.1-binary)
-  - TencentQQSDK (1.0.0.1-binary)
+  - TencentQQSDK (1.1.0-rc.0.1.binary)
   - ToutiaoFrontierWebSocket (0.2.5.1-binary):
     - ToutiaoFrontierWebSocket/Main (= 0.2.5.1-binary)
     - ToutiaoFrontierWebSocket/PB (= 0.2.5.1-binary)
@@ -315,6 +318,7 @@ PODS:
   - TTAdSplashSDK (0.4.4.1-binary)
   - TTAiKan (0.1.0)
   - TTAppRuntime (0.1.0)
+  - TTAppStoreStarManager (1.0.12.1-binary)
   - TTAppUpdateHelper/TTUpdateHelper (1.0.9.1-binary)
   - TTAppUpdateHelper/TTUpdateView (1.0.9.1-binary)
   - TTArticle (0.1.0)
@@ -413,7 +417,7 @@ PODS:
   - TTMonitor/BackTrace (0.7.11.0.1-binary)
   - TTMonitor/Monitor (0.7.11.0.1-binary)
   - TTNetBusiness (0.0.10.1-binary)
-  - TTNetworkManager (2.2.8.55-rc.1.1.binary)
+  - TTNetworkManager (2.2.14.3.1-binary)
   - TTNewsAccountBusiness (0.2.4):
     - TTNewsAccountBusiness/Classes (= 0.2.4)
     - TTNewsAccountBusiness/SSCookieManager (= 0.2.4)
@@ -443,7 +447,6 @@ PODS:
     - TTPlatformUIModel/TTImageDetectorViewController (= 0.2.39)
     - TTPlatformUIModel/TTLabel (= 0.2.39)
     - TTPlatformUIModel/TTModel (= 0.2.39)
-    - TTPlatformUIModel/TTSeachBarView (= 0.2.39)
   - TTPlatformUIModel/HPGrowingTextView (0.2.39)
   - TTPlatformUIModel/TTActionSheet (0.2.39)
   - TTPlatformUIModel/TTAssetView (0.2.39)
@@ -456,13 +459,12 @@ PODS:
   - TTPlatformUIModel/TTImageDetectorViewController (0.2.39)
   - TTPlatformUIModel/TTLabel (0.2.39)
   - TTPlatformUIModel/TTModel (0.2.39)
-  - TTPlatformUIModel/TTSeachBarView (0.2.39)
   - TTPlayerSDK (2.9.9.10)
   - TTPostBase (0.1.4)
   - TTPreloaderSDK (1.4.20-rc.0)
   - TTPushManager (0.0.13.4)
   - TTPushSDK (0.1.1.1-binary)
-  - TTReachability (0.5.2.1-binary)
+  - TTReachability (0.6.2.1-binary)
   - TTRegistry (7.4.0.3)
   - TTReporter (0.2.1.1-binary)
   - TTRexxar/Core (0.8.10.1-binary)
@@ -562,9 +564,9 @@ PODS:
     - TTUIWidget/TTTagView (= 0.10.28)
     - TTUIWidget/TTThemedAlertController (= 0.10.28)
     - TTUIWidget/TTThemedAlertControllerProtocol (= 0.10.28)
+    - TTUIWidget/TTWrongWordsReportView (= 0.10.28)
     - TTUIWidget/UIView+CustomTimingFunction (= 0.10.28)
     - TTUIWidget/UIViewController+TabBarSnapShot (= 0.10.28)
-    - TTUIWidget/VVeboImage (= 0.10.28)
   - TTUIWidget/ALAssets (0.10.28)
   - TTUIWidget/ArticleListNotifyBarView (0.10.28)
   - TTUIWidget/Others (0.10.28)
@@ -594,11 +596,11 @@ PODS:
   - TTUIWidget/TTTagView (0.10.28)
   - TTUIWidget/TTThemedAlertController (0.10.28)
   - TTUIWidget/TTThemedAlertControllerProtocol (0.10.28)
+  - TTUIWidget/TTWrongWordsReportView (0.10.28)
   - TTUIWidget/UIView+CustomTimingFunction (0.10.28)
   - TTUIWidget/UIViewController+TabBarSnapShot (0.10.28)
-  - TTUIWidget/VVeboImage (0.10.28)
   - TTUserProfile (0.1.0)
-  - TTUserSettings (0.3.4.1-binary)
+  - TTUserSettings (0.3.4)
   - TTVContainerScrollView (0.1.2.1-binary)
   - TTVerifyKit (0.3.11.1-bugfix)
   - TTVersionHelper (1.0.0.1-binary)
@@ -663,8 +665,9 @@ DEPENDENCIES:
   - BDTBasePlayer (from `../AKPlugins/BDTBasePlayer`)
   - BDTExploreOrderedData (from `../AKPlugins/BDTExploreOrderedData`)
   - BDTFactoryConfigurator (= 0.1.0.1-binary)
+  - BDTrackerProtocol (= 2.1.1.1-binary)
   - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
-  - BDUGAccountOnekeyLogin (= 1.1.3)
+  - BDUGAccountOnekeyLogin (= 1.1.6-rc.1)
   - BDUGContainer (= 1.1.2)
   - BDUGDeepLink (= 1.1.1)
   - BDUGKit (= 1.3.3)
@@ -693,8 +696,9 @@ DEPENDENCIES:
   - Crashlytics (= 3.12.0.1-binary)
   - EAccountApiSDK (= 1.1.1.1-binary)
   - Fabric (= 1.10.2.1-binary)
+  - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.3)
+  - FHCommonUI (= 0.0.8-alpha.0)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -745,7 +749,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.10-rc.1)
+  - ios_house_im (= 0.1.14-alpha.4)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -756,6 +760,7 @@ DEPENDENCIES:
   - MBProgressHUD (= 1.1.0.1-binary)
   - MJExtension (= 3.0.12.1-binary)
   - MJRefresh (= 3.1.15.7.1-binary)
+  - MLeaksFinder/Core (= 1.0.2-rc.0.1.binary)
   - OHHTTPStubs (= 4.2.1.1-binary)
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
@@ -788,11 +793,11 @@ DEPENDENCIES:
   - SDWebImage/Core (= 4.4.1.1-binary)
   - SDWebImage/GIF (= 4.4.1.1-binary)
   - SDWebImage/WebP (= 4.4.1.1-binary)
-  - SecGuard (= 0.8.14.5)
+  - SecGuard (= 0.8.16.2)
   - SocketRocket (= 0.5.1.1-binary)
   - SQLiteRepairKit (= 1.2.1.1-binary)
   - SSZipArchive (= 1.6.3.1-binary)
-  - TencentQQSDK (= 1.0.0.1-binary)
+  - TencentQQSDK (= 1.1.0-rc.0.1.binary)
   - ToutiaoFrontierWebSocket (= 0.2.5.1-binary)
   - TSVToolkit (= 0.1.2.1-binary)
   - TTABManager (= 0.0.7.1-binary)
@@ -808,6 +813,7 @@ DEPENDENCIES:
   - TTAdSplashSDK (= 0.4.4.1-binary)
   - TTAiKan (from `../TTBundles/ios_tt_aikan`)
   - TTAppRuntime (from `../TTBundles/ios_tt_appruntime`)
+  - TTAppStoreStarManager (= 1.0.12.1-binary)
   - TTAppUpdateHelper/TTUpdateHelper (= 1.0.9.1-binary)
   - TTAppUpdateHelper/TTUpdateView (= 1.0.9.1-binary)
   - TTArticle (from `../TTBundles/ios_tt_article`)
@@ -876,7 +882,7 @@ DEPENDENCIES:
   - TTMacroManager (= 1.0.1)
   - TTMonitor (= 0.7.11.0.1-binary)
   - TTNetBusiness (= 0.0.10.1-binary)
-  - TTNetworkManager (= 2.2.8.55-rc.1.1.binary)
+  - TTNetworkManager (= 2.2.14.3.1-binary)
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
   - TTPersistence (= 0.2.3.1-binary)
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
@@ -887,7 +893,7 @@ DEPENDENCIES:
   - TTPreloaderSDK (= 1.4.20-rc.0)
   - TTPushManager (= 0.0.13.4)
   - TTPushSDK (= 0.1.1.1-binary)
-  - TTReachability (= 0.5.2.1-binary)
+  - TTReachability (= 0.6.2.1-binary)
   - TTRegistry (= 7.4.0.3)
   - TTReporter (= 0.2.1.1-binary)
   - TTRexxar/Core (= 0.8.10.1-binary)
@@ -907,9 +913,9 @@ DEPENDENCIES:
   - TTThemed (= 0.1.36.1-binary)
   - TTTracker (= 10.0.5.1-binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
-  - TTUIWidget (from `git@code.byted.org:TTIOS/tt_pods_ui.git`, commit `a11e3ee98d9848465d217f75d24ddec526c50a32`)
+  - TTUIWidget (from `../../testPod/tt_pods_ui`)
   - TTUserProfile (from `../TTBundles/ios_tt_userprofile`)
-  - TTUserSettings (= 0.3.4.1-binary)
+  - TTUserSettings (= 0.3.4)
   - TTVContainerScrollView (= 0.1.2.1-binary)
   - TTVerifyKit (= 0.3.11.1-bugfix)
   - TTVersionHelper (= 1.0.0.1-binary)
@@ -1033,19 +1039,13 @@ EXTERNAL SOURCES:
   TTUGCFoundation:
     :path: ../Vendor/TTUGCFoundation
   TTUIWidget:
-    :commit: a11e3ee98d9848465d217f75d24ddec526c50a32
-    :git: git@code.byted.org:TTIOS/tt_pods_ui.git
+    :path: ../../testPod/tt_pods_ui
   TTUserProfile:
     :path: ../TTBundles/ios_tt_userprofile
   TTVPlayerPod:
     :path: ../AKPlugins/TTVPlayer
   yoga:
     :path: ../ReactCommon/yoga
-
-CHECKOUT OPTIONS:
-  TTUIWidget:
-    :commit: a11e3ee98d9848465d217f75d24ddec526c50a32
-    :git: git@code.byted.org:TTIOS/tt_pods_ui.git
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
@@ -1072,8 +1072,9 @@ SPEC CHECKSUMS:
   BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
   BDTFactoryConfigurator: c14af7870fcd1fa9c52142d0c01635775543e42d
+  BDTrackerProtocol: c7605d2c4034c67976b79adbc8cb1b4826957411
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
-  BDUGAccountOnekeyLogin: 6b9b71170a10e55b79b3d67f87cb19864479f372
+  BDUGAccountOnekeyLogin: fc05dd02e5ccf22928bc071277c0390a46ec8aff
   BDUGContainer: 28193629e67c7c9244f5d5836bfed611bf631321
   BDUGDeepLink: 44dfefe43051d60cb1fd918ebdca3abcc090d365
   BDUGKit: 215f3f098840a16e1c491447d56e49093f08075d
@@ -1091,8 +1092,9 @@ SPEC CHECKSUMS:
   Crashlytics: bf08c2834d9231328142ef5588ee1ae5b78229a9
   EAccountApiSDK: 29385b846225d7ef532237b4a71aa10647914f35
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
+  FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: b0120ae743420b9524eeefcb375f19a516c8e2a8
+  FHCommonUI: 9d66b1470dc6076aa30742d6f7e571eb7398f38a
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1118,7 +1120,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 9965ac763d29b1301c8458cb7430bfe6141b47a5
+  ios_house_im: a3c07e84923f92aeea9732678b3ca8e52bc42676
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1129,6 +1131,7 @@ SPEC CHECKSUMS:
   MBProgressHUD: 3dcb01b57ae9af405717a0e338566a0087cca22a
   MJExtension: da69d633398f365e84e052720b7943206f467935
   MJRefresh: 0163f5b55692ab35b37f1d11c094f98218b93a5e
+  MLeaksFinder: a0db6991409e90f0e3b54e38df7481a52f38e723
   OHHTTPStubs: 8fe4a9bac9386d3450c6cdaeca77e5d07d0f6cf4
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
@@ -1139,11 +1142,11 @@ SPEC CHECKSUMS:
   RSSwizzle: 535f53ac21a545718af9b3bae51f7c3df5ad7bc0
   RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
-  SecGuard: 4cb7fa89163ad3f896cf6c5600d343fd479e9905
+  SecGuard: dcae217c380c302e1b5d0db276744bab3d54f234
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
   SQLiteRepairKit: 272cadce05957d8b36df6ac573dc8a596649ed28
   SSZipArchive: cc2e2411672daf4be9f5f61d4184ba66f15bcd2b
-  TencentQQSDK: 64750e415a7c2c41578ec10c88364c9602c3d12b
+  TencentQQSDK: c906ca02c98f63eb6fb8916a6dadf8968c5959f2
   ToutiaoFrontierWebSocket: 96f0257673f42edfffdf379681341854b1195937
   TSVToolkit: deb654f65a887a0c314aa70183681f25a8b0d75d
   TTABManager: b22ef5bd7f829192b72ec71d6e5f761e66428b5d
@@ -1155,6 +1158,7 @@ SPEC CHECKSUMS:
   TTAdSplashSDK: f02f0b22a03a06783ff6e1473f895fd8563c9333
   TTAiKan: 642649f0c4848130171604fa36db684ecbff7648
   TTAppRuntime: 950cd779a9ea11d64aa82e5c0899bd849c38799b
+  TTAppStoreStarManager: 70935d6a09575d63dd2c1fae2b6bb75c07caee2c
   TTAppUpdateHelper: d0e770676b263dfc1f8a0a6b07c280a760574b44
   TTArticle: 40401054fc58b1744b37a8ecb054b90dda774702
   TTArticleBase: b77815513c03f2a0339a9acf18ff1516789a0bc6
@@ -1190,18 +1194,18 @@ SPEC CHECKSUMS:
   TTMacroManager: 915aadf3841523767f16a230fd97fe546aa800eb
   TTMonitor: e56002040d636af0f7489db64e68e75aadae3843
   TTNetBusiness: e436bc6d648bf01946cc01756c86adfd0d718e5c
-  TTNetworkManager: 6afdda81f4f04c85b9d38c22d1d542d24b5d9141
+  TTNetworkManager: 0a593aa9a498f73db82d6de88297b823629bd809
   TTNewsAccountBusiness: 50125377b67c11155b3677cf0e6d3d02ed718a03
   TTPersistence: e0685fe3f0cfd826ccf6917ab5e8227fd6331947
   TTPhotoScrollVC: f34664f26861dbfbf617e47385a2522ba8bf1755
   TTPlatformBaseLib: 46cc48c57de16b6c48527ca5266f8932d4e60e65
-  TTPlatformUIModel: 42e1baaadf68615bd4911b3a0fce24683b955105
+  TTPlatformUIModel: 46294bc4358d2058458a5ea1d8316c21d72ed8be
   TTPlayerSDK: 64564c57c01b3448059203e9fe48d6d07520d641
   TTPostBase: 91071b89ed5d95c7ac3d96354a31c65d77a6c94e
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
   TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
   TTPushSDK: 3302f3e57c39cf8e14233769b28cb07d5f403966
-  TTReachability: bc8685b98fd9fcd949811a8a31236b5d5a3ec931
+  TTReachability: 7e6a58fa568af74e428e24394899caa3d8bddb00
   TTRegistry: da0948df15bacc1b90bb9ff8eb621b812ea9eebb
   TTReporter: 55c6785c79fb8b35a44105d760ac3493cc2ed365
   TTRexxar: 40c20cd090918e9816f74b0decced7094f000647
@@ -1215,10 +1219,10 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
   TTThemed: 921e544fa8ca8c34b3a091af38b8612609c18480
   TTTracker: 53b746772e7240481e57bee23ae866924fdc0193
-  TTUGCFoundation: f67fd0f474fef086cd3e986a4ad2c8bb79220d94
-  TTUIWidget: 777b4408e020d5068dbd531fef3d09b4b29dd3a4
+  TTUGCFoundation: 122bc1a5271b79b073460ec6691c3e3f2df86593
+  TTUIWidget: 50dfb035fd9b286192375c029515fdc01cc35325
   TTUserProfile: e9f6d23e86b3c1232b15a79a239e5d3a27e5b2f3
-  TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
+  TTUserSettings: 8214e9b9707b42dc450c2337ef5e9ca77456e0a4
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
   TTVerifyKit: 335e27fac67e94399762a848103f52a0e3691070
   TTVersionHelper: a6f1edf1b2c2e8f593be79cf0cf2e128bc4e440f
@@ -1242,6 +1246,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 658a8fbfcf6b2bf77cb52cec20d9f1a987b257a0
+PODFILE CHECKSUM: ae166c38bb99a16c9a6ddb3146d0c3b82f565e12
 
 COCOAPODS: 1.4.0

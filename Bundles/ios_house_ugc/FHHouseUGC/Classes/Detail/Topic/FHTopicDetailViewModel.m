@@ -25,6 +25,7 @@
 #import "HTSVideoPageParamHeader.h"
 #import "FHUGCSmallVideoCell.h"
 #import "AWEVideoConstants.h"
+#import "HMDTTMonitor.h"
 
 @interface FHTopicDetailViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -72,12 +73,12 @@
         self.feedOffset = 0;
         self.dataList = [[NSMutableArray alloc] init];
         self.hashTable = [NSHashTable weakObjectsHashTable];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:@"topicDetail"];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:@"topicDetail"];
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 举报成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         // 发帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
     }
@@ -139,6 +140,11 @@
             } else {
                 // 强制endLoading
                 wSelf.loadDataSuccessCount += 1;
+                
+                // 成功埋点 status = 0 成功（不上报） status = 1：header data error
+                NSMutableDictionary *metric = @{}.mutableCopy;
+                metric[@"topic_id"] = cidStr;
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_topic_detail_error" metric:metric category:@{@"status":@(1)} extra:nil];
             }
         }
         [wSelf processLoadingState];
@@ -225,6 +231,11 @@
                 wSelf.hasMore = feedList.hasMore;
                 wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
                 wSelf.appExtraParams = feedList.apiBaseInfo.appExtraParams;
+            } else {
+                // 成功埋点 status = 0 成功（不上报） status = 2：list data error
+                NSMutableDictionary *metric = @{}.mutableCopy;
+                metric[@"topic_id"] = cidStr;
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_topic_detail_error" metric:metric category:@{@"status":@(2)} extra:nil];
             }
         }
         [wSelf processLoadingState];
@@ -375,7 +386,7 @@
     }
     CGFloat offsetY = scrollView.contentOffset.y;
     if (offsetY<=0) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCLeaveTop" object:nil userInfo:@{@"canScroll":@"1"}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCLeaveTop" object:@"topicDetail" userInfo:@{@"canScroll":@"1"}];
     }
 }
 
@@ -465,10 +476,13 @@
                                             if (self.dataList.count == 0) {
                                                 self.hasMore = NO;
                                             }
-                                            //找到第一个非置顶贴的下标
-                                            __block NSUInteger index = 0;
+                                            // JOKER: 找到第一个非置顶贴的下标
+                                            __block NSUInteger index = self.dataList.count;
                                             [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                                                if(!cellModel.isStick) {
+                                                
+                                                BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
+                                                
+                                                if(!isStickTop) {
                                                     index = idx;
                                                     *stop = YES;
                                                 }
@@ -572,14 +586,27 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = [self pageType];
-    traceParam[@"enter_type"] = @"click";
-    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
-    traceParam[@"log_pb"] = cellModel.logPb;
     dict[TRACER_KEY] = traceParam;
     
     if (url) {
+        BOOL isOpen = YES;
         if ([url.absoluteString containsString:@"concern"]) {
+            traceParam[@"enter_from"] = [self pageType];
+            traceParam[@"enter_type"] = @"click";
+            traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+            traceParam[@"log_pb"] = cellModel.logPb;
+        }
+        else if([url.absoluteString containsString:@"profile"]) {
+            // JOKER:
+        }
+        else if([url.absoluteString containsString:@"webview"]) {
+            
+        }
+        else {
+            isOpen = NO;
+        }
+
+        if(isOpen) {
             // 话题
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
@@ -687,7 +714,6 @@
     
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    self.needRefreshCell = YES;
 }
 
 - (UIView *)currentSelectSmallVideoView {

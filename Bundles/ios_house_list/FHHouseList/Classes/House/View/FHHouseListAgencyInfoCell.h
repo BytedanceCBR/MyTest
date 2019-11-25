@@ -6,10 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FHHouseBase/FHListBaseCell.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseListAgencyInfoCell : UITableViewCell
+@interface FHHouseListAgencyInfoCell : FHListBaseCell
 
 @property(nonatomic, strong)UILabel *titleLabel;
 @property(nonatomic, strong)UIButton *allWebHouseBtn;

@@ -37,6 +37,8 @@
 #import "FHMapSubwayPickerView.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import "FHMapStationAnnotationView.h"
+#import "FHMapStationIconAnnotationView.h"
+#import "FHMapSearchStationIconAnnotation.h"
 #import "FHMapSearchFilterView.h"
 #import "FHMapAreaHouseListViewController.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
@@ -103,6 +105,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) FHMapAreaHouseListViewController *areaHouseListController; //区域内房源
 @property(nonatomic , assign) CLLocationCoordinate2D drawMinCoordinate;
 @property(nonatomic , assign) CLLocationCoordinate2D drawMaxCoordinate;
+@property(nonatomic , assign) BOOL hidingAreaHouseList;
 
 @end
 
@@ -562,6 +565,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)requestHouses:(BOOL)byUser showTip:(BOOL)showTip
 {
+    [self requestHouses:byUser showTip:showTip region:_mapView.region];
+}
+
+-(void)requestHouses:(BOOL)byUser showTip:(BOOL)showTip region:(MACoordinateRegion )region
+{
     if (_requestHouseTask &&  _requestHouseTask.state == TTHttpTaskStateRunning) {
         [_requestHouseTask cancel];
     }
@@ -586,7 +594,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _lastRequestCenter = CLLocationCoordinate2DMake(_lastBubble.centerLatitude, _lastBubble.centerLongitude);
     }
         
-    MACoordinateRegion region = _mapView.region;
+    
     if (region.span.latitudeDelta == 0 || region.span.longitudeDelta == 0) {
         MACoordinateRegion r = [self.mapView convertRect:self.mapView.bounds toRegionFromView:self.mapView];
         if (r.span.latitudeDelta == 0 || r.span.longitudeDelta == 0) {
@@ -758,6 +766,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)annotation;
                 removeAnnotationDict[houseAnnotation.houseData.nid] = annotation;
                 [currentHouseAnnotations addObject:annotation];//站点有重复的
+            }else if([annotation isKindOfClass:[FHMapSearchStationIconAnnotation class]]){
+                [self.mapView removeAnnotation:annotation];
             }
         }
 
@@ -807,6 +817,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 houseAnnotation.type = FHHouseAnnotationTypeNormal;
             }
             [annotations addObject:houseAnnotation];
+            
+            if ([info.type integerValue] == FHMapSearchTypeFakeStation) {
+                //地铁站增加 火车头icon
+                FHMapSearchStationIconAnnotation *stationIconAnnotation = [FHMapSearchStationIconAnnotation new];
+                stationIconAnnotation.coordinate = CLLocationCoordinate2DMake(lat, lon);
+                [annotations addObject:stationIconAnnotation];
+            }
         }
         NSArray *needRemoveAnnotations = [removeAnnotationDict allValues];
         [self.mapView removeAnnotations:currentHouseAnnotations];
@@ -873,7 +890,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (self.subwayLines) {
         [self.mapView removeOverlays:self.subwayLines];
     }    
-    [self.mapView addOverlays:lines];
+    [self.mapView addOverlays:lines level:MAOverlayLevelAboveRoads];
     self.subwayLines = lines;
     
     if (move) {
@@ -1140,8 +1157,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 stationView.annotation = houseAnnotation;
             }
             //设置中心点偏移，使得标注底部中间点成为经纬度对应点
-            stationView.centerOffset = CGPointMake(0, -22);
+            stationView.centerOffset = CGPointMake(0, -24);
             stationView.canShowCallout = NO;
+            stationView.zIndex = 1;
             return stationView;
             
         }else{
@@ -1166,11 +1184,20 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                     annotationView.zIndex = 10;
                     break;
                 default:
-                    annotationView.zIndex = 0;
+                    annotationView.zIndex = 2;
                     break;
             }
             return annotationView;
         }
+    }else if ([annotation isKindOfClass:[FHMapSearchStationIconAnnotation class]]){
+        static NSString *reuseIndetifier = @"StationIconAnnotationIndetifier";
+        FHMapStationIconAnnotationView *annotationView = (FHMapStationIconAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:reuseIndetifier];
+        if (annotationView == nil) {
+            annotationView = [[FHMapStationIconAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:reuseIndetifier];
+        }
+        annotationView.enabled = NO;
+        
+        return annotationView;
     }
     
     return nil;
@@ -1389,6 +1416,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)hideAreaHouseList
 {
+    if (self.hidingAreaHouseList) {
+        return;
+    }
+    self.hidingAreaHouseList = YES;
     CGRect frame = self.areaHouseListController.view.frame;
     frame.origin.y = CGRectGetMaxY(self.viewController.view.bounds);
     
@@ -1396,6 +1427,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         self.areaHouseListController.view.frame = frame;
         self.topInfoBar.alpha = 0;
     } completion:^(BOOL finished) {
+        self.hidingAreaHouseList = NO;
         [self.areaHouseListController.view removeFromSuperview];
         self.areaHouseListController = nil;
         
@@ -1410,10 +1442,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 region.center = CLLocationCoordinate2DMake((self.drawMinCoordinate.latitude+self.drawMaxCoordinate.latitude)/2, (self.drawMinCoordinate.longitude+self.drawMaxCoordinate.longitude)/2);
                 region.span = MACoordinateSpanMake((self.drawMaxCoordinate.latitude - self.drawMinCoordinate.latitude)*1.05 , (self.drawMaxCoordinate.longitude - self.drawMinCoordinate.longitude)*1.05);
                 
+                self.lastBubble.centerLatitude = region.center.latitude;
+                self.lastBubble.centerLongitude = region.center.longitude;
+                
                 [self.mapView setRegion:region animated:YES];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self requestHouses:YES showTip:NO];
-                });
+                [self requestHouses:YES showTip:NO region:region];
             }else{
                 [self requestHouses:YES showTip:NO];
             }

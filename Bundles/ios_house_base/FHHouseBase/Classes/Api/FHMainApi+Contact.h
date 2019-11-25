@@ -13,6 +13,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+typedef NS_ENUM(NSUInteger, FHClueErrorType) {
+    FHClueErrorTypeNone = 0,
+    FHClueErrorTypeNetFailure,
+    FHClueErrorTypeHttpFailure,
+    FHClueErrorTypeServerFailure,
+};
+
 @class FHFillFormAgencyListItemModel;
 @interface FHMainApi (Contact)
 
@@ -27,15 +35,30 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
                                           phone:(NSString*)phone
                                            from:(NSString*)from
+                                       cluePage:(NSNumber*)cluePage
+                                   clueEndpoint:(NSNumber*)clueEndpoint
+                                     targetType:(NSNumber *)targetType
                                      agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
 // 中介转接电话
+;
 + (TTHttpTask*)requestVirtualNumber:(NSString*)realtorId
                             houseId:(NSString*)houseId
                           houseType:(FHHouseType)houseType
                            searchId:(NSString*)searchId
                              imprId:(NSString*)imprId
                                from:(NSString*)fromStr
+                         completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion; //DEPRECATED_MSG_ATTRIBUTE("建议用带cluePage的方法，后续不直接用from了");
+
++ (TTHttpTask*)requestVirtualNumber:(NSString*)realtorId
+                            houseId:(NSString*)houseId
+                          houseType:(FHHouseType)houseType
+                           searchId:(NSString*)searchId
+                             imprId:(NSString*)imprId
+                               from:(NSString*)fromStr
+                           cluePage:(NSNumber*)cluePage
+                       clueEndpoint:(NSNumber*)clueEndpoint
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 房源关注

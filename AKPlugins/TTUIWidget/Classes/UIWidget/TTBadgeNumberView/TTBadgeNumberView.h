@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, TTBadgeNumberViewStyle)
 
 @property (nonatomic, assign) IBInspectable NSUInteger badgeViewStyle;
 @property (nonatomic, assign) NSUInteger lastBadgeViewStyle;//被选中之前的样式
+@property (nonatomic, assign) CGFloat badgeNumberPointSize;
 
 - (void)setBadgeLabelFontSize:(CGFloat)sizeNum;
 

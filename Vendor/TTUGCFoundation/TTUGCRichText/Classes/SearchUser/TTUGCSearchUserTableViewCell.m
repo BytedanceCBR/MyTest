@@ -13,6 +13,8 @@
 #import "FRApiModel.h"
 #import "TTDeviceHelper.h"
 #import "TTBusinessManager+StringUtils.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 
 @interface TTUGCSearchUserTableViewCell ()
 
@@ -30,12 +32,12 @@
         [self addSubview:self.descLabel];
         [self addSubview:self.bottomLineView];
 
-        self.avatarView.left = 15.f;
-        self.avatarView.top = 15.f;
+        self.avatarView.left = 20.f;
+        self.avatarView.top = 9.f;
 
         self.nameLabel.left = self.avatarView.right + 10.f;
-        self.nameLabel.top = 15.f;
-        self.nameLabel.height = 24.f;
+        self.nameLabel.top = 22.f;
+        self.nameLabel.height = 22.f;
 
         self.descLabel.left = self.nameLabel.left;
         self.descLabel.bottom = self.avatarView.bottom;
@@ -59,9 +61,9 @@
 
     CGFloat maxWidth = self.width - 15 - 44 - 10 - 15;
 
-    self.nameLabel.top = 13.f;
+    self.nameLabel.top = 22.f;
     self.nameLabel.width = MIN(self.nameLabel.width, maxWidth);
-    self.nameLabel.height = 24.f;
+    self.nameLabel.height = 22.f;
 
     self.descLabel.width = MIN(self.descLabel.width, maxWidth);
     self.descLabel.bottom = self.avatarView.bottom + 1;
@@ -113,7 +115,7 @@
                 // 处理 emoji 表情字符数问题
                 NSRange range = [self rangeOfComposedCharacterSequences:name atCodePoint:location.unsignedIntegerValue];
                 [mutableAttributedString addAttribute:NSForegroundColorAttributeName
-                                                value:SSGetThemedColorWithKey(kColorText4)
+                                                value:[UIColor themeRed3]
                                                 range:range];
             }
         }
@@ -126,7 +128,7 @@
                 NSRange range = [self rangeOfComposedCharacterSequences:remarkName atCodePoint:highlightLocation];
                 range.location += ellipsisUserName.length; // 这里避免重复计算 ellipsisUserName 的长度
                 [mutableAttributedString addAttribute:NSForegroundColorAttributeName
-                                                value:SSGetThemedColorWithKey(kColorText4)
+                                                value:[UIColor themeRed3]
                                                 range:range];
             }
         }
@@ -157,6 +159,8 @@
     }
 
     self.descLabel.text = followersText;
+    self.descLabel.hidden = YES;
+    self.bottomLineView.hidden = YES;
 }
 
 - (NSRange)rangeOfComposedCharacterSequences:(NSString *)string atCodePoint:(NSUInteger)codePoint {
@@ -210,18 +214,18 @@
 
 - (SSAvatarView *)avatarView {
     if (!_avatarView) {
-        _avatarView = [[SSAvatarView alloc] initWithFrame:CGRectMake(0, 0, 44.f, 44.f)];
+        _avatarView = [[SSAvatarView alloc] initWithFrame:CGRectMake(0, 0, 48.f, 48.f)];
         _avatarView.avatarImgPadding = 0;
         _avatarView.avatarButton.userInteractionEnabled = NO;
         _avatarView.avatarStyle = SSAvatarViewStyleRound;
 //        [_avatarView setupVerifyViewForLength:50.f adaptationSizeBlock:nil];
 
-        UIView *coverView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44.f, 44.f)];
+        UIView *coverView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 48.f, 48.f)];
         coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
-        coverView.layer.cornerRadius = 44.f / 2;
+        coverView.layer.cornerRadius = 48.f / 2;
         coverView.layer.masksToBounds = YES;
         coverView.userInteractionEnabled = NO;
-        coverView.layer.borderColor = [SSGetThemedColorWithKey(kColorLine1) CGColor];
+        //coverView.layer.borderColor = [SSGetThemedColorWithKey(kColorLine1) CGColor];
         [_avatarView addSubview:coverView];
     }
 
@@ -232,8 +236,8 @@
     if (!_nameLabel) {
         _nameLabel = [TTIconLabel new];
         _nameLabel.numberOfLines = 1;
-        _nameLabel.font = [UIFont boldSystemFontOfSize:15.f];
-        _nameLabel.textColorThemeKey = kColorText1;
+        _nameLabel.font = [UIFont themeFontRegular:16];
+        _nameLabel.textColor = [UIColor themeGray1];
         _nameLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
         _nameLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
 //        _nameLabel.enableAsync = NO;

@@ -14,6 +14,10 @@
 #import "FHTopicHeaderModel.h"
 #import "FHURLSettings.h"
 #import "FHTopicFeedListModel.h"
+#import "FHFeedOperationResultModel.h"
+#import "FHUGCNoticeModel.h"
+#import "FHUGCVoteModel.h"
+#import "FHUGCVoteResponseModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -43,17 +47,29 @@
 
 + (TTHttpTask *)requestCommunityDetail:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/social_group_basic_info";
+    NSString *url = QURL(queryPath);
+    
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"social_group_id"] = communityId ?: @"";
-    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:obj class:cls error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
+        
+    }];
+//    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
 
     NSString *queryPath = [ArticleURLSetting encrpytionStreamUrlString];
-    
-    //test
-//    NSString *queryPath = @"http://10.224.5.205:8765/api/news/feed/v96/";
 
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"category"] = category;
@@ -249,7 +265,7 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+ (TTHttpTask *)postDelete:(NSString *)groupId socialGroupId:(NSString *)socialGroupId enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void(^)(bool success , NSError *error))completion {
++ (TTHttpTask *)postDelete:(NSString *)groupId cellType:(NSInteger)cellType socialGroupId:(NSString *)socialGroupId enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void(^)(bool success , NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/delete_post";
     NSString *url = QURL(queryPath);
     
@@ -266,6 +282,7 @@
     if(pageType){
         paramDic[@"page_type"] = pageType;
     }
+    paramDic[@"cell_type"] = @(cellType);
     
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
         
@@ -286,6 +303,46 @@
         if (completion) {
             completion(success,error);
         }
+    }];
+}
+
++ (TTHttpTask *)postOperation:(NSString *)groupId cellType:(NSInteger)cellType socialGroupId:(NSString *)socialGroupId operationCode:(NSString *)operationCode enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void (^ _Nonnull)(id<FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/stick_operate";
+    NSString *url = QURL(queryPath);
+    //暂时为了测试写死开发机地址
+//    url = @"http://10.224.10.118:6789/f100/ugc/stick_operate";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(groupId){
+        paramDic[@"group_id"] = groupId;
+    }
+    if(socialGroupId){
+        paramDic[@"social_group_id"] = socialGroupId;
+    }
+    if(enterFrom){
+        paramDic[@"enter_from"] = enterFrom;
+    }
+    if(pageType){
+        paramDic[@"page_type"] = pageType;
+    }
+    if(operationCode){
+        paramDic[@"operate_code"] = operationCode;
+    }
+    
+    paramDic[@"cell_type"] = @(cellType);
+    
+    Class jsonCls = [FHFeedOperationResultModel class];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:obj class:jsonCls error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
     }];
 }
 
@@ -325,6 +382,11 @@
     if(longitude != 0){
         paramDic[@"longitude"] = @(longitude);
     }
+    
+    if(source){
+        paramDic[@"source_from"] = source;
+    }
+    
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
@@ -451,4 +513,261 @@
     }];
 }
 
++ (TTHttpTask *)requestUpdateUGCNoticeWithParam:(NSDictionary *)params completion:(void (^)(FHUGCNoticeModel *model, NSError *error))completion {
+    
+    NSString *queryPath = @"/f100/ugc/social_group/announcement";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    [paramDic addEntriesFromDictionary:params];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        FHUGCNoticeModel *ugcNoticeModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }
+                else
+                {
+                    ugcNoticeModel = [[FHUGCNoticeModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        
+        if (completion) {
+            completion(ugcNoticeModel,error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestMyCommentListWithUserId:(NSString *)userId offset:(NSInteger)offset completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/api/feed/my_comments/v1/?";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"count"] = @(20);
+    paramDic[@"offset"] = @(offset);
+    paramDic[@"category"] = @"my_comments";
+    
+    Class cls = NSClassFromString(@"FHUGCCommentListModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestHomePageInfoWithUserId:(NSString *)userId completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/user/profile/homepage/v7/?";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(userId){
+        paramDic[@"user_id"] = userId;
+    }
+    
+    paramDic[@"refer"] = @"all";
+    
+    Class cls = NSClassFromString(@"FHPersonalHomePageModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestHomePageFeedListWithUserId:(NSString *)userId offset:(NSInteger)offset count:(NSInteger)count completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/api/feed/profile/v1/?";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(userId){
+        paramDic[@"visited_uid"] = userId;
+    }
+    paramDic[@"category"] = @"profile_all";
+    paramDic[@"count"] = @(count);
+    paramDic[@"offset"] = @(offset);
+    paramDic[@"stream_api_version"] = [FHURLSettings streamAPIVersionString];
+    
+    Class cls = NSClassFromString(@"FHFeedListModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestFocusListWithUserId:(NSString *)userId completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/f100/ugc/follow_sg_list";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(userId){
+        paramDic[@"user_id"] = userId;
+    }
+    
+    Class cls = NSClassFromString(@"FHUGCModel");
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+    
++ (TTHttpTask *)requestFollowUserListBySocialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/follow_list";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (socialGroupId.length > 0) {
+        paramDic[@"social_group_id"] = socialGroupId;
+    }
+    paramDic[@"offset"] = @(offset);
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestFollowSugSearchByText:(NSString *)text socialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/follow_suggest_list";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (text.length > 0) {
+        paramDic[@"query_key"] = text;
+    }
+    if (socialGroupId.length > 0) {
+        paramDic[@"social_group_id"] = socialGroupId;
+    }
+    paramDic[@"offset"] = @(offset);
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
++ (TTHttpTask *)requestVotePublishWithParam:(NSDictionary *)params completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    
+    NSString *queryPath = @"/f100/ugc/vote/publish";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    [paramDic addEntriesFromDictionary:params];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        FHUGCVoteModel *ugcVoteModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }
+                else
+                {
+                    ugcVoteModel = [[FHUGCVoteModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        
+        if (completion) {
+            completion(ugcVoteModel,error);
+        }
+    }];
+}
+
+// 提交投票
++ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSNumber *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/vote/submit";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(voteId.length > 0) {
+        paramDic[@"vote_id"] = [NSNumber numberWithInteger:[voteId integerValue]];
+    }
+    if(optionIds.count > 0) {
+        paramDic[@"option_ids"] = optionIds;
+    }
+    if(optionNum > 0) {
+        paramDic[@"option_num"] = optionNum;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        id model = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:@"投票失败" code:API_ERROR_CODE userInfo:nil];
+                } else {
+                    model = [[FHUGCVoteResponseModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+            }
+        }
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+// 取消投票
++ (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSNumber *)optionNum completion:(void(^)(BOOL success , NSError *error))completion {
+    NSString *queryPath = @"/f100/ugc/vote/cancel";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if(voteId.length > 0) {
+        paramDic[@"vote_id"] = [NSNumber numberWithInteger:[voteId integerValue]];
+    }
+    if(optionNum > 0) {
+        paramDic[@"option_num"] = optionNum;
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:@"取消投票失败" code:API_ERROR_CODE userInfo:nil];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+            }
+        }
+        if (completion) {
+            completion(success,error);
+        }
+    }];
+}
+
+@end
+
+@implementation FHVoteHTTPRequestSerializer
+
++ (NSObject<TTHTTPRequestSerializerProtocol> *)serializer
+{
+    return [FHVoteHTTPRequestSerializer new];
+    
+}
+
+- (TTHttpRequest *)URLRequestWithURL:(NSString *)URL
+                              params:(NSDictionary *)parameters
+                              method:(NSString *)method
+               constructingBodyBlock:(TTConstructingBodyBlock)bodyBlock
+                        commonParams:(NSDictionary *)commonParam
+{
+    TTHttpRequest * request = [super URLRequestWithURL:URL params:parameters method:method constructingBodyBlock:bodyBlock commonParams:commonParam];
+    
+    [request setValue:@"application/json; encoding=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    if ([@"POST" isEqualToString: method] && [parameters isKindOfClass:[NSDictionary class]]) {
+        NSData * postDate = [NSJSONSerialization dataWithJSONObject:parameters options:NSJSONWritingPrettyPrinted error:nil];
+        [request setHTTPBody:postDate];
+    }
+    
+    
+    return request;
+    
+}
 @end

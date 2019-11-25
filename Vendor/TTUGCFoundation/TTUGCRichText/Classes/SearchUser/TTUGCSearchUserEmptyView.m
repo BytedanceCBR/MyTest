@@ -54,7 +54,7 @@
 - (SSThemedLabel *)errorMsg {
     if (!_errorMsg) {
         _errorMsg = [[SSThemedLabel alloc] init];
-        _errorMsg.text = @"没有联系人";
+        _errorMsg.text = @"";
         _errorMsg.textColorThemeKey = kColorText1;
         _errorMsg.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_padding:17.0]];
     }

@@ -23,6 +23,10 @@ static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
 static NSString *const kFHUGCReportPostNotification = @"k_fh_ugc_report_post_finish";
 // 关注tab是否有新内容的通知
 static NSString *const kFHUGCFocusTabHasNewNotification = @"k_fh_ugc_focus_tab_has_new";
+// 置顶和取消置顶成功通知 数放在userinfo的：social_group_id
+static NSString *const kFHUGCTopPostNotification = @"k_fh_ugc_top_post_finish";
+// 加精和取消加精成功通知 数放在userinfo的：social_group_id
+static NSString *const kFHUGCGoodPostNotification = @"k_fh_ugc_good_post_finish";
 
 @interface FHUGCConfig : NSObject
 
@@ -56,7 +60,7 @@ static NSString *const kFHUGCFocusTabHasNewNotification = @"k_fh_ugc_focus_tab_h
 // 删帖成功 更新帖子数 - 1
 - (void)updatePostDelSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model;
 
-// 非关注列表中的小区圈子数据 更新
+// 非关注列表中的圈子子数据 更新
 - (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model;// 内容更新
 
 // 关注 & 取消关注 follow ：YES为关注 NO为取消关注
@@ -67,7 +71,11 @@ static NSString *const kFHUGCFocusTabHasNewNotification = @"k_fh_ugc_focus_tab_h
  - 1       之前关注过，但是已经取消关注了
  - 2       其他错误
  */
+// 关注 & 取消关注 follow ：YES为关注 NO为取消关注
 - (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow completion:(void (^ _Nullable)(BOOL isSuccess))completion;
+
+// 先登录 再关注 需要登录页面的埋点参数
+- (void)followUGCBy:(NSString *)social_group_id isFollow:(BOOL)follow enterFrom:(NSString *)enter_from enterType:(NSString *)enter_type completion:(void (^ _Nullable)(BOOL isSuccess))completion;
 //
 
 

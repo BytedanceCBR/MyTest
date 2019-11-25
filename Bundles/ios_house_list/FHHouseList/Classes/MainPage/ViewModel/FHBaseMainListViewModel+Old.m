@@ -24,7 +24,7 @@
 }
 
 #pragma mark - 网络请求
--(TTHttpTask *)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend query:(NSString *)query  completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion
+-(TTHttpTask *)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend query:(NSString *)query completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion
 {
     NSInteger offset = 0;
     NSMutableDictionary *param = [NSMutableDictionary new];
@@ -49,9 +49,15 @@
         self.searchId = nil;
     } else {
         if (isFromRecommend) {
-            offset = self.sugesstHouseList.count - 1;
+            if ([self.houseDataModel isKindOfClass:[FHListSearchHouseDataModel class]]) {
+                FHListSearchHouseDataModel *model = (FHListSearchHouseDataModel *)self.currentRecommendHouseDataModel;
+                offset = model.offset;
+            }
         } else {
-            offset = self.houseList.count;
+            if ([self.houseDataModel isKindOfClass:[FHListSearchHouseDataModel class]]) {
+                FHListSearchHouseDataModel *model = (FHListSearchHouseDataModel *)self.houseDataModel;
+                offset = model.offset;
+            }
         }
     }
     
@@ -79,7 +85,7 @@
         }
     }
 
-    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:param offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:param offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (completion) {
             completion(model , error);
@@ -93,7 +99,7 @@
 - (TTHttpTask *)requestRecommendErshouHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion
 {
     NSDictionary *param = @{@"house_type":@(self.houseType)};
-    TTHttpTask *task = [FHHouseListAPI recommendErshouHouseList:query params:param offset:offset searchId:searchId sugParam:nil class:[FHRecommendSecondhandHouseModel class] completion:^(FHRecommendSecondhandHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI recommendErshouHouseList:query params:param offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (completion) {
             completion(model , error);

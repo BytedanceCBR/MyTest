@@ -30,6 +30,7 @@
     }
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)currentData;
+    cellModel.ischanged = NO;
     NSString *decorationImageUrlStr = cellModel.contentDecoration.url;
     BOOL isShowDecoration = cellModel.isStick && (decorationImageUrlStr.length > 0);
     self.decorationImageView.hidden = !(isShowDecoration);
@@ -53,6 +54,7 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.isFromDetail = NO;
     }
     return self;
 }

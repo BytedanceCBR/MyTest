@@ -30,16 +30,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
 @property (nonatomic, copy , nullable) NSString *userId;
+@property (nonatomic, copy , nullable) NSString *schema;
 
 @end
 
 @interface FHFeedUGCOriginItemModel : NSObject
 
 @property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *contentRichSpan;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *type;
 @property (nonatomic, copy , nullable) FHFeedContentImageListModel *imageModel;
 @property (nonatomic, copy , nullable) NSAttributedString *contentAStr;
+@property (nonatomic, strong) TTRichSpanText *richContent;
 
 @end
 
@@ -123,6 +126,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotTopicListModel> *hotTopicList;
 //投票
 @property (nonatomic, strong , nullable) FHFeedUGCVoteModel *vote;
+//UGC 投票
+@property (nonatomic, strong , nullable) FHUGCVoteInfoVoteInfoModel *voteInfo;
 //视频和小视频相关
 @property (nonatomic, assign) BOOL hasVideo;
 @property (nonatomic, strong , nullable) TTVFeedItem *videoFeedItem;
@@ -140,6 +145,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) FHFeedContentStickStyle stickStyle;
 // 内容装饰
 @property (nonatomic, strong) FHFeedUGCCellContentDecorationModel *contentDecoration;
+// 隐藏...,默认为显示
+@property (nonatomic, assign) BOOL hiddenMore;
+// 数据内容是否有变化，如果有则刷新数据时候会刷新，没有则不会刷新，在对cellModel改动需要刷新页面时候，需要设置成YES
+@property (nonatomic, assign) BOOL ischanged;
+// 来自详情页
+@property (nonatomic, assign)   BOOL       isFromDetail;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

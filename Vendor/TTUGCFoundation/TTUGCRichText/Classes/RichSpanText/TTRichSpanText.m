@@ -10,6 +10,7 @@
 #import "TTBaseMacro.h"
 #import <objc/runtime.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import <Base64.h>
 
 @implementation TTRichTextImageURLInfoModel
 
@@ -578,7 +579,7 @@ static NSString * const TTRichSpansKeyImageList = @"image_list";
 
 @end
 
-@interface TTRichSpanText ()
+@interface TTRichSpanText () <NSCoding>
 
 @property (nonatomic, copy, readwrite) NSString *text;
 @property (nonatomic, strong, readwrite) TTRichSpans *richSpans;
@@ -586,6 +587,35 @@ static NSString * const TTRichSpansKeyImageList = @"image_list";
 @end
 
 @implementation TTRichSpanText
+
+-(NSString *)base64EncodedString {
+    NSData *richSpanTextData = [NSKeyedArchiver archivedDataWithRootObject:self];
+    NSString *draftBase64Text = [richSpanTextData base64EncodedString];
+    return draftBase64Text;
+}
+
+-(instancetype)initWithBase64EncodedString:(NSString *)base64String {
+    if(self = [super init]) {
+        NSData *richSpanTextData = [base64String base64DecodedData];
+        TTRichSpanText *richSpanText = [NSKeyedUnarchiver unarchiveObjectWithData:richSpanTextData];
+        self.text = richSpanText.text;
+        self.richSpans = richSpanText.richSpans;
+    }
+    return self;
+}
+
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.text forKey:@"text"];
+    [aCoder encodeObject:[TTRichSpans JSONStringForRichSpans:self.richSpans] forKey:@"richSpans"];
+}
+
+-(instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if(self = [super init]) {
+        self.text = [aDecoder decodeObjectForKey:@"text"];
+        self.richSpans = [TTRichSpans richSpansForJSONString:[aDecoder decodeObjectForKey:@"richSpans"]];
+    }
+    return self;
+}
 
 - (instancetype)initWithText:(NSString *)text richSpansJSONString:(NSString *)richSpansJSONString {
     self = [super init];

@@ -379,10 +379,9 @@
         [self addSubview:logoView];
         self.logoView = logoView;
    
-        // add by zjing 去掉个人主页跳转
-//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickTitleView:)];
-//        tap.delegate = self;
-//        [self addGestureRecognizer:tap];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickTitleView:)];
+        tap.delegate = self;
+        [self addGestureRecognizer:tap];
         
         [self show:NO animated:NO];
     }

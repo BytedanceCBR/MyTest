@@ -10,6 +10,7 @@
 #import "FHCommentBaseDetailViewController.h"
 #import "FHUGCBaseCell.h"
 #import "TTHttpTask.h"
+#import <FHUGCShareManager.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) FHCommentBaseDetailViewController *detailController;
 @property (nonatomic, strong) NSMutableArray *items;// 子类维护的数据源
 @property(nonatomic , weak) TTHttpTask *httpTask;
+@property (nonatomic, strong)   FHUGCShareInfoModel *shareInfo;// 分享信息，服务端返回
 
 // 子类实现
 - (void)registerCellClasses;

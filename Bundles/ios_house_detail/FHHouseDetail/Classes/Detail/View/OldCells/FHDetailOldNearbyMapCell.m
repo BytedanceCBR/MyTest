@@ -485,7 +485,7 @@ FHDetailVCViewLifeCycleProtocol>
 
 - (UIImage *)getIconImageFromCategory:(NSString *)category
 {
-    return [UIImage imageNamed:@"icon-location"];
+    return [UIImage imageNamed:@"detail_map_loc_annotation"];
 }
 
 #pragma MapViewDelegata

@@ -597,15 +597,12 @@ TTCommentFooterCellDelegate>
 
 - (void)commentCell:(UITableViewCell *)view replyListAvatarClickedWithUserID:(nonnull NSString *)userID commentItem:(nonnull TTVCommentListItem *)item
 {
-    
-    // add by zjing 去掉个人主页跳转
-    return;
-    
     if (isEmptyString(userID)) {
         return;
     }
     
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(@{@"uid": userID})];
+    NSString *url = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=comment_list",userID];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];
 }
 
 - (void)commentCell:(nonnull UITableViewCell *)view quotedNameViewonClickedWithCommentItem:(nonnull TTVCommentListItem *)item {
@@ -614,7 +611,7 @@ TTCommentFooterCellDelegate>
         return;
     }
     
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(@{@"uid": item.commentModel.quotedComment.user_id})];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile?from_page=at_user_profile_comment"] userInfo:TTRouteUserInfoWithDict(@{@"uid": item.commentModel.quotedComment.user_id})];
 }
 
 - (void)commentCell:(UITableViewCell *)view contentUnfoldWithCommentItem:(nonnull TTVCommentListItem *)item

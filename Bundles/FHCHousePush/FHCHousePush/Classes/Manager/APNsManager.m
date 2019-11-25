@@ -123,11 +123,13 @@ static APNsManager *_sharedManager = nil;
         }
 
         TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:theUrl];
-        if ([paramObj.allParams valueForKey:@"ext_growth"]) {
-            NSDictionary *apsDict = [userInfo tt_dictionaryValueForKey:@"aps"];
-            NSInteger badgeNumber = [apsDict[@"badge"]integerValue];
-            [self writeLaunchLogEvent:[paramObj.allParams valueForKey:@"ext_growth"] badgeNumber:badgeNumber];
-        }
+        
+        //对齐安卓逻辑
+        NSString *extGrowth = [paramObj.allParams valueForKey:@"ext_growth"] ?:@"be_null";
+        NSDictionary *apsDict = [userInfo tt_dictionaryValueForKey:@"aps"];
+        NSInteger badgeNumber = [apsDict[@"badge"]integerValue];
+        [self writeLaunchLogEvent:[paramObj.allParams valueForKey:@"ext_growth"] badgeNumber:badgeNumber];
+        
         if (!isEmptyString(paramObj.host)) {
             [self trackWithPageName:paramObj.host params:paramObj.queryParams];
         }
@@ -158,7 +160,7 @@ static APNsManager *_sharedManager = nil;
             [param setValue:[[self class] f100ContentGroupId:paramObj.allParams] forKey:@"group_id"];
         }
 
-
+        param[@"title_id"] = paramObj.allParams[@"title_id"]?:@"0";
         param[@"event_type"] = @"house_app2c_v2";
 
         [TTTracker eventV3:@"push_click" params:param];
@@ -212,6 +214,7 @@ static APNsManager *_sharedManager = nil;
                 
                 NSDictionary* info = @{@"isFromPush": @(1),
                                        @"tracer":@{@"enter_from": @"push",
+                                                   @"enter_type": @"click",
                                                    @"element_from": @"be_null",
                                                    @"rank": @"be_null",
                                                    @"card_type": @"be_null",

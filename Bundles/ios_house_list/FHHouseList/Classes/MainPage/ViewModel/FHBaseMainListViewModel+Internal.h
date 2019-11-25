@@ -21,6 +21,9 @@
 #import "FHHouseListRedirectTipView.h"
 
 
+
+@class FHSearchHouseDataModel,FHHouseRentDataModel;
+
 @interface FHBaseMainListViewModel ()<UITableViewDelegate,UITableViewDataSource,FHConditionFilterViewModelDelegate,FHMainRentTopViewDelegate,FHMainOldTopViewDelegate>
 
 @property(nonatomic , strong) UITableView *tableView;
@@ -66,6 +69,9 @@
 @property(nonatomic , assign) BOOL showFilter;
 @property(nonatomic , assign) BOOL animateShowNotify;
 @property(nonatomic , copy)  void(^showNotifyDoneBlock)();
+
+@property (nonatomic, strong) JSONModel *currentRecommendHouseDataModel;
+@property (nonatomic, strong) JSONModel *houseDataModel;
 
 -(void)showErrorMask:(BOOL)show tip:(FHEmptyMaskViewType )type enableTap:(BOOL)enableTap showReload:(BOOL)showReload;
 

@@ -27,7 +27,7 @@
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
-
+extern NSString *const kFHPLoginhoneNumberCacheKey;
 @implementation FHHouseFillFormHelper
 
 + (BOOL)isFillFormParamsValid:(FHHouseFillFormConfigModel *)configModel
@@ -55,11 +55,25 @@ extern NSString *const kFHToastCountKey;
 
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
     id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    NSString *phoneNum = (NSString *)phoneCache;
+    id loginPhoneCache = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
+
+    NSString *phoneNum = nil;
+    if ([phoneCache isKindOfClass:[NSString class]]) {
+        NSString *cacheNum = (NSString *)phoneCache;
+        if (cacheNum.length > 0) {
+            phoneNum = cacheNum;
+        }
+    }else if ([loginPhoneCache isKindOfClass:[NSString class]]) {
+        NSString *cacheNum = (NSString *)loginPhoneCache;
+        if (cacheNum.length > 0) {
+            phoneNum = cacheNum;
+        }
+    }
     if (phoneNum.length > 0) {
         subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
     }
     [self addInformShowLog:configModel];
+    __weak typeof(self)wself = self;
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
     if (configModel.chooseAgencyList.count > 0) {
         NSInteger selectCount = 0;
@@ -87,8 +101,8 @@ extern NSString *const kFHToastCountKey;
     }
     alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
-        [self fillFormRequest:configModel phone:phoneNum alertView:alert];
-        [self addClickConfirmLog:configModel alertView:alertView];
+        [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
+        [wself addClickConfirmLog:configModel alertView:alertView];
     };
 
     alertView.tipClickBlock = ^{
@@ -118,7 +132,20 @@ extern NSString *const kFHToastCountKey;
     NSString *leftBtnTitle = configModel.leftBtnTitle;
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
     id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    NSString *phoneNum = (NSString *)phoneCache;
+    id loginPhoneCache = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
+    
+    NSString *phoneNum = nil;
+    if ([phoneCache isKindOfClass:[NSString class]]) {
+        NSString *cacheNum = (NSString *)phoneCache;
+        if (cacheNum.length > 0) {
+            phoneNum = cacheNum;
+        }
+    }else if ([loginPhoneCache isKindOfClass:[NSString class]]) {
+        NSString *cacheNum = (NSString *)loginPhoneCache;
+        if (cacheNum.length > 0) {
+            phoneNum = cacheNum;
+        }
+    }
     if (phoneNum.length > 0) {
         subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
     }
@@ -128,18 +155,18 @@ extern NSString *const kFHToastCountKey;
     if (leftBtnTitle.length > 0) {
         alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle leftBtnTitle:leftBtnTitle];
         alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
-            [self phoneCallAction:configModel];
+            [wself phoneCallAction:configModel];
             [alert dismiss];
         };
         alertView.leftClickBlock = ^(NSString * _Nonnull phoneNum,FHDetailNoticeAlertView *alert) {
             [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
-            [self addClickConfirmLog:configModel alertView:alertView];
+            [wself addClickConfirmLog:configModel alertView:alertView];
         };
     }else {
         alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
         alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
             [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
-            [self addClickConfirmLog:configModel alertView:alertView];
+            [wself addClickConfirmLog:configModel alertView:alertView];
         };
     }
     if (configModel.chooseAgencyList.count > 0) {
@@ -218,7 +245,7 @@ extern NSString *const kFHToastCountKey;
     NSString *houseId = customHouseId.length > 0 ? customHouseId : configModel.houseId;
     NSString *from = fromStr.length > 0 ? fromStr : [self fromStrByHouseType:configModel.houseType];
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : configModel.chooseAgencyList;
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:configModel.cluePage clueEndpoint:configModel.clueEndpoint targetType:@(configModel.houseType) agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             

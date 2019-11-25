@@ -9,7 +9,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHEditUserBaseCellDelegate <NSObject>
+
+@optional
+- (void)changeHomePageAuth:(BOOL)isOpen;
+
+@end
+
 @interface FHEditUserBaseCell : UITableViewCell
+
+@property(nonatomic , weak) id<FHEditUserBaseCellDelegate> delegate;
 
 - (void)updateCell:(NSDictionary *)dic;
 

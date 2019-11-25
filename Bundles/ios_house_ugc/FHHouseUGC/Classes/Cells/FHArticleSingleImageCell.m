@@ -10,6 +10,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
+#import <TTImageView+TrafficSave.h>
 
 #define maxLines 3
 #define singleImageViewHeight 90
@@ -20,7 +21,7 @@
 @interface FHArticleSingleImageCell ()
 
 @property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
-@property(nonatomic ,strong) UIImageView *singleImageView;
+@property(nonatomic ,strong) TTImageView *singleImageView;
 @property(nonatomic ,strong) FHArticleCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
@@ -52,11 +53,13 @@
 - (void)initViews {
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
+    _contentLabel.layer.masksToBounds = YES;
+    _contentLabel.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_contentLabel];
     
-    self.singleImageView = [[UIImageView alloc] init];
+    self.singleImageView = [[TTImageView alloc] initWithFrame:CGRectZero];
     _singleImageView.clipsToBounds = YES;
-    _singleImageView.contentMode = UIViewContentModeScaleAspectFill;
+    _singleImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _singleImageView.backgroundColor = [UIColor themeGray6];
     _singleImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
     _singleImageView.layer.borderWidth = 0.5;
@@ -130,8 +133,15 @@
     [self.bottomView showPositionView:showCommunity];
     //图片
     FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-    if(imageModel){
-        [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+//    if(imageModel){
+//        [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+//    }
+    if (imageModel && imageModel.url.length > 0) {
+        TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
+        __weak typeof(self) wSelf = self;
+        [self.singleImageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
+            [wSelf.singleImageView setImage:nil];
+        }];
     }
     
     [self showGuideView];

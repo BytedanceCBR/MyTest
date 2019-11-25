@@ -55,6 +55,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHDetailOldDataNeighborhoodInfoSchoolConsult : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *text;
+
+@end
 
 @interface FHDetailOldDataNeighborhoodInfoModel : JSONModel
 
@@ -79,6 +85,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel> *schoolDictList;
+@property (nonatomic, assign) BOOL useSchoolIm;
+@property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoSchoolConsult *schoolConsult;
+
 @end
 
 @interface FHDetailOldDataNeighborEvalModel : JSONModel
@@ -227,25 +236,25 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
-@protocol FHVideoHouseVideoVideoInfosModel<NSObject>
-@end
+//@protocol FHVideoHouseVideoVideoInfosModel<NSObject>
+//@end
+//
+//@interface FHVideoHouseVideoVideoInfosModel : JSONModel
+//
+//@property (nonatomic, copy , nullable) NSString *vid;
+//@property (nonatomic, assign) NSInteger imageWidth;
+//@property (nonatomic, assign) NSInteger vHeight;
+//@property (nonatomic, assign) NSInteger imageHeight;
+//@property (nonatomic, assign) NSInteger vWidth;
+//@property (nonatomic, copy , nullable) NSString *coverImageUrl;
+//@end
 
-@interface FHVideoHouseVideoVideoInfosModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *vid;
-@property (nonatomic, assign) NSInteger imageWidth;
-@property (nonatomic, assign) NSInteger vHeight;
-@property (nonatomic, assign) NSInteger imageHeight;
-@property (nonatomic, assign) NSInteger vWidth;
-@property (nonatomic, copy , nullable) NSString *coverImageUrl;
-@end
-
-@interface FHVideoHouseVideoModel : JSONModel
-
-@property (nonatomic, strong , nullable) NSArray<FHVideoHouseVideoVideoInfosModel> *videoInfos;
-@property (nonatomic, copy , nullable) NSString *infoSubTitle;
-@property (nonatomic, copy , nullable) NSString *infoTitle;
-@end
+//@interface FHVideoHouseVideoModel : JSONModel
+//
+//@property (nonatomic, strong , nullable) NSArray<FHVideoHouseVideoVideoInfosModel> *videoInfos;
+//@property (nonatomic, copy , nullable) NSString *infoSubTitle;
+//@property (nonatomic, copy , nullable) NSString *infoTitle;
+//@end
 
 #pragma mark - extra info
 @interface FHDetailDataBaseExtraDetectiveDialogsModel : JSONModel
@@ -335,11 +344,40 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
 @end
 
+@interface FHDetailDataBaseExtraBudgetModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *baseContent;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
+@interface FHDetailDataBaseExtraFloorInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *baseContent;
+@property (nonatomic, copy , nullable) NSString *extraContent;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
+@interface FHDetailDataBaseExtraNeighborhoodModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *subName;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
 
 @interface FHDetailDataBaseExtraModel : JSONModel
 
-@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDetectiveModel *detective ;
-@property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialModel *official ;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDetectiveModel *detective;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialModel *official;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraBudgetModel *budget;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraFloorInfoModel *floorInfo;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraNeighborhoodModel *neighborhoodInfo;
+
 @end
 
 @protocol FHDetailHouseReviewCommentModel
@@ -354,6 +392,29 @@ typedef enum : NSInteger {
 @property (nonatomic, assign) BOOL addFoldDirect;//标识评论高度，非服务端字段
 @end
 
+@interface FHDetailHouseVRDataModel: JSONModel
+@property (nonatomic, assign) BOOL hasVr;
+@property (nonatomic, strong , nullable) FHImageModel *vrImage;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@end
+
+@protocol FHDetailDataQuickQuestionItemModel
+@end
+@interface FHDetailDataQuickQuestionItemModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
+@interface FHDetailDataQuickQuestionModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *buttonContent;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataQuickQuestionItemModel> *questionItems;
+
+@end
+
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, assign) NSInteger status;
@@ -362,6 +423,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailOldDataHousePriceRangeModel *housePriceRange ;
 @property (nonatomic, strong , nullable) FHDetailOldDataHousePricingRankModel *housePricingRank ;
+@property (nonatomic, strong , nullable) FHDetailHouseVRDataModel *vrData ;
 @property (nonatomic, copy , nullable) NSString *partner;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailOldDataUserStatusModel *userStatus ;
@@ -397,6 +459,9 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraModel *baseExtra;
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryModel *ugcSocialGroup;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseReviewCommentModel> *houseReviewComment;
+@property (nonatomic, strong , nullable) FHDetailDataQuickQuestionModel *quickQuestion;
+@property (nonatomic, copy , nullable) NSString *recommendedHouseTitle;
+
 
 @end
 

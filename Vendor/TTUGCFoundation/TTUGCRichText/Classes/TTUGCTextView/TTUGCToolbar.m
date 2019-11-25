@@ -109,7 +109,7 @@
 
 - (void)refreshButtonsUI {
     self.emojiButton.hidden = NO;
-    self.atButton.hidden = YES;
+    self.atButton.hidden = self.banAtInput;
     self.shoppingButton.hidden = YES;
     
     self.emojiButton.left = 10;
@@ -121,6 +121,12 @@
         self.hashtagButton.right = 0;
     }
     
+    if (!self.atButton.hidden) {
+        self.atButton.left = self.hashtagButton.right - 5;
+    } else {
+        self.atButton.right = 0;
+    }
+    
     CGFloat right = self.toolbarView.width - 10;
     if (!self.keyboardButton.hidden) {
         self.keyboardButton.right = right;
@@ -130,7 +136,6 @@
     }
     
     // 隐藏
-    self.atButton.right = 0;
     self.shoppingButton.right = 0;
     self.longTextButton.right = 0;
     
@@ -402,6 +407,15 @@
     [self refreshButtonsUI];
 }
 
+-(void)setBanPicInput:(BOOL)banPicInput {
+    _banPicInput = banPicInput;
+    
+    self.picButton.enabled = !banPicInput;
+    self.picButton.hidden = banPicInput;
+    
+    [self refreshButtonsUI];
+}
+
 - (void)markKeyboardAsVisible {
     self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_normal";
     self.keyboardButton.accessibilityLabel = @"收起键盘";
@@ -457,7 +471,7 @@
 - (SSThemedButton *)atButton {
     if (!_atButton) {
         _atButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        _atButton.imageName = @"toolbar_icon_at";
+        _atButton.imageName = @"fh_ugc_toolbar_at_icon";
         _atButton.accessibilityLabel = @"@";
         [_atButton addTarget:self action:@selector(atAction:) forControlEvents:UIControlEventTouchUpInside];
     }

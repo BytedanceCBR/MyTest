@@ -54,6 +54,7 @@
 @property(nonatomic, strong) id <FHMessageBridgeProtocol> messageBridge;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSString *pageType;
+@property (nonatomic, copy)     NSString       *enterFrom;
 
 @property(nonatomic, strong) DeleteAlertDelegate *deleteAlertDelegate;
 
@@ -97,6 +98,10 @@
 
 - (void)setPageType:(NSString *)pageType {
     _pageType = pageType;
+}
+
+- (void)setEnterFrom:(NSString *)enterFrom {
+    _enterFrom = enterFrom;
 }
 
 - (void)requestData {
@@ -315,16 +320,30 @@
 }
 
 - (void)openConversation:(IMConversation *)conv {
-    NSString *title = conv.conversationDisplayName;
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setValue:conv.identifier forKey:KSCHEMA_CONVERSATION_ID];
-    [params setValue:title forKey:KSCHEMA_CHAT_TITLE];
-    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
-    [tracer setValue:@"message_list" forKey:@"origin_from"];
-    NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_single_chat" queryItems:params];
-    [self clickImMessageEvent:conv];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    if (conv.type == IMConversationTypeGroupChat) {
+        NSString *title = [@"" stringByAppendingFormat:@"%@(%@)", conv.conversationDisplayName, [[NSNumber numberWithLongLong:conv.participantsCount] stringValue]];
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setValue:conv.identifier forKey:KSCHEMA_CONVERSATION_ID];
+        [params setValue:title forKey:KSCHEMA_CHAT_TITLE];
+        NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+        [tracer setValue:@"message_list" forKey:@"origin_from"];
+        [tracer setValue:@"message_list" forKey:@"enter_from"];
+        NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_group_chat" queryItems:params];
+        [self clickImMessageEvent:conv];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    } else {
+        NSString *title = conv.conversationDisplayName;
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setValue:conv.identifier forKey:KSCHEMA_CONVERSATION_ID];
+        [params setValue:title forKey:KSCHEMA_CHAT_TITLE];
+        NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+        [tracer setValue:@"message_list" forKey:@"origin_from"];
+        NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_single_chat" queryItems:params];
+        [self clickImMessageEvent:conv];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
 }
 
 - (void)displayDeleteConversationConfirm:(IMConversation *)conversation {
@@ -343,14 +362,15 @@
 - (void)deleteConversation:(IMConversation *)conv {
     NSString *conversationId = conv.identifier;
     NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
-    NSDictionary *params = @{@"a:c_del": conv.lastMessageIdentifier};
+    NSDictionary *params = @{@"a:c_del": (conv.lastMessageIdentifier ? conv.lastMessageIdentifier : @"del_empty_conver")};
     [conv setSyncExtEntry:params completion:^(id _Nullable response, NSError *_Nullable error) {
         if (error == nil) {
             [conv setDraft:nil];
-            NSDictionary *params = @{@"event_type": @"house_app2c_v2",
+            NSDictionary *params = @{
                     @"page_type": _pageType,
                     @"conversation_id": conversationId,
                     @"realtor_id": targetUserId,
+                    @"enter_from":self.enterFrom ?: @"be_null"
             };
             [FHUserTracker writeEvent:@"delete_conversation" params:params];
         }
@@ -361,10 +381,10 @@
     NSString *conversationId = conv.identifier;
     NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
     NSDictionary *params = @{
-            @"event_type": @"house_app2b",
             @"page_type": _pageType,
             @"conversation_id": conversationId,
             @"realtor_id": targetUserId,
+            @"enter_from":self.enterFrom ?: @"be_null"
     };
     [FHUserTracker writeEvent:@"click_conversation" params:params];
 }
