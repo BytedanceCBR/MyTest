@@ -13,13 +13,7 @@
 #import "FHTracerModel.h"
 #import "FHFakeInputNavbar.h"
 
-#define kFHHouseListCellId @"kFHHouseListCellId"
-#define kFHHouseListSubscribCellId @"kFHHouseListSubscribCellId"
-#define kFHHouseListTopRealInfoCellId @"kFHHouseListTopRealInfoCellId"
-#define kBaseCellId @"kBaseCellId"
-#define kFHHouseListRecommendTitleCellId @"kFHHouseListRecommendTitleCellId"
 #define kFHHouseListPlaceholderCellId @"kFHHouseListPlaceholderCellId"
-#define kAgencyInfoCellId @"kAgencyInfoCellId"
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHHouseListViewModelDelegate;

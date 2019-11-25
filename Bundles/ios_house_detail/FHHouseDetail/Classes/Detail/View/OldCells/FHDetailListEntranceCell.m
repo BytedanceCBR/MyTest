@@ -30,17 +30,17 @@
 
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.width.height.mas_equalTo(18);
+        make.width.height.mas_equalTo(26);
         make.centerY.mas_equalTo(self);
     }];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.icon.mas_right).mas_equalTo(11);
+        make.left.mas_equalTo(self.icon.mas_right).mas_equalTo(6.5);
         make.centerY.mas_equalTo(self);
         make.right.mas_equalTo(self.rightArrow.mas_left).mas_equalTo(-11);
     }];
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-18);
-        make.width.height.mas_equalTo(16);
+        make.right.mas_equalTo(-19);
+        make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self);
     }];
 }
@@ -58,7 +58,7 @@
     if (!_nameLabel) {
         _nameLabel = [[UILabel alloc]init];
         _nameLabel.textColor = [UIColor themeGray1];
-        _nameLabel.font = [UIFont themeFontRegular:14];
+        _nameLabel.font = [UIFont themeFontDINAlternateBold:16];
     }
     return _nameLabel;
 }
@@ -66,7 +66,8 @@
 - (UIImageView *)rightArrow
 {
     if (!_rightArrow) {
-        UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", nil); //@"detail_entrance_arrow"
+        UIImage *img = [UIImage imageNamed:@"arrowicon-feed-4"];
+//        ICON_FONT_IMG(20, @"\U0000e670", nil); //@"detail_entrance_arrow"
         _rightArrow = [[UIImageView alloc]initWithImage:img];
     }
     return _rightArrow;
@@ -108,12 +109,12 @@
         [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(0);
             make.top.mas_equalTo(bottomY);
-            make.height.mas_equalTo(34);
+            make.height.mas_equalTo(47);
             if (index == model.listEntrance.count - 1) {
                 make.bottom.mas_equalTo(self.containerView);
             }
         }];
-        bottomY += 34;
+        bottomY += 47;
     }
     if (model.listEntrance.count == 1) {
         [_containerView mas_updateConstraints:^(MASConstraintMaker *make) {

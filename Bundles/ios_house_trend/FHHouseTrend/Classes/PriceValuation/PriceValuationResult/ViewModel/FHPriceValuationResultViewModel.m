@@ -19,6 +19,7 @@
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
+extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @interface FHPriceValuationResultViewModel()<FHPriceValuationResultViewDelegate,FHHouseBaseDataProtocel>
 
@@ -379,7 +380,20 @@ extern NSString *const kFHToastCountKey;
     __weak typeof(self)wself = self;
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
     id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    NSString *phoneNum = (NSString *)phoneCache;
+    id loginPhoneCache = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
+    
+    NSString *phoneNum = nil;
+    if ([phoneCache isKindOfClass:[NSString class]]) {
+        NSString *cacheNum = (NSString *)phoneCache;
+        if (cacheNum.length > 0) {
+            phoneNum = cacheNum;
+        }
+    }else if ([loginPhoneCache isKindOfClass:[NSString class]]) {
+        NSString *cacheNum = (NSString *)loginPhoneCache;
+        if (cacheNum.length > 0) {
+            phoneNum = cacheNum;
+        }
+    }
     NSString *subtitle = @"专业房地产经纪人为您服务";
     if (phoneNum.length > 0) {
         subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];

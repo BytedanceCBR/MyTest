@@ -281,7 +281,7 @@
         if (self.delegate && [self.delegate respondsToSelector:@selector(textViewDidInputTextAt:)]) {
             [self.delegate textViewDidInputTextAt:self];
             self.didInputTextAt = YES;
-            return YES;
+            return NO;
         }
 
         self.didInputTextAt = NO;

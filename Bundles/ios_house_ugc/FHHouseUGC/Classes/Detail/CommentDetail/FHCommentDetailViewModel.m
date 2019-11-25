@@ -31,6 +31,7 @@
 #import "FHPostDetailCell.h"
 #import "FHUGCCellHelper.h"
 #import <TTBusinessManager+StringUtils.h>
+#import "HMDTTMonitor.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>
 
@@ -183,6 +184,7 @@
             rawData.originGroup = model.commentDetail.originGroup;
             rawData.originThread = model.commentDetail.originThread;
             rawData.originUgcVideo = model.commentDetail.originUgcVideo;
+            rawData.originCommonContent = model.commentDetail.originCommonContent;
             rawData.originType = model.commentDetail.originType;
             FHFeedContentModel *feedContent = [[FHFeedContentModel alloc] init];
             feedContent.logPb = model.logPb;
@@ -207,6 +209,9 @@
             cellModel.stickStyle = self.detailController.detailData.stickStyle;
             cellModel.tracerDic = self.detailController.tracerDict.mutableCopy;
             [self.detailController refreshUI];
+        } else {
+            // 成功埋点 status = 0 成功（不上报） status = 1：commentDetail错误
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_comment_detail_error" metric:nil category:@{@"status":@(1)} extra:nil];
         }
         // 圈子详情数据
         FHUGCScialGroupDataModel *socialGroupModel = model.social_group;

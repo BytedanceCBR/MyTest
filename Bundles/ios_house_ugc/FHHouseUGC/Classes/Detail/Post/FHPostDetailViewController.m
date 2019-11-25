@@ -64,6 +64,7 @@
             self.comment_count = [self.detailData.commentCount longLongValue];
             self.user_digg = [self.detailData.userDigg integerValue];
             self.digg_count = [self.detailData.diggCount longLongValue];
+            self.detailData.groupId = [NSString stringWithFormat:@"%ld",tid];
         }
         // 埋点
         self.tracerDict[@"page_type"] = @"feed_detail";
@@ -98,6 +99,23 @@
             if (!err && [dic isKindOfClass:[NSDictionary class]] && dic.count > 0) {
                 self.tracerDict[@"log_pb"] = dic;
             }
+        } else if ([log_pb_str isKindOfClass:[NSDictionary class]]) {
+            self.tracerDict[@"log_pb"] = (NSDictionary *)log_pb_str;
+        }
+        // report_prarms
+        if (self.report_params_dic && self.report_params_dic[@"social_group_id"]) {
+            self.lastPageSocialGroupId = [params objectForKey:@"social_group_id"];
+        }
+        
+        // social_group_id 筛入 logpb中
+        NSDictionary *temp_log_pb = self.tracerDict[@"log_pb"];
+        if (self.lastPageSocialGroupId.length > 0) {
+            NSMutableDictionary *mutLogPb = [NSMutableDictionary new];
+            if ([temp_log_pb isKindOfClass:[NSDictionary class]]) {
+                [mutLogPb addEntriesFromDictionary:temp_log_pb];
+            }
+            mutLogPb[@"social_group_id"] = self.lastPageSocialGroupId;
+            self.tracerDict[@"log_pb"] = mutLogPb;
         }
     }
     return self;
@@ -118,9 +136,6 @@
     [self firstLoadCommentCount];
     // 列表页数据
     if (self.detailData) {
-//        [self.viewModel.items addObject:self.detailData];
-//        // 刷新数据
-//        [self.viewModel reloadData];
         self.weakViewModel.detailData = self.detailData;
     }
     [self addDefaultEmptyViewFullScreen];
@@ -132,15 +147,6 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self addStayPageLog];
-//    if (self.detailData) {
-//        // 修改列表页数据
-//        self.detailData.commentCount = [NSString stringWithFormat:@"%lld",self.comment_count];
-//        self.detailData.userDigg = [NSString stringWithFormat:@"%ld",self.user_digg];
-//        self.detailData.diggCount = [NSString stringWithFormat:@"%lld",self.digg_count];
-//        self.detailData.isStick = self.weakViewModel.serverData.isStick;
-//        self.detailData.stickStyle = self.weakViewModel.serverData.stickStyle;
-//        self.detailData.contentDecoration = self.weakViewModel.serverData.contentDecoration;
-//    }
     //跳页时关闭举报的弹窗
     [FHFeedOperationView dismissIfVisible];
 }
@@ -260,9 +266,10 @@
     
     //评论完成后发送通知修改评论数
     NSMutableDictionary *userInfo = @{}.mutableCopy;
-               userInfo[@"group_id"] = self.detailData.groupId;
-               userInfo[@"comment_conut"] = @(self.comment_count);
-               [[NSNotificationCenter defaultCenter] postNotificationName:@"kPostMessageFinishedNotification"
+    NSString *group_id = [NSString stringWithFormat:@"%ld",self.tid];
+    userInfo[@"group_id"] = group_id;
+    userInfo[@"comment_conut"] = @(self.comment_count);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kPostMessageFinishedNotification"
                                                                    object:nil
                                                                  userInfo:userInfo];
 }

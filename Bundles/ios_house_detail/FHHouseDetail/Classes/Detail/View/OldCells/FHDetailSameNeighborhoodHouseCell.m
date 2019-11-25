@@ -16,6 +16,7 @@
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
 #import "FHDetailMultitemCollectionView.h"
+#import "FHCornerView.h"
 
 @interface FHDetailSameNeighborhoodHouseCell ()
 
@@ -202,11 +203,16 @@
     return @"same_neighborhood";// 同小区房源
 }
 
+
 @end
 
 
 // FHDetailNeighborhoodItemCollectionCell
 @interface FHDetailSameNeighborhoodHouseCollectionCell ()
+
+@property(nonatomic, strong) UILabel *imageTagLabel;
+@property(nonatomic, strong) FHCornerView *imageTagLabelBgView;
+
 
 @end
 
@@ -241,6 +247,15 @@
             self.icon.image = [UIImage imageNamed:@"default_image"];
         }
         
+        if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
+            self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
+            self.imageTagLabel.text = model.houseImageTag.text;
+            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+            self.imageTagLabelBgView.hidden = NO;
+        }else {
+            self.imageTagLabelBgView.hidden = YES;
+        }
+        
         self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
         
         NSString *str = model.displaySameNeighborhoodTitle;
@@ -264,24 +279,39 @@
     _icon.layer.borderWidth = 0.5;
     _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     _icon.image = [UIImage imageNamed:@"default_image"];
-    [self addSubview:_icon];
+    [self.contentView addSubview:_icon];
     
     _houseVideoImageView = [[UIImageView alloc] init];
     _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video"];
     _houseVideoImageView.backgroundColor = [UIColor clearColor];
-    [self addSubview:_houseVideoImageView];
+    [self.contentView addSubview:_houseVideoImageView];
     
     _descLabel = [[YYLabel alloc] init];
-    [self addSubview:_descLabel];
+    [self.contentView addSubview:_descLabel];
     
     _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     _priceLabel.textColor = [UIColor themeRed1];
     _priceLabel.font = [UIFont themeFontMedium:16];
-    [self addSubview:_priceLabel];
+    [self.contentView addSubview:_priceLabel];
     
     _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _spaceLabel.textColor = [UIColor themeGray3];
-    [self addSubview:_spaceLabel];
+    [self.contentView addSubview:_spaceLabel];
+    
+    [self.contentView addSubview:self.imageTagLabelBgView];
+    [self.imageTagLabelBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.icon);
+        make.top.mas_equalTo(self.icon).mas_offset(0);
+        make.height.mas_equalTo(@17);
+        make.width.mas_equalTo(@48);
+    }];
+    
+    [self.imageTagLabelBgView addSubview:self.imageTagLabel];
+    [self.imageTagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(@0);
+        make.right.mas_equalTo(@0);
+        make.center.mas_equalTo(self.imageTagLabelBgView);
+    }];
     
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
@@ -317,6 +347,27 @@
         make.centerY.mas_equalTo(self.priceLabel.mas_centerY);
         make.bottom.mas_equalTo(self);
     }];
+}
+
+- (UILabel *)imageTagLabel
+{
+    if (!_imageTagLabel) {
+        _imageTagLabel = [[UILabel alloc]init];
+        _imageTagLabel.textAlignment = NSTextAlignmentCenter;
+        _imageTagLabel.font = [UIFont themeFontRegular:10];
+        _imageTagLabel.textColor = [UIColor whiteColor];
+    }
+    return _imageTagLabel;
+}
+
+- (FHCornerView *)imageTagLabelBgView
+{
+    if (!_imageTagLabelBgView) {
+        _imageTagLabelBgView = [[FHCornerView alloc]init];
+        _imageTagLabelBgView.backgroundColor = [UIColor themeRed3];
+        _imageTagLabelBgView.hidden = YES;
+    }
+    return _imageTagLabelBgView;
 }
 
 @end
