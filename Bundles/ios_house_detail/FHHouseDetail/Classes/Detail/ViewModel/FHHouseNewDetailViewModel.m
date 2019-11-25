@@ -26,6 +26,7 @@
 #import "FHDetailNewListSingleImageCell.h"
 #import <HMDTTMonitor.h>
 #import <FHHouseBase/FHCommonDefines.h>
+#import "FHDetailNewUGCSocialCell.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -60,6 +61,9 @@
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     
     [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
+    
+    // add by zyk
+    [self.tableView registerClass:[FHDetailNewUGCSocialCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailUGCSocialModel class])];
     
 }
 //// cell class
@@ -387,6 +391,16 @@
             item.courtId = model.data.coreInfo.id;
             [self.items addObject:item];
         }
+    }
+    
+    // add by zyk
+    FHDetailUGCSocialModel *tempData = [[FHDetailUGCSocialModel alloc] init];
+    model.data.socialInfo = tempData;
+    if (model.data.socialInfo) {
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        
+        [self.items addObject:model.data.socialInfo];
     }
     
     //周边配套
