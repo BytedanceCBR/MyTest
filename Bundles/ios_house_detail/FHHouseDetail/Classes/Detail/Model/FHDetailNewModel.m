@@ -338,4 +338,20 @@
 }
 @end
 
+@implementation FHDetailUGCSocialModel
 
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end

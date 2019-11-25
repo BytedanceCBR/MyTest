@@ -22,6 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// 新房UGC圈子信息
+@interface FHDetailUGCSocialModel : JSONModel
+
+@end
 
 @interface FHDetailNewDataUserStatusModel : JSONModel
 
@@ -197,6 +201,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoModel *coreInfo ;
 @property (nonatomic, strong , nullable) FHDetailNewDataDisclaimerModel *disclaimer ;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
+@property (nonatomic, strong , nullable) FHDetailUGCSocialModel *socialInfo ;
 
 @end
 
@@ -229,8 +234,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNewDataModel *data ;
 @property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @end
-
-
 
 NS_ASSUME_NONNULL_END
 //END OF HEADER

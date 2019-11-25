@@ -28,6 +28,7 @@
 @property(nonatomic , strong) UIButton *imChatBtn;
 @property(nonatomic , assign) CGFloat imBtnWidth;
 @property(nonatomic , assign) BOOL instantHasShow;
+@property(nonatomic , strong) UIButton *groupChatBtn;
 
 @end
 
@@ -123,6 +124,13 @@
         make.left.mas_equalTo(self.imChatBtn.mas_right).offset(btnBetween);
         make.right.mas_equalTo(btnRightMargin);
         make.height.mas_equalTo(44);
+    }];
+    
+    // 加群看房 需求
+    [self addSubview:self.groupChatBtn];
+    self.groupChatBtn.hidden = YES;
+    [self.groupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contactBtn);
     }];
     
     [self.contactBtn addTarget:self action:@selector(contactBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -305,6 +313,44 @@
     }
     
 }
+// - (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle chatTitle:(NSString *)chatTitle 之后调用
+- (void)refreshBottomBarWithGroupChatTitle:(NSString *)groupChatTitle {
+    if (groupChatTitle.length > 0) {
+        self.groupChatBtn.hidden = NO;
+        [self.groupChatBtn setTitle:groupChatTitle forState:UIControlStateNormal];
+        [self.groupChatBtn setTitle:groupChatTitle forState:UIControlStateHighlighted];
+        // 隐藏IM
+        self.imChatBtn.hidden = YES;
+        CGFloat width = ([UIScreen mainScreen].bounds.size.width - 40 - 9) / 2.0;
+        [self.groupChatBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(10);
+            make.bottom.mas_equalTo(-10);
+            make.right.mas_equalTo(-20);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(width);
+        }];
+        [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(10);
+            make.left.mas_equalTo(20);
+            make.bottom.mas_equalTo(-10);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(width);
+        }];
+    } else {
+        self.groupChatBtn.hidden = YES;
+        CGFloat width = [UIScreen mainScreen].bounds.size.width - 40;
+        [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(10);
+            make.left.mas_equalTo(20);
+            make.bottom.mas_equalTo(-10);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(width);
+        }];
+        [self.groupChatBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.contactBtn);
+        }];
+    }
+}
 
 - (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl
 {
@@ -422,6 +468,24 @@
         [_imChatBtn setTitle:@"在线联系" forState:UIControlStateHighlighted];
     }
     return _imChatBtn;
+}
+
+- (UIButton *)groupChatBtn {
+    if (!_groupChatBtn) {
+        _groupChatBtn = [[UIButton alloc] init];
+        _groupChatBtn.layer.cornerRadius = 4;
+        _groupChatBtn.backgroundColor = [UIColor themeIMOrange];
+        if ([TTDeviceHelper is568Screen]) {
+            _groupChatBtn.titleLabel.font = [UIFont themeFontRegular:14];
+        } else {
+            _groupChatBtn.titleLabel.font = [UIFont themeFontRegular:16];
+        }
+        [_groupChatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_groupChatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [_groupChatBtn setTitle:@"加群看房" forState:UIControlStateNormal];
+        [_groupChatBtn setTitle:@"加群看房" forState:UIControlStateHighlighted];
+    }
+    return _groupChatBtn;
 }
 
 - (UIButton *)licenceIcon

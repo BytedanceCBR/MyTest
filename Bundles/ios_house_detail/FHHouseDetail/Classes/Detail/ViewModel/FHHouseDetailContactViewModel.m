@@ -373,6 +373,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 }
 
+- (void)setSocialInfo:(FHDetailContactModel *)socialInfo {
+    _socialInfo = socialInfo;
+    // 判断是否 add by zyk
+    if (socialInfo) {
+        [self.bottomBar refreshBottomBarWithGroupChatTitle:@""];
+    } else {
+        [self.bottomBar refreshBottomBarWithGroupChatTitle:@"加群看房"];
+    }
+}
+
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
     [self.phoneCallViewModel generateImParams:houseId houseTitle:houseTitle houseCover:houseCover houseType:houseType houseDes:houseDes housePrice:housePrice houseAvgPrice:houseAvgPrice];
 }

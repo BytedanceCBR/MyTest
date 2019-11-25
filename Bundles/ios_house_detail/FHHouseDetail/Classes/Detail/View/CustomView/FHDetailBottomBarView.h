@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)startLoading;
 - (void)stopLoading;
 
+// 新房 加群看房功能
+- (void)refreshBottomBarWithGroupChatTitle:(NSString *)groupChatTitle;
+
 @end
 
 NS_ASSUME_NONNULL_END

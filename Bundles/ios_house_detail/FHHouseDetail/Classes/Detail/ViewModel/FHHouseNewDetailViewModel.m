@@ -287,6 +287,8 @@
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.socialInfo = model.data.socialInfo;
+    
     __weak typeof(self) wSelf = self;
     if (!model.isInstantData && model.data) {
         [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHDetailRelatedCourtModel * _Nullable model, NSError * _Nullable error) {
