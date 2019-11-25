@@ -49,7 +49,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) BOOL isClickTab;
 @property (nonatomic, assign) BOOL isRefreshing;
 @property (nonatomic, assign) BOOL isShowToasting;
-@property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
+@property (nonatomic, weak) ArticleListNotifyBarView * notifyBar;
 @property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic) BOOL adUGCHadJump;
 @property (nonatomic, strong) TTTopBar *topBar;
