@@ -46,6 +46,7 @@
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import "FHHouseDetailViewController.h"
 #import <FHHouseBase/FHHouseContactDefines.h>
+#import "FHHouseNewsSocialModel.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -377,14 +378,19 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 }
 
-- (void)setSocialInfo:(FHDetailContactModel *)socialInfo {
+- (void)setSocialInfo:(FHHouseNewsSocialModel *)socialInfo {
     _socialInfo = socialInfo;
-    // 判断是否 add by zyk
+    NSString *groupChatTitle = @"";// 隐藏
+    // add by zyk  加群看房 默认文案 是否要改
     if (socialInfo) {
-        [self.bottomBar refreshBottomBarWithGroupChatTitle:@""];
-    } else {
-        [self.bottomBar refreshBottomBarWithGroupChatTitle:@"加群看房"];
+        if (socialInfo.socialGroupInfo.socialGroupId.length > 0 && (socialInfo.socialGroupInfo.userAuth > UserAuthTypeNormal || [socialInfo.socialGroupInfo.chatStatus.conversationId integerValue] > 0)) {
+            groupChatTitle = socialInfo.groupChatLinkTitle.length > 0 ? socialInfo.groupChatLinkTitle : @"加群看房";
+        } else {
+            groupChatTitle = @"";
+        }
     }
+    // @"" 隐藏加群看房 按钮
+    [self.bottomBar refreshBottomBarWithGroupChatTitle:groupChatTitle];
 }
 
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
