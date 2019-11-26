@@ -20,7 +20,7 @@
 @interface FHMainOldTopTagsView ()
 
 @property (nonatomic, weak)     FHConfigDataModel       *wConfigData;
-@property (nonatomic, weak)     FHSearchFilterConfigOption       *tagsFilterData;
+@property (nonatomic, strong)     FHSearchFilterConfigOption       *tagsFilterData;
 
 @end
 
@@ -81,6 +81,11 @@
             }
         }
     }
+}
+
+- (BOOL)hasTagData
+{
+    return (self.tagsFilterData != nil);
 }
 
 // 点击

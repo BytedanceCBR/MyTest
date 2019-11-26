@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)     dispatch_block_t       itemClickBlk;
 @property (nonatomic, copy)     NSString* condition;
 
+- (BOOL)hasTagData;
+
 @end
 
 @interface FHMainOldTagsView : UIControl

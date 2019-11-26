@@ -509,10 +509,12 @@
         make.edges.mas_equalTo(self.filterContainerView);
     }];
     
+    BOOL hasTagData = [self.topTagsView hasTagData];
+    CGFloat tagHeight = hasTagData ? kFilterTagsViewHeight : 0;
     [self.topTagsView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.filterContainerView.mas_bottom);
         make.left.right.mas_equalTo(self.containerView);
-        make.height.mas_equalTo(kFilterTagsViewHeight);
+        make.height.mas_equalTo(tagHeight);
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
