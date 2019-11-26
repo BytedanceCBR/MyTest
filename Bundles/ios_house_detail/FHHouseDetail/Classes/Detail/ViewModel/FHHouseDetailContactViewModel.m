@@ -672,6 +672,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
     if ([TTAccountManager isLogin]) {
         // 已登录
+        ((FHBaseViewController *)self.belongsVC).hasValidateData = NO;
         [(FHBaseViewController *)self.belongsVC startLoading];
         [self p_gotoGroupChat_hasLogin];
     } else {
@@ -682,19 +683,20 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)p_gotoGroupChat_hasLogin {
     if ([TTAccountManager isLogin]) {
         // 已登录
-        if ([IMManager shareInstance].session.state == onRequestTokenFailed) {
+        if ([IMManager shareInstance].session.state == onAuthSuccessed) {
             // IM 链接成功
+            ((FHBaseViewController *)self.belongsVC).hasValidateData = YES;
             [(FHBaseViewController *)self.belongsVC endLoading];
             [self p_gotoGroupChat];
         } else {
             // IM 正在链接
             if (self.gotoGroupChatCount >= 4) {
                 self.gotoGroupChatCount = 0;
+                ((FHBaseViewController *)self.belongsVC).hasValidateData = YES;
                 [(FHBaseViewController *)self.belongsVC endLoading];
                 return;
             }
             __weak typeof(self) weakSelf = self;
-            [(FHBaseViewController *)self.belongsVC startLoading];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 weakSelf.gotoGroupChatCount += 1;
                 [weakSelf p_gotoGroupChat_hasLogin];
@@ -707,7 +709,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.socialInfo == nil) {
         return;
     }
-    // 未关注和关注都直接跳转-再调一次关注接口
     if ([TTReachability isNetworkConnected]) {
         if (self.socialInfo.socialGroupInfo.chatStatus.currentConversationCount >= self.socialInfo.socialGroupInfo.chatStatus.maxConversationCount && self.socialInfo.socialGroupInfo.chatStatus.maxConversationCount > 0) {
             [[ToastManager manager] showToast:@"成员已达上限"];
@@ -724,10 +725,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         } else {
             [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
         }
-        // 关注
-        [[FHUGCConfig sharedInstance] followUGCBy:self.socialInfo.socialGroupInfo.socialGroupId isFollow:YES completion:^(BOOL isSuccess) {
-            
-        }];
     } else {
         [[ToastManager manager] showToast:@"网络异常"];
     }
@@ -796,9 +793,20 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             // 登录成功
             if ([TTAccountManager isLogin]) {
                 [wSelf groupChatAction];
+                [wSelf followSocialGroup];
             }
         }
     }];
+}
+
+// 登录成功之后关注圈子
+- (void)followSocialGroup {
+    // 关注
+    if (self.socialInfo && self.socialInfo.socialGroupInfo.socialGroupId.length > 0) {
+        [[FHUGCConfig sharedInstance] followUGCBy:self.socialInfo.socialGroupInfo.socialGroupId isFollow:YES completion:^(BOOL isSuccess) {
+            
+        }];
+    }
 }
 
 // 回调方法
