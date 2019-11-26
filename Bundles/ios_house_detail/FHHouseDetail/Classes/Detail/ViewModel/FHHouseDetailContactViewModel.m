@@ -47,6 +47,8 @@
 #import "FHHouseDetailViewController.h"
 #import <FHHouseBase/FHHouseContactDefines.h>
 #import "FHHouseNewsSocialModel.h"
+#import "FHUGCConfig.h"
+#import "FHLoginViewController.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -60,6 +62,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property (nonatomic, strong) TTShareManager *shareManager;
 @property (nonatomic, copy)     NSDictionary       *shareExtraDic;// 额外分享参数字典
 @property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
+@property (nonatomic, assign)   NSInteger       gotoGroupChatCount;
 
 @end
 
@@ -75,6 +78,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _showenOnline = NO;
         _onLineName = @"在线联系";
         _phoneCallName = @"电话咨询";
+        _gotoGroupChatCount = 0;
         
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:_houseType houseId:_houseId];
 
@@ -660,7 +664,141 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 // 新房群聊按钮点击
 - (void)groupChatAction {
-    [[ToastManager manager] showToast:@"加群看房 点击"];
+    if (self.gotoGroupChatCount > 0) {
+        return;
+    }
+    if (self.socialInfo == nil) {
+        return;
+    }
+    if ([TTAccountManager isLogin]) {
+        // 已登录
+        [(FHBaseViewController *)self.belongsVC startLoading];
+        [self p_gotoGroupChat_hasLogin];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)p_gotoGroupChat_hasLogin {
+    if ([TTAccountManager isLogin]) {
+        // 已登录
+        if ([IMManager shareInstance].session.state == onRequestTokenFailed) {
+            // IM 链接成功
+            [(FHBaseViewController *)self.belongsVC endLoading];
+            [self p_gotoGroupChat];
+        } else {
+            // IM 正在链接
+            if (self.gotoGroupChatCount >= 4) {
+                self.gotoGroupChatCount = 0;
+                [(FHBaseViewController *)self.belongsVC endLoading];
+                return;
+            }
+            __weak typeof(self) weakSelf = self;
+            [(FHBaseViewController *)self.belongsVC startLoading];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                weakSelf.gotoGroupChatCount += 1;
+                [weakSelf p_gotoGroupChat_hasLogin];
+            });
+        }
+    }
+}
+
+- (void)p_gotoGroupChat {
+    if (self.socialInfo == nil) {
+        return;
+    }
+    // 未关注和关注都直接跳转-再调一次关注接口
+    if ([TTReachability isNetworkConnected]) {
+        if (self.socialInfo.socialGroupInfo.chatStatus.currentConversationCount >= self.socialInfo.socialGroupInfo.chatStatus.maxConversationCount && self.socialInfo.socialGroupInfo.chatStatus.maxConversationCount > 0) {
+            [[ToastManager manager] showToast:@"成员已达上限"];
+        } else if ([self.socialInfo.socialGroupInfo.chatStatus.conversationId integerValue] <= 0) {
+            if (self.socialInfo.socialGroupInfo.userAuth > UserAuthTypeNormal) {
+                [self gotoGroupChatVC:@"-1" isCreate:YES autoJoin:NO];
+            }
+        } else if(self.socialInfo.socialGroupInfo.chatStatus.conversationStatus == joinConversation) {
+            [self gotoGroupChatVC:self.socialInfo.socialGroupInfo.chatStatus.conversationId isCreate:NO autoJoin:NO];
+        } else if (self.socialInfo.socialGroupInfo.chatStatus.conversationStatus == leaveConversation) {
+            [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
+        } else if(self.socialInfo.socialGroupInfo.chatStatus.conversationStatus == KickOutConversation) {
+            [[ToastManager manager]showToast:@"你已经被移出群中"];
+        } else {
+            [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
+        }
+        // 关注
+        [[FHUGCConfig sharedInstance] followUGCBy:self.socialInfo.socialGroupInfo.socialGroupId isFollow:YES completion:^(BOOL isSuccess) {
+            
+        }];
+    } else {
+        [[ToastManager manager] showToast:@"网络异常"];
+    }
+}
+
+- (void)gotoGroupChatVC:(NSString *)convId isCreate:(BOOL)isCreate autoJoin:(BOOL)autoJoin {
+    //跳转到群聊页面
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"conversation_id"] = convId;
+    dict[@"chat_avatar"] = self.socialInfo.socialGroupInfo.avatar;
+    dict[@"chat_name"] = self.socialInfo.socialGroupInfo.socialGroupName;
+    dict[@"community_id"] = self.socialInfo.socialGroupInfo.socialGroupId;
+    NSMutableDictionary *reportDic = [NSMutableDictionary dictionary];
+    // add by zyk 埋点入口
+    NSString *pageType = self.tracerDict[@"page_type"] ? : @"be_null";
+    [reportDic setValue:pageType forKey:@"enter_from"];
+    [reportDic setValue:@"ugc_member_talk" forKey:@"element_from"];
+    
+    if (isCreate) {
+        dict[@"is_create"] = @"1";
+        NSString *title = [@"" stringByAppendingFormat:@"%@(%@)", self.socialInfo.socialGroupInfo.socialGroupName, self.socialInfo.socialGroupInfo.followerCount];
+        dict[@"chat_title"] = title;
+        dict[@"chat_member_count"] = self.socialInfo.socialGroupInfo.followerCount;
+        dict[@"idempotent_id"] = isEmptyString(self.socialInfo.socialGroupInfo.chatStatus.idempotentId) ? self.socialInfo.socialGroupInfo.socialGroupId : self.socialInfo.socialGroupInfo.chatStatus.idempotentId;
+    } else if (autoJoin) {
+        dict[@"auto_join"] = @"1";
+        dict[@"conversation_id"] = self.socialInfo.socialGroupInfo.chatStatus.conversationId;
+        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:self.socialInfo.socialGroupInfo.chatStatus.conversationShortId] stringValue];
+        NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", self.socialInfo.socialGroupInfo.socialGroupName, self.socialInfo.socialGroupInfo.chatStatus.currentConversationCount];
+        dict[@"chat_title"] = title;
+    } else {
+        NSInteger count = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:convId].participantsCount;
+        NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", self.socialInfo.socialGroupInfo.socialGroupName, count];
+        dict[@"chat_title"] = title;
+        dict[@"in_conversation"] = @"1";
+        dict[@"conversation_id"] = self.socialInfo.socialGroupInfo.chatStatus.conversationId;
+        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:self.socialInfo.socialGroupInfo.chatStatus.conversationShortId] stringValue];
+    }
+    dict[@"member_role"] = [NSString stringWithFormat: @"%d", self.socialInfo.socialGroupInfo.userAuth];
+    dict[@"is_admin"] = @(self.socialInfo.socialGroupInfo.userAuth > UserAuthTypeNormal);
+    dict[@"report_params"] = [[reportDic JSONRepresentation] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    WeakSelf;
+    dict[@"group_chat_page_exit_block"] = ^(void) {
+        StrongSelf;
+        // 返回是否需要刷新数据
+    };
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL* url = [NSURL URLWithString:@"sslocal://open_group_chat"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+}
+
+- (void)gotoLogin {
+    self.gotoGroupChatCount = 0;
+    // add by zyk 埋点
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:@"feed_detail" forKey:@"enter_from"];
+    [params setObject:@"feed_like" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                [wSelf groupChatAction];
+            }
+        }
+    }];
 }
 
 // 回调方法
