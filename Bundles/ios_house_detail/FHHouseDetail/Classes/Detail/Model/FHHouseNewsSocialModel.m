@@ -19,22 +19,6 @@
 }
 @end
 
-@implementation FHHouseNewsSocialSocialActiveInfoModel
-+ (JSONKeyMapper*)keyMapper
-{
-  NSDictionary *dict = @{
-    @"avatarUrl": @"avatar_url",
-  };
-  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-     return dict[keyName]?:keyName;
-  }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
 @implementation FHHouseNewsSocialModel
 + (JSONKeyMapper*)keyMapper
 {

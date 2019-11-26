@@ -61,10 +61,9 @@
         self.descLabel.text = descStr;
         if (socialInfo.socialActiveInfo && [socialInfo.socialActiveInfo isKindOfClass:[NSArray class]]) {
             if (socialInfo.socialActiveInfo.count > 0) {
-                FHHouseNewsSocialSocialActiveInfoModel *model = socialInfo.socialActiveInfo[0];
-                // add by zyk 头像模型要改
-                [self.iconImageView bd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
-                self.contentLabel.text = model.title;
+                FHDetailCommunityEntryActiveInfoModel *model = socialInfo.socialActiveInfo[0];
+                [self.iconImageView bd_setImageWithURL:[NSURL URLWithString:model.activeUserAvatar] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+                self.contentLabel.text = model.suggestInfo;
             } else {
                 self.contentLabel.text = @"";
                 self.iconImageView.image = [UIImage imageNamed:@"detail_default_avatar"];
