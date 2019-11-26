@@ -983,6 +983,9 @@ extern NSString *const INSTANT_DATA_KEY;
                     if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
                         itemModel.topMargin = 0;
                     }
+                    if ((itemModel.houseType.integerValue == FHHouseTypeRentHouse || itemModel.houseType.integerValue == FHHouseTypeNeighborhood) && idx == 0) {
+                        itemModel.topMargin = 10;
+                    }
                     theItemModel = itemModel;
                 }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
                     FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;

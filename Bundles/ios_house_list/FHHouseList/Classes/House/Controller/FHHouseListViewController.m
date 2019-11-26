@@ -510,23 +510,23 @@
     }];
     
     [self.topTagsView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.redirectTipView.mas_bottom);
+        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
         make.left.right.mas_equalTo(self.containerView);
         make.height.mas_equalTo(kFilterTagsViewHeight);
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (self.topTagsView) {
-            make.top.mas_equalTo(self.topTagsView.mas_bottom);
-        }else {
-            make.top.mas_equalTo(self.redirectTipView.mas_bottom);
-        }
+        make.top.mas_equalTo(self.redirectTipView.mas_bottom);
         make.left.right.bottom.mas_equalTo(self.containerView);
     }];
     
     [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        if (self.topTagsView) {
+            make.top.mas_equalTo(self.topTagsView.mas_bottom);
+        }else {
+            make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        }
         make.height.mas_equalTo(0);
     }];
     
@@ -594,7 +594,6 @@
 
     self.automaticallyAdjustsScrollViewInsets = NO;
 
-    [self setupTopTagsView];
     [_containerView addSubview:self.tableView];
     
     //error view
@@ -605,7 +604,8 @@
     //notifyview
     self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.notifyBarView];
-    
+    [self setupTopTagsView];
+
     self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.redirectTipView];
 
@@ -636,7 +636,7 @@
 {
     if (self.houseType == FHHouseTypeSecondHandHouse) {
         self.topTagsView = [[FHMainOldTopTagsView alloc] init];
-        [self.containerView addSubview:self.topTagsView];
+        [self.view addSubview:self.topTagsView];
         self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterTagsViewHeight);
         __weak typeof(self) weakSelf = self;
         self.topTagsView.itemClickBlk = ^{
