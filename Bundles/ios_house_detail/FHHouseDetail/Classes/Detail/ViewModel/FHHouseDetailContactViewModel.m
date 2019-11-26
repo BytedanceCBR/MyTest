@@ -782,7 +782,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     self.gotoGroupChatCount = 0;
     // add by zyk 埋点
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setObject:@"feed_detail" forKey:@"enter_from"];
+    NSString *pageType = self.tracerDict[@"page_type"] ? : @"be_null";
+    [params setObject:pageType forKey:@"enter_from"];
     [params setObject:@"feed_like" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
