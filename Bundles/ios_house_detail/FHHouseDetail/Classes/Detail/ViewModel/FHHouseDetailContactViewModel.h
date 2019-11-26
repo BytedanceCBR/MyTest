@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHHouseDetailFollowUpViewModel;
 @class FHDetailImShareInfoModel;
 @class FHDetailUGCSocialModel;
+@class FHHouseContactConfigModel;
 
 @interface FHHouseDetailContactViewModel : NSObject
 
@@ -35,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHDetailImShareInfoModel* imShareInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
 @property (nonatomic, strong)   FHDetailUGCSocialModel       *socialInfo;// 新房圈子信息
+@property (nonatomic, strong)   FHHouseContactConfigModel    *socialContactConfig;// 圈子拨打电话存储数据
 
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
@@ -64,6 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)destroyRNPreLoadCache;
 
 - (void)updateLoadFinish;
+
+- (void)checkSocialPhoneCall;
 
 // 回调方法
 - (void)vc_viewDidAppear:(BOOL)animated;

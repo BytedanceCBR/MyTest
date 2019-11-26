@@ -596,12 +596,25 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         contactConfig.from = extraDict[@"from"];
     }
     
+    // 圈子电话咨询数据备份
+    self.socialContactConfig = nil;
+    if (self.houseType == FHHouseTypeNewHouse) {
+        // 拨打电话 弹窗显示的话 本数据保留，否则 删除 nil
+        self.socialContactConfig = [[FHHouseContactConfigModel alloc] initWithDictionary:params error:nil];
+        self.socialContactConfig.houseType = self.houseType;
+        self.socialContactConfig.houseId = self.houseId;
+        self.socialContactConfig.phone = self.contactPhone.phone;
+        self.socialContactConfig.realtorId = self.contactPhone.realtorId;
+    }
+    
     [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         if(success && [wself.phoneCallViewModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *)wself.phoneCallViewModel.belongsVC;
             vc.isPhoneCallShow = YES;
             vc.phoneCallRealtorId = contactConfig.realtorId;
             vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
+        } else {
+            wself.socialContactConfig = nil;
         }
     }];
     
@@ -613,6 +626,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     // 静默关注功能
     [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
 
+}
+
+// 新房 拨打电话后是否需要添加弹窗 留资入口
+- (void)checkSocialPhoneCall {
+    if (self.socialContactConfig) {
+        NSMutableDictionary *userInfo = @{}.mutableCopy;
+        userInfo[@"contact_model"] = self.socialContactConfig;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHDetailUGCSocialEntranceNoti" object:nil userInfo:@{@"user_info":userInfo}];
+        self.socialContactConfig = nil;
+    }
 }
 
 - (void)imAction {

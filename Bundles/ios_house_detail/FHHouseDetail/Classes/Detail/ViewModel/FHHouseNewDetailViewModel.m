@@ -29,6 +29,7 @@
 #import "FHDetailNewUGCSocialCell.h"
 #import "FHDetailSocialEntranceView.h"
 #import "FHHouseFillFormHelper.h"
+#import "FHHouseContactConfigModel.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -151,6 +152,15 @@
                 }
             }
             // 拨打电话 // add by zyk
+            FHHouseContactConfigModel *socialContactConfig = userInfo[@"contact_model"];
+            if ([socialContactConfig isKindOfClass:[FHHouseContactConfigModel class]]) {
+                FHHouseType houseType = socialContactConfig.houseType;
+                NSString *houseId = socialContactConfig.houseId;
+                if (houseId.length > 0 && houseType == self.houseType && [self.houseId isEqualToString:houseId]) {
+                    // add by zyk 显示
+                    self.socialEntranceView.hidden = NO;
+                }
+            }
         }
     }
 }

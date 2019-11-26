@@ -53,6 +53,8 @@
 @property (nonatomic, strong) CTCallCenter *callCenter;
 //是否拨打电话已接通
 @property (nonatomic, assign) BOOL isPhoneCallPickUp;
+//是否拨打电话（不区分是否接通）
+@property (nonatomic, assign) BOOL isPhoneCalled;// 新房UGC留资使用
 
 @end
 
@@ -136,6 +138,7 @@
     [self setupUI];
     [self setupCallCenter];
     self.isViewDidDisapper = NO;
+    self.isPhoneCalled = NO;
     
     if(![SSCommonLogic disableDetailInstantShow] && [TTReachability isNetworkConnected]){
         //有网且打开秒开的情况下才显示
@@ -384,6 +387,7 @@
         }else{
             //doNothing
         }
+        self.isPhoneCalled = YES;
     };
 }
 
@@ -613,6 +617,12 @@
 }
 
 - (void)applicationDidBecomeActive {
+    // 新房留资后弹窗
+    if (self.isPhoneCalled) {
+        self.isPhoneCalled = NO;
+        [self.viewModel.contactViewModel checkSocialPhoneCall];
+    }
+    // 反馈弹窗
     if([self isShowFeedbackView]){
         self.isPhoneCallPickUp = NO;
         self.isPhoneCallShow = NO;
@@ -620,6 +630,8 @@
         self.phoneCallRealtorId = nil;
         self.phoneCallRequestId = nil;
     }
+    // 数据清除
+    self.isPhoneCallShow = NO;
 }
 
 - (BOOL)isShowFeedbackView {
