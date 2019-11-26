@@ -15,6 +15,7 @@
         self.contentView.backgroundColor = [UIColor clearColor];
         ArticleTabBarStyleNewsListViewController *ariticleListVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
         ariticleListVC.isShowTopSearchPanel = NO;
+        self.contentVC = ariticleListVC;
         [self.contentView addSubview:ariticleListVC.view];
     }
     return self;

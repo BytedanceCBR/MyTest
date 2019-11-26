@@ -14,6 +14,7 @@
     if (self){
         self.contentView.backgroundColor = [UIColor clearColor];
         FHHomeViewController *homeViewVC = [[FHHomeViewController alloc] init];
+        self.contentVC = homeViewVC;
         [self.contentView addSubview:homeViewVC.view];
     }
     
