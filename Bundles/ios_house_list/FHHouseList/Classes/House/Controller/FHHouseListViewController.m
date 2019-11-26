@@ -28,10 +28,12 @@
 #import "FHCommuteFilterView.h"
 #import "FHCommuteManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHMainOldTopTagsView.h"
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
 #define COMMUTE_HEIGHT     42
+#define kFilterTagsViewHeight 58
 
 @interface FHHouseListViewController ()<TTRouteInitializeProtocol, FHHouseListViewModelDelegate>
 
@@ -66,6 +68,7 @@
 @property (nonatomic , strong) NSDictionary *tracerDict; // 埋点
 
 @property (nonatomic , assign) FHHouseListSearchType searchType;
+@property(nonatomic , strong) FHMainOldTopTagsView *topTagsView;
 
 @end
 
@@ -406,7 +409,9 @@
     [self refreshNavBar:self.houseType placeholder:placeholder inputText:nil];
     
     [self.houseFilterBridge setFilterConditions:paramObj.queryParams];
-    
+    if (self.topTagsView && paramObj.queryParams) {
+        self.topTagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:paramObj.queryParams];
+    }
 }
 -(void)handleSugSelection:(TTRouteParamObj *)paramObj {
     
@@ -504,8 +509,18 @@
         make.edges.mas_equalTo(self.filterContainerView);
     }];
     
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.topTagsView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.redirectTipView.mas_bottom);
+        make.left.right.mas_equalTo(self.containerView);
+        make.height.mas_equalTo(kFilterTagsViewHeight);
+    }];
+    
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        if (self.topTagsView) {
+            make.top.mas_equalTo(self.topTagsView.mas_bottom);
+        }else {
+            make.top.mas_equalTo(self.redirectTipView.mas_bottom);
+        }
         make.left.right.bottom.mas_equalTo(self.containerView);
     }];
     
@@ -579,6 +594,7 @@
 
     self.automaticallyAdjustsScrollViewInsets = NO;
 
+    [self setupTopTagsView];
     [_containerView addSubview:self.tableView];
     
     //error view
@@ -614,6 +630,34 @@
         }
     }
 
+}
+
+- (void)setupTopTagsView
+{
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        self.topTagsView = [[FHMainOldTopTagsView alloc] init];
+        [self.containerView addSubview:self.topTagsView];
+        self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterTagsViewHeight);
+        __weak typeof(self) weakSelf = self;
+        self.topTagsView.itemClickBlk = ^{
+            __block NSString *value_id = nil;
+            NSArray *temp = weakSelf.topTagsView.lastConditionDic[@"tags%5B%5D"];
+            if ([temp isKindOfClass:[NSArray class]] && temp.count > 0) {
+                [temp enumerateObjectsUsingBlock:^(NSString*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if (value_id.length > 0) {
+                        value_id = [NSString stringWithFormat:@"%@,%@",value_id,obj];
+                    } else {
+                        value_id = obj;
+                    }
+                }];
+            } else {
+                value_id = nil;//
+            }
+            [weakSelf.houseFilterBridge setFilterConditions:weakSelf.topTagsView.lastConditionDic];
+            [weakSelf.houseFilterViewModel trigerConditionChanged];
+            [weakSelf.viewModel addTagsViewClick:value_id];
+        };
+    }
 }
 
 #pragma mark - show notify

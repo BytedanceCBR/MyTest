@@ -60,6 +60,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBaseNewHouseCell.h>
+#import "FHMainOldTopTagsView.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -121,6 +122,7 @@ extern NSString *const INSTANT_DATA_KEY;
 //@property (nonatomic, strong) FHNewHouseListDataModel *currentNewDataModel;
 
 @property (nonatomic, weak)     FHFakeInputNavbar       *navbar;
+@property(nonatomic , weak) FHMainOldTopTagsView *topTagsView;
 
 @end
 
@@ -251,15 +253,23 @@ extern NSString *const INSTANT_DATA_KEY;
             self.tracerModel = [FHTracerModel makerTracerModelWithDic:traceDictParams];
             self.originFrom = self.tracerModel.originFrom;
         }
-        
-
-        
         [self configTableView];
-
         NSLog(@"FENGBO WTF");
 
     }
     return self;
+}
+
+- (void)addTagsViewClick:(NSString *)value_id
+{
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
+    param[UT_ELEMENT_TYPE] = @"select_options";
+    param[UT_SEARCH_ID] = self.searchId ? : @"be_null";
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ? : @"be_null";
+    param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+    param[@"value_id"] = value_id ?: @"be_null";
+    TRACK_EVENT(@"click_options", param);
 }
 
 // 注册cell类型
