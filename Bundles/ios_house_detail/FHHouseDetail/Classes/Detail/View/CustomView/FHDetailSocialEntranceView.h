@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 新房 填表单之后入口
 @interface FHDetailSocialEntranceView : UIView
 
+@property (nonatomic, weak)     UIView       *parentView;
+
 @end
 
 NS_ASSUME_NONNULL_END

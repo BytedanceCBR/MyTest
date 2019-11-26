@@ -30,6 +30,8 @@
 #import "FHDetailSocialEntranceView.h"
 #import "FHHouseFillFormHelper.h"
 #import "FHHouseContactConfigModel.h"
+#import "FHDetailNoticeAlertView.h"
+#import <TTDeviceHelper+FHHouse.h>
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -131,20 +133,28 @@
 }
 
 - (void)registerNoti {
-    if (!self.hasRegisterNoti && self.socialEntranceView) {
+    if (!self.hasRegisterNoti) {
         self.hasRegisterNoti = YES;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ugcSocialEntranceNoti:) name:@"kFHDetailUGCSocialEntranceNoti" object:nil];
     }
 }
 
 - (void)ugcSocialEntranceNoti:(NSNotification *)notification {
-    if (notification && self.houseType == FHHouseTypeNewHouse && self.socialEntranceView) {
+    if (notification && self.houseType == FHHouseTypeNewHouse && self.weakSocialInfo) {
         NSDictionary *userInfo = notification.userInfo[@"user_info"];
         if (userInfo && [userInfo isKindOfClass:[NSDictionary class]]) {
             BOOL socialEntranceViewShowen = NO;
             // 填表单
+            FHDetailNoticeAlertView *formAlertView = nil;
             FHHouseFillFormConfigModel *configModel = userInfo[@"config_model"];
             if ([configModel isKindOfClass:[FHHouseFillFormConfigModel class]]) {
+                NSHashTable *table = userInfo[@"alert_view"];
+                if (table) {
+                    FHDetailNoticeAlertView *alertView = (FHDetailNoticeAlertView *)unwrap_weak(table);
+                    if ([alertView isKindOfClass:[FHDetailNoticeAlertView class]]) {
+                        formAlertView = alertView;
+                    }
+                }
                 FHHouseType houseType = configModel.houseType;
                 NSString *houseId = configModel.houseId;
                 if (houseId.length > 0 && houseType == self.houseType && [self.houseId isEqualToString:houseId]) {
@@ -163,20 +173,44 @@
             // 显示入口弹窗
             if (socialEntranceViewShowen) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self showSocialEntranceView];
+                    [self showSocialEntranceViewWith:formAlertView];
                 });
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    self.socialEntranceView.hidden = YES;
+                    [formAlertView dismiss]; // dismiss
                 });
+            }
+        }
+    } else {
+        // 不处理的情况也要dismiss弹窗--新房填表单后逻辑
+        NSDictionary *userInfo = notification.userInfo[@"user_info"];
+        if (userInfo && [userInfo isKindOfClass:[NSDictionary class]]) {
+            NSHashTable *table = userInfo[@"alert_view"];
+            if (table) {
+                FHDetailNoticeAlertView *alertView = (FHDetailNoticeAlertView *)unwrap_weak(table);
+                if ([alertView isKindOfClass:[FHDetailNoticeAlertView class]]) {
+                    [alertView dismiss];
+                }
             }
         }
     }
 }
 
-- (void)showSocialEntranceView {
-    self.socialEntranceView.hidden = NO;
+- (void)showSocialEntranceViewWith:(FHDetailNoticeAlertView *)alertView {
+    if (alertView == nil) {
+        alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"" subtitle:@"" btnTitle:@""];
+        [alertView showFrom:self.detailController.view];
+    }
+    CGFloat width = 280.0 * [TTDeviceHelper scaleToScreen375];
+    if (![TTDeviceHelper isScreenWidthLarge320]) {
+        width = 280;
+    }
     // add by zyk 赋值数据 改变高度
+
+    FHDetailSocialEntranceView *v = [[FHDetailSocialEntranceView alloc] initWithFrame:CGRectZero];
+    v.backgroundColor = [UIColor redColor];
+    v.parentView = alertView;
+    [alertView showAnotherView:v];
 }
 
 - (void)dealloc

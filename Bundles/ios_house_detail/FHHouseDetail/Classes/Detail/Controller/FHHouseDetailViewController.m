@@ -35,7 +35,6 @@
 @property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
 @property (nonatomic, strong) FHDetailFeedbackView *feedbackView;
 @property(nonatomic , strong) FHDetailQuestionButton *questionBtn;
-@property (nonatomic, strong) FHDetailSocialEntranceView *socialEntranceView;// 新房 填表单后入口
 
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
@@ -328,20 +327,6 @@
         make.top.mas_equalTo(self.bottomBar.mas_top);
         make.left.right.bottom.mas_equalTo(self.view);
     }];
-    
-    // 新房 填表单后入口
-    if (self.houseType == FHHouseTypeNewHouse) {
-        _socialEntranceView = [[FHDetailSocialEntranceView alloc] init];
-        _socialEntranceView.backgroundColor = [UIColor redColor];
-        _socialEntranceView.hidden = YES;
-        [self.view addSubview:_socialEntranceView];
-        [self.socialEntranceView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self.view);
-            make.bottom.mas_equalTo(self.bottomBar.mas_top);
-            make.height.mas_equalTo(100);
-        }];
-        self.viewModel.socialEntranceView = self.socialEntranceView;
-    }
     
     [self.view bringSubviewToFront:_navBar];
 }
