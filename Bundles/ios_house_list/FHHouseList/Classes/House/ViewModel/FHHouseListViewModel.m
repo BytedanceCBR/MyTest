@@ -57,6 +57,7 @@
 #import "FHNeighbourhoodAgencyCardCell.h"
 #import <FHHouseDetail/FHDetailBaseModel.h>
 #import "FHHouseListRecommendTipCell.h"
+#import "FHWebViewSchemaUtils.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBaseNewHouseCell.h>
@@ -255,8 +256,6 @@ extern NSString *const INSTANT_DATA_KEY;
 
         
         [self configTableView];
-
-        NSLog(@"FENGBO WTF");
 
     }
     return self;
@@ -845,6 +844,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 FHListSearchHouseDataModel *houseModel = ((FHListSearchHouseModel *)model).data;
                 self.houseDataModel = houseModel;
                 self.houseListOpenUrl = houseModel.houseListOpenUrl;
+                self.searchPageOpenUrl = houseModel.searchHistoryOpenUrl;
                 self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
                 hasMore = houseModel.hasMore;
                 refreshTip = houseModel.refreshTip;
@@ -874,6 +874,7 @@ extern NSString *const INSTANT_DATA_KEY;
             self.houseDataModel = houseModel;
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
+            self.searchPageOpenUrl = houseModel.searchHistoryOpenUrl;
             if (self.houseListOpenUrl.length <= 0) {
                 needUploadMapFindHouseUrlEvent = YES;
             }
@@ -890,6 +891,7 @@ extern NSString *const INSTANT_DATA_KEY;
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
+            self.searchPageOpenUrl = houseModel.searchHistoryOpenUrl;
             if (self.houseListOpenUrl.length <= 0) {
                 needUploadMapFindHouseUrlEvent = YES;
             }
@@ -913,6 +915,7 @@ extern NSString *const INSTANT_DATA_KEY;
             self.houseDataModel = houseModel;
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
+            self.searchPageOpenUrl = houseModel.searchHistoryOpenUrl;
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             if (houseModel.items.count > 0) {
@@ -1237,7 +1240,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [self showPoiSearch];
         return;
     }
-    
+
     NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
     //house_search
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
@@ -1258,7 +1261,12 @@ extern NSString *const INSTANT_DATA_KEY;
     if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
         urlStr = [NSString stringWithFormat:@"sslocal://house_search_deal_neighborhood"];
     }else {
-       urlStr = @"sslocal://house_search";
+        if (self.searchPageOpenUrl) {
+           //以本地的house_type为准
+            urlStr = self.searchPageOpenUrl;
+        } else {
+            urlStr = @"sslocal://house_search";
+        }
     }
     NSURL *url = [NSURL URLWithString:urlStr];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];

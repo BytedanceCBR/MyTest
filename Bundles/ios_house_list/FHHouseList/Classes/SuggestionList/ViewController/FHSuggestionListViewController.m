@@ -25,6 +25,7 @@
 @property (nonatomic, strong)   FHSuggestionListViewModel      *viewModel;
 
 @property (nonatomic, assign)   FHEnterSuggestionType       fromSource;
+@property (nonatomic, copy)   NSString*   autoFillInputText;
 
 @property (nonatomic, weak)     id<FHHouseSuggestionDelegate>    suggestDelegate;
 @property (nonatomic, weak)     UIViewController   *backListVC; // 需要返回到的页面
@@ -130,6 +131,10 @@
             self.homePageRollDic[@"house_type"] = @(self.viewModel.houseType);
             self.viewModel.homePageRollDic = self.homePageRollDic;
         }
+        //自动填充，并初始请求
+        if (paramObj.allParams[@"search_history_text"]) {
+            self.autoFillInputText = paramObj.allParams[@"search_history_text"];
+        }
     }
     return self;
 }
@@ -156,6 +161,9 @@
     self.hasDismissedVC = NO;
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    if (self.autoFillInputText) {
+        self.naviBar.searchInput.text = self.autoFillInputText;
+    }
     self.houseType = self.viewModel.houseType;// 执行网络请求等逻辑
     __weak typeof(self) weakSelf = self;
     self.panBeginAction = ^{
@@ -476,8 +484,11 @@
 - (void)requestData {
     // Sug
     NSString *text = self.naviBar.searchInput.text;
-    if (text.length > 0) {
+    BOOL hasText = text.length > 0;
+    if (hasText) {
          [self requestSuggestion:text];
+        _suggestTableView.hidden = !hasText;
+        _historyTableView.hidden = hasText;
     }
     // 历史记录 + 猜你想搜
     [self.viewModel clearHistoryTableView];
