@@ -39,6 +39,7 @@
 
 @property (nonatomic, assign)   BOOL       hasRegisterNoti;
 //@property (nonatomic, strong , nullable) FHDetailNewModel *newDetailDataModel;
+@property (nonatomic, weak)     FHHouseNewsSocialModel       *weakSocialInfo;
 
 @end
 
@@ -67,8 +68,7 @@
     
     [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
     
-    // add by zyk
-    [self.tableView registerClass:[FHDetailNewUGCSocialCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailUGCSocialModel class])];
+    [self.tableView registerClass:[FHDetailNewUGCSocialCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseNewsSocialModel class])];
     
 }
 //// cell class
@@ -141,28 +141,42 @@
     if (notification && self.houseType == FHHouseTypeNewHouse && self.socialEntranceView) {
         NSDictionary *userInfo = notification.userInfo[@"user_info"];
         if (userInfo && [userInfo isKindOfClass:[NSDictionary class]]) {
+            BOOL socialEntranceViewShowen = NO;
             // 填表单
             FHHouseFillFormConfigModel *configModel = userInfo[@"config_model"];
             if ([configModel isKindOfClass:[FHHouseFillFormConfigModel class]]) {
                 FHHouseType houseType = configModel.houseType;
                 NSString *houseId = configModel.houseId;
                 if (houseId.length > 0 && houseType == self.houseType && [self.houseId isEqualToString:houseId]) {
-                    // add by zyk 显示
-                    self.socialEntranceView.hidden = NO;
+                    socialEntranceViewShowen = YES;
                 }
             }
-            // 拨打电话 // add by zyk
+            // 拨打电话
             FHHouseContactConfigModel *socialContactConfig = userInfo[@"contact_model"];
             if ([socialContactConfig isKindOfClass:[FHHouseContactConfigModel class]]) {
                 FHHouseType houseType = socialContactConfig.houseType;
                 NSString *houseId = socialContactConfig.houseId;
                 if (houseId.length > 0 && houseType == self.houseType && [self.houseId isEqualToString:houseId]) {
-                    // add by zyk 显示
-                    self.socialEntranceView.hidden = NO;
+                    socialEntranceViewShowen = YES;
                 }
+            }
+            // 显示入口弹窗
+            if (socialEntranceViewShowen) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showSocialEntranceView];
+                });
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.socialEntranceView.hidden = YES;
+                });
             }
         }
     }
+}
+
+- (void)showSocialEntranceView {
+    self.socialEntranceView.hidden = NO;
+    // add by zyk 赋值数据 改变高度
 }
 
 - (void)dealloc
@@ -338,6 +352,7 @@
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.contactViewModel.socialInfo = model.data.socialInfo;
+    self.weakSocialInfo = model.data.socialInfo;
     
     __weak typeof(self) wSelf = self;
     if (!model.isInstantData && model.data) {
@@ -439,13 +454,10 @@
         }
     }
     
-    // add by zyk
-    FHDetailUGCSocialModel *tempData = [[FHDetailUGCSocialModel alloc] init];
-    model.data.socialInfo = tempData;
+    // UGC社区入口
     if (model.data.socialInfo) {
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
-        
         [self.items addObject:model.data.socialInfo];
     }
     

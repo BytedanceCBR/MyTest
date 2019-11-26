@@ -8,6 +8,7 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 #import "FHDetailBaseModel.h"
+#import "FHHouseNewsSocialModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -201,7 +202,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoModel *coreInfo ;
 @property (nonatomic, strong , nullable) FHDetailNewDataDisclaimerModel *disclaimer ;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
-@property (nonatomic, strong , nullable) FHDetailUGCSocialModel *socialInfo ;
+@property (nonatomic, strong , nullable) FHHouseNewsSocialModel *socialInfo ;
 
 @end
 
