@@ -376,10 +376,6 @@
 
 - (void)didLongPress {
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
-    //目前只有帖子支持长按复制
-    if(cellModel.cellType != FHUGCFeedListCellTypeUGC){
-        return;
-    }
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = [NSString stringWithFormat:@"%@", cellModel.content];
     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
