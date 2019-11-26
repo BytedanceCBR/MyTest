@@ -422,13 +422,8 @@
     }
     
     self.pagingView.delegate = self;
-//    [self.viewController.view addSubview:self.pagingView];
+    //放到最下面
     [self.viewController.view insertSubview:self.pagingView atIndex:0];
-    //这里添加完subview以后导航条被盖住了，所以在这里给放到前面
-//    [self.viewController.view bringSubviewToFront:self.viewController.customNavBarView];
-//    [self.viewController.view bringSubviewToFront:self.viewController.publishBtn];
-//    [self.viewController.view bringSubviewToFront:self.viewController.groupChatBtn];
-//    [self.viewController.view bringSubviewToFront:self.viewController.bageView];
 }
 
 - (void)createFeedListController:(NSString *)tabName {
@@ -441,14 +436,13 @@
     feedListController.forumId = self.viewController.communityId;
     feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
-    feedListController.segmentViewHeight = kSegmentViewHeight;
     //错误页高度
     CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
     if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1){
         errorViewHeight -= kSegmentViewHeight;
     }
     feedListController.errorViewHeight = errorViewHeight;
-    feedListController.notLoadDateWhenEmpty = YES;
+    feedListController.notLoadDataWhenEmpty = YES;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
     feedListController.beforeInsertPostBlock = ^{
@@ -464,6 +458,7 @@
 
 - (void)updateVC {
     for (FHCommunityFeedListController *feedListController in self.subVCs) {
+        //更新管理员权限
         feedListController.operations = self.socialGroupModel.data.permission;
     }
 }

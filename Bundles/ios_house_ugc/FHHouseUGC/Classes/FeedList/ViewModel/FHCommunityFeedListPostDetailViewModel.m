@@ -200,19 +200,6 @@
                 self.needRefreshCell = NO;
                 [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
             });
-            
-//            // JOKER: 发贴成功插入贴子后，滚动使露出
-//            if(index == 0) {
-//                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-////                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
-//            } else {
-//                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-////                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-////                CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
-////                rect.origin.y -= ([TTDeviceHelper isIPhoneXDevice] ? 88 : 64); // 白色导航条的高度
-////                rect.origin.y += self.viewController.segmentViewHeight;
-////                [self.tableView setContentOffset:rect.origin animated:YES];
-//            }
         }
     });
 }
@@ -854,8 +841,8 @@
     NSInteger row = [self getCellIndex:cellModel];
     if(row < self.dataList.count && row >= 0){
         [self.dataList removeObjectAtIndex:row];
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
         [self reloadTableViewData];
     }
 }
