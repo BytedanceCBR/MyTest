@@ -75,7 +75,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.ttNeedIgnoreZoomAnimation = YES;
-    [self.view addSubview:self.topBar];
+//    [self.view addSubview:self.topBar];
     
     FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
     //    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
@@ -121,7 +121,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self.emptyView showEmptyWithTip:@"功能暂未开通" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
     
-    [self.view bringSubviewToFront:self.topBar];
+//    [self.view bringSubviewToFront:self.topBar];
     
     self.mainTableView.scrollsToTop = YES;
 }
@@ -157,7 +157,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     // Do any additional setup after loading the view.
     
     self.view.backgroundColor = [UIColor whiteColor];
-    self.mainTableView.backgroundColor = [UIColor whiteColor];
+    self.mainTableView.backgroundColor = [UIColor purpleColor];
     FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!configModel) {
         [self tt_startUpdate];
@@ -176,8 +176,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         make.height.mas_equalTo(32);
     }];
     
+//    [self setupTopBarConstraints];
+//    self.mainTableView.tableHeaderView = self.topBar;
     
-    [self.view bringSubviewToFront:self.topBar];
+//    [self.view bringSubviewToFront:self.topBar];
 }
 
 #pragma mark - notifications
@@ -200,19 +202,19 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)setUpMainTableConstraints
 {
-    if ([TTDeviceHelper isIPhoneXDevice]) {
-        [self.mainTableView setFrame:CGRectMake(0.0f, 64 + 44, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 44 - 49)];
+    if ([TTDeviceHelper isIPhoneXSeries]) {
+        [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 44 - 49)];
     }else
     {
-        [self.mainTableView setFrame:CGRectMake(0.0f, 64 + 20, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 20 - 49)];
+        [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 20 - 49)];
     }
 }
 
 - (void)setupTopBarConstraints
 {
     [self.topBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo([TTDeviceHelper isIPhoneXSeries] ? 44 : 20);
-        make.left.right.equalTo(self.view);
+        make.top.mas_equalTo(0);
+        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
         make.height.mas_equalTo(64);
     }];
 }
