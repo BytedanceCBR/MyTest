@@ -352,6 +352,21 @@
     }
 }
 
+- (void)gotoAskPublish {
+    
+//    NSMutableDictionary *params = @{}.mutableCopy;
+//    params[UT_ELEMENT_TYPE] = @"vote_icon";
+//    params[UT_PAGE_TYPE] = [self pageType];
+//    TRACK_EVENT(@"click_options", params);
+    
+    if ([TTAccountManager isLogin]) {
+        [self gotoAskVC];
+    } else {
+        [self gotoLogin:FHUGCLoginFrom_ASK];
+    }
+    
+}
+
 // 发布按钮点击
 - (void)gotoPostThreadVC {
     if ([TTAccountManager isLogin]) {
@@ -388,16 +403,28 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                if (from == FHUGCLoginFrom_POST) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                       [wSelf gotoPostVC];
-                                   });
-                
-                } else if(from == FHUGCLoginFrom_VOTE) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [wSelf gotoVoteVC];
-                    });
-                }
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    
+                    switch (from) {
+                        case FHUGCLoginFrom_POST:
+                        {
+                            [wSelf gotoPostVC];
+                        }
+                            break;
+                        case FHUGCLoginFrom_VOTE:
+                        {
+                            [wSelf gotoVoteVC];
+                        }
+                            break;
+                        case FHUGCLoginFrom_ASK:
+                        {
+                            [wSelf gotoAskVC];
+                        }
+                            break;
+                        default:
+                            break;
+                    }
+                });
             }
         }
     }];
@@ -406,6 +433,16 @@
 // 跳转到投票发布器
 - (void)gotoVoteVC {
     NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[UT_ENTER_FROM] = [self pageType];
+    dict[TRACER_KEY] = tracerDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+}
+
+- (void)gotoAskVC {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_ask_publish"];
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = [self pageType];

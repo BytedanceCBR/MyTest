@@ -111,6 +111,7 @@
         _datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, TOP_BAR_HEIGHT, SCREEN_WIDTH, DATEPICKER_HEIGHT)];
         _datePicker.datePickerMode = UIDatePickerModeDateAndTime;
         _datePicker.minimumDate = [NSDate date];
+        _datePicker.maximumDate = [[NSDate date] dateByAddingTimeInterval:30 * 24 * 60 * 60];
         NSDate *defaultVoteDeadline = [[NSDate date] dateByAddingTimeInterval:7 * 24 * 60 * 60];
         _datePicker.date = defaultVoteDeadline;
     }

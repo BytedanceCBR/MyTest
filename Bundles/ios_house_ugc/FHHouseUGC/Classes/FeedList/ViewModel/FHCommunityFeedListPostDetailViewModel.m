@@ -59,6 +59,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
         // 发投票成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postVoteSuccess:) name:@"kFHVotePublishNotificationName" object:nil];
+        // 发提问成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postAskSuccess:) name:@"kFHAskPublishNotificationName" object:nil];
     }
     
     return self;
@@ -101,6 +103,51 @@
                     }
                 }
             }
+        }
+    }
+}
+// 发提问成功通知
+- (void)postAskSuccess:(NSNotification *)noti {
+    // TODO: 插入逻辑
+    if([self isNotInAllTab]){
+        return;
+    }
+    
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *ask_data = userInfo[@"askData"];
+        NSString *social_group_ids = userInfo[@"social_group_ids"];
+        if ([ask_data isKindOfClass:[NSString class]] && ask_data.length > 0) {
+            // 模型转换
+            NSDictionary *dic = [ask_data JSONValue];
+            FHFeedUGCCellModel *cellModel = nil;
+            if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+                NSDictionary * rawDataDic = dic[@"raw_data"];
+                // 先转成rawdata
+                NSError *jsonParseError;
+                if (rawDataDic && [rawDataDic isKindOfClass:[NSDictionary class]]) {
+                    FHFeedContentRawDataModel *model = [[FHFeedContentRawDataModel alloc] initWithDictionary:rawDataDic error:&jsonParseError];
+                    if (model) {
+                        FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
+                        ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeQuestion];
+                        ugcContent.title = model.title;
+                        ugcContent.isStick = model.isStick;
+                        ugcContent.stickStyle = model.stickStyle;
+                        ugcContent.diggCount = model.diggCount;
+                        ugcContent.commentCount = model.commentCount;
+                        ugcContent.userDigg = model.userDigg;
+                        ugcContent.groupId = model.groupId;
+                        ugcContent.logPb = model.logPb;
+                        ugcContent.community = model.community;
+                        ugcContent.rawData = model;
+                        // FHFeedUGCCellModel
+                        cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+                        cellModel.isFromDetail = NO;
+                        cellModel.tableView = self.tableView;
+                    }
+                }
+            }
+            [self insertPostData:cellModel socialGroupIds:social_group_ids];
         }
     }
 }

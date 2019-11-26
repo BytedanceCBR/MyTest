@@ -45,7 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIImageView *rightArrow;
 @end
 
-@interface FHUGCVotePublishTitleCell: FHUGCVotePublishBaseCell
+@interface FHUGCVotePublishTitleCell: FHUGCVotePublishBaseCell<UITextViewDelegate>
+@property (nonatomic, strong) UITextView  *contentTextView;
 @property (nonatomic, strong) UITextField *contentTextField;
 @end
 

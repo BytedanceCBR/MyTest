@@ -367,6 +367,17 @@
     [self.viewModel gotoVotePublish];
 }
 
+- (void)gotoAskPublish {
+    // JOKER: ASK PUBLISH
+//
+//    NSMutableDictionary *params = @{}.mutableCopy;
+//    params[UT_ELEMENT_TYPE] = @"feed_icon";
+//    params[UT_PAGE_TYPE] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+//    TRACK_EVENT(@"click_options", params);
+    
+    [self.viewModel gotoAskPublish];
+}
+
 - (void)postMenuViewWillShow {
     self.bageView.alpha = 0;
     self.groupChatBtn.hidden = YES;

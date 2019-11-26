@@ -16,13 +16,28 @@
 #define VGAP 30
 
 @interface FHUGCPostMenuView()
+
+// 关闭菜单
 @property (nonatomic, strong) UIButton *closeButton;
+
+// 发图文
 @property (nonatomic, strong) UILabel  *postTitleLabel;
 @property (nonatomic, strong) UIButton *pubPostButton;
+
+// 发提问
+@property (nonatomic, strong) UILabel  *pubAskTitleLabel;
+@property (nonatomic, strong) UIButton *pubAskButton;
+
+// 发投票
 @property (nonatomic, strong) UILabel  *voteTitleLabel;
 @property (nonatomic, strong) UIButton *pubVoteButton;
+
+// 黑色透明背景
 @property (nonatomic, strong) UIView *backgroupView;
+
+// 菜单弹出的参考按钮
 @property (nonatomic, weak) UIButton *originButton;
+
 @end
 
 @implementation FHUGCPostMenuView
@@ -101,6 +116,34 @@
     return _pubVoteButton;
 }
 
+- (UIButton *)pubAskButton {
+    if(!_pubAskButton) {
+        _pubAskButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_pubAskButton setImage:[UIImage imageNamed:@"fh_ugc_publish_menu_vote"] forState:UIControlStateNormal];
+        [_pubAskButton addTarget:self action:@selector(gotoPublishAsk:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _pubAskButton;
+}
+
+- (UILabel *)pubAskTitleLabel {
+    if(!_pubAskTitleLabel) {
+        _pubAskTitleLabel = [UILabel new];
+        _pubAskTitleLabel.text = @"发问答";
+        _pubAskTitleLabel.font = [UIFont themeFontSemibold:16];
+        _pubAskTitleLabel.textColor = [UIColor themeWhite];
+        [_pubAskTitleLabel sizeToFit];
+    }
+    return _pubAskTitleLabel;
+}
+
+- (void)gotoPublishAsk: (UIButton *)sender {
+    [self hide];
+    
+    if([self.delegate respondsToSelector:@selector(gotoAskPublish)]) {
+        [self.delegate gotoAskPublish];
+    }
+}
+
 - (void)gotoPublishVote:(UIButton *)sender {
     [self hide];
     if([self.delegate respondsToSelector:@selector(gotoVotePublish)]) {
@@ -112,7 +155,10 @@
     if(self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
         // 添加子视图
+        
         [self addSubview:self.backgroupView];
+        [self addSubview:self.pubAskTitleLabel];
+        [self addSubview:self.pubAskButton];
         [self addSubview:self.postTitleLabel];
         [self addSubview:self.pubPostButton];
         [self addSubview:self.voteTitleLabel];
@@ -137,12 +183,17 @@
 
     self.pubVoteButton.frame = relativeRect;
     self.pubPostButton.frame = relativeRect;
+    self.pubAskButton.frame = relativeRect;
+    
     self.postTitleLabel.center = CGPointMake(self.pubPostButton.frame.origin.x - HGAP - self.postTitleLabel.frame.size.width / 2.0, self.pubPostButton.center.y);
     self.voteTitleLabel.center = CGPointMake(self.pubVoteButton.frame.origin.x - HGAP - self.voteTitleLabel.frame.size.width / 2.0, self.pubVoteButton.center.y);
+    self.pubAskTitleLabel.center = CGPointMake(self.pubAskButton.frame.origin.x - HGAP - self.pubAskTitleLabel.frame.size.width / 2.0, self.pubAskButton.center.y);
     
     self.backgroupView.alpha = 0;
     self.pubVoteButton.alpha = 0;
     self.pubPostButton.alpha = 0;
+    self.pubAskButton.alpha = 0;
+    self.pubAskTitleLabel.alpha = 0;
     self.postTitleLabel.alpha = 0;
     self.voteTitleLabel.alpha = 0;
     self.originButton.hidden = YES;
@@ -157,11 +208,16 @@
         self.pubPostButton.alpha = 1;
         self.postTitleLabel.alpha = 1;
         self.voteTitleLabel.alpha = 1;
+        self.pubAskTitleLabel.alpha = 1;
+        self.pubAskButton.alpha = 1;
         
         self.pubVoteButton.frame = CGRectOffset(self.closeButton.frame, 0, yOffset);
-        self.pubPostButton.frame = CGRectOffset(self.pubVoteButton.frame, 0, yOffset);
+        self.pubAskButton.frame = CGRectOffset(self.pubVoteButton.frame, 0, yOffset);
+        self.pubPostButton.frame = CGRectOffset(self.pubAskButton.frame, 0, yOffset);
+
         self.postTitleLabel.center = CGPointMake(self.pubPostButton.frame.origin.x - HGAP - self.postTitleLabel.frame.size.width / 2.0, self.pubPostButton.center.y);
         self.voteTitleLabel.center = CGPointMake(self.pubVoteButton.frame.origin.x - HGAP - self.voteTitleLabel.frame.size.width / 2.0, self.pubVoteButton.center.y);
+        self.pubAskTitleLabel.center = CGPointMake(self.pubAskButton.frame.origin.x - HGAP - self.pubAskTitleLabel.frame.size.width / 2.0, self.pubAskButton.center.y);
     } completion:^(BOOL finished) {
         if([self.delegate respondsToSelector:@selector(postMenuViewDidShow)]) {
             [self.delegate postMenuViewDidShow];
@@ -182,11 +238,16 @@
         self.pubPostButton.alpha = 0;
         self.postTitleLabel.alpha = 0;
         self.voteTitleLabel.alpha = 0;
+        self.pubAskButton.alpha = 0;
+        self.pubAskTitleLabel.alpha = 0;
         
         self.pubVoteButton.frame = relativeRect;
         self.pubPostButton.frame = relativeRect;
+        self.pubAskButton.frame = relativeRect;
+        
         self.postTitleLabel.center = CGPointMake(self.pubPostButton.frame.origin.x - HGAP - self.postTitleLabel.frame.size.width / 2.0, self.pubPostButton.center.y);
         self.voteTitleLabel.center = CGPointMake(self.pubVoteButton.frame.origin.x - HGAP - self.voteTitleLabel.frame.size.width / 2.0, self.pubVoteButton.center.y);
+        self.pubAskTitleLabel.center = CGPointMake(self.pubAskButton.frame.origin.x - HGAP - self.pubAskTitleLabel.frame.size.width / 2.0, self.pubAskButton.center.y);
         
     } completion:^(BOOL finished) {
         self.originButton.hidden = NO;

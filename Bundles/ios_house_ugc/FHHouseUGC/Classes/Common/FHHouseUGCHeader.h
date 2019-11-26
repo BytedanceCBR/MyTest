@@ -75,6 +75,7 @@ typedef NS_ENUM(NSUInteger, FHUGCLoginFrom) {
     FHUGCLoginFrom_POST = 0,
     FHUGCLoginFrom_GROUPCHAT = 1,
     FHUGCLoginFrom_VOTE = 2,
+    FHUGCLoginFrom_ASK = 3,
 };
 
 #endif /* FHHouseUGCHeader_h */

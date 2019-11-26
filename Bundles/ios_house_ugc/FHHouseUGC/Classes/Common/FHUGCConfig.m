@@ -34,6 +34,8 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 // Publisher History
 static const NSString *kFHUGCPublisherHistoryCacheKey = @"key_ugc_publisher_history_cache";
 static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_history_Data";
+static const NSString *kFHUGCAskPublisherHistoryCacheKey = @"key_ugc_ask_publisher_history_cache";
+static const NSString *kFHUGCAskPublisherHistoryDataKey = @"key_ugc_ask_publisher_history_Data";
 
 // 圈子子数据统一内存数据缓存
 @interface FHUGCSocialGroupData : NSObject
@@ -51,6 +53,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 @property (nonatomic, strong)   YYCache       *followListCache;
 @property (nonatomic, strong)   YYCache       *ugcConfigCache;
 @property (nonatomic, strong)   YYCache       *ugcPublisherHistoryCache;
+@property (nonatomic, strong)   YYCache       *ugcAskPublisherHistoryCache;
 @property (nonatomic, copy)     NSString      *followListDataKey;// 关注数据 用户相关 存储key
 @property (nonatomic, strong)   NSTimer       *focusTimer;//关注是否有新内容的轮训timer
 @property (nonatomic, assign)   NSTimeInterval focusTimerInterval;//轮训时间
@@ -732,6 +735,13 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     return _ugcPublisherHistoryCache;
 }
 
+- (YYCache *)ugcAskPublisherHistoryCache {
+    if(!_ugcAskPublisherHistoryCache) {
+        _ugcAskPublisherHistoryCache = [YYCache cacheWithName:kFHUGCAskPublisherHistoryCacheKey];
+    }
+    return _ugcAskPublisherHistoryCache;
+}
+
 - (FHPostUGCSelectedGroupHistory *)loadPublisherHistoryData {
     NSDictionary *historyDict = [self.ugcPublisherHistoryCache objectForKey:kFHUGCPublisherHistoryDataKey];
     if (historyDict && [historyDict isKindOfClass:[NSDictionary class]]) {
@@ -749,6 +759,27 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         NSDictionary *historyDict = [model toDictionary];
         if (historyDict) {
             [self.ugcPublisherHistoryCache setObject:historyDict forKey:kFHUGCPublisherHistoryDataKey];
+        }
+    }
+}
+
+- (FHPostUGCSelectedGroupHistory *)loadAskPublisherHistoryData {
+    NSDictionary *historyDict = [self.ugcAskPublisherHistoryCache objectForKey:kFHUGCAskPublisherHistoryDataKey];
+    if (historyDict && [historyDict isKindOfClass:[NSDictionary class]]) {
+        NSError *err = nil;
+        FHPostUGCSelectedGroupHistory * model = [[FHPostUGCSelectedGroupHistory alloc] initWithDictionary:historyDict error:&err];
+        if (model) {
+            return model;
+        }
+    }
+    return nil;
+}
+
+- (void)saveAskPublisherHistoryDataWithModel: (FHPostUGCSelectedGroupHistory *)model {
+    if (model) {
+        NSDictionary *historyDict = [model toDictionary];
+        if (historyDict) {
+            [self.ugcAskPublisherHistoryCache setObject:historyDict forKey:kFHUGCAskPublisherHistoryDataKey];
         }
     }
 }

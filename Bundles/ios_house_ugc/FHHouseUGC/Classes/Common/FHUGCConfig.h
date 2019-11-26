@@ -99,6 +99,17 @@ static NSString *const kFHUGCGoodPostNotification = @"k_fh_ugc_good_post_finish"
  存储发布器选择历史信息
  */
 - (void)savePublisherHistoryDataWithModel: (FHPostUGCSelectedGroupHistory *)model;
+
+/**
+ 获取提问发布器选择历史信息
+ */
+- (FHPostUGCSelectedGroupHistory *)loadAskPublisherHistoryData;
+
+
+/**
+ 存储提问发布器选择历史信息
+ */
+- (void)saveAskPublisherHistoryDataWithModel: (FHPostUGCSelectedGroupHistory *)model;
 @end
 
 NS_ASSUME_NONNULL_END
