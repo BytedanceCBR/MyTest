@@ -218,13 +218,6 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    
-    //fake
-    if(isHead){
-//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
-//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake2]];
-    }
-    
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
@@ -472,11 +465,7 @@
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         // 问题 回答
-        BOOL jump_comment = NO;
-        if (showComment) {
-            jump_comment = YES;
-        }
-        NSDictionary *dict = @{@"is_jump_comment":@(jump_comment)};
+        NSDictionary *dict = @{@"is_jump_comment":@(showComment)};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
@@ -515,11 +504,7 @@
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
     }  else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo) {
         // 投票
-        BOOL jump_comment = NO;
-        if (showComment) {
-            jump_comment = YES;
-        }
-        NSMutableDictionary *dict = @{@"begin_show_comment":@(jump_comment)}.mutableCopy;
+        NSMutableDictionary *dict = @{@"begin_show_comment":@(showComment)}.mutableCopy;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
         traceParam[@"enter_from"] = @"hot_discuss_feed";
         traceParam[@"enter_type"] = enterType ? enterType : @"be_null";

@@ -143,12 +143,6 @@
 
 // 发帖成功通知
 - (void)postThreadSuccess:(NSNotification *)noti {
-//    //如果是多tab，并且当前不在全部tab，这个时候要先切tab
-//    if(self.selectedIndex != 0){
-//        self.isFirstEnter = YES;
-//        self.viewController.segmentView.selectedIndex = 0;
-//    }
-    
     if (noti) {
         NSString *groupId = noti.userInfo[@"social_group_id"];
         if (groupId.length > 0) {
@@ -387,7 +381,7 @@
                 [titles addObject:item.showName];
             }
             //这里记录一下精华tab的index,为了后面加精和取消加精时候，可以标记vc刷新
-            if([item.tabName isEqualToString:@"essence"]){
+            if([item.tabName isEqualToString:tabEssence]){
                 self.essenceIndex = i;
             }
             if(item.isDefault) {

@@ -36,6 +36,7 @@
 @interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @property(nonatomic, strong) FHErrorView *errorView;
+//当第一刷数据不足5个，同时feed还有新内容时，会继续刷下一刷的数据，这个值用来记录请求的次数
 @property(nonatomic, assign) NSInteger retryCount;
 
 @end
@@ -69,7 +70,7 @@
 }
 
 - (BOOL)isNotInAllTab {
-    return self.tabName && ![self.tabName isEqualToString:@"all"];
+    return self.tabName && ![self.tabName isEqualToString:tabAll];
 }
 
 // 发帖成功，插入数据
@@ -390,16 +391,13 @@
             if ([TTDeviceHelper isIPhoneXSeries]) {
                 refreshFooterBottomHeight += 34;
             }
+            //设置footer来占位
             UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight - height - refreshFooterBottomHeight)];
             tableFooterView.backgroundColor = [UIColor clearColor];
             self.tableView.tableFooterView = tableFooterView;
-            
-//            self.tableView.mj_footer.mj_y -= 50;
+            //修改footer的位置回到cell下方，不修改会在tableFooterView的下方
             self.tableView.mj_footer.mj_y -= tableFooterView.height;
             self.tableView.mj_footer.hidden = NO;
-//            [self.tableView bringSubviewToFront:self.tableView.mj_footer];
-            NSLog(@"footer___%f",self.tableView.mj_footer.mj_y);
-            
         }else{
             self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
             [self.tableView reloadData];

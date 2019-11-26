@@ -77,4 +77,8 @@ typedef NS_ENUM(NSUInteger, FHUGCLoginFrom) {
     FHUGCLoginFrom_VOTE = 2,
 };
 
+//feed中分类的key值
+#define tabAll @"all"                       //全部
+#define tabEssence @"essence"               //加精
+
 #endif /* FHHouseUGCHeader_h */
