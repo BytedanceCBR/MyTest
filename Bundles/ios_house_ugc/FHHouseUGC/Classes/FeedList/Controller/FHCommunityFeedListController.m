@@ -277,7 +277,6 @@
     }
     [self gotoPostThreadVC];
     
-    
     NSMutableDictionary *params = @{}.mutableCopy;
     params[UT_ELEMENT_TYPE] = @"feed_icon";
     params[UT_PAGE_TYPE] = [self pageType];
@@ -445,7 +444,7 @@
     }
 }
 
-#pragma mark -- SSImpressionProtocol
+#pragma mark - SSImpressionProtocol
 
 - (void)needRerecordImpressions {
     if (self.viewModel.dataList.count == 0) {

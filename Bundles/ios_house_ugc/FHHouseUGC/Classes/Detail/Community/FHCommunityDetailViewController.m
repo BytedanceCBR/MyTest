@@ -22,7 +22,7 @@
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
 @property (nonatomic, strong) UIImage *shareWhiteImage;
 @property (nonatomic, strong) UIButton *shareButton;// 分享
-@property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
+@property (nonatomic, strong) FHUGCPostMenuView *publishMenuView;
 
 @end
 
