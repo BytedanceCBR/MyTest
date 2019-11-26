@@ -322,14 +322,19 @@
         }
         
         if(model){
+//            if(isHead){
+//                if(feedListModel.hasMore){
+//                    [wself.dataList removeAllObjects];
+//                }
+//                wself.tableView.hasMore = YES;
+//            }else{
+//                wself.tableView.hasMore = feedListModel.hasMore;
+//            }
             if(isHead){
-                if(feedListModel.hasMore){
-                    [wself.dataList removeAllObjects];
-                }
-                wself.tableView.hasMore = YES;
-            }else{
-                wself.tableView.hasMore = feedListModel.hasMore;
+                [wself.dataList removeAllObjects];
             }
+            
+            wself.tableView.hasMore = feedListModel.hasMore;
             
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
@@ -386,8 +391,15 @@
                 refreshFooterBottomHeight += 34;
             }
             UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight - height - refreshFooterBottomHeight)];
-            tableFooterView.backgroundColor = [UIColor themeGray7];
+            tableFooterView.backgroundColor = [UIColor clearColor];
             self.tableView.tableFooterView = tableFooterView;
+            
+//            self.tableView.mj_footer.mj_y -= 50;
+            self.tableView.mj_footer.mj_y -= tableFooterView.height;
+            self.tableView.mj_footer.hidden = NO;
+//            [self.tableView bringSubviewToFront:self.tableView.mj_footer];
+            NSLog(@"footer___%f",self.tableView.mj_footer.mj_y);
+            
         }else{
             self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
             [self.tableView reloadData];

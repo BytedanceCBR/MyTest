@@ -357,7 +357,6 @@
 }
 
 - (void)gotoVotePublish {
-    
     if ([TTAccountManager isLogin]) {
         [self gotoVoteVC];
     } else {
@@ -437,11 +436,11 @@
     feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
     //错误页高度
-    CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
     if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1){
+        CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
         errorViewHeight -= kSegmentViewHeight;
+        feedListController.errorViewHeight = errorViewHeight;
     }
-    feedListController.errorViewHeight = errorViewHeight;
     feedListController.notLoadDataWhenEmpty = YES;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
