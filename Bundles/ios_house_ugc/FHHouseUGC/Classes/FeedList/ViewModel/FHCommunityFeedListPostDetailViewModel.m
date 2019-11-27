@@ -385,7 +385,7 @@
         self.tableView.backgroundColor = [UIColor themeGray7];
         
         CGFloat height = [self getVisibleHeight:5];
-        if(height gi< self.viewController.errorViewHeight && height > 0 && self.viewController.errorViewHeight > 0){
+        if(height < self.viewController.errorViewHeight && height > 0 && self.viewController.errorViewHeight > 0){
             [self.tableView reloadData];
             CGFloat refreshFooterBottomHeight = self.tableView.mj_footer.height;
             if ([TTDeviceHelper isIPhoneXSeries]) {
