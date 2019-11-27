@@ -16,6 +16,7 @@
 @property(nonatomic, strong) FHDetailHeaderView *headerView;
 @property(nonatomic, strong) UIView *containerView;
 @property(nonatomic, strong) UIImageView *bgView;
+@property (nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic, strong) UIImageView *lineView;
 @property(nonatomic, strong) UIImageView *leftPointView;
 @property(nonatomic, strong) UIImageView *rightPointView;
@@ -101,8 +102,24 @@
     return self;
 }
 
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        shadowImage.image = [[UIImage imageNamed:@"left_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(30,30,30,30) resizingMode:UIImageResizingModeStretch];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
+}
+
 - (void)setupUI {
     
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView).offset(-20);
+        make.right.mas_equalTo(self.contentView).offset(20);
+        make.top.equalTo(self.contentView);
+        make.height.equalTo(self.contentView);
+    }];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.isShowLoadMore = YES;
     _headerView.label.font = [UIFont themeFontRegular:16];
@@ -116,7 +133,7 @@
     }];
     
     _containerView = [[UIView alloc] init];
-    _containerView.backgroundColor = [UIColor whiteColor];
+    _containerView.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);

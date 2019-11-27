@@ -5,8 +5,8 @@
 //  Created by 谢思铭 on 2019/4/15.
 //
 
-#import "FHDetailMediaHeaderCell.h"
-#import "FHMultiMediaScrollView.h"
+#import "FHDetailMediaHeaderCorrectingCell.h"
+#import "FHMultiMediaCorrectingScrollView.h"
 #import "FHMultiMediaModel.h"
 #import "FHDetailOldModel.h"
 #import "FHDetailPictureViewController.h"
@@ -17,12 +17,12 @@
 #import <NSString+URLEncoding.h>
 #import <FHUtils.h>
 #import "FHMultiMediaModel.h"
+#import "FHCommonDefines.h"
+@interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
-@interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
-
-@property(nonatomic, strong) FHMultiMediaScrollView *mediaView;
+@property(nonatomic, strong) FHMultiMediaCorrectingScrollView *mediaView;
 @property(nonatomic, strong) FHMultiMediaModel *model;
-@property(nonatomic,strong) NSMutableArray *imageList;
+@property(nonatomic, strong) NSMutableArray *imageList;
 @property(nonatomic, strong) NSMutableDictionary *pictureShowDict;
 @property(nonatomic, assign) BOOL isLarge;
 @property(nonatomic, assign) NSInteger currentIndex;
@@ -33,7 +33,7 @@
 
 @end
 
-@implementation FHDetailMediaHeaderCell
+@implementation FHDetailMediaHeaderCorrectingCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -66,21 +66,40 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailMediaHeaderModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailMediaHeaderCorrectingModel class]]) {
         return;
     }
     [self.imageList removeAllObjects];
     self.currentData = data;
 
     [self generateModel];
-    [self.mediaView updateWithModel:self.model];
+    [self.mediaView updateModel:self.model withTitleModel: ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel];
     
     //有视频才传入埋点
     if(self.vedioCount > 0){
         self.mediaView.tracerDic = [self tracerDic];
     }
+    [self reckoncollectionHeightWithData:data];
 }
 
+- (void)reckoncollectionHeightWithData:(id)data {
+    FHDetailHouseTitleModel *titleModel =  ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel;
+    _photoCellHeight = [FHDetailMediaHeaderCell cellHeight];
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:24]};
+    CGRect rect = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH-70, CGFLOAT_MAX)
+                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                           attributes:attributes
+                                              context:nil];
+    if (titleModel.tags.count>0) {
+        //这里分别加上标签高度20，标签间隔20，标题间隔20,再减去重叠部分67,得到当前模块高度
+        _photoCellHeight = _photoCellHeight + 20 + 30 + rect.size.height + 20 -67;
+    }else {
+        _photoCellHeight = _photoCellHeight + 30 + rect.size.height -67;
+    }
+    [self.mediaView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_offset(_photoCellHeight);
+    }];
+}
 - (NSDictionary *)tracerDic {
     NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
     if(!dict){
@@ -100,28 +119,31 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
-        _photoCellHeight = [FHDetailMediaHeaderCell cellHeight];
-        _pictureShowDict = [NSMutableDictionary dictionary];
-        _vedioCount = 0;
-        _imageList = [[NSMutableArray alloc] init];
-        _mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _photoCellHeight)];
-        _mediaView.delegate = self;
-        [self.contentView addSubview:_mediaView];
-        
-        [_mediaView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.contentView);
-            make.height.mas_equalTo(self.photoCellHeight);
-        }];
+        [self createUI];
     }
     return self;
+}
+- (void)createUI {
+    _photoCellHeight = [FHDetailMediaHeaderCell cellHeight];
+    _pictureShowDict = [NSMutableDictionary dictionary];
+    _vedioCount = 0;
+    _imageList = [[NSMutableArray alloc] init];
+    _mediaView = [[FHMultiMediaCorrectingScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _photoCellHeight)];
+    _mediaView.delegate = self;
+    [self.contentView addSubview:_mediaView];
+
+    [_mediaView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(self.photoCellHeight);
+    }];
 }
 
 - (void)generateModel {
     self.model = [[FHMultiMediaModel alloc] init];
     NSMutableArray *itemArray = [NSMutableArray array];
-    NSArray *houseImageDict = ((FHDetailMediaHeaderModel *)self.currentData).houseImageDictList;
-    FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
-    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)self.currentData).vrModel;
+    NSArray *houseImageDict = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).houseImageDictList;
+    FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel;
+    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vrModel;
     
     if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
         FHMultiMediaItemModel *itemModelVR = [[FHMultiMediaItemModel alloc] init];
@@ -175,7 +197,7 @@
     
     self.model.medias = itemArray;
     if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
-        FHDetailOldModel *detailOldModel = self.baseViewModel.detailData;
+        FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
         self.model.isShowSkyEyeLogo = detailOldModel.data.baseExtra.detective.detectiveInfo.showSkyEyeLogo;
     }
 }
@@ -195,7 +217,7 @@
         }
     }
     
-    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)self.currentData).vrModel;
+    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vrModel;
     //VR
     if (index < 0 && vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
         if (![TTReachability isNetworkConnected]) {
@@ -224,7 +246,7 @@
     }
     
     
-    FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
+    FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel;
 
     if (index < 0 || index >= (images.count + self.vedioCount)) {
         return;
@@ -328,7 +350,7 @@
             weakSelf.isLarge = YES;
             
             NSInteger vrOffset = 0;
-            FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderModel *)weakSelf.currentData).vrModel;
+            FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)weakSelf.currentData).vrModel;
             //VR增加偏移
             if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr)
             {
@@ -369,7 +391,7 @@
     __weak typeof(self) weakSelf = self;
     if ([self.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
         FHMultiMediaVideoCell *tempCell = self.mediaView.currentMediaCell;
-        FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
+        FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel;
         if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 weakSelf.mediaView.videoVC.view.frame = bound;
@@ -395,7 +417,7 @@
 - (void)trackPictureShowWithIndex:(NSInteger)index {
     FHMultiMediaItemModel *itemModel = _model.medias[index];
     NSString *showType = self.isLarge ? @"large" : @"small";
-    NSString *row = [NSString stringWithFormat:@"%@_%i",showType,index];
+    NSString *row = [NSString stringWithFormat:@"%@_%li",showType,(long)index];
     self.isLarge = NO;
     if (_pictureShowDict[row]) {
         return;
@@ -498,7 +520,7 @@
     }
 }
 
-- (NSDictionary *)traceParamsForGallery:(NSInteger)index
+- (NSMutableDictionary *)traceParamsForGallery:(NSInteger)index
 {
     NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
     
@@ -531,11 +553,11 @@
 }
 
 
-#pragma mark - FHMultiMediaScrollViewDelegate
+#pragma mark - FHMultiMediaCorrectingScrollViewDelegate
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
     
-    if ([(FHDetailMediaHeaderModel *)self.currentData isInstantData]) {
+    if ([(FHDetailMediaHeaderCorrectingModel *)self.currentData isInstantData]) {
         //列表页带入的数据不响应
         return;
     }
@@ -547,7 +569,7 @@
 
 - (void)willDisplayCellForItemAtIndex:(NSInteger)index {
     
-    if ([(FHDetailMediaHeaderModel *)self.currentData isInstantData]) {
+    if ([(FHDetailMediaHeaderCorrectingModel *)self.currentData isInstantData]) {
         //列表页带入的数据不报埋点
         return;
     }
@@ -592,7 +614,7 @@
    if (vcParentView && self.vedioCount > 0) {
         self.vcParentView = vcParentView;
         CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
-        CGFloat navBarHeight = ([TTDeviceHelper isIPhoneXDevice] ? 44 : 20) + 44.0;
+        CGFloat navBarHeight = ([TTDeviceHelper isIPhoneXSeries] ? 44 : 20) + 44.0;
         CGFloat cellHei = [FHDetailMediaHeaderCell cellHeight];
         if (-point.y + navBarHeight > cellHei) {
             // 暂停播放
@@ -625,7 +647,7 @@
 
 @end
 
-@implementation FHDetailMediaHeaderModel
+@implementation FHDetailMediaHeaderCorrectingModel
 
 @end
 

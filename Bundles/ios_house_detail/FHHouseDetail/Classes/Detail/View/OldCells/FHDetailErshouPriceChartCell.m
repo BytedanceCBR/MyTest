@@ -18,6 +18,7 @@
 @interface FHDetailErshouPriceChartCell () <PNChartDelegate>
 
 @property(nonatomic , strong) FHDetailStarHeaderView *headerView;
+@property (nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic , strong) UIView *line;
 @property(nonatomic , strong) UILabel *priceKeyLabel;
 @property(nonatomic , strong) UILabel *priceValueLabel;
@@ -219,8 +220,25 @@
     return self;
 }
 
-- (void)setupUI {
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        shadowImage.image = [[UIImage imageNamed:@"left_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(30,30,30,30) resizingMode:UIImageResizingModeStretch];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
+}
 
+- (void)setupUI {
+    
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView).offset(-20);
+        make.right.mas_equalTo(self.contentView).offset(20);
+        make.top.equalTo(self.contentView);
+        make.height.equalTo(self.contentView);
+    }];
+    
     _headerView = [[FHDetailStarHeaderView alloc] init];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -367,7 +385,7 @@
     self.chartView.yLabelNum = 4; // 4 lines
     self.chartView.chartMarginLeft = 20;
     self.chartView.chartMarginRight = 20;
-    self.chartView.backgroundColor = [UIColor whiteColor];
+    self.chartView.backgroundColor = [UIColor clearColor];
     self.chartView.yGridLinesColor = [UIColor themeGray6];
     self.chartView.showYGridLines = YES; // 横着的虚线
     [self.chartView.chartData enumerateObjectsUsingBlock:^(PNLineChartData *obj, NSUInteger idx, BOOL *stop) {

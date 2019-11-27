@@ -17,6 +17,7 @@
 
 @property(nonatomic, strong) FHDetailStarHeaderView *headerView;
 @property(nonatomic, strong) UIView *bgView;
+@property(weak, nonatomic) UIImageView *shadowImage;
 
 @end
 
@@ -102,8 +103,25 @@
     return @"neighborhood_surroundings";
 }
 
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        shadowImage.image = [[UIImage imageNamed:@"left_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(30,30,30,30) resizingMode:UIImageResizingModeStretch];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
+}
+
 - (void)setupUI
 {
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView).offset(-20);
+        make.right.mas_equalTo(self.contentView).offset(20);
+        make.top.equalTo(self.contentView);
+        make.height.equalTo(self.contentView);
+    }];
+     [self.contentView addSubview:self.shadowImage];
     _headerView = [[FHDetailStarHeaderView alloc] init];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -29,7 +29,8 @@
 #import "FHDetailPriceRankCell.h"
 #import "FHDetailPriceTrendCellModel.h"
 #import "FHDetailPureTitleCell.h"
-#import "FHDetailNeighborhoodInfoCell.h"
+#import "FHDetailNeighborhoodInfoCorrectingCell.h"
+#import "FHDetailMediaHeaderCorrectingCell.h"
 #import "FHDetailNeighborhoodMapInfoCell.h"
 #import "FHDetailNeighborhoodEvaluateCell.h"
 #import "FHDetailListEntranceCell.h"
@@ -37,7 +38,6 @@
 #import "FHDetailAveragePriceComparisonCell.h"
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
-#import "FHDetailMediaHeaderCell.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
@@ -54,6 +54,7 @@
 #import <FHHouseBase/FHHomeHouseModel.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import "FHDetailQuestionPopView.h"
+#import "FHDetailHouseTitleModel.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -74,9 +75,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 // 注册cell类型
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
-    [self.tableView registerClass:[FHDetailMediaHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderModel class])];
+    //FHDetailMediaHeaderCell -----FHDetailMediaHeaderModel
+    [self.tableView registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
-    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameModel class])];
+//    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameModel class])];
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoModel class])];
     [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListModel class])];
     [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryModel class])];
@@ -91,7 +93,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailErshouPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceTrendCellModel class])];
     [self.tableView registerClass:[FHDetailPriceRankCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceRankModel class])];
     [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
-    [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoModel class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodInfoCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCorrectingModel class])];
     [self.tableView registerClass:[FHDetailOldEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldEvaluateModel class])];
     [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceModel class])];
     [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeModel class])];
@@ -231,16 +233,21 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             itemModel.groupType = @"视频";
         }
         
-        FHDetailMediaHeaderModel *headerCellModel = [[FHDetailMediaHeaderModel alloc] init];
+        FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
         headerCellModel.houseImageDictList = model.data.houseImageDictList;
         if (!isInstant) {
             FHDetailOldDataHouseImageDictListModel *imgModel = [headerCellModel.houseImageDictList firstObject];
             imgModel.instantHouseImageList = [self instantHouseImages];
         }
+        FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
+        houseTitleModel.titleStr = model.data.title;
+        houseTitleModel.tags = @[];
+        
         headerCellModel.vrModel = model.data.vrData;
         headerCellModel.vedioModel = itemModel;// 添加视频模型数据
         headerCellModel.contactViewModel = self.contactViewModel;
         headerCellModel.isInstantData = model.isInstantData;
+        headerCellModel.titleDataModel = houseTitleModel;
         [self.items addObject:headerCellModel];
     }else{
         // 添加头滑动图片
@@ -263,15 +270,15 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         self.questionBtn.hidden = NO;
         [self.questionBtn updateTitle:model.data.quickQuestion.buttonContent];
     }
-    // 添加标题
-    if (model.data) {
-        FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
-        houseName.type = 1;
-        houseName.name = model.data.title;
-        houseName.aliasName = nil;
-        houseName.tags = model.data.tags;
-        [self.items addObject:houseName];
-    }
+//    // 添加标题
+//    if (model.data) {
+//        FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
+//        houseName.type = 1;
+//        houseName.name = model.data.title;
+//        houseName.aliasName = nil;
+//        houseName.tags = model.data.tags;
+//        [self.items addObject:houseName];
+//    }
     // 添加core info
     if (model.data.coreInfo) {
         FHDetailErshouHouseCoreInfoModel *coreInfoModel = [[FHDetailErshouHouseCoreInfoModel alloc] init];
@@ -446,11 +453,11 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             model.data.ugcSocialGroup.houseType = FHHouseTypeSecondHandHouse;
             [self.items addObject:model.data.ugcSocialGroup];
         } else{
-            FHDetailBlankLineModel *whiteLine = [[FHDetailBlankLineModel alloc] init];
-            [self.items addObject:whiteLine];
+//            FHDetailBlankLineModel *whiteLine = [[FHDetailBlankLineModel alloc] init];
+//            [self.items addObject:whiteLine];
         }
 
-        FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
+        FHDetailNeighborhoodInfoCorrectingModel *infoModel = [[FHDetailNeighborhoodInfoCorrectingModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
         infoModel.tableView = self.tableView;
         infoModel.contactViewModel = self.contactViewModel;

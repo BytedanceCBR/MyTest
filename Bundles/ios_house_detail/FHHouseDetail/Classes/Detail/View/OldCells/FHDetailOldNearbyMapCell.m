@@ -61,6 +61,7 @@ FHDetailVCViewLifeCycleProtocol>
 @property (nonatomic , strong) FHDetailOldNearbyMapModel *dataModel;
 @property (nonatomic, assign)  BOOL isFirstSnapshot;// 首次截屏
 @property (nonatomic, assign)  BOOL mapMaskClicked;
+@property (nonatomic, weak) UIImageView *shadowImage;
 
 @end
 
@@ -81,6 +82,7 @@ FHDetailVCViewLifeCycleProtocol>
         _countCategoryDict = [NSMutableDictionary new];
         _poiDatasDict = [NSMutableDictionary new];
         
+        [self setupShadowView];
         //设置title
         [self setUpHeaderView];
         
@@ -95,6 +97,25 @@ FHDetailVCViewLifeCycleProtocol>
         [self setUpLocationListTableView];
     }
     return self;
+}
+
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        shadowImage.image = [[UIImage imageNamed:@"left_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(30,30,30,30) resizingMode:UIImageResizingModeStretch];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
+}
+
+- (void)setupShadowView {
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView).offset(-20);
+        make.right.mas_equalTo(self.contentView).offset(20);
+        make.top.equalTo(self.contentView);
+        make.height.equalTo(self.contentView);
+    }];
 }
 
 - (void)setUpHeaderView
@@ -214,9 +235,9 @@ FHDetailVCViewLifeCycleProtocol>
     [self.contentView addSubview:_mapImageView];
     
     [_mapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.contentView);
+        make.left.equalTo(self.contentView).offset(20);
         make.top.equalTo(self.segmentedControl.mas_bottom);
-        make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
+        make.width.mas_equalTo(MAIN_SCREEN_WIDTH-40);
         make.height.mas_equalTo(160);
     }];
     
@@ -281,6 +302,7 @@ FHDetailVCViewLifeCycleProtocol>
 {
     _locationList = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _locationList.separatorStyle = UITableViewCellSelectionStyleNone;
+    _locationList.backgroundColor = [UIColor clearColor];
     _locationList.allowsSelection = NO;
     _locationList.userInteractionEnabled = YES;
     _locationList.delegate = self;

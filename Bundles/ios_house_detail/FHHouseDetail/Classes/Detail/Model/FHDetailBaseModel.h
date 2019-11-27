@@ -9,6 +9,7 @@
 #import "FHHouseListModel.h"
 #import "FHBaseModelProtocol.h"
 #import "FHHouseType.h"
+#import "FHHouseShadowImageType.h"
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 #import <FHHouseBase/FHImageModel.h>
 #import <FHHouseBase/FHHouseCoreInfoModel.h>
@@ -38,7 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 //@end
 
 @interface FHDetailBaseModel : NSObject
-
+@property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
+//根据houseModelType将多个cell分为一个模块
+@property (nonatomic, assign)FHHouseModelType houseModelType;
 @end
 
 @interface FHDetailPhotoHeaderModel : FHDetailBaseModel

@@ -15,12 +15,14 @@
 #import "TTRoute.h"
 #import "UILabel+House.h"
 #import "FHDetailStarsCountView.h"
+#import "FHUtils.h"
 
 @interface FHDetailSuggestTipCell ()
 
 //@property (nonatomic, strong)   UIView       *tipBgView;
 @property (nonatomic, strong)   UILabel       *tipLabel;
 @property (nonatomic, strong)   UILabel       *subtitleLabel;
+@property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, strong)   UIImageView       *trendIcon;
 @property (nonatomic, strong)   UIView       *bgView;
 @property(nonatomic, strong) FHDetailStarsCountView *starView;
@@ -77,8 +79,23 @@
     return @"trade_tips";
 }
 
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        shadowImage.image = [[UIImage imageNamed:@"left_bottom_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(30,30,30,30) resizingMode:UIImageResizingModeStretch];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
+}
+
 - (void)setupUI {
-    
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView).offset(-20);
+        make.right.mas_equalTo(self.contentView).offset(20);
+        make.top.equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.contentView).offset(30);
+    }];
     _bgView = [[UIView alloc] init];
     _bgView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_bgView];
