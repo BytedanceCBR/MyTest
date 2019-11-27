@@ -30,6 +30,7 @@
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
 #define KFHHomeSectionHeight 45
+#define KFHHomeSearchBarHeight 50
 
 @interface FHHomeListViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -92,7 +93,8 @@
         //**************
         // 监听子控制器发出的通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subTableViewDidScroll:) name:@"FHHomeSubTableViewDidScroll" object:nil];
-        
+
+
         //*************
         self.tableViewV.hasMore = YES;
         
@@ -141,12 +143,7 @@
             [self checkCityStatus];
             
             self.headerHeight = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
-            if (xConfigDataModel.houseTypeList.count <= 1) {
-                self.headerHeight += KFHHomeSectionHeight;
-            }else
-            {
-                self.headerHeight += 1;
-            }
+    
             [self.tableViewV reloadData];
             
             [self setUpTableScrollOffsetZero];
@@ -581,10 +578,19 @@
 #pragma mark tableView 代理
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 3;
+    return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.row == kFHHomeListHeaderSearchSection) {
+        UITableViewCell *cell = [[UITableViewCell alloc] init];
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, 44)];
+        [headerView setBackgroundColor:[UIColor blueColor]];
+        [cell.contentView addSubview:headerView];
+        return cell;
+    }
+    
     if (indexPath.row == kFHHomeListHeaderBaseViewSection) {
         JSONModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
         if (!model) {
@@ -621,25 +627,34 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    if (indexPath.row == kFHHomeListHeaderSearchSection) {
+        return KFHHomeSearchBarHeight;
+    }
+    
     if (indexPath.row == kFHHomeListHeaderBaseViewSection) {
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
     if (indexPath.row == kFHHomeListHouseTypeBannerViewSection) {
-        self.headerHeight = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
-        
-        if (self.categoryView.segmentedControl.sectionTitles.count <= 1) {
-            self.headerHeight += KFHHomeSectionHeight;
-        }else
-        {
-            self.headerHeight += 1;
-        }
-        
         return KFHHomeSectionHeight;
     }
     
-    return [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight] + 45;
+    return [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight] + KFHHomeSectionHeight;
 }
+
+//- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    UIView *headerView = [UIView new];
+//    [headerView setBackgroundColor:[UIColor greenColor]];
+//    return headerView;
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    if (section = 0) {
+//        return KFHHomeSectionHeight;
+//    }
+//}
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.homeViewController hideImmediately];
@@ -648,17 +663,23 @@
         self.isSelectIndex = NO;
         self.tableViewV.scrollEnabled = NO;
         self.previousHouseType = self.houseType;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:nil];
+    }else if(scrollView == self.tableViewV)
+    {
+        // 滚动时发出通知
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
     }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (self.tableViewV == scrollView) {
-        if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight)) {
+        if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
             [self.categoryView showOriginStyle:NO];
             
             if (!self.isResetingOffsetZero) {
                 [self.homeViewController hideImmediately];
-                self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight);
+                self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
             }else
             {
                 [self.categoryView showOriginStyle:YES];
@@ -696,7 +717,11 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (scrollView == self.homeViewController.scrollView) {
-        
+
+    }else if(scrollView == self.tableViewV)
+    {
+        // 滚动时发出通知
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
     }
 }
 
@@ -717,14 +742,28 @@
             
             self.previousHouseType = self.houseType;
         }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            // 滚动时发出通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
+        });
     }
 }
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+//    if (scrollView == self.homeViewController.scrollView) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
+//    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
+}
+
+#pragma mark notifications
 
 - (void)subTableViewDidScroll:(NSNotification *)noti {
     self.tableViewV.scrollEnabled = YES;
     UIScrollView *scrollView = noti.object;
     self.childVCScrollView = scrollView;
-    if (self.tableViewV.contentOffset.y < self.headerHeight) {
+    if (self.tableViewV.contentOffset.y < self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
         scrollView.contentOffset = CGPointZero;
         scrollView.showsVerticalScrollIndicator = NO;
     } else {

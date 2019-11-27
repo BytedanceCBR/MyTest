@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHHomeViewController.h"
 #import "FHHouseType.h"
+#import "FHHomeBaseScrollView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

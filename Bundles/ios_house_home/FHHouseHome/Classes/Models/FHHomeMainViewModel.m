@@ -74,7 +74,7 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-   
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:scrollView];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -83,7 +83,7 @@
 
 //侧滑切换tab
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:scrollView];
 }
 
 

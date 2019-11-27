@@ -10,9 +10,10 @@
 #import "FHHomeSectionHeader.h"
 #import "FHHouseType.h"
 
-static const NSUInteger kFHHomeListHeaderBaseViewSection = 0;
-static const NSUInteger kFHHomeListHouseTypeBannerViewSection = 1;
-static const NSUInteger kFHHomeListHouseBaseViewSection = 2;
+static const NSUInteger kFHHomeListHeaderSearchSection = 0;
+static const NSUInteger kFHHomeListHeaderBaseViewSection = 1;
+static const NSUInteger kFHHomeListHouseTypeBannerViewSection = 2;
+static const NSUInteger kFHHomeListHouseBaseViewSection = 3;
 
 static const NSUInteger kFHHomeHeaderViewSectionHeight = 45;
 

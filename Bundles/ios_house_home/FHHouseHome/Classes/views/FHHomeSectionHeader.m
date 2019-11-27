@@ -114,12 +114,12 @@ static const NSInteger kTopScrollViewTag = 100;
 - (void)showOriginStyle:(BOOL)isOrigin
 {
     if (isOrigin) {
+        
         _topStyleContainer.hidden = YES;
         [self sendSubviewToBack:_topStyleContainer];
     }else
     {
-        _topStyleContainer.hidden = NO;
-        [self bringSubviewToFront:_topStyleContainer];
+        _topStyleContainer.hidden = YES;
     }
 }
 

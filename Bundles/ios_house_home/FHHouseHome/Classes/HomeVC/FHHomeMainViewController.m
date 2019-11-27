@@ -22,6 +22,7 @@
     [self initView]; //初始化视图
     [self initConstraints]; //更新约束
     [self initViewModel]; //创建viewModel
+    [self initNotifications];//订阅通知
     // Do any additional setup after loading the view.
 }
 
@@ -49,6 +50,7 @@
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
     _collectionView.bounces = NO;
+    _collectionView.scrollEnabled = NO;
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor themeGray7];
     [self.containerView addSubview:_collectionView];
@@ -75,7 +77,7 @@
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(0);
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(44 + safeTop);
+        make.height.mas_equalTo(64 + safeTop);
     }];
     [self.topView setBackgroundColor:[UIColor redColor]];
     
@@ -95,6 +97,23 @@
 - (void)initViewModel{
     self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
 }
+
+- (void)initNotifications{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollBegin) name:@"FHHomeMainDidScrollBegin" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollEnd) name:@"FHHomeMainDidScrollEnd" object:nil];
+}
+
+#pragma mark notifications
+
+- (void)mainCollectionScrollBegin{
+    self.collectionView.scrollEnabled = NO;
+}
+
+- (void)mainCollectionScrollEnd{
+    self.collectionView.scrollEnabled = YES;
+}
+
 /*
 #pragma mark - Navigation
 

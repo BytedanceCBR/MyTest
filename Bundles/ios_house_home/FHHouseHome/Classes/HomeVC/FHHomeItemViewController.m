@@ -481,6 +481,11 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 
 #pragma mark tableview等回调
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:nil];
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // 滚动时发出通知
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
@@ -491,6 +496,10 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
     if (self.scrollDidEnd) {
         self.scrollDidEnd();
     }
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -789,9 +798,10 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 - (UITableView *)tableView {
     
     if (!_tableView) {
-        _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
+        _tableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
+//        _tableView.bounces = NO;
         //        _tableView.decelerationRate = 0.1;
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.estimatedRowHeight = 0;

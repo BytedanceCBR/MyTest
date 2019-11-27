@@ -242,10 +242,10 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     // 108: topbar   49:tahbar  45:sectionHeader
     if ([TTDeviceHelper isIPhoneXSeries]) {
-        return MAIN_SCREENH_HEIGHT - 108 - 49 - 45 + padding;
+        return MAIN_SCREENH_HEIGHT - 108 - 49  + padding;
     }else
     {
-        return MAIN_SCREENH_HEIGHT - 84 - 49 - 45 + padding;
+        return MAIN_SCREENH_HEIGHT - 64 - 49  + padding;
     }
 }
 

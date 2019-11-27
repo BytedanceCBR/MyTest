@@ -36,6 +36,7 @@
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <TTThemedAlertController.h>
 #import <FHUtils.h>
+#import "FHHomeBaseScrollView.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -138,7 +139,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self.mainTableView removeFromSuperview];
     }
     
-    self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.mainTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.mainTableView.decelerationRate = 0.5;
     self.mainTableView.showsVerticalScrollIndicator = NO;
     
@@ -146,6 +147,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 //        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
 //    }
     
+//    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, 44)];
+//    [headerView setBackgroundColor:[UIColor blueColor]];
+//    self.mainTableView.tableHeaderView = headerView;
+//    self.mainTableView.bounces = YES;
     [self.view addSubview:self.mainTableView];
     
     self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -206,7 +211,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 44 - 49)];
     }else
     {
-        [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 20 - 49)];
+        [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 49)];
     }
 }
 
@@ -536,10 +541,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 #pragma mark init views
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
-        _scrollView = [[UIScrollView alloc] init];
+        _scrollView = [[FHHomeBaseScrollView alloc] init];
         _scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
         _scrollView.pagingEnabled = YES;
         _scrollView.bounces = NO;
+//        _scrollView.decelerationRate = 0.5;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.scrollsToTop = NO;
