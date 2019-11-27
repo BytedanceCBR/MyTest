@@ -24,4 +24,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// 消息
+typedef enum : NSUInteger {
+    FHDetailSocialMessageDirectionNone,
+    FHDetailSocialMessageDirectionLeft,
+    FHDetailSocialMessageDirectionRight,
+} FHDetailSocialMessageDirection;
+
+@interface FHDetailSocialMessageView : UIView
+
+@property (nonatomic, assign)   CGFloat       messageMaxWidth;
+@property (nonatomic, assign)   FHDetailSocialMessageDirection  direction;
+@property (nonatomic, strong)   FHDetailCommunityEntryActiveInfoModel       *activeInfo;
+
+@end
+
+
 NS_ASSUME_NONNULL_END
