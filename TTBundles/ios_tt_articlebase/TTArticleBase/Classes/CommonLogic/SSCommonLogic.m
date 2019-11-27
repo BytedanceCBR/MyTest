@@ -5413,14 +5413,15 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
 
 +(BOOL)disableDetailInstantShow
 {
-    NSDictionary *fhSettings = [self fhSettings];
-    if (fhSettings != nil && [fhSettings objectForKey:@"disable_detail_instant_show"] != nil) {
-        NSInteger info = [[fhSettings objectForKey:@"disable_detail_instant_show"] integerValue];
-        if (info == 1) {
-            return YES;
-        }
-    }
-    return NO;
+//    NSDictionary *fhSettings = [self fhSettings];
+//    if (fhSettings != nil && [fhSettings objectForKey:@"disable_detail_instant_show"] != nil) {
+//        NSInteger info = [[fhSettings objectForKey:@"disable_detail_instant_show"] integerValue];
+//        if (info == 1) {
+//            return YES;
+//        }
+//    }
+//    return NO;
+    return YES;
 }
 
 + (BOOL)enabledOldListQuickCondition {
