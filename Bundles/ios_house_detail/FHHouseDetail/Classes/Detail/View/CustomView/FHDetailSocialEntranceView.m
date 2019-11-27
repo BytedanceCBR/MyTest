@@ -149,8 +149,10 @@
         v.frame = defaultFrame;
         [self.animateArray addObject:v];
         __weak typeof(self) weakSelf = self;
+        [v startAnimation];
         [UIView animateWithDuration:kFHDetailSocialAnimateDuration animations:^{
             v.frame = nowFrame;
+            [v runAnimation];
         } completion:^(BOOL finished) {
         }];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((kFHDetailSocialAnimateDuration + 0.2) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -165,9 +167,13 @@
 - (void)animateUp {
     if (self.animateArray.count > 0) {
         __weak typeof(self) weakSelf = self;
+        NSInteger count = self.animateArray.count;
         [UIView animateWithDuration:kFHDetailSocialAnimateDuration animations:^{
             [weakSelf.animateArray enumerateObjectsUsingBlock:^(UIView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 obj.top -= 33;
+                if (count - idx > 2) {
+                    obj.alpha = 0;
+                }
             }];
         } completion:^(BOOL finished) {
             
@@ -231,6 +237,10 @@
 @property (nonatomic, strong)   UIView       *rightBgView;
 @property (nonatomic, strong)   UILabel       *messageLabel;
 
+@property (nonatomic, assign)   CGRect       originIconFrame;
+@property (nonatomic, assign)   CGRect       originBgFrame;
+@property (nonatomic, assign)   CGRect       originMessageFrame;
+
 @end
 
 @implementation FHDetailSocialMessageView
@@ -288,6 +298,31 @@
 
 - (void)setDirection:(FHDetailSocialMessageDirection)direction {
     _direction = direction;
+}
+
+- (void)startAnimation {
+    self.originIconFrame = self.iconImageView.frame;
+    self.originBgFrame = self.rightBgView.frame;
+    self.originMessageFrame = self.messageLabel.frame;
+    
+    self.iconImageView.layer.cornerRadius = 0;
+
+    if (self.direction == FHDetailSocialMessageDirectionLeft) {
+        self.iconImageView.frame = CGRectMake(0, 0, 0, 0);
+        self.rightBgView.frame = CGRectMake(0, 0, 0, 0);
+        self.messageLabel.frame = CGRectMake(0, 0, 0, 0);
+    } else if (self.direction == FHDetailSocialMessageDirectionRight) {
+        self.iconImageView.frame = CGRectMake(self.width, 0, 0, 0);
+        self.rightBgView.frame = CGRectMake(self.width, 0, 0, 0);
+        self.messageLabel.frame = CGRectMake(self.width, 0, 0, 0);
+    }
+}
+
+- (void)runAnimation {
+    self.iconImageView.frame = self.originIconFrame;
+    self.rightBgView.frame = self.originBgFrame;
+    self.messageLabel.frame = self.originMessageFrame;
+    self.iconImageView.layer.cornerRadius = 14;
 }
 
 @end

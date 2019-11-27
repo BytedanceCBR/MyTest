@@ -37,6 +37,9 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign)   FHDetailSocialMessageDirection  direction;
 @property (nonatomic, strong)   FHDetailCommunityEntryActiveInfoModel       *activeInfo;
 
+- (void)startAnimation;
+- (void)runAnimation;
+
 @end
 
 
