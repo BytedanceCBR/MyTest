@@ -207,11 +207,24 @@
     if (![TTDeviceHelper isScreenWidthLarge320]) {
         width = 280;
     }
-    // add by zyk 赋值数据 改变高度
+    // 高度计算
+    CGFloat height = 72 + 60;
+    NSInteger count = 3;
+    if (self.weakSocialInfo.associateActiveInfo.activeInfo.count >= 3) {
+        count = 3;
+    } else if (self.weakSocialInfo.associateActiveInfo.activeInfo.count > 0) {
+        count = self.weakSocialInfo.associateActiveInfo.activeInfo.count;
+    } else {
+        count = 1;
+    }
+    CGFloat messageHeight = 20 * 2 + 28 * count + (count - 1) * 5;
+    height += messageHeight;
 
-    FHDetailSocialEntranceView *v = [[FHDetailSocialEntranceView alloc] initWithFrame:CGRectZero];
-    v.backgroundColor = [UIColor redColor];
+    FHDetailSocialEntranceView *v = [[FHDetailSocialEntranceView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
+    v.backgroundColor = [UIColor themeWhite];
     v.parentView = alertView;
+    v.messageHeight = messageHeight;
+    v.socialInfo = self.weakSocialInfo;
     [alertView showAnotherView:v];
 }
 

@@ -6,13 +6,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHHouseNewsSocialModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@class FHDetailNoticeAlertView;
 
 // 新房 填表单之后入口
 @interface FHDetailSocialEntranceView : UIView
 
-@property (nonatomic, weak)     UIView       *parentView;
+@property (nonatomic, weak)     FHDetailNoticeAlertView       *parentView;
+@property (nonatomic, assign)   CGFloat       messageHeight;
+@property (nonatomic, strong)     FHHouseNewsSocialModel       *socialInfo;
+
+- (void)startAnimate;
+- (void)stopAnimate;
 
 @end
 

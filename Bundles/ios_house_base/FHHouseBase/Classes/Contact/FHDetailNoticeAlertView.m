@@ -463,9 +463,8 @@
     [self.contentView addSubview:anotherView];
     [anotherView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(100);
+        make.height.mas_equalTo(anotherView.height);
     }];
-    [anotherView updateConstraintsIfNeeded];
     [self layoutIfNeeded];
 }
 
