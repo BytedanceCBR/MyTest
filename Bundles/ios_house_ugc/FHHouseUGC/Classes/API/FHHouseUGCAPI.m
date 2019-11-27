@@ -18,7 +18,7 @@
 #import "FHUGCNoticeModel.h"
 #import "FHUGCVoteModel.h"
 #import "FHUGCVoteResponseModel.h"
-#import "FHUGCAskModel.h"
+#import "FHUGCWendaModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -741,7 +741,7 @@
     }];
 }
 
-+ (TTHttpTask *)requestPublishAskWithParam:(NSDictionary *)params completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
++ (TTHttpTask *)requestPublishWendaWithParam:(NSDictionary *)params completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
     NSString *queryPath = @"/f100/ugc/question/publish";
     NSString *url = QURL(queryPath);
     
@@ -751,7 +751,7 @@
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
         
         BOOL success = NO;
-        FHUGCAskModel *ugcAskModel = nil;
+        FHUGCWendaModel *ugcWendaModel = nil;
         if (!error) {
             @try{
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
@@ -762,7 +762,7 @@
                 }
                 else
                 {
-                    ugcAskModel = [[FHUGCAskModel alloc] initWithDictionary:json error:&error];
+                    ugcWendaModel = [[FHUGCWendaModel alloc] initWithDictionary:json error:&error];
                 }
             }
             @catch(NSException *e){
@@ -771,7 +771,7 @@
         }
         
         if (completion) {
-            completion(ugcAskModel,error);
+            completion(ugcWendaModel,error);
         }
     }];
 }

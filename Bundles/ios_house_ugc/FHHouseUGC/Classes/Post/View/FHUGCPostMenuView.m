@@ -128,7 +128,7 @@
 - (UILabel *)pubAskTitleLabel {
     if(!_pubAskTitleLabel) {
         _pubAskTitleLabel = [UILabel new];
-        _pubAskTitleLabel.text = @"发问答";
+        _pubAskTitleLabel.text = @"发提问";
         _pubAskTitleLabel.font = [UIFont themeFontSemibold:16];
         _pubAskTitleLabel.textColor = [UIColor themeWhite];
         [_pubAskTitleLabel sizeToFit];

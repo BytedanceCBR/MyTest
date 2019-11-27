@@ -37,7 +37,7 @@
         case FHPostUGCMainViewType_Post:
             return @"选择想要发布帖子的圈子";
             break;
-        case FHPostUGCMainViewType_Ask:
+        case FHPostUGCMainViewType_Wenda:
             return @"请选择要发布提问的圈子";
             break;
         default:

@@ -56,7 +56,7 @@
         // 发投票成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postVoteSuccess:) name:@"kFHVotePublishNotificationName" object:nil];
         // 发提问成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postAskSuccess:) name:@"kFHAskPublishNotificationName" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postWendaSuccess:) name:@"kFHWendaPublishNotificationName" object:nil];
     }
     
     return self;
@@ -118,10 +118,10 @@
     }
 }
 // 发提问成功通知
-- (void) postAskSuccess: (NSNotification *)noti {    
+- (void) postWendaSuccess: (NSNotification *)noti {    
     if (noti && noti.userInfo && self.dataList) {
         NSDictionary *userInfo = noti.userInfo;
-        NSString *ask_data = userInfo[@"askData"];
+        NSString *ask_data = userInfo[@"wendaData"];
         if ([ask_data isKindOfClass:[NSString class]] && ask_data.length > 0) {
             // 模型转换
             NSDictionary *dic = [ask_data JSONValue];

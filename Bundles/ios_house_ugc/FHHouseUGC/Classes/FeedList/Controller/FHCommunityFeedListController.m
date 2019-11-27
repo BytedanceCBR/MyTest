@@ -442,7 +442,7 @@
 }
 
 - (void)gotoAskVC {
-    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_ask_publish"];
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = [self pageType];

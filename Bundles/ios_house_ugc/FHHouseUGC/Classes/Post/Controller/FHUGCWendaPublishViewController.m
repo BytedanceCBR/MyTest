@@ -1,11 +1,11 @@
 //
-//  FHUGCAskPublishViewController.m
+//  FHUGCWendaPublishViewController.m
 //  FHHouseUGC
 //
 //  Created by wangzhizhou on 2019/11/22.
 //
 
-#import "FHUGCAskPublishViewController.h"
+#import "FHUGCWendaPublishViewController.h"
 #import <FHPostUGCMainView.h>
 #import <IMConsDefine.h>
 #import <FHUGCConfig.h>
@@ -26,20 +26,38 @@
 #import <TTPostThreadDefine.h>
 #import <FHHouseUGCAPI.h>
 #import <HMDTTMonitor.h>
-#import <FHUGCAskModel.h>
+#import <FHUGCWendaModel.h>
 #import <FHPostUGCViewController.h>
 
 #define ENTRY_HEIGHT 44
-#define TITLE_TEXT_VIEW_HEIGHT 60
+
+// 标题输入框尺寸
+#define TITLE_TEXT_VIEW_HEIGHT 40
+#define TITLE_TEXT_VIEW_MIN_HEIGHT 40
+#define TITLE_TEXT_VIEW_MAX_HEIGHT 100
+
+// 描述输入框尺寸
 #define DESC_TEXT_VIEW_HEIGHT 100
+#define DESC_TEXT_VIEW_MIN_HEIGHT 100
+#define DESC_TEXT_VIEW_MAX_HEIGHT 150
+
 #define ADD_IMAGES_HEIGHT 120
+
+// 页面内容左右边距
 #define LEFT_PADDING 20
 #define RIGHT_PADDING 20
-#define TITLE_MAX_COUNT 40
-#define DESC_MAX_COUNT 2000
-#define IMAGE_MAX_COUNT 3
 
-@interface FHUGCAskPublishViewController () <TTUGCToolbarDelegate, TTUGCTextViewDelegate, FRAddMultiImagesViewDelegate>
+#define TITLE_MAX_COUNT 40  // 问题标题文字长度限制
+#define DESC_MAX_COUNT 100  // 问题描述文字长度限制
+#define IMAGE_MAX_COUNT 3   // 问题副带图片个数限制
+
+#define VGAP_HIST_TITLE    24
+#define VGAP_TITLE_SEP     16
+#define VGAP_SEP_DESC      20
+#define VGAP_DESC_ADDIMAGE 10
+
+
+@interface FHUGCWendaPublishViewController () <TTUGCToolbarDelegate, TTUGCTextViewDelegate, FRAddMultiImagesViewDelegate>
 @property (nonatomic, assign) BOOL hasSocialGroup;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) FHPostUGCMainView *socialGroupSelectEntry;
@@ -51,14 +69,20 @@
 @property (nonatomic, strong) TTUGCToolbar *toolbar;
 @property (nonatomic, strong) SSThemedLabel *tipLabel;
 @property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
+
+@property (nonatomic, copy) NSString *selectGroupId;
+@property (nonatomic, copy) NSString *selectGroupName;
+
 @end
 
-@implementation FHUGCAskPublishViewController
+@implementation FHUGCWendaPublishViewController
 
 -(instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
         self.title = @"提问";
-        self.hasSocialGroup = NO;
+        self.selectGroupId = [paramObj.allParams tt_stringValueForKey:@"select_group_id"];
+        self.selectGroupName = [paramObj.allParams tt_stringValueForKey:@"select_group_name"];
+        self.hasSocialGroup = self.selectGroupId.length > 0 && self.selectGroupName.length > 0;
     }
     return self;
 }
@@ -106,7 +130,6 @@
     // 键盘弹出
     else {
         self.toolbar.top = self.containerView.height - [self toolbarHeight] - (SCREEN_HEIGHT - endFrame.origin.y);
-        
     }
 }
 
@@ -160,12 +183,17 @@
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
+    // 检查是否选择了要发布的小区koi
+    NSString *socialGroupId = self.socialGroupSelectEntry.groupId;
+    if(socialGroupId.length <= 0) {
+        [[ToastManager manager] showToast:@"请选择要发布的小区！"];
+        return;
+    }
     
     // 收起键盘
     [self.view endEditing:YES];
-    
     // 发布提问内容
-    [self publishAskContent];
+    [self publishWendaContent];
 }
 
 #pragma makr - 懒加载成员
@@ -178,7 +206,7 @@
 
 - (FHPostUGCMainView *)socialGroupSelectEntry {
     if(!_socialGroupSelectEntry) {
-        _socialGroupSelectEntry = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.hasSocialGroup ? 0 : ENTRY_HEIGHT) type:FHPostUGCMainViewType_Ask];
+        _socialGroupSelectEntry = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.hasSocialGroup ? 0 : ENTRY_HEIGHT) type:FHPostUGCMainViewType_Wenda];
         
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(socialGroupSelectEntryAction:)];
         
@@ -190,7 +218,7 @@
 - (FHPostUGCSelectedGroupHistoryView *)selectedGrouplHistoryView {
     if(!_selectedGrouplHistoryView) {
         FHPostUGCSelectedGroupModel *selectedGroup = [self loadSelectedGroup];
-        CGFloat height = selectedGroup ? ENTRY_HEIGHT: 0;
+        CGFloat height = (selectedGroup || self.hasSocialGroup) ? ENTRY_HEIGHT: 0;
         _selectedGrouplHistoryView = [[FHPostUGCSelectedGroupHistoryView alloc] initWithFrame:CGRectMake(0, self.socialGroupSelectEntry.bottom, SCREEN_WIDTH, height) delegate:self historyModel:selectedGroup];
         _selectedGrouplHistoryView.clipsToBounds = YES;
     }
@@ -199,39 +227,60 @@
 
 - (TTUGCTextView *)titleTextView {
     if(!_titleTextView) {
-        _titleTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(LEFT_PADDING, self.selectedGrouplHistoryView.bottom + 24, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, TITLE_TEXT_VIEW_HEIGHT)];
-        _titleTextView.internalGrowingTextView.frame = _titleTextView.bounds;
+        _titleTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(LEFT_PADDING, self.selectedGrouplHistoryView.bottom + VGAP_HIST_TITLE, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, TITLE_TEXT_VIEW_HEIGHT)];
         _titleTextView.clipsToBounds = YES;
+        _titleTextView.delegate = self;
+        
+        _titleTextView.internalGrowingTextView.minHeight = TITLE_TEXT_VIEW_MIN_HEIGHT;
+        _titleTextView.internalGrowingTextView.maxHeight = TITLE_TEXT_VIEW_MAX_HEIGHT;
         _titleTextView.internalGrowingTextView.font = [UIFont themeFontRegular:22];
         _titleTextView.internalGrowingTextView.placeholder = @"请输入问题";
         _titleTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
         _titleTextView.internalGrowingTextView.internalTextView.textAttributes = @{ NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:22]};
         _titleTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
-        _titleTextView.delegate = self;
+        
+        // 调整文字内容垂直偏移
+        UIEdgeInsets textContaineriInset = _titleTextView.internalGrowingTextView.internalTextView.textContainerInset;
+        textContaineriInset.top = 5; _titleTextView.internalGrowingTextView.internalTextView.textContainerInset = textContaineriInset;
     }
     return _titleTextView;
 }
 
+- (UIView *)horizontalSeparatorLine {
+    if(!_horizontalSeparatorLine) {
+        _horizontalSeparatorLine = [[UIView alloc] initWithFrame:CGRectMake(LEFT_PADDING, self.titleTextView.bottom + VGAP_TITLE_SEP, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, 1)];
+        _horizontalSeparatorLine.backgroundColor = [UIColor colorWithHexStr:@"E8E8E8"];
+    }
+    return _horizontalSeparatorLine;
+}
+
 - (TTUGCTextView *)descriptionTextView {
     if(!_descriptionTextView) {
-        _descriptionTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(LEFT_PADDING, self.horizontalSeparatorLine.bottom + 20, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, DESC_TEXT_VIEW_HEIGHT)];
+        _descriptionTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(LEFT_PADDING, self.horizontalSeparatorLine.bottom + VGAP_SEP_DESC, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, DESC_TEXT_VIEW_HEIGHT)];
         _descriptionTextView.clipsToBounds = YES;
+        _descriptionTextView.delegate = self;
+    
+        _descriptionTextView.internalGrowingTextView.minHeight = DESC_TEXT_VIEW_MIN_HEIGHT;
+        _descriptionTextView.internalGrowingTextView.maxHeight = DESC_TEXT_VIEW_MAX_HEIGHT;
         _descriptionTextView.internalGrowingTextView.font = [UIFont themeFontRegular:16];
         _descriptionTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
         _descriptionTextView.internalGrowingTextView.placeholder = @"增加描述和配图（选填）";
         _descriptionTextView.internalGrowingTextView.internalTextView.textAttributes = @{ NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:16]};
         _descriptionTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
-        _descriptionTextView.delegate = self;
     }
     return _descriptionTextView;
 }
 
-- (UIView *)horizontalSeparatorLine {
-    if(!_horizontalSeparatorLine) {
-        _horizontalSeparatorLine = [[UIView alloc] initWithFrame:CGRectMake(LEFT_PADDING, self.titleTextView.bottom + 16, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, 1)];
-        _horizontalSeparatorLine.backgroundColor = [UIColor colorWithHexStr:@"E8E8E8"];
+- (FRAddMultiImagesView *)addImagesView {
+    if(!_addImagesView) {
+        CGFloat y = MAX(self.descriptionTextView.top + DESC_TEXT_VIEW_HEIGHT, self.descriptionTextView.bottom) + VGAP_DESC_ADDIMAGE;
+        _addImagesView = [[FRAddMultiImagesView alloc] initWithFrame:CGRectMake(LEFT_PADDING, y, self.view.width - LEFT_PADDING - RIGHT_PADDING, ADD_IMAGES_HEIGHT) assets:@[] images:@[]];
+        _addImagesView.delegate = self;
+        _addImagesView.hideAddImagesButtonWhenEmpty = YES;
+        _addImagesView.selectionLimit = IMAGE_MAX_COUNT;
+        [_addImagesView startTrackImagepicker];
     }
-    return _horizontalSeparatorLine;
+    return _addImagesView;
 }
 
 - (TTUGCToolbar *)toolbar {
@@ -272,18 +321,6 @@
         [_tipLabel setTextColor:[UIColor themeGray4]];
     }
     return _tipLabel;
-}
-
-- (FRAddMultiImagesView *)addImagesView {
-    if(!_addImagesView) {
-        _addImagesView = [[FRAddMultiImagesView alloc] initWithFrame:CGRectMake(LEFT_PADDING, self.descriptionTextView.bottom, self.view.width - LEFT_PADDING - RIGHT_PADDING, ADD_IMAGES_HEIGHT) assets:@[]
-                                                            images:@[]];
-        _addImagesView.delegate = self;
-        _addImagesView.hideAddImagesButtonWhenEmpty = YES;
-        _addImagesView.selectionLimit = IMAGE_MAX_COUNT;
-        [_addImagesView startTrackImagepicker];
-    }
-    return _addImagesView;
 }
 
 - (FRUploadImageManager *)uploadImageManager {
@@ -337,6 +374,8 @@
         }
         self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",self.descriptionTextView.text.length, DESC_MAX_COUNT];
     }
+    
+    [self refreshUI];
 }
 
 - (void)textViewDidBeginEditing:(TTUGCTextView *)textView {
@@ -381,7 +420,7 @@
     
     FHPostUGCSelectedGroupModel *selectedGroup = nil;
     
-    FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadAskPublisherHistoryData];
+    FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadWendaPublisherHistoryData];
     
     NSString *currentUserID = [TTAccountManager currentUser].userID.stringValue;
     NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
@@ -399,7 +438,7 @@
     NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
     NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
     if(currentCityID.length > 0 && currentUserID.length > 0) {
-        FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadAskPublisherHistoryData];
+        FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadWendaPublisherHistoryData];
         if(!selectedGroupHistory) {
             selectedGroupHistory = [FHPostUGCSelectedGroupHistory new];
             selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
@@ -411,7 +450,7 @@
         NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
         [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
         
-        [[FHUGCConfig sharedInstance] saveAskPublisherHistoryDataWithModel:selectedGroupHistory];
+        [[FHUGCConfig sharedInstance] saveWendaPublisherHistoryDataWithModel:selectedGroupHistory];
     }
 }
 
@@ -464,16 +503,21 @@
     
     // 标题文本输入
     CGRect titleFrame = self.titleTextView.frame;
-    titleFrame.origin.y = self.selectedGrouplHistoryView.bottom + 24;
+    titleFrame.origin.y = self.selectedGrouplHistoryView.bottom + VGAP_HIST_TITLE;
     self.titleTextView.frame = titleFrame;
-    
+
     // 水平分割线
-    self.horizontalSeparatorLine.top = self.titleTextView.bottom + 16;
+    self.horizontalSeparatorLine.top = self.titleTextView.bottom + VGAP_TITLE_SEP;
     
     // 描述文本输入
     CGRect descriptionFrame = self.descriptionTextView.frame;
-    descriptionFrame.origin.y = self.horizontalSeparatorLine.bottom + 20;
+    descriptionFrame.origin.y = self.horizontalSeparatorLine.bottom + VGAP_SEP_DESC;
     self.descriptionTextView.frame = descriptionFrame;
+    
+    // 添加图片视图
+    CGRect addImageViewFrame = self.addImagesView.frame;
+    addImageViewFrame.origin.y = MAX(self.descriptionTextView.top + DESC_TEXT_VIEW_HEIGHT, self.descriptionTextView.bottom) + VGAP_DESC_ADDIMAGE;
+    self.addImagesView.frame = addImageViewFrame;
 }
 
 // 检查是否使用发布按钮逻辑
@@ -482,9 +526,7 @@
     
     NSString *titleString = [self validStringFrom:self.titleTextView.text];
     
-    NSString *socialGroupId = self.socialGroupSelectEntry.groupId;
-    
-    if(titleString.length > 0 && socialGroupId.length > 0) {
+    if(titleString.length > 0) {
         isEnable = YES;
     }
 
@@ -499,7 +541,7 @@
 
 #pragma mark - 发布逻辑
 
-- (void)publishAskContent {
+- (void)publishWendaContent {
     
     if ([TTAccountManager isLogin]) {
         TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
@@ -526,7 +568,7 @@
             // 登录成功
             if ([TTAccountManager isLogin]) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self publishAskContent];
+                    [self publishWendaContent];
                 });
             }
         }
@@ -536,16 +578,16 @@
 - (void)checkSocialGroupFollowedStatusAndPublish {
     if (self.socialGroupSelectEntry.followed) {
         // 已关注，直接发帖
-        [self publishAskContentAfterFollowedSocialGroup];
+        [self publishWendaContentAfterFollowedSocialGroup];
     } else {
         // 先关注
         WeakSelf;
         [[FHUGCConfig sharedInstance] followUGCBy:self.socialGroupSelectEntry.groupId isFollow:YES enterFrom:@"feed_publisher" enterType:@"click" completion:^(BOOL isSuccess) {
             StrongSelf;
             if (isSuccess) {
-                [self publishAskContentAfterFollowedSocialGroup];
+                [self publishWendaContentAfterFollowedSocialGroup];
             } else {
-                [[ToastManager manager] showToast:@"提问发布失败"];
+                [[ToastManager manager] showToast:@"发布失败"];
             }
         }];
     }
@@ -561,7 +603,7 @@
     return ary;
 }
 
-- (void)publishAskContentAfterFollowedSocialGroup {
+- (void)publishWendaContentAfterFollowedSocialGroup {
     
     // 有选中图片就先上传图片再发布提问
     if(self.addImagesView.selectedImages.count > 0) {
@@ -569,7 +611,7 @@
     }
     // 没有选中图片就直接发布提问
     else {
-        [self postAskRequestWithUploadImageModels: nil];
+        [self postWendaRequestWithUploadImageModels: nil];
     }
 }
 
@@ -643,12 +685,12 @@
             [[ToastManager manager] showToast:@"图片上传失败！"];
         }
         else {
-            [self postAskRequestWithUploadImageModels:finishUpLoadModels];
+            [self postWendaRequestWithUploadImageModels:finishUpLoadModels];
         }
     }];
 }
 
-- (void)postAskRequestWithUploadImageModels:(NSArray<FRUploadImageModel*> *) finishUpLoadModels {
+- (void)postWendaRequestWithUploadImageModels:(NSArray<FRUploadImageModel*> *) finishUpLoadModels {
     
     // 收集请求参数
     NSString *title = [self validStringFrom:self.titleTextView.text];
@@ -674,21 +716,21 @@
     
     WeakSelf;
     // 开始发送提问发布请求
-    [FHHouseUGCAPI requestPublishAskWithParam: requestParams completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestPublishWendaWithParam: requestParams completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
         if(error) {
-            [[ToastManager manager] showToast:@"发布提问失败!"];
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_ask_publish" metric:nil category:@{@"status":@(1)} extra:nil];
+            [[ToastManager manager] showToast:@"发布失败!"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_wenda_publish" metric:nil category:@{@"status":@(1)} extra:nil];
             return;
         }
         
-        if([model isKindOfClass:[FHUGCAskModel class]]) {
-            FHUGCAskModel *askModel = (FHUGCAskModel *)model;
-            if(askModel.data.length > 0) {
+        if([model isKindOfClass:[FHUGCWendaModel class]]) {
+            FHUGCWendaModel *wendaModel = (FHUGCWendaModel *)model;
+            if(wendaModel.data.length > 0) {
                 
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
-                userInfo[@"askData"] = askModel.data;
+                userInfo[@"wendaData"] = wendaModel.data;
                 userInfo[@"social_group_ids"] = socialGroupId;
                 
                 // 存储历史发布圈子信息
@@ -701,16 +743,16 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil];
                 
                 // 发通知进行数据插入操作
-                [[NSNotificationCenter defaultCenter] postNotificationName:kFHAskPublishNotificationName object:nil userInfo:userInfo];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHWendaPublishNotificationName object:nil userInfo:userInfo];
                 
-                [[ToastManager manager] showToast:@"发布提问成功!"];
+                [[ToastManager manager] showToast:@"发布成功!"];
                 
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_ask_publish" metric:nil category:@{@"status":@(0)} extra:nil];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_wenda_publish" metric:nil category:@{@"status":@(0)} extra:nil];
                 
             }
             else {
-                [[ToastManager manager] showToast:@"发布提问失败!"];
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_ask_publish" metric:nil category:@{@"status":@(2)} extra:nil];
+                [[ToastManager manager] showToast:@"发布失败!"];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_wenda_publish" metric:nil category:@{@"status":@(2)} extra:nil];
             }
         }
     }];

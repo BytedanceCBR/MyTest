@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, FHPostUGCMainViewType) {
     FHPostUGCMainViewType_Post,
-    FHPostUGCMainViewType_Ask
+    FHPostUGCMainViewType_Wenda
 };
 
 // 选择小区 类名懒得改了

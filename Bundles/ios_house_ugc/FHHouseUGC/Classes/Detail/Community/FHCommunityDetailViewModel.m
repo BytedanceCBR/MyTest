@@ -110,7 +110,7 @@
     // 发投票成功
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postVoteSuccess:) name:@"kFHVotePublishNotificationName" object:nil];
     // 发提问成功
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postAskSuccess:) name:@"kFHAskPublishNotificationName" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postWendaSuccess:) name:@"kFHWendaPublishNotificationName" object:nil];
 }
 
 - (void)postGoodSuccess:(NSNotification *)noti {
@@ -143,7 +143,7 @@
     }
 }
 // 发提问成功通知
-- (void) postAskSuccess:(NSNotification *)noti {
+- (void) postWendaSuccess:(NSNotification *)noti {
     if (noti && noti.userInfo) {
         NSDictionary *userInfo = noti.userInfo;
         FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
@@ -397,7 +397,7 @@
 }
 
 - (void)gotoAskVC {
-    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_ask_publish"];
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
