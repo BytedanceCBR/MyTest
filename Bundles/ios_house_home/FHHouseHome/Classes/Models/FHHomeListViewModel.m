@@ -327,6 +327,16 @@
     }
 }
 
+- (void)setUpHomeItemScrollView:(BOOL)isCanScroll
+{
+    for (FHHomeItemViewController *vc in self.itemsVCArray) {
+        if ([vc isKindOfClass:[FHHomeItemViewController class]]) {
+            FHHomeItemViewController *itemVC = (FHHomeItemViewController *)vc;
+            itemVC.tableView.scrollEnabled = isCanScroll;
+        }
+    }
+}
+
 - (void)setUpSubtableIndex:(NSInteger)index
 {
     if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
@@ -662,9 +672,11 @@
     if (scrollView == self.homeViewController.scrollView) {
         self.isSelectIndex = NO;
         self.tableViewV.scrollEnabled = NO;
-        self.previousHouseType = self.houseType;
-        
+          self.previousHouseType = self.houseType;
+    
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:nil];
+        
+        [self setUpHomeItemScrollView:NO];
     }else if(scrollView == self.tableViewV)
     {
         // 滚动时发出通知
@@ -717,7 +729,6 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (scrollView == self.homeViewController.scrollView) {
-
     }else if(scrollView == self.tableViewV)
     {
         // 滚动时发出通知
@@ -744,6 +755,7 @@
         }
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self setUpHomeItemScrollView:YES];
             // 滚动时发出通知
             [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
         });
@@ -754,6 +766,7 @@
 //    if (scrollView == self.homeViewController.scrollView) {
 //        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
 //    }
+    [self setUpHomeItemScrollView:YES];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
 }
 
