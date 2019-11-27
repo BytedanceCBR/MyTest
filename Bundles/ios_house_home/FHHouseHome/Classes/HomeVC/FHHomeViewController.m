@@ -430,6 +430,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [FHEnvContext addTabUGCGuid];
     
     [TTSandBoxHelper setAppFirstLaunchForAd];
+    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 - (void)_willEnterForeground:(NSNotification *)notification

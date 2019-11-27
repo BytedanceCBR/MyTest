@@ -38,7 +38,7 @@ PODS:
   - BDAlogProtocol (0.1.7)
   - BDAssert/Core (2.0.0)
   - BDMobileRuntime (0.3.38)
-  - BDSSOAuthSDK (1.0.8)
+  - BDSSOAuthSDK (1.1.0)
   - BDTArticle (0.2.3)
   - BDTBasePlayer (0.3.47)
   - BDTExploreOrderedData (0.1.7)
@@ -913,7 +913,7 @@ DEPENDENCIES:
   - TTThemed (= 0.1.36.1-binary)
   - TTTracker (= 10.0.5.1-binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
-  - TTUIWidget (from `../../testPod/tt_pods_ui`)
+  - TTUIWidget (from `git@code.byted.org:TTIOS/tt_pods_ui.git`, commit `035a4a6c45663530331516a778b8ad8949a3e7c9`)
   - TTUserProfile (from `../TTBundles/ios_tt_userprofile`)
   - TTUserSettings (= 0.3.4)
   - TTVContainerScrollView (= 0.1.2.1-binary)
@@ -1039,13 +1039,19 @@ EXTERNAL SOURCES:
   TTUGCFoundation:
     :path: ../Vendor/TTUGCFoundation
   TTUIWidget:
-    :path: ../../testPod/tt_pods_ui
+    :commit: 035a4a6c45663530331516a778b8ad8949a3e7c9
+    :git: git@code.byted.org:TTIOS/tt_pods_ui.git
   TTUserProfile:
     :path: ../TTBundles/ios_tt_userprofile
   TTVPlayerPod:
     :path: ../AKPlugins/TTVPlayer
   yoga:
     :path: ../ReactCommon/yoga
+
+CHECKOUT OPTIONS:
+  TTUIWidget:
+    :commit: 035a4a6c45663530331516a778b8ad8949a3e7c9
+    :git: git@code.byted.org:TTIOS/tt_pods_ui.git
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
@@ -1067,7 +1073,7 @@ SPEC CHECKSUMS:
   BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
   BDMobileRuntime: 83175e738acd91083ea560cf0fd4e34612987b80
-  BDSSOAuthSDK: 58a6720a0f1cebdba65e1309d986ec2f17305521
+  BDSSOAuthSDK: 50464c9dd31869a9fe999723f68b931e8acab644
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
@@ -1220,7 +1226,7 @@ SPEC CHECKSUMS:
   TTThemed: 921e544fa8ca8c34b3a091af38b8612609c18480
   TTTracker: 53b746772e7240481e57bee23ae866924fdc0193
   TTUGCFoundation: 122bc1a5271b79b073460ec6691c3e3f2df86593
-  TTUIWidget: 50dfb035fd9b286192375c029515fdc01cc35325
+  TTUIWidget: 941f08ee676566775f3721a9f7322507132985f7
   TTUserProfile: e9f6d23e86b3c1232b15a79a239e5d3a27e5b2f3
   TTUserSettings: 8214e9b9707b42dc450c2337ef5e9ca77456e0a4
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
@@ -1246,6 +1252,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: ae166c38bb99a16c9a6ddb3146d0c3b82f565e12
+PODFILE CHECKSUM: 02bc2a6cab791e132ff6c6cebd5fda7b10278d56
 
 COCOAPODS: 1.4.0
