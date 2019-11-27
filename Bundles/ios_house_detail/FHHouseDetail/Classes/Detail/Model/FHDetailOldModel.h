@@ -461,7 +461,9 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseReviewCommentModel> *houseReviewComment;
 @property (nonatomic, strong , nullable) FHDetailDataQuickQuestionModel *quickQuestion;
 @property (nonatomic, copy , nullable) NSString *recommendedHouseTitle;
-
+@property (nonatomic, copy , nullable) NSString *subscriptionToast;
+@property (nonatomic, copy , nullable) NSString *reportToast;
+@property (nonatomic, copy , nullable) NSString *reportDoneToast;
 
 @end
 

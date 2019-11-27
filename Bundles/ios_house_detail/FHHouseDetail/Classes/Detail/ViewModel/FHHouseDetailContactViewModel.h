@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *fromStr;//floor_plan_detail:app_floor_plan
 @property (nonatomic, strong) FHDetailImShareInfoModel* imShareInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
+@property (nonatomic, copy , nullable) NSString *subTitle;
+@property (nonatomic, copy , nullable) NSString *toast;//表单提交成功的提示语
 
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;

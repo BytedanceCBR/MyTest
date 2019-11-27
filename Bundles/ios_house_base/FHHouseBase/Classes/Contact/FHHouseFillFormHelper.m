@@ -252,7 +252,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [alertView dismiss];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phone forKey:kFHPhoneNumberCacheKey];
-            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
+            NSString *toast = @"提交成功，经纪人将尽快与您联系";
+            if (configModel.toast && configModel.toast.length > 0) {
+                toast = configModel.toast;
+            }
+            [[ToastManager manager] showToast:toast];
         }else {
             NSString *message = model.message ? : @"提交失败";
             [[ToastManager manager] showToast:message];
