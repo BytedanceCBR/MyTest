@@ -49,7 +49,9 @@
 
 // 注册cell类型
 - (void)registerCellClasses {
-
+    // 注册通知
+    [self registerNoti];
+    
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
     
     [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameModel class])];
