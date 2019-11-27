@@ -483,12 +483,23 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:nil];
+    if (self.scrollDidBegin) {
+        self.scrollDidBegin();
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // 滚动时发出通知
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (decelerate) {
+        if (self.scrollDidEnd) {
+            self.scrollDidEnd();
+        }
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView

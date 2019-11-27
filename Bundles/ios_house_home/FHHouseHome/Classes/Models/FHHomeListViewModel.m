@@ -289,8 +289,12 @@
                 [weakSelf processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
             };
             
+            itemVC.scrollDidBegin = ^{
+                self.homeViewController.scrollView.scrollEnabled = NO;
+            };
+            
             itemVC.scrollDidEnd = ^{
-                
+                self.homeViewController.scrollView.scrollEnabled = YES;
             };
             
             itemVC.requestNetworkUnAvalableRetryCallBack = ^{
