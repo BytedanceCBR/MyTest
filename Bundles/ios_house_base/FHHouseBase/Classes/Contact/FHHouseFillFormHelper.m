@@ -251,8 +251,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phone forKey:kFHPhoneNumberCacheKey];
-            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-            // add by zyk
+            
             /* 不想加这个逻辑，新房填表单之后要弹出另一个弹窗，效果是要衔接，就是一个不消失直接展示另一个，不是不能实现，是要把之前封装好的逻辑打乱，还要加一些XX的代码，不优雅； 数据都不在一个地方，加通知也不太好，oops
              */
             if (configModel.houseType == FHHouseTypeNewHouse && [configModel.topViewController isKindOfClass:[FHHouseDetailViewController class]]) {
@@ -263,8 +262,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 if (table) {
                     userInfo[@"alert_view"] = table;
                 }
+                // 注意toast提示，在通知的地方继续处理，好乱的逻辑啊啊啊啊
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHDetailUGCSocialEntranceNoti" object:nil userInfo:@{@"user_info":userInfo}];
             } else {
+                [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
                 // 走之前的逻辑
                 [alertView dismiss];
             }

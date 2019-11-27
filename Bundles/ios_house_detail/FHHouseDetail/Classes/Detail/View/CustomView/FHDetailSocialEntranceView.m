@@ -23,7 +23,7 @@
 #import "FHDetailNoticeAlertView.h"
 #import "UIImage+FIconFont.h"
 
-#define kFHDetailSocialAnimateDuration 1.0
+#define kFHDetailSocialAnimateDuration 0.8
 
 @interface FHDetailSocialEntranceView()
 
@@ -52,6 +52,7 @@
 {
     _viewsArray = [NSMutableArray new];
     _animateArray = [NSMutableArray new];
+    _isFromForm = YES;
     
     [self addSubview:self.titleLabel];
     [self addSubview:self.closeBtn];
@@ -95,7 +96,11 @@
 - (void)setSocialInfo:(FHHouseNewsSocialModel *)socialInfo {
     _socialInfo = socialInfo;
     if (socialInfo) {
-        self.titleLabel.text = socialInfo.socialGroupInfo.socialGroupName;
+        if (self.isFromForm) {
+            self.titleLabel.text = @"提交成功";
+        } else {
+            self.titleLabel.text = socialInfo.socialGroupInfo.socialGroupName;
+        }
         NSString *btnTitle = @"立即加入";
         if (socialInfo.associateActiveInfo.associateLinkTitle.length > 0) {
             btnTitle = socialInfo.associateActiveInfo.associateLinkTitle;
@@ -129,7 +134,9 @@
 
 - (void)startAnimate {
     [self.animateArray removeAllObjects];
-    [self animateRun];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self animateRun];
+    });
 }
 
 - (void)animateRun {

@@ -179,7 +179,10 @@
                 });
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [formAlertView dismiss]; // dismiss
+                    if (formAlertView) {
+                        [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
+                        [formAlertView dismiss];
+                    }
                 });
             }
         }
@@ -187,11 +190,22 @@
         // 不处理的情况也要dismiss弹窗--新房填表单后逻辑
         NSDictionary *userInfo = notification.userInfo[@"user_info"];
         if (userInfo && [userInfo isKindOfClass:[NSDictionary class]]) {
-            NSHashTable *table = userInfo[@"alert_view"];
-            if (table) {
-                FHDetailNoticeAlertView *alertView = (FHDetailNoticeAlertView *)unwrap_weak(table);
-                if ([alertView isKindOfClass:[FHDetailNoticeAlertView class]]) {
-                    [alertView dismiss];
+            // 填表单
+            FHDetailNoticeAlertView *formAlertView = nil;
+            FHHouseFillFormConfigModel *configModel = userInfo[@"config_model"];
+            if ([configModel isKindOfClass:[FHHouseFillFormConfigModel class]]) {
+                NSHashTable *table = userInfo[@"alert_view"];
+                if (table) {
+                    FHDetailNoticeAlertView *alertView = (FHDetailNoticeAlertView *)unwrap_weak(table);
+                    if ([alertView isKindOfClass:[FHDetailNoticeAlertView class]]) {
+                        formAlertView = alertView;
+                    }
+                }
+                FHHouseType houseType = configModel.houseType;
+                NSString *houseId = configModel.houseId;
+                if (houseId.length > 0 && houseType == self.houseType && [self.houseId isEqualToString:houseId]) {
+                     [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
+                    [formAlertView dismiss];
                 }
             }
         }
@@ -199,7 +213,9 @@
 }
 
 - (void)showSocialEntranceViewWith:(FHDetailNoticeAlertView *)alertView {
+    BOOL isFromForm = YES;
     if (alertView == nil) {
+        isFromForm = NO;
         alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"" subtitle:@"" btnTitle:@""];
         [alertView showFrom:self.detailController.view];
     }
@@ -222,6 +238,7 @@
 
     FHDetailSocialEntranceView *v = [[FHDetailSocialEntranceView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
     v.backgroundColor = [UIColor themeWhite];
+    v.isFromForm = isFromForm;
     v.parentView = alertView;
     v.messageHeight = messageHeight;
     v.socialInfo = self.weakSocialInfo;

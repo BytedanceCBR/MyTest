@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 新房 填表单之后入口
 @interface FHDetailSocialEntranceView : UIView
 
+@property (nonatomic, assign)   BOOL       isFromForm;// 填表单
 @property (nonatomic, weak)     FHDetailNoticeAlertView       *parentView;
 @property (nonatomic, assign)   CGFloat       messageHeight;
 @property (nonatomic, strong)     FHHouseNewsSocialModel       *socialInfo;
