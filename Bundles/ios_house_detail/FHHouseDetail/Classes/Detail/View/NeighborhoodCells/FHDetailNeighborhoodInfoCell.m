@@ -253,7 +253,7 @@
         imExtra[@"source_from"] = @"education_type";
         imExtra[@"im_open_url"] = model.neighborhoodInfo.schoolConsult.openUrl;
         imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-        imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHCluePageTypeCOldSchool];
+        imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldSchool];
         [model.contactViewModel onlineActionWithExtraDict:imExtra];
         if (self.baseViewModel) {
             [self.baseViewModel addClickOptionLog:@"education_type"];

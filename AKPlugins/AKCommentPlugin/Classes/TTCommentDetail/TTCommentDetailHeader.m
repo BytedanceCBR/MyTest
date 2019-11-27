@@ -30,7 +30,7 @@
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
 #import <TTUGCFoundation/TTRichSpanText+Emoji.h>
 #import <UIColor+Theme.h>
-
+#import "TTRichSpanText+Link.h"
 
 @interface TTCommentDetailHeaderUIHelper : NSObject
 
@@ -237,6 +237,8 @@
         richSpanText = [[TTRichSpanText alloc] initWithText:model.content
                                         richSpansJSONString:model.contentRichSpanJSONString];
     }
+    
+    richSpanText = [richSpanText replaceWhitelistLinks];
 
     NSMutableAttributedString *attributedString = [[TTUGCEmojiParser parseInCoreTextContext:richSpanText.text
                                                                                    fontSize:[TTCommentDetailHeaderUIHelper contentLabelFont].pointSize] mutableCopy];

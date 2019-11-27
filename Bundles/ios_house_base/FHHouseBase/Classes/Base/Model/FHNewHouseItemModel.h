@@ -9,7 +9,6 @@
 #import <JSONModel.h>
 #import "FHBaseModelProtocol.h"
 #import "FHHouseListModel.h"
-#import "FHNewHouseItemModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 

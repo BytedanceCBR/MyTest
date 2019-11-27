@@ -404,6 +404,10 @@
             if (fromRemote && !isLoadMore) {
                 if ([SSCommonLogic feedRefreshClearAllEnable] && ![self.categoryID isEqualToString:kTTFollowCategoryID]) {
                     self.items = [userInfo objectForKey:kExploreFetchListInsertedPersetentDataKey];
+                    if (self.items.count == 0) {
+                        //下拉刷新没有数据时，展示本地缓存
+                        self.items = [userInfo objectForKey:kExploreFetchListItemsKey];
+                    }
                 } else {
                     self.items = [userInfo objectForKey:kExploreFetchListItemsKey];
                 }

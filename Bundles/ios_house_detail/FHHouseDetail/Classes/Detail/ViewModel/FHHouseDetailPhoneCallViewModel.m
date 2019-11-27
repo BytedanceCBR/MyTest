@@ -30,6 +30,7 @@
 
 extern NSString *const kFHToastCountKey;
 extern NSString *const kFHPhoneNumberCacheKey;
+extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @interface FHHouseDetailPhoneCallViewModel ()
 
@@ -248,8 +249,12 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://realtor_detail?realtor_id=%@",contactPhone.realtorId]];
 
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"enter_from"] = self.tracerDict[@"page_type"] ? : @"be_null";
-    dict[@"element_from"] = extra[@"element_from"] ? : @"old_detail_button";
+    if (extra[@"enter_from"]) {
+        dict[@"enter_from"] = extra[@"enter_from"];
+    }else {
+        dict[@"enter_from"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    }
+    dict[@"element_from"] = extra[@"element_from"] ? : [self elementTypeStringByHouseType:self.houseType];
     dict[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     id logPb = self.tracerDict[@"log_pb"];
     if ([logPb isKindOfClass:[NSDictionary class]]) {
@@ -280,6 +285,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
     dict[@"from"] = @"app_realtor_mainpage";
     dict[@"realtor_logpb"] = contactPhone.realtorLogpb;
+    if (extra[@"enter_from"]) {
+        dict[@"enter_from"] = extra[@"enter_from"];
+    }
 
     IMConversation* conv = [[[IMManager shareInstance] chatService] conversationWithUserId:contactPhone.realtorId];
     if ([conv.identifier isEqualToString:@"-1"]) {
@@ -300,6 +308,29 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [imdic setValue:contactPhone.realtorId forKey:@"target_user_id"];
     [imdic setValue:contactPhone.realtorName forKey:@"chat_title"];
     imdic[@"source"] = @"app_realtor_mainpage";
+//    imdic[kFHCluePage] = @(FHClueIMPageTypeCExpertDetail);// todo zjing
+//    imdic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+//    NSURL *url = [NSURL URLWithString:contactPhone.realtorDetailUrl];
+//    if (url) {
+//        NSURLComponents* components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+//        NSMutableArray<NSURLQueryItem *> *queryItems = [components.queryItems mutableCopy];
+//        NSURLQueryItem *imQueryItem;
+//        for(NSURLQueryItem *queryItem in components.queryItems){
+//            if([queryItem.name isEqualToString:@"im_params"]){
+//                imQueryItem = queryItem;
+//                break;
+//            }
+//        }
+//        if (imQueryItem.value.length > 0) {
+//            NSError *err;
+//            NSString *imParamStr = [imQueryItem.value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//            NSData *jsondata = [imParamStr dataUsingEncoding:NSUTF8StringEncoding];
+//            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsondata options:NSJSONReadingMutableContainers error:&err];
+//            if (!err && dic) {
+//                [imdic addEntriesFromDictionary:dic];
+//            }
+//        }
+//    }
     NSString *imParams = nil;
     NSError *imParseError = nil;
     NSData *imJsonData = [NSJSONSerialization dataWithJSONObject:imdic options:0 error:&imParseError];
@@ -351,6 +382,21 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
 }
 
+- (NSString *)elementTypeStringByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_detail_button";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_detail_button";
+            break;
+            
+        default:
+            break;
+    }
+    return @"be_null";
+}
 
 - (void)destoryRNPreloadCache
 {
