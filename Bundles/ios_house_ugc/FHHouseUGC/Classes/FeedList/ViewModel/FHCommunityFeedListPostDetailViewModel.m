@@ -385,7 +385,7 @@
         self.tableView.backgroundColor = [UIColor themeGray7];
         
         CGFloat height = [self getVisibleHeight:5];
-        if(height < self.viewController.errorViewHeight && height > 0 && self.viewController.errorViewHeight > 0){
+        if(height gi< self.viewController.errorViewHeight && height > 0 && self.viewController.errorViewHeight > 0){
             [self.tableView reloadData];
             CGFloat refreshFooterBottomHeight = self.tableView.mj_footer.height;
             if ([TTDeviceHelper isIPhoneXSeries]) {
@@ -395,9 +395,9 @@
             UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight - height - refreshFooterBottomHeight)];
             tableFooterView.backgroundColor = [UIColor clearColor];
             self.tableView.tableFooterView = tableFooterView;
-            //修改footer的位置回到cell下方，不修改会在tableFooterView的下方
-            self.tableView.mj_footer.mj_y -= tableFooterView.height;
-            self.tableView.mj_footer.hidden = NO;
+//            //修改footer的位置回到cell下方，不修改会在tableFooterView的下方
+//            self.tableView.mj_footer.mj_y -= tableFooterView.height;
+//            self.tableView.mj_footer.hidden = NO;
         }else{
             self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
             [self.tableView reloadData];
