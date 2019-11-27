@@ -89,7 +89,10 @@
 }
 
 - (void)submitButtonClick:(UIButton *)btn {
-    
+    [self closeButtonClick:nil];
+    if (self.submitBtnBlock) {
+        self.submitBtnBlock();
+    }
 }
 
 - (void)setSocialInfo:(FHHouseNewsSocialModel *)socialInfo {

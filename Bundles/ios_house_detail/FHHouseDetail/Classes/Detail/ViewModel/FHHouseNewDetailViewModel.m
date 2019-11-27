@@ -209,8 +209,41 @@
     v.parentView = alertView;
     v.messageHeight = messageHeight;
     v.socialInfo = self.weakSocialInfo;
+    __weak typeof(self) weakSelf = self;
+    v.submitBtnBlock = ^{
+        [weakSelf socialEntranceButtonClick];
+    };
     [alertView showAnotherView:v];
     [v startAnimate];
+}
+
+- (void)socialEntranceButtonClick {
+    if (self.weakSocialInfo && self.weakSocialInfo.associateActiveInfo) {
+        NSString *type = self.weakSocialInfo.associateActiveInfo.associateLinkShowType;
+        if ([type isEqualToString:@"0"]) {
+            // 圈子
+            // add by zyk 记得埋点
+            NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+            tracerDic[@"log_pb"] = self.listLogPB ? self.listLogPB : @"be_null";
+            if (self.weakSocialInfo) {
+                FHHouseNewsSocialModel *socialInfo = (FHHouseNewsSocialModel *)self.weakSocialInfo;
+                if (socialInfo.socialGroupInfo && socialInfo.socialGroupInfo.socialGroupId.length > 0) {
+                    NSMutableDictionary *dict = @{}.mutableCopy;
+                    dict[@"community_id"] = socialInfo.socialGroupInfo.socialGroupId;
+                    dict[@"tracer"] = tracerDic;
+                    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                    // 跳转到圈子详情页
+                    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
+                    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+                }
+            }
+        } else if ([type isEqualToString:@"1"]) {
+            // 群聊
+            if (self.contactViewModel) {
+                [self.contactViewModel groupChatAction];
+            }
+        }
+    }
 }
 
 - (void)dealloc

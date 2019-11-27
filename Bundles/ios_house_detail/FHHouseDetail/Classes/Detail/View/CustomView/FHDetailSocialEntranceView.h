@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   CGFloat       messageHeight;
 @property (nonatomic, strong)   FHHouseNewsSocialModel       *socialInfo;
 
+@property (nonatomic, copy)     dispatch_block_t  submitBtnBlock;
+
 - (void)startAnimate;
 - (void)stopAnimate;
 

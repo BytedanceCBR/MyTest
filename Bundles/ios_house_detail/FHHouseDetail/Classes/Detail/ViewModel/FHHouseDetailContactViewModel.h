@@ -70,6 +70,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)checkSocialPhoneCall;
 
+// 新房群聊按钮点击
+- (void)groupChatAction;
+
 // 回调方法
 - (void)vc_viewDidAppear:(BOOL)animated;
 

@@ -261,8 +261,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 FHHouseNewDetailViewModel* viewModel = (FHHouseNewDetailViewModel *)vc.viewModel;
                 if ([viewModel needShowSocialInfoForm:configModel]) {
                     [viewModel showUgcSocialEntrance:alertView];
-                    [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系" style:FHToastViewStyleDefault position:FHToastViewPositionBottom verticalOffset:0];
                 } else {
+                    [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
                     [alertView dismiss];
                 }
             } else {
