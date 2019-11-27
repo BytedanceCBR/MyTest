@@ -729,6 +729,7 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (scrollView == self.homeViewController.scrollView) {
+        [self setUpHomeItemScrollView:YES];
     }else if(scrollView == self.tableViewV)
     {
         // 滚动时发出通知
