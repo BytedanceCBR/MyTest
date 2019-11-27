@@ -226,6 +226,7 @@
     v.messageHeight = messageHeight;
     v.socialInfo = self.weakSocialInfo;
     [alertView showAnotherView:v];
+    [v startAnimate];
 }
 
 - (void)dealloc

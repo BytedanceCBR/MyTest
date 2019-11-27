@@ -23,12 +23,17 @@
 #import "FHDetailNoticeAlertView.h"
 #import "UIImage+FIconFont.h"
 
+#define kFHDetailSocialAnimateDuration 1.0
+
 @interface FHDetailSocialEntranceView()
 
 @property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) UIButton *closeBtn;
 @property(nonatomic , strong) UIButton *submitBtn;
 @property (nonatomic, strong)   NSMutableArray       *viewsArray;
+@property (nonatomic, assign)   CGRect       defaultLeftBottomFrame;
+@property (nonatomic, assign)   CGRect       defaultRightBottomFrame;
+@property (nonatomic, strong)   NSMutableArray       *animateArray;
 
 @end
 
@@ -46,10 +51,15 @@
 - (void)setupUI
 {
     _viewsArray = [NSMutableArray new];
+    _animateArray = [NSMutableArray new];
     
     [self addSubview:self.titleLabel];
     [self addSubview:self.closeBtn];
     [self addSubview:self.submitBtn];
+    
+    [self.closeBtn addTarget:self action:@selector(closeButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.submitBtn addTarget:self action:@selector(submitButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(34);
@@ -69,6 +79,19 @@
     }];
 }
 
+- (void)closeButtonClick:(UIButton *)btn {
+    [self stopAnimate];
+    if (self.parentView) {
+        [self.parentView dismiss];
+    } else {
+        [self removeFromSuperview];
+    }
+}
+
+- (void)submitButtonClick:(UIButton *)btn {
+    
+}
+
 - (void)setSocialInfo:(FHHouseNewsSocialModel *)socialInfo {
     _socialInfo = socialInfo;
     if (socialInfo) {
@@ -83,6 +106,8 @@
     CGFloat messageMaxW = self.width - 112 - 20;
     CGFloat messageViewWidth = self.width - 40;
     CGFloat defaultTop = self.height - 108;
+    self.defaultLeftBottomFrame = CGRectMake(20, self.height - 80, 0, 0);
+    self.defaultRightBottomFrame = CGRectMake(self.width - 20, self.height - 80, 0, 0);
     [self.viewsArray enumerateObjectsUsingBlock:^(UIView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj removeFromSuperview];
     }];
@@ -103,11 +128,60 @@
 }
 
 - (void)startAnimate {
-    
+    [self.animateArray removeAllObjects];
+    [self animateRun];
+}
+
+- (void)animateRun {
+    if (self.viewsArray.count > 0) {
+        // 取数据
+        FHDetailSocialMessageView *v = [self.viewsArray lastObject];
+        [self.viewsArray removeLastObject];
+        v.hidden = NO;
+        // 放大
+        CGRect nowFrame = v.frame;
+        CGRect defaultFrame = self.defaultLeftBottomFrame;
+        if (v.direction == FHDetailSocialMessageDirectionLeft) {
+            defaultFrame = self.defaultLeftBottomFrame;
+        } else if (v.direction == FHDetailSocialMessageDirectionRight) {
+            defaultFrame = self.defaultRightBottomFrame;
+        }
+        v.frame = defaultFrame;
+        [self.animateArray addObject:v];
+        __weak typeof(self) weakSelf = self;
+        [UIView animateWithDuration:kFHDetailSocialAnimateDuration animations:^{
+            v.frame = nowFrame;
+        } completion:^(BOOL finished) {
+        }];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((kFHDetailSocialAnimateDuration + 0.2) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            // 整体上移
+            if (weakSelf.viewsArray.count > 0) {
+                [weakSelf animateUp];
+            }
+        });
+    }
+}
+
+- (void)animateUp {
+    if (self.animateArray.count > 0) {
+        __weak typeof(self) weakSelf = self;
+        [UIView animateWithDuration:kFHDetailSocialAnimateDuration animations:^{
+            [weakSelf.animateArray enumerateObjectsUsingBlock:^(UIView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                obj.top -= 33;
+            }];
+        } completion:^(BOOL finished) {
+            
+        }];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((kFHDetailSocialAnimateDuration + 0.2) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            // 继续动画
+            [weakSelf animateRun];
+        });
+    }
 }
 
 - (void)stopAnimate {
-    
+    [self.animateArray removeAllObjects];
+    [self.viewsArray removeAllObjects];
 }
 
 - (UILabel *)titleLabel
@@ -171,6 +245,7 @@
 }
 
 - (void)setupUI {
+    self.clipsToBounds = YES;
     _direction = FHDetailSocialMessageDirectionNone;
     // 28 * 28
     _iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 28, 28)];
