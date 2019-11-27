@@ -32,6 +32,7 @@
 #import "FHHouseContactConfigModel.h"
 #import "FHDetailNoticeAlertView.h"
 #import <TTDeviceHelper+FHHouse.h>
+#import "TTUIResponderHelper.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -39,7 +40,6 @@
 
 @property (nonatomic, strong , nullable) FHDetailNewModel *dataModel;
 
-@property (nonatomic, assign)   BOOL       hasRegisterNoti;
 //@property (nonatomic, strong , nullable) FHDetailNewModel *newDetailDataModel;
 @property (nonatomic, weak)     FHHouseNewsSocialModel       *weakSocialInfo;
 
@@ -49,8 +49,6 @@
 
 // 注册cell类型
 - (void)registerCellClasses {
-    // 注册通知
-    [self registerNoti];
     
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
     
@@ -134,88 +132,58 @@
     return NSStringFromClass(cls);
 }
 
-- (void)registerNoti {
-    if (!self.hasRegisterNoti) {
-        self.hasRegisterNoti = YES;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ugcSocialEntranceNoti:) name:@"kFHDetailUGCSocialEntranceNoti" object:nil];
+// 是否弹出ugc表单
+- (BOOL)needShowSocialInfoForm:(id)model {
+    if (self.houseType == FHHouseTypeNewHouse && self.weakSocialInfo) {
+        // 是否已关注
+        BOOL hasFollow = [self.weakSocialInfo.socialGroupInfo.hasFollow boolValue];
+        if (hasFollow) {
+            // add by zyk
+            // return NO;
+        }
+        
+        // 当前VC是否在顶部
+        UIViewController * viewController = (UIViewController *)[TTUIResponderHelper topViewControllerFor: self.detailController];
+        if (viewController != self.detailController) {
+            return NO;
+        }
+        
+        if ([model isKindOfClass:[FHHouseFillFormConfigModel class]]) {
+            FHHouseFillFormConfigModel *configModel = (FHHouseFillFormConfigModel *)model;
+            FHHouseType houseType = configModel.houseType;
+            NSString *houseId = configModel.houseId;
+            if (houseId.length > 0 && houseType == self.houseType && [self.houseId isEqualToString:houseId]) {
+                // 同一个房源
+            } else {
+                return NO;
+            }
+        }
+        if ([model isKindOfClass:[FHHouseContactConfigModel class]]) {
+            FHHouseContactConfigModel *configModel = (FHHouseContactConfigModel *)model;
+            FHHouseType houseType = configModel.houseType;
+            NSString *houseId = configModel.houseId;
+            if (houseId.length > 0 && houseType == self.houseType && [self.houseId isEqualToString:houseId]) {
+                // 同一个房源
+            } else {
+                return NO;
+            }
+        }
+        
+        return YES;
+        
     }
+    return NO;
 }
 
-- (void)ugcSocialEntranceNoti:(NSNotification *)notification {
-    if (notification && self.houseType == FHHouseTypeNewHouse && self.weakSocialInfo) {
-        NSDictionary *userInfo = notification.userInfo[@"user_info"];
-        if (userInfo && [userInfo isKindOfClass:[NSDictionary class]]) {
-            BOOL socialEntranceViewShowen = NO;
-            // 填表单
-            FHDetailNoticeAlertView *formAlertView = nil;
-            FHHouseFillFormConfigModel *configModel = userInfo[@"config_model"];
-            if ([configModel isKindOfClass:[FHHouseFillFormConfigModel class]]) {
-                NSHashTable *table = userInfo[@"alert_view"];
-                if (table) {
-                    FHDetailNoticeAlertView *alertView = (FHDetailNoticeAlertView *)unwrap_weak(table);
-                    if ([alertView isKindOfClass:[FHDetailNoticeAlertView class]]) {
-                        formAlertView = alertView;
-                    }
-                }
-                FHHouseType houseType = configModel.houseType;
-                NSString *houseId = configModel.houseId;
-                if (houseId.length > 0 && houseType == self.houseType && [self.houseId isEqualToString:houseId]) {
-                    socialEntranceViewShowen = YES;
-                }
-            }
-            // 拨打电话
-            FHHouseContactConfigModel *socialContactConfig = userInfo[@"contact_model"];
-            if ([socialContactConfig isKindOfClass:[FHHouseContactConfigModel class]]) {
-                FHHouseType houseType = socialContactConfig.houseType;
-                NSString *houseId = socialContactConfig.houseId;
-                if (houseId.length > 0 && houseType == self.houseType && [self.houseId isEqualToString:houseId]) {
-                    socialEntranceViewShowen = YES;
-                }
-            }
-            // 显示入口弹窗
-            if (socialEntranceViewShowen) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self showSocialEntranceViewWith:formAlertView];
-                });
-            } else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (formAlertView) {
-                        [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-                        [formAlertView dismiss];
-                    }
-                });
-            }
-        }
-    } else {
-        // 不处理的情况也要dismiss弹窗--新房填表单后逻辑
-        NSDictionary *userInfo = notification.userInfo[@"user_info"];
-        if (userInfo && [userInfo isKindOfClass:[NSDictionary class]]) {
-            // 填表单
-            FHDetailNoticeAlertView *formAlertView = nil;
-            FHHouseFillFormConfigModel *configModel = userInfo[@"config_model"];
-            if ([configModel isKindOfClass:[FHHouseFillFormConfigModel class]]) {
-                NSHashTable *table = userInfo[@"alert_view"];
-                if (table) {
-                    FHDetailNoticeAlertView *alertView = (FHDetailNoticeAlertView *)unwrap_weak(table);
-                    if ([alertView isKindOfClass:[FHDetailNoticeAlertView class]]) {
-                        formAlertView = alertView;
-                    }
-                }
-                FHHouseType houseType = configModel.houseType;
-                NSString *houseId = configModel.houseId;
-                if (houseId.length > 0 && houseType == self.houseType && [self.houseId isEqualToString:houseId]) {
-                     [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-                    [formAlertView dismiss];
-                }
-            }
-        }
-    }
+// 显示新房UGC填留资弹窗
+- (void)showUgcSocialEntrance:(FHDetailNoticeAlertView *)alertView {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self showSocialEntranceViewWith:alertView];
+    });
 }
 
 - (void)showSocialEntranceViewWith:(FHDetailNoticeAlertView *)alertView {
-    BOOL isFromForm = YES;
     if (alertView == nil) {
-        isFromForm = NO;
         alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"" subtitle:@"" btnTitle:@""];
         [alertView showFrom:self.detailController.view];
     }
@@ -238,7 +206,6 @@
 
     FHDetailSocialEntranceView *v = [[FHDetailSocialEntranceView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
     v.backgroundColor = [UIColor themeWhite];
-    v.isFromForm = isFromForm;
     v.parentView = alertView;
     v.messageHeight = messageHeight;
     v.socialInfo = self.weakSocialInfo;
@@ -254,7 +221,6 @@
 - (void)startLoadData
 {
     __weak typeof(self) wSelf = self;
-    [self registerNoti];
     [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             if (model.data) {

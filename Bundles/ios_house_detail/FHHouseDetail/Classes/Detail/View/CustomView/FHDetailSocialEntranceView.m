@@ -52,7 +52,6 @@
 {
     _viewsArray = [NSMutableArray new];
     _animateArray = [NSMutableArray new];
-    _isFromForm = YES;
     
     [self addSubview:self.titleLabel];
     [self addSubview:self.closeBtn];
@@ -96,11 +95,7 @@
 - (void)setSocialInfo:(FHHouseNewsSocialModel *)socialInfo {
     _socialInfo = socialInfo;
     if (socialInfo) {
-        if (self.isFromForm) {
-            self.titleLabel.text = @"提交成功";
-        } else {
-            self.titleLabel.text = socialInfo.socialGroupInfo.socialGroupName;
-        }
+        self.titleLabel.text = socialInfo.socialGroupInfo.socialGroupName;
         NSString *btnTitle = @"立即加入";
         if (socialInfo.associateActiveInfo.associateLinkTitle.length > 0) {
             btnTitle = socialInfo.associateActiveInfo.associateLinkTitle;
@@ -177,9 +172,11 @@
         NSInteger count = self.animateArray.count;
         [UIView animateWithDuration:kFHDetailSocialAnimateDuration animations:^{
             [weakSelf.animateArray enumerateObjectsUsingBlock:^(UIView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                obj.top -= 33;
                 if (count - idx > 2) {
                     obj.alpha = 0;
+                    obj.top -= 20;
+                } else {
+                    obj.top -= 33;
                 }
             }];
         } completion:^(BOOL finished) {

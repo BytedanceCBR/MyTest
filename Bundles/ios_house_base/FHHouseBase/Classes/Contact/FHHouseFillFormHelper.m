@@ -24,6 +24,7 @@
 #import "FHHouseFollowUpHelper.h"
 #import "FHFillFormAgencyListItemModel.h"
 #import "FHHouseDetailViewController.h"
+#import "FHHouseNewDetailViewModel.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
@@ -256,14 +257,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
              */
             if (configModel.houseType == FHHouseTypeNewHouse && [configModel.topViewController isKindOfClass:[FHHouseDetailViewController class]]) {
                 // 新房详情
-                NSMutableDictionary *userInfo = @{}.mutableCopy;
-                userInfo[@"config_model"] = configModel;
-                NSHashTable *table = wrap_weak(alertView);
-                if (table) {
-                    userInfo[@"alert_view"] = table;
+                FHHouseDetailViewController *vc = configModel.topViewController;
+                FHHouseNewDetailViewModel* viewModel = (FHHouseNewDetailViewModel *)vc.viewModel;
+                if ([viewModel needShowSocialInfoForm:configModel]) {
+                    [viewModel showUgcSocialEntrance:alertView];
+                    [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系" style:FHToastViewStyleDefault position:FHToastViewPositionBottom verticalOffset:0];
+                } else {
+                    [alertView dismiss];
                 }
-                // 注意toast提示，在通知的地方继续处理，好乱的逻辑啊啊啊啊
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHDetailUGCSocialEntranceNoti" object:nil userInfo:@{@"user_info":userInfo}];
             } else {
                 [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
                 // 走之前的逻辑

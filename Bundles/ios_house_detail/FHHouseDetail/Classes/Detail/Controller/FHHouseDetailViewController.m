@@ -36,7 +36,6 @@
 @property (nonatomic, strong) FHDetailFeedbackView *feedbackView;
 @property(nonatomic , strong) FHDetailQuestionButton *questionBtn;
 
-@property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 @property (nonatomic, copy)     NSString       *source; // 特殊标记，从哪进入的小区详情，比如地图租房列表“rent_detail”，此时小区房源展示租房列表
 @property (nonatomic, copy)   NSString *houseId; // 房源id

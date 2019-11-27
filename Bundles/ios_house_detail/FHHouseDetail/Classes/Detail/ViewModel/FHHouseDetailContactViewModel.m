@@ -50,6 +50,7 @@
 #import "FHUGCConfig.h"
 #import "FHLoginViewController.h"
 #import "FHHouseUGCAPI.h"
+#import "FHHouseNewDetailViewModel.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -644,9 +645,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 新房 拨打电话后是否需要添加弹窗 留资入口
 - (void)checkSocialPhoneCall {
     if (self.socialContactConfig) {
-        NSMutableDictionary *userInfo = @{}.mutableCopy;
-        userInfo[@"contact_model"] = self.socialContactConfig;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHDetailUGCSocialEntranceNoti" object:nil userInfo:@{@"user_info":userInfo}];
+        if (self.socialContactConfig.houseType == FHHouseTypeNewHouse && [self.belongsVC isKindOfClass:[FHHouseDetailViewController class]]) {
+            FHHouseDetailViewController *detailVC = (FHHouseDetailViewController *)self.belongsVC;
+            FHHouseNewDetailViewModel *viewModel = (FHHouseNewDetailViewModel *)detailVC.viewModel;
+            if ([viewModel needShowSocialInfoForm:self.socialContactConfig]) {
+                [viewModel showUgcSocialEntrance:nil];
+            }
+        }
         self.socialContactConfig = nil;
     }
 }
@@ -716,6 +721,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)p_gotoGroupChat {
     if (self.socialInfo == nil) {
         return;
+    }
+    // 未关注 先关注圈子
+    if (![self.socialInfo.socialGroupInfo.hasFollow boolValue]) {
+        [self followSocialGroup];
     }
     if ([TTReachability isNetworkConnected]) {
         if (self.socialInfo.socialGroupInfo.chatStatus.currentConversationCount >= self.socialInfo.socialGroupInfo.chatStatus.maxConversationCount && self.socialInfo.socialGroupInfo.chatStatus.maxConversationCount > 0) {
