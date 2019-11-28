@@ -423,7 +423,12 @@
         [self resetFilter:paramObj];
         
     }
-    
+    BOOL hasTagData = [self.topTagsView hasTagData];
+    CGFloat tagHeight = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? kFilterTagsViewHeight : 0;
+    [self.topTagsView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(tagHeight);
+    }];
+    self.topTagsView.hidden = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? NO : YES;
     [self handleListOpenUrlUpdate:paramObj];
     [self.houseFilterBridge trigerConditionChanged];
 
@@ -559,7 +564,9 @@
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
     [self.viewModel setRedirectTipView:self.redirectTipView];
-    
+    if (self.topTagsView && self.paramObj.queryParams) {
+        self.topTagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:self.paramObj.queryParams];
+    }
     [self.houseFilterViewModel trigerConditionChanged];
 
 }

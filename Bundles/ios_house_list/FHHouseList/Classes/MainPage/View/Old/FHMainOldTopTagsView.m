@@ -30,6 +30,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _lastConditionDic = @{}.mutableCopy;
         self.backgroundColor = [UIColor whiteColor];
         [self setupUI];
     }
