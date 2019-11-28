@@ -157,7 +157,6 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
         [commonParams setValue:[TTSandBoxHelper fhVersionCode] forKey:@"version_code"];
         [commonParams setValue:[TTSandBoxHelper buildVerion] forKey:@"update_version_code"];
         
-        // add by zjing f_city_name
         NSString *cityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
         if (cityName.length > 0) {
             [commonParams setValue:cityName forKey:@"f_city_name"];
