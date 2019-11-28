@@ -32,6 +32,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/TTThemeManager.h>
 #import "FHWebViewConfig.h"
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseConditionADIDKey";
 
@@ -140,6 +141,9 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 //            self.navigationItem.title = isEmptyString([params tt_stringValueForKey:@"title"])? @"": [params tt_stringValueForKey:@"title"];
 //        }
         self.titleImageName = [params tt_stringValueForKey:@"titleImageName"]; //显示为logo
+        if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+            urlStr = [SSWebViewController boeUrlWithURLString:urlStr];
+        }
         self.requestURL = [TTStringHelper URLWithURLString:urlStr];
         if ([params valueForKey:SSViewControllerBaseConditionADIDKey]) {
             self.adID = [params valueForKey:SSViewControllerBaseConditionADIDKey];
@@ -318,6 +322,26 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         
     }
     return self;
+}
+
++ (NSString *)boeUrlWithURLString:(NSString *)urlString
+{
+    NSArray *hostArray = @[@"m.haoduofangs.com",@"i.haoduofangs.com",@"m.99hdf.com",@"m.xflapp.com"];
+    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+        
+        if ([urlString containsString:@"boe-gateway.byted.org"]) {
+            return urlString;
+        }
+        if ([urlString hasPrefix:@"https"]) {
+            urlString = [urlString stringByReplacingOccurrencesOfString:@"https" withString:@"http"];
+        }
+        for (NSString *host in hostArray) {
+            if ([urlString containsString:host]) {
+                urlString = [urlString stringByReplacingOccurrencesOfString:host withString:[NSString stringWithFormat:@"%@.boe-gateway.byted.org",host]];
+            }
+        }
+    }
+    return urlString;
 }
 
 - (void)setUpBackBtnControl:(NSNumber *)isControl
