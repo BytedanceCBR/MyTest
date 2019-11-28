@@ -99,7 +99,7 @@
     _socialInfo = socialInfo;
     if (socialInfo) {
         self.titleLabel.text = socialInfo.socialGroupInfo.socialGroupName;
-        NSString *btnTitle = @"立即加入";
+        NSString *btnTitle = @"立即聊天";
         if (socialInfo.associateActiveInfo.associateLinkTitle.length > 0) {
             btnTitle = socialInfo.associateActiveInfo.associateLinkTitle;
         }

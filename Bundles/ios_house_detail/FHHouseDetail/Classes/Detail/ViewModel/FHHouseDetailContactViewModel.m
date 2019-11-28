@@ -868,6 +868,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)vc_viewDidAppear:(BOOL)animated
 {
     [self.phoneCallViewModel vc_viewDidAppear:animated];
+    // 新房重新拉取圈子数据
+    if (self.houseType == FHHouseTypeNewHouse && [TTReachability isNetworkConnected] && [TTAccountManager isLogin]) {
+        [self reQuestSocialData];
+    }
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated

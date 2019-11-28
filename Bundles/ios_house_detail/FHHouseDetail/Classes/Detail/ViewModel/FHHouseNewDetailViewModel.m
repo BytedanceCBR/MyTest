@@ -142,6 +142,11 @@
             // return NO;
         }
         
+        // 弹窗数据是否为空
+        if (self.weakSocialInfo.associateActiveInfo.activeInfo.count <= 0) {
+            return NO;
+        }
+        
         // 当前VC是否在顶部
         UIViewController * viewController = (UIViewController *)[TTUIResponderHelper topViewControllerFor: self.detailController];
         if (viewController != self.detailController) {
@@ -168,9 +173,8 @@
                 return NO;
             }
         }
-        
+        // 可以弹窗
         return YES;
-        
     }
     return NO;
 }
@@ -183,6 +187,13 @@
 }
 
 - (void)showSocialEntranceViewWith:(FHDetailNoticeAlertView *)alertView {
+    if (self.weakSocialInfo.associateActiveInfo.activeInfo.count <= 0) {
+        if (alertView) {
+            [alertView dismiss];
+            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
+        }
+        return;
+    }
     if (alertView == nil) {
         alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"" subtitle:@"" btnTitle:@""];
         [alertView showFrom:self.detailController.view];
@@ -222,7 +233,7 @@
         NSString *type = self.weakSocialInfo.associateActiveInfo.associateLinkShowType;
         if ([type isEqualToString:@"0"]) {
             // 圈子
-            // add by zyk 记得埋点
+            // add by zyk 记得埋点 log_pb应该传圈子的吧？？？
             NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
             tracerDic[@"log_pb"] = self.listLogPB ? self.listLogPB : @"be_null";
             if (self.weakSocialInfo) {
