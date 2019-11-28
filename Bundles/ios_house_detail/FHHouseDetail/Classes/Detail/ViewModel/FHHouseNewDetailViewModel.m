@@ -138,8 +138,7 @@
         // 是否已关注
         BOOL hasFollow = [self.weakSocialInfo.socialGroupInfo.hasFollow boolValue];
         if (hasFollow) {
-            // add by zyk
-            // return NO;
+             return NO;
         }
         
         // 弹窗数据是否为空

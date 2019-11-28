@@ -605,6 +605,8 @@
     if (self.isPhoneCalled) {
         self.isPhoneCalled = NO;
         [self.viewModel.contactViewModel checkSocialPhoneCall];
+    } else {
+        self.viewModel.contactViewModel.socialContactConfig = nil;
     }
     // 反馈弹窗
     if([self isShowFeedbackView]){

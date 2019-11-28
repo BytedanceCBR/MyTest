@@ -7,7 +7,7 @@
   NSDictionary *dict = @{
     @"associateContentTitle":@"associate_content_title",
     @"associateLinkTitle": @"associate_link_title",
-    @"associateLinkShowType": @"associate_link_show_type",
+    @"associateLinkShowType": @"associate_link_type",
     @"activeInfo": @"active_info",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
