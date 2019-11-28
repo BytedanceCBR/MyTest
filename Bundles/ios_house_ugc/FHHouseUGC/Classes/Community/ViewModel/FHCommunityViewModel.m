@@ -69,12 +69,11 @@
         self.dataArray = @[
                            @(FHCommunityCollectionCellTypeMyJoin),
                            @(FHCommunityCollectionCellTypeNearby),
-                           @(FHCommunityCollectionCellTypeDiscovery)
                            ];
     }else{
         self.currentTabIndex = 0;
         self.dataArray = @[
-                           @(FHCommunityCollectionCellTypeDiscovery)
+                           @(FHCommunityCollectionCellTypeFindHouse)
                            ];
     }
     [self.viewController showSegmentControl:isShow];
@@ -90,7 +89,6 @@
     self.dataArray = @[
                        @(FHCommunityCollectionCellTypeMyJoin),
                        @(FHCommunityCollectionCellTypeNearby),
-                       @(FHCommunityCollectionCellTypeDiscovery)
                        ];
 }
 

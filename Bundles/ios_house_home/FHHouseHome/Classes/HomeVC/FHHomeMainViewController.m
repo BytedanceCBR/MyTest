@@ -109,6 +109,8 @@
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         StrongSelf;
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
+        [FHEnvContext changeFindTabTitle];
+        [FHEnvContext showRedPointForNoUgc];
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
     }];
 }

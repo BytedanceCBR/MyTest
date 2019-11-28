@@ -10,6 +10,7 @@
 #import "FHCommunityFeedListController.h"
 #import "FHNearbyViewController.h"
 #import "FHMyJoinViewController.h"
+#import <FHHouseFindViewController.h>
 
 @interface FHCommunityCollectionCell ()
 
@@ -78,6 +79,9 @@
         ArticleTabBarStyleNewsListViewController *ariticleListVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
         ariticleListVC.isShowTopSearchPanel = NO;
         self.vc = ariticleListVC;
+    }else if(self.type == FHCommunityCollectionCellTypeFindHouse){
+        FHHouseFindViewController *findHouseVC = [[FHHouseFindViewController alloc] init];
+        self.vc = findHouseVC;
     }else{
         
     }

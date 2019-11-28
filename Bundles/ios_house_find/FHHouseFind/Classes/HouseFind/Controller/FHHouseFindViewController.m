@@ -4,9 +4,8 @@
 //
 //  Created by 春晖 on 2019/2/12.
 //
-#if 0
 #import "FHHouseFindViewController.h"
-#import <FHCommonUI/HMSegmentedControl.h>
+#import <HMSegmentedControl.h>
 #import "FHHouseFindFakeSearchBar.h"
 #import <FHCommonUI/FHErrorView.h>
 #import <FHCommonUI/UIFont+House.h>
@@ -257,4 +256,3 @@
 */
 
 @end
-#endif

@@ -21,6 +21,7 @@ typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
     FHCommunityCollectionCellTypeMyJoin = 0,
     FHCommunityCollectionCellTypeNearby,
     FHCommunityCollectionCellTypeDiscovery,
+    FHCommunityCollectionCellTypeFindHouse,
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)

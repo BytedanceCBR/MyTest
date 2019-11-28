@@ -763,7 +763,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
         if ([self isUGCOpen]) {
             [tabItem setTitle:@"邻里"];
         }else{
-            [tabItem setTitle:@"发现"];
+            [tabItem setTitle:@"找房"];
         }
     }
 }
