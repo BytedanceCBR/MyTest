@@ -9,6 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *associateLinkShowType;
 @property (nonatomic, strong , nullable) NSArray<FHDetailCommunityEntryActiveInfoModel> *activeInfo;
 @property (nonatomic, copy , nullable) NSString *associateLinkTitle;
+@property (nonatomic, copy , nullable) NSString *associateContentTitle;
 @end
 
 @interface FHHouseNewsSocialModel : JSONModel 

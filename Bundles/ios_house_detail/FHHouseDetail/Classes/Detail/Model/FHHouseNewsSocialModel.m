@@ -5,6 +5,7 @@
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
+    @"associateContentTitle":@"associate_content_title",
     @"associateLinkTitle": @"associate_link_title",
     @"associateLinkShowType": @"associate_link_show_type",
     @"activeInfo": @"active_info",

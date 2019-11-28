@@ -27,7 +27,6 @@
 
 @interface FHDetailSocialEntranceView()
 
-@property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) UIButton *closeBtn;
 @property(nonatomic , strong) UIButton *submitBtn;
 @property (nonatomic, strong)   NSMutableArray       *viewsArray;
@@ -201,7 +200,7 @@
 {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc]init];
-        _titleLabel.font = [UIFont themeFontMedium:24];
+        _titleLabel.font = [UIFont themeFontMedium:20];
         _titleLabel.textColor = [UIColor themeGray1];
         _titleLabel.numberOfLines = 0;
         _titleLabel.lineBreakMode = NSLineBreakByWordWrapping;

@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak)     FHDetailNoticeAlertView       *parentView;
 @property (nonatomic, assign)   CGFloat       messageHeight;
 @property (nonatomic, strong)   FHHouseNewsSocialModel       *socialInfo;
+@property(nonatomic , strong)   UILabel *titleLabel;
 
 @property (nonatomic, copy)     dispatch_block_t  submitBtnBlock;
 

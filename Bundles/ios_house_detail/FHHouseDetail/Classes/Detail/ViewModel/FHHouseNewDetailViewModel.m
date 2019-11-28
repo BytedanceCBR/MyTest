@@ -194,7 +194,9 @@
         }
         return;
     }
+    BOOL isfromForm = YES;
     if (alertView == nil) {
+        isfromForm = NO;
         alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"" subtitle:@"" btnTitle:@""];
         [alertView showFrom:self.detailController.view];
     }
@@ -202,8 +204,32 @@
     if (![TTDeviceHelper isScreenWidthLarge320]) {
         width = 280;
     }
+    
+    NSString *titleText = self.weakSocialInfo.associateActiveInfo.associateContentTitle;
+    if (titleText.length <= 0) {
+        // 添加默认文案
+        NSString *type = self.weakSocialInfo.associateActiveInfo.associateLinkShowType;
+        if ([type isEqualToString:@"0"]) {
+            // 圈子
+            titleText = [NSString stringWithFormat:@"%@人已加入看房圈",self.weakSocialInfo.socialGroupInfo.followerCount];
+        } else if ([type isEqualToString:@"1"]) {
+            // 群聊
+            titleText = [NSString stringWithFormat:@"%ld人已加入看房群",self.weakSocialInfo.socialGroupInfo.chatStatus.currentConversationCount];
+        }
+    }
+    if (isfromForm) {
+        titleText = [NSString stringWithFormat:@"提交成功！%@",titleText];
+    }
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, width - 40, 300)];
+    titleLabel.hidden = YES;
+    titleLabel.font = [UIFont themeFontMedium:20];
+    titleLabel.textColor = [UIColor themeGray1];
+    titleLabel.numberOfLines = 0;
+    titleLabel.text = titleText;
+    CGSize size = [titleLabel sizeThatFits:CGSizeMake(width - 40, 300)];
+    
     // 高度计算
-    CGFloat height = 72 + 60;
+    CGFloat height = 40 + size.height + 60;
     NSInteger count = 3;
     if (self.weakSocialInfo.associateActiveInfo.activeInfo.count >= 3) {
         count = 3;
@@ -224,6 +250,7 @@
     v.submitBtnBlock = ^{
         [weakSelf socialEntranceButtonClick];
     };
+    v.titleLabel.text = titleText;
     [alertView showAnotherView:v];
     [v startAnimate];
 }
