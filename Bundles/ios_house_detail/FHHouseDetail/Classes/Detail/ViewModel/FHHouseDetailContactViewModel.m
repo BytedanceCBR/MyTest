@@ -51,6 +51,7 @@
 #import "FHLoginViewController.h"
 #import "FHHouseUGCAPI.h"
 #import "FHHouseNewDetailViewModel.h"
+#import "FHDetailBaseCell.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -83,6 +84,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _phoneCallName = @"电话咨询";
         _gotoGroupChatCount = 0;
         _canDirectlyGotoGroupChat = YES;
+        _needRefetchSocialGroupData = NO;
         
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:_houseType houseId:_houseId];
 
@@ -722,6 +724,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.socialInfo == nil) {
         return;
     }
+    self.needRefetchSocialGroupData = YES;
     // 未关注 先关注圈子
     if (![self.socialInfo.socialGroupInfo.hasFollow boolValue]) {
         [self followSocialGroup];
@@ -858,6 +861,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                     
                     weakSelf.socialInfo.socialGroupInfo.userAuth = socialModel.data.userAuth;
                 }
+                // 刷新Cell
+                if (socialModel.data.socialGroupId.length > 0) {
+                    NSDictionary *userInfo = @{@"social_group_id":socialModel.data.socialGroupId};
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHDetailNewUGCSocialCellNotiKey" object:nil userInfo:userInfo];
+                }
             }
             weakSelf.canDirectlyGotoGroupChat = YES;
         }];
@@ -869,7 +877,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 {
     [self.phoneCallViewModel vc_viewDidAppear:animated];
     // 新房重新拉取圈子数据
-    if (self.houseType == FHHouseTypeNewHouse && [TTReachability isNetworkConnected] && [TTAccountManager isLogin]) {
+    if (self.houseType == FHHouseTypeNewHouse && [TTReachability isNetworkConnected] && [TTAccountManager isLogin] && self.needRefetchSocialGroupData) {
+        self.needRefetchSocialGroupData = NO;
         [self reQuestSocialData];
     }
 }

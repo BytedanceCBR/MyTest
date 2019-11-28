@@ -265,6 +265,7 @@
             if (self.weakSocialInfo) {
                 FHHouseNewsSocialModel *socialInfo = (FHHouseNewsSocialModel *)self.weakSocialInfo;
                 if (socialInfo.socialGroupInfo && socialInfo.socialGroupInfo.socialGroupId.length > 0) {
+                    self.contactViewModel.needRefetchSocialGroupData = YES;
                     NSMutableDictionary *dict = @{}.mutableCopy;
                     dict[@"community_id"] = socialInfo.socialGroupInfo.socialGroupId;
                     dict[@"tracer"] = tracerDic;

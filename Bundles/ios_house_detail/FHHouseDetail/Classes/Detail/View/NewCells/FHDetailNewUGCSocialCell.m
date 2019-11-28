@@ -47,7 +47,7 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHHouseNewsSocialModel class]]) {
+    if (![data isKindOfClass:[FHHouseNewsSocialModel class]]) {
         return;
     }
     self.currentData = data;
@@ -91,9 +91,29 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setupUI];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCellData:) name:@"kFHDetailNewUGCSocialCellNotiKey" object:nil];
     }
     return self;
 }
+
+// 刷新Cell
+- (void)updateCellData:(NSNotification *)noti {
+    if (noti) {
+        NSString *social_group_id = noti.userInfo[@"social_group_id"];
+        if (self.currentData && social_group_id && [social_group_id isKindOfClass:[NSString class]]) {
+            FHHouseNewsSocialModel *socialInfo = (FHHouseNewsSocialModel *)self.currentData;
+            if ([socialInfo.socialGroupInfo.socialGroupId isEqualToString:social_group_id]) {
+                [self refreshWithData:self.currentData];
+            }
+        }
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 
 - (void)setupUI {
     self.backgroundColor = [UIColor themeWhite];
@@ -171,6 +191,7 @@
     if (self.currentData) {
         FHHouseNewsSocialModel *socialInfo = (FHHouseNewsSocialModel *)self.currentData;
         if (socialInfo.socialGroupInfo && socialInfo.socialGroupInfo.socialGroupId.length > 0) {
+            self.baseViewModel.contactViewModel.needRefetchSocialGroupData = YES;
             NSMutableDictionary *dict = @{}.mutableCopy;
             dict[@"community_id"] = socialInfo.socialGroupInfo.socialGroupId;
             dict[@"tracer"] = tracerDic;
