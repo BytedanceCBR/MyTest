@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)gotoPostPublish;
 - (void)gotoVotePublish;
-- (void)gotoAskPublish;
+- (void)gotoWendaPublish;
 
 @optional
 

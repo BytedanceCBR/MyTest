@@ -53,10 +53,6 @@
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         // 关注状态变化
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
-        // 发投票成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postVoteSuccess:) name:@"kFHVotePublishNotificationName" object:nil];
-        // 发提问成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postWendaSuccess:) name:@"kFHWendaPublishNotificationName" object:nil];
     }
     
     return self;
@@ -92,122 +88,9 @@
 
 // 发帖成功，插入数据
 - (void)postThreadSuccess:(NSNotification *)noti {
-    if (noti && noti.userInfo && self.dataList) {
-        NSDictionary *userInfo = noti.userInfo;
-        NSString *social_group_id = userInfo[@"social_group_id"];
-        NSDictionary *result_model = userInfo[@"result_model"];
-        if (result_model && [result_model isKindOfClass:[NSDictionary class]]) {
-            NSDictionary * thread_cell_dic = result_model[@"data"];
-            if (thread_cell_dic && [thread_cell_dic isKindOfClass:[NSDictionary class]]) {
-                NSString * thread_cell_data = thread_cell_dic[@"thread_cell"];
-                if (thread_cell_data && [thread_cell_data isKindOfClass:[NSString class]]) {
-                    // 得到cell 数据
-                    NSError *jsonParseError;
-                    NSData *jsonData = [thread_cell_data dataUsingEncoding:NSUTF8StringEncoding];
-                    if (jsonData) {
-                        Class cls = [FHFeedUGCContentModel class];
-                        FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
-                        if (model && jsonParseError == nil) {
-                            FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-                            [self insertPostData:cellModel];
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-// 发提问成功通知
-- (void) postWendaSuccess: (NSNotification *)noti {    
-    if (noti && noti.userInfo && self.dataList) {
-        NSDictionary *userInfo = noti.userInfo;
-        NSString *ask_data = userInfo[@"wendaData"];
-        if ([ask_data isKindOfClass:[NSString class]] && ask_data.length > 0) {
-            // 模型转换
-            NSDictionary *dic = [ask_data JSONValue];
-            FHFeedUGCCellModel *cellModel = nil;
-            if (dic && [dic isKindOfClass:[NSDictionary class]]) {
-                NSDictionary * rawDataDic = dic[@"raw_data"];
-                // 先转成rawdata
-                NSError *jsonParseError;
-                if (rawDataDic && [rawDataDic isKindOfClass:[NSDictionary class]]) {
-                    FHFeedContentRawDataModel *model = [[FHFeedContentRawDataModel alloc] initWithDictionary:rawDataDic error:&jsonParseError];
-                    if (model) {
-                        FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
-                        ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeQuestion];
-                        ugcContent.rawData = model;
-                        
-                        ugcContent.title = model.content.question.title;
-                        ugcContent.itemId = model.itemId;
-                        ugcContent.groupId = model.groupId;
-                        ugcContent.logPb = model.logPb;
-                        
-                        ugcContent.isStick = model.isStick;
-                        ugcContent.stickStyle = model.stickStyle;
-                        ugcContent.diggCount = model.diggCount;
-                        ugcContent.commentCount = model.commentCount;
-                        ugcContent.userDigg = model.userDigg;
-                        ugcContent.community = model.community;
-                        
-                        // FHFeedUGCCellModel
-                        cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
-                        cellModel.isFromDetail = NO;
-                        cellModel.tableView = self.tableView;
-                    }
-                }
-            }
-            [self insertPostData:cellModel];
-        }
-    }
-}
-// 发投票成功，插入数据
-- (void)postVoteSuccess:(NSNotification *)noti {
-    if (noti && noti.userInfo && self.dataList) {
-        NSDictionary *userInfo = noti.userInfo;
-        NSString *vote_data = userInfo[@"voteData"];
-        if ([vote_data isKindOfClass:[NSString class]] && vote_data.length > 0) {
-            // 模型转换
-            NSDictionary *dic = [vote_data JSONValue];
-            FHFeedUGCCellModel *cellModel = nil;
-            if (dic && [dic isKindOfClass:[NSDictionary class]]) {
-                NSDictionary * rawDataDic = dic[@"raw_data"];
-                // 先转成rawdata
-                NSError *jsonParseError;
-                if (rawDataDic && [rawDataDic isKindOfClass:[NSDictionary class]]) {
-                    FHFeedContentRawDataModel *model = [[FHFeedContentRawDataModel alloc] initWithDictionary:rawDataDic error:&jsonParseError];
-                    if (model && model.voteInfo) {
-                        // 有投票数据
-                        // social_group data
-                        /*
-                        FHUGCScialGroupDataModel * groupData = nil;
-                        if (rawDataDic[@"community"]) {
-                            // 继续解析小区头部
-                            NSDictionary *social_group = [rawDataDic tt_dictionaryValueForKey:@"community"];
-                            NSError *groupError = nil;
-                            groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
-                        }
-                         */
-                        FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
-                        ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeUGCVoteInfo];
-                        ugcContent.title = model.title;
-                        ugcContent.isStick = model.isStick;
-                        ugcContent.stickStyle = model.stickStyle;
-                        ugcContent.diggCount = model.diggCount;
-                        ugcContent.commentCount = model.commentCount;
-                        ugcContent.userDigg = model.userDigg;
-                        ugcContent.groupId = model.groupId;
-                        ugcContent.logPb = model.logPb;
-                        ugcContent.community = model.community;
-                        ugcContent.rawData = model;
-                        // FHFeedUGCCellModel
-                        cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
-                        cellModel.isFromDetail = NO;
-                        cellModel.tableView = self.tableView;
-                    }
-                }
-            }
-            [self insertPostData:cellModel];
-        }
+    FHFeedUGCCellModel *cellModel = noti.userInfo[@"cell_model"];
+    if(cellModel) {
+        [self insertPostData:cellModel];
     }
 }
 // 发帖和发投票后插入逻辑

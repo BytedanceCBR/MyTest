@@ -367,7 +367,7 @@
     [self.viewModel gotoVotePublish];
 }
 
-- (void)gotoAskPublish {
+- (void)gotoWendaPublish {
     // JOKER: ASK PUBLISH
 //
 //    NSMutableDictionary *params = @{}.mutableCopy;
@@ -375,7 +375,7 @@
 //    params[UT_PAGE_TYPE] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
 //    TRACK_EVENT(@"click_options", params);
     
-    [self.viewModel gotoAskPublish];
+    [self.viewModel gotoWendaPublish];
 }
 
 - (void)postMenuViewWillShow {

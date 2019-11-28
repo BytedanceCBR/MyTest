@@ -189,10 +189,10 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         BOOL isRepost = (!isEmptyString(task.opt_id) && task.repostType != TTThreadRepostTypeNone);
         [userInfo setValue:@(isRepost) forKey:kFRPostThreadIsRepost];
         [userInfo setValue:task.social_group_id forKey:@"social_group_id"];
+        [userInfo setValue:@(FHUGCPublishTypePost) forKey:@"publish_type"];
+
         // 发帖成功
         if (task.social_group_id.length > 0) {
-            NSDictionary *dic = @{@"social_group_id":task.social_group_id};
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostSuccessNotification object:nil userInfo:dic];
             
             // 存储发布历史
             NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
@@ -215,6 +215,31 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         }
         
         [[ToastManager manager] showToast:@"发帖成功"];
+        
+        // 数据解析
+        NSString *social_group_id = userInfo[@"social_group_id"];
+        NSDictionary *result_model = userInfo[@"result_model"];
+        if (result_model && [result_model isKindOfClass:[NSDictionary class]]) {
+            NSDictionary * thread_cell_dic = result_model[@"data"];
+            if (thread_cell_dic && [thread_cell_dic isKindOfClass:[NSDictionary class]]) {
+                NSString * thread_cell_data = thread_cell_dic[@"thread_cell"];
+                if (thread_cell_data && [thread_cell_data isKindOfClass:[NSString class]]) {
+                    // 得到cell 数据
+                    NSError *jsonParseError;
+                    NSData *jsonData = [thread_cell_data dataUsingEncoding:NSUTF8StringEncoding];
+                    if (jsonData) {
+                        Class cls = [FHFeedUGCContentModel class];
+                        FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
+                        if (model && jsonParseError == nil) {
+                            FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+                            if(cellModel) {
+                                userInfo[@"cell_model"] = cellModel;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostThreadSuccessNotification object:task userInfo:userInfo];
         

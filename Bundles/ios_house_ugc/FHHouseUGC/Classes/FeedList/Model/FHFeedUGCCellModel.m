@@ -269,9 +269,17 @@
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
         cellModel.groupId = model.rawData.groupId;
+        
+        // 发布用户的信息
+        FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.name = model.rawData.content.user.uname;
+        user.avatarUrl = model.rawData.content.user.avatarUrl;
+        user.userId = model.rawData.content.user.userId;
+        user.schema = model.rawData.content.user.userSchema;
+        cellModel.user = user;
+        
         cellModel.title = model.rawData.content.question.title;
         cellModel.openUrl = model.rawData.content.question.questionListSchema;
-        cellModel.groupId = model.rawData.content.question.qid;
         cellModel.numberOfLines = 3;
         
         cellModel.imageList = model.rawData.content.question.content.thumbImageList;

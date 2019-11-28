@@ -28,6 +28,8 @@
 #import <HMDTTMonitor.h>
 #import <FHUGCWendaModel.h>
 #import <FHPostUGCViewController.h>
+#import <FHFeedUGCCellModel.h>
+#import <TTUGCDefine.h>
 
 // 选择小区圈子控件的高度
 #define ENTRY_HEIGHT                44
@@ -781,7 +783,7 @@
         StrongSelf;
         // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
         if(error) {
-            [[ToastManager manager] showToast:@"发布失败!"];
+            [[ToastManager manager] showToast: model.message?:@"发布失败!"];
             [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_wenda_publish" metric:nil category:@{@"status":@(1)} extra:nil];
             return;
         }
@@ -791,8 +793,13 @@
             if(wendaModel.data.length > 0) {
                 
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
-                userInfo[@"wendaData"] = wendaModel.data;
-                userInfo[@"social_group_ids"] = socialGroupId;
+                userInfo[@"social_group_id"] = socialGroupId;
+                userInfo[@"publish_type"] = @(FHUGCPublishTypeQuestion);
+                
+                FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:wendaModel.data];
+                if(cellModel) {
+                    userInfo[@"cell_model"] = cellModel;
+                }
                 
                 // 存储历史发布圈子信息
                 [self saveSelectedGroup];
@@ -804,7 +811,7 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil];
                 
                 // 发通知进行数据插入操作
-                [[NSNotificationCenter defaultCenter] postNotificationName:kFHWendaPublishNotificationName object:nil userInfo:userInfo];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostThreadSuccessNotification object:nil userInfo:userInfo];
                 
                 [[ToastManager manager] showToast:@"发布成功!"];
                 

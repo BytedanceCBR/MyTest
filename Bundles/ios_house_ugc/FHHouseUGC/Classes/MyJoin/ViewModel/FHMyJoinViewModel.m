@@ -14,6 +14,7 @@
 #import "FHUserTracker.h"
 #import "FHCommunityList.h"
 #import "FHMyJoinAllNeighbourhoodCell.h"
+#import <TTUGCDefine.h>
 
 #define cellId @"cellId"
 #define allCellId @"allCellId"
@@ -64,7 +65,7 @@
         
         [self onUnreadMessageChange];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
     }
 

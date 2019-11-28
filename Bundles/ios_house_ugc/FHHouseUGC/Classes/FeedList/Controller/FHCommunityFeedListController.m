@@ -352,7 +352,7 @@
     }
 }
 
-- (void)gotoAskPublish {
+- (void)gotoWendaPublish {
     
 //    NSMutableDictionary *params = @{}.mutableCopy;
 //    params[UT_ELEMENT_TYPE] = @"vote_icon";

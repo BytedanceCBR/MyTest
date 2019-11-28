@@ -9,7 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define kFHWendaPublishNotificationName  @"kFHWendaPublishNotificationName"
 
 @interface FHUGCWendaPublishViewController : FHUGCPublishBaseViewController
 @end

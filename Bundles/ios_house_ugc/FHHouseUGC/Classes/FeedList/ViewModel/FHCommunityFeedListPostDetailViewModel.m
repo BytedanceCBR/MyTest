@@ -57,10 +57,6 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postTopSuccess:) name:kFHUGCTopPostNotification object:nil];
         // 加精或取消加精成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
-        // 发投票成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postVoteSuccess:) name:@"kFHVotePublishNotificationName" object:nil];
-        // 发提问成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postWendaSuccess:) name:@"kFHWendaPublishNotificationName" object:nil];
     }
     
     return self;
@@ -81,130 +77,13 @@
         return;
     }
     
-    if (noti && noti.userInfo && self.dataList) {
+    if (noti && noti.userInfo) {
         NSDictionary *userInfo = noti.userInfo;
-        NSString *social_group_id = userInfo[@"social_group_id"];
-        NSDictionary *result_model = userInfo[@"result_model"];
-        if (result_model && [result_model isKindOfClass:[NSDictionary class]]) {
-            NSDictionary * thread_cell_dic = result_model[@"data"];
-            if (thread_cell_dic && [thread_cell_dic isKindOfClass:[NSDictionary class]]) {
-                NSString * thread_cell_data = thread_cell_dic[@"thread_cell"];
-                if (thread_cell_data && [thread_cell_data isKindOfClass:[NSString class]]) {
-                    // 得到cell 数据
-                    NSError *jsonParseError;
-                    NSData *jsonData = [thread_cell_data dataUsingEncoding:NSUTF8StringEncoding];
-                    if (jsonData) {
-                        Class cls = [FHFeedUGCContentModel class];
-                        FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
-                        if (model && jsonParseError == nil) {
-                            FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-                            [self insertPostData:cellModel socialGroupIds:nil];
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-// 发提问成功通知
-- (void)postWendaSuccess:(NSNotification *)noti {
-    // TODO: 插入逻辑
-    if([self isNotInAllTab]){
-        return;
-    }
-    
-    if (noti && noti.userInfo && self.dataList) {
-        NSDictionary *userInfo = noti.userInfo;
-        NSString *ask_data = userInfo[@"wendaData"];
-        NSString *social_group_ids = userInfo[@"social_group_ids"];
-        if ([ask_data isKindOfClass:[NSString class]] && ask_data.length > 0) {
-            // 模型转换
-            NSDictionary *dic = [ask_data JSONValue];
-            FHFeedUGCCellModel *cellModel = nil;
-            if (dic && [dic isKindOfClass:[NSDictionary class]]) {
-                NSDictionary * rawDataDic = dic[@"raw_data"];
-                // 先转成rawdata
-                NSError *jsonParseError;
-                if (rawDataDic && [rawDataDic isKindOfClass:[NSDictionary class]]) {
-                    FHFeedContentRawDataModel *model = [[FHFeedContentRawDataModel alloc] initWithDictionary:rawDataDic error:&jsonParseError];
-                    if (model) {
-                        FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
-                        ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeQuestion];
-                        ugcContent.title = model.title;
-                        ugcContent.isStick = model.isStick;
-                        ugcContent.stickStyle = model.stickStyle;
-                        ugcContent.diggCount = model.diggCount;
-                        ugcContent.commentCount = model.commentCount;
-                        ugcContent.userDigg = model.userDigg;
-                        ugcContent.groupId = model.groupId;
-                        ugcContent.logPb = model.logPb;
-                        ugcContent.community = model.community;
-                        ugcContent.rawData = model;
-                        // FHFeedUGCCellModel
-                        cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
-                        cellModel.isFromDetail = NO;
-                        cellModel.tableView = self.tableView;
-                    }
-                }
-            }
-            [self insertPostData:cellModel socialGroupIds:social_group_ids];
-        }
-    }
-}
-
-// 发投票成功，插入数据
-- (void)postVoteSuccess:(NSNotification *)noti {
-    //多个tab时候，仅仅强插在全部页面
-    if([self isNotInAllTab]){
-        return;
-    }
-    
-    if (noti && noti.userInfo && self.dataList) {
-        NSDictionary *userInfo = noti.userInfo;
-        NSString *vote_data = userInfo[@"voteData"];
-        NSString *social_group_ids = userInfo[@"social_group_ids"];
-        if ([vote_data isKindOfClass:[NSString class]] && vote_data.length > 0) {
-            // 模型转换
-            NSDictionary *dic = [vote_data JSONValue];
-            FHFeedUGCCellModel *cellModel = nil;
-            if (dic && [dic isKindOfClass:[NSDictionary class]]) {
-                NSDictionary * rawDataDic = dic[@"raw_data"];
-                // 先转成rawdata
-                NSError *jsonParseError;
-                if (rawDataDic && [rawDataDic isKindOfClass:[NSDictionary class]]) {
-                    FHFeedContentRawDataModel *model = [[FHFeedContentRawDataModel alloc] initWithDictionary:rawDataDic error:&jsonParseError];
-                    if (model && model.voteInfo) {
-                        // 有投票数据
-                        // social_group data
-                        /*
-                        FHUGCScialGroupDataModel * groupData = nil;
-                        if (rawDataDic[@"community"]) {
-                            // 继续解析小区头部
-                            NSDictionary *social_group = [rawDataDic tt_dictionaryValueForKey:@"community"];
-                            NSError *groupError = nil;
-                            groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
-                        }
-                         */
-                        FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
-                        ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeUGCVoteInfo];
-                        ugcContent.title = model.title;
-                        ugcContent.isStick = model.isStick;
-                        ugcContent.stickStyle = model.stickStyle;
-                        ugcContent.diggCount = model.diggCount;
-                        ugcContent.commentCount = model.commentCount;
-                        ugcContent.userDigg = model.userDigg;
-                        ugcContent.groupId = model.groupId;
-                        ugcContent.logPb = model.logPb;
-                        ugcContent.community = model.community;
-                        ugcContent.rawData = model;
-                        // FHFeedUGCCellModel
-                        cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
-                        cellModel.isFromDetail = NO;
-                        cellModel.tableView = self.tableView;
-                    }
-                }
-            }
-            [self insertPostData:cellModel socialGroupIds:social_group_ids];
+        FHFeedUGCCellModel *cellModel = userInfo[@"cell_model"];
+        if(cellModel) {
+            cellModel.tableView = self.tableView;
+            cellModel.isFromDetail = NO;
+            [self insertPostData:cellModel socialGroupIds:nil];
         }
     }
 }
