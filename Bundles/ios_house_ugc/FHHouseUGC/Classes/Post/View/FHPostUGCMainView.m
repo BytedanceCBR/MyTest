@@ -16,18 +16,34 @@
 @property (nonatomic, strong)   UILabel       *nameLabel;
 @property (nonatomic, strong)   UILabel       *valueLabel;
 @property (nonatomic, strong)   UIView       *sepLine;
+@property (nonatomic, assign)   FHPostUGCMainViewType type;
 
 @end
 
 @implementation FHPostUGCMainView
 
-- (instancetype)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame type:(FHPostUGCMainViewType)type
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.type = type;
         [self setupUI];
     }
     return self;
+}
+
+- (NSString *)hintString {
+    switch (self.type) {
+        case FHPostUGCMainViewType_Post:
+            return @"选择想要发布帖子的圈子";
+            break;
+        case FHPostUGCMainViewType_Wenda:
+            return @"请选择要发布提问的圈子";
+            break;
+        default:
+            return @"";
+            break;
+    }
 }
 
 - (void)setupUI {
@@ -41,7 +57,7 @@
     _nameLabel.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_nameLabel];
     _valueLabel = [[UILabel alloc] init];
-    _valueLabel.text = @"选择想要发布帖子的圈子";
+    _valueLabel.text = [self hintString];
     _valueLabel.textColor = [UIColor themeGray3];
     _valueLabel.font = [UIFont themeFontRegular:16];
     _valueLabel.textAlignment = NSTextAlignmentLeft;
@@ -87,7 +103,7 @@
         }];
     } else {
         self.nameLabel.text = @"发布到：";
-        self.valueLabel.text = @"选择想要发布帖子的圈子";
+        self.valueLabel.text = [self hintString];
         self.valueLabel.textColor = [UIColor themeGray3];
         [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(66);

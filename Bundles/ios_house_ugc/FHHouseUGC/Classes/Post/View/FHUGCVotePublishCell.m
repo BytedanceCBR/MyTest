@@ -89,6 +89,22 @@
 // MARK: 投票标题Cell
 @implementation FHUGCVotePublishTitleCell
 
+
+- (UITextView *)contentTextView {
+    if(!_contentTextView) {
+        _contentTextView  = [[UITextView alloc] initWithFrame:CGRectMake(PADDING, 23, SCREEN_WIDTH - 2 * PADDING, 32)];
+        _contentTextView.font = [UIFont themeFontRegular:22];
+        _contentTextView.textColor = [UIColor themeGray1];
+        _contentTextView.clipsToBounds = YES;
+        _contentTextView.delegate = self;
+    }
+    return _contentTextView;
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+    
+}
+
 -(UITextField *)contentTextField {
     if(!_contentTextField) {
         _contentTextField = [[UITextField alloc] initWithFrame:CGRectMake(PADDING, 23, SCREEN_WIDTH - 2 * PADDING, 32)];
