@@ -12,7 +12,7 @@
 #import <FHEnvContext.h>
 
 #define kCellId @"cellId"
-#define maxCellCount 3
+#define maxCellCount 2
 
 @interface FHCommunityViewModel ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -101,12 +101,7 @@
 
 - (void)setCurrentTabIndex:(NSInteger)currentTabIndex {
     _currentTabIndex = currentTabIndex;
-    if (currentTabIndex >= 2) {
-        self.searchBtn.hidden = YES;
-        [self.viewController hideGuideView];
-    } else {
-        self.searchBtn.hidden = NO;
-    }
+    self.searchBtn.hidden = NO;
 }
 
 //顶部tabView点击事件

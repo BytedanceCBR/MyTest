@@ -307,13 +307,13 @@
         [titles addObject:@"附近"];
     }
         
-    [titles addObject:@"发现"];
+//    [titles addObject:@"发现"];
     
-    if(titles.count == 3){
+    if(titles.count == 2){
         return titles;
     }
     
-    return @[@"关注", @"附近", @"发现"];
+    return @[@"关注", @"附近"];
 }
 
 - (void)initConstraints {
