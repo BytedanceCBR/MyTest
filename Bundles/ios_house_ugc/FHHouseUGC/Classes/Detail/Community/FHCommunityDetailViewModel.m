@@ -249,6 +249,10 @@
 }
 
 - (void)requestData:(BOOL) userPull refreshFeed:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed showToast:(BOOL) showToast{
+    if(self.isFirstEnter){
+        [self.viewController tt_startUpdate];
+    }
+    
     if (![TTReachability isNetworkConnected]) {
         [self onNetworError:showEmptyIfFailed showToast:showToast];
         if(userPull){
@@ -330,7 +334,6 @@
 }
 
 - (void)gotoVotePublish {
-    
     if ([TTAccountManager isLogin]) {
         [self gotoVoteVC];
     } else {
@@ -379,7 +382,7 @@
                 [titles addObject:item.showName];
             }
             //这里记录一下精华tab的index,为了后面加精和取消加精时候，可以标记vc刷新
-            if([item.tabName isEqualToString:@"essence"]){
+            if([item.tabName isEqualToString:tabEssence]){
                 self.essenceIndex = i;
             }
             if(item.isDefault) {
@@ -413,13 +416,8 @@
     }
     
     self.pagingView.delegate = self;
-//    [self.viewController.view addSubview:self.pagingView];
+    //放到最下面
     [self.viewController.view insertSubview:self.pagingView atIndex:0];
-    //这里添加完subview以后导航条被盖住了，所以在这里给放到前面
-//    [self.viewController.view bringSubviewToFront:self.viewController.customNavBarView];
-//    [self.viewController.view bringSubviewToFront:self.viewController.publishBtn];
-//    [self.viewController.view bringSubviewToFront:self.viewController.groupChatBtn];
-//    [self.viewController.view bringSubviewToFront:self.viewController.bageView];
 }
 
 - (void)createFeedListController:(NSString *)tabName {
@@ -432,14 +430,13 @@
     feedListController.forumId = self.viewController.communityId;
     feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
-    feedListController.segmentViewHeight = kSegmentViewHeight;
     //错误页高度
-    CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
     if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1){
+        CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
         errorViewHeight -= kSegmentViewHeight;
+        feedListController.errorViewHeight = errorViewHeight;
     }
-    feedListController.errorViewHeight = errorViewHeight;
-    feedListController.notLoadDateWhenEmpty = YES;
+    feedListController.notLoadDataWhenEmpty = YES;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
     feedListController.beforeInsertPostBlock = ^{
@@ -455,6 +452,7 @@
 
 - (void)updateVC {
     for (FHCommunityFeedListController *feedListController in self.subVCs) {
+        //更新管理员权限
         feedListController.operations = self.socialGroupModel.data.permission;
     }
 }
@@ -1104,16 +1102,13 @@
 }
 
 // 帐号切换
-- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
-{
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
     if (_isLogin != TTAccountManager.isLogin) {
-        [_viewController tt_startUpdate];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-             [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+            [self refreshBasicInfo];
         });
         _isLogin = TTAccountManager.isLogin;
     }
-    
 }
 
 - (void)onLoginIn {

@@ -36,6 +36,7 @@
 @interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @property(nonatomic, strong) FHErrorView *errorView;
+//当第一刷数据不足5个，同时feed还有新内容时，会继续刷下一刷的数据，这个值用来记录请求的次数
 @property(nonatomic, assign) NSInteger retryCount;
 
 @end
@@ -67,7 +68,7 @@
 }
 
 - (BOOL)isNotInAllTab {
-    return self.tabName && ![self.tabName isEqualToString:@"all"];
+    return self.tabName && ![self.tabName isEqualToString:tabAll];
 }
 
 // 发帖成功，插入数据
@@ -126,19 +127,6 @@
                 self.needRefreshCell = NO;
                 [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
             });
-            
-//            // JOKER: 发贴成功插入贴子后，滚动使露出
-//            if(index == 0) {
-//                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-////                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
-//            } else {
-//                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-////                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-////                CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
-////                rect.origin.y -= ([TTDeviceHelper isIPhoneXDevice] ? 88 : 64); // 白色导航条的高度
-////                rect.origin.y += self.viewController.segmentViewHeight;
-////                [self.tableView setContentOffset:rect.origin animated:YES];
-//            }
         }
     });
 }
@@ -261,14 +249,19 @@
         }
         
         if(model){
+//            if(isHead){
+//                if(feedListModel.hasMore){
+//                    [wself.dataList removeAllObjects];
+//                }
+//                wself.tableView.hasMore = YES;
+//            }else{
+//                wself.tableView.hasMore = feedListModel.hasMore;
+//            }
             if(isHead){
-                if(feedListModel.hasMore){
-                    [wself.dataList removeAllObjects];
-                }
-                wself.tableView.hasMore = YES;
-            }else{
-                wself.tableView.hasMore = feedListModel.hasMore;
+                [wself.dataList removeAllObjects];
             }
+            
+            wself.tableView.hasMore = feedListModel.hasMore;
             
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
@@ -324,9 +317,13 @@
             if ([TTDeviceHelper isIPhoneXSeries]) {
                 refreshFooterBottomHeight += 34;
             }
+            //设置footer来占位
             UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight - height - refreshFooterBottomHeight)];
-            tableFooterView.backgroundColor = [UIColor themeGray7];
+            tableFooterView.backgroundColor = [UIColor clearColor];
             self.tableView.tableFooterView = tableFooterView;
+//            //修改footer的位置回到cell下方，不修改会在tableFooterView的下方
+//            self.tableView.mj_footer.mj_y -= tableFooterView.height;
+//            self.tableView.mj_footer.hidden = NO;
         }else{
             self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
             [self.tableView reloadData];
@@ -780,8 +777,8 @@
     NSInteger row = [self getCellIndex:cellModel];
     if(row < self.dataList.count && row >= 0){
         [self.dataList removeObjectAtIndex:row];
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
         [self reloadTableViewData];
     }
 }

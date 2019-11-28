@@ -11,7 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCommunityFeedListPostDetailViewModel : FHCommunityFeedListBaseViewModel
 
+//圈子id
 @property(nonatomic, copy) NSString *socialGroupId;
+//分类的key
 @property(nonatomic, copy) NSString *tabName;
 
 @end

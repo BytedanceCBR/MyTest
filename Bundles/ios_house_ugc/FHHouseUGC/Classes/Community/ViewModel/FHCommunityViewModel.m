@@ -205,7 +205,27 @@
 
 //设置每个item的尺寸
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return collectionView.frame.size;
+    CGFloat bottom = 49;
+    if (@available(iOS 11.0, *)) {
+        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
+    CGFloat top = 0;
+    CGFloat safeTop = 0;
+    if (@available(iOS 11.0, *)) {
+        safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+    }
+    if (safeTop > 0) {
+        top += safeTop;
+    } else {
+        top += [[UIApplication sharedApplication] statusBarFrame].size.height;
+    }
+    
+    top += 60;
+    
+    CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - top - bottom);
+    
+    return size;
 }
 
 #pragma mark - UIScrollViewDelegate
