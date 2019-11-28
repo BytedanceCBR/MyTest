@@ -29,36 +29,41 @@
 #import <FHUGCWendaModel.h>
 #import <FHPostUGCViewController.h>
 
-#define ENTRY_HEIGHT 44
+// 选择小区圈子控件的高度
+#define ENTRY_HEIGHT                44
 
 // 标题输入框尺寸
-#define TITLE_TEXT_VIEW_HEIGHT 40
-#define TITLE_TEXT_VIEW_MIN_HEIGHT 40
-#define TITLE_TEXT_VIEW_MAX_HEIGHT 100
+#define TITLE_TEXT_VIEW_HEIGHT      44
+#define TITLE_TEXT_VIEW_MIN_HEIGHT  44
+#define TITLE_TEXT_VIEW_MAX_HEIGHT  200
 
 // 描述输入框尺寸
-#define DESC_TEXT_VIEW_HEIGHT 100
-#define DESC_TEXT_VIEW_MIN_HEIGHT 100
-#define DESC_TEXT_VIEW_MAX_HEIGHT 150
+#define DESC_TEXT_VIEW_HEIGHT       100
+#define DESC_TEXT_VIEW_MIN_HEIGHT   100
+#define DESC_TEXT_VIEW_MAX_HEIGHT   200
 
-#define ADD_IMAGES_HEIGHT 120
+// 添加图片控件的高度
+#define ADD_IMAGES_HEIGHT           120
 
 // 页面内容左右边距
-#define LEFT_PADDING 20
-#define RIGHT_PADDING 20
+#define LEFT_PADDING                20
+#define RIGHT_PADDING               20
 
-#define TITLE_MAX_COUNT 40  // 问题标题文字长度限制
-#define DESC_MAX_COUNT 100  // 问题描述文字长度限制
-#define IMAGE_MAX_COUNT 3   // 问题副带图片个数限制
+// 输入文本长度限制
+#define TITLE_MAX_COUNT             40  // 问题标题文字长度限制
+#define DESC_MAX_COUNT              100  // 问题描述文字长度限制
+#define IMAGE_MAX_COUNT             3   // 问题副带图片个数限制
 
-#define VGAP_HIST_TITLE    24
-#define VGAP_TITLE_SEP     16
-#define VGAP_SEP_DESC      20
-#define VGAP_DESC_ADDIMAGE 10
+// 控件的垂直间距
+#define VGAP_HIST_TITLE             24
+#define VGAP_TITLE_SEP              16
+#define VGAP_SEP_DESC               20
+#define VGAP_DESC_ADDIMAGE          10
 
 
 @interface FHUGCWendaPublishViewController () <TTUGCToolbarDelegate, TTUGCTextViewDelegate, FRAddMultiImagesViewDelegate>
-@property (nonatomic, assign) BOOL hasSocialGroup;
+
+// 控件区
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) FHPostUGCMainView *socialGroupSelectEntry;
 @property (nonatomic, strong) FHPostUGCSelectedGroupHistoryView *selectedGrouplHistoryView;
@@ -66,18 +71,26 @@
 @property (nonatomic, strong) UIView *horizontalSeparatorLine;
 @property (nonatomic, strong) TTUGCTextView *descriptionTextView;
 @property (nonatomic, strong) FRAddMultiImagesView * addImagesView;
-@property (nonatomic, strong) TTUGCToolbar *toolbar;
 @property (nonatomic, strong) SSThemedLabel *tipLabel;
-@property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
+@property (nonatomic, strong) TTUGCToolbar *toolbar;
 
+// 数据区
 @property (nonatomic, copy) NSString *selectGroupId;
 @property (nonatomic, copy) NSString *selectGroupName;
+@property (nonatomic, assign) BOOL hasSocialGroup;
+
+// 辅助变量
+@property (nonatomic, assign) BOOL isKeyboardWillShow;
+@property (nonatomic, weak) UIResponder *lastResponder;
+@property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
 
 @end
 
 @implementation FHUGCWendaPublishViewController
 
--(instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+#pragma mark - 生命周期
+
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
         self.title = @"提问";
         self.selectGroupId = [paramObj.allParams tt_stringValueForKey:@"select_group_id"];
@@ -94,6 +107,16 @@
     [self setupUI];
     
     [self registerNotification];
+    
+    [self addGestures];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if(![self.titleTextView isFirstResponder]) {
+        [self.titleTextView becomeFirstResponder];
+    }
 }
 
 - (void)setupUI {
@@ -117,14 +140,26 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardFrameWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
 }
 
-#pragma makr - 通知
+- (void)addGestures {
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+    [self.containerView addGestureRecognizer: tap];
+}
+
+- (void)tapAction:(UITapGestureRecognizer *)tap {
+    [self configFirstResponderWithKeyboardShow:!self.isKeyboardWillShow];
+}
+
+#pragma makr - 键盘高度变化通知
 
 - (void)keyboardFrameWillChange:(NSNotification *)notification {
+    
     CGRect beginFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    BOOL isShrinking = beginFrame.origin.y < endFrame.origin.y;
+
+    self.isKeyboardWillShow = beginFrame.origin.y > endFrame.origin.y;
     // 键盘收起
-    if(isShrinking) {
+    if(self.isKeyboardWillShow) {
         self.toolbar.top =  self.containerView.height - [self toolbarHeight];
     }
     // 键盘弹出
@@ -197,6 +232,7 @@
 }
 
 #pragma makr - 懒加载成员
+
 - (UIView *)containerView {
     if(!_containerView) {
         _containerView = [[UIView alloc] initWithFrame:CGRectMake(0, kNavigationBarHeight, SCREEN_WIDTH, SCREEN_HEIGHT - kNavigationBarHeight)];
@@ -313,8 +349,8 @@
 
 - (SSThemedLabel *)tipLabel {
     if(!_tipLabel) {
-        _tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(LEFT_PADDING, 11, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, 25.f)];
-        _tipLabel.backgroundColor = [UIColor whiteColor];
+        _tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(LEFT_PADDING, 0, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, 36)];
+        _tipLabel.backgroundColor = [UIColor clearColor];
         _tipLabel.font = [UIFont themeFontRegular:11];
         _tipLabel.textAlignment = NSTextAlignmentRight;
         _tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
@@ -331,6 +367,7 @@
 }
 
 #pragma mark - FHPostUGCSelectedGroupHistoryViewDelegate
+
 // 圈子选择历史选中
 -(void)selectedHistoryGroup:(FHPostUGCSelectedGroupModel *)item {
     if (item) {
@@ -348,22 +385,44 @@
 #pragma mark - TTUGCToolbarDelegate
 
 - (void)toolbarDidClickKeyboardButton:(BOOL)switchToKeyboardInput {
-    if (switchToKeyboardInput) {
+    [self configFirstResponderWithKeyboardShow:switchToKeyboardInput];
+}
+
+- (void)configFirstResponderWithKeyboardShow:(BOOL)isKeyboardShow {
+    
+    if (isKeyboardShow) {
+        if(self.lastResponder) {
+            [self.lastResponder becomeFirstResponder];
+        } else {
+            [self.titleTextView becomeFirstResponder];
+        }
     }
     else {
-        [self.view endEditing:YES];
+        if([self.titleTextView isFirstResponder]) {
+            self.lastResponder = self.titleTextView;
+        } else if([self.descriptionTextView isFirstResponder]) {
+            self.lastResponder = self.descriptionTextView;
+        }
+        
+        [self.lastResponder resignFirstResponder];
     }
 }
 
 #pragma makr - TTUGCTextViewDelegate
 
 - (void)textViewDidChange:(TTUGCTextView *)textView {
-    
+
     if(textView == self.titleTextView) {
-        if(self.titleTextView.text.length > TITLE_MAX_COUNT) {
-            self.titleTextView.text = [self.titleTextView.text substringToIndex: TITLE_MAX_COUNT];
+        
+        NSString *textViewContent = self.titleTextView.text;
+        if([textViewContent containsString:@"\n"]) {
+            textViewContent = [textViewContent stringByReplacingOccurrencesOfString:@"\n" withString:@""];
         }
-        self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",self.titleTextView.text.length, TITLE_MAX_COUNT];
+            
+        if(textViewContent.length > TITLE_MAX_COUNT) {
+            self.titleTextView.text = [textViewContent substringToIndex: TITLE_MAX_COUNT];
+        }
+        [self updateTipLabelWithText:self.titleTextView.text maxLength:TITLE_MAX_COUNT];
         
         [self checkIfEnablePublish];
     }
@@ -372,7 +431,7 @@
         if(self.descriptionTextView.text.length > DESC_MAX_COUNT) {
             self.descriptionTextView.text = [self.descriptionTextView.text substringToIndex: DESC_MAX_COUNT];
         }
-        self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",self.descriptionTextView.text.length, DESC_MAX_COUNT];
+        [self updateTipLabelWithText:self.descriptionTextView.text maxLength:DESC_MAX_COUNT];
     }
     
     [self refreshUI];
@@ -380,11 +439,11 @@
 
 - (void)textViewDidBeginEditing:(TTUGCTextView *)textView {
     if(textView == self.titleTextView) {
-        self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",self.titleTextView.text.length, TITLE_MAX_COUNT];
+        [self updateTipLabelWithText:self.titleTextView.text maxLength:TITLE_MAX_COUNT];
     }
     
     else if (textView == self.descriptionTextView) {
-        self.tipLabel.text = [NSString stringWithFormat:@"%ld/%lu",self.descriptionTextView.text.length, DESC_MAX_COUNT];
+        [self updateTipLabelWithText:self.descriptionTextView.text maxLength:DESC_MAX_COUNT];
     }
 }
 
@@ -420,7 +479,7 @@
     
     FHPostUGCSelectedGroupModel *selectedGroup = nil;
     
-    FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadWendaPublisherHistoryData];
+    FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
     
     NSString *currentUserID = [TTAccountManager currentUser].userID.stringValue;
     NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
@@ -438,7 +497,7 @@
     NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
     NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
     if(currentCityID.length > 0 && currentUserID.length > 0) {
-        FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadWendaPublisherHistoryData];
+        FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
         if(!selectedGroupHistory) {
             selectedGroupHistory = [FHPostUGCSelectedGroupHistory new];
             selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
@@ -450,7 +509,7 @@
         NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
         [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
         
-        [[FHUGCConfig sharedInstance] saveWendaPublisherHistoryDataWithModel:selectedGroupHistory];
+        [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
     }
 }
 
@@ -539,6 +598,18 @@
     return ret;
 }
 
+// 更新提示标签文本
+- (void)updateTipLabelWithText: (NSString *)text maxLength:(NSUInteger)maxLength {
+    NSString *textString = [NSString stringWithFormat:@"%ld/%lu",text.length, maxLength];
+    NSRange range = [textString rangeOfString:@"/"];
+    if(range.location != NSNotFound) {
+        NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc] initWithString:textString];
+        [attributeText addAttributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName: [UIFont themeFontRegular:11]} range:NSMakeRange(0, range.location)];
+        [attributeText addAttributes:@{NSForegroundColorAttributeName:[UIColor themeGray3],NSFontAttributeName:[UIFont themeFontRegular:11]} range:NSMakeRange(range.location, textString.length - range.location)];
+        self.tipLabel.attributedText = attributeText;
+    }
+}
+
 #pragma mark - 发布逻辑
 
 - (void)publishWendaContent {
@@ -591,16 +662,6 @@
             }
         }];
     }
-}
-
-- (NSArray<FRUploadImageModel*> *)needUploadImgModels {
-    NSMutableArray<FRUploadImageModel*> * ary = (NSMutableArray <FRUploadImageModel*> *)[NSMutableArray arrayWithCapacity:10];
-    for (FRUploadImageModel * model in self.addImagesView.selectedImages) {
-        if (isEmptyString(model.webURI)) {
-            [ary addObject:model];
-        }
-    }
-    return ary;
 }
 
 - (void)publishWendaContentAfterFollowedSocialGroup {
@@ -757,4 +818,7 @@
         }
     }];
 }
+
+#pragma mark - 埋点
+
 @end
