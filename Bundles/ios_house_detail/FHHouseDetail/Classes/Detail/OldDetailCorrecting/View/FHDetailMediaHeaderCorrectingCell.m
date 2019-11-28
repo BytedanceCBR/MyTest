@@ -71,7 +71,6 @@
     }
     [self.imageList removeAllObjects];
     self.currentData = data;
-
     [self generateModel];
     [self.mediaView updateModel:self.model withTitleModel: ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel];
     

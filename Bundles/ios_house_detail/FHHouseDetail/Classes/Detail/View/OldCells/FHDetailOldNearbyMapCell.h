@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHDetailBaseCell.h"
+#import "FHDetailBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface FHDetailOldNearbyMapModel : NSObject
+@interface FHDetailOldNearbyMapModel :FHDetailBaseModel
 
 @property (nonatomic, weak , nullable) UITableViewCell *cell;
 @property (nonatomic, copy , nullable) NSString *gaodeLng;

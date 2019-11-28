@@ -6,6 +6,8 @@
 //
 
 #import "FHDetailBaseCell.h"
+@interface FHDetailBaseCell ()
+@end
 
 @implementation FHDetailBaseCell
 
@@ -26,7 +28,6 @@
     }
     return self;
 }
-
 - (void)refreshWithData:(id)data {
     // sub implements.........
 }
@@ -61,6 +62,7 @@
 - (void)fh_didEndDisplayingCell{
 
 }
+
 @end
 
 // FHDetailBaseCollectionCell

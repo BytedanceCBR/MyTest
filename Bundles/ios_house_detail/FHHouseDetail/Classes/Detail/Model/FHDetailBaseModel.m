@@ -8,6 +8,25 @@
 #import "FHDetailBaseModel.h"
 
 @implementation FHDetailBaseModel
+- (void)setShadowImageType:(FHHouseShdowImageType)shadowImageType {
+    _shadowImageType = shadowImageType;
+    switch (shadowImageType) {
+        case FHHouseShdowImageTypeLR:
+            _bacImageName = @"left_right";
+            break;
+        case FHHouseShdowImageTypeLTR:
+            _bacImageName = @"left_top_right";
+            break;
+        case FHHouseShdowImageTypeLBR:
+            _bacImageName = @"left_bottom_right";
+            break;
+        case FHHouseShdowImageTypeRound:
+            _bacImageName = @"top_left_right_bottom";
+            break;
+        default:
+            break;
+    }
+}
 
 @end
 
@@ -301,6 +320,22 @@
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
+}
+- (void)setShadowImageType:(FHHouseShdowImageType)shadowImageType {
+    _shadowImageType = shadowImageType;
+    switch (shadowImageType) {
+        case FHHouseShdowImageTypeLR:
+            _bacImageName = @"left_right";
+            break;
+        case FHHouseShdowImageTypeLTR:
+            _bacImageName = @"left_top_right";
+            break;
+        case FHHouseShdowImageTypeLBR:
+            _bacImageName = @"left_bottom_right";
+            break;
+        default:
+            break;
+    }
 }
 @end
 

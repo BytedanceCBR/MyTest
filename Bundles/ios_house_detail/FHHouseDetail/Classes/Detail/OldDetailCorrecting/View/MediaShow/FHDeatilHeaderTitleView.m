@@ -27,9 +27,7 @@
 }
 - (void)initUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(-15);
-        make.right.mas_equalTo(self).offset(15);
-        make.top.equalTo(self);
+        make.left.right.top.equalTo(self);
         make.height.equalTo(self);
     }];
     [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -39,9 +37,9 @@
         make.height.mas_offset(20);
     }];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(35);
+        make.left.mas_equalTo(self).offset(31);
         make.right.mas_equalTo(self).offset(-35);
-        make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(15);
+        make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(17);
     }];
 }
 
@@ -100,7 +98,7 @@
 - (void)setModel:(FHDetailHouseTitleModel *)model {
     NSArray *tags = model.tags;
      self.nameLabel.text = model.titleStr;
-    __block UIView *lastView = self;
+    __block UIView *lastView = self.tagBacView;
     if (tags.count  == 0) {
         [self.tagBacView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_offset(0.01);
@@ -120,7 +118,7 @@
         [self.tagBacView addSubview:label];
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
             if (idx == 0) {
-                make.left.equalTo(lastView).offset(31);
+                make.left.equalTo(lastView).offset(16);
             }else {
                 make.left.equalTo(lastView.mas_right).offset(10);
             }

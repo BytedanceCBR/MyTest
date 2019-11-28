@@ -9,12 +9,15 @@
 #define FHHouseShadowImageType_h
 //用于控制阴影图片展示方向
 typedef NS_ENUM (NSInteger , FHHouseShdowImageType){
-    FHHouseShdowImageTypeLTR = 0,
-    FHHouseShdowImageTypeLR,
+    FHHouseShdowImageTypeLR = 0,
+    FHHouseShdowImageTypeLTR,
     FHHouseShdowImageTypeLBR,
+    FHHouseShdowImageTypeRound
 };
 //用于将小模块区分成大模块
 typedef NS_ENUM (NSInteger , FHHouseModelType){
-    FHHouseModelTypeCoreInfo = 0,
+    FHHouseModelTypeDefault = 0,
+    FHHouseModelTypeCoreInfo,//房源属性模块
+    FHHouseModelTypeSubscribe
 };
 #endif /* FHHouseShadowImageType_h */

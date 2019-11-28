@@ -186,7 +186,7 @@
         make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
     }];
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self);
+        make.left.right.bottom.equalTo(self);
         make.top.equalTo(self.colletionView.mas_bottom).offset(-82);
     }];
     
@@ -201,7 +201,7 @@
         make.width.mas_equalTo(44);
         make.height.mas_equalTo(20);
         make.right.mas_equalTo(self).offset(-20);
-        make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
+        make.bottom.mas_equalTo(self.titleView.mas_top).offset(12);
     }];
     
  
