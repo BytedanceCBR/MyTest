@@ -108,12 +108,17 @@
 }
 
 - (void)refreshButtonsUI {
-    self.emojiButton.hidden = NO;
+    self.emojiButton.hidden = self.banEmojiInput;
     self.atButton.hidden = self.banAtInput;
     self.shoppingButton.hidden = YES;
     
-    self.emojiButton.left = 10;
-    self.picButton.left = self.emojiButton.right - 5;
+    if(!self.emojiButton.hidden) {
+        self.emojiButton.left = 10;
+        self.picButton.left = self.emojiButton.right - 5;
+    } else {
+        self.emojiButton.right = 0;
+        self.picButton.left = 10;
+    }
     
     if (!self.hashtagButton.hidden) {
         self.hashtagButton.left = self.picButton.right - 5;

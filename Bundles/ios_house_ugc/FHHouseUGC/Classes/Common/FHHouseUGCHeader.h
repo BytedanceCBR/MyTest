@@ -75,6 +75,13 @@ typedef NS_ENUM(NSUInteger, FHUGCLoginFrom) {
     FHUGCLoginFrom_POST = 0,
     FHUGCLoginFrom_GROUPCHAT = 1,
     FHUGCLoginFrom_VOTE = 2,
+    FHUGCLoginFrom_ASK = 3,
+};
+
+typedef NS_ENUM(NSUInteger, FHUGCPublishType) {
+    FHUGCPublishTypePost,       // 发图文贴
+    FHUGCPublishTypeVote,       // 发投票
+    FHUGCPublishTypeQuestion,   // 发提问
 };
 
 #endif /* FHHouseUGCHeader_h */

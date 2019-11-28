@@ -25,12 +25,12 @@
 #import "BTDJSONHelper.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHPostUGCViewController.h"
+#import <TTUGCDefine.h>
 
 #define OPTION_START_INDEX  2
 #define DATEPICKER_HEIGHT 200
 #define TOP_BAR_HEIGHT 40
 
-#define kFHVotePublishNotificationName @"kFHVotePublishNotificationName"
 
 @interface FHUGCVoteViewModel() <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate,FHUGCVotePublishBaseCellDelegate>
 @property (nonatomic, strong) FHUGCVotePublishModel *model;
@@ -111,6 +111,7 @@
         _datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, TOP_BAR_HEIGHT, SCREEN_WIDTH, DATEPICKER_HEIGHT)];
         _datePicker.datePickerMode = UIDatePickerModeDateAndTime;
         _datePicker.minimumDate = [NSDate date];
+        _datePicker.maximumDate = [[NSDate date] dateByAddingTimeInterval:30 * 24 * 60 * 60];
         NSDate *defaultVoteDeadline = [[NSDate date] dateByAddingTimeInterval:7 * 24 * 60 * 60];
         _datePicker.date = defaultVoteDeadline;
     }
@@ -458,11 +459,51 @@
             FHUGCVoteModel *voteModel = (FHUGCVoteModel *)model;
             if(voteModel.data.length > 0) {
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
-                userInfo[@"voteData"] = voteModel.data;
+                
                 if (socialGroupIds.length > 0) {
-                    userInfo[@"social_group_ids"] = socialGroupIds;
+                    userInfo[@"social_group_id"] = socialGroupIds;
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:kFHVotePublishNotificationName object:nil userInfo:userInfo];
+                
+                [userInfo setValue:@(FHUGCPublishTypeVote) forKey:@"publish_type"];
+            
+                // 数据转换
+                NSString *vote_data = voteModel.data;
+                NSString *social_group_ids = socialGroupIds;
+                if ([vote_data isKindOfClass:[NSString class]] && vote_data.length > 0) {
+                    // 模型转换
+                    NSDictionary *dic = [vote_data JSONValue];
+                    FHFeedUGCCellModel *cellModel = nil;
+                    if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary * rawDataDic = dic[@"raw_data"];
+                        // 先转成rawdata
+                        NSError *jsonParseError;
+                        if (rawDataDic && [rawDataDic isKindOfClass:[NSDictionary class]]) {
+                            FHFeedContentRawDataModel *model = [[FHFeedContentRawDataModel alloc] initWithDictionary:rawDataDic error:&jsonParseError];
+                            if (model && model.voteInfo) {
+                                FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
+                                ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeUGCVoteInfo];
+                                ugcContent.title = model.title;
+                                ugcContent.isStick = model.isStick;
+                                ugcContent.stickStyle = model.stickStyle;
+                                ugcContent.diggCount = model.diggCount;
+                                ugcContent.commentCount = model.commentCount;
+                                ugcContent.userDigg = model.userDigg;
+                                ugcContent.groupId = model.groupId;
+                                ugcContent.logPb = model.logPb;
+                                ugcContent.community = model.community;
+                                ugcContent.rawData = model;
+                                // FHFeedUGCCellModel
+                                cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+                                
+                                if(cellModel) {
+                                    userInfo[@"cell_model"] = cellModel;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostThreadSuccessNotification object:nil userInfo:userInfo];
                 [self exitPage];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(0)} extra:nil];
                 

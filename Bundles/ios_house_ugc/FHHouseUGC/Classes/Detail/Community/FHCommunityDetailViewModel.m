@@ -33,6 +33,7 @@
 #import "IMManager.h"
 #import <TTThemedAlertController.h>
 #import "FHFeedUGCCellModel.h"
+#import <TTUGCDefine.h>
 
 #define kSegmentViewHeight 52
 
@@ -103,12 +104,10 @@
     [TTAccount addMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
     // 加精或取消加精成功
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
-    // 发投票成功
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postVoteSuccess:) name:@"kFHVotePublishNotificationName" object:nil];
 }
 
 - (void)postGoodSuccess:(NSNotification *)noti {
@@ -125,33 +124,11 @@
         }
     }
 }
-
-- (void)postVoteSuccess:(NSNotification *)noti {
-    if (noti && noti.userInfo) {
-        NSDictionary *userInfo = noti.userInfo;
-        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
-        NSString *socialGroupId = userInfo[@"social_group_id"];
-        if([socialGroupId isEqualToString:self.viewController.communityId]){
-            //多于1个tab的时候
-            if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
-                FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
-                feedVC.needReloadData = YES;
-            }
-        }
-    }
-}
-
 // 发帖成功通知
 - (void)postThreadSuccess:(NSNotification *)noti {
-//    //如果是多tab，并且当前不在全部tab，这个时候要先切tab
-//    if(self.selectedIndex != 0){
-//        self.isFirstEnter = YES;
-//        self.viewController.segmentView.selectedIndex = 0;
-//    }
-    
     if (noti) {
         NSString *groupId = noti.userInfo[@"social_group_id"];
-        if (groupId.length > 0) {
+        if (groupId.length > 0 && self.viewController.communityId.length > 0 && [groupId containsString:self.viewController.communityId]) {
             __weak typeof(self) weakSelf = self;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 FHUGCScialGroupDataModel *groupData = [[FHUGCConfig sharedInstance] socialGroupData:weakSelf.data.socialGroupId];
@@ -179,7 +156,7 @@
         }
     }
     
-    if (groupId.length > 0) {
+    if (groupId.length > 0 && [groupId isEqualToString:self.viewController.communityId]) {
         __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             FHUGCScialGroupDataModel *groupData = [[FHUGCConfig sharedInstance] socialGroupData:weakSelf.data.socialGroupId];
@@ -361,9 +338,27 @@
     }
 }
 
+- (void)gotoWendaPublish {
+    if ([TTAccountManager isLogin]) {
+        [self gotoAskVC];
+    } else {
+        [self gotoLogin:FHUGCLoginFrom_ASK];
+    }
+}
+
 // 跳转到投票发布器
 - (void)gotoVoteVC {
     NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+    dict[TRACER_KEY] = tracerDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+}
+
+- (void)gotoAskVC {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
@@ -578,7 +573,7 @@
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
-- (void)gotoLogin:(FHUGCLoginFrom *)from {
+- (void)gotoLogin:(FHUGCLoginFrom)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setObject:@"community_group_detail" forKey:@"enter_from"];
     [params setObject:@"feed_like" forKey:@"enter_type"];
@@ -590,17 +585,28 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                if (from == FHUGCLoginFrom_POST) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [wSelf goPostDetail];
-                    });
-                } else if(from == FHUGCLoginFrom_GROUPCHAT){
-                    [wSelf onLoginIn];
-                } else if(from == FHUGCLoginFrom_VOTE) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [wSelf gotoVoteVC];
-                    });
-                }
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    switch(from) {
+                        case FHUGCLoginFrom_POST:
+                        {
+                            [self goPostDetail];
+                        }
+                            break;
+                        case FHUGCLoginFrom_VOTE:
+                        {
+                            [self gotoVoteVC];
+                        }
+                            break;
+                        case FHUGCLoginFrom_ASK:
+                        {
+                            [self gotoAskVC];
+                        }
+                            break;
+                        default:
+                            break;
+                    }
+                });
             }
         }
     }];

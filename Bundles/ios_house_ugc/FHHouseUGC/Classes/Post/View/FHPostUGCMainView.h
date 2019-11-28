@@ -9,6 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, FHPostUGCMainViewType) {
+    FHPostUGCMainViewType_Post,
+    FHPostUGCMainViewType_Wenda
+};
+
 // 选择小区 类名懒得改了
 @interface FHPostUGCMainView : UIControl
 
@@ -17,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)     NSString       *groupId;// 圈子 id
 @property (nonatomic, assign)   BOOL       followed; // 是否已关注
 @property (nonatomic, assign)   BOOL       hasValidData;// 是否有效
+
+- (instancetype)initWithFrame:(CGRect)frame type:(FHPostUGCMainViewType)type;
 
 @end
 
