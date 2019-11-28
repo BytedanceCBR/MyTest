@@ -79,22 +79,22 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if([self.navigationController isKindOfClass:[TTNavigationController class]]) {
-        self.navController = (TTNavigationController *)self.navigationController;
+//    if([self.navigationController isKindOfClass:[TTNavigationController class]]) {
+//        self.navController = (TTNavigationController *)self.navigationController;
         // todo zjing wangzhizhou confirm
-        self.ttDisableDragBack = YES;
 //        self.navController.isBanSideSlideAction = YES;
-    }
+//    }
+    self.ttDisableDragBack = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-    if(self.navController) {
+//    if(self.navController) {
                 // todo zjing wangzhizhou confirm
-        self.ttDisableDragBack = YES;
 //        self.navController.isBanSideSlideAction = NO;
-    }
+//    }
+    self.ttDisableDragBack = YES;
 }
 
 - (void)viewDidLoad {
