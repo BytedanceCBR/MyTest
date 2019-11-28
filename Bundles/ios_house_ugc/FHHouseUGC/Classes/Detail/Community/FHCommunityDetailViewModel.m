@@ -590,17 +590,17 @@
                     switch(from) {
                         case FHUGCLoginFrom_POST:
                         {
-                            [wSelf goPostDetail];
+                            [self goPostDetail];
                         }
                             break;
                         case FHUGCLoginFrom_VOTE:
                         {
-                            [wSelf gotoVoteVC];
+                            [self gotoVoteVC];
                         }
                             break;
                         case FHUGCLoginFrom_ASK:
                         {
-                            [wSelf gotoAskVC];
+                            [self gotoAskVC];
                         }
                             break;
                         default:
