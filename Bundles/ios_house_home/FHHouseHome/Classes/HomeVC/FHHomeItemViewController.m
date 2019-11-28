@@ -495,10 +495,8 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    if (decelerate) {
-        if (self.scrollDidEnd) {
-            self.scrollDidEnd();
-        }
+    if (self.scrollDidEnd) {
+        self.scrollDidEnd();
     }
 }
 

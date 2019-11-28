@@ -8,7 +8,7 @@
 #import "FHHomeMainViewController.h"
 #import "FHHomeMainViewModel.h"
 #import "FHHomeMainTopView.h"
-
+#import <TTDeviceHelper.h>
 @interface FHHomeMainViewController ()
 @property (nonatomic,strong)FHHomeMainViewModel *viewModel;
 @property (nonatomic,strong)FHHomeMainTopView *topView;
@@ -68,16 +68,11 @@
     if (@available(iOS 11.0, *)) {
         safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
     }
-    if (safeTop > 0) {
-        top += safeTop;
-    } else {
-        top += [[UIApplication sharedApplication] statusBarFrame].size.height;
-    }
     
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(0);
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(64 + safeTop);
+        make.height.mas_equalTo(44 + safeTop);
     }];
     [self.topView setBackgroundColor:[UIColor redColor]];
     

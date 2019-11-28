@@ -28,7 +28,6 @@
 #import <FHCommuteManager.h>
 #import <TTUIResponderHelper.h>
 #import "TTTabBarController.h"
-#import <TTTopBar.h>
 #import <FHHomeSearchPanelViewModel.h>
 #import <ExploreLogicSetting.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
@@ -53,7 +52,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 @property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic) BOOL adUGCHadJump;
-@property (nonatomic, strong) TTTopBar *topBar;
 @property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;

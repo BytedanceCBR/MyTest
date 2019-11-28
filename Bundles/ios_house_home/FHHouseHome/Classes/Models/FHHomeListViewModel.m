@@ -32,6 +32,12 @@
 #define KFHHomeSectionHeight 45
 #define KFHHomeSearchBarHeight 50
 
+#define KFHHomeHeaderCellId @"kHouseListCellid"
+#define KFHHomeSearchCellId @"kHouseSearchCellid"
+#define KFHHomeCategoryCellId @"kCategoryCellid"
+#define KFHHomeHouseListCellId @"kHouseListCellid"
+
+
 @interface FHHomeListViewModel()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableViewV;
@@ -311,7 +317,7 @@
     
     self.homeViewController.scrollView.delegate = self;
     self.itemsVCArray = itemVCArrayTmp;
-    [self.homeViewController.scrollView setContentSize:CGSizeMake(KFHScreenWidth * configDataModel.houseTypeList.count, self.homeViewController.scrollView.frame.size.height)];
+    [self.homeViewController.scrollView setContentSize:CGSizeMake(KFHScreenWidth * configDataModel.houseTypeList.count + 1, self.homeViewController.scrollView.frame.size.height)];
     NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
     [self setUpSubtableIndex:currentSelectIndex];
     
@@ -598,10 +604,14 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row == kFHHomeListHeaderSearchSection) {
-        UITableViewCell *cell = [[UITableViewCell alloc] init];
-        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, 44)];
-        [headerView setBackgroundColor:[UIColor blueColor]];
-        [cell.contentView addSubview:headerView];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:KFHHomeSearchCellId];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:KFHHomeSearchCellId];
+        }
+        
+        if (![cell.contentView.subviews containsObject:self.homeViewController.topBar]) {
+            [cell.contentView addSubview:self.homeViewController.topBar];
+        }
         return cell;
     }
     
@@ -618,19 +628,21 @@
     }
     
     if (indexPath.row == kFHHomeListHouseTypeBannerViewSection) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:KFHHomeCategoryCellId];
         if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:KFHHomeCategoryCellId];
         }
         // 添加分页菜单
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        [cell.contentView addSubview:self.categoryView];
+        if (![cell.contentView.subviews containsObject:self.categoryView]) {
+            [cell.contentView addSubview:self.categoryView];
+        }
         return cell;
     }
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:KFHHomeHouseListCellId];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:KFHHomeHouseListCellId];
     }
     // 添加分页菜单
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -715,6 +727,12 @@
             [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
         }
     } else if (scrollView == self.homeViewController.scrollView) {
+        
+        CGFloat contentWidth = (KFHScreenWidth * [FHEnvContext sharedInstance].generalBizConfig.configCache.houseTypeList.count) - KFHScreenWidth;
+        if (scrollView.contentOffset.x >= contentWidth) {
+            scrollView.contentOffset = CGPointMake(contentWidth, 0);
+        }
+        
         if (!self.isSelectIndex) {
             NSInteger scrollIndex = (NSInteger)((scrollView.contentOffset.x + KFHScreenWidth/2)/KFHScreenWidth);
             if ([[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList.count > scrollIndex) {
