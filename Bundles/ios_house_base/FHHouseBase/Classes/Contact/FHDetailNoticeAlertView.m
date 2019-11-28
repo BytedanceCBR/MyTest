@@ -454,6 +454,20 @@
     }];
 }
 
+- (void)showAnotherView:(UIView *)anotherView {
+    [self endEditing:YES];
+    NSArray *subViews = self.contentView.subviews.copy;
+    for (UIView *v in subViews) {
+        [v removeFromSuperview];
+    }
+    [self.contentView addSubview:anotherView];
+    [anotherView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(anotherView.height);
+    }];
+    [self layoutIfNeeded];
+}
+
 - (UIView *)bgView
 {
     if (!_bgView) {

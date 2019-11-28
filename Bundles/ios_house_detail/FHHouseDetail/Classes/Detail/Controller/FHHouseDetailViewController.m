@@ -36,7 +36,6 @@
 @property (nonatomic, strong) FHDetailFeedbackView *feedbackView;
 @property(nonatomic , strong) FHDetailQuestionButton *questionBtn;
 
-@property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 @property (nonatomic, copy)     NSString       *source; // 特殊标记，从哪进入的小区详情，比如地图租房列表“rent_detail”，此时小区房源展示租房列表
 @property (nonatomic, copy)   NSString *houseId; // 房源id
@@ -52,6 +51,8 @@
 @property (nonatomic, strong) CTCallCenter *callCenter;
 //是否拨打电话已接通
 @property (nonatomic, assign) BOOL isPhoneCallPickUp;
+//是否拨打电话（不区分是否接通）
+@property (nonatomic, assign) BOOL isPhoneCalled;// 新房UGC留资使用
 
 @end
 
@@ -135,6 +136,7 @@
     [self setupUI];
     [self setupCallCenter];
     self.isViewDidDisapper = NO;
+    self.isPhoneCalled = NO;
     
     if(![SSCommonLogic disableDetailInstantShow] && [TTReachability isNetworkConnected]){
         //有网且打开秒开的情况下才显示
@@ -369,6 +371,7 @@
         }else{
             //doNothing
         }
+        self.isPhoneCalled = YES;
     };
 }
 
@@ -598,6 +601,14 @@
 }
 
 - (void)applicationDidBecomeActive {
+    // 新房留资后弹窗
+    if (self.isPhoneCalled) {
+        self.isPhoneCalled = NO;
+        [self.viewModel.contactViewModel checkSocialPhoneCall];
+    } else {
+        self.viewModel.contactViewModel.socialContactConfig = nil;
+    }
+    // 反馈弹窗
     if([self isShowFeedbackView]){
         self.isPhoneCallPickUp = NO;
         self.isPhoneCallShow = NO;
@@ -605,6 +616,8 @@
         self.phoneCallRealtorId = nil;
         self.phoneCallRequestId = nil;
     }
+    // 数据清除
+    self.isPhoneCallShow = NO;
 }
 
 - (BOOL)isShowFeedbackView {

@@ -16,6 +16,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import "FHDetailHalfPopLayer.h"
 #import "FHDetailQuestionButton.h"
+#import "FHDetailSocialEntranceView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
