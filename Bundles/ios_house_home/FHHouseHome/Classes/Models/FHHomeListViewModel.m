@@ -26,6 +26,7 @@
 #import "FHHomeItemViewController.h"
 #import "FHHomeSearchPanelViewModel.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <FHUtils.h>
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -462,20 +463,21 @@
 
 - (void)checkCityStatus
 {
-    if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
-    }else
-    {
-        [self.homeViewController.emptyView.retryButton setTitle:@"先逛逛发现" forState:UIControlStateNormal];
-        
-        self.homeViewController.emptyView.retryBlock = ^{
-            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarSecond];
-        };
-        
-        [self.homeViewController.emptyView.retryButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.homeViewController.emptyView showEmptyWithTip:@"房产资讯、大咖观点、问答百科、攻略指南" errorImage:[UIImage imageNamed:@"group-9"] showRetry:YES];
-        [self.homeViewController.emptyView.retryButton setBackgroundColor:[UIColor themeRed1]];
-        [self.homeViewController.emptyView setUpHomeRedBtn];
-    }
+    
+//    if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+//    }else
+//    {
+//        [self.homeViewController.emptyView.retryButton setTitle:@"先逛逛发现" forState:UIControlStateNormal];
+//
+//        self.homeViewController.emptyView.retryBlock = ^{
+//            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarSecond];
+//        };
+//
+//        [self.homeViewController.emptyView.retryButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        [self.homeViewController.emptyView showEmptyWithTip:@"房产资讯、大咖观点、问答百科、攻略指南" errorImage:[UIImage imageNamed:@"group-9"] showRetry:YES];
+//        [self.homeViewController.emptyView.retryButton setBackgroundColor:[UIColor themeRed1]];
+//        [self.homeViewController.emptyView setUpHomeRedBtn];
+//    }
 }
 
 - (BOOL)checkIsHasFindHouse

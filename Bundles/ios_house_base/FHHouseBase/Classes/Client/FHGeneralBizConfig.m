@@ -154,6 +154,9 @@ static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
         FHConfigDataModel *configModel = [self lazyInitConfig:configDict];
         self.configCache = configModel;
         if ([configModel isKindOfClass:[FHConfigDataModel class]]) {
+            if (configModel.cityAvailability) {
+                [FHUtils setContent:@(configModel.cityAvailability.enable.boolValue) forKey:kFHCityIsOpenKey];
+            }
             return configModel;
         }else
         {

@@ -38,7 +38,7 @@
 {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor whiteColor];
-        [self setupCityButton];
+//        [self setupCityButton];
         [self setSearchArea];
     }
     

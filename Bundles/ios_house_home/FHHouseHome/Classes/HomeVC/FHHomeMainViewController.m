@@ -9,6 +9,8 @@
 #import "FHHomeMainViewModel.h"
 #import "FHHomeMainTopView.h"
 #import <TTDeviceHelper.h>
+#import <FHEnvContext.h>
+
 @interface FHHomeMainViewController ()
 @property (nonatomic,strong)FHHomeMainViewModel *viewModel;
 @property (nonatomic,strong)FHHomeMainTopView *topView;
@@ -23,6 +25,7 @@
     [self initConstraints]; //更新约束
     [self initViewModel]; //创建viewModel
     [self initNotifications];//订阅通知
+    [self initCityChangeSubscribe];//城市变化通知
     // Do any additional setup after loading the view.
 }
 
@@ -97,6 +100,17 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollBegin) name:@"FHHomeMainDidScrollBegin" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollEnd) name:@"FHHomeMainDidScrollEnd" object:nil];
+}
+
+- (void)initCityChangeSubscribe
+{
+    BOOL isOpen = [FHEnvContext isCurrentCityNormalOpen];
+    WeakSelf;
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
+        FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
+        self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
+    }];
 }
 
 #pragma mark notifications

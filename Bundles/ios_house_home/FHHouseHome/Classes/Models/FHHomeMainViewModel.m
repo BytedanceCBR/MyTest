@@ -9,10 +9,12 @@
 #import "FHHomeMainViewController.h"
 #import "FHHomeMainHouseCollectionCell.h"
 #import "FHHomeMainFeedCollectionCell.h"
+#import <FHEnvContext.h>
 
 @interface FHHomeMainViewModel()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHHomeMainViewController *viewController;
+@property(nonatomic , strong) NSMutableArray *dataArray;
 @end
 
 @implementation FHHomeMainViewModel
@@ -22,13 +24,24 @@
     if (self) {
         self.collectionView = collectionView;
         [self registerCollectionCells];
-        
+        [self resetDataArray];
         collectionView.delegate = self;
         collectionView.dataSource = self;
-        
         self.viewController = (FHHomeMainViewController *)viewController;
     }
     return self;
+}
+
+- (void)resetDataArray
+{
+    if ([FHEnvContext isCurrentCityNormalOpen]) {
+        self.dataArray = @[@(kFHHomeMainCellTypeHouse),@(kFHHomeMainCellTypeFeed)];
+    }else
+    {
+        self.dataArray = @[@(kFHHomeMainCellTypeFeed)];
+    }
+    
+    [self.collectionView reloadData];
 }
 
 - (void)registerCollectionCells
@@ -45,22 +58,25 @@
 
 //每个section的item个数
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 2;
+    return self.dataArray.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSString *cellIdentifier = NSStringFromClass([FHHomeMainBaseCollectionCell class]);
 
-    if (indexPath.row == 0) {
-        cellIdentifier = NSStringFromClass([FHHomeMainHouseCollectionCell class]);
-    }else
-    {
-        cellIdentifier = NSStringFromClass([FHHomeMainFeedCollectionCell class]);
+    if (self.dataArray.count > indexPath.row) {
+        if ([self.dataArray[indexPath.row] integerValue] == kFHHomeMainCellTypeHouse) {
+            cellIdentifier = NSStringFromClass([FHHomeMainHouseCollectionCell class]);
+        }else
+        {
+            cellIdentifier = NSStringFromClass([FHHomeMainFeedCollectionCell class]);
+        }
     }
 
     FHHomeMainBaseCollectionCell *cell = (FHHomeMainBaseCollectionCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
     NSInteger row = indexPath.row;
     if (cell.contentVC) {
+        [cell.contentVC removeFromParentViewController];
         [self.viewController addChildViewController:cell.contentVC];
     }
     return cell;

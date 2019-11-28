@@ -7,6 +7,9 @@
 
 #import <Foundation/Foundation.h>
 
+#define kFHHomeMainCellTypeHouse 0
+#define kFHHomeMainCellTypeFeed 1
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeMainViewModel : NSObject

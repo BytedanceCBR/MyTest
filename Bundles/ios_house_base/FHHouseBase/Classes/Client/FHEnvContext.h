@@ -34,11 +34,15 @@ static NSString *const kUserDefaultCityId = @"k_fh_config_key_select_city_id";
 
 static NSString *const kUserHasSelectedCityKey = @"k_fh_has_sel_city";
 
+static NSString *const kFHCityIsOpenKey = @"is_city_open";
+
 static NSString *const kTracerEventType = @"house_app2c_v2";
 
 static NSString *const kFHSwitchGetLightFinishedNotification = @"k_fh_get_light_finish";
 
 static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
+
+
 
 @class FHMessageManager;
 @class TTReachability;
