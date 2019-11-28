@@ -64,7 +64,7 @@
 //#import "TTContactsAddFriendsViewController.h"
 //#import "TTCommonwealManager.h"
 #import "TTTopBar.h"
-#import <TTBubbleView.h>
+#import <TTUIWidget/TTBubbleView.h>
 #import "TTBubbleViewHeader.h"
 #import "TTGuideDispatchManager.h"
 #import "TTVSettingsConfiguration.h"

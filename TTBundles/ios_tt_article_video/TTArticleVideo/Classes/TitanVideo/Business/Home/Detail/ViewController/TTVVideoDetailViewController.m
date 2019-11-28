@@ -592,9 +592,14 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     if (![TTDeviceHelper isIPhoneXDevice]) {
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
     }
-    [[UIApplication sharedApplication] setStatusBarStyle:self.ttStatusBarStyle == UIStatusBarStyleDefault ? [[TTThemeManager sharedInstance_tt] statusBarStyle] : self.ttStatusBarStyle];
+    if (self.ttStatusBarStyle == UIStatusBarStyleDefault) {
+        [[UIApplication sharedApplication] setStatusBarStyle:[[TTThemeManager sharedInstance_tt] statusBarStyle]];
+    }else {
+        
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    }
     [TTVideoTip setCanShowVideoTip:YES];
-    
+
     //5.7需求，从底部tabbar进入视频详情页后，不再需要显示气泡
     UIWindow *mainWindow = [[UIApplication sharedApplication].delegate window];
     if ([mainWindow.rootViewController isKindOfClass:[TTArticleTabBarController class]]) {

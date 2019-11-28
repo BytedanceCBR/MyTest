@@ -8,7 +8,7 @@
 #import "FHBaseViewController.h"
 #import "FHHouseUGCHeader.h"
 #import <CoreLocation/CoreLocation.h>
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "SSImpressionManager.h"
 #import "ArticleImpressionHelper.h"
 //#import "FHUGCScialGroupModel.h"

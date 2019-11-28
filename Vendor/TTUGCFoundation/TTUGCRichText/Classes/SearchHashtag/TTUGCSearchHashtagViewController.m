@@ -12,7 +12,7 @@
 #import "SSNavigationBar.h"
 #import "TTUGCSearchHashtagTableViewCell.h"
 #import "TTUGCRequestManager.h"
-#import "TTSeachBarView.h"
+#import <TTUIWidget/TTSearchBarView.h>
 #import "UIScrollView+Refresh.h"
 #import "FRApiModel.h"
 #import "TTDeviceHelper.h"
@@ -28,9 +28,9 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 };
 
 
-@interface TTUGCSearchHashtagViewController () <UITableViewDataSource, UITableViewDelegate, UIViewControllerErrorHandler, TTSeachBarViewDelegate>
+@interface TTUGCSearchHashtagViewController () <UITableViewDataSource, UITableViewDelegate, UIViewControllerErrorHandler, TTSearchBarViewDelegate>
 
-@property (nonatomic, strong) TTSeachBarView *searchBar;
+@property (nonatomic, strong) TTSearchBarView *searchBar;
 @property (nonatomic, strong) SSThemedTableView *tableView;
 @property (nonatomic, strong) SSThemedTableView *searchResultTableView;
 @property (nonatomic, strong) SSThemedView *maskView;
@@ -427,7 +427,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
     }
 }
 
-- (BOOL)searchBarShouldBeginEditing:(TTSeachBarView *)searchBar {
+- (BOOL)searchBarShouldBeginEditing:(TTSearchBarView *)searchBar {
     [TTTrackerWrapper eventV3:@"search_bar_click" params:nil];
 
     [self searchBarBecomeActive];
@@ -435,7 +435,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
     return YES;
 }
 
-- (void)searchBar:(TTSeachBarView *)searchBar textDidChange:(NSString *)searchText {
+- (void)searchBar:(TTSearchBarView *)searchBar textDidChange:(NSString *)searchText {
     if (isEmptyString(searchText)) {
         [self hideSearchResultTableView];
 
@@ -449,7 +449,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
     [self loadRequestSearchResult:NO];
 }
 
-- (void)searchBarSearchButtonClicked:(TTSeachBarView *)searchBar {
+- (void)searchBarSearchButtonClicked:(TTSearchBarView *)searchBar {
     [self.searchBar resignFirstResponder];
 
     if (isEmptyString(searchBar.text)) {
@@ -465,7 +465,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
     [self loadRequestSearchResult:NO];
 }
 
-- (void)searchBarCancelButtonClicked:(TTSeachBarView *)searchBar {
+- (void)searchBarCancelButtonClicked:(TTSearchBarView *)searchBar {
     if (self.searchBar.isFirstResponder) {
         [self.searchBar resignFirstResponder];
     }
@@ -672,11 +672,11 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchHashtagViewControllerState) {
 
 #pragma mark - getter and setter
 
-- (TTSeachBarView *)searchBar {
+- (TTSearchBarView *)searchBar {
     CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height - 4.f;
 
     if (!_searchBar) {
-        _searchBar = [[TTSeachBarView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, 44.f)];
+        _searchBar = [[TTSearchBarView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, 44.f)];
         _searchBar.backgroundColorThemeKey = kColorBackground4;
         _searchBar.inputBackgroundView.backgroundColorThemeKey = kColorBackground3;
         _searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;

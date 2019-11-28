@@ -2018,6 +2018,7 @@ extern NSString *const INSTANT_DATA_KEY;
     } else if ([cellModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
         
         FHSugSubscribeDataDataSubscribeInfoModel *cellSubModel = (FHSugSubscribeDataDataSubscribeInfoModel *)cellModel;
+        cellSubModel.subscribeId = @{};
         if ([cellSubModel.subscribeId isKindOfClass:[NSString class]] && [cellSubModel.subscribeId integerValue] != 0) {
             tracerDict[@"subscribe_id"] = cellSubModel.subscribeId;
         }else {

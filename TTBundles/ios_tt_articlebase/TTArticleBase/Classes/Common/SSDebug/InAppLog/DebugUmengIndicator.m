@@ -7,7 +7,7 @@
 //
 
 #import "DebugUmengIndicator.h"
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "ArticleExportPrefixBase.h"
 
 static int const kTimerInterval = .5f;

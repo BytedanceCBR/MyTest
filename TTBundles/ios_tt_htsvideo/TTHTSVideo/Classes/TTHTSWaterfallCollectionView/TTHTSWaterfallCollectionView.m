@@ -14,7 +14,7 @@
 #import "NetworkUtilities.h"
 #import "SSTipModel.h"
 #import "TSVShortVideoOriginalData.h"
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "ArticleImpressionHelper.h"
 #import "TTRoute.h"
 #import "ExploreMixListDefine.h"

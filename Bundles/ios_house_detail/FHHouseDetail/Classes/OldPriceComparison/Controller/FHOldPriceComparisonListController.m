@@ -10,7 +10,7 @@
 #import <TTUIWidget/UIViewController+Track.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTReachability/TTReachability.h>
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import <UIViewAdditions.h>
 #import <FHHouseBase/FHBaseTableView.h>
 

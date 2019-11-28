@@ -18,7 +18,7 @@
 #import <TTAccountBusiness.h>
 
 #import "ArticleMobileLoginViewController.h"
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import <TTArticleBase/SSCommonLogic.h>
 
 
