@@ -20,6 +20,7 @@
 #import "TTAccountManager.h"
 #import <TTSandBoxHelper.h>
 #import "FHHouseNewsSocialModel.h"
+#import "TTUGCEmojiParser.h"
 
 @interface FHDetailNewUGCSocialCell()
 
@@ -27,7 +28,7 @@
 @property (nonatomic, strong)   UILabel       *titleLabel;
 @property (nonatomic, strong)   UILabel       *descLabel;
 @property (nonatomic, strong)   UIImageView       *iconImageView;
-@property (nonatomic, strong)   UILabel       *contentLabel;
+@property (nonatomic, strong)   TTUGCAttributedLabel       *contentLabel;
 @property (nonatomic, strong)   UIImageView       *rightArrowIcon;
 
 @end
@@ -63,13 +64,20 @@
             if (socialInfo.socialActiveInfo.count > 0) {
                 FHDetailCommunityEntryActiveInfoModel *model = socialInfo.socialActiveInfo[0];
                 [self.iconImageView bd_setImageWithURL:[NSURL URLWithString:model.activeUserAvatar] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
-                self.contentLabel.text = model.suggestInfo;
+                NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithAttributedString:[TTUGCEmojiParser parseInCoreTextContext:model.suggestInfo fontSize:16]];
+                NSMutableDictionary *typeAttributes = @{}.mutableCopy;
+                [typeAttributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
+                [typeAttributes setValue:[UIFont themeFontRegular:16] forKey:NSFontAttributeName];
+                if (attrStr.length > 0) {
+                    [attrStr addAttributes:typeAttributes range:NSMakeRange(0, attrStr.length)];
+                }
+                [self.contentLabel setText:attrStr];
             } else {
-                self.contentLabel.text = @"";
+                [self.contentLabel setText:@""];
                 self.iconImageView.image = [UIImage imageNamed:@"detail_default_avatar"];
             }
         } else {
-            self.contentLabel.text = @"";
+            [self.contentLabel setText:@""];
             self.iconImageView.image = [UIImage imageNamed:@"detail_default_avatar"];
         }
     }
@@ -133,7 +141,8 @@
         make.top.mas_equalTo(self.descLabel.mas_bottom).offset(8);
     }];
     
-    _contentLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    _contentLabel.font = [UIFont themeFontRegular:16];
     _contentLabel.textColor = [UIColor themeGray1];
     _contentLabel.textAlignment = NSTextAlignmentLeft;
     _contentLabel.numberOfLines = 1;

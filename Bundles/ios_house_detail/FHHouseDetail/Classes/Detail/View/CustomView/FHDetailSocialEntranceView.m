@@ -22,6 +22,8 @@
 #import "FHHouseNewsSocialModel.h"
 #import "FHDetailNoticeAlertView.h"
 #import "UIImage+FIconFont.h"
+#import "TTUGCEmojiParser.h"
+#import "YYTextLayout.h"
 
 #define kFHDetailSocialAnimateDuration 0.8
 
@@ -241,7 +243,7 @@
 
 @property (nonatomic, strong)   UIImageView       *iconImageView;
 @property (nonatomic, strong)   UIView       *rightBgView;
-@property (nonatomic, strong)   UILabel       *messageLabel;
+@property (nonatomic, strong)   TTUGCAttributedLabel       *messageLabel;
 
 @property (nonatomic, assign)   CGRect       originIconFrame;
 @property (nonatomic, assign)   CGRect       originBgFrame;
@@ -274,7 +276,8 @@
     _rightBgView.backgroundColor = [UIColor themeRed1];
     [self addSubview:_rightBgView];
     
-    _messageLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _messageLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    _messageLabel.font = [UIFont themeFontRegular:12];
     _messageLabel.textColor = [UIColor themeWhite];
     [self addSubview:_messageLabel];
 }
@@ -283,8 +286,20 @@
     _activeInfo = activeInfo;
     if (activeInfo) {
         [self.iconImageView bd_setImageWithURL:[NSURL URLWithString:activeInfo.activeUserAvatar] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
-        self.messageLabel.text = activeInfo.suggestInfo;
-        CGSize size = [self.messageLabel sizeThatFits:CGSizeMake(2000, 18)];
+        
+        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithAttributedString:[TTUGCEmojiParser parseInCoreTextContext:activeInfo.suggestInfo fontSize:12]];
+        NSMutableDictionary *typeAttributes = @{}.mutableCopy;
+        [typeAttributes setValue:[UIColor themeWhite] forKey:NSForegroundColorAttributeName];
+        [typeAttributes setValue:[UIFont themeFontRegular:12] forKey:NSFontAttributeName];
+        if (attrStr.length > 0) {
+            [attrStr addAttributes:typeAttributes range:NSMakeRange(0, attrStr.length)];
+        }
+        [self.messageLabel setText:attrStr];
+        
+        YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:CGSizeMake(2000, 18) text:attrStr];
+        CGSize size = layout.textBoundingSize;
+        
+//        CGSize size = [self.messageLabel sizeThatFits:CGSizeMake(2000, 18)];
         CGFloat messageW = size.width > self.messageMaxWidth ? self.messageMaxWidth : size.width + 1;
         
         // 方向
