@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   FHHouseNewsSocialModel       *socialInfo;// 新房圈子信息
 @property (nonatomic, strong)   FHHouseContactConfigModel    *socialContactConfig;// 圈子拨打电话存储数据
 @property (nonatomic, assign)   BOOL  needRefetchSocialGroupData;// 进入下个页面返回 是否需要重新拉取圈子数据
+@property (nonatomic, assign)   NSInteger       ugcLoginType; // 1：community_member_talk(底部群聊入口), 2：community_tip(群聊引导弹窗)
 
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
@@ -71,8 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)checkSocialPhoneCall;
 
-// 新房群聊按钮点击，loginType，1：community_member_talk(底部群聊入口), 2：community_tip(群聊引导弹窗)
-- (void)groupChatActionWithLoginType:(NSInteger)loginType;
+- (void)groupChatAction;
 
 // 回调方法
 - (void)vc_viewDidAppear:(BOOL)animated;

@@ -1054,6 +1054,7 @@
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     [FHUserTracker writeEvent:@"go_detail_community" params:params];
 }
 
@@ -1069,6 +1070,7 @@
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHUserTracker writeEvent:@"stay_page_community" params:params];
 }
@@ -1079,6 +1081,7 @@
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     [FHUserTracker writeEvent:@"element_show" params:params];
 }
 
@@ -1102,6 +1105,7 @@
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"enter_type"] =  @"click";
     params[@"click_position"] = position;
     [FHUserTracker writeEvent:@"click_options" params:params];

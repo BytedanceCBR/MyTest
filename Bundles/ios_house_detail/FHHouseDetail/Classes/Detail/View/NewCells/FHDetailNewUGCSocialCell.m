@@ -185,7 +185,6 @@
 
 // 跳转圈子
 - (void)cellClicked:(UIControl *)controll {
-    // add by zyk 记得埋点
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
     if (self.currentData) {
         FHHouseNewsSocialModel *socialInfo = (FHHouseNewsSocialModel *)self.currentData;
@@ -201,6 +200,7 @@
             tracerDic[@"enter_from"] = page_type ?: @"be_null";
             tracerDic[@"enter_type"] = @"click";
             tracerDic[@"group_id"] = group_id ?: @"be_null";
+            tracerDic[@"element_from"] = @"community_group";
             NSMutableDictionary *dict = @{}.mutableCopy;
             dict[@"community_id"] = socialInfo.socialGroupInfo.socialGroupId;
             dict[@"tracer"] = tracerDic;
@@ -212,7 +212,6 @@
     }
 }
 
-// add by zyk
 - (NSString *)elementTypeString:(FHHouseType)houseType {
     return @"community_group";
 }
