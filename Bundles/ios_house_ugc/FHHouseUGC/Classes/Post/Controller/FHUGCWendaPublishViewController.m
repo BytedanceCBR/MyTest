@@ -296,10 +296,10 @@
         
         _titleTextView.internalGrowingTextView.minHeight = TITLE_TEXT_VIEW_MIN_HEIGHT;
         _titleTextView.internalGrowingTextView.maxHeight = TITLE_TEXT_VIEW_MAX_HEIGHT;
-        _titleTextView.internalGrowingTextView.font = [UIFont themeFontRegular:22];
+        _titleTextView.textViewFontSize = 22;
+        _titleTextView.typingAttributes = @{ NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:22]};
         _titleTextView.internalGrowingTextView.placeholder = @"请输入问题";
         _titleTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
-        _titleTextView.internalGrowingTextView.internalTextView.textAttributes = @{ NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:22]};
         _titleTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
         
         // 调整文字内容垂直偏移
