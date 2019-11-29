@@ -123,6 +123,10 @@
 		B373CF022174587A008F9905 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C000AF16F7426D00FC365B /* AssetsLibrary.framework */; };
 		B388CB272142652A00653188 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E32142652800653188 /* Assets.xcassets */; };
 		B388CB292142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
+		D37495E023965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */; };
+		D37495E123965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */; };
+		D37495E223965409006D44D2 /* gaode_house_detail_style.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DF23965409006D44D2 /* gaode_house_detail_style.data */; };
+		D37495E323965409006D44D2 /* gaode_house_detail_style.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DF23965409006D44D2 /* gaode_house_detail_style.data */; };
 		D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		EB988F3EBE29F7D165C85289 /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A95054107C5636D5192DC02 /* libPods-NewsLiteInHouse.a */; };
@@ -368,6 +372,8 @@
 		D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = FrameworkResource.xcassets; sourceTree = "<group>"; };
 		D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CommonResource.xcassets; sourceTree = "<group>"; };
+		D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_house_detail_style_extra.data; sourceTree = "<group>"; };
+		D37495DF23965409006D44D2 /* gaode_house_detail_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_house_detail_style.data; sourceTree = "<group>"; };
 		D48E93C0233CF142005A42CD /* VRImageLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VRImageLoading.json; sourceTree = "<group>"; };
 		D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoResource.xcassets; sourceTree = "<group>"; };
 		EF3B84B5173BDC690017F4E7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -693,6 +699,8 @@
 		A8A57F531B16F44D00783AA9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */,
+				D37495DF23965409006D44D2 /* gaode_house_detail_style.data */,
 				7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */,
 				D48E93C0233CF142005A42CD /* VRImageLoading.json */,
 				3D7D2F3722704CAA00A95FAF /* AppIcon */,
@@ -980,11 +988,13 @@
 				3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */,
 				D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */,
 				B373CEAA2174587A008F9905 /* sound3.caf in Resources */,
+				D37495E323965409006D44D2 /* gaode_house_detail_style.data in Resources */,
 				3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				B373CEAF2174587A008F9905 /* CommonResource.xcassets in Resources */,
 				B373CEB02174587A008F9905 /* sound2.caf in Resources */,
 				B373CEB32174587A008F9905 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */,
 				3D7D2F4222704CAB00A95FAF /* Icon-72.png in Resources */,
+				D37495E123965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */,
 				3D7D2F4622704CAB00A95FAF /* Icon-72@2x.png in Resources */,
 				B373CEB42174587A008F9905 /* sound5.caf in Resources */,
 				3D721AA0218FE7FA006C1156 /* gaode_map_style.data in Resources */,
@@ -1047,6 +1057,7 @@
 				FEFA5A06205FB1A8001F50D8 /* sound5.caf in Resources */,
 				3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				FEFA5A13205FB1A8001F50D8 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
+				D37495E223965409006D44D2 /* gaode_house_detail_style.data in Resources */,
 				3DB49F8E2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				FEFA5A15205FB1A8001F50D8 /* NewsInHouse.debug.xcconfig in Resources */,
 				FEFA5A16205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
@@ -1057,6 +1068,7 @@
 				FEFA5A1E205FB1A8001F50D8 /* Account.xcassets in Resources */,
 				FEFA5A1F205FB1A8001F50D8 /* NewsInHouseTodayExtenstion.release.xcconfig in Resources */,
 				FEFA5A20205FB1A8001F50D8 /* NewsInHouse.release.xcconfig in Resources */,
+				D37495E023965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */,
 				FEFA5A21205FB1A8001F50D8 /* AuthorizeHintResource.xcassets in Resources */,
 				FEFA5A22205FB1A8001F50D8 /* default_profile_background_image.jpg in Resources */,
 				B388CB272142652A00653188 /* Assets.xcassets in Resources */,
@@ -1285,7 +1297,6 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
-				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCRichText/Assets/Emoji.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
@@ -1628,7 +1639,6 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
-				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCRichText/Assets/Emoji.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",

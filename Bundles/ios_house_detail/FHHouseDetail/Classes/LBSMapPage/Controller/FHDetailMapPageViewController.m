@@ -360,6 +360,18 @@ static MAMapView *kFHPageMapView = nil;
     CGRect mapFrame = CGRectMake(0, 0, self.view.width, self.view.height - navHeight - bottomHeight);
     if (!kFHPageMapView) {
         kFHPageMapView = [[MAMapView alloc] initWithFrame:mapFrame];// 不会同时出两个页面
+
+        //设置地图style
+        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style.data" ofType:nil];
+        NSData *data = [NSData dataWithContentsOfFile:stylePath];
+        NSString *extraPath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style_extra.data" ofType:nil];
+        NSData *extraData = [NSData dataWithContentsOfFile:extraPath];
+        MAMapCustomStyleOptions *options = [MAMapCustomStyleOptions new];
+        options.styleData = data;
+        options.styleExtraData = extraData;
+        [kFHPageMapView setCustomMapStyleOptions:options];
+        [kFHPageMapView setCustomMapStyleEnabled:YES];
+
         kFHPageMapView.zoomLevel  = 14;
         [kFHPageMapView setCenterCoordinate:self.centerPoint];
     }

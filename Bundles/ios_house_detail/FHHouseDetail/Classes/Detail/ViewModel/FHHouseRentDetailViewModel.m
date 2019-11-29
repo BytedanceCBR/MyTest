@@ -28,6 +28,7 @@
 #import "FHDetailBlankLineCell.h"
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
+#import "FHDetailStaticMapCell.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
@@ -64,6 +65,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoModel class])];
     [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeModel class])];
     [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
+    [self.tableView registerClass:[FHDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
 }
 //// cell class
 //- (Class)cellClassForEntity:(id)model {
@@ -400,16 +402,40 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         infoModel.tableView = self.tableView;
         [self.items addObject:infoModel];
     }
-    // 地图
-    if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
-        FHDetailNeighborhoodMapInfoModel *infoModel = [[FHDetailNeighborhoodMapInfoModel alloc] init];
-        infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
-        infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
-        infoModel.title = model.data.neighborhoodInfo.name;
-        infoModel.category = @"公交";
-        
-        [self.items addObject:infoModel];
+    //地图
+    if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
+        FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
+        staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+        staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        staticMapModel.tableView = self.tableView;
+        staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
+        staticMapModel.useStarHeader = NO;
+        staticMapModel.mapOnly = YES;
+        [self.items addObject:staticMapModel];
+
+    } else{
+        NSString *eventName = @"detail_map_location_failed";
+        NSDictionary *cat = @{@"status": @(1)};
+
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+        [params setValue:@"经纬度缺失" forKey:@"reason"];
+        [params setValue:model.data.id forKey:@"house_id"];
+        [params setValue:@(FHHouseTypeRentHouse) forKey:@"house_type"];
+        [params setValue:model.data.neighborhoodInfo.name forKey:@"name"];
+
+        [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
     }
+    // 地图
+//    if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
+//        FHDetailNeighborhoodMapInfoModel *infoModel = [[FHDetailNeighborhoodMapInfoModel alloc] init];
+//        infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+//        infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+//        infoModel.title = model.data.neighborhoodInfo.name;
+//        infoModel.category = @"公交";
+//
+//        [self.items addObject:infoModel];
+//    }
  
     //生成IM卡片的schema用 个人认为server应该加接口
     NSString *imgUrl = @"";
