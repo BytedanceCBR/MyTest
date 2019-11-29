@@ -766,6 +766,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     dict[@"community_id"] = self.socialInfo.socialGroupInfo.socialGroupId;
     NSMutableDictionary *reportDic = [NSMutableDictionary dictionary];
 
+    NSDictionary *log_pb = self.tracerDict[@"log_pb"];
+    NSString *group_id = nil;
+    if (log_pb && [log_pb isKindOfClass:[NSDictionary class]]) {
+        group_id = log_pb[@"group_id"];
+    }
+    reportDic[@"group_id"] = group_id ?: @"be_null";
     NSString *pageType = self.tracerDict[@"page_type"] ? : @"be_null";
     [reportDic setValue:pageType forKey:@"enter_from"];
     if (self.ugcLoginType == 1) {
