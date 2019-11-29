@@ -855,13 +855,14 @@
                 // 如果是在附近列表，发布投票完成后，跳转到关注页面
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil];
                 
-                // 发通知进行数据插入操作
-                [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostThreadSuccessNotification object:nil userInfo:userInfo];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_wenda_publish" metric:nil category:@{@"status":@(0)} extra:nil];
                 
                 [[ToastManager manager] showToast:@"发布成功!"];
                 
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_wenda_publish" metric:nil category:@{@"status":@(0)} extra:nil];
-                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    // 发通知进行数据插入操作
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostThreadSuccessNotification object:nil userInfo:userInfo];
+                });
             }
             else {
                 [[ToastManager manager] showToast:@"发布失败!"];
