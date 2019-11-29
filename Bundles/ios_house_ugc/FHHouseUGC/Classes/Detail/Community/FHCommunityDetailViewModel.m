@@ -343,9 +343,9 @@
 
 - (void)gotoWendaPublish {
     if ([TTAccountManager isLogin]) {
-        [self gotoAskVC];
+        [self gotoWendaVC];
     } else {
-        [self gotoLogin:FHUGCLoginFrom_ASK];
+        [self gotoLogin:FHUGCLoginFrom_WENDA];
     }
 }
 
@@ -360,9 +360,11 @@
     [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
 }
 
-- (void)gotoAskVC {
+- (void)gotoWendaVC {
     NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
     NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
+    dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
     dict[TRACER_KEY] = tracerDict;
@@ -596,9 +598,9 @@
                             [self gotoVoteVC];
                         }
                             break;
-                        case FHUGCLoginFrom_ASK:
+                        case FHUGCLoginFrom_WENDA:
                         {
-                            [self gotoAskVC];
+                            [self gotoWendaVC];
                         }
                             break;
                         default:
