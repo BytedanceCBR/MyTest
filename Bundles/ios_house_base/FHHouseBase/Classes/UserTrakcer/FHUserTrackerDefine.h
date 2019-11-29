@@ -74,6 +74,7 @@ extern NSString *const UT_OF_ELEMENT_SHOW;
 
 extern NSString *const UT_GO_DETAIL ; // @"go_detail"
 extern NSString *const UT_BE_NULL ; // @"be_null";
+extern NSString *const UT_CLICK_POSITION; // @"click_position";
 /*
  
  origin_from：首次进入列表页或详情页的入口,{'租房大类页搜索': 'renting_search', '租房大类页推荐列表': 'renting_list', '租房大类页全部房源icon': 'renting_all', '租房大类页整租icon': 'renting_fully', '租房大类页合租icon': 'renting_joint', '租房大类页公寓icon': 'renting_apartment', '学区房运营位': 'school_operation', '降价房运营位': 'discount_operation', '小户型运营位': 'small_operation', '城市行情': 'city_market',

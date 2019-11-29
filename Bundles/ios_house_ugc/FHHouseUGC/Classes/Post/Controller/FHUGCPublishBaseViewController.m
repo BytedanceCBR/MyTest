@@ -6,6 +6,7 @@
 //
 
 #import "FHUGCPublishBaseViewController.h"
+#import <ReactiveObjC.h>
 
 @interface FHUGCPublishBaseViewController ()
 
@@ -52,6 +53,13 @@
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:self.publishBtn]];
     
     [self enablePublish:NO];
+    
+    @weakify(self);
+    [[[[[self.publishBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] deliverOnMainThread] throttle: 1] subscribeNext:^(__kindof UIButton * _Nullable sender) {
+        @strongify(self);
+        
+        [self publishAction: sender];
+    }];
 }
 
 # pragma mark - UI 控件区
@@ -82,10 +90,9 @@
     if(!_publishBtn) {
         _publishBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _publishBtn.frame = CGRectMake(0, 0, 32, 44);
-        _publishBtn.titleLabel.font = [UIFont themeFontRegular:16];
         [_publishBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         [_publishBtn setTitle:@"发布" forState:UIControlStateNormal];
-        [_publishBtn addTarget:self action:@selector(publishAction:) forControlEvents:UIControlEventTouchUpInside];
+        _publishBtn.titleLabel.font = [UIFont themeFontMedium:16];
         _publishBtn.enabled = NO;
     }
     return _publishBtn;
