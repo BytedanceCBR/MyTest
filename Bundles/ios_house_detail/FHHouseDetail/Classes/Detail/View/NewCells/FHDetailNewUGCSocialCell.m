@@ -187,11 +187,20 @@
 - (void)cellClicked:(UIControl *)controll {
     // add by zyk 记得埋点
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-    tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
     if (self.currentData) {
         FHHouseNewsSocialModel *socialInfo = (FHHouseNewsSocialModel *)self.currentData;
         if (socialInfo.socialGroupInfo && socialInfo.socialGroupInfo.socialGroupId.length > 0) {
             self.baseViewModel.contactViewModel.needRefetchSocialGroupData = YES;
+            NSDictionary *log_pb = tracerDic[@"log_pb"];
+            NSString *group_id = nil;
+            if (log_pb && [log_pb isKindOfClass:[NSDictionary class]]) {
+                group_id = log_pb[@"group_id"];
+            }
+            tracerDic[@"log_pb"] = socialInfo.socialGroupInfo.logPb ? socialInfo.socialGroupInfo.logPb : @"be_null";
+            NSString *page_type = tracerDic[@"page_type"];
+            tracerDic[@"enter_from"] = page_type ?: @"be_null";
+            tracerDic[@"enter_type"] = @"click";
+            tracerDic[@"group_id"] = group_id ?: @"be_null";
             NSMutableDictionary *dict = @{}.mutableCopy;
             dict[@"community_id"] = socialInfo.socialGroupInfo.socialGroupId;
             dict[@"tracer"] = tracerDic;
@@ -205,7 +214,7 @@
 
 // add by zyk
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"ugc_social_info";
+    return @"community_group";
 }
 
 @end

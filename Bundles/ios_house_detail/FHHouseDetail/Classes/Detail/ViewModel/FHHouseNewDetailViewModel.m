@@ -278,7 +278,7 @@
         } else if ([type isEqualToString:@"1"]) {
             // 群聊
             if (self.contactViewModel) {
-                [self.contactViewModel groupChatAction];
+                [self.contactViewModel groupChatActionWithLoginType:2];
             }
         }
     }

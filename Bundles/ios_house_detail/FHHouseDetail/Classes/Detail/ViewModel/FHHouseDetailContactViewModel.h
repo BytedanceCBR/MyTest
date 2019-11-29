@@ -71,8 +71,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)checkSocialPhoneCall;
 
-// 新房群聊按钮点击
-- (void)groupChatAction;
+// 新房群聊按钮点击，loginType，1：community_member_talk(底部群聊入口), 2：community_tip(群聊引导弹窗)
+- (void)groupChatActionWithLoginType:(NSInteger)loginType;
 
 // 回调方法
 - (void)vc_viewDidAppear:(BOOL)animated;

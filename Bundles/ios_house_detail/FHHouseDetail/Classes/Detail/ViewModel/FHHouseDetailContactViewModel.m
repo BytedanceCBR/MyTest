@@ -118,7 +118,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         };
         
         _bottomBar.bottomBarGroupChatBlock = ^{
-            [wself groupChatAction];
+            [wself groupChatActionWithLoginType:1];
         };
  
         _navBar.collectActionBlock = ^(BOOL followStatus){
@@ -391,16 +391,22 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)setSocialInfo:(FHHouseNewsSocialModel *)socialInfo {
     _socialInfo = socialInfo;
     NSString *groupChatTitle = @"";// 隐藏
-    // add by zyk  加群看房 默认文案 是否要改
     if (socialInfo) {
         if (socialInfo.socialGroupInfo.socialGroupId.length > 0 && (socialInfo.socialGroupInfo.userAuth > UserAuthTypeNormal || [socialInfo.socialGroupInfo.chatStatus.conversationId integerValue] > 0)) {
-            groupChatTitle = socialInfo.groupChatLinkTitle.length > 0 ? socialInfo.groupChatLinkTitle : @"加群看房";
+            groupChatTitle = socialInfo.groupChatLinkTitle.length > 0 ? socialInfo.groupChatLinkTitle : @"加入看盘群";
         } else {
             groupChatTitle = @"";
         }
     }
     // @"" 隐藏加群看房 按钮
     [self.bottomBar refreshBottomBarWithGroupChatTitle:groupChatTitle];
+    if (groupChatTitle.length > 0) {
+        // 添加埋点
+        NSMutableDictionary *params = @{}.mutableCopy;
+        [params addEntriesFromDictionary:[self baseParams]];
+        params[@"element_type"] = @"community_member_talk";
+        [FHUserTracker writeEvent:@"element_show" params:params];
+    }
 }
 
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
@@ -673,7 +679,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 }
 
 // 新房群聊按钮点击
-- (void)groupChatAction {
+- (void)groupChatActionWithLoginType:(NSInteger)loginType {
     if (self.gotoGroupChatCount > 0) {
         return;
     }
@@ -686,7 +692,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [(FHBaseViewController *)self.belongsVC startLoading];
         [self p_gotoGroupChat_hasLogin];
     } else {
-        [self gotoLogin];
+        [self gotoLoginWithLoginType:loginType];
     }
 }
 
@@ -798,13 +804,19 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
-- (void)gotoLogin {
+- (void)gotoLoginWithLoginType:(NSInteger)loginType {
     self.gotoGroupChatCount = 0;
-    // add by zyk 埋点
+    
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *pageType = self.tracerDict[@"page_type"] ? : @"be_null";
     [params setObject:pageType forKey:@"enter_from"];
-    [params setObject:@"feed_like" forKey:@"enter_type"];
+    if (loginType == 1) {
+        // community_member_talk(底部群聊入口)
+        [params setObject:@"community_member_talk" forKey:@"enter_type"];
+    } else if (loginType == 2) {
+        // community_tip(群聊引导弹窗)
+        [params setObject:@"community_tip" forKey:@"enter_type"];
+    }
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
@@ -815,7 +827,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             // 登录成功
             if ([TTAccountManager isLogin]) {
                 wSelf.canDirectlyGotoGroupChat = NO;
-                [wSelf groupChatAction];
+                [wSelf groupChatActionWithLoginType:loginType];
                 [wSelf followSocialGroup];
                 [wSelf reQuestSocialData];
             } else {
