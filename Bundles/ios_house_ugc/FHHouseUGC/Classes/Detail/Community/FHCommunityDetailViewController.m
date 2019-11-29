@@ -368,12 +368,11 @@
 }
 
 - (void)gotoWendaPublish {
-    // JOKER: ASK PUBLISH
-//
-//    NSMutableDictionary *params = @{}.mutableCopy;
-//    params[UT_ELEMENT_TYPE] = @"feed_icon";
-//    params[UT_PAGE_TYPE] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
-//    TRACK_EVENT(@"click_options", params);
+
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ELEMENT_TYPE] = @"question_icon";
+    params[UT_PAGE_TYPE] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+    TRACK_EVENT(@"click_options", params);
     
     [self.viewModel gotoWendaPublish];
 }
