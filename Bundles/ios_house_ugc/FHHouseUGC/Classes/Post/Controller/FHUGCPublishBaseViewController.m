@@ -55,7 +55,7 @@
     [self enablePublish:NO];
     
     @weakify(self);
-    [[[[[self.publishBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] deliverOnMainThread] throttle: 1] subscribeNext:^(__kindof UIButton * _Nullable sender) {
+    [[[[[self.publishBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] deliverOnMainThread] throttle: 0.5] subscribeNext:^(__kindof UIButton * _Nullable sender) {
         @strongify(self);
         
         [self publishAction: sender];
