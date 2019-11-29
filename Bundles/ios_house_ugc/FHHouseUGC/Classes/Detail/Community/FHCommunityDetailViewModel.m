@@ -1054,6 +1054,8 @@
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     [FHUserTracker writeEvent:@"go_detail_community" params:params];
 }
 
@@ -1068,6 +1070,8 @@
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHUserTracker writeEvent:@"stay_page_community" params:params];
 }
@@ -1077,6 +1081,8 @@
     params[@"element_type"] = @"community_group_notice";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     [FHUserTracker writeEvent:@"element_show" params:params];
 }
 
@@ -1099,6 +1105,8 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"enter_type"] =  @"click";
     params[@"click_position"] = position;
     [FHUserTracker writeEvent:@"click_options" params:params];
@@ -1223,11 +1231,12 @@
         self.isFirstEnter = NO;
     } else {
         //上报埋点
-        NSString *position = @"";
-        if(self.selectedIndex == 0){
-            position = @"all_list";
-        }else if(self.selectedIndex == 1){
-            position = @"essence_list";
+        NSString *position = @"be_null";
+        if(toIndex < self.socialGroupModel.data.tabInfo.count){
+            FHUGCScialGroupDataTabInfoModel *tabModel = self.socialGroupModel.data.tabInfo[toIndex];
+            if(tabModel.tabName){
+                position = [NSString stringWithFormat:@"%@_list",tabModel.tabName];
+            }
         }
         [self addClickOptionsLog:position];
         [self.pagingView scrollToIndex:toIndex withAnimation:YES];

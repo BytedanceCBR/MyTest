@@ -252,21 +252,57 @@
     v.titleLabel.text = titleText;
     [alertView showAnotherView:v];
     [v startAnimate];
+    
+    // show 埋点
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *log_pb = self.detailTracerDic[@"log_pb"];
+    NSString *page_type = self.detailTracerDic[@"page_type"];
+    if (log_pb) {
+        params[@"log_pb"] = log_pb;
+    }
+    if (page_type) {
+        params[@"page_type"] = page_type;
+    }
+    params[@"tip_type"] = @"community_tip";
+    [FHUserTracker writeEvent:@"tip_show" params:params];
 }
 
 - (void)socialEntranceButtonClick {
+    // click 埋点
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *log_pb = self.detailTracerDic[@"log_pb"];
+    NSString *page_type = self.detailTracerDic[@"page_type"];
+    if (log_pb) {
+        params[@"log_pb"] = log_pb;
+    }
+    if (page_type) {
+        params[@"page_type"] = page_type;
+    }
+    params[@"tip_type"] = @"community_tip";
+    params[@"click_type"] = @"confirm";
+    [FHUserTracker writeEvent:@"tip_click" params:params];
+    
     if (self.weakSocialInfo && self.weakSocialInfo.associateActiveInfo) {
         NSString *type = self.weakSocialInfo.associateActiveInfo.associateLinkShowType;
         if ([type isEqualToString:@"0"]) {
             // 圈子
-            // add by zyk 记得埋点 log_pb应该传圈子的吧？？？
             NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
-            tracerDic[@"log_pb"] = self.listLogPB ? self.listLogPB : @"be_null";
             if (self.weakSocialInfo) {
                 FHHouseNewsSocialModel *socialInfo = (FHHouseNewsSocialModel *)self.weakSocialInfo;
                 if (socialInfo.socialGroupInfo && socialInfo.socialGroupInfo.socialGroupId.length > 0) {
                     self.contactViewModel.needRefetchSocialGroupData = YES;
                     NSMutableDictionary *dict = @{}.mutableCopy;
+                    NSDictionary *log_pb = tracerDic[@"log_pb"];
+                    NSString *group_id = nil;
+                    if (log_pb && [log_pb isKindOfClass:[NSDictionary class]]) {
+                        group_id = log_pb[@"group_id"];
+                    }
+                    tracerDic[@"log_pb"] = socialInfo.socialGroupInfo.logPb ? socialInfo.socialGroupInfo.logPb : @"be_null";
+                    NSString *page_type = tracerDic[@"page_type"];
+                    tracerDic[@"enter_from"] = page_type ?: @"be_null";
+                    tracerDic[@"enter_type"] = @"click";
+                    tracerDic[@"group_id"] = group_id ?: @"be_null";
+                    tracerDic[@"element_from"] = @"community_tip";
                     dict[@"community_id"] = socialInfo.socialGroupInfo.socialGroupId;
                     dict[@"tracer"] = tracerDic;
                     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -278,6 +314,7 @@
         } else if ([type isEqualToString:@"1"]) {
             // 群聊
             if (self.contactViewModel) {
+                self.contactViewModel.ugcLoginType = 2;
                 [self.contactViewModel groupChatAction];
             }
         }

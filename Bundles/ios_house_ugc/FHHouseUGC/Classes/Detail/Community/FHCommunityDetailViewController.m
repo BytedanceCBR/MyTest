@@ -47,6 +47,10 @@
         if (element_from.length > 0) {
             self.tracerDict[@"element_from"] = element_from;
         }
+        NSString *group_id = params[@"group_id"];
+        if (group_id.length > 0) {
+            self.tracerDict[@"group_id"] = group_id;
+        }
         self.tracerDict[@"page_type"] = [self pageType];
         
         NSString *log_pb_str = params[@"log_pb"];
