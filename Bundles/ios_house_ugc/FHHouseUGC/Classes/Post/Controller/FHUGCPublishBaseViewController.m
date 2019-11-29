@@ -111,7 +111,7 @@
 
 - (void)enablePublish:(BOOL)isEnable {
     if(isEnable) {
-        [self.publishBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+        [self.publishBtn setTitleColor:[UIColor themeRed] forState:UIControlStateNormal];
     } else {
         [self.publishBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
     }

@@ -245,7 +245,7 @@
 - (FHPostUGCMainView *)socialGroupSelectEntry {
     if(!_socialGroupSelectEntry) {
         _socialGroupSelectEntry = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.hasSocialGroup ? 0 : ENTRY_HEIGHT) type:FHPostUGCMainViewType_Wenda];
-        
+        _socialGroupSelectEntry.clipsToBounds = YES;
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(socialGroupSelectEntryAction:)];
         
         [_socialGroupSelectEntry addGestureRecognizer:tapGestureRecognizer];
@@ -256,7 +256,7 @@
 - (FHPostUGCSelectedGroupHistoryView *)selectedGrouplHistoryView {
     if(!_selectedGrouplHistoryView) {
         FHPostUGCSelectedGroupModel *selectedGroup = [self loadSelectedGroup];
-        CGFloat height = (selectedGroup || self.hasSocialGroup) ? ENTRY_HEIGHT: 0;
+        CGFloat height = (selectedGroup && !self.hasSocialGroup) ? ENTRY_HEIGHT: 0;
         _selectedGrouplHistoryView = [[FHPostUGCSelectedGroupHistoryView alloc] initWithFrame:CGRectMake(0, self.socialGroupSelectEntry.bottom, SCREEN_WIDTH, height) delegate:self historyModel:selectedGroup];
         _selectedGrouplHistoryView.clipsToBounds = YES;
     }
@@ -279,7 +279,8 @@
         
         // 调整文字内容垂直偏移
         UIEdgeInsets textContaineriInset = _titleTextView.internalGrowingTextView.internalTextView.textContainerInset;
-        textContaineriInset.top = 5; _titleTextView.internalGrowingTextView.internalTextView.textContainerInset = textContaineriInset;
+        textContaineriInset.top = 5;
+        _titleTextView.internalGrowingTextView.internalTextView.textContainerInset = textContaineriInset;
     }
     return _titleTextView;
 }
@@ -701,7 +702,7 @@
         [images addObject:model];
     }
     
-    [self showLoadingAlert:@"正在上传图片..."];
+    [self showLoadingAlert:@"正在发布"];
     WeakSelf;
     [self.uploadImageManager uploadPhotos:images extParameter:@{} progressBlock:^(int expectCount, int receivedCount) {
         StrongSelf;
@@ -709,8 +710,6 @@
         
     } finishBlock:^(NSError *error, NSArray<FRUploadImageModel*> *finishUpLoadModels) {
         StrongSelf;
-        
-        [self dismissLoadingAlert];
         NSError *finishError = nil;
         for (FRUploadImageModel *model in finishUpLoadModels) {
             if (isEmptyString(model.webURI)) {
@@ -745,7 +744,7 @@
             if (error) {
                 [monitorDictionary setValue:@(error.code) forKey:@"error"];
             }
-            [[ToastManager manager] showToast:@"图片上传失败！"];
+            [[ToastManager manager] showToast:@"发布失败！"];
         }
         else {
             [self postWendaRequestWithUploadImageModels:finishUpLoadModels];
@@ -781,6 +780,7 @@
     // 开始发送提问发布请求
     [FHHouseUGCAPI requestPublishWendaWithParam: requestParams completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
+        [self dismissLoadingAlert];
         // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
         if(error) {
             [[ToastManager manager] showToast: model.message?:@"发布失败!"];
