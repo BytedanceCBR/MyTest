@@ -148,13 +148,13 @@
 - (void)delPostThreadSuccess:(NSNotification *)noti {
     NSString *groupId = noti.userInfo[@"social_group_id"];
     
-    if([groupId isEqualToString:self.viewController.communityId]){
-        //多于1个tab的时候
-        if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
-            FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
-            feedVC.needReloadData = YES;
-        }
-    }
+//    if([groupId isEqualToString:self.viewController.communityId]){
+//        //多于1个tab的时候
+//        if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
+//            FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
+//            feedVC.needReloadData = YES;
+//        }
+//    }
     
     if (groupId.length > 0 && [groupId isEqualToString:self.viewController.communityId]) {
         __weak typeof(self) weakSelf = self;
