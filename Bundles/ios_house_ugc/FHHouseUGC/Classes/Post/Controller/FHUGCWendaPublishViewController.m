@@ -76,10 +76,12 @@
 @property (nonatomic, strong) SSThemedLabel *tipLabel;
 @property (nonatomic, strong) TTUGCToolbar *toolbar;
 
+@property (nonatomic, assign) BOOL hasSocialGroup;      // 是否外部带入圈子信息
+
 // 数据区
 @property (nonatomic, copy) NSString *selectGroupId;
 @property (nonatomic, copy) NSString *selectGroupName;
-@property (nonatomic, assign) BOOL hasSocialGroup;
+@property (nonatomic, assign) BOOL isSelectectGroupFollowed;
 
 // 辅助变量
 @property (nonatomic, assign) BOOL isKeyboardWillShow;
@@ -97,6 +99,7 @@
         self.title = @"提问";
         self.selectGroupId = [paramObj.allParams tt_stringValueForKey:@"select_group_id"];
         self.selectGroupName = [paramObj.allParams tt_stringValueForKey:@"select_group_name"];
+        self.isSelectectGroupFollowed = [paramObj.allParams tta_boolForKey:@"select_group_followed"];
         self.hasSocialGroup = self.selectGroupId.length > 0 && self.selectGroupName.length > 0;
     }
     return self;
@@ -220,8 +223,8 @@
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    // 检查是否选择了要发布的小区koi
-    NSString *socialGroupId = self.socialGroupSelectEntry.groupId;
+    // 检查是否选择了要发布的小区
+    NSString *socialGroupId = self.selectGroupId;
     if(socialGroupId.length <= 0) {
         [[ToastManager manager] showToast:@"请选择要发布的小区！"];
         return;
@@ -352,8 +355,8 @@
 
 - (SSThemedLabel *)tipLabel {
     if(!_tipLabel) {
-        _tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(LEFT_PADDING, 0, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, 36)];
-        _tipLabel.backgroundColor = [UIColor clearColor];
+        _tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(LEFT_PADDING, 11, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, 25)];
+        _tipLabel.backgroundColor = [UIColor themeWhite];
         _tipLabel.font = [UIFont themeFontRegular:11];
         _tipLabel.textAlignment = NSTextAlignmentRight;
         _tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
@@ -377,6 +380,10 @@
         self.socialGroupSelectEntry.groupId = item.socialGroupId;
         self.socialGroupSelectEntry.communityName = item.socialGroupName;
         self.socialGroupSelectEntry.followed = NO;
+        
+        self.selectGroupId = self.socialGroupSelectEntry.groupId;
+        self.selectGroupName = self.socialGroupSelectEntry.communityName;
+        self.isSelectectGroupFollowed = self.socialGroupSelectEntry.followed;
 
         // 如果选中圈子选择历史，更新UI
         [self updateSelectedGroupHistoryWithItem:item];
@@ -507,8 +514,8 @@
         }
         
         FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
-        selectedGroup.socialGroupId = self.socialGroupSelectEntry.groupId;
-        selectedGroup.socialGroupName = self.socialGroupSelectEntry.communityName;
+        selectedGroup.socialGroupId = self.selectGroupId;
+        selectedGroup.socialGroupName = self.selectGroupName;
         NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
         [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
         
@@ -542,6 +549,10 @@
         self.socialGroupSelectEntry.groupId = item.socialGroupId;
         self.socialGroupSelectEntry.communityName = item.socialGroupName;
         self.socialGroupSelectEntry.followed = [item.hasFollow boolValue];
+        
+        self.selectGroupId = self.socialGroupSelectEntry.groupId;
+        self.selectGroupName = self.socialGroupSelectEntry.communityName;
+        self.isSelectectGroupFollowed = self.socialGroupSelectEntry.followed;
         
         // 如果选中的圈子和上一次一样就隐藏选择历史模块
         [self updateSelectedGroupHistoryWithItem:item];
@@ -650,13 +661,13 @@
 }
 
 - (void)checkSocialGroupFollowedStatusAndPublish {
-    if (self.socialGroupSelectEntry.followed) {
+    if (self.isSelectectGroupFollowed) {
         // 已关注，直接发帖
         [self publishWendaContentAfterFollowedSocialGroup];
     } else {
         // 先关注
         WeakSelf;
-        [[FHUGCConfig sharedInstance] followUGCBy:self.socialGroupSelectEntry.groupId isFollow:YES enterFrom:@"feed_publisher" enterType:@"click" completion:^(BOOL isSuccess) {
+        [[FHUGCConfig sharedInstance] followUGCBy:self.selectGroupId isFollow:YES enterFrom:@"feed_publisher" enterType:@"click" completion:^(BOOL isSuccess) {
             StrongSelf;
             if (isSuccess) {
                 [self publishWendaContentAfterFollowedSocialGroup];
@@ -757,7 +768,7 @@
     // 收集请求参数
     NSString *title = [self validStringFrom:self.titleTextView.text];
     NSString *description = [self validStringFrom:self.descriptionTextView.text];
-    NSString *socialGroupId = self.socialGroupSelectEntry.groupId;
+    NSString *socialGroupId = self.selectGroupId;
     
     NSMutableArray<NSString *> *image_urls = [NSMutableArray arrayWithCapacity:finishUpLoadModels.count];
     [finishUpLoadModels enumerateObjectsUsingBlock:^(FRUploadImageModel * _Nonnull model, NSUInteger idx, BOOL * _Nonnull stop) {

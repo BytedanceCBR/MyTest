@@ -148,13 +148,13 @@
 - (void)delPostThreadSuccess:(NSNotification *)noti {
     NSString *groupId = noti.userInfo[@"social_group_id"];
     
-    if([groupId isEqualToString:self.viewController.communityId]){
-        //多于1个tab的时候
-        if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
-            FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
-            feedVC.needReloadData = YES;
-        }
-    }
+//    if([groupId isEqualToString:self.viewController.communityId]){
+//        //多于1个tab的时候
+//        if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
+//            FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
+//            feedVC.needReloadData = YES;
+//        }
+//    }
     
     if (groupId.length > 0 && [groupId isEqualToString:self.viewController.communityId]) {
         __weak typeof(self) weakSelf = self;
@@ -365,6 +365,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
     dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
+    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
     dict[TRACER_KEY] = tracerDict;
@@ -1230,11 +1231,12 @@
         self.isFirstEnter = NO;
     } else {
         //上报埋点
-        NSString *position = @"";
-        if(self.selectedIndex == 0){
-            position = @"all_list";
-        }else if(self.selectedIndex == 1){
-            position = @"essence_list";
+        NSString *position = @"be_null";
+        if(toIndex < self.socialGroupModel.data.tabInfo.count){
+            FHUGCScialGroupDataTabInfoModel *tabModel = self.socialGroupModel.data.tabInfo[toIndex];
+            if(tabModel.tabName){
+                position = [NSString stringWithFormat:@"%@_list",tabModel.tabName];
+            }
         }
         [self addClickOptionsLog:position];
         [self.pagingView scrollToIndex:toIndex withAnimation:YES];

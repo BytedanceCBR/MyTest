@@ -777,8 +777,6 @@
     NSInteger row = [self getCellIndex:cellModel];
     if(row < self.dataList.count && row >= 0){
         [self.dataList removeObjectAtIndex:row];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
         [self reloadTableViewData];
     }
 }
