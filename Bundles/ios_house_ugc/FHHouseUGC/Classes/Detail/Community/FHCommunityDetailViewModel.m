@@ -1222,11 +1222,12 @@
         self.isFirstEnter = NO;
     } else {
         //上报埋点
-        NSString *position = @"";
-        if(self.selectedIndex == 0){
-            position = @"all_list";
-        }else if(self.selectedIndex == 1){
-            position = @"essence_list";
+        NSString *position = @"be_null";
+        if(toIndex < self.socialGroupModel.data.tabInfo.count){
+            FHUGCScialGroupDataTabInfoModel *tabModel = self.socialGroupModel.data.tabInfo[toIndex];
+            if(tabModel.tabName){
+                position = [NSString stringWithFormat:@"%@_list",tabModel.tabName];
+            }
         }
         [self addClickOptionsLog:position];
         [self.pagingView scrollToIndex:toIndex withAnimation:YES];
