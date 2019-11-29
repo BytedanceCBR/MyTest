@@ -352,8 +352,8 @@
 
 - (SSThemedLabel *)tipLabel {
     if(!_tipLabel) {
-        _tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(LEFT_PADDING, 0, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, 36)];
-        _tipLabel.backgroundColor = [UIColor clearColor];
+        _tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(LEFT_PADDING, 11, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, 25)];
+        _tipLabel.backgroundColor = [UIColor themeWhite];
         _tipLabel.font = [UIFont themeFontRegular:11];
         _tipLabel.textAlignment = NSTextAlignmentRight;
         _tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
