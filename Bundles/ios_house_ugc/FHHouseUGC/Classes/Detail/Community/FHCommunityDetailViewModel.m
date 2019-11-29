@@ -671,7 +671,6 @@
     NSMutableDictionary *dic = [NSMutableDictionary new];
     dic[@"select_group_id"] = self.data.socialGroupId;
     dic[@"select_group_name"] = self.data.socialGroupName;
-    dic[@"select_group_followed"] = @(self.data.hasFollow.boolValue);
     dic[TRACER_KEY] = traceParam;
     dic[VCTITLE_KEY] = @"发帖";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
