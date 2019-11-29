@@ -305,9 +305,9 @@
 //    TRACK_EVENT(@"click_options", params);
     
     if ([TTAccountManager isLogin]) {
-        [self gotoAskVC];
+        [self gotoWendaVC];
     } else {
-        [self gotoLogin:FHUGCLoginFrom_ASK];
+        [self gotoLogin:FHUGCLoginFrom_WENDA];
     }
     
 }
@@ -361,9 +361,9 @@
                             [self gotoVoteVC];
                         }
                             break;
-                        case FHUGCLoginFrom_ASK:
+                        case FHUGCLoginFrom_WENDA:
                         {
-                            [self gotoAskVC];
+                            [self gotoWendaVC];
                         }
                             break;
                         default:
@@ -386,7 +386,7 @@
     [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
 }
 
-- (void)gotoAskVC {
+- (void)gotoWendaVC {
     NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
