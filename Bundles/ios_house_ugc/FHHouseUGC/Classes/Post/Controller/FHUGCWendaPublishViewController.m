@@ -794,7 +794,7 @@
         [self dismissLoadingAlert];
         // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
         if(error) {
-            [[ToastManager manager] showToast: model.message?:@"发布失败!"];
+            [[ToastManager manager] showToast: (error.code == 2001 && error.domain.length > 0) ? error.domain : @"发布失败!"];
             [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_wenda_publish" metric:nil category:@{@"status":@(1)} extra:nil];
             return;
         }
