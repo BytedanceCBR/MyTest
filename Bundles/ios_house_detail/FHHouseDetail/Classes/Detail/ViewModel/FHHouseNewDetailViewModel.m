@@ -244,6 +244,7 @@
     v.backgroundColor = [UIColor themeWhite];
     v.parentView = alertView;
     v.messageHeight = messageHeight;
+    v.topTitleHeight = 40 + size.height;
     v.socialInfo = self.weakSocialInfo;
     __weak typeof(self) weakSelf = self;
     v.submitBtnBlock = ^{
