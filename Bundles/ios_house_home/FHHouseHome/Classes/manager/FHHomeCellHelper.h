@@ -111,6 +111,10 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 + (void)sendBannerTypeCellShowTrace:(FHHouseType)houseType;
 
 
+//匹配房源名称
++ (NSArray <NSString *>*)matchHouseSegmentedTitleArray;
+
+
 @end 
 
 NS_ASSUME_NONNULL_END

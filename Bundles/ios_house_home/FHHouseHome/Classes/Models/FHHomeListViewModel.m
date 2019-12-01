@@ -435,29 +435,14 @@
         }
     }
     
-    [self.categoryView updateSegementedTitles:[self matchHouseSegmentedTitleArray]  andSelectIndex:indexValue];
+    [self.categoryView updateSegementedTitles:[FHHomeCellHelper matchHouseSegmentedTitleArray]  andSelectIndex:indexValue];
     
     if (isNeedCreateScroll) {
         [self setUpSubtableViewContrllers];
     }
 }
 
-//匹配房源名称
-- (NSArray <NSString *>*)matchHouseSegmentedTitleArray
-{
-    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    NSMutableArray *titleArrays = [[NSMutableArray alloc] initWithCapacity:3];
-    for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
-        NSNumber *houseTypeNum = configDataModel.houseTypeList[i];
-        if ([houseTypeNum isKindOfClass:[NSNumber class]]) {
-            NSString * houseStr = [self matchHouseString:[houseTypeNum integerValue]];
-            if (kIsNSString(houseStr) && houseStr.length != 0) {
-                [titleArrays addObject:houseStr];
-            }
-        }
-    }
-    return titleArrays;
-}
+
 
 - (void)checkCityStatus
 {
@@ -534,36 +519,6 @@
         FHHomeItemViewController *itemVC = self.itemsVCArray[index];
         itemVC.enterType = enterType;
         [itemVC currentViewIsShowing];
-    }
-}
-
-- (NSString *)matchHouseString:(FHHouseType)houseType
-{
-    switch (houseType) {
-        case FHHouseTypeNewHouse:
-        {
-            return @"新房";
-        }
-            break;
-        case FHHouseTypeRentHouse:
-        {
-            return @"租房";
-        }
-            break;
-        case FHHouseTypeNeighborhood:
-        {
-            return @"小区";
-        }
-            break;
-        case FHHouseTypeSecondHandHouse:
-        {
-            return @"二手房";
-        }
-            break;
-            
-        default:
-            return @"";
-            break;
     }
 }
 

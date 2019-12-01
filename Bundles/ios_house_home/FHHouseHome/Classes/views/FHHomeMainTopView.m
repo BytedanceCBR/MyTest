@@ -17,6 +17,10 @@
 #import <TTRoute.h>
 #import <UIImageView+BDWebImage.h>
 #import "FHHomeConfigManager.h"
+#import <FHHouseType.h>
+#import <FHHomeCellHelper.h>
+
+static const float kSegementedOneWidth = 50;
 
 @interface FHHomeMainTopView()
 
@@ -105,15 +109,70 @@
     
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topBackCityContainer);
-        make.height.mas_equalTo(52);
+        make.height.mas_equalTo(44);
         if (self.changeCountryBtn) {
-            make.centerY.equalTo(self.changeCountryBtn).offset(-5);
+            make.centerY.equalTo(self.changeCountryBtn).offset(-2);
         }else
         {
             make.bottom.mas_equalTo(8);
         }
         make.width.mas_equalTo(118);
     }];
+}
+
+- (void)setUpHouseSegmentedControl
+{
+    
+    NSArray *titlesArray = [FHHomeCellHelper matchHouseSegmentedTitleArray];
+    if (!titlesArray && [titlesArray count] == 0) {
+        return;
+    }
+    
+    _houseSegmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[FHHomeCellHelper matchHouseSegmentedTitleArray]];
+    
+    NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
+                                          NSForegroundColorAttributeName: [UIColor themeGray3]};
+    _houseSegmentControl.titleTextAttributes = titleTextAttributes;
+    
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
+                                                  NSForegroundColorAttributeName: [UIColor themeGray1]};
+    _houseSegmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
+    _houseSegmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
+    _houseSegmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    _houseSegmentControl.isNeedNetworkCheck = NO;
+    _houseSegmentControl.segmentEdgeInset = UIEdgeInsetsMake(5, 0, 5, 0);
+    _houseSegmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+    _houseSegmentControl.selectionIndicatorWidth = 20.0f;
+    _houseSegmentControl.selectionIndicatorHeight = 4.0f;
+    _houseSegmentControl.selectionIndicatorCornerRadius = 2.0f;
+    _houseSegmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
+    _houseSegmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+    //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
+    
+    __weak typeof(self) weakSelf = self;
+    _houseSegmentControl.indexChangeBlock = ^(NSInteger index) {
+          
+    };
+    
+    _houseSegmentControl.indexRepeatBlock = ^(NSInteger index) {
+        
+    };
+    
+    
+    [self.topBackCityContainer addSubview:_houseSegmentControl];
+    
+    [_houseSegmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.topBackCityContainer);
+        make.height.mas_equalTo(44);
+        if (self.changeCountryBtn) {
+            make.centerY.equalTo(self.changeCountryBtn).offset(-2);
+        }else
+        {
+            make.bottom.mas_equalTo(8);
+        }
+        make.width.mas_equalTo((kSegementedOneWidth + 20) * titlesArray.count);
+    }];
+    
 }
 
 - (void)showUnValibleCity
@@ -237,6 +296,7 @@
     }else
     {
         [self setupSetmentedControl];
+        [self setUpHouseSegmentedControl];
     }
    
 }

@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeMainTopView : UIView
 @property(nonatomic,strong)HMSegmentedControl *segmentControl;
+@property(nonatomic,strong)HMSegmentedControl *houseSegmentControl;
+
 @property(nonatomic,copy) void (^indexChangeBlock)(NSInteger index);
 @end
 
