@@ -711,7 +711,7 @@
 
 - (void)publishWendaContentAfterFollowedSocialGroup {
     
-    [self showLoadingAlert:@"正在发布"];
+    [self startLoading];
     
     // 有选中图片就先上传图片再发布提问
     if(self.addImagesView.selectedImages.count > 0) {
@@ -762,7 +762,7 @@
         }
         
         if (error || finishError) {
-            [self dismissLoadingAlert];
+            [self endLoading];
             //端监控
             //图片上传失败
             NSMutableDictionary * monitorDictionary = [NSMutableDictionary dictionary];
@@ -825,7 +825,7 @@
     WeakSelf;
     [FHHouseUGCAPI requestPublishWendaWithParam: requestParams completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
-        [self dismissLoadingAlert];
+        [self endLoading];
         // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
         if(error) {
             [[ToastManager manager] showToast: (error.code == 2001 && error.domain.length > 0) ? error.domain : @"发布失败!"];
@@ -870,6 +870,18 @@
             }
         }
     }];
+}
+
+- (void)startLoading {
+    [super startLoading];
+    
+    [self showLoadingAlert:@"正在发布"];
+}
+
+- (void)endLoading {
+    [super endLoading];
+    
+    [self dismissLoadingAlert];
 }
 
 #pragma mark - 埋点区
