@@ -35,6 +35,7 @@
 @property (nonatomic, assign)   CGRect       defaultLeftBottomFrame;
 @property (nonatomic, assign)   CGRect       defaultRightBottomFrame;
 @property (nonatomic, strong)   NSMutableArray       *animateArray;
+@property (nonatomic, strong)   UIView       *middleView;
 
 @end
 
@@ -58,6 +59,11 @@
     [self addSubview:self.closeBtn];
     [self addSubview:self.submitBtn];
     
+    _middleView = [[UIView alloc] init];
+    _middleView.backgroundColor = [UIColor themeWhite];
+    _middleView.clipsToBounds = YES;
+    [self addSubview:_middleView];
+    
     [self.closeBtn addTarget:self action:@selector(closeButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.submitBtn addTarget:self action:@selector(submitButtonClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -78,6 +84,11 @@
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(-20);
     }];
+    [self.middleView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom);
+        make.height.mas_equalTo(self.messageHeight);
+     }];
 }
 
 - (void)closeButtonClick:(UIButton *)btn {
@@ -107,11 +118,15 @@
         [self.submitBtn setTitle:btnTitle forState:UIControlStateNormal];
         [self.submitBtn setTitle:btnTitle forState:UIControlStateHighlighted];
     }
+    [self.middleView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(self.messageHeight);
+    }];
     CGFloat messageMaxW = self.width - 112 - 20;
     CGFloat messageViewWidth = self.width - 40;
-    CGFloat defaultTop = self.height - 108;
-    self.defaultLeftBottomFrame = CGRectMake(20, self.height - 80, 0, 0);
-    self.defaultRightBottomFrame = CGRectMake(self.width - 20, self.height - 80, 0, 0);
+    CGFloat defaultTop = self.height - 108;// 之前的写法
+    defaultTop = self.messageHeight - 48;
+    self.defaultLeftBottomFrame = CGRectMake(20, self.height - 20, 0, 0);
+    self.defaultRightBottomFrame = CGRectMake(self.width - 20, self.height - 20, 0, 0);
     [self.viewsArray enumerateObjectsUsingBlock:^(UIView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj removeFromSuperview];
     }];
@@ -126,7 +141,7 @@
         }
         mv.activeInfo = obj;
         mv.hidden = YES;
-        [self addSubview:mv];
+        [self.middleView addSubview:mv];
         [self.viewsArray addObject:mv];
     }];
 }
@@ -146,21 +161,25 @@
         v.hidden = NO;
         // 放大
         CGRect nowFrame = v.frame;
-        CGRect defaultFrame = self.defaultLeftBottomFrame;
+        CGRect defaultFrame = self.defaultLeftBottomFrame;// defaultFrame 暂时不用啦
+        NSValue *startPoint = [NSValue valueWithCGPoint:CGPointMake(nowFrame.origin.x, nowFrame.origin.y + nowFrame.size.height)];
+        NSValue *endPoint = [NSValue valueWithCGPoint:CGPointMake(nowFrame.origin.x + nowFrame.size.width / 2, nowFrame.origin.y + nowFrame.size.height / 2)];
         if (v.direction == FHDetailSocialMessageDirectionLeft) {
             defaultFrame = self.defaultLeftBottomFrame;
+            startPoint = [NSValue valueWithCGPoint:CGPointMake(nowFrame.origin.x, nowFrame.origin.y + nowFrame.size.height)];
+            endPoint = [NSValue valueWithCGPoint:CGPointMake(nowFrame.origin.x + nowFrame.size.width / 2, nowFrame.origin.y + nowFrame.size.height / 2)];
         } else if (v.direction == FHDetailSocialMessageDirectionRight) {
             defaultFrame = self.defaultRightBottomFrame;
+            startPoint = [NSValue valueWithCGPoint:CGPointMake(nowFrame.origin.x + nowFrame.size.width, nowFrame.origin.y + nowFrame.size.height)];
+            endPoint = [NSValue valueWithCGPoint:CGPointMake(nowFrame.origin.x + nowFrame.size.width / 2, nowFrame.origin.y + nowFrame.size.height / 2)];
         }
-        v.frame = defaultFrame;
         [self.animateArray addObject:v];
         __weak typeof(self) weakSelf = self;
-        [v startAnimation];
-        [UIView animateWithDuration:kFHDetailSocialAnimateDuration animations:^{
-            v.frame = nowFrame;
-            [v runAnimation];
-        } completion:^(BOOL finished) {
-        }];
+        CABasicAnimation *anim1 = [self getAnimationKeyPath:@"position" fromValue:startPoint toValue:endPoint];
+        [v.layer addAnimation:anim1 forKey:@"anim1"];
+        CABasicAnimation *anim2 = [self getAnimationKeyPath:@"transform.scale" fromValue:@(0) toValue:@(1)];
+        [v.layer addAnimation:anim2 forKey:@"anim2"];
+        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((kFHDetailSocialAnimateDuration + 0.2) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             // 整体上移
             if (weakSelf.viewsArray.count > 0) {
@@ -168,6 +187,20 @@
             }
         });
     }
+}
+
+- (CABasicAnimation *)getAnimationKeyPath:(NSString *)keyPath fromValue:(id)fromValue toValue:(id)toValue{
+    CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:keyPath];
+    basicAnimation.fromValue = fromValue;
+    /*byvalue是在fromvalue的值的基础上增加量*/
+    //basicAnimation.byValue = @1;
+    basicAnimation.toValue = toValue;
+    basicAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];;
+    basicAnimation.duration = kFHDetailSocialAnimateDuration;
+    basicAnimation.repeatCount = 1;
+    /* animation remove from view after animation finish */
+    basicAnimation.removedOnCompletion = YES;
+    return basicAnimation;
 }
 
 - (void)animateUp {
@@ -178,7 +211,7 @@
             [weakSelf.animateArray enumerateObjectsUsingBlock:^(UIView*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if (count - idx > 2) {
                     obj.alpha = 0;
-                    obj.top -= 20;
+                    obj.top -= 33;
                 } else {
                     obj.top -= 33;
                 }

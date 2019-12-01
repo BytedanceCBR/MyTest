@@ -71,6 +71,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) BOOL isLoadingData;
 
+/**
+ * 默认是YES，是否重设statusBar的状态。默认每次新进一个vc都需要设置，但是针对子vc需要和父vc行为一致，这时候需要设置这个字段来控制
+ */
+@property (nonatomic, assign) BOOL isResetStatusBar;
+
 
 /**
  * 空页面，默认是NULL
