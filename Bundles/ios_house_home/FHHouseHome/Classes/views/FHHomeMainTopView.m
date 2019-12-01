@@ -151,7 +151,9 @@ static const float kSegementedOneWidth = 50;
     
     __weak typeof(self) weakSelf = self;
     _houseSegmentControl.indexChangeBlock = ^(NSInteger index) {
-          
+        if (weakSelf.indexHouseChangeBlock) {
+            weakSelf.indexHouseChangeBlock(index);
+        }
     };
     
     _houseSegmentControl.indexRepeatBlock = ^(NSInteger index) {

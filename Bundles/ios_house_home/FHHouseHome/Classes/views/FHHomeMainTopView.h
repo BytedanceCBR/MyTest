@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong)HMSegmentedControl *houseSegmentControl;
 
 @property(nonatomic,copy) void (^indexChangeBlock)(NSInteger index);
+@property(nonatomic,copy) void (^indexHouseChangeBlock)(NSInteger index);
+
 @end
 
 NS_ASSUME_NONNULL_END

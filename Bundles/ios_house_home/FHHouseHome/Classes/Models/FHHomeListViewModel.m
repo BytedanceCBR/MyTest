@@ -27,6 +27,7 @@
 #import "FHHomeSearchPanelViewModel.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <FHUtils.h>
+#import <FHHomeMainViewController.h>
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -203,34 +204,39 @@
         //切换推荐房源类型
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;
-            
-            //上报stay埋点
-            [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
-            
-            //收起tip
-            [self.homeViewController hideImmediately];
-            
-            //设置当前房源类型
-            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-            if (currentDataModel.houseTypeList.count > indexValue) {
-                NSNumber *numberType = [currentDataModel.houseTypeList objectAtIndex:indexValue];
-                if ([numberType isKindOfClass:[NSNumber class]]) {
-                    self.houseType = [numberType integerValue];
-                }
-            }
-            
-            self.isRequestFromSwitch = YES;
-            
-            for (FHHomeItemViewController *vc in self.itemsVCArray) {
-                if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.previousHouseType) {
-                    [vc sendTraceEvent:FHHomeCategoryTraceTypeStay];
-                }
-            }
-            
-            [self setUpSubtableIndex:indexValue];
+            [self selectIndexHouseType:indexValue];
         };
+        
     }
     return self;
+}
+
+- (void)selectIndexHouseType:(NSInteger)indexValue
+{
+    //上报stay埋点
+    [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
+    
+    //收起tip
+    [self.homeViewController hideImmediately];
+    
+    //设置当前房源类型
+    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (currentDataModel.houseTypeList.count > indexValue) {
+        NSNumber *numberType = [currentDataModel.houseTypeList objectAtIndex:indexValue];
+        if ([numberType isKindOfClass:[NSNumber class]]) {
+            self.houseType = [numberType integerValue];
+        }
+    }
+    
+    self.isRequestFromSwitch = YES;
+    
+    for (FHHomeItemViewController *vc in self.itemsVCArray) {
+        if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.previousHouseType) {
+            [vc sendTraceEvent:FHHomeCategoryTraceTypeStay];
+        }
+    }
+    
+    [self setUpSubtableIndex:indexValue];
 }
 
 - (void)requestOriginData:(BOOL)isFirstChange isShowPlaceHolder:(BOOL)showPlaceHolder
@@ -688,8 +694,8 @@
             scrollView.contentOffset = CGPointMake(contentWidth, 0);
         }
         
+        NSInteger scrollIndex = (NSInteger)((scrollView.contentOffset.x + KFHScreenWidth/2)/KFHScreenWidth);
         if (!self.isSelectIndex) {
-            NSInteger scrollIndex = (NSInteger)((scrollView.contentOffset.x + KFHScreenWidth/2)/KFHScreenWidth);
             if ([[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList.count > scrollIndex) {
                 if ([[[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList[scrollIndex] respondsToSelector:@selector(integerValue)]) {
                     self.houseType = [[[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList[scrollIndex] integerValue];
@@ -701,6 +707,10 @@
             }
         }
         [self.categoryView refreshSelectionIconFromOffsetX:scrollView.contentOffset.x];
+        if ([self.homeViewController.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
+            FHHomeMainViewController *mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
+            mainVC.topView.houseSegmentControl.selectedSegmentIndex = scrollIndex;
+        }
     }
 }
 

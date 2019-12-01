@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)resetMaintableView;
 
+- (void)bindIndexChangedBlock;
+
 @end
 
 NS_ASSUME_NONNULL_END

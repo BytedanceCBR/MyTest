@@ -47,6 +47,8 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 
 - (void)setIsShowRefreshTip:(BOOL)isShowRefreshTip;
 
+- (void)selectIndexHouseType:(NSInteger)indexValue;
+
 @end
 
 NS_ASSUME_NONNULL_END

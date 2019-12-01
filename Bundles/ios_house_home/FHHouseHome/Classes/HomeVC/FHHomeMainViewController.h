@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeMainViewController : FHBaseViewController
 @property(nonatomic, strong) FHBaseCollectionView *collectionView;
-@property (nonatomic,strong)FHHomeMainTopView *topView;
+@property (nonatomic,strong) FHHomeMainTopView *topView;
 @property(nonatomic, strong) UIView *containerView;
 @end
 

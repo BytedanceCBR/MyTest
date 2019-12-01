@@ -36,6 +36,7 @@
 #import <TTThemedAlertController.h>
 #import <FHUtils.h>
 #import "FHHomeBaseScrollView.h"
+#import <FHHomeMainViewController.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -92,7 +93,18 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    
+ 
+}
+
+- (void)bindIndexChangedBlock
+{
+    __weak typeof(self) weakSelf = self;
+    if ([self.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
+        FHHomeMainViewController *mainVC = (FHHomeMainViewController *)self.parentViewController;
+        mainVC.topView.indexHouseChangeBlock = ^(NSInteger index) {
+            [weakSelf.homeListViewModel selectIndexHouseType:index];
+        };
+    }
 }
 
 - (void)scrollMainTableToTop
@@ -104,7 +116,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 -(void)dealyIniViews
 {
-    
     //如果是inhouse的，弹升级弹窗
     if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
         //#if INHOUSE
@@ -384,6 +395,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     
     [self checkPasteboard:NO];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -437,6 +449,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [TTSandBoxHelper setAppFirstLaunchForAd];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
+    
+    [self bindIndexChangedBlock];
 }
 
 - (void)_willEnterForeground:(NSNotification *)notification
