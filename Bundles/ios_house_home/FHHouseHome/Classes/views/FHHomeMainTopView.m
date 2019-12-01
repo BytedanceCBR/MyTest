@@ -78,7 +78,7 @@
                                           NSForegroundColorAttributeName: [UIColor themeGray3]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
     
-    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontMedium:18],
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
@@ -86,24 +86,32 @@
     _segmentControl.isNeedNetworkCheck = NO;
     _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(9, 10, 0, 10);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-    _segmentControl.selectionIndicatorWidth = 24.0f;
-    _segmentControl.selectionIndicatorHeight = 12.0f;
-    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
+    _segmentControl.selectionIndicatorWidth = 20.0f;
+    _segmentControl.selectionIndicatorHeight = 4.0f;
+    _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+//    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
     
     __weak typeof(self) weakSelf = self;
     _segmentControl.indexChangeBlock = ^(NSInteger index) {
+        
     };
     
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
+        
     };
     
     
     [self.topBackCityContainer addSubview:_segmentControl];
     
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.changeCountryBtn.mas_right).offset(0);
+        make.centerX.equalTo(self.topBackCityContainer);
         make.height.mas_equalTo(52);
-        make.bottom.equalTo(self.topBackCityContainer.mas_bottom).offset(0);
+        if (self.changeCountryBtn) {
+            make.centerY.equalTo(self.changeCountryBtn).offset(-5);
+        }else
+        {
+            make.bottom.mas_equalTo(8);
+        }
         make.width.mas_equalTo(108);
     }];
 }
@@ -152,22 +160,22 @@
     }
     CGFloat widthOffset = leftOffset * 2;
     UILabel *cityLabel = [[UILabel alloc] init];
-    cityLabel.textColor = [UIColor tt_themedColorForKey:@"grey1"];
+    cityLabel.textColor = [UIColor themeGray1];
     cityLabel.text = dataModel.currentCityName;
-    cityLabel.font = [UIFont themeFontRegular:14];
+    cityLabel.font = [UIFont themeFontSemibold:14];
     
     UIButton *citySwichButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.changeCountryBtn = citySwichButton;
     [self.topBackCityContainer addSubview:citySwichButton];
-    citySwichButton.layer.cornerRadius = 20;
-    citySwichButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
-    citySwichButton.layer.shadowOffset = CGSizeMake(0.f, 2.f);
-    citySwichButton.layer.shadowRadius = 6.f;
-    citySwichButton.layer.shadowOpacity = 1.f;
+//    citySwichButton.layer.cornerRadius = 20;
+//    citySwichButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
+//    citySwichButton.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+//    citySwichButton.layer.shadowRadius = 6.f;
+//    citySwichButton.layer.shadowOpacity = 1.f;
     [citySwichButton.titleLabel setFont:[UIFont themeFontRegular:14]];
-    citySwichButton.backgroundColor = [UIColor whiteColor];
+    citySwichButton.backgroundColor = [UIColor clearColor];
     [citySwichButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.topBackCityContainer).offset(20);
+        make.left.equalTo(self.topBackCityContainer).offset(10);
         make.height.mas_equalTo(40);
         make.bottom.equalTo(self.topBackCityContainer.mas_bottom).offset(-12);
         make.width.mas_equalTo(dataModel.currentCityName.length * 14 + 24 + widthOffset); // button width
@@ -183,10 +191,10 @@
     [citySwichButton addSubview:imageButtonLeftIcon];
     [imageButtonLeftIcon setImage:[UIImage imageNamed:@"combined-shape-1"]];
     [imageButtonLeftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(citySwichButton).offset(leftOffset);
-        make.height.mas_equalTo(18);
+        make.left.equalTo(citySwichButton).offset(0);
+        make.height.mas_equalTo(24);
         make.centerY.equalTo(citySwichButton);
-        make.width.mas_equalTo(18);
+        make.width.mas_equalTo(24);
     }];
     
     [citySwichButton addSubview:cityLabel];
