@@ -153,17 +153,16 @@
 }
 
 - (void)tapAction:(UITapGestureRecognizer *)tap {
-    [self configFirstResponderWithKeyboardShow:!self.isKeyboardWillShow];
+    [self configFirstResponderWithKeyboardShow:self.isKeyboardWillShow];
 }
 
 #pragma mark - 键盘高度变化通知
 
 - (void)keyboardFrameWillChange:(NSNotification *)notification {
     
-    CGRect beginFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
 
-    self.isKeyboardWillShow = beginFrame.origin.y > endFrame.origin.y;
+    self.isKeyboardWillShow = endFrame.origin.y >= SCREEN_HEIGHT;
 }
 
 #pragma mark - FHUGCPublishBaseViewControllerProtocol
