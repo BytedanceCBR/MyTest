@@ -28,9 +28,9 @@ static const float kSegementedMainPadingBottom = 10;
 
 @property (nonatomic, strong) UIView *topBackCityContainer;
 @property (nonatomic, strong) SSThemedImageView *backgroundImageView;
-@property(nonatomic, strong) UIButton * changeCountryBtn;
-@property(nonatomic, strong) UILabel * countryLabel;
-@property(nonatomic, strong) UIImageView * cityImageButtonLeftIcon;
+@property (nonatomic, strong) UIButton * changeCountryBtn;
+@property (nonatomic, strong) UILabel * countryLabel;
+@property (nonatomic, strong) UIImageView * cityImageButtonLeftIcon;
 
 @end
 
@@ -67,6 +67,13 @@ static const float kSegementedMainPadingBottom = 10;
     }];
     self.backgroundImageView.layer.zPosition = -1;
     self.backgroundImageView.userInteractionEnabled = YES;
+    
+    
+    _searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_searchBtn setImage:[UIImage imageNamed:@"home_right_searchbtn"] forState:UIControlStateNormal];
+    [_searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    _searchBtn.hidden = YES;
+    [self addSubview:_searchBtn];
     
     WeakSelf;
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
@@ -119,6 +126,18 @@ static const float kSegementedMainPadingBottom = 10;
             make.bottom.mas_equalTo(8);
         }
         make.width.mas_equalTo(118);
+    }];
+    
+    
+    [_searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self).offset(-15);
+        if (self.segmentControl) {
+            make.centerY.equalTo(self.segmentControl).offset(2);
+        }else
+        {
+            make.bottom.mas_equalTo(8);
+        }
+        make.width.height.mas_equalTo(24);
     }];
 }
 
@@ -210,6 +229,25 @@ static const float kSegementedMainPadingBottom = 10;
         }
         make.width.mas_equalTo((kSegementedOneWidth + 20) * titles.count);
     }];
+    
+    _searchBtn.hidden = YES;
+}
+
+- (void)searchBtnClick
+{
+    NSMutableDictionary *tracerParams = [NSMutableDictionary new];
+    tracerParams[@"enter_type"] = @"click";
+    tracerParams[@"element_from"] = @"maintab_search";
+    tracerParams[@"enter_from"] = @"maintab";
+    tracerParams[@"origin_from"] = @"maintab_search";
+
+    NSMutableDictionary *infos = [NSMutableDictionary new];
+    infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+    infos[@"tracer"] = tracerParams;
+    infos[@"from_home"] = @(1);
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_search"] userInfo:userInfo];
+
 }
 
 - (void)showUnValibleCity

@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UIView *containerView;
 
 - (void)changeTopStatusShowHouse:(BOOL)isShowHouse;
+- (void)changeTopSearchBtn:(BOOL)isShow;
+
 @end
 
 NS_ASSUME_NONNULL_END

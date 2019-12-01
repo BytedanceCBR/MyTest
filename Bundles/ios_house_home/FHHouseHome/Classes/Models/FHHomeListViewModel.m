@@ -672,6 +672,9 @@
     
 
     if (self.tableViewV == scrollView) {
+        
+        [self changeTopSearchBtn:scrollView.contentOffset.y > KFHHomeSearchBarHeight];
+        
         if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
             [self.categoryView showOriginStyle:NO];
             [self changeHouseCategoryStatus:NO];
@@ -794,6 +797,15 @@
     };
     [self.categoryView showOriginStyle:isShowTopHouse];
     [mainVC changeTopStatusShowHouse:!isShowTopHouse];
+}
+
+- (void)changeTopSearchBtn:(BOOL)isShow
+{
+    FHHomeMainViewController *mainVC = nil;
+    if ([self.homeViewController.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
+        mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
+    };
+    [mainVC changeTopSearchBtn:isShow];
 }
 
 - (void)dealloc

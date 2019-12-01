@@ -94,7 +94,6 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSLog(@"x=%f",scrollView.contentOffset.x);
     NSInteger resultIndex = (NSInteger)((scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width/2)/[UIScreen mainScreen].bounds.size.width);
     self.currentIndex = resultIndex;
     self.viewController.topView.segmentControl.selectedSegmentIndex = resultIndex;

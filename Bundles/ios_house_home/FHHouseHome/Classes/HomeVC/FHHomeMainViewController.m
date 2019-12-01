@@ -132,6 +132,10 @@
     self.topView.houseSegmentControl.hidden = !isShowHouse;
 }
 
+- (void)changeTopSearchBtn:(BOOL)isShow {
+    self.topView.searchBtn.hidden = !isShow;
+}
+
 #pragma mark notifications
 
 - (void)mainCollectionScrollBegin{
