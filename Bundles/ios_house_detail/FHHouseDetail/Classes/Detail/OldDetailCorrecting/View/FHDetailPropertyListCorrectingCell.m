@@ -47,7 +47,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
 //    FHDetailPropertyListCorrectingModel *propertyModel = (FHDetailPropertyListCorrectingModel *)self.currentData;
     FHDetailPropertyListCorrectingModel *model = (FHDetailPropertyListCorrectingModel *)data;
-    self.shadowImage.image = [UIImage imageNamed:model.bacImageName];
+    self.shadowImage.image = model.shadowImage;
     FHAgencyNameInfoView *infoView = nil;
     if (model.certificate && model.certificate.labels.count) {
         infoView = [[FHAgencyNameInfoView alloc] init];
@@ -328,15 +328,15 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.equalTo(self);
-        make.height.equalTo(self);
+        make.left.right.top.equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.contentView).offset(12);
     }];
 }
 
 - (UIImageView *)shadowImage {
     if (!_shadowImage) {
         UIImageView *shadowImage = [[UIImageView alloc]init];
-        shadowImage.image = [[UIImage imageNamed:@"left_top_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(10,10,10,10) resizingMode:UIImageResizingModeStretch];
+        shadowImage.image = [[UIImage imageNamed:@"left_top_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(40,30,40,30) resizingMode:UIImageResizingModeStretch];
         [self.contentView addSubview:shadowImage];
         _shadowImage = shadowImage;
     }

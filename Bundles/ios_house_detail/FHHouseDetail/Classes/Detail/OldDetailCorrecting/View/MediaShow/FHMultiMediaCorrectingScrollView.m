@@ -201,12 +201,8 @@
         make.width.mas_equalTo(44);
         make.height.mas_equalTo(20);
         make.right.mas_equalTo(self).offset(-20);
-        make.bottom.mas_equalTo(self.titleView.mas_top).offset(12);
+        make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
     }];
-    
- 
-
-    
 }
 
 - (void)selectItem:(NSInteger)index {

@@ -40,7 +40,7 @@
         [v removeFromSuperview];
     }
     FHDetailErshouHouseCoreInfoModel *model = (FHDetailErshouHouseCoreInfoModel *)data;
-    self.shadowImage.image = [UIImage imageNamed:model.bacImageName];
+    self.shadowImage.image = model.shadowImage;
     NSInteger count = model.coreInfo.count;
     if (count > 0) {
         CGFloat width = (UIScreen.mainScreen.bounds.size.width - 30)  / count;
@@ -88,7 +88,7 @@
 - (UIImageView *)shadowImage {
     if (!_shadowImage) {
         UIImageView *shadowImage = [[UIImageView alloc]init];
-        shadowImage.image = [[UIImage imageNamed:@""] resizableImageWithCapInsets:UIEdgeInsetsMake(30,30,30,30) resizingMode:UIImageResizingModeStretch];
+        shadowImage.image = [[UIImage imageNamed:@""] resizableImageWithCapInsets:UIEdgeInsetsMake(20,0,20,0) resizingMode:UIImageResizingModeStretch];
         [self.contentView addSubview:shadowImage];
         _shadowImage = shadowImage;
     }

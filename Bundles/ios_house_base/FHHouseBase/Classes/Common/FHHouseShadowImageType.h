@@ -18,6 +18,7 @@ typedef NS_ENUM (NSInteger , FHHouseShdowImageType){
 typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeDefault = 0,
     FHHouseModelTypeCoreInfo,//房源属性模块
-    FHHouseModelTypeSubscribe
+    FHHouseModelTypeSubscribe,//订阅房源动态模块
+    FHHouseModelTypeOutlineInfo//房源概况
 };
 #endif /* FHHouseShadowImageType_h */

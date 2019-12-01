@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
 //根据houseModelType将多个cell分为一个模块
 @property (nonatomic, assign)FHHouseModelType houseModelType;
-@property (nonatomic, copy) NSString *bacImageName;
+@property (nonatomic, strong) UIImage *shadowImage;
 @end
 
 @interface FHDetailPhotoHeaderModel : FHDetailBaseModel
@@ -247,7 +247,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
 //根据houseModelType将多个cell分为一个模块
 @property (nonatomic, assign)FHHouseModelType houseModelType;
-@property (nonatomic, copy) NSString *bacImageName;
+@property (nonatomic, strong) UIImage *shadowImage;
 
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryActiveCountInfoModel *activeCountInfo;

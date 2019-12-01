@@ -12,16 +12,16 @@
     _shadowImageType = shadowImageType;
     switch (shadowImageType) {
         case FHHouseShdowImageTypeLR:
-            _bacImageName = @"left_right";
+            _shadowImage = [UIImage imageNamed:@"left_right"];
             break;
         case FHHouseShdowImageTypeLTR:
-            _bacImageName = @"left_top_right";
+            _shadowImage = [[UIImage imageNamed:@"left_top_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(20,0,0,0) resizingMode:UIImageResizingModeStretch];
             break;
         case FHHouseShdowImageTypeLBR:
-            _bacImageName = @"left_bottom_right";
+            _shadowImage = [[UIImage imageNamed:@"left_bottom_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(0,0,40,0) resizingMode:UIImageResizingModeStretch];
             break;
         case FHHouseShdowImageTypeRound:
-            _bacImageName = @"top_left_right_bottom";
+            _shadowImage = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(40,40,40,40) resizingMode:UIImageResizingModeStretch];
             break;
         default:
             break;
@@ -325,13 +325,16 @@
     _shadowImageType = shadowImageType;
     switch (shadowImageType) {
         case FHHouseShdowImageTypeLR:
-            _bacImageName = @"left_right";
+            _shadowImage = [UIImage imageNamed:@"left_right"];
             break;
         case FHHouseShdowImageTypeLTR:
-            _bacImageName = @"left_top_right";
+            _shadowImage = [[UIImage imageNamed:@"left_top_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(40,0,0,0) resizingMode:UIImageResizingModeStretch];
             break;
         case FHHouseShdowImageTypeLBR:
-            _bacImageName = @"left_bottom_right";
+            _shadowImage = [[UIImage imageNamed:@"left_bottom_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(0,0,40,0) resizingMode:UIImageResizingModeStretch];
+            break;
+        case FHHouseShdowImageTypeRound:
+            _shadowImage = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(40,40,40,40) resizingMode:UIImageResizingModeStretch];
             break;
         default:
             break;

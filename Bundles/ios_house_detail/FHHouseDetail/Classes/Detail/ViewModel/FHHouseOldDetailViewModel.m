@@ -55,6 +55,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import "FHDetailQuestionPopView.h"
 #import "FHDetailHouseTitleModel.h"
+#import "FHDetailHouseOutlineInfoCorrectingCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -74,18 +75,24 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
 // 注册cell类型
 - (void)registerCellClasses {
+    //顶部轮播
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
     //FHDetailMediaHeaderCell -----FHDetailMediaHeaderModel
     [self.tableView registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
     //    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameModel class])];
+   //属性模块
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoModel class])];
 //    [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListModel class])];
      [self.tableView registerClass:[FHDetailPropertyListCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCorrectingModel class])];
     [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryModel class])];
+    
+    
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
     [self.tableView registerClass:[FHDetailUserHouseCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailUserHouseCommentModel class])];
-    [self.tableView registerClass:[FHDetailHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoModel class])];
+    //房源概况
+    [self.tableView registerClass:[FHDetailHouseOutlineInfoCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoCorrectingModel class])];
+    
     [self.tableView registerClass:[FHDetailSuggestTipCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSuggestTipModel class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodModel class])];
     [self.tableView registerClass:[FHDetailRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedHouseModel class])];
@@ -105,7 +112,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoModel class])];
     [self.tableView registerClass:[FHDetailCommunityEntryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
     [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
-    [self.tableView registerClass:[FHDetailDetectiveCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDetectiveModel class])];
+//    [self.tableView registerClass:[FHDetailDetectiveCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDetectiveModel class])];
     [self.tableView registerClass:[FHDetailHouseReviewCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseReviewCommentCellModel class])];
 }
 
@@ -359,26 +366,25 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseType = [NSString stringWithFormat:@"%d", self.houseType];
     NSString *houseDes = [NSString stringWithFormat:@"%@/%@/%@", area, face, tag];
-    // 幸福天眼
-    __weak typeof(self)wself = self;
-    if (model.data.baseExtra.detective) {
-        FHDetailDetectiveModel *detectiveModel = [[FHDetailDetectiveModel alloc] init];
-        detectiveModel.detective = model.data.baseExtra.detective;
-        detectiveModel.feedBack = ^(NSInteger type, id  _Nonnull data, void (^ _Nonnull compltion)(BOOL)) {
-            [wself poplayerFeedBack:data type:type completion:compltion];
-        };
-        [self.items addObject:detectiveModel];
-    }
+//    // 幸福天眼
+//    __weak typeof(self)wself = self;
+//    if (model.data.baseExtra.detective) {
+//        FHDetailDetectiveModel *detectiveModel = [[FHDetailDetectiveModel alloc] init];
+//        detectiveModel.detective = model.data.baseExtra.detective;
+//        detectiveModel.feedBack = ^(NSInteger type, id  _Nonnull data, void (^ _Nonnull compltion)(BOOL)) {
+//            [wself poplayerFeedBack:data type:type completion:compltion];
+//        };
+//        [self.items addObject:detectiveModel];
+//    }
     // 房源概况
     if (model.data.houseOverreview.list.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        if (!model.data.baseExtra.detective) {
-            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
-        }
-        FHDetailHouseOutlineInfoModel *infoModel = [[FHDetailHouseOutlineInfoModel alloc] init];
+
+        FHDetailHouseOutlineInfoCorrectingModel *infoModel = [[FHDetailHouseOutlineInfoCorrectingModel alloc] init];
         infoModel.houseOverreview = model.data.houseOverreview;
         infoModel.baseViewModel = self;
+        infoModel.tableView = self.tableView;
+        infoModel.houseModelType = FHHouseModelTypeOutlineInfo;
         infoModel.hideReport = model.data.baseExtra.detective ? YES : NO;
         [self.items addObject:infoModel];
     }
@@ -903,6 +909,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 - (void)moduleClassificationMethod:(NSArray *)moduleArr {
     NSMutableArray *coreInfos = [[NSMutableArray alloc]init];
     NSMutableArray *Subscribes = [[NSMutableArray alloc]init];
+    NSMutableArray *outlineInfo = [[NSMutableArray alloc]init];
     [moduleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
         switch (model.houseModelType) {
@@ -912,10 +919,14 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             case FHHouseModelTypeSubscribe:
                 [Subscribes addObject:obj];
                 break;
+            case FHHouseModelTypeOutlineInfo:
+                [outlineInfo addObject:obj];
+                break;
             default:
                 break;
         }
     }];
+    
     [coreInfos enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
         if (idx == coreInfos.count-1 && coreInfos.count != 1) {
@@ -928,6 +939,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
         model.shadowImageType = FHHouseShdowImageTypeRound;
     }];
-    
+    [outlineInfo enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
+        model.shadowImageType = FHHouseShdowImageTypeRound;
+    }];
 }
 @end

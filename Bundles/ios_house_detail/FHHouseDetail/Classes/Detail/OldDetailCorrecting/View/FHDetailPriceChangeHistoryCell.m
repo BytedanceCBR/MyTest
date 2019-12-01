@@ -45,7 +45,7 @@
     self.currentData = data;
     //
     FHDetailPriceChangeHistoryModel *model = (FHDetailPriceChangeHistoryModel *)data;
-    self.shadowImage.image = [UIImage imageNamed:model.bacImageName];
+    self.shadowImage.image = model.shadowImage;
     self.infoLabel.text = model.priceChangeHistory.priceChangeDesc;
     [self layoutIfNeeded];
 }
