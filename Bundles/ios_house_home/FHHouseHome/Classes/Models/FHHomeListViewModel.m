@@ -579,6 +579,12 @@
         
         if (![cell.contentView.subviews containsObject:self.homeViewController.topBar]) {
             [cell.contentView addSubview:self.homeViewController.topBar];
+            [self.homeViewController.topBar mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(0);
+                make.centerX.mas_equalTo(0);
+                make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
+                make.height.mas_equalTo(50);
+            }];
         }
         return cell;
     }

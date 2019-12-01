@@ -66,15 +66,15 @@
     }
     
     CGFloat top = 0;
-    CGFloat safeTop = 0;
+    CGFloat safeTop = 20;
     if (@available(iOS 11.0, *)) {
         safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
     }
     
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(0);
+        make.top.mas_equalTo(0);
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(44 + safeTop);
+        make.height.mas_equalTo(44 + (safeTop == 0 ? 20 : safeTop));
     }];
     [self.topView setBackgroundColor:[UIColor redColor]];
     

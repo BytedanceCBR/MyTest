@@ -53,7 +53,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
 @property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic) BOOL adUGCHadJump;
-@property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
+@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
@@ -177,7 +177,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self tt_startUpdate];
     }
     
-    
     if (self.notifyBar) {
         [self.notifyBar removeFromSuperview];
     }
@@ -224,22 +223,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     }
 }
 
-- (void)setupTopBarConstraints
-{
-    [self.topBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(0);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
-        make.height.mas_equalTo(64);
-    }];
-}
-
 - (TTTopBar *)topBar {
     if (!_topBar) {
         _topBar = [[TTTopBar alloc] init];
         _topBar.isShowTopSearchPanel = YES;
         _topBar.tab = @"home";
-        [self.view addSubview:_topBar];
-        [self setupTopBarConstraints];
         _topBar.delegate = self;
         [_topBar setupSubviews];
     }

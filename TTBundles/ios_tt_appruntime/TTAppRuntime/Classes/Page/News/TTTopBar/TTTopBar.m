@@ -246,12 +246,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     _backgroundImageView.clipsToBounds = YES;
     [self addSubview:_backgroundImageView];
     [_backgroundImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(self);
-        if (self.selectorView){
-            make.bottom.equalTo(self.selectorView.mas_top);
-        }else{
-            make.bottom.equalTo(self);
-        }
+        make.edges.equalTo(self);
     }];
     self.backgroundImageView.layer.zPosition = -1;
     self.backgroundImageView.userInteractionEnabled = YES;
@@ -295,7 +290,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
             make.left.equalTo(self);
             make.bottom.mas_equalTo(_backgroundImageView.mas_bottom);
             make.right.equalTo(self);
-            make.height.mas_equalTo(64.0f);
+            make.height.mas_equalTo(50.0f);
         }];
         
         [_pageSearchPanel setBackgroundColor:[UIColor whiteColor]];
