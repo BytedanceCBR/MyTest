@@ -55,11 +55,21 @@
     [self enablePublish:NO];
     
     @weakify(self);
-    [[[[[self.publishBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] deliverOnMainThread] throttle: 0.5] subscribeNext:^(__kindof UIButton * _Nullable sender) {
+    [[[[self.publishBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] deliverOnMainThread] subscribeNext:^(__kindof UIButton * _Nullable sender) {
         @strongify(self);
         
+        // 设置防止连续点击逻辑
+        self.publishBtn.userInteractionEnabled = NO;
+        [self performSelector:@selector(recoverPublishButtonClickable) withObject:nil afterDelay:1];
+        
+        // 按钮点击事件处理函数，可由子类覆盖
         [self publishAction: sender];
+        
     }];
+}
+
+- (void)recoverPublishButtonClickable {
+    self.publishBtn.userInteractionEnabled = YES;
 }
 
 # pragma mark - UI 控件区
