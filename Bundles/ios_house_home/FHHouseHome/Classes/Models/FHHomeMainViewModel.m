@@ -29,8 +29,18 @@
         collectionView.delegate = self;
         collectionView.dataSource = self;
         self.viewController = (FHHomeMainViewController *)viewController;
+        
+        [self resetCollectionOffset];
     }
     return self;
+}
+
+- (void)resetCollectionOffset
+{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    if ([self.collectionView numberOfItemsInSection:0] > 0) {
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+    }
 }
 
 - (void)resetDataArray
