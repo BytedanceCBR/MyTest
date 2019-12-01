@@ -156,7 +156,7 @@
     [self configFirstResponderWithKeyboardShow:!self.isKeyboardWillShow];
 }
 
-#pragma makr - 键盘高度变化通知
+#pragma mark - 键盘高度变化通知
 
 - (void)keyboardFrameWillChange:(NSNotification *)notification {
     
@@ -164,14 +164,6 @@
     CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
 
     self.isKeyboardWillShow = beginFrame.origin.y > endFrame.origin.y;
-    // 键盘收起
-    if(self.isKeyboardWillShow) {
-        self.toolbar.top =  self.containerView.height - [self toolbarHeight];
-    }
-    // 键盘弹出
-    else {
-        self.toolbar.top = self.containerView.height - [self toolbarHeight] - (SCREEN_HEIGHT - endFrame.origin.y);
-    }
 }
 
 #pragma mark - FHUGCPublishBaseViewControllerProtocol
@@ -248,7 +240,7 @@
     [self publishWendaContent];
 }
 
-#pragma makr - 懒加载成员
+#pragma mark - 懒加载成员
 
 - (UIView *)containerView {
     if(!_containerView) {
@@ -443,7 +435,7 @@
     }
 }
 
-#pragma makr - TTUGCTextViewDelegate
+#pragma mark - TTUGCTextViewDelegate
 
 - (BOOL)textView:(TTUGCTextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if(textView == self.titleTextView) {
