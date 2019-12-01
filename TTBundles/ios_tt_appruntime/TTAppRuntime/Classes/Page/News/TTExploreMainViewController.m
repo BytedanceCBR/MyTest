@@ -278,7 +278,7 @@
 }
 
 - (void)setupTopBar {
-//    [self.view addSubview:self.topBar];
+    [self.view addSubview:self.topBar];
     
 //    FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
 ////    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];

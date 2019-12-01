@@ -246,7 +246,12 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     _backgroundImageView.clipsToBounds = YES;
     [self addSubview:_backgroundImageView];
     [_backgroundImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self);
+        make.left.top.right.equalTo(self);
+        if (self.selectorView){
+            make.bottom.equalTo(self.selectorView.mas_top);
+        }else{
+            make.bottom.equalTo(self);
+        }
     }];
     self.backgroundImageView.layer.zPosition = -1;
     self.backgroundImageView.userInteractionEnabled = YES;
