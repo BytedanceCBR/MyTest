@@ -264,11 +264,12 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)setupTopTagsView
 {
-    if (self.houseType == FHHouseTypeSecondHandHouse && self.mainListPage) {
+    if (self.mainListPage) {
         self.topTagsView = [[FHMainOldTopTagsView alloc] init];
         BOOL hasTagData = [self.topTagsView hasTagData];
-        CGFloat tagHeight = hasTagData ? kFilterTagsViewHeight : 0;
+        CGFloat tagHeight = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? kFilterTagsViewHeight : 0;
         self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, tagHeight);
+        self.topTagsView.hidden = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? NO : YES;
         __weak typeof(self) weakSelf = self;
         self.topTagsView.itemClickBlk = ^{
             __block NSString *value_id = nil;
@@ -453,7 +454,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     [_requestTask cancel];
     
-    NSString *query = [_filterOpenUrlMdodel query];
+    NSString *query = self.allQuery;
     if (self.originFrom.length > 0) {
         if ([query isKindOfClass:[NSString class]] && query.length > 0) {
             query = [query stringByAppendingString:[NSString stringWithFormat:@"&origin_from=%@",self.originFrom]];
@@ -1237,11 +1238,18 @@ extern NSString *const INSTANT_DATA_KEY;
     self.fromRecommend = NO;
 
     self.conditionFilter = condition;
+    NSString *allQuery = [self.houseFilterBridge getAllQueryString];
+    self.allQuery = allQuery;
     if (self.topTagsView) {
-        self.topTagsView.condition = condition;
+        NSMutableDictionary *filterDict = @{}.mutableCopy;
+        NSDictionary *queryDict = [self.filterOpenUrlMdodel queryDictBy:allQuery];
+        if (queryDict) {
+            [filterDict addEntriesFromDictionary:queryDict];
+        }
+        self.topTagsView.lastConditionDic = filterDict;
+        self.topTagsView.condition = allQuery;
     }
     
-    [self.filterOpenUrlMdodel overwriteFliter:condition];
     [self.tableView triggerPullDown];
     self.fromRecommend = NO;
     [self requestData:YES];

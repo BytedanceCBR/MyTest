@@ -515,7 +515,8 @@
     }];
     
     BOOL hasTagData = [self.topTagsView hasTagData];
-    CGFloat tagHeight = hasTagData ? kFilterTagsViewHeight : 0;
+    CGFloat tagHeight = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? kFilterTagsViewHeight : 0;
+    self.topTagsView.hidden = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? NO : YES;
     [self.topTagsView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.filterContainerView.mas_bottom);
         make.left.right.mas_equalTo(self.containerView);
@@ -564,6 +565,7 @@
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
     [self.viewModel setRedirectTipView:self.redirectTipView];
+    [self.viewModel setTopTagsView:self.topTagsView];
     if (self.topTagsView && self.paramObj.queryParams) {
         self.topTagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:self.paramObj.queryParams];
     }
@@ -643,30 +645,31 @@
 
 - (void)setupTopTagsView
 {
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
-        self.topTagsView = [[FHMainOldTopTagsView alloc] init];
-        [self.view addSubview:self.topTagsView];
-        self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterTagsViewHeight);
-        __weak typeof(self) weakSelf = self;
-        self.topTagsView.itemClickBlk = ^{
-            __block NSString *value_id = nil;
-            NSArray *temp = weakSelf.topTagsView.lastConditionDic[@"tags%5B%5D"];
-            if ([temp isKindOfClass:[NSArray class]] && temp.count > 0) {
-                [temp enumerateObjectsUsingBlock:^(NSString*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if (value_id.length > 0) {
-                        value_id = [NSString stringWithFormat:@"%@,%@",value_id,obj];
-                    } else {
-                        value_id = obj;
-                    }
-                }];
-            } else {
-                value_id = nil;//
-            }
-            [weakSelf.houseFilterBridge setFilterConditions:weakSelf.topTagsView.lastConditionDic];
-            [weakSelf.houseFilterViewModel trigerConditionChanged];
-            [weakSelf.viewModel addTagsViewClick:value_id];
-        };
-    }
+    self.topTagsView = [[FHMainOldTopTagsView alloc] init];
+    [self.view addSubview:self.topTagsView];
+    BOOL hasTagData = [self.topTagsView hasTagData];
+    CGFloat tagHeight = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? kFilterTagsViewHeight : 0;
+    self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, tagHeight);
+    self.topTagsView.hidden = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? NO : YES;
+    __weak typeof(self) weakSelf = self;
+    self.topTagsView.itemClickBlk = ^{
+        __block NSString *value_id = nil;
+        NSArray *temp = weakSelf.topTagsView.lastConditionDic[@"tags%5B%5D"];
+        if ([temp isKindOfClass:[NSArray class]] && temp.count > 0) {
+            [temp enumerateObjectsUsingBlock:^(NSString*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (value_id.length > 0) {
+                    value_id = [NSString stringWithFormat:@"%@,%@",value_id,obj];
+                } else {
+                    value_id = obj;
+                }
+            }];
+        } else {
+            value_id = nil;//
+        }
+        [weakSelf.houseFilterBridge setFilterConditions:weakSelf.topTagsView.lastConditionDic];
+        [weakSelf.houseFilterViewModel trigerConditionChanged];
+        [weakSelf.viewModel addTagsViewClick:value_id];
+    };
 }
 
 #pragma mark - show notify

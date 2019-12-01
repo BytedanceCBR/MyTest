@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)removeQueryOfKey:(NSString *)key;
 
+- (NSDictionary *)queryDictBy:(NSString *)queryString;
+
 @end
 
 NS_ASSUME_NONNULL_END

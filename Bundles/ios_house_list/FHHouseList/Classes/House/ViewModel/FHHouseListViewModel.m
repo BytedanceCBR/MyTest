@@ -152,6 +152,11 @@ extern NSString *const INSTANT_DATA_KEY;
     
 }
 
+- (void)setTopTagsView:(FHMainOldTopTagsView *)topTagsView
+{
+    _topTagsView = topTagsView;
+}
+
 -(void)updateRedirectTipInfo {
     
     if (self.showRedirectTip && self.redirectTips) {
@@ -1229,14 +1234,23 @@ extern NSString *const INSTANT_DATA_KEY;
 //        return;
 //    }
     self.condition = allQuery;
-    [self.filterOpenUrlMdodel overwriteFliter:self.condition];
-
+    if (self.topTagsView) {
+        NSMutableDictionary *filterDict = @{}.mutableCopy;
+        NSDictionary *queryDict = [self.filterOpenUrlMdodel queryDictBy:allQuery];
+        if (queryDict) {
+            [filterDict addEntriesFromDictionary:queryDict];
+        }
+        self.topTagsView.lastConditionDic = filterDict;
+        self.topTagsView.condition = allQuery;
+    }
     self.isRefresh = YES;
     [self.tableView triggerPullDown];
     self.fromRecommend = NO;
     [self loadData:self.isRefresh];
     
 }
+
+
 
 #pragma mark filter将要显示
 -(void)onConditionWillPanelDisplay
