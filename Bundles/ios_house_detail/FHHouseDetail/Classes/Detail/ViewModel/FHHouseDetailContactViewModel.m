@@ -748,7 +748,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         } else if (self.socialInfo.socialGroupInfo.chatStatus.conversationStatus == leaveConversation) {
             [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
         } else if(self.socialInfo.socialGroupInfo.chatStatus.conversationStatus == KickOutConversation) {
-            [[ToastManager manager]showToast:@"你已经被移出群中"];
+            [[ToastManager manager]showToast:@"你已经被移出群聊"];
         } else {
             [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
         }

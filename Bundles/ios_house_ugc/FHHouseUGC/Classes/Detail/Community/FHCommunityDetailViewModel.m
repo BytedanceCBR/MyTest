@@ -474,7 +474,7 @@
         } else if (self.socialGroupModel.data.chatStatus.conversationStatus == leaveConversation) {
             [self tryJoinConversation];
         } else if(self.socialGroupModel.data.chatStatus.conversationStatus == KickOutConversation) {
-            [[ToastManager manager]showToast:@"你已经被移出群中"];
+            [[ToastManager manager]showToast:@"你已经被移出群聊"];
         } else {
             [self tryJoinConversation];
         }
