@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,copy) void (^indexChangeBlock)(NSInteger index);
 @property(nonatomic,copy) void (^indexHouseChangeBlock)(NSInteger index);
 
+- (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index;
+
 @end
 
 NS_ASSUME_NONNULL_END

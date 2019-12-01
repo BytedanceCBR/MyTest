@@ -441,7 +441,14 @@
         }
     }
     
-    [self.categoryView updateSegementedTitles:[FHHomeCellHelper matchHouseSegmentedTitleArray]  andSelectIndex:indexValue];
+    NSArray *houseSegmentArray = [FHHomeCellHelper matchHouseSegmentedTitleArray];
+    [self.categoryView updateSegementedTitles:houseSegmentArray andSelectIndex:indexValue];
+    
+    FHHomeMainViewController *mainVC = nil;
+    if ([self.homeViewController.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
+        mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
+        [mainVC.topView updateSegementedTitles:houseSegmentArray andSelectIndex:indexValue];
+    };
     
     if (isNeedCreateScroll) {
         [self setUpSubtableViewContrllers];

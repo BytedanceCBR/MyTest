@@ -171,7 +171,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     // Do any additional setup after loading the view.
     
     self.view.backgroundColor = [UIColor whiteColor];
-    self.mainTableView.backgroundColor = [UIColor purpleColor];
+    self.mainTableView.backgroundColor = [UIColor whiteColor];
     FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!configModel) {
         [self tt_startUpdate];

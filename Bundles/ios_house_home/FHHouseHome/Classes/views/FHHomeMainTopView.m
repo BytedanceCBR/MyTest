@@ -21,6 +21,8 @@
 #import <FHHomeCellHelper.h>
 
 static const float kSegementedOneWidth = 50;
+static const float kSegementedMainTopHeight = 44;
+static const float kSegementedMainPadingBottom = 10;
 
 @interface FHHomeMainTopView()
 
@@ -35,12 +37,12 @@ static const float kSegementedOneWidth = 50;
 @implementation FHHomeMainTopView
 
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect {
+ // Drawing code
+ }
+ */
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -91,7 +93,7 @@ static const float kSegementedOneWidth = 50;
     _segmentControl.selectionIndicatorWidth = 20.0f;
     _segmentControl.selectionIndicatorHeight = 4.0f;
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
-//    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
+    //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
     
     __weak typeof(self) weakSelf = self;
     _segmentControl.indexChangeBlock = ^(NSInteger index) {
@@ -109,7 +111,7 @@ static const float kSegementedOneWidth = 50;
     
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topBackCityContainer);
-        make.height.mas_equalTo(44);
+        make.height.mas_equalTo(kSegementedMainTopHeight);
         if (self.changeCountryBtn) {
             make.centerY.equalTo(self.changeCountryBtn).offset(-2);
         }else
@@ -128,7 +130,16 @@ static const float kSegementedOneWidth = 50;
         return;
     }
     
-    _houseSegmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[FHHomeCellHelper matchHouseSegmentedTitleArray]];
+    NSNumber *userSelectType = [[FHEnvContext sharedInstance].generalBizConfig getUserSelectTypeDiskCache];
+    NSInteger indexValue = 0;
+    NSArray *houstTypeList = [[FHEnvContext sharedInstance] getConfigFromCache].houseTypeList;
+    
+    if ([houstTypeList containsObject:userSelectType]) {
+        indexValue = [houstTypeList indexOfObject:userSelectType];
+        NSNumber *numberType = [houstTypeList objectAtIndex:indexValue];
+    }
+    
+    _houseSegmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:titlesArray];
     
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
                                           NSForegroundColorAttributeName: [UIColor themeGray3]};
@@ -144,6 +155,7 @@ static const float kSegementedOneWidth = 50;
     _houseSegmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _houseSegmentControl.selectionIndicatorWidth = 20.0f;
     _houseSegmentControl.selectionIndicatorHeight = 4.0f;
+    _houseSegmentControl.hidden = YES;
     _houseSegmentControl.selectionIndicatorCornerRadius = 2.0f;
     _houseSegmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
     _houseSegmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
@@ -160,12 +172,11 @@ static const float kSegementedOneWidth = 50;
         
     };
     
-    
     [self.topBackCityContainer addSubview:_houseSegmentControl];
     
     [_houseSegmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topBackCityContainer);
-        make.height.mas_equalTo(44);
+        make.height.mas_equalTo(kSegementedMainTopHeight);
         if (self.changeCountryBtn) {
             make.centerY.equalTo(self.changeCountryBtn).offset(-2);
         }else
@@ -175,6 +186,30 @@ static const float kSegementedOneWidth = 50;
         make.width.mas_equalTo((kSegementedOneWidth + 20) * titlesArray.count);
     }];
     
+    [self updateSegementedTitles:titlesArray andSelectIndex:indexValue];
+}
+
+- (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index
+{
+    _houseSegmentControl.sectionTitles = titles;
+    if (titles.count > index) {
+        _houseSegmentControl.selectedSegmentIndex = index;
+    }else
+    {
+        _houseSegmentControl.selectedSegmentIndex = _houseSegmentControl.selectedSegmentIndex;
+    }
+    
+    [_houseSegmentControl mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.topBackCityContainer);
+        make.height.mas_equalTo(kSegementedMainTopHeight);
+        if (self.changeCountryBtn) {
+            make.centerY.equalTo(self.changeCountryBtn).offset(-2);
+        }else
+        {
+            make.bottom.mas_equalTo(8);
+        }
+        make.width.mas_equalTo((kSegementedOneWidth + 20) * titles.count);
+    }];
 }
 
 - (void)showUnValibleCity
@@ -190,7 +225,7 @@ static const float kSegementedOneWidth = 50;
     }
     
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-
+    
     if (self.topBackCityContainer) {
         [self.topBackCityContainer removeFromSuperview];
         self.topBackCityContainer = nil;
@@ -228,11 +263,11 @@ static const float kSegementedOneWidth = 50;
     UIButton *citySwichButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.changeCountryBtn = citySwichButton;
     [self.topBackCityContainer addSubview:citySwichButton];
-//    citySwichButton.layer.cornerRadius = 20;
-//    citySwichButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
-//    citySwichButton.layer.shadowOffset = CGSizeMake(0.f, 2.f);
-//    citySwichButton.layer.shadowRadius = 6.f;
-//    citySwichButton.layer.shadowOpacity = 1.f;
+    //    citySwichButton.layer.cornerRadius = 20;
+    //    citySwichButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
+    //    citySwichButton.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+    //    citySwichButton.layer.shadowRadius = 6.f;
+    //    citySwichButton.layer.shadowOpacity = 1.f;
     [citySwichButton.titleLabel setFont:[UIFont themeFontRegular:14]];
     citySwichButton.backgroundColor = [UIColor clearColor];
     [citySwichButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -300,7 +335,7 @@ static const float kSegementedOneWidth = 50;
         [self setupSetmentedControl];
         [self setUpHouseSegmentedControl];
     }
-   
+    
 }
 
 - (NSArray *)getSegmentTitles {
