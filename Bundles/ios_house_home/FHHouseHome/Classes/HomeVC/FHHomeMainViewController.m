@@ -126,6 +126,12 @@
     };
 }
 
+- (void)changeTopStatusShowHouse:(BOOL)isShowHouse
+{
+    self.topView.segmentControl.hidden = isShowHouse;
+    self.topView.houseSegmentControl.hidden = !isShowHouse;
+}
+
 #pragma mark notifications
 
 - (void)mainCollectionScrollBegin{

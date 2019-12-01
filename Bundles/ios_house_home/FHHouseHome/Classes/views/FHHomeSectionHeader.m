@@ -15,7 +15,7 @@
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 35;
-static const float kSegementedPadingTop = 10;
+static const float kSegementedPadingTop = 14;
 
 static const NSInteger kTopScrollViewTag = 100;
 
@@ -41,9 +41,9 @@ static const NSInteger kTopScrollViewTag = 100;
         self.categoryLabel.font = [UIFont themeFontMedium:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 14];
         self.categoryLabel.textColor = [UIColor themeGray1];
         self.categoryLabel.text = @"为你推荐";
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.categoryLabel];
-        self.categoryLabel.frame = CGRectMake(20, 22, 100, 20);
+        self.categoryLabel.frame = CGRectMake(20, 25, 100, 20);
         [self setUpSegmentedControl];
     }
     return self;
@@ -80,8 +80,7 @@ static const NSInteger kTopScrollViewTag = 100;
     [self addSubview:self.segmentedControl];
     
     _topStyleContainer = [[UIView alloc] initWithFrame:self.frame];
-    [_topStyleContainer setBackgroundColor:[UIColor whiteColor]];
-    _topStyleContainer.hidden = YES; 
+    _topStyleContainer.hidden = YES;
     [self addSubview:_topStyleContainer];
     
 }

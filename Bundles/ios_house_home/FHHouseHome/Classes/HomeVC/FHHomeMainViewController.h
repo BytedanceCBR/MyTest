@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHBaseCollectionView *collectionView;
 @property (nonatomic,strong) FHHomeMainTopView *topView;
 @property(nonatomic, strong) UIView *containerView;
+
+- (void)changeTopStatusShowHouse:(BOOL)isShowHouse;
 @end
 
 NS_ASSUME_NONNULL_END

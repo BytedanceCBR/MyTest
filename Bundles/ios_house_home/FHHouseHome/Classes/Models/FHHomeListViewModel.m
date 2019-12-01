@@ -662,21 +662,25 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+
     if (self.tableViewV == scrollView) {
         if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
             [self.categoryView showOriginStyle:NO];
-            
+            [self changeHouseCategoryStatus:NO];
+
             if (!self.isResetingOffsetZero) {
                 [self.homeViewController hideImmediately];
                 self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
             }else
             {
-                [self.categoryView showOriginStyle:YES];
+                [self changeHouseCategoryStatus:YES];
             }
         }else
         {
-            [self.categoryView showOriginStyle:YES];
+            [self changeHouseCategoryStatus:YES];
         }
+        
         
         CGFloat offSetY = scrollView.contentOffset.y;
         
@@ -707,10 +711,11 @@
             }
         }
         [self.categoryView refreshSelectionIconFromOffsetX:scrollView.contentOffset.x];
+        FHHomeMainViewController *mainVC = nil;
         if ([self.homeViewController.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
-            FHHomeMainViewController *mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
-            mainVC.topView.houseSegmentControl.selectedSegmentIndex = scrollIndex;
-        }
+            mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
+        };
+        mainVC.topView.houseSegmentControl.selectedSegmentIndex = scrollIndex;
     }
 }
 
@@ -773,9 +778,21 @@
     }
 }
 
+#pragma mark changeTopStatus
+- (void)changeHouseCategoryStatus:(BOOL)isShowTopHouse
+{
+    FHHomeMainViewController *mainVC = nil;
+    if ([self.homeViewController.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
+        mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
+    };
+    [self.categoryView showOriginStyle:isShowTopHouse];
+    [mainVC changeTopStatusShowHouse:!isShowTopHouse];
+}
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 
 @end
