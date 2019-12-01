@@ -445,6 +445,13 @@
 
 #pragma makr - TTUGCTextViewDelegate
 
+- (BOOL)textView:(TTUGCTextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if(textView == self.titleTextView) {
+        return ![text isEqualToString:@"\n"];
+    }
+    return YES;
+}
+
 - (void)textViewDidChange:(TTUGCTextView *)textView {
 
     if(textView == self.titleTextView) {
