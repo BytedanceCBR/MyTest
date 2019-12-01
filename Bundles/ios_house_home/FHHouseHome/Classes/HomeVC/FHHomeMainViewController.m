@@ -130,6 +130,10 @@
 {
     self.topView.segmentControl.hidden = isShowHouse;
     self.topView.houseSegmentControl.hidden = !isShowHouse;
+    //房源显示时，禁止滑动
+    if (isShowHouse) {
+        self.collectionView.scrollEnabled = NO;
+    }
 }
 
 - (void)changeTopSearchBtn:(BOOL)isShow {

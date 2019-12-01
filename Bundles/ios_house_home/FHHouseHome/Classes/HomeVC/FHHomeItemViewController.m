@@ -486,6 +486,8 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
     if (self.scrollDidBegin) {
         self.scrollDidBegin();
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:nil];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -498,6 +500,8 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
     if (self.scrollDidEnd) {
         self.scrollDidEnd();
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
