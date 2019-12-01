@@ -6,7 +6,6 @@
 //
 
 #import "FHHomeMainTopView.h"
-#import <HMSegmentedControl.h>
 #import "UIColor+Expanded.h"
 #import <UIFont+House.h>
 #import <UIColor+Theme.h>
@@ -21,7 +20,6 @@
 
 @interface FHHomeMainTopView()
 
-@property(nonatomic,strong)HMSegmentedControl *segmentControl;
 @property (nonatomic, strong) UIView *topBackCityContainer;
 @property (nonatomic, strong) SSThemedImageView *backgroundImageView;
 @property(nonatomic, strong) UIButton * changeCountryBtn;
@@ -93,7 +91,9 @@
     
     __weak typeof(self) weakSelf = self;
     _segmentControl.indexChangeBlock = ^(NSInteger index) {
-        
+        if (weakSelf.indexChangeBlock) {
+            weakSelf.indexChangeBlock(index);
+        }
     };
     
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
@@ -112,7 +112,7 @@
         {
             make.bottom.mas_equalTo(8);
         }
-        make.width.mas_equalTo(108);
+        make.width.mas_equalTo(118);
     }];
 }
 

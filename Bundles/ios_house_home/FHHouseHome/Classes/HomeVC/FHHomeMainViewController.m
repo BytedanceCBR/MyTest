@@ -7,13 +7,11 @@
 
 #import "FHHomeMainViewController.h"
 #import "FHHomeMainViewModel.h"
-#import "FHHomeMainTopView.h"
 #import <TTDeviceHelper.h>
 #import <FHEnvContext.h>
 
 @interface FHHomeMainViewController ()
 @property (nonatomic,strong)FHHomeMainViewModel *viewModel;
-@property (nonatomic,strong)FHHomeMainTopView *topView;
 @end
 
 @implementation FHHomeMainViewController
@@ -26,6 +24,7 @@
     [self initViewModel]; //创建viewModel
     [self initNotifications];//订阅通知
     [self initCityChangeSubscribe];//城市变化通知
+    [self bindTopIndexChanged];//绑定头部选中index变化
     // Do any additional setup after loading the view.
 }
 
@@ -35,7 +34,7 @@
     self.topView = [[FHHomeMainTopView alloc] init];
     _topView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_topView];
-
+    
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
@@ -115,6 +114,18 @@
     }];
 }
 
+- (void)bindTopIndexChanged
+{
+    WeakSelf;
+    self.topView.indexChangeBlock = ^(NSInteger index) {
+        StrongSelf;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        if ([self.collectionView numberOfItemsInSection:0] > index) {
+            [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        }
+    };
+}
+
 #pragma mark notifications
 
 - (void)mainCollectionScrollBegin{
@@ -126,13 +137,13 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

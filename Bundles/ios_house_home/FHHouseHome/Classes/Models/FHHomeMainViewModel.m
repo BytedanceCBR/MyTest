@@ -15,6 +15,7 @@
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHHomeMainViewController *viewController;
 @property(nonatomic , strong) NSMutableArray *dataArray;
+@property(nonatomic , assign) NSInteger currentIndex;
 @end
 
 @implementation FHHomeMainViewModel
@@ -90,16 +91,18 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:scrollView];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
+    NSLog(@"x=%f",scrollView.contentOffset.x);
+    NSInteger resultIndex = (NSInteger)((scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width/2)/[UIScreen mainScreen].bounds.size.width);
+    self.currentIndex = resultIndex;
+    self.viewController.topView.segmentControl.selectedSegmentIndex = resultIndex;
 }
 
 //侧滑切换tab
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:scrollView];
+    
 }
 
 
