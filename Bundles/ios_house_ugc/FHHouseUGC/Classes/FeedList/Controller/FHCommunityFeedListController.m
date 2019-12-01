@@ -299,10 +299,10 @@
 
 - (void)gotoWendaPublish {
     
-//    NSMutableDictionary *params = @{}.mutableCopy;
-//    params[UT_ELEMENT_TYPE] = @"vote_icon";
-//    params[UT_PAGE_TYPE] = [self pageType];
-//    TRACK_EVENT(@"click_options", params);
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ELEMENT_TYPE] = @"question_icon";
+    params[UT_PAGE_TYPE] = [self pageType];
+    TRACK_EVENT(@"click_options", params);
     
     if ([TTAccountManager isLogin]) {
         [self gotoWendaVC];

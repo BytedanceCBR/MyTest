@@ -365,6 +365,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
     dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
+    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
     dict[TRACER_KEY] = tracerDict;
@@ -1054,6 +1055,8 @@
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     [FHUserTracker writeEvent:@"go_detail_community" params:params];
 }
 
@@ -1068,6 +1071,8 @@
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHUserTracker writeEvent:@"stay_page_community" params:params];
 }
@@ -1077,6 +1082,8 @@
     params[@"element_type"] = @"community_group_notice";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     [FHUserTracker writeEvent:@"element_show" params:params];
 }
 
@@ -1099,6 +1106,8 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"enter_type"] =  @"click";
     params[@"click_position"] = position;
     [FHUserTracker writeEvent:@"click_options" params:params];

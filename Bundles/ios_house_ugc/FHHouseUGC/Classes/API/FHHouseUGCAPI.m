@@ -755,10 +755,11 @@
         if (!error) {
             @try{
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
-                success = ([json[@"status"] integerValue] == 0);
+                NSInteger statusCode = [json[@"status"] integerValue];
+                success = (statusCode == 0);
                 if (!success) {
                     NSString *msg = json[@"message"];
-                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:statusCode userInfo:nil];
                 }
                 else
                 {

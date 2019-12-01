@@ -118,6 +118,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         };
         
         _bottomBar.bottomBarGroupChatBlock = ^{
+            wself.ugcLoginType = 1;
             [wself groupChatAction];
         };
  
@@ -391,16 +392,22 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)setSocialInfo:(FHHouseNewsSocialModel *)socialInfo {
     _socialInfo = socialInfo;
     NSString *groupChatTitle = @"";// 隐藏
-    // add by zyk  加群看房 默认文案 是否要改
     if (socialInfo) {
         if (socialInfo.socialGroupInfo.socialGroupId.length > 0 && (socialInfo.socialGroupInfo.userAuth > UserAuthTypeNormal || [socialInfo.socialGroupInfo.chatStatus.conversationId integerValue] > 0)) {
-            groupChatTitle = socialInfo.groupChatLinkTitle.length > 0 ? socialInfo.groupChatLinkTitle : @"加群看房";
+            groupChatTitle = socialInfo.groupChatLinkTitle.length > 0 ? socialInfo.groupChatLinkTitle : @"加入看盘群";
         } else {
             groupChatTitle = @"";
         }
     }
     // @"" 隐藏加群看房 按钮
     [self.bottomBar refreshBottomBarWithGroupChatTitle:groupChatTitle];
+    if (groupChatTitle.length > 0) {
+        // 添加埋点
+        NSMutableDictionary *params = @{}.mutableCopy;
+        [params addEntriesFromDictionary:[self baseParams]];
+        params[@"element_type"] = @"community_member_talk";
+        [FHUserTracker writeEvent:@"element_show" params:params];
+    }
 }
 
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
@@ -758,10 +765,22 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     dict[@"chat_name"] = self.socialInfo.socialGroupInfo.socialGroupName;
     dict[@"community_id"] = self.socialInfo.socialGroupInfo.socialGroupId;
     NSMutableDictionary *reportDic = [NSMutableDictionary dictionary];
-    // add by zyk 埋点入口
+
+    NSDictionary *log_pb = self.tracerDict[@"log_pb"];
+    NSString *group_id = nil;
+    if (log_pb && [log_pb isKindOfClass:[NSDictionary class]]) {
+        group_id = log_pb[@"group_id"];
+    }
+    reportDic[@"group_id"] = group_id ?: @"be_null";
     NSString *pageType = self.tracerDict[@"page_type"] ? : @"be_null";
     [reportDic setValue:pageType forKey:@"enter_from"];
-    [reportDic setValue:@"ugc_member_talk" forKey:@"element_from"];
+    if (self.ugcLoginType == 1) {
+        // community_member_talk(底部群聊入口)
+        [reportDic setValue:@"community_member_talk" forKey:@"element_from"];
+    } else if (self.ugcLoginType == 2) {
+        // community_tip(群聊引导弹窗)
+        [reportDic setValue:@"community_tip" forKey:@"element_from"];
+    }
     
     if (isCreate) {
         dict[@"is_create"] = @"1";
@@ -800,11 +819,17 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)gotoLogin {
     self.gotoGroupChatCount = 0;
-    // add by zyk 埋点
+    
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *pageType = self.tracerDict[@"page_type"] ? : @"be_null";
     [params setObject:pageType forKey:@"enter_from"];
-    [params setObject:@"feed_like" forKey:@"enter_type"];
+    if (self.ugcLoginType == 1) {
+        // community_member_talk(底部群聊入口)
+        [params setObject:@"community_member_talk" forKey:@"enter_type"];
+    } else if (self.ugcLoginType == 2) {
+        // community_tip(群聊引导弹窗)
+        [params setObject:@"community_tip" forKey:@"enter_type"];
+    }
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
@@ -830,10 +855,37 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 登录成功之后关注圈子
 - (void)followSocialGroup {
     // 关注
+    __weak typeof(self) wSelf = self;
+    BOOL hasFollow = [self.socialInfo.socialGroupInfo.hasFollow boolValue];
     if (self.socialInfo && self.socialInfo.socialGroupInfo.socialGroupId.length > 0) {
         [[FHUGCConfig sharedInstance] followUGCBy:self.socialInfo.socialGroupInfo.socialGroupId isFollow:YES completion:^(BOOL isSuccess) {
+            if (!hasFollow && isSuccess) {
+                // 未关注 执行关注成功
+                [wSelf uploadFollowTracerDic];
+            }
         }];
     }
+}
+
+- (void)uploadFollowTracerDic {
+    NSMutableDictionary *tracerDic = [self baseParams].mutableCopy;
+    NSDictionary *log_pb = tracerDic[@"log_pb"];
+    NSString *group_id = nil;
+    if (log_pb && [log_pb isKindOfClass:[NSDictionary class]]) {
+        group_id = log_pb[@"group_id"];
+    }
+    tracerDic[@"log_pb"] = self.socialInfo.socialGroupInfo.logPb ? self.socialInfo.socialGroupInfo.logPb : @"be_null";
+    NSString *page_type = tracerDic[@"page_type"];
+    tracerDic[@"enter_from"] = page_type ?: @"be_null";
+    tracerDic[@"enter_type"] = @"click";
+    tracerDic[@"group_id"] = group_id ?: @"be_null";
+    if (self.ugcLoginType == 1) {
+         tracerDic[@"click_position"] = @"community_member_talk";
+    } else if (self.ugcLoginType == 2) {
+        tracerDic[@"click_position"] = @"community_tip";
+    }
+
+    [FHUserTracker writeEvent:@"click_join" params:tracerDic];
 }
 
 // 登录成功重新拉取圈子数据

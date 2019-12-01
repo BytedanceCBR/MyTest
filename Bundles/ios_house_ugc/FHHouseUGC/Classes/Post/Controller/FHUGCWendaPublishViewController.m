@@ -30,6 +30,7 @@
 #import <FHPostUGCViewController.h>
 #import <FHFeedUGCCellModel.h>
 #import <TTUGCDefine.h>
+#import <FHUserTracker.h>
 
 // 选择小区圈子控件的高度
 #define ENTRY_HEIGHT                44
@@ -76,10 +77,12 @@
 @property (nonatomic, strong) SSThemedLabel *tipLabel;
 @property (nonatomic, strong) TTUGCToolbar *toolbar;
 
+@property (nonatomic, assign) BOOL hasSocialGroup;      // 是否外部带入圈子信息
+
 // 数据区
 @property (nonatomic, copy) NSString *selectGroupId;
 @property (nonatomic, copy) NSString *selectGroupName;
-@property (nonatomic, assign) BOOL hasSocialGroup;
+@property (nonatomic, assign) BOOL isSelectectGroupFollowed;
 
 // 辅助变量
 @property (nonatomic, assign) BOOL isKeyboardWillShow;
@@ -97,6 +100,7 @@
         self.title = @"提问";
         self.selectGroupId = [paramObj.allParams tt_stringValueForKey:@"select_group_id"];
         self.selectGroupName = [paramObj.allParams tt_stringValueForKey:@"select_group_name"];
+        self.isSelectectGroupFollowed = [paramObj.allParams tta_boolForKey:@"select_group_followed"];
         self.hasSocialGroup = self.selectGroupId.length > 0 && self.selectGroupName.length > 0;
     }
     return self;
@@ -192,6 +196,9 @@
 }
 
 - (void)cancelAction: (UIButton *)cancelBtn {
+
+    [self tracePublisherCancelClick];
+    
     if([self isEdited]) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"编辑未完成" message: @"退出后编辑的内容将不会被保存" preferredStyle:UIAlertControllerStyleAlert];
         
@@ -199,15 +206,21 @@
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             StrongSelf;
             [self exitPage];
+            [self tracePublisherCancelAlertClickConfirm:YES];
         }];
         
         UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"继续编辑" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
+            [self tracePublisherCancelAlertClickConfirm:NO];
         }];
         
         [alertController addAction:cancelAction];
         [alertController addAction:confirmAction];
         
         [self presentViewController:alertController animated:YES completion:nil];
+        
+        [self tracePublisherCancelAlertShow];
+        
     } else {
         [self exitPage];
     }
@@ -215,13 +228,15 @@
 
 - (void)publishAction: (UIButton *)publishBtn {
     
+    [self tracePublishButtonClick];
+    
     // 检查网络状态
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    // 检查是否选择了要发布的小区koi
-    NSString *socialGroupId = self.socialGroupSelectEntry.groupId;
+    // 检查是否选择了要发布的小区
+    NSString *socialGroupId = self.selectGroupId;
     if(socialGroupId.length <= 0) {
         [[ToastManager manager] showToast:@"请选择要发布的小区！"];
         return;
@@ -244,11 +259,16 @@
 
 - (FHPostUGCMainView *)socialGroupSelectEntry {
     if(!_socialGroupSelectEntry) {
-        _socialGroupSelectEntry = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.hasSocialGroup ? 0 : ENTRY_HEIGHT) type:FHPostUGCMainViewType_Wenda];
+        BOOL isShow = !(self.hasSocialGroup);
+        _socialGroupSelectEntry = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, isShow ? ENTRY_HEIGHT : 0) type:FHPostUGCMainViewType_Wenda];
         _socialGroupSelectEntry.clipsToBounds = YES;
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(socialGroupSelectEntryAction:)];
         
         [_socialGroupSelectEntry addGestureRecognizer:tapGestureRecognizer];
+        
+        if(isShow) {
+            [self traceSocialGroupSelectEntryShow];
+        }
     }
     return _socialGroupSelectEntry;
 }
@@ -256,9 +276,14 @@
 - (FHPostUGCSelectedGroupHistoryView *)selectedGrouplHistoryView {
     if(!_selectedGrouplHistoryView) {
         FHPostUGCSelectedGroupModel *selectedGroup = [self loadSelectedGroup];
-        CGFloat height = (selectedGroup && !self.hasSocialGroup) ? ENTRY_HEIGHT: 0;
+        BOOL isShow = (selectedGroup && !self.hasSocialGroup);
+        CGFloat height = isShow ? ENTRY_HEIGHT: 0;
         _selectedGrouplHistoryView = [[FHPostUGCSelectedGroupHistoryView alloc] initWithFrame:CGRectMake(0, self.socialGroupSelectEntry.bottom, SCREEN_WIDTH, height) delegate:self historyModel:selectedGroup];
         _selectedGrouplHistoryView.clipsToBounds = YES;
+        
+        if(isShow) {
+            [self traceGroupHistoryViewShow];
+        }
     }
     return _selectedGrouplHistoryView;
 }
@@ -271,10 +296,10 @@
         
         _titleTextView.internalGrowingTextView.minHeight = TITLE_TEXT_VIEW_MIN_HEIGHT;
         _titleTextView.internalGrowingTextView.maxHeight = TITLE_TEXT_VIEW_MAX_HEIGHT;
-        _titleTextView.internalGrowingTextView.font = [UIFont themeFontRegular:22];
+        _titleTextView.textViewFontSize = 22;
+        _titleTextView.typingAttributes = @{ NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:22]};
         _titleTextView.internalGrowingTextView.placeholder = @"请输入问题";
         _titleTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
-        _titleTextView.internalGrowingTextView.internalTextView.textAttributes = @{ NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:22]};
         _titleTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
         
         // 调整文字内容垂直偏移
@@ -352,8 +377,8 @@
 
 - (SSThemedLabel *)tipLabel {
     if(!_tipLabel) {
-        _tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(LEFT_PADDING, 0, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, 36)];
-        _tipLabel.backgroundColor = [UIColor clearColor];
+        _tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(LEFT_PADDING, 11, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, 25)];
+        _tipLabel.backgroundColor = [UIColor themeWhite];
         _tipLabel.font = [UIFont themeFontRegular:11];
         _tipLabel.textAlignment = NSTextAlignmentRight;
         _tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
@@ -373,10 +398,17 @@
 
 // 圈子选择历史选中
 -(void)selectedHistoryGroup:(FHPostUGCSelectedGroupModel *)item {
+    
+    [self traceGroupHistoryViewClick];
+    
     if (item) {
         self.socialGroupSelectEntry.groupId = item.socialGroupId;
         self.socialGroupSelectEntry.communityName = item.socialGroupName;
         self.socialGroupSelectEntry.followed = NO;
+        
+        self.selectGroupId = self.socialGroupSelectEntry.groupId;
+        self.selectGroupName = self.socialGroupSelectEntry.communityName;
+        self.isSelectectGroupFollowed = self.socialGroupSelectEntry.followed;
 
         // 如果选中圈子选择历史，更新UI
         [self updateSelectedGroupHistoryWithItem:item];
@@ -507,8 +539,8 @@
         }
         
         FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
-        selectedGroup.socialGroupId = self.socialGroupSelectEntry.groupId;
-        selectedGroup.socialGroupName = self.socialGroupSelectEntry.communityName;
+        selectedGroup.socialGroupId = self.selectGroupId;
+        selectedGroup.socialGroupName = self.selectGroupName;
         NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
         [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
         
@@ -519,6 +551,9 @@
 #pragma mark - 选择圈子逻辑
 // 点击选择圈子入口，跳转圈子选择列表
 - (void)socialGroupSelectEntryAction:(UITapGestureRecognizer *)sender {
+    
+    [self traceSocialGroupSelectEntryClick];
+    
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"action_type"] = @(FHCommunityListTypeChoose);
     //无关注定位到推荐
@@ -529,6 +564,9 @@
     dict[@"choose_delegate"] = chooseDelegateTable;
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[UT_ELEMENT_FROM] = @"select_like_publisher_neighborhood";
+    traceParam[UT_ENTER_FROM] = [self pageType];
+    traceParam[UT_ENTER_TYPE] = @"click";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
@@ -542,6 +580,10 @@
         self.socialGroupSelectEntry.groupId = item.socialGroupId;
         self.socialGroupSelectEntry.communityName = item.socialGroupName;
         self.socialGroupSelectEntry.followed = [item.hasFollow boolValue];
+        
+        self.selectGroupId = self.socialGroupSelectEntry.groupId;
+        self.selectGroupName = self.socialGroupSelectEntry.communityName;
+        self.isSelectectGroupFollowed = self.socialGroupSelectEntry.followed;
         
         // 如果选中的圈子和上一次一样就隐藏选择历史模块
         [self updateSelectedGroupHistoryWithItem:item];
@@ -650,13 +692,13 @@
 }
 
 - (void)checkSocialGroupFollowedStatusAndPublish {
-    if (self.socialGroupSelectEntry.followed) {
+    if (self.isSelectectGroupFollowed) {
         // 已关注，直接发帖
         [self publishWendaContentAfterFollowedSocialGroup];
     } else {
         // 先关注
         WeakSelf;
-        [[FHUGCConfig sharedInstance] followUGCBy:self.socialGroupSelectEntry.groupId isFollow:YES enterFrom:@"feed_publisher" enterType:@"click" completion:^(BOOL isSuccess) {
+        [[FHUGCConfig sharedInstance] followUGCBy:self.selectGroupId isFollow:YES enterFrom:@"feed_publisher" enterType:@"click" completion:^(BOOL isSuccess) {
             StrongSelf;
             if (isSuccess) {
                 [self publishWendaContentAfterFollowedSocialGroup];
@@ -668,6 +710,8 @@
 }
 
 - (void)publishWendaContentAfterFollowedSocialGroup {
+    
+    [self showLoadingAlert:@"正在发布"];
     
     // 有选中图片就先上传图片再发布提问
     if(self.addImagesView.selectedImages.count > 0) {
@@ -702,7 +746,6 @@
         [images addObject:model];
     }
     
-    [self showLoadingAlert:@"正在发布"];
     WeakSelf;
     [self.uploadImageManager uploadPhotos:images extParameter:@{} progressBlock:^(int expectCount, int receivedCount) {
         StrongSelf;
@@ -719,6 +762,7 @@
         }
         
         if (error || finishError) {
+            [self dismissLoadingAlert];
             //端监控
             //图片上传失败
             NSMutableDictionary * monitorDictionary = [NSMutableDictionary dictionary];
@@ -757,7 +801,7 @@
     // 收集请求参数
     NSString *title = [self validStringFrom:self.titleTextView.text];
     NSString *description = [self validStringFrom:self.descriptionTextView.text];
-    NSString *socialGroupId = self.socialGroupSelectEntry.groupId;
+    NSString *socialGroupId = self.selectGroupId;
     
     NSMutableArray<NSString *> *image_urls = [NSMutableArray arrayWithCapacity:finishUpLoadModels.count];
     [finishUpLoadModels enumerateObjectsUsingBlock:^(FRUploadImageModel * _Nonnull model, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -776,14 +820,15 @@
     requestParams[@"page_type"] = @"";
     requestParams[@"element_from"] = @"";
     
-    WeakSelf;
+    
     // 开始发送提问发布请求
+    WeakSelf;
     [FHHouseUGCAPI requestPublishWendaWithParam: requestParams completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         [self dismissLoadingAlert];
         // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
         if(error) {
-            [[ToastManager manager] showToast: model.message?:@"发布失败!"];
+            [[ToastManager manager] showToast: (error.code == 2001 && error.domain.length > 0) ? error.domain : @"发布失败!"];
             [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_wenda_publish" metric:nil category:@{@"status":@(1)} extra:nil];
             return;
         }
@@ -810,13 +855,14 @@
                 // 如果是在附近列表，发布投票完成后，跳转到关注页面
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCForumPostThreadFinish object:nil];
                 
-                // 发通知进行数据插入操作
-                [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostThreadSuccessNotification object:nil userInfo:userInfo];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_wenda_publish" metric:nil category:@{@"status":@(0)} extra:nil];
                 
                 [[ToastManager manager] showToast:@"发布成功!"];
                 
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_wenda_publish" metric:nil category:@{@"status":@(0)} extra:nil];
-                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    // 发通知进行数据插入操作
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostThreadSuccessNotification object:nil userInfo:userInfo];
+                });
             }
             else {
                 [[ToastManager manager] showToast:@"发布失败!"];
@@ -826,6 +872,75 @@
     }];
 }
 
-#pragma mark - 埋点
+#pragma mark - 埋点区
 
+- (void)tracePublisherCancelClick {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[UT_PAGE_TYPE] = [self pageType];
+    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
+    dict[UT_CLICK_POSITION] = @"publisher_cancel";
+    TRACK_EVENT(@"click_options", dict);
+}
+
+- (void)tracePublisherCancelAlertShow {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[UT_PAGE_TYPE] = [self pageType];
+    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
+    TRACK_EVENT(@"publisher_cancel_popup_show", dict);
+}
+
+- (void)tracePublisherCancelAlertClickConfirm:(BOOL)isConfirm {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[UT_PAGE_TYPE] = [self pageType];
+    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
+    dict[UT_CLICK_POSITION] = isConfirm ? @"confirm" : @"cancel";
+    TRACK_EVENT(@"publisher_cancel_popup_click", dict);
+}
+
+- (void)traceGroupHistoryViewShow {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[UT_ELEMENT_TYPE] = @"last_published_neighborhood";
+    dict[UT_PAGE_TYPE] = [self pageType];
+    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
+    dict[@"group_id"] = self.selectedGrouplHistoryView.model.socialGroupId;
+    TRACK_EVENT(@"element_show", dict);
+}
+
+- (void)traceGroupHistoryViewClick {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[UT_PAGE_TYPE] = [self pageType];
+    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
+    dict[UT_CLICK_POSITION] = @"last_published_neighborhood";
+    TRACK_EVENT(@"click_last_published_neighborhood", dict);
+}
+
+- (void)traceSocialGroupSelectEntryShow {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[UT_ELEMENT_TYPE] = @"select_like_publisher_neighborhood";
+    dict[UT_PAGE_TYPE] = [self pageType];
+    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
+    TRACK_EVENT(@"element_show", dict);
+}
+
+- (void)traceSocialGroupSelectEntryClick {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[UT_PAGE_TYPE] = [self pageType];
+    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
+    dict[UT_CLICK_POSITION] = @"select_like_publisher_neighborhood";
+    TRACK_EVENT(@"click_like_publisher_neighborhood", dict);
+}
+
+- (void)tracePublishButtonClick {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[UT_PAGE_TYPE] = [self pageType];
+    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
+    dict[UT_CLICK_POSITION] = @"passport_publisher";
+    TRACK_EVENT(@"feed_publish_click", dict);
+}
+
+# pragma mark - 埋点辅助函数
+
+- (NSString *)pageType {
+    return @"question_publisher";
+}
 @end
