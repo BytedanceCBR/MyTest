@@ -17,6 +17,7 @@
 #import "FHUGCPostMenuView.h"
 #import "FHCommonDefines.h"
 #import "FHUserTracker.h"
+#import <UIViewController+NavigationBarStyle.h>
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol, FHUGCPostMenuViewDelegate>
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
@@ -84,6 +85,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.ttStatusBarStyle = UIStatusBarStyleLightContent;
     
     [self initNavBar];
     [self initView];

@@ -35,6 +35,7 @@
     if (self) {
         self.isFirstViewDidAppear = YES;
         self.needRemoveLastVC = NO;
+        self.isResetStatusBar = YES;
 
         self.titleName = [paramObj.allParams objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
@@ -91,7 +92,8 @@
     if(application.statusBarHidden){
         [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     }
-    if(application.statusBarStyle != UIStatusBarStyleDefault){
+    
+    if(application.statusBarStyle != UIStatusBarStyleDefault && self.isResetStatusBar){
         [application setStatusBarStyle:UIStatusBarStyleDefault];
     }
     

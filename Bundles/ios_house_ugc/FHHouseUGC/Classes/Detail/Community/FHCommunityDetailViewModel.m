@@ -301,12 +301,12 @@
                 }else{
                     [self updateVC];
                 }
-                
+
                 if (self.isLoginSatusChangeFromGroupChat) {
                     [self gotoGroupChat];
                     self.isLoginSatusChangeFromGroupChat = NO;
                 }
-                
+
                 if (refreshFeed) {
                     [self.feedListController startLoadData:YES];
                 }
@@ -432,6 +432,7 @@
     feedListController.forumId = self.viewController.communityId;
     feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
+    feedListController.isResetStatusBar = NO;
     //错误页高度
     if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1){
         CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
