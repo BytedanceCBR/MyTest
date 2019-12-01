@@ -107,6 +107,10 @@
     NSInteger resultIndex = (NSInteger)((scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width/2)/[UIScreen mainScreen].bounds.size.width);
     self.currentIndex = resultIndex;
     self.viewController.topView.segmentControl.selectedSegmentIndex = resultIndex;
+    
+    if (resultIndex == 1) {
+        [self.viewController changeTopStatusShowHouse:NO];
+    }
 }
 
 //侧滑切换tab
