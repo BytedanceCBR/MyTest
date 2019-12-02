@@ -335,10 +335,10 @@ extern NSString *const INSTANT_DATA_KEY;
         [self.tableView reloadData];
         [_errorMaskView showEmptyWithType:type];
         _errorMaskView.retryButton.enabled = enableTap;
-
         CGFloat top = _topView.height; //self.tableView.contentOffset.y;
 
-        [_errorMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
+        [_errorMaskView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.left.right.mas_equalTo(self.viewController.containerView);
             make.top.mas_equalTo(top);
         }];
         self.tableView.contentOffset = CGPointMake(0, -top);
@@ -347,6 +347,7 @@ extern NSString *const INSTANT_DATA_KEY;
         self.tableView.scrollEnabled = NO;
     }
     self.errorMaskView.hidden = !show;
+    
 }
 
 - (void)requestAddSubScribe:(NSString *)text

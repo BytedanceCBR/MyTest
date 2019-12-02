@@ -23,10 +23,10 @@
 @interface FHBaseMainListViewController ()
 
 @property(nonatomic , strong) FHFakeInputNavbar *navbar;
-@property(nonatomic , strong) UIView *containerView;
+@property(nonatomic , strong,readonly) UIView *containerView;
 @property(nonatomic , strong) UIView *topContainerView;
 @property(nonatomic , strong) FHMainListTopView *topView;
-@property(nonatomic , strong) UITableView *tableView;
+@property(nonatomic , strong, readonly) UITableView *tableView;
 @property(nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , strong) FHHouseListRedirectTipView *redirectTipView;
 @property(nonatomic , strong) FHBaseMainListViewModel *viewModel;
