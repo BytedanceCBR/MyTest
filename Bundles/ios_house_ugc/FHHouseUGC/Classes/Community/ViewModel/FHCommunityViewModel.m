@@ -221,7 +221,9 @@
         top += [[UIApplication sharedApplication] statusBarFrame].size.height;
     }
     
-    top += 60;
+    if(self.viewController.isUgcOpen){
+        top += 60;
+    }
     
     CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - top - bottom);
     
