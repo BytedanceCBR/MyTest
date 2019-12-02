@@ -14,8 +14,8 @@
 #import <ToastManager.h>
 
 static const float kSegementedOneWidth = 50;
-static const float kSegementedHeight = 35;
-static const float kSegementedPadingTop = 14;
+static const float kSegementedHeight = 30;
+static const float kSegementedPadingTop = 0;
 
 static const NSInteger kTopScrollViewTag = 100;
 
@@ -38,12 +38,12 @@ static const NSInteger kTopScrollViewTag = 100;
     self = [super initWithFrame:frame];
     if (self) {
         self.categoryLabel = [UILabel new];
-        self.categoryLabel.font = [UIFont themeFontMedium:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 14];
+        self.categoryLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 18 : 14];
         self.categoryLabel.textColor = [UIColor themeGray1];
         self.categoryLabel.text = @"为你推荐";
         self.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.categoryLabel];
-        self.categoryLabel.frame = CGRectMake(20, 25, 100, 20);
+        self.categoryLabel.frame = CGRectMake(20, 0, 100, 30);
         [self setUpSegmentedControl];
     }
     return self;

@@ -31,7 +31,7 @@
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
-#define KFHHomeSectionHeight 45
+#define KFHHomeSectionHeight 30
 #define KFHHomeSearchBarHeight 50
 
 #define KFHHomeHeaderCellId @"kHouseListCellid"

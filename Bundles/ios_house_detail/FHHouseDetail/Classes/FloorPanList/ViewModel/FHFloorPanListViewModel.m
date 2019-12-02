@@ -67,20 +67,24 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     UIView * previousView = nil;
     
     for (NSInteger i = 0; i < self.nameLeftArray.count; i++) {
-        UIView *labelContentView = [UIView new];
+        UIView *labelContentView = [[UIView alloc] init];
         [self.leftFilterView addSubview:labelContentView];
         
-        [labelContentView mas_makeConstraints:^(MASConstraintMaker *make) {
-            if (i==0) {
-                make.top.equalTo(self.leftFilterView);
-            }else
-            {
-                make.top.equalTo(previousView.mas_bottom);
-            }
-            
-            make.left.right.equalTo(self.leftFilterView);
-            make.height.mas_equalTo(50);
-        }];
+        if ([self.leftFilterView.subviews containsObject:labelContentView]) {
+            [labelContentView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (i==0) {
+                    make.top.equalTo(self.leftFilterView);
+                }else
+                {
+                    if (previousView) {
+                        make.top.equalTo(previousView.mas_bottom);
+                    }
+                }
+                
+                make.left.right.equalTo(self.leftFilterView);
+                make.height.mas_equalTo(50);
+            }];
+        }
         
         previousView = labelContentView;
         

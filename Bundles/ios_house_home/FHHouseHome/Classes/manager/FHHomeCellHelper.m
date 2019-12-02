@@ -303,9 +303,6 @@ static NSMutableArray  * _Nullable identifierArr;
             }else {
                 height += 10;
             }
-        }else
-        {
-            height += 10;
         }
     }
     self.headerHeight = height;

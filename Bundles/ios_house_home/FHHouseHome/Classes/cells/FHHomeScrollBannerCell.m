@@ -13,14 +13,17 @@
 #import "FHUserTracker.h"
 #import "TTRoute.h"
 #import "FHHomeCellHelper.h"
+#import <FHShadowView.h>
 
-static CGFloat kFHScrollBannerTopMargin = 10;
-static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
+static CGFloat kFHScrollBannerTopMargin = 15;
+static CGFloat kFHScrollBannerLeftRightMargin = 15;
+static CGFloat kFHScrollBannerHeight = 80; // 轮播图的高度
 
 @interface FHHomeScrollBannerCell ()<FHBannerViewIndexProtocol>
 
 @property (nonatomic, strong)   FHConfigDataMainPageBannerOpDataModel       *model;
 @property (nonatomic, strong)   NSMutableDictionary       *tracerDic;
+@property (nonatomic, strong)   FHShadowView       *shadowView;
 
 @end
 
@@ -36,8 +39,8 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 }
 
 + (CGFloat)cellHeight {
-    kFHScrollBannerHeight = 58.0;
-    kFHScrollBannerHeight = ceil(([UIScreen mainScreen].bounds.size.width - 40) / 335.0f * kFHScrollBannerHeight);
+    kFHScrollBannerHeight = 80;
+    kFHScrollBannerHeight = ceil(([UIScreen mainScreen].bounds.size.width - kFHScrollBannerLeftRightMargin * 2) / 335.0f * kFHScrollBannerHeight);
     return kFHScrollBannerHeight + kFHScrollBannerTopMargin * 2;
 }
 
@@ -45,17 +48,23 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
     _tracerDic = [NSMutableDictionary new];
     _bannerView = [[FHHomeScrollBannerView alloc] init];
     _bannerView.backgroundColor = [UIColor whiteColor];
+    _bannerView.layer.masksToBounds = YES;
+    _bannerView.layer.cornerRadius = 5;
+    
+    _shadowView = [[FHShadowView alloc] initWithFrame:CGRectMake(15, 14, [UIScreen mainScreen].bounds.size.width -  kFHScrollBannerLeftRightMargin * 2, kFHScrollBannerHeight)];
+    [self.contentView addSubview:_shadowView];
+    
     [self.contentView addSubview:_bannerView];
+    
     [_bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.bottom.mas_equalTo(self.contentView);// 下面的降价房cell之前布局有问题
+        make.left.mas_equalTo(kFHScrollBannerLeftRightMargin);
+        make.right.mas_equalTo(-kFHScrollBannerLeftRightMargin);
+        make.bottom.mas_equalTo(self.contentView).offset(-16);// 下面的降价房cell之前布局有问题
         make.height.mas_equalTo(kFHScrollBannerHeight);
     }];
     _bannerView.delegate = self;
-    [_bannerView setContent:[UIScreen mainScreen].bounds.size.width - 40 height:kFHScrollBannerHeight];
+    [_bannerView setContent:[UIScreen mainScreen].bounds.size.width - kFHScrollBannerLeftRightMargin * 2 height:kFHScrollBannerHeight];
 }
-
 
 + (BOOL)hasValidModel:(FHConfigDataMainPageBannerOpDataModel *)mainPageOpData {
     if (mainPageOpData && [mainPageOpData isKindOfClass:[FHConfigDataMainPageBannerOpDataModel class]]) {
@@ -227,7 +236,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
         _currentIndex = 0;
         _totalCount = 0;
         _imageURLs = [NSMutableArray new];
-        _imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
+        _imageWidth = [UIScreen mainScreen].bounds.size.width - kFHScrollBannerLeftRightMargin * 2;
         _imageHeight = kFHScrollBannerHeight;
         _enableTimer = YES;
         _hasPausedTimer = NO;
