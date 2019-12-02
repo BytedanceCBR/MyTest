@@ -163,8 +163,6 @@
         return;
     }
     
-    self.tableView.scrollEnabled = NO;
-    
     self.viewController.needReloadData = NO;
     self.viewController.isLoadingData = YES;
     
@@ -174,6 +172,7 @@
     }
     
     if(isFirst){
+        self.tableView.scrollEnabled = NO;
         [self.viewController startLoading];
         self.retryCount = 0;
     }
@@ -222,9 +221,9 @@
     
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
-        wself.tableView.scrollEnabled = YES;
         if(isFirst){
             [wself.viewController endLoading];
+            wself.tableView.scrollEnabled = YES;
         }
         
         [wself.tableView finishPullDownWithSuccess:YES];
