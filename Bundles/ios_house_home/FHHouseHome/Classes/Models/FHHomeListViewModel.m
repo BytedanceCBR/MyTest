@@ -684,10 +684,9 @@
         if ((self.childVCScrollView && _childVCScrollView.contentOffset.y > 0) || (scrollView.contentOffset.y > self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
             [self.categoryView showOriginStyle:NO];
             [self changeHouseCategoryStatus:NO];
-
             if (!self.isResetingOffsetZero) {
                 [self.homeViewController hideImmediately];
-                self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
+                self.tableViewV.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight + 0.01);
             }else
             {
                 [self changeHouseCategoryStatus:YES];
