@@ -597,7 +597,7 @@
     }
     
     // UGC社区入口
-    if (model.data.socialInfo) {
+    if (model.data.socialInfo && model.data.socialInfo.socialGroupInfo && model.data.socialInfo.socialGroupInfo.socialGroupId.length > 0) {
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         [self.items addObject:model.data.socialInfo];
