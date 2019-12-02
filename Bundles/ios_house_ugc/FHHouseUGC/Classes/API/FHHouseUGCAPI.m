@@ -19,6 +19,7 @@
 #import "FHUGCVoteModel.h"
 #import "FHUGCVoteResponseModel.h"
 #import "FHUGCWendaModel.h"
+#import "HMDTTMonitor.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -693,13 +694,17 @@
                 if (!success) {
                     NSString *msg = json[@"message"];
                     error = [NSError errorWithDomain:msg?:@"投票失败" code:API_ERROR_CODE userInfo:nil];
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(1)} extra:nil];
                 } else {
                     model = [[FHUGCVoteResponseModel alloc] initWithDictionary:json error:&error];
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(0)} extra:nil];
                 }
             }
             @catch(NSException *e){
                 error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
             }
+        } else {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(2)} extra:nil];
         }
         if (completion) {
             completion(model,error);
@@ -729,11 +734,16 @@
                 if (!success) {
                     NSString *msg = json[@"message"];
                     error = [NSError errorWithDomain:msg?:@"取消投票失败" code:API_ERROR_CODE userInfo:nil];
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"unvote_action" metric:nil category:@{@"status":@(1)} extra:nil];
+                } else {
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"unvote_action" metric:nil category:@{@"status":@(0)} extra:nil];
                 }
             }
             @catch(NSException *e){
                 error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
             }
+        } else {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"unvote_action" metric:nil category:@{@"status":@(2)} extra:nil];
         }
         if (completion) {
             completion(success,error);

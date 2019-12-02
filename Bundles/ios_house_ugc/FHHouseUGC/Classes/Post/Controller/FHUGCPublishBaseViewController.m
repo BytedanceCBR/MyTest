@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCPublishBaseViewController.h"
-#import <ReactiveObjC.h>
+#import <FHBubbleTipManager.h>
 
 @interface FHUGCPublishBaseViewController ()
 
@@ -17,6 +17,8 @@
 @property (nonatomic, strong) UIButton *publishBtn;
 
 @property (nonatomic, copy) NSString *title;
+
+@property (nonatomic, assign) BOOL lastCanShowMessageTip;
 
 @end
 
@@ -36,6 +38,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self configNavigation];
+    
+    // 发布器内禁止接收IM消息弹窗
+    self.lastCanShowMessageTip = [FHBubbleTipManager shareInstance].canShowTip;
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
+}
+
+- (void)dealloc {
+    
+    [FHBubbleTipManager shareInstance].canShowTip = self.lastCanShowMessageTip;
 }
 
 // 配置导航条
@@ -53,15 +64,15 @@
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:self.publishBtn]];
     
     [self enablePublish:NO];
-    
-    @weakify(self);
-    [[[[[self.publishBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] deliverOnMainThread] throttle: 0.5] subscribeNext:^(__kindof UIButton * _Nullable sender) {
-        @strongify(self);
-        
-        [self publishAction: sender];
-    }];
 }
 
+- (void)startLoading {
+    self.publishBtn.userInteractionEnabled = NO;
+}
+
+- (void)endLoading {
+    self.publishBtn.userInteractionEnabled = YES;
+}
 # pragma mark - UI 控件区
 
 - (UIButton *)cancelBtn {
@@ -93,6 +104,7 @@
         [_publishBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         [_publishBtn setTitle:@"发布" forState:UIControlStateNormal];
         _publishBtn.titleLabel.font = [UIFont themeFontMedium:16];
+        [_publishBtn addTarget:self action:@selector(publishAction:) forControlEvents:UIControlEventTouchUpInside];
         _publishBtn.enabled = NO;
     }
     return _publishBtn;

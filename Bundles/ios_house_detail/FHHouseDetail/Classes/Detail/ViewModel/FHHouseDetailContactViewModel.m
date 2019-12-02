@@ -393,7 +393,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     _socialInfo = socialInfo;
     NSString *groupChatTitle = @"";// 隐藏
     if (socialInfo) {
-        if (socialInfo.socialGroupInfo.socialGroupId.length > 0 && (socialInfo.socialGroupInfo.userAuth > UserAuthTypeNormal || [socialInfo.socialGroupInfo.chatStatus.conversationId integerValue] > 0)) {
+        if (socialInfo.socialGroupInfo.socialGroupId.length > 0 && ([socialInfo.socialGroupInfo.chatStatus.conversationId integerValue] > 0)) {
             groupChatTitle = socialInfo.groupChatLinkTitle.length > 0 ? socialInfo.groupChatLinkTitle : @"加入看盘群";
         } else {
             groupChatTitle = @"";
@@ -748,7 +748,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         } else if (self.socialInfo.socialGroupInfo.chatStatus.conversationStatus == leaveConversation) {
             [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
         } else if(self.socialInfo.socialGroupInfo.chatStatus.conversationStatus == KickOutConversation) {
-            [[ToastManager manager]showToast:@"你已经被移出群中"];
+            [[ToastManager manager]showToast:@"你已经被移出群聊"];
         } else {
             [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
         }

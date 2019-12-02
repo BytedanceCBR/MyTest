@@ -70,6 +70,7 @@
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) FHPostUGCMainView *socialGroupSelectEntry;
 @property (nonatomic, strong) FHPostUGCSelectedGroupHistoryView *selectedGrouplHistoryView;
+@property (nonatomic, strong) UIScrollView *textContentScrollView;
 @property (nonatomic, strong) TTUGCTextView *titleTextView;
 @property (nonatomic, strong) UIView *horizontalSeparatorLine;
 @property (nonatomic, strong) TTUGCTextView *descriptionTextView;
@@ -85,7 +86,8 @@
 @property (nonatomic, assign) BOOL isSelectectGroupFollowed;
 
 // 辅助变量
-@property (nonatomic, assign) BOOL isKeyboardWillShow;
+@property (nonatomic, assign) BOOL isKeyboardWillHide;
+@property (nonatomic, assign) BOOL keyboardVisibleFlagForToolbarPicPresent;
 @property (nonatomic, weak) UIResponder *lastResponder;
 @property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
 
@@ -120,7 +122,12 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if(![self.titleTextView isFirstResponder]) {
+    if(self.lastResponder) {
+        if(!self.lastResponder.isFirstResponder) {
+            [self.lastResponder becomeFirstResponder];
+        }
+    }
+    else if(!self.titleTextView.isFirstResponder) {
         [self.titleTextView becomeFirstResponder];
     }
 }
@@ -129,13 +136,16 @@
     
     [self.view addSubview:self.containerView];
     
+    // 顶部圈子选择和圈子历史区
     [self.containerView addSubview:self.socialGroupSelectEntry];
     [self.containerView addSubview:self.selectedGrouplHistoryView];
     
-    [self.containerView addSubview:self.titleTextView];
-    [self.containerView addSubview:self.horizontalSeparatorLine];
-    [self.containerView addSubview:self.descriptionTextView];
-    [self.containerView addSubview:self.addImagesView];
+    //  中间内容编辑区
+    [self.containerView addSubview:self.textContentScrollView];
+    [self.textContentScrollView addSubview:self.titleTextView];
+    [self.textContentScrollView addSubview:self.horizontalSeparatorLine];
+    [self.textContentScrollView addSubview:self.descriptionTextView];
+    [self.textContentScrollView addSubview:self.addImagesView];
     
     // 工具条加在最外层视图
     [self.view addSubview:self.toolbar];
@@ -153,25 +163,21 @@
 }
 
 - (void)tapAction:(UITapGestureRecognizer *)tap {
-    [self configFirstResponderWithKeyboardShow:!self.isKeyboardWillShow];
+    [self configFirstResponderWithKeyboardShow:self.isKeyboardWillHide];
 }
 
-#pragma makr - 键盘高度变化通知
+#pragma mark - 键盘高度变化通知
 
 - (void)keyboardFrameWillChange:(NSNotification *)notification {
     
-    CGRect beginFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
 
-    self.isKeyboardWillShow = beginFrame.origin.y > endFrame.origin.y;
-    // 键盘收起
-    if(self.isKeyboardWillShow) {
-        self.toolbar.top =  self.containerView.height - [self toolbarHeight];
-    }
-    // 键盘弹出
-    else {
-        self.toolbar.top = self.containerView.height - [self toolbarHeight] - (SCREEN_HEIGHT - endFrame.origin.y);
-    }
+    self.isKeyboardWillHide = endFrame.origin.y >= SCREEN_HEIGHT;
+    
+    CGFloat height = SCREEN_HEIGHT - kNavigationBarHeight - self.selectedGrouplHistoryView.bottom -  [self toolbarHeight] - (self.isKeyboardWillHide ? 0 : endFrame.size.height - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom);
+    self.textContentScrollView.height = height;
+    
+    [self updateTextContentScrollViewContentSize];
 }
 
 #pragma mark - FHUGCPublishBaseViewControllerProtocol
@@ -248,7 +254,7 @@
     [self publishWendaContent];
 }
 
-#pragma makr - 懒加载成员
+#pragma mark - 懒加载成员
 
 - (UIView *)containerView {
     if(!_containerView) {
@@ -288,9 +294,16 @@
     return _selectedGrouplHistoryView;
 }
 
+- (UIScrollView *)textContentScrollView {
+    if(!_textContentScrollView) {
+        _textContentScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, self.selectedGrouplHistoryView.bottom, SCREEN_WIDTH, SCREEN_HEIGHT - kNavigationBarHeight - self.selectedGrouplHistoryView.bottom - [self toolbarHeight])];
+    }
+    return _textContentScrollView;
+}
+
 - (TTUGCTextView *)titleTextView {
     if(!_titleTextView) {
-        _titleTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(LEFT_PADDING, self.selectedGrouplHistoryView.bottom + VGAP_HIST_TITLE, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, TITLE_TEXT_VIEW_HEIGHT)];
+        _titleTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(LEFT_PADDING, VGAP_HIST_TITLE, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, TITLE_TEXT_VIEW_HEIGHT)];
         _titleTextView.clipsToBounds = YES;
         _titleTextView.delegate = self;
         
@@ -363,6 +376,10 @@
         self.toolbar.picButtonClkBlk = ^{
             StrongSelf;
             
+            self.keyboardVisibleFlagForToolbarPicPresent = !self.isKeyboardWillHide;
+            
+            [self updateLastResponder];
+            
             // 添加图片
             [self.addImagesView showImagePicker];
         };
@@ -433,17 +450,24 @@
         }
     }
     else {
-        if([self.titleTextView isFirstResponder]) {
-            self.lastResponder = self.titleTextView;
-        } else if([self.descriptionTextView isFirstResponder]) {
-            self.lastResponder = self.descriptionTextView;
-        }
-        
+        [self updateLastResponder];
         [self.lastResponder resignFirstResponder];
     }
 }
 
-#pragma makr - TTUGCTextViewDelegate
+#pragma mark - TTUGCTextViewDelegate
+
+- (BOOL)textView:(TTUGCTextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    
+    NSString *replacedString = [textView.text stringByReplacingCharactersInRange:range withString:text];
+    
+    if(textView == self.titleTextView) {
+        return ![text isEqualToString:@"\n"] && replacedString.length <= TITLE_MAX_COUNT;
+    } else if(textView == self.descriptionTextView) {
+        return replacedString.length <= DESC_MAX_COUNT;
+    }
+    return YES;
+}
 
 - (void)textViewDidChange:(TTUGCTextView *)textView {
 
@@ -470,6 +494,10 @@
     }
     
     [self refreshUI];
+    
+    if(textView == self.descriptionTextView && self.textContentScrollView.size.height < self.textContentScrollView.contentSize.height) {
+        [self scrollToCursorVisible];
+    }
 }
 
 - (void)textViewDidBeginEditing:(TTUGCTextView *)textView {
@@ -479,6 +507,14 @@
     
     else if (textView == self.descriptionTextView) {
         [self updateTipLabelWithText:self.descriptionTextView.text maxLength:DESC_MAX_COUNT];
+        [self scrollToCursorVisible];
+    }
+}
+
+- (void)scrollToCursorVisible {
+    CGFloat offsetY = self.textContentScrollView.contentSize.height - self.textContentScrollView.bounds.size.height;
+    if(offsetY > 0 ) {
+        [self.textContentScrollView setContentOffset:CGPointMake(0, offsetY) animated:YES];
     }
 }
 
@@ -493,6 +529,9 @@
 }
 
 - (void)addMultiImagesViewPresentedViewControllerDidDismiss {
+    if(self.keyboardVisibleFlagForToolbarPicPresent) {
+        [self configFirstResponderWithKeyboardShow:self.keyboardVisibleFlagForToolbarPicPresent];
+    }
 }
 
 - (void)addMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView changeToSize:(CGSize)size {
@@ -563,6 +602,8 @@
     [chooseDelegateTable addObject:self];
     dict[@"choose_delegate"] = chooseDelegateTable;
     
+    [self updateLastResponder];
+    
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ELEMENT_FROM] = @"select_like_publisher_neighborhood";
     traceParam[UT_ENTER_FROM] = [self pageType];
@@ -571,6 +612,14 @@
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+- (void)updateLastResponder {
+    if(self.titleTextView.isFirstResponder) {
+        self.lastResponder = self.titleTextView;
+    } else if(self.descriptionTextView.isFirstResponder) {
+        self.lastResponder = self.descriptionTextView;
+    }
 }
 
 // 从圈子选择列表中选中圈子回带
@@ -605,10 +654,10 @@
 // 刷新UI布局
 - (void)refreshUI {
     
-    // 标题文本输入
-    CGRect titleFrame = self.titleTextView.frame;
-    titleFrame.origin.y = self.selectedGrouplHistoryView.bottom + VGAP_HIST_TITLE;
-    self.titleTextView.frame = titleFrame;
+    // 内容滚动视图位置调整
+    CGRect contentScrollViewFrame = self.textContentScrollView.frame;
+    contentScrollViewFrame.origin.y = self.selectedGrouplHistoryView.bottom;
+    self.textContentScrollView.frame = contentScrollViewFrame;
 
     // 水平分割线
     self.horizontalSeparatorLine.top = self.titleTextView.bottom + VGAP_TITLE_SEP;
@@ -622,6 +671,19 @@
     CGRect addImageViewFrame = self.addImagesView.frame;
     addImageViewFrame.origin.y = MAX(self.descriptionTextView.top + DESC_TEXT_VIEW_HEIGHT, self.descriptionTextView.bottom) + VGAP_DESC_ADDIMAGE;
     self.addImagesView.frame = addImageViewFrame;
+    
+    // 更新scrollView内容大小
+    [self updateTextContentScrollViewContentSize];
+}
+
+- (void)updateTextContentScrollViewContentSize {
+    CGSize contentSize = self.textContentScrollView.contentSize;
+    if(self.addImagesView.selectedImages.count > 0) {
+        contentSize.height = self.addImagesView.top + ADD_IMAGES_HEIGHT;
+    } else {
+        contentSize.height = self.descriptionTextView.bottom;
+    }
+    self.textContentScrollView.contentSize = contentSize;
 }
 
 // 检查是否使用发布按钮逻辑
@@ -711,7 +773,7 @@
 
 - (void)publishWendaContentAfterFollowedSocialGroup {
     
-    [self showLoadingAlert:@"正在发布"];
+    [self startLoading];
     
     // 有选中图片就先上传图片再发布提问
     if(self.addImagesView.selectedImages.count > 0) {
@@ -762,7 +824,7 @@
         }
         
         if (error || finishError) {
-            [self dismissLoadingAlert];
+            [self endLoading];
             //端监控
             //图片上传失败
             NSMutableDictionary * monitorDictionary = [NSMutableDictionary dictionary];
@@ -825,7 +887,7 @@
     WeakSelf;
     [FHHouseUGCAPI requestPublishWendaWithParam: requestParams completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
-        [self dismissLoadingAlert];
+        [self endLoading];
         // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
         if(error) {
             [[ToastManager manager] showToast: (error.code == 2001 && error.domain.length > 0) ? error.domain : @"发布失败!"];
@@ -870,6 +932,18 @@
             }
         }
     }];
+}
+
+- (void)startLoading {
+    [super startLoading];
+    
+    [self showLoadingAlert:@"正在发布"];
+}
+
+- (void)endLoading {
+    [super endLoading];
+    
+    [self dismissLoadingAlert];
 }
 
 #pragma mark - 埋点区
