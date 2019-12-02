@@ -331,7 +331,8 @@
             _shadowImage = [[UIImage imageNamed:@"left_top_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(40,0,0,0) resizingMode:UIImageResizingModeStretch];
             break;
         case FHHouseShdowImageTypeLBR:
-            _shadowImage = [[UIImage imageNamed:@"left_bottom_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(0,0,40,0) resizingMode:UIImageResizingModeStretch];
+            _shadowImage = [UIImage imageNamed:@"left_bottom_right"];
+//            _shadowImage = [[UIImage imageNamed:@"left_bottom_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(0,25,18,25) resizingMode:UIImageResizingModeStretch];
             break;
         case FHHouseShdowImageTypeRound:
             _shadowImage = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(40,40,40,40) resizingMode:UIImageResizingModeStretch];

@@ -19,6 +19,10 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeDefault = 0,
     FHHouseModelTypeCoreInfo,//房源属性模块
     FHHouseModelTypeSubscribe,//订阅房源动态模块
-    FHHouseModelTypeOutlineInfo//房源概况
+    FHHouseModelTypeOutlineInfo,//房源概况
+    FHHouseModelTypeBillBoard,//房源榜单
+    FHHouseModelTypeAgentlist,//推荐经纪人
+    FHHouseModelTypeLocationPeriphery //位置周边
+    
 };
 #endif /* FHHouseShadowImageType_h */

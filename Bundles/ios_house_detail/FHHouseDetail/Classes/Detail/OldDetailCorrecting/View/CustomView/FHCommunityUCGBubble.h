@@ -5,7 +5,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface FHCommunitySuggestionBubble : UIView
+@interface FHCommunityUCGBubble : UIView
 @property (nonatomic ,strong) UIColor *bacColor;
 @property (nonatomic ,assign) CGFloat cornerRadius;
 - (CGFloat)refreshWithAvatar:(NSString *)icon title:(NSString *)title color:(UIColor *)color;

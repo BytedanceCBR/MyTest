@@ -4,18 +4,17 @@
 
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry/View+MASAdditions.h>
-#import "FHCommunitySuggestionBubble.h"
+#import "FHCommunityUCGBubble.h"
 #import "WDDefines.h"
 #import "BDWebImage.h"
 
 
-@interface FHCommunitySuggestionBubble ()
-@property(nonatomic, strong) UIImageView *iconView;
+@interface FHCommunityUCGBubble ()
 @property(nonatomic, strong) UILabel *label;
 @property(nonatomic, strong) UIView *backView;
 @end
 
-@implementation FHCommunitySuggestionBubble
+@implementation FHCommunityUCGBubble
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -33,11 +32,6 @@
 }
 
 - (void)initViews {
-    _iconView = [[UIImageView alloc] init];
-    _iconView.layer.cornerRadius = 7.0f;
-    _iconView.layer.borderWidth = 0.5f;
-    _iconView.layer.borderColor = [UIColor themeRed3].CGColor;
-    _iconView.clipsToBounds = YES;
 
     _label = [[UILabel alloc] init];
     _label.textColor = [UIColor themeRed1];
@@ -45,20 +39,12 @@
     _label.font = [UIFont systemFontOfSize:10.0f];
     _label.numberOfLines = 1;
     _label.preferredMaxLayoutWidth = 140;
-
-    [self addSubview:_iconView];
     [self addSubview:_label];
 }
 
 - (void)initConstraints {
-    [_iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(4);
-        make.centerY.mas_equalTo(self);
-        make.width.height.mas_equalTo(14);
-    }];
-
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(_iconView.mas_right).offset(2);
+        make.left.mas_equalTo(self).offset(4);
         make.centerY.mas_equalTo(self);
         make.height.mas_equalTo(14);
         make.right.mas_equalTo(self).offset(-4);
@@ -69,8 +55,6 @@
     if (isEmptyString(icon) || isEmptyString(title)) {
         return 0.0f;
     }
-
-    [self.iconView bd_setImageWithURL:[NSURL URLWithString:icon]];
     self.label.text = title;
     self.label.textColor = color;
     CGSize preferSize = [self.label sizeThatFits:CGSizeMake(140, 14)];

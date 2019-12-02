@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "detail_agent_call_normal.png",
+      "filename" : "star_titleview.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "detail_agent_call_normal@2x.png",
+      "filename" : "star_titleview@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "detail_agent_call_normal@3x.png",
+      "filename" : "star_titleview@3x.png",
       "scale" : "3x"
     }
   ],
