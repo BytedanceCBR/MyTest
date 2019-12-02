@@ -311,7 +311,7 @@ static const float kSegementedMainPadingBottom = 10;
     [citySwichButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.topBackCityContainer).offset(10);
         make.height.mas_equalTo(40);
-        make.bottom.equalTo(self.topBackCityContainer.mas_bottom).offset(-8);
+        make.bottom.equalTo(self.topBackCityContainer.mas_bottom).offset(-6);
         make.width.mas_equalTo(dataModel.currentCityName.length * 14 + 24 + widthOffset); // button width
     }];
     

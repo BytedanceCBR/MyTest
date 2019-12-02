@@ -76,14 +76,14 @@
         make.left.right.mas_equalTo(self.view);
         make.height.mas_equalTo(44 + (safeTop == 0 ? 20 : safeTop));
     }];
-    [self.topView setBackgroundColor:[UIColor redColor]];
+    [self.topView setBackgroundColor:[UIColor whiteColor]];
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.topView.mas_bottom);
         make.left.right.equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(-bottom);
     }];
-    [self.containerView setBackgroundColor:[UIColor blueColor]];
+    [self.containerView setBackgroundColor:[UIColor whiteColor]];
     
     
     [self.collectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
