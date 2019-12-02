@@ -70,6 +70,7 @@
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) FHPostUGCMainView *socialGroupSelectEntry;
 @property (nonatomic, strong) FHPostUGCSelectedGroupHistoryView *selectedGrouplHistoryView;
+@property (nonatomic, strong) UIScrollView *textContentScrollView;
 @property (nonatomic, strong) TTUGCTextView *titleTextView;
 @property (nonatomic, strong) UIView *horizontalSeparatorLine;
 @property (nonatomic, strong) TTUGCTextView *descriptionTextView;
@@ -85,7 +86,7 @@
 @property (nonatomic, assign) BOOL isSelectectGroupFollowed;
 
 // 辅助变量
-@property (nonatomic, assign) BOOL isKeyboardWillShow;
+@property (nonatomic, assign) BOOL isKeyboardWillHide;
 @property (nonatomic, weak) UIResponder *lastResponder;
 @property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
 
@@ -129,13 +130,16 @@
     
     [self.view addSubview:self.containerView];
     
+    // 顶部圈子选择和圈子历史区
     [self.containerView addSubview:self.socialGroupSelectEntry];
     [self.containerView addSubview:self.selectedGrouplHistoryView];
     
-    [self.containerView addSubview:self.titleTextView];
-    [self.containerView addSubview:self.horizontalSeparatorLine];
-    [self.containerView addSubview:self.descriptionTextView];
-    [self.containerView addSubview:self.addImagesView];
+    //  中间内容编辑区
+    [self.containerView addSubview:self.textContentScrollView];
+    [self.textContentScrollView addSubview:self.titleTextView];
+    [self.textContentScrollView addSubview:self.horizontalSeparatorLine];
+    [self.textContentScrollView addSubview:self.descriptionTextView];
+    [self.textContentScrollView addSubview:self.addImagesView];
     
     // 工具条加在最外层视图
     [self.view addSubview:self.toolbar];
@@ -153,7 +157,7 @@
 }
 
 - (void)tapAction:(UITapGestureRecognizer *)tap {
-    [self configFirstResponderWithKeyboardShow:self.isKeyboardWillShow];
+    [self configFirstResponderWithKeyboardShow:self.isKeyboardWillHide];
 }
 
 #pragma mark - 键盘高度变化通知
@@ -162,7 +166,12 @@
     
     CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
 
-    self.isKeyboardWillShow = endFrame.origin.y >= SCREEN_HEIGHT;
+    self.isKeyboardWillHide = endFrame.origin.y >= SCREEN_HEIGHT;
+    
+    CGFloat height = SCREEN_HEIGHT - kNavigationBarHeight - self.selectedGrouplHistoryView.bottom -  [self toolbarHeight] - (self.isKeyboardWillHide ? 0 : endFrame.size.height - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom);
+    self.textContentScrollView.height = height;
+    
+    [self updateTextContentScrollViewContentSize];
 }
 
 #pragma mark - FHUGCPublishBaseViewControllerProtocol
@@ -279,9 +288,16 @@
     return _selectedGrouplHistoryView;
 }
 
+- (UIScrollView *)textContentScrollView {
+    if(!_textContentScrollView) {
+        _textContentScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, self.selectedGrouplHistoryView.bottom, SCREEN_WIDTH, SCREEN_HEIGHT - kNavigationBarHeight - self.selectedGrouplHistoryView.bottom - [self toolbarHeight])];
+    }
+    return _textContentScrollView;
+}
+
 - (TTUGCTextView *)titleTextView {
     if(!_titleTextView) {
-        _titleTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(LEFT_PADDING, self.selectedGrouplHistoryView.bottom + VGAP_HIST_TITLE, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, TITLE_TEXT_VIEW_HEIGHT)];
+        _titleTextView = [[TTUGCTextView alloc] initWithFrame:CGRectMake(LEFT_PADDING, VGAP_HIST_TITLE, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, TITLE_TEXT_VIEW_HEIGHT)];
         _titleTextView.clipsToBounds = YES;
         _titleTextView.delegate = self;
         
@@ -429,7 +445,6 @@
         } else if([self.descriptionTextView isFirstResponder]) {
             self.lastResponder = self.descriptionTextView;
         }
-        
         [self.lastResponder resignFirstResponder];
     }
 }
@@ -468,6 +483,10 @@
     }
     
     [self refreshUI];
+    
+    if(self.textContentScrollView.size.height < self.textContentScrollView.contentSize.height) {
+        [self scrollToCursorVisible];
+    }
 }
 
 - (void)textViewDidBeginEditing:(TTUGCTextView *)textView {
@@ -477,7 +496,12 @@
     
     else if (textView == self.descriptionTextView) {
         [self updateTipLabelWithText:self.descriptionTextView.text maxLength:DESC_MAX_COUNT];
+        [self scrollToCursorVisible];
     }
+}
+
+- (void)scrollToCursorVisible {
+    [self.textContentScrollView setContentOffset:CGPointMake(0, self.textContentScrollView.contentSize.height - self.textContentScrollView.bounds.size.height) animated:YES];
 }
 
 #pragma mark - FRAddMultiImagesViewDelegate
@@ -603,10 +627,10 @@
 // 刷新UI布局
 - (void)refreshUI {
     
-    // 标题文本输入
-    CGRect titleFrame = self.titleTextView.frame;
-    titleFrame.origin.y = self.selectedGrouplHistoryView.bottom + VGAP_HIST_TITLE;
-    self.titleTextView.frame = titleFrame;
+    // 内容滚动视图位置调整
+    CGRect contentScrollViewFrame = self.textContentScrollView.frame;
+    contentScrollViewFrame.origin.y = self.selectedGrouplHistoryView.bottom;
+    self.textContentScrollView.frame = contentScrollViewFrame;
 
     // 水平分割线
     self.horizontalSeparatorLine.top = self.titleTextView.bottom + VGAP_TITLE_SEP;
@@ -620,6 +644,19 @@
     CGRect addImageViewFrame = self.addImagesView.frame;
     addImageViewFrame.origin.y = MAX(self.descriptionTextView.top + DESC_TEXT_VIEW_HEIGHT, self.descriptionTextView.bottom) + VGAP_DESC_ADDIMAGE;
     self.addImagesView.frame = addImageViewFrame;
+    
+    // 更新scrollView内容大小
+    [self updateTextContentScrollViewContentSize];
+}
+
+- (void)updateTextContentScrollViewContentSize {
+    CGSize contentSize = self.textContentScrollView.contentSize;
+    if(self.addImagesView.selectedImages.count > 0) {
+        contentSize.height = self.addImagesView.top + ADD_IMAGES_HEIGHT;
+    } else {
+        contentSize.height = self.descriptionTextView.bottom;
+    }
+    self.textContentScrollView.contentSize = contentSize;
 }
 
 // 检查是否使用发布按钮逻辑
