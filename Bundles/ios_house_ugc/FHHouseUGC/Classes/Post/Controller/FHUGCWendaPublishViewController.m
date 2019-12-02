@@ -501,7 +501,10 @@
 }
 
 - (void)scrollToCursorVisible {
-    [self.textContentScrollView setContentOffset:CGPointMake(0, self.textContentScrollView.contentSize.height - self.textContentScrollView.bounds.size.height) animated:YES];
+    CGFloat offsetY = self.textContentScrollView.contentSize.height - self.textContentScrollView.bounds.size.height;
+    if(offsetY > 0 ) {
+        [self.textContentScrollView setContentOffset:CGPointMake(0, offsetY) animated:YES];
+    }
 }
 
 #pragma mark - FRAddMultiImagesViewDelegate
