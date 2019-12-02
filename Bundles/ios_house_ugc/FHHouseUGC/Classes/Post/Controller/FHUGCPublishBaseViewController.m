@@ -6,6 +6,7 @@
 //
 
 #import "FHUGCPublishBaseViewController.h"
+#import <FHBubbleTipManager.h>
 
 @interface FHUGCPublishBaseViewController ()
 
@@ -16,6 +17,8 @@
 @property (nonatomic, strong) UIButton *publishBtn;
 
 @property (nonatomic, copy) NSString *title;
+
+@property (nonatomic, assign) BOOL lastCanShowMessageTip;
 
 @end
 
@@ -35,6 +38,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self configNavigation];
+    
+    // 发布器内禁止接收IM消息弹窗
+    self.lastCanShowMessageTip = [FHBubbleTipManager shareInstance].canShowTip;
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
+}
+
+- (void)dealloc {
+    
+    [FHBubbleTipManager shareInstance].canShowTip = self.lastCanShowMessageTip;
 }
 
 // 配置导航条
