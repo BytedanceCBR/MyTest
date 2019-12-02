@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)   UIImageView       *rightImageView;
 @property (nonatomic, copy)     NSString       *communityName;// 小区名称
-@property (nonatomic, copy)     NSString       *groupId;// 小区圈 id
+@property (nonatomic, copy)     NSString       *groupId;// 圈子 id
 @property (nonatomic, assign)   BOOL       followed; // 是否已关注
 @property (nonatomic, assign)   BOOL       hasValidData;// 是否有效
 

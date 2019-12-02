@@ -8,7 +8,7 @@
 #import "FHUGCBaseCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+// 老的投票cell，新的UGC投票cell为FHUGCVoteDetailCell
 @interface FHUGCVoteCell : FHUGCBaseCell
 
 @end

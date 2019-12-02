@@ -534,7 +534,7 @@ TTAccountMulticastProtocol
     if(!_segmentView) {
         _segmentView = [[TTPersonalHomeSegmentView alloc] init];
         _segmentView.delegate = self;
-        [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont) {
+        [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
             *norColorKey = kColorText1;
             *selColorKey = @"akmain";
             *titleFont = [UIFont systemFontOfSize:15];

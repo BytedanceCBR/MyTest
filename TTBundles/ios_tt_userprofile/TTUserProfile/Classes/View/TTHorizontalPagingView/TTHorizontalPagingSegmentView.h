@@ -28,12 +28,13 @@ typedef enum {
 @property (nonatomic, assign) TTPagingSegmentViewHorizontalAlignment type;
 @property (nonatomic, strong) NSArray<NSString *> *titles;
 @property (nonatomic, weak) id <TTHorizontalPagingSegmentViewDelegate> delegate;
+@property (nonatomic, assign) BOOL isSwitching;
 /**
  一次性设置素有字体属性
 
  @param titleEffectBlock 回调的block
  */
-- (void)setUpTitleEffect:(void(^)(NSString *__autoreleasing *titleScrollViewColorKey,NSString *__autoreleasing *norColorKey,NSString *__autoreleasing *selColorKey,UIFont *__autoreleasing *titleFont))titleEffectBlock;
+- (void)setUpTitleEffect:(void(^)(NSString *__autoreleasing *titleScrollViewColorKey,NSString *__autoreleasing *norColorKey,NSString *__autoreleasing *selColorKey,UIFont *__autoreleasing *titleFont,UIFont *__autoreleasing *selectedTitleFont))titleEffectBlock;
 
 /**
  一次性设置所有下标的属性

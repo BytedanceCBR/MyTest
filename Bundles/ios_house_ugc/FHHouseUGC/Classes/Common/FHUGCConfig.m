@@ -35,7 +35,7 @@ static const NSString *kFHUGCConfigDataKey = @"key_ugc_config_data";
 static const NSString *kFHUGCPublisherHistoryCacheKey = @"key_ugc_publisher_history_cache";
 static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_history_Data";
 
-// 小区圈子数据统一内存数据缓存
+// 圈子子数据统一内存数据缓存
 @interface FHUGCSocialGroupData : NSObject
 
 + (instancetype)sharedInstance;
@@ -298,7 +298,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 }
 
 - (FHUGCScialGroupDataModel *)socialGroupData:(NSString *)social_group_id {
-    // 先去小区圈专门内存中取（包含关注列表中的数据，优化后）
+    // 先去圈子专门内存中取（包含关注列表中的数据，优化后）
     FHUGCScialGroupDataModel * model = [[FHUGCSocialGroupData sharedInstance] socialGroupData:social_group_id];
     if (model) {
         return model;
@@ -394,7 +394,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 
 - (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model {
     [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:model];
-    // 通知 附近 可能感兴趣的小区圈 帖子数变化
+    // 通知 附近 可能感兴趣的圈子 帖子数变化
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCSicialGroupDataChangeKey" object:nil];
     // 我关注的列表数据修改
     NSString *social_group_id = model.socialGroupId;

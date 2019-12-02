@@ -164,7 +164,8 @@
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         model.phoneCallViewModel.belongsVC = model.belongsVC;
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"element_from"] = @"old_detail_related";
+        dict[@"element_from"] = [self elementTypeStringByHouseType:self.baseViewModel.houseType];
+        dict[@"enter_from"] = [self.baseViewModel pageTypeString];
         [model.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO extra:dict];
     }
 }
@@ -202,7 +203,11 @@
         contactConfig.searchId = model.searchId;
         contactConfig.imprId = model.imprId;
         contactConfig.realtorType = contact.realtorType;
-        contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+            contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhoodMulrealtor);
+        }else {
+            contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+        }
         [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
             if(success && [model.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
                 FHHouseDetailViewController *vc = (FHHouseDetailViewController *)model.belongsVC;
@@ -230,7 +235,12 @@
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"realtor_position"] = @"detail_related";
-		imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodMulrealtor];
+        }else {
+            imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+        }
         [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
     }
 }
@@ -349,6 +359,22 @@
     [self tracerRealtorShowToIndex:showCount];
 }
 
+- (NSString *)elementTypeStringByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_detail_related";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_detail_related";
+            break;
+            
+        default:
+            break;
+    }
+    return @"be_null";
+}
+
 - (void)tracerRealtorShowToIndex:(NSInteger)index {
     for (int i = 0; i< index; i++) {
         NSString *cahceKey = [NSString stringWithFormat:@"%d",i];
@@ -360,7 +386,7 @@
         if (i < model.recommendedRealtors.count) {
             FHDetailContactModel *contact = model.recommendedRealtors[i];
             NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-            tracerDic[@"element_type"] = @"old_detail_related";
+            tracerDic[@"element_type"] = [self elementTypeStringByHouseType:self.baseViewModel.houseType];
             tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
             tracerDic[@"realtor_rank"] = @(i);
             tracerDic[@"realtor_position"] = @"detail_related";
@@ -390,7 +416,16 @@
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"old_detail_related";
+    switch (houseType) {
+        case FHHouseTypeSecondHandHouse:
+            return @"old_detail_related";
+            break;
+         case FHHouseTypeNeighborhood:
+            return @"neighborhood_detail_related";
+        default:
+            break;
+    }
+    return @"be_null";
 }
 
 @end
@@ -544,10 +579,8 @@
 
 - (void)layoutForStyle1 {
     [self setupUI];
-    [self modifiedLayout];
-    
+    [self modifiedLayoutNameNeedShowCenter:self.model.realtorTags.count >0];
     [self addSubview:self.tagsView];
-    
     [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(15);
         make.left.equalTo(self.name);
@@ -559,10 +592,8 @@
 
 - (void)layoutForStyle2 {
     [self setupUI];
-    [self modifiedLayout];
-    
+    [self modifiedLayoutNameNeedShowCenter:self.model.realtorEvaluate.length>0];
     [self addSubview:self.realtorEvaluate];
-    
     [self.realtorEvaluate mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(17);
         make.left.equalTo(self.name);
@@ -571,7 +602,7 @@
     }];
 }
 
--(void)modifiedLayout {
+-(void)modifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
     
     [self addSubview: self.vSepLine];
     
@@ -581,13 +612,15 @@
         make.centerY.equalTo(self.name);
         make.left.equalTo(self.name.mas_right).offset(6);
     }];
-    
     [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.avator.mas_right).offset(14);
-        make.top.mas_equalTo(self.avator).offset(4);
-        make.height.mas_equalTo(20);
-    }];
-
+            make.left.mas_equalTo(self.avator.mas_right).offset(14);
+            if(!showCenter){
+                make.centerY.equalTo(self.avator);
+            }else {
+                make.top.mas_equalTo(self.avator).offset(4);
+            }
+            make.height.mas_equalTo(20);
+        }];
     [self.name setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
 
     [self.agency mas_remakeConstraints:^(MASConstraintMaker *make) {

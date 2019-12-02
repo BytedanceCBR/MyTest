@@ -951,6 +951,7 @@ TTFeedCollectionCellDelegate>
 {
     if (!_refreshView) {
         _refreshView = [[TTFeedRefreshView alloc] init];
+        _refreshView.hidden = YES;
         [_refreshView.arrowBtn addTarget:self action:@selector(refreshButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _refreshView;
@@ -988,7 +989,9 @@ TTFeedCollectionCellDelegate>
 - (void)adjustToolViewsAppearance:(id<TTFeedCollectionCell>)feedCollectionCelll
 {
     //refresh view
-    self.refreshView.hidden = !([SSCommonLogic refreshButtonSettingEnabled] && [SSCommonLogic showRefreshButton]);
+//    self.refreshView.hidden = !([SSCommonLogic refreshButtonSettingEnabled] && [SSCommonLogic showRefreshButton]);
+    //by xsm 以前主端是通过开关来控制按钮显示的，这里我们小端不需要这个功能，直接写死隐藏了。
+    self.refreshView.hidden = YES;
     
     if (!_refreshView.hidden) {
         if (!feedCollectionCelll) feedCollectionCelll = self.currentCollectionPageCell;

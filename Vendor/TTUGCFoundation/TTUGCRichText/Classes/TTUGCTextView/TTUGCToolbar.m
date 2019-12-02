@@ -109,7 +109,7 @@
 
 - (void)refreshButtonsUI {
     self.emojiButton.hidden = NO;
-    self.atButton.hidden = NO;
+    self.atButton.hidden = self.banAtInput;
     self.shoppingButton.hidden = YES;
     
     self.emojiButton.left = 10;

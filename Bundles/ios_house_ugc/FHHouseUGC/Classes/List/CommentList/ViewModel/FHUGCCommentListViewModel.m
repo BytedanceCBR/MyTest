@@ -432,9 +432,14 @@
             traceParam[@"enter_type"] = @"click";
             traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
             traceParam[@"log_pb"] = cellModel.logPb;
-        } else if([url.absoluteString containsString:@"profile"]) {
+        }
+        else if([url.absoluteString containsString:@"profile"]) {
             // JOKER:
-        } else {
+        }
+        else if([url.absoluteString containsString:@"webview"]) {
+            
+        }
+        else {
             isOpen = NO;
         }
         

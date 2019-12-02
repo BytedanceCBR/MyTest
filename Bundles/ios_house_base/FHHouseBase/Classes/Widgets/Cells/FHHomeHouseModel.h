@@ -220,6 +220,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHHomeHouseAdvantageTagModel : JSONModel
+
+@property (nonatomic, strong , nullable) FHHomeHouseDataItemsFloorpanListListImagesModel *icon;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@property (nonatomic, copy , nullable) NSString *borderColor;
+
+@end
+
+
 @protocol FHHomeHouseDataItemsDislikeInfoModel<NSObject>
 @end
 
@@ -274,6 +285,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayPrice;
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsContactModel *contact ;
+@property (nonatomic, strong , nullable) FHHomeHouseAdvantageTagModel *advantageDescription ;
 @property (nonatomic, strong , nullable) FHHomeHouseVRModel *vrInfo ;
 @property (nonatomic, copy , nullable) NSString *displayPricePerSqm;
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsFloorpanListModel *floorpanList ;

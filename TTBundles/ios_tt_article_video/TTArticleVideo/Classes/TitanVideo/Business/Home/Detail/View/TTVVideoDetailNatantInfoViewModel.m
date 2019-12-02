@@ -282,7 +282,7 @@ inline CGFloat kVideoTitleLineHeight() {
     }];
     
     //可能显示appStore评分视图
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"like"}];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"like"}];
 }
 
 - (void)cancelDiggAction{

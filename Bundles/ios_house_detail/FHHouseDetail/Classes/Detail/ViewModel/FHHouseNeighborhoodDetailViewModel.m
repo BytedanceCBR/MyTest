@@ -28,6 +28,7 @@
 #import "FHDetailPureTitleCell.h"
 #import "FHDetailCommunityEntryCell.h"
 #import "FHDetailBlankLineCell.h"
+#import "FHDetailAgentListCell.h"
 #import <HMDTTMonitor.h>
 #import <FHHouseBase/FHHouseNeighborModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
@@ -40,6 +41,7 @@
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
 @property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodRentHouseData;// 同小区房源，租房
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
+
 
 @end
 
@@ -62,6 +64,8 @@
     [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
     [self.tableView registerClass:[FHDetailCommunityEntryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
     [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
+    [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
+
 }
 
 // cell identifier
@@ -171,12 +175,31 @@
     
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.neighbordhoodStatus.neighborhoodSubStatus;
-    
-    FHDetailContactModel *contactPhone = [[FHDetailContactModel alloc]init];
+
+    // TODO fengbo IMPORTTANT
+//    [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
+
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    } else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
     contactPhone.isInstantData = model.isInstantData;
-    contactPhone.isFormReport = YES;
+
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
     self.contactViewModel.contactPhone = contactPhone;
+    self.contactViewModel.shareInfo = model.data.shareInfo;
+//    self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+
+
+
     self.detailData = model;
     [self addDetailCoreInfoExcetionLog];
 
@@ -349,7 +372,41 @@
         infoModel.neighborhoodId = self.houseId;
         [self.items addObject:infoModel];
     }
-    
+
+    // 推荐经纪人
+    if (model.data.recommendedRealtors.count > 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        agentListModel.tableView = self.tableView;
+        agentListModel.belongsVC = self.detailController;
+        agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
+        agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+
+        /******* 这里的 逻辑   ********/
+        agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:self.houseId];
+        //TODO fengbo important! generate IM Params
+//        [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title :imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        agentListModel.phoneCallViewModel.tracerDict = paramsDict;
+//        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
+//        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
+        agentListModel.searchId = searchId;
+        agentListModel.imprId = imprId;
+        agentListModel.houseId = self.houseId;
+        agentListModel.houseType = self.houseType;
+
+        [self.items addObject:agentListModel];
+//        self.agentListModel = agentListModel;
+    }
+
     if (model.isInstantData) {
         [self.tableView reloadData];
     }else{

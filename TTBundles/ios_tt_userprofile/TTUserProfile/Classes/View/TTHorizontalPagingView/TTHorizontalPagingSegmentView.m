@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSMutableArray *titleLabels;
 @property (nonatomic, assign) BOOL isShowUnderLine;
 @property (nonatomic, strong) UIFont *titleFont;
+@property (nonatomic, strong) UIFont *selectedtitleFont;
 @property (nonatomic, strong) SSThemedView *underLine;
 @property (nonatomic, strong) UIColor *underLineColor;
 @property (nonatomic, assign) CGFloat underLineH;
@@ -99,14 +100,15 @@
     [self addSubview:self.bottomLine];
 }
 
-- (void)setUpTitleEffect:(void(^)(NSString *__autoreleasing *titleScrollViewColorKey,NSString *__autoreleasing *norColorKey,NSString *__autoreleasing *selColorKey,UIFont *__autoreleasing *titleFont))titleEffectBlock;
+- (void)setUpTitleEffect:(void(^)(NSString *__autoreleasing *titleScrollViewColorKey,NSString *__autoreleasing *norColorKey,NSString *__autoreleasing *selColorKey,UIFont *__autoreleasing *titleFont,UIFont *__autoreleasing *selectedTitleFont))titleEffectBlock 
 {
     NSString *titleScrollViewColorKey = nil;
     NSString *norColorKey = nil;
     NSString *selColorKey = nil;
     UIFont *titleFont = nil;
+    UIFont *selectedTitleFont = nil;
     if(titleEffectBlock) {
-        titleEffectBlock(&titleScrollViewColorKey,&norColorKey,&selColorKey,&titleFont);
+        titleEffectBlock(&titleScrollViewColorKey,&norColorKey,&selColorKey,&titleFont,&selectedTitleFont);
         if(norColorKey) {
             self.normalColorKey = norColorKey;
         }
@@ -118,6 +120,7 @@
             _titleScrollView.backgroundColorThemeKey = _titleScrollViewColorKey;
         }
         _titleFont = titleFont;
+        _selectedtitleFont = selectedTitleFont;
     }
 }
 
@@ -179,8 +182,10 @@
     for(SSThemedLabel *label in self.titleLabels) {
         if(selectedLabel == label) continue;
         label.textColorThemeKey = self.normalColorKey;
+        label.font = self.titleFont;
     }
     selectedLabel.textColorThemeKey = self.selColorKey;
+    selectedLabel.font = self.selectedtitleFont;
     _selectedIndex = selectedLabel.tag;
     [self setupLabelTitleCenter:selectedLabel];
     if (self.isShowUnderLine) {
@@ -265,6 +270,9 @@
 
 - (void)titleClick:(UITapGestureRecognizer *)tap
 {
+    if(self.isSwitching){
+        return;
+    }
     self.isTitleClick = YES;
     SSThemedLabel *label = (SSThemedLabel *)tap.view;
     [self setupLabelSelected:label];
@@ -276,6 +284,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.isTitleClick = NO;
     });
+    self.lastSelectedIndex = label.tag;
 }
 
 - (void)scrollToOffsetX:(CGFloat)offsetX

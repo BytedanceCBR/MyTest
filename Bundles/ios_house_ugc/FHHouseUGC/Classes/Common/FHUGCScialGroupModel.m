@@ -44,6 +44,7 @@
     @"userAuth": @"user_auth",
     @"chatStatus": @"chat_status",
     @"shareInfo":@"share_info",
+    @"tabInfo": @"tab_info",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -64,6 +65,24 @@
                            @"imageHeight": @"image_height",
                            @"linkUrl": @"link_url",
                            @"hasOperation": @"has_operation",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHUGCScialGroupDataTabInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"tabName": @"tab_name",
+                           @"showName": @"show_name",
+                           @"isDefault": @"is_default",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

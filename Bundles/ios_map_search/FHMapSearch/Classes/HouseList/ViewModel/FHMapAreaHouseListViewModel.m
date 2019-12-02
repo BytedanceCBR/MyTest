@@ -22,7 +22,7 @@
 #import <FHHouseBase/FHHouseFilterBridge.h>
 #import <FHCommonUI/FHRefreshCustomFooter.h>
 #import <FHHouseBase/FHMainApi.h>
-#import <TTPlatformUIModel/ArticleListNotifyBarView.h>
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHCommonDefines.h>
@@ -260,7 +260,7 @@
 {
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:isHead?0:self.currentRentModel.offset searchId:self.searchId sugParam:nil completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
+    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:isHead?0:self.currentRentModel.offset searchId:self.searchId sugParam:nil class:[FHHouseRentModel class] completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
         
         if (!wself) {
             return ;

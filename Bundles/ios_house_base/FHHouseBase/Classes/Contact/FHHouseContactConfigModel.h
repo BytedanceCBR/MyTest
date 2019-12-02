@@ -48,6 +48,9 @@ typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error, FHDe
 @property (nonatomic , copy) NSString *conversationId;
 @property (nonatomic , copy) NSString *itemId;
 @property (nonatomic , copy) NSString *from;
+@property (nonatomic , strong) NSNumber *cluePage;
+@property (nonatomic , strong) NSNumber *clueEndpoint;
+
 - (void)setTraceParams:(NSDictionary *)params;
 
 @end

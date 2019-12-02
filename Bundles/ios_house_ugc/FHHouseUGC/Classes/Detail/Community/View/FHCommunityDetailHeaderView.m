@@ -11,17 +11,21 @@
 #import "FHUGCFollowButton.h"
 #import "SSViewBase.h"
 #import "TTDeviceHelper.h"
-#import "FHCommunityDetailMJRefreshHeader.h"
 #import <UIFont+House.h>
 #import "TTRoute.h"
 #import "FHUGCScialGroupModel.h"
+#import <UIViewAdditions.h>
 
 @interface FHCommunityDetailHeaderView ()
 
-@property(nonatomic, strong) UIView *infoContainer;
-@property(nonatomic, strong) UIView *operationBannerContainer;
-@property(nonatomic, strong) UIView *publicationsDetailView;
-@property (nonatomic, strong)   UIView       *userCountTapView;
+@property (nonatomic, strong) UIView *infoContainer;
+@property (nonatomic, strong) UIView *operationBannerContainer;
+@property (nonatomic, strong) UIView *publicationsDetailView;
+@property (nonatomic, strong) UIView *userCountTapView;
+@property (nonatomic, assign) CGFloat preOffset;
+
+@property (nonatomic, assign) CGFloat publicationsContainerHeight;
+@property (nonatomic, assign) CGFloat operationBannerContainerHeight;
 
 @end
 
@@ -108,10 +112,16 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
+        [self initVars];
         [self initView];
         [self initConstraints];
     }
     return self;
+}
+
+- (void)initVars {
+    self.publicationsContainerHeight = 40;
+    self.operationBannerContainerHeight = 0;
 }
 
 - (void)initView {
@@ -200,6 +210,10 @@
     [self.publicationsContainer addSubview:self.publicationsContentLabel];
     [self.publicationsContainer addSubview:self.publicationsDetailView]; // 公告点击查看按钮
     
+    self.refreshHeader = [[FHCommunityDetailRefreshHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 40, 20)];
+    _refreshHeader.alpha = 0;
+    [self.viewController.view addSubview:_refreshHeader];
+    
     
     /** 背景图 **/
     [self addSubview:self.topBack];
@@ -209,6 +223,8 @@
     [self addSubview:self.publicationsContainer];
     /** 运营位  **/
     [self addSubview:self.operationBannerContainer];
+    
+    [self addSubview:self.refreshHeader];
     
     self.userCountShowen = NO;
 }
@@ -222,20 +238,26 @@
 }
 
 - (void)initConstraints {
+    [self.refreshHeader mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self).offset(20);
+        make.right.equalTo(self).offset(-20);
+        make.bottom.equalTo(self.infoContainer.mas_top);
+        make.height.mas_equalTo(20);
+    }];
     
     [self.infoContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self).offset(20);
         make.right.equalTo(self).offset(-20);
         make.bottom.equalTo(self.topBack.mas_bottom).offset(-15);
+        make.height.mas_equalTo(50);
     }];
 
     [self.avatar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.bottom.equalTo(self.infoContainer);
+        make.left.top.equalTo(self.infoContainer);
         make.width.height.mas_equalTo(50);
     }];
     
     [self.labelContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.avatar);
         make.left.equalTo(self.avatar.mas_right).offset(8);
         make.right.equalTo(self.followButton.mas_left).offset(-8);
         make.top.equalTo(self.infoContainer).offset(3);
@@ -288,6 +310,7 @@
     [self.publicationsContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self);
         make.top.equalTo(self.topBack.mas_bottom);
+        make.height.mas_equalTo(40);
     }];
     
     [self.publicationsContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -305,25 +328,48 @@
     }];
      
      [self.operationBannerContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-         make.left.right.bottom.equalTo(self);
+         make.left.right.equalTo(self.topBack);
          make.top.equalTo(self.publicationsContainer.mas_bottom);
          make.height.mas_equalTo(0);
      }];
 
-    [self mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(self.topBack);
-        make.bottom.equalTo(self.operationBannerContainer).offset(5);
-    }];
+//    [self mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.top.right.equalTo(self.topBack);
+//        make.bottom.equalTo(self.operationBannerContainer).offset(5);
+//    }];
 }
 
-- (void)updateWhenScrolledWithContentOffset:(CGPoint)contentOffset isScrollTop:(BOOL)isScrollTop {
-    CGFloat offsetY = contentOffset.y;
-    if (offsetY < 0) {
-        CGFloat height = self.headerBackHeight - offsetY;
-        self.topBack.frame = CGRectMake(0, offsetY, SCREEN_WIDTH, height);
+- (void)updateWhenScrolledWithContentOffset:(CGFloat)offset isScrollTop:(BOOL)isScrollTop scrollView:(UIScrollView *)scrollView {
+    if (offset < 0) {
+        CGFloat height = self.headerBackHeight - offset;
+        self.topBack.frame = CGRectMake(0, offset, SCREEN_WIDTH, height);
     } else {
         self.topBack.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight);
     }
+    //控制刷新状态
+    if(offset <= 0 && self.refreshHeader.state != MJRefreshStateRefreshing){
+        CGFloat distance = fabs(offset) > 20 ? 20 : fabs(offset);
+        self.refreshHeader.alpha = distance / 20;
+    }
+
+    if(offset <= -50){
+        if(self.refreshHeader.state != MJRefreshStatePulling && self.refreshHeader.state != MJRefreshStateRefreshing){
+            self.refreshHeader.state = MJRefreshStatePulling;
+        }
+    }else{
+        if(self.refreshHeader.state != MJRefreshStateIdle && self.refreshHeader.state != MJRefreshStateRefreshing){
+            self.refreshHeader.state = MJRefreshStateIdle;
+        }
+    }
+    
+//    CGFloat diff = offset - _preOffset;
+//    NSLog(@"diff____%f",diff);
+//    if(self.refreshHeader.state == MJRefreshStatePulling && self.scrollViewDidEndDrag){
+//        self.scrollViewDidEndDrag = NO;
+//        self.refreshHeader.state = MJRefreshStateRefreshing;
+//    }
+    
+    _preOffset = offset;
 }
 
 - (void)updateOperationInfo:(BOOL)isShow whRatio:(CGFloat)whRatio {
@@ -333,15 +379,23 @@
     [self.operationBannerContainer mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];
+    
+    [self layoutIfNeeded];
+    self.operationBannerContainerHeight = self.operationBannerContainer.height;
+    self.height = [self viewHeight];
 }
 
 - (void)updatePublicationsInfo:(BOOL)isShow hasDetailBtn:(BOOL)hasDetailBtn {
-    
     if(isShow) {
-        [self.publicationsContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.equalTo(self);
-            make.top.equalTo(self.topBack.mas_bottom);
-        }];
+        if([self isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow]){
+            [self.publicationsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(60);
+            }];
+        }else{
+            [self.publicationsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(40);
+            }];
+        }
     } else {
         [self.publicationsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
@@ -355,6 +409,10 @@
     [self.publicationsContentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.publicationsDetailView.mas_left).offset(hasDetailBtn ? -10 : 0);
     }];
+    
+    [self layoutIfNeeded];
+    self.publicationsContainerHeight = self.publicationsContainer.height;
+    self.height = [self viewHeight];
 }
 
 - (void)gotoPublicationsDetail: (UITapGestureRecognizer *)gesture {
@@ -363,7 +421,7 @@
     }
 }
 
-// 小区圈关注列表
+// 圈子关注列表
 - (void)gotoSocialFollowUserList: (UITapGestureRecognizer *)gesture {
     if (self.gotoSocialFollowUserListBlk) {
         self.gotoSocialFollowUserListBlk();
@@ -380,8 +438,19 @@
     BOOL ret = NO;
     CGFloat leftPadding = 20;
     CGFloat rightPadding = 15;
-    CGRect rect = [self.publicationsContentLabel textRectForBounds:CGRectMake(0, 0, SCREEN_WIDTH - leftPadding - rightPadding, CGFLOAT_MAX) limitedToNumberOfLines:0];
-    ret = rect.size.height > (PublicationsContentLabel_numberOfLines * PublicationsContentLabel_lineHeight);
+//    CGRect rect = [self.publicationsContentLabel textRectForBounds:CGRectMake(0, 0, SCREEN_WIDTH - leftPadding - rightPadding, CGFLOAT_MAX) limitedToNumberOfLines:0];
+    CGSize size = [self.publicationsContentLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - leftPadding - rightPadding, CGFLOAT_MAX)];
+    ret = size.height >= (PublicationsContentLabel_numberOfLines * PublicationsContentLabel_lineHeight);
     return ret;
 }
+
+- (CGFloat)viewHeight {
+    CGFloat headerBackNormalHeight = 144;
+    CGFloat headerBackXSeriesHeight = headerBackNormalHeight + 24; //刘海平多出24
+    CGFloat height = [TTDeviceHelper isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight;
+    height += self.publicationsContainerHeight;
+    height += (self.operationBannerContainerHeight + 5);
+    return height;
+}
+
 @end

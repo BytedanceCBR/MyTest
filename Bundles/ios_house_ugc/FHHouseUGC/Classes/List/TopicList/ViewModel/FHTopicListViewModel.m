@@ -128,9 +128,14 @@
                     traceParam[UT_ENTER_TYPE] = @"click";
                     traceParam[UT_LOG_PB] = UT_BE_NULL;
                     traceParam[@"rank"] = @(indexPath.row);
-                } else if([url.absoluteString containsString:@"profile"]) {
+                }
+                else if([url.absoluteString containsString:@"profile"]) {
                     // JOKER:
-                } else {
+                }
+                else if([url.absoluteString containsString:@"webview"]) {
+                    
+                }
+                else {
                     isOpen = NO;
                 }
                 

@@ -31,6 +31,7 @@
 #import "NSDictionary+TTAdditions.h"
 #import "TTInstallIDManager.h"
 #import "TTSandBoxHelper.h"
+#import <FHUtils.h>
 
 DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
@@ -52,17 +53,21 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     //待首页view初始化后 再执行切tab
     
     NSString *lastCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    if (![FHEnvContext isCurrentCityNormalOpen] && lastCityId) {
-        [[FHEnvContext sharedInstance] jumpUGCTab];
-    }else
-    {
-        if ([FHEnvContext isUGCAdUser]) {
-            if ([FHEnvContext isUGCOpen]) {
-                [[FHEnvContext sharedInstance] jumpUGCTab];
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+
+    if (hasSelectedCity) {
+        if (![FHEnvContext isCurrentCityNormalOpen] && lastCityId) {
+            [[FHEnvContext sharedInstance] jumpUGCTab];
+        }else
+        {
+            if ([FHEnvContext isUGCAdUser]) {
+                if ([FHEnvContext isUGCOpen]) {
+                    [[FHEnvContext sharedInstance] jumpUGCTab];
+                }
             }
         }
     }
-    
+
     if (lastCityId) {
         [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
     }

@@ -7,10 +7,11 @@
 
 #import <UIKit/UIKit.h>
 #import "FHRecommendSecondhandHouseTitleModel.h"
+#import <FHHouseBase/FHListBaseCell.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHRecommendSecondhandHouseTitleCell : UITableViewCell
+@interface FHRecommendSecondhandHouseTitleCell : FHListBaseCell
 
 -(void) bindData: (FHRecommendSecondhandHouseTitleModel *) model;
 

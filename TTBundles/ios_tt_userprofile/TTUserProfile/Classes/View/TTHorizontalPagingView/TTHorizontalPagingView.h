@@ -75,6 +75,14 @@
  */
 - (void)pagingView:(TTHorizontalPagingView *)pagingView scrollTopOffset:(CGFloat)offset;
 
+/**
+ 视图滚动松手时候会调用，仅限于头部视图和segment视图
+ 
+ @param pagingView pagingView
+ @param offset 当前滚动视图的contentOffset.y
+ */
+- (void)pagingView:(TTHorizontalPagingView *)pagingView scrollViewDidEndDraggingOffset:(CGFloat)offset;
+
 @end
 
 @interface TTHorizontalPagingView : SSThemedView
@@ -111,7 +119,7 @@ swipeView是否开启水平bounce效果，默认为 NO
 /**
  头部视图
  */
-@property (nonatomic, strong, readonly) UIView *headerView;
+@property (nonatomic, strong) UIView *headerView;
 /**
  代理
  */
@@ -119,11 +127,17 @@ swipeView是否开启水平bounce效果，默认为 NO
 /**
  segmentView
  */
-@property (nonatomic, strong, readonly) TTHorizontalPagingSegmentView *segmentView;
+@property (nonatomic, strong) TTHorizontalPagingSegmentView *segmentView;
 /**
  当前滚动的scrollView
  */
 @property (nonatomic, strong, readonly) UIScrollView *currentContentView;
+
+@property (nonatomic, assign) BOOL headerViewScrollEnabled;
+
+@property (nonatomic, strong) UIView *movingView;
+
+@property (nonatomic, assign) BOOL isSwitching;
 /**
  *  手动控制滚动到某个视图
  *
@@ -148,5 +162,9 @@ swipeView是否开启水平bounce效果，默认为 NO
  刷新视图
  */
 - (void)reloadData;
+
+- (void)reloadHeaderShowHeight;
+
+- (void)reloadHeaderViewHeight:(CGFloat)height;
 
 @end

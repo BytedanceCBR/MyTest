@@ -10,11 +10,11 @@
 #import "FHCommuteConfigDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@class FHHouseRentModel;
+@class FHHouseRentModel,FHListSearchHouseModel;
 @class TTHttpTask;
 @interface FHBaseMainListViewModel (Rent)<FHCommuteConfigDelegate>
 
--(TTHttpTask *)requestRentData:(BOOL)isHead query:(NSString *_Nullable)query completion:(void(^_Nullable)(FHHouseRentModel *_Nullable model , NSError *_Nullable error))completion;
+-(TTHttpTask *)requestRentData:(BOOL)isHead query:(NSString *_Nullable)query completion:(void(^_Nullable)(FHListSearchHouseModel *_Nullable model , NSError *_Nullable error))completion;
 
 -(NSString *)originFromWithFilterType:(FHHouseRentFilterType)filterType;
 

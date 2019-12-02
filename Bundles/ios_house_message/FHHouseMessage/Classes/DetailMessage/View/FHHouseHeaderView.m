@@ -40,7 +40,7 @@
     
     self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
     _contentLabel.numberOfLines = 2;
-    _contentLabel.lineBreakMode = UILineBreakModeCharacterWrap;
+    _contentLabel.lineBreakMode = UILineBreakModeTailTruncation;
     [_contentView addSubview:_contentLabel];
     
     self.bottomLine = [[UIView alloc] init];

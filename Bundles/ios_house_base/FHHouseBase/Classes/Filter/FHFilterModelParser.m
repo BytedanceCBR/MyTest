@@ -7,6 +7,7 @@
 
 #import "FHFilterModelParser.h"
 #import "FHEnvContext.h"
+#import "FHLocManager.h"
 
 @implementation FHFilterModelParser
 
@@ -92,10 +93,12 @@
                                                 withParent:(FHFilterNodeModel*)model {
     NSMutableArray<FHFilterNodeModel*>* result = [[NSMutableArray alloc] init];
     [options enumerateObjectsUsingBlock:^(FHSearchFilterConfigOption * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHFilterNodeModel* mm = [self convertConfigOptionToModel:obj
-                                                    supportMutli:supportNutli ? supportNutli : obj.supportMulti
-                                                      withParent:model];
-        [result addObject:mm];
+        if ([[FHLocManager  sharedInstance] isHaveLocationAuthorization] || ![obj.type isEqualToString:@"distance"]) {
+            FHFilterNodeModel* mm = [self convertConfigOptionToModel:obj
+                                                        supportMutli:supportNutli ? supportNutli : obj.supportMulti
+                                                          withParent:model];
+            [result addObject:mm];
+        }
     }];
     return result;
 }

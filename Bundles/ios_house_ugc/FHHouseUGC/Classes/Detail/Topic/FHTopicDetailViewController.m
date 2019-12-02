@@ -60,7 +60,6 @@
 @property (nonatomic, assign)   int64_t cid;// 话题id
 @property (nonatomic, strong)   UIButton       *publishBtn;
 @property (nonatomic, copy)     NSString       *enter_from;// 从哪进入的当前页面
-
 @end
 
 @implementation FHTopicDetailViewController
@@ -461,8 +460,14 @@
 - (void)setupPublishBtn {
     self.publishBtn = [[UIButton alloc] init];
     [_publishBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
-    [_publishBtn addTarget:self action:@selector(gotoPostThreadVC) forControlEvents:UIControlEventTouchUpInside];
+    [_publishBtn addTarget:self action:@selector(gotoPublish:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_publishBtn];
+}
+
+- (void)gotoPublish:(UIButton *)sender {
+    
+    [self gotoPostThreadVC];
+
 }
 
 // 发布按钮点击
@@ -470,11 +475,11 @@
     if ([TTAccountManager isLogin]) {
         [self gotoPostVC];
     } else {
-        [self gotoLogin];
+        [self gotoLogin:FHUGCLoginFrom_POST];
     }
 }
 
-- (void)gotoLogin {
+- (void)gotoLogin:(FHUGCLoginFrom)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *page_type = @"topic_detail";
     [params setObject:page_type forKey:@"enter_from"];
@@ -487,9 +492,11 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [wSelf gotoPostVC];
-                });
+                if(from == FHUGCLoginFrom_POST) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [wSelf gotoPostVC];
+                    });
+                }
             }
         }
     }];

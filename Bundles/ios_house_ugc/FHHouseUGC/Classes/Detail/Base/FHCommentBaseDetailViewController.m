@@ -75,8 +75,62 @@
         if(paramObj.allParams[@"begin_show_comment"]) {
             self.beginShowComment = [paramObj.allParams[@"begin_show_comment"] boolValue];
         }
+        NSString *report_params = paramObj.allParams[@"report_params"];
+        if ([report_params isKindOfClass:[NSString class]]) {
+            NSDictionary *params = [self getDictionaryFromJSONString:report_params];
+            if ([params isKindOfClass:[NSDictionary class]]) {
+                self.report_params_dic = params;
+                NSString *enter_from = params[@"enter_from"];
+                if (enter_from.length > 0) {
+                    self.tracerDict[@"enter_from"] = enter_from;
+                }
+                NSString *enter_type = params[@"enter_type"];
+                if (enter_type.length > 0) {
+                    self.tracerDict[@"enter_type"] = enter_type;
+                }
+                NSString *element_from = params[@"element_from"];
+                if (element_from.length > 0) {
+                    self.tracerDict[@"element_from"] = element_from;
+                }
+                NSString *log_pb_str = params[@"log_pb"];
+                if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
+                    NSData *jsonData = [log_pb_str dataUsingEncoding:NSUTF8StringEncoding];
+                    NSError *err = nil;
+                    NSDictionary *dic = nil;
+                    @try {
+                        dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                              options:NSJSONReadingMutableContainers
+                                                                error:&err];
+                    } @catch (NSException *exception) {
+                        
+                    } @finally {
+                        
+                    }
+                    if (!err && [dic isKindOfClass:[NSDictionary class]] && dic.count > 0) {
+                        self.tracerDict[@"log_pb"] = dic;
+                    }
+                } else if ([log_pb_str isKindOfClass:[NSDictionary class]]) {
+                    self.tracerDict[@"log_pb"] = (NSDictionary *)log_pb_str;
+                }
+            }
+        }
     }
     return self;
+}
+
+- (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
+    NSMutableDictionary *retDic = nil;
+    if (jsonString.length > 0) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        retDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if ([retDic isKindOfClass:[NSDictionary class]] && error == nil) {
+            return retDic;
+        } else {
+            return nil;
+        }
+    }
+    return retDic;
 }
 
 - (void)viewDidLoad {
@@ -432,8 +486,13 @@
     dict[@"enter_from"] = self.tracerDict[@"enter_from"];
     dict[@"element_from"] = self.tracerDict[@"element_from"];
     dict[@"page_type"] = self.tracerDict[@"page_type"];
-    
-    [FHCommonApi requestCommonDigg:self.groupModel.groupID groupType:FHDetailDiggTypeTHREAD action:self.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    FHDetailDiggType diggType = FHDetailDiggTypeTHREAD;
+    if (self.postType == FHUGCPostTypePost) {
+        diggType = FHDetailDiggTypeTHREAD;
+    } else if (self.postType == FHUGCPostTypeVote) {
+        diggType = FHDetailDiggTypeVote;
+    }
+    [FHCommonApi requestCommonDigg:self.groupModel.groupID groupType:diggType action:self.user_digg tracerParam:dict  completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
     }];
 }
@@ -445,8 +504,13 @@
         NSInteger diggCount = self.digg_count;
         NSInteger groupType = [userInfo[@"group_type"] integerValue];
         NSString *groupId = userInfo[@"group_id"];
-        
-        if(groupType == FHDetailDiggTypeTHREAD && [groupId isEqualToString:self.groupModel.groupID]){
+        FHDetailDiggType diggType = FHDetailDiggTypeTHREAD;
+        if (self.postType == FHUGCPostTypePost) {
+            diggType = FHDetailDiggTypeTHREAD;
+        } else if (self.postType == FHUGCPostTypeVote) {
+            diggType = FHDetailDiggTypeVote;
+        }
+        if(groupType == diggType && [groupId isEqualToString:self.groupModel.groupID]){
             // 刷新UI
             if(user_digg == 0){
                 //取消点赞
@@ -752,7 +816,7 @@
                 if (commentHeight < frameHeight) {
                     topOffset = topOffset - (frameHeight - commentHeight) - 1;
                 }
-                if (self.postType == FHUGCPostTypePost) {
+                if (self.postType == FHUGCPostTypePost || self.postType == FHUGCPostTypeVote) {
                     // 帖子 -- 减去全部评论的高度
                     topOffset -= 52;
                 }

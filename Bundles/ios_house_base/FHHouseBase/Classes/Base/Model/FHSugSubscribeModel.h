@@ -1,10 +1,13 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 #import "FHBaseModelProtocol.h"
+#import "FHSearchBaseItemModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
+
+
 // 搜索列表页面是否显示真假房源入口
-@interface FHSugListRealHouseTopInfoModel : JSONModel
+@interface FHSugListRealHouseTopInfoModel : FHSearchBaseItemModel
 
 @property (nonatomic, copy , nullable) NSString *fakeText;
 @property (nonatomic, copy , nullable) NSString *fakeHouse;
@@ -19,10 +22,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *subscribeId;
 
+@property (nonatomic, strong)   NSDictionary   *tracerDict;
+@property (nonatomic, strong)  NSString *searchQuery;
+
 @end
 
 // 搜索列表页面返回的是否订阅模型
-@interface FHSugSubscribeDataDataSubscribeInfoModel : JSONModel
+@interface FHSugSubscribeDataDataSubscribeInfoModel : FHSearchBaseItemModel
 
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, copy , nullable) NSString *title;

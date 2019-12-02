@@ -513,6 +513,23 @@
         
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
+    }  else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo) {
+        // 投票
+        BOOL jump_comment = NO;
+        if (showComment) {
+            jump_comment = YES;
+        }
+        NSMutableDictionary *dict = @{@"begin_show_comment":@(jump_comment)}.mutableCopy;
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = @"hot_discuss_feed";
+        traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+        traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+        traceParam[@"log_pb"] = cellModel.logPb;
+        dict[@"tracer"] = traceParam;
+        dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
@@ -630,9 +647,14 @@
             traceParam[@"enter_type"] = @"click";
             traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
             traceParam[@"log_pb"] = cellModel.logPb;
-        } else if([url.absoluteString containsString:@"profile"]) {
+        }
+        else if([url.absoluteString containsString:@"profile"]) {
             // JOKER:
-        } else {
+        }
+        else if([url.absoluteString containsString:@"webview"]) {
+            
+        }
+        else {
             isOpen = NO;
         }
         

@@ -116,7 +116,7 @@
 - (void)setupUI {
     _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:22];
     _keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
-    _keyLabel.font = [UIFont themeFontDINMedium:22];
+    _keyLabel.font = [UIFont themeFontMedium:22];
     [self addSubview:_keyLabel];
     
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];

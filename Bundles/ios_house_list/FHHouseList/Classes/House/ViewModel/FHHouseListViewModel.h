@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 列表页 viewmodel
  */
 
-@class FHHouseListRedirectTipView;
+@class FHHouseListRedirectTipView,FHMainOldTopTagsView;
 @class FHHouseListCommuteTipView;
 @class FHFakeInputNavbar;
 @interface FHHouseListViewModel : FHBaseHouseListViewModel <FHHouseSuggestionDelegate>
@@ -62,6 +62,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar;
 
 - (void)refreshMessageDot;
+
++ (NSInteger)searchOffsetByhouseModel:(JSONModel *)houseModel;
+
+- (void)setTopTagsView:(FHMainOldTopTagsView *)topTagsView;
+- (void)addTagsViewClick:(NSString *)value_id;
 
 @end
 

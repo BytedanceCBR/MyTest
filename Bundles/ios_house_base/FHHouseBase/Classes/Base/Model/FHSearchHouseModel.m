@@ -6,6 +6,7 @@
 //
 
 #import "FHSearchHouseModel.h"
+#import "FHDetailBaseModel.h"
 
 @implementation  FHSearchHouseDataItemsBaseInfoMapModel
 
@@ -14,6 +15,27 @@
     NSDictionary *dict = @{
                            @"pricingPerSqm": @"pricing_per_sqm",
                            @"builtYear":@"built_year",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHHouseListHouseAdvantageTagModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"textColor": @"text_color",
+                           @"backgroundColor": @"background_color",
+                           @"borderColor": @"border_color",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -90,25 +112,25 @@
 
 @end
 
-@implementation FHRecommendSecondhandHouseDataModel
-
-+ (JSONKeyMapper *)keyMapper {
-    NSDictionary *dict = @{
-                           @"hasMore": @"has_more",
-                           @"recommendTitle": @"recommend_title",
-                           @"searchHint": @"search_hint",
-                           @"searchId": @"search_id",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName {
-    return YES;
-}
-
-@end
+//@implementation FHRecommendSecondhandHouseDataModel
+//
+//+ (JSONKeyMapper *)keyMapper {
+//    NSDictionary *dict = @{
+//                           @"hasMore": @"has_more",
+//                           @"recommendTitle": @"recommend_title",
+//                           @"searchHint": @"search_hint",
+//                           @"searchId": @"search_id",
+//                           };
+//    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+//        return dict[keyName]?:keyName;
+//    }];
+//}
+//
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName {
+//    return YES;
+//}
+//
+//@end
 
 @implementation FHHouseItemHouseExternalModel
 
@@ -330,6 +352,10 @@
 }
 @end
 
+
+
+
+
 @implementation FHSearchHouseDataItemsSkyEyeTagModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -346,6 +372,8 @@
     return YES;
 }
 @end
+
+
 
 @implementation  FHSearchHouseDataItemsModel
 
@@ -421,14 +449,14 @@
 //@end
 
 
-@implementation  FHRecommendSecondhandHouseModel
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
+//@implementation  FHRecommendSecondhandHouseModel
+//
+//+ (BOOL)propertyIsOptional:(NSString *)propertyName
+//{
+//    return YES;
+//}
+//
+//@end
 
 @implementation  FHSearchHouseModel
 
@@ -438,6 +466,51 @@
 }
 
 @end
+
+
+#pragma mark - 新model
+
+@implementation  FHListSearchHouseModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation  FHListSearchHouseDataModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"hasMore": @"has_more",
+                           @"refreshTip": @"refresh_tip",
+                           @"redirectTips": @"redirect_tips",
+                           @"searchId": @"search_id",
+                           @"mapFindHouseOpenUrl": @"map_find_house_open_url",
+                           @"houseListOpenUrl": @"house_list_open_url",
+                           @"recommendSearchModel": @"recommend_search",
+                           @"subscribeInfo": @"subscribe_info",
+                           @"externalSite": @"external_site",
+                           @"agencyInfo": @"agency_info",
+                           @"topTip":@"top_tip",
+                           @"bottomTip":@"bottom_tip",
+                           //                           @"currentItems":@"items",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+
 
 @implementation FHSearchHouseDataItemsModelBottomText
 
@@ -494,3 +567,172 @@
 }
 
 @end
+
+
+@implementation FHHouseNeighborAgencyModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                                   @"id": @"neighborhood_id",
+                                   @"neighborhoodName": @"neighborhood_name",
+                                   @"neighborhoodPrice": @"neighborhood_price",
+                                   @"displayStatusInfo": @"display_status_info",
+                                   @"contactModel": @"realtor_info",
+                                   @"logPb": @"log_pb",
+                                   };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+#pragma mark - 后续统一用FHSearchBaseItemModel 和 FHSearchHouseItemModel
+
+@implementation  FHSearchHouseItemModel
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.topMargin = 0;
+    }
+    return self;
+}
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+
+                           @"logPb": @"log_pb",
+                           @"recommendReasons": @"recommend_reasons",
+                           @"baseInfo": @"base_info",
+                           @"displaySubtitle": @"display_subtitle",
+                           @"neighborhoodInfo": @"neighborhood_info",
+                           @"displayPrice": @"display_price",
+                           @"displayBuiltYear": @"display_built_year",
+                           @"displayTitle": @"display_title",
+                           @"houseImageTag": @"house_image_tag",
+                           @"houseTitleTag": @"title_tag",
+                           @"displayDescription": @"display_description",
+                           @"displayPricePerSqm": @"display_price_per_sqm",
+                           @"uploadAt": @"upload_at",
+                           @"imprId": @"impr_id",
+                           @"vrInfo": @"vr_info",
+
+                           @"searchId": @"search_id",
+                           @"houseImage": @"house_image",
+                           @"houseType": @"house_type",
+                           @"houseVideo": @"house_video",
+                           @"displaySameNeighborhoodTitle": @"display_same_neighborhood_title",
+                           @"baseInfoMap": @"base_info_map",
+                           @"coreInfo": @"core_info",
+
+                           @"externalInfo":@"external_info",
+                           @"originPrice":@"origin_price",
+                           @"subscribeInfo": @"subscribe_info",
+                           @"bottomText": @"bottom_text",
+                           @"fakeReason": @"fake_reason",
+                           @"externalInfo": @"external_info",
+                           @"skyEyeTag": @"sky_eye_tag",
+                           @"advantageDescription":@"advantage_description",
+
+                           @"pricePerSqmNum": @"price_per_sqm_num",
+                           @"pricePerSqmUnit": @"price_per_sqm_unit",
+                           @"globalPricing":@"global_pricing",
+                           @"floorpanList":@"floorpan_list",
+                           @"userStatus":@"user_status",
+
+                           @"pricingNum": @"pricing_num",
+                           @"pricingUnit": @"pricing_unit",
+
+                           @"houseType": @"house_type",
+                           @"coreInfo": @"core_info",
+                           @"logPb": @"log_pb",
+
+                           @"houseImageTag": @"house_image_tag",
+                           @"houseImage": @"house_image",
+                           @"bottomText": @"bottom_text",
+                           @"baseInfo": @"base_info",
+                           @"coreInfo": @"core_info",
+
+                           @"gaodeLat": @"gaode_lat",
+                           @"gaodeLng": @"gaode_lng",
+                           @"displayStatsInfo": @"display_stats_info",
+                           @"dealStatus": @"deal_status",
+                           @"dealOpenUrl": @"deal_open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHSearchHouseItemModel (RecommendReason)
+
+-(BOOL)showRecommendReason
+{
+    for (FHSearchHouseDataItemsRecommendReasonsModel *reason in self.recommendReasons) {
+        if (reason.text.length > 0) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+@end
+
+
+#pragma mark - 搜索混排卡片整合
+// 过滤文本卡片 （已为您过滤xxx套可疑房源）
+@implementation  FHSearchFilterHouseTipModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+// 猜你想找Tips
+@implementation  FHSearchGuessYouWantTipsModel
+
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+// 猜你想找文本
+@implementation  FHSearchGuessYouWantContentModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+

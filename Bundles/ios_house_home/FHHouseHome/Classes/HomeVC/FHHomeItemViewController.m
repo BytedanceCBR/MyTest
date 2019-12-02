@@ -26,8 +26,13 @@
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import <FHHouseBaseNewHouseCell.h>
+#import <FHPlaceHolderCell.h>
 
 extern NSString *const INSTANT_DATA_KEY;
+
+static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
+static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate>
 
@@ -167,13 +172,17 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)registerCells
 {
-    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
-    
+    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellSmallItemImageId];
+
+    [self.tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:kCellNewHouseItemImageId];
+
     [self.tableView  registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
     
     [self.tableView  registerClass:[FHHomeBaseTableCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBaseTableCell class])];
     
     [self.tableView  registerClass:[FHhomeHouseTypeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
+    
+    [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
 }
@@ -395,6 +404,24 @@ extern NSString *const INSTANT_DATA_KEY;
     }
 }
 
+
+-(NSString *)houseTypeString {
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return @"new";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
 - (void)uploadFirstScreenHouseShow
 {
     for (NSMutableDictionary *houseShowTrace in self.traceNeedUploadCache) {
@@ -525,6 +552,16 @@ extern NSString *const INSTANT_DATA_KEY;
         if (self.showNoDataErrorView || self.showRequestErrorView || self.showDislikeNoDataView) {
             return [self getHeightShowNoData];
         }
+        if (self.houseType == FHHouseTypeNewHouse) {
+            if (indexPath.row < self.houseDataItemsModel.count) {
+                JSONModel *model = self.houseDataItemsModel[indexPath.row];
+                return [FHHouseBaseNewHouseCell heightForData:model];
+            }
+        }
+        
+        if (self.showPlaceHolder && self.houseType == FHHouseTypeNewHouse) {
+            return 118;
+        }
         
         return 75;
     }
@@ -626,12 +663,27 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         
         if (self.showPlaceHolder) {
+            if (self.houseType == FHHouseTypeNewHouse) {
+                FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+                return cell;
+            }
             FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
             return cell;
         }
         
+        if (self.houseType == FHHouseTypeNewHouse) {
+            //to do 房源cell
+            FHHouseBaseNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellNewHouseItemImageId];
+            cell.delegate = self;
+            if (indexPath.row < self.houseDataItemsModel.count) {
+                JSONModel *model = self.houseDataItemsModel[indexPath.row];
+                [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
+                [cell updateHomeNewHouseCellModel:model];
+            }
+            return cell;
+        }
         //to do 房源cell
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellSmallItemImageId];
         cell.delegate = self;
         if (indexPath.row < self.houseDataItemsModel.count) {
             JSONModel *model = self.houseDataItemsModel[indexPath.row];
@@ -665,9 +717,9 @@ extern NSString *const INSTANT_DATA_KEY;
             NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
             
             NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-            tracerDict[@"house_type"] = [self pageTypeString] ? : @"be_null";
+            tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
             tracerDict[@"card_type"] = @"left_pic";
-            tracerDict[@"page_type"] = [self pageTypeString];
+            tracerDict[@"page_type"] = @"maintab";
             tracerDict[@"element_type"] = @"maintab_list";
             tracerDict[@"group_id"] = cellModel.idx ? : @"be_null";
             tracerDict[@"impr_id"] = cellModel.imprId ? : @"be_null";

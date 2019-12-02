@@ -43,6 +43,7 @@ PODS:
   - BDTBasePlayer (0.3.47)
   - BDTExploreOrderedData (0.1.7)
   - BDTFactoryConfigurator (0.1.0.1-binary)
+  - BDTrackerProtocol (2.1.1.1-binary)
   - BDTSharedHeaders (0.1.0)
   - BDUGAccountOnekeyLogin (1.1.6-rc.1)
   - BDUGContainer (1.1.2)
@@ -81,6 +82,8 @@ PODS:
   - Bolts/AppLinks (1.9.0.1-binary)
   - Bolts/Tasks (1.9.0.1-binary)
   - boringssl (0.0.7)
+  - ByteDanceKit/Foundation (1.0.0-rc.3.1.binary)
+  - ByteDanceKit/UIKit (1.0.0-rc.3.1.binary)
   - CHTCollectionViewWaterfallLayout (0.9.5.1-binary):
     - CHTCollectionViewWaterfallLayout/ObjC (= 0.9.5.1-binary)
   - CHTCollectionViewWaterfallLayout/ObjC (0.9.5.1-binary)
@@ -94,7 +97,7 @@ PODS:
   - Fabric (1.10.2.1-binary)
   - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.7-alpha.0)
+  - FHCommonUI (0.0.8-alpha.0)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -171,7 +174,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.13-rc.3)
+  - ios_house_im (0.1.14-alpha.4)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -271,17 +274,17 @@ PODS:
   - SDWebImage/Core (4.4.1.1-binary)
   - SDWebImage/GIF (4.4.1.1-binary)
   - SDWebImage/WebP (4.4.1.1-binary)
-  - SecGuard (0.8.14.5):
-    - SecGuard/Base (= 0.8.14.5)
-    - SecGuard/Core (= 0.8.14.5)
-    - SecGuard/Encrypt (= 0.8.14.5)
-    - SecGuard/ForceCrash (= 0.8.14.5)
-    - SecGuard/Selas (= 0.8.14.5)
-  - SecGuard/Base (0.8.14.5)
-  - SecGuard/Core (0.8.14.5)
-  - SecGuard/Encrypt (0.8.14.5)
-  - SecGuard/ForceCrash (0.8.14.5)
-  - SecGuard/Selas (0.8.14.5)
+  - SecGuard (0.8.16.2.1-binary):
+    - SecGuard/Base (= 0.8.16.2.1-binary)
+    - SecGuard/Core (= 0.8.16.2.1-binary)
+    - SecGuard/Encrypt (= 0.8.16.2.1-binary)
+    - SecGuard/ForceCrash (= 0.8.16.2.1-binary)
+    - SecGuard/Selas (= 0.8.16.2.1-binary)
+  - SecGuard/Base (0.8.16.2.1-binary)
+  - SecGuard/Core (0.8.16.2.1-binary)
+  - SecGuard/Encrypt (0.8.16.2.1-binary)
+  - SecGuard/ForceCrash (0.8.16.2.1-binary)
+  - SecGuard/Selas (0.8.16.2.1-binary)
   - SocketRocket (0.5.1.1-binary)
   - SQLiteRepairKit (1.2.1.1-binary)
   - SSZipArchive (1.6.3.1-binary)
@@ -444,7 +447,6 @@ PODS:
     - TTPlatformUIModel/TTImageDetectorViewController (= 0.2.39)
     - TTPlatformUIModel/TTLabel (= 0.2.39)
     - TTPlatformUIModel/TTModel (= 0.2.39)
-    - TTPlatformUIModel/TTSeachBarView (= 0.2.39)
   - TTPlatformUIModel/HPGrowingTextView (0.2.39)
   - TTPlatformUIModel/TTActionSheet (0.2.39)
   - TTPlatformUIModel/TTAssetView (0.2.39)
@@ -457,7 +459,6 @@ PODS:
   - TTPlatformUIModel/TTImageDetectorViewController (0.2.39)
   - TTPlatformUIModel/TTLabel (0.2.39)
   - TTPlatformUIModel/TTModel (0.2.39)
-  - TTPlatformUIModel/TTSeachBarView (0.2.39)
   - TTPlayerSDK (2.9.9.10)
   - TTPostBase (0.1.4)
   - TTPreloaderSDK (1.4.20-rc.0)
@@ -533,9 +534,71 @@ PODS:
   - TTUGCFoundation/TTUGCApiModel (0.1.3)
   - TTUGCFoundation/TTUGCImage (0.1.3)
   - TTUGCFoundation/TTUGCRichText (0.1.3)
-  - TTUIWidget (0.1.0):
-    - TTUIWidget/TTIndicatorView (= 0.1.0)
-  - TTUIWidget/TTIndicatorView (0.1.0)
+  - TTUIWidget (1.4.9-alpha.0-fproject):
+    - TTUIWidget/ALAssets (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/ArticleListNotifyBarView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/Others (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/PopoverView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/SaveImageAlertView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/SSAlertViewBase (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/SSMotionRender (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/SSViewControllerBase (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/STLinkLabel (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTAlphaThemedButton (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTAsyncLabel (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTBackButtonView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTBadgeNumberView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTBubbleView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTColorAsFollowButton (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTDialogView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTHeaderScrollView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTIconLabel (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTIndicatorView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTKeyboardListener (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTLabel (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTNavigationController (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTNavigationControllerTTBD (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTPageController (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTSearchBarView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTSegmentedControl (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTTagView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTThemedAlertController (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTThemedAlertControllerProtocol (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/TTWrongWordsReportView (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/UIView+CustomTimingFunction (= 1.4.9-alpha.0-fproject)
+    - TTUIWidget/UIViewController+TabBarSnapShot (= 1.4.9-alpha.0-fproject)
+  - TTUIWidget/ALAssets (1.4.9-alpha.0-fproject)
+  - TTUIWidget/ArticleListNotifyBarView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/Others (1.4.9-alpha.0-fproject)
+  - TTUIWidget/PopoverView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/SaveImageAlertView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/SSAlertViewBase (1.4.9-alpha.0-fproject)
+  - TTUIWidget/SSMotionRender (1.4.9-alpha.0-fproject)
+  - TTUIWidget/SSViewControllerBase (1.4.9-alpha.0-fproject)
+  - TTUIWidget/STLinkLabel (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTAlphaThemedButton (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTAsyncLabel (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTBackButtonView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTBadgeNumberView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTBubbleView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTColorAsFollowButton (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTDialogView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTHeaderScrollView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTIconLabel (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTIndicatorView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTKeyboardListener (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTLabel (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTNavigationController (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTNavigationControllerTTBD (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTPageController (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTSearchBarView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTSegmentedControl (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTTagView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTThemedAlertController (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTThemedAlertControllerProtocol (1.4.9-alpha.0-fproject)
+  - TTUIWidget/TTWrongWordsReportView (1.4.9-alpha.0-fproject)
+  - TTUIWidget/UIView+CustomTimingFunction (1.4.9-alpha.0-fproject)
+  - TTUIWidget/UIViewController+TabBarSnapShot (1.4.9-alpha.0-fproject)
   - TTUserProfile (0.1.0)
   - TTUserSettings (0.3.4)
   - TTVContainerScrollView (0.1.2.1-binary)
@@ -602,6 +665,7 @@ DEPENDENCIES:
   - BDTBasePlayer (from `../AKPlugins/BDTBasePlayer`)
   - BDTExploreOrderedData (from `../AKPlugins/BDTExploreOrderedData`)
   - BDTFactoryConfigurator (= 0.1.0.1-binary)
+  - BDTrackerProtocol (= 2.1.1.1-binary)
   - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
   - BDUGAccountOnekeyLogin (= 1.1.6-rc.1)
   - BDUGContainer (= 1.1.2)
@@ -625,6 +689,8 @@ DEPENDENCIES:
   - BDWebImage/SDAdapter (= 0.2.2.1-binary)
   - Bolts (= 1.9.0.1-binary)
   - boringssl (= 0.0.7)
+  - ByteDanceKit/Foundation (= 1.0.0-rc.3.1.binary)
+  - ByteDanceKit/UIKit (= 1.0.0-rc.3.1.binary)
   - CHTCollectionViewWaterfallLayout (= 0.9.5.1-binary)
   - CocoaLumberjack (= 3.4.2.1-binary)
   - Crashlytics (= 3.12.0.1-binary)
@@ -632,7 +698,7 @@ DEPENDENCIES:
   - Fabric (= 1.10.2.1-binary)
   - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.7-alpha.0)
+  - FHCommonUI (= 0.0.8-alpha.0)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -683,7 +749,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.13-rc.3)
+  - ios_house_im (= 0.1.14-alpha.4)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -727,7 +793,7 @@ DEPENDENCIES:
   - SDWebImage/Core (= 4.4.1.1-binary)
   - SDWebImage/GIF (= 4.4.1.1-binary)
   - SDWebImage/WebP (= 4.4.1.1-binary)
-  - SecGuard (= 0.8.14.5)
+  - SecGuard (= 0.8.16.2.1-binary)
   - SocketRocket (= 0.5.1.1-binary)
   - SQLiteRepairKit (= 1.2.1.1-binary)
   - SSZipArchive (= 1.6.3.1-binary)
@@ -847,7 +913,7 @@ DEPENDENCIES:
   - TTThemed (= 0.1.36.1-binary)
   - TTTracker (= 10.0.5.1-binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
-  - TTUIWidget (from `../AKPlugins/TTUIWidget`)
+  - TTUIWidget (= 1.4.9-alpha.0-fproject)
   - TTUserProfile (from `../TTBundles/ios_tt_userprofile`)
   - TTUserSettings (= 0.3.4)
   - TTVContainerScrollView (= 0.1.2.1-binary)
@@ -972,8 +1038,6 @@ EXTERNAL SOURCES:
       - TTShareBusiness/TTShareWeChatBusiness
   TTUGCFoundation:
     :path: ../Vendor/TTUGCFoundation
-  TTUIWidget:
-    :path: ../AKPlugins/TTUIWidget
   TTUserProfile:
     :path: ../TTBundles/ios_tt_userprofile
   TTVPlayerPod:
@@ -1006,6 +1070,7 @@ SPEC CHECKSUMS:
   BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
   BDTFactoryConfigurator: c14af7870fcd1fa9c52142d0c01635775543e42d
+  BDTrackerProtocol: c7605d2c4034c67976b79adbc8cb1b4826957411
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
   BDUGAccountOnekeyLogin: fc05dd02e5ccf22928bc071277c0390a46ec8aff
   BDUGContainer: 28193629e67c7c9244f5d5836bfed611bf631321
@@ -1019,6 +1084,7 @@ SPEC CHECKSUMS:
   BDWebImage: cb9435b175d994f7156ffdc736477d794db576dd
   Bolts: 1432a62b82e8d832c6fceaa3cce9ddbc18d91893
   boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
+  ByteDanceKit: ecd679ebcd80d2937ae10566db6dec1248d7840f
   CHTCollectionViewWaterfallLayout: 8a33ea9e60a246d71a3b04d4350c70de4caf1d24
   CocoaLumberjack: c0d821ecf553b7ee2a8da704cb4543027f3d0c5e
   Crashlytics: bf08c2834d9231328142ef5588ee1ae5b78229a9
@@ -1026,7 +1092,7 @@ SPEC CHECKSUMS:
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
   FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: 9aa45a281cf69135cabeddb213274d5ed91bab94
+  FHCommonUI: 9d66b1470dc6076aa30742d6f7e571eb7398f38a
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1052,7 +1118,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 863640adf12d1b7e49026833a2f5aaaa5320fa72
+  ios_house_im: a3c07e84923f92aeea9732678b3ca8e52bc42676
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1074,7 +1140,7 @@ SPEC CHECKSUMS:
   RSSwizzle: 535f53ac21a545718af9b3bae51f7c3df5ad7bc0
   RXCollections: fc5eb6c41b5a3646601e6a01c1ee444c354a9bfc
   SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
-  SecGuard: 4cb7fa89163ad3f896cf6c5600d343fd479e9905
+  SecGuard: cd11b1cde856e4eff5d9fa16b7b2c52c89cc819d
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
   SQLiteRepairKit: 272cadce05957d8b36df6ac573dc8a596649ed28
   SSZipArchive: cc2e2411672daf4be9f5f61d4184ba66f15bcd2b
@@ -1131,7 +1197,7 @@ SPEC CHECKSUMS:
   TTPersistence: e0685fe3f0cfd826ccf6917ab5e8227fd6331947
   TTPhotoScrollVC: f34664f26861dbfbf617e47385a2522ba8bf1755
   TTPlatformBaseLib: 46cc48c57de16b6c48527ca5266f8932d4e60e65
-  TTPlatformUIModel: 42e1baaadf68615bd4911b3a0fce24683b955105
+  TTPlatformUIModel: 46294bc4358d2058458a5ea1d8316c21d72ed8be
   TTPlayerSDK: 64564c57c01b3448059203e9fe48d6d07520d641
   TTPostBase: 91071b89ed5d95c7ac3d96354a31c65d77a6c94e
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
@@ -1151,8 +1217,8 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
   TTThemed: 921e544fa8ca8c34b3a091af38b8612609c18480
   TTTracker: 53b746772e7240481e57bee23ae866924fdc0193
-  TTUGCFoundation: f67fd0f474fef086cd3e986a4ad2c8bb79220d94
-  TTUIWidget: d6b9ff5d35146e048c206d45a8362c2e490b7025
+  TTUGCFoundation: 122bc1a5271b79b073460ec6691c3e3f2df86593
+  TTUIWidget: 1c194626c37434ce974daabf17674bfbf50e532d
   TTUserProfile: e9f6d23e86b3c1232b15a79a239e5d3a27e5b2f3
   TTUserSettings: 8214e9b9707b42dc450c2337ef5e9ca77456e0a4
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932

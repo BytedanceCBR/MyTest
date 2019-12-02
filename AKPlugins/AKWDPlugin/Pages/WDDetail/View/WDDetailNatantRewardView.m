@@ -331,7 +331,7 @@ static CGFloat const rewardLabelLeftInset = 9;
                                        enterFrom:kWDDetailViewControllerUMEventName
                                         apiParam:self.detailModel.apiParam
                                      finishBlock:nil];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"like"}];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"like"}];
             } else {
                 [TTTracker eventV3:@"rt_unlike" params:[dict copy]];
 

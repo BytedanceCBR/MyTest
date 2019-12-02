@@ -9,6 +9,7 @@
 #import <FHHouseBase/FHHouseType.h>
 #import <FHHouseBase/FHMainApi.h>
 #import <FHHouseBase/FHCommonApi.h>
+#import "TTHTTPRequestSerializerBase.h"
 
 @class TTHttpTask;
 @class FHUGCNoticeModel;
@@ -48,10 +49,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTHttpTask *)requestUGCConfig:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion;
 
 // 删除帖子
-+ (TTHttpTask *)postDelete:(NSString *)groupId socialGroupId:(NSString *)socialGroupId enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void(^)(bool success , NSError *error))completion;
++ (TTHttpTask *)postDelete:(NSString *)groupId cellType:(NSInteger)cellType socialGroupId:(NSString *)socialGroupId enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void(^)(bool success , NSError *error))completion;
 
 // 管理员操作帖子
-+ (TTHttpTask *)postOperation:(NSString *)groupId socialGroupId:(NSString *)socialGroupId operationCode:(NSString *)operationCode enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void (^ _Nonnull)(id<FHBaseModelProtocol> model, NSError *error))completion;
++ (TTHttpTask *)postOperation:(NSString *)groupId cellType:(NSInteger)cellType socialGroupId:(NSString *)socialGroupId operationCode:(NSString *)operationCode enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void (^ _Nonnull)(id<FHBaseModelProtocol> model, NSError *error))completion;
 
 // 评论详情
 + (TTHttpTask *)requestCommentDetailDataWithCommentId:(NSString *)comment_id socialGroupId:(NSString *)socialGroupId  class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
@@ -90,6 +91,21 @@ NS_ASSUME_NONNULL_BEGIN
 // 请求用户关注列表sug
 + (TTHttpTask *)requestFollowSugSearchByText:(NSString *)text socialGroupId:(NSString *)socialGroupId offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+// 投票发布器发布请求
++ (TTHttpTask *)requestVotePublishWithParam: (NSDictionary *)params completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 投票
+// 提交投票
++ (TTHttpTask *)requestVoteSubmit:(NSString *)voteId optionIDs:(NSArray *)optionIds optionNum:(NSNumber *)optionNum completion:(void(^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 取消投票
++ (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSNumber *)optionNum completion:(void(^)(BOOL success , NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
+
+// POST JSON 提交
+@interface FHVoteHTTPRequestSerializer : TTHTTPRequestSerializerBase<TTHTTPRequestSerializerProtocol>
+
+@end

@@ -233,4 +233,60 @@
 }
 
 
+- (NSDictionary *)queryDictBy:(NSString *)queryString
+{
+    NSMutableDictionary *queryParams = @{}.mutableCopy;
+    NSArray *paramsList = [queryString componentsSeparatedByString:@"&"];
+    [paramsList enumerateObjectsUsingBlock:^(NSString *param, NSUInteger idx, BOOL *stop){
+        NSArray *keyAndValue = [param componentsSeparatedByString:@"="];
+        if ([keyAndValue count] > 1) {
+            NSString *paramKey = [keyAndValue objectAtIndex:0];
+            NSString *paramValue = [keyAndValue objectAtIndex:1];
+            //                if ([paramValue rangeOfString:@"%"].length > 0) {
+            //                    //v0.2.17 递归decode解析query参数
+            //                    paramValue = [TTRoute recursiveDecodeForParamValue:paramValue];
+            //                }
+            
+            //v0.2.19 去掉递归decode，外部保证传入合法encode的url
+            [self _decodeWithEncodedURLString:&paramValue];
+            
+            if (paramValue && paramKey) {
+                [[self class] setQueryValue:paramValue forKey:paramKey toDict:queryParams];
+            }
+        }
+    }];
+    return queryParams;
+}
+
+- (void)_decodeWithEncodedURLString:(NSString **)urlString
+{
+    if ([*urlString rangeOfString:@"%"].length == 0){
+        return;
+    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    *urlString = (__bridge_transfer NSString *)(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, (__bridge CFStringRef)*urlString, CFSTR(""), kCFStringEncodingUTF8));
+#pragma clang diagnostic pop
+}
+
+
++ (void)setQueryValue:(nullable id)value forKey: (NSString *)key toDict:(NSMutableDictionary*)dict {
+    //判断数据是否是数组类型
+    NSString* arrayParamRegularExpressionStr = @".*%5B%5D";
+    NSRegularExpression* regex = [[NSRegularExpression alloc] initWithPattern:arrayParamRegularExpressionStr options:0 error:nil];
+    if ([regex firstMatchInString:key options:0 range:NSMakeRange(0, key.length)]) {
+        if (dict[key] != nil) {
+            NSArray* values = dict[key];
+            NSMutableArray* newValues = [[NSMutableArray alloc] initWithCapacity:values.count + 1];
+            [newValues addObjectsFromArray:values];
+            [newValues addObject:value];
+            dict[key] = newValues;
+        } else {
+            dict[key] = @[value];
+        }
+    } else {
+        dict[key] = value;
+    }
+}
+
 @end

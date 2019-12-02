@@ -14,18 +14,24 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHSearchChannelTypes.h>
+#import <FHHouseBase/FHSearchHouseModel.h>
 
 @implementation FHBaseMainListViewModel (Rent)
 
--(TTHttpTask *)requestRentData:(BOOL)isHead query:(NSString *_Nullable)query completion:(void(^_Nullable)(FHHouseRentModel *_Nullable model , NSError *_Nullable error))completion
+-(TTHttpTask *)requestRentData:(BOOL)isHead query:(NSString *_Nullable)query completion:(void(^_Nullable)(FHListSearchHouseModel *_Nullable model , NSError *_Nullable error))completion
 {
     NSInteger offset = 0;
     if (!isHead) {
-        offset = self.currentRentDataModel.offset;
-//        offset = self.houseList.count;
+        if ([self.houseDataModel isKindOfClass:[FHListSearchHouseDataModel class]]) {
+            FHListSearchHouseDataModel *model = (FHListSearchHouseDataModel *)self.houseDataModel;
+            offset = model.offset;
+        }else if ([self.houseDataModel isKindOfClass:[FHHouseRentDataModel class]]) {
+            FHHouseRentDataModel *model = (FHHouseRentDataModel *)self.houseDataModel;
+            offset = model.offset;
+        }
     }
     NSDictionary *params = @{CHANNEL_ID:CHANNEL_ID_SEARCH_RENT_WITH_BANNER};
-    return   [FHMainApi searchRent:query params:params offset:offset searchId:self.searchId sugParam:nil completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
+    return [FHMainApi searchRent:query params:params offset:offset searchId:self.searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error) {
         if (completion) {
             completion(model,error);
         }

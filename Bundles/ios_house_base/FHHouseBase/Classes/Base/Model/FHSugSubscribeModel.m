@@ -2,6 +2,26 @@
 #import "FHSugSubscribeModel.h"
 
 @implementation FHSugListRealHouseTopInfoModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"fakeTitle": @"fake_title",
+                           @"houseTotal": @"house_total",
+                           @"totalTitle": @"total_title",
+                           @"enableFakeHouse": @"enable_fake_house",
+                           @"trueHouseTotal": @"true_house_total",
+                           @"openUrl": @"open_url",
+                           @"fakeText":@"fake_text",
+                           @"trueTitle": @"true_title",
+                           @"fakeHouseTotal": @"fake_house_total",
+                           @"fakeHouse": @"fake_house",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

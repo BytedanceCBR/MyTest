@@ -42,7 +42,10 @@
                            @"evaluationInfo": @"evaluation_info",
                            @"chooseAgencyList": @"choose_agency_list",
                            @"ugcSocialGroup":@"ugc_social_group",
-                           };
+                           @"recommendedRealtors": @"recommended_realtors",
+                           @"recommendedRealtorsTitle": @"recommended_realtors_title",
+                           @"highlightedRealtor": @"highlighted_realtor",
+    };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];

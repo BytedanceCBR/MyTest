@@ -7,6 +7,17 @@
 
 #import "FHHouseListAPI.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
+#import <YYModel/YYModel.h>
+
+#define QURL(QPATH) [[FHMainApi host] stringByAppendingString:QPATH]
+#define GET @"GET"
+#define POST @"POST"
+#define DEFULT_ERROR @"请求错误"
+#define API_ERROR_CODE  10000
+#define API_NO_DATA     10001
+#define API_WRONG_DATA  10002
+
+
 
 @implementation FHHouseListAPI
 
@@ -44,7 +55,7 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestRelatedHouseSearchWithQuery:(NSString *)query houseId:(NSString *)houseId offset:(NSInteger)offset count:(NSInteger)count class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
++ (TTHttpTask *)requestRelatedHouseSearchWithQuery:(NSString *)query houseId:(NSString *)houseId searchId:(NSString *)searchId offset:(NSInteger)offset count:(NSInteger)count class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
 {
     NSString *queryPath = @"/f100/api/related_house";
     queryPath = [NSString stringWithFormat:@"%@?house_id=%@&offset=%ld",queryPath, houseId ?: @"",offset];
@@ -53,6 +64,7 @@
     }
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"house_id"] = houseId ?: @"";
+    paramDic[@"search_id"] = searchId ?: @"";
     paramDic[@"offset"] = @(offset);
     paramDic[@"count"] = @(count);
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_HOUSE;
@@ -102,7 +114,6 @@
     if (sugParam) {
         qparam[@"suggestion_params"] = sugParam;
     }
-    
     return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls logPath:@"search_second" completion:completion];
     
 }
@@ -383,6 +394,42 @@
     }
     
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (FHSearchHouseModel *)generateSearchModel:(NSData *)jsonData error:(NSError *__autoreleasing *)error
+{
+    if (*error) {
+        //there is error
+        return nil;
+    }
+    
+    if (!jsonData) {
+        *error = [NSError errorWithDomain:@"未请求到数据" code:API_NO_DATA userInfo:nil];
+        return nil;
+    }
+    
+    NSError *jerror = nil;
+    FHSearchHouseModel *model = nil;
+    model = [[FHSearchHouseModel alloc]initWithData:jsonData error:&jerror];
+    if (jerror) {
+#if DEBUG
+        NSLog(@" %s %ld API [%@] make json failed",__FILE__,__LINE__,NSStringFromClass([FHSearchHouseModel class]));
+#endif
+        *error = [NSError errorWithDomain:@"数据异常" code:API_WRONG_DATA userInfo:nil];
+        return nil;
+    }
+    
+    if ([model respondsToSelector:@selector(status)]) {
+        NSString *status = [model performSelector:@selector(status)];
+        if (![@"0" isEqualToString:status]) {
+            NSString *message = nil;
+            if ([model respondsToSelector:@selector(message)]) {
+                message = [model performSelector:@selector(message)];
+            }
+            *error = [NSError errorWithDomain:message?:DEFULT_ERROR code:[status integerValue] userInfo:nil];
+        }
+    }
+    return model;
 }
 
 

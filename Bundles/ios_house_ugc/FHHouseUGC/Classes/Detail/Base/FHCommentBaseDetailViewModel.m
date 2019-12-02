@@ -9,6 +9,8 @@
 #import "FHHouseUGCAPI.h"
 #import "TTHttpTask.h"
 #import "FHPostDetailViewModel.h"
+#import "FHVoteDetailViewModel.h"
+#import "FHUGCVoteDetailCell.h"
 
 @interface FHCommentBaseDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate>
 
@@ -22,7 +24,14 @@
     FHCommentBaseDetailViewModel *viewModel = NULL;
     switch (postType) {
         case FHUGCPostTypePost:
+            // 帖子
             viewModel = [[FHPostDetailViewModel alloc] initWithController:viewController tableView:tableView postType:postType];
+        case FHUGCPostTypeWenDa:
+            // 暂无
+            break;
+        case FHUGCPostTypeVote:
+            // 投票
+            viewModel = [[FHVoteDetailViewModel alloc] initWithController:viewController tableView:tableView postType:postType];
             break;
     }
     return viewModel;
@@ -104,7 +113,12 @@
         if (identifier.length > 0) {
             FHUGCBaseCell *cell = (FHUGCBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             cell.delegate = self;
+            cell.isFromDetail = YES;
             cell.baseViewModel = self;
+            if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
+                FHFeedUGCCellModel *cellModel = data;
+                cellModel.tracerDic = [self.detailController.tracerDict copy];
+            }
             [cell refreshWithData:data];
             return cell;
         }
@@ -124,6 +138,21 @@
     NSNumber *cellHeight = self.cellHeightCaches[tempKey];
     if (cellHeight) {
         return [cellHeight floatValue];
+    }
+    return UITableViewAutomaticDimension;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    // 投票cell FHUGCVoteDetailCell 行高
+    if (self.postType == FHUGCPostTypeVote) {
+        // 投票
+        NSInteger row = indexPath.row;
+        if (row >= 0 && row < self.items.count) {
+            id data = self.items[row];
+            if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
+                return [FHUGCVoteDetailCell heightForData:data];
+            }
+        }
     }
     return UITableViewAutomaticDimension;
 }

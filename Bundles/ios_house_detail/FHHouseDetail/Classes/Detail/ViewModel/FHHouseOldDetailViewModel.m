@@ -58,6 +58,7 @@
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
+extern NSString *const kFHPLoginhoneNumberCacheKey;
 @interface FHHouseOldDetailViewModel ()
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodHouseData;
@@ -405,6 +406,14 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
         //        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        agentListModel.phoneCallViewModel.tracerDict = paramsDict;
+//        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
+//        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;
         agentListModel.imprId = imprId;
         agentListModel.houseId = self.houseId;
@@ -672,7 +681,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 // 周边房源
 - (void)requestRelatedHouseSearch {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestRelatedHouseSearch:self.houseId offset:@"0" query:nil count:5 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestRelatedHouseSearch:self.houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
         wSelf.relatedHouseData = model.data;
         [wSelf processDetailRelatedData];
@@ -705,7 +714,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseId = self.houseId;
     NSString *from = @"app_oldhouse_subscription";
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+
+    
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
@@ -713,7 +724,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
             
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
-            [subscribeHouseCache setObject:@"1" forKey:self.houseId];
+            [subscribeHouseCache setObject:@"1" forKey:wself.houseId];
             
             [wself.items removeObject:subscribeModel];
             [wself reloadData];

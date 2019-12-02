@@ -33,6 +33,7 @@
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"
 #import "FHUGCCellHelper.h"
+#import "HMDTTMonitor.h"
 
 @interface FHPostDetailViewModel ()
 
@@ -175,17 +176,14 @@
             self.shareInfo = model.shareInfo;
         }
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+        cellModel.isFromDetail = YES;
         cellModel.feedVC = self.detailData.feedVC;
         cellModel.isStick = self.detailData.isStick;
         cellModel.stickStyle = self.detailData.stickStyle;
+        cellModel.contentDecoration = nil;
         if (cellModel.community.socialGroupId.length <= 0) {
             cellModel.community = self.detailData.community;
         }
-        // 兼容 服务端返回的数据不一致的问题，目前直接使用服务端返回的数据
-//        if (self.detailController.comment_count > 0) {
-//            // 直接用评论接口返回的个数
-//            cellModel.commentCount = [NSString stringWithFormat:@"%lld",self.detailController.comment_count];
-//        }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
         if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
             // 未关注
@@ -269,6 +267,10 @@
                     NSString *dataStr = [dataDict tt_stringValueForKey:@"data"];
                     if (isEmptyString(dataStr)) {
                         //不该出现这种情况
+                        // 成功埋点 status = 0 成功（不上报） status = 1：data为空
+                        NSMutableDictionary *metric = @{}.mutableCopy;
+                        metric[@"post_id"] = @(self.threadID);
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_detail_error" metric:metric category:@{@"status":@(1)} extra:nil];
                     } else {
                         NSError *jsonParseError;
                         NSData *jsonData = [dataStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -291,6 +293,11 @@
                                     [self processWithData:model socialGroup:groupData];
                                 }
                             }
+                        } else {
+                            // 成功埋点 status = 0 成功（不上报） status = 2：转json失败
+                            NSMutableDictionary *metric = @{}.mutableCopy;
+                            metric[@"post_id"] = @(self.threadID);
+                            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_detail_error" metric:metric category:@{@"status":@(2)} extra:nil];
                         }
                     }
                 }

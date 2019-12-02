@@ -147,8 +147,10 @@ static WDDetailFullContentManager * sharedManager;
             }
         }
     }];
-    
-    [self.operations addObject:task];
+    // 兼容v0.8.2 如果task为 nil 会crash
+    if (task) {
+        [self.operations addObject:task];
+    }
     if ([task respondsToSelector:@selector(setPriority:)]) {
         switch (priority) {
             case NSOperationQueuePriorityVeryLow:

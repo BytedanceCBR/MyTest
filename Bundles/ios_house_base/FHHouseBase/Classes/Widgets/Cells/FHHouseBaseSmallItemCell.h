@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHHouseType.h"
+#import "FHListBaseCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 //当图图片cell
@@ -20,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHHouseBaseSmallItemCell : UITableViewCell
+@interface FHHouseBaseSmallItemCell : FHListBaseCell
 
 @property(nonatomic , weak) id<FHHouseBaseSmallItemCellDelegate> delegate;
 @property(nonatomic, strong) UIImageView *mainImageView;

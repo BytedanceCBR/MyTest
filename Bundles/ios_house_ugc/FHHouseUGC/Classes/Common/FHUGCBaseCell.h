@@ -65,6 +65,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 当前cell所需基础埋点数据，更新refreshWithData的时候赋值
 @property (nonatomic, copy)     NSDictionary       *tracerDic;
 
+// 是否是详情页，默认是NO
+@property (nonatomic, assign)   BOOL       isFromDetail;
+
 @end
 
 // FHUGCBaseCollectionCell

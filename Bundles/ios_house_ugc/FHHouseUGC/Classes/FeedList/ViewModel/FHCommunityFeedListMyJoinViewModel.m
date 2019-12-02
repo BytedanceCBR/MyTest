@@ -53,6 +53,8 @@
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         // 关注状态变化
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+        // 发投票成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postVoteSuccess:) name:@"kFHVotePublishNotificationName" object:nil];
     }
     
     return self;
@@ -104,45 +106,103 @@
                         Class cls = [FHFeedUGCContentModel class];
                         FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
                         if (model && jsonParseError == nil) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-                                if (cellModel) {
-                                    //去重逻辑
-                                    [self removeDuplicaionModel:cellModel.groupId];
-                                    
-                                    // JOKER: 找到第一个非置顶贴的下标
-                                    __block NSUInteger index = self.dataList.count;
-                                    [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                                        
-                                        BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
-                                        
-                                        if(!isStickTop) {
-                                            index = idx;
-                                            *stop = YES;
-                                        }
-                                    }];
-                                    // 插入在置顶贴的下方
-                                    [self.dataList insertObject:cellModel atIndex:index];
-                                    [self.tableView reloadData];
-                                    [self.tableView layoutIfNeeded];
-                                    self.needRefreshCell = NO;
-                                    // JOKER: 发贴成功插入贴子后，滚动使露出
-                                    if(index == 0) {
-                                        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
-                                    } else {
-                                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                        CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
-                                        [self.tableView setContentOffset:rect.origin
-                                                                animated:YES];
-                                    }
-                                }
-                            });
+                            FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+                            [self insertPostData:cellModel];
                         }
                     }
                 }
             }
         }
     }
+}
+
+// 发投票成功，插入数据
+- (void)postVoteSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *vote_data = userInfo[@"voteData"];
+        if ([vote_data isKindOfClass:[NSString class]] && vote_data.length > 0) {
+            // 模型转换
+            NSDictionary *dic = [vote_data JSONValue];
+            FHFeedUGCCellModel *cellModel = nil;
+            if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+                NSDictionary * rawDataDic = dic[@"raw_data"];
+                // 先转成rawdata
+                NSError *jsonParseError;
+                if (rawDataDic && [rawDataDic isKindOfClass:[NSDictionary class]]) {
+                    FHFeedContentRawDataModel *model = [[FHFeedContentRawDataModel alloc] initWithDictionary:rawDataDic error:&jsonParseError];
+                    if (model && model.voteInfo) {
+                        // 有投票数据
+                        // social_group data
+                        /*
+                        FHUGCScialGroupDataModel * groupData = nil;
+                        if (rawDataDic[@"community"]) {
+                            // 继续解析小区头部
+                            NSDictionary *social_group = [rawDataDic tt_dictionaryValueForKey:@"community"];
+                            NSError *groupError = nil;
+                            groupData = [[FHUGCScialGroupDataModel alloc] initWithDictionary:social_group error:&groupError];
+                        }
+                         */
+                        FHFeedContentModel *ugcContent = [[FHFeedContentModel alloc] init];
+                        ugcContent.cellType = [NSString stringWithFormat:@"%d",FHUGCFeedListCellTypeUGCVoteInfo];
+                        ugcContent.title = model.title;
+                        ugcContent.isStick = model.isStick;
+                        ugcContent.stickStyle = model.stickStyle;
+                        ugcContent.diggCount = model.diggCount;
+                        ugcContent.commentCount = model.commentCount;
+                        ugcContent.userDigg = model.userDigg;
+                        ugcContent.groupId = model.groupId;
+                        ugcContent.logPb = model.logPb;
+                        ugcContent.community = model.community;
+                        ugcContent.rawData = model;
+                        // FHFeedUGCCellModel
+                        cellModel = [FHFeedUGCCellModel modelFromFeedContent:ugcContent];
+                        cellModel.isFromDetail = NO;
+                        cellModel.tableView = self.tableView;
+                    }
+                }
+            }
+            [self insertPostData:cellModel];
+        }
+    }
+}
+// 发帖和发投票后插入逻辑
+- (void)insertPostData:(FHFeedUGCCellModel *)cellModel {
+    if (cellModel == nil) {
+        return;
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (cellModel) {
+            //去重逻辑
+            [self removeDuplicaionModel:cellModel.groupId];
+            
+            // JOKER: 找到第一个非置顶贴的下标
+            __block NSUInteger index = self.dataList.count;
+            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
+                
+                if(!isStickTop) {
+                    index = idx;
+                    *stop = YES;
+                }
+            }];
+            // 插入在置顶贴的下方
+            [self.dataList insertObject:cellModel atIndex:index];
+            [self.tableView reloadData];
+            [self.tableView layoutIfNeeded];
+            self.needRefreshCell = NO;
+            // JOKER: 发贴成功插入贴子后，滚动使露出
+            if(index == 0) {
+                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+            } else {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+                [self.tableView setContentOffset:rect.origin
+                                        animated:YES];
+            }
+        }
+    });
 }
 
 - (void)postDeleteSuccess:(NSNotification *)noti {
@@ -686,6 +746,23 @@
         
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
+    } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVoteInfo) {
+        // 投票
+        BOOL jump_comment = NO;
+        if (showComment) {
+            jump_comment = YES;
+        }
+        NSMutableDictionary *dict = @{@"begin_show_comment":@(jump_comment)}.mutableCopy;
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"enter_from"] = @"my_join_feed";
+        traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+        traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+        traceParam[@"log_pb"] = cellModel.logPb;
+        dict[@"tracer"] = traceParam;
+        dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
@@ -792,9 +869,14 @@
             traceParam[@"enter_type"] = @"click";
             traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
             traceParam[@"log_pb"] = cellModel.logPb;
-        } else if([url.absoluteString containsString:@"profile"]) {
+        }
+        else if([url.absoluteString containsString:@"profile"]) {
             // JOKER:
-        } else {
+        }
+        else if([url.absoluteString containsString:@"webview"]) {
+        
+        }
+        else {
             isOpen = NO;
         }
         

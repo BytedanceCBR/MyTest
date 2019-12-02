@@ -35,7 +35,7 @@
         make.centerY.mas_equalTo(self);
     }];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.icon.mas_right).mas_equalTo(11);
+        make.left.mas_equalTo(self.icon.mas_right).mas_equalTo(6.5);
         make.centerY.mas_equalTo(self);
         make.right.mas_equalTo(self.rightArrow.mas_left).mas_equalTo(-11);
     }];
@@ -115,7 +115,7 @@
                 make.bottom.mas_equalTo(self.containerView);
             }
         }];
-        bottomY += 34;
+        bottomY += 47;
     }
     if (model.listEntrance.count == 1) {
         [_containerView mas_updateConstraints:^(MASConstraintMaker *make) {

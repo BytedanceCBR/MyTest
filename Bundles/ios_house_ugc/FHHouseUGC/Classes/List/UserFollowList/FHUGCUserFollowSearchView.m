@@ -80,7 +80,7 @@
 }
 
 - (void)setupData {
-    [self setSearchPlaceHolderText:@"搜索小区圈成员"];
+    [self setSearchPlaceHolderText:@"搜索圈子成员"];
 }
 
 - (void)setSearchPlaceHolderText:(NSString *)text {

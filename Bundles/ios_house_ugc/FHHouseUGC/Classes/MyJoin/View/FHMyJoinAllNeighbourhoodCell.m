@@ -85,7 +85,7 @@
     if(isLeave){
         str = @"松开查看";
     }else{
-        str = @"全部小区圈";
+        str = @"全部圈子";
     }
     NSAttributedString *aStr = [[NSAttributedString alloc] initWithString:str attributes:[self titleLabelAttributes]];
     self.titleLabel.attributedText = aStr;

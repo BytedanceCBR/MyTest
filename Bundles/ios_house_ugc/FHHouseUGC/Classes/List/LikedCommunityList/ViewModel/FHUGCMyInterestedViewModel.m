@@ -124,7 +124,7 @@
                 [wself.tableView reloadData];
             }else{
                 if(wself.viewController.type == FHUGCMyInterestedTypeEmpty){
-                    [wself.viewController.emptyView showEmptyWithTip:@"你还没有关注任何小区圈\n去附近或发现逛逛吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+                    [wself.viewController.emptyView showEmptyWithTip:@"你还没有关注任何圈子\n去附近或发现逛逛吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
                 }else{
                     [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
                 }

@@ -80,7 +80,7 @@ typedef enum : NSUInteger {
     
     [self isPhoneCallParamsValid:configModel];
 
-    [FHMainApi requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId from:fromStr completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId from:fromStr cluePage:configModel.cluePage clueEndpoint:configModel.clueEndpoint completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         NSMutableDictionary *userInfo = @{}.mutableCopy;
         userInfo[@"house_id"] = houseId;

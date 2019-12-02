@@ -59,6 +59,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) NSString *position;
 @property (nonatomic , copy) NSString *realtorPosition;
 @property (nonatomic , copy) NSString *itemId;
+@property (nonatomic , strong) NSNumber *cluePage;
+@property (nonatomic , strong) NSNumber *clueEndpoint;
 
 - (void)setTraceParams:(NSDictionary *)params;
 @end

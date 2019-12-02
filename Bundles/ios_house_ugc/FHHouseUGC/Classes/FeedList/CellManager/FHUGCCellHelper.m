@@ -12,6 +12,9 @@
 #import "TTVFeedListItem.h"
 #import <TTVFeedCellAction.h>
 #import <TTRichSpanText+Comment.h>
+#import "YYText.h"
+#import "TTRichSpanText+Link.h"
+#import "TTUGCEmojiParser.h"
 
 @implementation FHUGCCellHelper
 
@@ -54,7 +57,7 @@
         if (numberOfLines > 0) {
             parseEmojiCount = (100 * (numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
@@ -125,8 +128,9 @@
 }
 
 + (void)setRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    
     TTRichSpans *richSpans = [TTRichSpans richSpansForJSONString:model.contentRichSpan];
-    TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:model.content richSpans:richSpans];
+    TTRichSpanText *richContent = [[[TTRichSpanText alloc] initWithText:model.content richSpans:richSpans] replaceWhitelistLinks];
     
     TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
     
@@ -144,7 +148,7 @@
         if (model.numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
@@ -191,7 +195,7 @@
         if (model.numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
@@ -334,7 +338,7 @@
         if (model.numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:16 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             
@@ -423,6 +427,39 @@
     }
 }
 
++ (void)setUGCVoteContentString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    if(!isEmptyString(model.voteInfo.title)){
+        UILabel *label = [[UILabel alloc] init];
+        label.numberOfLines = numberOfLines;
+        label.font = [UIFont themeFontRegular:16];
+        //设置字间距0.4
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:model.voteInfo.title attributes:@{NSForegroundColorAttributeName : [UIColor themeGray1],NSFontAttributeName : [UIFont themeFontRegular:16]}];
+        label.attributedText = attributedString;
+        
+        YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:CGSizeMake(width, MAXFLOAT) text:attributedString];
+        CGFloat height= layout.textBoundingSize.height;
+        // 下面这种方法对系统表情计算高度兼容性不好，用YYTextLayout吧
+        CGSize size = [label sizeThatFits:CGSizeMake(width, MAXFLOAT)];
+        // 好傻的逻辑 为了兼容 系统表情 展示
+        if (numberOfLines == 2) {
+            if (height >= 45) {
+                // 说明是两行
+                size.height = 53;// 两行
+            } else {
+                size.height = height;
+            }
+        } else {
+            // 全部展示
+            size.height = height;
+        }
+        model.voteInfo.contentAStr = attributedString;
+        model.voteInfo.contentHeight = size.height;
+    }else{
+        model.voteInfo.contentHeight = 0;
+        model.voteInfo.contentAStr = nil;
+    }
+}
+
 + (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel {
     TTVFeedListItem *item = [[TTVFeedListItem alloc] init];
     item.originData = cellModel.videoFeedItem;
@@ -477,7 +514,7 @@
     
     if (!isEmptyString(richContent.text)) {
         NSInteger parseEmojiCount = -1;
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:richContent.text fontSize:16 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:richContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             mutableAttributedString = [attrStr mutableCopy];

@@ -18,6 +18,7 @@
 #import <YYLabel.h>
 #import <YYText/NSAttributedString+YYText.h>
 #import "TTAccountMobileCaptchaAlertView.h"
+#import "TTThemedAlertController.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -66,6 +67,28 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self stopTimer];
     }
 }
+- (BOOL)getOneKeyLoginSwitchOff
+{
+    BOOL disableTelecom = NO;
+    BOOL disableUnicom = NO;
+    BOOL disableMobile = NO;
+    NSDictionary *fhSettings = [FHLoginViewModel fhSettings];
+    NSDictionary *loginSettings = [fhSettings tt_dictionaryValueForKey:@"login_settings"];
+    if (loginSettings) {
+        disableTelecom = [loginSettings tt_boolValueForKey:@"disable_telecom"];
+        disableUnicom = [loginSettings tt_boolValueForKey:@"disable_unicom"];
+        disableMobile = [loginSettings tt_boolValueForKey:@"disable_mobile"];
+    }
+    NSString *service = [TTAccount sharedAccount].service;
+    if ([service isEqualToString:TTAccountMobile]) {
+        return disableMobile;
+    }else if ([service isEqualToString:TTAccountUnion]) {
+        return disableUnicom;
+    }else if ([service isEqualToString:TTAccountTelecom]) {
+        return disableTelecom;
+    }
+}
+
 
 #pragma mark - 一键登录
 - (void)startLoadData
@@ -74,6 +97,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self showOneKeyLoginView:NO phoneNum:nil];
         return;
     }
+    
+    BOOL isSwitchOff = [self getOneKeyLoginSwitchOff];
+    if (isSwitchOff) {
+        [self showOneKeyLoginView:NO phoneNum:nil];
+        return;
+    }
+
     [self updateLoadingState:YES];
     [self getOneKeyLoginPhoneNum];
 }
@@ -371,7 +401,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [[ToastManager manager] showToast:@"登录成功"];
         if (phoneNumber.length > 0) {
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+//            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
         }
         if (self.needPopVC) {
@@ -386,11 +416,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     } else if (captchaImage) {
         [self loginShowCaptcha:captchaImage error:error phoneNumber:phoneNumber smsCode:smsCode];
     } else {
-        NSString *errorMessage = @"啊哦，服务器开小差了";
-        if (!isOneKeyLogin) {
-            errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+        if (error.code == 1039) {
+            TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"登录信息" message:[error.userInfo objectForKey:@"toutiao.account.errmsg_key"] preferredType:TTThemedAlertControllerTypeAlert];
+            [alertController addActionWithTitle:@"确认" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+                [self otherLoginAction];
+            }];
+            [alertController showFrom:self.viewController animated:YES];
+        }else {
+            NSString *errorMessage = @"啊哦，服务器开小差了";
+            if (!isOneKeyLogin) {
+                errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+            }
+            [[ToastManager manager] showToast:errorMessage];
         }
-        [[ToastManager manager] showToast:errorMessage];
     }
 }
 

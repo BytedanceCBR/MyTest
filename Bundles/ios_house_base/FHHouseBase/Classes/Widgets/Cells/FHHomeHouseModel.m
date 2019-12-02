@@ -137,6 +137,28 @@
 @end
 
 
+@implementation FHHomeHouseAdvantageTagModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"textColor": @"text_color",
+                           @"backgroundColor": @"background_color",
+                           @"borderColor": @"border_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+
 @implementation  FHHomeHouseDataItemsTimelineListModel
 
 + (JSONKeyMapper*)keyMapper
@@ -393,6 +415,7 @@
                            @"displayPricePerSqm": @"display_price_per_sqm",
                            @"imprId": @"impr_id",
                            @"vrInfo": @"vr_info",
+                           @"advantageDescription":@"advantage_description",
                            @"cellStyle": @"cell_style",
                            @"houseImageTag": @"house_image_tag",
                            @"floorpanList": @"floorpan_list",

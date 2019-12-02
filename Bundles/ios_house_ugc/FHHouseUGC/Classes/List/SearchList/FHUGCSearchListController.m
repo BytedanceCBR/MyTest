@@ -146,7 +146,7 @@
 - (void)setupNaviBar {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
     _naviBar = [[FHUGCSearchBar alloc] initWithFrame:CGRectZero];
-    [_naviBar setSearchPlaceHolderText:@"搜索小区圈"];
+    [_naviBar setSearchPlaceHolderText:@"搜索圈子"];
     [self.view addSubview:_naviBar];
     CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
     [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
