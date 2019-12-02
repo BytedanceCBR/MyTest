@@ -377,6 +377,9 @@
             StrongSelf;
             
             self.keyboardVisibleFlagForToolbarPicPresent = !self.isKeyboardWillHide;
+            
+            [self updateLastResponder];
+            
             // 添加图片
             [self.addImagesView showImagePicker];
         };
@@ -447,11 +450,7 @@
         }
     }
     else {
-        if([self.titleTextView isFirstResponder]) {
-            self.lastResponder = self.titleTextView;
-        } else if([self.descriptionTextView isFirstResponder]) {
-            self.lastResponder = self.descriptionTextView;
-        }
+        [self updateLastResponder];
         [self.lastResponder resignFirstResponder];
     }
 }
@@ -603,11 +602,7 @@
     [chooseDelegateTable addObject:self];
     dict[@"choose_delegate"] = chooseDelegateTable;
     
-    if(self.titleTextView.isFirstResponder) {
-        self.lastResponder = self.titleTextView;
-    } else if(self.descriptionTextView.isFirstResponder) {
-        self.lastResponder = self.descriptionTextView;
-    }
+    [self updateLastResponder];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ELEMENT_FROM] = @"select_like_publisher_neighborhood";
@@ -617,6 +612,14 @@
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+- (void)updateLastResponder {
+    if(self.titleTextView.isFirstResponder) {
+        self.lastResponder = self.titleTextView;
+    } else if(self.descriptionTextView.isFirstResponder) {
+        self.lastResponder = self.descriptionTextView;
+    }
 }
 
 // 从圈子选择列表中选中圈子回带
