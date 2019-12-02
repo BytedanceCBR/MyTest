@@ -569,6 +569,13 @@
         [self.items addObject:model.data.floorpanList];
     }
     
+    // UGC社区入口
+    if (model.data.socialInfo && model.data.socialInfo.socialGroupInfo && model.data.socialInfo.socialGroupInfo.socialGroupId.length > 0) {
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        [self.items addObject:model.data.socialInfo];
+    }
+    
     //楼盘动态
     if (model.data.timeline.list.count != 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -594,13 +601,6 @@
             item.courtId = model.data.coreInfo.id;
             [self.items addObject:item];
         }
-    }
-    
-    // UGC社区入口
-    if (model.data.socialInfo && model.data.socialInfo.socialGroupInfo && model.data.socialInfo.socialGroupInfo.socialGroupId.length > 0) {
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        [self.items addObject:model.data.socialInfo];
     }
     
     //周边配套
