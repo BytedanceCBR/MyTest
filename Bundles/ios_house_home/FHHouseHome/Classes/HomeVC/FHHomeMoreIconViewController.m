@@ -12,7 +12,7 @@
 #import <FHHomeCellHelper.h>
 #import <FHHomeEntrancesCell.h>
 #import <FHEnvContext.h>
-
+#import <UIColor+Theme.h>
 @interface FHHomeMoreIconViewController ()<TTRouteInitializeProtocol,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) UITableView* contentTableView;
 @end
@@ -36,7 +36,11 @@
     
     self.customNavBarView.title.text = @"工具箱";
     
+    self.contentTableView.separatorStyle = UITableViewCellSelectionStyleNone;
     [self.view addSubview:self.contentTableView];
+    [self.contentTableView setBackgroundColor:[UIColor themeGray8]];
+    [self.view setBackgroundColor:[UIColor themeGray8]];
+
     
     [self setupConstrains];
     
@@ -73,7 +77,11 @@
     NSString *identifier = NSStringFromClass([FHHomeEntrancesCell class]);
     FHHomeEntrancesCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
-    [cell updateWithItems:configData.toolboxData.items];
+    FHConfigDataOpDataModel *opData = [FHConfigDataOpDataModel new];
+    opData.items = (NSArray<FHConfigDataOpDataItemsModel> *)configData.toolboxData.items;
+    [cell.contentView setBackgroundColor:[UIColor themeGray8]];
+    [FHHomeCellHelper fillFHHomeEntrancesCell:cell withModel:opData];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 

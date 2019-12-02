@@ -28,6 +28,8 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 
 #define kFHHomeBannerRowCount 2 //每行banner个数
 
+@class FHHomeEntrancesCell;
+
 @interface FHHomeCellHelper : NSObject
 
 @property(nonatomic , assign) FHHomeHeaderCellPositionType headerType;
@@ -114,6 +116,8 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 //匹配房源名称
 + (NSArray <NSString *>*)matchHouseSegmentedTitleArray;
 
+
++ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model;
 
 @end 
 
