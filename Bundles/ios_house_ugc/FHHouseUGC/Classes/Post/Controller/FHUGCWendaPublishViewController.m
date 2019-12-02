@@ -494,10 +494,7 @@
     }
     
     [self refreshUI];
-    
-    if(textView == self.descriptionTextView && self.textContentScrollView.size.height < self.textContentScrollView.contentSize.height) {
-        [self scrollToCursorVisible];
-    }
+    [self scrollToCursorVisibleForTextView:textView];
 }
 
 - (void)textViewDidBeginEditing:(TTUGCTextView *)textView {
@@ -507,14 +504,18 @@
     
     else if (textView == self.descriptionTextView) {
         [self updateTipLabelWithText:self.descriptionTextView.text maxLength:DESC_MAX_COUNT];
-        [self scrollToCursorVisible];
+        [self scrollToCursorVisibleForTextView:textView];
     }
 }
 
-- (void)scrollToCursorVisible {
-    CGFloat offsetY = self.textContentScrollView.contentSize.height - self.textContentScrollView.bounds.size.height;
-    if(offsetY > 0 ) {
-        [self.textContentScrollView setContentOffset:CGPointMake(0, offsetY) animated:YES];
+- (void)scrollToCursorVisibleForTextView:(TTUGCTextView *)textView {
+    if(textView == self.descriptionTextView && self.textContentScrollView.size.height < self.textContentScrollView.contentSize.height) {
+        CGFloat offsetY = self.textContentScrollView.contentSize.height - self.textContentScrollView.bounds.size.height;
+        if(offsetY > 0 ) {
+            [self.textContentScrollView setContentOffset:CGPointMake(0, offsetY) animated:YES];
+        }
+    } else if(textView == self.titleTextView) {
+        [self.textContentScrollView setContentOffset:CGPointZero animated:YES];
     }
 }
 
