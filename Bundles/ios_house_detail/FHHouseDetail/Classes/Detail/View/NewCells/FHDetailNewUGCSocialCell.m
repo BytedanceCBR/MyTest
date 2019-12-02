@@ -46,6 +46,15 @@
     // Configure the view for the selected state
 }
 
+// 去除空格和换行
+- (NSString *)removeSpaceAndNewline:(NSString *)str
+{
+    NSString *temp = [str stringByReplacingOccurrencesOfString:@" " withString:@""];
+    temp = [temp stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+    temp = [temp stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    return temp;
+}
+
 - (void)refreshWithData:(id)data {
     if (![data isKindOfClass:[FHHouseNewsSocialModel class]]) {
         return;
@@ -64,7 +73,9 @@
             if (socialInfo.socialActiveInfo.count > 0) {
                 FHDetailCommunityEntryActiveInfoModel *model = socialInfo.socialActiveInfo[0];
                 [self.iconImageView bd_setImageWithURL:[NSURL URLWithString:model.activeUserAvatar] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
-                NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithAttributedString:[TTUGCEmojiParser parseInCoreTextContext:model.suggestInfo fontSize:16]];
+                NSString *textStr = model.suggestInfo;
+                textStr = [self removeSpaceAndNewline:textStr];
+                NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithAttributedString:[TTUGCEmojiParser parseInCoreTextContext:textStr fontSize:16]];
                 NSMutableDictionary *typeAttributes = @{}.mutableCopy;
                 [typeAttributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
                 [typeAttributes setValue:[UIFont themeFontRegular:16] forKey:NSFontAttributeName];
