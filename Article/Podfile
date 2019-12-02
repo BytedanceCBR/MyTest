@@ -640,6 +640,12 @@ def appPods
     pod 'BDUGDeepLink', '1.1.1'
     
     pod_binary 'TTAppStoreStarManager', '1.0.12'
+    
+    pod 'BDDynamically', '0.4.7',:subspecs => [
+    'Main',
+    'BitcodeVM'
+    ]
+
 end
 
 

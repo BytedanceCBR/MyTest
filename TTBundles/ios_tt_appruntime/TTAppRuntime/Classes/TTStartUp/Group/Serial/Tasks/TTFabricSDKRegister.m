@@ -23,6 +23,7 @@
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "CommonURLSetting.h"
 #import "TTLaunchDefine.h"
+#import "BDDYCClient.h"
 
 static NSString *const kTTFabricLaunchCrashKey = @"kTTFabricLaunchCrashKey";
 
@@ -50,6 +51,7 @@ DEC_TASK("TTFabricSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+3);
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     [self registerCrashlyticsSDK];
+    [self registerDynamicSDK];
     [[self class] addOneCrashCount];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [[self class] clearCrashCount];
@@ -62,6 +64,11 @@ DEC_TASK("TTFabricSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+3);
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     [[self class] clearCrashCount];
+}
+
+- (void)registerDynamicSDK
+{
+    [BDDYCClient start];
 }
 
 - (void)registerCrashlyticsSDK {

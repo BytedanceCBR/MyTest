@@ -37,6 +37,8 @@ PODS:
   - BDALog (0.1.12.1-binary)
   - BDAlogProtocol (0.1.7)
   - BDAssert/Core (2.0.0)
+  - BDDynamically/BitcodeVM (0.4.7)
+  - BDDynamically/Main (0.4.7)
   - BDMobileRuntime (0.3.38)
   - BDSSOAuthSDK (1.1.0)
   - BDTArticle (0.2.3)
@@ -596,6 +598,8 @@ DEPENDENCIES:
   - BDALog (= 0.1.12.1-binary)
   - BDAlogProtocol (= 0.1.7)
   - BDAssert/Core (= 2.0.0)
+  - BDDynamically/BitcodeVM (= 0.4.7)
+  - BDDynamically/Main (= 0.4.7)
   - BDMobileRuntime (= 0.3.38)
   - BDSSOAuthSDK
   - BDTArticle (from `../AKPlugins/BDTArticle`)
@@ -1000,6 +1004,7 @@ SPEC CHECKSUMS:
   BDALog: 2c34fe6b9e0f7107abb36d41ca3baf1ee33113bb
   BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
+  BDDynamically: 41c09c5508d3c16a701deb206366e2300d2444fc
   BDMobileRuntime: 83175e738acd91083ea560cf0fd4e34612987b80
   BDSSOAuthSDK: 50464c9dd31869a9fe999723f68b931e8acab644
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
@@ -1178,6 +1183,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 57fe16212b4e73480dda6af1c0f1a606445e65f9
+PODFILE CHECKSUM: 822638d03030d57597b8c9918c4e158f1fce8aed
 
 COCOAPODS: 1.4.0
