@@ -1695,22 +1695,14 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
     if (data) {
-        identifier = [self cellIdentifierForEntity:data];
-    }
-    //新房单独处理
-//    if (self.houseType == FHHouseTypeNewHouse) {
-//        identifier = NSStringFromClass([FHHouseBaseNewHouseCell class]);
-//    }
-    
-    if (identifier.length > 0) {
-        FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+        id cellClass = [self cellClassForEntity:data];
         if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
             FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
             item.isLastCell = isLastCell;
             data = item;
         }
-        if ([[cell class]respondsToSelector:@selector(heightForData:)]) {
-            return [[cell class] heightForData:data];
+        if ([[cellClass class]respondsToSelector:@selector(heightForData:)]) {
+            return [[cellClass class] heightForData:data];
         }
     }
     return height;

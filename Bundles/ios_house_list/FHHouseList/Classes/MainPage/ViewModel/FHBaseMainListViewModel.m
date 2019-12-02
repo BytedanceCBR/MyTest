@@ -1380,7 +1380,6 @@ extern NSString *const INSTANT_DATA_KEY;
     if (_showPlaceHolder) {
         return 75;
     }
-    NSString *identifier = @"";
     BOOL isLastCell = NO;
     id data = nil;
     if (indexPath.section == 0) {
@@ -1399,84 +1398,18 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
     if (data) {
-        identifier = [self cellIdentifierForEntity:data];
-    }
-    if (identifier.length > 0) {
-        FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+        id cellClass = [self cellClassForEntity:data];
         if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
             FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
             item.isLastCell = isLastCell;
             data = item;
         }
-        if ([[cell class]respondsToSelector:@selector(heightForData:)]) {
-            return [[cell class] heightForData:data];
+        if ([[cellClass class]respondsToSelector:@selector(heightForData:)]) {
+            return [[cellClass class] heightForData:data];
         }
     }
-    
     return 75;
-
 }
-
-//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    if (_showPlaceHolder) {
-//        return 75;
-//    }
-//
-//    if (indexPath.section == 1 && [self.sugesstHouseList[indexPath.row] isKindOfClass:[FHRecommendSecondhandHouseTitleModel class]]) {
-//        CGFloat height = 44.5;
-//        FHRecommendSecondhandHouseTitleModel *titleModel = self.sugesstHouseList[indexPath.row];
-//        if (titleModel.noDataTip.length > 0) {
-//            height += 58;
-//        }
-//        if (self.isShowSubscribeCell) {
-//            if (titleModel.noDataTip.length > 0) {
-//                height -= 30;
-//            }else
-//            {
-//                height -= 3;
-//            }
-//        }
-//        return height;
-//    } else {
-//        BOOL isLastCell = NO;
-//        FHSingleImageInfoCellModel *cellModel = nil;
-//        if (indexPath.section == 0) {
-//            isLastCell = (indexPath.row == self.houseList.count - 1);
-//            cellModel = self.houseList[indexPath.row];
-//        } else {
-//            isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
-//            cellModel = self.sugesstHouseList[indexPath.row];
-//        }
-//
-//        if(cellModel.isNoHousePlaceHoderCell){
-//            return CGRectGetHeight(self.tableView.frame) - self.topView.height ;
-//        }
-//
-//        if (cellModel.isAgencyInfoCell) {
-//            if ([cellModel.agencyInfoModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
-//                return 40;
-//            }
-//        }
-//        if (cellModel.isRealHouseTopCell) {
-//            if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-//                return 50;
-//            }
-//        }
-//
-//        if (cellModel.isSubscribCell) {
-//            if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
-//                return 121;
-//            }
-//        }
-//
-//        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0;
-//        return (isLastCell ? 95 : 75)+reasonHeight;
-//
-//    }
-//
-//    return 75;
-//}
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
