@@ -87,6 +87,7 @@
 
 // 辅助变量
 @property (nonatomic, assign) BOOL isKeyboardWillHide;
+@property (nonatomic, assign) BOOL keyboardVisibleFlagForToolbarPicPresent;
 @property (nonatomic, weak) UIResponder *lastResponder;
 @property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
 
@@ -121,7 +122,12 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if(![self.titleTextView isFirstResponder]) {
+    if(self.lastResponder) {
+        if(!self.lastResponder.isFirstResponder) {
+            [self.lastResponder becomeFirstResponder];
+        }
+    }
+    else if(!self.titleTextView.isFirstResponder) {
         [self.titleTextView becomeFirstResponder];
     }
 }
@@ -370,6 +376,7 @@
         self.toolbar.picButtonClkBlk = ^{
             StrongSelf;
             
+            self.keyboardVisibleFlagForToolbarPicPresent = !self.isKeyboardWillHide;
             // 添加图片
             [self.addImagesView showImagePicker];
         };
@@ -452,8 +459,13 @@
 #pragma mark - TTUGCTextViewDelegate
 
 - (BOOL)textView:(TTUGCTextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    
+    NSString *replacedString = [textView.text stringByReplacingCharactersInRange:range withString:text];
+    
     if(textView == self.titleTextView) {
-        return ![text isEqualToString:@"\n"];
+        return ![text isEqualToString:@"\n"] && replacedString.length <= TITLE_MAX_COUNT;
+    } else if(textView == self.descriptionTextView) {
+        return replacedString.length <= DESC_MAX_COUNT;
     }
     return YES;
 }
@@ -484,7 +496,7 @@
     
     [self refreshUI];
     
-    if(self.textContentScrollView.size.height < self.textContentScrollView.contentSize.height) {
+    if(textView == self.descriptionTextView && self.textContentScrollView.size.height < self.textContentScrollView.contentSize.height) {
         [self scrollToCursorVisible];
     }
 }
@@ -518,6 +530,9 @@
 }
 
 - (void)addMultiImagesViewPresentedViewControllerDidDismiss {
+    if(self.keyboardVisibleFlagForToolbarPicPresent) {
+        [self configFirstResponderWithKeyboardShow:self.keyboardVisibleFlagForToolbarPicPresent];
+    }
 }
 
 - (void)addMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView changeToSize:(CGSize)size {
@@ -587,6 +602,12 @@
     NSHashTable *chooseDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [chooseDelegateTable addObject:self];
     dict[@"choose_delegate"] = chooseDelegateTable;
+    
+    if(self.titleTextView.isFirstResponder) {
+        self.lastResponder = self.titleTextView;
+    } else if(self.descriptionTextView.isFirstResponder) {
+        self.lastResponder = self.descriptionTextView;
+    }
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ELEMENT_FROM] = @"select_like_publisher_neighborhood";
