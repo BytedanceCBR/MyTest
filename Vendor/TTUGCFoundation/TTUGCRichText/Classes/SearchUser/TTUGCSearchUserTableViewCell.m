@@ -101,7 +101,7 @@
 
     NSString *ellipsisUserName = [self stringWithUserName:userName constraintsWitdh:constraintsWidth];
 
-    SSThemedLabel *nameLabel = (SSThemedLabel *) self.nameLabel.label;
+    SSThemedLabel *nameLabel = (SSThemedLabel *) self.nameLabel.themedLabel;
 
     NSString *name = [NSString stringWithFormat:@"%@%@", ellipsisUserName, remarkName];
 
@@ -240,7 +240,7 @@
         _nameLabel.textColor = [UIColor themeGray1];
         _nameLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
         _nameLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
-        _nameLabel.enableAsync = NO;
+//        _nameLabel.enableAsync = NO;
     }
 
     return _nameLabel;

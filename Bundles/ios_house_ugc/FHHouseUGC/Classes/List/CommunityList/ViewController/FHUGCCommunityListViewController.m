@@ -159,12 +159,16 @@
 
 - (void)startLoading {
     self.loadingView.hidden = NO;
-    [self.loadingView performSelector:@selector(startLoadingAnimation)];
+    if ([self.loadingView respondsToSelector:@selector(startLoadingAnimation)]) {
+        [self.loadingView performSelector:@selector(startLoadingAnimation)];
+    }
 }
 
 - (void)endLoading {
     self.loadingView.hidden = YES;
-    [self.loadingView performSelector:@selector(stopLoadingAnimation)];
+    if ([self.loadingView respondsToSelector:@selector(stopLoadingAnimation)]) {
+        [self.loadingView performSelector:@selector(stopLoadingAnimation)];
+    }
 }
 
 #pragma getter

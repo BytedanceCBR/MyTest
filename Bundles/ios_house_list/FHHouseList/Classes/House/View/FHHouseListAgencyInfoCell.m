@@ -43,9 +43,10 @@
     CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 6 - 14;
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(20);
+        make.left.mas_equalTo(20);
+        make.top.mas_equalTo(10);
         make.height.mas_equalTo(20);
-        make.bottom.mas_equalTo(0);
+        make.bottom.mas_equalTo(-10);
         make.width.mas_lessThanOrEqualTo(maxWidth);
     }];
     [_allWebHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -67,8 +68,7 @@
     
 }
 
-- (void)refreshWithData:(id)data
-{
+- (void)refreshWithData:(id)data {
     if ([data isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
         FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)data;
 

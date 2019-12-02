@@ -6,7 +6,7 @@
 //
 
 #import "FHMainListTopView.h"
-#import <TTPlatformUIModel/ArticleListNotifyBarView.h>
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHCommonUI/UIColor+Theme.h>

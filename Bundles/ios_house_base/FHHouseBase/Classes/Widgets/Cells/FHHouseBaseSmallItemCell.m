@@ -939,7 +939,7 @@
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
         isLastCell = model.isLastCell;
         CGFloat reasonHeight = [model showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0;
-        return (isLastCell ? 95 : 75) + reasonHeight + (model.topMargin - 10);
+        return (isLastCell ? 95 : 75) + reasonHeight + model.topMargin;
     }
 }
 
