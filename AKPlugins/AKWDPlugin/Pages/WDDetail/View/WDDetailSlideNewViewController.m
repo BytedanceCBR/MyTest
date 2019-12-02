@@ -38,7 +38,7 @@
 #import "WDAdapterSetting.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTPlatformUIModel/TTBubbleView.h>
+#import <TTUIWidget/TTBubbleView.h>
 #import <AKCommentPlugin/TTCommentWriteView.h>
 
 

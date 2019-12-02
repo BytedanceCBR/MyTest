@@ -44,6 +44,7 @@
 @property(nonatomic , copy)   NSString *conditionFilter;
 @property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
+@property(nonatomic , copy)   NSString *allQuery;
 
 @property(nonatomic , strong) NSMutableDictionary *showHouseDict;
 @property(nonatomic , strong) NSMutableDictionary *stayTraceDict;

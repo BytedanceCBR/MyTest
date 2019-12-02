@@ -60,6 +60,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBaseNewHouseCell.h>
+#import "FHMainOldTopTagsView.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -121,6 +122,7 @@ extern NSString *const INSTANT_DATA_KEY;
 //@property (nonatomic, strong) FHNewHouseListDataModel *currentNewDataModel;
 
 @property (nonatomic, weak)     FHFakeInputNavbar       *navbar;
+@property(nonatomic , weak) FHMainOldTopTagsView *topTagsView;
 
 @end
 
@@ -148,6 +150,11 @@ extern NSString *const INSTANT_DATA_KEY;
         [wself clickRedirectTip];
     };
     
+}
+
+- (void)setTopTagsView:(FHMainOldTopTagsView *)topTagsView
+{
+    _topTagsView = topTagsView;
 }
 
 -(void)updateRedirectTipInfo {
@@ -251,15 +258,23 @@ extern NSString *const INSTANT_DATA_KEY;
             self.tracerModel = [FHTracerModel makerTracerModelWithDic:traceDictParams];
             self.originFrom = self.tracerModel.originFrom;
         }
-        
-
-        
         [self configTableView];
-
         NSLog(@"FENGBO WTF");
 
     }
     return self;
+}
+
+- (void)addTagsViewClick:(NSString *)value_id
+{
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
+    param[UT_ELEMENT_TYPE] = @"select_options";
+    param[UT_SEARCH_ID] = self.searchId ? : @"be_null";
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ? : @"be_null";
+    param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+    param[@"value_id"] = value_id ?: @"be_null";
+    TRACK_EVENT(@"click_options", param);
 }
 
 // 注册cell类型
@@ -973,6 +988,9 @@ extern NSString *const INSTANT_DATA_KEY;
                     if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
                         itemModel.topMargin = 0;
                     }
+                    if ((itemModel.houseType.integerValue == FHHouseTypeRentHouse || itemModel.houseType.integerValue == FHHouseTypeNeighborhood) && idx == 0) {
+                        itemModel.topMargin = 10;
+                    }
                     theItemModel = itemModel;
                 }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
                     FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
@@ -1216,14 +1234,23 @@ extern NSString *const INSTANT_DATA_KEY;
 //        return;
 //    }
     self.condition = allQuery;
-    [self.filterOpenUrlMdodel overwriteFliter:self.condition];
-
+    if (self.topTagsView) {
+        NSMutableDictionary *filterDict = @{}.mutableCopy;
+        NSDictionary *queryDict = [self.filterOpenUrlMdodel queryDictBy:allQuery];
+        if (queryDict) {
+            [filterDict addEntriesFromDictionary:queryDict];
+        }
+        self.topTagsView.lastConditionDic = filterDict;
+        self.topTagsView.condition = allQuery;
+    }
     self.isRefresh = YES;
     [self.tableView triggerPullDown];
     self.fromRecommend = NO;
     [self loadData:self.isRefresh];
     
 }
+
+
 
 #pragma mark filter将要显示
 -(void)onConditionWillPanelDisplay

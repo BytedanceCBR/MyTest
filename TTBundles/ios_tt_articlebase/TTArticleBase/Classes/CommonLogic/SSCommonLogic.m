@@ -5424,17 +5424,6 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     return YES;
 }
 
-+ (BOOL)enabledOldListQuickCondition {
-    NSDictionary *fhSettings = [self fhSettings];
-    if (fhSettings != nil && [fhSettings objectForKey:@"f_filter_tag_show"] != nil) {
-        NSInteger info = [[fhSettings objectForKey:@"f_filter_tag_show"] integerValue];
-        if (info == 1) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
 @end
 
 
