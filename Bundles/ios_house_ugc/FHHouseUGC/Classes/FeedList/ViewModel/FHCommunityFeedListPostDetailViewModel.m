@@ -163,6 +163,8 @@
         return;
     }
     
+    self.tableView.scrollEnabled = NO;
+    
     self.viewController.needReloadData = NO;
     self.viewController.isLoadingData = YES;
     
@@ -220,6 +222,7 @@
     
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
+        wself.tableView.scrollEnabled = YES;
         if(isFirst){
             [wself.viewController endLoading];
         }
