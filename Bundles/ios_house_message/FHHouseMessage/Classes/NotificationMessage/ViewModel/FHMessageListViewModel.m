@@ -145,7 +145,7 @@
     }
 
     if (!cell) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"preventCrashCellIdentifier"];
+        cell = [tableView dequeueReusableCellWithIdentifier:@"preventCrashCellIdentifier"];
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"preventCrashCellIdentifier"];
         }
