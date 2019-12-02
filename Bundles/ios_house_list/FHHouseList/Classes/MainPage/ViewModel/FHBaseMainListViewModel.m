@@ -127,8 +127,7 @@ extern NSString *const INSTANT_DATA_KEY;
             self.tracerModel.originFrom = @"renting";
         }
         
-        //暂时去掉这个逻辑，等安卓实验结论上
-//        [self setupTopTagsView];
+        [self setupTopTagsView];
         
         _isFirstLoad = YES;
         _canChangeHouseSearchDic = YES;
@@ -263,12 +262,14 @@ extern NSString *const INSTANT_DATA_KEY;
     
 }
 
-- (void)setupTopTagsView {
-    // add by zyk 是否满足实验
-    BOOL isEnableFilterTag = [SSCommonLogic enabledOldListQuickCondition];
-    if (self.houseType == FHHouseTypeSecondHandHouse && self.mainListPage && isEnableFilterTag) {
+- (void)setupTopTagsView
+{
+    if (self.mainListPage) {
         self.topTagsView = [[FHMainOldTopTagsView alloc] init];
-        self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterTagsViewHeight);
+        BOOL hasTagData = [self.topTagsView hasTagData];
+        CGFloat tagHeight = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? kFilterTagsViewHeight : 0;
+        self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, tagHeight);
+        self.topTagsView.hidden = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? NO : YES;
         __weak typeof(self) weakSelf = self;
         self.topTagsView.itemClickBlk = ^{
             __block NSString *value_id = nil;
@@ -453,7 +454,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     [_requestTask cancel];
     
-    NSString *query = [_filterOpenUrlMdodel query];
+    NSString *query = self.allQuery;
     if (self.originFrom.length > 0) {
         if ([query isKindOfClass:[NSString class]] && query.length > 0) {
             query = [query stringByAppendingString:[NSString stringWithFormat:@"&origin_from=%@",self.originFrom]];
@@ -652,6 +653,9 @@ extern NSString *const INSTANT_DATA_KEY;
                     itemModel.isLastCell = (idx == items.count - 1);
                     if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
                         itemModel.topMargin = 0;
+                    }
+                    if ((itemModel.houseType.integerValue == FHHouseTypeRentHouse || itemModel.houseType.integerValue == FHHouseTypeNeighborhood) && idx == 0) {
+                        itemModel.topMargin = 10;
                     }
                     theItemModel = itemModel;
                 }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
@@ -978,7 +982,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     [self.houseFilterBridge setFilterConditions:paramObj.queryParams];
     
-    if (self.topTagsView) {
+    if (self.topTagsView && paramObj.queryParams) {
         self.topTagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:paramObj.queryParams];
     }
 }
@@ -1234,11 +1238,18 @@ extern NSString *const INSTANT_DATA_KEY;
     self.fromRecommend = NO;
 
     self.conditionFilter = condition;
+    NSString *allQuery = [self.houseFilterBridge getAllQueryString];
+    self.allQuery = allQuery;
     if (self.topTagsView) {
-        self.topTagsView.condition = condition;
+        NSMutableDictionary *filterDict = @{}.mutableCopy;
+        NSDictionary *queryDict = [self.filterOpenUrlMdodel queryDictBy:allQuery];
+        if (queryDict) {
+            [filterDict addEntriesFromDictionary:queryDict];
+        }
+        self.topTagsView.lastConditionDic = filterDict;
+        self.topTagsView.condition = allQuery;
     }
     
-    [self.filterOpenUrlMdodel overwriteFliter:condition];
     [self.tableView triggerPullDown];
     self.fromRecommend = NO;
     [self requestData:YES];
@@ -1328,7 +1339,7 @@ extern NSString *const INSTANT_DATA_KEY;
             FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             if([cell isKindOfClass:[FHHouseBaseSmallItemCell class]] || [cell isKindOfClass:[FHHouseBaseSmallItemCell class]]){
                 FHHouseBaseSmallItemCell *theCell = (FHHouseBaseSmallItemCell *)cell;
-                [theCell refreshTopMargin: 10];// todo zjing
+//                [theCell refreshTopMargin: 10];// todo zjing
             }
             [cell refreshWithData:data];
             if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
@@ -2015,6 +2026,7 @@ extern NSString *const INSTANT_DATA_KEY;
     } else if ([cellModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
         
         FHSugSubscribeDataDataSubscribeInfoModel *cellSubModel = (FHSugSubscribeDataDataSubscribeInfoModel *)cellModel;
+        cellSubModel.subscribeId = @{};
         if ([cellSubModel.subscribeId isKindOfClass:[NSString class]] && [cellSubModel.subscribeId integerValue] != 0) {
             tracerDict[@"subscribe_id"] = cellSubModel.subscribeId;
         }else {
