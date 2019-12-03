@@ -566,17 +566,17 @@
             cell.secondaryLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
             NSAttributedString *text1 = [self processHighlightedDefault:model.listText textColor:[UIColor themeGray1] fontSize:15.0];
             cell.label.attributedText = text1;
-            if (indexPath.row - 1 == self.sugListData.count - 1) {
-                // 末尾
-                [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.bottom.mas_equalTo(cell.contentView).offset(-20);
-                }];
-            } else {
-                [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.bottom.mas_equalTo(cell.contentView).offset(0);
-                }];
-            }
-        }
+//            if (indexPath.row - 1 == self.sugListData.count - 1) {
+//                // 末尾
+//                [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
+//                    make.bottom.mas_equalTo(cell.contentView).offset(-20);
+//                }];
+//            } else {
+//                [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
+//                    make.bottom.mas_equalTo(cell.contentView).offset(0);
+//                }];
+//            }
+//        }
         return cell;
     } else if (tableView.tag == 2) {
         // 联想词列表
