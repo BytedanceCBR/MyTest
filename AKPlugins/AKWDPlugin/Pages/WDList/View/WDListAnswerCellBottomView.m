@@ -71,9 +71,11 @@
         if (ansEntity.isDigg) {
             self.followBtn.followed = YES;
             self.followBtn.icon.image = [UIImage imageNamed:@"f_ask_favorite_selected"];//
+            self.followBtn.textLabel.textColor = [UIColor themeRed1];
         } else {
             self.followBtn.followed = NO;
             self.followBtn.icon.image = [UIImage imageNamed:@"f_ask_favorite_noraml"];// f_ask_favorite_selected
+            self.followBtn.textLabel.textColor = [UIColor themeGray1];
         }
     }
     [self layoutIfNeeded];
