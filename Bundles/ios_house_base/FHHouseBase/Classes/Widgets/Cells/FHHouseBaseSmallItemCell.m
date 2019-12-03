@@ -919,6 +919,8 @@
             
             self.mainTitleLabel.text = commonModel.displayTitle;
             self.subTitleLabel.text = commonModel.displaySubtitle;
+            self.tagLabel.textColor = [UIColor themeGray3];
+            self.tagLabel.font = [UIFont themeFontRegular:12];
             self.tagLabel.text = commonModel.displayStatsInfo;
             self.priceLabel.text = commonModel.pricePerSqmNum;
             self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
@@ -941,6 +943,7 @@
         CGFloat reasonHeight = [model showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0;
         return (isLastCell ? 95 : 75) + reasonHeight + model.topMargin;
     }
+    return 75;
 }
 
 #pragma mark 二手房
