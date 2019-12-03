@@ -18,6 +18,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
+    FHNetworkMonitorTypeSuccess = 100000, //成功
+    FHNetworkMonitorTypeBizFailed = 110000, //返回数据成功 status 非0
+    FHNetworkMonitorTypeNetFailed = 120000, //数据返回失败
+};
+
 @interface FHMainApi : NSObject
 
 +(NSString *)host;
@@ -141,6 +147,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 +(TTHttpTask *_Nullable)checkUGCPostPromotionparams:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion;
+
++(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict;
++(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict exceptionDict:(NSDictionary *)exceptionDict;
 
 @end
 
