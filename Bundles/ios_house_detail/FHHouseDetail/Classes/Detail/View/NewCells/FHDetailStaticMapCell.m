@@ -376,7 +376,7 @@
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
 
     NSDictionary *fhSettings = [self fhSettings];
-    dataModel.useNativeMap = [fhSettings tt_unsignedIntegerValueForKey:@"f_use_static_map"] != 0;
+    dataModel.useNativeMap = [fhSettings tt_unsignedIntegerValueForKey:@"f_use_static_map"] == 0;
 
     [self cleanSubViews];
     if (dataModel.mapOnly) {
