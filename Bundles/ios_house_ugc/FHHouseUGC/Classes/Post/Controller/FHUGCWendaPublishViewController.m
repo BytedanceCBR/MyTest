@@ -154,6 +154,7 @@
 
 - (void)registerNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardFrameWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
 }
 
 - (void)addGestures {
@@ -178,6 +179,15 @@
     self.textContentScrollView.height = height;
     
     [self updateTextContentScrollViewContentSize];
+}
+
+-(void)keyboardDidShow:(NSNotification *)notification {
+    if(self.titleTextView.isFirstResponder) {
+        [self scrollToCursorVisibleForTextView:self.titleTextView];
+    }
+    else if(self.descriptionTextView.isFirstResponder) {
+        [self scrollToCursorVisibleForTextView:self.descriptionTextView];
+    }
 }
 
 #pragma mark - FHUGCPublishBaseViewControllerProtocol
@@ -504,18 +514,33 @@
     
     else if (textView == self.descriptionTextView) {
         [self updateTipLabelWithText:self.descriptionTextView.text maxLength:DESC_MAX_COUNT];
-        [self scrollToCursorVisibleForTextView:textView];
+        
     }
 }
 
 - (void)scrollToCursorVisibleForTextView:(TTUGCTextView *)textView {
-    if(textView == self.descriptionTextView && self.textContentScrollView.size.height < self.textContentScrollView.contentSize.height) {
-        CGFloat offsetY = self.textContentScrollView.contentSize.height - self.textContentScrollView.bounds.size.height;
-        if(offsetY > 0 ) {
-            [self.textContentScrollView setContentOffset:CGPointMake(0, offsetY) animated:YES];
+
+    UITextRange *range = textView.internalGrowingTextView.internalTextView.selectedTextRange;
+    
+    CGRect rect = [textView.internalGrowingTextView.internalTextView caretRectForPosition:range.start];
+    
+    CGRect targetRect = [self.textContentScrollView convertRect:rect fromView:textView.internalGrowingTextView.internalTextView];
+    
+    CGPoint contentOffset = self.textContentScrollView.contentOffset;
+    
+    CGFloat targetBottom = targetRect.origin.y + targetRect.size.height;
+    
+    CGFloat caretOffset = targetBottom - contentOffset.y;
+    
+    CGFloat scrollViewHeight = self.textContentScrollView.frame.size.height;
+    
+    if(caretOffset > 0) {
+        if(caretOffset > scrollViewHeight) {
+            CGFloat contentOffsetYDelta = caretOffset - scrollViewHeight;
+            [self.textContentScrollView setContentOffset:CGPointMake(0, contentOffset.y + contentOffsetYDelta) animated:YES];
         }
-    } else if(textView == self.titleTextView) {
-        [self.textContentScrollView setContentOffset:CGPointZero animated:YES];
+    } else {
+        [self.textContentScrollView setContentOffset:CGPointMake(0, contentOffset.y + caretOffset - targetRect.size.height) animated:YES];
     }
 }
 
