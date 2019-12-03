@@ -207,16 +207,7 @@
 
 - (void)viewDidAppear {
     self.isViewAppear = YES;
-//    self.feedListController.tableView.mj_header = self.refreshHeader;
-//    self.refreshHeader.ignoredScrollViewContentInsetTop = -([TTDeviceHelper isIPhoneXSeries] ? 44 + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.top : 64);
-////    NSString *version = [UIDevice currentDevice].systemVersion;
-////    if (version.doubleValue >= 12.0) {
-////        self.feedListController.tableView.tableHeaderView = self.viewController.headerView;
-////    }
-//    [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
-//    if (self.feedListController.tableView) {
-//        [self scrollViewDidScroll:self.feedListController.tableView];
-//    }
+    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
     // 帖子数同步逻辑
     FHUGCScialGroupDataModel *tempModel = self.data;
     if (tempModel) {
@@ -230,13 +221,6 @@
             [self updateUIWithData:tempModel];
         }
     }
-    // 修复发帖返回状态栏不对问题
-//    if (self.feedListController.tableView) {
-//        __weak typeof(self) weakSelf = self;
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            [weakSelf scrollViewDidScroll:weakSelf.feedListController.tableView];
-//        });
-//    }
 }
 
 - (void)viewWillDisappear {
@@ -996,7 +980,7 @@
 - (void)updateJoinUI:(BOOL)followed {
     self.viewController.headerView.followButton.followed = followed;
     self.viewController.rightBtn.followed = followed;
-    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
+//    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
 }
 
 - (void)gotoSocialFollowUserList {
