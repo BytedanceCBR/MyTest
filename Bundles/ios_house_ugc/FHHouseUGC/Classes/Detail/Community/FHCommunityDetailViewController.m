@@ -89,7 +89,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.ttStatusBarStyle = UIStatusBarStyleLightContent;
     
     [self initNavBar];
     [self initView];
