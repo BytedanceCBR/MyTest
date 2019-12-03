@@ -763,7 +763,6 @@
         if (rangeLeft.location != NSNotFound) {
             [string insertString:@"[" atIndex:rangeLeft.location];
             [string insertString:@"]" atIndex:rangeLeft.location + 2];
-            NSLog(@"fengbo %@", string);
         }
 
         //右括号
@@ -771,7 +770,6 @@
         if (rangeRight.location != NSNotFound) {
             [string insertString:@"[" atIndex:rangeRight.location];
             [string insertString:@"]" atIndex:rangeRight.location + 2];
-            NSLog(@"fengbo %@", string);
         }
 
         //()在正则表达式有特殊意义——子表达式
