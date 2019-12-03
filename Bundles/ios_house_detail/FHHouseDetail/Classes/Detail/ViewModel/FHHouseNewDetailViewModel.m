@@ -264,6 +264,14 @@
     if (page_type) {
         params[@"page_type"] = page_type;
     }
+    NSString *type = self.weakSocialInfo.associateActiveInfo.associateLinkShowType;
+    if ([type isEqualToString:@"0"]) {
+        // 圈子
+        params[@"skip_page_type"] = @"community_group";
+    } else if ([type isEqualToString:@"1"]) {
+        // 群聊
+        params[@"skip_page_type"] = @"community_member_talk";
+    }
     params[@"tip_type"] = @"community_tip";
     [FHUserTracker writeEvent:@"tip_show" params:params];
 }
@@ -278,6 +286,14 @@
     }
     if (page_type) {
         params[@"page_type"] = page_type;
+    }
+    NSString *type = self.weakSocialInfo.associateActiveInfo.associateLinkShowType;
+    if ([type isEqualToString:@"0"]) {
+        // 圈子
+        params[@"skip_page_type"] = @"community_group";
+    } else if ([type isEqualToString:@"1"]) {
+        // 群聊
+        params[@"skip_page_type"] = @"community_member_talk";
     }
     params[@"tip_type"] = @"community_tip";
     params[@"click_type"] = @"confirm";
