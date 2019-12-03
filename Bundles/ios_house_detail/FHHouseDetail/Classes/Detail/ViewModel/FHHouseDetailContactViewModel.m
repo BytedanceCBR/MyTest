@@ -884,6 +884,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     } else if (self.ugcLoginType == 2) {
         tracerDic[@"click_position"] = @"community_tip";
     }
+    tracerDic[@"card_type"] = @"be_null";
 
     [FHUserTracker writeEvent:@"click_join" params:tracerDic];
 }
