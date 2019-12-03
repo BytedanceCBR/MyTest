@@ -235,9 +235,8 @@
 + (id)searchItemModelByDict:(NSDictionary *)itemDict
 {
     NSInteger cardType = -1;
-    if (itemDict[@"card_type"]) {
-        cardType = [itemDict tt_integerValueForKey:@"card_type"];
-    }else if (itemDict[@"house_type"]) {
+    cardType = [itemDict tt_integerValueForKey:@"card_type"];
+    if (cardType == 0 || cardType == -1) {
         cardType = [itemDict tt_integerValueForKey:@"house_type"];
     }
     id itemModel = nil;
@@ -602,41 +601,6 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+ (FHSearchHouseModel *)generateSearchModel:(NSData *)jsonData error:(NSError *__autoreleasing *)error
-{
-    if (*error) {
-        //there is error
-        return nil;
-    }
-    
-    if (!jsonData) {
-        *error = [NSError errorWithDomain:@"未请求到数据" code:API_NO_DATA userInfo:nil];
-        return nil;
-    }
-    
-    NSError *jerror = nil;
-    FHSearchHouseModel *model = nil;
-    model = [[FHSearchHouseModel alloc]initWithData:jsonData error:&jerror];
-    if (jerror) {
-#if DEBUG
-        NSLog(@" %s %ld API [%@] make json failed",__FILE__,__LINE__,NSStringFromClass([FHSearchHouseModel class]));
-#endif
-        *error = [NSError errorWithDomain:@"数据异常" code:API_WRONG_DATA userInfo:nil];
-        return nil;
-    }
-    
-    if ([model respondsToSelector:@selector(status)]) {
-        NSString *status = [model performSelector:@selector(status)];
-        if (![@"0" isEqualToString:status]) {
-            NSString *message = nil;
-            if ([model respondsToSelector:@selector(message)]) {
-                message = [model performSelector:@selector(message)];
-            }
-            *error = [NSError errorWithDomain:message?:DEFULT_ERROR code:[status integerValue] userInfo:nil];
-        }
-    }
-    return model;
-}
 
 
 @end
