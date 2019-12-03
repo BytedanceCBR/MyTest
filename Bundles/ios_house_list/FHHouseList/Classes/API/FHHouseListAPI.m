@@ -209,29 +209,6 @@
             responseModel.data.searchItems = searchItems;
             model = responseModel;
         }
-    }else if ([class isKindOfClass:[FHNewHouseListResponseModel class]]) {
-//        model = [[class alloc]initWithData:jsonData error:&jerror];
-
-    } else if ([class isKindOfClass:[FHHouseRentModel class]]) {
-        
-        FHListSearchHouseModel *responseModel = (FHListSearchHouseModel *)model;
-        if (responseModel.data.items.count > 0) {
-            
-            NSMutableArray *searchItems = @[].mutableCopy;
-            NSArray *itemsArray = responseModel.data.items;
-            [itemsArray enumerateObjectsUsingBlock:^(id  _Nonnull itemDict, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([itemDict isKindOfClass:[NSDictionary class]]) {
-                    id theItemModel = [self searchItemModelByDict:itemDict];
-                    if (theItemModel) {
-                        [searchItems addObject:theItemModel];
-                    }
-                }
-            }];
-            responseModel.data.searchItems = searchItems;
-            model = responseModel;
-        }
-    } else if ([class isKindOfClass:[FHHouseNeighborModel class]]) {
-//        model = [[class alloc]initWithData:jsonData error:&jerror];
     }
         
     if (jerror) {

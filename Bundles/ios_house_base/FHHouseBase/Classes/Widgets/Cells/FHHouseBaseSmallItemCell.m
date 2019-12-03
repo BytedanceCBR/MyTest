@@ -773,7 +773,9 @@
         //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
         FHImageModel *imageModel = commonModel.images.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
-        
+        _vrLoadingView.hidden = YES;
+        self.tagTitleLabel.hidden = YES;
+
         if (houseType == FHHouseTypeSecondHandHouse) {
             
             self.tagLabel.attributedText =  attributeString;
