@@ -509,6 +509,7 @@
 }
 
 - (void)scrollToCursorVisibleForTextView:(TTUGCTextView *)textView {
+    
     if(textView == self.descriptionTextView && self.textContentScrollView.size.height < self.textContentScrollView.contentSize.height) {
         CGFloat offsetY = self.textContentScrollView.contentSize.height - self.textContentScrollView.bounds.size.height;
         if(offsetY > 0 ) {
@@ -517,6 +518,14 @@
     } else if(textView == self.titleTextView) {
         [self.textContentScrollView setContentOffset:CGPointZero animated:YES];
     }
+    
+    UITextRange *range = textView.internalGrowingTextView.internalTextView.selectedTextRange;
+    
+    CGRect rect = [textView.internalGrowingTextView.internalTextView caretRectForPosition:range.start];
+    
+    CGRect targetRect = [self.textContentScrollView convertRect:rect fromView:textView.internalGrowingTextView.internalTextView];
+    
+    [self.textContentScrollView scrollRectToVisible:targetRect animated:YES];
 }
 
 #pragma mark - FRAddMultiImagesViewDelegate
