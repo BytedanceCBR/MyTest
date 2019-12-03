@@ -576,7 +576,7 @@
 //                    make.bottom.mas_equalTo(cell.contentView).offset(0);
 //                }];
 //            }
-//        }
+        }
         return cell;
     } else if (tableView.tag == 2) {
         // 联想词列表
@@ -755,8 +755,27 @@
     if (self.highlightedText.length > 0) {
         NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};
         NSMutableAttributedString * tempAttr = [[NSMutableAttributedString alloc] initWithAttributedString:text];
-        
-        NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:[NSString stringWithFormat:@"%@",self.highlightedText] options:NSRegularExpressionCaseInsensitive error:nil];
+
+        NSMutableString *string = [NSMutableString stringWithString:self.highlightedText];
+
+        //左括号
+        NSRange rangeLeft = [string rangeOfString:@"("];
+        if (rangeLeft.location != NSNotFound) {
+            [string insertString:@"[" atIndex:rangeLeft.location];
+            [string insertString:@"]" atIndex:rangeLeft.location + 2];
+            NSLog(@"fengbo %@", string);
+        }
+
+        //右括号
+        NSRange rangeRight = [string rangeOfString:@")"];
+        if (rangeRight.location != NSNotFound) {
+            [string insertString:@"[" atIndex:rangeRight.location];
+            [string insertString:@"]" atIndex:rangeRight.location + 2];
+            NSLog(@"fengbo %@", string);
+        }
+
+        //()在正则表达式有特殊意义——子表达式
+        NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:[NSString stringWithFormat:@"%@",string] options:NSRegularExpressionCaseInsensitive error:nil];
         
         [regex enumerateMatchesInString:originText options:NSMatchingReportProgress range:NSMakeRange(0, originText.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
             [tempAttr addAttributes:attr range:result.range];
