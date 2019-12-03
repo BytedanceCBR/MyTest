@@ -6,40 +6,39 @@
 //
 
 #import "FHMinisdkManager.h"
-//#import <BDDiamond20/BDDTaskCenterManager.h>
-//#import <TTInstallIDManager.h>
-//
-//@interface FHMinisdkManager ()<BDDTaskCenterManagerProtocol>
+#import <TTInstallIDManager.h>
+
+//@interface FHMinisdkManager ()<BDMTaskCenterManagerProtocol>
 //
 //@end
 
 @implementation FHMinisdkManager
     
-+ (instancetype)sharedInstance {
-    static id manager = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        manager = [[self alloc] init];
-    });
-
-    return manager;
-}
-
+//+ (instancetype)sharedInstance {
+//    static id manager = nil;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        manager = [[self alloc] init];
+//    });
+//
+//    return manager;
+//}
+//
 //- (NSString *)taskID {
 //    return @"104";
 //}
 //
 //- (void)initTask {
-//    [BDDTaskCenterManager sharedInstance].delegate = self;
-//    [[BDDTaskCenterManager sharedInstance] uploadAppFirstOpenAfterDownload];
+//    [BDMTaskCenterManager sharedInstance].delegate = self;
+//    [[BDMTaskCenterManager sharedInstance] uploadAppFirstOpenAfterDownload];
 //}
 //
 //- (void)appBecomeActive:(NSString *)ackToken {
-//    [[BDDTaskCenterManager sharedInstance] setAckToken:ackToken];
+//    [[BDMTaskCenterManager sharedInstance] setAckToken:ackToken];
 //}
 //
 //- (void)taskComplete:(BDDTaskFinishBlock)finishBlock {
-//    [[BDDTaskCenterManager sharedInstance] updateTaskID:[self taskID] finishBlock:finishBlock];
+//    [[BDMTaskCenterManager sharedInstance] updateTaskID:[self taskID] finishBlock:finishBlock];
 //}
 //
 //#pragma mark - BDDTaskCenterManagerProtocol
