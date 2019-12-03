@@ -8,6 +8,9 @@
 #import "FHHouseListAPI.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import <YYModel/YYModel.h>
+#import "FHSearchHouseModel.h"
+#import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import <FHHouseBase/FHHouseNeighborModel.h>
 
 #define QURL(QPATH) [[FHMainApi host] stringByAppendingString:QPATH]
 #define GET @"GET"
@@ -114,8 +117,166 @@
     if (sugParam) {
         qparam[@"suggestion_params"] = sugParam;
     }
+    
+    if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
+        return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:@"search_second" completion:completion];
+    }
     return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls logPath:@"search_second" completion:completion];
     
+}
+
+#pragma mark - model 特殊处理
++(TTHttpTask *)querySearchData:(NSString *_Nullable)queryPath uploadLog:(BOOL)uploadLog params:(NSDictionary *_Nullable)param class:(Class)cls logPath:(NSString *)logPath completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
+{
+    NSString *url = QURL(queryPath);
+    
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        NSDate *backDate = [NSDate date];
+        
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHListSearchHouseModel *model = (FHListSearchHouseModel *)[self generateModel:obj class:cls error:&backError];
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            
+            BOOL success = NO;
+            if (response.statusCode == 200 ) {
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || error != nil) {
+                        if (uploadLog) {
+                            extraDict = @{}.mutableCopy;
+                            extraDict[@"request_url"] = response.URL.absoluteString;
+                            extraDict[@"response_headers"] = response.allHeaderFields;
+                            extraDict[@"error"] = error.domain;
+                        }
+                        code = [status integerValue];
+                        resultType = status.integerValue;
+                        errMsg = error.domain;
+                    }
+                }
+            }else{
+                code = response.statusCode;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            }
+            [FHMainApi addRequestLog:logPath?:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
+            
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
+        
+    }];
+}
+
++(JSONModel *)generateModel:(NSData *)jsonData class:(Class)class error:(NSError *__autoreleasing *)error
+{
+    if (*error) {
+        //there is error
+        return nil;
+    }
+    
+    if (!jsonData) {
+        *error = [NSError errorWithDomain:@"未请求到数据" code:API_NO_DATA userInfo:nil];
+        return nil;
+    }
+    
+    NSError *jerror = nil;
+    JSONModel *model = nil;
+
+    model = [[class alloc]initWithData:jsonData error:&jerror];
+    if ([model isKindOfClass:[FHListSearchHouseModel class]]) {
+        
+        FHListSearchHouseModel *responseModel = (FHListSearchHouseModel *)model;
+        if (responseModel.data.items.count > 0) {
+            
+            NSMutableArray *searchItems = @[].mutableCopy;
+            NSArray *itemsArray = responseModel.data.items;
+            [itemsArray enumerateObjectsUsingBlock:^(id  _Nonnull itemDict, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([itemDict isKindOfClass:[NSDictionary class]]) {
+                    id theItemModel = [self searchItemModelByDict:itemDict];
+                    if (theItemModel) {
+                        [searchItems addObject:theItemModel];
+                    }
+                }
+            }];
+            responseModel.data.searchItems = searchItems;
+            model = responseModel;
+        }
+    }
+        
+    if (jerror) {
+#if DEBUG
+        NSLog(@" %s %ld API [%@] make json failed",__FILE__,__LINE__,NSStringFromClass(class));
+#endif
+        *error = [NSError errorWithDomain:@"数据异常" code:API_WRONG_DATA userInfo:nil];
+        return nil;
+    }
+    
+    if ([model respondsToSelector:@selector(status)]) {
+        NSString *status = [model performSelector:@selector(status)];
+        if (![@"0" isEqualToString:status]) {
+            NSString *message = nil;
+            if ([model respondsToSelector:@selector(message)]) {
+                message = [model performSelector:@selector(message)];
+            }
+            *error = [NSError errorWithDomain:message?:DEFULT_ERROR code:[status integerValue] userInfo:nil];
+        }
+    }
+    return model;
+}
+
++ (id)searchItemModelByDict:(NSDictionary *)itemDict
+{
+    NSInteger cardType = -1;
+    cardType = [itemDict tt_integerValueForKey:@"card_type"];
+    if (cardType == 0 || cardType == -1) {
+        cardType = [itemDict tt_integerValueForKey:@"house_type"];
+    }
+    id itemModel = nil;
+    NSError *jerror = nil;
+    
+    switch (cardType) {
+        case FHSearchCardTypeSecondHouse:
+            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeNewHouse:
+            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeRentHouse:
+            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeNeighborhood:
+            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeSubscribe:
+            itemModel = [[FHSugSubscribeDataDataSubscribeInfoModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeNeighborExpert:
+            itemModel = [[FHHouseNeighborAgencyModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeAgencyInfo:
+            itemModel = [[FHSearchRealHouseAgencyInfo alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeFilterHouseTip:
+            itemModel = [[FHSugListRealHouseTopInfoModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeGuessYouWantTip:
+            itemModel = [[FHSearchGuessYouWantTipsModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        case FHSearchCardTypeGuessYouWantContent:
+            itemModel = [[FHSearchGuessYouWantContentModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
+        default:
+            break;
+    }
+    return itemModel;
 }
 
 /*
@@ -172,6 +333,9 @@
         qparam[@"suggestion_params"] = sugParam;
     }
     qparam[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_SEARCH;
+    if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
+        return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
+    }
     return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
     
 }
@@ -201,7 +365,9 @@
         qparam[@"suggestion_params"] = sugParam;
     }
     qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_COURT;
-
+    if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
+        return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
+    }
     return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
 
 }
@@ -231,8 +397,43 @@
         qparam[@"suggestion_params"] = sugParam;
     }
     qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_NEIGHBORHOOD;
+    if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
+        return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
+    }
     return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
 
+}
+
+/*
+ *  租房请求
+ *  @param: query 筛选等请求
+ *  @param: param 其他请求参数
+ *  @param: offset 偏移
+ *  @param: searchId 请求id
+ *  @param: sugParam  suggestion params
+ */
++(TTHttpTask *)searchRent:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
+{
+    NSString *queryPath = @"/f100/api/search_rent";
+    
+    NSMutableDictionary *qparam = [NSMutableDictionary new];
+    if (query.length > 0) {
+        queryPath = [NSString stringWithFormat:@"%@?%@",queryPath,query];
+    }
+    if (param) {
+        [qparam addEntriesFromDictionary:param];
+    }
+    qparam[@"offset"] = @(offset);
+    qparam[@"search_id"] = searchId?:@"";
+    if (sugParam) {
+        qparam[@"suggestion_params"] = sugParam;
+    }
+    
+
+    if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
+        return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
+    }
+    return [FHMainApi queryData:queryPath uploadLog:YES params:qparam class:cls completion:completion];
 }
 
 /*
@@ -253,6 +454,9 @@
         qparam[@"search_type"] = searchType;
     }
     qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_NEIGHBORHOOD_DEAL;
+    if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
+        return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
+    }
     return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
     
 }
@@ -338,7 +542,7 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+(TTHttpTask *)requestCommute:(NSInteger)cityId query:(NSString *_Nullable)query location:(CLLocationCoordinate2D)location houseType:(FHHouseType)houseType duration:(CGFloat)duration type:(FHCommuteType)type param:(NSDictionary *_Nonnull)param offset:(NSInteger)offset completion:(void(^_Nullable)(FHHouseRentModel* _Nullable model , NSError * _Nullable error))completion
++(TTHttpTask *)requestCommute:(NSInteger)cityId query:(NSString *_Nullable)query location:(CLLocationCoordinate2D)location houseType:(FHHouseType)houseType duration:(CGFloat)duration type:(FHCommuteType)type param:(NSDictionary *_Nonnull)param offset:(NSInteger)offset completion:(void(^_Nullable)(FHListSearchHouseModel* _Nullable model , NSError * _Nullable error))completion
 {
     //10.224.5.226:6789/f100/api/commuting?city_id=122&aim_longitude=116.307512&aim_latitude=39.982717&duration=900&commutingway=2&house_type=3'
     NSString *path = @"/f100/api/commuting";
@@ -357,12 +561,13 @@
     if (query.length > 0) {
         path = [NSString stringWithFormat:@"%@?%@",path,query];
     }
-    
-    return [FHMainApi queryData:path params:mparam class:[FHHouseRentModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        if (completion) {
-            completion(model , error);
-        }
-    }];
+
+    return [FHHouseListAPI querySearchData:path uploadLog:YES params:mparam class:[FHListSearchHouseModel class] logPath:nil completion:completion];
+//    return [FHMainApi queryData:path params:mparam class:[FHHouseRentModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+//        if (completion) {
+//            completion(model , error);
+//        }
+//    }];
 }
 
 + (TTHttpTask *)requestSuggestionOnlyNeiborhoodCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
@@ -396,41 +601,6 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
-+ (FHSearchHouseModel *)generateSearchModel:(NSData *)jsonData error:(NSError *__autoreleasing *)error
-{
-    if (*error) {
-        //there is error
-        return nil;
-    }
-    
-    if (!jsonData) {
-        *error = [NSError errorWithDomain:@"未请求到数据" code:API_NO_DATA userInfo:nil];
-        return nil;
-    }
-    
-    NSError *jerror = nil;
-    FHSearchHouseModel *model = nil;
-    model = [[FHSearchHouseModel alloc]initWithData:jsonData error:&jerror];
-    if (jerror) {
-#if DEBUG
-        NSLog(@" %s %ld API [%@] make json failed",__FILE__,__LINE__,NSStringFromClass([FHSearchHouseModel class]));
-#endif
-        *error = [NSError errorWithDomain:@"数据异常" code:API_WRONG_DATA userInfo:nil];
-        return nil;
-    }
-    
-    if ([model respondsToSelector:@selector(status)]) {
-        NSString *status = [model performSelector:@selector(status)];
-        if (![@"0" isEqualToString:status]) {
-            NSString *message = nil;
-            if ([model respondsToSelector:@selector(message)]) {
-                message = [model performSelector:@selector(message)];
-            }
-            *error = [NSError errorWithDomain:message?:DEFULT_ERROR code:[status integerValue] userInfo:nil];
-        }
-    }
-    return model;
-}
 
 
 @end
