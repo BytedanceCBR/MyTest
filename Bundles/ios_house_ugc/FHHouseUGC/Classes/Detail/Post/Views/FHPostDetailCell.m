@@ -14,6 +14,7 @@
 #import "FHUGCCellHelper.h"
 #import "FHCommentBaseDetailViewModel.h"
 #import "FHUGCCellOriginItemView.h"
+#import <TTIndicatorView.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -89,6 +90,10 @@
     self.contentLabel.activeLinkAttributes = linkAttributes;
     self.contentLabel.inactiveLinkAttributes = linkAttributes;
     [self.contentView addSubview:_contentLabel];
+    
+    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressContentLabel:)];
+    longPressGesture.minimumPressDuration = 1.0;
+    [_contentLabel addGestureRecognizer:longPressGesture];
     
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:self.imageCount];
     [self.contentView addSubview:_multiImageView];
@@ -357,6 +362,23 @@
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
     }
+}
+
+- (void)attributedLabel:(TTUGCAttributedLabel *)label didLongPressLinkWithURL:(NSURL *)url atPoint:(CGPoint)point {
+    [self didLongPress];
+}
+
+- (void)didLongPressContentLabel:(UILongPressGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        [self didLongPress];
+    }
+}
+
+- (void)didLongPress {
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = [NSString stringWithFormat:@"%@", cellModel.content];
+    [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
 }
 
 @end

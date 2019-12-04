@@ -17,12 +17,13 @@
 #import "FHUGCPostMenuView.h"
 #import "FHCommonDefines.h"
 #import "FHUserTracker.h"
+#import <UIViewController+NavigationBarStyle.h>
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol, FHUGCPostMenuViewDelegate>
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
 @property (nonatomic, strong) UIImage *shareWhiteImage;
 @property (nonatomic, strong) UIButton *shareButton;// 分享
-@property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
+@property (nonatomic, strong) FHUGCPostMenuView *publishMenuView;
 
 @end
 
@@ -46,6 +47,10 @@
         NSString *element_from = params[@"element_from"];
         if (element_from.length > 0) {
             self.tracerDict[@"element_from"] = element_from;
+        }
+        NSString *group_id = params[@"group_id"];
+        if (group_id.length > 0) {
+            self.tracerDict[@"group_id"] = group_id;
         }
         self.tracerDict[@"page_type"] = [self pageType];
         
@@ -213,6 +218,7 @@
 - (void)initGroupChatBtn {
     self.groupChatBtn = [[UIButton alloc] init];
     [_groupChatBtn setImage:[UIImage imageNamed:@"fh_ugc_group_chat_tip"] forState:UIControlStateNormal];
+    [_groupChatBtn setImage:[UIImage imageNamed:@"fh_ugc_group_chat_tip"] forState:UIControlStateDisabled];
     [_groupChatBtn addTarget:self action:@selector(gotoGroupChat) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_groupChatBtn];
     [_groupChatBtn setHidden:YES];
@@ -365,6 +371,16 @@
     TRACK_EVENT(@"click_options", params);
     
     [self.viewModel gotoVotePublish];
+}
+
+- (void)gotoWendaPublish {
+
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ELEMENT_TYPE] = @"question_icon";
+    params[UT_PAGE_TYPE] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+    TRACK_EVENT(@"click_options", params);
+    
+    [self.viewModel gotoWendaPublish];
 }
 
 - (void)postMenuViewWillShow {

@@ -15,6 +15,7 @@
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import <FHHouseBase/FHSearchHouseModel.h>
+#import "FHHouseListAPI.h"
 
 @implementation FHBaseMainListViewModel (Rent)
 
@@ -31,7 +32,7 @@
         }
     }
     NSDictionary *params = @{CHANNEL_ID:CHANNEL_ID_SEARCH_RENT_WITH_BANNER};
-    return [FHMainApi searchRent:query params:params offset:offset searchId:self.searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error) {
+    return [FHHouseListAPI searchRent:query params:params offset:offset searchId:self.searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error) {
         if (completion) {
             completion(model,error);
         }

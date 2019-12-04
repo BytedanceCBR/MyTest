@@ -7,7 +7,7 @@
 
 #import "FHHomeViewController.h"
 #import "FHHomeListViewModel.h"
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHEnvContext.h"
 #import "FHHomeCellHelper.h"
 #import "FHHomeConfigManager.h"
@@ -430,6 +430,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [FHEnvContext addTabUGCGuid];
     
     [TTSandBoxHelper setAppFirstLaunchForAd];
+    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 - (void)_willEnterForeground:(NSNotification *)notification

@@ -6,7 +6,7 @@
 //
 //
 
-#import "TTBubbleView.h"
+#import <TTUIWidget/TTBubbleView.h>
 
 typedef NS_ENUM(NSUInteger,TTBubbleViewType){
     TTBubbleViewTypeDefault = 1,                //默认tip,纯文字或者图在左边

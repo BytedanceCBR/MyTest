@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHBaseMainListViewController : FHBaseViewController
 
 @property(nonatomic , strong , readonly) UITableView *tableView;
+@property(nonatomic , strong, readonly) UIView *containerView;
 
 @end
 

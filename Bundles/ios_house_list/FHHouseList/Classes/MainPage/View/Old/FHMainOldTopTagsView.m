@@ -20,7 +20,7 @@
 @interface FHMainOldTopTagsView ()
 
 @property (nonatomic, weak)     FHConfigDataModel       *wConfigData;
-@property (nonatomic, weak)     FHSearchFilterConfigOption       *tagsFilterData;
+@property (nonatomic, strong)     FHSearchFilterConfigOption       *tagsFilterData;
 
 @end
 
@@ -30,6 +30,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _lastConditionDic = @{}.mutableCopy;
         self.backgroundColor = [UIColor whiteColor];
         [self setupUI];
     }
@@ -81,6 +82,11 @@
             }
         }
     }
+}
+
+- (BOOL)hasTagData
+{
+    return (self.tagsFilterData != nil);
 }
 
 // 点击
