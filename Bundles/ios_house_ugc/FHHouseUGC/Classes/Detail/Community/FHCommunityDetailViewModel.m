@@ -262,6 +262,7 @@
         StrongSelf;
         
         [_viewController tt_endUpdataData];
+
         //basicInfo信息接口回来后群聊按钮才可以点击
         self.viewController.groupChatBtn.enabled = YES;
         
