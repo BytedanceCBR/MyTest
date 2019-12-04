@@ -41,7 +41,7 @@ static const NSInteger kTopScrollViewTag = 100;
         self.categoryLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 18 : 14];
         self.categoryLabel.textColor = [UIColor themeGray1];
         self.categoryLabel.text = @"为你推荐";
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor themeGray9];
         [self addSubview:self.categoryLabel];
         self.categoryLabel.frame = CGRectMake(20, 0, 100, 30);
         [self setUpSegmentedControl];
@@ -59,6 +59,7 @@ static const NSInteger kTopScrollViewTag = 100;
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleFullWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
+    [_segmentedControl setBackgroundColor:[UIColor themeGray9]];
     
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
@@ -82,7 +83,6 @@ static const NSInteger kTopScrollViewTag = 100;
     _topStyleContainer = [[UIView alloc] initWithFrame:self.frame];
     _topStyleContainer.hidden = YES;
     [self addSubview:_topStyleContainer];
-    
 }
 
 - (void)refreshSelectionIconFromOffsetX:(CGFloat)offsetX
@@ -141,8 +141,7 @@ static const NSInteger kTopScrollViewTag = 100;
     _segmentedControl.sectionTitles = titles;
     _segmentedControl.selectedSegmentIndex = 0;
     _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
-    
-    [self addScrollTopSection:titles andSelectIndex:0];
+//    [self addScrollTopSection:titles andSelectIndex:0];
 }
 
 - (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index

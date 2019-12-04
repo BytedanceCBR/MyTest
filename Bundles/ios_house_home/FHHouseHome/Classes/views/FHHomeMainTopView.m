@@ -47,7 +47,7 @@ static const float kSegementedMainPadingBottom = 10;
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor themeGray9];
         //        [self setupCityButton];
         [self setupSubviews];
     }
@@ -102,6 +102,7 @@ static const float kSegementedMainPadingBottom = 10;
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
+    [_segmentControl setBackgroundColor:[UIColor themeGray9]];
     
     __weak typeof(self) weakSelf = self;
     _segmentControl.indexChangeBlock = ^(NSInteger index) {
@@ -179,6 +180,8 @@ static const float kSegementedMainPadingBottom = 10;
     _houseSegmentControl.selectionIndicatorCornerRadius = 2.0f;
     _houseSegmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
     _houseSegmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+    [_houseSegmentControl setBackgroundColor:[UIColor themeGray9]];
+
     //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
     
     __weak typeof(self) weakSelf = self;
@@ -280,6 +283,8 @@ static const float kSegementedMainPadingBottom = 10;
     if (dataModel.cityAvailability.backgroundColor) {
         [self.topBackCityContainer setBackgroundColor:[UIColor colorWithHexString:dataModel.cityAvailability.backgroundColor]];
     }
+    [self.topBackCityContainer setBackgroundColor:[UIColor themeGray9]];
+
     
     CGFloat padingTop = 8;
     if ([TTDeviceHelper isIPhoneXSeries]) {

@@ -26,6 +26,7 @@
 #import "FHUserTracker.h"
 #import "UIImage+FIconFont.h"
 #import <Lottie/LOTAnimationView.h>
+#import <UIColor+Theme.h>
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -37,6 +38,11 @@
 #define MAIN_TAG_HEIGHT     10
 #define INFO_TO_ICON_MARGIN 12
 #define PRICE_BG_TOP_MARGIN 5
+
+#define MAIN_SMALL_IMG_WIDTH   85
+#define MAIN_SMALL_IMG_HEIGHT  64
+#define MAIN_SMALL_IMG_LEFT    6
+#define MAIN_SMALL_IMG_TOP     8
 
 #define YOGA_RIGHT_PRICE_WIDITH 72
 
@@ -450,6 +456,8 @@
 
 -(void)initSmallImageUI
 {
+    self.contentView.backgroundColor = [UIColor themeGray8];
+    
     [self.contentView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.flexDirection = YGFlexDirectionRow;
@@ -465,8 +473,8 @@
     self.leftInfoView = [[UIView alloc] init];
     [_leftInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.width = YGPointValue(75);
-        layout.height = YGPointValue(75);
+        layout.width = YGPointValue(97);
+        layout.height = YGPointValue(80);
     }];
     
     [self.contentView addSubview:_leftInfoView];
@@ -477,9 +485,10 @@
     [_mainImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(10.f);
-        layout.width = YGPointValue(70.0f);
-        layout.height = YGPointValue(54.0f);
+        layout.top = YGPointValue(MAIN_SMALL_IMG_TOP);
+        layout.left = YGPointValue(MAIN_SMALL_IMG_LEFT);
+        layout.width = YGPointValue(MAIN_SMALL_IMG_WIDTH);
+        layout.height = YGPointValue(MAIN_SMALL_IMG_HEIGHT);
     }];
     
     [self.leftInfoView addSubview:self.houseVideoImageView];
@@ -536,7 +545,7 @@
         layout.justifyContent = YGJustifyCenter;
 //        layout.alignItems = YGAlignCenter;
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
-        layout.height = YGPointValue(75);
+        layout.height = YGPointValue(70);
     }];
     
     UIView *titleView = [[UIView alloc] init];
@@ -551,14 +560,14 @@
         layout.paddingLeft = YGPointValue(0);
         layout.paddingRight = YGPointValue(0);
         layout.alignItems = YGAlignFlexStart;
-        layout.marginTop = YGPointValue(0);
+        layout.marginTop = YGPointValue(10);
         layout.height = YGPointValue(22);
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
     }];
     [titleView addSubview:self.mainTitleLabel];
     [titleView addSubview:self.tagTitleLabel];
     
-    _mainTitleLabel.font = [UIFont themeFontSemibold:16];
+    _mainTitleLabel.font = [UIFont themeFontSemibold:18];
     [_mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(0);
@@ -594,7 +603,7 @@
     _tagLabel.font = [UIFont themeFontRegular:10];
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.marginTop = YGPointValue(0);
+        layout.marginTop = YGPointValue(8);
         layout.marginLeft = YGPointValue(0);
         layout.height = YGPointValue(16);
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
@@ -611,15 +620,16 @@
 //    [_priceBgView addSubview:self.originPriceLabel];
     [_priceBgView addSubview:self.pricePerSqmLabel];
     [_priceBgView addSubview:self.closeBtn];
-    [_priceBgView setBackgroundColor:[UIColor whiteColor]];
+    [_priceBgView setBackgroundColor:[UIColor clearColor]];
     [_priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.flexDirection = YGFlexDirectionColumn;
+        layout.flexDirection = YGFlexDirectionColumnReverse;
         layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
-        layout.height = YGPointValue(75);
+        layout.height = YGPointValue(64);
         layout.right = YGPointValue(0);
+        layout.top = YGPointValue(15);
 //        layout.marginRight = YGPointValue(20);
-        layout.justifyContent = YGJustifyCenter;
+        layout.justifyContent = YGJustifySpaceBetween;
         layout.position = YGPositionTypeAbsolute;
 //        layout.top = YGPointValue(5);
         layout.alignItems = YGAlignFlexEnd;
@@ -657,7 +667,7 @@
     [_closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.right = YGPointValue(20);
-        layout.marginTop = YGPointValue(8);
+        layout.marginTop = YGPointValue(0);
         layout.width = YGPointValue(8);
         layout.height = YGPointValue(8);
     }];
@@ -848,13 +858,12 @@
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
+            _pricePerSqmLabel.textColor = [UIColor themeRed4];
         }else {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
+            _pricePerSqmLabel.textColor = [UIColor themeRed4];
         }
-        
         
         FHImageModel *imageModel = [commonModel.houseImage firstObject];
         [self updateMainImageWithUrl:imageModel.url];

@@ -28,6 +28,7 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import <FHHouseBaseNewHouseCell.h>
 #import <FHPlaceHolderCell.h>
+#import <UIColor+Theme.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -568,7 +569,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
             return 118;
         }
         
-        return 75;
+        return kFHHomeHouseItemHeight;
     }
 }
 
@@ -577,10 +578,10 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
     {
         FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
         [bannerCell refreshData:self.houseType];
+        [bannerCell.contentView setBackgroundColor:[UIColor themeGray9]];
         return bannerCell;
     }else
     {
-        
         if (self.showNoDataErrorView) {
             
             UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];

@@ -32,7 +32,7 @@
 //#import "Bubble-Swift.h"
 #import <UIFont+House.h>
 #import "UIImageView+BDWebImage.h"
-
+#import <UIColor+Theme.h>
 #import "FHEnvContext.h"
 
 #import "UIImageAdditions.h"
@@ -298,7 +298,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
             make.height.mas_equalTo(50.0f);
         }];
         
-        [_pageSearchPanel setBackgroundColor:[UIColor whiteColor]];
+        [_pageSearchPanel setBackgroundColor:[UIColor themeGray9]];
     }
 
     [self remakeConstraintsForSearchLabel];

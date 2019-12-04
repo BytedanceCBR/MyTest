@@ -125,6 +125,8 @@
         [itemView setBackgroundColor:[UIColor clearColor]];
         itemView.hidden = NO;
     }
+    
+    [self.contentView setBackgroundColor:[UIColor themeGray9]];
 }
 
 -(void)onItemAction:(FHHomeEntranceItemView *)itemView
