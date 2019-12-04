@@ -53,7 +53,7 @@
     self.currentData = data;
     
     FHDetailAveragePriceComparisonModel *model = (FHDetailAveragePriceComparisonModel *)data;
-    
+    self.shadowImage.image = model.shadowImage;
     NSString *curPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.curPricePsm floatValue]];
     NSString *minPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.minPricePsm floatValue]];
     NSString *maxPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.maxPricePsm floatValue]];
@@ -105,7 +105,6 @@
 - (UIImageView *)shadowImage {
     if (!_shadowImage) {
         UIImageView *shadowImage = [[UIImageView alloc]init];
-        shadowImage.image = [[UIImage imageNamed:@"left_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(30,30,30,30) resizingMode:UIImageResizingModeStretch];
         [self.contentView addSubview:shadowImage];
         _shadowImage = shadowImage;
     }
@@ -115,20 +114,21 @@
 - (void)setupUI {
     
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).offset(-20);
-        make.right.mas_equalTo(self.contentView).offset(20);
-        make.top.equalTo(self.contentView);
-        make.height.equalTo(self.contentView);
+        make.left.right.mas_equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.isShowLoadMore = YES;
-    _headerView.label.font = [UIFont themeFontRegular:16];
+    _headerView.loadMore.text = @"";
+    _headerView.label.font = [UIFont themeFontMedium:18];
     [_headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView).offset(10);
-        make.left.right.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.contentView).offset(15);
+        make.right.mas_equalTo(self.contentView).offset(-15);
         make.height.mas_equalTo(46);
     }];
     
@@ -137,12 +137,13 @@
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView).offset(-10);
+        make.left.mas_equalTo(self.contentView).offset(15);
+        make.right.mas_equalTo(self.contentView).offset(-15);
+        make.bottom.mas_equalTo(self.contentView).offset(-38);
     }];
     
     _bgView = [[UIImageView alloc] init];
-    _bgView.image = [UIImage imageNamed:@"detail_price_bg"];
+    _bgView.image = [UIImage imageNamed:@"old_detail_price_bg"];
     [self.containerView addSubview:_bgView];
     
     [_bgView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -153,7 +154,7 @@
     }];
     
     _lineView = [[UIImageView alloc] init];
-    _lineView.image = [UIImage imageNamed:@"detail_price_line"];
+    _lineView.image = [UIImage imageNamed:@"old_detail_price_line"];
     [self.containerView addSubview:_lineView];
     
     [_lineView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -164,7 +165,7 @@
     }];
     
     _leftPointView = [[UIImageView alloc] init];
-    _leftPointView.image = [UIImage imageNamed:@"detail_price_point"];
+    _leftPointView.image = [UIImage imageNamed:@"old_detail_price_point"];
     [self.containerView addSubview:_leftPointView];
     
     [_leftPointView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -174,7 +175,7 @@
     }];
     
     _rightPointView = [[UIImageView alloc] init];
-    _rightPointView.image = [UIImage imageNamed:@"detail_price_point"];
+    _rightPointView.image = [UIImage imageNamed:@"old_detail_price_point"];
     [self.containerView addSubview:_rightPointView];
     
     [_rightPointView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -184,7 +185,7 @@
     }];
     
     _currentPointView = [[UIImageView alloc] init];
-    _currentPointView.image = [UIImage imageNamed:@"detail_price_point_big"];
+    _currentPointView.image = [UIImage imageNamed:@"old_detail_price_point_big"];
     _currentPointView.hidden = YES;
     [self.containerView addSubview:_currentPointView];
     
@@ -218,7 +219,7 @@
     }];
     
     _tipView = [[UIImageView alloc] init];
-    _tipView.image = [UIImage imageNamed:@"detail_price_tip_bg"];
+    _tipView.image = [UIImage imageNamed:@"old_detail_price_tip_bg"];
     _tipView.contentMode = UIViewContentModeScaleAspectFit;
     _tipView.hidden = YES;
     [self.containerView addSubview:_tipView];

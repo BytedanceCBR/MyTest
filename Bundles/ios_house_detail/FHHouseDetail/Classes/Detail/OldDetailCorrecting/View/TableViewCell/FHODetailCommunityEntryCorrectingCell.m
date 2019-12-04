@@ -87,10 +87,9 @@
 
 - (void)initViews {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView);
-        make.height.equalTo(self.contentView);
+        make.left.right.equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
     }];
     [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);

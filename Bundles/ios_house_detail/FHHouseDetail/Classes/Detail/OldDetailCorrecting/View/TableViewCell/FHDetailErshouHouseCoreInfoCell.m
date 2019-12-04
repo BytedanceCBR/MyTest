@@ -80,8 +80,9 @@
 
 - (void)initBacIma {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.equalTo(self);
-        make.height.equalTo(self.contentView);
+        make.left.right.equalTo(self);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
     }];
 }
 

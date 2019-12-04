@@ -158,43 +158,41 @@ extern NSString *const kFHPhoneNumberCacheKey;
     return _legalAnnouncement;
 }
 - (void)setupUI {
-    
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView);
-         make.height.mas_offset(177);
-        make.bottom.equalTo(self.contentView);
+        make.top.mas_equalTo(self.contentView).mas_offset(-12);
+        make.height.mas_offset(187);
+        make.bottom.mas_equalTo(self.contentView).mas_offset(12);
     }];
     [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.top.mas_equalTo(self.contentView).offset(8);
-        make.height.mas_offset(161);
+        make.height.mas_offset(147);
     }];
     
     [self.titleImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.bacIma).offset(27);
-        make.top.mas_equalTo(self.bacIma).offset(30);
+        make.left.mas_equalTo(self.bacIma).offset(30);
+        make.top.mas_equalTo(self.bacIma).offset(26);
         make.size.mas_offset(CGSizeMake(117, 24));
     }];
     
     [self.subscribeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleImage.mas_bottom).offset(19);
+        make.top.mas_equalTo(self.titleImage.mas_bottom).offset(18);
         make.right.mas_equalTo(self.bacIma).offset(-16);
         make.width.mas_equalTo(100);
         make.height.mas_equalTo(32);
     }];
     [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(16);
-        make.top.mas_equalTo(self.titleImage.mas_bottom).offset(19);
+        make.top.mas_equalTo(self.titleImage.mas_bottom).offset(18);
         make.right.mas_equalTo(self.subscribeBtn.mas_left).offset(-10);
         make.height.mas_equalTo(32);
     }];
     [self.legalAnnouncement mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.textField.mas_bottom).offset(10);
         make.left.mas_equalTo(self.textField);
-        make.height.mas_equalTo(17);
     }];
 }
 

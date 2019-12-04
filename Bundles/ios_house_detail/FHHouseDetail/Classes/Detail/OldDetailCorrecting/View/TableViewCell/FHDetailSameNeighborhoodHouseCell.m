@@ -16,16 +16,19 @@
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
 #import "FHDetailMultitemCollectionView.h"
-#import "FHCornerView.h"
+#import "FHSameHouseTagView.h"
 
 @interface FHDetailSameNeighborhoodHouseCell ()
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
+@property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, strong)   UIView       *containerView;
 
 @end
 
 @implementation FHDetailSameNeighborhoodHouseCell
+
+
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -47,16 +50,17 @@
     }
     //
     FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)data;
+    self.shadowImage.image = model.shadowImage;
     if (model.sameNeighborhoodHouseData) {
         self.headerView.label.text = [NSString stringWithFormat:@"同小区房源(%@)",model.sameNeighborhoodHouseData.total];
         self.headerView.isShowLoadMore = model.sameNeighborhoodHouseData.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-        flowLayout.itemSize = CGSizeMake(156, 174);
+        flowLayout.itemSize = CGSizeMake(140, 210);
         flowLayout.minimumLineSpacing = 10;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         NSString *identifier = NSStringFromClass([FHDetailSameNeighborhoodHouseCollectionCell class]);
-        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:174 cellIdentifier:identifier cellCls:[FHDetailSameNeighborhoodHouseCollectionCell class] datas:model.sameNeighborhoodHouseData.items];
+        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 cellIdentifier:identifier cellCls:[FHDetailSameNeighborhoodHouseCollectionCell class] datas:model.sameNeighborhoodHouseData.items];
         [self.containerView addSubview:colView];
         __weak typeof(self) wSelf = self;
         colView.clickBlk = ^(NSInteger index) {
@@ -67,7 +71,8 @@
         };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
-            make.left.right.mas_equalTo(self.containerView);
+            make.left.mas_equalTo(self.containerView).offset(15);
+            make.right.mas_equalTo(self.containerView).offset(-15);
             make.bottom.mas_equalTo(self.containerView);
         }];
         [colView reloadData];
@@ -86,18 +91,36 @@
     return self;
 }
 
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
+}
+
 - (void)setupUI {
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView);
+        make.right.mas_equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
+    }];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"同小区房源";
+    _headerView.loadMore.text = @"";
+    _headerView.label.font = [UIFont themeFontMedium:20];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.contentView).offset(15);
+        make.right.mas_equalTo(self.contentView).offset(-15);
+        make.top.mas_equalTo(self.contentView).offset(18);
         make.height.mas_equalTo(46);
     }];
     [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
-    _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
@@ -211,7 +234,7 @@
 @interface FHDetailSameNeighborhoodHouseCollectionCell ()
 
 @property(nonatomic, strong) UILabel *imageTagLabel;
-@property(nonatomic, strong) FHCornerView *imageTagLabelBgView;
+@property(nonatomic, strong) FHSameHouseTagView *imageTagLabelBgView;
 
 
 @end
@@ -222,7 +245,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor whiteColor];
+
         [self setupUI];
     }
     return self;
@@ -274,7 +297,7 @@
 
 - (void)setupUI {
     _icon = [[UIImageView alloc] init];
-    _icon.layer.cornerRadius = 4.0;
+    _icon.layer.cornerRadius = 10.0;
     _icon.layer.masksToBounds = YES;
     _icon.layer.borderWidth = 0.5;
     _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
@@ -290,7 +313,7 @@
     [self.contentView addSubview:_descLabel];
     
     _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _priceLabel.textColor = [UIColor themeRed1];
+    _priceLabel.textColor = [UIColor colorWithHexStr:@"fe5500"];
     _priceLabel.font = [UIFont themeFontMedium:16];
     [self.contentView addSubview:_priceLabel];
     
@@ -302,7 +325,7 @@
     [self.imageTagLabelBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.icon);
         make.top.mas_equalTo(self.icon).mas_offset(0);
-        make.height.mas_equalTo(@17);
+        make.height.mas_equalTo(@20);
         make.width.mas_equalTo(@48);
     }];
     
@@ -315,8 +338,8 @@
     
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
-        make.width.mas_equalTo(156);
-        make.height.mas_equalTo(116);
+        make.width.mas_equalTo(120);
+        make.height.mas_equalTo(140);
         make.top.mas_equalTo(self);
     }];
     
@@ -329,22 +352,21 @@
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
         make.height.mas_equalTo(22);
-        make.top.mas_equalTo(self.icon.mas_bottom).offset(9);
+        make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
     }];
     [_priceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_priceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
+    [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self);
+        make.right.mas_equalTo(self);
+        make.height.mas_equalTo(17);
+        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(3);
+    }];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self);
         make.height.mas_equalTo(22);
-        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(3);
-    }];
-    
-    [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.priceLabel.mas_right).offset(6);
-        make.right.mas_equalTo(self);
-        make.height.mas_equalTo(22);
-        make.centerY.mas_equalTo(self.priceLabel.mas_centerY);
+        make.top.mas_equalTo(self.spaceLabel.mas_bottom).offset(8);
         make.bottom.mas_equalTo(self);
     }];
 }
@@ -354,17 +376,17 @@
     if (!_imageTagLabel) {
         _imageTagLabel = [[UILabel alloc]init];
         _imageTagLabel.textAlignment = NSTextAlignmentCenter;
-        _imageTagLabel.font = [UIFont themeFontRegular:10];
+        _imageTagLabel.font = [UIFont themeFontRegular:12];
         _imageTagLabel.textColor = [UIColor whiteColor];
     }
     return _imageTagLabel;
 }
 
-- (FHCornerView *)imageTagLabelBgView
+- (FHSameHouseTagView *)imageTagLabelBgView
 {
     if (!_imageTagLabelBgView) {
-        _imageTagLabelBgView = [[FHCornerView alloc]init];
-        _imageTagLabelBgView.backgroundColor = [UIColor themeRed3];
+        _imageTagLabelBgView = [[FHSameHouseTagView alloc]init];
+        _imageTagLabelBgView.backgroundColor = [UIColor colorWithHexStr:@"#f3ae0c"];
         _imageTagLabelBgView.hidden = YES;
     }
     return _imageTagLabelBgView;

@@ -68,7 +68,6 @@
 - (UIImageView *)shadowImage {
     if (!_shadowImage) {
         UIImageView *shadowImage = [[UIImageView alloc]init];
-        shadowImage.image = [[UIImage imageNamed:@"left_top_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(30,30,30,30) resizingMode:UIImageResizingModeStretch];
         [self.contentView addSubview:shadowImage];
         _shadowImage = shadowImage;
     }
@@ -107,8 +106,7 @@
 
 - (UILabel *)infoLabel {
     if (!_infoLabel) {
-        UILabel *infoLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-        infoLabel.textColor = [UIColor colorWithHexStr:@"#9c6d43"];
+        UILabel *infoLabel = [UILabel createLabel:@"" textColor:@"#9c6d43" fontSize:14];
         [self.bgView addSubview:infoLabel];
         _infoLabel = infoLabel;
     }
@@ -117,8 +115,9 @@
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.equalTo(self);
-        make.height.equalTo(self.contentView);
+        make.left.right.equalTo(self);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
     }];
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(31);

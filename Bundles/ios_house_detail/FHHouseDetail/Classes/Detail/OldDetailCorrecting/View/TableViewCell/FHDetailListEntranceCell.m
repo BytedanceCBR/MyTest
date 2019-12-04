@@ -188,8 +188,8 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self);
-        make.height.equalTo(self);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
     }];
     _containerView = [[UIView alloc]init];
 //    _containerView.backgroundColor = [UIColor whiteColor];

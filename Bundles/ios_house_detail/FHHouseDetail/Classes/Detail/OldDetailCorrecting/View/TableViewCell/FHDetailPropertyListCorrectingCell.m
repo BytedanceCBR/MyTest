@@ -327,15 +327,15 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView).offset(12);
+        make.left.right.equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
     }];
 }
 
 - (UIImageView *)shadowImage {
     if (!_shadowImage) {
         UIImageView *shadowImage = [[UIImageView alloc]init];
-        shadowImage.image = [[UIImage imageNamed:@"left_top_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(40,30,40,30) resizingMode:UIImageResizingModeStretch];
         [self.contentView addSubview:shadowImage];
         _shadowImage = shadowImage;
     }
@@ -486,8 +486,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     _logoImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     _indicatorLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _indicatorLabel.font = [UIFont themeFontRegular:14];
-    _indicatorLabel.textColor = [UIColor themeRed1];
+    _indicatorLabel.font = [UIFont themeFontMedium:14];
+    _indicatorLabel.textColor = [UIColor colorWithHexStr:@"#ff9629"];
     
     _indicator = [[UIImageView alloc]initWithImage:img];
     _indicator.contentMode = UIViewContentModeCenter;
@@ -648,7 +648,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
     if (!IS_EMPTY_STRING(budgetmodel.baseContent)) {
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:budgetmodel.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor themeRed1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:budgetmodel.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexStr:@"#ff9629"],NSFontAttributeName:[UIFont themeFontMedium:14]}];
         [minfoAttrStr appendAttributedString:infoStr];
     }
     _infoLabel.attributedText = minfoAttrStr;
@@ -660,8 +660,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 -(void)updateWithFloorInfo:(FHDetailDataBaseExtraFloorInfoModel *)floorInfo
 {
     self.data = floorInfo;
-    _nameLabel.text = floorInfo.baseTitle;
-    
+     _nameLabel.text = floorInfo.baseTitle;
     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
     if (!IS_EMPTY_STRING(floorInfo.baseContent)) {
         NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:floorInfo.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:14]}];

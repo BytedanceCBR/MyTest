@@ -23,6 +23,7 @@
 @interface FHDetailRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
+@property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong)   UITableView       *tableView;
 @property (nonatomic, strong)   FHDetailBottomOpenAllView       *openAllView;// 查看更多
@@ -54,6 +55,7 @@
     }
     // 添加tableView和查看更多
     FHDetailRelatedHouseModel *model = (FHDetailRelatedHouseModel *)data;
+    self.shadowImage.image = model.shadowImage;
     CGFloat cellHeight = 108;
     BOOL hasMore = model.relatedHouseData.hasMore;
     CGFloat bottomOffset = 0;
@@ -131,7 +133,21 @@
     return self;
 }
 
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
+}
+
 - (void)setupUI {
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
+    }];
     _houseShowCache = [NSMutableDictionary new];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"周边房源";

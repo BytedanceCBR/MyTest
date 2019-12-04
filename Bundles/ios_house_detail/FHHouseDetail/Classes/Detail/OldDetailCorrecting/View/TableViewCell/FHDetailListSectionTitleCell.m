@@ -19,10 +19,18 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
+- (void)refreshWithData:(id)data
+{
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailListSectionTitleModel class]]) {
+        return;
+    }
+    FHDetailListSectionTitleModel *model = (FHDetailListSectionTitleModel *)data;
+    self.title = model.title;
+}
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
@@ -33,12 +41,12 @@
 }
 
 - (void)setupUI {
+    self.backgroundColor = [UIColor colorWithHexStr:@"#FAFAF9"];
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(13);
         make.top.mas_equalTo(self.contentView).mas_offset(22);
         make.centerY.equalTo(self.contentView);
     }];
-    
 }
 
 - (UILabel *)titleLab {
@@ -55,4 +63,9 @@
 - (void)setTitle:(NSString *)title {
     _titleLab.text = title;
 }
+@end
+
+@implementation FHDetailListSectionTitleModel
+
+
 @end

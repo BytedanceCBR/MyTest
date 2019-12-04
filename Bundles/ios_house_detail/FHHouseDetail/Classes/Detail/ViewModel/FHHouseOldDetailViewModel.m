@@ -55,6 +55,7 @@
 #import "FHDetailQuestionPopView.h"
 #import "FHDetailHouseTitleModel.h"
 #import "FHDetailHouseOutlineInfoCorrectingCell.h"
+#import "FHDetailListSectionTitleCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -85,14 +86,20 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailUserHouseCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailUserHouseCommentModel class])];
     //房源概况
     [self.tableView registerClass:[FHDetailHouseOutlineInfoCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoCorrectingModel class])];
+    //购房小建议
     [self.tableView registerClass:[FHDetailSuggestTipCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSuggestTipModel class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodModel class])];
+    //周边房源
     [self.tableView registerClass:[FHDetailRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedHouseModel class])];
+    //同小区房源
     [self.tableView registerClass:[FHDetailSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSameNeighborhoodHouseModel class])];
     [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerModel class])];
+    //价格指数
     [self.tableView registerClass:[FHDetailErshouPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceTrendCellModel class])];
     [self.tableView registerClass:[FHDetailPriceRankCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceRankModel class])];
     [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
+    //小区详情上标题
+    [self.tableView registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])];
     //小区详情
     [self.tableView registerClass:[FHDetailNeighborhoodInfoCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCorrectingModel class])];
 
@@ -102,6 +109,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 //    [self.tableView registerClass:[FHDetailHouseSubscribeCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCorrectingModel class])];
     //表单订阅
      [self.tableView registerClass:[FHDetailHouseSubscribeCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCorrectingModel class])];
+    //均价对比
     [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonModel class])];
     [self.tableView registerClass:[FHDetailOldNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldNearbyMapModel class])];
     //舒适指数
@@ -458,7 +466,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         //ugc 圈子入口,写在这儿是因为如果小区模块移除，那么圈子入口也不展示
         BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
-      
+       FHDetailListSectionTitleModel *titleModel = [[FHDetailListSectionTitleModel alloc] init];
+        titleModel.title = @"位置及周边配套";
+         [self.items addObject:titleModel];
         FHDetailNeighborhoodInfoCorrectingModel *infoModel = [[FHDetailNeighborhoodInfoCorrectingModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
         infoModel.houseModelType = FHHouseModelTypeLocationPeriphery;
@@ -518,6 +528,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         priceTrendModel.neighborhoodInfo = model.data.neighborhoodInfo;
         priceTrendModel.pricingPerSqmV = model.data.pricingPerSqmV;
         priceTrendModel.priceAnalyze = model.data.priceAnalyze;
+        priceTrendModel.houseModelType = FHHouseModelTypeLocationPeriphery;
         if (model.data.neighborhoodPriceRange && model.data.priceAnalyze) {
             priceTrendModel.bottomHeight = 0;
         }else {
@@ -529,6 +540,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     // 均价对比
     if(model.data.neighborhoodPriceRange && model.data.priceAnalyze){
         FHDetailAveragePriceComparisonModel *infoModel = [[FHDetailAveragePriceComparisonModel alloc] init];
+        infoModel.houseModelType =  FHHouseModelTypeLocationPeriphery;
         infoModel.neighborhoodId = model.data.neighborhoodInfo.id;
         infoModel.neighborhoodName = model.data.neighborhoodInfo.name;
         infoModel.analyzeModel = model.data.priceAnalyze;
@@ -540,6 +552,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailSuggestTipModel *infoModel = [[FHDetailSuggestTipModel alloc] init];
         infoModel.buySuggestion = model.data.housePricingRank.buySuggestion;
+        infoModel.houseModelType = FHHouseModelTypeTips;
         [self.items addObject:infoModel];
     }
     [self moduleClassificationMethod:self.items];
@@ -613,10 +626,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         self.detailController.isLoadingData = NO;
         //  同小区房源
         if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
-            // 添加分割线--当存在某个数据的时候在顶部添加分割线
-            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
             FHDetailSameNeighborhoodHouseModel *infoModel = [[FHDetailSameNeighborhoodHouseModel alloc] init];
+            infoModel.houseModelType = FHHouseModelTypePlot;
             infoModel.sameNeighborhoodHouseData = self.sameNeighborhoodHouseData;
             [self.items addObject:infoModel];
         }
@@ -627,15 +638,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [self.items addObject:grayLine];
             FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
             infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
+            infoModel.houseModelType = FHHouseModelTypePlot;
             infoModel.neighborhoodId = self.neighborhoodId;
             [self.items addObject:infoModel];
         }
         // 周边房源
         if (self.relatedHouseData && self.relatedHouseData.items.count > 0) {
-            // 添加分割线--当存在某个数据的时候在顶部添加分割线
-            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
             FHDetailRelatedHouseModel *infoModel = [[FHDetailRelatedHouseModel alloc] init];
+            infoModel.houseModelType = FHHouseModelTypePeriphery;
             infoModel.relatedHouseData = self.relatedHouseData;
             [self.items addObject:infoModel];
         }
@@ -652,6 +662,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             }
             [self.items addObject:infoModel];
         }
+        [self moduleClassificationMethod:self.items];
         //
         [self reloadData];
     }
@@ -917,6 +928,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableArray *billBoard = [[NSMutableArray alloc]init];
      NSMutableArray *agentlist = [[NSMutableArray alloc]init];
     NSMutableArray *locationPeripherys = [[NSMutableArray alloc]init];
+    NSMutableArray *tips = [[NSMutableArray alloc]init];
+    NSMutableArray *plots = [[NSMutableArray alloc]init];
+    NSMutableArray *peripherys = [[NSMutableArray alloc]init];
     
     [moduleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
@@ -938,6 +952,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 break;
             case FHHouseModelTypeLocationPeriphery:
                 [locationPeripherys addObject:obj];
+                break;
+            case FHHouseModelTypeTips:
+                [tips addObject:obj];
+                break;
+            case FHHouseModelTypePlot:
+                [plots addObject:obj];
+                break;
+            case FHHouseModelTypePeriphery:
+                [peripherys addObject:obj];
                 break;
             default:
                 break;
@@ -980,5 +1003,26 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
            model.shadowImageType = FHHouseShdowImageTypeLR;
         }
     }];
+    [plots enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
+        if (idx == plots.count-1 && plots.count != 1) {
+            model.shadowImageType = FHHouseShdowImageTypeLBR;
+        }else if(idx == 0 && plots.count == 1)  {
+            model.shadowImageType = FHHouseShdowImageTypeRound;
+        }else if (idx == 0 && plots.count != 1) {
+            model.shadowImageType = FHHouseShdowImageTypeLTR;
+        }else {
+            model.shadowImageType = FHHouseShdowImageTypeLR;
+        }
+    }];
+    [tips enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
+        model.shadowImageType = FHHouseShdowImageTypeRound;
+    }];
+    [peripherys enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
+        model.shadowImageType = FHHouseShdowImageTypeRound;
+    }];
+    
 }
 @end

@@ -46,7 +46,7 @@
 - (UIImageView *)shadowImage {
     if (!_shadowImage) {
         UIImageView *shadowImage = [[UIImageView alloc]init];
-        shadowImage.image = [[UIImage imageNamed:@"left_top_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(20,0,0,0) resizingMode:UIImageResizingModeStretch];
+        shadowImage.image = [[UIImage imageNamed:@"left_top_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,0,25) resizingMode:UIImageResizingModeStretch];
         [self addSubview:shadowImage];
         _shadowImage = shadowImage;
     }
@@ -83,7 +83,7 @@
     label.layer.cornerRadius = 10;
     label.layer.masksToBounds = YES;
     label.text = text;
-    label.font = [UIFont systemFontOfSize:12];
+    label.font = [UIFont themeFontMedium:12];
     return label;
 }
 
@@ -112,7 +112,7 @@
         CGSize itemSize = [tagModel.content sizeWithAttributes:@{
                                                                  NSFontAttributeName: [UIFont themeFontRegular:12]
                                                                  }];
-        UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#ffead3"]: [UIColor colorWithHexStr:@"a59f9c62"];
+        UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#ffead3"]: [[UIColor colorWithHexStr:@"a59f9c"]colorWithAlphaComponent:0.39 ];
         UIColor *tagTextColor = idx == 0 ?[UIColor colorWithHexString:@"#ff9300"]:[UIColor colorWithHexString:@"#a49a92"];
         UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
         [self.tagBacView addSubview:label];

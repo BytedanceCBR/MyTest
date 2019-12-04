@@ -21,7 +21,7 @@
 #import <TTSandBoxHelper.h>
 #import "FHDetailFoldViewButton.h"
 
-#define foldHeight 150 //当文本高度+标题高度（32）+headerView高度（52）>367折叠
+#define foldHeight 150 //当文本高度+标题高度（36）+headerView高度（52+18）>367折叠
 
 @interface FHDetailHouseOutlineInfoCorrectingCell ()
 
@@ -62,7 +62,7 @@
     FHDetailHouseOutlineInfoCorrectingModel *model = (FHDetailHouseOutlineInfoCorrectingModel *)data;
     self.shadowImage.image = model.shadowImage;
     _infoButton.hidden = model.hideReport;
-    _contentHeight = 52; //header高度
+    _contentHeight = 70; //header高度
     __block UIView *lastView = self.containerView;
     if (model.houseOverreview.list.count > 0) {
         [model.houseOverreview.list enumerateObjectsUsingBlock:^(FHDetailOldDataHouseOverreviewListModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -70,7 +70,7 @@
             outlineView.keyLabel.text = obj.title;
             outlineView.valueLabel.text = obj.content;
             CGSize titleSize = [obj.content boundingRectWithSize:CGSizeMake(SCREEN_WIDTH-62, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14]} context:nil].size;
-            self.contentHeight = self.contentHeight + 32 + titleSize.height;
+            self.contentHeight = self.contentHeight + 34 + titleSize.height;
             [outlineView.valueLabel sizeToFit];
             [outlineView showIconAndTitle:obj.title.length > 0];
             [self.containerView addSubview:outlineView];
@@ -214,14 +214,14 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(0);
         make.right.mas_equalTo(self).offset(0);
-        make.top.equalTo(self);
-        make.height.equalTo(self);
+        make.top.mas_equalTo(self).offset(-12);
+        make.bottom.mas_equalTo(self).offset(12);
     }];
 
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(11);
         make.right.mas_equalTo(self.contentView).offset(-11);
-        make.top.mas_equalTo(0);
+        make.top.mas_equalTo(self.contentView).offset(18);
         make.height.mas_equalTo(52);// 46 + 6
     }];
     
@@ -289,7 +289,7 @@
     self.foldButton.isFold = model.isFold;
     [model.tableView beginUpdates];
     [self.containerView mas_updateConstraints :^(MASConstraintMaker *make) {
-        make.height.mas_equalTo( model.isFold ?foldHeight:self.contentHeight-52+50);//减去header 高度再加上展开时展开s按钮的高度
+        make.height.mas_equalTo( model.isFold ?foldHeight:self.contentHeight-70+50);//减去header 高度再加上展开时展开s按钮的高度
     }];
     self.bottomGradientView.hidden =!model.isFold ;
     [model.tableView endUpdates];
@@ -358,10 +358,11 @@
 }
 
 - (void)setupUI {
-    _iconImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rectangle-11"]];
+    _iconImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rectangle-100"]];
     [self addSubview:_iconImg];
     _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _keyLabel.textColor = [UIColor themeGray1];
+    _keyLabel.font = [UIFont themeFontMedium:15];
+    _keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
     [self addSubview:_keyLabel];
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _valueLabel.textColor = [UIColor themeGray3];
@@ -384,7 +385,7 @@
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.iconImg);
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self).offset(32);
+        make.top.mas_equalTo(self).offset(36);
         make.bottom.mas_equalTo(self).offset(-10);
     }];
 }

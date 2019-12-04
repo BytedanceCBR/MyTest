@@ -110,10 +110,10 @@ FHDetailVCViewLifeCycleProtocol>
 
 - (void)setupShadowView {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView);
-        make.height.equalTo(self.contentView);
+        make.left.equalTo(self.contentView);
+        make.right.equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
     }];
 }
 

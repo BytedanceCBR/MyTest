@@ -126,7 +126,7 @@
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.contentView).offset(-20);
+            make.bottom.mas_equalTo(self.contentView).offset(-28);
         }];
     }
     [self updateItems:NO];
@@ -279,14 +279,14 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView);
-        make.height.equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"推荐经纪人";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.contentView).offset(18);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.left.mas_equalTo(self.contentView).offset(15);;
         make.height.mas_equalTo(46);
