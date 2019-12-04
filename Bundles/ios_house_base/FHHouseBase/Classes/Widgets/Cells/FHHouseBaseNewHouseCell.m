@@ -75,6 +75,7 @@
 @property(nonatomic, strong) UIView *bottomRecommendViewBack;//底部背景
 @property(nonatomic, strong) UIImageView *bottomIconImageView; //活动icon
 @property(nonatomic, strong) UILabel *bottomRecommendLabel; //活动title
+@property(nonatomic, strong) UIView *houseCellBackView;//背景色
 
 //@property(nonatomic, strong) UIButton *closeBtn; //x按钮
 @property(nonatomic, strong) YYLabel *trueHouseLabel; // 天眼验真
@@ -334,6 +335,21 @@
         layout.alignItems = YGAlignFlexStart;
     }];
     
+    self.houseCellBackView = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.contentView addSubview:self.houseCellBackView];
+    self.houseCellBackView.hidden = YES;
+    [self.houseCellBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.left = YGPointValue(15);
+        layout.right = YGPointValue(15);
+        layout.width = YGPointValue(SCREEN_WIDTH - 30);
+        layout.height = YGPointValue(130);
+        layout.flexGrow = 1;
+    }];
+    [self.houseCellBackView setBackgroundColor:[UIColor whiteColor]];
+    [self.houseCellBackView.yoga markDirty];
+    
     self.leftInfoView = [[UIView alloc] init];
     [_leftInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -571,6 +587,27 @@
     
 }
 
+-(void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast
+{
+    self.houseCellBackView.hidden = NO;
+    [self.contentView setBackgroundColor:[UIColor themeHomeColor]];
+    if (isFirst) {
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = self.houseCellBackView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        self.houseCellBackView.layer.mask = maskLayer;
+    } else if (isLast){
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = self.houseCellBackView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        self.houseCellBackView.layer.mask = maskLayer;
+    }else
+    {
+        self.houseCellBackView.layer.mask = nil;
+    }
+}
 
 -(void)updateMainImageWithUrl:(NSString *)url
 {

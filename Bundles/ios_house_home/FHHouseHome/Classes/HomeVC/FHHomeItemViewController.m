@@ -714,6 +714,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
                 [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
                 [cell updateHomeNewHouseCellModel:model];
             }
+            [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
             return cell;
         }
         //to do 房源cell

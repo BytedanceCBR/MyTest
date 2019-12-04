@@ -75,7 +75,7 @@
 @property(nonatomic, strong) UIImageView *fakeImageView;
 @property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
-@property(nonatomic, strong) UIView *houseCellBackView; //底部 包含 价格 分享
+@property(nonatomic, strong) UIView *houseCellBackView; //背景
 @property(nonatomic, strong) UIButton *closeBtn; //x按钮
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 
