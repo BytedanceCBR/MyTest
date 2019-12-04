@@ -218,6 +218,7 @@
 - (void)initGroupChatBtn {
     self.groupChatBtn = [[UIButton alloc] init];
     [_groupChatBtn setImage:[UIImage imageNamed:@"fh_ugc_group_chat_tip"] forState:UIControlStateNormal];
+    [_groupChatBtn setImage:[UIImage imageNamed:@"fh_ugc_group_chat_tip"] forState:UIControlStateDisabled];
     [_groupChatBtn addTarget:self action:@selector(gotoGroupChat) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_groupChatBtn];
     [_groupChatBtn setHidden:YES];
