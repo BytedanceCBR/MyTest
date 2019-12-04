@@ -23,7 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
 @interface FHDetailNewDataUserStatusModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
