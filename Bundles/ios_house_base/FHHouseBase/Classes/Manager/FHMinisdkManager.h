@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
     
 //在我们App完成指定任务后调用
 - (void)taskComplete:(BDDTaskFinishBlock)finishBlock;
+
+//具体任务
+- (void)seeVideo;
     
 @end
 

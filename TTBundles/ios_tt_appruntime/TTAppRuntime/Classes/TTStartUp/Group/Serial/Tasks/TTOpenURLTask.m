@@ -36,7 +36,8 @@ extern BOOL kFHInAppPushTipsHidden;
     }
     
     BOOL ret = [[TTRoute sharedRoute] canOpenURL:url];
-    if ([url.host isEqualToString:@"main"] || [url.host isEqualToString:@"home"]){
+    if ([url.host isEqualToString:@"main"] || [url.host isEqualToString:@"home"] || [url.host isEqualToString:@"spring"]){
+        //这三种必须分开判断，要不然直接crash
         [[TTRoute sharedRoute] openURL:url userInfo:nil objHandler:nil];
         //snssdk1370://main?select_tab=tab_message
     }else{

@@ -12,6 +12,8 @@
 #import <TTTabBarItem.h>
 #import "UIViewController+TTMovieUtil.h"
 #import "FHHomeConfigManager.h"
+#import <FHEnvContext.h>
+#import <FHMinisdkManager.h>
 
 @interface FHHomeSchemaObject()<TTRouteInitializeProtocol>
 
@@ -42,6 +44,16 @@
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:userInfo];
                 }
             }
+        }
+        
+        //处理春节活动过来的 ack_token
+        if([FHEnvContext isSpringOpen]){
+            NSString *ackToken = paramObj.allParams[@"ack_token"];
+            if(ackToken){
+                [[FHMinisdkManager sharedInstance] appBecomeActive:ackToken];
+            }
+            //执行任务
+            [[FHMinisdkManager sharedInstance] seeVideo];
         }
         
     }

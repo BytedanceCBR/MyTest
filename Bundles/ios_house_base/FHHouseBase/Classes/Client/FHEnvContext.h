@@ -226,6 +226,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)checkZLink;
 
 - (void)jumpUGCTab;
+    
+/*
+    判断开启了春节活动
+*/
++ (BOOL)isSpringOpen;
 
 
 @end

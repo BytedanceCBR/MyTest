@@ -535,7 +535,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
     [self updateRequestCommonParams];
     
     //初始化拉新拉活sdk
-    [[FHMinisdkManager sharedInstance] initTask];
+    if([FHEnvContext isSpringOpen]){
+        [[FHMinisdkManager sharedInstance] initTask];
+    }
     
     NSString *startFeedCatgegory = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getFeedStartCategoryName];
     
@@ -922,6 +924,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
         })];
     }
 
+}
+    
++ (BOOL)isSpringOpen {
+    return YES;
 }
 
 @end
