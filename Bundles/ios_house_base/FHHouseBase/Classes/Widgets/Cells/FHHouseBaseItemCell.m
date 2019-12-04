@@ -286,7 +286,7 @@
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc] init];
         _closeBtn.hidden = YES;
-        UIImage *img = ICON_FONT_IMG(8, @"\U0000e673", [UIColor themeGray3]);
+        UIImage *img = ICON_FONT_IMG(8, @"\U0000e673", [UIColor themeGray5]);
         [_closeBtn setImage:img forState:UIControlStateNormal];
         [_closeBtn addTarget:self action:@selector(dislike) forControlEvents:UIControlEventTouchUpInside];
         _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -20, -10, -20);
@@ -301,7 +301,7 @@
 
 -(CGFloat)contentSmallImageMaxWidth
 {
-    return  SCREEN_WIDTH - 40 - YOGA_RIGHT_PRICE_WIDITH - 90; //根据UI图 直接计算出来
+    return  SCREEN_WIDTH - 30 - YOGA_RIGHT_PRICE_WIDITH - 90; //根据UI图 直接计算出来
 }
 
 -(void)initUI
@@ -562,7 +562,7 @@
         layout.marginLeft = YGPointValue(INFO_TO_ICON_MARGIN);
         layout.flexDirection = YGFlexDirectionColumn;
         layout.flexGrow = 1;
-        layout.justifyContent = YGJustifyCenter;
+        layout.justifyContent = YGJustifyFlexStart;
 //        layout.alignItems = YGAlignCenter;
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
         layout.height = YGPointValue(70);
@@ -688,8 +688,8 @@
         layout.isEnabled = YES;
         layout.right = YGPointValue(20);
         layout.marginTop = YGPointValue(0);
-        layout.width = YGPointValue(8);
-        layout.height = YGPointValue(8);
+        layout.width = YGPointValue(16);
+        layout.height = YGPointValue(16);
     }];
 
     [_rightInfoView addSubview:self.recReasonView];
