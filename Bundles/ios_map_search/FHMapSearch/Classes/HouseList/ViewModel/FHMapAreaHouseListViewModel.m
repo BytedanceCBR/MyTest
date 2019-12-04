@@ -22,7 +22,7 @@
 #import <FHHouseBase/FHHouseFilterBridge.h>
 #import <FHCommonUI/FHRefreshCustomFooter.h>
 #import <FHHouseBase/FHMainApi.h>
-#import <TTPlatformUIModel/ArticleListNotifyBarView.h>
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHCommonDefines.h>

@@ -489,6 +489,7 @@
                            @"redirectTips": @"redirect_tips",
                            @"searchId": @"search_id",
                            @"mapFindHouseOpenUrl": @"map_find_house_open_url",
+                           @"searchHistoryOpenUrl": @"search_history_open_url",
                            @"houseListOpenUrl": @"house_list_open_url",
                            @"recommendSearchModel": @"recommend_search",
                            @"subscribeInfo": @"subscribe_info",
@@ -600,7 +601,7 @@
 {
     self = [super init];
     if (self) {
-        self.topMargin = 10;
+        self.topMargin = 0;
     }
     return self;
 }

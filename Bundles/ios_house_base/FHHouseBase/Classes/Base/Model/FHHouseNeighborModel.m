@@ -20,6 +20,7 @@
                            @"redirectTips": @"redirect_tips",
                            @"searchId": @"search_id",
                            @"houseListOpenUrl": @"house_list_open_url",
+                           @"searchHistoryOpenUrl": @"search_history_open_url",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
