@@ -27,6 +27,7 @@
 #import "UIImage+FIconFont.h"
 #import <Lottie/LOTAnimationView.h>
 #import <UIColor+Theme.h>
+#import <FHShadowView.h>
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -43,6 +44,7 @@
 #define MAIN_SMALL_IMG_HEIGHT  64
 #define MAIN_SMALL_IMG_LEFT    6
 #define MAIN_SMALL_IMG_TOP     8
+#define MAIN_SMALL_CELL_HEIGHT  96
 
 #define YOGA_RIGHT_PRICE_WIDITH 72
 
@@ -73,6 +75,7 @@
 @property(nonatomic, strong) UIImageView *fakeImageView;
 @property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
+@property(nonatomic, strong) UIView *houseCellShader; //底部 包含 价格 分享
 @property(nonatomic, strong) UIButton *closeBtn; //x按钮
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 
@@ -468,7 +471,24 @@
         layout.flexGrow = 1;
 //        layout.justifyContent = YGAlignCenter;
 //        layout.alignItems = YGAlignCenter;
+    }];    
+//    [self.contentView setBackgroundColor:[UIColor redColor]];
+    
+    self.houseCellShader = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.contentView addSubview:self.houseCellShader];
+    [self.houseCellShader configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.left = YGPointValue(15);
+        layout.right = YGPointValue(15);
+        layout.top = YGPointValue(0);
+        layout.width = YGPointValue(SCREEN_WIDTH - 30);
+        layout.height = YGPointValue(MAIN_SMALL_CELL_HEIGHT);
+        layout.flexGrow = 1;
     }];
+    [self.houseCellShader setBackgroundColor:[UIColor whiteColor]];
+    [self.houseCellShader.yoga markDirty];
+    
     
     self.leftInfoView = [[UIView alloc] init];
     [_leftInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
