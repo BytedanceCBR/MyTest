@@ -254,10 +254,17 @@
         return;
     }
     
+    // 请求basicInfo信息期间群聊按钮不可点击
+    self.viewController.groupChatBtn.enabled = NO;
+    
     WeakSelf;
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         [_viewController tt_endUpdataData];
         StrongSelf;
+        
+        //basicInfo信息接口回来后群聊按钮才可以点击
+        self.viewController.groupChatBtn.enabled = YES;
+        
         if(userPull){
             [self endRefreshing];
         }
