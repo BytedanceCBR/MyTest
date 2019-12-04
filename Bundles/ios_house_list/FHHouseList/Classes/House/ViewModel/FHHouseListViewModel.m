@@ -252,8 +252,6 @@ extern NSString *const INSTANT_DATA_KEY;
             self.originFrom = self.tracerModel.originFrom;
         }
         [self configTableView];
-        NSLog(@"FENGBO WTF");
-
     }
     return self;
 }
@@ -841,6 +839,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 FHListSearchHouseDataModel *houseModel = ((FHListSearchHouseModel *)model).data;
                 self.houseDataModel = houseModel;
                 self.houseListOpenUrl = houseModel.houseListOpenUrl;
+                self.searchPageOpenUrl = houseModel.searchHistoryOpenUrl;
                 self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
                 hasMore = houseModel.hasMore;
                 refreshTip = houseModel.refreshTip;
@@ -865,7 +864,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }
 
         }
-        
+
         if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
             redirectTips = nil;
         }
@@ -966,7 +965,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [recommendItemArray enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[self class] searchItemModelByDict:itemDict];
-            
+
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)theItemModel;
                     itemModel.isRecommendCell = YES;
@@ -1173,8 +1172,6 @@ extern NSString *const INSTANT_DATA_KEY;
     
 }
 
-
-
 #pragma mark filter将要显示
 -(void)onConditionWillPanelDisplay
 {
@@ -1200,7 +1197,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [self showPoiSearch];
         return;
     }
-    
+
     NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
     //house_search
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
@@ -1221,7 +1218,12 @@ extern NSString *const INSTANT_DATA_KEY;
     if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
         urlStr = [NSString stringWithFormat:@"sslocal://house_search_deal_neighborhood"];
     }else {
-       urlStr = @"sslocal://house_search";
+        if (self.searchPageOpenUrl) {
+           //以本地的house_type为准
+            urlStr = self.searchPageOpenUrl;
+        } else {
+            urlStr = @"sslocal://house_search";
+        }
     }
     NSURL *url = [NSURL URLWithString:urlStr];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
