@@ -175,6 +175,7 @@
 #import <FHUtils.h>
 #import <TTTabBarItem.h>
 #import <HMDTTMonitor.h>
+#import <UIColor+Theme.h>
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -979,8 +980,7 @@ TTRefreshViewDelegate
         }
     }
         
-    
-    self.listView.backgroundColor = [UIColor whiteColor];
+    self.listView.backgroundColor = [UIColor themeGray9];
 }
 
 - (void)willAppear
@@ -1284,7 +1284,7 @@ TTRefreshViewDelegate
     [super themeChanged:notification];
 //    self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
     
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor themeGray9];
     self.listView.backgroundColor = self.backgroundColor;
 }
 
