@@ -277,6 +277,7 @@
 
     if (useNativeMap) {
         _nativeMapImageView = [[UIImageView alloc] initWithFrame:mapRect];
+        _nativeMapImageView.image = [UIImage imageNamed:@"static_map_empty"];
         [self.contentView addSubview:_nativeMapImageView];
     } else {
         _mapView = [FHDetailStaticMap mapWithFrame:mapRect];

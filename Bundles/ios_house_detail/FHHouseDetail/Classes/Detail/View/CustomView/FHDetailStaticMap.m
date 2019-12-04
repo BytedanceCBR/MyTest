@@ -62,8 +62,8 @@
     NSUInteger heightPixel = (NSUInteger) (image.size.height * image.scale);
     NSUInteger expectedHeight = (NSUInteger) round(widthPixel * self.targetHeight / self.targetWidth);
     if (expectedHeight != heightPixel) {
-
-        self.error = [NSError errorWithDomain:@"transformer" code:1 userInfo:nil];
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"bad_picture[width:%tu,height:%tu]", widthPixel, heightPixel]};
+        self.error = [NSError errorWithDomain:@"transformer" code:1 userInfo:userInfo];
         return nil;
     }
 
@@ -109,7 +109,6 @@
     self.latRatio = latRatio;
     self.lngRatio = lngRatio;
     self.loaded = NO;
-    //todo zlj 重连测试
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(connectionChanged:)
