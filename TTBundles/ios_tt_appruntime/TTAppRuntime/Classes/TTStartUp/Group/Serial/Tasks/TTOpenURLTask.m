@@ -34,20 +34,16 @@ extern BOOL kFHInAppPushTipsHidden;
     if (kFHInAppPushTipsHidden) {
         return NO;
     }
+    
     BOOL ret = [[TTRoute sharedRoute] canOpenURL:url];
-    if (ret && [SharedAppDelegate appTopNavigationController]) {
-        [SSADManager shareInstance].splashADShowType = SSSplashADShowTypeHide;
-        [[self class] sendLaunchTrackIfNeededWithUrl:url];
-        [[TTRoute sharedRoute] openURLByPushViewController:url];
-    }else if ([url.host isEqualToString:@"main"]){
+    if ([url.host isEqualToString:@"main"] || [url.host isEqualToString:@"home"]){
+        [[TTRoute sharedRoute] openURL:url userInfo:nil objHandler:nil];
         //snssdk1370://main?select_tab=tab_message
-        TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
-        NSDictionary* params = [obj queryParams];
-        if (params != nil) {
-            NSString* target = params[@"select_tab"];
-            if (target != nil && target.length > 0) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
-            }
+    }else{
+        if (ret && [SharedAppDelegate appTopNavigationController]) {
+            [SSADManager shareInstance].splashADShowType = SSSplashADShowTypeHide;
+            [[self class] sendLaunchTrackIfNeededWithUrl:url];
+            [[TTRoute sharedRoute] openURLByPushViewController:url];
         }
     }
     

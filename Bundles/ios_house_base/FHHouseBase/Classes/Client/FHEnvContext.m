@@ -32,6 +32,7 @@
 #import <TTArticleTabBarController.h>
 #import <TTCategoryBadgeNumberManager.h>
 #import "FHMainApi.h"
+#import <FHMinisdkManager.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -532,6 +533,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //更新公共参数
     [self updateRequestCommonParams];
+    
+    //初始化拉新拉活sdk
+    [[FHMinisdkManager sharedInstance] initTask];
     
     NSString *startFeedCatgegory = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getFeedStartCategoryName];
     

@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-//#import <BDDiamond20/BDMTaskCenterManager.h>
+#import <BDDiamond20/BDMTaskCenterManager.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,14 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
     
 + (instancetype)sharedInstance;
     
-////App冷启动调用，调用时机:初始化App时候
-//- (void)initTask;
-//    
-////外部链接拉活App调用，ackToken通过url传递
-//- (void)appBecomeActive:(NSString *)ackToken;
-//    
-////在我们App完成指定任务后调用
-//- (void)taskComplete:(BDDTaskFinishBlock)finishBlock;
+//App冷启动调用，调用时机:初始化App时候
+- (void)initTask;
+    
+//外部链接拉活App调用，ackToken通过url传递
+- (void)appBecomeActive:(NSString *)ackToken;
+    
+//在我们App完成指定任务后调用
+- (void)taskComplete:(BDDTaskFinishBlock)finishBlock;
     
 @end
 
