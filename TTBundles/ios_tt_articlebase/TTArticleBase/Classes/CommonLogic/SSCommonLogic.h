@@ -1401,8 +1401,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)imCanStart;
 //是否禁用详情页秒开
 +(BOOL)disableDetailInstantShow;
-//是否开启二手房大类页快捷筛选项
-+ (BOOL)enabledOldListQuickCondition;
 
 
 @end

@@ -15,7 +15,7 @@
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
 #import "ToastManager.h"
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import <UIScrollView+Refresh.h>
 #import <MJRefresh.h>
 #import <FHRefreshCustomFooter.h>

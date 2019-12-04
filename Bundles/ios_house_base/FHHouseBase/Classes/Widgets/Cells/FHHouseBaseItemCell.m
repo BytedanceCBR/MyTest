@@ -1191,6 +1191,7 @@
         CGFloat reasonHeight = [model showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
         return (isLastCell ? 125 : 105) + reasonHeight;
     }
+    return 105;
 }
 
 #pragma mark 二手房

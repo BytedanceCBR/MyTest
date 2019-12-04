@@ -89,6 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, strong , nullable) NSArray<FHNewHouseItemModel> *items;
+@property (nonatomic, copy , nullable) NSString *searchHistoryOpenUrl;
 @property (nonatomic, copy , nullable) NSString *houseListOpenUrl;
 @property (nonatomic, copy , nullable) NSString *refreshTip;
 @property (nonatomic, copy , nullable) NSString *total;

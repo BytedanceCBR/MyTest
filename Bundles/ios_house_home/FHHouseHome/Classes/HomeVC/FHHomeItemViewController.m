@@ -408,6 +408,24 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
     }
 }
 
+
+-(NSString *)houseTypeString {
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return @"new";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
 - (void)uploadFirstScreenHouseShow
 {
     for (NSMutableDictionary *houseShowTrace in self.traceNeedUploadCache) {
@@ -734,9 +752,9 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
             NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
             
             NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-            tracerDict[@"house_type"] = [self pageTypeString] ? : @"be_null";
+            tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
             tracerDict[@"card_type"] = @"left_pic";
-            tracerDict[@"page_type"] = [self pageTypeString];
+            tracerDict[@"page_type"] = @"maintab";
             tracerDict[@"element_type"] = @"maintab_list";
             tracerDict[@"group_id"] = cellModel.idx ? : @"be_null";
             tracerDict[@"impr_id"] = cellModel.imprId ? : @"be_null";
