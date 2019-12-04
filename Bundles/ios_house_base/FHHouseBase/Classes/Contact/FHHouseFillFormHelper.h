@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *phone;
 @property (nonatomic, assign) FHFollowActionType actionType;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
+@property (nonatomic, copy) NSString *toast;//提交成功后弹出的提示语
 
 #pragma mark 埋点
 // 必填

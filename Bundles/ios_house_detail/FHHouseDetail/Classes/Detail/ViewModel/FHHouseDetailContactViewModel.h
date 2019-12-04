@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *fromStr;//floor_plan_detail:app_floor_plan
 @property (nonatomic, strong) FHDetailImShareInfoModel* imShareInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
+@property (nonatomic, copy , nullable) NSString *subTitle;
+@property (nonatomic, copy , nullable) NSString *toast;//表单提交成功的提示语
 @property (nonatomic, strong)   FHHouseNewsSocialModel       *socialInfo;// 新房圈子信息
 @property (nonatomic, strong)   FHHouseContactConfigModel    *socialContactConfig;// 圈子拨打电话存储数据
 @property (nonatomic, assign)   BOOL  needRefetchSocialGroupData;// 进入下个页面返回 是否需要重新拉取圈子数据

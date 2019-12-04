@@ -529,6 +529,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     fillFormConfig.from = self.fromStr;
     fillFormConfig.realtorId = self.contactPhone.realtorId;
     fillFormConfig.customHouseId = self.customHouseId;
+    if (self.subTitle && self.subTitle.length > 0) {
+        fillFormConfig.subtitle = self.subTitle;
+    }
+    if (self.toast && self.toast.length > 0) {
+        fillFormConfig.toast = self.toast;
+    }
     if (self.houseType == FHHouseTypeNeighborhood) {
         fillFormConfig.title = @"咨询经纪人";
         fillFormConfig.btnTitle = @"提交";
