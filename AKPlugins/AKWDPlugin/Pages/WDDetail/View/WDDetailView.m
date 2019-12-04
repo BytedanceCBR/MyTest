@@ -197,8 +197,12 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     
     if (self.detailModel.apiParam[@"enter_from"]
         && [self.detailModel.apiParam[@"enter_from"] isKindOfClass:[NSString class]]
-        && [self.detailModel.apiParam[@"enter_from"] isEqualToString:@"question"]) {
+        && ([self.detailModel.apiParam[@"enter_from"] isEqualToString:@"question"] || [self.detailModel.apiParam[@"enter_from"] isEqualToString:@"wenda_follow_new_answer"])) {
         // 来源于问答相关（回答详情）
+        [v3Dic setValue:@"answer" forKey:@"page_type"];
+    }
+    // 如果没有page_type 添加默认值
+    if (!v3Dic[@"page_type"]) {
         [v3Dic setValue:@"answer" forKey:@"page_type"];
     }
 

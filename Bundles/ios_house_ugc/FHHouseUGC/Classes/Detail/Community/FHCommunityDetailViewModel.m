@@ -115,7 +115,7 @@
         NSDictionary *userInfo = noti.userInfo;
         NSString *social_group_ids = userInfo[@"social_group_ids"] ? userInfo[@"social_group_ids"] : userInfo[@"social_group_id"];
         
-        if(social_group_ids.length > 0 && [social_group_ids containsString:self.viewController.communityId]){
+        if(social_group_ids.length > 0 && self.viewController.communityId && [social_group_ids containsString:self.viewController.communityId]){
             //多于1个tab的时候
             if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
                 FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];

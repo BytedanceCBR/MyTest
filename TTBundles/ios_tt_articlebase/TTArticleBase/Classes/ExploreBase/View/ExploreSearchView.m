@@ -56,7 +56,7 @@
 
 @end
 
-@interface ExploreSearchView()<TTSeachBarViewDelegate, YSWebViewDelegate, UIGestureRecognizerDelegate, TTArticleSearchHistoryViewDelegate>
+@interface ExploreSearchView()<TTSearchBarViewDelegate, YSWebViewDelegate, UIGestureRecognizerDelegate, TTArticleSearchHistoryViewDelegate>
 {
     BOOL _willDisappear;
     
@@ -696,12 +696,12 @@
 }
 
 #pragma mark - UISearchBarDelegate
-- (void)searchBarSearchButtonClicked:(TTSeachBarView *)searchBar_ {
+- (void)searchBarSearchButtonClicked:(TTSearchBarView *)searchBar_ {
     _fromType = ListDataSearchFromTypeTab;
     [self searchWithLabel:@"input_keyword_search"];
 }
 
-- (void)searchBar:(TTSeachBarView *)searchBar_ textDidChange:(NSString *)searchText {
+- (void)searchBar:(TTSearchBarView *)searchBar_ textDidChange:(NSString *)searchText {
     self.fromType = ListDataSearchFromTypeTab;
     
     if (isEmptyString(searchText)) {
@@ -755,7 +755,7 @@
     }
 }
 
-- (void)searchBarCancelButtonClicked:(TTSeachBarView *)searchBar_ {
+- (void)searchBarCancelButtonClicked:(TTSearchBarView *)searchBar_ {
     wrapperTrackEvent(self.labelString, @"cancel_search");
     
     
@@ -798,7 +798,7 @@
     }
 }
 
-- (void)searchBarTextDidBeginEditing:(TTSeachBarView *)searchBar {
+- (void)searchBarTextDidBeginEditing:(TTSearchBarView *)searchBar {
     // 点击了搜索输入框， 判断有无历史搜索记录，如果有历史搜索记录，则显示历史搜索记录
     [self sendStayPageTrack];
     

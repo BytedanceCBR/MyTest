@@ -28,7 +28,6 @@
 @property(nonatomic , strong) UIButton *imChatBtn;
 @property(nonatomic , assign) CGFloat imBtnWidth;
 @property(nonatomic , assign) BOOL instantHasShow;
-@property(nonatomic , strong) UIButton *groupChatBtn;
 
 @end
 

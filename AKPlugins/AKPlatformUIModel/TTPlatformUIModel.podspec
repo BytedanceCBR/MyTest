@@ -58,11 +58,11 @@ s.subspec 'TTLabel' do |ss|
     ss.public_header_files = 'TTPlatformUIModel/TTLabel/*.h'
 end
 
-s.subspec 'TTSeachBarView' do |ss|
-    ss.requires_arc =   true
-    ss.source_files =   'TTPlatformUIModel/TTSeachBarView/*.{h,m}'
-    ss.public_header_files = 'TTPlatformUIModel/TTSeachBarView/*.h'
-end
+#s.subspec 'TTSeachBarView' do |ss|
+#    ss.requires_arc =   true
+#    ss.source_files =   'TTPlatformUIModel/TTSeachBarView/*.{h,m}'
+#    ss.public_header_files = 'TTPlatformUIModel/TTSeachBarView/*.h'
+#end
 
 s.subspec 'HPGrowingTextView' do |ss|
     ss.requires_arc =   true
