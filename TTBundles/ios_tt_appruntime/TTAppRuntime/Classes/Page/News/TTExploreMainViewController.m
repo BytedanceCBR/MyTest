@@ -21,7 +21,7 @@
 #import "NewsBaseDelegate.h"
 #import "UIViewAdditions.h"
 #import "TTAuthorizeManager.h"
-#import "TTSeachBarView.h"
+#import <TTUIWidget/TTSearchBarView.h>
 #import "TTTopBar.h"
 #import "TTTopBarManager.h"
 #import "TTDeviceHelper.h"
@@ -76,7 +76,7 @@
 //@property (nonatomic, strong) NIHSearchPanelViewModel *panelVM;
 @property (nonatomic, strong) TTTopBar *topBar;
 @property (nonatomic, strong) NSArray *guideControlArray;
-@property (nonatomic, strong) TTSeachBarView *searchBar;
+@property (nonatomic, strong) TTSearchBarView *searchBar;
 @property (nonatomic, strong) NSTimer *weatherTimer;
 @property (nonatomic, copy) NSDate *lastShouldFireDate; // 退到后台后停止定时器，记录触发时间，进入前台后恢复定时器
 
@@ -819,8 +819,8 @@
     [self.navigationController pushViewController:profileVC animated:YES];
 }
 
-+ (TTSeachBarView *)searchBar {
-    TTSeachBarView * searchBar = [[TTSeachBarView alloc] init];
++ (TTSearchBarView *)searchBar {
+    TTSearchBarView * searchBar = [[TTSearchBarView alloc] init];
     searchBar.backgroundColor = [UIColor clearColor];
     searchBar.searchField.userInteractionEnabled = NO;
     searchBar.bottomLineView.hidden = YES;

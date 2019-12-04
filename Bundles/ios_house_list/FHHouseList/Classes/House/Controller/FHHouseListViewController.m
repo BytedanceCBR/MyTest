@@ -12,7 +12,7 @@
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHFakeInputNavbar.h"
 #import <UIViewAdditions.h>
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHTracerModel.h"
 #import "FHErrorMaskView.h"
 #import "FHHouseListViewModel.h"
@@ -28,10 +28,12 @@
 #import "FHCommuteFilterView.h"
 #import "FHCommuteManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHMainOldTopTagsView.h"
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
 #define COMMUTE_HEIGHT     42
+#define kFilterTagsViewHeight 58
 
 @interface FHHouseListViewController ()<TTRouteInitializeProtocol, FHHouseListViewModelDelegate>
 
@@ -66,6 +68,7 @@
 @property (nonatomic , strong) NSDictionary *tracerDict; // 埋点
 
 @property (nonatomic , assign) FHHouseListSearchType searchType;
+@property(nonatomic , strong) FHMainOldTopTagsView *topTagsView;
 
 @end
 
@@ -406,7 +409,9 @@
     [self refreshNavBar:self.houseType placeholder:placeholder inputText:nil];
     
     [self.houseFilterBridge setFilterConditions:paramObj.queryParams];
-    
+    if (self.topTagsView && paramObj.queryParams) {
+        self.topTagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:paramObj.queryParams];
+    }
 }
 -(void)handleSugSelection:(TTRouteParamObj *)paramObj {
     
@@ -418,7 +423,12 @@
         [self resetFilter:paramObj];
         
     }
-    
+    BOOL hasTagData = [self.topTagsView hasTagData];
+    CGFloat tagHeight = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? kFilterTagsViewHeight : 0;
+    [self.topTagsView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(tagHeight);
+    }];
+    self.topTagsView.hidden = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? NO : YES;
     [self handleListOpenUrlUpdate:paramObj];
     [self.houseFilterBridge trigerConditionChanged];
 
@@ -504,6 +514,15 @@
         make.edges.mas_equalTo(self.filterContainerView);
     }];
     
+    BOOL hasTagData = [self.topTagsView hasTagData];
+    CGFloat tagHeight = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? kFilterTagsViewHeight : 0;
+    self.topTagsView.hidden = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? NO : YES;
+    [self.topTagsView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        make.left.right.mas_equalTo(self.containerView);
+        make.height.mas_equalTo(tagHeight);
+    }];
+    
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.redirectTipView.mas_bottom);
         make.left.right.bottom.mas_equalTo(self.containerView);
@@ -511,7 +530,11 @@
     
     [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        if (self.topTagsView) {
+            make.top.mas_equalTo(self.topTagsView.mas_bottom);
+        }else {
+            make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        }
         make.height.mas_equalTo(0);
     }];
     
@@ -542,7 +565,10 @@
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
     [self.viewModel setRedirectTipView:self.redirectTipView];
-    
+    [self.viewModel setTopTagsView:self.topTagsView];
+    if (self.topTagsView && self.paramObj.queryParams) {
+        self.topTagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:self.paramObj.queryParams];
+    }
     [self.houseFilterViewModel trigerConditionChanged];
 
 }
@@ -589,7 +615,8 @@
     //notifyview
     self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.notifyBarView];
-    
+    [self setupTopTagsView];
+
     self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.redirectTipView];
 
@@ -614,6 +641,35 @@
         }
     }
 
+}
+
+- (void)setupTopTagsView
+{
+    self.topTagsView = [[FHMainOldTopTagsView alloc] init];
+    [self.view addSubview:self.topTagsView];
+    BOOL hasTagData = [self.topTagsView hasTagData];
+    CGFloat tagHeight = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? kFilterTagsViewHeight : 0;
+    self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, tagHeight);
+    self.topTagsView.hidden = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? NO : YES;
+    __weak typeof(self) weakSelf = self;
+    self.topTagsView.itemClickBlk = ^{
+        __block NSString *value_id = nil;
+        NSArray *temp = weakSelf.topTagsView.lastConditionDic[@"tags%5B%5D"];
+        if ([temp isKindOfClass:[NSArray class]] && temp.count > 0) {
+            [temp enumerateObjectsUsingBlock:^(NSString*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (value_id.length > 0) {
+                    value_id = [NSString stringWithFormat:@"%@,%@",value_id,obj];
+                } else {
+                    value_id = obj;
+                }
+            }];
+        } else {
+            value_id = nil;//
+        }
+        [weakSelf.houseFilterBridge setFilterConditions:weakSelf.topTagsView.lastConditionDic];
+        [weakSelf.houseFilterViewModel trigerConditionChanged];
+        [weakSelf.viewModel addTagsViewClick:value_id];
+    };
 }
 
 #pragma mark - show notify

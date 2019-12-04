@@ -356,6 +356,12 @@
     __weak typeof(self) wself = self;
     [FHHouseUGCAPI postOperation:self.cellModel.groupId cellType:self.cellModel.cellType socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
+        //已经审核通过的问题删除就返回这个
+        if(model && [model.status integerValue] == 2001){
+            [[ToastManager manager] showToast:(model.message ?: @"删除失败")];
+            return;
+        }
+        
         if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
             if(wself.deleteCellBlock){
                 wself.deleteCellBlock();

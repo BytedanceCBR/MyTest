@@ -25,7 +25,7 @@
 #import "TTTabBarProvider.h"
 //#import "TTPostVideoRedpackDelegate.h"
 #import "TTTabBarProvider.h"
-#import "TTBubbleView.h"
+#import <TTUIWidget/TTBubbleView.h>
 #import "TTExploreMainViewController.h"//这个不OK
 #import "NewsBaseDelegate.h"//这个不OK，为啥还要依赖这个？？？
 #import "ArticleMobileViewController.h"//这个不OK

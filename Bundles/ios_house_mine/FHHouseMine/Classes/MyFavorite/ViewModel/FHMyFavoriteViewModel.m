@@ -117,9 +117,15 @@ extern NSString *const kFHDetailFollowUpNotification;
             return;
         }
 
-        if (error && wself.dataList.count == 0) {
+        if (error) {
             //TODO: show handle error
-            [wself.viewController.emptyView showEmptyWithType:[wself networkErrorType]];
+            if(wself.dataList.count == 0){
+                [wself.viewController.emptyView showEmptyWithType:[wself networkErrorType]];
+            }else{
+                if(!isHead){
+                    [[ToastManager manager] showToast:@"网络异常"];
+                }
+            }
             return;
         }
         
