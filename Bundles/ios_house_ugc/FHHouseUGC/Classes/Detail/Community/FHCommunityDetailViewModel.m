@@ -571,28 +571,32 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    switch(from) {
-                        case FHUGCLoginFrom_POST:
-                        {
-                            [self goPostDetail];
+                if(from == FHUGCLoginFrom_GROUPCHAT) {
+                    [self onLoginIn];
+                }
+                else {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        switch(from) {
+                            case FHUGCLoginFrom_POST:
+                            {
+                                [self goPostDetail];
+                            }
+                                break;
+                            case FHUGCLoginFrom_VOTE:
+                            {
+                                [self gotoVoteVC];
+                            }
+                                break;
+                            case FHUGCLoginFrom_WENDA:
+                            {
+                                [self gotoWendaVC];
+                            }
+                                break;
+                            default:
+                                break;
                         }
-                            break;
-                        case FHUGCLoginFrom_VOTE:
-                        {
-                            [self gotoVoteVC];
-                        }
-                            break;
-                        case FHUGCLoginFrom_WENDA:
-                        {
-                            [self gotoWendaVC];
-                        }
-                            break;
-                        default:
-                            break;
-                    }
-                });
+                    });
+                }
             }
         }
     }];
