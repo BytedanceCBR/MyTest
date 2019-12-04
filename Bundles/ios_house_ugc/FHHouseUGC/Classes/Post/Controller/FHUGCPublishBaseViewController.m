@@ -66,13 +66,10 @@
     [self enablePublish:NO];
 }
 
-- (void)startLoading {
-    self.publishBtn.userInteractionEnabled = NO;
+- (void)publishBtnClickable:(BOOL)isClickable {
+    self.publishBtn.userInteractionEnabled = isClickable;
 }
 
-- (void)endLoading {
-    self.publishBtn.userInteractionEnabled = YES;
-}
 # pragma mark - UI 控件区
 
 - (UIButton *)cancelBtn {

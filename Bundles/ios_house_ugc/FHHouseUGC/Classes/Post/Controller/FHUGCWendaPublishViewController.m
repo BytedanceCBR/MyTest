@@ -758,7 +758,7 @@
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setObject:@"feed_publisher" forKey:@"enter_from"];
+    [params setObject:[self pageType] forKey:@"enter_from"];
     [params setObject:@"click" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
@@ -961,14 +961,12 @@
 }
 
 - (void)startLoading {
-    [super startLoading];
-    
+    [self publishBtnClickable:NO];
     [self showLoadingAlert:@"正在发布"];
 }
 
 - (void)endLoading {
-    [super endLoading];
-    
+    [self publishBtnClickable:YES];
     [self dismissLoadingAlert];
 }
 

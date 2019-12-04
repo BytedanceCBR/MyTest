@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FHHouseDetailFollowUpViewModel;
 @class FHDetailImShareInfoModel;
-@class FHDetailUGCSocialModel;
 @class FHHouseContactConfigModel;
 @class FHHouseNewsSocialModel;
 
