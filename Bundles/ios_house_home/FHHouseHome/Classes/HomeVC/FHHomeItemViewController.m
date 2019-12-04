@@ -105,6 +105,9 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
     
     self.tableView.mj_footer = self.refreshFooter;
     
+    [self.refreshFooter setBackgroundColor:[UIColor themeHomeColor]];
+    [self.tableView setBackgroundColor:[UIColor themeHomeColor]];
+    
     [self registerCells];
     
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
@@ -524,10 +527,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
-        if ([self checkIsHaveEntrancesList]) {
-            return 1;
-        }
-        return 0;
+        return 1;
     }
     
     if (self.showNoDataErrorView || self.showRequestErrorView || self.showDislikeNoDataView) {
@@ -546,18 +546,19 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
         if ([self checkIsHaveEntrancesList]) {
             //适配5s
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                return 89;
+                return 100;
             }else
             {
                 return 74;
             }
         }
-        return 0;
+        return 12;
     }else
     {
         if (self.showNoDataErrorView || self.showRequestErrorView || self.showDislikeNoDataView) {
             return [self getHeightShowNoData];
         }
+        
         if (self.houseType == FHHouseTypeNewHouse) {
             if (indexPath.row < self.houseDataItemsModel.count) {
                 JSONModel *model = self.houseDataItemsModel[indexPath.row];
@@ -576,10 +577,20 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.section == kFHHomeHouseTypeBannerViewSection)
     {
-        FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
-        [bannerCell refreshData:self.houseType];
-        [bannerCell.contentView setBackgroundColor:[UIColor themeGray9]];
-        return bannerCell;
+        if ([self checkIsHaveEntrancesList]) {
+            FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
+            [bannerCell refreshData:self.houseType];
+            [bannerCell.contentView setBackgroundColor:[UIColor themeHomeColor]];
+            return bannerCell;
+        }else
+        {
+            UITableViewCell *cellMargin = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+            for (UIView *subView in cellMargin.contentView.subviews) {
+                [subView removeFromSuperview];
+            }
+            [cellMargin setBackgroundColor:[UIColor themeHomeColor]];
+            return cellMargin;
+        }
     }else
     {
         if (self.showNoDataErrorView) {
@@ -639,7 +650,6 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
                     }
                 };
             }
-            
             return cellError;
         }
         
@@ -696,6 +706,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
             [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
             [cell updateHomeSmallImageHouseCellModel:model andType:self.houseType];
         }
+        [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
         return cell;
     }
 }
@@ -703,7 +714,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.section == kFHHomeHouseTypeBannerViewSection) {
-        if (self.houseType == _listModel.houseType && ![self.traceRecordDict objectForKey:@(self.houseType)] ) {
+        if (self.houseType == _listModel.houseType && ![self.traceRecordDict objectForKey:@(self.houseType)] && [self checkIsHaveEntrancesList]) {
             [self.traceRecordDict setValue:@"" forKey:@(self.houseType)];
             [FHHomeCellHelper sendBannerTypeCellShowTrace:_houseType];
         }

@@ -75,7 +75,7 @@
 @property(nonatomic, strong) UIImageView *fakeImageView;
 @property(nonatomic, strong) UIView *fakeImageViewContainer;
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
-@property(nonatomic, strong) UIView *houseCellShader; //底部 包含 价格 分享
+@property(nonatomic, strong) UIView *houseCellBackView; //底部 包含 价格 分享
 @property(nonatomic, strong) UIButton *closeBtn; //x按钮
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 
@@ -471,12 +471,12 @@
         layout.flexGrow = 1;
 //        layout.justifyContent = YGAlignCenter;
 //        layout.alignItems = YGAlignCenter;
-    }];    
+    }];
 //    [self.contentView setBackgroundColor:[UIColor redColor]];
     
-    self.houseCellShader = [[UIView alloc] initWithFrame:CGRectZero];
-    [self.contentView addSubview:self.houseCellShader];
-    [self.houseCellShader configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+    self.houseCellBackView = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.contentView addSubview:self.houseCellBackView];
+    [self.houseCellBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
         layout.left = YGPointValue(15);
@@ -486,8 +486,8 @@
         layout.height = YGPointValue(MAIN_SMALL_CELL_HEIGHT);
         layout.flexGrow = 1;
     }];
-    [self.houseCellShader setBackgroundColor:[UIColor whiteColor]];
-    [self.houseCellShader.yoga markDirty];
+    [self.houseCellBackView setBackgroundColor:[UIColor whiteColor]];
+    [self.houseCellBackView.yoga markDirty];
     
     
     self.leftInfoView = [[UIView alloc] init];
@@ -741,10 +741,6 @@
             
             self.imageTagLabelBgView.hidden = YES;
         }
-        
-        
-    
-        
     } else if (houseType == FHHouseTypeRentHouse) {
         
         self.mainTitleLabel.text = commonModel.title;
@@ -1112,6 +1108,26 @@
         [self updateTitlesLayout:attributeString.length > 0];
         
         [self.contentView.yoga applyLayoutPreservingOrigin:NO];
+    }
+}
+
+-(void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast
+{
+    if (isFirst) {
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = self.houseCellBackView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        self.houseCellBackView.layer.mask = maskLayer;
+    } else if (isLast){
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = self.houseCellBackView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        self.houseCellBackView.layer.mask = maskLayer;
+    }else
+    {
+        self.houseCellBackView.layer.mask = nil;
     }
 }
 

@@ -38,7 +38,7 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        self.backgroundColor = [UIColor themeGray9];
+        self.backgroundColor = [UIColor themeHomeColor];
         [self setSearchArea];
     }
     
@@ -76,14 +76,14 @@
     searchButton.layer.borderWidth = 0.5;
     searchButton.layer.borderColor = [UIColor themeGray5].CGColor;
     [searchButton.titleLabel setFont:[UIFont themeFontRegular:14]];
-    searchButton.backgroundColor = [UIColor themeGray9];
+    searchButton.backgroundColor = [UIColor themeHomeColor];
     [searchButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self).offset(15);
         make.height.mas_equalTo(34);
         make.centerY.equalTo(self);
         make.right.mas_equalTo(self).offset(-15);
     }];
-    [searchButton setBackgroundColor:[UIColor themeGray9]];
+    [searchButton setBackgroundColor:[UIColor themeHomeColor]];
     
     UIImageView *imageButtonLeftIcon = [UIImageView new];
     [searchButton addSubview:imageButtonLeftIcon];

@@ -47,7 +47,7 @@ static CGFloat kFHScrollBannerHeight = 80; // 轮播图的高度
 - (void)setupUI {
     _tracerDic = [NSMutableDictionary new];
     _bannerView = [[FHHomeScrollBannerView alloc] init];
-    _bannerView.backgroundColor = [UIColor themeGray9];
+    _bannerView.backgroundColor = [UIColor themeHomeColor];
     _bannerView.layer.masksToBounds = YES;
     _bannerView.layer.cornerRadius = 8;
     
@@ -66,7 +66,7 @@ static CGFloat kFHScrollBannerHeight = 80; // 轮播图的高度
     _bannerView.delegate = self;
     [_bannerView setContent:[UIScreen mainScreen].bounds.size.width - kFHScrollBannerLeftRightMargin * 2 height:kFHScrollBannerHeight];
     
-    [self.contentView setBackgroundColor:[UIColor themeGray9]];
+    [self.contentView setBackgroundColor:[UIColor themeHomeColor]];
 }
 
 + (BOOL)hasValidModel:(FHConfigDataMainPageBannerOpDataModel *)mainPageOpData {

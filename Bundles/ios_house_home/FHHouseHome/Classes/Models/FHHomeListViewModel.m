@@ -134,6 +134,8 @@
             }
         }];
         
+        [self.tableViewV setBackgroundColor:[UIColor themeHomeColor]];
+        [self.tableViewV.pullDownView setUpRefreshBackColor:[UIColor themeHomeColor]];
         //       __block NSString *previousCityId = configDataModel.currentCityId;
         //订阅config变化发送网络请求
         [FHHomeCellHelper sharedInstance].isFirstLanuch = YES;
@@ -620,7 +622,7 @@
     // 添加分页菜单
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell.contentView addSubview:self.homeViewController.scrollView];
-    [cell.contentView setBackgroundColor:[UIColor whiteColor]];
+    [cell.contentView setBackgroundColor:[UIColor themeHomeColor]];
     return cell;
 }
 

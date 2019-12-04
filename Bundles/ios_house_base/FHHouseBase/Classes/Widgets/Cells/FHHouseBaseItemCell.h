@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)refreshTopMargin:(CGFloat)top;
 
+-(void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast;
+
 -(void)updateHomeSmallImageHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType;
 
 +(CGFloat)recommendReasonHeight;

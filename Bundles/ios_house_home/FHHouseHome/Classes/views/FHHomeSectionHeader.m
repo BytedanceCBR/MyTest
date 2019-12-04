@@ -41,7 +41,7 @@ static const NSInteger kTopScrollViewTag = 100;
         self.categoryLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 18 : 14];
         self.categoryLabel.textColor = [UIColor themeGray1];
         self.categoryLabel.text = @"为你推荐";
-        self.backgroundColor = [UIColor themeGray9];
+        self.backgroundColor = [UIColor themeHomeColor];
         [self addSubview:self.categoryLabel];
         self.categoryLabel.frame = CGRectMake(20, 0, 100, 30);
         [self setUpSegmentedControl];
@@ -59,7 +59,7 @@ static const NSInteger kTopScrollViewTag = 100;
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleFullWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
-    [_segmentedControl setBackgroundColor:[UIColor themeGray9]];
+    [_segmentedControl setBackgroundColor:[UIColor themeHomeColor]];
     
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,

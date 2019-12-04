@@ -753,7 +753,7 @@ CGFloat const gestureMinimumTranslation = 20.0;
     if (self.refreshAnimateView) {
         self.refreshAnimateView.hidden = NO;
     }
-    self.bgView.backgroundColor = [UIColor whiteColor];
+//    self.bgView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)hideAnimationView {
@@ -822,6 +822,17 @@ CGFloat const gestureMinimumTranslation = 20.0;
         [self doHandler];
     }];
 }
+
+- (void)setUpRefreshBackColor:(UIColor *)color
+{
+    if ([color isKindOfClass:[UIColor class]]) {
+        UIColor *resultColor = color ? color : [UIColor whiteColor];
+        self.bgView.backgroundColor = resultColor;
+        [self setBackgroundColor:resultColor];
+        [self.defaultRefreshAnimateView setBackgroundColor:resultColor];
+    }
+}
+
 
 - (void)setScrollViewContentInsetWithOutObserve:(UIEdgeInsets) inset {
     

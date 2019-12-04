@@ -98,7 +98,7 @@
     self = [super initWithFrame:frame];
     if(self)
     {
-        self.backgroundColor = [UIColor themeGray9];
+        self.backgroundColor = [UIColor themeHomeColor];
         
         self.style = aStyle;
         self.tabType = tabType;
@@ -106,13 +106,13 @@
         
         self.titleLabel = [[TTGlowLabel alloc] initWithFrame:self.bounds];
         [self addSubview:_titleLabel];
-        _titleLabel.backgroundColor = [UIColor themeGray9];
+        _titleLabel.backgroundColor = [UIColor themeHomeColor];
         
         self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
         [self addGestureRecognizer:_tapRecognizer];
         
         self.maskTitleLabel = [[TTGlowLabel alloc] initWithFrame:_titleLabel.frame];
-        self.maskTitleLabel.backgroundColor = [UIColor themeGray9];
+        self.maskTitleLabel.backgroundColor = [UIColor themeHomeColor];
         
 //        self.bottomSelectView = [[SSThemedView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 6, 20, 3)];
 //        self.bottomSelectView.backgroundColor = [UIColor themeRed1];
@@ -432,7 +432,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     self = [super initWithFrame:frame];
     if(self)
     {
-        self.backgroundColor = [UIColor themeGray9];
+        self.backgroundColor = [UIColor themeHomeColor];
         self.style = style;
         self.tabType = tabType;
         
@@ -502,7 +502,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         [self addSubview:self.rightBorderIndicatorView];
         [self addSubview:self.searchButton]; //search图片四周用很多空白，所以用expandButton覆盖
         [self addSubview:self.expandButton];
-        [self setBackgroundColor:[UIColor themeGray9]];
+        [self setBackgroundColor:[UIColor themeHomeColor]];
         
         [self reloadThemeUI];
         
@@ -572,7 +572,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     viewFrame.size.height = self.height;
     viewFrame.origin.x = self.scrollView.right - viewFrame.size.width;
     viewFrame.origin.y = 0;
-    [self.scrollView  setBackgroundColor:[UIColor themeGray9]];
+    [self.scrollView  setBackgroundColor:[UIColor themeHomeColor]];
     
     [self refreshExpandButton:nil];
     [self refreshSelectorView];

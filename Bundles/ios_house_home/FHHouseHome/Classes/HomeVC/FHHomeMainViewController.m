@@ -29,10 +29,10 @@
 }
 
 - (void)initView {
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor themeHomeColor];
     
     self.topView = [[FHHomeMainTopView alloc] init];
-    _topView.backgroundColor = [UIColor whiteColor];
+    _topView.backgroundColor = [UIColor themeHomeColor];
     [self.view addSubview:_topView];
     
     self.containerView = [[UIView alloc] init];
@@ -76,14 +76,14 @@
         make.left.right.mas_equalTo(self.view);
         make.height.mas_equalTo(44 + (safeTop == 0 ? 20 : safeTop));
     }];
-    [self.topView setBackgroundColor:[UIColor whiteColor]];
+    [self.topView setBackgroundColor:[UIColor themeHomeColor]];
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.topView.mas_bottom);
         make.left.right.equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(-bottom);
     }];
-    [self.containerView setBackgroundColor:[UIColor whiteColor]];
+    [self.containerView setBackgroundColor:[UIColor themeHomeColor]];
     
     
     [self.collectionView mas_remakeConstraints:^(MASConstraintMaker *make) {

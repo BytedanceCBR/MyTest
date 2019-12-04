@@ -170,8 +170,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     // Do any additional setup after loading the view.
     
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.mainTableView.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor themeHomeColor];
+    self.mainTableView.backgroundColor = [UIColor themeHomeColor];
     FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!configModel) {
         [self tt_startUpdate];
@@ -552,7 +552,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.scrollsToTop = NO;
         _scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width*4, 0);
-        _scrollView.backgroundColor = [UIColor whiteColor];
+        _scrollView.backgroundColor = [UIColor themeHomeColor];
         if (@available(iOS 11.0 , *)) {
             _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }

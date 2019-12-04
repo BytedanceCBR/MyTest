@@ -980,7 +980,7 @@ TTRefreshViewDelegate
         }
     }
         
-    self.listView.backgroundColor = [UIColor themeGray9];
+    self.listView.backgroundColor = [UIColor themeHomeColor];
 }
 
 - (void)willAppear
@@ -1284,7 +1284,7 @@ TTRefreshViewDelegate
     [super themeChanged:notification];
 //    self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
     
-    self.backgroundColor = [UIColor themeGray9];
+    self.backgroundColor = [UIColor themeHomeColor];
     self.listView.backgroundColor = self.backgroundColor;
 }
 
