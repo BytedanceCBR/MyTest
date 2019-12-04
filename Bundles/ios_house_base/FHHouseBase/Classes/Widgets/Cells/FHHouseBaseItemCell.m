@@ -46,6 +46,10 @@
 #define MAIN_SMALL_IMG_TOP     8
 #define MAIN_SMALL_CELL_HEIGHT  96
 
+#define MAIN_SMALL_IMG_BACK_WIDTH   97
+#define MAIN_SMALL_IMG_BACK_HEIGHT  76
+
+
 #define YOGA_RIGHT_PRICE_WIDITH 72
 
 
@@ -62,6 +66,7 @@
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHCornerView *imageTagLabelBgView;
 @property(nonatomic, strong) UIView *maskVRImageView;
+@property(nonatomic, strong) UIImageView *houseMainImageBackView;
 
 @property(nonatomic, strong) UIView *rightInfoView;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //主title lable
@@ -252,6 +257,16 @@
         _pricePerSqmLabel.textColor = [UIColor themeGray3];
     }
     return _pricePerSqmLabel;
+}
+
+-(UIImageView *)houseMainImageBackView
+{
+    if (!_houseMainImageBackView) {
+        _houseMainImageBackView = [[UIImageView alloc]init];
+        [_houseMainImageBackView setImage:[UIImage imageNamed:@"base_house_image_back"]];
+        _houseMainImageBackView.contentMode = UIViewContentModeScaleAspectFill;
+    }
+    return _houseMainImageBackView;
 }
 
 -(LOTAnimationView *)vrLoadingView
@@ -487,7 +502,6 @@
         layout.flexGrow = 1;
     }];
     [self.houseCellBackView setBackgroundColor:[UIColor whiteColor]];
-    [self.houseCellBackView.yoga markDirty];
     
     
     self.leftInfoView = [[UIView alloc] init];
@@ -498,6 +512,7 @@
     }];
     
     [self.contentView addSubview:_leftInfoView];
+    [_leftInfoView addSubview:self.houseMainImageBackView];
     [_leftInfoView addSubview:self.mainImageView];
     [_leftInfoView addSubview:self.imageTagLabelBgView];
     [_imageTagLabelBgView addSubview:self.imageTagLabel];
@@ -509,6 +524,15 @@
         layout.left = YGPointValue(MAIN_SMALL_IMG_LEFT);
         layout.width = YGPointValue(MAIN_SMALL_IMG_WIDTH);
         layout.height = YGPointValue(MAIN_SMALL_IMG_HEIGHT);
+    }];
+    
+    [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.top = YGPointValue(5);
+        layout.left = YGPointValue(3);
+        layout.width = YGPointValue(MAIN_SMALL_IMG_BACK_WIDTH - 3);
+        layout.height = YGPointValue(MAIN_SMALL_IMG_BACK_HEIGHT - 2);
     }];
     
     [self.leftInfoView addSubview:self.houseVideoImageView];

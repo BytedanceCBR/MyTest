@@ -370,7 +370,6 @@ static const float kSegementedMainPadingBottom = 10;
             make.width.mas_equalTo(183);
         }];
         
-        
         if (dataModel.cityAvailability.iconImage.url) {
             [imageRightView bd_setImageWithURL:[NSURL URLWithString:dataModel.cityAvailability.iconImage.url]];
         }
@@ -383,7 +382,7 @@ static const float kSegementedMainPadingBottom = 10;
 }
 
 - (NSArray *)getSegmentTitles {
-    return @[@"首页", @"发现"];
+    return @[@"找房", @"发现"];
 }
 
 @end
