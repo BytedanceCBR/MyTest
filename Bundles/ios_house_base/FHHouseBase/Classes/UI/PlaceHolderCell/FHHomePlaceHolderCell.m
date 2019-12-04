@@ -46,9 +46,9 @@
         [self.contentView addSubview:self.view2];
         [self.contentView addSubview:self.view3];
         
-        CGFloat vleft = HOR_MARGIN+70+10;
+        CGFloat vleft = HOR_MARGIN+85+10;
         CGFloat vWidth = (SCREEN_WIDTH - vleft - HOR_MARGIN);
-        _placeHolderImageView.frame = CGRectMake(HOR_MARGIN, 10, 70, 54);
+        _placeHolderImageView.frame = CGRectMake(HOR_MARGIN, 10, 85, 64);
         _view1.frame = CGRectMake(vleft, 12, vWidth, 10);
         _view2.frame = CGRectMake(vleft, _view1.bottom + 10, vWidth-44, 10);
         _view3.frame = CGRectMake(vleft, _view2.bottom + 10, _view2.centerX - vleft + 10 , 10);
