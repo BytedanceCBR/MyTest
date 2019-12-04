@@ -601,7 +601,7 @@
 {
     self = [super init];
     if (self) {
-        self.topMargin = 10;
+        self.topMargin = 0;
     }
     return self;
 }

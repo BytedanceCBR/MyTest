@@ -346,6 +346,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark todo zjing
 @property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
+@property (nonatomic, strong , nullable) NSArray<FHSearchBaseItemModel *> *searchItems;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHListSearchHouseDataModel *recommendSearchModel;
 

@@ -67,6 +67,16 @@
                 self.tracerDict[@"log_pb"] = dic;
             }
         }
+        //logPb 增加social_group_id
+        NSDictionary *temp_log_pb = self.tracerDict[@"log_pb"];
+        if (self.communityId.length > 0) {
+            NSMutableDictionary *mutLogPb = [NSMutableDictionary new];
+            if ([temp_log_pb isKindOfClass:[NSDictionary class]]) {
+                [mutLogPb addEntriesFromDictionary:temp_log_pb];
+            }
+            mutLogPb[@"social_group_id"] = self.communityId;
+            self.tracerDict[@"log_pb"] = mutLogPb;
+        }
     }
     return self;
 }
