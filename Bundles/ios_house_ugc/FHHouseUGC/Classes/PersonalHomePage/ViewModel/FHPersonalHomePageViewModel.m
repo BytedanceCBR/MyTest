@@ -126,7 +126,7 @@
     __weak typeof(self) wSelf = self;
     self.httpTopListTask = [FHHouseUGCAPI requestHomePageInfoWithUserId:self.userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (!error && [model isKindOfClass:[FHPersonalHomePageModel class]]) {
-            if(![model.message isEqualToString:@"error"]){
+            if([model.message isEqualToString:@"success"] && [wSelf.headerModel.dErrno integerValue] == 0){
                 wSelf.headerModel = model;
                 [wSelf.detailController refreshHeaderData:NO];
             }
@@ -148,22 +148,17 @@
             // 强制endLoading
             wSelf.loadDataSuccessCount += 1;
         } else {
-            if ([model isKindOfClass:[FHPersonalHomePageModel class]]) {
+            if ([model isKindOfClass:[FHPersonalHomePageModel class]] && [model.message isEqualToString:@"success"] && [wSelf.headerModel.dErrno integerValue] == 0) {
                 wSelf.headerModel = model;
-                if([wSelf.headerModel.dErrno integerValue] != 0){
-                    // 强制endLoading
-                    wSelf.loadDataSuccessCount += 1;
-                }else{
-                    if(wSelf.headerModel.data.logPb){
-                        wSelf.detailController.tracerDict[@"log_pb"] = wSelf.headerModel.data.logPb;
-                    }
-                    [wSelf.detailController refreshHeaderData:YES];
-                    wSelf.detailController.mainScrollView.backgroundColor = [UIColor themeGray7];
-                    
-                    if([wSelf.headerModel.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:wSelf.headerModel.data.userId]){
-                        // 加载列表数据
-                        [wSelf loadFeedListData];
-                    }
+                if(wSelf.headerModel.data.logPb){
+                    wSelf.detailController.tracerDict[@"log_pb"] = wSelf.headerModel.data.logPb;
+                }
+                [wSelf.detailController refreshHeaderData:YES];
+                wSelf.detailController.mainScrollView.backgroundColor = [UIColor themeGray7];
+                
+                if([wSelf.headerModel.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:wSelf.headerModel.data.userId]){
+                    // 加载列表数据
+                    [wSelf loadFeedListData];
                 }
             } else {
                 wSelf.headerModel = nil;

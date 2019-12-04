@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateAgencyTitle:(NSString *)agencyTitle;
 - (void)showFrom:(UIView *)parentView;
 - (void)dismiss;
+// 不dissmiss 直接展示另一个view
+- (void)showAnotherView:(UIView *)anotherView;
 
 - (NSArray *)selectAgencyList;
 
