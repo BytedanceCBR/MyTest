@@ -266,6 +266,9 @@
             [self onNetworError:showEmptyIfFailed showToast:showToast];
         }
         
+        // 根据basicInfo接口成功失败决定是否显示群聊入口按钮
+        self.viewController.groupChatBtn.hidden = (error != nil);
+        
         if (model) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
             self.socialGroupModel = responseModel;
