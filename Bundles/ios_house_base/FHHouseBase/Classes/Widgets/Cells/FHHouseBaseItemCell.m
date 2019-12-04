@@ -867,8 +867,8 @@
         
         self.mainTitleLabel.text = commonModel.title;
         self.subTitleLabel.text = commonModel.subtitle;
-        self.priceLabel.text = commonModel.pricingNum;
-        self.pricePerSqmLabel.text = commonModel.pricingUnit;
+        self.priceLabel.text = commonModel.pricing;
+        self.pricePerSqmLabel.text = @"";
         
         
         if ([TTDeviceHelper isScreenWidthLarge320]) {
