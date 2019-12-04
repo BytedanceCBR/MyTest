@@ -492,7 +492,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 make.bottom.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? -10 : -8);
             }];
         }
-        itemView.backgroundColor = [UIColor whiteColor];
+        itemView.backgroundColor = [UIColor clearColor];
         if (isNeedAllocNewItems) {
             [itemsArray addObject:itemView];
         }

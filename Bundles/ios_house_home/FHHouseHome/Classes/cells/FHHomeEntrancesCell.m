@@ -152,6 +152,7 @@
     if (self) {
         self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake((frame.size.width - iconSize.width)/2, 0, iconSize.width, iconSize.height)];
         [self addSubview:_iconView];
+        [self.iconView setBackgroundColor:[UIColor clearColor]];
         
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, frame.size.height - 20, frame.size.width, 20)];
         _nameLabel.textColor = [UIColor themeGray2];
