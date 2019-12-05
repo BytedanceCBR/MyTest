@@ -19,7 +19,6 @@
 #import "FHSingleImageInfoCellModel.h"
 #import "FHDetailBottomOpenAllView.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
-
 @interface FHDetailRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
@@ -56,11 +55,11 @@
     // 添加tableView和查看更多
     FHDetailRelatedHouseModel *model = (FHDetailRelatedHouseModel *)data;
     self.shadowImage.image = model.shadowImage;
-    CGFloat cellHeight = 108;
+    CGFloat cellHeight = 96;
     BOOL hasMore = model.relatedHouseData.hasMore;
-    CGFloat bottomOffset = 0;
+    CGFloat bottomOffset = 20;
     if (hasMore) {
-        bottomOffset = 48;
+        bottomOffset = 68;
     }
     self.items = model.relatedHouseData.items;
     NSString *title = @"周边房源";
@@ -71,16 +70,17 @@
     _headerView.label.text = title;
     if (model.relatedHouseData.items.count > 0) {
         UITableView *tv = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        tv.estimatedRowHeight = 108;
+        tv.estimatedRowHeight = 96;
         tv.estimatedSectionHeaderHeight = 0;
         tv.estimatedSectionFooterHeight = 0;
+        tv.backgroundColor = [UIColor clearColor];
         if (@available(iOS 11.0, *)) {
             tv.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         tv.separatorStyle = UITableViewCellSeparatorStyleNone;
         tv.showsVerticalScrollIndicator = NO;
         tv.scrollEnabled = NO;
-        [tv registerClass:[FHHouseBaseItemCell  class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
+        [tv registerClass:[FHHouseBaseItemCell  class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
@@ -96,6 +96,10 @@
     if (model.relatedHouseData.hasMore) {
         // 添加查看更多
         self.openAllView = [[FHDetailBottomOpenAllView alloc] init];
+        self.openAllView.title.font = [UIFont themeFontRegular:16];
+        self.openAllView.title.textColor = [UIColor themeGray3];
+        self.openAllView.topBorderView.hidden = YES;
+        self.openAllView.settingArrowImageView.image = [UIImage imageNamed:@"arrowicon-feed-4"];
         [self.containerView addSubview:self.openAllView];
         // 查看更多按钮点击
         __weak typeof(self) wSelf = self;
@@ -108,7 +112,7 @@
                 make.top.mas_equalTo(self.tableView.mas_bottom);
                 make.left.right.mas_equalTo(self.containerView);
                 make.height.mas_equalTo(48);
-                make.bottom.mas_equalTo(self.containerView);
+                make.bottom.mas_equalTo(self.containerView).offset(-20);
             }];
         } else {
             // 查看更多自己布局
@@ -116,7 +120,7 @@
                 make.top.mas_equalTo(self.containerView).offset(20);
                 make.left.right.mas_equalTo(self.containerView);
                 make.height.mas_equalTo(48);
-                make.bottom.mas_equalTo(self.containerView);
+                make.bottom.mas_equalTo(self.containerView).offset(-20);
             }];
         }
     }
@@ -151,14 +155,16 @@
     _houseShowCache = [NSMutableDictionary new];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"周边房源";
+    _headerView.label.font = [UIFont themeFontMedium:20];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.contentView).offset(11);
+        make.right.mas_equalTo(self.contentView).offset(-11);
+        make.top.equalTo(self.contentView).offset(20);
         make.height.mas_equalTo(46);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
-    _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
@@ -245,28 +251,25 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row >= 0 && indexPath.row < self.items.count) {
-        FHSearchHouseDataItemsModel *item = self.items[indexPath.row];
+        FHSearchHouseItemModel *item = self.items[indexPath.row];
         FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
         if ([cell isKindOfClass:[FHHouseBaseItemCell  class]]) {
             FHHouseBaseItemCell  *imageInfoCell = (FHHouseBaseItemCell  *)cell;
             CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell  recommendReasonHeight] : 0;
             [imageInfoCell refreshTopMargin:0];
             [imageInfoCell updateWithHouseCellModel:cellModel];
         }
+        cell.contentView.backgroundColor = [UIColor clearColor];
+        cell.backgroundColor = [UIColor clearColor];
         return cell;
     }
-    
     return [[UITableViewCell alloc] init];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    FHSearchHouseDataItemsModel *item = self.items[indexPath.row];    
-    if ([item showRecommendReason]) {
-        return 108 + [FHHouseBaseItemCell  recommendReasonHeight];
-    }
-    return 108;
+{ 
+    return 96;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

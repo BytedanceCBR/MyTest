@@ -8,7 +8,7 @@
 #import "FHHouseDetailViewController.h"
 #import "FHHouseDetailBaseViewModel.h"
 #import "TTReachability.h"
-#import "FHDetailBottomBarView.h"
+#import "FHOldDetailBottomBarView.h"
 #import "FHDetailNavBar.h"
 #import "TTDeviceHelper.h"
 #import "UIFont+House.h"
@@ -32,7 +32,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UILabel *bottomStatusBar;
 @property (nonatomic, strong) UIView *bottomMaskView;
-@property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
+@property (nonatomic, strong) FHOldDetailBottomBarView *bottomBar;
 @property (nonatomic, strong) FHDetailFeedbackView *feedbackView;
 @property(nonatomic , strong) FHDetailQuestionButton *questionBtn;
 
@@ -265,7 +265,12 @@
     _bottomMaskView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_bottomMaskView];
     
-    _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    if (_houseType == FHHouseTypeSecondHandHouse) {
+        _bottomBar = [[FHOldDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    }else {
+         _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    }
+    
     [self.view addSubview:_bottomBar];
     self.viewModel.bottomBar = _bottomBar;
     _bottomBar.hidden = YES;
@@ -307,7 +312,7 @@
     }];
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(64);
+        make.height.mas_equalTo(80);
         if (@available(iOS 11.0, *)) {
             make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
         }else {
