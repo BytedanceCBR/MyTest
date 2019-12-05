@@ -290,8 +290,10 @@
                     [self updateVC];
                 }
 
-                if ([self.viewController isCurrentVisible] && self.isLoginSatusChangeFromGroupChat) {
-                    [self gotoGroupChat];
+                if (self.isLoginSatusChangeFromGroupChat) {
+                    if([self.viewController isCurrentVisible]){
+                        [self gotoGroupChat];
+                    }
                     self.isLoginSatusChangeFromGroupChat = NO;
                 }
 
