@@ -6,14 +6,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#if __has_include("BDDYCMain.h")
-#import "BDDYCMain.h"
+#if __has_include("BDBDMain.h")
+#import "BDBDMain.h"
 #define BDDYC_ENABLED 1
-#elif __has_include(<BDDynamically/BDDYCMain.h>)
-#import <BDDynamically/BDDYCMain.h>
+#elif __has_include(<Quaterback/BDBDMain.h>)
+#import <Quaterback/BDBDMain.h>
 #define BDDYC_ENABLED 1
-#endif
 
+#endif
 
 
 NS_ASSUME_NONNULL_BEGIN

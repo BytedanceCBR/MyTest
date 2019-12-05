@@ -37,8 +37,6 @@ PODS:
   - BDALog (0.1.12.1-binary)
   - BDAlogProtocol (0.1.7)
   - BDAssert/Core (2.0.0)
-  - BDDynamically/BitcodeVM (0.4.7)
-  - BDDynamically/Main (0.4.7)
   - BDMobileRuntime (0.3.38)
   - BDSSOAuthSDK (1.1.0)
   - BDTArticle (0.2.3)
@@ -176,7 +174,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.14-alpha.4)
+  - ios_house_im (0.1.15-rc.2)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -248,6 +246,8 @@ PODS:
   - OpenSSL-Universal (1.0.1.20.1-binary)
   - OpenUDID (0.1.0.1-binary)
   - Protobuf (3.0.1-ttv.1-binary)
+  - Quaterback/Main/Core (0.0.2-rc.1)
+  - Quaterback/Main/Default (0.0.2-rc.1)
   - React/base (0.55.13-rc.0.1.binary)
   - React/Core (0.55.13-rc.0.1.binary)
   - React/CxxBridge (0.55.13-rc.0.1.binary)
@@ -661,8 +661,6 @@ DEPENDENCIES:
   - BDALog (= 0.1.12.1-binary)
   - BDAlogProtocol (= 0.1.7)
   - BDAssert/Core (= 2.0.0)
-  - BDDynamically/BitcodeVM (= 0.4.7)
-  - BDDynamically/Main (= 0.4.7)
   - BDMobileRuntime (= 0.3.38)
   - BDSSOAuthSDK
   - BDTArticle (from `../AKPlugins/BDTArticle`)
@@ -753,7 +751,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.14-alpha.4)
+  - ios_house_im (= 0.1.15-rc.2)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -769,6 +767,8 @@ DEPENDENCIES:
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
   - Protobuf (= 3.0.1-ttv.1-binary)
+  - Quaterback/Main/Core (= 0.0.2-rc.1)
+  - Quaterback/Main/Default (= 0.0.2-rc.1)
   - React/base (= 0.55.13-rc.0.1.binary)
   - React/Core (= 0.55.13-rc.0.1.binary)
   - React/CxxBridge (= 0.55.13-rc.0.1.binary)
@@ -1068,7 +1068,6 @@ SPEC CHECKSUMS:
   BDALog: 2c34fe6b9e0f7107abb36d41ca3baf1ee33113bb
   BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
-  BDDynamically: 41c09c5508d3c16a701deb206366e2300d2444fc
   BDMobileRuntime: 83175e738acd91083ea560cf0fd4e34612987b80
   BDSSOAuthSDK: 50464c9dd31869a9fe999723f68b931e8acab644
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
@@ -1123,7 +1122,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: a3c07e84923f92aeea9732678b3ca8e52bc42676
+  ios_house_im: 87e062114a602922099931da7fc159690399b106
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1139,6 +1138,7 @@ SPEC CHECKSUMS:
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
   Protobuf: 52a446ec094fe19d92c51ef98bd5c975b56d8732
+  Quaterback: ca260f9322c8c0e77d01d28c8e90b2a7394a3f10
   React: 5e1cd3dbd5d3472c64a378caad5cf4468a60c615
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
@@ -1249,6 +1249,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 14ca77c1daec6c943cbb8b49bcc6086638065065
+PODFILE CHECKSUM: 30ec0593b113bc5f2a2ed381d7fc23bdbcc4eea7
 
 COCOAPODS: 1.4.0

@@ -552,9 +552,9 @@ def appPods
     
     pod_binary 'TTAppStoreStarManager', '1.0.12'
     
-    pod 'BDDynamically', '0.4.7',:subspecs => [
-    'Main',
-    'BitcodeVM'
+    pod 'Quaterback', '0.0.2-rc.1', :subspecs => [
+    'Main/Core',
+    'Main/Default'
     ]
 #    pod 'BDDiamond20', :git => 'git@code.byted.org:liuhanhong/qi_project_ios.git', :branch => 'develop', :subspecs => ['minisdk']
 

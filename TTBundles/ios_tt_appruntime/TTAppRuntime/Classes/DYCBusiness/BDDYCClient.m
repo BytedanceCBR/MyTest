@@ -56,7 +56,7 @@
     
     NSNumber *onNumber = [dycConfs isKindOfClass:[NSDictionary class]] ? dycConfs[@"on_off"] : nil;
     if (onNumber && [onNumber respondsToSelector:@selector(boolValue)] && [onNumber boolValue]) {
-        BDDYCConfiguration *conf = [BDDYCConfiguration new];
+        BDBDConfiguration *conf = [BDBDConfiguration new];
         
 #if BDDYC_HAS_NETWORK
         conf.commonNetworkParamsBlock = ^NSDictionary * {
@@ -76,17 +76,16 @@
         conf.channel = [TTSandBoxHelper getCurrentChannel];
         conf.appVersion = [TTSandBoxHelper versionName];
 #endif
-        conf.domainName = @"i.haoduofangs.com"; // todo zjing
-
         conf.appBuildVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-        [BDDYCMain startWithConfiguration:conf delegate:nil];
         
-        BDDYCLogConfiguration *logConf = [BDDYCLogConfiguration new];
+        BDBDLogConfiguration *logConf = [BDBDLogConfiguration new];
         logConf.enableModInitLog = YES;
         logConf.enablePrintLog   = YES;
         logConf.enableInstExecLog = YES;
         logConf.enableInstCallFrameLog = YES;
-        [BDDYCMain sharedMain].logConf = logConf;
+        [BDBDMain sharedMain].logConf = logConf;
+        [BDBDMain startWithConfiguration:conf delegate:nil];
+
     }
     
 #endif
@@ -122,7 +121,7 @@
 #if DEBUG
 #ifdef BDDYC_ENABLED
 
-    BDDYCConfiguration *conf = [BDDYCConfiguration new];
+    BDBDConfiguration *conf = [BDBDConfiguration new];
 #if BDDYC_HAS_NETWORK
     conf.commonNetworkParamsBlock = ^NSDictionary * {
         return [TTNetworkUtilities commonURLParameters];
@@ -143,15 +142,15 @@
 #endif
     
     conf.appBuildVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-    [BDDYCMain startWithConfiguration:conf delegate:nil];
     
-    BDDYCLogConfiguration *logConf = [BDDYCLogConfiguration new];
+    BDBDLogConfiguration *logConf = [BDBDLogConfiguration new];
     logConf.enableModInitLog = YES;
     logConf.enablePrintLog   = YES;
     logConf.enableInstExecLog = YES;
     logConf.enableInstCallFrameLog = YES;
-    [BDDYCMain sharedMain].logConf = logConf;
-    
+    [BDBDMain sharedMain].logConf = logConf;
+    [BDBDMain startWithConfiguration:conf delegate:nil];
+
 #endif
 #endif
 }
@@ -159,9 +158,8 @@
 + (void)loadAtPath:(NSString *)path;
 {
 #ifdef BDDYC_ENABLED
-    
-    [BDDYCMain loadFileAtPath:path];
-    
+    // todo zjing
+//    [BDBDQuaterback loadFileAtPath:path];
 #endif
 }
 
@@ -169,7 +167,7 @@
 {
 #ifdef BDDYC_ENABLED
     
-    [BDDYCMain loadZipFileAtPath:zipPath];
+//    [BDBDQuaterback loadZipFileAtPath:zipPath];
     
 #endif
 }
