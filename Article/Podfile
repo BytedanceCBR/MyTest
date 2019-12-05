@@ -103,7 +103,7 @@ def appDevelopPods
     #----- 新分享库 -----
     pod 'AKShareServicePlugin', :path => '../AKPlugins/AKShareServicePlugin', :inhibit_warnings => false
     
-    pod 'TTShare' , :path => '../AKPlugins/TTShare'  , :subspects => [  # '0.3.3'
+    pod 'TTShare' , :path => '../AKPlugins/TTShare'  , :subspecs => [  # '0.3.3'
     'TTShareBusiness/TTShareWeChatBusiness',
     'TTShareBusiness/TTShareQQBusiness',
     'TTShareBusiness/TTShareCopyBusiness',
