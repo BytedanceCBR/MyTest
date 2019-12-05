@@ -34,6 +34,7 @@
 #import <TTThemedAlertController.h>
 #import "FHFeedUGCCellModel.h"
 #import <TTUGCDefine.h>
+#import <UIViewController+Helper.h>
 
 #define kSegmentViewHeight 52
 
@@ -253,19 +254,11 @@
         }
         return;
     }
-    
-    // 请求basicInfo信息期间群聊按钮不可点击
-    self.viewController.groupChatBtn.enabled = NO;
-    
     WeakSelf;
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
         
         [_viewController tt_endUpdataData];
-
-        //basicInfo信息接口回来后群聊按钮才可以点击
-        self.viewController.groupChatBtn.enabled = YES;
-        
         if(userPull){
             [self endRefreshing];
         }
@@ -297,7 +290,7 @@
                     [self updateVC];
                 }
 
-                if (self.isLoginSatusChangeFromGroupChat) {
+                if ([self.viewController isCurrentVisible] && self.isLoginSatusChangeFromGroupChat) {
                     [self gotoGroupChat];
                     self.isLoginSatusChangeFromGroupChat = NO;
                 }
@@ -474,6 +467,7 @@
             [self tryJoinConversation];
         }
     } else {
+       // 登录前先把群聊入口隐藏，登录成功后刷新basicinfo接口成功后显示 self.viewController.groupChatBtn.hidden = YES;
         [self gotoLogin:FHUGCLoginFrom_GROUPCHAT];
     }
 }
