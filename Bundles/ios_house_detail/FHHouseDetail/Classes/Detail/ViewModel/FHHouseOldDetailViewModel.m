@@ -550,6 +550,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
+    self.contactViewModel.subTitle = model.data.reportToast;
+    self.contactViewModel.toast = model.data.reportDoneToast;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     if (model.isInstantData) {
@@ -703,7 +705,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
-            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
+            FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;
+            NSString *toast =@"提交成功，经纪人将尽快与您联系";
+            if (model.data.subscriptionToast && model.data.subscriptionToast.length > 0) {
+                toast = model.data.subscriptionToast;
+            }
+            [[ToastManager manager] showToast:toast];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
             
