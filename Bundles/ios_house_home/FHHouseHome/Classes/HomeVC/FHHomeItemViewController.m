@@ -34,6 +34,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
 static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
+static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate>
 
@@ -178,6 +179,8 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 {
     [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellSmallItemImageId];
 
+    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellRentHouseItemImageId];
+    
     [self.tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:kCellNewHouseItemImageId];
 
     [self.tableView  registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
@@ -718,7 +721,8 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
             return cell;
         }
         //to do 房源cell
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellSmallItemImageId];
+        NSString *identifier = self.houseType == FHHouseTypeRentHouse ? kCellRentHouseItemImageId : kCellSmallItemImageId;
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         cell.delegate = self;
         if (indexPath.row < self.houseDataItemsModel.count) {
             JSONModel *model = self.houseDataItemsModel[indexPath.row];
