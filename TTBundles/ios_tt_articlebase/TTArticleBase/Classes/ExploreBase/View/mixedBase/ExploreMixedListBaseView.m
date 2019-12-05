@@ -27,7 +27,7 @@
 #import "ExploreArticleCardCell.h"
 #import "NewsListLogicManager.h"
 #import "ExploreArticleWebCellView.h"
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "NetworkUtilities.h"
 #import "NewsDetailConstant.h"
 #import "TTArticleCategoryManager.h"

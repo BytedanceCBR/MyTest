@@ -7,7 +7,7 @@
 
 #import "FHHomeViewController.h"
 #import "FHHomeListViewModel.h"
-#import "ArticleListNotifyBarView.h"
+#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHEnvContext.h"
 #import "FHHomeCellHelper.h"
 #import "FHHomeConfigManager.h"
@@ -49,7 +49,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) BOOL isClickTab;
 @property (nonatomic, assign) BOOL isRefreshing;
 @property (nonatomic, assign) BOOL isShowToasting;
-@property (nonatomic, assign) ArticleListNotifyBarView * notifyBar;
+@property (nonatomic, strong) ArticleListNotifyBarView * notifyBar;
 @property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic) BOOL adUGCHadJump;
 @property (nonatomic, strong) TTTopBar *topBar;
@@ -430,6 +430,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [FHEnvContext addTabUGCGuid];
     
     [TTSandBoxHelper setAppFirstLaunchForAd];
+    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 - (void)_willEnterForeground:(NSNotification *)notification

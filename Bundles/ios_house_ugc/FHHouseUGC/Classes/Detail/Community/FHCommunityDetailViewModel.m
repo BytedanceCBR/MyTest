@@ -33,6 +33,7 @@
 #import "IMManager.h"
 #import <TTThemedAlertController.h>
 #import "FHFeedUGCCellModel.h"
+#import <TTUGCDefine.h>
 
 #define kSegmentViewHeight 52
 
@@ -103,12 +104,10 @@
     [TTAccount addMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
     // 加精或取消加精成功
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
-    // 发投票成功
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postVoteSuccess:) name:@"kFHVotePublishNotificationName" object:nil];
 }
 
 - (void)postGoodSuccess:(NSNotification *)noti {
@@ -116,7 +115,7 @@
         NSDictionary *userInfo = noti.userInfo;
         NSString *social_group_ids = userInfo[@"social_group_ids"] ? userInfo[@"social_group_ids"] : userInfo[@"social_group_id"];
         
-        if(social_group_ids.length > 0 && [social_group_ids containsString:self.viewController.communityId]){
+        if(social_group_ids.length > 0 && self.viewController.communityId && [social_group_ids containsString:self.viewController.communityId]){
             //多于1个tab的时候
             if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
                 FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
@@ -125,33 +124,11 @@
         }
     }
 }
-
-- (void)postVoteSuccess:(NSNotification *)noti {
-    if (noti && noti.userInfo) {
-        NSDictionary *userInfo = noti.userInfo;
-        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
-        NSString *socialGroupId = userInfo[@"social_group_id"];
-        if([socialGroupId isEqualToString:self.viewController.communityId]){
-            //多于1个tab的时候
-            if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
-                FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
-                feedVC.needReloadData = YES;
-            }
-        }
-    }
-}
-
 // 发帖成功通知
 - (void)postThreadSuccess:(NSNotification *)noti {
-//    //如果是多tab，并且当前不在全部tab，这个时候要先切tab
-//    if(self.selectedIndex != 0){
-//        self.isFirstEnter = YES;
-//        self.viewController.segmentView.selectedIndex = 0;
-//    }
-    
     if (noti) {
         NSString *groupId = noti.userInfo[@"social_group_id"];
-        if (groupId.length > 0) {
+        if (groupId.length > 0 && self.viewController.communityId.length > 0 && [groupId containsString:self.viewController.communityId]) {
             __weak typeof(self) weakSelf = self;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 FHUGCScialGroupDataModel *groupData = [[FHUGCConfig sharedInstance] socialGroupData:weakSelf.data.socialGroupId];
@@ -171,15 +148,15 @@
 - (void)delPostThreadSuccess:(NSNotification *)noti {
     NSString *groupId = noti.userInfo[@"social_group_id"];
     
-    if([groupId isEqualToString:self.viewController.communityId]){
-        //多于1个tab的时候
-        if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
-            FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
-            feedVC.needReloadData = YES;
-        }
-    }
+//    if([groupId isEqualToString:self.viewController.communityId]){
+//        //多于1个tab的时候
+//        if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
+//            FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
+//            feedVC.needReloadData = YES;
+//        }
+//    }
     
-    if (groupId.length > 0) {
+    if (groupId.length > 0 && [groupId isEqualToString:self.viewController.communityId]) {
         __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             FHUGCScialGroupDataModel *groupData = [[FHUGCConfig sharedInstance] socialGroupData:weakSelf.data.socialGroupId];
@@ -230,16 +207,7 @@
 
 - (void)viewDidAppear {
     self.isViewAppear = YES;
-//    self.feedListController.tableView.mj_header = self.refreshHeader;
-//    self.refreshHeader.ignoredScrollViewContentInsetTop = -([TTDeviceHelper isIPhoneXSeries] ? 44 + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.top : 64);
-////    NSString *version = [UIDevice currentDevice].systemVersion;
-////    if (version.doubleValue >= 12.0) {
-////        self.feedListController.tableView.tableHeaderView = self.viewController.headerView;
-////    }
-//    [self.feedListController.tableView bringSubviewToFront:self.feedListController.tableView.mj_header];
-//    if (self.feedListController.tableView) {
-//        [self scrollViewDidScroll:self.feedListController.tableView];
-//    }
+    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
     // 帖子数同步逻辑
     FHUGCScialGroupDataModel *tempModel = self.data;
     if (tempModel) {
@@ -253,13 +221,6 @@
             [self updateUIWithData:tempModel];
         }
     }
-    // 修复发帖返回状态栏不对问题
-//    if (self.feedListController.tableView) {
-//        __weak typeof(self) weakSelf = self;
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            [weakSelf scrollViewDidScroll:weakSelf.feedListController.tableView];
-//        });
-//    }
 }
 
 - (void)viewWillDisappear {
@@ -272,6 +233,10 @@
 }
 
 - (void)requestData:(BOOL) userPull refreshFeed:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed showToast:(BOOL) showToast{
+    if(self.isFirstEnter){
+        [self.viewController tt_startUpdate];
+    }
+    
     if (![TTReachability isNetworkConnected]) {
         [self onNetworError:showEmptyIfFailed showToast:showToast];
         if(userPull){
@@ -289,10 +254,18 @@
         return;
     }
     
+    // 请求basicInfo信息期间群聊按钮不可点击
+    self.viewController.groupChatBtn.enabled = NO;
+    
     WeakSelf;
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
-        [_viewController tt_endUpdataData];
         StrongSelf;
+        
+        [_viewController tt_endUpdataData];
+
+        //basicInfo信息接口回来后群聊按钮才可以点击
+        self.viewController.groupChatBtn.enabled = YES;
+        
         if(userPull){
             [self endRefreshing];
         }
@@ -300,6 +273,9 @@
         if(error){
             [self onNetworError:showEmptyIfFailed showToast:showToast];
         }
+        
+        // 根据basicInfo接口成功失败决定是否显示群聊入口按钮
+        self.viewController.groupChatBtn.hidden = (error != nil);
         
         if (model) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
@@ -320,12 +296,12 @@
                 }else{
                     [self updateVC];
                 }
-                
+
                 if (self.isLoginSatusChangeFromGroupChat) {
                     [self gotoGroupChat];
                     self.isLoginSatusChangeFromGroupChat = NO;
                 }
-                
+
                 if (refreshFeed) {
                     [self.feedListController startLoadData:YES];
                 }
@@ -353,7 +329,6 @@
 }
 
 - (void)gotoVotePublish {
-    
     if ([TTAccountManager isLogin]) {
         [self gotoVoteVC];
     } else {
@@ -361,10 +336,31 @@
     }
 }
 
+- (void)gotoWendaPublish {
+    if ([TTAccountManager isLogin]) {
+        [self gotoWendaVC];
+    } else {
+        [self gotoLogin:FHUGCLoginFrom_WENDA];
+    }
+}
+
 // 跳转到投票发布器
 - (void)gotoVoteVC {
     NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
     NSMutableDictionary *dict = @{}.mutableCopy;
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+    dict[TRACER_KEY] = tracerDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+}
+
+- (void)gotoWendaVC {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
+    dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
+    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
     dict[TRACER_KEY] = tracerDict;
@@ -384,7 +380,7 @@
                 [titles addObject:item.showName];
             }
             //这里记录一下精华tab的index,为了后面加精和取消加精时候，可以标记vc刷新
-            if([item.tabName isEqualToString:@"essence"]){
+            if([item.tabName isEqualToString:tabEssence]){
                 self.essenceIndex = i;
             }
             if(item.isDefault) {
@@ -418,13 +414,8 @@
     }
     
     self.pagingView.delegate = self;
-//    [self.viewController.view addSubview:self.pagingView];
+    //放到最下面
     [self.viewController.view insertSubview:self.pagingView atIndex:0];
-    //这里添加完subview以后导航条被盖住了，所以在这里给放到前面
-//    [self.viewController.view bringSubviewToFront:self.viewController.customNavBarView];
-//    [self.viewController.view bringSubviewToFront:self.viewController.publishBtn];
-//    [self.viewController.view bringSubviewToFront:self.viewController.groupChatBtn];
-//    [self.viewController.view bringSubviewToFront:self.viewController.bageView];
 }
 
 - (void)createFeedListController:(NSString *)tabName {
@@ -437,14 +428,14 @@
     feedListController.forumId = self.viewController.communityId;
     feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
-    feedListController.segmentViewHeight = kSegmentViewHeight;
+    feedListController.isResetStatusBar = NO;
     //错误页高度
-    CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
     if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1){
+        CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
         errorViewHeight -= kSegmentViewHeight;
+        feedListController.errorViewHeight = errorViewHeight;
     }
-    feedListController.errorViewHeight = errorViewHeight;
-    feedListController.notLoadDateWhenEmpty = YES;
+    feedListController.notLoadDataWhenEmpty = YES;
     //传入选项信息
     feedListController.operations = self.socialGroupModel.data.permission;
     feedListController.beforeInsertPostBlock = ^{
@@ -460,6 +451,7 @@
 
 - (void)updateVC {
     for (FHCommunityFeedListController *feedListController in self.subVCs) {
+        //更新管理员权限
         feedListController.operations = self.socialGroupModel.data.permission;
     }
 }
@@ -477,7 +469,7 @@
         } else if (self.socialGroupModel.data.chatStatus.conversationStatus == leaveConversation) {
             [self tryJoinConversation];
         } else if(self.socialGroupModel.data.chatStatus.conversationStatus == KickOutConversation) {
-            [[ToastManager manager]showToast:@"你已经被移出群中"];
+            [[ToastManager manager]showToast:@"你已经被移出群聊"];
         } else {
             [self tryJoinConversation];
         }
@@ -578,7 +570,7 @@
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
-- (void)gotoLogin:(FHUGCLoginFrom *)from {
+- (void)gotoLogin:(FHUGCLoginFrom)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setObject:@"community_group_detail" forKey:@"enter_from"];
     [params setObject:@"feed_like" forKey:@"enter_type"];
@@ -590,15 +582,30 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                if (from == FHUGCLoginFrom_POST) {
+                if(from == FHUGCLoginFrom_GROUPCHAT) {
+                    [self onLoginIn];
+                }
+                else {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [wSelf goPostDetail];
-                    });
-                } else if(from == FHUGCLoginFrom_GROUPCHAT){
-                    [wSelf onLoginIn];
-                } else if(from == FHUGCLoginFrom_VOTE) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [wSelf gotoVoteVC];
+                        switch(from) {
+                            case FHUGCLoginFrom_POST:
+                            {
+                                [self goPostDetail];
+                            }
+                                break;
+                            case FHUGCLoginFrom_VOTE:
+                            {
+                                [self gotoVoteVC];
+                            }
+                                break;
+                            case FHUGCLoginFrom_WENDA:
+                            {
+                                [self gotoWendaVC];
+                            }
+                                break;
+                            default:
+                                break;
+                        }
                     });
                 }
             }
@@ -988,7 +995,7 @@
 - (void)updateJoinUI:(BOOL)followed {
     self.viewController.headerView.followButton.followed = followed;
     self.viewController.rightBtn.followed = followed;
-    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
+//    [self updateNavBarWithAlpha:self.viewController.customNavBarView.bgView.alpha];
 }
 
 - (void)gotoSocialFollowUserList {
@@ -1047,6 +1054,8 @@
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     [FHUserTracker writeEvent:@"go_detail_community" params:params];
 }
 
@@ -1061,6 +1070,8 @@
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHUserTracker writeEvent:@"stay_page_community" params:params];
 }
@@ -1070,6 +1081,8 @@
     params[@"element_type"] = @"community_group_notice";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     [FHUserTracker writeEvent:@"element_show" params:params];
 }
 
@@ -1092,22 +1105,21 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
     params[@"enter_type"] =  @"click";
     params[@"click_position"] = position;
     [FHUserTracker writeEvent:@"click_options" params:params];
 }
 
 // 帐号切换
-- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
-{
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
     if (_isLogin != TTAccountManager.isLogin) {
-        [_viewController tt_startUpdate];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-             [self requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+            [self refreshBasicInfo];
         });
         _isLogin = TTAccountManager.isLogin;
     }
-    
 }
 
 - (void)onLoginIn {
@@ -1219,11 +1231,12 @@
         self.isFirstEnter = NO;
     } else {
         //上报埋点
-        NSString *position = @"";
-        if(self.selectedIndex == 0){
-            position = @"all_list";
-        }else if(self.selectedIndex == 1){
-            position = @"essence_list";
+        NSString *position = @"be_null";
+        if(toIndex < self.socialGroupModel.data.tabInfo.count){
+            FHUGCScialGroupDataTabInfoModel *tabModel = self.socialGroupModel.data.tabInfo[toIndex];
+            if(tabModel.tabName){
+                position = [NSString stringWithFormat:@"%@_list",tabModel.tabName];
+            }
         }
         [self addClickOptionsLog:position];
         [self.pagingView scrollToIndex:toIndex withAnimation:YES];

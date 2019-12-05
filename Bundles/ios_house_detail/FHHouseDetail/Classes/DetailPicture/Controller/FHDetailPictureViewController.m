@@ -1084,7 +1084,8 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         return;
     }
     
-    for (UIView * subView in [_photoScrollView subviews]) {
+    NSArray *tempSubViews = [[_photoScrollView subviews] copy];
+    for (UIView * subView in tempSubViews) {
         if ([subView isKindOfClass:[TTShowImageView class]] && subView.tag == index) {
             if (index < self.vedioCount) {
                 // 视频

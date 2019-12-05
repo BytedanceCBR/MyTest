@@ -18,6 +18,8 @@
 #import "FHUGCNoticeModel.h"
 #import "FHUGCVoteModel.h"
 #import "FHUGCVoteResponseModel.h"
+#import "FHUGCWendaModel.h"
+#import "HMDTTMonitor.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -692,13 +694,17 @@
                 if (!success) {
                     NSString *msg = json[@"message"];
                     error = [NSError errorWithDomain:msg?:@"投票失败" code:API_ERROR_CODE userInfo:nil];
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(1)} extra:nil];
                 } else {
                     model = [[FHUGCVoteResponseModel alloc] initWithDictionary:json error:&error];
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(0)} extra:nil];
                 }
             }
             @catch(NSException *e){
                 error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
             }
+        } else {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(2)} extra:nil];
         }
         if (completion) {
             completion(model,error);
@@ -728,14 +734,55 @@
                 if (!success) {
                     NSString *msg = json[@"message"];
                     error = [NSError errorWithDomain:msg?:@"取消投票失败" code:API_ERROR_CODE userInfo:nil];
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"unvote_action" metric:nil category:@{@"status":@(1)} extra:nil];
+                } else {
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"unvote_action" metric:nil category:@{@"status":@(0)} extra:nil];
                 }
             }
             @catch(NSException *e){
                 error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
             }
+        } else {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"unvote_action" metric:nil category:@{@"status":@(2)} extra:nil];
         }
         if (completion) {
             completion(success,error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestPublishWendaWithParam:(NSDictionary *)params completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    NSString *queryPath = @"/f100/ugc/question/publish";
+    NSString *url = QURL(queryPath);
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    [paramDic addEntriesFromDictionary:params];
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        FHUGCWendaModel *ugcWendaModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                NSInteger statusCode = [json[@"status"] integerValue];
+                success = (statusCode == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:statusCode userInfo:nil];
+                }
+                else
+                {
+                    ugcWendaModel = [[FHUGCWendaModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        
+        if (completion) {
+            completion(ugcWendaModel,error);
         }
     }];
 }

@@ -148,6 +148,7 @@
         
         _bottomGradientView = [[UIView alloc] initWithFrame:frame];
         [_bottomGradientView.layer addSublayer:gradientLayer];
+        _bottomGradientView.userInteractionEnabled = NO;
     }
     return _bottomGradientView;
 }

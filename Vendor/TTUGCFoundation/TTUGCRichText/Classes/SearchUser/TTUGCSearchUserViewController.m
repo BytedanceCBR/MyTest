@@ -12,7 +12,7 @@
 #import "SSNavigationBar.h"
 #import "TTUGCSearchUserTableViewCell.h"
 #import "TTNetworkManager.h"
-#import "TTSeachBarView.h"
+#import <TTUIWidget/TTSearchBarView.h>
 #import "UIScrollView+Refresh.h"
 #import "TTUGCSearchUserEmptyView.h"
 #import "TTDeviceHelper.h"
@@ -31,9 +31,9 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 };
 
 
-@interface TTUGCSearchUserViewController () <UITableViewDataSource, UITableViewDelegate, UIViewControllerErrorHandler, TTSeachBarViewDelegate>
+@interface TTUGCSearchUserViewController () <UITableViewDataSource, UITableViewDelegate, UIViewControllerErrorHandler, TTSearchBarViewDelegate>
 
-@property (nonatomic, strong) TTSeachBarView *searchBar;
+@property (nonatomic, strong) TTSearchBarView *searchBar;
 @property (nonatomic, strong) SSThemedTableView *tableView;
 @property (nonatomic, strong) SSThemedTableView *searchResultTableView;
 @property (nonatomic, strong) SSThemedView *maskView;
@@ -79,18 +79,22 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if([self.navigationController isKindOfClass:[TTNavigationController class]]) {
-        self.navController = (TTNavigationController *)self.navigationController;
-        self.navController.isBanSideSlideAction = YES;
-    }
+//    if([self.navigationController isKindOfClass:[TTNavigationController class]]) {
+//        self.navController = (TTNavigationController *)self.navigationController;
+        // todo zjing wangzhizhou confirm
+//        self.navController.isBanSideSlideAction = YES;
+//    }
+    self.ttDisableDragBack = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-    if(self.navController) {
-        self.navController.isBanSideSlideAction = NO;
-    }
+//    if(self.navController) {
+                // todo zjing wangzhizhou confirm
+//        self.navController.isBanSideSlideAction = NO;
+//    }
+    self.ttDisableDragBack = YES;
 }
 
 - (void)viewDidLoad {
@@ -488,7 +492,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     }
 }
 
-- (BOOL)searchBarShouldBeginEditing:(TTSeachBarView *)searchBar {
+- (BOOL)searchBarShouldBeginEditing:(TTSearchBarView *)searchBar {
     [TTTrackerWrapper eventV3:@"search_bar_click" params:nil];
     
     [self searchBarBecomeActive];
@@ -496,7 +500,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     return YES;
 }
 
-- (void)searchBar:(TTSeachBarView *)searchBar textDidChange:(NSString *)searchText {
+- (void)searchBar:(TTSearchBarView *)searchBar textDidChange:(NSString *)searchText {
     if (isEmptyString(searchText)) {
         [self hideSearchResultTableView];
         
@@ -510,7 +514,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     [self loadRequestSearchResult:NO];
 }
 
-- (void)searchBarSearchButtonClicked:(TTSeachBarView *)searchBar {
+- (void)searchBarSearchButtonClicked:(TTSearchBarView *)searchBar {
     [self.searchBar resignFirstResponder];
     
     if (isEmptyString(searchBar.text)) {
@@ -526,7 +530,7 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
     [self loadRequestSearchResult:NO];
 }
 
-- (void)searchBarCancelButtonClicked:(TTSeachBarView *)searchBar {
+- (void)searchBarCancelButtonClicked:(TTSearchBarView *)searchBar {
 //    if (self.searchBar.isFirstResponder) {
         [self.searchBar resignFirstResponder];
 //    }
@@ -743,11 +747,10 @@ typedef NS_ENUM(NSUInteger, TTUGCSearchUserViewControllerState) {
 
 #pragma mark - getter and setter
 
-- (TTSeachBarView *)searchBar {
+- (TTSearchBarView *)searchBar {
     if (!_searchBar) {
         CGFloat topInset = TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height;
-        
-        _searchBar = [[TTSeachBarView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, 40.f)];
+        _searchBar = [[TTSearchBarView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, 40.f)];
         _searchBar.backgroundColor = [UIColor themeWhite];
         _searchBar.inputBackgroundView.backgroundColor = [UIColor themeGray7];
         _searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;

@@ -8,7 +8,8 @@
 	<array>
 		<string>applinks:i.haoduofangs.com</string>
 		<string>applinks:mon.haoduofangs.com</string>
-		<string>applinks:f100.zlink.toutiao.com</string>
+        <string>applinks:f100.zlink.toutiao.com</string>
+		<string>applinks:zlink.xingfulizhaofang.com</string>
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array/>
