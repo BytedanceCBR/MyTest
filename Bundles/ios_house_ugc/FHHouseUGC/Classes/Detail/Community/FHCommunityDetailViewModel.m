@@ -470,7 +470,6 @@
         }
     } else {
        // 登录前先把群聊入口隐藏，登录成功后刷新basicinfo接口成功后显示
-        self.viewController.groupChatBtn.hidden = YES;
         [self gotoLogin:FHUGCLoginFrom_GROUPCHAT];
     }
 }
@@ -574,12 +573,14 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
-    __weak typeof(self) wSelf = self;
+    WeakSelf;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        StrongSelf;
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
                 if(from == FHUGCLoginFrom_GROUPCHAT) {
+                    self.viewController.groupChatBtn.hidden = YES;
                     [self onLoginIn];
                 }
                 else {
