@@ -842,7 +842,7 @@ static NSInteger const kMaxPostImageCount = 9;
             if (isSuccess) {
                 [weakSelf postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
             } else {
-                [[ToastManager manager] showToast:@"发帖失败"];
+                // [[ToastManager manager] showToast:@"发帖失败"];
             }
         }];
     }
