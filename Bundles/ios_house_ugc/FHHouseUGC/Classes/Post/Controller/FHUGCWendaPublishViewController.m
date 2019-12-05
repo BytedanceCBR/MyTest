@@ -786,12 +786,12 @@
     } else {
         // 先关注
         WeakSelf;
-        [[FHUGCConfig sharedInstance] followUGCBy:self.selectGroupId isFollow:YES enterFrom:@"feed_publisher" enterType:@"click" completion:^(BOOL isSuccess) {
+        [[FHUGCConfig sharedInstance] followUGCBy:self.selectGroupId isFollow:YES enterFrom:[self pageType]  enterType:@"click" completion:^(BOOL isSuccess) {
             StrongSelf;
             if (isSuccess) {
                 [self publishWendaContentAfterFollowedSocialGroup];
             } else {
-                [[ToastManager manager] showToast:@"发布失败"];
+                //[[ToastManager manager] showToast:@"发布失败"];
             }
         }];
     }
