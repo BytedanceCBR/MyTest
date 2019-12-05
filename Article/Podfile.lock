@@ -479,47 +479,12 @@ PODS:
   - TTSettingsManager/Core (0.4.16)
   - TTSettingsManager/Debug (0.4.16)
   - TTSettingsManager/Performance (0.4.16)
-  - TTShare (0.3.3):
-    - TTShare/TTShareBasic (= 0.3.3)
-    - TTShare/TTShareBusiness (= 0.3.3)
-    - TTShare/TTShareService (= 0.3.3)
-  - TTShare/TTShareBasic (0.3.3):
-    - TTShare/TTShareBasic/TTAliShare (= 0.3.3)
-    - TTShare/TTShareBasic/TTDingTalkShare (= 0.3.3)
-    - TTShare/TTShareBasic/TTMailShare (= 0.3.3)
-    - TTShare/TTShareBasic/TTMessageShare (= 0.3.3)
-    - TTShare/TTShareBasic/TTQQShare (= 0.3.3)
-    - TTShare/TTShareBasic/TTWeChatShare (= 0.3.3)
-    - TTShare/TTShareBasic/TTWeiboShare (= 0.3.3)
-  - TTShare/TTShareBasic/TTAliShare (0.3.3)
-  - TTShare/TTShareBasic/TTDingTalkShare (0.3.3)
-  - TTShare/TTShareBasic/TTMailShare (0.3.3)
-  - TTShare/TTShareBasic/TTMessageShare (0.3.3)
   - TTShare/TTShareBasic/TTQQShare (0.3.3)
   - TTShare/TTShareBasic/TTWeChatShare (0.3.3)
-  - TTShare/TTShareBasic/TTWeiboShare (0.3.3)
-  - TTShare/TTShareBusiness (0.3.3):
-    - TTShare/TTShareBusiness/TTActivity (= 0.3.3)
-    - TTShare/TTShareBusiness/TTShareAliBusiness (= 0.3.3)
-    - TTShare/TTShareBusiness/TTShareCopyBusiness (= 0.3.3)
-    - TTShare/TTShareBusiness/TTShareDingTalkBusiness (= 0.3.3)
-    - TTShare/TTShareBusiness/TTShareEmailBusiness (= 0.3.3)
-    - TTShare/TTShareBusiness/TTShareQQBusiness (= 0.3.3)
-    - TTShare/TTShareBusiness/TTShareSMSBusiness (= 0.3.3)
-    - TTShare/TTShareBusiness/TTShareSystemBusiness (= 0.3.3)
-    - TTShare/TTShareBusiness/TTShareWeChatBusiness (= 0.3.3)
-    - TTShare/TTShareBusiness/TTShareWeiboBusiness (= 0.3.3)
   - TTShare/TTShareBusiness/TTActivity (0.3.3)
-  - TTShare/TTShareBusiness/TTShareAliBusiness (0.3.3)
   - TTShare/TTShareBusiness/TTShareCopyBusiness (0.3.3)
-  - TTShare/TTShareBusiness/TTShareDingTalkBusiness (0.3.3)
-  - TTShare/TTShareBusiness/TTShareEmailBusiness (0.3.3)
   - TTShare/TTShareBusiness/TTShareQQBusiness (0.3.3)
-  - TTShare/TTShareBusiness/TTShareSMSBusiness (0.3.3)
-  - TTShare/TTShareBusiness/TTShareSystemBusiness (0.3.3)
   - TTShare/TTShareBusiness/TTShareWeChatBusiness (0.3.3)
-  - TTShare/TTShareBusiness/TTShareWeiboBusiness (0.3.3)
-  - TTShare/TTShareService (0.3.3)
   - TTTAttributedLabel (1.13.3.1-binary)
   - TTThemed (0.1.36.1-binary)
   - TTTracker (10.0.5.1-binary)
@@ -908,7 +873,12 @@ DEPENDENCIES:
   - TTSettingsManager/Core (= 0.4.16)
   - TTSettingsManager/Debug
   - TTSettingsManager/Performance (= 0.4.16)
-  - TTShare (from `../AKPlugins/TTShare`)
+  - TTShare/TTShareBasic/TTQQShare (from `../AKPlugins/TTShare`)
+  - TTShare/TTShareBasic/TTWeChatShare (from `../AKPlugins/TTShare`)
+  - TTShare/TTShareBusiness/TTActivity (from `../AKPlugins/TTShare`)
+  - TTShare/TTShareBusiness/TTShareCopyBusiness (from `../AKPlugins/TTShare`)
+  - TTShare/TTShareBusiness/TTShareQQBusiness (from `../AKPlugins/TTShare`)
+  - TTShare/TTShareBusiness/TTShareWeChatBusiness (from `../AKPlugins/TTShare`)
   - TTTAttributedLabel (= 1.13.3.1-binary)
   - TTThemed (= 0.1.36.1-binary)
   - TTTracker (= 10.0.5.1-binary)
@@ -1029,13 +999,6 @@ EXTERNAL SOURCES:
     :path: ../TTBundles/ios_tt_service
   TTShare:
     :path: ../AKPlugins/TTShare
-    :subspects:
-      - TTShareBasic/TTQQShare
-      - TTShareBasic/TTWeChatShare
-      - TTShareBusiness/TTActivity
-      - TTShareBusiness/TTShareCopyBusiness
-      - TTShareBusiness/TTShareQQBusiness
-      - TTShareBusiness/TTShareWeChatBusiness
   TTUGCFoundation:
     :path: ../Vendor/TTUGCFoundation
   TTUserProfile:
@@ -1244,6 +1207,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: bd8c3d29594e7b3759963152c4e29393f47390c5
+PODFILE CHECKSUM: 59ab559b375e13baacc8e0c46f90cab87cb4caa0
 
 COCOAPODS: 1.4.0
