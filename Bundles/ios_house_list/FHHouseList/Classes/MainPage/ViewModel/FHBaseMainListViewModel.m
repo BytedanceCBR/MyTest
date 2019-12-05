@@ -638,7 +638,7 @@ extern NSString *const INSTANT_DATA_KEY;
 //                id theItemModel = [[self class] searchItemModelByDict:itemDict];
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = theItemModel;
-                    itemModel.isLastCell = (idx == items.count - 1);
+//                    itemModel.isLastCell = (idx == items.count - 1);
                     if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
                         itemModel.topMargin = 0;
                     }
