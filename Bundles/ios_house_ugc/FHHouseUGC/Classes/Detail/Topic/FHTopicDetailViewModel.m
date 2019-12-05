@@ -448,70 +448,52 @@
         return;
     }
     if (noti && noti.userInfo && self.dataList) {
-        NSDictionary *userInfo = noti.userInfo;
-        NSString *social_group_id = userInfo[@"social_group_id"];
-        NSDictionary *result_model = userInfo[@"result_model"];
-        if (result_model && [result_model isKindOfClass:[NSDictionary class]]) {
-            NSDictionary * thread_cell_dic = result_model[@"data"];
-            if (thread_cell_dic && [thread_cell_dic isKindOfClass:[NSDictionary class]]) {
-                NSString * thread_cell_data = thread_cell_dic[@"thread_cell"];
-                if (thread_cell_data && [thread_cell_data isKindOfClass:[NSString class]]) {
-                    // 得到cell 数据
-                    NSError *jsonParseError;
-                    NSData *jsonData = [thread_cell_data dataUsingEncoding:NSUTF8StringEncoding];
-                    if (jsonData) {
-                        Class cls = [FHFeedUGCContentModel class];
-                        FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
-                        if (model && jsonParseError == nil) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
-                                cellModel.showCommunity = YES;
-                                NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
-                                for (TTRichSpanLink *richSpanLink in richSpanLinks) {
-                                    if (richSpanLink.type == TTRichSpanLinkTypeHashtag) {
-                                        // 话题
-                                        if ([richSpanLink.link containsString:cidStr]) {
-                                            // 去重
-                                            [self removeDuplicaionModel:cellModel.groupId];
-                                            if (self.dataList.count == 0) {
-                                                self.hasMore = NO;
-                                            }
-                                            // JOKER: 找到第一个非置顶贴的下标
-                                            __block NSUInteger index = self.dataList.count;
-                                            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                                                
-                                                BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
-                                                
-                                                if(!isStickTop) {
-                                                    index = idx;
-                                                    *stop = YES;
-                                                }
-                                            }];
-                                            // 插入在置顶贴的下方
-                                            [self.dataList insertObject:cellModel atIndex:index];
-                                            [self processLoadingState];
-                                            self.needRefreshCell = NO;
-                                            // JOKER: 发贴成功插入贴子后，滚动使露出
-                                            if(index == 0) {
-                                                [tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
-                                            } else {
-                                                [tableView reloadData];
-                                                [tableView layoutIfNeeded];
-                                                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                                CGRect rect = [tableView rectForRowAtIndexPath:indexPath];
-                                                self.canScroll = YES;
-                                                [tableView setContentOffset:rect.origin animated:NO];
-                                                [[NSNotificationCenter defaultCenter] postNotificationName:@"kScrollToSubScrollView" object:nil];
-                                            }
-                                            break;
-                                        }
-                                    }
+        FHFeedUGCCellModel *cellModel = noti.userInfo[@"cell_model"];
+        if(cellModel){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cellModel.showCommunity = YES;
+                NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
+                for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+                    if (richSpanLink.type == TTRichSpanLinkTypeHashtag) {
+                        // 话题
+                        if ([richSpanLink.link containsString:cidStr]) {
+                            // 去重
+                            [self removeDuplicaionModel:cellModel.groupId];
+                            if (self.dataList.count == 0) {
+                                self.hasMore = NO;
+                            }
+                            // JOKER: 找到第一个非置顶贴的下标
+                            __block NSUInteger index = self.dataList.count;
+                            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                                
+                                BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
+                                
+                                if(!isStickTop) {
+                                    index = idx;
+                                    *stop = YES;
                                 }
-                            });
+                            }];
+                            // 插入在置顶贴的下方
+                            [self.dataList insertObject:cellModel atIndex:index];
+                            [self processLoadingState];
+                            self.needRefreshCell = NO;
+                            // JOKER: 发贴成功插入贴子后，滚动使露出
+                            if(index == 0) {
+                                [tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+                            } else {
+                                [tableView reloadData];
+                                [tableView layoutIfNeeded];
+                                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                                CGRect rect = [tableView rectForRowAtIndexPath:indexPath];
+                                self.canScroll = YES;
+                                [tableView setContentOffset:rect.origin animated:NO];
+                                [[NSNotificationCenter defaultCenter] postNotificationName:@"kScrollToSubScrollView" object:nil];
+                            }
+                            break;
                         }
                     }
                 }
-            }
+            });
         }
     }
 }

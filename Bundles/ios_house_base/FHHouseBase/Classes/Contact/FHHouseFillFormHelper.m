@@ -24,6 +24,7 @@
 #import "FHHouseFollowUpHelper.h"
 #import "FHFillFormAgencyListItemModel.h"
 #import "FHHouseDetailViewController.h"
+#import "FHHouseNewDetailViewModel.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
@@ -248,11 +249,30 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:configModel.cluePage clueEndpoint:configModel.clueEndpoint targetType:@(configModel.houseType) agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
-            
-            [alertView dismiss];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phone forKey:kFHPhoneNumberCacheKey];
-            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
+            NSString *toast = @"提交成功，经纪人将尽快与您联系";
+            if (configModel.toast && configModel.toast.length > 0) {
+                toast = configModel.toast;
+            }
+            
+            /* 不想加这个逻辑，新房填表单之后要弹出另一个弹窗，效果是要衔接，就是一个不消失直接展示另一个，不是不能实现，是要把之前封装好的逻辑打乱，还要加一些XX的代码，不优雅； 数据都不在一个地方，加通知也不太好，oops
+             */
+            if (configModel.houseType == FHHouseTypeNewHouse && [configModel.topViewController isKindOfClass:[FHHouseDetailViewController class]]) {
+                // 新房详情
+                FHHouseDetailViewController *vc = configModel.topViewController;
+                FHHouseNewDetailViewModel* viewModel = (FHHouseNewDetailViewModel *)vc.viewModel;
+                if ([viewModel needShowSocialInfoForm:configModel]) {
+                    [viewModel showUgcSocialEntrance:alertView];
+                } else {
+                    [[ToastManager manager] showToast:toast];
+                    [alertView dismiss];
+                }
+            } else {
+                [[ToastManager manager] showToast:toast];
+                // 走之前的逻辑
+                [alertView dismiss];
+            }
         }else {
             NSString *message = model.message ? : @"提交失败";
             [[ToastManager manager] showToast:message];
