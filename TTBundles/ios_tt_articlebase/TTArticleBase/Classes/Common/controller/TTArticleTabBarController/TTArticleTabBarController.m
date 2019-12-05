@@ -405,9 +405,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     for (UIViewController *vc in viewControllers) {
         if ([vc isKindOfClass:[UINavigationController class]]) {
             UINavigationController *navi =  (UINavigationController *)vc;
-            if (!navi.delegate) {
-                [navi setDelegate:self];
-            }
+            [navi setDelegate:self];
         }
     }
 
