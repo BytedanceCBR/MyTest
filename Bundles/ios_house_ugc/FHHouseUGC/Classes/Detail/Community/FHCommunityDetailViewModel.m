@@ -467,7 +467,8 @@
             [self tryJoinConversation];
         }
     } else {
-       // 登录前先把群聊入口隐藏，登录成功后刷新basicinfo接口成功后显示 self.viewController.groupChatBtn.hidden = YES;
+       // 登录前先把群聊入口隐藏，登录成功后刷新basicinfo接口成功后显示
+        self.viewController.groupChatBtn.hidden = YES;
         [self gotoLogin:FHUGCLoginFrom_GROUPCHAT];
     }
 }
