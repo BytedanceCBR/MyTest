@@ -175,6 +175,7 @@
 #import <FHUtils.h>
 #import <TTTabBarItem.h>
 #import <HMDTTMonitor.h>
+#import <UIColor+Theme.h>
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -979,8 +980,7 @@ TTRefreshViewDelegate
         }
     }
         
-    
-    self.listView.backgroundColor = [UIColor whiteColor];
+    self.listView.backgroundColor = [UIColor themeHomeColor];
 }
 
 - (void)willAppear
@@ -1284,7 +1284,7 @@ TTRefreshViewDelegate
     [super themeChanged:notification];
 //    self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
     
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor themeHomeColor];
     self.listView.backgroundColor = self.backgroundColor;
 }
 
@@ -3041,9 +3041,9 @@ TTRefreshViewDelegate
 
 - (void)setListTopInset:(CGFloat)topInset BottomInset:(CGFloat)bottomInset
 {
-//    [self setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
-//    [self.listView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
-//    [self.listView setScrollIndicatorInsets:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self.listView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self.listView setScrollIndicatorInsets:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
 }
 
 - (void)clearListContent

@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseListViewModel : FHBaseHouseListViewModel <FHHouseSuggestionDelegate>
 
 @property (nonatomic , copy) NSString *houseListOpenUrl;
+@property (nonatomic , copy) NSString *searchPageOpenUrl;
 @property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , assign) FHHouseListSearchType searchType;
 

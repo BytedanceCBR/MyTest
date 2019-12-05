@@ -28,7 +28,6 @@
 #import <FHCommuteManager.h>
 #import <TTUIResponderHelper.h>
 #import "TTTabBarController.h"
-#import <TTTopBar.h>
 #import <FHHomeSearchPanelViewModel.h>
 #import <ExploreLogicSetting.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
@@ -36,6 +35,8 @@
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <TTThemedAlertController.h>
 #import <FHUtils.h>
+#import "FHHomeBaseScrollView.h"
+#import <FHHomeMainViewController.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -52,8 +53,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, strong) ArticleListNotifyBarView * notifyBar;
 @property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic) BOOL adUGCHadJump;
-@property (nonatomic, strong) TTTopBar *topBar;
-@property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
+@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
@@ -75,7 +75,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.ttNeedIgnoreZoomAnimation = YES;
-    [self.view addSubview:self.topBar];
+//    [self.view addSubview:self.topBar];
     
     FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
     //    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
@@ -93,7 +93,18 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    
+ 
+}
+
+- (void)bindIndexChangedBlock
+{
+    __weak typeof(self) weakSelf = self;
+    if ([self.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
+        FHHomeMainViewController *mainVC = (FHHomeMainViewController *)self.parentViewController;
+        mainVC.topView.indexHouseChangeBlock = ^(NSInteger index) {
+            [weakSelf.homeListViewModel selectIndexHouseType:index];
+        };
+    }
 }
 
 - (void)scrollMainTableToTop
@@ -105,7 +116,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 -(void)dealyIniViews
 {
-    
     //如果是inhouse的，弹升级弹窗
     if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
         //#if INHOUSE
@@ -121,7 +131,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self.emptyView showEmptyWithTip:@"功能暂未开通" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
     
-    [self.view bringSubviewToFront:self.topBar];
+//    [self.view bringSubviewToFront:self.topBar];
     
     self.mainTableView.scrollsToTop = YES;
 }
@@ -138,7 +148,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self.mainTableView removeFromSuperview];
     }
     
-    self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.mainTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.mainTableView.decelerationRate = 0.5;
     self.mainTableView.showsVerticalScrollIndicator = NO;
     
@@ -146,6 +156,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 //        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
 //    }
     
+//    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, 44)];
+//    [headerView setBackgroundColor:[UIColor blueColor]];
+//    self.mainTableView.tableHeaderView = headerView;
+//    self.mainTableView.bounces = YES;
     [self.view addSubview:self.mainTableView];
     
     self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -156,13 +170,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     // Do any additional setup after loading the view.
     
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.mainTableView.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor themeHomeColor];
+    self.mainTableView.backgroundColor = [UIColor themeHomeColor];
     FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!configModel) {
         [self tt_startUpdate];
     }
-    
     
     if (self.notifyBar) {
         [self.notifyBar removeFromSuperview];
@@ -176,8 +189,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         make.height.mas_equalTo(32);
     }];
     
+//    [self setupTopBarConstraints];
+//    self.mainTableView.tableHeaderView = self.topBar;
     
-    [self.view bringSubviewToFront:self.topBar];
+//    [self.view bringSubviewToFront:self.topBar];
 }
 
 #pragma mark - notifications
@@ -200,21 +215,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)setUpMainTableConstraints
 {
-    if ([TTDeviceHelper isIPhoneXDevice]) {
-        [self.mainTableView setFrame:CGRectMake(0.0f, 64 + 44, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 44 - 49)];
+    if ([TTDeviceHelper isIPhoneXSeries]) {
+        [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 44 - 49)];
     }else
     {
-        [self.mainTableView setFrame:CGRectMake(0.0f, 64 + 20, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 20 - 49)];
+        [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 49)];
     }
-}
-
-- (void)setupTopBarConstraints
-{
-    [self.topBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo([TTDeviceHelper isIPhoneXSeries] ? 44 : 20);
-        make.left.right.equalTo(self.view);
-        make.height.mas_equalTo(64);
-    }];
 }
 
 - (TTTopBar *)topBar {
@@ -222,8 +228,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         _topBar = [[TTTopBar alloc] init];
         _topBar.isShowTopSearchPanel = YES;
         _topBar.tab = @"home";
-        [self.view addSubview:_topBar];
-        [self setupTopBarConstraints];
         _topBar.delegate = self;
         [_topBar setupSubviews];
     }
@@ -379,6 +383,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     
     [self checkPasteboard:NO];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -430,6 +435,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [FHEnvContext addTabUGCGuid];
     
     [TTSandBoxHelper setAppFirstLaunchForAd];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
+    
+    [self bindIndexChangedBlock];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
@@ -536,15 +545,16 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 #pragma mark init views
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
-        _scrollView = [[UIScrollView alloc] init];
+        _scrollView = [[FHHomeBaseScrollView alloc] init];
         _scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
         _scrollView.pagingEnabled = YES;
         _scrollView.bounces = NO;
+//        _scrollView.decelerationRate = 0.5;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.scrollsToTop = NO;
         _scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width*4, 0);
-        _scrollView.backgroundColor = [UIColor whiteColor];
+        _scrollView.backgroundColor = [UIColor themeHomeColor];
         if (@available(iOS 11.0 , *)) {
             _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }

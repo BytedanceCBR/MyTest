@@ -28,6 +28,7 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import <FHHouseBaseNewHouseCell.h>
 #import <FHPlaceHolderCell.h>
+#import <UIColor+Theme.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -103,6 +104,9 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.tableView.mj_footer = self.refreshFooter;
+    
+    [self.refreshFooter setBackgroundColor:[UIColor themeHomeColor]];
+    [self.tableView setBackgroundColor:[UIColor themeHomeColor]];
     
     [self registerCells];
     
@@ -499,9 +503,27 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 
 #pragma mark tableview等回调
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if (self.scrollDidBegin) {
+        self.scrollDidBegin();
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:nil];
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // 滚动时发出通知
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (self.scrollDidEnd) {
+        self.scrollDidEnd();
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -509,6 +531,11 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
     if (self.scrollDidEnd) {
         self.scrollDidEnd();
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -518,10 +545,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
-        if ([self checkIsHaveEntrancesList]) {
-            return 1;
-        }
-        return 0;
+        return 1;
     }
     
     if (self.showNoDataErrorView || self.showRequestErrorView || self.showDislikeNoDataView) {
@@ -540,18 +564,19 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
         if ([self checkIsHaveEntrancesList]) {
             //适配5s
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                return 89;
+                return 100;
             }else
             {
                 return 74;
             }
         }
-        return 0;
+        return 12;
     }else
     {
         if (self.showNoDataErrorView || self.showRequestErrorView || self.showDislikeNoDataView) {
             return [self getHeightShowNoData];
         }
+        
         if (self.houseType == FHHouseTypeNewHouse) {
             if (indexPath.row < self.houseDataItemsModel.count) {
                 JSONModel *model = self.houseDataItemsModel[indexPath.row];
@@ -563,19 +588,29 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
             return 118;
         }
         
-        return 75;
+        return kFHHomeHouseItemHeight;
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.section == kFHHomeHouseTypeBannerViewSection)
     {
-        FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
-        [bannerCell refreshData:self.houseType];
-        return bannerCell;
+        if ([self checkIsHaveEntrancesList]) {
+            FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
+            [bannerCell refreshData:self.houseType];
+            [bannerCell.contentView setBackgroundColor:[UIColor themeHomeColor]];
+            return bannerCell;
+        }else
+        {
+            UITableViewCell *cellMargin = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+            for (UIView *subView in cellMargin.contentView.subviews) {
+                [subView removeFromSuperview];
+            }
+            [cellMargin setBackgroundColor:[UIColor themeHomeColor]];
+            return cellMargin;
+        }
     }else
     {
-        
         if (self.showNoDataErrorView) {
             
             UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
@@ -633,7 +668,6 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
                     }
                 };
             }
-            
             return cellError;
         }
         
@@ -680,6 +714,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
                 [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
                 [cell updateHomeNewHouseCellModel:model];
             }
+            [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
             return cell;
         }
         //to do 房源cell
@@ -690,6 +725,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
             [cell refreshTopMargin:([TTDeviceHelper is896Screen3X] || [TTDeviceHelper is896Screen2X]) ? 4 : 0];
             [cell updateHomeSmallImageHouseCellModel:model andType:self.houseType];
         }
+        [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
         return cell;
     }
 }
@@ -697,7 +733,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.section == kFHHomeHouseTypeBannerViewSection) {
-        if (self.houseType == _listModel.houseType && ![self.traceRecordDict objectForKey:@(self.houseType)] ) {
+        if (self.houseType == _listModel.houseType && ![self.traceRecordDict objectForKey:@(self.houseType)] && [self checkIsHaveEntrancesList]) {
             [self.traceRecordDict setValue:@"" forKey:@(self.houseType)];
             [FHHomeCellHelper sendBannerTypeCellShowTrace:_houseType];
         }
@@ -807,9 +843,10 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 - (UITableView *)tableView {
     
     if (!_tableView) {
-        _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
+        _tableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,[[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
+//        _tableView.bounces = NO;
         //        _tableView.decelerationRate = 0.1;
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.estimatedRowHeight = 0;

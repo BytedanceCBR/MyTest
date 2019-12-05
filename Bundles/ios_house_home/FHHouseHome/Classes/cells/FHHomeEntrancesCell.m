@@ -19,7 +19,7 @@
 
 #define ITEM_PER_ROW  5
 #define TOP_MARGIN_PER_ROW 10
-#define NORMAL_ICON_WIDTH  40
+#define NORMAL_ICON_WIDTH  56
 #define NORMAL_NAME_HEIGHT 20
 #define NORMAL_ITEM_WIDTH  40
 #define ITEM_TAG_BASE      100
@@ -99,7 +99,8 @@
     if(self.itemViews.count < totalCount){
         CGSize iconSize = CGSizeMake(ceil(NORMAL_ICON_WIDTH*ratio), ceil(NORMAL_ICON_WIDTH*ratio));
         for (NSInteger i = _itemViews.count; i < totalCount; i++) {
-            FHHomeEntranceItemView *itemView = [[FHHomeEntranceItemView alloc] initWithFrame:itemFrame iconSize:iconSize];       
+            FHHomeEntranceItemView *itemView = [[FHHomeEntranceItemView alloc] initWithFrame:itemFrame iconSize:iconSize];
+            [itemView setBackgroundColor:[UIColor clearColor]];
             [itemView addTarget:self action:@selector(onItemAction:) forControlEvents:UIControlEventTouchUpInside];
             [self.itemViews addObject:itemView];
             [self.contentView addSubview:itemView];
@@ -121,8 +122,11 @@
         NSInteger row = i / countPerRow;
         NSInteger col = i % countPerRow;
         itemView.origin = CGPointMake(HOR_MARGIN+(itemFrame.size.width+margin)*col, row*[self.class rowHeight]+TOP_MARGIN_PER_ROW);
+        [itemView setBackgroundColor:[UIColor clearColor]];
         itemView.hidden = NO;
     }
+    
+    [self.contentView setBackgroundColor:[UIColor themeHomeColor]];
 }
 
 -(void)onItemAction:(FHHomeEntranceItemView *)itemView
@@ -148,10 +152,11 @@
     if (self) {
         self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake((frame.size.width - iconSize.width)/2, 0, iconSize.width, iconSize.height)];
         [self addSubview:_iconView];
+        [self.iconView setBackgroundColor:[UIColor clearColor]];
         
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, frame.size.height - 20, frame.size.width, 20)];
+        _nameLabel.textColor = [UIColor themeGray2];
         _nameLabel.font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:14] : [UIFont themeFontRegular:12];
-        _nameLabel.textColor = [UIColor themeGray1];
         _nameLabel.textAlignment = NSTextAlignmentCenter;
         
         [self addSubview:_nameLabel];

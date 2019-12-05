@@ -11,8 +11,6 @@
 #import "TTHttpTask.h"
 #import "FHHouseListAPI.h"
 #import "FHSearchHouseModel.h"
-#import "FHHouseNeighborModel.h"
-#import "FHHouseRentModel.h"
 #import "FHNewHouseItemModel.h"
 
 #import "FHHomePlaceHolderCell.h"
@@ -115,11 +113,6 @@ extern NSString *const INSTANT_DATA_KEY;
 
 @property (nonatomic, strong) JSONModel *currentRecommendHouseDataModel;
 @property (nonatomic, strong) JSONModel *houseDataModel;
-
-//@property (nonatomic, strong) FHSearchHouseDataModel *currentHouseDataModel;
-//@property (nonatomic, strong) FHHouseRentDataModel *currentRentDataModel;
-//@property (nonatomic, strong) FHHouseNeighborDataModel *currentNeighborDataModel;
-//@property (nonatomic, strong) FHNewHouseListDataModel *currentNewDataModel;
 
 @property (nonatomic, weak)     FHFakeInputNavbar       *navbar;
 @property(nonatomic , weak) FHMainOldTopTagsView *topTagsView;
@@ -259,8 +252,6 @@ extern NSString *const INSTANT_DATA_KEY;
             self.originFrom = self.tracerModel.originFrom;
         }
         [self configTableView];
-        NSLog(@"FENGBO WTF");
-
     }
     return self;
 }
@@ -528,18 +519,6 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([houseModel isKindOfClass:[FHListSearchHouseDataModel class]]) {
         FHListSearchHouseDataModel *model = (FHListSearchHouseDataModel *)houseModel;
         return model.offset;
-    }else if ([houseModel isKindOfClass:[FHSearchHouseDataModel class]]) {
-        FHSearchHouseDataModel *model = (FHSearchHouseDataModel *)houseModel;
-        return model.offset;
-    }else if ([houseModel isKindOfClass:[FHHouseRentDataModel class]]) {
-        FHHouseRentDataModel *model = (FHHouseRentDataModel *)houseModel;
-        return model.offset;
-    }else if ([houseModel isKindOfClass:[FHHouseNeighborDataModel class]]) {
-        FHHouseNeighborDataModel *model = (FHHouseNeighborDataModel *)houseModel;
-        return model.offset;
-    }else if ([houseModel isKindOfClass:[FHNewHouseListDataModel class]]) {
-        FHNewHouseListDataModel *model = (FHNewHouseListDataModel *)houseModel;
-        return model.offset;
     }
     return 0;
 }
@@ -587,7 +566,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHHouseListAPI searchNeighborhoodDealList:query searchType:[self searchTypeString] offset:offset searchId:searchId class:[FHHouseNeighborModel class] completion:^(FHHouseNeighborModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchNeighborhoodDealList:query searchType:[self searchTypeString] offset:offset searchId:searchId class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;
@@ -619,7 +598,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     __weak typeof(self) wself = self;
     
-    TTHttpTask *task = [FHMainApi searchRent:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel * _Nonnull model, NSError * _Nonnull error) {
+    TTHttpTask *task = [FHHouseListAPI searchRent:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHListSearchHouseModel class] completion:^(FHListSearchHouseModel * _Nonnull model, NSError * _Nonnull error) {
         
         if (!wself) {
             return ;
@@ -684,7 +663,7 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     param[CHANNEL_ID] = CHANNEL_ID_RENT_COMMUTING;
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseListAPI requestCommute:cityId query:query location:location houseType:_houseType duration:duration type:manager.commuteType param:param offset:offset completion:^(FHHouseRentModel * _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI requestCommute:cityId query:query location:location houseType:_houseType duration:duration type:manager.commuteType param:param offset:offset completion:^(FHListSearchHouseModel * _Nullable model, NSError * _Nullable error) {
         if (!wself) {
             return ;
         }
@@ -851,8 +830,8 @@ extern NSString *const INSTANT_DATA_KEY;
                 recommendHouseDataModel = ((FHListSearchHouseModel *)model).data;
                 self.recommendSearchId = recommendHouseDataModel.searchId;
                 hasMore = recommendHouseDataModel.hasMore;
-                if (recommendHouseDataModel.items) {
-                    [recommendItemArray addObjectsFromArray:recommendHouseDataModel.items];
+                if (recommendHouseDataModel.searchItems) {
+                    [recommendItemArray addObjectsFromArray:recommendHouseDataModel.searchItems];
                 }
                 self.currentRecommendHouseDataModel = recommendHouseDataModel;
                 fromRecommend = YES;
@@ -860,16 +839,17 @@ extern NSString *const INSTANT_DATA_KEY;
                 FHListSearchHouseDataModel *houseModel = ((FHListSearchHouseModel *)model).data;
                 self.houseDataModel = houseModel;
                 self.houseListOpenUrl = houseModel.houseListOpenUrl;
+                self.searchPageOpenUrl = houseModel.searchHistoryOpenUrl;
                 self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
                 hasMore = houseModel.hasMore;
                 refreshTip = houseModel.refreshTip;
-                if (houseModel.items.count > 0) {
-                    [itemArray addObjectsFromArray:houseModel.items];
+                if (houseModel.searchItems.count > 0) {
+                    [itemArray addObjectsFromArray:houseModel.searchItems];
                 }
                 redirectTips = houseModel.redirectTips;
                 recommendHouseDataModel = houseModel.recommendSearchModel;
-                if (recommendHouseDataModel.items) {
-                    [recommendItemArray addObjectsFromArray:recommendHouseDataModel.items];
+                if (recommendHouseDataModel.searchItems) {
+                    [recommendItemArray addObjectsFromArray:recommendHouseDataModel.searchItems];
                 }
                 self.searchId = houseModel.searchId;
                 
@@ -883,68 +863,10 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
             }
 
-        } else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
-            
-            FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
-            self.houseDataModel = houseModel;
-            self.searchId = houseModel.searchId;
-            self.houseListOpenUrl = houseModel.houseListOpenUrl;
-            if (self.houseListOpenUrl.length <= 0) {
-                needUploadMapFindHouseUrlEvent = YES;
-            }
-            hasMore = houseModel.hasMore;
-            refreshTip = houseModel.refreshTip;
-            if (houseModel.items.count > 0) {
-                [itemArray addObjectsFromArray:houseModel.items];
-            }
-            redirectTips = houseModel.redirectTips;
-        } else if ([model isKindOfClass:[FHHouseRentModel class]]) {
+        }
 
-            FHHouseRentDataModel *houseModel = ((FHHouseRentModel *)model).data;
-            self.houseDataModel = houseModel;
-            self.searchId = houseModel.searchId;
-            self.houseListOpenUrl = houseModel.houseListOpenUrl;
-            self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
-            if (self.houseListOpenUrl.length <= 0) {
-                needUploadMapFindHouseUrlEvent = YES;
-            }
-            hasMore = houseModel.hasMore;
-            refreshTip = houseModel.refreshTip;
-            if (houseModel.items.count > 0) {
-                for (FHHouseRentDataItemsModel *rentItem in houseModel.items) {
-                    NSDictionary *dict = [rentItem toDictionary];
-                    NSMutableDictionary *itemDict = @{}.mutableCopy;
-                    if (dict) {
-                        [itemDict addEntriesFromDictionary:dict];
-                        itemDict[@"card_type"] = [NSString stringWithFormat:@"%ld",FHSearchCardTypeRentHouse];
-                        [itemArray addObject:itemDict];
-                    }
-                }
-            }
-            redirectTips = houseModel.redirectTips;
-        } else if ([model isKindOfClass:[FHHouseNeighborModel class]]) {
-
-            FHHouseNeighborDataModel *houseModel = ((FHHouseNeighborModel *)model).data;
-            self.houseDataModel = houseModel;
-            self.searchId = houseModel.searchId;
-            self.houseListOpenUrl = houseModel.houseListOpenUrl;
-            hasMore = houseModel.hasMore;
-            refreshTip = houseModel.refreshTip;
-            if (houseModel.items.count > 0) {
-                for (FHHouseNeighborDataItemsModel *item in houseModel.items) {
-                    NSDictionary *dict = [item toDictionary];
-                    NSMutableDictionary *itemDict = @{}.mutableCopy;
-                    if (dict) {
-                        [itemDict addEntriesFromDictionary:dict];
-                        itemDict[@"card_type"] = [NSString stringWithFormat:@"%ld",FHSearchCardTypeNeighborhood];
-                        [itemArray addObject:itemDict];
-                    }
-                }
-            }
-            if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
-            }else {
-                redirectTips = houseModel.redirectTips;
-            }
+        if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+            redirectTips = nil;
         }
         self.fromRecommend = fromRecommend;
 
@@ -978,9 +900,9 @@ extern NSString *const INSTANT_DATA_KEY;
             [traceDictParams addEntriesFromDictionary:[wself categoryLogDict]];
         }
         __block id lastObj = nil;
-        [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull itemDict, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([itemDict isKindOfClass:[NSDictionary class]]) {
-                id theItemModel = [[wself class] searchItemModelByDict:itemDict];
+        [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
+//            if ([itemDict isKindOfClass:[NSDictionary class]]) {
+//                id theItemModel = [[wself class] searchItemModelByDict:itemDict];
 
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = theItemModel;
@@ -1037,13 +959,13 @@ extern NSString *const INSTANT_DATA_KEY;
                 if (theItemModel) {
                     lastObj = theItemModel;
                 }
-            }
+//            }
         }];
         
-        [recommendItemArray enumerateObjectsUsingBlock:^(id  _Nonnull itemDict, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([itemDict isKindOfClass:[NSDictionary class]]) {
-                id theItemModel = [[self class] searchItemModelByDict:itemDict];
-                
+        [recommendItemArray enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
+//            if ([itemDict isKindOfClass:[NSDictionary class]]) {
+//                id theItemModel = [[self class] searchItemModelByDict:itemDict];
+
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)theItemModel;
                     itemModel.isRecommendCell = YES;
@@ -1079,7 +1001,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 if (theItemModel) {
                     [wself.sugesstHouseList addObject:theItemModel];
                 }
-            }
+//            }
         }];
 
         BOOL addNoHouseCell = NO;
@@ -1250,8 +1172,6 @@ extern NSString *const INSTANT_DATA_KEY;
     
 }
 
-
-
 #pragma mark filter将要显示
 -(void)onConditionWillPanelDisplay
 {
@@ -1277,7 +1197,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [self showPoiSearch];
         return;
     }
-    
+
     NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
     //house_search
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
@@ -1298,7 +1218,12 @@ extern NSString *const INSTANT_DATA_KEY;
     if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
         urlStr = [NSString stringWithFormat:@"sslocal://house_search_deal_neighborhood"];
     }else {
-       urlStr = @"sslocal://house_search";
+        if (self.searchPageOpenUrl) {
+           //以本地的house_type为准
+            urlStr = self.searchPageOpenUrl;
+        } else {
+            urlStr = @"sslocal://house_search";
+        }
     }
     NSURL *url = [NSURL URLWithString:urlStr];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
@@ -1672,6 +1597,7 @@ extern NSString *const INSTANT_DATA_KEY;
         return height;
     }
     NSString *identifier = @"";
+    BOOL isFirstCell = NO;
     BOOL isLastCell = NO;
     CGFloat normalHeight = height;
     
@@ -1685,6 +1611,9 @@ extern NSString *const INSTANT_DATA_KEY;
             if (indexPath.row == self.houseList.count - 1) {
                 isLastCell = YES;
             }
+            if (indexPath.row == 0) {
+                isFirstCell = YES;
+            }
         }
     } else {
         if (indexPath.row < self.sugesstHouseList.count) {
@@ -1692,25 +1621,25 @@ extern NSString *const INSTANT_DATA_KEY;
             if (indexPath.row == self.sugesstHouseList.count - 1) {
                 isLastCell = YES;
             }
+            if (indexPath.row == 0) {
+                isFirstCell = YES;
+            }
         }
     }
     if (data) {
-        identifier = [self cellIdentifierForEntity:data];
-    }
-    //新房单独处理
-//    if (self.houseType == FHHouseTypeNewHouse) {
-//        identifier = NSStringFromClass([FHHouseBaseNewHouseCell class]);
-//    }
-    
-    if (identifier.length > 0) {
-        FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+        id cellClass = [self cellClassForEntity:data];
         if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
             FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
             item.isLastCell = isLastCell;
+            if ((item.houseType.integerValue == FHHouseTypeRentHouse || item.houseType.integerValue == FHHouseTypeNeighborhood) && isFirstCell) {
+                item.topMargin = 10;
+            }else {
+                item.topMargin = 0;
+            }
             data = item;
         }
-        if ([[cell class]respondsToSelector:@selector(heightForData:)]) {
-            return [[cell class] heightForData:data];
+        if ([[cellClass class]respondsToSelector:@selector(heightForData:)]) {
+            return [[cellClass class] heightForData:data];
         }
     }
     return height;
