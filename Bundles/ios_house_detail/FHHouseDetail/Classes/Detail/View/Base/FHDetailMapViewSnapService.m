@@ -88,7 +88,6 @@
 }
 
 - (void)takeSnapWithTask:(FHDetailMapSnapTask *)task {
-    NSLog(@"zlj enqueue task :%@", task);
     if (self.reverseQueue.count > 0) {
         [self.reverseQueue addObject:task];
         return;

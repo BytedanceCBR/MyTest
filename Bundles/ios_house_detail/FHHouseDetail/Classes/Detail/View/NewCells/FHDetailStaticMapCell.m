@@ -93,7 +93,6 @@
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSArray<FHStaticMapAnnotation *> *> *poiAnnotations;
 @property(nonatomic, strong) FHStaticMapAnnotation *centerAnnotation;
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *poiSearchStatus;
-@property(nonatomic, strong) NSMutableDictionary<NSString *, UIImage *> *nativeMapSnap;
 @end
 
 @implementation FHDetailStaticMapCell
@@ -119,9 +118,9 @@
         _countCategoryDict = [NSMutableDictionary new];
         _poiAnnotations = [NSMutableDictionary new];
         _poiSearchStatus = [NSMutableDictionary dictionary];
-        _nativeMapSnap = [NSMutableDictionary dictionary];
         //初始化空数据
         for (NSString *name in _nameArray) {
+            _poiSearchStatus[name] = @(0);
             _countCategoryDict[name] = @(0);
             _poiAnnotations[name] = [NSMutableArray arrayWithCapacity:3];
         }
@@ -305,8 +304,9 @@
             self.nativeMapImageView.image = [UIImage imageNamed:@"static_map_empty"];
             return;
         }
-        wself.nativeMapSnap[category] = image;
-        wself.nativeMapImageView.image = image;
+        if ([category isEqualToString:wself.curCategory]) {
+            wself.nativeMapImageView.image = image;
+        }
     }];
 }
 
@@ -421,7 +421,7 @@
             self.headerView.titleLabel.text = dataModel.title;
         }
     }
-    if ([self isPoiSearchDone]) {
+    if ([self isPoiSearchDone:self.curCategory]) {
         [self showPoiResultInfo];
     } else {
         [self requestPoiInfo:self.centerPoint];
@@ -445,8 +445,9 @@
         return;
     }
     for (NSString *categoryName in self.nameArray) {
-
-        // todo zlj 对比android搜索结果
+        if ([self isPoiSearchDone:categoryName]) {
+            continue;
+        }
         AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
 
         requestPoi.keywords = [categoryName isEqualToString:@"交通"] ? @"公交地铁" : categoryName;
@@ -454,11 +455,7 @@
         requestPoi.requireExtension = YES;
         requestPoi.requireSubPOIs = NO;
 
-        if ([self isPoiSearchDone]) {
-            [self showPoiResultInfo];
-        } else {
-            [self.searchApi AMapPOIAroundSearch:requestPoi];
-        }
+        [self.searchApi AMapPOIAroundSearch:requestPoi];
     }
 }
 
@@ -634,22 +631,17 @@
     _poiAnnotations[category] = [annotations copy];
     _poiSearchStatus[category] = @(1);
 
-    if ([self isPoiSearchDone]) {
+    [self showPoiNumber];
+    if ([category isEqualToString:self.curCategory]) {
         [self showPoiResultInfo];
     }
 }
 
-- (BOOL)isPoiSearchDone {
-    BOOL allSearchDone = YES;
-    for (NSInteger i = 0; i < _nameArray.count; i++) {
-        if (!(_poiSearchStatus[_nameArray[i]])) {
-            allSearchDone = NO;
-        }
-    }
-    return allSearchDone;
+- (BOOL)isPoiSearchDone:(NSString *)category {
+    return [self.poiSearchStatus[category] integerValue] != 0;
 }
 
-- (void)showPoiResultInfo {
+- (void)showPoiNumber {
     NSMutableArray *sectionTitleArray = [NSMutableArray new];
     for (NSInteger i = 0; i < _nameArray.count; i++) {
         if (_countCategoryDict[_nameArray[i]]) {
@@ -660,6 +652,10 @@
     }
 
     _segmentedControl.sectionTitles = sectionTitleArray;
+}
+
+- (void)showPoiResultInfo {
+    [self showPoiNumber];
 
     [self showPoiInfoWithCategory:self.curCategory];
 }
@@ -678,11 +674,7 @@
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
 
     if (dataModel.useNativeMap) {
-        if (self.nativeMapSnap[category]) {
-            self.nativeMapImageView.image = self.nativeMapSnap[category];
-        } else {
-            [self takeSnapWith:category annotations:annotations];
-        }
+        [self takeSnapWith:category annotations:annotations];
     } else {
         [self.mapView removeAllAnnotations];
         [self.mapView addAnnotations:annotations];
