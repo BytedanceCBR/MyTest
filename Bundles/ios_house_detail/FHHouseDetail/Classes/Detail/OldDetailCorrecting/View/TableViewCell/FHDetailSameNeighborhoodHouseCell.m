@@ -51,6 +51,11 @@
     //
     FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)data;
     self.shadowImage.image = model.shadowImage;
+    if (model.shadowImageType == FHHouseShdowImageTypeLTR) {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.contentView);
+        }];
+    }
     if (model.sameNeighborhoodHouseData) {
         self.headerView.label.text = [NSString stringWithFormat:@"同小区房源(%@)",model.sameNeighborhoodHouseData.total];
         self.headerView.isShowLoadMore = model.sameNeighborhoodHouseData.hasMore;
@@ -73,7 +78,7 @@
             make.top.mas_equalTo(20);
             make.left.mas_equalTo(self.containerView).offset(15);
             make.right.mas_equalTo(self.containerView).offset(-15);
-            make.bottom.mas_equalTo(self.containerView);
+            make.bottom.mas_equalTo(self.containerView).offset(-10);
         }];
         [colView reloadData];
     }

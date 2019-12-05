@@ -20,7 +20,7 @@
 #import "FHDetailAgentListCell.h"
 #import "FHDetailHouseOutlineInfoCell.h"
 #import "FHDetailSuggestTipCell.h"
-#import "FHDetailRelatedNeighborhoodCell.h"
+#import "FHDetailSurroundingAreaCell.h"
 #import "FHDetailRelatedHouseCell.h"
 #import "FHDetailSameNeighborhoodHouseCell.h"
 #import "FHDetailErshouPriceChartCell.h"
@@ -88,7 +88,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailHouseOutlineInfoCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoCorrectingModel class])];
     //购房小建议
     [self.tableView registerClass:[FHDetailSuggestTipCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSuggestTipModel class])];
-    [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodModel class])];
+    [self.tableView registerClass:[FHDetailSurroundingAreaCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSurroundingAreaModel class])];
     //周边房源
     [self.tableView registerClass:[FHDetailRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedHouseModel class])];
     //同小区房源
@@ -633,10 +633,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
         // 周边小区
         if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
-            // 添加分割线--当存在某个数据的时候在顶部添加分割线
-            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
-            FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
+            FHDetailSurroundingAreaModel *infoModel = [[FHDetailSurroundingAreaModel alloc] init];
             infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
             infoModel.houseModelType = FHHouseModelTypePlot;
             infoModel.neighborhoodId = self.neighborhoodId;
