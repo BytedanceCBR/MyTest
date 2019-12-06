@@ -101,7 +101,7 @@ static const float kSegementedMainPadingBottom = 10;
     _segmentControl.selectionIndicatorHeight = 4.0f;
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
-    //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
+    //_segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
     [_segmentControl setBackgroundColor:[UIColor themeHomeColor]];
     
     __weak typeof(self) weakSelf = self;
@@ -114,7 +114,6 @@ static const float kSegementedMainPadingBottom = 10;
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
         
     };
-    
     
     [self.topBackCityContainer addSubview:_segmentControl];
     

@@ -409,18 +409,19 @@ static NSInteger kGetLightRequestRetryCount = 3;
 + (void)showRedPointForNoUgc
 {
     if(![self isUGCOpen]){
-        if([FHEnvContext sharedInstance].hasShowDots){
-            //显示过
-            if([FHEnvContext sharedInstance].isShowDots){
-                [self showFindTabRedDots];
-            }else{
-                [self hideFindTabRedDots];
-            }
-        }else{
-            //没显示过
-            [self showFindTabRedDotsLimitCount];
-            [FHEnvContext sharedInstance].hasShowDots = YES;
-        }
+//        if([FHEnvContext sharedInstance].hasShowDots){
+//            //显示过
+//            if([FHEnvContext sharedInstance].isShowDots){
+//                [self showFindTabRedDots];
+//            }else{
+//                [self hideFindTabRedDots];
+//            }
+//        }else{
+//            //没显示过
+//            [self showFindTabRedDotsLimitCount];
+//            [FHEnvContext sharedInstance].hasShowDots = YES;
+//        }
+        [self hideFindTabRedDots];
     }
 }
 
