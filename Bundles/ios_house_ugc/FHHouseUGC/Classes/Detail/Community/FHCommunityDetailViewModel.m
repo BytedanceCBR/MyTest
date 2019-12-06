@@ -303,6 +303,10 @@
                     [self.feedListController startLoadData:YES];
                 }
             }
+            self.isLoginSatusChangeFromGroupChat = NO;
+        }
+        else {
+            self.isLoginSatusChangeFromGroupChat = NO;
         }
     }];
 }
