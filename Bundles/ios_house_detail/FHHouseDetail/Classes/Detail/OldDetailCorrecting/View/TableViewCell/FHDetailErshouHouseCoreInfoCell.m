@@ -41,6 +41,21 @@
     }
     FHDetailErshouHouseCoreInfoModel *model = (FHDetailErshouHouseCoreInfoModel *)data;
     self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     NSInteger count = model.coreInfo.count;
     if (count > 0) {
         CGFloat width = (UIScreen.mainScreen.bounds.size.width - 30)  / count;
@@ -52,7 +67,8 @@
                 itemView.lineView.hidden = YES;
             }
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.bottom.mas_equalTo(self.contentView);
+                make.top.mas_equalTo(self.shadowImage).offset(12);
+                make.top.mas_equalTo(self.shadowImage).offset(-12);
                 make.width.mas_equalTo(width);
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];

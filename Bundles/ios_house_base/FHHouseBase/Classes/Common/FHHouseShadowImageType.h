@@ -27,6 +27,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeBillBoard,
     ///推荐经纪人
     FHHouseModelTypeAgentlist,
+    ///房源评价
+    FHHouseModelTypeHousingEvaluation,
     ///位置周边
     FHHouseModelTypeLocationPeriphery,
     ///购房建议
@@ -34,6 +36,19 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     ///同小区房源+小区
     FHHouseModelTypePlot,
     ///周边房源
-    FHHouseModelTypePeriphery
+    FHHouseModelTypePeriphery,
+    ///免责声明
+    FHHouseModelTypeDisclaimer,
 };
+//展示范围。是否进行裁剪
+typedef NS_ENUM (NSInteger , FHHouseShdowImageScopeType){
+    FHHouseShdowImageScopeTypeDefault = 0,
+    ///上阴影展示全部
+    FHHouseShdowImageScopeTypeTopAll,
+    ///下阴影展示全部
+     FHHouseShdowImageScopeTypeBottomAll,
+    ///全部展示
+     FHHouseShdowImageScopeTypeAll,
+};
+
 #endif /* FHHouseShadowImageType_h */

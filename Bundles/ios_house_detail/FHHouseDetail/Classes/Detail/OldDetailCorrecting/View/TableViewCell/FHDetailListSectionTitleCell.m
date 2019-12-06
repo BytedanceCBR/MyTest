@@ -41,10 +41,10 @@
 }
 
 - (void)setupUI {
-    self.backgroundColor = [UIColor colorWithHexStr:@"#FAFAF9"];
+    self.backgroundColor = [UIColor colorWithHexStr:@"#FFFEFE"];
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(13);
-        make.top.mas_equalTo(self.contentView).mas_offset(22);
+        make.top.mas_equalTo(self.contentView).mas_offset(5);
         make.centerY.equalTo(self.contentView);
     }];
 }

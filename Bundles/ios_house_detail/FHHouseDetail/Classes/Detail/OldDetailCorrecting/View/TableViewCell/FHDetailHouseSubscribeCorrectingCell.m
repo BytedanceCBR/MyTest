@@ -50,6 +50,21 @@ extern NSString *const kFHPhoneNumberCacheKey;
     self.currentData = data;
     FHDetailHouseSubscribeCorrectingModel *model = (FHDetailHouseSubscribeCorrectingModel *)data;
     self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     model.cell = self;
 }
 

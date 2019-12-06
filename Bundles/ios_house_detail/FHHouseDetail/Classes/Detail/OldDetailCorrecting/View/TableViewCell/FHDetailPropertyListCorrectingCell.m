@@ -47,6 +47,21 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 //    FHDetailPropertyListCorrectingModel *propertyModel = (FHDetailPropertyListCorrectingModel *)self.currentData;
     FHDetailPropertyListCorrectingModel *model = (FHDetailPropertyListCorrectingModel *)data;
     self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     FHAgencyNameInfoView *infoView = nil;
     if (model.certificate && model.certificate.labels.count) {
         infoView = [[FHAgencyNameInfoView alloc] init];
@@ -60,7 +75,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     if (count > 0) {
         NSMutableArray *singles = [NSMutableArray new];
         __block NSInteger doubleCount = 0;// 两列计数
-        __block CGFloat topOffset = 6;// 高度
+        __block CGFloat topOffset = model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll?18:6;// 高度
         __block CGFloat listRowHeight = 29;// 30
         __block CGFloat lastViewLeftOffset = 20;
         __block CGFloat lastTopOffset = 20;
@@ -282,7 +297,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }
     
     [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-40);
+        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-42);
     }];
     
     [self layoutIfNeeded];

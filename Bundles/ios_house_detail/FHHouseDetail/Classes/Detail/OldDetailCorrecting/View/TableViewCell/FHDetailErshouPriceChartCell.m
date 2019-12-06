@@ -250,7 +250,7 @@
         make.bottom.equalTo(self.contentView).offset(12);
     }];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.shadowImage).offset(12);
          make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
     }];
@@ -301,7 +301,7 @@
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.top.mas_equalTo(self.priceView.mas_bottom).offset(20);
-        make.bottom.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-12);
     }];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.bottomBgView).offset(16);
@@ -337,6 +337,21 @@
     self.currentData = data;
     FHDetailPriceTrendCellModel *cellModel = (FHDetailPriceTrendCellModel *)data;
     self.shadowImage.image = cellModel.shadowImage;
+    if(cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     [self.headerView updateTitle:cellModel.priceAnalyze.title ? : @"价格指数"];
     [self.headerView updateStarsCount:cellModel.priceAnalyze.score.integerValue];
     

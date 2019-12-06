@@ -21,6 +21,7 @@
 @interface FHDetailUserHouseCommentCell ()
 
 @property(nonatomic, strong) FHDetailHeaderView *headerView;
+@property (nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic, strong) UIView *containerView;
 
 @end
@@ -36,11 +37,19 @@
 }
 
 - (void)setupUI {
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView);
+        make.right.mas_equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
+    }];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"他们都在看";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.shadowImage).offset(30);
+        make.right.mas_equalTo(self.contentView).offset(-15);
+        make.left.mas_equalTo(self.contentView).offset(15);
         make.height.mas_equalTo(46);
     }];
     _containerView = [[UIView alloc] init];
@@ -48,10 +57,20 @@
     _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
+        make.left.mas_equalTo(self.contentView).mas_offset(15);
+        make.right.mas_equalTo(self.contentView).mas_offset(-15);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-35);
     }];
+}
+
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
@@ -69,17 +88,31 @@
     }
 
     FHDetailUserHouseCommentModel *model = (FHDetailUserHouseCommentModel *) data;
-
+    self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     if (model.userComments && model.userComments.count > 0) {
         __block FHDetailUserHouseCommentItemView *lastItemView = nil;
-
         [model.userComments enumerateObjectsUsingBlock:^(FHUserHouseCommentModel *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
             FHDetailUserHouseCommentItemView *itemView = [[FHDetailUserHouseCommentItemView alloc] init];
             itemView.tag = idx;
             [self.containerView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (lastItemView != nil) {
-                    make.top.mas_equalTo(lastItemView.commentData.mas_bottom);
+                    make.top.mas_equalTo(lastItemView.mas_bottom);
                 } else {
                     make.top.mas_equalTo(self.containerView);
                 }
@@ -93,9 +126,8 @@
             }
             lastItemView = itemView;
         }];
-
-        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(lastItemView.commentData.mas_bottom).offset(20);
+        [lastItemView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.containerView).offset(-20);
         }];
 
         lastItemView = nil;
@@ -158,6 +190,7 @@
             make.left.mas_equalTo(20);
             make.right.mas_equalTo(-20);
             make.top.mas_equalTo(self.userAvatar.mas_bottom).offset(10);
+            make.bottom.equalTo(self);
         }];
     }
     return self;

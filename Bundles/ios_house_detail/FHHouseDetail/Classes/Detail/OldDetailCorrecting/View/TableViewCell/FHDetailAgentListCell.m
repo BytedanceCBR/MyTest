@@ -56,11 +56,25 @@
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)data;
     
     self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     // 设置下发标题
     if(model.recommendedRealtorsTitle.length > 0) {
         self.headerView.label.text = model.recommendedRealtorsTitle;
     }
-    
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         CGFloat vHeight = 76.0;
@@ -121,12 +135,12 @@
             make.left.right.mas_equalTo(self.contentView);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.contentView).offset(-58);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-93);
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.contentView).offset(-28);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-35);
         }];
     }
     [self updateItems:NO];
@@ -286,7 +300,7 @@
     _headerView.label.text = @"推荐经纪人";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(18);
+        make.top.mas_equalTo(self.shadowImage).offset(30);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.left.mas_equalTo(self.contentView).offset(15);;
         make.height.mas_equalTo(46);
@@ -299,7 +313,7 @@
         make.left.mas_equalTo(self.contentView).mas_offset(15);
         make.right.mas_equalTo(self.contentView).mas_offset(-15);
         make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-35);
     }];
 }
 

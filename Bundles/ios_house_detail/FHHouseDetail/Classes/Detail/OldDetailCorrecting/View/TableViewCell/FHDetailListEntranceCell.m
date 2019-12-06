@@ -99,6 +99,21 @@
     }
     CGFloat bottomY = 0;
     self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     for (NSInteger index = 0;index < model.listEntrance.count;index++) {
         FHDetailDataListEntranceItemModel *item = model.listEntrance[index];
         FHDetailListEntranceItemView *itemView = [[FHDetailListEntranceItemView alloc]initWithFrame:CGRectZero];
@@ -195,11 +210,10 @@
 //    _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
-        make.top.mas_equalTo(13);
-        make.bottom.mas_equalTo(-13);
-        
+        make.left.mas_equalTo(self.contentView).offset(15);
+        make.right.mas_equalTo(self.contentView).offset(-15);
+        make.top.mas_equalTo(self.shadowImage).offset(25);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-25);
     }];
     
 }

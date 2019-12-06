@@ -553,7 +553,7 @@
     _tableView.estimatedSectionHeaderHeight = 0;
 }
 
--(void)tapAction:(id)tap {
+- (void)tapAction:(id)tap {
     [_tableView endEditing:YES];
 }
 

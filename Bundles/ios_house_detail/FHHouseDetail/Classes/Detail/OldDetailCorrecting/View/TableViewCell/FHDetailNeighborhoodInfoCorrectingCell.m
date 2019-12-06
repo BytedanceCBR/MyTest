@@ -154,6 +154,21 @@
     FHDetailNeighborhoodInfoCorrectingModel *model = (FHDetailNeighborhoodInfoCorrectingModel *)data;
     // 二手房
     self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     if (model.neighborhoodInfo) {
         [self updateErshouCellData];
     }
@@ -423,7 +438,8 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(AdaptOffset(15));
         make.right.mas_equalTo(self.contentView).mas_offset(AdaptOffset(-15));
-        make.top.bottom.equalTo(self.contentView);
+        make.top.equalTo(self.shadowImage).offset(12);
+        make.bottom.equalTo(self.shadowImage).offset(-12);
     }];
     [self.mainImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.equalTo(self.containerView);

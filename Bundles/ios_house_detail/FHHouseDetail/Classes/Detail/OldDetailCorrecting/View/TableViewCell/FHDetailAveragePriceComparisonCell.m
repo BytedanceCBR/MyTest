@@ -54,6 +54,21 @@
     
     FHDetailAveragePriceComparisonModel *model = (FHDetailAveragePriceComparisonModel *)data;
     self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     NSString *curPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.curPricePsm floatValue]];
     NSString *minPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.minPricePsm floatValue]];
     NSString *maxPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.maxPricePsm floatValue]];
@@ -126,7 +141,7 @@
     
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(10);
+        make.top.mas_equalTo(self.shadowImage).offset(22);
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.height.mas_equalTo(46);
@@ -139,7 +154,7 @@
         make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
-        make.bottom.mas_equalTo(self.contentView).offset(-38);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-50);
     }];
     
     _bgView = [[UIImageView alloc] init];

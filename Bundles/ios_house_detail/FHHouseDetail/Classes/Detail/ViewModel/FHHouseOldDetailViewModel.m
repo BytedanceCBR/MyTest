@@ -24,7 +24,7 @@
 #import "FHDetailRelatedHouseCell.h"
 #import "FHDetailSameNeighborhoodHouseCell.h"
 #import "FHDetailErshouPriceChartCell.h"
-#import "FHDetailDisclaimerCell.h"
+#import "FHOldDetailDisclaimerCell.h"
 #import "FHDetailPriceRankCell.h"
 #import "FHDetailPriceTrendCellModel.h"
 #import "FHDetailPureTitleCell.h"
@@ -56,6 +56,7 @@
 #import "FHDetailHouseTitleModel.h"
 #import "FHDetailHouseOutlineInfoCorrectingCell.h"
 #import "FHDetailListSectionTitleCell.h"
+#import "FHOldDetailModuleHelper.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -75,14 +76,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
     //FHDetailMediaHeaderCell -----FHDetailMediaHeaderModel
     [self.tableView registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
-    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
-    //    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameModel class])];
    //属性模块
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoModel class])];
-//    [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListModel class])];
      [self.tableView registerClass:[FHDetailPropertyListCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCorrectingModel class])];
     [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryModel class])];
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
+    //用户房源评价
     [self.tableView registerClass:[FHDetailUserHouseCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailUserHouseCommentModel class])];
     //房源概况
     [self.tableView registerClass:[FHDetailHouseOutlineInfoCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoCorrectingModel class])];
@@ -93,7 +92,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedHouseModel class])];
     //同小区房源
     [self.tableView registerClass:[FHDetailSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSameNeighborhoodHouseModel class])];
-    [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerModel class])];
+    [self.tableView registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
     //价格指数
     [self.tableView registerClass:[FHDetailErshouPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceTrendCellModel class])];
     [self.tableView registerClass:[FHDetailPriceRankCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceRankModel class])];
@@ -119,7 +118,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHODetailCommunityEntryCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
     [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
 //    [self.tableView registerClass:[FHDetailDetectiveCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDetectiveModel class])];
+    //经纪人带看房评
     [self.tableView registerClass:[FHDetailHouseReviewCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseReviewCommentCellModel class])];
+     [self.tableView registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])];
 }
 
 // cell identifier
@@ -191,7 +192,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }];
     }
 }
-
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model{
@@ -431,8 +431,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     
     if(model.data.houseReviewComment.count > 0){
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
         
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
@@ -440,6 +438,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         FHDetailHouseReviewCommentCellModel * houseReviewCommentModel = [[FHDetailHouseReviewCommentCellModel alloc] init];
         houseReviewCommentModel.tableView = self.tableView;
         houseReviewCommentModel.belongsVC = self.detailController;
+        houseReviewCommentModel.houseModelType = FHHouseModelTypeHousingEvaluation;
         houseReviewCommentModel.houseReviewComment = model.data.houseReviewComment;
         houseReviewCommentModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [houseReviewCommentModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
@@ -454,9 +453,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     //用户房源评价
     if (model.data.userHouseComments.count > 0) {
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
         FHDetailUserHouseCommentModel *userHouseCommentModel = [[FHDetailUserHouseCommentModel alloc] init];
+        userHouseCommentModel.houseModelType = FHHouseModelTypeHousingEvaluation;
         userHouseCommentModel.userComments = model.data.userHouseComments;
         [self.items addObject:userHouseCommentModel];
     }
@@ -466,9 +464,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         //ugc 圈子入口,写在这儿是因为如果小区模块移除，那么圈子入口也不展示
         BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
-       FHDetailListSectionTitleModel *titleModel = [[FHDetailListSectionTitleModel alloc] init];
-        titleModel.title = @"位置及周边配套";
-         [self.items addObject:titleModel];
         FHDetailNeighborhoodInfoCorrectingModel *infoModel = [[FHDetailNeighborhoodInfoCorrectingModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
         infoModel.houseModelType = FHHouseModelTypeLocationPeriphery;
@@ -555,7 +550,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         infoModel.houseModelType = FHHouseModelTypeTips;
         [self.items addObject:infoModel];
     }
-    [self moduleClassificationMethod:self.items];
+    self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items loadPeriphery:NO];
     
     // --
     [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
@@ -649,8 +644,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         // 免责声明
         FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;
         if (model.data.contact || model.data.disclaimer) {
-            FHDetailDisclaimerModel *infoModel = [[FHDetailDisclaimerModel alloc] init];
+            FHOldDetailDisclaimerModel *infoModel = [[FHOldDetailDisclaimerModel alloc] init];
             infoModel.disclaimer = model.data.disclaimer;
+            infoModel.houseModelType = FHHouseModelTypeDisclaimer;
             if (!model.data.highlightedRealtor) {
                 // 当且仅当没有合作经纪人时，才在disclaimer中显示 经纪人 信息
                 infoModel.contact = model.data.contact;
@@ -659,7 +655,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             }
             [self.items addObject:infoModel];
         }
-        [self moduleClassificationMethod:self.items];
+         self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items loadPeriphery:NO];
         //
         [self reloadData];
     }
@@ -918,108 +914,4 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     TRACK_EVENT(@"click_options", param);
 }
 
-- (void)moduleClassificationMethod:(NSArray *)moduleArr {
-    NSMutableArray *coreInfos = [[NSMutableArray alloc]init];
-    NSMutableArray *Subscribes = [[NSMutableArray alloc]init];
-    NSMutableArray *outlineInfo = [[NSMutableArray alloc]init];
-    NSMutableArray *billBoard = [[NSMutableArray alloc]init];
-     NSMutableArray *agentlist = [[NSMutableArray alloc]init];
-    NSMutableArray *locationPeripherys = [[NSMutableArray alloc]init];
-    NSMutableArray *tips = [[NSMutableArray alloc]init];
-    NSMutableArray *plots = [[NSMutableArray alloc]init];
-    NSMutableArray *peripherys = [[NSMutableArray alloc]init];
-    
-    [moduleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-        switch (model.houseModelType) {
-            case FHHouseModelTypeCoreInfo:
-                [coreInfos addObject:obj];
-                break;
-            case FHHouseModelTypeSubscribe:
-                [Subscribes addObject:obj];
-                break;
-            case FHHouseModelTypeOutlineInfo:
-                [outlineInfo addObject:obj];
-                break;
-            case FHHouseModelTypeBillBoard:
-                [billBoard addObject:obj];
-                break;
-            case FHHouseModelTypeAgentlist:
-                [agentlist addObject:obj];
-                break;
-            case FHHouseModelTypeLocationPeriphery:
-                [locationPeripherys addObject:obj];
-                break;
-            case FHHouseModelTypeTips:
-                [tips addObject:obj];
-                break;
-            case FHHouseModelTypePlot:
-                [plots addObject:obj];
-                break;
-            case FHHouseModelTypePeriphery:
-                [peripherys addObject:obj];
-                break;
-            default:
-                break;
-        }
-    }];
-    
-    [coreInfos enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-        if (idx == coreInfos.count-1 && coreInfos.count != 1) {
-            model.shadowImageType = FHHouseShdowImageTypeLBR;
-        }else {
-            model.shadowImageType = FHHouseShdowImageTypeLR;
-        }
-    }];
-    [Subscribes enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-        model.shadowImageType = FHHouseShdowImageTypeRound;
-    }];
-    [outlineInfo enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-        model.shadowImageType = FHHouseShdowImageTypeRound;
-    }];
-    [billBoard enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-        model.shadowImageType = FHHouseShdowImageTypeRound;
-    }];
-    [agentlist enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-        model.shadowImageType = FHHouseShdowImageTypeRound;
-    }];
-    [locationPeripherys enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-        if (idx == locationPeripherys.count-1 && locationPeripherys.count != 1) {
-            model.shadowImageType = FHHouseShdowImageTypeLBR;
-        }else if(idx == 0 && locationPeripherys.count == 1)  {
-            model.shadowImageType = FHHouseShdowImageTypeRound;
-        }else if (idx == 0 && locationPeripherys.count != 1) {
-            model.shadowImageType = FHHouseShdowImageTypeLTR;
-        }else {
-           model.shadowImageType = FHHouseShdowImageTypeLR;
-        }
-    }];
-    [plots enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-        if (idx == plots.count-1 && plots.count != 1) {
-            model.shadowImageType = FHHouseShdowImageTypeLBR;
-        }else if(idx == 0 && plots.count == 1)  {
-            model.shadowImageType = FHHouseShdowImageTypeRound;
-        }else if (idx == 0 && plots.count != 1) {
-            model.shadowImageType = FHHouseShdowImageTypeLTR;
-        }else {
-            model.shadowImageType = FHHouseShdowImageTypeLR;
-        }
-    }];
-    [tips enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-        model.shadowImageType = FHHouseShdowImageTypeRound;
-    }];
-    [peripherys enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-        model.shadowImageType = FHHouseShdowImageTypeRound;
-    }];
-    
-}
 @end

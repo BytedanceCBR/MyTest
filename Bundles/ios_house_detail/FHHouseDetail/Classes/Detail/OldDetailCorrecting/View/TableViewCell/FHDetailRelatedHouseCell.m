@@ -55,6 +55,21 @@
     // 添加tableView和查看更多
     FHDetailRelatedHouseModel *model = (FHDetailRelatedHouseModel *)data;
     self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     CGFloat cellHeight = 96;
     BOOL hasMore = model.relatedHouseData.hasMore;
     CGFloat bottomOffset = 20;
@@ -160,7 +175,7 @@
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(11);
         make.right.mas_equalTo(self.contentView).offset(-11);
-        make.top.equalTo(self.contentView).offset(20);
+        make.top.equalTo(self.shadowImage).offset(32);
         make.height.mas_equalTo(46);
     }];
     _containerView = [[UIView alloc] init];
@@ -169,7 +184,7 @@
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-12);
     }];
 }
 

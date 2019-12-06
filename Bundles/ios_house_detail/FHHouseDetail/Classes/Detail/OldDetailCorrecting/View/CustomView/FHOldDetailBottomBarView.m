@@ -16,6 +16,7 @@
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHCommonDefines.h>
 #import "FHUIAdaptation.h"
+#import "FHUtils.h"
 
 @interface FHOldDetailBottomBarView ()
 
@@ -329,7 +330,7 @@
     if (!_avatarView) {
         _avatarView = [[UIImageView alloc]init];
         _avatarView.contentMode = UIViewContentModeScaleAspectFill;
-        _avatarView.layer.cornerRadius = 21;
+        _avatarView.layer.cornerRadius = 24;
         _avatarView.layer.masksToBounds = YES;
     }
     return _avatarView;
@@ -366,7 +367,7 @@
 - (FHLoadingButton *)contactBtn
 {
     if (!_contactBtn) {
-        _contactBtn = [[FHLoadingButton alloc]init];
+        _contactBtn = [[FHLoadingButton alloc]initWithFrame:CGRectMake(0, 0, 88, 44)];
         [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         if ([TTDeviceHelper is568Screen]) {
@@ -377,14 +378,22 @@
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
         _contactBtn.layer.cornerRadius = 22;
+        // 阴影颜色
+        _contactBtn.layer.shadowColor = [UIColor themeRed1].CGColor;
+        // 阴影偏移量 默认为(0,3)
+        _contactBtn.layer.shadowOffset = CGSizeMake(0, 3);
+        // 阴影透明度
+        _contactBtn.layer.shadowOpacity = .2;
         _contactBtn.backgroundColor = [UIColor themeRed1];
+     
     }
     return _contactBtn;
 }
 
 - (UIButton *)imChatBtn {
     if (!_imChatBtn) {
-        _imChatBtn = [[UIButton alloc] init];
+        _imChatBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 88, 44)];
+           [FHUtils addShadowToView:_imChatBtn withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(0, 2) shadowRadius:6 andCornerRadius:4];
         _imChatBtn.layer.cornerRadius = 22;
         _imChatBtn.backgroundColor = [UIColor themeIMOrange];
         if ([TTDeviceHelper is568Screen]) {
@@ -396,6 +405,9 @@
         [_imChatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [_imChatBtn setTitle:@"在线联系" forState:UIControlStateNormal];
         [_imChatBtn setTitle:@"在线联系" forState:UIControlStateHighlighted];
+        _imChatBtn.layer.shadowColor = [UIColor themeIMOrange].CGColor;
+        _imChatBtn.layer.shadowOffset = CGSizeMake(0, 3);
+        _imChatBtn.layer.shadowOpacity = .2;
     }
     return _imChatBtn;
 }

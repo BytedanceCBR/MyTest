@@ -49,9 +49,24 @@
     //
     FHDetailSurroundingAreaModel *model = (FHDetailSurroundingAreaModel *)data;
     self.shadowImage.image = model.shadowImage;
-    if (model.shadowImageType == FHHouseShdowImageTypeLBR) {
-        [self.headerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentView);
+//    if (model.shadowImageType == FHHouseShdowImageTypeLBR) {
+//        [self.headerView mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(self.contentView);
+//        }];
+//    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
         }];
     }
     if (model.relatedNeighborhoodData) {
@@ -109,7 +124,7 @@
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
-        make.top.mas_equalTo(self.contentView).offset(18);
+        make.top.mas_equalTo(self.shadowImage).offset(30);
         make.height.mas_equalTo(46);
     }];
     [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -120,7 +135,7 @@
         make.top.mas_equalTo(self.headerView);
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
-        make.bottom.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-12);
     }];
 }
 - (UIImageView *)shadowImage {

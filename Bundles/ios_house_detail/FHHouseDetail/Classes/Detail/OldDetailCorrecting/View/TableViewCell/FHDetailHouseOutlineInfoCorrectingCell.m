@@ -61,6 +61,21 @@
     }
     FHDetailHouseOutlineInfoCorrectingModel *model = (FHDetailHouseOutlineInfoCorrectingModel *)data;
     self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     _infoButton.hidden = model.hideReport;
     _contentHeight = 70; //header高度
     __block UIView *lastView = self.containerView;
@@ -212,16 +227,16 @@
 }
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(0);
-        make.right.mas_equalTo(self).offset(0);
-        make.top.mas_equalTo(self).offset(-12);
-        make.bottom.mas_equalTo(self).offset(12);
+        make.left.mas_equalTo(self.contentView).offset(0);
+        make.right.mas_equalTo(self.contentView).offset(0);
+        make.top.mas_equalTo(self.contentView).offset(-12);
+        make.bottom.mas_equalTo(self.contentView).offset(12);
     }];
 
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(11);
         make.right.mas_equalTo(self.contentView).offset(-11);
-        make.top.mas_equalTo(self.contentView).offset(18);
+        make.top.mas_equalTo(self.shadowImage).offset(30);
         make.height.mas_equalTo(52);// 46 + 6
     }];
     
@@ -234,7 +249,7 @@
         make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.mas_equalTo(self.contentView).offset(11);
         make.right.mas_equalTo(self.contentView).offset(-11);
-        make.bottom.mas_equalTo(self.contentView).offset(-24);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-36);
     }];
     [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);

@@ -56,6 +56,21 @@
     //
     FHDetailSuggestTipModel *model = (FHDetailSuggestTipModel *)data;
     self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     if (model.buySuggestion && model.buySuggestion.type.length > 0) {
         self.infoLab.text = model.buySuggestion.content;
     }
@@ -140,7 +155,7 @@
     }];
     [self.titleImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).offset(29);
-        make.top.equalTo(self.contentView).offset(32);
+        make.top.equalTo(self.shadowImage).offset(44);
         make.size.mas_offset(CGSizeMake(24, 24));
     }];
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -159,7 +174,7 @@
         make.right.equalTo(self.contentView).offset(-31);
         make.top.equalTo(self.infoLab.mas_bottom).offset(22);
         make.height.mas_offset(40);
-        make.bottom.equalTo(self.contentView).offset(-38);
+        make.bottom.equalTo(self.shadowImage).offset(-50);
     }];
 }
 

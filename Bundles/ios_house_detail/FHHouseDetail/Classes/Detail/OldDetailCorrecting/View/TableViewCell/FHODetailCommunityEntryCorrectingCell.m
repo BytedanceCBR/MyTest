@@ -94,8 +94,8 @@
     [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
-        make.top.mas_equalTo(self.contentView).offset(10);
-        make.bottom.equalTo(self.contentView).offset(-20);
+        make.top.mas_equalTo(self.shadowImage).offset(22);
+        make.bottom.equalTo(self.shadowImage).offset(-32);
     }];
     [self.activeCountInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.backView).offset(16);
@@ -164,6 +164,21 @@
     
     FHDetailCommunityEntryModel *entryModel = data;
     self.shadowImage.image = entryModel.shadowImage;
+    if(entryModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(entryModel.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(entryModel.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     if (!entryModel.activeInfo) {
         return;
     }

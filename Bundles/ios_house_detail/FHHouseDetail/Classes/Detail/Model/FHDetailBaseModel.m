@@ -28,6 +28,14 @@
     }
 }
 
+- (void)setShdowImageScopeType:(FHHouseShdowImageScopeType)shdowImageScopeType {
+    if (_shdowImageScopeType ==  FHHouseShdowImageScopeTypeDefault) {
+               _shdowImageScopeType = shdowImageScopeType;
+    }else {
+        _shdowImageScopeType = FHHouseShdowImageScopeTypeAll;
+    }
+}
+
 @end
 
 @implementation FHDetailPhotoHeaderModel

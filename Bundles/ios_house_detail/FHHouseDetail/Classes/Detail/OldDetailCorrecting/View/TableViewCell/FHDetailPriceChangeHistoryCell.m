@@ -46,6 +46,21 @@
     //
     FHDetailPriceChangeHistoryModel *model = (FHDetailPriceChangeHistoryModel *)data;
     self.shadowImage.image = model.shadowImage;
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     self.infoLabel.text = model.priceChangeHistory.priceChangeDesc;
     [self layoutIfNeeded];
 }
@@ -122,9 +137,9 @@
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(31);
         make.right.mas_equalTo(self.contentView).offset(-31);
-        make.top.equalTo(self.contentView).offset(15);
+        make.top.equalTo(self.shadowImage).offset(27);
         make.height.mas_offset(40);
-        make.centerY.equalTo(self.contentView);
+        make.centerY.equalTo(self.shadowImage);
     }];
     [self.leftIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.bgView).offset(15);

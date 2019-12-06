@@ -21,6 +21,7 @@
 
 @interface FHDetailHouseReviewCommentCell () <FHDetailHouseReviewCommentItemViewDelegate>
 @property(nonatomic, strong) FHDetailHeaderView *headerView;
+@property (nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic, strong) UIView *containerView;
 @property(nonatomic, strong) FHDetailFoldViewButton *foldButton;
 @property(nonatomic, strong) NSMutableDictionary *tracerDicCache;
@@ -41,12 +42,20 @@
 }
 
 - (void)setupUI {
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView);
+        make.right.mas_equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
+    }];
     _tracerDicCache = [NSMutableDictionary new];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"经纪人带看房评";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.shadowImage).offset(30);
+        make.right.mas_equalTo(self.contentView).offset(-15);
+        make.left.mas_equalTo(self.contentView).offset(15);
         make.height.mas_equalTo(46);
     }];
     _containerView = [[UIView alloc] init];
@@ -54,10 +63,11 @@
     _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.right.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
+        make.left.mas_equalTo(self.contentView).mas_offset(15);
+        make.right.mas_equalTo(self.contentView).mas_offset(-15);
         make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-35);
     }];
 }
 
@@ -66,6 +76,22 @@
         return;
     }
     FHDetailHouseReviewCommentCellModel *modelData = (FHDetailHouseReviewCommentCellModel *) data;
+    self.shadowImage.image = modelData.shadowImage;
+    if(modelData.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
+    if(modelData.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
+        }];
+    }
+    if(modelData.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.contentView);
+        }];
+    }
     if (modelData.houseReviewComment.count <= 0) {
         return;
     }
@@ -112,12 +138,12 @@
             make.left.right.mas_equalTo(self.contentView);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.contentView).offset(-58);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-93);
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.contentView).offset(-20);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-35);
         }];
     }
     [self updateItems:NO];

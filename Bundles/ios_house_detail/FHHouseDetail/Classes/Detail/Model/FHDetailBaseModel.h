@@ -40,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailBaseModel : NSObject
 @property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
+//是否裁剪阴影图
+@property (nonatomic, assign) FHHouseShdowImageScopeType shdowImageScopeType;
 //根据houseModelType将多个cell分为一个模块
 @property (nonatomic, assign)FHHouseModelType houseModelType;
 @property (nonatomic, strong) UIImage *shadowImage;
@@ -245,6 +247,8 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 
 @interface FHDetailCommunityEntryModel : JSONModel
 @property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
+//是否裁剪阴影图
+@property (nonatomic, assign) FHHouseShdowImageScopeType shdowImageScopeType;
 //根据houseModelType将多个cell分为一个模块
 @property (nonatomic, assign)FHHouseModelType houseModelType;
 @property (nonatomic, strong) UIImage *shadowImage;
