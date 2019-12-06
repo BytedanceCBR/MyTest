@@ -227,6 +227,7 @@
 - (void)viewWillDisappear {
     [self.feedListController viewWillDisappear];
     self.isViewAppear = NO;
+    [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:self.data];
 }
 
 - (void)endRefreshing {
