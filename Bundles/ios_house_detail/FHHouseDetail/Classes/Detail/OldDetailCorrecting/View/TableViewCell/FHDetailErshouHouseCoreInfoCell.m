@@ -68,7 +68,7 @@
             }
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.shadowImage).offset(12);
-                make.top.mas_equalTo(self.shadowImage).offset(-12);
+                make.bottom.mas_equalTo(self.shadowImage).offset(-12);
                 make.width.mas_equalTo(width);
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];

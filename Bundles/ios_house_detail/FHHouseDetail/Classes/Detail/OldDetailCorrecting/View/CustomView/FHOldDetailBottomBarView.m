@@ -367,7 +367,7 @@
 - (FHLoadingButton *)contactBtn
 {
     if (!_contactBtn) {
-        _contactBtn = [[FHLoadingButton alloc]initWithFrame:CGRectMake(0, 0, 88, 44)];
+        _contactBtn = [[FHLoadingButton alloc]init];
         [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         if ([TTDeviceHelper is568Screen]) {
@@ -381,9 +381,9 @@
         // 阴影颜色
         _contactBtn.layer.shadowColor = [UIColor themeRed1].CGColor;
         // 阴影偏移量 默认为(0,3)
-        _contactBtn.layer.shadowOffset = CGSizeMake(0, 3);
+        _contactBtn.layer.shadowOffset = CGSizeMake(0, 4);
         // 阴影透明度
-        _contactBtn.layer.shadowOpacity = .2;
+        _contactBtn.layer.shadowOpacity = .5;
         _contactBtn.backgroundColor = [UIColor themeRed1];
      
     }
@@ -392,9 +392,11 @@
 
 - (UIButton *)imChatBtn {
     if (!_imChatBtn) {
-        _imChatBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 88, 44)];
-           [FHUtils addShadowToView:_imChatBtn withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(0, 2) shadowRadius:6 andCornerRadius:4];
+        _imChatBtn = [[UIButton alloc] init];
         _imChatBtn.layer.cornerRadius = 22;
+        _imChatBtn.layer.shadowColor = [UIColor themeIMOrange].CGColor;
+        _imChatBtn.layer.shadowOffset = CGSizeMake(0, 4);
+        _imChatBtn.layer.shadowOpacity = .5;
         _imChatBtn.backgroundColor = [UIColor themeIMOrange];
         if ([TTDeviceHelper is568Screen]) {
             _imChatBtn.titleLabel.font = [UIFont themeFontRegular:14];
@@ -405,9 +407,7 @@
         [_imChatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [_imChatBtn setTitle:@"在线联系" forState:UIControlStateNormal];
         [_imChatBtn setTitle:@"在线联系" forState:UIControlStateHighlighted];
-        _imChatBtn.layer.shadowColor = [UIColor themeIMOrange].CGColor;
-        _imChatBtn.layer.shadowOffset = CGSizeMake(0, 3);
-        _imChatBtn.layer.shadowOpacity = .2;
+
     }
     return _imChatBtn;
 }

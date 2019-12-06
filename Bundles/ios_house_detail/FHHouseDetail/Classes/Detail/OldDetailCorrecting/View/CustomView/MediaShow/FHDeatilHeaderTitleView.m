@@ -112,7 +112,7 @@
         CGSize itemSize = [tagModel.content sizeWithAttributes:@{
                                                                  NSFontAttributeName: [UIFont themeFontRegular:12]
                                                                  }];
-        UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#ffead3"]: [[UIColor colorWithHexStr:@"a59f9c"]colorWithAlphaComponent:0.39 ];
+        UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#ffead3"]: [UIColor colorWithHexStr:@"#EDEEEC"];
         UIColor *tagTextColor = idx == 0 ?[UIColor colorWithHexString:@"#ff9300"]:[UIColor colorWithHexString:@"#a49a92"];
         UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
         [self.tagBacView addSubview:label];
