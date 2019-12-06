@@ -34,7 +34,7 @@
 #import <TTThemedAlertController.h>
 #import "FHFeedUGCCellModel.h"
 #import <TTUGCDefine.h>
-#import <UIViewController+Helper.h>
+#import <FHUGCCategoryHelper.h>
 
 #define kSegmentViewHeight 52
 
