@@ -9,6 +9,9 @@
 #import <TTInstallIDManager.h>
 #import <TTRoute.h>
 
+//固定值
+#define taskID @"311"
+
 @interface FHMinisdkManager ()<BDMTaskCenterManagerProtocol>
 
 @end
@@ -25,10 +28,6 @@
     return manager;
 }
 
-- (NSString *)taskID {
-    return @"311";
-}
-
 - (void)initTask {
     [BDMTaskCenterManager sharedInstance].delegate = self;
     [[BDMTaskCenterManager sharedInstance] uploadAppFirstOpenAfterDownload];
@@ -39,7 +38,7 @@
 }
 
 - (void)taskComplete:(BDDTaskFinishBlock)finishBlock {
-    [[BDMTaskCenterManager sharedInstance] updateTaskID:[self taskID] finishBlock:finishBlock];
+    [[BDMTaskCenterManager sharedInstance] updateTaskID:taskID finishBlock:finishBlock];
 }
     
 - (void)seeVideo {
