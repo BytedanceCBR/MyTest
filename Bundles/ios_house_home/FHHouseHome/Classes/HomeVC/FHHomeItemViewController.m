@@ -602,6 +602,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
             [bannerCell refreshData:self.houseType];
             [bannerCell.contentView setBackgroundColor:[UIColor themeHomeColor]];
+            bannerCell.selectionStyle = UITableViewCellSelectionStyleNone;
             return bannerCell;
         }else
         {
@@ -610,6 +611,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 [subView removeFromSuperview];
             }
             [cellMargin setBackgroundColor:[UIColor themeHomeColor]];
+            cellMargin.selectionStyle = UITableViewCellSelectionStyleNone;
             return cellMargin;
         }
     }else

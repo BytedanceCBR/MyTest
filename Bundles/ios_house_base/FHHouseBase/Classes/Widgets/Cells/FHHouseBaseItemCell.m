@@ -929,7 +929,7 @@
         layout.isEnabled = YES;
         layout.flexDirection = YGFlexDirectionColumnReverse;
         layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
-        layout.height = YGPointValue(58);
+        layout.height = YGPointValue(60);
         layout.right = YGPointValue(0);
         layout.top = YGPointValue(15);
         //        layout.marginRight = YGPointValue(20);
