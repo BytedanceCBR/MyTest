@@ -79,8 +79,8 @@
         NSDictionary *userInfo = notification.userInfo;
         
         FHUGCVoteInfoVoteInfoModel *voteInfo = notification.userInfo[@"vote_info"];
-        if (voteInfo && voteInfo.selected) {
-            // 完成(或者过期)
+        if (voteInfo) {
+            // 完成(或者过期) 或者 取消投票
             FHUGCVoteInfoVoteInfoModel *currentVoteInfo = self.cellModel.voteInfo;
             if ([currentVoteInfo.voteId isEqualToString:voteInfo.voteId] && currentVoteInfo != voteInfo) {
                 // 同样的投票
@@ -721,6 +721,9 @@
             }];
             
             [weakSelf refreshWithData:weakSelf.voteInfo];
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            [userInfo setObject:weakSelf.voteInfo forKey:@"vote_info"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
         } else {
             weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
             if (error) {
