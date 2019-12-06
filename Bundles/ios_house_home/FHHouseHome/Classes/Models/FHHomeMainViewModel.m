@@ -15,9 +15,9 @@
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHHomeMainViewController *viewController;
 @property(nonatomic , strong) NSMutableArray *dataArray;
-@property(nonatomic , assign) NSInteger currentIndex;
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
+
 @end
 
 @implementation FHHomeMainViewModel
@@ -136,6 +136,7 @@
         if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (self.viewController.topView.segmentControl.sectionTitles.count - 1)){
             return;
         }
+        self.currentIndex = tabIndex;
         
         CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
         [self.viewController.topView.segmentControl setScrollValue:value isDirectionLeft:diff < 0];

@@ -120,7 +120,7 @@
     self.topView.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-        if ([self.collectionView numberOfItemsInSection:0] > index) {
+        if ([self.collectionView numberOfItemsInSection:0] > index && index != self.viewModel.currentIndex) {
             [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
     };

@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeMainViewModel : NSObject
 
+@property(nonatomic , assign) NSInteger currentIndex;
+
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(UIViewController *)viewController;
 
 @end
