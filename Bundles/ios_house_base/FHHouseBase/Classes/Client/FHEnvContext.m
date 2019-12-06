@@ -766,6 +766,12 @@ static NSInteger kGetLightRequestRetryCount = 3;
             [tabItem setTitle:@"找房"];
         }
     }
+    
+    if ([self isUGCOpen]) {
+        [tabItem setNormalImage:[UIImage imageNamed:@"tab-ugc"] highlightedImage:[UIImage imageNamed:@"tab-ugc_press"] loadingImage:nil];
+    }else{
+        [tabItem setNormalImage:[UIImage imageNamed:@"tab-search"] highlightedImage:[UIImage imageNamed:@"tab-search_press"] loadingImage:nil];
+    }
 }
 
 + (BOOL)hadFindTabShowRed

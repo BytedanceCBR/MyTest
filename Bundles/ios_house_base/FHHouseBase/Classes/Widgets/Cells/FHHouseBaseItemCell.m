@@ -674,14 +674,15 @@
         layout.height = YGPointValue(64);
         layout.right = YGPointValue(0);
         layout.top = YGPointValue(15);
-//        layout.marginRight = YGPointValue(20);
+//      layout.marginRight = YGPointValue(20);
+        layout.right = YGPointValue(3);
         layout.justifyContent = YGJustifySpaceBetween;
         layout.position = YGPositionTypeAbsolute;
-//        layout.top = YGPointValue(5);
+//      layout.top = YGPointValue(5);
         layout.alignItems = YGAlignFlexEnd;
     }];
 
-    
+
     [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.right = YGPointValue(20);
@@ -930,7 +931,7 @@
         layout.flexDirection = YGFlexDirectionColumnReverse;
         layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
         layout.height = YGPointValue(60);
-        layout.right = YGPointValue(0);
+        layout.right = YGPointValue(3);
         layout.top = YGPointValue(15);
         //        layout.marginRight = YGPointValue(20);
         layout.justifyContent = YGJustifySpaceBetween;

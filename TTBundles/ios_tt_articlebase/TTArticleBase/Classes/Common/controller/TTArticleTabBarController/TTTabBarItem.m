@@ -202,8 +202,7 @@ static TTPersistence *tabBarItemPersistence;
     
     if(self.state == TTTabBarItemStateNone) {
         self.state = TTTabBarItemStateNormal;
-    }
-    else {
+    }else {
         [self changeImageViewIfNeed];
         [self layoutImageAndTitleView];
     }
