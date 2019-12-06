@@ -1153,9 +1153,10 @@
         self.mainTitleLabel.text = commonModel.title;
         self.subTitleLabel.text = commonModel.subtitle;
         self.priceLabel.text = commonModel.pricing;
-        self.pricePerSqmLabel.text = @"";
-        _mainTitleLabel.numberOfLines = 2;
-        [_mainTitleLabel sizeToFit];
+//        self.pricePerSqmLabel.text = @"";
+//        _mainTitleLabel.numberOfLines = 2;
+//        [_mainTitleLabel sizeToFit];
+//
         
         [self.mainTitleLabel.yoga markDirty];
         [self.subTitleLabel.yoga markDirty];
