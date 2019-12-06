@@ -34,6 +34,14 @@
 #import "FHWebViewConfig.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 
+#if __has_include(<BDNativeWebComponent/WKWebView+BDNative.h>)
+#import <BDNativeWebComponent/WKWebView+BDNative.h>
+#import <BDNativeWebComponent/BDNativeLogManager.h>
+#import <BDNativeWebComponent/BDNativeImageComponent.h>
+//#import <BDNativeWebComponent/BDNativeVideoComponent.h>
+
+#endif
+
 NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseConditionADIDKey";
 
 @interface SSWebViewController ()<YSWebViewDelegate>
@@ -91,6 +99,18 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 
 + (void)load {
     RegisterRouteObjWithEntryName(@"novel");
+}
+
++(void)initialize {
+    
+#if __has_include(<BDNativeWebComponent/WKWebView+BDNative.h>)
+    [WKWebView registerGlobalNativeWithComponents:
+     @[
+       [BDNativeImageComponent class]
+     ]
+     ];
+    //       [BDNativeVideoComponent class]]
+#endif
 }
 
 //这是我见过写的最乱的代码.
@@ -540,6 +560,13 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     // iOS12 - 使用WKWebView出现input键盘将页面上顶 不下移问题 兼容
     self.isFirstKeyBoardShow = YES;
     [self registerKeybordObserver];
+    
+#if __has_include(<BDNativeWebComponent/WKWebView+BDNative.h>)
+    WKWebView *wkWebView = [self.ssWebView.ssWebContainer.ssWebView tt_webViewInUse];
+    if ([wkWebView isKindOfClass:[WKWebView class]]) {        
+        [wkWebView enableNative];
+    }
+#endif
 }
 
 -(void)initNavbar {
