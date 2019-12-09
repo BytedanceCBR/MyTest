@@ -40,6 +40,7 @@
         make.left.mas_equalTo(self).offset(31);
         make.right.mas_equalTo(self).offset(-35);
         make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(17);
+        make.bottom.mas_equalTo(self);
     }];
 }
 

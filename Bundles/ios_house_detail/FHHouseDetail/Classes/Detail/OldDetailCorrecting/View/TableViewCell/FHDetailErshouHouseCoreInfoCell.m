@@ -88,6 +88,7 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.clipsToBounds = YES;
         _itemArr = [[NSMutableArray alloc]init];
         [self initBacIma];
     }

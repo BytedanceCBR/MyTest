@@ -208,6 +208,23 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     BOOL hasVideo = NO;
     BOOL hasVR = NO;
     BOOL isInstant = model.isInstantData;
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    }else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
+    if (contactPhone.phone.length > 0) {
+        
+        if ([self isShowSubscribe]) {
+            contactPhone.isFormReport = YES;
+        }else {
+            contactPhone.isFormReport = NO;
+        }
+    }else {
+        contactPhone.isFormReport = YES;
+    }
     if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
         hasVideo = YES;
     }
@@ -578,7 +595,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (model.data.housePricingRank.buySuggestion.content.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailSuggestTipModel *infoModel = [[FHDetailSuggestTipModel alloc] init];
+        infoModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        [infoModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
+        infoModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
+        //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
+        //        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        infoModel.phoneCallViewModel.tracerDict = paramsDict;
         infoModel.buySuggestion = model.data.housePricingRank.buySuggestion;
+        infoModel.contactPhone = contactPhone;
         infoModel.houseModelType = FHHouseModelTypeTips;
         [self.items addObject:infoModel];
     }
@@ -587,23 +616,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     // --
     [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
     
-    FHDetailContactModel *contactPhone = nil;
-    if (model.data.highlightedRealtor) {
-        contactPhone = model.data.highlightedRealtor;
-    }else {
-        contactPhone = model.data.contact;
-        contactPhone.unregistered = YES;
-    }
-    if (contactPhone.phone.length > 0) {
-        
-        if ([self isShowSubscribe]) {
-            contactPhone.isFormReport = YES;
-        }else {
-            contactPhone.isFormReport = NO;
-        }
-    }else {
-        contactPhone.isFormReport = YES;
-    }
+
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.subTitle = model.data.reportToast;

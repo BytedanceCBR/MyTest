@@ -44,7 +44,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
@@ -74,9 +74,21 @@
     if (model.buySuggestion && model.buySuggestion.type.length > 0) {
         self.infoLab.text = model.buySuggestion.content;
     }
+    FHDetailContactModel *contactPhone = model.contactPhone;
+    if (contactPhone.unregistered) {
+        self.imBtn.hidden = YES;
+        [self.infoLab mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.shadowImage).offset(-50);
+        }];
+        [self.imBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_offset(0);
+        }];
+    }
+    
+    
 }
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
@@ -139,6 +151,7 @@
         [imBtn setTitleColor: [UIColor colorWithHexStr:@"#ff9629"] forState:UIControlStateNormal];
         imBtn.titleLabel.font = [UIFont themeFontMedium:16];
         imBtn.backgroundColor = [[UIColor colorWithHexStr:@"#ffa227"] colorWithAlphaComponent:0.16];
+        [imBtn addTarget:self action:@selector(im_click:) forControlEvents:UIControlEventTouchUpInside];
         imBtn.layer.cornerRadius = 20;
         [self.contentView addSubview:imBtn];
         _imBtn = imBtn;
@@ -178,6 +191,12 @@
     }];
 }
 
+- (void)im_click:(UIButton *)btn {
+    FHDetailSuggestTipModel *model = (FHDetailSuggestTipModel *)self.currentData;
+    NSMutableDictionary *imExtra = @{}.mutableCopy;
+    imExtra[@"realtor_position"] = @"trade_tips";
+    [model.phoneCallViewModel imchatActionWithPhone:model.contactPhone realtorRank:@"0" extraDic:imExtra];
+}
 @end
 
 

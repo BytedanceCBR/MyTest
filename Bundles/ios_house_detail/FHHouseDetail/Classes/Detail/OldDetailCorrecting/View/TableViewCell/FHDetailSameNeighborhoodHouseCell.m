@@ -290,14 +290,14 @@
             self.icon.image = [UIImage imageNamed:@"default_image"];
         }
         
-        if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
-            self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
-            self.imageTagLabel.text = model.houseImageTag.text;
-            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
-            self.imageTagLabelBgView.hidden = NO;
-        }else {
-            self.imageTagLabelBgView.hidden = YES;
-        }
+//        if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
+//            self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
+//            self.imageTagLabel.text = model.houseImageTag.text;
+//            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+//            self.imageTagLabelBgView.hidden = NO;
+//        }else {
+//            self.imageTagLabelBgView.hidden = YES;
+//        }
         
         self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
         
