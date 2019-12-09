@@ -134,8 +134,31 @@
 
 // UGC定位弹窗 3天 弹一次
 - (void)checkNeedShowLocationAlert {
-    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970];
-    NSLog(@"-----:%lf",duration);
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    NSNumber *lastTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"kFHUGCCheckNeedShowLocationAlert"];
+    NSNumber *currentTimeNum = [NSNumber numberWithDouble:currentTime];
+    if (lastTime == nil) {
+        if (currentTimeNum) {
+            [[NSUserDefaults standardUserDefaults] setObject:currentTimeNum forKey:@"kFHUGCCheckNeedShowLocationAlert"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        [self showLocationGuideAlert];
+    } else {
+        double lastTimeValue = [lastTime doubleValue];
+        // 3天 = 3 * 24 * 60 * 60
+        if (currentTime - lastTimeValue >= (3 * 24 * 60 * 60)) {
+            if (currentTimeNum) {
+                [[NSUserDefaults standardUserDefaults] setObject:currentTimeNum forKey:@"kFHUGCCheckNeedShowLocationAlert"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            [self showLocationGuideAlert];
+        } else {
+            // 3天内展示过了 直接初始化view
+            self.needRefresh = YES;
+            [self initView];
+            self.lastRequestTime = [[NSDate date] timeIntervalSince1970];
+        }
+    }
 }
 
 - (void)showLocationGuideAlert {
