@@ -324,6 +324,8 @@
 
         staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        staticMapModel.houseId = model.data.neighborhoodInfo.id;
+        staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeNeighborhood];
         staticMapModel.title = model.data.neighborhoodInfo.name;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;

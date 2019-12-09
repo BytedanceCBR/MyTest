@@ -407,6 +407,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
         staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        staticMapModel.houseId = model.data.id;
+        staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeRentHouse];
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
         staticMapModel.useStarHeader = NO;

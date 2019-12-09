@@ -483,6 +483,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
         staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        staticMapModel.houseId = model.data.id;
+        staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeSecondHandHouse];
+        //todo zlj review check
+        staticMapModel.mapCentertitle = model.data.neighborhoodInfo.name;
         staticMapModel.title = model.data.neighborEval.title;
         staticMapModel.score = model.data.neighborEval.score;
         staticMapModel.tableView = self.tableView;

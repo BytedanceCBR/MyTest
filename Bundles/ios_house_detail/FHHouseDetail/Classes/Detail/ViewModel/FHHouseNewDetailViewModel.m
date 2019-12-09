@@ -631,6 +631,8 @@
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
         staticMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
+        staticMapModel.houseId = model.data.coreInfo.id;
+        staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeNewHouse];
         staticMapModel.title = model.data.coreInfo.name;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.coreInfo.gaodeImage;
