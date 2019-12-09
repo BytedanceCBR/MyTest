@@ -21,11 +21,14 @@
 #import "FHHouseDetailAPI.h"
 #import <TTReachability/TTReachability.h>
 #import "FHDetailQuestionPopView.h"
+#import "FHDetailMediaHeaderCorrectingCell.h"
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong)   NSMutableDictionary       *cellHeightCaches;
 @property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
+//目前背景阴影用图表示,该数组表示模块集合，根据模块内容来添加阴影图片
+@property (nonatomic, strong)   NSMutableDictionary *elementShdowGroup;
 @property (nonatomic, strong)   NSHashTable               *weakedCellTable;
 @property (nonatomic, strong)   NSHashTable               *weakedVCLifeCycleCellTable;
 @property (nonatomic, assign)   CGPoint       lastPointOffset;
@@ -66,6 +69,7 @@
         _items = [NSMutableArray new];
         _cellHeightCaches = [NSMutableDictionary new];
         _elementShowCaches = [NSMutableDictionary new];
+        _elementShdowGroup = [NSMutableDictionary new];
         _lastPointOffset = CGPointZero;
         _weakedCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _weakedVCLifeCycleCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
@@ -149,7 +153,6 @@
 - (void)questionBtnDidClick:(UIButton *)btn
 {
     [self addQuickQuestionClickOptionLog:NO];
-    
     FHDetailOldDataModel *dataModel = nil;
     if ([self.detailData isKindOfClass:[FHDetailOldModel class]]) {
         dataModel = [(FHDetailOldModel*)self.detailData data];
@@ -202,7 +205,6 @@
 }
 
 #pragma mark - 需要子类实现的方法
-
 // 注册cell类型
 - (void)registerCellClasses {
     // sub implements.........
@@ -286,16 +288,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     if ([self currentIsInstantData]) {
         //当前是列表页带入的数据，不上报埋点
         return;
     }
-    
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
-    
     CGFloat originY = tableView.contentOffset.y;
     CGFloat cellOriginY = cell.frame.origin.y;
     CGFloat winH = [UIScreen mainScreen].bounds.size.height;
@@ -304,7 +303,6 @@
         // 超出屏幕
         return;
     }
-    
     if ([cell conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)] && ![self.weakedCellTable containsObject:cell]) {
         [self.weakedCellTable addObject:cell];
     }
@@ -328,12 +326,11 @@
             [tracerDic removeObjectForKey:@"element_from"];
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
         }
-        
         NSArray *element_array = [tempCell elementTypeStringArray:self.houseType];
         if (element_array.count > 0) {
             for (NSString * element_name in element_array) {
                 if ([element_name isKindOfClass:[NSString class]]) {
-                    // 上报埋点
+                    // 上报埋点x
                     NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
                     tracerDic[@"element_type"] = element_name;
                     [tracerDic removeObjectForKey:@"element_from"];
@@ -341,7 +338,6 @@
                 }
             }
         }
-        
         NSDictionary * houseShowDict = [tempCell elementHouseShowUpload];
         if (houseShowDict.allKeys.count > 0) {
             // 上报埋点

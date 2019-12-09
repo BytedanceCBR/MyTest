@@ -92,7 +92,7 @@
         }
         
         [backImage setBackgroundColor:[UIColor whiteColor]];
-        backImage.layer.cornerRadius = 2;
+        backImage.layer.cornerRadius = 10;
         backImage.userInteractionEnabled = YES;
         backImage.layer.masksToBounds = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(houseTypeBannerClick:)];

@@ -349,6 +349,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             }
         }
     }
+    
     self.onLineName = chatTitle;
     self.phoneCallName = contactTitle;
     [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle chatTitle:chatTitle];

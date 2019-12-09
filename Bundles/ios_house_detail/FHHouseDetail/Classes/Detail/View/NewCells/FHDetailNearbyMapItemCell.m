@@ -20,6 +20,7 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setUpLabels];
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }

@@ -51,7 +51,7 @@ def fhPods
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev'
     #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '04b0711843b573a64a781571dd19bdf50f5cc59e'
 #    pod 'FHCommonUI', :path => '../../ios_common_ui'
-    pod 'FHCommonUI', '0.0.8-alpha.0'
+    pod 'FHCommonUI', '0.0.9-alpha.1'
 
     pod 'ios_house_im', '0.1.15-rc.4'
 #     pod 'ios_house_im' , :path => '../../ios_house_im'
@@ -316,8 +316,8 @@ def appPods
 
     #-----头条UI组件库-----
     # add by zjing for test
-#    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '37aa1729fff109b544c4cdd3010dd0efe4cb7079'
-    pod 'TTUIWidget','1.4.9-alpha.0-fproject'
+    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '8930d870e3f49e16378f2cdb1d6c27bc25c0f923'
+#    pod 'TTUIWidget','1.4.9-alpha.0-fproject'
 #    pod 'TTUIWidget', :path => '../../testPod/tt_pods_ui', :inhibit_warnings => false
 
     pod_binary 'ByteDanceKit', '1.0.0-rc.3', :subspecs => [

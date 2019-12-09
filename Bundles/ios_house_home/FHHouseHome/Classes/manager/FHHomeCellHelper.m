@@ -242,10 +242,10 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     // 108: topbar   49:tahbar  45:sectionHeader
     if ([TTDeviceHelper isIPhoneXSeries]) {
-        return MAIN_SCREENH_HEIGHT - 108 - 49 - 45 + padding;
+        return MAIN_SCREENH_HEIGHT - 108 - 49  + padding;
     }else
     {
-        return MAIN_SCREENH_HEIGHT - 84 - 49 - 45 + padding;
+        return MAIN_SCREENH_HEIGHT - 64 - 49  + padding;
     }
 }
 
@@ -303,9 +303,6 @@ static NSMutableArray  * _Nullable identifierArr;
             }else {
                 height += 10;
             }
-        }else
-        {
-            height += 10;
         }
     }
     self.headerHeight = height;
@@ -495,7 +492,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 make.bottom.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? -10 : -8);
             }];
         }
-        itemView.backgroundColor = [UIColor whiteColor];
+        itemView.backgroundColor = [UIColor clearColor];
         if (isNeedAllocNewItems) {
             [itemsArray addObject:itemView];
         }
@@ -718,6 +715,53 @@ static NSMutableArray  * _Nullable identifierArr;
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"page_type"] = @"maintab";
     [FHUserTracker writeEvent:@"city_market_click" params:param];
+}
+
+//匹配房源名称
++ (NSArray <NSString *>*)matchHouseSegmentedTitleArray
+{
+    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSMutableArray *titleArrays = [[NSMutableArray alloc] initWithCapacity:3];
+    for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
+        NSNumber *houseTypeNum = configDataModel.houseTypeList[i];
+        if ([houseTypeNum isKindOfClass:[NSNumber class]]) {
+            NSString * houseStr = [self matchHouseString:[houseTypeNum integerValue]];
+            if (kIsNSString(houseStr) && houseStr.length != 0) {
+                [titleArrays addObject:houseStr];
+            }
+        }
+    }
+    return titleArrays;
+}
+
++ (NSString *)matchHouseString:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+        {
+            return @"新房";
+        }
+            break;
+        case FHHouseTypeRentHouse:
+        {
+            return @"租房";
+        }
+            break;
+        case FHHouseTypeNeighborhood:
+        {
+            return @"小区";
+        }
+            break;
+        case FHHouseTypeSecondHandHouse:
+        {
+            return @"二手房";
+        }
+            break;
+            
+        default:
+            return @"";
+            break;
+    }
 }
 
 @end

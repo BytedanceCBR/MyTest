@@ -79,7 +79,7 @@
     if (!_bgView) {
         _bgView = [[UIView alloc]init];
         _bgView.userInteractionEnabled = NO;
-        _bgView.backgroundColor = [UIColor colorWithHexString:@"#fff2ed" alpha:0.3];
+//        _bgView.backgroundColor = [UIColor colorWithHexString:@"#fff2ed" alpha:0.3];
     }
     return _bgView;
 }

@@ -308,6 +308,7 @@
     return @{
              @"houseTypeList": @"house_type_list",
              @"opData2": @"op_data_2",
+             @"toolboxData":@"toolbox_data",
              @"opData2list": @"op_data_2_list",
              @"opData": @"op_data",
              @"rentOpData": @"rent_op_data",
@@ -352,6 +353,7 @@
     return @{
              @"opData2list":[FHConfigDataOpData2ListModel class],
              @"entryInfo":[FHConfigDataEntryInfoModel class],
+             @"toolboxData":[FHConfigDataOpData2Model class],
              @"hotCityList":[FHConfigDataHotCityListModel class],
              @"cityList":[FHConfigDataCityListModel class],
              @"banners":[FHConfigDataBannersModel class],
@@ -379,6 +381,7 @@
     NSArray *keys = @[
                       @"op_data_2",
                       @"op_data_2_list",
+                      @"toolbox_data",
                       @"op_data",
                       @"rent_op_data",
                       @"main_page_banner",

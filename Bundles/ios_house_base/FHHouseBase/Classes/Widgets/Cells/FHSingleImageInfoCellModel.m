@@ -261,7 +261,6 @@
                         }
                     }
                 }
-
                 UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor colorWithHexString:@"#f85959"];
                 UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor colorWithRed:248/255.0 green:89/255.0 blue:89/255.0 alpha:0.08];
                 NSAttributedString *attr = [self.class createSmallTagAttrString:reulstString isFirst:idx == 0 textColor:textColor backgroundColor:backgroundColor];
