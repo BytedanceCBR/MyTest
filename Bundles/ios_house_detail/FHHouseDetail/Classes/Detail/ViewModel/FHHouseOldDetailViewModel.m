@@ -58,6 +58,7 @@
 #import "FHDetailListSectionTitleCell.h"
 #import "FHOldDetailModuleHelper.h"
 #import "FHDetailStaticMapCell.h"
+#import "FHOldDetailStaticMapCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -112,7 +113,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     //均价对比
     [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonModel class])];
     [self.tableView registerClass:[FHDetailOldNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldNearbyMapModel class])];
-    [self.tableView registerClass:[FHDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
+    [self.tableView registerClass:[FHOldDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     //舒适指数
 //    [self.tableView registerClass:[FHDetailOldComfortCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldComfortModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoModel class])];
@@ -531,6 +532,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 //        FHDetailOldNearbyMapModel *infoModel = [[FHDetailOldNearbyMapModel alloc] init];
 //        infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
 //        infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+//        infoModel.houseModelType = FHHouseModelTypeLocationPeriphery;
 //        infoModel.title = model.data.neighborEval.title;
 //        infoModel.mapCentertitle = model.data.neighborhoodInfo.name;
 //        infoModel.score = model.data.neighborEval.score;

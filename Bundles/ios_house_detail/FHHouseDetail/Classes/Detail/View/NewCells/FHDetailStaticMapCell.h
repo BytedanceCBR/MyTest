@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) FHDetailGaodeImageModel *staticImage;
 @property(nonatomic, assign) BOOL useStarHeader;
 @property(nonatomic, assign) BOOL mapOnly;
+@property(nonatomic, assign) BOOL useNativeMap; //降级控制，外部不使用
 @end
 
 @interface FHDetailStaticMapCell : FHDetailBaseCell
