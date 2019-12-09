@@ -134,15 +134,13 @@
     }
     if (model.listEntrance.count == 1) {
         [_containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(7);
-            make.bottom.mas_equalTo(-7);
-            
+            make.top.mas_equalTo(self.shadowImage).offset(25);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-25);
         }];
     }else {
         [_containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(13);
-            make.bottom.mas_equalTo(-13);
-            
+            make.top.mas_equalTo(self.shadowImage).offset(30);
+            make.bottom.mas_equalTo(self.shadowImage).offset(30);
         }];
     }
 }
