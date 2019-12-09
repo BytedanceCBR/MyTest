@@ -212,7 +212,6 @@
     if (self.traceEnterTopTabache) {
         [feedCategoryDict addEntriesFromDictionary:self.traceEnterTopTabache];
     }
-    
     [feedCategoryDict setValue:self.mainVC.categorySelectorView.currentSelectedCategory.categoryID
                         forKey:@"category_name"];
     [FHEnvContext recordEvent:feedCategoryDict andEventKey:@"enter_category"];
@@ -222,7 +221,7 @@
 {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     if (self.traceEnterTopTabache) {
-        [tracerDict addEntriesFromDictionary:tracerDict];
+        [tracerDict addEntriesFromDictionary:self.traceEnterTopTabache];
     }
     
     NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
@@ -233,8 +232,8 @@
     
     
     NSMutableDictionary *feedCategoryDict = [NSMutableDictionary new];
-    if (self.traceEnterTopTabache) {
-        [feedCategoryDict addEntriesFromDictionary:self.traceEnterTopTabache];
+    if (tracerDict) {
+        [feedCategoryDict addEntriesFromDictionary:tracerDict];
     }
     [feedCategoryDict setValue:self.mainVC.categorySelectorView.currentSelectedCategory.categoryID
                         forKey:@"category_name"];
