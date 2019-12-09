@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPersonalHomePageHeaderView : UIView
 
+@property (nonatomic, assign)   CGFloat       headerViewheight;
 - (void)updateData:(FHPersonalHomePageModel *)model tracerDic:(nonnull NSDictionary *)tracerDic refreshAvatar:(BOOL)refreshAvatar;
 
 @end
