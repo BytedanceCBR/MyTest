@@ -136,8 +136,8 @@
     //初始化poi信息列表
     [self setUpLocationListTableView];
 
-    self.headerView.frame = CGRectMake(15, 0, self.cellWidth, 28);
-    self.segmentedControl.frame = CGRectMake(15, self.headerView.bottom, self.cellWidth, 50);
+    self.headerView.frame = CGRectMake(15, 0, self.cellWidth, 38);
+    self.segmentedControl.frame = CGRectMake(15, self.headerView.bottom + 10, self.cellWidth, 40);
 
     CGFloat mapHeight = self.cellWidth * 7.0f / 16.0f;
     CGRect mapFrame = CGRectMake(15, self.segmentedControl.bottom, self.cellWidth, mapHeight);
