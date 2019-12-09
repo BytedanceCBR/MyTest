@@ -28,10 +28,10 @@
         
         CALayer *layer = self.layer;
         
-        layer.shadowOffset = CGSizeMake(0, 1);
+        layer.shadowOffset = CGSizeMake(0, 2);
         layer.shadowRadius = 4;
-        layer.shadowColor = [UIColor themeGray3].CGColor;
-        layer.shadowOpacity = 0.5;
+        layer.shadowColor = [UIColor colorWithRed:110.f/255.f green:110.f/255.f blue:110.f/255.f alpha:0.1].CGColor;
+        layer.shadowOpacity = 0.2;
         
         self.backgroundColor = [UIColor clearColor];
     }
