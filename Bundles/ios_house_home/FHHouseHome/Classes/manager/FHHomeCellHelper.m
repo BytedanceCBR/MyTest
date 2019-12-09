@@ -329,8 +329,8 @@ static NSMutableArray  * _Nullable identifierArr;
 
 #pragma mark 填充数据 fill data =======================
 
-+ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model
-{
++ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:(NSDictionary *)traceParams{
+    
     FHHomeEntrancesCell *cellEntrance = cell;
     
     NSInteger countItems = model.items.count;
@@ -343,7 +343,13 @@ static NSMutableArray  * _Nullable identifierArr;
     
     cellEntrance.clickBlock = ^(NSInteger clickIndex , FHConfigDataOpDataItemsModel *itemModel){
         NSMutableDictionary *dictTrace = [NSMutableDictionary new];
+        
         [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+
+        if ([traceParams isKindOfClass:[NSDictionary class]]) {
+            [dictTrace addEntriesFromDictionary:traceParams];
+        }
+        
         [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
         [dictTrace setValue:@"click" forKey:@"enter_type"];
         
@@ -617,7 +623,7 @@ static NSMutableArray  * _Nullable identifierArr;
     cell.fd_enforceFrameLayout = NO; //
     
     if ([cell isKindOfClass:[FHHomeEntrancesCell class]] && [model isKindOfClass:[FHConfigDataOpDataModel class]]) {
-        [self fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model];
+        [self fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:nil];
     }
     
     if ([cell isKindOfClass:[FHHomeBannerCell class]] && [model isKindOfClass:[FHConfigDataOpData2Model class]]) {
