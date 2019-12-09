@@ -235,7 +235,7 @@ def appPods
     
     pod_binary 'BDTFactoryConfigurator', '0.1.0'
 
-    pod_binary 'TencentQQSDK', '1.1.0-rc.0'
+    pod_binary 'TencentQQSDK','1.0.0' #QQ SDK降级 iOS13有问题
     pod_binary 'WechatSDK','0.1.5'
 
     #-----免流量统计-----
