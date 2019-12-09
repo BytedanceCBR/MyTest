@@ -634,7 +634,7 @@
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(0);
         layout.height = YGPointValue(19);
-        layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
+        layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 23));
         layout.flexGrow = 0;
     }];
     
