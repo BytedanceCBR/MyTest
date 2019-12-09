@@ -42,7 +42,7 @@
         [self initView];
         self.lastRequestTime = [[NSDate date] timeIntervalSince1970];
     }else{
-        [self showLocationGuideAlert];
+        [self checkNeedShowLocationAlert];
     }
     
     [self addEnterCategoryLog];
@@ -130,6 +130,12 @@
         [self loadFeedListView];
     }
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+}
+
+// UGC定位弹窗 3天 弹一次
+- (void)checkNeedShowLocationAlert {
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970];
+    NSLog(@"-----:%lf",duration);
 }
 
 - (void)showLocationGuideAlert {
