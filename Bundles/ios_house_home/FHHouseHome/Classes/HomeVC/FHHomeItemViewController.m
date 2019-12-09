@@ -34,6 +34,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
 static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
+static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate>
 
@@ -178,6 +179,8 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 {
     [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellSmallItemImageId];
 
+    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellRentHouseItemImageId];
+    
     [self.tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:kCellNewHouseItemImageId];
 
     [self.tableView  registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
@@ -599,6 +602,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
             FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
             [bannerCell refreshData:self.houseType];
             [bannerCell.contentView setBackgroundColor:[UIColor themeHomeColor]];
+            bannerCell.selectionStyle = UITableViewCellSelectionStyleNone;
             return bannerCell;
         }else
         {
@@ -607,6 +611,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
                 [subView removeFromSuperview];
             }
             [cellMargin setBackgroundColor:[UIColor themeHomeColor]];
+            cellMargin.selectionStyle = UITableViewCellSelectionStyleNone;
             return cellMargin;
         }
     }else
@@ -718,6 +723,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
             return cell;
         }
         //to do 房源cell
+//        NSString *identifier = self.houseType == FHHouseTypeRentHouse ? kCellRentHouseItemImageId : kCellSmallItemImageId;
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellSmallItemImageId];
         cell.delegate = self;
         if (indexPath.row < self.houseDataItemsModel.count) {

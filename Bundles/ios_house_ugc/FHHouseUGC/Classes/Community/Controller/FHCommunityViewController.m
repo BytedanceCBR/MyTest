@@ -267,9 +267,12 @@
     _segmentControl.isNeedNetworkCheck = NO;
     _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(9, 10, 0, 10);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-    _segmentControl.selectionIndicatorWidth = 24.0f;
-    _segmentControl.selectionIndicatorHeight = 12.0f;
-    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
+    _segmentControl.selectionIndicatorWidth = 20.0f;
+    _segmentControl.selectionIndicatorHeight = 4.0f;
+    _segmentControl.selectionIndicatorCornerRadius = 2.0f;
+    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
+    _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+//    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
 
     [self.topView addSubview:_segmentControl];
 

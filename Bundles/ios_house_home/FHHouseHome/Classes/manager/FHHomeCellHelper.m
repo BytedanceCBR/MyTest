@@ -328,9 +328,8 @@ static NSMutableArray  * _Nullable identifierArr;
 }
 
 #pragma mark 填充数据 fill data =======================
-
-+ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model
-{
++ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:(NSDictionary *)traceParams{
+    
     FHHomeEntrancesCell *cellEntrance = cell;
     
     NSInteger countItems = model.items.count;
@@ -340,10 +339,14 @@ static NSMutableArray  * _Nullable identifierArr;
     
     [cell updateWithItems:model.items];
     
-    
     cellEntrance.clickBlock = ^(NSInteger clickIndex , FHConfigDataOpDataItemsModel *itemModel){
         NSMutableDictionary *dictTrace = [NSMutableDictionary new];
         [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+
+        if ([traceParams isKindOfClass:[NSDictionary class]]) {
+            [dictTrace addEntriesFromDictionary:traceParams];
+        }
+        
         [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
         [dictTrace setValue:@"click" forKey:@"enter_type"];
         
@@ -355,8 +358,7 @@ static NSMutableArray  * _Nullable identifierArr;
         if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
             [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
             [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
-        }else
-        {
+        }else{
             [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
             [dictTrace setValue:@"be_null" forKey:@"origin_from"];
         }
@@ -365,7 +367,6 @@ static NSMutableArray  * _Nullable identifierArr;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         
         if ([itemModel.openUrl isKindOfClass:[NSString class]]) {
-            
             NSURL *url = [NSURL URLWithString:itemModel.openUrl];
             if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
@@ -617,7 +618,7 @@ static NSMutableArray  * _Nullable identifierArr;
     cell.fd_enforceFrameLayout = NO; //
     
     if ([cell isKindOfClass:[FHHomeEntrancesCell class]] && [model isKindOfClass:[FHConfigDataOpDataModel class]]) {
-        [self fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model];
+        [self fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:nil];
     }
     
     if ([cell isKindOfClass:[FHHomeBannerCell class]] && [model isKindOfClass:[FHConfigDataOpData2Model class]]) {

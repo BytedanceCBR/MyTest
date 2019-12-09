@@ -37,6 +37,8 @@
 
 - (void)refreshData:(FHHouseType)houseType
 {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     
     if (!dataModel.opData2list || dataModel.opData2list.count == 0) {
