@@ -479,6 +479,7 @@
             self.completeBtn.hidden = YES;
             return;
         }
+        [self.emptyView hideEmptyView];
         NSMutableArray *socialGroupList = [NSMutableArray array];
         
         NSMutableSet<NSString *> *selectedGroupIdSet = [NSMutableSet set];

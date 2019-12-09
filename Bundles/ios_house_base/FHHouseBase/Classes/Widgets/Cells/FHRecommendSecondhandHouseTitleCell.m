@@ -114,7 +114,7 @@
         make.left.mas_equalTo(self.contentView).offset(20);
         make.right.mas_equalTo(self.contentView).offset(-20);
 //        make.top.mas_equalTo(self.divider.mas_bottom).offset(20);
-        make.bottom.mas_equalTo(self.contentView);
+        make.centerY.mas_equalTo(self.contentView);
         make.height.mas_equalTo(24);
     }];
 }

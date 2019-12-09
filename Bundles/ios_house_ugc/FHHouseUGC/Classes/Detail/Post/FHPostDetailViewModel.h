@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak)     FHPostDetailHeaderModel       *detailHeaderModel;
 @property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
+@property (nonatomic, weak)     UIButton       *weakShareButton;
 
 @end
 
