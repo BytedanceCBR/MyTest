@@ -758,7 +758,7 @@
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setObject:@"feed_publisher" forKey:@"enter_from"];
+    [params setObject:[self pageType] forKey:@"enter_from"];
     [params setObject:@"click" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
@@ -786,12 +786,12 @@
     } else {
         // 先关注
         WeakSelf;
-        [[FHUGCConfig sharedInstance] followUGCBy:self.selectGroupId isFollow:YES enterFrom:@"feed_publisher" enterType:@"click" completion:^(BOOL isSuccess) {
+        [[FHUGCConfig sharedInstance] followUGCBy:self.selectGroupId isFollow:YES enterFrom:[self pageType]  enterType:@"click" completion:^(BOOL isSuccess) {
             StrongSelf;
             if (isSuccess) {
                 [self publishWendaContentAfterFollowedSocialGroup];
             } else {
-                [[ToastManager manager] showToast:@"发布失败"];
+                //[[ToastManager manager] showToast:@"发布失败"];
             }
         }];
     }
@@ -961,14 +961,12 @@
 }
 
 - (void)startLoading {
-    [super startLoading];
-    
+    [self publishBtnClickable:NO];
     [self showLoadingAlert:@"正在发布"];
 }
 
 - (void)endLoading {
-    [super endLoading];
-    
+    [self publishBtnClickable:YES];
     [self dismissLoadingAlert];
 }
 

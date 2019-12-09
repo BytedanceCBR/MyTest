@@ -23,11 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-// 新房UGC圈子信息
-@interface FHDetailUGCSocialModel : JSONModel
-
-@end
-
 @interface FHDetailNewDataUserStatusModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;

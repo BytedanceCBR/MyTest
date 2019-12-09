@@ -14,10 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)publishAction: (UIButton *)publishBtn;
 
-- (void)startLoading;
-
-- (void)endLoading;
-
 @optional
 
 - (void)cancelAction: (UIButton *)cancelBtn;
@@ -30,9 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)exitPage;
 
-- (void)startLoading;
-
-- (void)endLoading;
+- (void)publishBtnClickable:(BOOL)isClickable;
 
 @end
 

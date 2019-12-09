@@ -514,6 +514,12 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                         NSString *messageStr = model.message;
                         [[ToastManager manager] showToast:messageStr];
                     }
+                } else {
+                    // 其他直接显示message
+                    if ([model.message isKindOfClass:[NSString class]] && model.message.length > 0) {
+                        NSString *messageStr = model.message;
+                        [[ToastManager manager] showToast:messageStr];
+                    }
                 }
                 if (completion) {
                     completion(isSuccess);

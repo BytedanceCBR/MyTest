@@ -64,7 +64,7 @@
 //#import "TTContactsAddFriendsViewController.h"
 //#import "TTCommonwealManager.h"
 #import "TTTopBar.h"
-#import <TTBubbleView.h>
+#import <TTUIWidget/TTBubbleView.h>
 #import "TTBubbleViewHeader.h"
 #import "TTGuideDispatchManager.h"
 #import "TTVSettingsConfiguration.h"
@@ -405,9 +405,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     for (UIViewController *vc in viewControllers) {
         if ([vc isKindOfClass:[UINavigationController class]]) {
             UINavigationController *navi =  (UINavigationController *)vc;
-            if (!navi.delegate) {
-                [navi setDelegate:self];
-            }
+            [navi setDelegate:self];
         }
     }
 

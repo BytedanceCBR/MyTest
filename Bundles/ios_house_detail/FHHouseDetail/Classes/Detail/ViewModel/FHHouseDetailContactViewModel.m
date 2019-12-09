@@ -529,6 +529,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     fillFormConfig.from = self.fromStr;
     fillFormConfig.realtorId = self.contactPhone.realtorId;
     fillFormConfig.customHouseId = self.customHouseId;
+    if (self.subTitle && self.subTitle.length > 0) {
+        fillFormConfig.subtitle = self.subTitle;
+    }
+    if (self.toast && self.toast.length > 0) {
+        fillFormConfig.toast = self.toast;
+    }
     if (self.houseType == FHHouseTypeNeighborhood) {
         fillFormConfig.title = @"咨询经纪人";
         fillFormConfig.btnTitle = @"提交";
@@ -842,6 +848,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 wSelf.canDirectlyGotoGroupChat = NO;
                 [wSelf groupChatAction];
                 [wSelf followSocialGroup];
+                wSelf.bottomBar.groupChatBtn.enabled = NO;
+                wSelf.bottomBar.groupChatBtn.alpha = 0.5;
                 [wSelf reQuestSocialData];
             } else {
                 wSelf.canDirectlyGotoGroupChat = YES;
@@ -895,6 +903,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         __weak typeof(self) weakSelf = self;
         [FHHouseUGCAPI requestCommunityDetail:self.socialInfo.socialGroupInfo.socialGroupId class:[FHUGCScialGroupModel class] completion:^(id <FHBaseModelProtocol> model, NSError *error) {
             if (model && [model isKindOfClass:[FHUGCScialGroupModel class]]) {
+                // 从登录过来的
+                if (!weakSelf.canDirectlyGotoGroupChat) {
+                    weakSelf.bottomBar.groupChatBtn.enabled = YES;
+                    weakSelf.bottomBar.groupChatBtn.alpha = 1;
+                }
                 FHUGCScialGroupModel *socialModel = (FHUGCScialGroupModel *)model;
                 // 更新数据 主要是群聊
                 if (socialModel.data.chatStatus) {

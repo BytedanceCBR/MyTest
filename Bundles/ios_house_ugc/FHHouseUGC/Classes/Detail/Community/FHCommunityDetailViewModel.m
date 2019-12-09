@@ -34,6 +34,7 @@
 #import <TTThemedAlertController.h>
 #import "FHFeedUGCCellModel.h"
 #import <TTUGCDefine.h>
+#import <FHUGCCategoryHelper.h>
 
 #define kSegmentViewHeight 52
 
@@ -115,7 +116,7 @@
         NSDictionary *userInfo = noti.userInfo;
         NSString *social_group_ids = userInfo[@"social_group_ids"] ? userInfo[@"social_group_ids"] : userInfo[@"social_group_id"];
         
-        if(social_group_ids.length > 0 && [social_group_ids containsString:self.viewController.communityId]){
+        if(social_group_ids.length > 0 && self.viewController.communityId && [social_group_ids containsString:self.viewController.communityId]){
             //多于1个tab的时候
             if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1 && self.essenceIndex > -1 && self.essenceIndex < self.subVCs.count){
                 FHCommunityFeedListController *feedVC = self.subVCs[self.essenceIndex];
@@ -226,6 +227,7 @@
 - (void)viewWillDisappear {
     [self.feedListController viewWillDisappear];
     self.isViewAppear = NO;
+    [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:self.data];
 }
 
 - (void)endRefreshing {
@@ -253,11 +255,11 @@
         }
         return;
     }
-    
     WeakSelf;
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
-        [_viewController tt_endUpdataData];
         StrongSelf;
+        
+        [_viewController tt_endUpdataData];
         if(userPull){
             [self endRefreshing];
         }
@@ -265,6 +267,10 @@
         if(error){
             [self onNetworError:showEmptyIfFailed showToast:showToast];
         }
+        
+        // 根据basicInfo接口成功失败决定是否显示群聊入口按钮
+        BOOL isHidden = (error != nil);
+        self.viewController.groupChatBtn.alpha = isHidden ? 0 : 1;
         
         if (model) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
@@ -287,7 +293,9 @@
                 }
 
                 if (self.isLoginSatusChangeFromGroupChat) {
-                    [self gotoGroupChat];
+                    if([self.viewController isCurrentVisible]){
+                        [self gotoGroupChat];
+                    }
                     self.isLoginSatusChangeFromGroupChat = NO;
                 }
 
@@ -295,6 +303,10 @@
                     [self.feedListController startLoadData:YES];
                 }
             }
+            self.isLoginSatusChangeFromGroupChat = NO;
+        }
+        else {
+            self.isLoginSatusChangeFromGroupChat = NO;
         }
     }];
 }
@@ -463,6 +475,7 @@
             [self tryJoinConversation];
         }
     } else {
+       // 登录前先把群聊入口隐藏，登录成功后刷新basicinfo接口成功后显示
         [self gotoLogin:FHUGCLoginFrom_GROUPCHAT];
     }
 }
@@ -566,12 +579,14 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
-    __weak typeof(self) wSelf = self;
+    WeakSelf;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        StrongSelf;
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
                 if(from == FHUGCLoginFrom_GROUPCHAT) {
+                    self.viewController.groupChatBtn.alpha = 0;
                     [self onLoginIn];
                 }
                 else {
