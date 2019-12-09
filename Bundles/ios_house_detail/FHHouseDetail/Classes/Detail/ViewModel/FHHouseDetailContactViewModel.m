@@ -942,8 +942,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)vc_viewDidAppear:(BOOL)animated
 {
     [self.phoneCallViewModel vc_viewDidAppear:animated];
-    // 新房重新拉取圈子数据
-    if (self.houseType == FHHouseTypeNewHouse && [TTReachability isNetworkConnected] && [TTAccountManager isLogin] && self.needRefetchSocialGroupData) {
+    // 新房重新拉取圈子数据 --  进入下个页面返回就拉新数据吧
+    if (self.houseType == FHHouseTypeNewHouse && [TTReachability isNetworkConnected] && [TTAccountManager isLogin]) {
         self.needRefetchSocialGroupData = NO;
         [self reQuestSocialData];
     }
