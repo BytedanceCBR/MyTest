@@ -114,8 +114,8 @@
                                  (__bridge id)[UIColor colorWithWhite:1 alpha:1].CGColor,
                                  (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor
                                  ];
-        gradientLayer.startPoint = CGPointMake(0.5, 0);
-        gradientLayer.endPoint = CGPointMake(0.5, 0.9);
+        gradientLayer.startPoint = CGPointMake(0.5, 0.2);
+        gradientLayer.endPoint = CGPointMake(0.5, 1);
         
         _bottomGradientView = [[UIView alloc] initWithFrame:frame];
         [_bottomGradientView.layer addSublayer:gradientLayer];
