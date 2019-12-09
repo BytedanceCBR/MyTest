@@ -36,41 +36,28 @@
     
     [_backImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(6);
-        make.left.mas_equalTo(14);
-        make.right.mas_equalTo(-14);
+        make.left.mas_equalTo(9);
+        make.right.mas_equalTo(-9);
         make.height.mas_equalTo(101);
         make.bottom.mas_equalTo(self.contentView);
     }];
-    
-    UIImageView *imageRight = [[UIImageView alloc] init];
-    [imageRight setImage:[UIImage imageNamed:@"suglist_subscribe_right"]];
-    [_backImageView addSubview:imageRight];
-    [imageRight mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-14);
-        make.height.mas_equalTo(61);
-        make.width.mas_equalTo(166);
-        make.bottom.equalTo(self.backImageView).offset(-8);
-    }];
-
 
     _titleLabel = [[UILabel alloc] init];
-    _titleLabel.font = [UIFont themeFontMedium:14];
+    _titleLabel.font = [UIFont themeFontSemibold:16];
     _titleLabel.textColor = [UIColor themeGray1];
     _titleLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_titleLabel];
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(36);
-        make.top.mas_equalTo(30);
-        make.height.mas_equalTo(20);
+        make.left.mas_equalTo(30);
+        make.top.mas_equalTo(25);
+        make.height.mas_equalTo(22);
     }];
 
-
     _subTitleLabel = [[UILabel alloc] init];
-    _subTitleLabel.font = [UIFont themeFontRegular:11];
+    _subTitleLabel.font = [UIFont themeFontRegular:12];
     _subTitleLabel.textColor = [UIColor themeGray3];
-    _subTitleLabel.textAlignment = NSTextAlignmentRight;
+    _subTitleLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_subTitleLabel];
-    
     
     [_subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.titleLabel).offset(0);
@@ -80,32 +67,32 @@
     
     _bottomContentLabel = [[UILabel alloc] init];
     _bottomContentLabel.font = [UIFont themeFontRegular:12];
-    _bottomContentLabel.textColor = [UIColor themeGray2];
+    _bottomContentLabel.textColor = [UIColor themeGray1];
     _bottomContentLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_bottomContentLabel];
     [_bottomContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.contentView).offset(36);
-        make.top.equalTo(self.subTitleLabel.mas_bottom).offset(6);
-        make.right.equalTo(self.contentView).offset(-36);
+        make.left.equalTo(self.contentView).offset(30);
+        make.top.equalTo(self.subTitleLabel.mas_bottom).offset(20);
+        make.right.equalTo(self.contentView).offset(-30);
     }];
     
     _subscribeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
     _subscribeBtn.layer.masksToBounds = YES;
     _subscribeBtn.titleLabel.font = [UIFont themeFontRegular:12];
-    _subscribeBtn.layer.borderColor = [UIColor themeRed1].CGColor;
+    _subscribeBtn.layer.borderColor = [UIColor themeOrange1].CGColor;
     _subscribeBtn.layer.borderWidth = 0.5;
-    _subscribeBtn.layer.cornerRadius = 10.5;
+    _subscribeBtn.layer.cornerRadius = 4;
     [_subscribeBtn addTarget:self action:@selector(subscribeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    [_subscribeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [_subscribeBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     [self.contentView addSubview:_subscribeBtn];
     
     
     [_subscribeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.contentView).offset(-40);
+        make.right.equalTo(self.contentView).offset(-30);
         make.top.equalTo(self.titleLabel);
-        make.width.mas_equalTo(52);
-        make.height.mas_equalTo(21);
+        make.width.mas_equalTo(64);
+        make.height.mas_equalTo(28);
     }];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subscribeStatusChanged:) name:kFHSuggestionSubscribeNotificationKey object:nil];
@@ -152,14 +139,14 @@
     if (text && [text isEqualToString:_currentModel.text]) {
         if (status && [status isEqualToString:@"1"]) {
             self.currentModel.isSubscribe = YES;
-            [_subscribeBtn setBackgroundColor:[UIColor themeRed1]];
-            [_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            _subscribeBtn.layer.borderColor = [UIColor themeGray6].CGColor;
+            [_subscribeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
             [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
         }else if (status && [status isEqualToString:@"0"])
         {
             self.currentModel.isSubscribe = NO;
-            [_subscribeBtn setBackgroundColor:[UIColor whiteColor]];
-            [_subscribeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+            _subscribeBtn.layer.borderColor = [UIColor themeOrange1].CGColor;
+            [_subscribeBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
             [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
         }
     }
@@ -191,13 +178,13 @@
         _subTitleLabel.text = @"新上房源立刻通知";
         _bottomContentLabel.text = model.text ? : @"暂无";
         if (model.isSubscribe) {
-            [_subscribeBtn setBackgroundColor:[UIColor themeRed1]];
+            [_subscribeBtn setBackgroundColor:[UIColor themeOrange1]];
             [_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
         }else
         {
             [_subscribeBtn setBackgroundColor:[UIColor whiteColor]];
-            [_subscribeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+            [_subscribeBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
             [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
         }
     }

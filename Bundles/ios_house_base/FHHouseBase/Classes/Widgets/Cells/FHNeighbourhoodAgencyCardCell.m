@@ -16,12 +16,13 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import <TTThemed/SSViewBase.h>
 #import <TTThemed/UIColor+TTThemeExtension.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHNeighbourhoodAgencyCardCell ()
 
 
 @property(nonatomic, strong) UIView *containerView;
-@property(nonatomic, strong) UIView *shadowView;
+@property(nonatomic, strong) FHShadowView *shadowView;
 
 @property(nonatomic, strong) UIView *topInfoView;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //小区名称
@@ -29,9 +30,6 @@
 @property(nonatomic, strong) UILabel *countOnSale; //在售套数
 @property(nonatomic, strong) UIImageView *rightArrow;
 @property(nonatomic, strong) UIView *verticleDividerView;
-
-
-@property(nonatomic, strong) UIView *dividerView;
 
 @property(nonatomic, strong) UIView *bottomInfoView;
 @property(nonatomic, strong) UIImageView *avator;
@@ -66,11 +64,12 @@
     self.clipsToBounds = NO;
 
     _shadowView = [[FHShadowView alloc] initWithFrame:CGRectZero];
+    _shadowView.cornerRadius = 10;
     [self.contentView addSubview:_shadowView];
 
     _containerView = [[UIView alloc] init];
     CALayer *layer = _containerView.layer;
-    layer.cornerRadius = 4;
+    layer.cornerRadius = 10;
     layer.masksToBounds = YES;
     layer.borderColor =  [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
     layer.borderWidth = 0.5f;
@@ -101,14 +100,11 @@
     [_verticleDividerView setBackgroundColor:[UIColor colorWithHexString:@"#e8e8e8"]];
     [self.topInfoView addSubview:_verticleDividerView];
 
-    self.rightArrow = [[UIImageView alloc] initWithImage:SYS_IMG(@"arrow_right_setup")];
+    self.rightArrow = [[UIImageView alloc] initWithImage:ICON_FONT_IMG(10, @"\U0000e670", [UIColor themeGray6])];
     [self.topInfoView addSubview:_rightArrow];
 
-    _dividerView = [[UIView alloc] init];
-    [_dividerView setBackgroundColor:[UIColor colorWithHexString:@"#e8e8e8"]];
-    [self.containerView addSubview:_dividerView];
-
     _bottomInfoView = [[UIView alloc] init];
+    _bottomInfoView.backgroundColor = [UIColor themeGray8];
     [self.containerView addSubview:_bottomInfoView];
 
     _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
@@ -124,15 +120,15 @@
     [self.bottomInfoView addSubview:_licenceIcon];
 
     _callBtn = [[FHExtendHotAreaButton alloc] init];
-    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal"] forState:UIControlStateNormal];
-    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press"] forState:UIControlStateSelected];
-    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press"] forState:UIControlStateHighlighted];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal_new"] forState:UIControlStateNormal];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateSelected];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateHighlighted];
     [self.bottomInfoView addSubview:_callBtn];
 
     _imBtn = [[FHExtendHotAreaButton alloc] init];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
-    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateSelected];
-    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateHighlighted];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateSelected];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateHighlighted];
     [self.bottomInfoView addSubview:_imBtn];
 
     _name = [UILabel createLabel:@"" textColor:@"" fontSize:16];
@@ -205,15 +201,8 @@
         make.height.mas_equalTo(18);
     }];
 
-    [self.dividerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(0.5);
-        make.left.mas_equalTo(self.containerView).offset(20);
-        make.right.mas_equalTo(self.containerView).offset(-20);
-        make.top.mas_equalTo(self.topInfoView.mas_bottom);
-    }];
-
     [self.bottomInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.dividerView.mas_bottom);
+        make.top.mas_equalTo(self.topInfoView.mas_bottom);
         make.left.mas_equalTo(self.containerView.mas_left);
         make.right.mas_equalTo(self.containerView.mas_right);
         make.height.mas_equalTo(69);
@@ -294,7 +283,6 @@
             self.phoneCallViewModel.belongsVC = model.belongsVC;
         } else {
             [self.bottomInfoView setHidden:YES];
-            [self.dividerView setHidden:YES];
         }
     }
 }

@@ -10,11 +10,13 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
+#import <TTBaseLib/TTDeviceHelper.h>
 
 @interface FHHouseListRecommendTipCell ()
 
 @property (nonatomic, strong) UILabel *noDataTipLabel;
-@property (nonatomic, strong) UIImageView *noDataTipImage;
+@property (nonatomic, strong) UIView *leftLine;
+@property (nonatomic, strong) UIView *rightLine;
 
 @end
 
@@ -24,12 +26,13 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.noDataTipLabel = [[UILabel alloc] init];
+        self.noDataTipLabel.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:self.noDataTipLabel];
-        self.noDataTipLabel.font = [UIFont themeFontMedium:12];
+        self.noDataTipLabel.font = [UIFont themeFontMedium:14];
         self.noDataTipLabel.textColor = [UIColor themeGray4];
-        self.noDataTipImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"house_base_recommend_not_found"]];
-        [self.contentView addSubview:self.noDataTipImage];
-        [self setupUI];
+        [self.contentView addSubview:self.leftLine];
+        [self.contentView addSubview:self.rightLine];
+        [self initConstraints];
         self.userInteractionEnabled = NO;
     }
     return self;
@@ -44,23 +47,6 @@
     [super setSelected:selected animated:animated];
 }
 
-- (void)hideSeprateLine:(BOOL)isFirstCell
-{
-    [self.noDataTipImage mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(10.5);
-        make.left.mas_equalTo(self.contentView).offset(20);
-        make.height.mas_equalTo(16);
-        make.width.mas_equalTo(16);
-    }];
-    
-    [self.noDataTipLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(10);
-        make.left.mas_equalTo(self.noDataTipImage.mas_right).offset(5);
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.height.mas_equalTo(18);
-    }];
-}
-
 - (void)refreshWithData:(id)data
 {
     if ([data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]) {
@@ -71,21 +57,46 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 38;
+    return 40;
 }
 
-- (void)setupUI {
-    [self.noDataTipImage mas_makeConstraints:^(MASConstraintMaker *make) {
+- (void)initConstraints {
+    [self.leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.contentView).offset(20);
-        make.height.mas_equalTo(16);
-        make.width.mas_equalTo(16);
+        make.left.mas_equalTo(15);
+        make.height.mas_equalTo([TTDeviceHelper ssOnePixel]);
+        make.width.mas_greaterThanOrEqualTo(30);
     }];
     [self.noDataTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.noDataTipImage.mas_right).offset(5);
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.height.mas_equalTo(18);
+        make.left.mas_equalTo(self.leftLine.mas_right).offset(15);
+        make.height.mas_equalTo(20);
+    }];
+    [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.noDataTipLabel.mas_right).offset(15);
+        make.right.mas_equalTo(-15);
+        make.height.mas_equalTo([TTDeviceHelper ssOnePixel]);
+        make.width.mas_equalTo(self.leftLine);
     }];
 }
+
+- (UIView *)leftLine
+{
+    if (!_leftLine) {
+        _leftLine = [[UIView alloc]init];
+        _leftLine.backgroundColor = [UIColor colorWithHexString:@"#d8d8d8"];
+    }
+    return _leftLine;
+}
+
+- (UIView *)rightLine
+{
+    if (!_rightLine) {
+        _rightLine = [[UIView alloc]init];
+        _rightLine.backgroundColor = [UIColor colorWithHexString:@"#d8d8d8"];
+    }
+    return _rightLine;
+}
+
 @end

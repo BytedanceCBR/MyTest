@@ -57,10 +57,10 @@
     }
     // 判断标签数据
     if (self.tagsFilterData) {
-        CGFloat itemWidth = (SCREEN_WIDTH - 40 - 13 * 3) / 4.0;
+        CGFloat itemWidth = (SCREEN_WIDTH - 30 - 10 * 3) / 4.0;
         CGFloat top = 14;
-        CGFloat itemMargin = 13;
-        __block CGFloat leftOffset = 20;
+        CGFloat itemMargin = 10;
+        __block CGFloat leftOffset = 15;
         if ([self.tagsFilterData.options isKindOfClass:[NSArray class]]) {
             NSArray *tempArray = nil;
             if (self.tagsFilterData.options.count >= 4) {
