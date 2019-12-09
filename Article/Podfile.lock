@@ -97,7 +97,7 @@ PODS:
   - Fabric (1.10.2.1-binary)
   - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.8-alpha.0)
+  - FHCommonUI (0.0.9-alpha.1)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -174,7 +174,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.14-alpha.4)
+  - ios_house_im (0.1.15-rc.2)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -534,71 +534,71 @@ PODS:
   - TTUGCFoundation/TTUGCApiModel (0.1.3)
   - TTUGCFoundation/TTUGCImage (0.1.3)
   - TTUGCFoundation/TTUGCRichText (0.1.3)
-  - TTUIWidget (1.4.9-alpha.0-fproject):
-    - TTUIWidget/ALAssets (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/ArticleListNotifyBarView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/Others (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/PopoverView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/SaveImageAlertView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/SSAlertViewBase (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/SSMotionRender (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/SSViewControllerBase (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/STLinkLabel (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTAlphaThemedButton (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTAsyncLabel (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTBackButtonView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTBadgeNumberView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTBubbleView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTColorAsFollowButton (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTDialogView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTHeaderScrollView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTIconLabel (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTIndicatorView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTKeyboardListener (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTLabel (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTNavigationController (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTNavigationControllerTTBD (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTPageController (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTSearchBarView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTSegmentedControl (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTTagView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTThemedAlertController (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTThemedAlertControllerProtocol (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/TTWrongWordsReportView (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/UIView+CustomTimingFunction (= 1.4.9-alpha.0-fproject)
-    - TTUIWidget/UIViewController+TabBarSnapShot (= 1.4.9-alpha.0-fproject)
-  - TTUIWidget/ALAssets (1.4.9-alpha.0-fproject)
-  - TTUIWidget/ArticleListNotifyBarView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/Others (1.4.9-alpha.0-fproject)
-  - TTUIWidget/PopoverView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/SaveImageAlertView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/SSAlertViewBase (1.4.9-alpha.0-fproject)
-  - TTUIWidget/SSMotionRender (1.4.9-alpha.0-fproject)
-  - TTUIWidget/SSViewControllerBase (1.4.9-alpha.0-fproject)
-  - TTUIWidget/STLinkLabel (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTAlphaThemedButton (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTAsyncLabel (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTBackButtonView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTBadgeNumberView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTBubbleView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTColorAsFollowButton (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTDialogView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTHeaderScrollView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTIconLabel (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTIndicatorView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTKeyboardListener (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTLabel (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTNavigationController (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTNavigationControllerTTBD (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTPageController (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTSearchBarView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTSegmentedControl (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTTagView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTThemedAlertController (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTThemedAlertControllerProtocol (1.4.9-alpha.0-fproject)
-  - TTUIWidget/TTWrongWordsReportView (1.4.9-alpha.0-fproject)
-  - TTUIWidget/UIView+CustomTimingFunction (1.4.9-alpha.0-fproject)
-  - TTUIWidget/UIViewController+TabBarSnapShot (1.4.9-alpha.0-fproject)
+  - TTUIWidget (0.10.28):
+    - TTUIWidget/ALAssets (= 0.10.28)
+    - TTUIWidget/ArticleListNotifyBarView (= 0.10.28)
+    - TTUIWidget/Others (= 0.10.28)
+    - TTUIWidget/PopoverView (= 0.10.28)
+    - TTUIWidget/SaveImageAlertView (= 0.10.28)
+    - TTUIWidget/SSAlertViewBase (= 0.10.28)
+    - TTUIWidget/SSMotionRender (= 0.10.28)
+    - TTUIWidget/SSViewControllerBase (= 0.10.28)
+    - TTUIWidget/STLinkLabel (= 0.10.28)
+    - TTUIWidget/TTAlphaThemedButton (= 0.10.28)
+    - TTUIWidget/TTAsyncLabel (= 0.10.28)
+    - TTUIWidget/TTBackButtonView (= 0.10.28)
+    - TTUIWidget/TTBadgeNumberView (= 0.10.28)
+    - TTUIWidget/TTBubbleView (= 0.10.28)
+    - TTUIWidget/TTColorAsFollowButton (= 0.10.28)
+    - TTUIWidget/TTDialogView (= 0.10.28)
+    - TTUIWidget/TTHeaderScrollView (= 0.10.28)
+    - TTUIWidget/TTIconLabel (= 0.10.28)
+    - TTUIWidget/TTIndicatorView (= 0.10.28)
+    - TTUIWidget/TTKeyboardListener (= 0.10.28)
+    - TTUIWidget/TTLabel (= 0.10.28)
+    - TTUIWidget/TTNavigationController (= 0.10.28)
+    - TTUIWidget/TTNavigationControllerTTBD (= 0.10.28)
+    - TTUIWidget/TTPageController (= 0.10.28)
+    - TTUIWidget/TTSearchBarView (= 0.10.28)
+    - TTUIWidget/TTSegmentedControl (= 0.10.28)
+    - TTUIWidget/TTTagView (= 0.10.28)
+    - TTUIWidget/TTThemedAlertController (= 0.10.28)
+    - TTUIWidget/TTThemedAlertControllerProtocol (= 0.10.28)
+    - TTUIWidget/TTWrongWordsReportView (= 0.10.28)
+    - TTUIWidget/UIView+CustomTimingFunction (= 0.10.28)
+    - TTUIWidget/UIViewController+TabBarSnapShot (= 0.10.28)
+  - TTUIWidget/ALAssets (0.10.28)
+  - TTUIWidget/ArticleListNotifyBarView (0.10.28)
+  - TTUIWidget/Others (0.10.28)
+  - TTUIWidget/PopoverView (0.10.28)
+  - TTUIWidget/SaveImageAlertView (0.10.28)
+  - TTUIWidget/SSAlertViewBase (0.10.28)
+  - TTUIWidget/SSMotionRender (0.10.28)
+  - TTUIWidget/SSViewControllerBase (0.10.28)
+  - TTUIWidget/STLinkLabel (0.10.28)
+  - TTUIWidget/TTAlphaThemedButton (0.10.28)
+  - TTUIWidget/TTAsyncLabel (0.10.28)
+  - TTUIWidget/TTBackButtonView (0.10.28)
+  - TTUIWidget/TTBadgeNumberView (0.10.28)
+  - TTUIWidget/TTBubbleView (0.10.28)
+  - TTUIWidget/TTColorAsFollowButton (0.10.28)
+  - TTUIWidget/TTDialogView (0.10.28)
+  - TTUIWidget/TTHeaderScrollView (0.10.28)
+  - TTUIWidget/TTIconLabel (0.10.28)
+  - TTUIWidget/TTIndicatorView (0.10.28)
+  - TTUIWidget/TTKeyboardListener (0.10.28)
+  - TTUIWidget/TTLabel (0.10.28)
+  - TTUIWidget/TTNavigationController (0.10.28)
+  - TTUIWidget/TTNavigationControllerTTBD (0.10.28)
+  - TTUIWidget/TTPageController (0.10.28)
+  - TTUIWidget/TTSearchBarView (0.10.28)
+  - TTUIWidget/TTSegmentedControl (0.10.28)
+  - TTUIWidget/TTTagView (0.10.28)
+  - TTUIWidget/TTThemedAlertController (0.10.28)
+  - TTUIWidget/TTThemedAlertControllerProtocol (0.10.28)
+  - TTUIWidget/TTWrongWordsReportView (0.10.28)
+  - TTUIWidget/UIView+CustomTimingFunction (0.10.28)
+  - TTUIWidget/UIViewController+TabBarSnapShot (0.10.28)
   - TTUserProfile (0.1.0)
   - TTUserSettings (0.3.4)
   - TTVContainerScrollView (0.1.2.1-binary)
@@ -698,7 +698,7 @@ DEPENDENCIES:
   - Fabric (= 1.10.2.1-binary)
   - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.8-alpha.0)
+  - FHCommonUI (= 0.0.9-alpha.1)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -749,7 +749,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.14-alpha.4)
+  - ios_house_im (= 0.1.15-rc.2)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -913,7 +913,7 @@ DEPENDENCIES:
   - TTThemed (= 0.1.36.1-binary)
   - TTTracker (= 10.0.5.1-binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
-  - TTUIWidget (= 1.4.9-alpha.0-fproject)
+  - TTUIWidget (from `git@code.byted.org:TTIOS/tt_pods_ui.git`, commit `8930d870e3f49e16378f2cdb1d6c27bc25c0f923`)
   - TTUserProfile (from `../TTBundles/ios_tt_userprofile`)
   - TTUserSettings (= 0.3.4)
   - TTVContainerScrollView (= 0.1.2.1-binary)
@@ -1038,12 +1038,20 @@ EXTERNAL SOURCES:
       - TTShareBusiness/TTShareWeChatBusiness
   TTUGCFoundation:
     :path: ../Vendor/TTUGCFoundation
+  TTUIWidget:
+    :commit: 8930d870e3f49e16378f2cdb1d6c27bc25c0f923
+    :git: git@code.byted.org:TTIOS/tt_pods_ui.git
   TTUserProfile:
     :path: ../TTBundles/ios_tt_userprofile
   TTVPlayerPod:
     :path: ../AKPlugins/TTVPlayer
   yoga:
     :path: ../ReactCommon/yoga
+
+CHECKOUT OPTIONS:
+  TTUIWidget:
+    :commit: 8930d870e3f49e16378f2cdb1d6c27bc25c0f923
+    :git: git@code.byted.org:TTIOS/tt_pods_ui.git
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
@@ -1092,7 +1100,7 @@ SPEC CHECKSUMS:
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
   FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: 9d66b1470dc6076aa30742d6f7e571eb7398f38a
+  FHCommonUI: 4c8fa31b37cb54522c9294e2cc040842d3e54c38
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1118,7 +1126,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: a3c07e84923f92aeea9732678b3ca8e52bc42676
+  ios_house_im: 87e062114a602922099931da7fc159690399b106
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1218,7 +1226,7 @@ SPEC CHECKSUMS:
   TTThemed: 921e544fa8ca8c34b3a091af38b8612609c18480
   TTTracker: 53b746772e7240481e57bee23ae866924fdc0193
   TTUGCFoundation: 122bc1a5271b79b073460ec6691c3e3f2df86593
-  TTUIWidget: 1c194626c37434ce974daabf17674bfbf50e532d
+  TTUIWidget: 941f08ee676566775f3721a9f7322507132985f7
   TTUserProfile: e9f6d23e86b3c1232b15a79a239e5d3a27e5b2f3
   TTUserSettings: 8214e9b9707b42dc450c2337ef5e9ca77456e0a4
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
@@ -1244,6 +1252,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 3c602a768c22abaea9b53859b3a024cd8f4674a6
+PODFILE CHECKSUM: b7563514087bec63be7b9215e88ca1564c019d0d
 
 COCOAPODS: 1.4.0

@@ -53,9 +53,9 @@ def fhPods
 #    pod 'FHCommonUI', :path => '../../ios_common_ui'
     pod 'FHCommonUI', '0.0.9-alpha.1'
 
-     pod 'ios_house_im', '0.1.14-alpha.4'
+    pod 'ios_house_im', '0.1.15-rc.2'
 #     pod 'ios_house_im' , :path => '../../ios_house_im'
-#     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => 'be082192f5dc1d7f1131b11f63acfc9aafb71075'
+#     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '11359d0f859a7d3c7881252144954a0045d71600'
 
 
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
@@ -551,6 +551,9 @@ def appPods
     pod 'BDUGDeepLink', '1.1.1'
     
     pod_binary 'TTAppStoreStarManager', '1.0.12'
+    
+#    pod 'BDDiamond20', :git => 'git@code.byted.org:liuhanhong/qi_project_ios.git', :branch => 'develop', :subspecs => ['minisdk']
+
 end
 
 

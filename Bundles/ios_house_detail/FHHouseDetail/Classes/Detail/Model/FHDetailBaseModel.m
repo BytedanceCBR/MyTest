@@ -350,6 +350,22 @@
 }
 @end
 
+@implementation FHDetailGaodeImageModel
++(JSONKeyMapper *)keyMapper {
+    NSDictionary *dict = @{
+            @"latRatio": @"lat_ratio",
+            @"lngRatio": @"lng_ratio",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 
 
 

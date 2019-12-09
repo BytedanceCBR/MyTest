@@ -81,7 +81,7 @@ static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 
 - (FHConfigDataModel *)configCache {
     if (_configCache == nil) {
-        self.configCache = [self getGeneralConfigFromLocal];
+        _configCache = [self getGeneralConfigFromLocal];
     }
     return _configCache;
 }

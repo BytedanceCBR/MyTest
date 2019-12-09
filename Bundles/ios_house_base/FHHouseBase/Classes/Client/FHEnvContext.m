@@ -715,7 +715,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 + (BOOL)isUGCAdUser
 {
     NSString *localMark = [FHUtils contentForKey:kFHUGCPromotionUser];
-    
+
     if ([localMark isKindOfClass:[NSString class]] && [localMark isEqualToString:@"1"]){
         return YES;
     }else
