@@ -174,7 +174,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.15-rc.3)
+  - ios_house_im (0.1.6)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -749,7 +749,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.15-rc.3)
+  - ios_house_im (from `../../ios_house_im`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -985,6 +985,8 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
+  ios_house_im:
+    :path: ../../ios_house_im
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -1118,7 +1120,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 22e2c3c9768c6e466fe37e0ca06eee517fcfed60
+  ios_house_im: 3c0ddab7cc55e3255d69421fe8030f23d9c43a92
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1244,6 +1246,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: bd8c3d29594e7b3759963152c4e29393f47390c5
+PODFILE CHECKSUM: 4c48ee894e9cfae43448475bd1780141a8ed92c3
 
 COCOAPODS: 1.4.0
