@@ -94,6 +94,11 @@
     if (![self.viewController.childViewControllers containsObject:cell.contentVC]) {
         [self.viewController addChildViewController:cell.contentVC];
     }
+    
+    if ([cell.contentVC isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
+        self.articleListVC = cell.contentVC;
+    }
+    
     return cell;
 }
 
@@ -162,6 +167,9 @@
     NSLog(@"%s -- %ld",__func__,enterType);
     if (traceType == FHHomeMainTraceTypeHouse) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeItemVCEnterCategory" object:@(enterType)];
+    }else
+    {
+        [self.articleListVC viewAppearForEnterType:enterType];
     }
 }
 
@@ -169,6 +177,9 @@
     NSLog(@"%s -- %ld",__func__,enterType);
     if (traceType == FHHomeMainTraceTypeHouse) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeItemVCStayCategory" object:@(enterType)];
+    }else
+    {
+        [self.articleListVC viewDisAppearForEnterType:enterType];
     }
 }
 
