@@ -242,8 +242,8 @@
     [_tipView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.currentPointView.mas_top).offset(4);
         make.centerX.mas_equalTo(self.currentPointView);
-        make.width.mas_equalTo(96);
-        make.height.mas_equalTo(62);
+        make.width.mas_equalTo(128);
+        make.height.mas_equalTo(92);
     }];
     
     _curPriceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
@@ -253,7 +253,7 @@
     [self.tipView addSubview:_curPriceLabel];
     
     [self.curPriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.tipView).offset(10);
+        make.top.mas_equalTo(self.tipView).offset(25);
 //        make.left.mas_equalTo(self.tipView).offset(13);
 //        make.right.mas_equalTo(self.tipView).offset(-13);
         make.centerX.mas_equalTo(self.tipView);
@@ -272,7 +272,7 @@
 //        make.left.mas_equalTo(self.tipView).offset(13);
 //        make.right.mas_equalTo(self.tipView).offset(-13);
         make.left.mas_equalTo(self.curPriceLabel);
-        make.width.mas_lessThanOrEqualTo(80);
+        make.width.mas_lessThanOrEqualTo(64);
         make.height.mas_equalTo(16);
     }];
 }
