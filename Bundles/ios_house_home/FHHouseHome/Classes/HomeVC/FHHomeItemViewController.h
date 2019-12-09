@@ -60,6 +60,10 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 
 - (void)currentViewIsDisappeared;
 
+- (void)initNotifications;
+
+- (void)removeNotifications;
+
 @end
 
 NS_ASSUME_NONNULL_END

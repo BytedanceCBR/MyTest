@@ -238,6 +238,8 @@
     }
     
     [self setUpSubtableIndex:indexValue];
+    
+    [self bindItemVCTrace];
 }
 
 - (void)requestOriginData:(BOOL)isFirstChange isShowPlaceHolder:(BOOL)showPlaceHolder
@@ -533,6 +535,20 @@
         FHHomeItemViewController *itemVC = self.itemsVCArray[index];
         itemVC.enterType = enterType;
         [itemVC currentViewIsShowing];
+        
+        [self bindItemVCTrace];
+    }
+}
+
+- (void)bindItemVCTrace
+{
+    for (FHHomeItemViewController *vc in self.itemsVCArray) {
+        if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.previousHouseType) {
+            [vc initNotifications];
+        }else
+        {
+            [vc removeNotifications];
+        }
     }
 }
 

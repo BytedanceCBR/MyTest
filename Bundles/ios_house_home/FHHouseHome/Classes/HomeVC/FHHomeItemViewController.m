@@ -29,6 +29,7 @@
 #import <FHHouseBaseNewHouseCell.h>
 #import <FHPlaceHolderCell.h>
 #import <UIColor+Theme.h>
+#import <FHHomeMainViewModel.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -114,7 +115,40 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
     
     self.tableView.scrollsToTop = NO;
+    
 }
+
+- (void)initNotifications {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterCategoryWithEnterType:) name:@"FHHomeItemVCEnterCategory" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stayCategoryWithEnterType:) name:@"FHHomeItemVCStayCategory" object:nil];
+}
+
+- (void)removeNotifications
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)enterCategoryWithEnterType:(id)enterType
+{
+    if ([enterType isKindOfClass:[NSNumber class]] && [(NSNumber *)enterType integerValue] == FHHomeMainTraceEnterTypeFlip) {
+        [self.traceEnterCategoryCache setValue:@"click" forKey:@"enter_type"];
+    }else
+    {
+        [self.traceEnterCategoryCache setValue:@"flip" forKey:@"enter_type"];
+    }
+    self.stayTime = [self getCurrentTime];
+    [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+}
+
+- (void)stayCategoryWithEnterType:(id)enterType
+{
+    if (self.houseType == _listModel.houseType) {
+        [self currentViewIsDisappeared];
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {

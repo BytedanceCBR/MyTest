@@ -158,13 +158,16 @@
 
 - (void)sendEnterCategory:(FHHomeMainTraceType)traceType enterType:(FHHomeMainTraceEnterType)enterType{
     NSLog(@"%s -- %ld",__func__,enterType);
-    
-    
-    
+    if (traceType == FHHomeMainTraceTypeHouse) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeItemVCEnterCategory" object:@(enterType)];
+    }
 }
 
 - (void)sendStayCategory:(FHHomeMainTraceType)traceType enterType:(FHHomeMainTraceEnterType)enterType{
     NSLog(@"%s -- %ld",__func__,enterType);
+    if (traceType == FHHomeMainTraceTypeHouse) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeItemVCStayCategory" object:@(enterType)];
+    }
 }
 
 
