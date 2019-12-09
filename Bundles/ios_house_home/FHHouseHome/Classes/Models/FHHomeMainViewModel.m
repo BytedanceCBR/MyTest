@@ -17,6 +17,7 @@
 @property(nonatomic , strong) NSMutableArray *dataArray;
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
+@property(nonatomic , strong) NSMutableDictionary *traceDict;
 
 @end
 
@@ -131,6 +132,9 @@
     if(tabIndex != self.viewController.topView.segmentControl.selectedSegmentIndex){
         self.currentIndex = tabIndex;
         self.viewController.topView.segmentControl.selectedSegmentIndex = self.currentIndex;
+        
+        [self sendEnterCategory:tabIndex == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed enterType:FHHomeMainTraceEnterTypeFlip];
+        [self sendStayCategory:tabIndex == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse enterType:FHHomeMainTraceEnterTypeFlip];
     }else{
         if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (self.viewController.topView.segmentControl.sectionTitles.count - 1)){
             return;
@@ -150,6 +154,17 @@
 //侧滑切换tab
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     
+}
+
+- (void)sendEnterCategory:(FHHomeMainTraceType)traceType enterType:(FHHomeMainTraceEnterType)enterType{
+    NSLog(@"%s -- %ld",__func__,enterType);
+    
+    
+    
+}
+
+- (void)sendStayCategory:(FHHomeMainTraceType)traceType enterType:(FHHomeMainTraceEnterType)enterType{
+    NSLog(@"%s -- %ld",__func__,enterType);
 }
 
 

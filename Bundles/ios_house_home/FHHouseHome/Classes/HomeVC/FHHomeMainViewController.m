@@ -134,7 +134,11 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         if ([self.collectionView numberOfItemsInSection:0] > index && index != self.viewModel.currentIndex) {
             [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            
+            [self.viewModel sendEnterCategory:(index == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed) enterType:FHHomeMainTraceEnterTypeClick];
+            [self.viewModel sendStayCategory:(index == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse) enterType:FHHomeMainTraceEnterTypeClick];
         }
+        
     };
 }
 
