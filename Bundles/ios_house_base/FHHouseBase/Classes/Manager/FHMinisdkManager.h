@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)taskComplete:(BDDTaskFinishBlock)finishBlock;
 
 //具体任务
-- (void)seeVideo;
+- (void)seeVideo:(NSString *)vid;
     
 @end
 

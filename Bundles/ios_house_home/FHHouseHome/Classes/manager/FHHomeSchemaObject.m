@@ -49,11 +49,15 @@
         //处理春节活动过来的 ack_token
         if([FHEnvContext isSpringOpen]){
             NSString *ackToken = paramObj.allParams[@"ack_token"];
+            NSString *vid = paramObj.allParams[@"vid"];
             if(ackToken){
                 [[FHMinisdkManager sharedInstance] appBecomeActive:ackToken];
             }
+            if(!vid){
+                vid = @"6751326314264792332";
+            }
             //执行任务
-            [[FHMinisdkManager sharedInstance] seeVideo];
+            [[FHMinisdkManager sharedInstance] seeVideo:vid];
         }
         
     }
