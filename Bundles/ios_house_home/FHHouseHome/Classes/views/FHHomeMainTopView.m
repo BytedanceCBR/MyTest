@@ -230,7 +230,7 @@ static const float kSegementedMainPadingBottom = 10;
         {
             make.bottom.mas_equalTo(8);
         }
-        make.width.mas_equalTo((kSegementedOneWidth + 20) * titles.count);
+        make.width.mas_equalTo((kSegementedOneWidth + 20) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 20));
     }];
     
     _searchBtn.hidden = YES;

@@ -50,11 +50,12 @@ static CGFloat kFHScrollBannerHeight = 80; // 轮播图的高度
     _bannerView.backgroundColor = [UIColor themeHomeColor];
     _bannerView.layer.masksToBounds = YES;
     _bannerView.layer.cornerRadius = 8;
-    
+
     _shadowView = [[FHShadowView alloc] initWithFrame:CGRectMake(15, 14, [UIScreen mainScreen].bounds.size.width -  kFHScrollBannerLeftRightMargin * 2, kFHScrollBannerHeight)];
     [_shadowView setCornerRadius:10];
+    [_shadowView setShadowColor:[UIColor colorWithRed:110.f/255.f green:110.f/255.f blue:110.f/255.f alpha:1]];
+    [_shadowView setShadowOffset:CGSizeMake(0, 2)];
     [self.contentView addSubview:_shadowView];
-    
     [self.contentView addSubview:_bannerView];
     
     [_bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -290,13 +291,14 @@ static CGFloat kFHScrollBannerHeight = 80; // 轮播图的高度
         [self updateIndexViewFrame];
         if (self.totalCount == 1) {
             [self.bannerScrollView setLeftImage:self.imageURLs[0]];
-            self.bannerScrollView.scrollEnabled = NO;
+            self.bannerScrollView.scrollEnabled = YES;
             [self.bannerScrollView setContentOffset:CGPointMake(0, 0) animated:NO];
             self.indexView.hidden = YES;
             if (self.delegate != nil) {
                 [self.delegate currentIndexChanged:self.currentIndex];
             }
         } else {
+            
             self.indexView.hidden = NO;
             self.bannerScrollView.scrollEnabled = YES;
             [self changeCurrentImageToMid];
@@ -433,6 +435,15 @@ static CGFloat kFHScrollBannerHeight = 80; // 轮播图的高度
 - (void)dealloc
 {
     [self removeGestureRecognizer:_tapGes];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (self.totalCount == 1) {
+        if (scrollView.contentOffset.x != 0) {
+            scrollView.contentOffset = CGPointMake(0.0f, 0.0f);
+        }
+    }
 }
 
 // scrollViewWillBeginDragging

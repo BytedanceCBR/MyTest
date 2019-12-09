@@ -28,6 +28,18 @@
     // Do any additional setup after loading the view.
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    
+}
+
 - (void)initView {
     self.view.backgroundColor = [UIColor themeHomeColor];
     

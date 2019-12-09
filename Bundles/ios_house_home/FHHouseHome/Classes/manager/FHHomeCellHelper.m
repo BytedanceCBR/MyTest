@@ -328,7 +328,6 @@ static NSMutableArray  * _Nullable identifierArr;
 }
 
 #pragma mark 填充数据 fill data =======================
-
 + (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:(NSDictionary *)traceParams{
     
     FHHomeEntrancesCell *cellEntrance = cell;
@@ -340,10 +339,8 @@ static NSMutableArray  * _Nullable identifierArr;
     
     [cell updateWithItems:model.items];
     
-    
     cellEntrance.clickBlock = ^(NSInteger clickIndex , FHConfigDataOpDataItemsModel *itemModel){
         NSMutableDictionary *dictTrace = [NSMutableDictionary new];
-        
         [dictTrace setValue:@"maintab" forKey:@"enter_from"];
 
         if ([traceParams isKindOfClass:[NSDictionary class]]) {
@@ -361,8 +358,7 @@ static NSMutableArray  * _Nullable identifierArr;
         if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
             [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
             [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
-        }else
-        {
+        }else{
             [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
             [dictTrace setValue:@"be_null" forKey:@"origin_from"];
         }
@@ -371,7 +367,6 @@ static NSMutableArray  * _Nullable identifierArr;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         
         if ([itemModel.openUrl isKindOfClass:[NSString class]]) {
-            
             NSURL *url = [NSURL URLWithString:itemModel.openUrl];
             if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
