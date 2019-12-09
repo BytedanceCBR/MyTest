@@ -248,6 +248,10 @@
     if (!showIM) {
 
         if (contactPhone.showRealtorinfo != 1)  {
+            
+        // 阴影颜色
+            _contactBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#ff9629"].CGColor;
+            _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
             [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.equalTo(self);
                 make.right.mas_equalTo(self).offset(-20);
