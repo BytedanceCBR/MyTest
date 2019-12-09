@@ -101,6 +101,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 取消投票
 + (TTHttpTask *)requestVoteCancel:(NSString *)voteId optionNum:(NSNumber *)optionNum completion:(void(^)(BOOL success , NSError *error))completion;
 
+// 提问发布请求
++ (TTHttpTask *)requestPublishWendaWithParam: (NSDictionary *)params  completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 @end
 
 NS_ASSUME_NONNULL_END

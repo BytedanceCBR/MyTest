@@ -334,6 +334,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, copy , nullable) NSString *houseListOpenUrl;
+@property (nonatomic, copy , nullable) NSString *searchHistoryOpenUrl;
 @property (nonatomic, copy , nullable) NSString *refreshTip;
 @property (nonatomic, copy , nullable) NSString *mapFindHouseOpenUrl;
 @property (nonatomic, copy , nullable) NSString *total;
@@ -345,6 +346,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark todo zjing
 @property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
+@property (nonatomic, strong , nullable) NSArray<FHSearchBaseItemModel *> *searchItems;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHListSearchHouseDataModel *recommendSearchModel;
 

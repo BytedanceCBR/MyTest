@@ -152,6 +152,7 @@
         if (error) {
             if (error.code == -10001) {
                 // 被删除，空页面已经展示了
+                wSelf.weakShareButton.hidden = YES;
             } else if (wSelf.items.count <= 0) {
                 // 显示空页面
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -214,6 +215,14 @@
         if (socialGroupModel) {
             // 更新圈子数据
             [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:socialGroupModel];
+            if (cellModel.community.socialGroupId.length <= 0) {
+                // 赋值 圈子数据 删除的时候需要
+                FHFeedUGCCellCommunityModel *communityModel = [[FHFeedUGCCellCommunityModel alloc] init];
+                communityModel.url = socialGroupModel.announcementUrl;
+                communityModel.socialGroupId = socialGroupModel.socialGroupId;
+                communityModel.name = socialGroupModel.socialGroupName;
+                cellModel.community = communityModel;
+            }
         }
         // 更新点赞以及评论数
         if (cellModel) {

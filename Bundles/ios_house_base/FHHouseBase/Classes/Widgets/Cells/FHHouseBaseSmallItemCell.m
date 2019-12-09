@@ -773,7 +773,9 @@
         //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
         FHImageModel *imageModel = commonModel.images.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
-        
+        _vrLoadingView.hidden = YES;
+        self.tagTitleLabel.hidden = YES;
+
         if (houseType == FHHouseTypeSecondHandHouse) {
             
             self.tagLabel.attributedText =  attributeString;
@@ -919,6 +921,8 @@
             
             self.mainTitleLabel.text = commonModel.displayTitle;
             self.subTitleLabel.text = commonModel.displaySubtitle;
+            self.tagLabel.textColor = [UIColor themeGray3];
+            self.tagLabel.font = [UIFont themeFontRegular:12];
             self.tagLabel.text = commonModel.displayStatsInfo;
             self.priceLabel.text = commonModel.pricePerSqmNum;
             self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
@@ -939,8 +943,9 @@
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
         isLastCell = model.isLastCell;
         CGFloat reasonHeight = [model showRecommendReason] ? [FHHouseBaseSmallItemCell recommendReasonHeight] : 0;
-        return (isLastCell ? 95 : 75) + reasonHeight + (model.topMargin - 10);
+        return (isLastCell ? 95 : 75) + reasonHeight + model.topMargin;
     }
+    return 75;
 }
 
 #pragma mark 二手房
