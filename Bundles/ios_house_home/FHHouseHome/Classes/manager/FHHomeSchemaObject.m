@@ -53,9 +53,6 @@
             if(ackToken){
                 [[FHMinisdkManager sharedInstance] appBecomeActive:ackToken];
             }
-            if(!vid){
-                vid = @"6751326314264792332";
-            }
             //执行任务
             [[FHMinisdkManager sharedInstance] seeVideo:vid];
         }
