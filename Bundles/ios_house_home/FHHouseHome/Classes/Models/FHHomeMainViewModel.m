@@ -10,10 +10,12 @@
 #import "FHHomeMainHouseCollectionCell.h"
 #import "FHHomeMainFeedCollectionCell.h"
 #import <FHEnvContext.h>
+#import <ArticleTabbarStyleNewsListViewController.h>
 
 @interface FHHomeMainViewModel()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHHomeMainViewController *viewController;
+@property(nonatomic , weak) ArticleTabBarStyleNewsListViewController *articleListVC;
 @property(nonatomic , strong) NSMutableArray *dataArray;
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;

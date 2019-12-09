@@ -130,22 +130,49 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)enterCategoryWithEnterType:(id)enterType
+- (void)enterCategoryWithEnterType:(NSNotification *)notify
 {
-    if ([enterType isKindOfClass:[NSNumber class]] && [(NSNumber *)enterType integerValue] == FHHomeMainTraceEnterTypeFlip) {
+    self.traceEnterTopTabache = [NSMutableDictionary new];
+
+    if ([notify.object isKindOfClass:[NSNumber class]] && [(NSNumber *)notify.object integerValue] == FHHomeMainTraceEnterTypeClick) {
         [self.traceEnterCategoryCache setValue:@"click" forKey:@"enter_type"];
+        [self.traceEnterTopTabache setValue:@"click" forKey:@"enter_type"];
     }else
     {
         [self.traceEnterCategoryCache setValue:@"flip" forKey:@"enter_type"];
+        [self.traceEnterTopTabache setValue:@"flip" forKey:@"enter_type"];
     }
+    
     self.stayTime = [self getCurrentTime];
     [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+    
+    [self.traceEnterTopTabache setValue:@"maintab" forKey:@"enter_from"];
+    [self.traceEnterTopTabache setValue:@"f_find_house" forKey:@"category_name"];
+    [FHEnvContext recordEvent:self.traceEnterTopTabache andEventKey:@"enter_category"];
 }
 
-- (void)stayCategoryWithEnterType:(id)enterType
+- (void)stayCategoryWithEnterType:(NSNotification *)notify
 {
     if (self.houseType == _listModel.houseType) {
         [self currentViewIsDisappeared];
+        
+        NSMutableDictionary *stayTabParams = [NSMutableDictionary new];
+        if (self.traceEnterTopTabache) {
+            [stayTabParams addEntriesFromDictionary:self.traceEnterTopTabache];
+        }
+        NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
+        if (duration) {
+            [stayTabParams setValue:@((int)duration) forKey:@"stay_time"];
+        }
+        
+//        if ([enterType isKindOfClass:[NSNumber class]] && [(NSNumber *)enterType integerValue] == FHHomeMainTraceEnterTypeFlip) {
+//            [stayTabParams setValue:@"click" forKey:@"enter_type"];
+//
+//        }else
+//        {
+//            [stayTabParams setValue:@"flip" forKey:@"enter_type"];
+//        }
+        [FHEnvContext recordEvent:stayTabParams andEventKey:@"stay_category"];
     }
 }
 
