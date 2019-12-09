@@ -130,7 +130,7 @@
     [self.bottomInfoView addSubview:_callBtn];
 
     _imBtn = [[FHExtendHotAreaButton alloc] init];
-    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal"] forState:UIControlStateNormal];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateSelected];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateHighlighted];
     [self.bottomInfoView addSubview:_imBtn];
