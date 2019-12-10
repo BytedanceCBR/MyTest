@@ -43,7 +43,7 @@
 #define MAIN_SMALL_IMG_WIDTH   85
 #define MAIN_SMALL_IMG_HEIGHT  64
 #define MAIN_SMALL_IMG_LEFT    6
-#define MAIN_SMALL_IMG_TOP     8
+#define MAIN_SMALL_IMG_TOP     12
 #define MAIN_SMALL_CELL_HEIGHT  96
 
 #define MAIN_SMALL_IMG_BACK_WIDTH   97
@@ -303,7 +303,7 @@
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc] init];
         _closeBtn.hidden = YES;
-        UIImage *img = ICON_FONT_IMG(12, @"\U0000e673", [UIColor themeGray5]);
+        UIImage *img = ICON_FONT_IMG(16, @"\U0000e673", [UIColor themeGray5]);
         [_closeBtn setImage:img forState:UIControlStateNormal];
         [_closeBtn addTarget:self action:@selector(dislike) forControlEvents:UIControlEventTouchUpInside];
         _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -20, -10, -20);
@@ -531,7 +531,7 @@
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(5);
+        layout.top = YGPointValue(MAIN_SMALL_IMG_TOP - 2);
         layout.left = YGPointValue(3);
         layout.width = YGPointValue(MAIN_SMALL_IMG_BACK_WIDTH - 3);
         layout.height = YGPointValue(MAIN_SMALL_IMG_BACK_HEIGHT - 2);
@@ -543,10 +543,10 @@
     [_houseVideoImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(27.0f);
-        layout.left = YGPointValue(25.0f);
-        layout.width = YGPointValue(20.0f);
-        layout.height = YGPointValue(20.0f);
+        layout.top = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 10);
+        layout.left = YGPointValue(12);
+        layout.width = YGPointValue(16);
+        layout.height = YGPointValue(16.0f);
     }];
     
     [self.leftInfoView addSubview:self.vrLoadingView];
@@ -555,10 +555,10 @@
     [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(25.0f);
-        layout.left = YGPointValue(23.0f);
-        layout.width = YGPointValue(24);
-        layout.height = YGPointValue(24);
+        layout.top = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 10);
+        layout.left = YGPointValue(12);
+        layout.width = YGPointValue(16);
+        layout.height = YGPointValue(16);
     }];
     
 //    [_imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -606,7 +606,7 @@
         layout.paddingLeft = YGPointValue(0);
         layout.paddingRight = YGPointValue(0);
         layout.alignItems = YGAlignFlexStart;
-        layout.marginTop = YGPointValue(10);
+        layout.marginTop = YGPointValue(12);
         layout.height = YGPointValue(22);
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
     }];
@@ -632,7 +632,7 @@
     
     [_subTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.marginTop = YGPointValue(0);
+        layout.marginTop = YGPointValue(1);
         layout.height = YGPointValue(19);
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 23));
         layout.flexGrow = 0;
@@ -1070,6 +1070,7 @@
     }
     
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
+    self.houseVideoImageView.hidden = NO;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
     NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
