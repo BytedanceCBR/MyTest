@@ -18,7 +18,6 @@
 
 #import "FHMainRentTopView.h"
 #import "FHMainOldTopView.h"
-#import "FHHouseListRedirectTipView.h"
 
 
 
@@ -63,9 +62,6 @@
 @property(nonatomic , copy)   NSString *recommendSearchId;
 @property(nonatomic , strong) NSDictionary *houseSearchDic;
 @property(nonatomic , assign) BOOL addEnterCategory; // 是否算enter_category
-@property(nonatomic , assign) BOOL showRedirectTip;
-@property(nonatomic , strong) FHSearchHouseDataRedirectTipsModel *redirectTips;
-@property(nonatomic , weak)   FHHouseListRedirectTipView *redirectTipView;
 
 @property(nonatomic , assign) BOOL showFilter;
 @property(nonatomic , assign) BOOL animateShowNotify;
@@ -73,6 +69,7 @@
 
 @property (nonatomic, strong) JSONModel *currentRecommendHouseDataModel;
 @property (nonatomic, strong) JSONModel *houseDataModel;
+@property(nonatomic , strong) NSArray *cellIdArray;
 
 -(void)showErrorMask:(BOOL)show tip:(FHEmptyMaskViewType )type enableTap:(BOOL)enableTap showReload:(BOOL)showReload;
 

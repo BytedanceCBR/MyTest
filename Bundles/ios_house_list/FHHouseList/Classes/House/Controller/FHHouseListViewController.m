@@ -20,7 +20,6 @@
 #import "TTDeviceHelper.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHConditionFilterViewModel.h"
-#import "FHHouseListRedirectTipView.h"
 #import "HMDTTMonitor.h"
 #import "FHEnvContext.h"
 #import "TTInstallIDManager.h"
@@ -47,7 +46,6 @@
 
 @property (nonatomic , strong) UIView *filterContainerView;
 @property (nonatomic , strong) UIView *filterPanel;
-@property (nonatomic , strong) FHHouseListRedirectTipView *redirectTipView;
 
 @property (nonatomic , strong) UIControl *filterBgControl;
 @property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
@@ -524,18 +522,12 @@
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.redirectTipView.mas_bottom);
-        make.left.right.bottom.mas_equalTo(self.containerView);
-    }];
-    
-    [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.containerView);
         if (self.topTagsView) {
             make.top.mas_equalTo(self.topTagsView.mas_bottom);
         }else {
             make.top.mas_equalTo(self.filterContainerView.mas_bottom);
         }
-        make.height.mas_equalTo(0);
+        make.left.right.bottom.mas_equalTo(self.containerView);
     }];
     
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -564,7 +556,6 @@
 
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
-    [self.viewModel setRedirectTipView:self.redirectTipView];
     [self.viewModel setTopTagsView:self.topTagsView];
     if (self.topTagsView && self.paramObj.queryParams) {
         self.topTagsView.lastConditionDic = [NSMutableDictionary dictionaryWithDictionary:self.paramObj.queryParams];
@@ -616,9 +607,6 @@
     self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.notifyBarView];
     [self setupTopTagsView];
-
-    self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.redirectTipView];
 
     [self.view addSubview:self.navbar];
     [self.view addSubview:self.filterBgControl];

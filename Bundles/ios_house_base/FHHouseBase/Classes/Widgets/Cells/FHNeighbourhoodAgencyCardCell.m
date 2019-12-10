@@ -64,7 +64,9 @@
     self.clipsToBounds = NO;
 
     _shadowView = [[FHShadowView alloc] initWithFrame:CGRectZero];
-    _shadowView.cornerRadius = 10;
+    [_shadowView setCornerRadius:10];
+    [_shadowView setShadowColor:[UIColor colorWithRed:110.f/255.f green:110.f/255.f blue:110.f/255.f alpha:1]];
+    [_shadowView setShadowOffset:CGSizeMake(0, 2)];
     [self.contentView addSubview:_shadowView];
 
     _containerView = [[UIView alloc] init];
@@ -151,8 +153,8 @@
 
 
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).mas_offset(20);
-        make.right.mas_equalTo(self).mas_offset(-20);
+        make.left.mas_equalTo(self).mas_offset(15);
+        make.right.mas_equalTo(self).mas_offset(-15);
         make.top.mas_equalTo(self).offset(10);
         make.bottom.mas_equalTo(self).offset(-10);
     }];

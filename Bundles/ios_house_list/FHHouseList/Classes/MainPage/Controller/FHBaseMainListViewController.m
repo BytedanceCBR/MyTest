@@ -12,7 +12,6 @@
 #import <FHHouseBase/FHHouseType.h>
 #import "FHBaseMainListViewModel.h"
 #import <TTBaseLib/UIViewAdditions.h>
-#import "FHHouseListRedirectTipView.h"
 #import <FHHouseBase/FHUserTracker.h>
 #import <TTUIWidget/UIViewController+Track.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
@@ -28,7 +27,6 @@
 @property(nonatomic , strong) FHMainListTopView *topView;
 @property(nonatomic , strong, readwrite) UITableView *tableView;
 @property(nonatomic , assign) FHHouseType houseType;
-@property (nonatomic , strong) FHHouseListRedirectTipView *redirectTipView;
 @property(nonatomic , strong) FHBaseMainListViewModel *viewModel;
 @property(nonatomic , strong) FHErrorView *errorView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
@@ -144,10 +142,7 @@
     [self.tableView addSubview:_topView];
     
     [self.containerView addSubview:self.tableView];
-    
-    self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectMake(0, 0, self.view.width, 100)];
-    [self.containerView addSubview:_redirectTipView];
-    
+
     _viewModel.viewController = self;
     _viewModel.navbar = self.navbar;
     _errorView = [[FHErrorView alloc] init];
@@ -212,13 +207,6 @@
         make.bottom.left.right.mas_equalTo(self.containerView);
         make.top.mas_equalTo(self.viewModel.filterPanel.mas_bottom);
     }];
-    
-    [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(0);
-        make.height.mas_equalTo(0);
-    }];
-    
 }
 
 
