@@ -9,9 +9,11 @@
 #import <TTInstallIDManager.h>
 #import <TTRoute.h>
 #import <ToastManager.h>
+#import <TTAccountLoginManager.h>
+#import <TTAccountManager.h>
 
 //固定值
-#define taskID @"311"
+#define taskID @"503"
 #define kFHSpringAlreadyReport @"kFHSpringAlreadyReport"
 
 @interface FHMinisdkManager ()<BDMTaskCenterManagerProtocol>
@@ -43,6 +45,10 @@
 
 - (void)taskComplete:(BDDTaskFinishBlock)finishBlock {
     [[BDMTaskCenterManager sharedInstance] updateTaskID:taskID finishBlock:finishBlock];
+}
+
+- (void)excuteTask {
+    [self gotoLogin];
 }
     
 - (void)seeVideo:(NSString *)vid {
@@ -77,6 +83,64 @@
             }
         }];
     });
+}
+
+- (void)gotoLogin {
+    __weak typeof(self) wSelf = self;
+    __block NSInteger retryCount = 0;
+    
+    BDDTaskFinishBlock finishBlock = ^(BOOL isCompleted, NSError *error) {
+        if(error){
+            //重试逻辑
+            retryCount++;
+            return;
+        }
+        
+        if(isCompleted){
+            wSelf.alreadyReport = YES;
+            [[ToastManager manager] showToast:@"恭喜你，完成任务"];
+        }else{
+            [[ToastManager manager] showToast:@"一台设备不能重复完成"];
+        }
+    };
+    
+    //当前用户已经登录
+    if ([TTAccountManager isLogin]) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            if(wSelf.alreadyReport){
+//                //已经上报成功了
+//                [[ToastManager manager] showToast:@"之前已经上报过了"];
+//                return;
+//            }
+            
+            [[FHMinisdkManager sharedInstance] taskComplete:finishBlock];
+        });
+        return;
+    }
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+
+    [params setObject:@"spring" forKey:@"enter_from"];
+    [params setObject:@"click" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                    if(wSelf.alreadyReport){
+//                        //已经上报成功了
+//                        [[ToastManager manager] showToast:@"之前已经上报过了"];
+//                        return;
+//                    }
+                    
+                    [[FHMinisdkManager sharedInstance] taskComplete:finishBlock];
+                });
+            }
+        }
+    }];
 }
 
 #pragma mark - BDDTaskCenterManagerProtocol

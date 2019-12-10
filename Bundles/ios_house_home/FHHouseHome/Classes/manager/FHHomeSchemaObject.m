@@ -54,7 +54,7 @@
                 [[FHMinisdkManager sharedInstance] appBecomeActive:ackToken];
             }
             //执行任务
-            [[FHMinisdkManager sharedInstance] seeVideo:vid];
+            [[FHMinisdkManager sharedInstance] excuteTask];
         }
         
     }
