@@ -793,6 +793,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [cell updateHomeSmallImageHouseCellModel:model andType:self.houseType];
         }
         [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
+        [cell.contentView setBackgroundColor:[UIColor themeHomeColor]];
         return cell;
     }
 }
