@@ -86,7 +86,7 @@ static const float kSegementedMainPadingBottom = 10;
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
     
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
-                                          NSForegroundColorAttributeName: [UIColor themeGray3]};
+                                          NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
     
     NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
@@ -162,7 +162,7 @@ static const float kSegementedMainPadingBottom = 10;
     _houseSegmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:titlesArray];
     
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
-                                          NSForegroundColorAttributeName: [UIColor themeGray3]};
+                                          NSForegroundColorAttributeName: [UIColor themeGray1]};
     _houseSegmentControl.titleTextAttributes = titleTextAttributes;
     
     NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],

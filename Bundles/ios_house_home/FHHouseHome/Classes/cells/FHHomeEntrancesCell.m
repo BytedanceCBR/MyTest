@@ -156,7 +156,7 @@
         
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, frame.size.height - 20, frame.size.width, 20)];
         _nameLabel.textColor = [UIColor themeGray2];
-        _nameLabel.font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:14] : [UIFont themeFontRegular:12];
+        _nameLabel.font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:12] : [UIFont themeFontRegular:12];
         _nameLabel.textAlignment = NSTextAlignmentCenter;
         
         [self addSubview:_nameLabel];

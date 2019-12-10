@@ -173,7 +173,7 @@
     if (!_tagTitleLabel) {
         _tagTitleLabel = [[FHCornerItemLabel alloc] init];
         _tagTitleLabel.textAlignment = NSTextAlignmentCenter;
-        _tagTitleLabel.font = [UIFont themeFontMedium:10];
+        _tagTitleLabel.font = [UIFont themeFontRegular:12];
         _tagTitleLabel.textColor = [UIColor themeWhite];
         _tagTitleLabel.frame = CGRectMake(0, 0, 16, 16);
     }
@@ -226,8 +226,8 @@
 {
     if (!_priceLabel) {
         _priceLabel = [[UILabel alloc]init];
-        _priceLabel.font = [UIFont themeFontMedium:14];
-        _priceLabel.textColor = [UIColor themeRed1];
+        _priceLabel.font = [UIFont themeFontSemibold:14];
+        _priceLabel.textColor = [UIColor themeRed4];
     }
     return _priceLabel;
 }
@@ -1085,11 +1085,11 @@
         self.subTitleLabel.text = commonModel.displaySubtitle;
         
         if ([TTDeviceHelper isScreenWidthLarge320]) {
-            _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
+            _priceLabel.font = [UIFont themeFontDINAlternateBold:12];
         }else {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
         }
-        _pricePerSqmLabel.textColor = [UIColor themeGray3];
+        _pricePerSqmLabel.textColor = [UIColor themeGray1];
         
         self.priceLabel.text = commonModel.displayPrice;
         if (commonModel.originPrice) {
