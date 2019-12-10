@@ -552,7 +552,11 @@ def appPods
     
     pod_binary 'TTAppStoreStarManager', '1.0.12'
     
-    pod 'BDDiamond20', :git => 'git@code.byted.org:liuhanhong/qi_project_ios.git', :branch => 'develop', :subspecs => ['minisdk']
+#    pod 'BDDiamond20', :git => 'git@code.byted.org:liuhanhong/qi_project_ios.git', :branch => 'develop', :subspecs => ['minisdk']
+
+    pod_binary 'BDDiamond20', '0.9.0-alpha.10', :subspecs => ['minisdk']
+
+#    pod_binary 'BDDiamond20', '0.9.0-alpha.10'
 
 end
 

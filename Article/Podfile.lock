@@ -37,7 +37,7 @@ PODS:
   - BDALog (0.1.12.1-binary)
   - BDAlogProtocol (0.1.7)
   - BDAssert/Core (2.0.0)
-  - BDDiamond20/minisdk (0.0.1)
+  - BDDiamond20/minisdk (0.9.0-alpha.10.1.binary)
   - BDMobileRuntime (0.3.38)
   - BDSSOAuthSDK (1.1.0)
   - BDTArticle (0.2.3)
@@ -625,7 +625,7 @@ DEPENDENCIES:
   - BDALog (= 0.1.12.1-binary)
   - BDAlogProtocol (= 0.1.7)
   - BDAssert/Core (= 2.0.0)
-  - BDDiamond20/minisdk (from `git@code.byted.org:liuhanhong/qi_project_ios.git`, branch `develop`)
+  - BDDiamond20/minisdk (= 0.9.0-alpha.10.1.binary)
   - BDMobileRuntime (= 0.3.38)
   - BDSSOAuthSDK
   - BDTArticle (from `../AKPlugins/BDTArticle`)
@@ -921,9 +921,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/AKWDPlugin
   AKWebViewBundlePlugin:
     :path: ../AKPlugins/AKWebViewBundlePlugin
-  BDDiamond20:
-    :branch: develop
-    :git: git@code.byted.org:liuhanhong/qi_project_ios.git
   BDTArticle:
     :path: ../AKPlugins/BDTArticle
   BDTBasePlayer:
@@ -1013,11 +1010,6 @@ EXTERNAL SOURCES:
   yoga:
     :path: ../ReactCommon/yoga
 
-CHECKOUT OPTIONS:
-  BDDiamond20:
-    :commit: fd6b8759d54987aee58a67f7e270e0d27fd8112b
-    :git: git@code.byted.org:liuhanhong/qi_project_ios.git
-
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
   AFNetworking: ae73845b1571323685452375dc66d8e98feefa67
@@ -1037,7 +1029,7 @@ SPEC CHECKSUMS:
   BDALog: 2c34fe6b9e0f7107abb36d41ca3baf1ee33113bb
   BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
-  BDDiamond20: 07d2ce78f49323c12aff22b9d3bc64c5c26efef5
+  BDDiamond20: 9d77c54d009abb02dcb332bda83bbf32a85ff930
   BDMobileRuntime: 83175e738acd91083ea560cf0fd4e34612987b80
   BDSSOAuthSDK: 50464c9dd31869a9fe999723f68b931e8acab644
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
@@ -1218,6 +1210,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 0cbaa51ab9b9bb741dd3f5bdd12baff5f425de6c
+PODFILE CHECKSUM: 4aa23cdb250046408a74e02f9b1b53fe4f2f8757
 
 COCOAPODS: 1.4.0

@@ -234,6 +234,9 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
 @property (nonatomic, strong) TTGroupModel *groupModel;
 
+//春节活动 by xsm，默认是NO
+@property (nonatomic, assign) BOOL isSpring;
+
 @end
 
 static const CGFloat kFloatingViewOriginY = 230;
@@ -264,6 +267,9 @@ static const CGFloat kFloatingViewOriginY = 230;
         _ruleID = [params[AWEVideoRuleId] copy];
         _groupSource = [params[VideoGroupSource] copy] ?: @"";
         _showComment = [params[AWEVideoShowComment] copy];
+        
+        _isSpring = [params[@"spring"] boolValue];
+        
         if (!_showComment) {
             _showComment = [extraParams[AWEVideoShowComment] copy];
         }
@@ -455,6 +461,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         controller.dataFetchManager = self.dataFetchManager;
         controller.commonTrackingParameter = self.commonTrackingParameter;
         controller.extraDic = self.extraDic;
+        controller.isSpring = self.isSpring;
         controller.needCellularAlert = (self.pageParams[AWEVideoPageParamNonWiFiAlert] && [self.pageParams[AWEVideoPageParamNonWiFiAlert] isKindOfClass:[NSNumber class]]) ? [self.pageParams[AWEVideoPageParamNonWiFiAlert] boolValue] : YES;
         @weakify(self)
         controller.wantToClosePage = ^{
