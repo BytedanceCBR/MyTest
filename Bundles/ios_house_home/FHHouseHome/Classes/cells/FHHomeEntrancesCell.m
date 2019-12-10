@@ -16,6 +16,7 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBase/FHCommonDefines.h>
+#import <FHEnvContext.h>
 
 #define ITEM_PER_ROW  5
 #define TOP_MARGIN_PER_ROW 10
@@ -45,7 +46,12 @@
 
 +(CGFloat)rowHeight
 {
-    return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+    if([[FHEnvContext sharedInstance] getConfigFromCache].mainPageBannerOpData.items.count > 0){
+        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+    }else
+    {
+        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW + 10;
+    }
 }
 
 +(CGFloat)cellHeightForModel:(id)model

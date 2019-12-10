@@ -176,7 +176,7 @@ static const NSInteger kTopScrollViewTag = 100;
     }
     
     if ([TTDeviceHelper isScreenWidthLarge320]) {
-        _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
+        _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count + (titles.count == 1 ? 10 : 0), kSegementedHeight);
     }else
     {
         if (titles.count < 3) {

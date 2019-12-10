@@ -624,7 +624,7 @@
     _tagTitleLabel.hidden = YES;
     [_tagTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.marginTop = YGPointValue(3);
+        layout.marginTop = YGPointValue(1.5);
         layout.marginLeft = YGPointValue(4);
         layout.height = YGPointValue(16);
         layout.width = YGPointValue(16);

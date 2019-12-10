@@ -741,11 +741,13 @@ TTRefreshViewDelegate
         }
     }];
     
+    
     [_listView tt_addDefaultPullUpLoadMoreWithHandler:^{
         __strong typeof(self) sself = wself;
         sself.refreshFromType = ListDataOperationReloadFromTypeLoadMore;
         [wself loadMoreWithUmengLabel:[wself modifyEventLabelForRefreshEvent:@"load_more"]];
     }];
+    [_listView.pullDownView setUpRefreshBackColor:[UIColor themeHomeColor]];
 }
 
 - (void)didFinishLoadTable
