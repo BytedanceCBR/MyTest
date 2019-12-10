@@ -528,7 +528,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         staticMapModel.score = model.data.neighborEval.score;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
-        staticMapModel.useStarHeader = YES;
         staticMapModel.mapOnly = NO;
         [self.items addObject:staticMapModel];
     } else{

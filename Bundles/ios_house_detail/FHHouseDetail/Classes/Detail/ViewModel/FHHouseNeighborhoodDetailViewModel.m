@@ -329,7 +329,6 @@
         staticMapModel.title = model.data.neighborhoodInfo.name;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
-        staticMapModel.useStarHeader = NO;
         staticMapModel.mapOnly = NO;
         [self.items addObject:staticMapModel];
     } else{

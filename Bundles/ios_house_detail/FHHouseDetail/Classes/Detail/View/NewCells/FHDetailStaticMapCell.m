@@ -162,9 +162,9 @@
     }
 }
 
-- (void)setupViews:(BOOL)useStarHeader useNativeMap:(BOOL)useNativeMap {
+- (void)setupViews:(BOOL)useNativeMap {
     //初始化Header
-    [self setUpHeaderView:useStarHeader];
+    [self setUpHeaderView];
 
     //初始化左右切换
     [self setUpSegmentedControl];
@@ -177,7 +177,7 @@
 
     self.headerView.frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 46);
     self.starHeaderView.frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 110);
-    self.segmentedControl.frame = CGRectMake(0, useStarHeader ? 52 : self.headerView.bottom, MAIN_SCREEN_WIDTH, 50);
+    self.segmentedControl.frame = CGRectMake(0,self.headerView.bottom, MAIN_SCREEN_WIDTH, 50);
 
     CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
     CGRect mapFrame = CGRectMake(0, self.segmentedControl.bottom, MAIN_SCREEN_WIDTH, mapHeight);
@@ -223,18 +223,11 @@
     self.mapMaskBtnLocation = nil;
 }
 
-- (void)setUpHeaderView:(BOOL)useStarHeader {
-    if (useStarHeader) {
-        _starHeaderView = [[FHDetailStarHeaderView alloc] init];
-        [self.contentView addSubview:_starHeaderView];
-        [_starHeaderView updateTitle:@"便捷指数"];
-        [self.contentView sendSubviewToBack:_starHeaderView];
-    } else {
-        _headerView = [[FHDetailHeaderView alloc] init];
-        [self.contentView addSubview:_headerView];
-        _headerView.label.text = @"周边配套";
-        [self.contentView sendSubviewToBack:_headerView];
-    }
+- (void)setUpHeaderView{
+    _headerView = [[FHDetailHeaderView alloc] init];
+    [self.contentView addSubview:_headerView];
+    _headerView.label.text = @"周边配套";
+    [self.contentView sendSubviewToBack:_headerView];
 }
 
 - (void)setUpSegmentedControl {
@@ -380,7 +373,7 @@
         [self setupViewMapOnly:dataModel.useNativeMap];
         [self refreshWithDataMapOnly];
     } else {
-        [self setupViews:dataModel.useStarHeader useNativeMap:dataModel.useNativeMap];
+        [self setupViews:dataModel.useNativeMap];
         [self refreshWithDataPoiDetail];
     }
 }
@@ -407,15 +400,8 @@
         [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
     }
 
-    if (dataModel.useStarHeader) {
-        if (dataModel.title.length > 0) {
-            [self.starHeaderView updateTitle:dataModel.title];
-        }
-        [self.starHeaderView updateStarsCount:[dataModel.score integerValue]];
-    } else {
-        if (dataModel.title.length > 0) {
-            self.headerView.titleLabel.text = dataModel.title;
-        }
+    if (dataModel.title.length > 0) {
+        self.headerView.titleLabel.text = dataModel.title;
     }
     if ([self isPoiSearchDone:self.curCategory]) {
         [self showPoiResultInfo];
@@ -491,7 +477,7 @@
     return [[FHStaticMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
 }
 
-- (void)mapView:(FHDetailStaticMap *)mapView loadFinished:(BOOL)success message:(NSString *)message {
+- (void)mapView:(FHDetailStaticMap *)mapView loadFinished:(BOOL)success message:(NSString *)me那个ssage {
     if (success) {
         return;
     }
@@ -516,7 +502,7 @@
         [self setupViewMapOnly:dataModel.useNativeMap];
         [self refreshWithDataMapOnly];
     } else {
-        [self setupViews:dataModel.useStarHeader useNativeMap:dataModel.useNativeMap];
+        [self setupViews:dataModel.useNativeMap];
         [self refreshWithDataPoiDetail];
     }
 }
