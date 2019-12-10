@@ -36,6 +36,7 @@
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <TTThemedAlertController.h>
 #import <FHUtils.h>
+#import <FHMinisdkManager.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -379,6 +380,13 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     
     [self checkPasteboard:NO];
+    
+    //春节活动
+    if([FHEnvContext isSpringOpen]){
+        if([FHMinisdkManager sharedInstance].isSpring && [FHMinisdkManager sharedInstance].url){
+             [[TTRoute sharedRoute] openURL:[FHMinisdkManager sharedInstance].url userInfo:nil objHandler:nil];
+        }
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated

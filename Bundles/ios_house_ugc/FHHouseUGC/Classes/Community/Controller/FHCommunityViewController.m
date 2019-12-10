@@ -26,6 +26,7 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
+#import <FHMinisdkManager.h>
 
 @interface FHCommunityViewController ()
 
@@ -191,6 +192,13 @@
         if (!self.hasShowDots) {
             [FHEnvContext hideFindTabRedDotsLimitCount];
             self.hasShowDots = YES;
+        }
+    }
+    
+    //春节活动
+    if([FHEnvContext isSpringOpen]){
+        if([FHMinisdkManager sharedInstance].isSpring && [FHMinisdkManager sharedInstance].url){
+            [[TTRoute sharedRoute] openURL:[FHMinisdkManager sharedInstance].url userInfo:nil objHandler:nil];
         }
     }
 }

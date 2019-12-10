@@ -12,6 +12,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <FHEnvContext.h>
 #import "TTLaunchDefine.h"
+#import <FHMinisdkManager.h>
 
 DEC_TASK("TTOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_MEDIUM);
 
@@ -40,6 +41,12 @@ extern BOOL kFHInAppPushTipsHidden;
         //这三种必须分开判断，要不然直接crash
         [[TTRoute sharedRoute] openURL:url userInfo:nil objHandler:nil];
         //snssdk1370://main?select_tab=tab_message
+        
+        //这里加这句话是因为第一次安装时候，上面Route不起作用，进不去
+        if([url.host isEqualToString:@"spring"] && !ret){
+            [FHMinisdkManager sharedInstance].isSpring = YES;
+            [FHMinisdkManager sharedInstance].url = url;
+        }
     }else{
         if (ret && [SharedAppDelegate appTopNavigationController]) {
             [SSADManager shareInstance].splashADShowType = SSSplashADShowTypeHide;

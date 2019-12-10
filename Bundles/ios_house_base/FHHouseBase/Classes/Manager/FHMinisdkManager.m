@@ -49,42 +49,43 @@
 }
 
 - (void)excuteTask {
+    self.isSpring = NO;
     [self gotoLogin];
 }
     
-- (void)seeVideo:(NSString *)vid {
-    //执行一些操作
-    if(vid.length > 0){
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSString *routeUrl = [NSString stringWithFormat:@"sslocal://awemevideo?category_name=spring&enter_from=spring&group_id=%@&group_source=19&item_id=%@&load_more=0&spring=1",vid,vid];
-            NSURL *openUrl = [NSURL URLWithString:routeUrl];
-            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-        });
-    }
-    
-    if(self.alreadyReport){
-        //已经上报成功了
-        [[ToastManager manager] showToast:@"之前已经上报过了"];
-        return;
-    }
-    //以下为联调测试使用
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        //doSomething
-        [[FHMinisdkManager sharedInstance] taskComplete:^(BOOL isCompleted, NSError *error) {
-            if(error){
-                //重试逻辑
-                return;
-            }
-            
-            if(isCompleted){
-                self.alreadyReport = YES;
-                [[ToastManager manager] showToast:@"恭喜你，完成任务"];
-            }else{
-                [[ToastManager manager] showToast:@"一台设备不能重复完成"];
-            }
-        }];
-    });
-}
+//- (void)seeVideo:(NSString *)vid {
+//    //执行一些操作
+//    if(vid.length > 0){
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            NSString *routeUrl = [NSString stringWithFormat:@"sslocal://awemevideo?category_name=spring&enter_from=spring&group_id=%@&group_source=19&item_id=%@&load_more=0&spring=1",vid,vid];
+//            NSURL *openUrl = [NSURL URLWithString:routeUrl];
+//            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+//        });
+//    }
+//    
+//    if(self.alreadyReport){
+//        //已经上报成功了
+//        [[ToastManager manager] showToast:@"之前已经上报过了"];
+//        return;
+//    }
+//    //以下为联调测试使用
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        //doSomething
+//        [[FHMinisdkManager sharedInstance] taskComplete:^(BOOL isCompleted, NSError *error) {
+//            if(error){
+//                //重试逻辑
+//                return;
+//            }
+//            
+//            if(isCompleted){
+//                self.alreadyReport = YES;
+//                [[ToastManager manager] showToast:@"恭喜你，完成任务"];
+//            }else{
+//                [[ToastManager manager] showToast:@"一台设备不能重复完成"];
+//            }
+//        }];
+//    });
+//}
 
 - (void)gotoLogin {
     __weak typeof(self) wSelf = self;
@@ -132,7 +133,7 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
 
-    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+    [TTAccountLoginManager presentAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
