@@ -142,16 +142,30 @@
     if(items.count > 0){
         CGFloat width = (UIScreen.mainScreen.bounds.size.width - bgPadding * 2 - (eachRowCount - 1) * itemPadding) / eachRowCount;
         
+        UIView *topView = self.titleLabel;
+        
         for (NSInteger i = 0; i < items.count; i++) {
             FHMineFavoriteItemView *view = items[i];
             [self.bgView addSubview:view];
             
+            NSInteger column = i % eachRowCount;
+            
             [view mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(3);
-                make.left.mas_equalTo(self.bgView).offset((width + itemPadding) * i);
+                if(topView == self.titleLabel){
+                    make.top.mas_equalTo(topView.mas_bottom).offset(3);
+                }else{
+                    make.top.mas_equalTo(topView.mas_bottom).offset(-10);
+                }
+                make.left.mas_equalTo(self.bgView).offset((width + itemPadding) * column);
                 make.width.mas_equalTo(width);
-                make.bottom.mas_equalTo(self.bgView).offset(-10);
+                if(i == items.count - 1){
+                    make.bottom.mas_equalTo(self.bgView).offset(-10);
+                }
             }];
+            
+            if(column == eachRowCount - 1){
+                topView = view;
+            }
         }
     }
 }
