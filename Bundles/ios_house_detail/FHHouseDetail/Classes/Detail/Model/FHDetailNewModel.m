@@ -276,6 +276,7 @@
                            @"shareInfo": @"share_info",
                            @"highlightedRealtor": @"highlighted_realtor",
                            @"chooseAgencyList": @"choose_agency_list",
+                           @"socialInfo":@"ugc_social_group",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -337,5 +338,3 @@
     return YES;
 }
 @end
-
-

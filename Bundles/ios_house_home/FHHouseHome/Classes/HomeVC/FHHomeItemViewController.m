@@ -687,7 +687,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
             //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
             [cellError.contentView addSubview:noDataErrorView];
-            
+            noDataErrorView.backgroundColor = [UIColor themeHomeColor];
             [noDataErrorView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImageName:@"group-9"
                                     showRetry:NO];
             return cellError;
@@ -702,7 +702,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
             //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
             [cellError.contentView addSubview:noDataErrorView];
-            
+            noDataErrorView.backgroundColor = [UIColor themeHomeColor];
             if ([FHEnvContext isNetworkConnected]) {
                 [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
                                         showRetry:YES];

@@ -629,6 +629,8 @@ extern NSString *const INSTANT_DATA_KEY;
         
         __weak typeof(self)wself = self;
         __block id lastObj = nil;
+        __block BOOL hideRefreshTip = NO;
+        
         NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
         if (wself.stayTraceDict) {
             [traceDictParams addEntriesFromDictionary:wself.stayTraceDict];
@@ -636,9 +638,12 @@ extern NSString *const INSTANT_DATA_KEY;
         [items enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[self class] searchItemModelByDict:itemDict];
+            if (idx == 0 && ![theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+                hideRefreshTip = YES;
+            }
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = theItemModel;
-                    itemModel.isLastCell = (idx == items.count - 1);
+//                    itemModel.isLastCell = (idx == items.count - 1);
                     if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
                         itemModel.topMargin = 0;
                     }
@@ -764,7 +769,7 @@ extern NSString *const INSTANT_DATA_KEY;
             self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
         }
         
-        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && !self.showRealHouseTop) {
+        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && !self.showRealHouseTop && !hideRefreshTip) {
             [self showNotifyMessage:refreshTip];
         }
                 

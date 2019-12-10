@@ -322,7 +322,7 @@ static NSInteger const kMaxPostImageCount = 9;
     // select view
     if (!self.hasSocialGroup) {
         CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
-        self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, SCREEN_WIDTH, 44)];
+        self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, SCREEN_WIDTH, 44) type: FHPostUGCMainViewType_Post];
         [self.view addSubview:self.selectView];
         self.selectView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];
@@ -434,9 +434,7 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // add image view
     y += kAddImagesViewTopPadding;
-    self.addImagesView = [[FRAddMultiImagesView alloc] initWithFrame:CGRectMake(kLeftPadding, y, self.view.width - kLeftPadding - kRightPadding, self.view.height - y)
-                                                              assets:self.outerInputAssets
-                                                              images:self.outerInputImages];
+    self.addImagesView = [[FRAddMultiImagesView alloc] initWithFrame:CGRectMake(kLeftPadding, y, self.view.width - kLeftPadding - kRightPadding, self.view.height - y) assets:self.outerInputAssets images:self.outerInputImages];
     self.addImagesView.eventName = kPostTopicEventName;
     self.addImagesView.delegate = self;
     self.addImagesView.ssTrackDict = self.trackDict;
@@ -844,7 +842,7 @@ static NSInteger const kMaxPostImageCount = 9;
             if (isSuccess) {
                 [weakSelf postThreadWithTitleText:titleText inputText:inputText phoneText:phoneText];
             } else {
-                [[ToastManager manager] showToast:@"发帖失败"];
+                // [[ToastManager manager] showToast:@"发帖失败"];
             }
         }];
     }

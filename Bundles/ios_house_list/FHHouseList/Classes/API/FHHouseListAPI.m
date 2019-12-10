@@ -207,8 +207,22 @@
                 }
             }];
             responseModel.data.searchItems = searchItems;
-            model = responseModel;
         }
+        FHListSearchHouseDataModel *recommendHouseDataModel = responseModel.data.recommendSearchModel;
+        if (recommendHouseDataModel.items.count > 0) {
+            NSMutableArray *searchItems = @[].mutableCopy;
+            NSArray *itemsArray = recommendHouseDataModel.items;
+            [itemsArray enumerateObjectsUsingBlock:^(id  _Nonnull itemDict, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([itemDict isKindOfClass:[NSDictionary class]]) {
+                    id theItemModel = [self searchItemModelByDict:itemDict];
+                    if (theItemModel) {
+                        [searchItems addObject:theItemModel];
+                    }
+                }
+            }];
+            recommendHouseDataModel.searchItems = searchItems;
+        }
+        model = responseModel;
     }
         
     if (jerror) {

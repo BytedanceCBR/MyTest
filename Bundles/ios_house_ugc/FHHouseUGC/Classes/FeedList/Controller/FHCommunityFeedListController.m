@@ -68,7 +68,7 @@
 - (void)viewWillAppear {
     [self.viewModel viewWillAppear];
     
-    if(self.viewModel.dataList.count > 0 || self.notLoadDateWhenEmpty){
+    if(self.viewModel.dataList.count > 0 || self.notLoadDataWhenEmpty){
         if (self.needReloadData) {
             self.needReloadData = NO;
             [self scrollToTopAndRefreshAllData];
@@ -148,21 +148,6 @@
     [self.view addSubview:self.notifyBarView];
 }
 
-//- (void)initGroupChatBtn {
-//    self.groupChatBtn = [[UIButton alloc] init];
-//    [_groupChatBtn setImage:[UIImage imageNamed:@"fh_ugc_group_chat_tip"] forState:UIControlStateNormal];
-//    [_groupChatBtn addTarget:self action:@selector(gotoGroupChat) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:_groupChatBtn];
-//    [_groupChatBtn setHidden:YES];
-//}
-//
-//- (void)initBageView {
-//    self.bageView = [[TTBadgeNumberView alloc] init];
-//    _bageView.badgeNumber = [[NSNumber numberWithInt:0] integerValue];
-//    [self.view addSubview:_bageView];
-//}
-
-
 - (void)initPublishBtn {
     self.publishBtn = [[UIButton alloc] init];
     [_publishBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
@@ -186,46 +171,7 @@
         make.right.mas_equalTo(self.view).offset(-12);
         make.width.height.mas_equalTo(64);
     }];
-    
-//    [self.groupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.mas_equalTo(self.view).offset(-self.publishBtnBottomHeight - 64);
-//        make.right.mas_equalTo(self.view).offset(-12);
-//        make.width.height.mas_equalTo(64);
-//    }];
-//
-//    [self.bageView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.groupChatBtn).offset(5);
-//        make.right.mas_equalTo(self.self.groupChatBtn).offset(-5);
-//        make.height.mas_equalTo(15);
-//    }];
 }
-
-//- (void)updateViews {
-//    if (_forumId > 0 && (_scialGroupData.userAuth > UserAuthTypeNormal || [_scialGroupData.chatStatus.conversationId integerValue] > 0)) {
-//        [_groupChatBtn setHidden:NO];
-//    } else {
-//        [_groupChatBtn setHidden:YES];
-//    }
-//     NSUInteger unreadCount = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].unreadCount;
-//    if (_scialGroupData.chatStatus.conversationStatus == joinConversation) {
-//        if ([[IMManager shareInstance].chatService sdkConversationWithIdentifier:_scialGroupData.chatStatus.conversationId].mute && unreadCount > 0) {
-//            _bageView.badgeNumber = TTBadgeNumberPoint;
-//            [self.bageView mas_makeConstraints:^(MASConstraintMaker *make) {
-//                make.top.mas_equalTo(self.groupChatBtn).offset(7);
-//                make.right.mas_equalTo(self.self.groupChatBtn).offset(-7);
-//                make.height.mas_equalTo(10);
-//                make.width.mas_equalTo(10);
-//            }];
-//        } else {
-//            _bageView.badgeNumber = unreadCount;
-//            [self.bageView mas_makeConstraints:^(MASConstraintMaker *make) {
-//                make.top.mas_equalTo(self.groupChatBtn).offset(5);
-//                make.right.mas_equalTo(self.self.groupChatBtn).offset(-5);
-//                make.height.mas_equalTo(15);
-//            }];
-//        }
-//    }
-//}
 
 - (void)initViewModel {
     FHCommunityFeedListBaseViewModel *viewModel = nil;
@@ -331,7 +277,6 @@
     }
     [self gotoPostThreadVC];
     
-    
     NSMutableDictionary *params = @{}.mutableCopy;
     params[UT_ELEMENT_TYPE] = @"feed_icon";
     params[UT_PAGE_TYPE] = [self pageType];
@@ -350,6 +295,21 @@
     } else {
         [self gotoLogin:FHUGCLoginFrom_VOTE];
     }
+}
+
+- (void)gotoWendaPublish {
+    
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ELEMENT_TYPE] = @"question_icon";
+    params[UT_PAGE_TYPE] = [self pageType];
+    TRACK_EVENT(@"click_options", params);
+    
+    if ([TTAccountManager isLogin]) {
+        [self gotoWendaVC];
+    } else {
+        [self gotoLogin:FHUGCLoginFrom_WENDA];
+    }
+    
 }
 
 // 发布按钮点击
@@ -388,16 +348,28 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                if (from == FHUGCLoginFrom_POST) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                       [wSelf gotoPostVC];
-                                   });
-                
-                } else if(from == FHUGCLoginFrom_VOTE) {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [wSelf gotoVoteVC];
-                    });
-                }
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    
+                    switch (from) {
+                        case FHUGCLoginFrom_POST:
+                        {
+                            [self gotoPostVC];
+                        }
+                            break;
+                        case FHUGCLoginFrom_VOTE:
+                        {
+                            [self gotoVoteVC];
+                        }
+                            break;
+                        case FHUGCLoginFrom_WENDA:
+                        {
+                            [self gotoWendaVC];
+                        }
+                            break;
+                        default:
+                            break;
+                    }
+                });
             }
         }
     }];
@@ -406,6 +378,16 @@
 // 跳转到投票发布器
 - (void)gotoVoteVC {
     NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[UT_ENTER_FROM] = [self pageType];
+    dict[TRACER_KEY] = tracerDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+}
+
+- (void)gotoWendaVC {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = [self pageType];
@@ -441,63 +423,13 @@
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
 
-//- (void)gotoGroupChatVC:(NSString *)convId isCreate:(BOOL)isCreate autoJoin:(BOOL)autoJoin {
-//    //跳转到群聊页面
-//    NSMutableDictionary *dict = @{}.mutableCopy;
-//    dict[@"conversation_id"] = convId;
-//    dict[@"chat_avatar"] = _scialGroupData.avatar;
-//    dict[@"chat_name"] = _scialGroupData.socialGroupName;
-//    dict[@"community_id"] = _scialGroupData.socialGroupId;
-//    NSMutableDictionary *reportDic = [NSMutableDictionary dictionary];
-//    [reportDic setValue:@"community_group_detail" forKey:@"enter_from"];
-//    [reportDic setValue:@"ugc_member_talk" forKey:@"element_from"];
-// 
-//    if (isCreate) {
-//        dict[@"is_create"] = @"1";
-//        NSString *title = [@"" stringByAppendingFormat:@"%@(%@)", _scialGroupData.socialGroupName, _scialGroupData.followerCount];
-//        dict[@"chat_title"] = title;
-//        dict[@"chat_member_count"] = _scialGroupData.followerCount;
-//        dict[@"idempotent_id"] = isEmptyString(_scialGroupData.chatStatus.idempotentId) ? _scialGroupData.socialGroupId : _scialGroupData.chatStatus.idempotentId;
-//    } else if (autoJoin) {
-//        dict[@"auto_join"] = @"1";
-//        dict[@"conversation_id"] = _scialGroupData.chatStatus.conversationId;
-//        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:_scialGroupData.chatStatus.conversationShortId] stringValue];
-//        NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", _scialGroupData.socialGroupName, _scialGroupData.chatStatus.currentConversationCount];
-//        dict[@"chat_title"] = title;
-//    } else {
-//        NSInteger count = [[IMManager shareInstance].chatService sdkConversationWithIdentifier:convId].participantsCount;
-//        NSString *title = [@"" stringByAppendingFormat:@"%@(%d)", _scialGroupData.socialGroupName, count];
-//        dict[@"chat_title"] = title;
-//        dict[@"in_conversation"] = @"1";
-//        dict[@"conversation_id"] = _scialGroupData.chatStatus.conversationId;
-//        dict[@"short_conversation_id"] = [[NSNumber numberWithLongLong:_scialGroupData.chatStatus.conversationShortId] stringValue];
-//    }
-//    dict[@"member_role"] = [NSString stringWithFormat: @"%d", _scialGroupData.userAuth];
-//    dict[@"is_admin"] = @(_scialGroupData.userAuth > UserAuthTypeNormal);
-//    dict[@"report_params"] = [[reportDic JSONRepresentation] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    
-//    @weakify(self);
-//    dict[@"group_chat_page_exit_block"] = ^(void) {
-//        @strongify(self);
-//        if([self.delegate respondsToSelector:@selector(refreshBasicInfo)]) {
-//            [self.delegate refreshBasicInfo];
-//        }
-//    };
-//    _bageView.badgeNumber = 0;
-//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    
-//    NSURL* url = [NSURL URLWithString:@"sslocal://open_group_chat"];
-//    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-//}
-
 #pragma mark - show notify
 
-- (void)showNotify:(NSString *)message
-{
+- (void)showNotify:(NSString *)message {
     [self showNotify:message completion:nil];
 }
 
-- (void)showNotify:(NSString *)message completion:(void(^)())completion{
+- (void)showNotify:(NSString *)message completion:(void(^)())completion {
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;
@@ -549,7 +481,7 @@
     }
 }
 
-#pragma mark -- SSImpressionProtocol
+#pragma mark - SSImpressionProtocol
 
 - (void)needRerecordImpressions {
     if (self.viewModel.dataList.count == 0) {

@@ -79,8 +79,8 @@
         NSDictionary *userInfo = notification.userInfo;
         
         FHUGCVoteInfoVoteInfoModel *voteInfo = notification.userInfo[@"vote_info"];
-        if (voteInfo && voteInfo.selected) {
-            // 完成(或者过期)
+        if (voteInfo) {
+            // 完成(或者过期) 或者 取消投票
             FHUGCVoteInfoVoteInfoModel *currentVoteInfo = self.cellModel.voteInfo;
             if ([currentVoteInfo.voteId isEqualToString:voteInfo.voteId] && currentVoteInfo != voteInfo) {
                 // 同样的投票
@@ -210,6 +210,18 @@
         self.bottomView.commentBtn.hidden = NO;
         self.bottomView.likeBtn.hidden = NO;
         self.bottomView.height = bottomViewHeight;
+    }
+    
+    //详情页增加长按复制功能
+    if (self.cellModel.isFromDetail) {
+        UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressContentLabel:)];
+        longPressGesture.minimumPressDuration = 1.0;
+        [_contentLabel addGestureRecognizer:longPressGesture];
+        
+        _descLabel.userInteractionEnabled = YES;
+        UILongPressGestureRecognizer *longPressGestureDesc = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressContentLabel:)];
+        longPressGestureDesc.minimumPressDuration = 1.0;
+        [_descLabel addGestureRecognizer:longPressGestureDesc];
     }
 }
 
@@ -441,6 +453,29 @@
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
     }
+}
+
+#pragma mark - 长按复制
+- (void)attributedLabel:(TTUGCAttributedLabel *)label didLongPressLinkWithURL:(NSURL *)url atPoint:(CGPoint)point {
+    [self didLongPress:self.cellModel.voteInfo.originTitle];
+}
+
+- (void)didLongPressContentLabel:(UILongPressGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        NSString *text = nil;
+        if(gesture.view == self.contentLabel){
+            text = self.cellModel.voteInfo.originTitle;
+        }else{
+            text = self.cellModel.voteInfo.desc;
+        }
+        [self didLongPress:text];
+    }
+}
+
+- (void)didLongPress:(NSString *)text {
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = text;
+    [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
 }
 
 @end
@@ -686,6 +721,9 @@
             }];
             
             [weakSelf refreshWithData:weakSelf.voteInfo];
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            [userInfo setObject:weakSelf.voteInfo forKey:@"vote_info"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
         } else {
             weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
             if (error) {
