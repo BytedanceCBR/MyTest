@@ -327,7 +327,7 @@ def appPods
     #-----头条网络库-----
 #    pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'fea3c88cb586f624970bdf5629f11aa1dc9c8521'
 #pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'e2434b5'
-    pod_binary 'TTNetworkManager' , '2.2.14.3'
+    pod_binary 'TTNetworkManager' , '2.2.18.1'
 
     #-----播放器SDK相关-----
     pod 'TTPlayerSDK', '2.9.9.10'
