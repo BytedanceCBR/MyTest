@@ -19,6 +19,7 @@
 @interface FHMinisdkManager ()<BDMTaskCenterManagerProtocol>
 
 @property(nonatomic, assign) BOOL alreadyReport;
+@property(nonatomic, copy) BDDTaskFinishBlock finishBlock;
 
 @end
 
@@ -89,10 +90,16 @@
     __weak typeof(self) wSelf = self;
     __block NSInteger retryCount = 0;
     
-    BDDTaskFinishBlock finishBlock = ^(BOOL isCompleted, NSError *error) {
+    self.finishBlock = ^(BOOL isCompleted, NSError *error) {
         if(error){
             //重试逻辑
-            retryCount++;
+            if(retryCount < 1){
+                //3秒后重试，只重试一次
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    retryCount++;
+                    [[FHMinisdkManager sharedInstance] taskComplete:self.finishBlock];
+                });
+            }
             return;
         }
         
@@ -107,13 +114,13 @@
     //当前用户已经登录
     if ([TTAccountManager isLogin]) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            if(wSelf.alreadyReport){
-//                //已经上报成功了
-//                [[ToastManager manager] showToast:@"之前已经上报过了"];
-//                return;
-//            }
+            if(wSelf.alreadyReport){
+                //已经上报成功了
+                [[ToastManager manager] showToast:@"之前已经上报过了"];
+                return;
+            }
             
-            [[FHMinisdkManager sharedInstance] taskComplete:finishBlock];
+            [[FHMinisdkManager sharedInstance] taskComplete:self.finishBlock];
         });
         return;
     }
@@ -130,13 +137,13 @@
             // 登录成功
             if ([TTAccountManager isLogin]) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                    if(wSelf.alreadyReport){
-//                        //已经上报成功了
-//                        [[ToastManager manager] showToast:@"之前已经上报过了"];
-//                        return;
-//                    }
+                    if(wSelf.alreadyReport){
+                        //已经上报成功了
+                        [[ToastManager manager] showToast:@"之前已经上报过了"];
+                        return;
+                    }
                     
-                    [[FHMinisdkManager sharedInstance] taskComplete:finishBlock];
+                    [[FHMinisdkManager sharedInstance] taskComplete:self.finishBlock];
                 });
             }
         }
