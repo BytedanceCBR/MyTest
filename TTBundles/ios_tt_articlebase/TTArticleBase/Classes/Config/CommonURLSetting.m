@@ -54,7 +54,6 @@ static inline void setBaseURLDomains(NSDictionary *domains) {
 
 static inline NSDictionary *baseURLDomains() {
     NSDictionary *domains = [[NSUserDefaults standardUserDefaults] objectForKey:kBaseURLDomainsUserDefaultKey];
-    domains = nil;
     if (!domains || !domains[kSecurityBaseURLDomainKey]) {
         domains = @{kNormalBaseURLDomainKey : NormalBaseURLDomain,
                     kSNSBaseURLDomainKey : SNSBaseURLDomain,
