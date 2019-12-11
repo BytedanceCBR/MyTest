@@ -86,7 +86,7 @@ static const float kSegementedMainPadingBottom = 10;
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
     
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
-                                          NSForegroundColorAttributeName: [UIColor themeGray3]};
+                                          NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
     
     NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
@@ -162,7 +162,7 @@ static const float kSegementedMainPadingBottom = 10;
     _houseSegmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:titlesArray];
     
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
-                                          NSForegroundColorAttributeName: [UIColor themeGray3]};
+                                          NSForegroundColorAttributeName: [UIColor themeGray1]};
     _houseSegmentControl.titleTextAttributes = titleTextAttributes;
     
     NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
@@ -230,7 +230,7 @@ static const float kSegementedMainPadingBottom = 10;
         {
             make.bottom.mas_equalTo(8);
         }
-        make.width.mas_equalTo((kSegementedOneWidth + 20) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 20));
+        make.width.mas_equalTo((kSegementedOneWidth + 15) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 20));
     }];
     
     _searchBtn.hidden = YES;
@@ -250,7 +250,6 @@ static const float kSegementedMainPadingBottom = 10;
     infos[@"from_home"] = @(1);
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_search"] userInfo:userInfo];
-
 }
 
 - (void)showUnValibleCity
@@ -381,7 +380,7 @@ static const float kSegementedMainPadingBottom = 10;
 }
 
 - (NSArray *)getSegmentTitles {
-    return @[@"找房", @"发现"];
+    return @[@"推荐", @"发现"];
 }
 
 @end

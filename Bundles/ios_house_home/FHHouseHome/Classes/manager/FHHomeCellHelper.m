@@ -333,9 +333,9 @@ static NSMutableArray  * _Nullable identifierArr;
     FHHomeEntrancesCell *cellEntrance = cell;
     
     NSInteger countItems = model.items.count;
-    if (countItems > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2) {
-        countItems = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
-    }
+//    if (countItems > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2) {
+//        countItems = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
+//    }
     
     [cell updateWithItems:model.items];
     

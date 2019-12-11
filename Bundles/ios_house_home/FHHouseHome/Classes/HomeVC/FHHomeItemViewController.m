@@ -29,6 +29,7 @@
 #import <FHHouseBaseNewHouseCell.h>
 #import <FHPlaceHolderCell.h>
 #import <UIColor+Theme.h>
+#import <FHHomeMainViewModel.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -114,7 +115,67 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
     
     self.tableView.scrollsToTop = NO;
+    
 }
+
+- (void)initNotifications {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterCategoryWithEnterType:) name:@"FHHomeItemVCEnterCategory" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stayCategoryWithEnterType:) name:@"FHHomeItemVCStayCategory" object:nil];
+}
+
+- (void)removeNotifications
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)enterCategoryWithEnterType:(NSNotification *)notify
+{
+    self.traceEnterTopTabache = [NSMutableDictionary new];
+
+    if ([notify.object isKindOfClass:[NSNumber class]] && [(NSNumber *)notify.object integerValue] == FHHomeMainTraceEnterTypeClick) {
+        [self.traceEnterCategoryCache setValue:@"click" forKey:@"enter_type"];
+        [self.traceEnterTopTabache setValue:@"click" forKey:@"enter_type"];
+    }else
+    {
+        [self.traceEnterCategoryCache setValue:@"flip" forKey:@"enter_type"];
+        [self.traceEnterTopTabache setValue:@"flip" forKey:@"enter_type"];
+    }
+    
+    self.stayTime = [self getCurrentTime];
+    [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+    
+    [self.traceEnterTopTabache setValue:@"maintab" forKey:@"enter_from"];
+    [self.traceEnterTopTabache setValue:@"f_find_house" forKey:@"category_name"];
+    [FHEnvContext recordEvent:self.traceEnterTopTabache andEventKey:@"enter_category"];
+}
+
+- (void)stayCategoryWithEnterType:(NSNotification *)notify
+{
+    if (self.houseType == _listModel.houseType) {
+        [self currentViewIsDisappeared];
+        
+        NSMutableDictionary *stayTabParams = [NSMutableDictionary new];
+        if (self.traceEnterTopTabache) {
+            [stayTabParams addEntriesFromDictionary:self.traceEnterTopTabache];
+        }
+        NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
+        if (duration) {
+            [stayTabParams setValue:@((int)duration) forKey:@"stay_time"];
+        }
+        
+//        if ([enterType isKindOfClass:[NSNumber class]] && [(NSNumber *)enterType integerValue] == FHHomeMainTraceEnterTypeFlip) {
+//            [stayTabParams setValue:@"click" forKey:@"enter_type"];
+//
+//        }else
+//        {
+//            [stayTabParams setValue:@"flip" forKey:@"enter_type"];
+//        }
+        [FHEnvContext recordEvent:stayTabParams andEventKey:@"stay_category"];
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -626,7 +687,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
             //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
             [cellError.contentView addSubview:noDataErrorView];
-            
+            noDataErrorView.backgroundColor = [UIColor themeHomeColor];
             [noDataErrorView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImageName:@"group-9"
                                     showRetry:NO];
             return cellError;
@@ -641,7 +702,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
             //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
             [cellError.contentView addSubview:noDataErrorView];
-            
+            noDataErrorView.backgroundColor = [UIColor themeHomeColor];
             if ([FHEnvContext isNetworkConnected]) {
                 [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
                                         showRetry:YES];
@@ -732,6 +793,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [cell updateHomeSmallImageHouseCellModel:model andType:self.houseType];
         }
         [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
+        [cell.contentView setBackgroundColor:[UIColor themeHomeColor]];
         return cell;
     }
 }
@@ -887,8 +949,10 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [self.tableView reloadData];
         }else{
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:1];
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
             //当数据少于一页的时候，拉下一页数据填充
+            [self.tableView reloadData];
+
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if(self.houseDataItemsModel.count < self.itemCount && self.tableView.hasMore){

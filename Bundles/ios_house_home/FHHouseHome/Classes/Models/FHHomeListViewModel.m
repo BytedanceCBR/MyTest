@@ -238,6 +238,8 @@
     }
     
     [self setUpSubtableIndex:indexValue];
+    
+    [self bindItemVCTrace];
 }
 
 - (void)requestOriginData:(BOOL)isFirstChange isShowPlaceHolder:(BOOL)showPlaceHolder
@@ -533,6 +535,20 @@
         FHHomeItemViewController *itemVC = self.itemsVCArray[index];
         itemVC.enterType = enterType;
         [itemVC currentViewIsShowing];
+        
+        [self bindItemVCTrace];
+    }
+}
+
+- (void)bindItemVCTrace
+{
+    for (FHHomeItemViewController *vc in self.itemsVCArray) {
+        if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.previousHouseType) {
+            [vc initNotifications];
+        }else
+        {
+            [vc removeNotifications];
+        }
     }
 }
 
@@ -577,7 +593,7 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:KFHHomeSearchCellId];
         }
-        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         if (![cell.contentView.subviews containsObject:self.homeViewController.topBar]) {
             [cell.contentView addSubview:self.homeViewController.topBar];
             [self.homeViewController.topBar mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -587,6 +603,7 @@
                 make.height.mas_equalTo(50);
             }];
         }
+        [cell.contentView setBackgroundColor:[UIColor themeHomeColor]];
         return cell;
     }
     
