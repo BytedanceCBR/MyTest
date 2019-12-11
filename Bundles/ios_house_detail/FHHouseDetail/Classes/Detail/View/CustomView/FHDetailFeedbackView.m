@@ -26,6 +26,7 @@
 #import "HPGrowingTextView.h"
 #import "UIColor+TTVideo.h"
 #import "MAAnnotationView.h"
+#import "YYTextView.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <TTSandBoxHelper.h>
 #import <TTBaseLib/UITextView+TTAdditions.h>
@@ -56,6 +57,7 @@
 @property(nonatomic, strong) UILabel *starInfoLabel;
 @property(nonatomic, strong) UILabel *lengthInfoLabel;
 @property(nonatomic, strong) SSThemedTextView *inputTextView;
+@property(nonatomic, strong) UIView *inputTextViewBg;
 @property(nonatomic, strong) UICollectionView *collectionView;
 @property(nonatomic, strong) UIButton *btnConfirm;
 
@@ -95,13 +97,10 @@
 - (void)dealloc {
     [self.collectionView removeObserver:self forKeyPath:KEY_CONTENT_SIZE];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-
-    NSLog(@"fengbo, della");
 }
 
 - (void)removeFromSuperview {
     [super removeFromSuperview];
-    //TODO fengbo ?
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -187,18 +186,22 @@
     _collectionView.dataSource = self;
     [self.containerView addSubview:_collectionView];
 
-    _inputTextView = [[SSThemedTextView alloc] init];
+    _inputTextViewBg = [[UIView alloc] init];
+    _inputTextViewBg.layer.cornerRadius = 4;
+    _inputTextViewBg.layer.masksToBounds = YES;
+    _inputTextViewBg.backgroundColor = [UIColor themeGray7];
+    [self.containerView addSubview:_inputTextViewBg];
+
+    _inputTextView = [[UITextView alloc] init];
     _inputTextView.editable = YES;
-    _inputTextView.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
-    _inputTextView.backgroundColor = [UIColor themeGray7];
+    _inputTextView.backgroundColor = [UIColor clearColor];
+    _inputTextView.textContainerInset = UIEdgeInsetsMake(10, 0, 0, 0);
     _inputTextView.textColor = [UIColor themeGray1];
     _inputTextView.font = [UIFont themeFontRegular:14];
-    _inputTextView.layer.cornerRadius = 4;
-    _inputTextView.layer.masksToBounds = YES;
     _inputTextView.delegate = self;
-    _inputTextView.placeHolder = @"您可输入具体评价，以便经纪人为您提供更好的服务";
-    _inputTextView.placeHolderColor = [UIColor themeGray4];
-    _inputTextView.placeHolderEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+    _inputTextView.placeHolder=@"您可输入具体评价，以便经纪人为您提供更好的服务";
+    _inputTextView.placeHolderFont=[UIFont themeFontRegular:14];
+    _inputTextView.placeHolderColor=[UIColor themeGray4];
     [self.containerView addSubview:_inputTextView];
 
     _lengthInfoLabel = [self labelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
@@ -220,7 +223,20 @@
     [self.containerView addSubview:_bottomView];
 }
 
-- (void)setConfirmButtonEnable: (BOOL) enabled {
+
+- (void)checkConfirmButtonEnableState{
+    BOOL enabled = YES;
+
+    if (self.selectStar < 4) {
+        if (self.inputTextView.text.length >= 5) {
+            enabled = YES;
+        } else {
+            enabled = NO;
+        }
+    } else {
+        enabled = YES;
+    }
+
     if (enabled) {
         [self.btnConfirm setBackgroundColor:[UIColor colorWithHexString:@"#ff5869"]];
         self.btnConfirm.enabled = YES;
@@ -230,11 +246,16 @@
     }
 }
 
-- (void) hideInputView {
+
+- (void)hideInputView {
     self.hasShowInputView = NO;
-    self.lengthInfoLabel.hidden = YES;
+
     [self.starBtn3 mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.dividerView.mas_bottom).offset(30);
+    }];
+
+    [self.inputTextViewBg mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(0);
     }];
 
     [self.inputTextView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -242,22 +263,27 @@
     }];
 }
 
-- (void) showInputView {
+- (void)showInputView {
     self.hasShowInputView = YES;
-    self.lengthInfoLabel.hidden = NO;
 
     [self.starBtn3 mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.dividerView.mas_bottom).offset(20);
     }];
 
-    [self.inputTextView mas_updateConstraints:^(MASConstraintMaker *make) {
+    [self.inputTextViewBg mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(60);
+    }];
+
+    [self.inputTextView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(27);
     }];
 }
 
 
-- (void) resetViewState {
+- (void)resetViewState {
     [self hideInputView];
+    self.lengthInfoLabel.hidden = YES;
+    _selectStar = -1;
 }
 
 - (void)initConstaints {
@@ -337,21 +363,28 @@
         make.height.mas_equalTo(0);
     }];
 
-    [self.inputTextView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.inputTextViewBg mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.containerView).offset(30);
         make.right.mas_equalTo(self.containerView).offset(-30);
         make.height.mas_equalTo(60);
         make.top.mas_equalTo(self.collectionView.mas_bottom).mas_offset(14);
     }];
 
+    [self.inputTextView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.inputTextViewBg).offset(10);
+        make.right.mas_equalTo(self.inputTextViewBg).offset(-10);
+        make.top.mas_equalTo(self.inputTextViewBg);
+        make.height.mas_equalTo(27);
+    }];
+
     [self.lengthInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.inputTextView.mas_right).offset(-10);
-        make.bottom.mas_equalTo(self.inputTextView.mas_bottom).mas_offset(-10);
+        make.right.mas_equalTo(self.inputTextViewBg.mas_right).offset(-10);
+        make.bottom.mas_equalTo(self.inputTextViewBg.mas_bottom).mas_offset(-10);
     }];
 
     [self.btnConfirm mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(44);
-        make.top.mas_equalTo(self.inputTextView.mas_bottom).mas_offset(20);
+        make.top.mas_equalTo(self.inputTextViewBg.mas_bottom).mas_offset(20);
         make.left.mas_equalTo(self.containerView).mas_offset(30);
         make.right.mas_equalTo(self.containerView).mas_offset(-30);
     }];
@@ -375,13 +408,20 @@
     btn.imageView.contentMode = UIViewContentModeCenter;
     UIImage *img = [UIImage imageNamed:@"detail_feedback_star_grey"];
     [btn setImage:img forState:UIControlStateNormal];
-    img = [UIImage imageNamed:@"detail_feedback_star_yellow"];
-    [btn setImage:img forState:UIControlStateSelected];
     btn.tag = tag;
     btn.adjustsImageWhenHighlighted = NO;
     [btn addTarget:self action:@selector(starBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-
     return btn;
+}
+
+- (void)setStarButtonSelected:(UIButton *)btn select:(BOOL)select {
+    if (select) {
+        UIImage *img = [UIImage imageNamed:@"detail_feedback_star_yellow"];
+        [btn setImage:img forState:UIControlStateNormal];
+    } else {
+        UIImage *img = [UIImage imageNamed:@"detail_feedback_star_grey"];
+        [btn setImage:img forState:UIControlStateNormal];
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -391,7 +431,6 @@
             CGSize size = [value CGSizeValue];
             if (size.height > 1) {
                 [self.collectionView mas_updateConstraints:^(MASConstraintMaker *make) {
-//                    make.top.mas_equalTo(self.lableSubTitle.mas_bottom).mas_offset(20);
                     make.height.mas_equalTo(size.height);
                 }];
                 [self layoutIfNeeded];
@@ -425,20 +464,18 @@
 - (void)starBtnClick:(id)sender {
     UIButton *btn = (UIButton *) sender;
     NSInteger tag = btn.tag;
-    //TODO fengbo
-//    if (tag == self.selectStar) {
-//        return;
-//    }
-    self.selectStar = tag;
+    if (tag == self.selectStar) {
+        return;
+    }
     for (int i = 0; i < tag && i < self.starBtnArray.count; i++) {
         if ([[self.starBtnArray objectAtIndex:i] respondsToSelector:@selector(setSelected:)]) {
-            [[self.starBtnArray objectAtIndex:i] setSelected:YES];
+            [self setStarButtonSelected:[self.starBtnArray objectAtIndex:i] select:YES];
         }
     }
 
     for (int i = tag; i < self.starBtnArray.count; i++) {
         if ([[self.starBtnArray objectAtIndex:i] respondsToSelector:@selector(setSelected:)]) {
-            [[self.starBtnArray objectAtIndex:i] setSelected:NO];
+            [self setStarButtonSelected:[self.starBtnArray objectAtIndex:i] select:NO];
         }
     }
 
@@ -450,7 +487,6 @@
 
     [self.starInfoLabel setTextColor:[UIColor colorWithHexString:@"#ff8151"]];
     if (tag > 0 && tag <= realtorEvaluatioinConfigModel.scoreTags.count) {
-        //TODO checkthis
         [self.starInfoLabel setText:[realtorEvaluatioinConfigModel.scoreTags objectAtIndex:(tag - 1)]];
     } else {
         if (tag == 1) {
@@ -468,16 +504,20 @@
 
     if (tag >= 4) {
         self.inputTextView.placeHolder = realtorEvaluatioinConfigModel.goodPlaceholder;
-        //load tags
-        self.selections = realtorEvaluatioinConfigModel.goodTags;
-        [self.collectionView reloadData];
-        [self setConfirmButtonEnable:YES];
+        if (self.selectStar <=3 || self.selectStar < 0) {
+            self.selections = realtorEvaluatioinConfigModel.goodTags;
+            [self.collectionView reloadData];
+        }
+        [self checkConfirmButtonEnableState];
     } else {
-        self.selections = realtorEvaluatioinConfigModel.badTags;
         self.inputTextView.placeHolder = realtorEvaluatioinConfigModel.badPlaceholder;
-        [self.collectionView reloadData];
-        [self setConfirmButtonEnable:NO];
+        [self checkConfirmButtonEnableState];
+        if (self.selectStar > 3 || self.selectStar < 0) {
+            self.selections = realtorEvaluatioinConfigModel.badTags;
+            [self.collectionView reloadData];
+        }
     }
+    self.selectStar = tag;
 
 }
 
@@ -492,14 +532,22 @@
     [self hide];
     [self traceRealtorEvaluatePopupClick:[NSString stringWithFormat:@"%i", tag]];
 
-    [FHHouseDetailAPI requestRealtorEvaluationFeedback:self.viewModel.houseId realtorId:self.realtorId content:self.inputTextView.text score:self.selectStar
-                                                  tags:@[@1,@2,@3] completion:^(bool succss, NSError *_Nonnull error) {
-        if (succss) {
-            [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
-        } else {
-            [[ToastManager manager] showToast:@"提交失败"];
+    NSMutableArray *tags = [[NSMutableArray alloc] init];
+    for (int i = 0; i <  self.selectionedArray.count; i++) {
+        if ([[self.selectionedArray objectAtIndex:i] isKindOfClass:[FHRealtorEvaluatioinTagModel class]]) {
+            FHRealtorEvaluatioinTagModel *model = [self.selectionedArray objectAtIndex:i];
+            [tags addObject:model.id];
         }
-    }];
+    }
+
+    [FHHouseDetailAPI requestRealtorEvaluationFeedback:self.viewModel.houseId realtorId:self.realtorId content:self.inputTextView.text score:self.selectStar
+                                                  tags:tags completion:^(bool succss, NSError *_Nonnull error) {
+                if (succss) {
+                    [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
+                } else {
+                    [[ToastManager manager] showToast:@"提交失败"];
+                }
+            }];
 }
 
 - (void)close {
@@ -510,21 +558,27 @@
 #pragma mark - UITextViewDelegate
 - (void)textViewDidChange:(UITextView *)textView {
     [self.inputTextView showOrHidePlaceHolderTextView];
-    [self.inputTextView  forceLayoutPlaceHolder];
-
     NSString *str = textView.text;
-    if(str.length > MAX_LENGTH) {
-        self.inputTextView.text = [str substringToIndex: MAX_LENGTH];
+    if (str.length > MAX_LENGTH) {
+        self.inputTextView.text = [str substringToIndex:MAX_LENGTH];
     }
     self.lengthInfoLabel.text = [NSString stringWithFormat:@"%d/%d", self.inputTextView.text.length, MAX_LENGTH];
+
+    if (self.inputTextView.text.length > 0) {
+        self.lengthInfoLabel.hidden = NO;
+    } else {
+        self.lengthInfoLabel.hidden = YES;
+    }
+
+    [self checkConfirmButtonEnableState];
 }
 
-- (BOOL)textViewShouldBeginEditing:(UITextView *)aTextView {
-    //Has Focus
-    return YES;
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+
 }
 
 #pragma mark - keyboard
+
 - (void)keyboardWillChangeNotifiction:(NSNotification *)notification {
     NSValue *beginInfoValue = notification.userInfo[UIKeyboardFrameBeginUserInfoKey];
     NSValue *endInfoValue = notification.userInfo[UIKeyboardFrameEndUserInfoKey];
@@ -589,23 +643,11 @@
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     BOOL shouldSelect = YES;
     BOOL isContain = [[collectionView indexPathsForSelectedItems] containsObject:indexPath];
-    int count = [[collectionView indexPathsForSelectedItems] count];
     if (isContain) {
         [collectionView deselectItemAtIndexPath:indexPath animated:YES];
         [self.selectionedArray removeObject:self.selections[indexPath.item]];
         shouldSelect = NO;
     }
-    //TODO fengbo
-//    if (isContain) {
-//        if (count <= 1) {
-//            [self setConfirmBtnEnabled:NO];
-//        } else {
-//            [self setConfirmBtnEnabled:YES];
-//        }
-//    } else {
-//        [self setConfirmBtnEnabled:YES];
-//    }
-
     return shouldSelect;
 }
 
