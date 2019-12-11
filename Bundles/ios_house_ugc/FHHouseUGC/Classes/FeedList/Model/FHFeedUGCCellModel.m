@@ -268,10 +268,22 @@
         }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
-        cellModel.groupId = model.rawData.groupId;
+        // 发布用户的信息
+        FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.name = model.rawData.content.user.uname;
+        user.avatarUrl = model.rawData.content.user.avatarUrl;
+        user.userId = model.rawData.content.user.userId;
+        user.schema = model.rawData.content.user.userSchema;
+        cellModel.user = user;
+        
         cellModel.title = model.rawData.content.question.title;
         cellModel.openUrl = model.rawData.content.question.questionListSchema;
-        cellModel.groupId = model.rawData.content.question.qid;
+        
+        //  优先使用qid，使用groudId 兜底
+        NSString *qid = model.rawData.content.question.qid;
+        NSString *groupId = qid.length > 0 ? qid : model.rawData.groupId;
+        cellModel.groupId = groupId;
+        
         cellModel.numberOfLines = 3;
         
         cellModel.imageList = model.rawData.content.question.content.thumbImageList;
@@ -486,6 +498,9 @@
         if (cellModel.voteInfo == nil || cellModel.voteInfo.items.count < 2) {
             return nil;
         }
+        //保存一下title原本的内容，为了复制用
+        cellModel.voteInfo.originTitle = cellModel.voteInfo.title;
+        
         if ([cellModel.voteInfo.voteType isEqualToString:@"1"]) {
             // 单选
             cellModel.voteInfo.title = [NSString stringWithFormat:@"【单选】%@",cellModel.voteInfo.title];

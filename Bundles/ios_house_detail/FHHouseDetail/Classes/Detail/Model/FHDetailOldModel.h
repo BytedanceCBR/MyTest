@@ -69,6 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *areaId;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *gaodeImageUrl;
+@property (nonatomic, strong, nullable) FHDetailGaodeImageModel *gaodeImage;//高德地图静态图
 @property (nonatomic, copy , nullable) NSString *cityId;
 @property (nonatomic, copy , nullable) NSString *areaName;
 @property (nonatomic, copy , nullable) NSString *districtId;
@@ -461,7 +462,9 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseReviewCommentModel> *houseReviewComment;
 @property (nonatomic, strong , nullable) FHDetailDataQuickQuestionModel *quickQuestion;
 @property (nonatomic, copy , nullable) NSString *recommendedHouseTitle;
-
+@property (nonatomic, copy , nullable) NSString *subscriptionToast;
+@property (nonatomic, copy , nullable) NSString *reportToast;
+@property (nonatomic, copy , nullable) NSString *reportDoneToast;
 
 @end
 

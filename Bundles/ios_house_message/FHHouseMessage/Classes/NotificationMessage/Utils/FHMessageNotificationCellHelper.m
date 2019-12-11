@@ -17,6 +17,7 @@
 
 + (Class)cellClassForData:(TTMessageNotificationModel *)data{
     switch ([data.style integerValue]) {
+        case TTMessageNotificationStyleJump:
         case TTMessageNotificationStyleInteractive:
             return [FHMessageNotificationInteractiveCell class];
         case TTMessageNotificationStyleInteractiveMerge:

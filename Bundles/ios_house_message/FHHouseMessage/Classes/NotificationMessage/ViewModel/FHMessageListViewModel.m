@@ -18,6 +18,7 @@
 #import "TTStringHelper.h"
 #import "FHUserTracker.h"
 #import "FHMessageNotificationCellHelper.h"
+#import "UIScrollView+Refresh.h"
 
 @interface FHMessageListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -87,7 +88,8 @@
                 }
             }
             wself.maxCursor = response.minCursor;
-            [wself updateTableViewWithMoreData:[response.hasMore boolValue]];
+            wself.tableView.hasMore = [response.hasMore boolValue];
+            [wself updateTableViewWithMoreData:wself.tableView.hasMore];
             [wself.viewController.emptyView hideEmptyView];
             if(response.msgList){
                 for(TTMessageNotificationModel* itemModel in response.msgList){
@@ -111,6 +113,7 @@
 - (void)networkError:(BOOL)loadMore {
     if (loadMore) {
         [[ToastManager manager] showToast:@"网络不给力,请稍后重试"];
+        [self updateTableViewWithMoreData:self.tableView.hasMore];
     } else {
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
@@ -142,7 +145,7 @@
     }
 
     if (!cell) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"preventCrashCellIdentifier"];
+        cell = [tableView dequeueReusableCellWithIdentifier:@"preventCrashCellIdentifier"];
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"preventCrashCellIdentifier"];
         }
