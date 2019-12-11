@@ -357,6 +357,9 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     self.segmentView.isSwitching = YES;
     NSString *identifier = [self collectionViewCellIdentifierWithIndex:indexPath.item];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    if(indexPath.row && self.segmentView.selectedIndex != indexPath.row){
+        return cell;
+    }
     UIScrollView *scrollView = [self scrollViewAtIndex:indexPath.row];
     UIScrollView *subScrollView = objc_getAssociatedObject(cell.contentView, TTHorizontalPagingViewCellKey);
     if (scrollView != subScrollView) {
@@ -378,6 +381,7 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         [cell.contentView addSubview:vc.view];
         objc_setAssociatedObject(cell.contentView, TTHorizontalPagingViewCellKey, scrollView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
+    
     [self adjustContentViewOffsetWithScrollView:scrollView];
     return cell;
     

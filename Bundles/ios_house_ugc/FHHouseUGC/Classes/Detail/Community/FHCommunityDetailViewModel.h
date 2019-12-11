@@ -41,4 +41,6 @@
 
 - (void)gotoGroupChat;
 
+- (void)gotoWendaPublish;
+
 @end

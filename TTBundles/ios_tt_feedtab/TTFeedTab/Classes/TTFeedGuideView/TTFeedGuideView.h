@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TTGuideDispatchManager.h"
-#import "TTBubbleView.h"
+#import <TTUIWidget/TTBubbleView.h>
 
 typedef NS_ENUM(NSUInteger, TTFeedGuideType) {
     TTFeedGuideTypeSearch,

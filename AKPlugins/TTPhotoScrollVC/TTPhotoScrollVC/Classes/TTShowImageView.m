@@ -594,30 +594,35 @@
     _imageloadingProgressView.hidden = NO;
     _imageloadingProgressView.loadingProgress = 0;
 
-
-    __weak TTShowImageView * wself = self;
+    WeakSelf;
     [[BDWebImageManager sharedManager]requestImage:[NSURL URLWithString:url] alternativeURLs:nil options:BDImageRequestHighPriority cacheName:url transformer:nil progress:^(BDWebImageRequest *request, NSInteger receivedSize, NSInteger expectedSize) {
-        if (!wself.imageloadingProgressView.hidden) {
-            wself.imageloadingProgressView.loadingProgress = receivedSize/(expectedSize*1.0f);
-        }
+        StrongSelf;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!self.imageloadingProgressView.hidden) {
+                self.imageloadingProgressView.loadingProgress = receivedSize/(expectedSize*1.0f);
+            }
+        });
     } complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
-        _isDownloading = NO;
+        StrongSelf;
+        self.isDownloading = NO;
         if (error) {
-            [wself tryLoadNextUrlIfFailed];
-
-            wself.imageloadingProgressView.hidden = YES;
+            [self tryLoadNextUrlIfFailed];
             [TTTracker event:@"image" label:@"fail"];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.imageloadingProgressView.hidden = YES;
+            });
         }
         else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                wself.imageloadingProgressView.hidden = YES;
+                self.imageloadingProgressView.hidden = YES;
 
                 if (image) {
-                    [wself loadFinishedWithImage:image];
+                    [self loadFinishedWithImage:image];
                 }else if (data) {
-                    [wself loadImageFromData:data];
+                    [self loadImageFromData:data];
                 } else {
-                    [wself loadFailed];
+                    [self loadFailed];
                 }
             });
         }

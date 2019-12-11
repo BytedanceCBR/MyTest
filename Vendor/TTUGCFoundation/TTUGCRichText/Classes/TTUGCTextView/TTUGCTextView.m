@@ -337,6 +337,7 @@
 
     // 处理 Undo 事件
     if (cursor == ULONG_MAX || start > originText.length || start > currentText.length) {
+        [self refreshTextViewUI];
         return;
     }
     

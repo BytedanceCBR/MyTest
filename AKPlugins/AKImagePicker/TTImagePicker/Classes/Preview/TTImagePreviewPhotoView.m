@@ -86,6 +86,10 @@
         /// 应对icloud
         self.imageView.image = _model.thumbImage;
     }
+    // 没有图片时，再加载一次，并设置缓存图片
+    if(!self.imageView.image && _model.assetID.length > 0) {
+        [self loadImage];
+    }
 }
 
 - (void)_initLoadingView
@@ -107,6 +111,11 @@
 }
 
 - (void)photoViewDidDisplay {
+    
+    [self loadImage];
+}
+
+- (void)loadImage {
     
     [self _initLoadingView];
     
@@ -175,13 +184,8 @@
             NSLog(@"%f",progress);
             
         } isIcloudEabled:YES isSingleTask:YES];
-
-    
     }
- 
 }
-
-
 
 - (void)recoverSubviews {
     [_scrollView setZoomScale:1.0 animated:NO];

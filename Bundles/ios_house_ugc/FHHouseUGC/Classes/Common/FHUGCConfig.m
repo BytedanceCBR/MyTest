@@ -91,7 +91,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     //    static NSString *const kFHUGCPostSuccessNotification = @"k_fh_ugc_post_finish";
     // 删除帖子成功通知 数放在userinfo的：social_group_id
     //    static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kFHUGCPostSuccessNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
 }
 
@@ -100,10 +100,15 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     if (noti) {
         NSString *groupId = noti.userInfo[@"social_group_id"];
         if (groupId.length > 0) {
-            FHUGCScialGroupDataModel *data = [self socialGroupData:groupId];
-            [self updatePostSuccessScialGroupDataModel:data];
-            // 更新圈子数据
-            [self updateSocialGroupDataWith:data];
+            NSArray *groupIDs = [groupId componentsSeparatedByString:@","];
+            [groupIDs enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (obj.length > 0) {
+                    FHUGCScialGroupDataModel *data = [self socialGroupData:obj];
+                    [self updatePostSuccessScialGroupDataModel:data];
+                    // 更新圈子数据
+                    [self updateSocialGroupDataWith:data];
+                }
+            }];
         }
     }
 }
@@ -505,6 +510,12 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                     isSuccess = YES;
                 } else if([model.status isEqualToString:@"1"]) {
                     // 管理员 - 禁止取消关注 - toast 提示
+                    if ([model.message isKindOfClass:[NSString class]] && model.message.length > 0) {
+                        NSString *messageStr = model.message;
+                        [[ToastManager manager] showToast:messageStr];
+                    }
+                } else {
+                    // 其他直接显示message
                     if ([model.message isKindOfClass:[NSString class]] && model.message.length > 0) {
                         NSString *messageStr = model.message;
                         [[ToastManager manager] showToast:messageStr];

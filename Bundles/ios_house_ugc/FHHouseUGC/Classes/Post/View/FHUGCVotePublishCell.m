@@ -11,6 +11,7 @@
 #import <UIFont+House.h>
 #import <ReactiveObjC.h>
 #import <FHCommonDefines.h>
+#import <FHUGCCategoryHelper.h>
 
 @implementation FHUGCVotePublishTextView
 @end
@@ -89,6 +90,22 @@
 // MARK: 投票标题Cell
 @implementation FHUGCVotePublishTitleCell
 
+
+- (UITextView *)contentTextView {
+    if(!_contentTextView) {
+        _contentTextView  = [[UITextView alloc] initWithFrame:CGRectMake(PADDING, 23, SCREEN_WIDTH - 2 * PADDING, 32)];
+        _contentTextView.font = [UIFont themeFontRegular:22];
+        _contentTextView.textColor = [UIColor themeGray1];
+        _contentTextView.clipsToBounds = YES;
+        _contentTextView.delegate = self;
+    }
+    return _contentTextView;
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+    
+}
+
 -(UITextField *)contentTextField {
     if(!_contentTextField) {
         _contentTextField = [[UITextField alloc] initWithFrame:CGRectMake(PADDING, 23, SCREEN_WIDTH - 2 * PADDING, 32)];
@@ -111,9 +128,7 @@
 
 - (void)textFieldDidChange:(UITextField *)textField {
     
-    if(textField.text.length > TITLE_LENGTH_LIMIT) {
-        textField.text = [textField.text substringToIndex:TITLE_LENGTH_LIMIT];
-    }
+    [textField textFieldDidChangeLimitTextLength:TITLE_LENGTH_LIMIT];
     
     if([self.delegate respondsToSelector:@selector(voteTitleCell:didInputText:)]) {
         [self.delegate voteTitleCell:self didInputText:textField.text];
@@ -139,9 +154,8 @@
 }
 
 - (void)textFieldDidChange: (UITextField *)textField {
-    if(textField.text.length > DESCRIPTION_LENGTH_LIMIT) {
-        textField.text = [textField.text substringToIndex:DESCRIPTION_LENGTH_LIMIT];
-    }
+    
+    [textField textFieldDidChangeLimitTextLength:DESCRIPTION_LENGTH_LIMIT];
     
     if([self.delegate respondsToSelector:@selector(descriptionCell:didInputText:)]) {
         [self.delegate descriptionCell:self didInputText:textField.text];
@@ -185,9 +199,7 @@
 
 - (void)textFieldDidChange:(UITextField *)textField {
     
-    if(textField.text.length > OPTION_LENGTH_LIMIT) {
-        textField.text = [textField.text substringToIndex:OPTION_LENGTH_LIMIT];
-    }
+    [textField textFieldDidChangeLimitTextLength:OPTION_LENGTH_LIMIT];
     
     if([self.delegate respondsToSelector:@selector(optionCell:didInputText:)]) {
         [self.delegate optionCell:self didInputText:textField.text];

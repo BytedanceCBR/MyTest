@@ -138,6 +138,7 @@
     if (self.detailData) {
         self.weakViewModel.detailData = self.detailData;
     }
+    self.weakViewModel.weakShareButton = self.shareButton;
     [self addDefaultEmptyViewFullScreen];
     // 请求 详情页数据
     [self startLoadData];
