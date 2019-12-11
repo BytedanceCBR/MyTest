@@ -610,7 +610,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         infoModel.houseModelType = FHHouseModelTypeTips;
         [self.items addObject:infoModel];
     }
-    self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items loadPeriphery:NO];
+    self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];
     
     // --
     [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
@@ -701,7 +701,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             }
             [self.items addObject:infoModel];
         }
-         self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items loadPeriphery:NO];
+         self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];
         //
         [self reloadData];
     }

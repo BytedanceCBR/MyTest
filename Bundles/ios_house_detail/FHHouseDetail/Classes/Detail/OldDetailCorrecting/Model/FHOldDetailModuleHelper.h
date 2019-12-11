@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHOldDetailModuleHelper : NSObject
-+ (NSMutableArray *)moduleClassificationMethod:(NSMutableArray *)moduleArr loadPeriphery:(BOOL)loadPeriphery;
++ (NSMutableArray *)moduleClassificationMethod:(NSMutableArray *)moduleArr;
 @end
 
 NS_ASSUME_NONNULL_END

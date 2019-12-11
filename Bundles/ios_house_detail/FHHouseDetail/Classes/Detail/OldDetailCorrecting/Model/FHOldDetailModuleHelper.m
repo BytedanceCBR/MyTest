@@ -12,7 +12,7 @@
 
 @implementation FHOldDetailModuleHelper
 
-+ (NSMutableArray *)moduleClassificationMethod:(NSMutableArray *)moduleArr loadPeriphery:(BOOL)loadPeriphery{
++ (NSMutableArray *)moduleClassificationMethod:(NSMutableArray *)moduleArr{
     NSArray *filterArr = [moduleArr copy];
     for (FHDetailBaseModel *model in filterArr) {
         model.shdowImageScopeType = FHHouseShdowImageScopeTypeDefault;
@@ -85,7 +85,7 @@
     if (billBoard.count > 0) {
         [moduleItems addObject:@{@"billBoard":billBoard}];
     }
-    if (outlineInfo.count > 0) {
+    if (agentlist.count > 0) {
         [moduleItems addObject:@{@"agentlist":agentlist}];
     }
     if (housingEvaluation.count > 0) {
@@ -143,7 +143,6 @@
             }];
         }
         //加载周边时
-        if (!loadPeriphery) {
             if ([[obj allKeys] containsObject:@"locationPeripherys"] || [[obj allKeys] containsObject:@"housingEvaluation"] || [[obj allKeys] containsObject:@"disclaimers"]) {
                 //如果包含大标题的模块存在，则当前模块第一个元素和上一个模块最后一个元素的阴影不裁剪,同时在当前模块插入标题
                 if (idx > 0) {
@@ -156,7 +155,6 @@
                     [FHOldDetailModuleHelper moduleInsertSectionTitle:moduleArr beforeModel:currentModel];
                 }
             }
-        }
     }];
     return moduleArr;
 }

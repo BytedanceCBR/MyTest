@@ -104,7 +104,7 @@
         label.left = trailing - label.width;
         label.height = 20;
         label.top = 0;
-        trailing = label.left - 10;
+        trailing = label.left - 8;
         
         icon.left = trailing - icon.width;
         icon.centerY = label.centerY;
@@ -264,7 +264,7 @@
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self.priceView);
         make.height.mas_equalTo(40);
-        make.width.mas_equalTo(1);
+        make.width.mas_equalTo(.6);
     }];
     [self.priceKeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.priceView).offset(20);
@@ -300,7 +300,7 @@
     [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
-        make.top.mas_equalTo(self.priceView.mas_bottom).offset(20);
+        make.top.mas_equalTo(self.priceView.mas_bottom).offset(30);
         make.bottom.mas_equalTo(self.shadowImage).offset(-12);
     }];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -633,12 +633,12 @@
             obj.pointLabelColor = [UIColor blackColor];
         }];
         chartView.showCoordinateAxis = YES;// 坐标轴的线
-        chartView.yLabelColor = [UIColor themeGray3];
+        chartView.yLabelColor = [UIColor themeGray2];
         chartView.yLabelFormat = @"%.2f";
         chartView.yLabelFont = [UIFont themeFontRegular:12];
         chartView.yLabelHeight = 17;
         chartView.showGenYLabels = YES; // 竖轴的label值
-        chartView.xLabelColor = [UIColor themeGray3];
+        chartView.xLabelColor = [UIColor themeGray2];
         chartView.xLabelFont = [UIFont themeFontRegular:12];
         chartView.yHighlightedColor = [UIColor themeRed1];
         chartView.axisColor = [UIColor themeGray6]; // x轴和y轴

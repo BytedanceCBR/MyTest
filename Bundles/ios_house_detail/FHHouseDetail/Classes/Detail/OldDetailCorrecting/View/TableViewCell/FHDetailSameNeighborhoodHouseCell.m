@@ -72,7 +72,7 @@
         }];
     }
     if (model.sameNeighborhoodHouseData) {
-        self.headerView.label.text = [NSString stringWithFormat:@"同小区房源(%@)",model.sameNeighborhoodHouseData.total];
+        self.headerView.label.text = [NSString stringWithFormat:@"同小区房源 (%@)",model.sameNeighborhoodHouseData.total];
         self.headerView.isShowLoadMore = model.sameNeighborhoodHouseData.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
@@ -306,7 +306,7 @@
             str = @"";
         }
         NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc] initWithString:str];
-        attributeText.yy_font = [UIFont themeFontRegular:16];
+        attributeText.yy_font = [UIFont themeFontMedium:16];
         attributeText.yy_color = [UIColor themeGray1];
         self.descLabel.attributedText = attributeText;
         self.priceLabel.text = model.displayPrice;

@@ -599,7 +599,7 @@
         make.height.mas_equalTo(15);
         make.left.equalTo(self.name);
         make.right.equalTo(self.imBtn.mas_left).offset(-10);
-        make.top.equalTo(self.name.mas_bottom).offset(4);
+        make.top.equalTo(self.name.mas_bottom).offset(8);
     }];
 
 }
@@ -748,12 +748,12 @@
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(-20);
-        make.centerY.mas_equalTo(self.avator);
+        make.top.mas_equalTo(self.name);
     }];
     [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
-        make.centerY.mas_equalTo(self.avator);
+        make.top.mas_equalTo(self.name);
     }];
 }
 

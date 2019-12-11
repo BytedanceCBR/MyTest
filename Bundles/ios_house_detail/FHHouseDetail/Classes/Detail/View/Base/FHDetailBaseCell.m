@@ -29,6 +29,7 @@
     }
     return self;
 }
+
 - (void)refreshWithData:(id)data {
     // sub implements.........
 }

@@ -70,7 +70,7 @@
         }];
     }
     if (model.relatedNeighborhoodData) {
-        self.headerView.label.text = [NSString stringWithFormat:@"周边小区(%@)",model.relatedNeighborhoodData.total];
+        self.headerView.label.text = [NSString stringWithFormat:@"周边小区 (%@)",model.relatedNeighborhoodData.total];
         self.headerView.isShowLoadMore = model.relatedNeighborhoodData.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
@@ -278,6 +278,7 @@
     [self addSubview:_icon];
     
     _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _descLabel.font = [UIFont themeFontMedium:16];
     _descLabel.textColor = [UIColor themeGray1];
     [self addSubview:_descLabel];
     

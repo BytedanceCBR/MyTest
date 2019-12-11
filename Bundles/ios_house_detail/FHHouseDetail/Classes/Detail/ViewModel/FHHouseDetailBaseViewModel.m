@@ -320,7 +320,9 @@
         FHDetailBaseCell *tempCell = (FHDetailBaseCell *)cell;
         NSString *element_type = [tempCell elementTypeString:self.houseType];
         if ([element_type isEqualToString:@"trade_tips"]) {
-            [self addLeadShowLog:self.contactViewModel.contactPhone];
+            if (!self.contactViewModel.contactPhone.unregistered) {
+                [self addLeadShowLog:self.contactViewModel.contactPhone];
+            }
         }
         if (element_type.length > 0) {
             // 上报埋点
@@ -556,8 +558,8 @@
     params[@"log_pb"] = self.detailTracerDic[@"log_pb"];
     params[@"click_position"] = @"house_ask_question";
     params[@"is_im"] = !isEmptyString(contactPhone.imOpenUrl) ? @"1" : @"0";
-    params[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
-    params[@"is_report"] = contactPhone.isFormReport ? @"1" : @"0";
+    params[@"is_call"] =  @"0";
+    params[@"is_report"] = @"0";
     params[@"is_online"] = contactPhone.unregistered?@"1":@"0";
     [FHUserTracker writeEvent:@"lead_show" params:params];
 }

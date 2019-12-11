@@ -150,7 +150,7 @@
         [imBtn setTitle: @"咨询经纪人该房源底价" forState:UIControlStateNormal];
         [imBtn setTitleColor: [UIColor colorWithHexStr:@"#ff9629"] forState:UIControlStateNormal];
         imBtn.titleLabel.font = [UIFont themeFontMedium:16];
-        imBtn.backgroundColor = [[UIColor colorWithHexStr:@"#ffa227"] colorWithAlphaComponent:0.16];
+        imBtn.backgroundColor = [UIColor colorWithHexStr:@"#fff8ef"];
         [imBtn addTarget:self action:@selector(im_click:) forControlEvents:UIControlEventTouchUpInside];
         imBtn.layer.cornerRadius = 20;
         [self.contentView addSubview:imBtn];
@@ -172,7 +172,7 @@
         make.size.mas_offset(CGSizeMake(24, 24));
     }];
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.titleImageView.mas_right).offset(2);
+        make.left.equalTo(self.titleImageView.mas_right).offset(4);
         make.centerY.equalTo(self.titleImageView);
     }];
     
