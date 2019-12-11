@@ -395,8 +395,8 @@
 - (void)refreshWithDataMapOnly {
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     if (!dataModel.useNativeMap) {
-        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url)) {
-            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"static_image_url_null";
+        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
+            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";
             [self mapView:self.mapView loadFinished:NO message:message];
             return;
         }
@@ -408,8 +408,8 @@
 - (void)refreshWithDataPoiDetail {
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     if (!dataModel.useNativeMap) {
-        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url)) {
-            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"static_image_url_null";
+        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
+            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";
             [self mapView:self.mapView loadFinished:NO message:message];
             return;
         }
