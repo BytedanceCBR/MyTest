@@ -262,6 +262,12 @@
     
     if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
         [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:NO];
+        
+        for (FHHomeItemViewController *vc in self.itemsVCArray) {
+            if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0){
+                [vc.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:NO];
+            }
+        }
     }
 }
 
