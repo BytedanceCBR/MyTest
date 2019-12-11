@@ -97,7 +97,7 @@
 
     [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.nameLabel);
-        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(6);
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(2);
         make.right.mas_equalTo(self.leftView);
     }];
 
