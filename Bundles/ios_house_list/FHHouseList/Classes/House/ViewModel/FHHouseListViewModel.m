@@ -30,7 +30,6 @@
 #import "FHHouseBridgeManager.h"
 #import "FHCityListViewModel.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
-#import <FHHouseBase/FHHouseBaseSmallItemCell.h>
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
 #import "FHSugSubscribeModel.h"
@@ -231,7 +230,6 @@ extern NSString *const INSTANT_DATA_KEY;
                          NSStringFromClass([FHPlaceHolderCell class]),
                          NSStringFromClass([FHHouseBaseItemCell class]),
                          NSStringFromClass([FHHomePlaceHolderCell class]),
-                         NSStringFromClass([FHHouseBaseSmallItemCell class]),
                          NSStringFromClass([FHHouseListRedirectTipCell class]),
                          NSStringFromClass([FHNeighbourhoodAgencyCardCell class])
                          ];
@@ -245,23 +243,7 @@ extern NSString *const INSTANT_DATA_KEY;
     for (NSString *className in self.cellIdArray) {
         [self registerCellClassBy:className];
     }
-//    [self registerCellClassBy:[FHSuggestionSubscribCell class]];
-//    [self registerCellClassBy:[FHSuggestionRealHouseTopCell class]];
-//    [self registerCellClassBy:[FHRecommendSecondhandHouseTitleCell class]];
-//    [self registerCellClassBy:[FHHouseListRecommendTipCell class]];
-//    [self registerCellClassBy:[FHPlaceHolderCell class]];
-//    [self registerCellClassBy:[FHHouseListAgencyInfoCell class]];
-//    [self registerCellClassBy:[FHHouseListNoHouseCell class]];
-//
-//    [self registerCellClassBy:[FHHouseBaseNewHouseCell class]];
-//
-//    [self registerCellClassBy:[FHPlaceHolderCell class]];
-//    [self registerCellClassBy:[FHHouseBaseItemCell class]];
-//
-//    [self registerCellClassBy:[FHHomePlaceHolderCell class]];
-//    [self registerCellClassBy:[FHHouseBaseSmallItemCell class]];
-//    [self registerCellClassBy:[FHNeighbourhoodAgencyCardCell class]];
-
+ 
     if(self.commute){  
         [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
     }else{
@@ -282,7 +264,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }else if(self.houseType == FHHouseTypeNewHouse) {
             return [FHHouseBaseNewHouseCell class];
         }else {
-            return [FHHouseBaseSmallItemCell class];
+            return [FHHouseBaseItemCell class];
         }
     }else if ([model isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
         return [FHSuggestionSubscribCell class];

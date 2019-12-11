@@ -29,7 +29,7 @@
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleModel.h>
 //#import <FHHouseBase/FHSingleImageInfoCellModel.h>
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleCell.h>
-#import <FHHouseBase/FHHouseBaseSmallItemCell.h>
+#import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <FHHouseBase/FHHomePlaceHolderCell.h>
 #import <FHHouseBase/FHMapSearchOpenUrlDelegate.h>
 
@@ -148,7 +148,7 @@ extern NSString *const INSTANT_DATA_KEY;
                          NSStringFromClass([FHHouseListNoHouseCell class]),
                          NSStringFromClass([FHPlaceHolderCell class]),
                          NSStringFromClass([FHHomePlaceHolderCell class]),
-                         NSStringFromClass([FHHouseBaseSmallItemCell class]),
+                         NSStringFromClass([FHHouseBaseItemCell class]),
                          NSStringFromClass([FHHouseListRedirectTipCell class]),
                          NSStringFromClass([FHNeighbourhoodAgencyCardCell class])
                          ];
@@ -174,7 +174,7 @@ extern NSString *const INSTANT_DATA_KEY;
 - (Class)cellClassForEntity:(id)model {
 
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
-        return [FHHouseBaseSmallItemCell class];
+        return [FHHouseBaseItemCell class];
     }else if ([model isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
         return [FHSuggestionSubscribCell class];
     }else if ([model isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
@@ -237,7 +237,8 @@ extern NSString *const INSTANT_DATA_KEY;
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
     self.houseFilterViewModel.delegate = self;
-    
+    [bridge showBottomLine:YES];// todo zjing filter
+
     self.filterPanel.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterBarHeight);
     
 }
@@ -1334,10 +1335,6 @@ extern NSString *const INSTANT_DATA_KEY;
         __weak typeof(self)wself = self;
         if (identifier.length > 0) {
             FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-            if([cell isKindOfClass:[FHHouseBaseSmallItemCell class]] || [cell isKindOfClass:[FHHouseBaseSmallItemCell class]]){
-                FHHouseBaseSmallItemCell *theCell = (FHHouseBaseSmallItemCell *)cell;
-//                [theCell refreshTopMargin: 10];// todo zjing
-            }
             [cell refreshWithData:data];
             if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
                 FHHouseListAgencyInfoCell *agencyInfoCell = (FHHouseListAgencyInfoCell *)cell;
