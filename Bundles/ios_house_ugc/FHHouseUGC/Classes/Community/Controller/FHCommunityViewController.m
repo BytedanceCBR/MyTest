@@ -259,7 +259,7 @@
             NSForegroundColorAttributeName: [UIColor themeGray3]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
 
-    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontMedium:18],
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
             NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
@@ -270,7 +270,7 @@
     _segmentControl.selectionIndicatorWidth = 20.0f;
     _segmentControl.selectionIndicatorHeight = 4.0f;
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
-    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
+//    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
 //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
 
@@ -340,7 +340,7 @@
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(top);
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(60);
+        make.height.mas_equalTo(44);
     }];
 
     [self.searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -357,8 +357,8 @@
     [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.topView);
         make.width.mas_equalTo([self.segmentControl totalSegmentedControlWidth]);
-        make.top.mas_equalTo(self.topView).offset(6);
-        make.bottom.mas_equalTo(self.topView).offset(-4);
+        make.height.mas_equalTo(44);
+        make.bottom.mas_equalTo(self.topView).offset(-8);
     }];
 
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -381,7 +381,7 @@
     if (isShow) {
         _collectionView.backgroundColor = [UIColor themeGray7];
         [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(60);
+            make.height.mas_equalTo(44);
         }];
     } else {
         _collectionView.backgroundColor = [UIColor whiteColor];

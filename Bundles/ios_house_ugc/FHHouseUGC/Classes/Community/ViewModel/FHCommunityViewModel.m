@@ -215,7 +215,7 @@
     }
     
     if(self.viewController.isUgcOpen){
-        top += 60;
+        top += 44;
     }
     
     CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - top - bottom);
