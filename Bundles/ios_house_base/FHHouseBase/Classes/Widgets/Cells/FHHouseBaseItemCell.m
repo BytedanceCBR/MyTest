@@ -646,7 +646,7 @@
         layout.flexGrow = 0;
     }];
     
-    _tagLabel.font = [UIFont themeFontRegular:10];
+    _tagLabel.font = [UIFont themeFontRegular:12];
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(8);

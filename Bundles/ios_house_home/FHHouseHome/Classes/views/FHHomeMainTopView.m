@@ -205,7 +205,7 @@ static const float kSegementedMainPadingBottom = 10;
         {
             make.bottom.mas_equalTo(8);
         }
-        make.width.mas_equalTo((kSegementedOneWidth + 20) * titlesArray.count);
+        make.width.mas_equalTo((kSegementedOneWidth + 15) * titlesArray.count);
     }];
     
     [self updateSegementedTitles:titlesArray andSelectIndex:indexValue];
