@@ -19,6 +19,7 @@
 #import "FHHomeConfigManager.h"
 #import <FHHouseType.h>
 #import <FHHomeCellHelper.h>
+#import <UIImage+FIconFont.h>
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
@@ -70,7 +71,7 @@ static const float kSegementedMainPadingBottom = 10;
     
     
     _searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_searchBtn setImage:[UIImage imageNamed:@"home_right_searchbtn"] forState:UIControlStateNormal];
+    [_searchBtn setImage:ICON_FONT_IMG(16,@"\U0000e675",[UIColor blackColor]) forState:UIControlStateNormal];
     [_searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
     _searchBtn.hidden = YES;
     [self addSubview:_searchBtn];
