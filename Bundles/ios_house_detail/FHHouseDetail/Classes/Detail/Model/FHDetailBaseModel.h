@@ -9,6 +9,7 @@
 #import "FHHouseListModel.h"
 #import "FHBaseModelProtocol.h"
 #import "FHHouseType.h"
+#import "FHHouseShadowImageType.h"
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 #import <FHHouseBase/FHImageModel.h>
 #import <FHHouseBase/FHHouseCoreInfoModel.h>
@@ -38,7 +39,12 @@ NS_ASSUME_NONNULL_BEGIN
 //@end
 
 @interface FHDetailBaseModel : NSObject
-
+@property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
+//是否裁剪阴影图
+@property (nonatomic, assign) FHHouseShdowImageScopeType shdowImageScopeType;
+//根据houseModelType将多个cell分为一个模块
+@property (nonatomic, assign)FHHouseModelType houseModelType;
+@property (nonatomic, strong) UIImage *shadowImage;
 @end
 
 @interface FHDetailPhotoHeaderModel : FHDetailBaseModel
@@ -240,6 +246,13 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @protocol FHDetailCommunityEntryActiveInfoModel;
 
 @interface FHDetailCommunityEntryModel : JSONModel
+@property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
+//是否裁剪阴影图
+@property (nonatomic, assign) FHHouseShdowImageScopeType shdowImageScopeType;
+//根据houseModelType将多个cell分为一个模块
+@property (nonatomic, assign)FHHouseModelType houseModelType;
+@property (nonatomic, strong) UIImage *shadowImage;
+
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryActiveCountInfoModel *activeCountInfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailCommunityEntryActiveInfoModel> *activeInfo;
@@ -247,4 +260,13 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, copy) NSDictionary *logPb;
 @end
+
+@interface FHDetailGaodeImageModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, assign) NSInteger width;
+@property (nonatomic, assign) NSInteger height;
+@property (nonatomic, copy , nullable) NSString *latRatio;
+@property (nonatomic, copy , nullable) NSString *lngRatio;
+@end
+
 NS_ASSUME_NONNULL_END

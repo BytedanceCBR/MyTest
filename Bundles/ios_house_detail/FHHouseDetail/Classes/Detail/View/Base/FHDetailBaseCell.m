@@ -6,6 +6,8 @@
 //
 
 #import "FHDetailBaseCell.h"
+@interface FHDetailBaseCell ()
+@end
 
 @implementation FHDetailBaseCell
 
@@ -23,6 +25,7 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.clipsToBounds = YES;
     }
     return self;
 }
@@ -61,6 +64,7 @@
 - (void)fh_didEndDisplayingCell{
 
 }
+
 @end
 
 // FHDetailBaseCollectionCell

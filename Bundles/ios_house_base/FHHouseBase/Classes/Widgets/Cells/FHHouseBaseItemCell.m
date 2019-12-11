@@ -1487,24 +1487,27 @@
 -(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model
 {
     self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
+      [self.houseCellBackView setBackgroundColor:[UIColor clearColor]];
     _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     FHImageModel *imageModel = model.houseImage.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
-    if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
-        self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
-        self.imageTagLabel.text = model.houseImageTag.text;
-        self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
-        self.imageTagLabelBgView.hidden = NO;
-    }else {
-        self.imageTagLabelBgView.hidden = YES;
-    }
+//    if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
+//        self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
+//        self.imageTagLabel.text = model.houseImageTag.text;
+//        self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+//        self.imageTagLabelBgView.hidden = NO;
+//    }else {
+//        self.imageTagLabelBgView.hidden = YES;
+//    }
     
-    [self updateImageTopLeft];
+//    [self updateImageTopLeft];
     
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
-    self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
+    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:model.tags];
+    self.tagLabel.attributedText =  attributeString;
+//    self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
 
     
     self.priceLabel.text = model.displayPrice;

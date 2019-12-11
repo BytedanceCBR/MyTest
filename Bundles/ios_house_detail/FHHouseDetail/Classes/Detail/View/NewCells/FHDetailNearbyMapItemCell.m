@@ -20,6 +20,7 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setUpLabels];
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
@@ -33,7 +34,7 @@
     [self.contentView addSubview:_labelLeft];
     
     [_labelLeft mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.contentView).offset(20);
+        make.left.equalTo(self.contentView).offset(16);
         make.top.bottom.equalTo(self.contentView);
         make.height.mas_equalTo(35);
         make.right.equalTo(self.contentView).offset(-80);
@@ -47,7 +48,7 @@
     
     
     [_labelRight mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-20);
+        make.right.mas_equalTo(-16);
         make.top.bottom.height.equalTo(self.labelLeft);
     }];
     
