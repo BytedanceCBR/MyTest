@@ -71,14 +71,12 @@
 
 @interface FHDetailStaticMapCell () <AMapSearchDelegate, UITableViewDelegate, UITableViewDataSource, FHDetailVCViewLifeCycleProtocol, FHStaticMapDelegate, MAMapViewDelegate>
 //ui
-@property(nonatomic, strong) UIView *topLine;
 @property(nonatomic, strong) FHDetailStarHeaderView *starHeaderView;
 @property(nonatomic, strong) FHDetailHeaderView *headerView;
 @property(nonatomic, strong) HMSegmentedControl *segmentedControl;
 @property(nonatomic, strong) FHDetailStaticMap *mapView;
 @property(nonatomic, strong) UIImageView *nativeMapImageView;
 @property(nonatomic, strong) UITableView *locationList;
-@property(nonatomic, strong) UIView *bottomLine;
 @property(nonatomic, strong) UILabel *emptyInfoLabel;
 @property(nonatomic, strong) UIButton *mapMaskBtn;
 @property(nonatomic, strong) UIButton *mapMaskBtnLocation;
@@ -148,10 +146,18 @@
     }];
 }
 
+//TODO zlj 判断使用native地图
 - (void)addCenterAnnotationMapOnly:(BOOL)useNativeMap {
     self.centerAnnotation.coordinate = self.centerPoint;
     CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
     CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, mapHeight);
+
+    if (!useNativeMap) {
+        [self.mapView removeAllAnnotations];
+        [self.mapView addAnnotations:@[self.centerAnnotation]];
+        return;
+    }
+
     WeakSelf;
     [[FHDetailMapViewSnapService sharedInstance] takeSnapWith:self.centerPoint frame:frame targetRect:frame annotations:@[self.centerAnnotation] delegate:self block:^(FHDetailMapSnapTask *task, UIImage *image, BOOL success) {
         StrongSelf;
@@ -160,10 +166,7 @@
         }
         wself.nativeMapImageView.image = image;
     }];
-    if (!useNativeMap) {
-        [self.mapView removeAllAnnotations];
-        [self.mapView addAnnotations:@[self.centerAnnotation]];
-    }
+
 }
 
 - (void)setupViews:(BOOL)useStarHeader useNativeMap:(BOOL)useNativeMap {
@@ -392,8 +395,9 @@
 - (void)refreshWithDataMapOnly {
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     if (!dataModel.useNativeMap) {
-        if (!dataModel.staticImage) {
-            [self mapView:self.mapView loadFinished:NO message:@"static_image_null"];
+        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url)) {
+            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"static_image_url_null";
+            [self mapView:self.mapView loadFinished:NO message:message];
             return;
         }
         [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
@@ -404,8 +408,9 @@
 - (void)refreshWithDataPoiDetail {
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     if (!dataModel.useNativeMap) {
-        if (!dataModel.staticImage) {
-            [self mapView:self.mapView loadFinished:NO message:@"static_image_null"];
+        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url)) {
+            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"static_image_url_null";
+            [self mapView:self.mapView loadFinished:NO message:message];
             return;
         }
         [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
