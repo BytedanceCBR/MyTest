@@ -628,7 +628,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if ([self checkIsHaveEntrancesList]) {
             //适配5s
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                return 100;
+                return 105;
             }else
             {
                 return 74;
@@ -793,6 +793,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [cell updateHomeSmallImageHouseCellModel:model andType:self.houseType];
         }
         [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
+        [cell.contentView setBackgroundColor:[UIColor themeHomeColor]];
         return cell;
     }
 }
@@ -948,8 +949,10 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [self.tableView reloadData];
         }else{
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:1];
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
             //当数据少于一页的时候，拉下一页数据填充
+            [self.tableView reloadData];
+
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if(self.houseDataItemsModel.count < self.itemCount && self.tableView.hasMore){

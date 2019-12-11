@@ -23,6 +23,7 @@
                            @"monthUp": @"month_up",
                            @"gaodeLng": @"gaode_lng",
                            @"gaodeImageUrl": @"gaode_image_url",
+                           @"gaodeImage": @"gaode_image",
                            @"evaluationInfo": @"evaluation_info",
                            @"schoolDictList": @"school_dict_list",
                            @"searchId": @"search_id",

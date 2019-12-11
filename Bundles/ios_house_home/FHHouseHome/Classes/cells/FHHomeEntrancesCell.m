@@ -16,6 +16,7 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBase/FHCommonDefines.h>
+#import <FHEnvContext.h>
 
 #define ITEM_PER_ROW  5
 #define TOP_MARGIN_PER_ROW 10
@@ -45,7 +46,12 @@
 
 +(CGFloat)rowHeight
 {
-    return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+    if([[FHEnvContext sharedInstance] getConfigFromCache].mainPageBannerOpData.items.count > 0){
+        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+    }else
+    {
+        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW + 10;
+    }
 }
 
 +(CGFloat)cellHeightForModel:(id)model
@@ -156,8 +162,9 @@
         
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, frame.size.height - 20, frame.size.width, 20)];
         _nameLabel.textColor = [UIColor themeGray2];
-        _nameLabel.font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:14] : [UIFont themeFontRegular:12];
+        _nameLabel.font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:12] : [UIFont themeFontRegular:12];
         _nameLabel.textAlignment = NSTextAlignmentCenter;
+        [_nameLabel setBackgroundColor:[UIColor clearColor]];
         
         [self addSubview:_nameLabel];
         self.clipsToBounds = NO;

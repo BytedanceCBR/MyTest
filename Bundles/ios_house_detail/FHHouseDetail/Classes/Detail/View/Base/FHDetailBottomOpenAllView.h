@@ -14,7 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Cell点击事件，可以不用实现
 @property (nonatomic, copy)     dispatch_block_t       didClickCellBlk;
-
+@property (nonatomic, strong)   UILabel       *title;
+@property (nonatomic, strong)   UIView       *topBorderView;
+@property (nonatomic, strong)   UIImageView       *settingArrowImageView;
 @end
 
 NS_ASSUME_NONNULL_END

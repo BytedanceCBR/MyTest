@@ -45,13 +45,20 @@
     [self.view addSubview:self.contentTableView];
     [self.contentTableView setBackgroundColor:[UIColor themeGray8]];
     [self.view setBackgroundColor:[UIColor themeGray8]];
-
+    self.contentTableView.scrollEnabled = NO;
     
     [self setupConstrains];
     
     [self.contentTableView registerClass:[FHHomeEntrancesCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeEntrancesCell class])];
     
     [self sendGoDetailTrace];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self.contentTableView reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -153,7 +160,7 @@
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [FHHomeEntrancesCell rowHeight];
+    return [FHHomeEntrancesCell rowHeight] * 12;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
