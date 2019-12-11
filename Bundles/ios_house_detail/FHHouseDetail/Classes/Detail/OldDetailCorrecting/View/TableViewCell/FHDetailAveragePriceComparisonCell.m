@@ -141,7 +141,7 @@
     
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(22);
+        make.top.mas_equalTo(self.shadowImage).offset(12);
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.height.mas_equalTo(46);
@@ -165,7 +165,7 @@
         make.top.mas_equalTo(self.containerView).offset(20);
         make.left.mas_equalTo(self.containerView).offset(60);
         make.right.mas_equalTo(self.containerView).offset(-60);
-        make.height.mas_equalTo(100);
+        make.height.mas_equalTo(80);
     }];
     
     _lineView = [[UIImageView alloc] init];
@@ -240,7 +240,7 @@
     [self.containerView addSubview:_tipView];
     
     [_tipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.currentPointView.mas_top).offset(4);
+        make.bottom.mas_equalTo(self.currentPointView.mas_top).offset(-6);
         make.centerX.mas_equalTo(self.currentPointView);
         make.width.mas_equalTo(128);
         make.height.mas_equalTo(92);

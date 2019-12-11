@@ -62,7 +62,7 @@
 - (void)updateStarsCount:(NSInteger)scoreValue
 {
     if (scoreValue > 0) {
-        self.starNumLabel.text = [NSString stringWithFormat:@"%ld",(long)scoreValue/10];
+        self.starNumLabel.text = [NSString stringWithFormat:@"%.1f",(float)scoreValue/10];
     }else {
         self.starNumLabel.text  = @"";
     }
@@ -87,7 +87,7 @@
 {
     if (!_starImageView) {
         _starImageView = [[UIImageView alloc]init];
-        UIImage *img = ICON_FONT_IMG(20, @"\U0000e6b2", [UIColor colorWithHexStr:@"#ffa227"]);
+        UIImage *img = ICON_FONT_IMG(18, @"\U0000e6b2", [UIColor colorWithHexStr:@"#ffa227"]);
         _starImageView.image = img;
     }
     return _starImageView;

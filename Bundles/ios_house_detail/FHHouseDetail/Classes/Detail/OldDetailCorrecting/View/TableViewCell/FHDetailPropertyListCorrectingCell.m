@@ -297,7 +297,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }
     
     [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-42);
+        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-50);
     }];
     
     [self layoutIfNeeded];
@@ -494,7 +494,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     [self addSubview:_infoLabel];
     _infoLabel.textAlignment = NSTextAlignmentLeft;
     
-    UIImage *img = ICON_FONT_IMG(14, @"\U0000e670", [UIColor themeGray3]); //@"detail_entrance_arrow"
+    UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeGray3]); //@"detail_entrance_arrow"
 
     _logoImageView = [[UIImageView alloc] init];
     _logoImageView.image = img;
