@@ -124,8 +124,8 @@
             if ([tagImageModel.url isKindOfClass:[NSString class]]) {
                 [hotImage bd_setImageWithURL:[NSURL URLWithString:tagImageModel.url]];
             }
-            [hotImage setBackgroundColor:[UIColor whiteColor]];
-            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 17 : 18.5), 3.5, 21, 11)];
+            [hotImage setBackgroundColor:[UIColor clearColor]];
+            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 23.5 : 25.5), 3.5, 28, 15)];
             [containView addSubview:hotImage];
         }
         
@@ -144,8 +144,7 @@
             if(titleLabel.text.length > 5)
             {
                 [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  5, 14, backImage.frame.size.width - 10, 20)];
-            }else
-            {
+            }else{
                 [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  10, 14, backImage.frame.size.width - 10, 20)];
             }
         }

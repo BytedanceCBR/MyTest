@@ -321,7 +321,7 @@
 
 -(CGFloat)contentMaxWidth
 {
-    return  SCREEN_WIDTH - HOR_MARGIN * 2  - MAIN_IMG_WIDTH - INFO_TO_ICON_MARGIN - 5; //根据UI图 直接计算出来
+    return  SCREEN_WIDTH - HOR_MARGIN * 2  - MAIN_IMG_WIDTH - INFO_TO_ICON_MARGIN - 7; //根据UI图 直接计算出来
 }
 
 -(void)initUI
@@ -353,7 +353,7 @@
     self.leftInfoView = [[UIView alloc] init];
     [_leftInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.width = YGPointValue(MAIN_IMG_WIDTH + 5);
+        layout.width = YGPointValue(MAIN_IMG_WIDTH + 6);
         layout.height = YGPointValue(CELL_HEIGHT);
     }];
     
@@ -377,7 +377,7 @@
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
         layout.top = YGPointValue(MAIN_IIMAGE_TOP);
-        layout.left = YGPointValue(4.5);
+        layout.left = YGPointValue(5.5);
         layout.width = YGPointValue(MAIN_IMG_WIDTH);
         layout.height = YGPointValue(MAIN_IMG_HEIGHT);
     }];

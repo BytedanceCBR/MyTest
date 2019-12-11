@@ -230,7 +230,7 @@ static const float kSegementedMainPadingBottom = 10;
         {
             make.bottom.mas_equalTo(8);
         }
-        make.width.mas_equalTo((kSegementedOneWidth + 20) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 20));
+        make.width.mas_equalTo((kSegementedOneWidth + 15) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 20));
     }];
     
     _searchBtn.hidden = YES;
@@ -250,7 +250,6 @@ static const float kSegementedMainPadingBottom = 10;
     infos[@"from_home"] = @(1);
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_search"] userInfo:userInfo];
-
 }
 
 - (void)showUnValibleCity

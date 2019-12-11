@@ -1070,7 +1070,6 @@
     }
     
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
-    self.houseVideoImageView.hidden = NO;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
     NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
@@ -1095,8 +1094,7 @@
         self.priceLabel.text = commonModel.displayPrice;
         if (commonModel.originPrice) {
             self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
-        }else
-        {
+        }else{
             self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
         }
         
@@ -1148,7 +1146,6 @@
             }];
         }
         [self.mainTitleLabel.yoga markDirty];
-        
     } else if (houseType == FHHouseTypeRentHouse) {
         _mainTitleLabel.numberOfLines = 2;
         self.mainTitleLabel.text = commonModel.title;
