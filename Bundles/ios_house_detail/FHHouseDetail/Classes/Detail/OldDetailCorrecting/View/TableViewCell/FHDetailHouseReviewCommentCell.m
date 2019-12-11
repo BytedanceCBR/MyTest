@@ -53,16 +53,17 @@
     _headerView.label.text = @"经纪人带看房评";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(30);
+        make.top.mas_equalTo(self.shadowImage).offset(22);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.left.mas_equalTo(self.contentView).offset(15);
         make.height.mas_equalTo(46);
     }];
     _containerView = [[UIView alloc] init];
+//    _containerView.backgroundColor = [UIColor redColor];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(2);
         make.left.mas_equalTo(self.contentView).mas_offset(15);
         make.right.mas_equalTo(self.contentView).mas_offset(-15);
         make.height.mas_equalTo(0);
@@ -167,7 +168,6 @@
             *stop = YES;
         }
     }];
-
     if (animated) {
         [model.tableView beginUpdates];
     }

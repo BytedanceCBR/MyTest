@@ -40,5 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @end
+// moreItem
+@interface FHDetailMoreItemCollectionCell : FHDetailBaseCollectionCell
 
+@end
+
+@interface FHDetailMoreItemModel : FHDetailBaseModel
+
+@end
 NS_ASSUME_NONNULL_END

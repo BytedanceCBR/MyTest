@@ -17,9 +17,9 @@
 #import "FHDetailHeaderView.h"
 #import "FHDetailMultitemCollectionView.h"
 #import "FHSameHouseTagView.h"
-
+#import "FHOldDetailMultitemCollectionView.h"
+#import "FHDetailSurroundingAreaCell.h"
 @interface FHDetailSameNeighborhoodHouseCell ()
-
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, strong)   UIView       *containerView;
@@ -76,15 +76,27 @@
         self.headerView.isShowLoadMore = model.sameNeighborhoodHouseData.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-        flowLayout.itemSize = CGSizeMake(140, 210);
+        NSMutableArray *dataArr = [[NSMutableArray alloc]initWithArray:model.sameNeighborhoodHouseData.items];
+        if (model.sameNeighborhoodHouseData.hasMore && dataArr.count>3) {
+            FHDetailMoreItemModel *moreItem = [[FHDetailMoreItemModel alloc]init];
+            [dataArr addObject:moreItem];
+        }
         flowLayout.minimumLineSpacing = 10;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        NSString *identifier = NSStringFromClass([FHDetailSameNeighborhoodHouseCollectionCell class]);
-        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 cellIdentifier:identifier cellCls:[FHDetailSameNeighborhoodHouseCollectionCell class] datas:model.sameNeighborhoodHouseData.items];
+        NSString *identifier = NSStringFromClass([FHSearchHouseDataItemsModel class]);
+        NSString *moreIdentifier = NSStringFromClass([FHDetailMoreItemModel class]);
+//        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 cellIdentifier:identifier cellCls:[FHDetailSameNeighborhoodHouseCollectionCell class] datas:model.sameNeighborhoodHouseData.items];
+        FHOldDetailMultitemCollectionView *colView = [[FHOldDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 datas:dataArr];
+        [colView registerCell:[FHDetailSameNeighborhoodHouseCollectionCell class] forIdentifier:identifier];
+        [colView registerCell:[FHDetailMoreItemCollectionCell class] forIdentifier:moreIdentifier];
         [self.containerView addSubview:colView];
         __weak typeof(self) wSelf = self;
         colView.clickBlk = ^(NSInteger index) {
-            [wSelf collectionCellClick:index];
+            if (index == model.sameNeighborhoodHouseData.items.count) {
+                [wSelf moreButtonClick];
+            }else {
+                [wSelf collectionCellClick:index];
+            }
         };
         colView.displayCellBlk = ^(NSInteger index) {
             [wSelf collectionDisplayCell:index];
@@ -138,7 +150,7 @@
         make.top.mas_equalTo(self.shadowImage).offset(30);
         make.height.mas_equalTo(46);
     }];
-    [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerView addTarget:self action:@selector(moreButtonClick) forControlEvents:UIControlEventTouchUpInside];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
@@ -150,7 +162,7 @@
 }
 
 // 查看更多
-- (void)moreButtonClick:(UIButton *)button {
+- (void)moreButtonClick {
     FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)self.currentData;
     if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.hasMore) {
         // click_loadmore 埋点不再需要
@@ -321,6 +333,9 @@
     _icon.layer.masksToBounds = YES;
     _icon.layer.borderWidth = 0.5;
     _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
+//    _icon.layer.shadowColor = [UIColor blackColor].CGColor;
+//    _icon.layer.shadowOffset = CGSizeMake(3, 3);
+//    _icon.layer.shadowOpacity = .2;
     _icon.image = [UIImage imageNamed:@"default_image"];
     [self.contentView addSubview:_icon];
     
@@ -357,10 +372,10 @@
     }];
     
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self);
-        make.width.mas_equalTo(120);
-        make.height.mas_equalTo(140);
-        make.top.mas_equalTo(self);
+        make.left.mas_equalTo(self.contentView);
+        make.width.mas_equalTo(140);
+        make.height.mas_equalTo(120);
+        make.top.mas_equalTo(self.contentView);
     }];
     
     [self.houseVideoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -387,7 +402,6 @@
         make.left.mas_equalTo(self);
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(self.spaceLabel.mas_bottom).offset(8);
-        make.bottom.mas_equalTo(self);
     }];
 }
 

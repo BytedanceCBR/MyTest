@@ -15,8 +15,8 @@
 #import "TTRoute.h"
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
-#import "FHDetailMultitemCollectionView.h"
-
+#import "FHOldDetailMultitemCollectionView.h"
+@class FHDetailRelatedNeighborhoodResponseDataItemsModel;
 @interface FHDetailSurroundingAreaCell ()
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
@@ -72,17 +72,28 @@
     if (model.relatedNeighborhoodData) {
         self.headerView.label.text = [NSString stringWithFormat:@"周边小区 (%@)",model.relatedNeighborhoodData.total];
         self.headerView.isShowLoadMore = model.relatedNeighborhoodData.hasMore;
+        NSMutableArray *dataArr = [[NSMutableArray alloc]initWithArray:model.relatedNeighborhoodData.items];
+        if (model.relatedNeighborhoodData.hasMore && dataArr.count>3) {
+            FHDetailMoreItemModel *moreItem = [[FHDetailMoreItemModel alloc]init];
+            [dataArr addObject:moreItem];
+        }
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-        flowLayout.itemSize = CGSizeMake(140, 210);
         flowLayout.minimumLineSpacing = 10;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        NSString *identifier = NSStringFromClass([FHDetailSurroundingAreaItemCollectionCell class]);
-        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 cellIdentifier:identifier cellCls:[FHDetailSurroundingAreaItemCollectionCell class] datas:model.relatedNeighborhoodData.items];
+        NSString *identifier = NSStringFromClass([FHDetailRelatedNeighborhoodResponseDataItemsModel class]);
+        NSString *moreIdentifier = NSStringFromClass([FHDetailMoreItemModel class]);
+        FHOldDetailMultitemCollectionView *colView = [[FHOldDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 datas:model.relatedNeighborhoodData.items];
+        [colView registerCell:[FHDetailSurroundingAreaItemCollectionCell class] forIdentifier:identifier];
+        [colView registerCell:[FHDetailMoreItemCollectionCell class] forIdentifier:moreIdentifier];
         [self.containerView addSubview:colView];
         __weak typeof(self) wSelf = self;
         colView.clickBlk = ^(NSInteger index) {
-            [wSelf collectionCellClick:index];
+            if (index == model.relatedNeighborhoodData.items.count) {
+                [wSelf moreButtonClick];
+            }else {
+                [wSelf collectionCellClick:index];
+            }
         };
         colView.displayCellBlk = ^(NSInteger index) {
             [wSelf collectionDisplayCell:index];
@@ -127,7 +138,7 @@
         make.top.mas_equalTo(self.shadowImage).offset(30);
         make.height.mas_equalTo(46);
     }];
-    [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerView addTarget:self action:@selector(moreButtonClick) forControlEvents:UIControlEventTouchUpInside];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
@@ -147,7 +158,7 @@
     return  _shadowImage;
 }
 // 查看更多
-- (void)moreButtonClick:(UIButton *)button {
+- (void)moreButtonClick {
     FHDetailSurroundingAreaModel *model = (FHDetailSurroundingAreaModel *)self.currentData;
     if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.hasMore) {
         
@@ -273,6 +284,10 @@
     _icon = [[UIImageView alloc] init];
     _icon.layer.cornerRadius = 10.0;
     _icon.layer.masksToBounds = YES;
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
+//    _icon.layer.shadowColor = [UIColor blackColor].CGColor;
+//    _icon.layer.shadowOffset = CGSizeMake(3, 3);
+//      _icon.layer.shadowOpacity = .5;
     _icon.layer.borderWidth = 0.5;
     _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self addSubview:_icon];
@@ -335,5 +350,82 @@
 // FHDetailSurroundingAreaModel
 
 @implementation FHDetailSurroundingAreaModel
+
+@end
+
+@interface FHDetailMoreItemCollectionCell()
+@property (weak, nonatomic)UIView *bacView;
+@property (weak, nonatomic)UIImageView *moreImage;
+@property (weak, nonatomic)UILabel *moreLabel;
+
+
+
+@end
+@implementation FHDetailMoreItemCollectionCell
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor whiteColor];
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI {
+    [self.bacView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.equalTo(self.contentView);
+        make.width.mas_equalTo(94);
+        make.height.mas_equalTo(120);
+    }];
+    [self.moreImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.bacView);
+        make.top.equalTo(self.bacView).offset(34);
+        make.size.mas_offset(CGSizeMake(26, 26));
+    }];
+    [self.moreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.bacView);
+        make.top.equalTo(self.moreImage.mas_bottom).offset(10);
+    }];
+}
+
+- (UIView *)bacView {
+    if (!_bacView) {
+        UIView *bacView = [[UIView alloc]init];
+        bacView.backgroundColor = [UIColor colorWithHexStr:@"#f5f5f5"];
+        bacView.layer.cornerRadius = 10;
+        [self.contentView addSubview:bacView];
+        _bacView = bacView;
+    }
+    return _bacView;
+}
+- (UIImageView *)moreImage {
+    if (!_moreImage) {
+        UIImageView *moreImage = [[UIImageView alloc]init];
+        moreImage.image = [UIImage imageNamed:@"more_house"];
+        [self.bacView addSubview:moreImage];
+        _moreImage = moreImage;
+    }
+    return _moreImage;
+}
+
+- (UILabel *)moreLabel
+{
+    if (!_moreLabel) {
+        UILabel *moreLabel = [[UILabel alloc]init];
+        moreLabel.font = [UIFont themeFontRegular:14];
+        moreLabel.text = @"查看更多";
+        moreLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
+        [self.bacView addSubview:moreLabel];
+        _moreLabel = moreLabel;
+    }
+    return _moreLabel;
+}
+- (void)refreshWithData:(id)data {
+    
+}
+@end
+@implementation FHDetailMoreItemModel
 
 @end
