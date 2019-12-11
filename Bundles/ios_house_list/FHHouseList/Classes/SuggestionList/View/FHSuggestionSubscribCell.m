@@ -13,8 +13,13 @@
 #import <FHEnvContext.h>
 #import <ToastManager.h>
 #import <NSDictionary+TTAdditions.h>
+#import <FHHouseBase/FHShadowView.h>
 
 @interface FHSuggestionSubscribCell()
+
+@property(nonatomic, strong) UIView *containerView;
+@property(nonatomic, strong) FHShadowView *shadowView;
+
 @property (nonatomic, strong)FHSugSubscribeDataDataSubscribeInfoModel *currentModel;
 @end
 
@@ -30,17 +35,19 @@
 
 - (void)setupUI {
     
-    _backImageView = [UIImageView new];
-    [self.contentView addSubview:_backImageView];
-    [_backImageView setImage:[UIImage imageNamed:@"suglist_subscribe_mask"]];
+    _shadowView = [[FHShadowView alloc] initWithFrame:CGRectZero];
+    [_shadowView setCornerRadius:10];
+    [_shadowView setShadowColor:[UIColor colorWithRed:110.f/255.f green:110.f/255.f blue:110.f/255.f alpha:1]];
+    [_shadowView setShadowOffset:CGSizeMake(0, 2)];
+    [self.contentView addSubview:_shadowView];
     
-    [_backImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(6);
-        make.left.mas_equalTo(9);
-        make.right.mas_equalTo(-9);
-        make.height.mas_equalTo(101);
-        make.bottom.mas_equalTo(self.contentView);
-    }];
+    _containerView = [[UIView alloc] init];
+    CALayer *layer = _containerView.layer;
+    layer.cornerRadius = 10;
+    layer.masksToBounds = YES;
+    layer.borderColor =  [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
+    layer.borderWidth = 0.5f;
+    [self.contentView addSubview:_containerView];
 
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.font = [UIFont themeFontSemibold:16];
@@ -87,6 +94,16 @@
     [_subscribeBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     [self.contentView addSubview:_subscribeBtn];
     
+    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).mas_offset(15);
+        make.right.mas_equalTo(self).mas_offset(-15);
+        make.top.mas_equalTo(self).offset(10);
+        make.bottom.mas_equalTo(self).offset(-10);
+    }];
+    
+    [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.containerView);
+    }];
     
     [_subscribeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.contentView).offset(-30);
@@ -166,7 +183,7 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 121;
+    return 127;
 }
 
 - (void)refreshUI:(JSONModel *)data
@@ -178,12 +195,12 @@
         _subTitleLabel.text = @"新上房源立刻通知";
         _bottomContentLabel.text = model.text ? : @"暂无";
         if (model.isSubscribe) {
-            [_subscribeBtn setBackgroundColor:[UIColor themeOrange1]];
-            [_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            _subscribeBtn.layer.borderColor = [UIColor themeGray6].CGColor;
+            [_subscribeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
             [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
         }else
         {
-            [_subscribeBtn setBackgroundColor:[UIColor whiteColor]];
+            _subscribeBtn.layer.borderColor = [UIColor themeOrange1].CGColor;
             [_subscribeBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
             [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
         }

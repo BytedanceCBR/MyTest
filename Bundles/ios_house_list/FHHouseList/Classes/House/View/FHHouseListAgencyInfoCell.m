@@ -52,7 +52,7 @@
     [_allWebHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(18);
         make.centerY.mas_equalTo(self.titleLabel);
-        make.left.mas_equalTo(self.titleLabel.mas_right).mas_offset(10);
+        make.left.mas_equalTo(self.titleLabel.mas_right).mas_offset(6);
     }];
 }
 

@@ -48,8 +48,8 @@
     [self.contentView addSubview:backColorView];
     [backColorView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
-        make.centerY.equalTo(self.contentView);
-        make.height.mas_equalTo(30);
+        make.top.mas_equalTo(10);
+        make.height.mas_equalTo(46);
     }];
     
     _falseHouseLabel = [[UILabel alloc] init];
@@ -163,7 +163,7 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 56;
+    return 66;
 }
 
 - (void)refreshUI:(JSONModel *)data

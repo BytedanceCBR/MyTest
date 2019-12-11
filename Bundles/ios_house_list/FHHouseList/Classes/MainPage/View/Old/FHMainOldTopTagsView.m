@@ -183,7 +183,7 @@
 
 - (void)setupUI {
     _label = [[UILabel alloc] init];
-    _label.textColor = [UIColor colorWithHexStr:@"#45494d"];
+    _label.textColor = [UIColor themeGray1];
     _label.font = [UIFont themeFontRegular:12];
     _label.textAlignment = NSTextAlignmentCenter;
     [self addSubview:_label];
@@ -202,11 +202,11 @@
 - (void)setIsSelected:(BOOL)isSelected {
     _isSelected = isSelected;
     if (isSelected) {
-        self.backgroundColor = [UIColor colorWithHexStr:@"ffeef0"];
-        _label.textColor = [UIColor colorWithHexStr:@"#ff5969"];
+        self.backgroundColor = [UIColor themeOrange2];
+        _label.textColor = [UIColor themeOrange1];
     } else {
-        self.backgroundColor = [UIColor themeGray7];
-        _label.textColor = [UIColor colorWithHexStr:@"#45494d"];
+        self.backgroundColor = [UIColor themeGray8];
+        _label.textColor = [UIColor themeGray1];
     }
 }
 

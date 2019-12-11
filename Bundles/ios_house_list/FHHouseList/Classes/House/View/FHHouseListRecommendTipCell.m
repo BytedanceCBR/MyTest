@@ -64,7 +64,7 @@
     [self.leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);
         make.left.mas_equalTo(15);
-        make.height.mas_equalTo([TTDeviceHelper ssOnePixel]);
+        make.height.mas_equalTo(1);
         make.width.mas_greaterThanOrEqualTo(30);
     }];
     [self.noDataTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -76,7 +76,7 @@
         make.centerY.mas_equalTo(self.contentView);
         make.left.mas_equalTo(self.noDataTipLabel.mas_right).offset(15);
         make.right.mas_equalTo(-15);
-        make.height.mas_equalTo([TTDeviceHelper ssOnePixel]);
+        make.height.mas_equalTo(1);
         make.width.mas_equalTo(self.leftLine);
     }];
 }
