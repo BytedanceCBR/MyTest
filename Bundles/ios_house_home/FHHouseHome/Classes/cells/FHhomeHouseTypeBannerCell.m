@@ -69,7 +69,7 @@
     CGFloat scaleRatio = 0.9;
 
     CGFloat imageWidth = viewWidth * scaleRatio;
-    CGFloat imageHeight = viewWidth * 69 / 82 * scaleRatio;
+    CGFloat imageHeight = viewWidth * scaleRatio * 0.92;
     
     for (NSInteger i = 0; i < items.count; i++) {
         if (i > 3) {
