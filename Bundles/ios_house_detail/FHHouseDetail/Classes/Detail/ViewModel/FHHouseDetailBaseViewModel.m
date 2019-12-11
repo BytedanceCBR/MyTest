@@ -92,15 +92,27 @@
     
     CGRect frame = self.tableView.frame;
     [self.tableView reloadData];
-    if (!self.scretchingWhenLoading) {
-        self.tableView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width,10000);//设置大frame 强制计算cell高度
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.tableView.frame = frame;
-        });
-        if (![self currentIsInstantData]) {
-            self.scretchingWhenLoading = YES;
-        }
-    }
+    //防止滑动卡顿，测试前关闭
+    
+    
+    
+    
+    
+    
+    
+//    if (!self.scretchingWhenLoading) {
+//        self.tableView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width,10000);//设置大frame 强制计算cell高度
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            self.tableView.frame = frame;
+//        });
+//        if (![self currentIsInstantData]) {
+//            self.scretchingWhenLoading = YES;
+//        }
+//    }
+    
+    
+    
+    
 }
 
 // 回调方法
