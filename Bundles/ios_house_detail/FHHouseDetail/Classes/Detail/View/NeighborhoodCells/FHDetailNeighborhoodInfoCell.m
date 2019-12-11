@@ -222,7 +222,7 @@
         if (model.neighborhoodInfo.useSchoolIm) {
             self.schoolView.hidden = YES;
             self.consultView.hidden = NO;
-            self.consultView.nameLabel.text = @"学校资源";
+            self.consultView.nameLabel.text = @"学校资源:";
             self.consultView.infoLabel.text = model.neighborhoodInfo.schoolConsult.text;
             [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(26 + self.topHeight);

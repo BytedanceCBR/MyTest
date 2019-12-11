@@ -1240,7 +1240,7 @@
     
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
-    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:model.tags];
+    NSAttributedString * attributeString = self.cellModel.tagsAttrStr;
     self.tagLabel.attributedText =  attributeString;
 //    self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
 

@@ -63,7 +63,7 @@
     [self addSubview:_nameLabel];
     
     _infoLabel = [[UILabel alloc]init];
-    _infoLabel.font = [UIFont themeFontRegular:AdaptFont(14)];
+    _infoLabel.font = [UIFont themeFontMedium:AdaptFont(14)];
     _infoLabel.textColor = [UIColor colorWithHexStr:@"#ff9629"];
     [self addSubview:_infoLabel];
     _infoLabel.textAlignment = NSTextAlignmentLeft;
@@ -302,7 +302,7 @@
         if (model.neighborhoodInfo.useSchoolIm) {
             self.schoolView.hidden = YES;
             self.consultView.hidden = NO;
-            self.consultView.nameLabel.text = @"学校资源";
+            self.consultView.nameLabel.text = @"学校资源:";
             self.consultView.infoLabel.text = model.neighborhoodInfo.schoolConsult.text;
         }else {
             self.schoolView.hidden = NO;
@@ -444,7 +444,7 @@
         make.left.equalTo(self.containerView);
         make.top.equalTo(self.containerView).offset(8);
         make.width.mas_equalTo(AdaptOffset(81));
-        make.width.mas_equalTo(AdaptOffset(96));
+        make.height.mas_equalTo(AdaptOffset(96));
     }];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.mainImage.mas_right).offset(AdaptOffset(16));
