@@ -594,6 +594,7 @@
             [self jumpToVideoDetail:cellModel showComment:showComment enterType:enterType];
         }else{
             BOOL canOpenURL = NO;
+            cellModel.openUrl = @"sslocal://detail?groupid=6768645663799378439&item_id=6768645663799378439&report_params=%7B%22enter_from%22%3A%22community_group_detail%22%2C%22log_pb%22%3A%7B%22group_id%22%3A%226670391748776165899%22%2C%22group_source%22%3A%222%22%2C%22impr_id%22%3A%222019121111312501001605014224CCC0AD%22%2C%22social_group_id%22%3A%226763978177032225032%22%7D%2C%22page_type%22%3A%22article_detail%22%7D";
             if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
                 NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
                 if ([[UIApplication sharedApplication] canOpenURL:url]) {
