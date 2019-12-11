@@ -581,7 +581,7 @@
                        options:(TTCommentLoadOptions)options
                    finishBlock:(TTCommentLoadFinishBlock)finishBlock
 {
-    if (self.msgID.length > 0) {
+    if (self.msgID.length > 0 && [offset integerValue] <= 0) {
         // 标记需要置顶
         [self.commentViewController tt_markStickyCellNeedsAnimation];
     }
