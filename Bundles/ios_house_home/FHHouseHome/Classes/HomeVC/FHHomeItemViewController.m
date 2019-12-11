@@ -784,8 +784,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             return cell;
         }
         //to do 房源cell
-//        NSString *identifier = self.houseType == FHHouseTypeRentHouse ? kCellRentHouseItemImageId : kCellSmallItemImageId;
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellSmallItemImageId];
+        NSString *identifier = self.houseType == FHHouseTypeRentHouse ? kCellRentHouseItemImageId : kCellSmallItemImageId;
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         cell.delegate = self;
         if (indexPath.row < self.houseDataItemsModel.count) {
             JSONModel *model = self.houseDataItemsModel[indexPath.row];
