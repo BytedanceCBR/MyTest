@@ -811,6 +811,13 @@
     if (self.tableViewV.contentOffset.y < self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
         scrollView.contentOffset = CGPointZero;
         scrollView.showsVerticalScrollIndicator = NO;
+        
+        //将未滑动到置顶的子table置顶
+        for (FHHomeItemViewController *vc in self.itemsVCArray) {
+            if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
+                vc.tableView.contentOffset = CGPointZero;
+            }
+        }
     } else {
         //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
         scrollView.showsVerticalScrollIndicator = YES;

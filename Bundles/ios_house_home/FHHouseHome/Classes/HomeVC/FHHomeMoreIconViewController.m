@@ -45,7 +45,7 @@
     [self.view addSubview:self.contentTableView];
     [self.contentTableView setBackgroundColor:[UIColor themeGray8]];
     [self.view setBackgroundColor:[UIColor themeGray8]];
-
+    self.contentTableView.scrollEnabled = NO;
     
     [self setupConstrains];
     
@@ -160,7 +160,7 @@
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [FHHomeEntrancesCell rowHeight] * 10;
+    return [FHHomeEntrancesCell rowHeight] * 12;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
