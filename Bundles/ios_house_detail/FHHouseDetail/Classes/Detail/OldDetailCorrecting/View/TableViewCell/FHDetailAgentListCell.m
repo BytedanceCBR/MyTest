@@ -128,6 +128,7 @@
         _foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
         _foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];
         _foldButton.keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
+         _foldButton.keyLabel.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:_foldButton];
         [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView.mas_bottom);

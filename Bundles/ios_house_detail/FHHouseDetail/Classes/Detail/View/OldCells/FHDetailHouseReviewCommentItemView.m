@@ -39,7 +39,7 @@
     if (data.commentHeight <= 0) {
         [FHDetailHouseReviewCommentItemView calculateHeight:data isExpand:data.isExpended];
     }
-    return 42 + 10 + data.commentHeight;
+    return 42 + 20 + data.commentHeight;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -80,13 +80,15 @@
     [self.realtorLabelContainer addSubview:_nameView];
 
     _verticalDivider = [[UIView alloc] init];
-    _verticalDivider.backgroundColor = [UIColor themeGray6];
+    _verticalDivider.backgroundColor = [UIColor colorWithHexStr:@"#f1f1f0"];
+    _verticalDivider.layer.borderColor = [UIColor colorWithHexStr:@"#d6d6d6"].CGColor;
+    _verticalDivider.layer.borderWidth = 0.5;
     [self.realtorLabelContainer addSubview:_verticalDivider];
 
     self.agencyView = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _agencyView.textColor = [UIColor themeGray3];
-    _agencyView.textAlignment = NSTextAlignmentLeft;
-    [self.realtorLabelContainer addSubview:_agencyView];
+    _agencyView.textAlignment = NSTextAlignmentCenter;
+    [self.verticalDivider addSubview:_agencyView];
 
     _houseReviewView = [UILabel createLabel:@"" textColor:@"" fontSize:10];
     _houseReviewView.textColor = [UIColor themeGray3];
@@ -108,9 +110,10 @@
     _commentView = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _commentView.delegate = self;
     _commentView.verticalAlignment = TTTAttributedLabelVerticalAlignmentTop;
-    _commentView.frame = CGRectMake(20, 52, SCREEN_WIDTH - 70, 0);
+    _commentView.frame = CGRectMake(20, 62, SCREEN_WIDTH - 70, 0);
     [self addSubview:_commentView];
 
+    
     [_licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
     [_callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
     [_imBtn addTarget:self action:@selector(imClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -151,20 +154,18 @@
 
     [self.verticalDivider mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.nameView.mas_right).offset(6);
-        make.width.mas_equalTo(1);
-        make.height.mas_equalTo(14);
         make.centerY.mas_equalTo(self.nameView);
     }];
 
     [self.agencyView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.nameView).offset(2);
-        make.height.mas_equalTo(20);
-        make.left.mas_equalTo(self.verticalDivider.mas_right).offset(6);
-        make.right.mas_lessThanOrEqualTo(self.licenceIcon.mas_left).offset(5);
+        make.top.mas_equalTo(self.verticalDivider).offset(1);
+        make.bottom.mas_equalTo(self.verticalDivider).offset(-1);
+        make.left.mas_equalTo(self.verticalDivider).offset(2);
+        make.right.mas_equalTo(self.verticalDivider).offset(-2);
     }];
 
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.agencyView.mas_right).offset(5);
+        make.left.mas_equalTo(self.verticalDivider.mas_right).offset(5);
         make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.nameView);
         make.right.mas_lessThanOrEqualTo(self.realtorLabelContainer);
@@ -261,7 +262,7 @@
                                                               numberOfLines:numberOfLines];
 
         CGSize size1 = [TTTAttributedLabel sizeThatFitsAttributedString:attributedText1
-                                                        withConstraints:CGSizeMake(SCREEN_WIDTH - 40, FLT_MAX)
+                                                        withConstraints:CGSizeMake(SCREEN_WIDTH - 70, FLT_MAX)
                                                  limitedToNumberOfLines:numberOfLines];
 
         CGSize size2 = [TTTAttributedLabel sizeThatFitsAttributedString:attributedText2

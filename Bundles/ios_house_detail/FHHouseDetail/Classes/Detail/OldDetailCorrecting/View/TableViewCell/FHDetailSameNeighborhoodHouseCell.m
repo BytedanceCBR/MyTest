@@ -268,7 +268,7 @@
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHSameHouseTagView *imageTagLabelBgView;
 
-
+@property (nonatomic, strong) UIImageView *imageBacView;
 @end
 
 @implementation FHDetailSameNeighborhoodHouseCollectionCell
@@ -327,18 +327,29 @@
     [self layoutIfNeeded];
 }
 
+-(UIImageView *)imageBacView
+{
+    if (!_imageBacView) {
+        _imageBacView = [[UIImageView alloc]init];
+        [_imageBacView setImage:[UIImage imageNamed:@"base_house_image_back"]];
+        _imageBacView.contentMode = UIViewContentModeScaleAspectFill;
+    }
+    return _imageBacView;
+}
+
 - (void)setupUI {
+        [self.contentView addSubview:self.imageBacView];
     _icon = [[UIImageView alloc] init];
     _icon.layer.cornerRadius = 10.0;
-    _icon.layer.masksToBounds = YES;
     _icon.layer.borderWidth = 0.5;
+    _icon.clipsToBounds = YES;
     _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
-//    _icon.layer.shadowColor = [UIColor blackColor].CGColor;
-//    _icon.layer.shadowOffset = CGSizeMake(3, 3);
-//    _icon.layer.shadowOpacity = .2;
+    _icon.layer.shadowColor = [UIColor blackColor].CGColor;
+    _icon.layer.shadowOffset = CGSizeMake(5, 5);
+    _icon.layer.shadowOpacity = 1;
     _icon.image = [UIImage imageNamed:@"default_image"];
     [self.contentView addSubview:_icon];
-    
+
     _houseVideoImageView = [[UIImageView alloc] init];
     _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video"];
     _houseVideoImageView.backgroundColor = [UIColor clearColor];
@@ -377,7 +388,12 @@
         make.height.mas_equalTo(120);
         make.top.mas_equalTo(self.contentView);
     }];
-    
+    [self.imageBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView);
+        make.width.mas_equalTo(140);
+        make.height.mas_equalTo(120);
+        make.top.mas_equalTo(self.contentView);
+    }];
     [self.houseVideoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self.icon);
         make.width.mas_equalTo(30);
