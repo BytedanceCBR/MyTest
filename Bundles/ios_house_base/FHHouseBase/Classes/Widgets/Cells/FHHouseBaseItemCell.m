@@ -876,7 +876,7 @@
         layout.marginTop = YGPointValue(8);
         layout.marginLeft = YGPointValue(0);
         layout.height = YGPointValue(16);
-        layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth]);
+        layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth] - 10);
     }];
     
     
