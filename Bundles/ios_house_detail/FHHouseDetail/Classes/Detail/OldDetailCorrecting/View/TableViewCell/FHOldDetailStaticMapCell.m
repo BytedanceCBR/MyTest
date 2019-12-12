@@ -9,25 +9,23 @@
 #import "FHDetailStaticMapCell.h"
 #import "AMapSearchAPI.h"
 #import "MAMapKit.h"
-#import "HMSegmentedControl.h"
 #import "FHBaseTableView.h"
 #import "FHDetailNearbyMapItemCell.h"
 #import "UIViewAdditions.h"
 #import "FHDetailMapViewSnapService.h"
 #import "HMDUserExceptionTracker.h"
 #import "FHDetailHeaderStarTitleView.h"
+#import "FHSegmentControl.h"
 
 @interface FHOldDetailStaticMapCell () <AMapSearchDelegate, UITableViewDelegate, UITableViewDataSource, FHDetailVCViewLifeCycleProtocol, FHStaticMapDelegate, MAMapViewDelegate>
 //ui
 @property(nonatomic, assign) CGFloat cellWidth;
 
-@property(nonatomic, strong) UIView *topLine;
 @property(nonatomic, strong) FHDetailHeaderStarTitleView *headerView;
-@property(nonatomic, strong) HMSegmentedControl *segmentedControl;
+@property(nonatomic, strong) FHSegmentControl *segmentedControl;
 @property(nonatomic, strong) FHDetailStaticMap *mapView;
 @property(nonatomic, strong) UIImageView *nativeMapImageView;
 @property(nonatomic, strong) UITableView *locationList;
-@property(nonatomic, strong) UIView *bottomLine;
 @property(nonatomic, strong) UILabel *emptyInfoLabel;
 @property(nonatomic, strong) UIButton *mapMaskBtn;
 @property(nonatomic, strong) UIButton *mapMaskBtnLocation;
@@ -137,7 +135,8 @@
     [self setUpLocationListTableView];
 
     self.headerView.frame = CGRectMake(15, 0, self.cellWidth, 38);
-    self.segmentedControl.frame = CGRectMake(15, self.headerView.bottom + 10, self.cellWidth, 40);
+    
+    self.segmentedControl.frame = CGRectMake(15 + 16, self.headerView.bottom + 17, self.cellWidth - 32, 33);
 
     CGFloat mapHeight = self.cellWidth * 7.0f / 16.0f;
     CGRect mapFrame = CGRectMake(15, self.segmentedControl.bottom, self.cellWidth, mapHeight);
@@ -190,23 +189,16 @@
 }
 
 - (void)setUpSegmentedControl {
-    _segmentedControl = [HMSegmentedControl new];
+    _segmentedControl = [FHSegmentControl new];
     _segmentedControl.sectionTitles = @[@"交通(0)", @"购物(0)", @"医院(0)", @"教育(0)"];
-    _segmentedControl.selectionIndicatorHeight = 3;
-    _segmentedControl.selectionIndicatorWidth = 12;
+    _segmentedControl.selectionIndicatorSize = CGSizeMake(12, 3);
     _segmentedControl.selectionIndicatorCornerRadius = 1.5;
     _segmentedControl.selectionIndicatorColor = [UIColor themeGray1];
-    _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
-    _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
-    _segmentedControl.isNeedNetworkCheck = NO;
-
     NSDictionary *attributeNormal = @{NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor themeGray3]};
-    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor themeGray1]};
-
+    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontMedium:16], NSForegroundColorAttributeName: [UIColor themeGray1]};
+    _segmentedControl.backgroundColor = [UIColor whiteColor];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
-    _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-    _segmentedControl.backgroundColor = [UIColor clearColor];
 
     WeakSelf;
     _segmentedControl.indexChangeBlock = ^(NSInteger index) {
@@ -338,8 +330,9 @@
 - (void)refreshWithDataPoiDetail {
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     if (!dataModel.useNativeMap) {
-        if (!dataModel.staticImage) {
-            [self mapView:self.mapView loadFinished:NO message:@"static_image_null"];
+        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
+            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";
+            [self mapView:self.mapView loadFinished:NO message:message];
             return;
         }
         [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];

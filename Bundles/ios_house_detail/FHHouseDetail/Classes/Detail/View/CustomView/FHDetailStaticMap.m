@@ -188,7 +188,6 @@
         return;
     }
     NSURL *URL = [NSURL URLWithString:self.backLayerUrl];
-    UIImage *placeholder = [UIImage imageNamed:@""];
 
     CGFloat scale = SCREEN_SCALE;
     CGFloat myWidth = CGRectGetWidth(self.bounds) * scale;
