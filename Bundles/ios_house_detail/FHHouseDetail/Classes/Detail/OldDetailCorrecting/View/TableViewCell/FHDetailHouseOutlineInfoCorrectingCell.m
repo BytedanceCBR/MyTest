@@ -246,19 +246,19 @@
     }];
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(6);
         make.left.mas_equalTo(self.contentView).offset(11);
         make.right.mas_equalTo(self.contentView).offset(-11);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-36);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-48);
     }];
     [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
-        make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-48);
+        make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-50);
         make.height.mas_equalTo(53);
     }];
     [self.foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-18);
+        make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-30);
         make.height.mas_equalTo(40);
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
@@ -400,7 +400,7 @@
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.iconImg);
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self).offset(36);
+        make.top.mas_equalTo(self.keyLabel.mas_bottom).offset(8);
         make.bottom.mas_equalTo(self).offset(-10);
     }];
 }

@@ -164,6 +164,7 @@
         _nameLabel.textColor = [UIColor themeGray2];
         _nameLabel.font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:12] : [UIFont themeFontRegular:12];
         _nameLabel.textAlignment = NSTextAlignmentCenter;
+        [_nameLabel setBackgroundColor:[UIColor clearColor]];
         
         [self addSubview:_nameLabel];
         self.clipsToBounds = NO;

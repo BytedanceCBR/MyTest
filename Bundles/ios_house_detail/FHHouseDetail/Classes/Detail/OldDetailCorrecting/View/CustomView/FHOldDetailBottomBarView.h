@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy)void(^bottomBarRealtorBlock)(void);
 @property(nonatomic, copy)void(^bottomBarLicenseBlock)(void);
 @property(nonatomic, copy)void(^bottomBarImBlock)(void);
+@property(nonatomic, copy)void(^bottomBarGroupChatBlock)(void);
 @property (nonatomic, assign)   BOOL       showIM;
 
 - (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle chatTitle:(NSString *)chatTitle;

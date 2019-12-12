@@ -166,8 +166,8 @@
     
     _disclaimerContent = [[YYLabel alloc] init];
     _disclaimerContent.numberOfLines = 0;
-    _disclaimerContent.textColor = [UIColor themeGray3];
-    _disclaimerContent.font = [UIFont themeFontRegular:10];
+    _disclaimerContent.textColor = [UIColor themeGray4];
+    _disclaimerContent.font = [UIFont themeFontRegular:12];
     [self.contentView addSubview:_disclaimerContent];
     
     [self.ownerLabel mas_makeConstraints:^(MASConstraintMaker *make) {

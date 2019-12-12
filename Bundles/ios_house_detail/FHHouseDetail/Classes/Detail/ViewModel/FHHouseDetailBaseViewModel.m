@@ -89,18 +89,30 @@
 }
 
 - (void)reloadData {
-        
+    
     CGRect frame = self.tableView.frame;
     [self.tableView reloadData];
-    if (!self.scretchingWhenLoading) {
-        self.tableView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width,10000);//设置大frame 强制计算cell高度
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.tableView.frame = frame;
-        });
-        if (![self currentIsInstantData]) {
-            self.scretchingWhenLoading = YES;
-        }
-    }
+    //防止滑动卡顿，测试前关闭
+    
+    
+    
+    
+    
+    
+    
+//    if (!self.scretchingWhenLoading) {
+//        self.tableView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width,10000);//设置大frame 强制计算cell高度
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            self.tableView.frame = frame;
+//        });
+//        if (![self currentIsInstantData]) {
+//            self.scretchingWhenLoading = YES;
+//        }
+//    }
+    
+    
+    
+    
 }
 
 // 回调方法
@@ -254,7 +266,7 @@
             }else{
                 NSLog(@"nil cell for data: %@",data);
             }
-
+            
         }
     }
     return [[UITableViewCell alloc] init];
@@ -319,6 +331,11 @@
         self.elementShowCaches[tempKey] = @(YES);
         FHDetailBaseCell *tempCell = (FHDetailBaseCell *)cell;
         NSString *element_type = [tempCell elementTypeString:self.houseType];
+        if ([element_type isEqualToString:@"trade_tips"]) {
+            if (!self.contactViewModel.contactPhone.unregistered) {
+                [self addLeadShowLog:self.contactViewModel.contactPhone];
+            }
+        }
         if (element_type.length > 0) {
             // 上报埋点
             NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
@@ -397,7 +414,7 @@
     if (scrollView != self.tableView) {
         return;
     }
-
+    
     // 解决类似周边房源列表页的house_show问题，视频播放逻辑
     CGPoint offset = scrollView.contentOffset;
     if (self.weakedCellTable.count > 0) {
@@ -413,7 +430,7 @@
     self.lastPointOffset = offset;
     
     [self.detailController refreshContentOffset:scrollView.contentOffset];
-
+    
     CGFloat diff = scrollView.contentOffset.y - self.tableviewBeginOffSet.y;
     
     CGFloat height = scrollView.frame.size.height;
@@ -423,11 +440,11 @@
         return;
     }
     if (contentYoffset <= 0) {
-//        [self showQuestionBtn:NO];
+        //        [self showQuestionBtn:NO];
         return;
     }
     if (contentYoffset >= distance) {
-//        [self showQuestionBtn:YES];
+        //        [self showQuestionBtn:YES];
         return;
     }
     self.questionBtn.userInteractionEnabled = NO;
@@ -482,15 +499,15 @@
 
 - (void)addGoDetailLog
 {
-//    1. event_type ：house_app2c_v2
-//    2. page_type（详情页类型）：rent_detail（租房详情页），old_detail（二手房详情页）
-//    3. card_type（房源展现时的卡片样式）：left_pic（左图）
-//    4. enter_from（详情页入口）：search_related_list（搜索结果推荐）
-//    5. element_from ：search_related
-//    6. rank
-//    7. origin_from
-//    8. origin_search_id
-//    9.log_pb
+    //    1. event_type ：house_app2c_v2
+    //    2. page_type（详情页类型）：rent_detail（租房详情页），old_detail（二手房详情页）
+    //    3. card_type（房源展现时的卡片样式）：left_pic（左图）
+    //    4. enter_from（详情页入口）：search_related_list（搜索结果推荐）
+    //    5. element_from ：search_related
+    //    6. rank
+    //    7. origin_from
+    //    8. origin_search_id
+    //    9.log_pb
     NSMutableDictionary *params = @{}.mutableCopy;
     if (self.detailTracerDic) {
         [params addEntriesFromDictionary:self.detailTracerDic];
@@ -499,7 +516,7 @@
         params[@"growth_deepevent"] = @(1);
     }
     [FHUserTracker writeEvent:@"go_detail" params:params];
-
+    
 }
 
 - (NSDictionary *)subPageParams
@@ -538,6 +555,27 @@
     return info;
 }
 
+- (void)addLeadShowLog:(FHDetailContactModel *)contactPhone
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"event_type"] = @"house_app2c_v2";
+    params[@"element_type"] = @"trade_tips";
+    params[@"page_type"] = self.detailTracerDic[@"page_type"];
+    params[@"card_type"] = self.detailTracerDic[@"card_type"];
+    params[@"element_from"] = self.detailTracerDic[@"element_from"];
+    params[@"enter_from"] = self.detailTracerDic[@"enter_from"];
+    params[@"origin_from"] = self.detailTracerDic[@"origin_from"];
+    params[@"origin_search_id"] = self.detailTracerDic[@"origin_search_id"];
+    params[@"rank"] = self.detailTracerDic[@"rank"];
+    params[@"log_pb"] = self.detailTracerDic[@"log_pb"];
+    params[@"click_position"] = @"house_ask_question";
+    params[@"is_im"] = !isEmptyString(contactPhone.imOpenUrl) ? @"1" : @"0";
+    params[@"is_call"] =  @"0";
+    params[@"is_report"] = @"0";
+    params[@"is_online"] = contactPhone.unregistered?@"1":@"0";
+    [FHUserTracker writeEvent:@"lead_show" params:params];
+}
+
 - (void)addStayPageLog:(NSTimeInterval)stayTime
 {
     //    1. event_type ：house_app2c_v2
@@ -563,15 +601,15 @@
 
 - (void)addclickAskQuestionLog:(FHDetailOldDataModel *)model rank:(NSNumber *)rank
 {
-//    1.event_type：house_app2c_v2
-//    2.page_type（页面类型）：old_detail（二手房详情页）
-//    3.element_from ：(与go_detail进入详情页的上传参数保持一致)
-//    4.enter_from：
-//    5. origin_from
-//    6. origin_search_id
-//    7.log_pb
-//    8.rank:
-//    9.question_id：问题id
+    //    1.event_type：house_app2c_v2
+    //    2.page_type（页面类型）：old_detail（二手房详情页）
+    //    3.element_from ：(与go_detail进入详情页的上传参数保持一致)
+    //    4.enter_from：
+    //    5. origin_from
+    //    6. origin_search_id
+    //    7.log_pb
+    //    8.rank:
+    //    9.question_id：问题id
     NSMutableDictionary *params = @{}.mutableCopy;
     if (self.detailTracerDic) {
         [params addEntriesFromDictionary:self.detailTracerDic];
@@ -584,15 +622,15 @@
 
 - (void)addQuickQuestionClickOptionLog:(BOOL)isFold
 {
-//    1.event_type：house_app2c_v2
-//    2.page_type（页面类型）：old_detail（二手房详情页）
-//    3.element_from ：(与go_detail进入详情页的上传参数保持一致)
-//    4.enter_from：
-//    5. origin_from
-//    6. origin_search_id
-//    7.log_pb
-//    8.click_position：house_ask_question（提问按钮）
-//    9.show_type：展示状态：“问题内容展开”：“open”；“问题内容收起”：“close”
+    //    1.event_type：house_app2c_v2
+    //    2.page_type（页面类型）：old_detail（二手房详情页）
+    //    3.element_from ：(与go_detail进入详情页的上传参数保持一致)
+    //    4.enter_from：
+    //    5. origin_from
+    //    6. origin_search_id
+    //    7.log_pb
+    //    8.click_position：house_ask_question（提问按钮）
+    //    9.show_type：展示状态：“问题内容展开”：“open”；“问题内容收起”：“close”
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"page_type"] = self.detailTracerDic[@"page_type"];
     params[@"element_from"] = self.detailTracerDic[@"element_from"];
@@ -781,7 +819,7 @@
     
     NSDictionary *jsonDic = [dataModel toDictionary];
     if (jsonDic) {
-
+        
         NSString *openUrl = @"sslocal://webview";
         NSDictionary *pageData = @{@"data":jsonDic};
         NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
@@ -833,7 +871,7 @@
     }
     
     [FHHouseDetailAPI requstQualityFeedback:self.houseId houseType:self.houseType source:source feedBack:type agencyId:agencyId completion:^(bool succss, NSError * _Nonnull error) {
-      
+        
         if (succss) {
             completion(succss);
         }else{

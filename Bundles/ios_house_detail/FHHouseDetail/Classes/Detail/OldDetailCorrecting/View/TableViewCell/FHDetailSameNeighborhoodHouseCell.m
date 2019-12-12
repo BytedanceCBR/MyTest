@@ -72,7 +72,7 @@
         }];
     }
     if (model.sameNeighborhoodHouseData) {
-        self.headerView.label.text = [NSString stringWithFormat:@"同小区房源(%@)",model.sameNeighborhoodHouseData.total];
+        self.headerView.label.text = [NSString stringWithFormat:@"同小区房源 (%@)",model.sameNeighborhoodHouseData.total];
         self.headerView.isShowLoadMore = model.sameNeighborhoodHouseData.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
@@ -290,14 +290,14 @@
             self.icon.image = [UIImage imageNamed:@"default_image"];
         }
         
-        if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
-            self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
-            self.imageTagLabel.text = model.houseImageTag.text;
-            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
-            self.imageTagLabelBgView.hidden = NO;
-        }else {
-            self.imageTagLabelBgView.hidden = YES;
-        }
+//        if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
+//            self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
+//            self.imageTagLabel.text = model.houseImageTag.text;
+//            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+//            self.imageTagLabelBgView.hidden = NO;
+//        }else {
+//            self.imageTagLabelBgView.hidden = YES;
+//        }
         
         self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
         
@@ -306,7 +306,7 @@
             str = @"";
         }
         NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc] initWithString:str];
-        attributeText.yy_font = [UIFont themeFontRegular:16];
+        attributeText.yy_font = [UIFont themeFontMedium:16];
         attributeText.yy_color = [UIColor themeGray1];
         self.descLabel.attributedText = attributeText;
         self.priceLabel.text = model.displayPrice;

@@ -75,9 +75,8 @@
     [self addSubview:_actionBtn];
     [_actionBtn addTarget:self action:@selector(consultBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 
-    UIImage *img = ICON_FONT_IMG(15, @"\U0000e691", [UIColor colorWithHexStr:@"#ff9629"]);
     _consultImgView = [[UIImageView alloc] init];
-    _consultImgView.image = img;
+    _consultImgView.image = [UIImage imageNamed:@"plot__message"];
     _consultImgView.contentMode = UIViewContentModeScaleAspectFit;
     [self addSubview:_consultImgView];
 
@@ -94,9 +93,10 @@
     }];
     
     [self.consultImgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.infoLabel.mas_right).offset(AdaptOffset(6));
+        make.left.mas_equalTo(self.infoLabel.mas_right).offset(AdaptOffset(2));
         make.centerY.mas_equalTo(self);
-        make.width.height.mas_equalTo(AdaptOffset(20));
+        make.height.mas_equalTo(AdaptOffset(16));
+        make.width.mas_equalTo(AdaptOffset(17));
     }];
     [self.consultBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.consultImgView);
@@ -189,8 +189,7 @@
 
 - (UIImageView *)mainImage {
     if (!_mainImage) {
-        UIImageView *mainImage = [[UIImageView alloc]init];
-        mainImage.backgroundColor = [UIColor redColor];
+        UIImageView *mainImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"plot_image"]];
         [self.containerView addSubview:mainImage];
         _mainImage = mainImage;
     }
@@ -295,10 +294,10 @@
         NSString *areaName = model.neighborhoodInfo.areaName;
         NSString *districtName = model.neighborhoodInfo.districtName;
         if (areaName.length > 0 && districtName.length > 0) {
-        [self showLabelWithKey:@"位置：" value:[NSString stringWithFormat:@"%@-%@",districtName,areaName] parentView:self.topView];
+            [self showLabelWithKey:@"位置:" value:[NSString stringWithFormat:@"%@-%@",districtName,areaName] parentView:self.topView];
 
         } else if (districtName.length > 0) {
-        [self showLabelWithKey:@"位置：" value:districtName parentView:self.topView];
+            [self showLabelWithKey:@"位置:" value:districtName parentView:self.topView];
         }
         if (model.neighborhoodInfo.useSchoolIm) {
             self.schoolView.hidden = YES;
@@ -442,14 +441,15 @@
         make.bottom.equalTo(self.shadowImage).offset(-12);
     }];
     [self.mainImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.equalTo(self.containerView);
+        make.left.equalTo(self.containerView);
+        make.top.equalTo(self.containerView).offset(8);
         make.width.mas_equalTo(AdaptOffset(81));
         make.width.mas_equalTo(AdaptOffset(96));
     }];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.mainImage.mas_right).offset(AdaptOffset(16));
         make.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.containerView).offset(AdaptOffset(31));
+        make.top.mas_equalTo(self.containerView).offset(AdaptOffset(25));
     }];
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.headerView);

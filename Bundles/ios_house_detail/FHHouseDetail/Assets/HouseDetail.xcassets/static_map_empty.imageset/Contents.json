@@ -6,12 +6,12 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "invalid-name@2x.png",
+      "filename" : "static_map_empty2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "home_right_searchbtn@3x.png",
+      "filename" : "static_map_empty3x.png",
       "scale" : "3x"
     }
   ],

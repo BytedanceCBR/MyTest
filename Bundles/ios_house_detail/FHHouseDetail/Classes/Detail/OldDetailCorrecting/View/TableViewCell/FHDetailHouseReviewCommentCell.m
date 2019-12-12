@@ -60,7 +60,6 @@
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
-    _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
@@ -69,6 +68,15 @@
         make.height.mas_equalTo(0);
         make.bottom.mas_equalTo(self.shadowImage).offset(-35);
     }];
+}
+
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
 }
 
 - (void)refreshWithData:(id)data {

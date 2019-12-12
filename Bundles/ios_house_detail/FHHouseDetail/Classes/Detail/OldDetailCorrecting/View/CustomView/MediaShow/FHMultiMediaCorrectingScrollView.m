@@ -102,7 +102,7 @@
 
     // 底部右侧序号信息标签
     _infoLabel = [[UILabel alloc] init];
-    _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.8];
+    _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
     _infoLabel.textAlignment = NSTextAlignmentCenter;
     _infoLabel.font = [UIFont themeFontRegular:14];
     _infoLabel.textColor = [UIColor whiteColor];
@@ -200,7 +200,7 @@
     [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(44);
         make.height.mas_equalTo(20);
-        make.right.mas_equalTo(self).offset(-20);
+        make.right.mas_equalTo(self).offset(-16);
         make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
     }];
 }

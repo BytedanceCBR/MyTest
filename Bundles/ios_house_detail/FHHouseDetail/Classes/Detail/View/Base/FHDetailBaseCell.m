@@ -25,10 +25,11 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.contentView.clipsToBounds = YES;
+        self.clipsToBounds = YES;
     }
     return self;
 }
+
 - (void)refreshWithData:(id)data {
     // sub implements.........
 }

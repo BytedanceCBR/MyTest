@@ -260,4 +260,13 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, copy) NSDictionary *logPb;
 @end
+
+@interface FHDetailGaodeImageModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, assign) NSInteger width;
+@property (nonatomic, assign) NSInteger height;
+@property (nonatomic, copy , nullable) NSString *latRatio;
+@property (nonatomic, copy , nullable) NSString *lngRatio;
+@end
+
 NS_ASSUME_NONNULL_END

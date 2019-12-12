@@ -35,6 +35,7 @@
 #import "TTTabBarCustomMiddleModel.h"
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import <UIColor+Theme.h>
 
 NSString *kTTTabBarZipDownloadSuccess = @"kTTTabBarZipDownloadSuccess";
 
@@ -318,7 +319,7 @@ SINGLETON_GCD(TTTabBarManager);
             }
         } else {
             item.normalTitleColor = [UIColor tt_themedColorForKey:@"TabBarTitleColor"];
-            item.highlightedTitleColor = [UIColor colorWithHexString:@"#ff5869"];
+            item.highlightedTitleColor = [UIColor themeRed4];
 //            item.highlightedTitleColor = [UIColor tt_themedColorForKey:@"TabBarTitleHighlightedColor"];
             item.ttBadgeView.backgroundColorThemeKey = kColorBackground7;
         }
@@ -921,7 +922,7 @@ SINGLETON_GCD(TTTabBarManager);
 
 - (UIColor *)customHighlightedColor {
     //f100 暂时去掉云控设置颜色
-    return [UIColor colorWithHexString:@"#ff5500"];
+    return [UIColor themeRed4];
 //    return [UIColor colorWithDayColorName:[self.customTextColorArray objectAtIndex:2] nightColorName:[self.customTextColorArray objectAtIndex:3]];
 }
 

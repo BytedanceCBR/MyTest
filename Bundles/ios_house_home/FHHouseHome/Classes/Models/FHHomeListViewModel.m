@@ -262,6 +262,12 @@
     
     if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
         [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:NO];
+        
+        for (FHHomeItemViewController *vc in self.itemsVCArray) {
+            if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0){
+                [vc.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:NO];
+            }
+        }
     }
 }
 
@@ -805,6 +811,13 @@
     if (self.tableViewV.contentOffset.y < self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
         scrollView.contentOffset = CGPointZero;
         scrollView.showsVerticalScrollIndicator = NO;
+        
+        //将未滑动到置顶的子table置顶
+        for (FHHomeItemViewController *vc in self.itemsVCArray) {
+            if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
+                vc.tableView.contentOffset = CGPointZero;
+            }
+        }
     } else {
         //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
         scrollView.showsVerticalScrollIndicator = YES;

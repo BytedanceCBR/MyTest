@@ -63,10 +63,10 @@ static const NSInteger kTopScrollViewTag = 100;
     
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
-                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray1],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontMedium:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
+                                     [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
                                      [UIColor colorWithHexStr:@"#fe5500"],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;

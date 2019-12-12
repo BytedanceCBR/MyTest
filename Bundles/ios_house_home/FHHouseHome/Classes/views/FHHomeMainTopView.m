@@ -19,6 +19,7 @@
 #import "FHHomeConfigManager.h"
 #import <FHHouseType.h>
 #import <FHHomeCellHelper.h>
+#import <UIImage+FIconFont.h>
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
@@ -70,7 +71,7 @@ static const float kSegementedMainPadingBottom = 10;
     
     
     _searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_searchBtn setImage:[UIImage imageNamed:@"home_right_searchbtn"] forState:UIControlStateNormal];
+    [_searchBtn setImage:ICON_FONT_IMG(16,@"\U0000e675",[UIColor blackColor]) forState:UIControlStateNormal];
     [_searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
     _searchBtn.hidden = YES;
     [self addSubview:_searchBtn];
@@ -95,11 +96,12 @@ static const float kSegementedMainPadingBottom = 10;
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _segmentControl.isNeedNetworkCheck = NO;
-    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(9, 10, 0, 10);
+    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(5, 0, 5, 0);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _segmentControl.selectionIndicatorWidth = 20.0f;
     _segmentControl.selectionIndicatorHeight = 4.0f;
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
+    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     //_segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
     [_segmentControl setBackgroundColor:[UIColor themeHomeColor]];
@@ -205,7 +207,7 @@ static const float kSegementedMainPadingBottom = 10;
         {
             make.bottom.mas_equalTo(8);
         }
-        make.width.mas_equalTo((kSegementedOneWidth + 20) * titlesArray.count);
+        make.width.mas_equalTo((kSegementedOneWidth + 15) * titlesArray.count);
     }];
     
     [self updateSegementedTitles:titlesArray andSelectIndex:indexValue];
@@ -380,7 +382,7 @@ static const float kSegementedMainPadingBottom = 10;
 }
 
 - (NSArray *)getSegmentTitles {
-    return @[@"推荐", @"发现"];
+    return @[@"找房", @"发现"];
 }
 
 @end

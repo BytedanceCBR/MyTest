@@ -88,6 +88,7 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.clipsToBounds = YES;
         _itemArr = [[NSMutableArray alloc]init];
         [self initBacIma];
     }
@@ -133,7 +134,8 @@
 - (void)setupUI {
     _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:22];
     _keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
-    _keyLabel.font = [UIFont themeFontMedium:22];
+//    _keyLabel.font = [UIFont themeFontMedium:22];
+    _keyLabel.font = [UIFont themeFontDINAlternateBold:22];
     [self addSubview:_keyLabel];
     
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];

@@ -107,6 +107,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     self.tableView.mj_footer = self.refreshFooter;
     
+    [self.refreshFooter setUpWhiteBackGroud];
+    
     [self.refreshFooter setBackgroundColor:[UIColor themeHomeColor]];
     [self.tableView setBackgroundColor:[UIColor themeHomeColor]];
     
@@ -324,7 +326,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableView.mj_footer.hidden = NO;
     if (hasMore == NO) {
-        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:3];
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:0];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableView.mj_footer endRefreshing];
@@ -628,7 +630,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if ([self checkIsHaveEntrancesList]) {
             //适配5s
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                return 100;
+                return 105;
             }else
             {
                 return 74;
@@ -784,8 +786,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             return cell;
         }
         //to do 房源cell
-//        NSString *identifier = self.houseType == FHHouseTypeRentHouse ? kCellRentHouseItemImageId : kCellSmallItemImageId;
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellSmallItemImageId];
+        NSString *identifier = self.houseType == FHHouseTypeRentHouse ? kCellRentHouseItemImageId : kCellSmallItemImageId;
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         cell.delegate = self;
         if (indexPath.row < self.houseDataItemsModel.count) {
             JSONModel *model = self.houseDataItemsModel[indexPath.row];

@@ -248,19 +248,25 @@
             if (element.content && element.textColor && element.backgroundColor) {
                 
                 NSMutableString *reulstString = element.content;
-                if (reulstString.length * 10 > ([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90)) {
-                    
-                    NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
-                    
-                    for (NSInteger i = 0; i < paramsArrary.count; i++) {
-                        reulstString = [self cutStringFromString:reulstString];
+                if (tagList.count > 1) {
+                    if (reulstString.length * 10 > ([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90)) {
                         
-                        if (reulstString.length * 8 < ([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90 - 10))
-                        {
-                            break;
+                        NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
+                        
+                        for (NSInteger i = 0; i < paramsArrary.count; i++) {
+                            reulstString = [self cutStringFromString:reulstString];
+                            
+                            if (reulstString.length * 8 < ([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90 - 10))
+                            {
+                                break;
+                            }
                         }
                     }
+                }else
+                {
+                    reulstString = element.content;
                 }
+          
                 UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor colorWithHexString:@"#f85959"];
                 UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor colorWithRed:248/255.0 green:89/255.0 blue:89/255.0 alpha:0.08];
                 NSAttributedString *attr = [self.class createSmallTagAttrString:reulstString isFirst:idx == 0 textColor:textColor backgroundColor:backgroundColor];

@@ -108,7 +108,7 @@
     _commentView = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _commentView.delegate = self;
     _commentView.verticalAlignment = TTTAttributedLabelVerticalAlignmentTop;
-    _commentView.frame = CGRectMake(20, 52, SCREEN_WIDTH - 40, 0);
+    _commentView.frame = CGRectMake(20, 52, SCREEN_WIDTH - 70, 0);
     [self addSubview:_commentView];
 
     [_licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -265,7 +265,7 @@
                                                  limitedToNumberOfLines:numberOfLines];
 
         CGSize size2 = [TTTAttributedLabel sizeThatFitsAttributedString:attributedText2
-                                                        withConstraints:CGSizeMake(SCREEN_WIDTH - 40, FLT_MAX)
+                                                        withConstraints:CGSizeMake(SCREEN_WIDTH - 70, FLT_MAX)
                                                  limitedToNumberOfLines:numberOfLines];
         modelData.commentHeight = MAX(size1.height, size2.height);
         modelData.addFoldDirect = size1.height == size2.height;
@@ -276,7 +276,7 @@
                                                                   font:[UIFont themeFontRegular:14]
                                                          numberOfLines:numberOfLines];
     CGSize size = [TTTAttributedLabel sizeThatFitsAttributedString:attributedText
-                                                   withConstraints:CGSizeMake(SCREEN_WIDTH - 40, FLT_MAX)
+                                                   withConstraints:CGSizeMake(SCREEN_WIDTH - 70, FLT_MAX)
                                             limitedToNumberOfLines:numberOfLines];
     modelData.commentHeight = size.height;
     modelData.isExpended = isExpand;
