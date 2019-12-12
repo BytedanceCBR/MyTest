@@ -1325,11 +1325,7 @@
         maskLayer.path = maskPath.CGPath;
         self.houseCellBackView.layer.mask = maskLayer;
     } else if (isLast){
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
-        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-        maskLayer.frame = self.houseCellBackView.bounds;
-        maskLayer.path = maskPath.CGPath;
-        self.houseCellBackView.layer.mask = maskLayer;
+        self.houseCellBackView.layer.mask = nil;
     }else
     {
         self.houseCellBackView.layer.mask = nil;
