@@ -554,9 +554,7 @@ def appPods
     
 #    pod 'BDDiamond20', :git => 'git@code.byted.org:liuhanhong/qi_project_ios.git', :branch => 'develop', :subspecs => ['minisdk']
 
-    pod_binary 'BDDiamond20', '0.9.0-alpha.10', :subspecs => ['minisdk']
-
-#    pod_binary 'BDDiamond20', '0.9.0-alpha.10'
+    pod_binary 'BDDiamond20', '1.0.2', :subspecs => ['minisdk']
 
 end
 
