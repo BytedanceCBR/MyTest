@@ -85,7 +85,7 @@
     _verticalDivider.layer.borderWidth = 0.5;
     [self.realtorLabelContainer addSubview:_verticalDivider];
 
-    self.agencyView = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    self.agencyView = [UILabel createLabel:@"" textColor:@"" fontSize:10];
     _agencyView.textColor = [UIColor themeGray3];
     _agencyView.textAlignment = NSTextAlignmentCenter;
     [self.verticalDivider addSubview:_agencyView];
@@ -160,8 +160,8 @@
     [self.agencyView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.verticalDivider).offset(1);
         make.bottom.mas_equalTo(self.verticalDivider).offset(-1);
-        make.left.mas_equalTo(self.verticalDivider).offset(2);
-        make.right.mas_equalTo(self.verticalDivider).offset(-2);
+        make.left.mas_equalTo(self.verticalDivider).offset(1);
+        make.right.mas_equalTo(self.verticalDivider).offset(-1);
     }];
 
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {

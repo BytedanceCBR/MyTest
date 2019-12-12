@@ -7,7 +7,7 @@
 #import "FHHouseOldDetailViewModel.h"
 #import "FHDetailBaseCell.h"
 #import "FHHouseDetailAPI.h"
-#import "FHDetailPhotoHeaderCell.h"
+#import "FHOldDetailPhotoHeaderCell.h"
 #import "FHDetailOldModel.h"
 #import "FHDetailRelatedHouseResponseModel.h"
 #import "FHDetailRelatedNeighborhoodResponseModel.h"
@@ -75,7 +75,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 // 注册cell类型
 - (void)registerCellClasses {
     //顶部轮播
-    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
+    [self.tableView registerClass:[FHOldDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
     //FHDetailMediaHeaderCell -----FHDetailMediaHeaderModel
     [self.tableView registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
    //属性模块
@@ -265,7 +265,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             itemModel.infoSubTitle = model.data.houseVideo.infoSubTitle;
             itemModel.groupType = @"视频";
         }
-        
+
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
         headerCellModel.houseImageDictList = model.data.houseImageDictList;
         if (!isInstant) {
@@ -275,7 +275,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
         houseTitleModel.titleStr = model.data.title;
         houseTitleModel.tags = model.data.tags;
-        
+
         headerCellModel.vrModel = model.data.vrData;
         headerCellModel.vedioModel = itemModel;// 添加视频模型数据
         headerCellModel.contactViewModel = self.contactViewModel;
@@ -295,6 +295,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             FHImageModel *imgModel = [FHImageModel new];
             headerCellModel.houseImage = @[imgModel];
         }
+        FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
+        houseTitleModel.titleStr = model.data.title;
+        houseTitleModel.tags = model.data.tags;
+        headerCellModel.titleDataModel = houseTitleModel;
         headerCellModel.isInstantData = model.isInstantData;
         [self.items addObject:headerCellModel];
         

@@ -476,8 +476,8 @@
             make.edges.equalTo(self.contentView);
         }];
         
-        self.layer.cornerRadius = 2;
-        self.layer.masksToBounds = YES;
+        self.contentView.layer.cornerRadius = 2;
+//        self.contentView.layer.masksToBounds = YES;
     }
     return self;
 }
@@ -803,7 +803,9 @@
     FHRealtorTag *tagInfo = [self.model.realtorTags objectAtIndex:indexPath.row];
     
     tagCell.tagLabel.text = tagInfo.text;
-    tagCell.backgroundColor = [UIColor colorWithHexStr:tagInfo.backgroundColor];
+    tagCell.contentView.backgroundColor = [UIColor colorWithHexStr:tagInfo.backgroundColor];
+    tagCell.contentView.layer.borderColor = [UIColor colorWithHexStr:tagInfo.borderColor].CGColor;
+    tagCell.contentView.layer.borderWidth = .3;
     tagCell.tagLabel.textColor = [UIColor colorWithHexStr:tagInfo.fontColor];
     return tagCell;
 }

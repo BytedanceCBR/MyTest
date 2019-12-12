@@ -299,6 +299,12 @@
         } else if (districtName.length > 0) {
             [self showLabelWithKey:@"位置:" value:districtName parentView:self.topView];
         }
+        if (model.neighborhoodInfo.neighborhoodImage.count >0) {
+            FHImageModel *imageModel = model.neighborhoodInfo.neighborhoodImage[0];
+            if (imageModel.url.length >0) {
+                [self.mainImage bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            }
+        }
         if (model.neighborhoodInfo.useSchoolIm) {
             self.schoolView.hidden = YES;
             self.consultView.hidden = NO;

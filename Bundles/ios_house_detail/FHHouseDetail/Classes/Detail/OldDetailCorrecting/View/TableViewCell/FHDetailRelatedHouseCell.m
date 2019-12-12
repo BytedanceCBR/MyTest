@@ -98,7 +98,7 @@
         [tv registerClass:[FHHouseBaseItemCell  class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(20);
+            make.top.mas_equalTo(self.containerView).offset(5);
             make.height.mas_equalTo(cellHeight * model.relatedHouseData.items.count);
             make.left.right.mas_equalTo(self.containerView);
             make.bottom.mas_equalTo(self.containerView).offset(-bottomOffset);
@@ -175,7 +175,7 @@
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(11);
         make.right.mas_equalTo(self.contentView).offset(-11);
-        make.top.equalTo(self.shadowImage).offset(32);
+        make.top.equalTo(self.shadowImage).offset(22);
         make.height.mas_equalTo(46);
     }];
     _containerView = [[UIView alloc] init];
