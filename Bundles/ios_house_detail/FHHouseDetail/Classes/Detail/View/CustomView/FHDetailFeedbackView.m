@@ -166,7 +166,7 @@
     [_starBtnArray addObject:self.starBtn4];
     [_starBtnArray addObject:self.starBtn5];
 
-    _starInfoLabel = [self labelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    _starInfoLabel = [self labelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
     _starInfoLabel.text = @"您的评分会让经纪人做的更好";
     _starInfoLabel.textAlignment = NSTextAlignmentCenter;
     [self.containerView addSubview:_starInfoLabel];
@@ -249,7 +249,8 @@
 
 - (void)hideInputView {
     self.hasShowInputView = NO;
-
+    
+    //TODO if reset view updateConstraints CollectionView & inputView
     [self.starBtn3 mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.dividerView.mas_bottom).offset(30);
     }];
@@ -272,10 +273,15 @@
 
     [self.inputTextViewBg mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(60);
+        make.top.mas_equalTo(self.collectionView.mas_bottom).mas_offset(14);
     }];
 
     [self.inputTextView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(27);
+    }];
+
+    [self.collectionView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.starInfoLabel.mas_bottom).mas_offset(20);
     }];
 }
 
@@ -290,6 +296,10 @@
     CGFloat bottom = 0;
     if (@available(iOS 11.0, *)) {
         bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+
+    if (bottom < 0) {
+        bottom = 0;
     }
 
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -311,7 +321,7 @@
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self.containerView).offset(-10);
-        make.width.height.mas_equalTo(24);
+        make.width.height.mas_equalTo(20);
     }];
 
     [self.dividerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -357,7 +367,7 @@
     }];
 
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.starInfoLabel.mas_bottom).mas_offset(20);
+        make.top.mas_equalTo(self.starInfoLabel.mas_bottom).mas_offset(10);
         make.left.mas_equalTo(self.containerView).offset(30);
         make.right.mas_equalTo(self.containerView).offset(-30);
         make.height.mas_equalTo(0);
@@ -367,7 +377,7 @@
         make.left.mas_equalTo(self.containerView).offset(30);
         make.right.mas_equalTo(self.containerView).offset(-30);
         make.height.mas_equalTo(60);
-        make.top.mas_equalTo(self.collectionView.mas_bottom).mas_offset(14);
+        make.top.mas_equalTo(self.collectionView.mas_bottom).mas_offset(0);
     }];
 
     [self.inputTextView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -391,8 +401,8 @@
 
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.btnConfirm.mas_bottom);
-        make.height.mas_equalTo(bottom);
+        make.top.mas_equalTo(self.btnConfirm.mas_bottom).mas_offset(20);
+        make.height.mas_equalTo(bottom + 0.5);
     }];
 }
 
