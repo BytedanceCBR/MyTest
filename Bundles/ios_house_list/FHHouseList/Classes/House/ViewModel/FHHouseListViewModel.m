@@ -900,9 +900,15 @@ extern NSString *const INSTANT_DATA_KEY;
             [traceDictParams addEntriesFromDictionary:[wself categoryLogDict]];
         }
         __block id lastObj = nil;
+        __block BOOL hideRefreshTip = NO;
+        
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[wself class] searchItemModelByDict:itemDict];
+            
+            if (idx == 0 && ![theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+                hideRefreshTip = YES;
+            }
 
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = theItemModel;
@@ -1033,7 +1039,7 @@ extern NSString *const INSTANT_DATA_KEY;
             self.tableView.contentOffset = CGPointMake(0, 0);
         }
         
-        if (self.isRefresh && self.viewModelDelegate && itemArray.count > 0 && !_showRealHouseTop) {
+        if (self.isRefresh && self.viewModelDelegate && (itemArray.count > 0 || recommendItemArray.count > 0) && !_showRealHouseTop && !hideRefreshTip) {
             [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
         }
      

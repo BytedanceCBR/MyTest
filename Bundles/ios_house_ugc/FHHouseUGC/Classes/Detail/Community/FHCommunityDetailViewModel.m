@@ -34,7 +34,7 @@
 #import <TTThemedAlertController.h>
 #import "FHFeedUGCCellModel.h"
 #import <TTUGCDefine.h>
-#import <UIViewController+Helper.h>
+#import <FHUGCCategoryHelper.h>
 
 #define kSegmentViewHeight 52
 
@@ -227,6 +227,7 @@
 - (void)viewWillDisappear {
     [self.feedListController viewWillDisappear];
     self.isViewAppear = NO;
+    [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:self.data];
 }
 
 - (void)endRefreshing {
@@ -268,7 +269,8 @@
         }
         
         // 根据basicInfo接口成功失败决定是否显示群聊入口按钮
-        self.viewController.groupChatBtn.hidden = (error != nil);
+        BOOL isHidden = (error != nil);
+        self.viewController.groupChatBtn.alpha = isHidden ? 0 : 1;
         
         if (model) {
             FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
@@ -301,6 +303,10 @@
                     [self.feedListController startLoadData:YES];
                 }
             }
+            self.isLoginSatusChangeFromGroupChat = NO;
+        }
+        else {
+            self.isLoginSatusChangeFromGroupChat = NO;
         }
     }];
 }
@@ -583,7 +589,7 @@
             // 登录成功
             if ([TTAccountManager isLogin]) {
                 if(from == FHUGCLoginFrom_GROUPCHAT) {
-                    self.viewController.groupChatBtn.hidden = YES;
+                    self.viewController.groupChatBtn.alpha = 0;
                     [self onLoginIn];
                 }
                 else {

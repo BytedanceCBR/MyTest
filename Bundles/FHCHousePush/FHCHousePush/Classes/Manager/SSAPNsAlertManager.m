@@ -160,7 +160,8 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                                 [params setValue:@"be_null" forKey:@"group_id"];
                             }
                         }
-                        params[@"title_id"] = paramObj.allParams[@"title_id"]?:@"0";
+                        NSString *titleId = [NSString stringWithFormat:@"%@",paramObj.allParams[@"title_id"]];
+                        params[@"title_id"] = @([titleId longLongValue]);
                         params[@"event_type"] = @"house_app2c_v2";
                         [TTTracker eventV3:@"push_click" params:params];
 
@@ -427,7 +428,8 @@ static NSString * const kTTAPNsImportanceKey = @"important";
             }
             param[@"event_type"] = @"house_app2c_v2";
             param[@"post_back"] = @"be_null";
-            param[@"title_id"] = paramObj.allParams[@"title_id"]?:@"0";
+            NSString *titleId = [NSString stringWithFormat:@"%@",paramObj.allParams[@"title_id"]];
+            param[@"title_id"] = @([titleId longLongValue]);
 
             [TTTracker eventV3:@"push_click" params:param];
 
