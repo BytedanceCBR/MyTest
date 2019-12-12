@@ -20,7 +20,7 @@
 
 @interface FHStaticMapAnnotationView ()
 @property(nonatomic, strong) FHStaticMapAnnotation *annotation;
-@property(nonatomic, strong) NSString *reuseIdentifier;
+@property(nonatomic, copy) NSString *reuseIdentifier;
 @end
 
 @implementation FHStaticMapAnnotationView

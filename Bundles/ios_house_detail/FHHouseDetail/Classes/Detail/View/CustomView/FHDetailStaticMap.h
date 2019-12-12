@@ -6,7 +6,7 @@
 #import "MAPointAnnotation.h"
 
 @interface FHStaticMapAnnotation : MAPointAnnotation
-@property(nonatomic, strong) NSString *extra;
+@property(nonatomic, copy) NSString *extra;
 @end
 
 @interface FHStaticMapAnnotationView : UIView
