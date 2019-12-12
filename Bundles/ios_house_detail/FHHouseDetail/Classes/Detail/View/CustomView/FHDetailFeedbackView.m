@@ -249,7 +249,7 @@
 
 - (void)hideInputView {
     self.hasShowInputView = NO;
-    
+
     //TODO if reset view updateConstraints CollectionView & inputView
     [self.starBtn3 mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.dividerView.mas_bottom).offset(30);
@@ -272,12 +272,12 @@
     }];
 
     [self.inputTextViewBg mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(60);
+        make.height.mas_equalTo(80);
         make.top.mas_equalTo(self.collectionView.mas_bottom).mas_offset(14);
     }];
 
     [self.inputTextView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(27);
+        make.height.mas_equalTo(40);
     }];
 
     [self.collectionView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -384,12 +384,12 @@
         make.left.mas_equalTo(self.inputTextViewBg).offset(10);
         make.right.mas_equalTo(self.inputTextViewBg).offset(-10);
         make.top.mas_equalTo(self.inputTextViewBg);
-        make.height.mas_equalTo(27);
+        make.height.mas_equalTo(40);
     }];
 
     [self.lengthInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.inputTextViewBg.mas_right).offset(-10);
-        make.bottom.mas_equalTo(self.inputTextViewBg.mas_bottom).mas_offset(-10);
+        make.bottom.mas_equalTo(self.inputTextViewBg.mas_bottom).mas_offset(-5);
     }];
 
     [self.btnConfirm mas_makeConstraints:^(MASConstraintMaker *make) {
