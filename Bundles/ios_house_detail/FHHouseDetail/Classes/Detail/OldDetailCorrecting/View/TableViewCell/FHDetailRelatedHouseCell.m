@@ -273,7 +273,7 @@
             FHHouseBaseItemCell  *imageInfoCell = (FHHouseBaseItemCell  *)cell;
             CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell  recommendReasonHeight] : 0;
             [imageInfoCell refreshTopMargin:0];
-            [imageInfoCell updateWithHouseCellModel:cellModel];
+            [imageInfoCell updateWithOldHouseDetailCellModel:cellModel];
         }
         cell.contentView.backgroundColor = [UIColor clearColor];
         cell.backgroundColor = [UIColor clearColor];

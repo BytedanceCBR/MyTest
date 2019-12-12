@@ -117,6 +117,6 @@
             return CGSizeMake(94, 210);
         }
     }
-    return CGSizeMake(140, 210);
+    return CGSizeMake(150, 210);
 }
 @end

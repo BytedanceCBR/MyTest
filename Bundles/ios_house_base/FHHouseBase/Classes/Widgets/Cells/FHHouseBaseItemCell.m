@@ -973,7 +973,76 @@
             break;
     }    
 }
-
+-(void)updateWithOldHouseDetailCellModel:(FHSingleImageInfoCellModel *)cellModel {
+    
+    _cellModel = cellModel;
+    [self.closeBtn removeFromSuperview];
+//    [self.closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+//        layout.isIncludedInLayout = NO;
+//    }];
+//    [self.closeBtn.yoga markDirty];
+    FHSearchHouseDataItemsModel *model  = cellModel.secondModel;
+    self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
+    [self.houseCellBackView setBackgroundColor:[UIColor clearColor]];
+    _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
+    FHImageModel *imageModel = model.houseImage.firstObject;
+    [self updateMainImageWithUrl:imageModel.url];
+    
+    //    if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
+    //        self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
+    //        self.imageTagLabel.text = model.houseImageTag.text;
+    //        self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+    //        self.imageTagLabelBgView.hidden = NO;
+    //    }else {
+    //        self.imageTagLabelBgView.hidden = YES;
+    //    }
+    
+    //    [self updateImageTopLeft];
+    
+    self.mainTitleLabel.text = model.displayTitle;
+    self.subTitleLabel.text = model.displaySubtitle;
+    NSAttributedString * attributeString = self.cellModel.tagsAttrStr;
+    self.tagLabel.attributedText =  attributeString;
+    //    self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
+    
+    [self.pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+         layout.marginTop = YGPointValue(2);
+    }];
+    [self.pricePerSqmLabel.yoga markDirty];
+    self.priceLabel.text = model.displayPrice;
+    self.pricePerSqmLabel.text = model.displayPricePerSqm;
+    
+    BOOL originPriceEnable = self.cellModel.originPriceAttrStr.string.length > 0;
+    if (originPriceEnable || ( self.originPriceLabel.yoga.isIncludedInLayout != originPriceEnable)) {
+        self.originPriceLabel.attributedText = self.cellModel.originPriceAttrStr;
+        [self.originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isIncludedInLayout = originPriceEnable;
+        }];
+        [self.originPriceLabel.yoga markDirty];
+    }
+    self.originPriceLabel.hidden = !originPriceEnable;
+    
+    [self.pricePerSqmLabel.yoga markDirty];
+    
+    if (model.recommendReasons.count > 0) {
+        self.recReasonView.hidden = NO;
+        [self.recReasonView setReasons:model.recommendReasons];
+    }else{
+        self.recReasonView.hidden = YES;
+    }
+    
+    if (self.recReasonView.yoga.isIncludedInLayout == self.recReasonView.isHidden) {
+        [self.recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isIncludedInLayout = !self.recReasonView.isHidden;
+        }];
+        [self.recReasonView.yoga markDirty];
+    }
+    
+    [self updateTitlesLayout:self.cellModel.tagsAttrStr.length > 0];
+    
+    [self.contentView.yoga applyLayoutPreservingOrigin:NO];
+    
+}
 - (void)updateWithNeighborModel:(FHHouseNeighborDataItemsModel *)model
 {
     self.houseVideoImageView.hidden = YES;

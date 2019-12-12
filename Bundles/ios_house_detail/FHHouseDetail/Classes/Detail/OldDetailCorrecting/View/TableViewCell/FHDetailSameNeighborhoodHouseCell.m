@@ -81,7 +81,8 @@
             FHDetailMoreItemModel *moreItem = [[FHDetailMoreItemModel alloc]init];
             [dataArr addObject:moreItem];
         }
-        flowLayout.minimumLineSpacing = 10;
+        flowLayout.minimumLineSpacing = 0;
+        flowLayout.minimumInteritemSpacing = 0;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         NSString *identifier = NSStringFromClass([FHSearchHouseDataItemsModel class]);
         NSString *moreIdentifier = NSStringFromClass([FHDetailMoreItemModel class]);
@@ -331,13 +332,14 @@
 {
     if (!_imageBacView) {
         _imageBacView = [[UIImageView alloc]init];
-        [_imageBacView setImage:[UIImage imageNamed:@"base_house_image_back"]];
+        [_imageBacView setImage:[UIImage imageNamed:@"old_detail_house"]];
         _imageBacView.contentMode = UIViewContentModeScaleAspectFill;
     }
     return _imageBacView;
 }
 
 - (void)setupUI {
+    self.clipsToBounds = YES;
         [self.contentView addSubview:self.imageBacView];
     _icon = [[UIImageView alloc] init];
     _icon.layer.cornerRadius = 10.0;
@@ -386,12 +388,12 @@
         make.left.mas_equalTo(self.contentView);
         make.width.mas_equalTo(140);
         make.height.mas_equalTo(120);
-        make.top.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.contentView).offset(5);
     }];
     [self.imageBacView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView);
-        make.width.mas_equalTo(140);
-        make.height.mas_equalTo(120);
+        make.left.mas_equalTo(self.contentView).offset(-10);
+        make.width.mas_equalTo(160);
+        make.height.mas_equalTo(140);
         make.top.mas_equalTo(self.contentView);
     }];
     [self.houseVideoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -401,7 +403,7 @@
     }];
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self);
+        make.left.right.mas_equalTo(self.icon);
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
     }];
@@ -409,13 +411,13 @@
     [_priceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
     [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self);
-        make.right.mas_equalTo(self);
+        make.left.mas_equalTo(self.icon);
+        make.right.mas_equalTo(self.icon);
         make.height.mas_equalTo(17);
         make.top.mas_equalTo(self.descLabel.mas_bottom).offset(3);
     }];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self);
+        make.left.mas_equalTo(self.icon);
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(self.spaceLabel.mas_bottom).offset(8);
     }];
