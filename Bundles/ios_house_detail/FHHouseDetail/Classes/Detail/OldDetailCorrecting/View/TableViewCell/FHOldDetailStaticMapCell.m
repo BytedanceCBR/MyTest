@@ -21,13 +21,11 @@
 //ui
 @property(nonatomic, assign) CGFloat cellWidth;
 
-@property(nonatomic, strong) UIView *topLine;
 @property(nonatomic, strong) FHDetailHeaderStarTitleView *headerView;
 @property(nonatomic, strong) FHSegmentControl *segmentedControl;
 @property(nonatomic, strong) FHDetailStaticMap *mapView;
 @property(nonatomic, strong) UIImageView *nativeMapImageView;
 @property(nonatomic, strong) UITableView *locationList;
-@property(nonatomic, strong) UIView *bottomLine;
 @property(nonatomic, strong) UILabel *emptyInfoLabel;
 @property(nonatomic, strong) UIButton *mapMaskBtn;
 @property(nonatomic, strong) UIButton *mapMaskBtnLocation;
@@ -332,8 +330,9 @@
 - (void)refreshWithDataPoiDetail {
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     if (!dataModel.useNativeMap) {
-        if (!dataModel.staticImage) {
-            [self mapView:self.mapView loadFinished:NO message:@"static_image_null"];
+        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
+            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";
+            [self mapView:self.mapView loadFinished:NO message:message];
             return;
         }
         [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
