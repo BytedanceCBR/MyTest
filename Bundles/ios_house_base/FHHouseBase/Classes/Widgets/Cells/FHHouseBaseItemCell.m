@@ -584,7 +584,7 @@
         layout.top = YGPointValue(0);
         layout.justifyContent = YGJustifyFlexStart;
 //        layout.alignItems = YGAlignCenter;
-        layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth]);
+        layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
         layout.height = YGPointValue(MAIN_SMALL_CELL_HEIGHT);
     }];
     
@@ -607,7 +607,12 @@
     [titleView addSubview:self.mainTitleLabel];
     [titleView addSubview:self.tagTitleLabel];
     
-    _mainTitleLabel.font = [UIFont themeFontSemibold:18];
+    if ([TTDeviceHelper isScreenWidthLarge320]) {
+        _mainTitleLabel.font = [UIFont themeFontSemibold:18];
+    }else {
+        _mainTitleLabel.font = [UIFont themeFontSemibold:16];
+    }
+    
     [_mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(0);
