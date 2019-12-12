@@ -46,7 +46,7 @@
 
 @end
 
-@interface FHDetailFeedbackView () <UICollectionViewDelegate, UICollectionViewDataSource, HPGrowingTextViewDelegate>
+@interface FHDetailFeedbackView () <UICollectionViewDelegate, UICollectionViewDataSource, UITextViewDelegate>
 
 @property(nonatomic, strong) UIView *emptyView;
 @property(nonatomic, strong) UIView *containerView;
@@ -56,7 +56,8 @@
 
 @property(nonatomic, strong) UILabel *starInfoLabel;
 @property(nonatomic, strong) UILabel *lengthInfoLabel;
-@property(nonatomic, strong) SSThemedTextView *inputTextView;
+@property(nonatomic, strong) UITextView *inputTextView;
+@property(nonatomic, strong) UITextView *placeHolderTextView;
 @property(nonatomic, strong) UIView *inputTextViewBg;
 @property(nonatomic, strong) UICollectionView *collectionView;
 @property(nonatomic, strong) UIButton *btnConfirm;
@@ -195,14 +196,23 @@
     _inputTextView = [[UITextView alloc] init];
     _inputTextView.editable = YES;
     _inputTextView.backgroundColor = [UIColor clearColor];
-    _inputTextView.textContainerInset = UIEdgeInsetsMake(10, 0, 0, 0);
+    _inputTextView.textContainer.lineFragmentPadding = 0;
+    _inputTextView.textContainerInset = UIEdgeInsetsZero;
     _inputTextView.textColor = [UIColor themeGray1];
     _inputTextView.font = [UIFont themeFontRegular:14];
     _inputTextView.delegate = self;
-    _inputTextView.placeHolder=@"您可输入具体评价，以便经纪人为您提供更好的服务";
-    _inputTextView.placeHolderFont=[UIFont themeFontRegular:14];
-    _inputTextView.placeHolderColor=[UIColor themeGray4];
     [self.containerView addSubview:_inputTextView];
+
+    _placeHolderTextView = [[UITextView alloc] init];
+    _placeHolderTextView.text=@"您可输入具体评价，以便经纪人为您提供更好的服务";
+    _placeHolderTextView.editable = NO;
+    _placeHolderTextView.userInteractionEnabled = NO;
+    _placeHolderTextView.backgroundColor = [UIColor clearColor];
+    _placeHolderTextView.textContainer.lineFragmentPadding = 0;
+    _placeHolderTextView.textContainerInset = UIEdgeInsetsZero;
+    _placeHolderTextView.textColor = [UIColor themeGray4];
+    _placeHolderTextView.font = [UIFont themeFontRegular:14];
+    [self.containerView addSubview:_placeHolderTextView];
 
     _lengthInfoLabel = [self labelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     _lengthInfoLabel.text = [NSString stringWithFormat:@"%d/%d", 0, 300];
@@ -383,13 +393,18 @@
     [self.inputTextView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.inputTextViewBg).offset(10);
         make.right.mas_equalTo(self.inputTextViewBg).offset(-10);
-        make.top.mas_equalTo(self.inputTextViewBg);
+        make.top.mas_equalTo(self.inputTextViewBg).offset(10);
         make.height.mas_equalTo(40);
+    }];
+
+    [self.placeHolderTextView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.inputTextView);
     }];
 
     [self.lengthInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.inputTextViewBg.mas_right).offset(-10);
         make.bottom.mas_equalTo(self.inputTextViewBg.mas_bottom).mas_offset(-5);
+        make.height.mas_equalTo(20);
     }];
 
     [self.btnConfirm mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -513,14 +528,14 @@
     }
 
     if (tag >= 4) {
-        self.inputTextView.placeHolder = realtorEvaluatioinConfigModel.goodPlaceholder;
+        self.placeHolderTextView.text = realtorEvaluatioinConfigModel.goodPlaceholder;
         if (self.selectStar <=3 || self.selectStar < 0) {
             self.selections = realtorEvaluatioinConfigModel.goodTags;
             [self.collectionView reloadData];
         }
         [self checkConfirmButtonEnableState];
     } else {
-        self.inputTextView.placeHolder = realtorEvaluatioinConfigModel.badPlaceholder;
+        self.placeHolderTextView.text = realtorEvaluatioinConfigModel.badPlaceholder;
         [self checkConfirmButtonEnableState];
         if (self.selectStar > 3 || self.selectStar < 0) {
             self.selections = realtorEvaluatioinConfigModel.badTags;
@@ -567,7 +582,9 @@
 
 #pragma mark - UITextViewDelegate
 - (void)textViewDidChange:(UITextView *)textView {
-    [self.inputTextView showOrHidePlaceHolderTextView];
+    if (self.placeHolderTextView) {
+        self.placeHolderTextView.hidden = textView.text.length > 0 ? YES : NO;
+    }
     NSString *str = textView.text;
     if (str.length > MAX_LENGTH) {
         self.inputTextView.text = [str substringToIndex:MAX_LENGTH];
