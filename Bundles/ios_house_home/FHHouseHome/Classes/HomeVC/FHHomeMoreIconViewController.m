@@ -13,8 +13,12 @@
 #import <FHHomeEntrancesCell.h>
 #import <FHEnvContext.h>
 #import <UIColor+Theme.h>
+#import "UIViewController+Track.h"
+
 @interface FHHomeMoreIconViewController ()<TTRouteInitializeProtocol,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) UITableView* contentTableView;
+@property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
+
 @end
 
 @implementation FHHomeMoreIconViewController
@@ -23,6 +27,7 @@
     self = [super initWithRouteParamObj: paramObj];
     if (self) {
         self.contentTableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        self.ttTrackStayEnable = YES;
         self.contentTableView.delegate = self;
         self.contentTableView.dataSource = self;
     }
@@ -40,11 +45,78 @@
     [self.view addSubview:self.contentTableView];
     [self.contentTableView setBackgroundColor:[UIColor themeGray8]];
     [self.view setBackgroundColor:[UIColor themeGray8]];
-
+    self.contentTableView.scrollEnabled = NO;
     
     [self setupConstrains];
     
     [self.contentTableView registerClass:[FHHomeEntrancesCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeEntrancesCell class])];
+    
+    [self sendGoDetailTrace];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self.contentTableView reloadData];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self sendStayPageTrace];
+    [self tt_resetStayTime];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self sendStayPageTrace];
+    [self tt_resetStayTime];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+
+- (void)sendGoDetailTrace
+{
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSArray<FHConfigDataOpDataItemsModel> * opDataArray = (NSArray<FHConfigDataOpDataItemsModel> *)configData.toolboxData.items;
+    NSMutableDictionary *paramsTrace = [NSMutableDictionary new];
+    [paramsTrace setValue:@"maintab" forKey:@"enter_from"];
+    [paramsTrace setValue:@"tools_box" forKey:@"page_type"];
+    NSMutableString *opDataIdStr = [NSMutableString new];
+    BOOL isFirst = YES;
+    for (FHConfigDataOpDataItemsModel * model in opDataArray) {
+        if (isFirst && model.id) {
+            [opDataIdStr appendString:model.id];
+        }else
+        {
+            if (model.id) {
+                [opDataIdStr appendString:[NSString stringWithFormat:@"_%@",model.id]];
+            }
+        }
+        isFirst = NO;
+    }
+    [paramsTrace setValue:opDataIdStr forKey:@"tools_name"];
+    [FHEnvContext recordEvent:paramsTrace andEventKey:@"go_detail"];
+}
+
+- (void)sendStayPageTrace
+{
+    NSMutableDictionary *paramsTrace = [NSMutableDictionary new];
+    [paramsTrace setValue:@"maintab" forKey:@"enter_from"];
+    [paramsTrace setValue:@"tools_box" forKey:@"page_type"];
+    
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    paramsTrace[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHEnvContext recordEvent:paramsTrace andEventKey:@"stay_page"];
 }
 
 - (void)setupConstrains
@@ -80,7 +152,7 @@
     FHConfigDataOpDataModel *opData = [FHConfigDataOpDataModel new];
     opData.items = (NSArray<FHConfigDataOpDataItemsModel> *)configData.toolboxData.items;
     [cell.contentView setBackgroundColor:[UIColor themeGray8]];
-    [FHHomeCellHelper fillFHHomeEntrancesCell:cell withModel:opData];
+    [FHHomeCellHelper fillFHHomeEntrancesCell:cell withModel:opData withTraceParams:@{@"enter_from":@"tools_box"}];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
@@ -88,7 +160,7 @@
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [FHHomeEntrancesCell rowHeight];
+    return [FHHomeEntrancesCell rowHeight] * 12;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {

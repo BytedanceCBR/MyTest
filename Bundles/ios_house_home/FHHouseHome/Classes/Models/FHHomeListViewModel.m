@@ -238,6 +238,8 @@
     }
     
     [self setUpSubtableIndex:indexValue];
+    
+    [self bindItemVCTrace];
 }
 
 - (void)requestOriginData:(BOOL)isFirstChange isShowPlaceHolder:(BOOL)showPlaceHolder
@@ -260,6 +262,12 @@
     
     if (self.tableViewV.numberOfSections > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
         [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:NO];
+        
+        for (FHHomeItemViewController *vc in self.itemsVCArray) {
+            if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0){
+                [vc.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:NO];
+            }
+        }
     }
 }
 
@@ -533,6 +541,20 @@
         FHHomeItemViewController *itemVC = self.itemsVCArray[index];
         itemVC.enterType = enterType;
         [itemVC currentViewIsShowing];
+        
+        [self bindItemVCTrace];
+    }
+}
+
+- (void)bindItemVCTrace
+{
+    for (FHHomeItemViewController *vc in self.itemsVCArray) {
+        if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.previousHouseType) {
+            [vc initNotifications];
+        }else
+        {
+            [vc removeNotifications];
+        }
     }
 }
 
@@ -577,7 +599,7 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:KFHHomeSearchCellId];
         }
-        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         if (![cell.contentView.subviews containsObject:self.homeViewController.topBar]) {
             [cell.contentView addSubview:self.homeViewController.topBar];
             [self.homeViewController.topBar mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -587,6 +609,7 @@
                 make.height.mas_equalTo(50);
             }];
         }
+        [cell.contentView setBackgroundColor:[UIColor themeHomeColor]];
         return cell;
     }
     
@@ -788,6 +811,13 @@
     if (self.tableViewV.contentOffset.y < self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
         scrollView.contentOffset = CGPointZero;
         scrollView.showsVerticalScrollIndicator = NO;
+        
+        //将未滑动到置顶的子table置顶
+        for (FHHomeItemViewController *vc in self.itemsVCArray) {
+            if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
+                vc.tableView.contentOffset = CGPointZero;
+            }
+        }
     } else {
         //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
         scrollView.showsVerticalScrollIndicator = YES;

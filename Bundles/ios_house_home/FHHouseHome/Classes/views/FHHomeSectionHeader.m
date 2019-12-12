@@ -63,10 +63,10 @@ static const NSInteger kTopScrollViewTag = 100;
     
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
-                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray1],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontMedium:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
+                                     [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 12],NSFontAttributeName,
                                      [UIColor colorWithHexStr:@"#fe5500"],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
@@ -176,7 +176,7 @@ static const NSInteger kTopScrollViewTag = 100;
     }
     
     if ([TTDeviceHelper isScreenWidthLarge320]) {
-        _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count, kSegementedHeight);
+        _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * titles.count - leftPading, kSegementedPadingTop, (kSegementedOneWidth  + 5) * titles.count + (titles.count == 1 ? 10 : 0), kSegementedHeight);
     }else
     {
         if (titles.count < 3) {

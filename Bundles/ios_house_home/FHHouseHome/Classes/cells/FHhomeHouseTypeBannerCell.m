@@ -37,6 +37,8 @@
 
 - (void)refreshData:(FHHouseType)houseType
 {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     
     if (!dataModel.opData2list || dataModel.opData2list.count == 0) {
@@ -67,7 +69,7 @@
     CGFloat scaleRatio = 0.9;
 
     CGFloat imageWidth = viewWidth * scaleRatio;
-    CGFloat imageHeight = viewWidth * 69 / 82 * scaleRatio;
+    CGFloat imageHeight = viewWidth * scaleRatio * 0.92;
     
     for (NSInteger i = 0; i < items.count; i++) {
         if (i > 3) {
@@ -122,8 +124,8 @@
             if ([tagImageModel.url isKindOfClass:[NSString class]]) {
                 [hotImage bd_setImageWithURL:[NSURL URLWithString:tagImageModel.url]];
             }
-            [hotImage setBackgroundColor:[UIColor whiteColor]];
-            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 17 : 18.5), 3.5, 21, 11)];
+            [hotImage setBackgroundColor:[UIColor clearColor]];
+            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 25.5 : 27.5), 3.5, 30, 13)];
             [containView addSubview:hotImage];
         }
         
@@ -142,8 +144,7 @@
             if(titleLabel.text.length > 5)
             {
                 [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  5, 14, backImage.frame.size.width - 10, 20)];
-            }else
-            {
+            }else{
                 [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  10, 14, backImage.frame.size.width - 10, 20)];
             }
         }

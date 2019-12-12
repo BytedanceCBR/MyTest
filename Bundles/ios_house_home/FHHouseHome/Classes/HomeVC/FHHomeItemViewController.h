@@ -38,6 +38,7 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 
 @property (nonatomic, strong) NSMutableArray *traceNeedUploadCache;
 @property (nonatomic, strong) NSMutableDictionary *traceEnterCategoryCache;
+@property (nonatomic, strong) NSMutableDictionary *traceEnterTopTabache;
 @property (nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
 @property (nonatomic, assign) BOOL isShowRefreshTip; //是否主页的tip正在刷新，开始刷新为YES，tips收回之后变成NO
 
@@ -59,6 +60,10 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 - (void)currentViewIsShowing;
 
 - (void)currentViewIsDisappeared;
+
+- (void)initNotifications;
+
+- (void)removeNotifications;
 
 @end
 

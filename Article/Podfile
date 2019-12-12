@@ -53,7 +53,7 @@ def fhPods
 #    pod 'FHCommonUI', :path => '../../ios_common_ui'
     pod 'FHCommonUI', '0.0.9-alpha.1'
 
-    pod 'ios_house_im', '0.1.15-rc.2'
+    pod 'ios_house_im', '0.1.15-rc.4'
 #     pod 'ios_house_im' , :path => '../../ios_house_im'
 #     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '11359d0f859a7d3c7881252144954a0045d71600'
 
@@ -103,7 +103,7 @@ def appDevelopPods
     #----- 新分享库 -----
     pod 'AKShareServicePlugin', :path => '../AKPlugins/AKShareServicePlugin', :inhibit_warnings => false
     
-    pod 'TTShare' , :path => '../AKPlugins/TTShare'  , :subspects => [  # '0.3.3'
+    pod 'TTShare' , :path => '../AKPlugins/TTShare'  , :subspecs => [  # '0.3.3'
     'TTShareBusiness/TTShareWeChatBusiness',
     'TTShareBusiness/TTShareQQBusiness',
     'TTShareBusiness/TTShareCopyBusiness',
