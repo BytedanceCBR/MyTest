@@ -55,7 +55,7 @@ def fhPods
 
     # pod 'ios_house_im', '0.1.15-rc.4'
 #     pod 'ios_house_im' , :path => '../../ios_house_im'
-     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => 'a43d62c4ff0f550dd9fd928ca363841e82b0a1fe'
+     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => 'f57e7c2e96d07dc986a0bb2c59642f739976707a'
 
 
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
