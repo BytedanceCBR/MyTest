@@ -37,6 +37,7 @@
 #import <FHUtils.h>
 #import "FHHomeBaseScrollView.h"
 #import <FHHomeMainViewController.h>
+#import <FHHouseBase/FHHomeScrollBannerView.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 

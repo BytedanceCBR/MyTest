@@ -111,7 +111,9 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         if (reuseIdentifier && [reuseIdentifier isEqualToString:@"FHHomeSmallImageItemCell"]) {
-            [self initSmallImageUI];
+            [self initSmallImageUI:YES];
+        }else if (reuseIdentifier && [reuseIdentifier isEqualToString:@"FHHouseBaseItemCell"]) {
+            [self initSmallImageUI:NO];
         }else if (reuseIdentifier && [reuseIdentifier isEqualToString:@"FHHomeRentHouseItemCell"]) {
             [self initRentHouseImageUI];
         }else
@@ -479,16 +481,17 @@
     
 }
 
--(void)initSmallImageUI
+-(void)initSmallImageUI:(BOOL)isHomePage
 {
-    self.contentView.backgroundColor = [UIColor themeGray8];
-    
+    CGFloat leftMargin = isHomePage ? HOR_MARGIN : 9;
+    CGFloat rightMargin = isHomePage ? HOR_MARGIN : 12;
+    self.contentView.backgroundColor = isHomePage ? [UIColor themeGray8] : [UIColor whiteColor];
     [self.contentView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.flexDirection = YGFlexDirectionRow;
-        layout.paddingLeft = YGPointValue(HOR_MARGIN);
-        layout.paddingRight = YGPointValue(HOR_MARGIN);
-        layout.paddingTop = YGPointValue(0);
+
+        layout.paddingLeft = YGPointValue(leftMargin);
+        layout.paddingRight = YGPointValue(leftMargin);
 //        layout.paddingTop = YGPointValue(10);
         layout.width = YGPointValue(SCREEN_WIDTH);
         layout.height = YGPointValue(MAIN_SMALL_CELL_HEIGHT);
@@ -511,7 +514,7 @@
         layout.flexGrow = 1;
     }];
     [self.houseCellBackView setBackgroundColor:[UIColor whiteColor]];
-    
+    self.houseCellBackView.hidden = !isHomePage;
     
     self.leftInfoView = [[UIView alloc] init];
     [_leftInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -670,7 +673,7 @@
         layout.isEnabled = YES;
         layout.flexGrow = 1;
         layout.flexDirection = YGFlexDirectionColumn;
-        layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + 20);
+        layout.width = YGPointValue(YOGA_RIGHT_PRICE_WIDITH + rightMargin);
         layout.height = YGPointValue(MAIN_SMALL_CELL_HEIGHT);
         layout.right = YGPointValue(0);
         layout.top = YGPointValue(0);
@@ -682,7 +685,7 @@
 
     [_closeBtn configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.right = YGPointValue(20);
+        layout.right = YGPointValue(rightMargin);
         layout.marginTop = YGPointValue(14);
         layout.width = YGPointValue(16);
         layout.height = YGPointValue(16);
@@ -692,7 +695,7 @@
     [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(6);
-        layout.right = YGPointValue(20);
+        layout.right = YGPointValue(rightMargin);
         layout.maxWidth = YGPointValue(YOGA_RIGHT_PRICE_WIDITH);
     }];
 
@@ -1254,12 +1257,16 @@
     }else if ([data isKindOfClass:[FHSearchHouseItemModel class]])
     {
         FHSearchHouseItemModel *commonModel = (FHSearchHouseItemModel *)data;
+        self.closeBtn.hidden = YES;
+
+        self.priceLabel.text = commonModel.pricePerSqmNum;
+        self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
+        
         self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
         self.mainTitleLabel.text = commonModel.displayTitle;
         self.subTitleLabel.text = commonModel.displayDescription;
         NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:commonModel.tags];
-        self.tagLabel.attributedText =  attributeString;
-        
+
         self.priceLabel.text = commonModel.displayPricePerSqm;
         //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
         FHImageModel *imageModel = commonModel.images.firstObject;
@@ -1267,11 +1274,19 @@
         
         FHHouseType houseType = commonModel.houseType.integerValue;
         if (houseType == FHHouseTypeSecondHandHouse) {
+            
+            self.tagLabel.attributedText =  attributeString;
+            
             FHImageModel *imageModel = commonModel.houseImage.firstObject;
             [self updateMainImageWithUrl:imageModel.url];
             self.subTitleLabel.text = commonModel.displaySubtitle;
             self.priceLabel.text = commonModel.displayPrice;
-            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+            if (commonModel.originPrice) {
+                self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
+            }else{
+                self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+            }
+            [self.pricePerSqmLabel.yoga markDirty];
             if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
                 self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
                 self.imageTagLabel.text = commonModel.houseImageTag.text;
@@ -1284,6 +1299,8 @@
             
         } else if (houseType == FHHouseTypeRentHouse) {
             
+            self.tagLabel.attributedText =  attributeString;
+
             NSArray *firstRow = [commonModel.bottomText firstObject];
             NSDictionary *bottomText = nil;
             if ([firstRow isKindOfClass:[NSArray class]]) {
@@ -1298,6 +1315,21 @@
             self.subTitleLabel.text = commonModel.subtitle;
             self.priceLabel.text = commonModel.pricing;
             self.pricePerSqmLabel.text = nil;
+
+            [self.mainTitleLabel.yoga markDirty];
+            [self.subTitleLabel.yoga markDirty];
+            [self.rightInfoView.yoga markDirty];
+
+            if ([TTDeviceHelper isScreenWidthLarge320]) {
+                _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
+                _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
+                _pricePerSqmLabel.textColor = [UIColor themeRed4];
+            }else {
+                _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
+                _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
+                _pricePerSqmLabel.textColor = [UIColor themeRed4];
+            }
+            
             FHImageModel *imageModel = [commonModel.houseImage firstObject];
             [self updateMainImageWithUrl:imageModel.url];
             
@@ -1309,14 +1341,47 @@
             }else {
                 self.imageTagLabelBgView.hidden = YES;
             }
+        } else if (houseType == FHHouseTypeNeighborhood) {
+            
+            self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
+            FHImageModel *imageModel = commonModel.images.firstObject;
+            [self updateMainImageWithUrl:imageModel.url];
+            
+            self.imageTagLabelBgView.hidden = YES;
+            [self updateImageTopLeft];
+            
+            self.mainTitleLabel.text = commonModel.displayTitle;
+            self.subTitleLabel.text = commonModel.displaySubtitle;
+            self.tagLabel.textColor = [UIColor themeGray2];
+            self.tagLabel.font = [UIFont themeFontRegular:12];
+            self.tagLabel.text = commonModel.displayStatsInfo;
+            self.priceLabel.text = commonModel.displayPrice;
+            self.pricePerSqmLabel.text = nil;
+            if (self.tagLabel.yoga.marginLeft.value != 0) {
+                [self.tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                    layout.marginLeft = YGPointValue(0);
+                }];
+            }
+            if ([TTDeviceHelper isScreenWidthLarge320]) {
+                _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
+                _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
+                _pricePerSqmLabel.textColor = [UIColor themeRed4];
+            }else {
+                _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
+                _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
+                _pricePerSqmLabel.textColor = [UIColor themeRed4];
+            }
+            
+            [self hideRecommendReason];
+//            [self updateTitlesLayout:YES];
         } else {
             self.pricePerSqmLabel.text = @"";
         }
         
         [self hideRecommendReason];
         self.titleSize = [[self class]titleSizeWithTagList:commonModel.tags titleStr:commonModel.title];
-        [self updateTitlesLayout:attributeString.length > 0];
-        
+        [self updateSamllTitlesLayout:attributeString.length > 0];
+
         [self.contentView.yoga applyLayoutPreservingOrigin:NO];
     }
 }
@@ -1395,9 +1460,9 @@
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
         isLastCell = model.isLastCell;
         CGFloat reasonHeight = [model showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-        return (isLastCell ? 125 : 105) + reasonHeight;
+        return (isLastCell ? 108 : 88) + reasonHeight;
     }
-    return 105;
+    return 88;
 }
 
 #pragma mark 二手房
