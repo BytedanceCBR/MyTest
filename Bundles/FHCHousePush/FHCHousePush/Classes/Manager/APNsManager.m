@@ -159,8 +159,9 @@ static APNsManager *_sharedManager = nil;
         if ([[self class] f100ContentHasGroupId:paramObj.allParams]) {
             [param setValue:[[self class] f100ContentGroupId:paramObj.allParams] forKey:@"group_id"];
         }
-
-        param[@"title_id"] = paramObj.allParams[@"title_id"]?:@"0";
+        
+        NSString *titleId = [NSString stringWithFormat:@"%@",paramObj.allParams[@"title_id"]];
+        param[@"title_id"] = @([titleId longLongValue]);
         param[@"event_type"] = @"house_app2c_v2";
 
         [TTTracker eventV3:@"push_click" params:param];
