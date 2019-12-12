@@ -580,11 +580,11 @@
         layout.position = YGPositionTypeAbsolute;
         layout.left = YGPointValue(117+INFO_TO_ICON_MARGIN);
         layout.flexDirection = YGFlexDirectionColumn;
-//        layout.flexGrow = 1;
+        layout.flexGrow = 1;
         layout.top = YGPointValue(0);
         layout.justifyContent = YGJustifyFlexStart;
 //        layout.alignItems = YGAlignCenter;
-        layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
+        layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth]);
         layout.height = YGPointValue(MAIN_SMALL_CELL_HEIGHT);
     }];
     
@@ -1038,7 +1038,7 @@
         
         _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
         _pricePerSqmLabel.textColor = [UIColor themeGray1];
-        
+        _pricePerSqmLabel.font = [UIFont themeFontRegular:12];
         self.priceLabel.text = commonModel.displayPrice;
         if (commonModel.originPrice) {
             self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
