@@ -578,6 +578,7 @@
 - (void)close {
     [self hide];
     [self traceRealtorEvaluatePopupClick:@"cancel"];
+    [[ToastManager manager] showToast:@"经纪人尚未评价"];
 }
 
 #pragma mark - UITextViewDelegate
