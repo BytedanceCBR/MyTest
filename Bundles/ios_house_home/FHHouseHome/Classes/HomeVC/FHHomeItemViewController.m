@@ -107,6 +107,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     self.tableView.mj_footer = self.refreshFooter;
     
+    [self.refreshFooter setUpWhiteBackGroud];
+    
     [self.refreshFooter setBackgroundColor:[UIColor themeHomeColor]];
     [self.tableView setBackgroundColor:[UIColor themeHomeColor]];
     
@@ -324,7 +326,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableView.mj_footer.hidden = NO;
     if (hasMore == NO) {
-        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:3];
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:0];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableView.mj_footer endRefreshing];
