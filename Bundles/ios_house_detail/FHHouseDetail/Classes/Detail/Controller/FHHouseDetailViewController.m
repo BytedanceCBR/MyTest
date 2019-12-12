@@ -602,6 +602,9 @@
 }
 
 - (void)applicationDidBecomeActive {
+
+    [self addFeedBackView];
+
     // 反馈弹窗
     if([self isShowFeedbackView]){
         self.isPhoneCallPickUp = NO;
