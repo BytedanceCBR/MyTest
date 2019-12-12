@@ -529,18 +529,18 @@
 
     if (tag >= 4) {
         self.placeHolderTextView.text = realtorEvaluatioinConfigModel.goodPlaceholder;
-        if (self.selectStar <=3 || self.selectStar < 0) {
+//        if (self.selectStar <=3 || self.selectStar < 0) {
             self.selections = realtorEvaluatioinConfigModel.goodTags;
             [self.collectionView reloadData];
-        }
+//        }
         [self checkConfirmButtonEnableState];
     } else {
         self.placeHolderTextView.text = realtorEvaluatioinConfigModel.badPlaceholder;
         [self checkConfirmButtonEnableState];
-        if (self.selectStar > 3 || self.selectStar < 0) {
+//        if (self.selectStar > 3 || self.selectStar < 0) {
             self.selections = realtorEvaluatioinConfigModel.badTags;
             [self.collectionView reloadData];
-        }
+//        }
     }
     self.selectStar = tag;
 
