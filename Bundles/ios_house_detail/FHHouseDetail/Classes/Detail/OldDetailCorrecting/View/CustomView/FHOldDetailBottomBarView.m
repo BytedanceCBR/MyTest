@@ -22,7 +22,7 @@
 
 @property(nonatomic , strong) UIControl *leftView;
 @property(nonatomic , strong) UIImageView *avatarView;
-@property(nonatomic , strong) UIImageView *identifyView;
+//@property(nonatomic , strong) UIImageView *identifyView;
 @property(nonatomic , strong) UILabel *nameLabel;
 @property(nonatomic , strong) UILabel *agencyLabel;
 @property(nonatomic , strong) FHLoadingButton *contactBtn;
@@ -62,7 +62,7 @@
     }];
     self.leftView.hidden = YES;
     [self.leftView addSubview:self.avatarView];
-    [self.leftView addSubview:self.identifyView];
+//    [self.leftView addSubview:self.identifyView];
     [self.leftView addSubview:self.nameLabel];
     [self.leftView addSubview:self.agencyLabel];
     [self.leftView addSubview:self.licenceIcon];
@@ -78,12 +78,12 @@
         make.width.height.mas_equalTo(48);
     }];
     CGFloat ratio = 0;
-    [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.avatarView).mas_offset(2);
-        make.centerX.mas_equalTo(self.avatarView);
-        make.height.mas_equalTo(14);
-        make.width.mas_equalTo(14 * ratio);
-    }];
+//    [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.mas_equalTo(self.avatarView).mas_offset(2);
+//        make.centerX.mas_equalTo(self.avatarView);
+//        make.height.mas_equalTo(14);
+//        make.width.mas_equalTo(14 * ratio);
+//    }];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
         make.top.mas_equalTo(self.avatarView).offset(2);
@@ -202,7 +202,7 @@
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
 
     FHDetailContactImageTagModel *tag = contactPhone.imageTag;
-    [self refreshIdentifyView:self.identifyView withUrl:tag.imageUrl];
+//    [self refreshIdentifyView:self.identifyView withUrl:tag.imageUrl];
 
     NSString *realtorName = contactPhone.realtorName;
     if (contactPhone.realtorName.length > 0) {
@@ -340,13 +340,13 @@
     return _avatarView;
 }
 
-- (UIImageView *)identifyView
-{
-    if (!_identifyView) {
-        _identifyView = [[UIImageView alloc]init];
-    }
-    return _identifyView;
-}
+//- (UIImageView *)identifyView
+//{
+//    if (!_identifyView) {
+//        _identifyView = [[UIImageView alloc]init];
+//    }
+//    return _identifyView;
+//}
 
 - (UILabel *)nameLabel
 {
@@ -387,7 +387,7 @@
         // 阴影偏移量 默认为(0,3)
         _contactBtn.layer.shadowOffset = CGSizeMake(0, 4);
         // 阴影透明度
-        _contactBtn.layer.shadowOpacity = .5;
+        _contactBtn.layer.shadowOpacity = .3;
         _contactBtn.backgroundColor =[UIColor colorWithHexStr:@"#fe5500"];
      
     }
@@ -400,7 +400,7 @@
         _imChatBtn.layer.cornerRadius = 22;
         _imChatBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#ff9629"].CGColor;
         _imChatBtn.layer.shadowOffset = CGSizeMake(0, 4);
-        _imChatBtn.layer.shadowOpacity = .5;
+        _imChatBtn.layer.shadowOpacity = .3;
         _imChatBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
         if ([TTDeviceHelper is568Screen]) {
             _imChatBtn.titleLabel.font = [UIFont themeFontRegular:14];

@@ -128,6 +128,7 @@
         _foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
         _foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];
         _foldButton.keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
+         _foldButton.keyLabel.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:_foldButton];
         [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView.mas_bottom);
@@ -475,8 +476,8 @@
             make.edges.equalTo(self.contentView);
         }];
         
-        self.layer.cornerRadius = 2;
-        self.layer.masksToBounds = YES;
+        self.contentView.layer.cornerRadius = 2;
+//        self.contentView.layer.masksToBounds = YES;
     }
     return self;
 }
@@ -802,7 +803,9 @@
     FHRealtorTag *tagInfo = [self.model.realtorTags objectAtIndex:indexPath.row];
     
     tagCell.tagLabel.text = tagInfo.text;
-    tagCell.backgroundColor = [UIColor colorWithHexStr:tagInfo.backgroundColor];
+    tagCell.contentView.backgroundColor = [UIColor colorWithHexStr:tagInfo.backgroundColor];
+    tagCell.contentView.layer.borderColor = [UIColor colorWithHexStr:tagInfo.borderColor].CGColor;
+    tagCell.contentView.layer.borderWidth = .3;
     tagCell.tagLabel.textColor = [UIColor colorWithHexStr:tagInfo.fontColor];
     return tagCell;
 }

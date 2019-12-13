@@ -22,7 +22,7 @@
 @property(nonatomic, strong) UIControl *realtorInfoContainerView;
 @property(nonatomic, strong) UIControl *realtorLabelContainer;
 @property(nonatomic, strong) UIImageView *avatarView;
-@property(nonatomic, strong) UIImageView *identifyView;
+//@property(nonatomic, strong) UIImageView *identifyView;
 @property(nonatomic, strong) UIButton *licenceIcon;
 @property(nonatomic, strong) UIView *verticalDivider;
 @property(nonatomic, strong) UIButton *callBtn;
@@ -39,7 +39,7 @@
     if (data.commentHeight <= 0) {
         [FHDetailHouseReviewCommentItemView calculateHeight:data isExpand:data.isExpended];
     }
-    return 42 + 10 + data.commentHeight;
+    return 42 + 20 + data.commentHeight;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -61,8 +61,8 @@
     _avatarView.clipsToBounds = YES;
     [self.realtorInfoContainerView addSubview:_avatarView];
 
-    _identifyView = [[UIImageView alloc] init];
-    [self.realtorInfoContainerView addSubview:_identifyView];
+//    _identifyView = [[UIImageView alloc] init];
+//    [self.realtorInfoContainerView addSubview:_identifyView];
 
     _realtorLabelContainer = [[UIControl alloc] init];
     [self.realtorInfoContainerView addSubview:_realtorLabelContainer];
@@ -80,15 +80,17 @@
     [self.realtorLabelContainer addSubview:_nameView];
 
     _verticalDivider = [[UIView alloc] init];
-    _verticalDivider.backgroundColor = [UIColor themeGray6];
+    _verticalDivider.backgroundColor = [UIColor colorWithHexStr:@"#f1f1f0"];
+    _verticalDivider.layer.borderColor = [UIColor colorWithHexStr:@"#d6d6d6"].CGColor;
+    _verticalDivider.layer.borderWidth = 0.5;
     [self.realtorLabelContainer addSubview:_verticalDivider];
 
-    self.agencyView = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    self.agencyView = [UILabel createLabel:@"" textColor:@"" fontSize:10];
     _agencyView.textColor = [UIColor themeGray3];
-    _agencyView.textAlignment = NSTextAlignmentLeft;
-    [self.realtorLabelContainer addSubview:_agencyView];
+    _agencyView.textAlignment = NSTextAlignmentCenter;
+    [self.verticalDivider addSubview:_agencyView];
 
-    _houseReviewView = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _houseReviewView = [UILabel createLabel:@"" textColor:@"" fontSize:10];
     _houseReviewView.textColor = [UIColor themeGray3];
     _houseReviewView.textAlignment = NSTextAlignmentLeft;
     [self.realtorLabelContainer addSubview:_houseReviewView];
@@ -108,9 +110,10 @@
     _commentView = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     _commentView.delegate = self;
     _commentView.verticalAlignment = TTTAttributedLabelVerticalAlignmentTop;
-    _commentView.frame = CGRectMake(20, 52, SCREEN_WIDTH - 70, 0);
+    _commentView.frame = CGRectMake(20, 62, SCREEN_WIDTH - 70, 0);
     [self addSubview:_commentView];
 
+    
     [_licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
     [_callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
     [_imBtn addTarget:self action:@selector(imClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -128,12 +131,12 @@
         make.left.mas_equalTo(20);
     }];
 
-    [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.avatarView).mas_offset(2);
-        make.centerX.mas_equalTo(self.avatarView);
-        make.height.mas_equalTo(14);
-        make.width.mas_equalTo(0);
-    }];
+//    [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.mas_equalTo(self.avatarView).mas_offset(2);
+//        make.centerX.mas_equalTo(self.avatarView);
+//        make.height.mas_equalTo(14);
+//        make.width.mas_equalTo(0);
+//    }];
 
     [self.realtorLabelContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avatarView.mas_right).offset(10);
@@ -151,20 +154,18 @@
 
     [self.verticalDivider mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.nameView.mas_right).offset(6);
-        make.width.mas_equalTo(1);
-        make.height.mas_equalTo(14);
         make.centerY.mas_equalTo(self.nameView);
     }];
 
     [self.agencyView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.nameView);
-        make.height.mas_equalTo(20);
-        make.left.mas_equalTo(self.verticalDivider.mas_right).offset(6);
-        make.right.mas_lessThanOrEqualTo(self.licenceIcon.mas_left).offset(5);
+        make.top.mas_equalTo(self.verticalDivider).offset(1);
+        make.bottom.mas_equalTo(self.verticalDivider).offset(-1);
+        make.left.mas_equalTo(self.verticalDivider).offset(1);
+        make.right.mas_equalTo(self.verticalDivider).offset(-1);
     }];
 
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.agencyView.mas_right).offset(5);
+        make.left.mas_equalTo(self.verticalDivider.mas_right).offset(5);
         make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.nameView);
         make.right.mas_lessThanOrEqualTo(self.realtorLabelContainer);
@@ -180,38 +181,38 @@
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(-20);
-        make.centerY.mas_equalTo(self.avatarView);
+        make.top.mas_equalTo(self.nameView);
     }];
 
     [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
-        make.centerY.mas_equalTo(self.avatarView);
+        make.top.mas_equalTo(self.nameView);
     }];
 }
 
-- (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl {
-    if (!identifyView) {
-        return;
-    }
-    if (imageUrl.length > 0) {
-        [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:imageUrl] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
-            if (!error && image) {
-                identifyView.image = image;
-                CGFloat ratio = 0;
-                if (image.size.height > 0) {
-                    ratio = image.size.width / image.size.height;
-                }
-                [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.width.mas_equalTo(14 * ratio);
-                }];
-            }
-        }];
-        identifyView.hidden = NO;
-    } else {
-        identifyView.hidden = YES;
-    }
-}
+//- (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl {
+//    if (!identifyView) {
+//        return;
+//    }
+//    if (imageUrl.length > 0) {
+//        [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:imageUrl] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+//            if (!error && image) {
+//                identifyView.image = image;
+//                CGFloat ratio = 0;
+//                if (image.size.height > 0) {
+//                    ratio = image.size.width / image.size.height;
+//                }
+//                [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {
+//                    make.width.mas_equalTo(14 * ratio);
+//                }];
+//            }
+//        }];
+//        identifyView.hidden = NO;
+//    } else {
+//        identifyView.hidden = YES;
+//    }
+//}
 
 - (void)refreshWithData:(NSObject *)data {
     if (self.curData == data || ![data isKindOfClass:[FHDetailHouseReviewCommentModel class]]) {
@@ -228,7 +229,7 @@
     self.nameView.text = modelData.realtorInfo.realtorName ?: @"";
     self.agencyView.text = modelData.realtorInfo.agencyName ?: @"";
     self.licenceIcon.hidden = isEmptyString(modelData.realtorInfo.businessLicense) && isEmptyString(modelData.realtorInfo.certificate);
-    [self refreshIdentifyView:self.identifyView withUrl:modelData.realtorInfo.imageTag.imageUrl];
+//    [self refreshIdentifyView:self.identifyView withUrl:modelData.realtorInfo.imageTag.imageUrl];
 
     self.commentView.height = self.curData.commentHeight;
 
@@ -261,7 +262,7 @@
                                                               numberOfLines:numberOfLines];
 
         CGSize size1 = [TTTAttributedLabel sizeThatFitsAttributedString:attributedText1
-                                                        withConstraints:CGSizeMake(SCREEN_WIDTH - 40, FLT_MAX)
+                                                        withConstraints:CGSizeMake(SCREEN_WIDTH - 70, FLT_MAX)
                                                  limitedToNumberOfLines:numberOfLines];
 
         CGSize size2 = [TTTAttributedLabel sizeThatFitsAttributedString:attributedText2
@@ -291,7 +292,8 @@
                                                                  contentColor:[UIColor themeGray1]
                                                                         color:[UIColor themeRed3]];
         self.commentView.attributedTruncationToken = truncationToken;
-
+        self.commentView.linkAttributes = @{NSForegroundColorAttributeName: [UIColor themeGray2], NSFontAttributeName: [UIFont themeFontRegular:14]};
+        self.commentView.activeLinkAttributes = @{NSForegroundColorAttributeName: [UIColor themeGray2], NSFontAttributeName: [UIFont themeFontRegular:14]};
         self.commentView.numberOfLines = 3;
         [self.commentView setText:attributedText];
         return;
@@ -345,7 +347,7 @@
         if (attrStr) {
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
-            [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
+            [attributes setValue:[UIColor themeGray2] forKey:NSForegroundColorAttributeName];
             [attributes setValue:font forKey:NSFontAttributeName];
 
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];

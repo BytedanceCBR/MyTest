@@ -13,6 +13,7 @@
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 #import <FHHouseBase/FHImageModel.h>
 #import <FHHouseBase/FHHouseCoreInfoModel.h>
+#import "FHDetailHouseTitleModel.h"
 
 @class FHDetailNewDataSmallImageGroupModel;
 
@@ -52,6 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel *> *smallImageGroup;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel *> *houseImage;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel *> *instantHouseImages;//列表页小图
+@property (strong, nonatomic) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型
 @property (nonatomic, assign) BOOL isInstantData;
 @end
 
@@ -89,6 +91,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, copy , nullable) NSString *backgroundColor;
 @property (nonatomic, copy , nullable) NSString *fontColor;
+@property (nonatomic, copy , nullable) NSString *borderColor;
 @end
 
 @protocol FHDetailContactModel<NSObject>
@@ -251,7 +254,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, assign) FHHouseShdowImageScopeType shdowImageScopeType;
 //根据houseModelType将多个cell分为一个模块
 @property (nonatomic, assign)FHHouseModelType houseModelType;
-@property (nonatomic, strong) UIImage *shadowImage;
+
 
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryActiveCountInfoModel *activeCountInfo;

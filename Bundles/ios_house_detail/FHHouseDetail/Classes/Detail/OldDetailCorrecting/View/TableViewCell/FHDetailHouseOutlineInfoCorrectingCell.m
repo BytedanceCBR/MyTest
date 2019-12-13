@@ -21,7 +21,7 @@
 #import <TTSandBoxHelper.h>
 #import "FHDetailFoldViewButton.h"
 
-#define foldHeight 150 //当文本高度+标题高度（36）+headerView高度（52+18）>367折叠
+#define foldHeight 367 //当文本高度+标题高度（36）+headerView高度（52+18）>367折叠
 
 @interface FHDetailHouseOutlineInfoCorrectingCell ()
 

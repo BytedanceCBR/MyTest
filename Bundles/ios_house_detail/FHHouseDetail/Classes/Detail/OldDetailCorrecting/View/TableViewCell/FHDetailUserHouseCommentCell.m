@@ -93,6 +93,9 @@
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.contentView);
         }];
+        [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.shadowImage).offset(12);
+        }];
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -155,14 +158,14 @@
         _userName.textAlignment = NSTextAlignmentLeft;
         [self addSubview:_userName];
 
-        _userContent = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+        _userContent = [UILabel createLabel:@"" textColor:@"" fontSize:10];
         _userContent.textColor = [UIColor themeGray3];
         _userContent.textAlignment = NSTextAlignmentLeft;
         _userContent.numberOfLines = 0;
         [self addSubview:_userContent];
 
         _commentData = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-        _commentData.textColor = [UIColor themeGray1];
+        _commentData.textColor = [UIColor themeGray2];
         _commentData.textAlignment = NSTextAlignmentLeft;
         _commentData.numberOfLines = 0;
         [_commentData sizeToFit];
