@@ -234,9 +234,11 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
             FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
             [[FHIMConfigManager shareInstance] registerDelegate:delegate];
 
+            [IMManager shareInstance].imAlertViewListener = [FHIMAlertViewListenerImpl shareInstance];
+
             NSString* uid = [[TTAccount sharedAccount] userIdString];
             [[IMManager shareInstance] startupWithUid:uid];
-            [IMManager shareInstance].imAlertViewListener = [FHIMAlertViewListenerImpl shareInstance];
+
         });
     }
 }

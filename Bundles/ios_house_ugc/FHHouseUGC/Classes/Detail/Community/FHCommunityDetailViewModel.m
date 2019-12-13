@@ -352,6 +352,9 @@
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
     dict[TRACER_KEY] = tracerDict;
+    dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
+    dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
+    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
 }

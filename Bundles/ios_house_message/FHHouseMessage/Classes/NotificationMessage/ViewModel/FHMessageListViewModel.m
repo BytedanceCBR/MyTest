@@ -145,11 +145,7 @@
     }
 
     if (!cell) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"preventCrashCellIdentifier"];
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"preventCrashCellIdentifier"];
-        }
-        cell.textLabel.text = @"";
+        cell = [UITableViewCell new];
     }
     return cell;
 }
