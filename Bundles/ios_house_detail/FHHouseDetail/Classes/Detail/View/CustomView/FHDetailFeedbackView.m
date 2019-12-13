@@ -204,7 +204,7 @@
     [self.containerView addSubview:_inputTextView];
 
     _placeHolderTextView = [[UITextView alloc] init];
-    _placeHolderTextView.text=@"您可输入具体评价，以便经纪人为您提供更好的服务";
+    _placeHolderTextView.text = @"您可输入具体评价，以便经纪人为您提供更好的服务";
     _placeHolderTextView.editable = NO;
     _placeHolderTextView.userInteractionEnabled = NO;
     _placeHolderTextView.backgroundColor = [UIColor clearColor];
@@ -234,7 +234,7 @@
 }
 
 
-- (void)checkConfirmButtonEnableState{
+- (void)checkConfirmButtonEnableState {
     BOOL enabled = YES;
 
     if (self.selectStar < 4) {
@@ -530,16 +530,16 @@
     if (tag >= 4) {
         self.placeHolderTextView.text = realtorEvaluatioinConfigModel.goodPlaceholder;
 //        if (self.selectStar <=3 || self.selectStar < 0) {
-            self.selections = realtorEvaluatioinConfigModel.goodTags;
-            [self.collectionView reloadData];
+        self.selections = realtorEvaluatioinConfigModel.goodTags;
+        [self.collectionView reloadData];
 //        }
         [self checkConfirmButtonEnableState];
     } else {
         self.placeHolderTextView.text = realtorEvaluatioinConfigModel.badPlaceholder;
         [self checkConfirmButtonEnableState];
 //        if (self.selectStar > 3 || self.selectStar < 0) {
-            self.selections = realtorEvaluatioinConfigModel.badTags;
-            [self.collectionView reloadData];
+        self.selections = realtorEvaluatioinConfigModel.badTags;
+        [self.collectionView reloadData];
 //        }
     }
     self.selectStar = tag;
@@ -555,10 +555,10 @@
     UIButton *btn = (UIButton *) sender;
     NSInteger tag = btn.tag;
     [self hide];
-    [self traceRealtorEvaluatePopupClick:[NSString stringWithFormat:@"%i", tag]];
+
 
     NSMutableArray *tags = [[NSMutableArray alloc] init];
-    for (int i = 0; i <  self.selectionedArray.count; i++) {
+    for (int i = 0; i < self.selectionedArray.count; i++) {
         if ([[self.selectionedArray objectAtIndex:i] isKindOfClass:[FHRealtorEvaluatioinTagModel class]]) {
             FHRealtorEvaluatioinTagModel *model = [self.selectionedArray objectAtIndex:i];
             [tags addObject:model.id];
@@ -573,15 +573,17 @@
                     [[ToastManager manager] showToast:@"提交失败"];
                 }
             }];
+    [self traceRealtorEvaluatePopupClick:@"confirm" starNum:[NSString stringWithFormat:@"%i", tag]];
 }
 
 - (void)close {
     [self hide];
-    [self traceRealtorEvaluatePopupClick:@"cancel"];
+    [self traceRealtorEvaluatePopupClick:@"cancel" starNum:@"0"];
     [[ToastManager manager] showToast:@"经纪人尚未评价"];
 }
 
 #pragma mark - UITextViewDelegate
+
 - (void)textViewDidChange:(UITextView *)textView {
     if (self.placeHolderTextView) {
         self.placeHolderTextView.hidden = textView.text.length > 0 ? YES : NO;
@@ -696,11 +698,12 @@
     TRACK_EVENT(@"realtor_evaluate_popup_show", tracerDic);
 }
 
-- (void)traceRealtorEvaluatePopupClick:(NSString *)position {
+- (void)traceRealtorEvaluatePopupClick:(NSString *)position starNum:(NSString *)num {
     NSMutableDictionary *tracerDic = [self.viewModel.detailTracerDic mutableCopy];
     tracerDic[@"realtor_id"] = self.realtorId ? self.realtorId : @"be_null";
     tracerDic[@"click_position"] = position ? position : @"be_null";
     tracerDic[@"request_id"] = self.requestId ?: UT_BE_NULL;
+    tracerDic[@"star_num"] = num ? num : @"be_null";
     TRACK_EVENT(@"realtor_evaluate_popup_click", tracerDic);
 }
 
