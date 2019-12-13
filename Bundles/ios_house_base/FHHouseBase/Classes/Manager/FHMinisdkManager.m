@@ -118,18 +118,17 @@
         
         if(isCompleted){
             wSelf.alreadyReport = YES;
-            [[ToastManager manager] showToast:@"恭喜你，完成任务"];
-        }else{
-            [[ToastManager manager] showToast:@"一台设备不能重复完成"];
+//            [[ToastManager manager] showToast:@"恭喜你，完成任务"];
         }
+//        else{
+//            [[ToastManager manager] showToast:@"一台设备不能重复完成"];
+//        }
     };
     
     //当前用户已经登录
     if ([TTAccountManager isLogin]) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if(wSelf.alreadyReport){
-                //已经上报成功了
-                [[ToastManager manager] showToast:@"之前已经上报过了"];
                 return;
             }
             
@@ -151,8 +150,6 @@
             if ([TTAccountManager isLogin]) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     if(wSelf.alreadyReport){
-                        //已经上报成功了
-                        [[ToastManager manager] showToast:@"之前已经上报过了"];
                         return;
                     }
                     
