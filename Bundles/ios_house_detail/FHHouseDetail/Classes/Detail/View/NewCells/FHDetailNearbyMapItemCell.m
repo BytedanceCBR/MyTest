@@ -29,7 +29,7 @@
 {
     _labelLeft = [UILabel new];
     _labelLeft.textAlignment = NSTextAlignmentLeft;
-    _labelLeft.font = [UIFont themeFontRegular:14];
+    _labelLeft.font = [UIFont themeFontRegular:12];
     _labelLeft.textColor = [UIColor themeGray1];
     [self.contentView addSubview:_labelLeft];
     
@@ -42,7 +42,7 @@
 
     _labelRight = [UILabel new];
     _labelRight.textAlignment = NSTextAlignmentRight;
-    _labelRight.font = [UIFont themeFontRegular:14];
+    _labelRight.font = [UIFont themeFontRegular:12];
     _labelRight.textColor = [UIColor themeGray3];
     [self.contentView addSubview:_labelRight];
     

@@ -34,7 +34,7 @@
 - (void)initViews {
 
     _label = [[UILabel alloc] init];
-    _label.textColor = [UIColor themeRed1];
+    _label.textColor = [UIColor colorWithHexStr:@"#9c6d43"];
     _label.backgroundColor = [UIColor clearColor];
     _label.font = [UIFont systemFontOfSize:10.0f];
     _label.numberOfLines = 1;

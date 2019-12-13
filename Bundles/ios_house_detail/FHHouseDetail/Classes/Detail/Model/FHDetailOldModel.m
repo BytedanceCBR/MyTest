@@ -122,6 +122,7 @@
                            @"gaodeImageUrl": @"gaode_image_url",
                            @"evaluationInfo": @"evaluation_info",
                            @"schoolDictList": @"school_dict_list",
+                           @"neighborhoodImage":@"neighborhood_images",
                            @"useSchoolIm": @"use_school_im",
                            @"schoolConsult": @"school_consult",
                            @"gaodeImage": @"gaode_image",

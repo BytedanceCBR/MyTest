@@ -104,7 +104,7 @@
         label.left = trailing - label.width;
         label.height = 20;
         label.top = 0;
-        trailing = label.left - 8;
+        trailing = label.left - 5;
         
         icon.left = trailing - icon.width;
         icon.centerY = label.centerY;

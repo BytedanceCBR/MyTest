@@ -104,6 +104,7 @@
         NSDictionary *dict = @{
                                @"backgroundColor": @"background_color",
                                @"fontColor": @"font_color",
+                               @"borderColor":@"border_color"
                                };
         return dict[keyName]?:keyName;
     }];
@@ -329,25 +330,7 @@
 {
     return YES;
 }
-- (void)setShadowImageType:(FHHouseShdowImageType)shadowImageType {
-    _shadowImageType = shadowImageType;
-    switch (shadowImageType) {
-        case FHHouseShdowImageTypeLR:
-            _shadowImage = [[UIImage imageNamed:@"left_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(0,25,0,25) resizingMode:UIImageResizingModeStretch];
-            break;
-        case FHHouseShdowImageTypeLTR:
-            _shadowImage = [[UIImage imageNamed:@"left_top_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,0,25) resizingMode:UIImageResizingModeStretch];
-            break;
-        case FHHouseShdowImageTypeLBR:
-            _shadowImage = [[UIImage imageNamed:@"left_bottom_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(0,25,30,25) resizingMode:UIImageResizingModeStretch];
-            break;
-        case FHHouseShdowImageTypeRound:
-            _shadowImage = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,30,25) resizingMode:UIImageResizingModeStretch];
-            break;
-        default:
-            break;
-    }
-}
+
 @end
 
 @implementation FHDetailGaodeImageModel

@@ -53,7 +53,7 @@
     _headerView.label.text = @"经纪人带看房评";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(30);
+        make.top.mas_equalTo(self.shadowImage).offset(42);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.left.mas_equalTo(self.contentView).offset(15);
         make.height.mas_equalTo(46);
@@ -62,7 +62,7 @@
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(2);
         make.left.mas_equalTo(self.contentView).mas_offset(15);
         make.right.mas_equalTo(self.contentView).mas_offset(-15);
         make.height.mas_equalTo(0);
@@ -138,20 +138,33 @@
             [_foldButton removeFromSuperview];
             _foldButton = nil;
         }
-        _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部" upText:@"收起" isFold:YES];
+//        _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部" upText:@"收起" isFold:YES];
+        _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部房评" upText:@"收起" isFold:YES];
+        _foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
+        _foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];
+        _foldButton.keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
+         _foldButton.keyLabel.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:_foldButton];
         [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.containerView.mas_bottom);
+            make.top.mas_equalTo(self.containerView.mas_bottom).offset(15);
             make.height.mas_equalTo(58);
             make.left.right.mas_equalTo(self.contentView);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.shadowImage).offset(-93);
+            if(modelData.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+            make.bottom.mas_equalTo(self.shadowImage).offset(-70);
+            }else {
+               make.bottom.mas_equalTo(self.shadowImage).offset(-93);
+            }
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.shadowImage).offset(-35);
+            if(modelData.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
+                make.bottom.mas_equalTo(self.shadowImage).offset(-12);
+            }else {
+                make.bottom.mas_equalTo(self.shadowImage).offset(-35);
+            }
         }];
     }
     [self updateItems:NO];
@@ -167,7 +180,6 @@
             *stop = YES;
         }
     }];
-
     if (animated) {
         [model.tableView beginUpdates];
     }

@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel;
 
+-(void)updateWithOldHouseDetailCellModel:(FHSingleImageInfoCellModel *)cellModel;
+
 -(void)updateHomeHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType;
 
 -(void)refreshTopMargin:(CGFloat)top;

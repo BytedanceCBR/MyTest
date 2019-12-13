@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIImageView *icon;
 @property (nonatomic, strong) UIImageView *houseVideoImageView;
+@property (nonatomic, weak) UIImageView *iconBacImageView;
 @property (nonatomic, strong) YYLabel *descLabel;
 @property (nonatomic, strong) UILabel *priceLabel;
 @property (nonatomic, strong) UILabel *spaceLabel;

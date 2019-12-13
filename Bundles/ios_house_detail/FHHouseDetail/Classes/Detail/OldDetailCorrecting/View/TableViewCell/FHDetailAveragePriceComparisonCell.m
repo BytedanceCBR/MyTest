@@ -240,7 +240,7 @@
     [self.containerView addSubview:_tipView];
     
     [_tipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.currentPointView.mas_top).offset(-6);
+        make.bottom.mas_equalTo(self.currentPointView.mas_top).offset(20);
         make.centerX.mas_equalTo(self.currentPointView);
         make.width.mas_equalTo(128);
         make.height.mas_equalTo(92);

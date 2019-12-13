@@ -106,7 +106,7 @@
         FHDetailMapSnapTask *task = wself.reverseQueue.lastObject;
         [wself.reverseQueue removeLastObject];
         //任务不存在，或者已取消，进行下一个
-        if (!task) {
+        if (!task || !task.delegate) {
             [wself flushSnapTasks];
             return;
         }

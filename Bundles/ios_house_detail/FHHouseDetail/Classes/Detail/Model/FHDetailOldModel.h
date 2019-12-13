@@ -88,6 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel> *schoolDictList;
 @property (nonatomic, assign) BOOL useSchoolIm;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoSchoolConsult *schoolConsult;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *neighborhoodImage;
 
 @end
 

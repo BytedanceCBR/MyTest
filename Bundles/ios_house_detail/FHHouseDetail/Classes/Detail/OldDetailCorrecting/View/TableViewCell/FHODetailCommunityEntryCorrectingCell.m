@@ -163,7 +163,7 @@
     self.curWheelIndex = 0;
     
     FHDetailCommunityEntryModel *entryModel = data;
-    self.shadowImage.image = entryModel.shadowImage;
+    [self shadowImageAssignment:entryModel.shadowImageType];
     if(entryModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.contentView);
@@ -202,6 +202,27 @@
     self.activeCountInfoLabel.attributedText = aStr;
     [self updateBubble];
 }
+- (void)shadowImageAssignment:(FHHouseShdowImageType)shadowImageType{
+    UIImage *image;
+    switch (shadowImageType) {
+        case FHHouseShdowImageTypeLR:
+            image = [[UIImage imageNamed:@"left_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(0,25,0,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        case FHHouseShdowImageTypeLTR:
+            image = [[UIImage imageNamed:@"left_top_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,0,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        case FHHouseShdowImageTypeLBR:
+            image = [[UIImage imageNamed:@"left_bottom_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(0,25,30,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        case FHHouseShdowImageTypeRound:
+            image = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,30,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        default:
+            break;
+    }
+     self.shadowImage.image = image;
+}
+
 
 - (void)updateBubble {
     FHDetailCommunityEntryModel *entryModel = self.currentData;
