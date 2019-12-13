@@ -509,20 +509,27 @@
         
         [alertVC addActionWithTitle:@"确认" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             StrongSelf;
-            if ([TTReachability isNetworkConnected]) {
-                [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
-                [[FHUGCConfig sharedInstance] followUGCBy:self.viewController.communityId isFollow:YES completion:^(BOOL isSuccess) {
-                    
-                }];
-            } else {
-                [[ToastManager manager] showToast:@"网络异常"];
-            }
+            [self joinAndGotoGroupChatVC];
         }];
         
         UIViewController *topVC = [TTUIResponderHelper topmostViewController];
         if (topVC) {
             [alertVC showFrom:topVC animated:YES];
         }
+    }
+}
+// 关注圈子并进入群聊
+- (void)joinAndGotoGroupChatVC {
+    if ([TTReachability isNetworkConnected]) {
+        WeakSelf;
+        [[FHUGCConfig sharedInstance] followUGCBy:self.viewController.communityId isFollow:YES completion:^(BOOL isSuccess) {
+            StrongSelf;
+            if (isSuccess) {
+                [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
+            }
+        }];
+    } else {
+        [[ToastManager manager] showToast:@"网络异常"];
     }
 }
 

@@ -163,7 +163,7 @@
         TTRouteUserInfo *userInfo = nil;
         NSMutableDictionary *dict = @{}.mutableCopy;
         if([bodyUrl containsString:@"comment_detail"]){
-            dict[@"hidePost"] = @(1);
+            //dict[@"hidePost"] = @(1);
         }
         
         NSMutableDictionary *traceParam = @{}.mutableCopy;
