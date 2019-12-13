@@ -1,74 +1,44 @@
 //
-//  FHHomeEntrancesCell.m
-//  Article
+//  FHListEntrancesView.m
+//  FHHouseList
 //
-//  Created by 谢飞 on 2018/11/21.
+//  Created by 张静 on 2019/12/13.
 //
 
-#import "FHHomeEntrancesCell.h"
-#import "FHHomeCellHelper.h"
-#import <TTDeviceHelper.h>
-#import <FHHomeCellHelper.h>
-#import <FHHouseBase/TTDeviceHelper+FHHouse.h>
-#import <Masonry/Masonry.h>
-#import <FHCommonUI/UIFont+House.h>
-#import <FHCommonUI/UIColor+Theme.h>
-#import <BDWebImage/UIImageView+BDWebImage.h>
+#import "FHListEntrancesView.h"
+#import <FHHouseBase/FHConfigModel.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import <FHHouseBase/FHCommonDefines.h>
-#import <FHEnvContext.h>
 #import <FHHouseBase/FHHomeEntranceItemView.h>
+#import <FHHouseBase/FHCommonDefines.h>
+#import <FHCommonUI/UIColor+Theme.h>
 
-
-
-
-@interface FHHomeEntrancesCell ()
+@interface FHListEntrancesView ()
 
 @property(nonatomic , strong) NSArray *items;
 @property(nonatomic , strong) NSMutableArray *itemViews;
 
 @end
 
-@implementation FHHomeEntrancesCell
+@implementation FHListEntrancesView
 
 +(CGFloat)rowHeight
 {
-    if([[FHEnvContext sharedInstance] getConfigFromCache].mainPageBannerOpData.items.count > 0){
-        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
-    }else
-    {
-        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW + 10;
-    }
+    return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+    
+    //    if([[FHEnvContext sharedInstance] getConfigFromCache].mainPageBannerOpData.items.count > 0){
+    //    }else
+    //    {
+    //        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW + 10;
+    //    }
 }
 
-+(CGFloat)cellHeightForModel:(id)model
+- (instancetype)initWithFrame:(CGRect)frame
 {
-    if (![model isKindOfClass:[FHConfigDataOpDataModel class]]) {
-        return 0;
-    }
-    NSInteger countPerRow = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount;
-    FHConfigDataOpDataModel *dataModel = (FHConfigDataOpDataModel *)model;
-    NSInteger rows = ((dataModel.items.count+countPerRow-1)/countPerRow);
-    return [self rowHeight]*rows;
-}
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    self = [super initWithFrame:frame];
     if (self) {
         _itemViews = [NSMutableArray new];
     }
     return self;
-}
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 -(void)updateWithItems:(NSArray<FHConfigDataOpDataItemsModel> *)items
@@ -79,7 +49,7 @@
     
     self.items = items;
     
-    NSInteger countPerRow = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount;
+    NSInteger countPerRow = _countPerRow;
     if(items.count > countPerRow*2){
         items = [items subarrayWithRange:NSMakeRange(0, countPerRow*2)];
     }
@@ -96,7 +66,7 @@
             [itemView setBackgroundColor:[UIColor clearColor]];
             [itemView addTarget:self action:@selector(onItemAction:) forControlEvents:UIControlEventTouchUpInside];
             [self.itemViews addObject:itemView];
-            [self.contentView addSubview:itemView];
+            [self addSubview:itemView];
         }
     }
     
@@ -119,7 +89,7 @@
         itemView.hidden = NO;
     }
     
-    [self.contentView setBackgroundColor:[UIColor themeHomeColor]];
+    [self setBackgroundColor:[UIColor themeHomeColor]];
 }
 
 -(void)onItemAction:(FHHomeEntranceItemView *)itemView
@@ -136,4 +106,3 @@
 
 
 @end
-

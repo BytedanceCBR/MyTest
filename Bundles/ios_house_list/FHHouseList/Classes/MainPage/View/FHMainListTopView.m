@@ -10,6 +10,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHCommonUI/UIColor+Theme.h>
+#import <FHCommonUI/FHFakeInputNavbar.h>
 
 #define NOTIFY_HEIGHT 32
 
@@ -86,7 +87,7 @@
 
 -(CGFloat)filterTop
 {
-    return self.filterBarView.top;
+    return self.filterBarView.top - [FHFakeInputNavbar perferredHeight];
 }
 
 -(CGFloat)filterBottom

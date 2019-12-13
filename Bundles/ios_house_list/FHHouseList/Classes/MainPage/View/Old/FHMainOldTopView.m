@@ -10,6 +10,14 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import "FHMainOldTopCell.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
+#import <FHHouseBase/FHHomeScrollBannerView.h>
+#import <FHHouseBase/FHHomeEntranceItemView.h>
+#import <Masonry.h>
+#import <FHCommonUI/FHFakeInputNavbar.h>
+#import <FHHouseBase/FHConfigModel.h>
+#import <TTBaseLib/UIViewAdditions.h>
+#import "FHListEntrancesView.h"
+#import "FHMainTopViewHelper.h"
 
 #define kCellId @"cell_id"
 #define ITEM_HOR_MARGIN  10
@@ -19,10 +27,18 @@
 
 @interface FHMainOldTopView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
+@property(nonatomic , strong) UIView *topBgView;//64 + 140 + 10
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , strong) UICollectionViewFlowLayout *layout;
+@property(nonatomic , strong) FHHomeScrollBannerView *bannerView;
+@property(nonatomic , strong) UIView *bottomBgView;
+@property(nonatomic , strong) FHListEntrancesView *bottomContainerView;
 
 @end
+
+
+
+
 
 @implementation FHMainOldTopView
 
@@ -31,29 +47,63 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        layout.headerReferenceSize = CGSizeMake(HOR_MARGIN, 1);
-        layout.footerReferenceSize = CGSizeMake(HOR_MARGIN, 1);
-        
-        CGRect f = self.bounds;
-        f.size.height -= BOTTOM_PADDING;
-        //CGRectMake(0, 15, frame.size.width, frame.size.height - BOTTOM_PADDING - 15)
-        _collectionView = [[FHBaseCollectionView alloc]initWithFrame:f collectionViewLayout:layout];
-        _collectionView.delegate = self;
-        _collectionView.dataSource = self;
-        
-        [_collectionView registerClass:[FHMainOldTopCell class] forCellWithReuseIdentifier:kCellId];
-        
-        _layout = layout;
-        
-        [self addSubview:_collectionView];
-        
-        self.backgroundColor = [UIColor whiteColor];
-        _collectionView.backgroundColor = [UIColor whiteColor];
-        
+        [self setupUI];
+        [self initConstraints];
     }
     return self;
+}
+
++ (CGFloat)bannerHeight
+{
+    return 140;
+}
+
++ (CGFloat)entranceHeight
+{
+    return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+}
+
++ (CGFloat)totalHeight
+{
+    return [FHFakeInputNavbar perferredHeight] + [FHMainOldTopView bannerHeight] + 10 + [FHMainOldTopView entranceHeight];
+}
+
+- (void)setupUI
+{
+    [self addSubview:self.topBgView];
+    [self addSubview:self.bottomBgView];
+    [self addSubview:self.bannerView];
+    [self addSubview:self.bottomContainerView];
+
+    self.topBgView.backgroundColor = [UIColor colorWithHexString:@"#c5b8aej" alpha:1];
+    self.bannerView.backgroundColor = [UIColor redColor];
+
+    self.bottomContainerView.backgroundColor = [UIColor themeBlue1];
+
+}
+
+- (void)initConstraints
+{
+    [self.topBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(0);
+        make.height.mas_equalTo([FHMainOldTopView bannerHeight] + 10 + [FHFakeInputNavbar perferredHeight]);
+    }];
+    [self.bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.top.mas_equalTo([FHFakeInputNavbar perferredHeight] + 10);
+        make.height.mas_equalTo([FHMainOldTopView bannerHeight]);
+    }];
+    [self.bottomContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(self.bannerView.mas_bottom);
+        make.height.mas_equalTo([FHMainOldTopView entranceHeight]);
+    }];
+    [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(self.bannerView.mas_bottom).mas_offset(-40);
+        make.bottom.mas_equalTo(self.bottomContainerView);// todo zjing height
+    }];
 }
 
 -(void)setItems:(NSArray *)items
@@ -113,12 +163,45 @@
     
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+#pragma mark - UI
+
+- (UIView *)topBgView
+{
+    if (!_topBgView) {
+        _topBgView = [[UIView alloc]init];
+    }
+    return _topBgView;
 }
-*/
+
+- (FHHomeScrollBannerView *)bannerView
+{
+    if (!_bannerView) {
+        _bannerView = [[FHHomeScrollBannerView alloc] init];
+        _bannerView.backgroundColor = [UIColor themeHomeColor];
+        _bannerView.layer.masksToBounds = YES;
+        _bannerView.layer.cornerRadius = 12;
+    }
+    return _bannerView;
+}
+
+- (UIView *)bottomBgView
+{
+    if (!_bottomBgView) {
+        _bottomBgView = [[UIView alloc]init];
+        _bottomBgView.backgroundColor = [UIColor themeGray8];
+        _bottomBgView.layer.masksToBounds = YES;
+        _bottomBgView.layer.cornerRadius = 10;
+    }
+    return _bottomBgView;
+}
+
+- (UIView *)bottomContainerView
+{
+    if (!_bottomContainerView) {
+        _bottomContainerView = [[UIView alloc]init];
+        _bottomContainerView.backgroundColor = [UIColor themeGray8];
+    }
+    return _bottomContainerView;
+}
 
 @end

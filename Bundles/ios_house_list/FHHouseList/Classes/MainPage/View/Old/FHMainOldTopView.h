@@ -10,10 +10,18 @@
 NS_ASSUME_NONNULL_BEGIN
 @class FHConfigDataOpData2ItemsModel;
 @protocol FHMainOldTopViewDelegate;
+
+
+
 @interface FHMainOldTopView : UIView
 
 @property(nonatomic , strong) NSArray<FHConfigDataOpData2ItemsModel *> *items;
 @property(nonatomic , weak) id<FHMainOldTopViewDelegate> delegate;
+
++ (CGFloat)bannerHeight;
++ (CGFloat)entranceHeight;
++ (CGFloat)totalHeight;
+
 
 @end
 

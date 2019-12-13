@@ -13,6 +13,8 @@
 #import <FHHouseBase/FHConfigModel.h>
 #import <FHHouseBase/FHEnvContext.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
+#import <FHCommonUI/FHFakeInputNavbar.h>
+#import <FHHouseBase/FHHomeEntranceItemView.h>
 
 @interface FHMainRentTopView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -69,73 +71,84 @@
     if (self) {
         
         self.clipsToBounds = YES;
+        self.backgroundColor = [UIColor themeGray9];
         
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        layout.headerReferenceSize = CGSizeMake(HOR_MARGIN, 1);
-        layout.footerReferenceSize = CGSizeMake(HOR_MARGIN, 1);
-        
-        CGRect f = self.bounds;
-        
-        CGFloat bannerHeight = [self.class bannerHeight:rentBanner];
-        BOOL needShowBanner = rentBanner && rentBanner.items.count > 0 ;
-        FHConfigDataRentBannerItemsModel *model = [rentBanner.items firstObject];
-        FHConfigDataRentBannerItemsImageModel *img = [model.image firstObject];
-        UIImage *image  = [[BDWebImageManager sharedManager].imageCache imageForKey:img.url];
-
-        if (bannerHeight == 0) {
-            needShowBanner = NO;
-        }
-        
-        f.size.height -= BOTTOM_PADDING;
-        if (needShowBanner && image) {
-            f.size.height -= bannerHeight;
-        }
-        //CGRectMake(0, 15, frame.size.width, frame.size.height - BOTTOM_PADDING - 15)
-        _collectionView = [[FHBaseCollectionView alloc]initWithFrame:f collectionViewLayout:layout];
-        _collectionView.delegate = self;
-        _collectionView.dataSource = self;
-        
-        
-        [_collectionView registerClass:[FHMainRentTopCell class] forCellWithReuseIdentifier:kCellId];
-        
-        _layout = layout;
-        
-        [self addSubview:_collectionView];
-        if (needShowBanner) {
-            _bannerView = [[UIImageView alloc]initWithFrame:CGRectMake(BANNER_HOR_MARGIN, CGRectGetMaxY(_collectionView.frame), f.size.width - 2*BANNER_HOR_MARGIN, bannerHeight+BOTTOM_PADDING)];
-            [self addSubview:_bannerView];
-
-            if (image) {
-                _bannerView.image = image;
-            }else{
-                
-                __weak typeof(self) wself = self;
-                [_bannerView bd_setImageWithURL:[NSURL URLWithString:img.url] placeholder:nil options:BDImageRequestHighPriority completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
-                    if (!wself) {
-                        return ;
-                    }
-                    if ([wself.delegate respondsToSelector:@selector(rentBannerLoaded:)]) {
-                        [wself.delegate rentBannerLoaded:wself.bannerView];
-                    }                                        
-                }];
-            }
-            
-            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bannerClickAction)];
-            [_bannerView addGestureRecognizer:tapGesture];
-            _bannerView.userInteractionEnabled = YES;
-            
-            self.backgroundColor = [UIColor whiteColor];
-        }else{
-            self.backgroundColor = [UIColor themeGray7];
-        }
-        
-        
-        _collectionView.backgroundColor = [UIColor whiteColor];
-        _bannerView.backgroundColor = [UIColor whiteColor];
+//        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+//        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+//        layout.headerReferenceSize = CGSizeMake(HOR_MARGIN, 1);
+//        layout.footerReferenceSize = CGSizeMake(HOR_MARGIN, 1);
+//
+//        CGRect f = self.bounds;
+//
+//        CGFloat bannerHeight = [self.class bannerHeight:rentBanner];
+//        BOOL needShowBanner = rentBanner && rentBanner.items.count > 0 ;
+//        FHConfigDataRentBannerItemsModel *model = [rentBanner.items firstObject];
+//        FHConfigDataRentBannerItemsImageModel *img = [model.image firstObject];
+//        UIImage *image  = [[BDWebImageManager sharedManager].imageCache imageForKey:img.url];
+//
+//        if (bannerHeight == 0) {
+//            needShowBanner = NO;
+//        }
+//
+//        f.size.height -= BOTTOM_PADDING;
+//        if (needShowBanner && image) {
+//            f.size.height -= bannerHeight;
+//        }
+//        //CGRectMake(0, 15, frame.size.width, frame.size.height - BOTTOM_PADDING - 15)
+//        _collectionView = [[FHBaseCollectionView alloc]initWithFrame:f collectionViewLayout:layout];
+//        _collectionView.delegate = self;
+//        _collectionView.dataSource = self;
+//
+//
+//        [_collectionView registerClass:[FHMainRentTopCell class] forCellWithReuseIdentifier:kCellId];
+//
+//        _layout = layout;
+//
+//        [self addSubview:_collectionView];
+//        if (needShowBanner) {
+//            _bannerView = [[UIImageView alloc]initWithFrame:CGRectMake(BANNER_HOR_MARGIN, CGRectGetMaxY(_collectionView.frame), f.size.width - 2*BANNER_HOR_MARGIN, bannerHeight+BOTTOM_PADDING)];
+//            [self addSubview:_bannerView];
+//
+//            if (image) {
+//                _bannerView.image = image;
+//            }else{
+//
+//                __weak typeof(self) wself = self;
+//                [_bannerView bd_setImageWithURL:[NSURL URLWithString:img.url] placeholder:nil options:BDImageRequestHighPriority completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+//                    if (!wself) {
+//                        return ;
+//                    }
+//                    if ([wself.delegate respondsToSelector:@selector(rentBannerLoaded:)]) {
+//                        [wself.delegate rentBannerLoaded:wself.bannerView];
+//                    }
+//                }];
+//            }
+//
+//            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bannerClickAction)];
+//            [_bannerView addGestureRecognizer:tapGesture];
+//            _bannerView.userInteractionEnabled = YES;
+//
+//            self.backgroundColor = [UIColor whiteColor];
+//        }else{
+//            self.backgroundColor = [UIColor themeGray7];
+//        }
+//
+//
+//        _collectionView.backgroundColor = [UIColor whiteColor];
+//        _bannerView.backgroundColor = [UIColor whiteColor];
         
     }
     return self;
+}
+
++ (CGFloat)entranceHeight
+{
+    return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+}
+
++ (CGFloat)totalHeight
+{
+    return [FHFakeInputNavbar perferredHeight] + [self entranceHeight] + 8;
 }
 
 -(void)setItems:(NSArray *)items

@@ -73,12 +73,13 @@
 #define kAgencyInfoCellId @"kAgencyInfoCellId"
 #define kNoHousePlaceHolderCellId @"no_house_cell_id"
 
+
 #define kFilterBarHeight 44
-#define MAX_ICON_COUNT 4
-#define ICON_HEADER_HEIGHT 115
-#define RENT_BANNER_HEIGHT 102
-#define OLD_ICON_HEADER_HEIGHT 80
 #define kFilterTagsViewHeight 58
+#define MAX_ICON_COUNT 4
+#define ICON_HEADER_HEIGHT ([FHMainRentTopView totalHeight])
+
+#define OLD_ICON_HEADER_HEIGHT ([FHMainOldTopView totalHeight])
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -1490,7 +1491,8 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     BOOL shouldInTable = (scrollView.contentOffset.y + scrollView.contentInset.top <  [self.topView filterTop]);
     [self moveToTableView:shouldInTable];
-    
+    [self.viewController refreshContentOffset:scrollView.contentOffset];
+
 }
 
 

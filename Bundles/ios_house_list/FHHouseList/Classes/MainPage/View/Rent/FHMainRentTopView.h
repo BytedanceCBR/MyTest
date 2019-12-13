@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithFrame:(CGRect)frame banner:(FHConfigDataRentBannerModel *)rentBanner;
 
++ (CGFloat)entranceHeight;
++ (CGFloat)totalHeight;
+
 @end
 
 @protocol FHMainRentTopViewDelegate <NSObject>

@@ -16,6 +16,8 @@
 #import <TTUIWidget/UIViewController+Track.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHMainOldTopView.h"
+#import "FHMainRentTopView.h"
 
 #define TOP_HOR_PADDING 3
 
@@ -30,6 +32,7 @@
 @property(nonatomic , strong) FHBaseMainListViewModel *viewModel;
 @property(nonatomic , strong) FHErrorView *errorView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
+@property (nonatomic, assign)   BOOL     isViewDidDisapper;
 
 @property (nonatomic , copy) NSString *associationalWord;// 联想词
 
@@ -95,7 +98,10 @@
 {
     // FHFakeInputNavbarTypeMessageAndMap 二手房大类页显示消息和小红点
     FHFakeInputNavbarType type = (_houseType == FHHouseTypeSecondHandHouse ? FHFakeInputNavbarTypeMessageAndMap : FHFakeInputNavbarTypeDefault);
+    FHFakeInputNavbarStyle style = (_houseType == FHHouseTypeSecondHandHouse ? FHFakeInputNavbarStyleDefault : FHFakeInputNavbarStyleBorder);
+
     _navbar = [[FHFakeInputNavbar alloc] initWithType:type];
+    _navbar.style = style;
     __weak typeof(self) wself = self;
     _navbar.defaultBackAction = ^{
         [wself.navigationController popViewControllerAnimated:YES];
@@ -111,7 +117,6 @@
     _navbar.tapInputBar = ^{
         [wself.viewModel showInputSearch];
     };
-    
     [self.view addSubview:_navbar];
     
 }
@@ -167,11 +172,16 @@
     self.tracerModel.categoryName = [_viewModel categoryName];
     [self.viewModel requestData:YES];
     self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
+    self.isViewDidDisapper = NO;
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.viewModel refreshMessageDot];
+    [self refreshContentOffset:self.tableView.contentOffset];
+    self.isViewDidDisapper = NO;
+
 }
 
 -(void)initConstraints
@@ -185,13 +195,13 @@
     
     [self.topContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.navbar.mas_bottom);
+        make.top.mas_equalTo(0);
         make.height.mas_equalTo(0);
     }];
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.navbar.mas_bottom);
+        make.top.mas_equalTo(0);
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -223,6 +233,45 @@
     [self.viewModel addStayLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.isViewDidDisapper = YES;
+}
+
+- (void)refreshContentOffset:(CGPoint)contentOffset
+{
+    CGFloat alpha = 0;
+    CGFloat offset = 0;
+    UIStatusBarStyle statusBarStyle = UIStatusBarStyleDefault;
+    if ([self.viewModel.topBannerView isKindOfClass:[FHMainOldTopView class]]) {
+        if ([FHMainOldTopView bannerHeight] > 0) {
+            offset = [FHMainOldTopView bannerHeight] - 42 + 10;
+        }
+        if (contentOffset.y >= 0) {
+            alpha = 1;
+        }else if (offset > 0){
+            alpha = (self.topView.height + contentOffset.y) / offset;
+        }
+        if (alpha >= 0.5) {
+            statusBarStyle = UIStatusBarStyleDefault;
+        }else {
+            statusBarStyle = UIStatusBarStyleLightContent;
+        }
+    }else if ([self.viewModel.topBannerView isKindOfClass:[FHMainRentTopView class]]) {
+        offset = [FHMainRentTopView totalHeight];
+        if (contentOffset.y >= 0) {
+            alpha = 1;
+        }else if (offset > 0){
+            alpha = (self.topView.height + contentOffset.y) / offset;
+        }
+    }
+    [self.navbar refreshAlpha:alpha];
+    
+    if (!self.isViewDidDisapper) {
+        [[UIApplication sharedApplication]setStatusBarStyle:statusBarStyle];
+    }
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol
