@@ -62,6 +62,7 @@ static NSString *s_oldAgent = nil;
         if ([params[@"house_type"] isKindOfClass:[NSNumber class]]) {
             self.houseType = [params[@"house_type"] integerValue];
         }
+        self.houseId = params[@"house_id"];
 
         self.tracerDict[@"pageType"] = @"realtor_detail";
         NSDictionary *reportParams = params[@"reportParams"];
@@ -93,12 +94,12 @@ static NSString *s_oldAgent = nil;
         }
     }];
     
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-    configModel.houseType = self.houseType;
-    configModel.followId = self.houseId;
-    configModel.hideToast = YES;
-    // 静默关注功能
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
+//    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+//    configModel.houseType = self.houseType;
+//    configModel.followId = self.houseId;
+//    configModel.hideToast = YES;
+//    // 静默关注功能
+//    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
     
 }
 
