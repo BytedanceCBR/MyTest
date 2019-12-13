@@ -25,6 +25,7 @@
     self = [super init];
     if (self) {
         
+        NSLog(@"spring in");
         //sslocal://home?tab=community
         if([paramObj.allParams.allKeys containsObject:@"tab"])
         {

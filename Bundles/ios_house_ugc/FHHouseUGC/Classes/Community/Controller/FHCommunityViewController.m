@@ -27,6 +27,7 @@
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import <FHMinisdkManager.h>
+#import "UIViewController+Track.h"
 
 @interface FHCommunityViewController ()
 
@@ -50,6 +51,7 @@
     self.hasShowDots = NO;
     self.isUgcOpen = [FHEnvContext isUGCOpen];
     self.alreadyShowGuide = NO;
+    self.ttTrackStayEnable = YES;
 
     [self initView];
     [self initConstraints];
@@ -195,12 +197,7 @@
         }
     }
     
-    //春节活动
-    if([FHEnvContext isSpringOpen]){
-        if([FHMinisdkManager sharedInstance].isSpring && [FHMinisdkManager sharedInstance].url){
-            [[TTRoute sharedRoute] openURL:[FHMinisdkManager sharedInstance].url userInfo:nil objHandler:nil];
-        }
-    }
+    [[FHMinisdkManager sharedInstance] goSpring];
 }
 
 -(BOOL)shouldAutorotate
@@ -427,5 +424,16 @@
     reportParams[@"origin_from"] = @"community_search";
     reportParams[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
     [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    //春节活动
+//    [[FHMinisdkManager sharedInstance] goSpring];
 }
 @end

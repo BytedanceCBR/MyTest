@@ -76,6 +76,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.ttNeedIgnoreZoomAnimation = YES;
+    self.ttTrackStayEnable = YES;
     [self.view addSubview:self.topBar];
     
     FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
@@ -382,11 +383,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self checkPasteboard:NO];
     
     //春节活动
-    if([FHEnvContext isSpringOpen]){
-        if([FHMinisdkManager sharedInstance].isSpring && [FHMinisdkManager sharedInstance].url){
-             [[TTRoute sharedRoute] openURL:[FHMinisdkManager sharedInstance].url userInfo:nil objHandler:nil];
-        }
-    }
+    [[FHMinisdkManager sharedInstance] goSpring];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -533,6 +530,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    //春节活动
+//    [[FHMinisdkManager sharedInstance] goSpring];
 }
 
 - (void)dealloc

@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)taskComplete:(BDDTaskFinishBlock)finishBlock;
 
 - (void)excuteTask;
+
+- (void)goSpring;
     
 @end
 

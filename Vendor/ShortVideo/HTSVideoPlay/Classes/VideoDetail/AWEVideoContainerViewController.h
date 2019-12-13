@@ -36,8 +36,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 //外面传的埋点信息 by xsm
 @property (nonatomic, strong) NSDictionary *extraDic;
-//春节活动 by xsm
-@property (nonatomic, assign) BOOL isSpring;
 
 - (void)replaceDataFetchManager:(id<TSVShortVideoDataFetchManagerProtocol>)dataFetchManager;
 - (void)refreshCurrentModel;

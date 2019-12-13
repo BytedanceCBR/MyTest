@@ -923,7 +923,23 @@ static NSInteger kGetLightRequestRetryCount = 3;
             [userInfo copy];
         })];
     }
+}
 
+- (void)jumpMainTab
+{
+    // 进历史
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:kFHHouseMixedCategoryID withShow:NO];
+    [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+    //    [[EnvContext shared].client.messageManager startSyncCategoryBadge];
+    if ([TTTabBarManager sharedTTTabBarManager].tabItems.count > 1) {
+        NSString *tabItemIdentifier = [TTTabBarManager sharedTTTabBarManager].tabItems[0].identifier;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:({
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            [userInfo setValue:tabItemIdentifier forKey:@"tag"];
+            [userInfo setValue:@1 forKey:@"needToRoot"];
+            [userInfo copy];
+        })];
+    }
 }
     
 + (BOOL)isSpringOpen {
