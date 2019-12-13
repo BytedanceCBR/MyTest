@@ -203,8 +203,7 @@ static const float kSegementedMainPadingBottom = 10;
         make.height.mas_equalTo(kSegementedMainTopHeight);
         if (self.changeCountryBtn) {
             make.centerY.equalTo(self.changeCountryBtn).offset(-2);
-        }else
-        {
+        }else{
             make.bottom.mas_equalTo(8);
         }
         make.width.mas_equalTo((kSegementedOneWidth + 15) * titlesArray.count);
@@ -232,7 +231,7 @@ static const float kSegementedMainPadingBottom = 10;
         {
             make.bottom.mas_equalTo(8);
         }
-        make.width.mas_equalTo((kSegementedOneWidth + 15) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 20));
+        make.width.mas_equalTo((kSegementedOneWidth + 12) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 20));
     }];
     
     _searchBtn.hidden = YES;

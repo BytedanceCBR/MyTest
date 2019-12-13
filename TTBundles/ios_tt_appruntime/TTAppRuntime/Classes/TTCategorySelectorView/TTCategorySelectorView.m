@@ -1081,7 +1081,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         [categoryButton updateBottomSelectFrame];
         [self.scrollView addSubview:categoryButton];
         
-        offsetX = categoryButton.right + 5;
+        offsetX = categoryButton.right;
         
         NSString *startCategoryID = kTTMainCategoryID;
         if (!_lastSelectedButton && [SSCommonLogic firstCategoryStyle] > 0) {

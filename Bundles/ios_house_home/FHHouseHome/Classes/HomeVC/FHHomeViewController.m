@@ -43,7 +43,6 @@ static CGFloat const kShowTipViewHeight = 32;
 
 static CGFloat const kSectionHeaderHeight = 38;
 
-static NSString * const kFUGCPrefixStr = @"fugc";
 
 @interface FHHomeViewController ()<TTAppUpdateHelperProtocol>
 
@@ -117,13 +116,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 -(void)dealyIniViews
 {
-    //如果是inhouse的，弹升级弹窗
-    if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
-        //#if INHOUSE
-        [self checkLocalTestUpgradeVersionAlert];
-        //#endif
-    }
-    
+
     [self addDefaultEmptyViewFullScreen];
     
     if (!_isMainTabVC) {
@@ -131,8 +124,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self.mainTableView removeFromSuperview];
         [self.emptyView showEmptyWithTip:@"功能暂未开通" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
-    
-//    [self.view bringSubviewToFront:self.topBar];
     
     self.mainTableView.scrollsToTop = YES;
 }
@@ -153,14 +144,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.mainTableView.decelerationRate = 0.5;
     self.mainTableView.showsVerticalScrollIndicator = NO;
     
-//    if (_isMainTabVC) {
-//        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
-//    }
-    
-//    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, 44)];
-//    [headerView setBackgroundColor:[UIColor blueColor]];
-//    self.mainTableView.tableHeaderView = headerView;
-//    self.mainTableView.bounces = YES;
+
     [self.view addSubview:self.mainTableView];
     
     self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -189,11 +173,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         make.top.left.right.equalTo(self.mainTableView);
         make.height.mas_equalTo(32);
     }];
-    
-//    [self setupTopBarConstraints];
-//    self.mainTableView.tableHeaderView = self.topBar;
-    
-//    [self.view bringSubviewToFront:self.topBar];
 }
 
 #pragma mark - notifications
@@ -383,8 +362,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     
-    [self checkPasteboard:NO];
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -409,7 +386,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 //        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
 //    }
     
-    
     //开屏广告启动不会展示，保留逻辑代码
     if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
         self.adColdHadJump = YES;
@@ -433,22 +409,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         }
     }
     
-    [FHEnvContext addTabUGCGuid];
-    
-    [TTSandBoxHelper setAppFirstLaunchForAd];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
     
     [self bindIndexChangedBlock];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-}
-
-- (void)_willEnterForeground:(NSNotification *)notification
-{
-    if (self.isShowing) {
-        [self checkPasteboard:NO];
-    }
 }
 
 
@@ -563,164 +529,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     return _scrollView;
 }
 
-#pragma mark 内测弹窗
-- (void)checkLocalTestUpgradeVersionAlert
-{
-    //内测弹窗
-    NSString * iidValue = [[TTInstallIDManager sharedInstance] installID];
-    NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
-    NSString * channelValue = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
-    NSString * aidValue = @"1370";
-    NSString * baseUrl = [CommonURLSetting baseURL];
-    //    NSString * baseUrl = @"https://i.snssdk.com";
-    
-    [TTAppUpdateHelper sharedInstance].delegate = self;
-    [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
-        [self.view addSubview:view];
-    } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
-        //        if (!downloadUrl) {
-        //            return;
-        //        }
-        //        NSURL *url = [NSURL URLWithString:downloadUrl];
-        //        [[UIApplication sharedApplication] openURL:url];
-    } closeBlock:^{
-        
-    }];
-}
 
-/** 通知代理对象已获取到弹窗升级Title和具体升级内容,如果自定义弹窗，必须实现此方法
- @params title 弹窗升级title,ex: 6.x.x内测更新了..
- @param content 更新具体内容
- @params tipVersion 弹窗升级版本号,ex: 6.7.8
- @param downloadUrl TF弹窗下载地址
- */
-//- (void)showUpdateTipTitle:(NSString *)title content:(NSString *)content tipVersion:(NSString *)tipVersion updateButtonText:(NSString *)text downloadUrl:(NSString *)downloadUrl error:(NSError * _Nullable)error
-//{
-//
-//}
 
-/** 通知代理对象弹窗需要remove
- *  代理对象需要在此方法里面将弹窗remove掉
- */
-- (void)dismissTipView
-{
-    
-}
-
-///*
-// 判断是否是内测包，当打包注入与头条主工程不一致时
-// 可以实现自行进行判断，默认与头条判断方式相同
-// 通过检查bundleID是否有inHouse字段进行判断
-// */
-- (BOOL)decideIsInhouseApp
-{
-    return YES;
-}
-//
-///*
-// 判断是否是LR包，当打包注入与头条主工程不一致时
-// 可以实现自行进行判断，默认与头条判断方式相同
-// 通过检查buildinfo字段进行判断
-// 注意：只有lr包才弹内测弹窗，如果业务方没有
-// lr包的概念，则返回YES即可
-// */
-- (BOOL)decideIsLrPackage
-{
-    return YES;
-}
-//
-///*
-// 判断是否需要上报用户did，主要用来上报用户是否安装tTestFlight
-// 的情况，业务方可以自行通过开关控制
-// */
-//- (BOOL)decideShouldReportDid
-//{
-//
-//}
-
-#pragma mark UGC线上线下推广
-
-- (void)checkPasteboard:(BOOL)isAutoJump
-{
-    __weak typeof(self) weakSelf = self;
-    //据说主线程读剪切板会导致app卡死。。。改为子线程读
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-        NSArray<NSString *> *pasteboardStrs = [pasteboard strings];
-
-        if (([pasteboardStrs isKindOfClass:[NSArray class]] && pasteboardStrs.count > 0)) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __block NSString *pasteboardStr = nil;
-                [pasteboardStrs enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if ([obj hasPrefix:kFUGCPrefixStr]) {
-                        pasteboardStr = obj;
-                        *stop = YES;
-                    }
-                }];
-                
-                if (pasteboardStr) {
-                    NSString *base64Str = [pasteboardStr stringByReplacingOccurrencesOfString:kFUGCPrefixStr withString:@""];
-                    
-                    if (base64Str) {
-                        [weakSelf requestSendUGCUserAD:base64Str];
-                    }
-                    //清空剪切板
-                    NSMutableArray * strs = pasteboardStrs.mutableCopy;
-                    [strs removeObject:pasteboardStr];
-                    pasteboard.strings = strs;
-                }
-            });
-        }
-    });
-}
-
-- (void)requestSendUGCUserAD:(NSString *)requestStr
-{
-    NSMutableDictionary *params = [NSMutableDictionary new];
-    [params setValue:requestStr forKey:@"promotion_code"];
-    __weak typeof(self) weakSelf = self;
-
-    [FHMainApi uploadUGCPostPromotionparams:params completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
-        
-        if (!error && [result isKindOfClass:[NSDictionary class]]) {
-            NSNumber *cityId = nil;
-            NSString *alertStr = nil;
-            NSNumber *inviteStatus = nil;
-            NSDictionary *dataDict = result[@"data"];
-            if ([dataDict isKindOfClass:[NSDictionary class]] && [dataDict[@"city_id"] isKindOfClass:[NSNumber class]]) {
-                cityId = dataDict[@"city_id"];
-            }
-            
-            if ([dataDict isKindOfClass:[NSDictionary class]] && [dataDict[@"tips"] isKindOfClass:[NSString class]]) {
-                alertStr = dataDict[@"tips"];
-            }
-            
-            if ([dataDict isKindOfClass:[NSDictionary class]] && [dataDict[@"invite_status"] isKindOfClass:[NSNumber class]]) {
-                inviteStatus = dataDict[@"invite_status"];
-            }
-            
-            if (alertStr && [inviteStatus isKindOfClass:[NSNumber class]] && [inviteStatus integerValue] != 2) {
-                TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:alertStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
-                
-                [alertVC addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-                    
-                }];
-                
-                UIViewController *topVC = [TTUIResponderHelper topmostViewController];
-                if (topVC) {
-                    [alertVC showFrom:topVC animated:YES];
-                }
-                
-                [FHUtils setContent:@"1" forKey:kFHUGCPromotionUser];
-            }
-            
-            if ([inviteStatus integerValue] != 2 && cityId) {
-                [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityId];
-            }
-            //只保存数据
-            [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
-        }
-    }];
-}
 
 @end
