@@ -207,18 +207,17 @@
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView).mas_offset(40);
-        make.left.mas_equalTo(self.contentView).mas_offset(20);
-        make.right.mas_equalTo(-20);
+        make.centerX.mas_equalTo(self.contentView);
     }];
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(10);
-        make.left.mas_equalTo(self.titleLabel);
+        make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
     }];
     [self.phoneTextField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(24);
         make.top.mas_equalTo(self.subtitleLabel.mas_bottom).mas_offset(20);
-        make.left.mas_equalTo(self.titleLabel);
+        make.left.mas_equalTo(self.subtitleLabel);
         make.right.mas_equalTo(-20);
     }];
     [self.errorTextLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -229,7 +228,7 @@
     [self.seperateLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(0.5);
         make.top.mas_equalTo(self.phoneTextField.mas_bottom).mas_offset(10);
-        make.left.mas_equalTo(self.titleLabel);
+        make.left.mas_equalTo(self.subtitleLabel);
         make.right.mas_equalTo(self.contentView).mas_offset(-20);
     }];
     
@@ -255,7 +254,7 @@
     [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(40);
         make.top.mas_equalTo(self.agencyView.mas_bottom).mas_offset(20);
-        make.left.mas_equalTo(self.titleLabel);
+        make.left.mas_equalTo(self.subtitleLabel);
         make.right.mas_equalTo(-20);
     }];
     [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -482,7 +481,7 @@
     if (!_contentView) {
         _contentView = [[UIView alloc]init];
         _contentView.backgroundColor = [UIColor whiteColor];
-        _contentView.layer.cornerRadius = 6;
+        _contentView.layer.cornerRadius = 10;
         _contentView.clipsToBounds = YES;
 
         }
@@ -517,7 +516,7 @@
 {
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc]init];
-        UIImage *img = ICON_FONT_IMG(13, @"\U0000e673", nil);
+        UIImage *img = ICON_FONT_IMG(20, @"\U0000e673", [UIColor colorWithHexStr:@"#d8d8d8"]);
         [_closeBtn setImage:img forState:UIControlStateNormal];
         [_closeBtn setImage:img forState:UIControlStateHighlighted];
     }
@@ -603,8 +602,8 @@
         _submitBtn.titleLabel.font = [UIFont themeFontRegular:16];
         [_submitBtn setTitle:@"提交" forState:UIControlStateNormal];
         [_submitBtn setTitle:@"提交" forState:UIControlStateHighlighted];
-        _submitBtn.layer.cornerRadius = 4;
-        _submitBtn.backgroundColor = [UIColor themeRed1];
+        _submitBtn.layer.cornerRadius = 20;
+        _submitBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
     }
     return _submitBtn;
 }
