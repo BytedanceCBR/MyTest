@@ -361,7 +361,7 @@
 }
 
 + (TTHttpTask *)requestReplyListWithCommentId:(NSString *)comment_id offset:(NSInteger)offset class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
-    NSString *queryPath = @"/2/comment/v1/reply_list/";
+    NSString *queryPath = @"/2/comment/v4/reply_list/";
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"id"] = comment_id ?: @"";

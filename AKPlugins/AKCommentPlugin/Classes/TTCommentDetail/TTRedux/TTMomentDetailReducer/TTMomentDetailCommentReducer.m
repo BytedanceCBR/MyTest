@@ -141,6 +141,20 @@
         [state.hotCommentLayouts addObject:[[TTCommentDetailCellLayout alloc] initWithCommentModel:model containViewWidth:state.cellWidth]];
     }
     
+    // 把置顶的评论放到评论的上方-不单独拿出去
+    state.needMarkedIndexPath = nil;
+    if (state.stickComments.count > 0 && (state.stickComments.count == state.stickCommentLayouts.count) && state.allComments && state.allCommentLayouts) {
+        for (int i = 0; i < state.stickComments.count; i++) {
+            TTCommentDetailReplyCommentModel *item = state.stickComments[i];
+            TTCommentDetailCellLayout *itemLayout = state.stickCommentLayouts[i];
+            [state.allComments insertObject:item atIndex:0];
+            [state.allCommentLayouts insertObject:itemLayout atIndex:0];
+            state.needMarkedIndexPath = [NSIndexPath indexPathForRow:0 inSection:2];
+        }
+    }
+    [state.stickComments removeAllObjects];
+    [state.stickCommentLayouts removeAllObjects];
+    
     //接口返回的评论数
     NSInteger totalCount = [action.payload tt_integerValueForKey:@"totalCount"];
     

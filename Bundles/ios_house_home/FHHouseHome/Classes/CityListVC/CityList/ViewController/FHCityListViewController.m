@@ -321,7 +321,7 @@
     
     if (self.disablePanGesture) {
         // 禁止滑动手势
-        if (self.weakNavVC) {
+        if (self.weakNavVC && self.weakNavVC.panRecognizer) {
             self.weakNavVC.panRecognizer.delegate = nil;
             [self.weakNavVC.view removeGestureRecognizer:self.weakNavVC.panRecognizer];
         }
@@ -332,7 +332,7 @@
     [super viewDidDisappear:animated];
     if (self.disablePanGesture) {
         // 取消禁止滑动手势
-        if (self.weakNavVC) {
+        if (self.weakNavVC && self.weakNavVC.panRecognizer) {
             self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
             [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
         }
@@ -423,7 +423,7 @@
     [[FHEnvContext sharedInstance] checkZLink];
     if (self.disablePanGesture) {
         // 取消禁止滑动手势
-        if (self.weakNavVC && self.weakNavVC.panRecognizer.delegate == nil) {
+        if (self.weakNavVC && self.weakNavVC.panRecognizer && self.weakNavVC.panRecognizer.delegate == nil) {
             self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
             [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
         }
@@ -445,7 +445,7 @@
         return;
     }
     // 禁止滑动手势
-    if (self.weakNavVC) {
+    if (self.weakNavVC && self.weakNavVC.panRecognizer) {
         self.weakNavVC.panRecognizer.delegate = nil;
         [self.weakNavVC.view removeGestureRecognizer:self.weakNavVC.panRecognizer];
     }
@@ -458,7 +458,7 @@
         return;
     }
     // 取消禁止滑动手势
-    if (self.weakNavVC) {
+    if (self.weakNavVC && self.weakNavVC.panRecognizer) {
         self.weakNavVC.panRecognizer.delegate = self.weakNavVC;
         [self.weakNavVC.view addGestureRecognizer:self.weakNavVC.panRecognizer];
     }
