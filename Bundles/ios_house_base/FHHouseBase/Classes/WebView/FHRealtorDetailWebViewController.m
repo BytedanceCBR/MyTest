@@ -27,7 +27,7 @@
 @property (nonatomic, strong) NSMutableDictionary *tracerDict;
 @property (nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 @property (nonatomic, copy) NSString *houseId;
-@property (nonatomic, assign) FHHouseType houseType; // 房源类型
+@property (nonatomic, assign) NSInteger houseType; // 房源类型
 
 @end
 
@@ -40,9 +40,9 @@ static NSString *s_oldAgent = nil;
         _tracerDict = @{}.mutableCopy;
         self.realtorUserInfo = paramObj.userInfo;
         _realtorId = paramObj.allParams[@"realtor_id"];
+        self.houseType = 0;
         [_tracerDict addEntriesFromDictionary:[self.realtorUserInfo allInfo][@"trace"]];
         _houseId = paramObj.userInfo.allInfo[@"house_id"];
-        _houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
     }
     return self;
@@ -59,6 +59,9 @@ static NSString *s_oldAgent = nil;
         @strongify(self);
         self->_realtorId = params[@"realtor_id"];
         NSString *phone = params[@"phone"];
+        if ([params[@"house_type"] isKindOfClass:[NSNumber class]]) {
+            self.houseType = [params[@"house_type"] integerValue];
+        }
 
         self.tracerDict[@"pageType"] = @"realtor_detail";
         NSDictionary *reportParams = params[@"reportParams"];
@@ -77,7 +80,7 @@ static NSString *s_oldAgent = nil;
         [params addEntriesFromDictionary:extraDict];
     }
     FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:params error:nil];
-    contactConfig.houseType = self.houseType;
+    contactConfig.houseType = self.houseType ? self.houseType : 9;
     contactConfig.houseId = self.houseId;
     contactConfig.phone = phone;
     contactConfig.realtorId = self->_realtorId;
