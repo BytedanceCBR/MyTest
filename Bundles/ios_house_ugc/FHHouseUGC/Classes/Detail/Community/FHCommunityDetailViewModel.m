@@ -392,6 +392,7 @@
         }
     }else{
         [titles addObject:@"全部"];
+        self.viewController.segmentView.hidden = YES;
     }
     self.selectedIndex = selectedIndex;
     self.viewController.segmentView.selectedIndex = selectedIndex;
