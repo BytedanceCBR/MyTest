@@ -66,7 +66,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property (nonatomic, copy)     NSDictionary       *shareExtraDic;// 额外分享参数字典
 @property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 @property (nonatomic, assign)   NSInteger       gotoGroupChatCount;
-@property (nonatomic, assign)   BOOL       canDirectlyGotoGroupChat;// 直接进入群聊
 
 @end
 
@@ -83,7 +82,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _onLineName = @"在线联系";
         _phoneCallName = @"电话咨询";
         _gotoGroupChatCount = 0;
-        _canDirectlyGotoGroupChat = YES;
         _needRefetchSocialGroupData = NO;
         
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:_houseType houseId:_houseId];
@@ -695,9 +693,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
     if ([TTAccountManager isLogin]) {
         // 已登录
-        ((FHBaseViewController *)self.belongsVC).hasValidateData = NO;
-        [(FHBaseViewController *)self.belongsVC startLoading];
-        [self p_gotoGroupChat_hasLogin];
+        // 未关注 先关注圈子
+        if (![self.socialInfo.socialGroupInfo.hasFollow boolValue]) {
+            // 关注后再跳转群聊
+            [self startUGCLoading];
+            [self followSocialGroup:YES];
+        } else {
+            // 已登录 已关注 跳转群聊
+            [self p_gotoGroupChat_hasLogin];
+        }
     } else {
         [self gotoLogin];
     }
@@ -706,18 +710,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)p_gotoGroupChat_hasLogin {
     if ([TTAccountManager isLogin]) {
         // 已登录
-        if ([IMManager shareInstance].session.state == onAuthSuccessed && self.canDirectlyGotoGroupChat) {
+        if ([IMManager shareInstance].session.state == onAuthSuccessed) {
             // IM 链接成功
-            ((FHBaseViewController *)self.belongsVC).hasValidateData = YES;
-            [(FHBaseViewController *)self.belongsVC endLoading];
+            [self endUGCLoading];
             self.gotoGroupChatCount = 0;
             [self p_gotoGroupChat];
         } else {
             // IM 正在链接
             if (self.gotoGroupChatCount >= 5) {
                 self.gotoGroupChatCount = 0;
-                ((FHBaseViewController *)self.belongsVC).hasValidateData = YES;
-                [(FHBaseViewController *)self.belongsVC endLoading];
+                [self endUGCLoading];
                 return;
             }
             __weak typeof(self) weakSelf = self;
@@ -727,8 +729,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             });
         }
     } else {
-        ((FHBaseViewController *)self.belongsVC).hasValidateData = YES;
-        [(FHBaseViewController *)self.belongsVC endLoading];
+        [self endUGCLoading];
         self.gotoGroupChatCount = 0;
     }
 }
@@ -738,10 +739,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         return;
     }
     self.needRefetchSocialGroupData = YES;
-    // 未关注 先关注圈子
-    if (![self.socialInfo.socialGroupInfo.hasFollow boolValue]) {
-        [self followSocialGroup];
-    }
     if ([TTReachability isNetworkConnected]) {
         if (self.socialInfo.socialGroupInfo.chatStatus.currentConversationCount >= self.socialInfo.socialGroupInfo.chatStatus.maxConversationCount && self.socialInfo.socialGroupInfo.chatStatus.maxConversationCount > 0) {
             [[ToastManager manager] showToast:@"成员已达上限"];
@@ -840,28 +837,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
     __weak typeof(self) wSelf = self;
-    self.canDirectlyGotoGroupChat = YES;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                wSelf.canDirectlyGotoGroupChat = NO;
-                [wSelf groupChatAction];
-                [wSelf followSocialGroup];
-                wSelf.bottomBar.groupChatBtn.enabled = NO;
-                wSelf.bottomBar.groupChatBtn.alpha = 0.5;
-                [wSelf reQuestSocialData];
-            } else {
-                wSelf.canDirectlyGotoGroupChat = YES;
+                [wSelf reQuestSocialData:YES];
             }
-        } else {
-            wSelf.canDirectlyGotoGroupChat = YES;
         }
     }];
 }
 
 // 登录成功之后关注圈子
-- (void)followSocialGroup {
+- (void)followSocialGroup:(BOOL)isFromLogin {
     // 关注
     __weak typeof(self) wSelf = self;
     BOOL hasFollow = [self.socialInfo.socialGroupInfo.hasFollow boolValue];
@@ -871,7 +858,17 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 // 未关注 执行关注成功
                 [wSelf uploadFollowTracerDic];
             }
+            if (isFromLogin) {
+                [wSelf endUGCLoading];
+            }
+            if (isSuccess && isFromLogin) {
+                // 登录-圈子数据更新-关注-群聊
+                wSelf.socialInfo.socialGroupInfo.hasFollow = @"1";
+                [wSelf groupChatAction];
+            }
         }];
+    } else {
+        [self endUGCLoading];
     }
 }
 
@@ -897,17 +894,30 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [FHUserTracker writeEvent:@"click_join" params:tracerDic];
 }
 
+- (void)startUGCLoading {
+    self.bottomBar.groupChatBtn.enabled = NO;
+    self.bottomBar.groupChatBtn.alpha = 0.5;
+    ((FHBaseViewController *)self.belongsVC).hasValidateData = NO;
+    [(FHBaseViewController *)self.belongsVC startLoading];
+}
+
+- (void)endUGCLoading {
+    self.bottomBar.groupChatBtn.enabled = YES;
+    self.bottomBar.groupChatBtn.alpha = 1;
+    ((FHBaseViewController *)self.belongsVC).hasValidateData = YES;
+    [(FHBaseViewController *)self.belongsVC endLoading];
+}
+
 // 登录成功重新拉取圈子数据
-- (void)reQuestSocialData {
+- (void)reQuestSocialData:(BOOL)isFromLogin {
     if (self.socialInfo && self.socialInfo.socialGroupInfo.socialGroupId.length > 0) {
+        if (isFromLogin) {
+            // 禁止按钮点击
+            [self startUGCLoading];
+        }
         __weak typeof(self) weakSelf = self;
         [FHHouseUGCAPI requestCommunityDetail:self.socialInfo.socialGroupInfo.socialGroupId class:[FHUGCScialGroupModel class] completion:^(id <FHBaseModelProtocol> model, NSError *error) {
             if (model && [model isKindOfClass:[FHUGCScialGroupModel class]]) {
-                // 从登录过来的
-                if (!weakSelf.canDirectlyGotoGroupChat) {
-                    weakSelf.bottomBar.groupChatBtn.enabled = YES;
-                    weakSelf.bottomBar.groupChatBtn.alpha = 1;
-                }
                 FHUGCScialGroupModel *socialModel = (FHUGCScialGroupModel *)model;
                 // 更新数据 主要是群聊
                 if (socialModel.data.chatStatus) {
@@ -932,8 +942,22 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                     NSDictionary *userInfo = @{@"social_group_id":socialModel.data.socialGroupId};
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHDetailNewUGCSocialCellNotiKey" object:nil userInfo:userInfo];
                 }
+                // 从登录过来的
+                if (isFromLogin) {
+                    if ([socialModel.data.hasFollow boolValue]) {
+                        // 已关注
+                        [weakSelf endUGCLoading];
+                        [weakSelf groupChatAction];
+                    } else {
+                        // 未关注
+                        [weakSelf followSocialGroup:isFromLogin];
+                    }
+                }
+            } else {
+                if (isFromLogin) {
+                    [weakSelf endUGCLoading];
+                }
             }
-            weakSelf.canDirectlyGotoGroupChat = YES;
         }];
     }
 }
@@ -945,7 +969,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     // 新房重新拉取圈子数据 --  进入下个页面返回就拉新数据吧
     if (self.houseType == FHHouseTypeNewHouse && [TTReachability isNetworkConnected] && [TTAccountManager isLogin]) {
         self.needRefetchSocialGroupData = NO;
-        [self reQuestSocialData];
+        [self reQuestSocialData:NO];
     }
 }
 
