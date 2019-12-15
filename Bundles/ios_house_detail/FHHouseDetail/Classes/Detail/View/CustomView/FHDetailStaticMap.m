@@ -198,24 +198,23 @@
     WeakSelf;
     id block = ^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
         StrongSelf;
-        BOOL success = !error;
-        self.loaded = success;
-        if (success && image.size.width > 0 && myWidth > 0) {
-            self.bitmapScaleRatio = myWidth / image.size.width;
-            [self loadAnnotations:self.annotations];
+        //如果是网络错误，直接返回，网络重连后会重试，但是不回调加载失败
+        if(error){
+            self.loaded = NO;
+            return;
         }
-
-        if (self.delegate) {
-            if (success) {
-                [self.delegate mapView:self loadFinished:YES message:@"ok"];
-            } else {
-                //普通的下载错误不算是加载失败，不回调
-                if (transformer.error) {
-                    NSString *message = transformer.error.userInfo[NSLocalizedDescriptionKey];
-                    [self.delegate mapView:self loadFinished:NO message:message];
-                }
-            }
+        
+        if(transformer.error || image.size.width <= 0.0f || myWidth <= 0.0f){
+            self.loaded = NO;
+            NSString *message = transformer.error.userInfo[NSLocalizedDescriptionKey];
+            [self.delegate mapView:self loadFinished:NO message:message];
+            return;
         }
+        
+        self.bitmapScaleRatio = myWidth / image.size.width;
+        self.loaded = YES;
+        [self loadAnnotations:self.annotations];
+        [self.delegate mapView:self loadFinished:YES message:@"ok"];
     };
 
     [self.backLayerImageView bd_setImageWithURL:URL
