@@ -631,9 +631,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             //适配5s
             if ([TTDeviceHelper isScreenWidthLarge320]) {
                 return 105;
-            }else
-            {
-                return 74;
+            }else{
+                return 85;
             }
         }
         return 12;
