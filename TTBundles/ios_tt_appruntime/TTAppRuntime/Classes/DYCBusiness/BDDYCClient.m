@@ -10,6 +10,7 @@
 
 #if __has_include(<TTBaseLib/TTSandBoxHelper.h>)
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import <TTBaseLib/NSDictionary+TTAdditions.h>
 #define BDDYC_HAS_BASELIB 1
 #endif
 
@@ -18,8 +19,8 @@
 #define BDDYC_HAS_INSTALL 1
 #endif
 
-#if __has_include(<TTSettings/TTSettingsManager.h>)
-#import <TTSettings/TTSettingsManager.h>
+#if __has_include(<TTSettingsManager/TTSettingsManager.h>)
+#import <TTSettingsManager/TTSettingsManager.h>
 #define BDDYC_HAS_SETTINGS 1
 #endif
 
@@ -49,9 +50,12 @@
     NSDictionary *dycConfs = @{@"on_off": @(1)};
     
 #if BDDYC_HAS_SETTINGS
-    dycConfs = [[TTSettingsManager sharedManager] settingForKey:@"better_settings"
-                                                   defaultValue:@{@"on_off": @(1)}
-                                                         freeze:NO];
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    dycConfs = [archSettings dictionaryValueForKey:@"better_settings" defalutValue:@{@"on_off": @(1)}];
+    
+//    dycConfs = [[TTSettingsManager sharedManager] settingForKey:@"better_settings"
+//                                                   defaultValue:@{@"on_off": @(1)}
+//                                                         freeze:NO];
 #endif
     
     NSNumber *onNumber = [dycConfs isKindOfClass:[NSDictionary class]] ? dycConfs[@"on_off"] : nil;
