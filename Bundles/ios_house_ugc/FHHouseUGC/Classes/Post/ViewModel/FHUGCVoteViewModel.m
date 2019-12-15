@@ -173,7 +173,7 @@
 // 从圈子详情页进入投票时带入的圈子信息处理
 - (void)configModelForSocialGroupId: (NSString *)socialGroupId socialGroupName: (NSString *)socialGroupName hasFollowed:(BOOL)followed {
     
-    if(self.model) {
+    if(self.model && followed) {
         FHUGCVotePublishCityInfo *cityInfo = [[FHUGCVotePublishCityInfo alloc] init];
         cityInfo.socialGroupId = socialGroupId;
         cityInfo.socialGroupName = socialGroupName;
