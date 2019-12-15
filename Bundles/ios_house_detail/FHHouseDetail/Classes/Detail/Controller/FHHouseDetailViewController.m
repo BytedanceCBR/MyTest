@@ -303,7 +303,7 @@
     [self.questionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-20);
         make.height.mas_equalTo(40);
-        make.bottom.mas_equalTo(self.view).mas_offset(-80 - bottomMargin);
+        make.bottom.mas_equalTo(self.view).mas_offset(-100 - bottomMargin);
     }];
     
     [self addDefaultEmptyViewFullScreen];
