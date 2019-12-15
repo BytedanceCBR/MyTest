@@ -90,9 +90,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     [self resetMaintableView];
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
- 
 }
 
 - (void)bindIndexChangedBlock
