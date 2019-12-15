@@ -308,7 +308,18 @@
     }];
     self.bottomGradientView.hidden =!model.isFold ;
     [model.tableView endUpdates];
+    [self addClickLoadMoreLog];
 }
+-(void)addClickLoadMoreLog{
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"page_type"]= tracerDic[@"page_type"];
+    params[@"element_from"]= @"house_info";
+    params[@"event_type"] = @"house_app2c_v2";
+    [FHUserTracker writeEvent:@"click_loadmore" params:params];
+}
+
+
 
 - (void)delayRemoveLoginVC {
     UINavigationController *navVC = self.baseViewModel.detailController.navigationController;

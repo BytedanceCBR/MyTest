@@ -106,7 +106,7 @@
 - (UILabel *)starNumLabel {
     if (!_starNumLabel) {
         _starNumLabel = [[UILabel alloc]init];
-        _starNumLabel.font = [UIFont themeFontMedium:18];
+        _starNumLabel.font = [UIFont themeFontDINAlternateBold:18];
         _starNumLabel.textColor = [UIColor colorWithHexStr:@"#ffb365"];
     }
     return _starNumLabel;
