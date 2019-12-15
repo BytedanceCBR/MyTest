@@ -98,7 +98,10 @@
 {
     // FHFakeInputNavbarTypeMessageAndMap 二手房大类页显示消息和小红点
     FHFakeInputNavbarType type = (_houseType == FHHouseTypeSecondHandHouse ? FHFakeInputNavbarTypeMessageAndMap : FHFakeInputNavbarTypeDefault);
-    FHFakeInputNavbarStyle style = (_houseType == FHHouseTypeSecondHandHouse ? FHFakeInputNavbarStyleDefault : FHFakeInputNavbarStyleBorder);
+    FHFakeInputNavbarStyle style = FHFakeInputNavbarStyleBorder;
+    if (_houseType == FHHouseTypeSecondHandHouse && [FHMainOldTopView showBanner]) {
+        style = FHFakeInputNavbarStyleDefault;
+    }
 
     _navbar = [[FHFakeInputNavbar alloc] initWithType:type];
     _navbar.style = style;
@@ -246,15 +249,17 @@
     CGFloat offset = 0;
     UIStatusBarStyle statusBarStyle = UIStatusBarStyleDefault;
     if ([self.viewModel.topBannerView isKindOfClass:[FHMainOldTopView class]]) {
-        if ([FHMainOldTopView bannerHeight] > 0) {
+        if ([FHMainOldTopView showBanner]) {
             offset = [FHMainOldTopView bannerHeight] - 42 + 10;
+        }else {
+            offset = [FHMainOldTopView totalHeight];
         }
         if (contentOffset.y >= 0) {
             alpha = 1;
-        }else if (offset > 0){
+        }else if (offset != 0){
             alpha = (self.topView.height + contentOffset.y) / offset;
         }
-        if (alpha >= 0.5) {
+        if (alpha >= 0.5 || _navbar.style == FHFakeInputNavbarStyleBorder) {
             statusBarStyle = UIStatusBarStyleDefault;
         }else {
             statusBarStyle = UIStatusBarStyleLightContent;

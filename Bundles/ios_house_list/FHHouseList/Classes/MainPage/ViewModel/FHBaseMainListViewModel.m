@@ -64,6 +64,8 @@
 #import "FHNeighbourhoodAgencyCardCell.h"
 #import <FHHouseDetail/FHDetailBaseModel.h>
 #import "FHHouseListRedirectTipCell.h"
+#import "FHMainTopViewHelper.h"
+#import "FHCommuteManager.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -258,21 +260,21 @@ extern NSString *const INSTANT_DATA_KEY;
                 bannerHeight = [FHMainRentTopView bannerHeight:dataModel.rentBanner];
             }
             FHMainRentTopView *topView = [[FHMainRentTopView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT + bannerHeight) banner:dataModel.rentBanner];
-            topView.items = rentModel.items;
+            [topView updateWithConfigData:dataModel];
             topView.delegate = self;
             self.topBannerView = topView;
         }
         
     }else if (_houseType == FHHouseTypeSecondHandHouse){
-        if (dataModel.houseOpData.items.count > 0) {
+        // todo zjing confirm
+        if (dataModel.houseOpData2.items.count > 0) {
             FHMainOldTopView *topView = [[FHMainOldTopView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, OLD_ICON_HEADER_HEIGHT)];
             topView.delegate = self;
-            topView.items = dataModel.houseOpData.items;
             self.topBannerView = topView;
-            
-            for (FHConfigDataOpData2ItemsModel *item in dataModel.houseOpData.items ) {
-                [self addOperationShowLog:item.logPb[@"operation_name"]];
-            }
+            [topView updateWithConfigData:dataModel];
+//            for (FHConfigDataOpData2ItemsModel *item in dataModel.houseOpData.items ) {
+//                [self addOperationShowLog:item.logPb[@"operation_name"]];
+//            }
         }
     }
     
@@ -1035,7 +1037,7 @@ extern NSString *const INSTANT_DATA_KEY;
 }
 
 #pragma mark - top banner rent delegate
--(void)selecteRentItem:(FHConfigDataRentOpDataItemsModel *)model
+-(void)selecteRentItem:(FHConfigDataOpDataItemsModel *)model
 {
     NSMutableString *openUrl = [[NSMutableString alloc] initWithString:model.openUrl];// model.openUrl;
     if (![openUrl containsString:@"house_type"]) {
@@ -1114,7 +1116,7 @@ extern NSString *const INSTANT_DATA_KEY;
     }
 }
 
--(void)selecteOldItem:(FHConfigDataOpData2ItemsModel *)model
+-(void)selecteOldItem:(FHConfigDataOpDataItemsModel *)model
 {
     TTRouteParamObj *paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:model.openUrl]];
     NSMutableDictionary *queryP = [NSMutableDictionary new];
@@ -1128,18 +1130,57 @@ extern NSString *const INSTANT_DATA_KEY;
     dict[UT_SEARCH_ID] = baseParams[UT_SEARCH_ID] ? : @"be_null";
     dict[UT_ORIGIN_SEARCH_ID] = baseParams[UT_ORIGIN_SEARCH_ID] ? : @"be_null";
     
-    NSString *reportParams = [self getEvaluateWebParams:dict];
-    NSString *jumpUrl = @"sslocal://webview";
-    NSMutableString *urlS = [[NSMutableString alloc] init];
-    [urlS appendString:queryP[@"url"]];
-    [urlS appendFormat:@"&report_params=%@",reportParams];
-    queryP[@"url"] = urlS;
+    NSDictionary *userInfoDict = @{@"tracer":dict};
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     
-    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:queryP];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:jumpUrl] userInfo:info];
+    if ([model.openUrl isKindOfClass:[NSString class]]) {
+        NSURL *url = [NSURL URLWithString:model.openUrl];
+        if ([model.openUrl containsString:@"://commute_list"]){
+            //通勤找房
+            [[FHCommuteManager sharedInstance] tryEnterCommutePage:model.openUrl logParam:dict];
+        }else{
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+    }
     
     NSDictionary *logpbDict = model.logPb;
     [self addOperationClickLog:logpbDict[@"operation_name"]];
+}
+
+- (void)clickBannerItem:(FHConfigDataRentOpDataItemsModel *)opData withIndex:(NSInteger)index
+{
+    NSString *opId = opData.id;
+    if (opId.length > 0) {
+    } else {
+        opId = @"be_null";
+    }
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    params[@"page_type"] = [self pageTypeString];
+    params[@"enter_from"] = @"maintab_ad";// todo zjing event
+    params[@"rank"] = @(index);
+    params[@"item_id"] = opId;
+    params[@"item_title"] = opData.title.length > 0 ? opData.title : @"be_null";
+    params[@"description"] = opData.descriptionStr.length > 0 ? opData.descriptionStr : @"be_null";
+    NSString *origin_from = @"be_null";
+    if (opData.logPb && [opData.logPb isKindOfClass:[NSDictionary class]]) {
+        origin_from = opData.logPb[@"origin_from"];
+    }
+    params[@"origin_from"] = origin_from;
+    
+    [FHUserTracker writeEvent:@"banner_click" params:params];
+    
+    // 页面跳转，origin_from：服务端下方，如果进入到房源相关页面需要透传
+    if (opData.openUrl.length > 0) {
+        NSMutableDictionary *trace_params = [NSMutableDictionary new];
+        trace_params[@"origin_from"] = origin_from;
+        trace_params[@"enter_from"] = @"maintab_ad";
+        
+        NSDictionary *infoDict = @{@"tracer":trace_params};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+        NSMutableString *openUrl = [[NSMutableString alloc] initWithString:opData.openUrl];
+        NSURL *url = [NSURL URLWithString:openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
 }
 
 -(void)rentBannerLoaded:(UIView *)bannerView

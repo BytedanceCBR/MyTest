@@ -15,11 +15,18 @@
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import <FHCommonUI/FHFakeInputNavbar.h>
 #import <FHHouseBase/FHHomeEntranceItemView.h>
+#import "FHListEntrancesView.h"
+#import <FHHouseBase/FHEnvContext.h>
+#import <Masonry.h>
+#import <FHCommonUI/FHFakeInputNavbar.h>
 
 @interface FHMainRentTopView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
-@property(nonatomic , strong) UICollectionView *collectionView;
-@property(nonatomic , strong) UICollectionViewFlowLayout *layout;
+@property(nonatomic , strong) NSArray<FHConfigDataRentOpDataItemsModel *> *items;
+@property(nonatomic , strong)  FHConfigDataModel *configModel;
+
+@property(nonatomic , strong) FHListEntrancesView *bottomContainerView;
+
 @property(nonatomic , strong) UIImageView *bannerView;
 @end
 
@@ -30,6 +37,7 @@
 
 #define BANNER_HEIGHT  (102-BOTTOM_PADDING)
 #define BANNER_HOR_MARGIN 14
+#define kFHMainRentEntranceCountPerRow 4
 
 
 @implementation FHMainRentTopView
@@ -72,7 +80,9 @@
         
         self.clipsToBounds = YES;
         self.backgroundColor = [UIColor themeGray9];
-        
+        [self setupUI];
+        [self initConstraints];
+
 //        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
 //        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 //        layout.headerReferenceSize = CGSizeMake(HOR_MARGIN, 1);
@@ -141,20 +151,57 @@
     return self;
 }
 
+- (void)setupUI
+{
+    [self addSubview:self.bottomContainerView];
+    [self addSubview:self.bannerView];
+
+    self.bottomContainerView.backgroundColor = [UIColor themeBlue1];
+}
+
+- (void)initConstraints
+{
+    [self.bottomContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo([FHFakeInputNavbar perferredHeight] + 10);
+        make.height.mas_equalTo([FHMainRentTopView entranceHeight]);
+    }];
+//    [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.mas_equalTo(0);
+//        make.top.mas_equalTo(self.bannerView.mas_bottom).mas_offset(-40);
+//        make.bottom.mas_equalTo(self.bottomContainerView);// todo zjing height
+//    }];
+}
+
 + (CGFloat)entranceHeight
 {
-    return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+    return [FHListEntrancesView rowHeight];
 }
 
 + (CGFloat)totalHeight
 {
-    return [FHFakeInputNavbar perferredHeight] + [self entranceHeight] + 8;
+    return [FHFakeInputNavbar perferredHeight] + [self entranceHeight] + 20;
 }
 
--(void)setItems:(NSArray *)items
+- (void)updateWithConfigData:(FHConfigDataModel *)configModel
 {
-    _items = items;
+    // todo zjing data
+    _configModel = configModel;
+    NSArray *items = configModel.rentOpData.items;
+    if (items.count > 5) {
+        _items = [items subarrayWithRange:NSMakeRange(0, 5 )];
+    }else{
+        _items = items;
+    }
+    [self.bottomContainerView updateWithItems:_items];
     
+    __weak typeof(self)wself = self;
+    self.bottomContainerView.clickBlock = ^(NSInteger clickIndex , FHConfigDataOpDataItemsModel *itemModel){
+        if ([self.delegate respondsToSelector:@selector(selecteRentItem:)]) {
+            FHConfigDataRentOpDataItemsModel *model = _items[clickIndex];
+            [self.delegate selecteRentItem:model];
+        }
+    };
 }
 
 -(void)setBannerUrl:(NSString *)bannerUrl
@@ -163,14 +210,8 @@
     [_bannerView bd_setImageWithURL:[NSURL URLWithString:bannerUrl]];
 }
 
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return _items.count;
-}
-
 -(__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     FHMainRentTopCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellId forIndexPath:indexPath];
     
     FHConfigDataRentOpDataItemsModel *model = _items[indexPath.item];
@@ -188,34 +229,6 @@
     
 }
 
-//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
-//{
-//    if (_items.count < 1) {
-//        return 0;
-//    }
-//
-//    return (SCREEN_WIDTH - ITEM_WIDTH*_items.count)/(_items.count - 1);
-//}
-
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
-{
-    if (_items.count < 1) {
-        return 0;
-    }
-    
-    return (SCREEN_WIDTH - ITEM_WIDTH*_items.count - 2*HOR_MARGIN)/(_items.count - 1);
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return CGSizeMake(ITEM_WIDTH, self.collectionView.frame.size.height - TOP_PADDING);
-}
-
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-{
-    return UIEdgeInsetsMake(TOP_PADDING, 0, 0, 0);
-}
-
 -(void)bannerClickAction
 {
     if ([self.delegate respondsToSelector:@selector(tapRentBanner)]) {
@@ -223,12 +236,14 @@
     }
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (FHListEntrancesView *)bottomContainerView
+{
+    if (!_bottomContainerView) {
+        _bottomContainerView = [[FHListEntrancesView alloc]init];
+        _bottomContainerView.backgroundColor = [UIColor themeGray8];
+        _bottomContainerView.countPerRow = kFHMainRentEntranceCountPerRow;
+    }
+    return _bottomContainerView;
 }
-*/
 
 @end

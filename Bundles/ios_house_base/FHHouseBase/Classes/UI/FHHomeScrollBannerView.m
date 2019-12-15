@@ -10,6 +10,7 @@
 #import "UIColor+Theme.h"
 #import "FHUtils.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
+#import "FHWeakProxy.h"
 
 
 // FHHomeScrollBannerView
@@ -179,7 +180,7 @@
     }
 }
 
-- (void)timerRun {
+- (void)timerRun:(NSTimer *)timer {
     [self.bannerScrollView setContentOffset:CGPointMake(self.bannerScrollView.frame.size.width * 2, 0) animated:YES];
 }
 
@@ -193,8 +194,9 @@
     if (self.totalCount <= 1) {
         return;
     }
-    self.timer = [NSTimer timerWithTimeInterval:self.timeDuration target:self selector:@selector(timerRun) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+    NSTimer *timer = [NSTimer timerWithTimeInterval:self.timeDuration target:[FHWeakProxy proxyWithTarget:self] selector:@selector(timerRun:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    self.timer = timer;
 }
 
 - (void)removeTimer {
@@ -203,6 +205,7 @@
         self.timer = nil;
     }
 }
+
 
 // 重启定时器
 - (void)resetTimer {
@@ -235,7 +238,8 @@
 
 - (void)dealloc
 {
-    [self removeGestureRecognizer:_tapGes];
+    [self removeGestureRecognizer:_tapGes];// todo zjing zhangyuanke confirm ???
+    [_timer invalidate];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
