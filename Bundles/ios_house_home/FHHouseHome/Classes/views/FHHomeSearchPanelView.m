@@ -69,14 +69,13 @@
     [self addSubview:searchButton];
     [self.searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
     searchButton.layer.cornerRadius = 17;
-    searchButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
-    searchButton.layer.shadowOffset = CGSizeMake(0.f, 4.f);
-    searchButton.layer.shadowRadius = 6.f;
-    searchButton.layer.shadowOpacity = 1.f;
+    searchButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    searchButton.layer.shadowOffset = CGSizeMake(0.f, 3.f);
+//    searchButton.layer.shadowRadius = 3.f;
+    searchButton.layer.shadowOpacity = 0.1f;
     searchButton.layer.borderWidth = 0.5;
     searchButton.layer.borderColor = [UIColor themeGray5].CGColor;
     [searchButton.titleLabel setFont:[UIFont themeFontRegular:14]];
-    searchButton.backgroundColor = [UIColor themeHomeColor];
     [searchButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self).offset(15);
         make.height.mas_equalTo(34);
@@ -155,6 +154,7 @@
         make.height.mas_equalTo(20);
         make.right.equalTo(self.categoryBgView).offset(-6);
     }];
+    
 }
 
 - (void)searchBtnClick

@@ -286,6 +286,8 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
 //        StrongSelf;
 //        [self showUnValibleCity];
 //    }];
+    
+    [self setBackgroundColor:[UIColor themeHomeColor]];
 }
 
 - (void)refreshLayout {
@@ -334,7 +336,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     //to do 根据服务端下发配置背景图
     //    self.backgroundImageView.image = [[self class] searchBackgroundImage];
     //    self.searchBarImageView.image = [[self class] searchBarImage];
-    self.backgroundImageView.backgroundColor = [UIColor whiteColor];
+    self.backgroundImageView.backgroundColor = [UIColor themeHomeColor];
     //    self.searchBarImageView.backgroundColor = [UIColor whiteColor];
     self.backgroundImageView.contentMode = UIViewContentModeScaleToFill;
 }
