@@ -344,10 +344,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.isShowing = YES;
     self.isShowRefreshTip = NO;
     
-    if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
-        [self.homeListViewModel checkCityStatus];
-    }
-    
     [self scrollToTopEnable:YES];
     
     self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
