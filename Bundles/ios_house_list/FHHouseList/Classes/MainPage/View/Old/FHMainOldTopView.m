@@ -31,8 +31,7 @@
 
 @property(nonatomic , strong) NSArray<FHConfigDataOpDataItemsModel *> *items;
 
-@property(nonatomic , strong) UIView *topBgView;//64 + 140 + 10
-
+@property(nonatomic , strong) UIView *topBgView;
 @property(nonatomic , strong) FHHomeScrollBannerView *bannerView;
 @property(nonatomic , strong) UIView *bottomBgView;
 @property(nonatomic , strong) FHListEntrancesView *bottomContainerView;
@@ -60,7 +59,6 @@
 
 + (CGFloat)bannerHeight
 {
-    // todo zjing
     if([FHMainOldTopView showBanner]) {
         return ceil(([UIScreen mainScreen].bounds.size.width - kFHScrollBannerLeftRightMargin * 2) / 335.0f * 140);
     }else {
@@ -92,14 +90,9 @@
     [self addSubview:self.bottomContainerView];
     self.bannerView.delegate = self;
     [self.bannerView setContent:[UIScreen mainScreen].bounds.size.width - kFHScrollBannerLeftRightMargin * 2 height:[FHMainOldTopView bannerHeight]];
-    
-    // todo zjing
-    self.topBgView.backgroundColor = [UIColor colorWithHexString:@"#c5b8aej" alpha:1];
-    self.bannerView.backgroundColor = [UIColor redColor];
     self.bottomBgView.hidden = [FHMainOldTopView showBanner] ? NO : YES;
-    
-    self.bottomContainerView.backgroundColor = [UIColor themeBlue1];
-
+    self.topBgView.backgroundColor = [UIColor themeGray8];
+    self.bottomBgView.backgroundColor = [UIColor themeGray8];
 }
 
 - (void)initConstraints
@@ -123,13 +116,12 @@
     [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(self.bannerView.mas_bottom).mas_offset(-40);
-        make.bottom.mas_equalTo(self.bottomContainerView);// todo zjing height
+        make.bottom.mas_equalTo(self.bottomContainerView);
     }];
 }
 
 - (void)updateWithConfigData:(FHConfigDataModel *)configModel
 {
-    // todo zjing data
     _configModel = configModel;
     NSArray *items = configModel.houseOpData2.items;
     if (items.count > 5) {
@@ -139,8 +131,16 @@
     }
     [self.bottomContainerView updateWithItems:_items];
     _bannerOpData = configModel.houseListBanner;
+    if ([FHMainOldTopView showBanner]) {
+        if (_bannerOpData.items.count > 0) {
+            FHConfigDataRentOpDataItemsModel *opData = _bannerOpData.items[0];
+            self.topBgView.backgroundColor = [UIColor colorWithHexString:opData.backgroundColor];
+        }else {
+            self.topBgView.backgroundColor = [UIColor themeGray8];
+        }
+    }
     [self updateBannerWithModel:self.bannerOpData];
-    
+
     __weak typeof(self)wself = self;
     self.bottomContainerView.clickBlock = ^(NSInteger clickIndex , FHConfigDataOpDataItemsModel *itemModel){
         if ([wself.delegate respondsToSelector:@selector(selecteOldItem:)]) {
@@ -249,7 +249,7 @@
 {
     if (!_bottomBgView) {
         _bottomBgView = [[UIView alloc]init];
-        _bottomBgView.backgroundColor = [UIColor themeGray8];
+        _bottomBgView.backgroundColor = [UIColor whiteColor];
         _bottomBgView.layer.masksToBounds = YES;
         _bottomBgView.layer.cornerRadius = 10;
     }

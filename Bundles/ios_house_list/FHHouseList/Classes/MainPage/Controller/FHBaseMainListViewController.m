@@ -247,17 +247,20 @@
 {
     CGFloat alpha = 0;
     CGFloat offset = 0;
+    CGFloat offsetY = 0;
     UIStatusBarStyle statusBarStyle = UIStatusBarStyleDefault;
     if ([self.viewModel.topBannerView isKindOfClass:[FHMainOldTopView class]]) {
+        offsetY = self.topView.height + contentOffset.y;
         if ([FHMainOldTopView showBanner]) {
             offset = [FHMainOldTopView bannerHeight] - 42 + 10;
         }else {
-            offset = [FHMainOldTopView totalHeight];
+            offset = [FHMainOldTopView entranceHeight];
         }
         if (contentOffset.y >= 0) {
             alpha = 1;
         }else if (offset != 0){
-            alpha = (self.topView.height + contentOffset.y) / offset;
+            CGFloat notiBarHeight = self.viewModel.animateShowNotify ? self.topView.notifyHeight : 0;
+            alpha = (offsetY - notiBarHeight) / offset;
         }
         if (alpha >= 0.5 || _navbar.style == FHFakeInputNavbarStyleBorder) {
             statusBarStyle = UIStatusBarStyleDefault;
@@ -265,7 +268,7 @@
             statusBarStyle = UIStatusBarStyleLightContent;
         }
     }else if ([self.viewModel.topBannerView isKindOfClass:[FHMainRentTopView class]]) {
-        offset = [FHMainRentTopView totalHeight];
+        offset = [FHMainRentTopView entranceHeight]; // todo zjing height
         if (contentOffset.y >= 0) {
             alpha = 1;
         }else if (offset > 0){

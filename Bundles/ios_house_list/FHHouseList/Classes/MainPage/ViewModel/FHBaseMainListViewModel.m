@@ -1356,7 +1356,7 @@ extern NSString *const INSTANT_DATA_KEY;
         return cell;
     }else{
         BOOL isLastCell = NO;
-        BOOL isFirstCell = NO;// todo zjing
+        BOOL isFirstCell = NO;
         
         NSString *identifier = @"";
         id data = nil;

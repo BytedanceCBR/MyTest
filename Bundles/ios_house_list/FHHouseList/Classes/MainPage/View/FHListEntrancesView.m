@@ -24,12 +24,6 @@
 +(CGFloat)rowHeight
 {
     return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
-    
-    //    if([[FHEnvContext sharedInstance] getConfigFromCache].mainPageBannerOpData.items.count > 0){
-    //    }else
-    //    {
-    //        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW + 10;
-    //    }
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -88,8 +82,6 @@
         [itemView setBackgroundColor:[UIColor clearColor]];
         itemView.hidden = NO;
     }
-    
-    [self setBackgroundColor:[UIColor themeHomeColor]];
 }
 
 -(void)onItemAction:(FHHomeEntranceItemView *)itemView

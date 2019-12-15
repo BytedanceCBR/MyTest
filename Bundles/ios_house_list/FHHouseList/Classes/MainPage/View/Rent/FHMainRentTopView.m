@@ -20,7 +20,7 @@
 #import <Masonry.h>
 #import <FHCommonUI/FHFakeInputNavbar.h>
 
-@interface FHMainRentTopView ()<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface FHMainRentTopView ()
 
 @property(nonatomic , strong) NSArray<FHConfigDataRentOpDataItemsModel *> *items;
 @property(nonatomic , strong)  FHConfigDataModel *configModel;
@@ -37,7 +37,7 @@
 
 #define BANNER_HEIGHT  (102-BOTTOM_PADDING)
 #define BANNER_HOR_MARGIN 14
-#define kFHMainRentEntranceCountPerRow 4
+#define kFHMainRentEntranceCountPerRow 5
 
 
 @implementation FHMainRentTopView
@@ -79,7 +79,7 @@
     if (self) {
         
         self.clipsToBounds = YES;
-        self.backgroundColor = [UIColor themeGray9];
+        self.backgroundColor = [UIColor themeGray8];
         [self setupUI];
         [self initConstraints];
 
@@ -155,39 +155,32 @@
 {
     [self addSubview:self.bottomContainerView];
     [self addSubview:self.bannerView];
-
-    self.bottomContainerView.backgroundColor = [UIColor themeBlue1];
 }
 
 - (void)initConstraints
 {
     [self.bottomContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo([FHFakeInputNavbar perferredHeight] + 10);
+        make.top.mas_equalTo([FHFakeInputNavbar perferredHeight]);
         make.height.mas_equalTo([FHMainRentTopView entranceHeight]);
     }];
-//    [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.mas_equalTo(0);
-//        make.top.mas_equalTo(self.bannerView.mas_bottom).mas_offset(-40);
-//        make.bottom.mas_equalTo(self.bottomContainerView);// todo zjing height
-//    }];
 }
 
 + (CGFloat)entranceHeight
 {
-    return [FHListEntrancesView rowHeight];
+    return [FHListEntrancesView rowHeight] + 20;
 }
 
 + (CGFloat)totalHeight
 {
-    return [FHFakeInputNavbar perferredHeight] + [self entranceHeight] + 20;
+    return [FHFakeInputNavbar perferredHeight] + [self entranceHeight];
 }
 
 - (void)updateWithConfigData:(FHConfigDataModel *)configModel
 {
     // todo zjing data
     _configModel = configModel;
-    NSArray *items = configModel.rentOpData.items;
+    NSArray *items = configModel.houseOpData2.items;
     if (items.count > 5) {
         _items = [items subarrayWithRange:NSMakeRange(0, 5 )];
     }else{
@@ -208,25 +201,6 @@
 {
     _bannerUrl = bannerUrl;
     [_bannerView bd_setImageWithURL:[NSURL URLWithString:bannerUrl]];
-}
-
--(__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    FHMainRentTopCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellId forIndexPath:indexPath];
-    
-    FHConfigDataRentOpDataItemsModel *model = _items[indexPath.item];
-    [cell updateWithModel:model];
-    
-    return cell;
-}
-
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([self.delegate respondsToSelector:@selector(selecteRentItem:)]) {
-        FHConfigDataRentOpDataItemsModel *model = _items[indexPath.item];
-        [self.delegate selecteRentItem:model];
-    }
-    
 }
 
 -(void)bannerClickAction

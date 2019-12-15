@@ -1505,12 +1505,7 @@ extern NSString *const INSTANT_DATA_KEY;
             };
         }
         return cell;
-    }
-    // todo zjing
-    //                if (cellModel.secondModel.externalInfo && cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
-    //                    [cell updateThirdPartHouseSourceStr:cellModel.secondModel.externalInfo.externalName];
-    //                }
-    
+    } 
     return [[FHListBaseCell alloc]init];
 }
 

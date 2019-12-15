@@ -310,10 +310,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *bottomTip;
 @property (nonatomic, copy , nullable) FHImageModel *banner;
 @property (nonatomic, assign) NSInteger offset;
-
-#pragma mark todo zjing
-//@property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
-
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHSearchHouseDataModel *recommendSearchModel;
 
@@ -343,8 +339,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *bottomTip;
 @property (nonatomic, copy , nullable) FHImageModel *banner;
 @property (nonatomic, assign) NSInteger offset;
-
-#pragma mark todo zjing
 @property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
 @property (nonatomic, strong , nullable) NSArray<FHSearchBaseItemModel *> *searchItems;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;

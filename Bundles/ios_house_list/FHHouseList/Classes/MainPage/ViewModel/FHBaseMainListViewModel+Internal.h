@@ -64,7 +64,6 @@
 @property(nonatomic , assign) BOOL addEnterCategory; // 是否算enter_category
 
 @property(nonatomic , assign) BOOL showFilter;
-@property(nonatomic , assign) BOOL animateShowNotify;
 @property(nonatomic , copy)  void(^showNotifyDoneBlock)();
 
 @property (nonatomic, strong) JSONModel *currentRecommendHouseDataModel;
