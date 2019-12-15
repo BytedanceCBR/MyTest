@@ -200,7 +200,7 @@
         StrongSelf;
         BOOL success = !error;
         self.loaded = success;
-        if (success) {
+        if (success && image.size.width > 0 && myWidth > 0) {
             self.bitmapScaleRatio = myWidth / image.size.width;
             [self loadAnnotations:self.annotations];
         }
