@@ -133,6 +133,7 @@
     }
     
     [self.contentView setBackgroundColor:[UIColor themeHomeColor]];
+    [self setBackgroundColor:[UIColor themeHomeColor]];
 }
 
 -(void)onItemAction:(FHHomeEntranceItemView *)itemView

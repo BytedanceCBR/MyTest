@@ -71,7 +71,7 @@ static const float kSegementedMainPadingBottom = 10;
     
     
     _searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_searchBtn setImage:ICON_FONT_IMG(16,@"\U0000e675",[UIColor blackColor]) forState:UIControlStateNormal];
+    [_searchBtn setImage:ICON_FONT_IMG(20,@"\U0000e675",[UIColor themeGray1]) forState:UIControlStateNormal];
     [_searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
     _searchBtn.hidden = YES;
     [self addSubview:_searchBtn];
