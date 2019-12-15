@@ -80,15 +80,12 @@
     [self.realtorLabelContainer addSubview:_nameView];
 
     _verticalDivider = [[UIView alloc] init];
-    _verticalDivider.backgroundColor = [UIColor colorWithHexStr:@"#f1f1f0"];
-    _verticalDivider.layer.borderColor = [UIColor colorWithHexStr:@"#d6d6d6"].CGColor;
-    _verticalDivider.layer.borderWidth = 0.5;
+//    _verticalDivider.backgroundColor = [UIColor colorWithHexStr:@"#f1f1f0"];
+//    _verticalDivider.layer.borderColor = [UIColor colorWithHexStr:@"#d6d6d6"].CGColor;
+//    _verticalDivider.layer.borderWidth = 0.5;
     [self.realtorLabelContainer addSubview:_verticalDivider];
 
-    self.agencyView = [UILabel createLabel:@"" textColor:@"" fontSize:10];
-    _agencyView.textColor = [UIColor themeGray3];
-    _agencyView.textAlignment = NSTextAlignmentCenter;
-    [self.verticalDivider addSubview:_agencyView];
+
 
     _houseReviewView = [UILabel createLabel:@"" textColor:@"" fontSize:10];
     _houseReviewView.textColor = [UIColor themeGray3];
@@ -156,12 +153,18 @@
         make.left.mas_equalTo(self.nameView.mas_right).offset(6);
         make.centerY.mas_equalTo(self.nameView);
     }];
-
+    [self.identifyBacima mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.verticalDivider);
+    }];
+    self.agencyView = [UILabel createLabel:@"" textColor:@"" fontSize:10];
+    _agencyView.textColor = [UIColor themeGray3];
+    _agencyView.textAlignment = NSTextAlignmentCenter;
+    [self.verticalDivider addSubview:_agencyView];
     [self.agencyView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.verticalDivider).offset(1);
         make.bottom.mas_equalTo(self.verticalDivider).offset(-1);
-        make.left.mas_equalTo(self.verticalDivider).offset(1);
-        make.right.mas_equalTo(self.verticalDivider).offset(-1);
+        make.left.mas_equalTo(self.verticalDivider).offset(2);
+        make.right.mas_equalTo(self.verticalDivider).offset(-2);
     }];
 
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -181,13 +184,13 @@
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self.nameView);
+        make.top.mas_equalTo(self.nameView).offset(-5);
     }];
 
     [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
-        make.top.mas_equalTo(self.nameView);
+        make.top.mas_equalTo(self.nameView).offset(-5);
     }];
 }
 
@@ -241,16 +244,21 @@
         NSUInteger nameLen = MIN(self.nameView.text.length, 4);
         make.width.mas_equalTo(nameLen * 14 + 1);
     }];
-    [self.agencyView mas_updateConstraints:^(MASConstraintMaker *make) {
-        NSUInteger agencyLen = MIN(self.agencyView.text.length, 6);
-        make.width.mas_equalTo(agencyLen * 14 + 1);
-    }];
     [self.realtorLabelContainer mas_updateConstraints:^(MASConstraintMaker *make) {
         NSInteger height = isEmptyString(self.houseReviewView.text) ? 20 : 37;
         make.height.mas_equalTo(height);
     }];
 }
 
+- (UIImageView *)identifyBacima {
+    if (!_identifyBacima) {
+        UIImageView *identifyBacima = [[UIImageView alloc]init];
+        identifyBacima.image = [UIImage imageNamed:@"identify_bac_image"];
+        [self.verticalDivider addSubview:identifyBacima];
+        _identifyBacima = identifyBacima;
+    }
+    return  _identifyBacima;
+}
 + (void)calculateHeight:(FHDetailHouseReviewCommentModel *)modelData isExpand:(BOOL)isExpand {
     NSUInteger numberOfLines = isExpand ? 0 : 3;
     if (isExpand) {

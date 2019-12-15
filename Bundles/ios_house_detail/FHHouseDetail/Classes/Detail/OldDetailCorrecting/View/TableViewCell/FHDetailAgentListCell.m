@@ -161,7 +161,7 @@
                     ratio = image.size.width / image.size.height;
                 }
                 [identifyView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.width.mas_equalTo(14 * ratio);
+                    make.width.mas_equalTo(44);
                 }];
             }
         }];
@@ -418,7 +418,7 @@
             }
             // 移除字段
             [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id"]];
-            [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
+            [FHUserTracker  writeEvent:@"realtor_show" params:tracerDic];
         }
     }
 }
@@ -462,8 +462,9 @@
 
 -(UILabel *)tagLabel {
     if(!_tagLabel) {
-        _tagLabel = [UILabel new];
+        _tagLabel = [[UILabel alloc]init];
         _tagLabel.font = [UIFont themeFontMedium:10];
+        _tagLabel.numberOfLines = 1;
         _tagLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _tagLabel;
@@ -474,8 +475,9 @@
         [self.contentView addSubview:self.tagLabel];
         [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.contentView);
+            
         }];
-        
+
         self.contentView.layer.cornerRadius = 2;
 //        self.contentView.layer.masksToBounds = YES;
     }
@@ -522,8 +524,8 @@
 }
 -(instancetype)init {
     if(self = [super init]) {
-        self.maximumInteritemSpacing = 4.f;
-        self.minimumInteritemSpacing = 4.0f;
+        self.maximumInteritemSpacing = 6.0f;
+        self.minimumInteritemSpacing = 6.0f;
         self.scrollDirection = UICollectionViewScrollDirectionVertical;
     }
     return self;
@@ -567,6 +569,9 @@
     }
     return _vSepLine;
 }
+
+
+
 
 -(instancetype)initWithModel:(FHDetailContactModel *)model {
     
@@ -724,10 +729,10 @@
     }];
     CGFloat ratio = 0;
     [self.identifyView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.avator).mas_offset(2);
+        make.top.mas_equalTo(self.avator).mas_offset(27);
         make.centerX.mas_equalTo(self.avator);
-        make.height.mas_equalTo(14);
-        make.width.mas_equalTo(14 * ratio);
+        make.height.mas_equalTo(19);
+        make.width.mas_equalTo(44);
     }];
     [self.name mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avator.mas_right).offset(14);
@@ -749,12 +754,12 @@
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self.name);
+        make.top.mas_equalTo(self.name).offset(-5);
     }];
     [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
-        make.top.mas_equalTo(self.name);
+        make.top.mas_equalTo(self.name).offset(-5);
     }];
 }
 
@@ -781,7 +786,7 @@
                                                   NSFontAttributeName: [UIFont themeFontRegular:10]
                                                   }];
         
-        itemSize.width += 6;
+        itemSize.width += 8;
         return itemSize;
     }
     return CGSizeZero;

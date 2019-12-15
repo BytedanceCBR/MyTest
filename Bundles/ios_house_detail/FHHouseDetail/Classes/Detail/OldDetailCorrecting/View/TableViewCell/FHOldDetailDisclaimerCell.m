@@ -50,8 +50,6 @@
         return;
     }
     self.currentData = data;
-    //
-    
     FHOldDetailDisclaimerModel *model = (FHOldDetailDisclaimerModel *)data;
     if (model.disclaimer && model.disclaimer.text.length > 0) {
         NSString *text = model.disclaimer.text;
@@ -266,9 +264,7 @@
     [self.disclaimerContent mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(5);
-        make.height.mas_equalTo(self.lineHeight);
-        make.bottom.mas_equalTo(-20);
+        make.top.mas_equalTo(self.contentView);
     }];
 }
 
@@ -297,9 +293,7 @@
         [self.disclaimerContent mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(20);
             make.right.mas_equalTo(-20);
-            make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
-            make.bottom.mas_equalTo(-20);
-            make.height.mas_equalTo(self.lineHeight);
+            make.top.mas_equalTo(self.contentView);
         }];
         [self.contentView setNeedsLayout];
     }

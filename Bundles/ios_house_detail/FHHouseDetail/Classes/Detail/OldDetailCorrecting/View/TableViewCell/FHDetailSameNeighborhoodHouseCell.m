@@ -388,7 +388,7 @@
         make.left.mas_equalTo(self.contentView);
         make.width.mas_equalTo(140);
         make.height.mas_equalTo(120);
-        make.top.mas_equalTo(self.contentView).offset(5);
+        make.top.mas_equalTo(self.contentView).offset(6);
     }];
     [self.imageBacView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(-10);

@@ -44,7 +44,7 @@
 
 - (void)initConstraints {
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(4);
+        make.left.mas_equalTo(self).offset(11);
         make.centerY.mas_equalTo(self);
         make.height.mas_equalTo(14);
         make.right.mas_equalTo(self).offset(-4);

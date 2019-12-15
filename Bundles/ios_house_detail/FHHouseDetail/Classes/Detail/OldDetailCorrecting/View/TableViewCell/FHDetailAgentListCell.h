@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UILabel     *agency;
 @property (nonatomic, strong)   UILabel     *realtorEvaluate;  // 话术
 
+
 -(instancetype)initWithModel:(FHDetailContactModel *)model;
 
 -(void)configForLicenceIconWithHidden:(BOOL)isHidden;
