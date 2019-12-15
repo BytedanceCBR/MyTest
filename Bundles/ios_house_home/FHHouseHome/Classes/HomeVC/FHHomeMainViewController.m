@@ -45,6 +45,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [super viewWillAppear:animated];
     self.isShowing = YES;
 
+    //UGC地推包检查粘贴板
     [self checkPasteboard:NO];
     
     //如果是inhouse的，弹升级弹窗

@@ -91,9 +91,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     [self resetMaintableView];
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
- 
 }
 
 - (void)bindIndexChangedBlock
@@ -348,10 +345,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.isShowing = YES;
     self.isShowRefreshTip = NO;
     
-    if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
-        [self.homeListViewModel checkCityStatus];
-    }
-    
     [self scrollToTopEnable:YES];
     
     self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
@@ -381,10 +374,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-//    if(_isMainTabVC && !self.homeListViewModel){
-//        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
-//    }
     
     //开屏广告启动不会展示，保留逻辑代码
     if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
@@ -421,9 +410,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
-    //        if (duration) {
-    //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
-    //        }
     [tracerDict setValue:@"main" forKey:@"tab_name"];
     [tracerDict setValue:@(0) forKey:@"with_tips"];
     [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
@@ -433,7 +419,6 @@ static CGFloat const kSectionHeaderHeight = 38;
         [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
     }
 }
-
 
 - (void)traceJump2AdEvent:(NSString *)urlString
 {

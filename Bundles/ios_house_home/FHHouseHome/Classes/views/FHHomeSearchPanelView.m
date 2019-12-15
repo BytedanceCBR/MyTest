@@ -70,7 +70,7 @@
     [self.searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
     searchButton.layer.cornerRadius = 17;
     searchButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
-    searchButton.layer.shadowOffset = CGSizeMake(0.f, 1.f);
+    searchButton.layer.shadowOffset = CGSizeMake(0.f, 4.f);
     searchButton.layer.shadowRadius = 6.f;
     searchButton.layer.shadowOpacity = 1.f;
     searchButton.layer.borderWidth = 0.5;

@@ -175,7 +175,7 @@
     if (!_tagTitleLabel) {
         _tagTitleLabel = [[FHCornerItemLabel alloc] init];
         _tagTitleLabel.textAlignment = NSTextAlignmentCenter;
-        _tagTitleLabel.font = [UIFont themeFontRegular:12];
+        _tagTitleLabel.font = [UIFont themeFontRegular:10];
         _tagTitleLabel.textColor = [UIColor themeWhite];
         _tagTitleLabel.frame = CGRectMake(0, 0, 16, 16);
     }
@@ -650,7 +650,6 @@
         layout.flexGrow = 0;
     }];
     
-    _tagLabel.font = [UIFont themeFontRegular:12];
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(8);
@@ -880,7 +879,6 @@
         layout.flexGrow = 0;
     }];
     
-    _tagLabel.font = [UIFont themeFontRegular:12];
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(8);

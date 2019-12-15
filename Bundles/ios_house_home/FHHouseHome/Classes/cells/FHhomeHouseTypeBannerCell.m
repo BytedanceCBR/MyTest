@@ -110,9 +110,10 @@
         // 设置阴影的路径 此处效果为在view周边添加宽度为4的阴影效果
         UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(- shaderWidht, -shaderWidht, shaderBackView.frame.size.width + shaderWidht * 2, shaderBackView.frame.size.height + shaderWidht * 2)];
         shaderBackView.layer.shadowPath = path.CGPath;
-        shaderBackView.layer.shadowOffset = CGSizeMake(0, 2);
-        shaderBackView.layer.shadowColor = [UIColor themeGray3].CGColor;
-        shaderBackView.layer.shadowOpacity = 0.2;
+        shaderBackView.layer.shadowOffset = CGSizeMake(0, 4);
+        shaderBackView.layer.shadowRadius = 6;
+        shaderBackView.layer.shadowColor = [UIColor blackColor].CGColor;
+        shaderBackView.layer.shadowOpacity = 0.1;
         
         backImage.tag = i;
         [containView addSubview:shaderBackView];

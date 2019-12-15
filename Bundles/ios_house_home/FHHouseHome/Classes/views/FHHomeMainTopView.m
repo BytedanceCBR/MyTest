@@ -71,7 +71,7 @@ static const float kSegementedMainPadingBottom = 10;
     
     
     _searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_searchBtn setImage:ICON_FONT_IMG(16,@"\U0000e675",[UIColor blackColor]) forState:UIControlStateNormal];
+    [_searchBtn setImage:ICON_FONT_IMG(20,@"\U0000e675",[UIColor themeGray1]) forState:UIControlStateNormal];
     [_searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
     _searchBtn.hidden = YES;
     [self addSubview:_searchBtn];
@@ -222,6 +222,8 @@ static const float kSegementedMainPadingBottom = 10;
         _houseSegmentControl.selectedSegmentIndex = _houseSegmentControl.selectedSegmentIndex;
     }
     
+    CGFloat expandWidth = titles.count > 1 ? 20 : 5;
+    
     [_houseSegmentControl mas_updateConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topBackCityContainer);
         make.height.mas_equalTo(kSegementedMainTopHeight);
@@ -231,8 +233,9 @@ static const float kSegementedMainPadingBottom = 10;
         {
             make.bottom.mas_equalTo(8);
         }
-        make.width.mas_equalTo((kSegementedOneWidth + 12) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 20));
+        make.width.mas_equalTo((kSegementedOneWidth + 12) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : expandWidth));
     }];
+    
     
     _searchBtn.hidden = YES;
 }
