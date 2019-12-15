@@ -201,7 +201,7 @@
         BOOL success = !error;
         self.loaded = success;
         if (success) {
-            self.bitmapScaleRatio = image.size.width < myWidth ? 1.0f : myWidth / image.size.width;
+            self.bitmapScaleRatio = myWidth / image.size.width;
             [self loadAnnotations:self.annotations];
         }
 
