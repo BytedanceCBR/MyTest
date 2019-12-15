@@ -81,7 +81,7 @@
 
 + (BOOL)showBanner
 {
-    return ([[FHEnvContext sharedInstance] getConfigFromCache].houseListBanner.items.count > 0);
+    return ([FHMainOldTopView hasValidModel:[[FHEnvContext sharedInstance] getConfigFromCache].houseListBanner]);
 }
 
 - (void)setupUI
@@ -173,7 +173,20 @@
     [self.bannerView setURLs:imageUrls];
 }
 
-+ (BOOL)isValidModel:(FHConfigDataRentOpDataItemsModel *)tModel {
++ (BOOL)hasValidModel:(FHConfigDataMainPageBannerOpDataModel *)mainPageOpData {
+    if (mainPageOpData && [mainPageOpData isKindOfClass:[FHConfigDataMainPageBannerOpDataModel class]]) {
+        for (int i = 0; i < mainPageOpData.items.count; i++) {
+            FHConfigDataRentOpDataItemsModel *tModel = mainPageOpData.items[i];
+            if ([self isValidModel:tModel]) {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
++ (BOOL)isValidModel:(FHConfigDataRentOpDataItemsModel *)tModel
+{
     if (tModel == nil) {
         return NO;
     }

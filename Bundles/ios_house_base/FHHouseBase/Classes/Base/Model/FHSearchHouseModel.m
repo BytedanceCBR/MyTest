@@ -578,6 +578,7 @@
                                    @"neighborhoodName": @"neighborhood_name",
                                    @"neighborhoodPrice": @"neighborhood_price",
                                    @"displayStatusInfo": @"display_status_info",
+                                   @"districtAreaName": @"district_area_name",
                                    @"contactModel": @"realtor_info",
                                    @"logPb": @"log_pb",
                                    };
