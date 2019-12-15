@@ -716,7 +716,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `ae46c4effe162cc2482aa983c5ef870b2297d197`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `959e8ede535aba6ff7ce8a147dad95aeee138027`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -960,7 +960,7 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_im:
-    :commit: ae46c4effe162cc2482aa983c5ef870b2297d197
+    :commit: 959e8ede535aba6ff7ce8a147dad95aeee138027
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
@@ -1017,7 +1017,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   ios_house_im:
-    :commit: ae46c4effe162cc2482aa983c5ef870b2297d197
+    :commit: 959e8ede535aba6ff7ce8a147dad95aeee138027
     :git: git@code.byted.org:fproject/ios_house_im.git
 
 SPEC CHECKSUMS:
@@ -1219,6 +1219,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 8e39809a683de9dacd03ac36778d99e35f0ecc83
+PODFILE CHECKSUM: 98a0f1b80f091739ee70852618a61b80995729f3
 
 COCOAPODS: 1.4.0
