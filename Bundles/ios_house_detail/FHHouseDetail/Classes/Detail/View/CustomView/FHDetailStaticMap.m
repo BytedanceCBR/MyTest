@@ -207,14 +207,18 @@
         if(transformer.error || image.size.width <= 0.0f || myWidth <= 0.0f){
             self.loaded = NO;
             NSString *message = transformer.error.userInfo[NSLocalizedDescriptionKey];
-            [self.delegate mapView:self loadFinished:NO message:message];
+            if(self.delegate){
+                [self.delegate mapView:self loadFinished:NO message:message];
+            }
             return;
         }
         
         self.bitmapScaleRatio = myWidth / image.size.width;
         self.loaded = YES;
         [self loadAnnotations:self.annotations];
-        [self.delegate mapView:self loadFinished:YES message:@"ok"];
+        if(self.delegate){
+            [self.delegate mapView:self loadFinished:YES message:@"ok"];
+        }
     };
 
     [self.backLayerImageView bd_setImageWithURL:URL
