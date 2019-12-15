@@ -45,7 +45,7 @@ PODS:
   - BDTFactoryConfigurator (0.1.0.1-binary)
   - BDTrackerProtocol (2.1.1.1-binary)
   - BDTSharedHeaders (0.1.0)
-  - BDUGAccountOnekeyLogin (1.1.6-rc.1)
+  - BDUGAccountOnekeyLogin (1.1.6-rc.0)
   - BDUGContainer (1.1.2)
   - BDUGDeepLink (1.1.1)
   - BDUGKit (1.3.3):
@@ -419,7 +419,7 @@ PODS:
   - TTMonitor/BackTrace (0.7.11.0.1-binary)
   - TTMonitor/Monitor (0.7.11.0.1-binary)
   - TTNetBusiness (0.0.10.1-binary)
-  - TTNetworkManager (2.2.14.3.1-binary)
+  - TTNetworkManager (2.2.18.1.1-binary)
   - TTNewsAccountBusiness (0.2.4):
     - TTNewsAccountBusiness/Classes (= 0.2.4)
     - TTNewsAccountBusiness/SSCookieManager (= 0.2.4)
@@ -634,7 +634,7 @@ DEPENDENCIES:
   - BDTFactoryConfigurator (= 0.1.0.1-binary)
   - BDTrackerProtocol (= 2.1.1.1-binary)
   - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
-  - BDUGAccountOnekeyLogin (= 1.1.6-rc.1)
+  - BDUGAccountOnekeyLogin (= 1.1.6-rc.0)
   - BDUGContainer (= 1.1.2)
   - BDUGDeepLink (= 1.1.1)
   - BDUGKit (= 1.3.3)
@@ -851,7 +851,7 @@ DEPENDENCIES:
   - TTMacroManager (= 1.0.1)
   - TTMonitor (= 0.7.11.0.1-binary)
   - TTNetBusiness (= 0.0.10.1-binary)
-  - TTNetworkManager (= 2.2.14.3.1-binary)
+  - TTNetworkManager (= 2.2.18.1.1-binary)
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
   - TTPersistence (= 0.2.3.1-binary)
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
@@ -1039,7 +1039,7 @@ SPEC CHECKSUMS:
   BDTFactoryConfigurator: c14af7870fcd1fa9c52142d0c01635775543e42d
   BDTrackerProtocol: c7605d2c4034c67976b79adbc8cb1b4826957411
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
-  BDUGAccountOnekeyLogin: fc05dd02e5ccf22928bc071277c0390a46ec8aff
+  BDUGAccountOnekeyLogin: cd9dd6f49cd8535f36ca0ebd412544c92220d541
   BDUGContainer: 28193629e67c7c9244f5d5836bfed611bf631321
   BDUGDeepLink: 44dfefe43051d60cb1fd918ebdca3abcc090d365
   BDUGKit: 215f3f098840a16e1c491447d56e49093f08075d
@@ -1160,7 +1160,7 @@ SPEC CHECKSUMS:
   TTMacroManager: 915aadf3841523767f16a230fd97fe546aa800eb
   TTMonitor: e56002040d636af0f7489db64e68e75aadae3843
   TTNetBusiness: e436bc6d648bf01946cc01756c86adfd0d718e5c
-  TTNetworkManager: 0a593aa9a498f73db82d6de88297b823629bd809
+  TTNetworkManager: 1dcc0022373154215625ad06fcaaaee201e36faf
   TTNewsAccountBusiness: 50125377b67c11155b3677cf0e6d3d02ed718a03
   TTPersistence: e0685fe3f0cfd826ccf6917ab5e8227fd6331947
   TTPhotoScrollVC: f34664f26861dbfbf617e47385a2522ba8bf1755
@@ -1212,6 +1212,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: eea55e06fa00d87f398e9d704bc3050066d72e92
+PODFILE CHECKSUM: e9e64099a613ab79c7308512d516911beeb55fbc
 
 COCOAPODS: 1.4.0
