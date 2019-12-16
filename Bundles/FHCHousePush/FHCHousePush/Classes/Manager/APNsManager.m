@@ -32,6 +32,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <FHEnvContext.h>
+#import <JSONAdditions.h>
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
@@ -178,16 +179,17 @@ static APNsManager *_sharedManager = nil;
             [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
 
             if ([[handledOpenURL host] isEqualToString:@"main"]) {
-                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:handledOpenURL];
-                NSDictionary* params = [obj queryParams];
-                if (params != nil) {
-                    NSString* target = params[@"select_tab"];
-                    if (target != nil && target.length > 0) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
-                    } else {
-                        NSAssert(false, @"推送消息的tag为空");
-                    }
-                }
+                [[TTRoute sharedRoute] openURL:handledOpenURL userInfo:nil objHandler:nil];
+//                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:handledOpenURL];
+//                NSDictionary* params = [obj queryParams];
+//                if (params != nil) {
+//                    NSString* target = params[@"select_tab"];
+//                    if (target != nil && target.length > 0) {
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
+//                    } else {
+//                        NSAssert(false, @"推送消息的tag为空");
+//                    }
+//                    
             } else {
                 // push对消息特殊处理
 //                if ([[handledOpenURL host] isEqualToString:@"message_detail_list"]) {

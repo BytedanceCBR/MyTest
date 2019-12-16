@@ -435,16 +435,17 @@ static NSString * const kTTAPNsImportanceKey = @"important";
 
 //            NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
             if ([[openURL host] isEqualToString:@"main"]) {
-                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
-                NSDictionary* params = [obj queryParams];
-                if (params != nil) {
-                    NSString* target = params[@"select_tab"];
-                    if (target != nil && target.length > 0) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
-                    } else {
-                        NSAssert(false, @"推送消息的tag为空");
-                    }
-                }
+                [[TTRoute sharedRoute] openURL:openURL userInfo:nil objHandler:nil];
+//                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
+//                NSDictionary* params = [obj queryParams];
+//                if (params != nil) {
+//                    NSString* target = params[@"select_tab"];
+//                    if (target != nil && target.length > 0) {
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
+//                    } else {
+//                        NSAssert(false, @"推送消息的tag为空");
+//                    }
+//                }
             } else {
                 // push对消息特殊处理
 //                if ([[openURL host] isEqualToString:@"message_detail_list"]) {
