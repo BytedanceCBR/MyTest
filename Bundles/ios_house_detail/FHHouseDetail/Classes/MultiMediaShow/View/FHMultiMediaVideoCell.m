@@ -36,7 +36,7 @@
         self.model = model;
         self.playerView = model.playerView;
         
-        if (model.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
+        if (model.cellHouseType == FHMultiMediaCellHouseNeiborhood || model.cellHouseType == FHMultiMediaCellHouseSecond) {
             [self showCoverView];
         }
     }
