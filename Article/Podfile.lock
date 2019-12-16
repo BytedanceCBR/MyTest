@@ -97,7 +97,7 @@ PODS:
   - Fabric (1.10.2.1-binary)
   - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.9)
+  - FHCommonUI (0.1.0)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -665,7 +665,7 @@ DEPENDENCIES:
   - Fabric (= 1.10.2.1-binary)
   - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.9)
+  - FHCommonUI (from `git@code.byted.org:fproject/ios_common_ui.git`, commit `56449b8a55158262cacb2cf08d6985b83bf1a07a`)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -716,7 +716,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `959e8ede535aba6ff7ce8a147dad95aeee138027`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `ad90236fefe087d887abdd619a93fc064a63d5ed`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -933,6 +933,9 @@ EXTERNAL SOURCES:
     :path: ../Vendor/BDTSharedHeaders
   FHCHousePush:
     :path: ../Bundles/FHCHousePush
+  FHCommonUI:
+    :commit: 56449b8a55158262cacb2cf08d6985b83bf1a07a
+    :git: git@code.byted.org:fproject/ios_common_ui.git
   FHHouseBase:
     :path: ../Bundles/ios_house_base
   FHHouseDetail:
@@ -960,7 +963,7 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_im:
-    :commit: 959e8ede535aba6ff7ce8a147dad95aeee138027
+    :commit: ad90236fefe087d887abdd619a93fc064a63d5ed
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
@@ -1016,8 +1019,11 @@ EXTERNAL SOURCES:
     :path: ../ReactCommon/yoga
 
 CHECKOUT OPTIONS:
+  FHCommonUI:
+    :commit: 56449b8a55158262cacb2cf08d6985b83bf1a07a
+    :git: git@code.byted.org:fproject/ios_common_ui.git
   ios_house_im:
-    :commit: 959e8ede535aba6ff7ce8a147dad95aeee138027
+    :commit: ad90236fefe087d887abdd619a93fc064a63d5ed
     :git: git@code.byted.org:fproject/ios_house_im.git
 
 SPEC CHECKSUMS:
@@ -1067,7 +1073,7 @@ SPEC CHECKSUMS:
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
   FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: e18b690a3078c706c73d642679ea9a83b589da02
+  FHCommonUI: b8b7d371281b79d2a206ab3b763ecc37ccf10fb7
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1219,6 +1225,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 98a0f1b80f091739ee70852618a61b80995729f3
+PODFILE CHECKSUM: 25330f1b048a1d6fb799ccec4dd1215b4cbb9ef4
 
 COCOAPODS: 1.4.0
