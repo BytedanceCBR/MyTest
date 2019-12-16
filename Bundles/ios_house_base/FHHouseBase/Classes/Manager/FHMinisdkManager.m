@@ -144,7 +144,7 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
 
-    [TTAccountLoginManager presentAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+    [TTAccountLoginManager presentAlertSpringLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {

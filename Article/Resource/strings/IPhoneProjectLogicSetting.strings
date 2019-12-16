@@ -204,3 +204,5 @@
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";
+
+"spring_login" = "SpringLoginViewController";
