@@ -131,7 +131,7 @@
 
     self.titleLabel = [self labelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
     _titleLabel.textAlignment = NSTextAlignmentCenter;
-    _titleLabel.text = @"您沟通的经纪人是否认真专业";
+    _titleLabel.text = @"您对沟通的经纪人是否满意";
     [self.containerView addSubview:_titleLabel];
 
     self.closeBtn = [[UIButton alloc] init];
@@ -168,7 +168,7 @@
     [_starBtnArray addObject:self.starBtn5];
 
     _starInfoLabel = [self labelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
-    _starInfoLabel.text = @"您的评分会让经纪人做的更好";
+    _starInfoLabel.text = @"您的评价会让经纪人做的更好";
     _starInfoLabel.textAlignment = NSTextAlignmentCenter;
     [self.containerView addSubview:_starInfoLabel];
 
@@ -492,6 +492,8 @@
     if (tag == self.selectStar) {
         return;
     }
+    self.selectStar = tag;
+
     for (int i = 0; i < tag && i < self.starBtnArray.count; i++) {
         if ([[self.starBtnArray objectAtIndex:i] respondsToSelector:@selector(setSelected:)]) {
             [self setStarButtonSelected:[self.starBtnArray objectAtIndex:i] select:YES];
@@ -542,8 +544,6 @@
         [self.collectionView reloadData];
 //        }
     }
-    self.selectStar = tag;
-
 }
 
 - (void)btnClick:(id)sender {
@@ -579,7 +579,7 @@
 - (void)close {
     [self hide];
     [self traceRealtorEvaluatePopupClick:@"cancel" starNum:@"0"];
-    [[ToastManager manager] showToast:@"经纪人尚未评价"];
+    [[ToastManager manager] showToast:@"您未提交评价"];
 }
 
 #pragma mark - UITextViewDelegate
