@@ -142,6 +142,8 @@
     
     if(entryModel.houseType == FHHouseTypeSecondHandHouse){
         tracerDict[@"enter_from"] = @"old_detail";
+        tracerDict[@"element_from"] = @"community_group";
+        
     }
     
     tracerDict[@"enter_type"] = @"click";
