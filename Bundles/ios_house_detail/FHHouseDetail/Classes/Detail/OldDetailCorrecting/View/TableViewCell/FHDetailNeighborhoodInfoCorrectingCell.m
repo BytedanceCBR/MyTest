@@ -87,7 +87,7 @@
     }];
     
     [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.nameLabel.mas_right).offset(AdaptOffset(12));
+        make.left.mas_equalTo(self.nameLabel.mas_right).offset(AdaptOffset(5));
         make.right.mas_lessThanOrEqualTo(AdaptOffset(-30));
         make.top.bottom.mas_equalTo(self);
     }];
@@ -419,7 +419,7 @@
         make.top.bottom.equalTo(parentView);
     }];
     [nameValue mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(nameKey.mas_right).mas_offset(AdaptOffset(10));
+        make.left.mas_equalTo(nameKey.mas_right).mas_offset(AdaptOffset(5));
         make.centerY.equalTo(nameKey);
     }];
 }

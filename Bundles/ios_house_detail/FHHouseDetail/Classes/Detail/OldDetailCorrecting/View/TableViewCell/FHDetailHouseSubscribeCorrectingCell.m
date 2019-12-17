@@ -161,7 +161,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         UILabel *legalAnnouncement = [[UILabel alloc] initWithFrame:CGRectZero];
         legalAnnouncement.textColor = [UIColor colorWithHexStr:@"#9c6d4346"];
         legalAnnouncement.textAlignment = NSTextAlignmentLeft;
-        NSDictionary *dic = @{NSKernAttributeName:@2.f};
+        NSDictionary *dic = @{NSKernAttributeName:@1.5f};
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"点击订阅即视为同意《个人信息保护声明》" attributes:dic];
         legalAnnouncement.attributedText = [attrStr copy];
         legalAnnouncement.font = [UIFont themeFontRegular:10];
