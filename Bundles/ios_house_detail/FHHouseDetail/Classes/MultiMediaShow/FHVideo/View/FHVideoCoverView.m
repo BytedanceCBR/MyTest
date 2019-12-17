@@ -47,17 +47,21 @@
     }];
     
     [self.startBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(52);
-        if (_houseType == FHMultiMediaCellHouseSecond)  {
-            make.top.mas_equalTo(94);
-            make.centerX.mas_equalTo(self);
-        }else {
+             make.width.height.mas_equalTo(60);
             make.center.equalTo(self);
-        }
-
     }];
 }
 
+- (void)setHouseType:(FHMultiMediaCellHouseType)houseType {
+    _houseType = houseType;
+    if (_houseType == FHMultiMediaCellHouseSecond)  {
+        [self.startBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(52);
+            make.top.mas_equalTo(94);
+            make.centerX.mas_equalTo(self);
+        }];
+    }
+}
 -(void)showWithImageUrl:(NSString *)imageUrl placeHoder:(UIImage *)placeHolder
 {
     _imageUrl = imageUrl;

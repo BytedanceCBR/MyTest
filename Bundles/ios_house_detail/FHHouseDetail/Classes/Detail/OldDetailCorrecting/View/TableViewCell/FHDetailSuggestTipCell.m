@@ -195,6 +195,7 @@
     FHDetailSuggestTipModel *model = (FHDetailSuggestTipModel *)self.currentData;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"realtor_position"] = @"trade_tips";
+    imExtra[@"element_from"] = @"app_oldhouse_price";
     [model.phoneCallViewModel imchatActionWithPhone:model.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
 @end

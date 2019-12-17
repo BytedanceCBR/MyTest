@@ -59,6 +59,7 @@
     
     self.coverView = [[FHVideoCoverView alloc] init];
     [self.coverView setFrame:CGRectMake(0.0, 0.0, [UIScreen mainScreen].bounds.size.width, [FHDetailMediaHeaderCell cellHeight])];
+    self.coverView.houseType = self.model.cellHouseType;
     [_coverView setBackgroundColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]];
     _coverView.startBtn.enabled = NO;
     [self.contentView addSubview:_coverView];
