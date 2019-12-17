@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)excuteTask;
 
+- (void)taskFinished;
+
 - (void)goSpring;
     
 @end

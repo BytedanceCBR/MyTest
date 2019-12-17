@@ -301,8 +301,6 @@ typedef NS_ENUM(NSInteger, TTAccountLoginDialogTitleType) {
 
 + (void)showQuickFLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginCompletionBlock)complete;
 
-+ (void)presentAlertSpringLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginAlertPhoneInputCompletionBlock)complete;
-
 @end
 
 

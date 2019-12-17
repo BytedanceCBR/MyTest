@@ -20,7 +20,6 @@
 @property(nonatomic ,strong) SpringLoginView *loginView;
 @property (nonatomic, strong)     TTAcountFLoginDelegate       *loginDelegate;
 @property (nonatomic, assign)   BOOL       needPopVC;
-@property (nonatomic, assign)   BOOL       isFromUGC;
 @property (nonatomic, assign)   BOOL       present;
 @property (nonatomic, assign)   BOOL       isFromMineTab;
 
@@ -51,10 +50,6 @@
         if (params[@"need_pop_vc"]) {
             self.needPopVC = [params[@"need_pop_vc"] boolValue];
         }
-        self.isFromUGC = NO;
-        if (params[@"from_ugc"]) {
-            self.isFromUGC = [params[@"from_ugc"] boolValue];
-        }
         
         if (params[@"present"]) {
             self.present = [params[@"present"] boolValue];
@@ -67,7 +62,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
-    [self initNavbar];
+    self.view.backgroundColor = [UIColor clearColor];
     [self initView];
     [self initConstraints];
     [self initViewModel];
@@ -85,14 +80,6 @@
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
-- (void)initNavbar {
-    [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = @"手机快捷登录";
-    self.customNavBarView.title.hidden = YES;
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
-}
-
 - (void)initView {
     self.loginView = [[SpringLoginView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:_loginView];
@@ -100,30 +87,8 @@
 
 - (void)initConstraints {
     [self.loginView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0, *)) {
-            make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
-        } else {
-            make.top.mas_equalTo(64);
-        }
-        make.left.right.bottom.equalTo(self.view);
+        make.top.left.right.bottom.equalTo(self.view);
     }];
-}
-
-- (void)dealloc
-{
-    if (self.isFromUGC) {
-        // UGC过来的，关闭登录页面后需要同步关注状态
-        if (![TTAccountManager isLogin]) {
-            if (self.loginDelegate.completeAlert) {
-                self.loginDelegate.completeAlert(TTAccountAlertCompletionEventTypeCancel,nil);
-            }
-        }
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (![TTAccountManager isLogin]) {
-                [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
-            }
-        });
-    }
 }
 
 - (void)initViewModel {

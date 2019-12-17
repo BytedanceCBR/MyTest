@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)confirm;
 - (void)sendVerifyCode;
+- (void)close;
 
 @optional
 - (void)goToUserProtocol;
@@ -23,12 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 - (void)acceptCheckBoxChange:(BOOL)selected;
 
-@optional
-- (void)otherLoginAction;
-
-@optional
-- (void)oneKeyLoginAction;
-
 @end
 
 
@@ -37,10 +32,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)UIEdgeInsets hotAreaInsets2;
 @end
 
+@interface SpringLoginScrollView : UIScrollView
+@end
+
 @interface SpringLoginView : UIView
 
 @property(nonatomic, strong) SpringLoginAcceptButton *acceptCheckBox;
-@property(nonatomic, strong) UIScrollView *scrollView;
+@property(nonatomic, strong) SpringLoginScrollView *scrollView;
 @property(nonatomic, strong) UITextField *phoneInput;
 @property(nonatomic, strong) UITextField *varifyCodeInput;
 @property(nonatomic, strong) UIButton *sendVerifyCodeBtn;
@@ -49,13 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) id<SpringLoginViewDelegate> delegate;
 
 - (void)setButtonContent:(NSString *)content font:(UIFont *)font color:(UIColor *)color state:(UIControlState)state btn:(UIButton *)btn;
-
 - (void)enableConfirmBtn:(BOOL)enabled;
-
 - (void)enableSendVerifyCodeBtn:(BOOL)enabled;
-- (void)showOneKeyLoginView:(BOOL)isOneKeyLogin;
-- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service;
-- (void)updateLoadingState:(BOOL)isLoading;
 - (void)setAgreementContent:(NSAttributedString *)attrText showAcceptBox:(BOOL)showAcceptBox;
 
 @end

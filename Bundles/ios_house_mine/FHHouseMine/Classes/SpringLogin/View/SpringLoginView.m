@@ -35,6 +35,17 @@
 
 @end
 
+@implementation SpringLoginScrollView
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [super touchesBegan:touches withEvent:event];
+    if(!self.dragging) {
+        [[self nextResponder] touchesBegan:touches withEvent:event];
+    }
+}
+
+@end
+
 @interface SpringLoginView ()
 
 @property(nonatomic, strong) UILabel *titleLabel;
@@ -46,6 +57,13 @@
 @property(nonatomic, strong) UIButton *confirmBtn;
 @property(nonatomic, strong) UIButton *otherLoginBtn;
 @property(nonatomic, strong) YYLabel *agreementLabel;
+
+@property(nonatomic, strong) UIView *containerView;
+@property(nonatomic, strong) UIView *springBgView;
+@property(nonatomic, strong) UIButton *closeBtn;
+@property(nonatomic, strong) UIView *phoneBgView;
+@property(nonatomic, strong) UIView *varifyCodeBgView;
+
 @end
 
 @implementation SpringLoginView
@@ -54,7 +72,7 @@
     self = [super initWithFrame:frame];
     
     if (self) {
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
         [self initViews];
         [self initConstraints];
     }
@@ -62,237 +80,163 @@
 }
 
 - (void)initViews {
-    self.scrollView = [[UIScrollView alloc] init];
-    //    _scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    self.scrollView = [[SpringLoginScrollView alloc] init];
     [self addSubview:_scrollView];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:30] textColor:[UIColor themeGray1]];
-    _titleLabel.text = @"手机快捷登录";
-    [self.scrollView addSubview:_titleLabel];
+    self.containerView = [[UIView alloc] init];
+    _containerView.backgroundColor = [UIColor clearColor];
+    [self.scrollView addSubview:_containerView];
     
-    self.serviceLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
-    self.serviceLabel.hidden = YES;
-    [self.scrollView addSubview:self.serviceLabel];
+    self.springBgView = [[UIView alloc] init];
+    _springBgView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_spring_login_bg"]];
+    [self.containerView addSubview:_springBgView];
     
-    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
-    _subTitleLabel.text = @"未注册手机验证后自动注册";
-    [self.scrollView addSubview:_subTitleLabel];
+    self.closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_closeBtn setImage:[UIImage imageNamed:@"fh_spring_login_close"] forState:UIControlStateNormal];
+    _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+    [_closeBtn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
+    [self.containerView addSubview:_closeBtn];
     
-    self.rightView = [[UIView alloc] init];
-    [self.scrollView addSubview:_rightView];
-    
+    self.phoneBgView = [[UIView alloc] init];
+    _phoneBgView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_spring_input_bg"]];
+    [self.springBgView addSubview:_phoneBgView];
+
     self.phoneInput = [[UITextField alloc] init];
     _phoneInput.font = [UIFont themeFontRegular:14];
+    _phoneInput.textColor = [UIColor colorWithHexString:@"a05700"];
     _phoneInput.placeholder = @"请输入手机号";
-    [_phoneInput setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
+    [_phoneInput setValue:[UIColor colorWithHexString:@"e1b067"] forKeyPath:@"_placeholderLabel.textColor"];
     _phoneInput.keyboardType = UIKeyboardTypePhonePad;
     _phoneInput.returnKeyType = UIReturnKeyDone;
-    [self.scrollView addSubview:_phoneInput];
-    
-    self.singleLine = [[UIView alloc] init];
-    _singleLine.backgroundColor = [UIColor themeGray6];
-    [self.scrollView addSubview:_singleLine];
-    
+    [self.phoneBgView addSubview:_phoneInput];
+
+    self.varifyCodeBgView = [[UIView alloc] init];
+    _varifyCodeBgView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_spring_input_bg"]];
+    [self.springBgView addSubview:_varifyCodeBgView];
+
     self.varifyCodeInput = [[UITextField alloc] init];
     _varifyCodeInput.font = [UIFont themeFontRegular:14];
+    _varifyCodeInput.textColor = [UIColor colorWithHexString:@"a05700"];
     _varifyCodeInput.placeholder = @"请输入验证码";
-    [_varifyCodeInput setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
+    [_varifyCodeInput setValue:[UIColor colorWithHexString:@"e1b067"] forKeyPath:@"_placeholderLabel.textColor"];
     _varifyCodeInput.keyboardType = UIKeyboardTypePhonePad;
     _varifyCodeInput.returnKeyType = UIReturnKeyGo;
-    [self.scrollView addSubview:_varifyCodeInput];
-    
-    self.singleLine2 = [[UIView alloc] init];
-    _singleLine2.backgroundColor = [UIColor themeGray6];
-    [self.scrollView addSubview:_singleLine2];
-    
+    [self.varifyCodeBgView addSubview:_varifyCodeInput];
+
     self.sendVerifyCodeBtn = [[UIButton alloc] init];
-    [self setButtonContent:@"获取验证码" font:[UIFont themeFontRegular:14] color:[UIColor themeGray1] state:UIControlStateNormal btn:_sendVerifyCodeBtn];
-    [self setButtonContent:@"获取验证码" font:[UIFont themeFontRegular:14] color:[UIColor themeGray3] state:UIControlStateDisabled btn:_sendVerifyCodeBtn];
+    [self setButtonContent:@"发送验证码" font:[UIFont themeFontRegular:14] color:[UIColor colorWithHexString:@"a05700"] state:UIControlStateNormal btn:_sendVerifyCodeBtn];
+    [self setButtonContent:@"发送验证码" font:[UIFont themeFontRegular:14] color:[UIColor colorWithHexString:@"e1b067"] state:UIControlStateDisabled btn:_sendVerifyCodeBtn];
     _sendVerifyCodeBtn.enabled = NO;
     [_sendVerifyCodeBtn addTarget:self action:@selector(sendVerifyCode) forControlEvents:UIControlEventTouchUpInside];
-    [self.scrollView addSubview:_sendVerifyCodeBtn];
-    
-    self.confirmBtn = [[UIButton alloc] init];
-    _confirmBtn.backgroundColor = [UIColor themeRed1];
-    _confirmBtn.alpha = 0.6;
-    _confirmBtn.layer.cornerRadius = 4;
-    [_confirmBtn addTarget:self action:@selector(confirm) forControlEvents:UIControlEventTouchUpInside];
-    [self setButtonContent:@"登录" font:[UIFont themeFontRegular:16] color:[UIColor whiteColor] state:UIControlStateNormal btn:_confirmBtn];
-    [self.scrollView addSubview:_confirmBtn];
-    
-    self.otherLoginBtn = [[UIButton alloc] init];
-    [self setButtonContent:@"其他方式登录" font:[UIFont themeFontRegular:14] color:[UIColor themeGray2] state:UIControlStateNormal btn:self.otherLoginBtn];
-    [self setButtonContent:@"其他方式登录" font:[UIFont themeFontRegular:14] color:[UIColor themeGray2] state:UIControlStateHighlighted btn:self.otherLoginBtn];
-    [self.scrollView addSubview:self.otherLoginBtn];
-    [self.otherLoginBtn addTarget:self action:@selector(otherLoginBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-    self.otherLoginBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
-    self.otherLoginBtn.hidden = YES;
-    
+    [self.varifyCodeBgView addSubview:_sendVerifyCodeBtn];
+
     self.agreementLabel = [[YYLabel alloc] init];
     _agreementLabel.numberOfLines = 0;
     _agreementLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    _agreementLabel.textColor = [UIColor themeGray3];
-    _agreementLabel.font = [UIFont themeFontRegular:13];
+    _agreementLabel.textColor = [UIColor colorWithHexString:@"a90c05"];
+    _agreementLabel.font = [UIFont themeFontRegular:10];
     [self.scrollView addSubview:_agreementLabel];
-    
+
     self.acceptCheckBox = [[SpringLoginAcceptButton alloc] init];
-    self.acceptCheckBox.hotAreaInsets = UIEdgeInsetsMake(20, 30, 0, 30);
-    self.acceptCheckBox.hotAreaInsets2 = UIEdgeInsetsMake(20, 30, 20, 0);
-    [_acceptCheckBox setImage:[UIImage imageNamed:@"checkbox-checked"] forState:UIControlStateSelected];
-    [_acceptCheckBox setImage:[UIImage imageNamed:@"ic-filter-normal"] forState:UIControlStateNormal];
+    self.acceptCheckBox.hotAreaInsets = UIEdgeInsetsMake(20, 15, 0, 30);
+    self.acceptCheckBox.hotAreaInsets2 = UIEdgeInsetsMake(20, 15, 20, 0);
+    [_acceptCheckBox setImage:[UIImage imageNamed:@"fh_spring_login_checked"] forState:UIControlStateSelected];
+    [_acceptCheckBox setImage:[UIImage imageNamed:@"fh_spring_login_check"] forState:UIControlStateNormal];
     [_acceptCheckBox addTarget:self action:@selector(acceptCheckBoxChange) forControlEvents:UIControlEventTouchUpInside];
     [self.scrollView addSubview:_acceptCheckBox];
-}
+    
+    self.confirmBtn = [[UIButton alloc] init];
+//    _confirmBtn.alpha = 0.6;
+    [_confirmBtn addTarget:self action:@selector(confirm) forControlEvents:UIControlEventTouchUpInside];
+    [_confirmBtn setImage:[UIImage imageNamed:@"fh_spring_login_button"] forState:UIControlStateNormal];
+    [self.springBgView addSubview:_confirmBtn];
 
-
-- (void)showOneKeyLoginView:(BOOL)isOneKeyLogin {
-    _isOneKeyLogin = isOneKeyLogin;
-    if (isOneKeyLogin) {
-        self.titleLabel.text = @"一键登录";
-        self.subTitleLabel.text = @"登录幸福里，关注好房永不丢失";
-        self.serviceLabel.hidden = NO;
-        self.otherLoginBtn.hidden = NO;
-        self.acceptCheckBox.hidden = YES;
-        self.varifyCodeInput.hidden = YES;
-        self.singleLine2.hidden = YES;
-        self.sendVerifyCodeBtn.hidden = YES;
-        self.phoneInput.enabled = NO;
-        [self.agreementLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.singleLine.mas_bottom).offset(20);
-        }];
-        
-    } else {
-        self.titleLabel.text = @"手机快捷登录";
-        self.subTitleLabel.text = @"未注册手机验证后自动注册";
-        self.serviceLabel.hidden = YES;
-        self.otherLoginBtn.hidden = YES;
-        self.acceptCheckBox.hidden = NO;
-        self.varifyCodeInput.hidden = NO;
-        self.singleLine2.hidden = NO;
-        self.sendVerifyCodeBtn.hidden = NO;
-        self.phoneInput.enabled = YES;
-        [self.agreementLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.singleLine.mas_bottom).offset(20 + 60);
-        }];
-    }
-}
-
-- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service {
-    self.phoneInput.text = phoneNum;
-    self.serviceLabel.text = service;
-    [self enableConfirmBtn:phoneNum.length > 0];
-}
-
-- (void)updateLoadingState:(BOOL)isLoading {
-    self.scrollView.hidden = isLoading;
 }
 
 - (void)initConstraints {
-    
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.scrollView).offset(40);
-        make.left.mas_equalTo(self.scrollView).offset(30);
-        make.height.mas_equalTo(42);
+    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.left.right.mas_equalTo(self);
     }];
     
-    [self.serviceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.singleLine);
-        make.centerY.mas_equalTo(self.phoneInput);
+    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.scrollView);
+        make.width.mas_equalTo(312);
+        make.height.mas_equalTo(467);
     }];
     
-    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
-        make.left.mas_equalTo(self.scrollView).offset(30);
-        make.height.mas_equalTo(20);
+    [self.springBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.containerView).offset(10);
+        make.left.right.mas_equalTo(self.containerView);
+        make.height.mas_equalTo(393);
     }];
     
-    [self.rightView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.scrollView);
-        make.left.mas_equalTo(self.scrollView).offset(30);
-        make.right.mas_equalTo(self).offset(-30);
-        make.height.mas_equalTo(1);
+    [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.containerView);
+        make.centerX.mas_equalTo(self.containerView);
+        make.width.height.mas_equalTo(24);
+    }];
+    
+    [self.phoneBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.springBgView).offset(167);
+        make.left.mas_equalTo(self.springBgView).offset(43);
+        make.width.mas_equalTo(230);
+        make.height.mas_equalTo(45);
     }];
     
     [self.phoneInput mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.subTitleLabel.mas_bottom).offset(40);
-        make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(20);
+        make.centerY.mas_equalTo(self.phoneBgView);
+        make.left.mas_equalTo(self.phoneBgView).offset(10);
+        make.right.mas_equalTo(self.phoneBgView).offset(-10);
+        make.top.bottom.mas_equalTo(self.phoneBgView);
     }];
     
-    [self.singleLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(11);
-        make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
-    }];
-    
-    [self.varifyCodeInput mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(43);
-        make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(20);
-    }];
-    
-    [self.singleLine2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.varifyCodeInput.mas_bottom).offset(11);
-        make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+    [self.varifyCodeBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.phoneBgView.mas_bottom).offset(12);
+        make.left.mas_equalTo(self.phoneBgView);
+        make.width.mas_equalTo(self.phoneBgView);
+        make.height.mas_equalTo(self.phoneBgView);
     }];
     
     [self.sendVerifyCodeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.varifyCodeInput);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(30);
+        make.centerY.mas_equalTo(self.varifyCodeBgView);
+        make.top.bottom.mas_equalTo(self.varifyCodeBgView);
+        make.right.mas_equalTo(self.varifyCodeBgView).offset(-10);
+    }];
+
+    [self.varifyCodeInput mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.varifyCodeBgView);
+        make.left.mas_equalTo(self.varifyCodeBgView).offset(10);
+        make.right.mas_equalTo(self.varifyCodeBgView).offset(-10);
+        make.top.bottom.mas_equalTo(self.varifyCodeBgView);
     }];
     
     [self.confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.agreementLabel.mas_bottom).offset(20);
-        make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(46);
-    }];
-    
-    [self.otherLoginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.confirmBtn);
-        make.top.mas_equalTo(self.confirmBtn.mas_bottom).mas_offset(20);
-        make.height.mas_equalTo(20);
-    }];
-    
-    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.left.right.mas_equalTo(self);
+        make.bottom.mas_equalTo(self.springBgView).offset(-15);
+        make.left.mas_equalTo(self.springBgView).offset(85);
+        make.width.mas_equalTo(147);
+        make.height.mas_equalTo(63);
     }];
 }
 
 - (void)setAgreementContent:(NSAttributedString *)attrText showAcceptBox:(BOOL)showAcceptBox {
     self.agreementLabel.attributedText = attrText;
-    CGFloat boxWidth = showAcceptBox ? 15 : 0;
-    CGFloat boxOffset = showAcceptBox ? 3 : 0;
-    CGFloat topOffset = !self.isOneKeyLogin ? 60 : 0;
-    CGFloat width = UIScreen.mainScreen.bounds.size.width - 45 - 3 - 30;
+    CGFloat boxWidth = 12;
+    CGFloat width = 210;
     CGSize size = [self.agreementLabel sizeThatFits:CGSizeMake(width, 1000)];
     self.acceptCheckBox.hidden = !showAcceptBox;
     
     [self.agreementLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.acceptCheckBox.mas_right).offset(boxOffset);
-        make.top.mas_equalTo(self.singleLine.mas_bottom).offset(20 + topOffset);
-        make.right.mas_equalTo(self.rightView);
+        make.left.mas_equalTo(self.varifyCodeBgView);
+        make.top.mas_equalTo(self.varifyCodeBgView.mas_bottom).offset(11);
+        make.width.mas_equalTo(width);
         make.height.mas_equalTo(size.height);
     }];
     
     [self.acceptCheckBox mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(30);
-        make.top.mas_equalTo(self.agreementLabel).offset(1.5);
+        make.right.mas_equalTo(self.varifyCodeBgView);
+        make.top.mas_equalTo(self.agreementLabel).offset(2);
         make.width.height.mas_equalTo(boxWidth);
     }];
-}
-
-- (NSDictionary *)commonTextStyle {
-    return @{
-             NSFontAttributeName: [UIFont themeFontRegular:13],
-             NSForegroundColorAttributeName: [UIColor themeGray3],
-             };
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -312,21 +256,15 @@
     [btn setAttributedTitle:attrStr forState:state];
 }
 
-- (void)confirm {
-    if (self.isOneKeyLogin) {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(oneKeyLoginAction)]) {
-            [self.delegate oneKeyLoginAction];
-        }
-    } else {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(confirm)]) {
-            [self.delegate confirm];
-        }
+- (void)close {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(close)]) {
+        [self.delegate close];
     }
 }
 
-- (void)otherLoginBtnDidClick:(UIButton *)btn {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(otherLoginAction)]) {
-        [self.delegate otherLoginAction];
+- (void)confirm {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(confirm)]) {
+        [self.delegate confirm];
     }
 }
 
@@ -352,6 +290,10 @@
 
 - (void)enableSendVerifyCodeBtn:(BOOL)enabled {
     self.sendVerifyCodeBtn.enabled = enabled;
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self endEditing:YES];
 }
 
 @end
