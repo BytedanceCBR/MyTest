@@ -53,9 +53,9 @@ def fhPods
 #    pod 'FHCommonUI', :path => '../../ios_common_ui'
 #    pod 'FHCommonUI', '0.0.9-alpha.1'
 
-    pod 'ios_house_im', '0.1.15-rc.4'
+    pod 'ios_house_im', '0.1.15-rc.5'
 #     pod 'ios_house_im' , :path => '../../ios_house_im'
-#     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '11359d0f859a7d3c7881252144954a0045d71600'
+#     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => 'e4e8a5635c0a7f40bfc4535e1f92ddee17343504'
 
 
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
@@ -235,7 +235,7 @@ def appPods
     
     pod_binary 'BDTFactoryConfigurator', '0.1.0'
 
-    pod_binary 'TencentQQSDK', '1.1.0-rc.0'
+    pod_binary 'TencentQQSDK','1.0.0' #QQ SDK降级 iOS13有问题
     pod_binary 'WechatSDK','0.1.5'
 
     #-----免流量统计-----
@@ -552,6 +552,10 @@ def appPods
     
     pod_binary 'TTAppStoreStarManager', '1.0.12'
     
+    pod 'Quaterback', '0.0.2-rc.1', :subspecs => [
+    'Main/Core',
+    'Main/Default'
+    ]
 #    pod 'BDDiamond20', :git => 'git@code.byted.org:liuhanhong/qi_project_ios.git', :branch => 'develop', :subspecs => ['minisdk']
 
 end

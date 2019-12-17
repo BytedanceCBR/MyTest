@@ -93,7 +93,7 @@
                                                 withParent:(FHFilterNodeModel*)model {
     NSMutableArray<FHFilterNodeModel*>* result = [[NSMutableArray alloc] init];
     [options enumerateObjectsUsingBlock:^(FHSearchFilterConfigOption * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([[FHLocManager  sharedInstance] isHaveLocationAuthorization] || ![obj.type isEqualToString:@"distance"]) {
+        if (![obj.type isEqualToString:@"distance"] || [[FHLocManager  sharedInstance] isHaveLocationAuthorization] ) {
             FHFilterNodeModel* mm = [self convertConfigOptionToModel:obj
                                                         supportMutli:supportNutli ? supportNutli : obj.supportMulti
                                                           withParent:model];
