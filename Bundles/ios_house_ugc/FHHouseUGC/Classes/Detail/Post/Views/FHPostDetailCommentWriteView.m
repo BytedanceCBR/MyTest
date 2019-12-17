@@ -24,6 +24,7 @@
 #import "TTCommentDetailReplyWriteManager.h"
 #import "TTCommentDefines.h"
 #import "UIColor+Theme.h"
+#import "FHBubbleTipManager.h"
 
 #define PUBLISHBUTTON_WIDTH [TTDeviceUIUtils tt_newPadding:35.f]
 #define PUBLISHBUTTON_HEIGHT [TTDeviceUIUtils tt_newPadding:22.5f]
@@ -449,7 +450,7 @@ static struct timeval kFHCommentTimeval;
 }
 
 - (void)keyboardWillHideNotification:(NSNotification *)notification {
-    if (self.emojiInputViewVisible) {
+    if (self.emojiInputViewVisible || [FHBubbleTipManager shareInstance].isShowingTips) {
         return;
     }
 
