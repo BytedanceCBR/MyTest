@@ -152,10 +152,48 @@
 
     Class cls = NSClassFromString(@"FHFeedListModel");
 
+    NSDate *startDate = [NSDate date];
+    NSString *requestLogPath = @"";
+    if (queryPath.length > 0) {
+        NSURL *url = [NSURL URLWithString:queryPath];
+        if (url && url.path.length > 0) {
+            requestLogPath = [NSString stringWithFormat:@"%@_%@",url.path,category];
+        }
+    }
+    
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:queryPath params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         __block NSError *backError = error;
+        NSDate *backDate = [NSDate date];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            if (backError) {
+                code = backError.code;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            }
+            
             id <FHBaseModelProtocol> model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
+            serDate = [NSDate date];
+            if (!model) {
+                // model 为nil
+                code = 1;
+                resultType = FHNetworkMonitorTypeBizFailed + 1;
+            } else {
+                // model 不为nil
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || backError != nil) {
+                        code = [status integerValue];
+                        errMsg = backError.domain;
+                        resultType = FHNetworkMonitorTypeBizFailed+code;
+                    }
+                }
+            }
+            [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model, backError);
