@@ -385,9 +385,10 @@
         // 阴影颜色
         _contactBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#fe5500"].CGColor;
         // 阴影偏移量 默认为(0,3)
-        _contactBtn.layer.shadowOffset = CGSizeMake(0, 4);
+        _contactBtn.layer.shadowOffset = CGSizeMake(0, 8);
         // 阴影透明度
-        _contactBtn.layer.shadowOpacity = .3;
+        _contactBtn.layer.shadowOpacity = .2;
+        _contactBtn.layer.shadowRadius = 5;
         _contactBtn.backgroundColor =[UIColor colorWithHexStr:@"#fe5500"];
      
     }
@@ -399,8 +400,9 @@
         _imChatBtn = [[UIButton alloc] init];
         _imChatBtn.layer.cornerRadius = 22;
         _imChatBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#ff9629"].CGColor;
-        _imChatBtn.layer.shadowOffset = CGSizeMake(0, 4);
-        _imChatBtn.layer.shadowOpacity = .3;
+        _imChatBtn.layer.shadowOffset = CGSizeMake(0, 8);
+        _imChatBtn.layer.shadowOpacity = .2;
+        _imChatBtn.layer.shadowRadius = 5;
         _imChatBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
         if ([TTDeviceHelper is568Screen]) {
             _imChatBtn.titleLabel.font = [UIFont themeFontRegular:14];

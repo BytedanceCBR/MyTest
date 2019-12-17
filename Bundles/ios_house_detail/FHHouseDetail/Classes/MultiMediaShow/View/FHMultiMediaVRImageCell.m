@@ -44,6 +44,7 @@
             }
             
             [self.imageView updateImageUrl:url andPlaceHolder:placeholder];
+            self.imageView.cellHouseType = model.cellHouseType;
         }
     }
 }

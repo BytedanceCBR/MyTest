@@ -34,7 +34,7 @@
     _coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [self addSubview:_coverView];
     
-    self.startBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.bounds.size.width/2 - 30, self.bounds.size.height/2 - 30, 60, 60)];
+    self.startBtn = [[UIButton alloc] init];
     [_startBtn setImage:[UIImage imageNamed:@"video_start"] forState:UIControlStateNormal];
     [_startBtn setImage:[UIImage imageNamed:@"video_start"] forState:UIControlStateHighlighted];
     [_startBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
@@ -47,11 +47,21 @@
     }];
     
     [self.startBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(60);
-        make.center.mas_equalTo(self);
+             make.width.height.mas_equalTo(60);
+            make.center.equalTo(self);
     }];
 }
 
+- (void)setHouseType:(FHMultiMediaCellHouseType)houseType {
+    _houseType = houseType;
+    if (_houseType == FHMultiMediaCellHouseSecond)  {
+        [self.startBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(52);
+            make.top.mas_equalTo(94);
+            make.centerX.mas_equalTo(self);
+        }];
+    }
+}
 -(void)showWithImageUrl:(NSString *)imageUrl placeHoder:(UIImage *)placeHolder
 {
     _imageUrl = imageUrl;

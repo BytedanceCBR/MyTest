@@ -168,7 +168,7 @@
     }];
     [self.titleImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).offset(29);
-        make.top.equalTo(self.shadowImage).offset(44);
+        make.top.equalTo(self.shadowImage).offset(50);
         make.size.mas_offset(CGSizeMake(24, 24));
     }];
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -178,7 +178,7 @@
     
     [self.infoLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.titleImageView);
-        make.top.equalTo(self.titleLab.mas_bottom).offset(22);
+        make.top.equalTo(self.titleLab.mas_bottom).offset(24);
         make.right.equalTo(self.contentView).offset(-31);
     }];
     
@@ -195,6 +195,7 @@
     FHDetailSuggestTipModel *model = (FHDetailSuggestTipModel *)self.currentData;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"realtor_position"] = @"trade_tips";
+    imExtra[@"element_from"] = @"app_oldhouse_price";
     [model.phoneCallViewModel imchatActionWithPhone:model.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
 @end
