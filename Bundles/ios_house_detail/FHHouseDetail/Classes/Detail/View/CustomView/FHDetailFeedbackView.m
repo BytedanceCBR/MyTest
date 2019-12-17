@@ -530,14 +530,14 @@
     }
 
     if (tag >= 4) {
-        self.placeHolderTextView.text = realtorEvaluatioinConfigModel.goodPlaceholder;
+        self.placeHolderTextView.text = !isEmptyString(realtorEvaluatioinConfigModel.goodPlaceholder) ? realtorEvaluatioinConfigModel.goodPlaceholder : @"您可输入具体评价，以便经纪人为您提供更好的服务";
 //        if (self.selectStar <=3 || self.selectStar < 0) {
         self.selections = realtorEvaluatioinConfigModel.goodTags;
         [self.collectionView reloadData];
 //        }
         [self checkConfirmButtonEnableState];
     } else {
-        self.placeHolderTextView.text = realtorEvaluatioinConfigModel.badPlaceholder;
+        self.placeHolderTextView.text = !isEmptyString(realtorEvaluatioinConfigModel.badPlaceholder) ? realtorEvaluatioinConfigModel.badPlaceholder : @"请输入不少于5个字的评价，让经纪人做得更好";
         [self checkConfirmButtonEnableState];
 //        if (self.selectStar > 3 || self.selectStar < 0) {
         self.selections = realtorEvaluatioinConfigModel.badTags;
@@ -573,7 +573,7 @@
                     [[ToastManager manager] showToast:@"提交失败"];
                 }
             }];
-    [self traceRealtorEvaluatePopupClick:@"confirm" starNum:[NSString stringWithFormat:@"%i", tag]];
+    [self traceRealtorEvaluatePopupClick:@"confirm" starNum:[NSString stringWithFormat:@"%i", self.selectStar]];
 }
 
 - (void)close {
