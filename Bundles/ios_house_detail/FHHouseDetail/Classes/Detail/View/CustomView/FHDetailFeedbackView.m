@@ -653,7 +653,7 @@
 #pragma mark -- collection view--
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.selections.count;
+    return self.selections.count > 6 ? 6 : self.selections.count;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
