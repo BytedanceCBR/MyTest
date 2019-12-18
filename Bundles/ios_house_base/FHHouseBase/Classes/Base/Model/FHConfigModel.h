@@ -379,7 +379,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHRealtorEvaluatioinTagModel : JSONModel
 
-@property (nonatomic, copy , nullable) NSNumber *id;
+@property (nonatomic, strong , nullable) NSNumber *id;
 @property (nonatomic, copy , nullable) NSString *text;
 
 @end
