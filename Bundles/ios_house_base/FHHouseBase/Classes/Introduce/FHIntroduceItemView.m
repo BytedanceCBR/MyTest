@@ -33,6 +33,8 @@
 }
 
 - (void)initView {
+    self.backgroundColor = [UIColor clearColor];
+    
     self.titleLabel = [self LabelWithFont:[UIFont themeFontSemibold:28] textColor:[UIColor themeGray1]];
     _titleLabel.textAlignment = NSTextAlignmentCenter;
     _titleLabel.text = self.model.title;

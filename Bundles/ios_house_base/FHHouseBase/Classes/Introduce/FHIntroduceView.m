@@ -31,6 +31,7 @@
     self.scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
     _scrollView.pagingEnabled = YES;
     _scrollView.bounces = NO;
+    _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.backgroundColor = [UIColor colorWithHexString:@"f4f5f6"];
     [self addSubview:_scrollView];
     
