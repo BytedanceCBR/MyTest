@@ -185,7 +185,7 @@
         return;
     }
     
-    NSInteger numValue = 3759;
+    NSInteger numValue = [NSString stringWithFormat:@"%@", entryModel.activeCountInfo.count];
     NSString *numStr = [NSString stringWithFormat:@"%ld", numValue];
     NSString *textStr = [NSString stringWithFormat:@"%@", entryModel.activeCountInfo.text];
     NSString *combineStr = [NSString stringWithFormat:@"%@%@", numStr, textStr];
