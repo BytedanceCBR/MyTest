@@ -610,8 +610,8 @@
         self.phoneCallRealtorId = nil;
         self.phoneCallRequestId = nil;
     }
-    // 数据清除
-    self.isPhoneCallShow = NO;
+    // 数据清除 TODO @yuanke
+//    self.isPhoneCallShow = NO;
 }
 
 - (void)checkShowSocialAlert {

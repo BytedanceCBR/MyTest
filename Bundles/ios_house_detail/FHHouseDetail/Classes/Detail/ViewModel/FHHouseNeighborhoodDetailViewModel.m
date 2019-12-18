@@ -178,7 +178,6 @@
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.neighbordhoodStatus.neighborhoodSubStatus;
 
-    // TODO fengbo IMPORTTANT
 //    [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
 
     FHDetailContactModel *contactPhone = nil;
@@ -422,7 +421,6 @@
 
         /******* 这里的 逻辑   ********/
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:self.houseId];
-        //TODO fengbo important! generate IM Params
 //        [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title :imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
         if (self.detailTracerDic) {
