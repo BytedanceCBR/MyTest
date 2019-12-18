@@ -47,12 +47,15 @@
     return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestCommunityDetail:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestCommunityDetail:(NSString *)communityId tabName:(NSString *)tabName class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/social_group_basic_info";
     NSString *url = QURL(queryPath);
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"social_group_id"] = communityId ?: @"";
+    if(tabName){
+        paramDic[@"tab_name"] = tabName;
+    }
     NSDate *startDate = [NSDate date];
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         __block NSError *backError = error;
