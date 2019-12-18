@@ -35,8 +35,8 @@
     [self addSubview:_coverView];
     
     self.startBtn = [[UIButton alloc] init];
-    [_startBtn setImage:[UIImage imageNamed:@"video_start"] forState:UIControlStateNormal];
-    [_startBtn setImage:[UIImage imageNamed:@"video_start"] forState:UIControlStateHighlighted];
+    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateNormal];
+    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateHighlighted];
     [_startBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_startBtn];
 }
@@ -57,7 +57,7 @@
     if (_houseType == FHMultiMediaCellHouseSecond)  {
         [self.startBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_equalTo(52);
-            make.top.mas_equalTo(94);
+            make.top.mas_equalTo(104);
             make.centerX.mas_equalTo(self);
         }];
     }

@@ -204,7 +204,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     // 清空数据源
     [self.items removeAllObjects];
-    // 添加头滑动图片 && 视频
     BOOL hasVideo = NO;
     BOOL hasVR = NO;
     BOOL isInstant = model.isInstantData;
@@ -225,6 +224,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }else {
         contactPhone.isFormReport = YES;
     }
+    // 添加头滑动图片 && 视频
     if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
         hasVideo = YES;
     }

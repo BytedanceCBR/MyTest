@@ -439,7 +439,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
 - (void)setupUI {
     _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _keyLabel.textColor = [UIColor themeGray3];
+    _keyLabel.textColor = [UIColor colorWithHexStr:@"aeadad"];
     [self addSubview:_keyLabel];
     [_keyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_keyLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];

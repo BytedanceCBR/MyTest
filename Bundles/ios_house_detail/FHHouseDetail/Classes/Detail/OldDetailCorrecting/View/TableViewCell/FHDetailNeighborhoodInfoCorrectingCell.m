@@ -93,10 +93,10 @@
     }];
     
     [self.consultImgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.infoLabel.mas_right).offset(AdaptOffset(2));
-        make.centerY.mas_equalTo(self);
-        make.height.mas_equalTo(AdaptOffset(16));
-        make.width.mas_equalTo(AdaptOffset(17));
+        make.left.mas_equalTo(self.infoLabel.mas_right).offset(AdaptOffset(3));
+        make.centerY.mas_equalTo(self).offset(-1);
+        make.height.mas_equalTo(AdaptOffset(15));
+        make.width.mas_equalTo(AdaptOffset(16));
     }];
     [self.consultBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.consultImgView);

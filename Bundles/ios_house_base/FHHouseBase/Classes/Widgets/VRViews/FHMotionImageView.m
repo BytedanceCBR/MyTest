@@ -172,7 +172,7 @@ static CGFloat multiplier = 2;
     if (_cellHouseType == FHMultiMediaCellHouseSecond)  {
         [self.vrLoadingView  mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_equalTo(60);
-            make.top.mas_equalTo(94);
+            make.top.mas_equalTo(104);
             make.centerX.mas_equalTo(self);
         }];
     }

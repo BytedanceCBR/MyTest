@@ -52,6 +52,7 @@ typedef enum : NSUInteger {
     FHClueIMPageTypeCNeighborhood = 4, // app_neighborhood: 1.4小区详情页
     FHClueIMPageTypeCNeighborhoodMulrealtor = 41,// app_neighborhood_mulrealtor: 1.41小区详情页经纪人多展位
     FHClueIMPageTypeCNeighborhoodAladdin = 42,// app_neighborhood_aladdin: 1.42小区阿拉丁微聊
+    FHClueIMPageTypePresentation = 27,//二手房详情页购房小建议
     
 } FHClueIMPageTypeC;
 
