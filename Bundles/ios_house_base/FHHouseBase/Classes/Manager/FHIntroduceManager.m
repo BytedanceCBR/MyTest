@@ -40,6 +40,7 @@
     self.view = [[FHIntroduceView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height) model:self.model];
     _view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [keyWindow addSubview:_view];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
 }
 
 - (void)generateModel {
@@ -55,18 +56,20 @@
     [items addObject:model];
     
     model = [[FHIntroduceItemModel alloc] init];
-    model.title = @"精准购房";
-    model.subTitle = @"个性推选 动态选房";
+    model.title = @"资讯盘点";
+    model.subTitle = @"楼市行情 专业测评";
     model.showJumpBtn = YES;
     model.showEnterBtn = NO;
     [items addObject:model];
     
     model = [[FHIntroduceItemModel alloc] init];
-    model.title = @"精准购房";
-    model.subTitle = @"个性推选 动态选房";
-    model.showJumpBtn = YES;
-    model.showEnterBtn = NO;
+    model.title = @"买房社区";
+    model.subTitle = @"想买好房 全凭“经验”";
+    model.showJumpBtn = NO;
+    model.showEnterBtn = YES;
     [items addObject:model];
+    
+    self.model.items = items;
 }
 
 @end

@@ -6,8 +6,10 @@
 //
 
 #import "FHIntroduceView.h"
+#import <UIColor+Theme.h>
+#import "FHIntroduceItemView.h"
 
-@interface FHIntroduceView ()
+@interface FHIntroduceView ()<FHIntroduceItemViewDelegate>
 
 @property (nonatomic ,strong) FHIntroduceModel *model;
 @property (nonatomic , strong) UIScrollView *scrollView;
@@ -26,26 +28,29 @@
 }
 
 - (void)initView {
-    self.backgroundColor = [UIColor greenColor];
-    
     self.scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
     _scrollView.pagingEnabled = YES;
     _scrollView.bounces = NO;
+    _scrollView.backgroundColor = [UIColor colorWithHexString:@"f4f5f6"];
     [self addSubview:_scrollView];
     
-    _scrollView.contentSize = CGSizeMake(self.bounds.size.width * 3, self.bounds.size.height);
+    if(_model.items.count > 0){
+        _scrollView.contentSize = CGSizeMake(self.bounds.size.width * _model.items.count, self.bounds.size.height);
+    }
     
-    UIView *view1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
-    view1.backgroundColor = [UIColor redColor];
-    [_scrollView addSubview:view1];
-    
-    UIView *view2 = [[UIView alloc] initWithFrame:CGRectMake(self.bounds.size.width, 0, self.bounds.size.width, self.bounds.size.height)];
-    view2.backgroundColor = [UIColor blueColor];
-    [_scrollView addSubview:view2];
-    
-    UIView *view3 = [[UIView alloc] initWithFrame:CGRectMake(self.bounds.size.width * 2, 0, self.bounds.size.width, self.bounds.size.height)];
-    view3.backgroundColor = [UIColor yellowColor];
-    [_scrollView addSubview:view3];
+    for (NSInteger i = 0; i < self.model.items.count; i++) {
+        FHIntroduceItemModel *item = self.model.items[i];
+        FHIntroduceItemView *itemView = [[FHIntroduceItemView alloc] initWithFrame:CGRectMake(self.bounds.size.width * i, 0, self.bounds.size.width, self.bounds.size.height) model:item];
+        itemView.delegate = self;
+        [_scrollView addSubview:itemView];
+    }
+}
+
+#pragma mark - FHIntroduceItemViewDelegate
+
+- (void)close {
+    [self removeFromSuperview];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 
 @end
