@@ -318,7 +318,7 @@ PODS:
   - TTAddressBookService/AddressBook (0.1.4.1-binary)
   - TTAddressBookService/DeprecatedAddressBook (0.1.4.1-binary)
   - TTAdModule (0.1.25)
-  - TTAdSplashSDK (0.4.4.1-binary)
+  - TTAdSplashSDK (0.4.4)
   - TTAiKan (0.1.0)
   - TTAppRuntime (0.1.0)
   - TTAppStoreStarManager (1.0.12.1-binary)
@@ -781,7 +781,7 @@ DEPENDENCIES:
   - TTAD (from `../TTBundles/ios_tt_ad`)
   - TTAddressBookService (= 0.1.4.1-binary)
   - TTAdModule (from `../AKPlugins/TTAdModule`)
-  - TTAdSplashSDK (= 0.4.4.1-binary)
+  - TTAdSplashSDK (= 0.4.4)
   - TTAiKan (from `../TTBundles/ios_tt_aikan`)
   - TTAppRuntime (from `../TTBundles/ios_tt_appruntime`)
   - TTAppStoreStarManager (= 1.0.12.1-binary)
@@ -1124,7 +1124,7 @@ SPEC CHECKSUMS:
   TTAD: 313a03c77994b6f073932f9bc19912a1ff3224af
   TTAddressBookService: dd811a1a2e57ea21a21a5006761eb1e7e1cef2ad
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
-  TTAdSplashSDK: f02f0b22a03a06783ff6e1473f895fd8563c9333
+  TTAdSplashSDK: bcbf6e94de76b9f200a52d549a6096afdb7a3726
   TTAiKan: 642649f0c4848130171604fa36db684ecbff7648
   TTAppRuntime: 950cd779a9ea11d64aa82e5c0899bd849c38799b
   TTAppStoreStarManager: 70935d6a09575d63dd2c1fae2b6bb75c07caee2c
@@ -1215,6 +1215,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 6a30bb9e124536ea2070490331d0516c8127a666
+PODFILE CHECKSUM: 6319a84d6bd4d65edba303682e3a38fd90ec2e9d
 
 COCOAPODS: 1.4.0

@@ -280,7 +280,7 @@ def appPods
     #-----举报-----
     pod_binary 'TTReporter', '0.2.1'
 
-    pod_binary 'TTAdSplashSDK', '0.4.4'
+    pod 'TTAdSplashSDK', '0.4.4'
     pod_binary 'TTEntry', '0.1.7'
 
     #-----点赞分享顶踩不感兴趣----
