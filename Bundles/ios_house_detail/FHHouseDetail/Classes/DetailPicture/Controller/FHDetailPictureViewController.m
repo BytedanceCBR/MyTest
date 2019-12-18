@@ -1597,7 +1597,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 || (UIInterfaceOrientationIsLandscape(_enterOrientation) && UIInterfaceOrientationIsPortrait(currentOrientation))) {
                 [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
                 
-                [UIView animateWithDuration:.35f animations:^{
+                [UIView animateWithDuration:.2f animations:^{
                     self.view.alpha = 0.0f;
                 } completion:^(BOOL finished) {
                     kFHStaticPhotoBrowserAtTop = NO;
@@ -1676,10 +1676,10 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             
-            [UIView animateWithDuration:0.4f animations:^{
+            [UIView animateWithDuration:0.3f animations:^{
                 self.containerView.backgroundColor = [UIColor clearColor];
                 containerView.backgroundColor = [UIColor clearColor];
-                largeImageView.frame = endFrame;
+                largeImageView.alpha = 0;
             } completion:^(BOOL finished) {
                 [containerView removeFromSuperview];
                 kFHStaticPhotoBrowserAtTop = NO;
