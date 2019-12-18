@@ -97,7 +97,7 @@ PODS:
   - Fabric (1.10.2.1-binary)
   - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.10)
+  - FHCommonUI (0.1.0)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -665,7 +665,7 @@ DEPENDENCIES:
   - Fabric (= 1.10.2.1-binary)
   - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.10)
+  - FHCommonUI (from `git@code.byted.org:fproject/ios_common_ui.git`, commit `ac630d149db636938dc4bf7ce11794c5e2485b0f`)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -933,6 +933,9 @@ EXTERNAL SOURCES:
     :path: ../Vendor/BDTSharedHeaders
   FHCHousePush:
     :path: ../Bundles/FHCHousePush
+  FHCommonUI:
+    :commit: ac630d149db636938dc4bf7ce11794c5e2485b0f
+    :git: git@code.byted.org:fproject/ios_common_ui.git
   FHHouseBase:
     :path: ../Bundles/ios_house_base
   FHHouseDetail:
@@ -1012,6 +1015,11 @@ EXTERNAL SOURCES:
   yoga:
     :path: ../ReactCommon/yoga
 
+CHECKOUT OPTIONS:
+  FHCommonUI:
+    :commit: ac630d149db636938dc4bf7ce11794c5e2485b0f
+    :git: git@code.byted.org:fproject/ios_common_ui.git
+
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
   AFNetworking: ae73845b1571323685452375dc66d8e98feefa67
@@ -1059,7 +1067,7 @@ SPEC CHECKSUMS:
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
   FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: 4d07d027d70c4015dd1dfb27e777606fb36cddc0
+  FHCommonUI: b8b7d371281b79d2a206ab3b763ecc37ccf10fb7
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1211,6 +1219,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 133d69799e621cba7cb20148ea3a4f8458fb2f3a
+PODFILE CHECKSUM: cdd54e0212ece387051180c969ae15d730805236
 
 COCOAPODS: 1.4.0
