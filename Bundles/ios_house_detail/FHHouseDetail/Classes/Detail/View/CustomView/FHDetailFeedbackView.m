@@ -695,6 +695,11 @@
     NSMutableDictionary *tracerDic = [self.viewModel.detailTracerDic mutableCopy];
     tracerDic[@"realtor_id"] = self.realtorId ? self.realtorId : @"be_null";
     tracerDic[@"request_id"] = self.requestId ?: UT_BE_NULL;
+    if (self.viewModel.contactViewModel && self.viewModel.contactViewModel.contactPhone) {
+        tracerDic[@"realtor_logpb"] = self.viewModel.contactViewModel.contactPhone.realtorLogpb;
+    } else {
+        tracerDic[@"realtor_logpb"] = UT_BE_NULL;
+    }
     TRACK_EVENT(@"realtor_evaluate_popup_show", tracerDic);
 }
 
@@ -704,6 +709,11 @@
     tracerDic[@"click_position"] = position ? position : @"be_null";
     tracerDic[@"request_id"] = self.requestId ?: UT_BE_NULL;
     tracerDic[@"star_num"] = num ? num : @"be_null";
+    if (self.viewModel.contactViewModel && self.viewModel.contactViewModel.contactPhone) {
+        tracerDic[@"realtor_logpb"] = self.viewModel.contactViewModel.contactPhone.realtorLogpb;
+    } else {
+        tracerDic[@"realtor_logpb"] = UT_BE_NULL;
+    }
     TRACK_EVENT(@"realtor_evaluate_popup_click", tracerDic);
 }
 
