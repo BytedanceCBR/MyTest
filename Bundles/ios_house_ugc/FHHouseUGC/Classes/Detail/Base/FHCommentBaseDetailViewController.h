@@ -33,6 +33,7 @@ typedef NS_ENUM (NSInteger , FHUGCPostType){
 @property (nonatomic, assign) BOOL beginShowComment;// 点击评论按钮
 @property (nonatomic, assign)  BOOL fromUGC;//来源是ugc模块新功能，区别以前的评论部分
 @property (nonatomic, copy)     NSDictionary       *report_params_dic;
+@property (nonatomic, copy)   NSString  *msgID; // 评论id，可以返回指定的评论数据为置顶 展示第一条并变黄
 
 - (void)commentCountChanged;
 - (void)headerInfoChanged;

@@ -256,12 +256,15 @@
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
     _tableView.tableFooterView = footerView;
     
-    _tableView.sectionFooterHeight = 0.0;
-    
-    _tableView.estimatedRowHeight = 0;
+//    _tableView.sectionFooterHeight = 0.0;
+//    
+//    _tableView.estimatedRowHeight = 0;
     
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        _tableView.estimatedRowHeight = 0;
+        _tableView.estimatedSectionFooterHeight = 0;
+        _tableView.estimatedSectionHeaderHeight = 0;
     }
     
     if ([TTDeviceHelper isIPhoneXSeries]) {
@@ -284,6 +287,18 @@
         [self hiddenEmptyView];
         self.topHeaderView.hidden = NO;
         [self.topHeaderView updateData:headerModel tracerDic:self.tracerDict refreshAvatar:refreshAvatar];
+        // 布局刷新
+        self.defaultTopHeight = self.topHeaderView.headerViewheight;
+        self.topHeaderView.frame = CGRectMake(0, self.navOffset, SCREEN_WIDTH, self.defaultTopHeight);
+        self.topHeightOffset = CGRectGetMaxY(self.topHeaderView.frame) + 5;
+        
+        // 计算subScrollView的高度
+        self.minSubScrollViewHeight = SCREEN_HEIGHT - self.topHeightOffset;// 暂时不用，数据较少时也可在下面展示空页面
+        self.maxSubScrollViewHeight = SCREEN_HEIGHT - self.navOffset;
+        self.criticalPointHeight = self.maxSubScrollViewHeight - self.minSubScrollViewHeight;
+        
+        self.subScrollView.frame = CGRectMake(0, self.topHeightOffset, SCREEN_WIDTH, self.maxSubScrollViewHeight);
+        self.mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, self.maxSubScrollViewHeight + self.topHeightOffset);
     }
 }
 

@@ -494,7 +494,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     }
     else {
         BOOL shouldShow = !comment.replyCount.intValue || show;
-
+        shouldShow = !comment.replyCount.intValue; // 去除置顶的时候弹出键盘
         //钩子分发到业务层
         if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentViewController:didSelectWithInfo:)]) {
             NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];

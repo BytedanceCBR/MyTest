@@ -49,13 +49,13 @@ def fhPods
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
     
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev'
-    #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '04b0711843b573a64a781571dd19bdf50f5cc59e'
+#    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => 'c639b4033f33f3cf5d129642c923121f266d9186'
 #    pod 'FHCommonUI', :path => '../../ios_common_ui'
-    pod 'FHCommonUI', '0.0.8-alpha.0'
+    pod 'FHCommonUI', '0.0.11'
 
-    pod 'ios_house_im', '0.1.15-rc.5'
+    pod 'ios_house_im', '0.1.15-rc.8'
 #     pod 'ios_house_im' , :path => '../../ios_house_im'
-#     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => 'e4e8a5635c0a7f40bfc4535e1f92ddee17343504'
+#     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '151202f92ad1136c668fa7fb6f36cc2279221fe0'
 
 
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
@@ -490,8 +490,7 @@ def appPods
     #支持自动约束cell缓存高度
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
 
-
-    pod 'TTIMSDK', '0.8.8-alpha.1', :subspecs => [
+    pod 'TTIMSDK', '1.0.0-rc.34', :subspecs => [
         'IMKit',
         'IMKit_WebSocket',
         'Feature_ApplicationStatus',
@@ -510,8 +509,10 @@ def appPods
         'Feature_Core_CurrentUser',
         'Feature_Core_ConversationInfo',
         'Feature_Core_Config',
+        'Feature_Core_Setting',
         'Feature_Core',
         'Feature_ApplicationStatus',
+        'Protocols',
         'Bridges'
     ]
     
