@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) UIImageView *coverView;
 @property(nonatomic, strong) UIButton *startBtn;
+@property(nonatomic, strong) UIImageView *startImage;
 @property(nonatomic, copy) NSString *imageUrl;
 @property(nonatomic, assign) FHMultiMediaCellHouseType houseType;
 @property(nonatomic , weak) id<FHVideoCoverViewDelegate> delegate;

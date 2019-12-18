@@ -73,7 +73,6 @@
     self.currentData = data;
     [self generateModel];
     [self.mediaView updateModel:self.model withTitleModel: ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel];
-    
     //有视频才传入埋点
     if(self.vedioCount > 0){
         self.mediaView.tracerDic = [self tracerDic];
@@ -263,6 +262,7 @@
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
+    
     vc.topVC = self.baseViewModel.detailController;
     
 //    if (FHVideoModel.cellhou == FHCellt) {

@@ -1522,7 +1522,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 containerView.backgroundColor = [UIColor blackColor];
             }
             largeImageView.frame = beginFrame;
-            
+            largeImageView.alpha = 1;
             UIView *originalSupperView = largeImageView.superview;
             [containerView addSubview:largeImageView];
             [rootViewController.view addSubview:self.view]; //图片放大动画情况下，先加入view再加入遮罩
