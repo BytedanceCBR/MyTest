@@ -916,7 +916,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             [self startUGCLoading];
         }
         __weak typeof(self) weakSelf = self;
-        [FHHouseUGCAPI requestCommunityDetail:self.socialInfo.socialGroupInfo.socialGroupId class:[FHUGCScialGroupModel class] completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+        [FHHouseUGCAPI requestCommunityDetail:self.socialInfo.socialGroupInfo.socialGroupId tabName:nil class:[FHUGCScialGroupModel class] completion:^(id <FHBaseModelProtocol> model, NSError *error) {
             if (model && [model isKindOfClass:[FHUGCScialGroupModel class]]) {
                 FHUGCScialGroupModel *socialModel = (FHUGCScialGroupModel *)model;
                 // 更新数据 主要是群聊

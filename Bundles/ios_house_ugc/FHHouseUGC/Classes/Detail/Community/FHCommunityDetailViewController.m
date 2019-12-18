@@ -34,6 +34,7 @@
     if (self) {
         self.ttTrackStayEnable = YES;
         self.communityId = paramObj.allParams[@"community_id"];
+        self.tabName = paramObj.allParams[@"tab_name"];
         // 取链接中的埋点数据
         NSDictionary *params = paramObj.allParams;
         NSString *enter_from = params[@"enter_from"];
