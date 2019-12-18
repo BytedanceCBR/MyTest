@@ -612,7 +612,6 @@
 }
 
 - (void)applicationDidBecomeActive {
-    
 }
 
 - (void)checkShowSocialAlert {

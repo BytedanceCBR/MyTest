@@ -562,4 +562,34 @@
     }];
 }
 
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)houseId realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nonnull))completion {
+    NSString *path = @"/f100/api/associate/realtor_evaluation/assign";
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[@"device_id"] = @([[[TTInstallIDManager sharedInstance] deviceID] longLongValue]);
+    param[@"house_id"] = @(houseId.longLongValue);
+    param[@"score"] = @(score);
+    param[@"tag_ids"] = tags;
+
+    if(!isEmptyString(realtorId)){
+        param[@"realtor_id"] = @(realtorId.longLongValue);;
+    }
+
+    if(!isEmptyString(content)) {
+        param[@"content"] = content;
+    }
+
+    return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
+        BOOL success = NO;
+        if (result) {
+            success = (result[@"status"] && [result[@"status"] integerValue] == 0);
+            if (!success) {
+                error = [NSError errorWithDomain:result[@"message"]?:@"请求失败" code:-1 userInfo:nil];
+            }
+        }
+        if (completion) {
+            completion(success , error);
+        }
+    }];
+}
+
 @end
