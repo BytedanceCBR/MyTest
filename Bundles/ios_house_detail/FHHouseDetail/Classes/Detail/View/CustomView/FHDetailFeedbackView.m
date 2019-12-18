@@ -27,6 +27,7 @@
 #import "UIColor+TTVideo.h"
 #import "MAAnnotationView.h"
 #import "YYTextView.h"
+#import "NSString+BTDAdditions.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <TTSandBoxHelper.h>
 #import <TTBaseLib/UITextView+TTAdditions.h>
@@ -238,7 +239,7 @@
     BOOL enabled = YES;
 
     if (self.selectStar < 4) {
-        if (self.inputTextView.text.length >= 5) {
+        if (self.inputTextView.text.length >= 5 && !isEmptyString([self.inputTextView.text btd_trimmed])) {
             enabled = YES;
         } else {
             enabled = NO;
