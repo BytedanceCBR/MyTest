@@ -626,6 +626,11 @@
         weakSelf.hasLoadedComment = YES;
     });
     
+    // 输入框去除：回复 XXX
+    if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
+        [self.commentViewController tt_clearDefaultReplyCommentModel];
+    }
+    
     if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
         NSString *userName = self.commentViewController.tt_defaultReplyCommentModel.userName;
         [self.toolbarView.writeButton setTitle:isEmptyString(userName)? @"说点什么...": [NSString stringWithFormat:@"回复 %@：", userName] forState:UIControlStateNormal];
