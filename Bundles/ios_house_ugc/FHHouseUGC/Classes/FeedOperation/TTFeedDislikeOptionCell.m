@@ -157,8 +157,7 @@
         }
             break;
         case FHFeedOperationOptionTypeEdit: {
-            // add by zyk 需要注意此处的icon修改
-            icon = [UIImage imageNamed:@"fh_ugc_self_look"];
+            icon = [UIImage imageNamed:@"fh_ugc_feed_edit"];
         }
             break;
     }
