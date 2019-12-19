@@ -168,7 +168,7 @@
         viewModel.isGood = NO;
         viewModel.isTop = NO;
     }
-
+    viewModel.cellType = self.cellModel.cellType;
     [dislikeView refreshWithModel:viewModel];
     CGPoint point = _moreBtn.center;
     [dislikeView showAtPoint:point
