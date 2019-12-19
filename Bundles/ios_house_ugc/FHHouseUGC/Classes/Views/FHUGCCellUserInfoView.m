@@ -168,7 +168,7 @@
         viewModel.isGood = NO;
         viewModel.isTop = NO;
     }
-
+    viewModel.cellType = self.cellModel.cellType;
     [dislikeView refreshWithModel:viewModel];
     CGPoint point = _moreBtn.center;
     [dislikeView showAtPoint:point
@@ -256,6 +256,8 @@
             [wself setOperationSelfLook:view.selectdWord.serverType];
         }];
         [self trackConfirmPopupShow:@"own_see_popup_show"];
+    } else if(view.selectdWord.type == FHFeedOperationWordTypeEdit) {
+        [[ToastManager manager] showToast:@"编辑按钮点击了"];
     }
 }
 

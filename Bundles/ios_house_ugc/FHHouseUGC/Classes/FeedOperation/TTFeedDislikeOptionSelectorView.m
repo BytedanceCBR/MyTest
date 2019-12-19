@@ -129,6 +129,7 @@ UITableViewDataSource
         case FHFeedOperationOptionTypeCancelTop:
         case FHFeedOperationOptionTypeGood:
         case FHFeedOperationOptionTypeCancelGood:
+        case FHFeedOperationOptionTypeEdit:
         case FHFeedOperationOptionTypeSelfLook: {
             [self finishWithKeyword:option.words.firstObject optionType:option.type];
         }

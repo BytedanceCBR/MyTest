@@ -75,6 +75,11 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
                               @"serverType":@"report"
                               },
                           @{
+                              @"id": @"8",
+                              @"title": @"编辑",
+                              @"serverType":@"edit"
+                              },
+                          @{
                               @"id": @"2",
                               @"title": @"删除",
                               @"serverType":@"delete"
@@ -128,8 +133,8 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
             if(word.type == FHFeedOperationWordTypeReport && !isShowDelete){
                 [items addObject:word];
             }
-            
-            if(word.type == FHFeedOperationWordTypeDelete && isShowDelete){
+            // 编辑 & 删除
+            if((word.type == FHFeedOperationWordTypeDelete || word.type == FHFeedOperationWordTypeEdit) && isShowDelete){
                 [items addObject:word];
             }
         }
@@ -142,6 +147,22 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
     
     if(viewModel.permission.count > 0){
         NSArray *operationList = [self operationList:viewModel.permission];
+        
+        // 管理员
+        NSString *userId = viewModel.userID;
+        BOOL isShowDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:userId]; // 是自己发的内容，第一条添加编辑选项，帖子
+        if (isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC) {
+            NSDictionary *dict = @{
+                                   @"id": @"8",
+                                   @"title": @"编辑",
+                                   @"serverType":@"edit"
+                                   };
+            FHFeedOperationWord *editData = [[FHFeedOperationWord alloc] initWithDict:dict];
+            if (editData) {
+                editData.items = @[editData];
+                [items addObject:editData];
+            }
+        }
         
         for (NSDictionary *dict in operationList) {
             if ([dict isKindOfClass:[NSDictionary class]]) {
@@ -224,6 +245,8 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         type = FHFeedOperationWordTypeCancelGood;
     }else if([serverKey isEqualToString:@"self_visiable"]){
         type = FHFeedOperationWordTypeSelfLook;
+    }else if([serverKey isEqualToString:@"edit"]){
+        type = FHFeedOperationWordTypeEdit;
     }else{
         type = FHFeedOperationWordTypeOther;
     }
