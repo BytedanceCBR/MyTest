@@ -243,7 +243,10 @@ extern NSString *const INSTANT_DATA_KEY;
     for (NSString *className in self.cellIdArray) {
         [self registerCellClassBy:className];
     }
- 
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeRentHouse]];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];
+
     if(self.commute){  
         [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
     }else{
@@ -259,9 +262,10 @@ extern NSString *const INSTANT_DATA_KEY;
 - (Class)cellClassForEntity:(id)model {
     
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
         if (self.commute) {
             return [FHHouseBaseItemCell class];
-        }else if(self.houseType == FHHouseTypeNewHouse) {
+        }else if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
             return [FHHouseBaseNewHouseCell class];
         }else {
             return [FHHouseBaseItemCell class];
@@ -293,6 +297,11 @@ extern NSString *const INSTANT_DATA_KEY;
 }
 // cell identifier
 - (NSString *)cellIdentifierForEntity:(id)model {
+    
+    if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
+        return [FHSearchHouseItemModel cellIdentifierByHouseType:houseModel.houseType.integerValue];
+    }
     Class cls = [self cellClassForEntity:model];
     return NSStringFromClass(cls);
 }

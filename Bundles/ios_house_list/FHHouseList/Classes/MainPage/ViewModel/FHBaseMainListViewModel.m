@@ -163,7 +163,10 @@ extern NSString *const INSTANT_DATA_KEY;
 - (void)registerCellClasses
 {
     [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceCellId];
-
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeRentHouse]];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];
+    
     for (NSString *className in self.cellIdArray) {
         [self registerCellClassBy:className];
     }
@@ -204,6 +207,10 @@ extern NSString *const INSTANT_DATA_KEY;
 }
 // cell identifier
 - (NSString *)cellIdentifierForEntity:(id)model {
+    if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
+        return [FHSearchHouseItemModel cellIdentifierByHouseType:houseModel.houseType.integerValue];
+    }
     Class cls = [self cellClassForEntity:model];
     return NSStringFromClass(cls);
 }

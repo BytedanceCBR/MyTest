@@ -679,6 +679,27 @@
     return YES;
 }
 
++ (NSString *)cellIdentifierByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+            return @"FHHouseBaseNewHouseCell";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"FHHouseBaseItemCellSecond";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"FHHouseBaseItemCellRent";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"FHHouseBaseItemCellNeighborhood";
+            break;
+        default:
+            break;
+    }
+    return @"FHHouseBaseItemCell";
+}
+
 @end
 
 @implementation FHSearchHouseItemModel (RecommendReason)

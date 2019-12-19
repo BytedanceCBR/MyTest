@@ -15,6 +15,7 @@
 #import "FHHouseBaseInfoModel.h"
 #import "FHNewHouseItemModel.h"
 #import "FHRentFacilitiesModel.h"
+#import "FHHouseType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -395,7 +396,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *cellStyle;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
-@property (nonatomic, strong, nullable) FHHouseItemHouseExternalModel *externalInfo;
+@property (nonatomic, strong, nullable) FHHouseItemHouseExternalModel *externalInfo; // 已下线
 @property (nonatomic, strong, nullable) FHSearchHouseVRModel *vrInfo;
 @property (nonatomic, copy , nullable) FHSearchHouseDataItemsFakeReasonModel *fakeReason;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsBaseInfoMapModel *baseInfoMap ;
@@ -404,7 +405,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImage;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsRecommendReasonsModel> *recommendReasons;
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsRecommendReasonsModel> *recommendReasons;// 已下线
 @property (nonatomic, copy , nullable) NSString *displaySubtitle;
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *displayBuiltYear;
@@ -413,7 +414,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsHouseImageTagModel *houseTitleTag ;
 @property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, strong) NSArray* bottomText;
-@property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ;
+@property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ; // todo zjing skyeye也要支持下
 @property (nonatomic, strong , nullable) FHHouseListHouseAdvantageTagModel *advantageDescription ;
 
 @property (nonatomic, copy , nullable) NSString *id;
@@ -445,6 +446,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isRecommendCell;
 @property (nonatomic, assign) BOOL isLastCell;
+
++ (NSString *)cellIdentifierByHouseType:(FHHouseType)houseType;
 
 @end
 
