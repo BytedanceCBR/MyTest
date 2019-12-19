@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithFrame:(CGRect)frame model:(FHIntroduceItemModel *)model;
 
+- (void)play;
+
 @property(nonatomic , weak) id<FHIntroduceItemViewDelegate> delegate;
 
 @end

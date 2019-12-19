@@ -130,6 +130,10 @@
 		D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		EB988F3EBE29F7D165C85289 /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A95054107C5636D5192DC02 /* libPods-NewsLiteInHouse.a */; };
+		FBA5893023AB64D20053EC79 /* introduce_3.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892123AB64D20053EC79 /* introduce_3.json */; };
+		FBA5893123AB64D20053EC79 /* introduce_2.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892223AB64D20053EC79 /* introduce_2.json */; };
+		FBA5893D23AB64D20053EC79 /* introduce_1.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892F23AB64D20053EC79 /* introduce_1.json */; };
+		FBA5893F23AB64E20053EC79 /* images in Resources */ = {isa = PBXBuildFile; fileRef = FBA5893E23AB64E20053EC79 /* images */; };
 		FEFA59C3205FB1A8001F50D8 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		FEFA59C7205FB1A8001F50D8 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
 		FEFA59C8205FB1A8001F50D8 /* sound6.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEB1FE007C20093E05D /* sound6.caf */; };
@@ -386,6 +390,10 @@
 		EFF33B05162FDB1D00B947F4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		EFF33B0C162FEE8600B947F4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = tt_video_doubleClickApprove.bundle; sourceTree = "<group>"; };
+		FBA5892123AB64D20053EC79 /* introduce_3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = introduce_3.json; sourceTree = "<group>"; };
+		FBA5892223AB64D20053EC79 /* introduce_2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = introduce_2.json; sourceTree = "<group>"; };
+		FBA5892F23AB64D20053EC79 /* introduce_1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = introduce_1.json; sourceTree = "<group>"; };
+		FBA5893E23AB64E20053EC79 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		FE524F681DC9BE4F00CDED36 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
 		FE593EA11CFFE3850029EA16 /* libTTBaseLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTTBaseLib.a; path = "Pods/../build/Debug-iphoneos/TTBaseLib/libTTBaseLib.a"; sourceTree = "<group>"; };
 		FE593EA91CFFE5C40029EA16 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Build/Products/Debug-iphonesimulator/libPods.a"; sourceTree = "<group>"; };
@@ -699,6 +707,7 @@
 		A8A57F531B16F44D00783AA9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				FBA5892023AB64D20053EC79 /* introduce */,
 				D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */,
 				D37495DF23965409006D44D2 /* gaode_house_detail_style.data */,
 				7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */,
@@ -754,6 +763,17 @@
 				FE700DC91B8D98F8004A435E /* yw_1222.jpg */,
 			);
 			path = OtherResource;
+			sourceTree = "<group>";
+		};
+		FBA5892023AB64D20053EC79 /* introduce */ = {
+			isa = PBXGroup;
+			children = (
+				FBA5893E23AB64E20053EC79 /* images */,
+				FBA5892123AB64D20053EC79 /* introduce_3.json */,
+				FBA5892223AB64D20053EC79 /* introduce_2.json */,
+				FBA5892F23AB64D20053EC79 /* introduce_1.json */,
+			);
+			path = introduce;
 			sourceTree = "<group>";
 		};
 		FEE188E21FFCB587005310BB /* Recovered References */ = {
@@ -1035,6 +1055,7 @@
 				FEFA59CF205FB1A8001F50D8 /* tt_video_doubleClickApprove.bundle in Resources */,
 				3D7D2F4922704CAB00A95FAF /* Icon@2x.png in Resources */,
 				FEFA59D1205FB1A8001F50D8 /* Images.xcassets in Resources */,
+				FBA5893F23AB64E20053EC79 /* images in Resources */,
 				FEFA59D2205FB1A8001F50D8 /* Settings.xcassets in Resources */,
 				FEFA59D6205FB1A8001F50D8 /* sound4.caf in Resources */,
 				FEFA59DB205FB1A8001F50D8 /* sound1.caf in Resources */,
@@ -1046,7 +1067,10 @@
 				FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				3DB49F922265E34900A0780E /* iconfont_new.ttf in Resources */,
 				FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */,
+				FBA5893023AB64D20053EC79 /* introduce_3.json in Resources */,
+				FBA5893123AB64D20053EC79 /* introduce_2.json in Resources */,
 				FEFA59F6205FB1A8001F50D8 /* sound3.caf in Resources */,
+				FBA5893D23AB64D20053EC79 /* introduce_1.json in Resources */,
 				3D83DD122306A933008B583E /* gaode_style_extra.data in Resources */,
 				3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				FEFA59FB205FB1A8001F50D8 /* CommonResource.xcassets in Resources */,

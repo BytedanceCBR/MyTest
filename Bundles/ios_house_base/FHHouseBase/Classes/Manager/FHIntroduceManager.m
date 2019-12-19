@@ -49,24 +49,24 @@
     FHIntroduceItemModel *model = nil;
     
     model = [[FHIntroduceItemModel alloc] init];
-    model.title = @"精准购房";
-    model.subTitle = @"个性推选 动态选房";
     model.showJumpBtn = YES;
     model.showEnterBtn = NO;
+    model.lottieJsonStr = @"introduce_1";
+    model.indicatorImageName = @"fh_introduce_indicator_1";
     [items addObject:model];
     
     model = [[FHIntroduceItemModel alloc] init];
-    model.title = @"资讯盘点";
-    model.subTitle = @"楼市行情 专业测评";
     model.showJumpBtn = YES;
     model.showEnterBtn = NO;
+    model.lottieJsonStr = @"introduce_2";
+    model.indicatorImageName = @"fh_introduce_indicator_2";
     [items addObject:model];
     
     model = [[FHIntroduceItemModel alloc] init];
-    model.title = @"买房社区";
-    model.subTitle = @"想买好房 全凭“经验”";
     model.showJumpBtn = NO;
     model.showEnterBtn = YES;
+    model.lottieJsonStr = @"introduce_3";
+    model.indicatorImageName = nil;
     [items addObject:model];
     
     self.model.items = items;

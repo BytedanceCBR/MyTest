@@ -11,12 +11,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHIntroduceItemModel : NSObject
 
-@property (nonatomic , copy) NSString *title;
-@property (nonatomic , copy) NSString *subTitle;
 @property (nonatomic , assign) BOOL showJumpBtn;
 @property (nonatomic , assign) BOOL showEnterBtn;
-
-@property (nonatomic , copy) NSString *lotty;
+@property (nonatomic , copy) NSString *imageContentName;
+@property (nonatomic , copy) NSString *lottieJsonStr;
+@property (nonatomic , copy) NSString *indicatorImageName;
+//是否已经播放过一次
+@property (nonatomic , assign) BOOL played;
 
 @end
 

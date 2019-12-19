@@ -9,14 +9,15 @@
 #import <Masonry.h>
 #import <UIColor+Theme.h>
 #import <UIFont+House.h>
+#import <Lottie/LOTAnimationView.h>
 
 @interface FHIntroduceItemView ()
 
 @property (nonatomic , strong) FHIntroduceItemModel *model;
-@property (nonatomic , strong) UILabel *titleLabel;
-@property (nonatomic , strong) UILabel *subTitleLabel;
-@property (nonatomic , strong) UIButton *jumpBtn;
 @property (nonatomic , strong) UIButton *enterBtn;
+@property (nonatomic , strong) UIImageView *imageContentView;
+@property (nonatomic , strong) LOTAnimationView *animationView;
+@property (nonatomic , strong) UIImageView *bottomBgView;
 
 @end
 
@@ -35,21 +36,15 @@
 - (void)initView {
     self.backgroundColor = [UIColor clearColor];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontSemibold:28] textColor:[UIColor themeGray1]];
-    _titleLabel.textAlignment = NSTextAlignmentCenter;
-    _titleLabel.text = self.model.title;
-    [self addSubview:_titleLabel];
+    NSString *path = [[NSBundle mainBundle] pathForResource:self.model.lottieJsonStr ofType:@"json"];
+    self.animationView = [LOTAnimationView animationWithFilePath:path]; 
+    _animationView.contentMode = UIViewContentModeScaleAspectFit;
+    [self addSubview:_animationView];
     
-    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:18] textColor:[UIColor themeGray1]];
-    _subTitleLabel.textAlignment = NSTextAlignmentCenter;
-    _subTitleLabel.text = self.model.subTitle;
-    [self addSubview:_subTitleLabel];
-    
-    self.jumpBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_jumpBtn setImage:[UIImage imageNamed:@"fh_introduce_jump"] forState:UIControlStateNormal];
-    [_jumpBtn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
-    _jumpBtn.hidden = !self.model.showJumpBtn;
-    [self addSubview:_jumpBtn];
+    self.bottomBgView = [[UIImageView alloc] init];
+    _bottomBgView.contentMode = UIViewContentModeScaleAspectFill;
+    _bottomBgView.image = [UIImage imageNamed:@"fh_introduce_bottom_bg"];
+    [self addSubview:_bottomBgView];
     
     self.enterBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_enterBtn setImage:[UIImage imageNamed:@"fh_introduce_enter"] forState:UIControlStateNormal];
@@ -59,25 +54,13 @@
 }
 
 - (void)initConstraints {
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self).offset(56);
-        make.left.mas_equalTo(self).offset(10);
-        make.right.mas_equalTo(self).offset(-10);
-        make.height.mas_equalTo(40);
+    [self.animationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self);
     }];
     
-    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom);
-        make.left.mas_equalTo(self).offset(10);
-        make.right.mas_equalTo(self).offset(-10);
-        make.height.mas_equalTo(25);
-    }];
-    
-    [self.jumpBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self).offset(20);
-        make.right.mas_equalTo(self).offset(-20);
-        make.width.mas_equalTo(64);
-        make.height.mas_equalTo(32);
+    [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self);
+        make.height.mas_equalTo(56);
     }];
     
     [self.enterBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -93,6 +76,16 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+- (void)play {
+    if(self.model.played){
+        return;
+    }
+    __weak typeof(self) wself = self;
+    [_animationView playWithCompletion:^(BOOL animationFinished) {
+        wself.model.played = YES;
+    }];
 }
 
 - (void)close {
