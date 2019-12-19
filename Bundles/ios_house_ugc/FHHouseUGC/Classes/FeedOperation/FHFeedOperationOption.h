@@ -19,6 +19,7 @@ typedef NS_ENUM(NSUInteger, FHFeedOperationOptionType) {
     FHFeedOperationOptionTypeGood,
     FHFeedOperationOptionTypeCancelGood,
     FHFeedOperationOptionTypeSelfLook,
+    FHFeedOperationOptionTypeEdit,
 };
 
 @interface FHFeedOperationOption : NSObject

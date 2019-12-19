@@ -75,6 +75,11 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
                               @"serverType":@"report"
                               },
                           @{
+                              @"id": @"8",
+                              @"title": @"编辑",
+                              @"serverType":@"edit"
+                              },
+                          @{
                               @"id": @"2",
                               @"title": @"删除",
                               @"serverType":@"delete"
@@ -128,8 +133,8 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
             if(word.type == FHFeedOperationWordTypeReport && !isShowDelete){
                 [items addObject:word];
             }
-            
-            if(word.type == FHFeedOperationWordTypeDelete && isShowDelete){
+            // 编辑 & 删除
+            if((word.type == FHFeedOperationWordTypeDelete || word.type == FHFeedOperationWordTypeEdit) && isShowDelete){
                 [items addObject:word];
             }
         }
@@ -224,6 +229,8 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         type = FHFeedOperationWordTypeCancelGood;
     }else if([serverKey isEqualToString:@"self_visiable"]){
         type = FHFeedOperationWordTypeSelfLook;
+    }else if([serverKey isEqualToString:@"edit"]){
+        type = FHFeedOperationWordTypeEdit;
     }else{
         type = FHFeedOperationWordTypeOther;
     }
