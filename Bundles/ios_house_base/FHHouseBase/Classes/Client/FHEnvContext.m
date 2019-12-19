@@ -33,6 +33,7 @@
 #import <TTCategoryBadgeNumberManager.h>
 #import "FHMainApi.h"
 #import <FHMinisdkManager.h>
+#import <FHIntroduceManager.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -84,7 +85,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
         
         __block NSInteger retryGetLightCount = kGetLightRequestRetryCount;
         
-        [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
+        if(![FHIntroduceManager sharedInstance].isShowing){
+            [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
+        }
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
             
@@ -141,7 +144,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
                     completion(NO);
                 }
                 [[ToastManager manager] dismissCustomLoading];
-                [[ToastManager manager] showToast:@"切换城市失败"];
+                if(![FHIntroduceManager sharedInstance].isShowing){
+                    [[ToastManager manager] showToast:@"切换城市失败"];
+                }
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
                 
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:1 extra:paramsExtra];

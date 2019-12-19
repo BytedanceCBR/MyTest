@@ -9,10 +9,13 @@
 #import <UIColor+Theme.h>
 #import "FHIntroduceItemView.h"
 #import <UIViewAdditions.h>
+#import "FHIntroduceManager.h"
+#import <Masonry.h>
 
 @interface FHIntroduceView ()<FHIntroduceItemViewDelegate>
 
-@property (nonatomic ,strong) FHIntroduceModel *model;
+@property (nonatomic , strong) FHIntroduceModel *model;
+@property (nonatomic , strong) UIView *containerView;
 @property (nonatomic , strong) UIScrollView *scrollView;
 @property (nonatomic , strong) UIImageView *indicatorView;
 @property (nonatomic , strong) UIButton *jumpBtn;
@@ -34,41 +37,58 @@
 }
 
 - (void)initView {
-    self.scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
+    self.backgroundColor = [UIColor colorWithHexString:@"f4f5f6"];
+    
+    CGFloat bottom = 0;
+    if (@available(iOS 11.0, *)) {
+        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
+    CGFloat top = 0;
+    CGFloat safeTop = 0;
+    if (@available(iOS 11.0, *)) {
+        safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+    }
+    if (safeTop > 0) {
+        top += (safeTop - 20);
+    }
+    
+    self.containerView = [[UIView alloc] initWithFrame:CGRectMake(0, top, self.bounds.size.width, self.bounds.size.height - top - bottom)];
+    [self addSubview:_containerView];
+    
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.containerView.bounds.size.width, self.containerView.bounds.size.height)];
     _scrollView.pagingEnabled = YES;
     _scrollView.bounces = NO;
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.backgroundColor = [UIColor colorWithHexString:@"f4f5f6"];
     _scrollView.delegate = self;
-    [self addSubview:_scrollView];
+    [_containerView addSubview:_scrollView];
     
     for (NSInteger i = 0; i < self.model.items.count; i++) {
         FHIntroduceItemModel *item = self.model.items[i];
-        FHIntroduceItemView *itemView = [[FHIntroduceItemView alloc] initWithFrame:CGRectMake(self.bounds.size.width * i, 0, self.bounds.size.width, self.bounds.size.height) model:item];
+        FHIntroduceItemView *itemView = [[FHIntroduceItemView alloc] initWithFrame:CGRectMake(self.bounds.size.width * i, 0, self.containerView.bounds.size.width, self.containerView.bounds.size.height) model:item];
         itemView.delegate = self;
         [_scrollView addSubview:itemView];
         [self.itemViewList addObject:itemView];
     }
     
-    self.indicatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 4)];
+    self.indicatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.containerView.bounds.size.height - 20, 40, 4)];
     _indicatorView.contentMode = UIViewContentModeScaleAspectFit;
     _indicatorView.image = [UIImage imageNamed:@"fh_introduce_indicator_1"];
     _indicatorView.centerX = self.centerX;
-    _indicatorView.bottom = self.bottom - 20;
-    [self addSubview:_indicatorView];
+    [_containerView addSubview:_indicatorView];
     
-    self.jumpBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 64, 32)];
+    self.jumpBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 20, 64, 32)];
     [_jumpBtn setImage:[UIImage imageNamed:@"fh_introduce_jump"] forState:UIControlStateNormal];
     [_jumpBtn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
     _jumpBtn.right = self.right - 20;
-    _jumpBtn.top = self.top + 20;
-    [self addSubview:_jumpBtn];
+    [_containerView addSubview:_jumpBtn];
 }
 
 - (void)initFirstData {
     if(self.model.items.count > 0 && self.itemViewList.count > 0){
-        self.scrollView.contentSize = CGSizeMake(self.bounds.size.width * _model.items.count, self.bounds.size.height);
-        
+        self.scrollView.contentSize = CGSizeMake(self.containerView.bounds.size.width * _model.items.count, self.containerView.size.height);
+    
         FHIntroduceItemModel *itemModel = self.model.items[0];
         if(itemModel){
             self.jumpBtn.hidden = !itemModel.showJumpBtn;
@@ -82,8 +102,7 @@
 #pragma mark - FHIntroduceItemViewDelegate
 
 - (void)close {
-    [self removeFromSuperview];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [[FHIntroduceManager sharedInstance] hideIntroduceView];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

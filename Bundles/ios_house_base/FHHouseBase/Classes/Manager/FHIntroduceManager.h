@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showIntroduceView:(UIView *)keyWindow;
 
+- (void)hideIntroduceView;
+
+@property (nonatomic , assign, readonly) BOOL isShowing;
+
 @end
 
 NS_ASSUME_NONNULL_END

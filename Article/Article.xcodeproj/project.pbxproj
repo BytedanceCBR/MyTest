@@ -134,6 +134,10 @@
 		FBA5893123AB64D20053EC79 /* introduce_2.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892223AB64D20053EC79 /* introduce_2.json */; };
 		FBA5893D23AB64D20053EC79 /* introduce_1.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892F23AB64D20053EC79 /* introduce_1.json */; };
 		FBA5893F23AB64E20053EC79 /* images in Resources */ = {isa = PBXBuildFile; fileRef = FBA5893E23AB64E20053EC79 /* images */; };
+		FBA5894023AB87200053EC79 /* images in Resources */ = {isa = PBXBuildFile; fileRef = FBA5893E23AB64E20053EC79 /* images */; };
+		FBA5894123AB87240053EC79 /* introduce_3.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892123AB64D20053EC79 /* introduce_3.json */; };
+		FBA5894223AB87270053EC79 /* introduce_2.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892223AB64D20053EC79 /* introduce_2.json */; };
+		FBA5894323AB872A0053EC79 /* introduce_1.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892F23AB64D20053EC79 /* introduce_1.json */; };
 		FEFA59C3205FB1A8001F50D8 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		FEFA59C7205FB1A8001F50D8 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
 		FEFA59C8205FB1A8001F50D8 /* sound6.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEB1FE007C20093E05D /* sound6.caf */; };
@@ -997,6 +1001,7 @@
 				3D2F39962270545700AE567D /* InfoPlist.strings in Resources */,
 				B373CE9B2174587A008F9905 /* sound1.caf in Resources */,
 				6114B09F21B3E78C00331D12 /* house_refresh.json in Resources */,
+				FBA5894123AB87240053EC79 /* introduce_3.json in Resources */,
 				B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */,
 				B373CEA42174587A008F9905 /* PushNotification.xcassets in Resources */,
@@ -1004,7 +1009,9 @@
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				3DB49F932265E34900A0780E /* iconfont_new.ttf in Resources */,
 				3D83DD132306A933008B583E /* gaode_style_extra.data in Resources */,
+				FBA5894323AB872A0053EC79 /* introduce_1.json in Resources */,
 				B373CEA62174587A008F9905 /* Weather.xcassets in Resources */,
+				FBA5894223AB87270053EC79 /* introduce_2.json in Resources */,
 				3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */,
 				D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */,
 				B373CEAA2174587A008F9905 /* sound3.caf in Resources */,
@@ -1027,6 +1034,7 @@
 				B373CEC52174587A008F9905 /* NewsResource.xcassets in Resources */,
 				B373CEC62174587A008F9905 /* FrameworkResource.xcassets in Resources */,
 				B373CEC82174587A008F9905 /* Account.xcassets in Resources */,
+				FBA5894023AB87200053EC79 /* images in Resources */,
 				B373CEC92174587A008F9905 /* NewsInHouseTodayExtenstion.release.xcconfig in Resources */,
 				B373CECA2174587A008F9905 /* NewsInHouse.release.xcconfig in Resources */,
 				B373CECB2174587A008F9905 /* AuthorizeHintResource.xcassets in Resources */,

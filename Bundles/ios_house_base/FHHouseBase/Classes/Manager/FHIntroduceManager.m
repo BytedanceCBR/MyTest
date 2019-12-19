@@ -13,6 +13,7 @@
 
 @property(nonatomic ,strong) FHIntroduceView *view;
 @property(nonatomic ,strong) FHIntroduceModel *model;
+@property (nonatomic , assign) BOOL isShowing;
 
 @end
 
@@ -31,16 +32,25 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        _isShowing = NO;
         [self generateModel];
+        
+        [[UIApplication sharedApplication] addObserver:self forKeyPath:@"statusBarHidden" options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
 }
 
 - (void)showIntroduceView:(UIView *)keyWindow {
+    self.isShowing = YES;
     self.view = [[FHIntroduceView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height) model:self.model];
-    _view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [keyWindow addSubview:_view];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
+}
+
+- (void)hideIntroduceView {
+    self.isShowing = NO;
+    [self.view removeFromSuperview];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 
 - (void)generateModel {
@@ -70,6 +80,15 @@
     [items addObject:model];
     
     self.model.items = items;
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"statusBarHidden"]) {
+        if([change[@"new"] boolValue]){
+            NSLog(@"1");
+        }
+    }
 }
 
 @end
