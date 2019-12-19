@@ -256,7 +256,7 @@
         return;
     }
     WeakSelf;
-    [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+    [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId tabName:self.viewController.tabName class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
         
         [_viewController tt_endUpdataData];
@@ -352,6 +352,9 @@
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
     dict[TRACER_KEY] = tracerDict;
+    dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
+    dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
+    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
 }
@@ -392,6 +395,7 @@
         }
     }else{
         [titles addObject:@"全部"];
+        self.viewController.segmentView.hidden = YES;
     }
     self.selectedIndex = selectedIndex;
     self.viewController.segmentView.selectedIndex = selectedIndex;
@@ -508,20 +512,27 @@
         
         [alertVC addActionWithTitle:@"确认" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             StrongSelf;
-            if ([TTReachability isNetworkConnected]) {
-                [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
-                [[FHUGCConfig sharedInstance] followUGCBy:self.viewController.communityId isFollow:YES completion:^(BOOL isSuccess) {
-                    
-                }];
-            } else {
-                [[ToastManager manager] showToast:@"网络异常"];
-            }
+            [self joinAndGotoGroupChatVC];
         }];
         
         UIViewController *topVC = [TTUIResponderHelper topmostViewController];
         if (topVC) {
             [alertVC showFrom:topVC animated:YES];
         }
+    }
+}
+// 关注圈子并进入群聊
+- (void)joinAndGotoGroupChatVC {
+    if ([TTReachability isNetworkConnected]) {
+        WeakSelf;
+        [[FHUGCConfig sharedInstance] followUGCBy:self.viewController.communityId isFollow:YES completion:^(BOOL isSuccess) {
+            StrongSelf;
+            if (isSuccess) {
+                [self gotoGroupChatVC:@"-1" isCreate:NO autoJoin:YES];
+            }
+        }];
+    } else {
+        [[ToastManager manager] showToast:@"网络异常"];
     }
 }
 

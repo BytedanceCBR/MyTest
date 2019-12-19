@@ -272,7 +272,6 @@
                 [tracerDict addEntriesFromDictionary:self.traceParams];
             }
             self.phoneCallViewModel.tracerDict = tracerDict;
-            //TODO fengbo  check this, seems like there`s no need to add view_controller?
             self.phoneCallViewModel.belongsVC = model.belongsVC;
         } else {
             [self.bottomInfoView setHidden:YES];

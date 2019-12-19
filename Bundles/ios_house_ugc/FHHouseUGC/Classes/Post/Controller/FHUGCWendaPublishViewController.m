@@ -791,6 +791,7 @@
             if (isSuccess) {
                 [self publishWendaContentAfterFollowedSocialGroup];
             } else {
+                // 关注请求内部已经做了错误提示，不需要再重复提示了
                 //[[ToastManager manager] showToast:@"发布失败"];
             }
         }];

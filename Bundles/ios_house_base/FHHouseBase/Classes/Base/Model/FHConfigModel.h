@@ -352,7 +352,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-
 @interface FHConfigDataEntranceSwitchModel : JSONModel
 
 @property (nonatomic, assign) BOOL isPriceValuationShowHouseTrend;
@@ -371,6 +370,31 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *myJoinList;
 @property (nonatomic, copy , nullable) NSString *nearbyList;
+@end
+
+
+@protocol FHRealtorEvaluatioinTagModel<NSObject>
+
+@end
+
+@interface FHRealtorEvaluatioinTagModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSNumber *id;
+@property (nonatomic, copy , nullable) NSString *text;
+
+@end
+
+@protocol FHRealtorEvaluatioinConfigModel<NSObject>
+
+@end
+@interface FHRealtorEvaluatioinConfigModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray *scoreTags;
+@property (nonatomic, strong , nullable) NSArray<FHRealtorEvaluatioinTagModel> *goodTags;
+@property (nonatomic, strong , nullable) NSArray<FHRealtorEvaluatioinTagModel> *badTags;
+@property (nonatomic, copy , nullable) NSString *goodPlaceholder;
+@property (nonatomic, copy , nullable) NSString *badPlaceholder;
+
 @end
 
 @interface  FHConfigDataModel  : JSONModel
@@ -421,6 +445,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSString *diffCode;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataTabConfigModel> *tabConfig;
 @property (nonatomic, strong , nullable) FHConfigDataUgcCategoryConfigModel *ugcCategoryConfig ;
+@property (nonatomic, strong , nullable) FHRealtorEvaluatioinConfigModel *realtorEvaluationConfig ;
 
 @property (nonatomic, strong , nullable) NSDictionary *originDict;
 

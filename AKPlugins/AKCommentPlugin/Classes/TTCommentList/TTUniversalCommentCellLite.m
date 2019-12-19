@@ -114,7 +114,7 @@
                               [self refreshNameView];
                           }];
     self.layout = layout;
-    self.backgroundColorThemeKey = model.isStick? kColorBackground22: kColorBackground4;
+    self.backgroundColorThemeKey = kColorBackground4;
     [self refreshAvatarView];
     [self refreshDigButton];
     [self refreshNameView];
