@@ -343,7 +343,7 @@
 - (UIImage *)backBlackImage
 {
     if (!_backBlackImage) {
-        _backBlackImage = ICON_FONT_IMG(24, @"\U0000e68a", nil); // detail_back_black
+        _backBlackImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]); // detail_back_black
     }
     return _backBlackImage;
 }

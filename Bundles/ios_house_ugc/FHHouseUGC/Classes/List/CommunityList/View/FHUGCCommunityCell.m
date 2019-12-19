@@ -170,6 +170,7 @@
 - (FHUGCFollowButton *)followButton {
     if (!_followButton) {
         _followButton = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero style:FHUGCFollowButtonStyleBorder];
+        _followButton.unFollowedTextColor = [UIColor themeOrange1];
     }
     return _followButton;
 }
