@@ -167,6 +167,7 @@
     _disclaimerContent.numberOfLines = 0;
     _disclaimerContent.textColor = [UIColor themeGray4];
     _disclaimerContent.font = [UIFont themeFontRegular:12];
+    _disclaimerContent.preferredMaxLayoutWidth = SCREEN_WIDTH-40;
 
     [self.contentView addSubview:_disclaimerContent];
     
@@ -277,7 +278,6 @@
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
         make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
-        make.height.mas_equalTo(self.lineHeight);
         make.bottom.mas_equalTo(-20);
     }];
 }
