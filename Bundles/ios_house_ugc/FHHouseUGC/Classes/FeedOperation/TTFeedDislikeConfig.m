@@ -159,6 +159,7 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
                                    };
             FHFeedOperationWord *editData = [[FHFeedOperationWord alloc] initWithDict:dict];
             if (editData) {
+                editData.items = @[editData];
                 [items addObject:editData];
             }
         }
