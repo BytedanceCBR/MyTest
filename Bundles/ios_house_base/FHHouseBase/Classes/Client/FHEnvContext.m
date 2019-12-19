@@ -799,7 +799,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 - (TTReachability *)reachability
 {
     if (!_reachability) {
-        _reachability = [TTReachability new];
+        _reachability = [TTReachability reachabilityForInternetConnection];
     }
     return _reachability;
 }
