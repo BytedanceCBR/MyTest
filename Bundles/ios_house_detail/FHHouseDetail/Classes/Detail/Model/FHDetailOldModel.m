@@ -390,6 +390,25 @@
 }
 @end
 
+@implementation FHDetailDataBaseExtraSuggestInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"buttonText": @"button_text",
+                           @"realtorId":@"base_id",
+                           @"autoText":@"auto_text",
+                           @"openUrl":@"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailDataBaseExtraNeighborhoodModel
 + (JSONKeyMapper*)keyMapper
 {

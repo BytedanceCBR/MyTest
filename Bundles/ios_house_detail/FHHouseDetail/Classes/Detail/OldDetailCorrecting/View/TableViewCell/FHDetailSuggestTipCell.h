@@ -20,8 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailSuggestTipModel : FHDetailBaseModel
 
 @property (nonatomic, strong , nullable) FHDetailOldDataHousePricingRankBuySuggestionModel *buySuggestion ;
-@property (nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
+@property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraModel *extraInfo;
 @end
 
 NS_ASSUME_NONNULL_END

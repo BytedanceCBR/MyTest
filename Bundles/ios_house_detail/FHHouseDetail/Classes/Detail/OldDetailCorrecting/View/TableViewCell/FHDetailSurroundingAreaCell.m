@@ -49,11 +49,11 @@
     //
     FHDetailSurroundingAreaModel *model = (FHDetailSurroundingAreaModel *)data;
     self.shadowImage.image = model.shadowImage;
-//    if (model.shadowImageType == FHHouseShdowImageTypeLBR) {
-//        [self.headerView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(self.contentView);
-//        }];
-//    }
+    if (model.shadowImageType == FHHouseShdowImageTypeLBR) {
+        [self.headerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.shadowImage);
+        }];
+    }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.contentView);
@@ -83,7 +83,7 @@
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         NSString *identifier = NSStringFromClass([FHDetailRelatedNeighborhoodResponseDataItemsModel class]);
         NSString *moreIdentifier = NSStringFromClass([FHDetailMoreItemModel class]);
-        FHOldDetailMultitemCollectionView *colView = [[FHOldDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 datas:model.relatedNeighborhoodData.items];
+        FHOldDetailMultitemCollectionView *colView = [[FHOldDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 datas:dataArr];
         [colView registerCell:[FHDetailSurroundingAreaItemCollectionCell class] forIdentifier:identifier];
         [colView registerCell:[FHDetailMoreItemCollectionCell class] forIdentifier:moreIdentifier];
         [self.containerView addSubview:colView];
@@ -143,7 +143,7 @@
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView);
+        make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
         make.bottom.mas_equalTo(self.shadowImage).offset(-12);

@@ -73,7 +73,6 @@
     self.currentData = data;
     [self generateModel];
     [self.mediaView updateModel:self.model withTitleModel: ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel];
-    
     //有视频才传入埋点
     if(self.vedioCount > 0){
         self.mediaView.tracerDic = [self tracerDic];
@@ -251,18 +250,19 @@
         return;
     }
     
-    if (index < self.vedioCount && vedioModel.cellHouseType != FHMultiMediaCellHouseNeiborhood) {
-        // 视频
-        if (self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStateStopped || self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStatePaused) {
-            // 第一次 非播放状态直接播放即可
-            [self.mediaView.videoVC play];
-            return;
-        }
-    }
+//    if (index < self.vedioCount && vedioModel.cellHouseType != FHMultiMediaCellHouseNeiborhood) {
+//        // 视频
+//        if (self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStateStopped || self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStatePaused) {
+//            // 第一次 非播放状态直接播放即可
+//            [self.mediaView.videoVC play];
+//            return;
+//        }
+//    }
     
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
+    
     vc.topVC = self.baseViewModel.detailController;
     
 //    if (FHVideoModel.cellhou == FHCellt) {
@@ -391,24 +391,24 @@
     if ([self.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
         FHMultiMediaVideoCell *tempCell = self.mediaView.currentMediaCell;
         FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel;
-        if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
+//        if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 weakSelf.mediaView.videoVC.view.frame = bound;
                 [weakSelf.mediaView.videoVC pause];
                 weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
                 [tempCell showCoverView];
             });
-        }else
-        {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                weakSelf.mediaView.videoVC.view.frame = bound;
-                weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
-                weakSelf.mediaView.videoVC.model.isShowControl = NO;
-                weakSelf.mediaView.videoVC.model.isShowMiniSlider = YES;
-                weakSelf.mediaView.videoVC.model.isShowStartBtnWhenPause = YES;
-                [weakSelf.mediaView.videoVC updateData:weakSelf.mediaView.videoVC.model];
-            });
-        }
+//        }else
+//        {
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                weakSelf.mediaView.videoVC.view.frame = bound;
+//                weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
+//                weakSelf.mediaView.videoVC.model.isShowControl = NO;
+//                weakSelf.mediaView.videoVC.model.isShowMiniSlider = YES;
+//                weakSelf.mediaView.videoVC.model.isShowStartBtnWhenPause = YES;
+//                [weakSelf.mediaView.videoVC updateData:weakSelf.mediaView.videoVC.model];
+//            });
+//        }
     }
 }
 

@@ -16,6 +16,7 @@
 #import "UILabel+House.h"
 #import "FHDetailStarsCountView.h"
 #import "FHUtils.h"
+#import "FHHouseContactDefines.h"
 
 @interface FHDetailSuggestTipCell ()
 
@@ -168,7 +169,7 @@
     }];
     [self.titleImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).offset(29);
-        make.top.equalTo(self.shadowImage).offset(44);
+        make.top.equalTo(self.shadowImage).offset(50);
         make.size.mas_offset(CGSizeMake(24, 24));
     }];
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -178,7 +179,7 @@
     
     [self.infoLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.titleImageView);
-        make.top.equalTo(self.titleLab.mas_bottom).offset(22);
+        make.top.equalTo(self.titleLab.mas_bottom).offset(24);
         make.right.equalTo(self.contentView).offset(-31);
     }];
     
@@ -194,8 +195,17 @@
 - (void)im_click:(UIButton *)btn {
     FHDetailSuggestTipModel *model = (FHDetailSuggestTipModel *)self.currentData;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
+    if (model.extraInfo.bargain.openUrl.length>0) {
+        imExtra[@"im_open_url"] = model.extraInfo.bargain.openUrl;
+    }else {
+        return;
+    }
     imExtra[@"realtor_position"] = @"trade_tips";
-    [model.phoneCallViewModel imchatActionWithPhone:model.contactPhone realtorRank:@"0" extraDic:imExtra];
+    imExtra[@"element_from"] = @"app_oldhouse_price";
+    imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+    imExtra[kFHCluePage] = @(FHClueIMPageTypePresentation);
+     [model.contactViewModel onlineActionWithExtraDict:imExtra];
+//    [model.phoneCallViewModel imchatActionWithPhone:model.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
 @end
 

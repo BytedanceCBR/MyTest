@@ -439,7 +439,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
 - (void)setupUI {
     _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _keyLabel.textColor = [UIColor themeGray3];
+    _keyLabel.textColor = [UIColor colorWithHexStr:@"aeadad"];
     [self addSubview:_keyLabel];
     [_keyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_keyLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
@@ -530,12 +530,12 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }];
     
     [self.indicatorLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-30);
+        make.right.mas_equalTo(-26);
         make.centerY.mas_equalTo(self);
     }];
     
     [self.logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-30);
+        make.right.mas_equalTo(-26);
         make.centerY.mas_equalTo(self);
         make.width.mas_equalTo(0);
     }];
@@ -560,7 +560,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             }
             
             [wself.logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(-30);
+                make.right.mas_equalTo(-26);
                 make.size.mas_equalTo(CGSizeMake(width, height));
             }];
             
@@ -697,7 +697,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }];
     
     [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-(31+size.width));
+        make.right.mas_equalTo(-(26+size.width));
         make.size.mas_equalTo(CGSizeZero);
     }];
     
