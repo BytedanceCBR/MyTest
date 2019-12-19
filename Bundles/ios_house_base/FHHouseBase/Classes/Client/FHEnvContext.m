@@ -951,6 +951,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return YES;
 }
 
++ (BOOL)isIntroduceOpen {
+    return YES;
+}
+
 @end
 
 // 升级TTRoute后需要验当前场景

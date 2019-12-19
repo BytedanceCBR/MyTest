@@ -15,6 +15,7 @@
 #import "TTLaunchDefine.h"
 #import "NewsBaseDelegate.h"
 #import "FHIntroduceManager.h"
+#import <FHEnvContext.h>
 
 DEC_TASK("FHIntroduceStartupTask",FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
@@ -27,12 +28,13 @@ DEC_TASK("FHIntroduceStartupTask",FHTaskTypeUI,TASK_PRIORITY_HIGH);
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     //只显示一次
-    if([FHIntroduceManager sharedInstance].alreadyShow){
-        return;
+    if([FHEnvContext isIntroduceOpen]){
+        if([FHIntroduceManager sharedInstance].alreadyShow){
+            return;
+        }
+        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
+        [FHIntroduceManager sharedInstance].alreadyShow = YES;
     }
-    
-    [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
-    [FHIntroduceManager sharedInstance].alreadyShow = YES;
 }
 
 @end
