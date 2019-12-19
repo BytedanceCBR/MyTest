@@ -5424,6 +5424,18 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     return YES;
 }
 
++ (BOOL)isForceEnableRealtorConfirmBtn
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] != nil) {
+        NSInteger info = [[fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] integerValue];
+        if (info == 1) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 @end
 
 
