@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)hideIntroduceView;
 
 @property (nonatomic , assign, readonly) BOOL isShowing;
+@property (nonatomic , assign) BOOL alreadyShow;
 
 @end
 

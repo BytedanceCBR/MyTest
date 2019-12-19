@@ -9,10 +9,12 @@
 #import <FHIntroduceView.h>
 #import "FHIntroduceModel.h"
 
+#define kFHIntroduceAlreadyShow @"kFHIntroduceAlreadyShow"
+
 @interface FHIntroduceManager ()
 
-@property(nonatomic ,strong) FHIntroduceView *view;
-@property(nonatomic ,strong) FHIntroduceModel *model;
+@property (nonatomic , strong) FHIntroduceView *view;
+@property (nonatomic , strong) FHIntroduceModel *model;
 @property (nonatomic , assign) BOOL isShowing;
 
 @end
@@ -34,8 +36,6 @@
     if (self) {
         _isShowing = NO;
         [self generateModel];
-        
-        [[UIApplication sharedApplication] addObserver:self forKeyPath:@"statusBarHidden" options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
 }
@@ -82,13 +82,15 @@
     self.model.items = items;
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:@"statusBarHidden"]) {
-        if([change[@"new"] boolValue]){
-            NSLog(@"1");
-        }
-    }
+#pragma mark - 记录状态，完成任务后不在上报
+
+- (void)setAlreadyShow:(BOOL)alreadyShow {
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:alreadyShow] forKey:kFHIntroduceAlreadyShow];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (BOOL)alreadyShow {
+    return [[[NSUserDefaults standardUserDefaults] objectForKey:kFHIntroduceAlreadyShow] boolValue];
 }
 
 @end
