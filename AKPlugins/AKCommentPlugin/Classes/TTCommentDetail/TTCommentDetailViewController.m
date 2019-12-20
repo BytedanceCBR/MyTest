@@ -655,11 +655,11 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TTCommentDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:kTTCommentDetailCellIdentifier forIndexPath:indexPath];
     cell.delegate = self;
-    cell.backgroundColorThemeKey = indexPath.section == 0? kColorBackground22: kColorBackground4;
-    __weak typeof(cell) wCell = cell;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        wCell.backgroundColorThemeKey = kColorBackground4;
-    });
+//    cell.backgroundColorThemeKey = indexPath.section == 0? kColorBackground22: kColorBackground4;
+//    __weak typeof(cell) wCell = cell;
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        wCell.backgroundColorThemeKey = kColorBackground4;
+//    });
     TTCommentDetailCellLayout *layout = self.pageState.totalCommentLayouts[indexPath.section][indexPath.row];
     if ([self hasDeleteReplyPermission]) {
         layout.deleteLayout.hidden = NO;

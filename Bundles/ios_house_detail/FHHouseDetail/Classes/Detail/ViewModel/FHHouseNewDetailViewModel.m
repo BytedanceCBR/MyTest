@@ -24,6 +24,7 @@
 #import "FHNewHouseItemModel.h"
 #import "FHDetailDisclaimerCell.h"
 #import "FHDetailNewListSingleImageCell.h"
+#import "FHDetailStaticMapCell.h"
 #import <HMDTTMonitor.h>
 #import <FHHouseBase/FHCommonDefines.h>
 #import "FHDetailNewUGCSocialCell.h"
@@ -69,6 +70,8 @@
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     
     [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
+
+    [self.tableView registerClass:[FHDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     
     [self.tableView registerClass:[FHDetailNewUGCSocialCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseNewsSocialModel class])];
     
@@ -618,42 +621,74 @@
             [self.items addObject:item];
         }
     }
-    
-    //周边配套
-    if (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng) {
+
+    //地图
+    if(model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng){
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
-        
-        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
-        nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
-        nearbyMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
-        nearbyMapModel.title = model.data.coreInfo.name;
-    
-        
-        if (!model.data.coreInfo.gaodeLat || !model.data.coreInfo.gaodeLng) {
-            NSMutableDictionary *params = [NSMutableDictionary new];
-            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
-            [params setValue:@"经纬度缺失" forKey:@"reason"];
-            [params setValue:model.data.coreInfo.id forKey:@"house_id"];
-            [params setValue:@(1) forKey:@"house_type"];
-            [params setValue:model.data.coreInfo.name forKey:@"name"];
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
-        }
-        
-        
-//        nearbyMapModel.tableView = self.tableView;
-        [self.items addObject:nearbyMapModel];
-        
-        __weak typeof(self) wSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
-                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
-                    [self reloadData];
-                };
-            }
-        });
+
+        FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
+        staticMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
+        staticMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
+        staticMapModel.houseId = model.data.coreInfo.id;
+        staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeNewHouse];
+        staticMapModel.title = model.data.coreInfo.name;
+        staticMapModel.tableView = self.tableView;
+        staticMapModel.staticImage = model.data.coreInfo.gaodeImage;
+        staticMapModel.useStarHeader = NO;
+        staticMapModel.mapOnly = NO;
+        [self.items addObject:staticMapModel];
+
+    } else{
+        NSString *eventName = @"detail_map_location_failed";
+        NSDictionary *cat = @{@"status": @(1)};
+
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+        [params setValue:@"经纬度缺失" forKey:@"reason"];
+        [params setValue:model.data.coreInfo.id forKey:@"house_id"];
+        [params setValue:@(FHHouseTypeNewHouse) forKey:@"house_type"];
+        [params setValue:model.data.coreInfo.name forKey:@"name"];
+
+        [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
     }
+
+//    //周边配套
+//    if (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng) {
+//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+//        [self.items addObject:grayLine];
+//
+//        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
+//        nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
+//        nearbyMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
+//        nearbyMapModel.title = model.data.coreInfo.name;
+//
+//
+//        if (!model.data.coreInfo.gaodeLat || !model.data.coreInfo.gaodeLng) {
+//            NSMutableDictionary *params = [NSMutableDictionary new];
+//            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+//            [params setValue:@"经纬度缺失" forKey:@"reason"];
+//            [params setValue:model.data.coreInfo.id forKey:@"house_id"];
+//            [params setValue:@(1) forKey:@"house_type"];
+//            [params setValue:model.data.coreInfo.name forKey:@"name"];
+//            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+//        }
+//
+//
+////        nearbyMapModel.tableView = self.tableView;
+//        [self.items addObject:nearbyMapModel];
+//
+//        __weak typeof(self) wSelf = self;
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
+//                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
+//                    [self reloadData];
+//                };
+//            }
+//        });
+//    }
     
     if (model.isInstantData) {
         [self.tableView reloadData];

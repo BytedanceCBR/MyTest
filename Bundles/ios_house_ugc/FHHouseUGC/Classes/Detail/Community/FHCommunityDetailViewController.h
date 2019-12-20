@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHCommunityDetailViewController : FHBaseViewController
 
 @property (nonatomic, copy) NSString *communityId;
+@property (nonatomic, copy) NSString *tabName;
 @property (nonatomic, strong) FHCommunityDetailHeaderView *headerView;
 @property (nonatomic, strong) FHCommunityDetailSegmentView *segmentView;
 @property (nonatomic, strong) FHUGCFollowButton *rightBtn;

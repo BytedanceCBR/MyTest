@@ -85,6 +85,7 @@
                            @"gaodeLng": @"gaode_lng",
                            @"shareInfo": @"share_info",
                            @"gaodeImageUrl": @"gaode_image_url",
+                           @"gaodeImage": @"gaode_image",
                            @"dataSourceId": @"data_source_id",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

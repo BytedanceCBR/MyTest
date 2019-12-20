@@ -266,10 +266,18 @@
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];
         NSString *urlStr = [NSString stringWithFormat:@"%@/f100/ugc/thread",host];
+        NSDate *startDate = [NSDate date];
         [TTUGCRequestManager requestForJSONWithURL:urlStr params:param method:@"GET" needCommonParams:YES callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
             StrongSelf;
+            NSDate *backDate = [NSDate date];
             uint64_t endTime = [NSObject currentUnixTime];
             uint64_t total = [NSObject machTimeToSecs:endTime - startTime] * 1000;
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
             if (!error) {
                 NSDictionary *dataDict = [jsonObj isKindOfClass:[NSDictionary class]]? jsonObj: nil;
                 if ([dataDict tt_longValueForKey:@"err_no"] == 0) {
@@ -280,6 +288,10 @@
                         NSMutableDictionary *metric = @{}.mutableCopy;
                         metric[@"post_id"] = @(self.threadID);
                         [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_detail_error" metric:metric category:@{@"status":@(1)} extra:nil];
+                        
+                        resultType = FHNetworkMonitorTypeBizFailed + 1;
+                        code = 1;
+                        errMsg = @"ugc_post_detail_error:empty";
                     } else {
                         NSError *jsonParseError;
                         NSData *jsonData = [dataStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -307,10 +319,23 @@
                             NSMutableDictionary *metric = @{}.mutableCopy;
                             metric[@"post_id"] = @(self.threadID);
                             [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_detail_error" metric:metric category:@{@"status":@(2)} extra:nil];
+                            
+                            resultType = FHNetworkMonitorTypeBizFailed + 2;
+                            code = 2;
+                            errMsg = @"ugc_post_detail_error:json error";
                         }
                     }
                 }
+            } else {
+                code = error.code;
+                resultType = FHNetworkMonitorTypeNetFailed;
             }
+            
+            // 序列化时间
+            serDate = [NSDate date];
+            // 帖子接口成功率
+            [FHMainApi addRequestLog:@"/f100/ugc/thread" startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            
             if (completion) {
                 completion(error,total);
             }

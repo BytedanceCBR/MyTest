@@ -124,7 +124,7 @@
                            @"schoolDictList": @"school_dict_list",
                            @"useSchoolIm": @"use_school_im",
                            @"schoolConsult": @"school_consult",
-
+                           @"gaodeImage": @"gaode_image",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -62,6 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *areaId;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *gaodeImageUrl;
+@property (nonatomic, strong, nullable) FHDetailGaodeImageModel *gaodeImage;//高德地图静态图
 @property (nonatomic, copy , nullable) NSString *areaName;
 @property (nonatomic, copy , nullable) NSString *districtId;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqmV;

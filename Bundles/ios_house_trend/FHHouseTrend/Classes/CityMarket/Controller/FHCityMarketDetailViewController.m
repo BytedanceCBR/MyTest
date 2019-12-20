@@ -344,7 +344,7 @@
 -(void)onNetworkError {
     [self endLoading];
     _navBarViewModel.isHasData = NO;
-    [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+    [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
 }
 
 -(void)onNoNetwork {
