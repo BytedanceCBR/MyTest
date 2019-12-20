@@ -130,6 +130,10 @@
 		D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		EB988F3EBE29F7D165C85289 /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A95054107C5636D5192DC02 /* libPods-NewsLiteInHouse.a */; };
+		FB6C55CF23ACD41800651456 /* firework.json in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55CA23ACD41700651456 /* firework.json */; };
+		FB6C55D023ACD41800651456 /* firework.json in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55CA23ACD41700651456 /* firework.json */; };
+		FB6C55D823ACD43100651456 /* fireImages in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55D723ACD43100651456 /* fireImages */; };
+		FB6C55D923ACD43100651456 /* fireImages in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55D723ACD43100651456 /* fireImages */; };
 		FBA5893023AB64D20053EC79 /* introduce_3.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892123AB64D20053EC79 /* introduce_3.json */; };
 		FBA5893123AB64D20053EC79 /* introduce_2.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892223AB64D20053EC79 /* introduce_2.json */; };
 		FBA5893D23AB64D20053EC79 /* introduce_1.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892F23AB64D20053EC79 /* introduce_1.json */; };
@@ -138,8 +142,6 @@
 		FBA5894123AB87240053EC79 /* introduce_3.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892123AB64D20053EC79 /* introduce_3.json */; };
 		FBA5894223AB87270053EC79 /* introduce_2.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892223AB64D20053EC79 /* introduce_2.json */; };
 		FBA5894323AB872A0053EC79 /* introduce_1.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892F23AB64D20053EC79 /* introduce_1.json */; };
-		FBA5894523ACA6F10053EC79 /* springBianPao.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5894423ACA6F10053EC79 /* springBianPao.json */; };
-		FBA5894623ACA6F10053EC79 /* springBianPao.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5894423ACA6F10053EC79 /* springBianPao.json */; };
 		FEFA59C3205FB1A8001F50D8 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		FEFA59C7205FB1A8001F50D8 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
 		FEFA59C8205FB1A8001F50D8 /* sound6.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEB1FE007C20093E05D /* sound6.caf */; };
@@ -396,11 +398,12 @@
 		EFF33B05162FDB1D00B947F4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		EFF33B0C162FEE8600B947F4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = tt_video_doubleClickApprove.bundle; sourceTree = "<group>"; };
+		FB6C55CA23ACD41700651456 /* firework.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = firework.json; sourceTree = "<group>"; };
+		FB6C55D723ACD43100651456 /* fireImages */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fireImages; sourceTree = "<group>"; };
 		FBA5892123AB64D20053EC79 /* introduce_3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = introduce_3.json; sourceTree = "<group>"; };
 		FBA5892223AB64D20053EC79 /* introduce_2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = introduce_2.json; sourceTree = "<group>"; };
 		FBA5892F23AB64D20053EC79 /* introduce_1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = introduce_1.json; sourceTree = "<group>"; };
 		FBA5893E23AB64E20053EC79 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
-		FBA5894423ACA6F10053EC79 /* springBianPao.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = springBianPao.json; sourceTree = "<group>"; };
 		FE524F681DC9BE4F00CDED36 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
 		FE593EA11CFFE3850029EA16 /* libTTBaseLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTTBaseLib.a; path = "Pods/../build/Debug-iphoneos/TTBaseLib/libTTBaseLib.a"; sourceTree = "<group>"; };
 		FE593EA91CFFE5C40029EA16 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Build/Products/Debug-iphonesimulator/libPods.a"; sourceTree = "<group>"; };
@@ -714,7 +717,7 @@
 		A8A57F531B16F44D00783AA9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				FBA5894423ACA6F10053EC79 /* springBianPao.json */,
+				FB6C55C923ACD41700651456 /* fireworks */,
 				FBA5892023AB64D20053EC79 /* introduce */,
 				D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */,
 				D37495DF23965409006D44D2 /* gaode_house_detail_style.data */,
@@ -771,6 +774,15 @@
 				FE700DC91B8D98F8004A435E /* yw_1222.jpg */,
 			);
 			path = OtherResource;
+			sourceTree = "<group>";
+		};
+		FB6C55C923ACD41700651456 /* fireworks */ = {
+			isa = PBXGroup;
+			children = (
+				FB6C55D723ACD43100651456 /* fireImages */,
+				FB6C55CA23ACD41700651456 /* firework.json */,
+			);
+			path = fireworks;
 			sourceTree = "<group>";
 		};
 		FBA5892023AB64D20053EC79 /* introduce */ = {
@@ -990,6 +1002,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB6C55D923ACD43100651456 /* fireImages in Resources */,
 				B373CE892174587A008F9905 /* area.plist in Resources */,
 				B373CE8A2174587A008F9905 /* LaunchScreen.storyboard in Resources */,
 				B373CE8E2174587A008F9905 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */,
@@ -1008,6 +1021,7 @@
 				FBA5894123AB87240053EC79 /* introduce_3.json in Resources */,
 				B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */,
+				FB6C55D023ACD41800651456 /* firework.json in Resources */,
 				B373CEA42174587A008F9905 /* PushNotification.xcassets in Resources */,
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
@@ -1022,7 +1036,6 @@
 				D37495E323965409006D44D2 /* gaode_house_detail_style.data in Resources */,
 				3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				B373CEAF2174587A008F9905 /* CommonResource.xcassets in Resources */,
-				FBA5894623ACA6F10053EC79 /* springBianPao.json in Resources */,
 				B373CEB02174587A008F9905 /* sound2.caf in Resources */,
 				B373CEB32174587A008F9905 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */,
 				3D7D2F4222704CAB00A95FAF /* Icon-72.png in Resources */,
@@ -1064,6 +1077,7 @@
 				FEFA59C8205FB1A8001F50D8 /* sound6.caf in Resources */,
 				FEFA59CD205FB1A8001F50D8 /* NewsInHouseTodayExtenstion.debug.xcconfig in Resources */,
 				3D325488226D66630002F0AD /* ios_asset in Resources */,
+				FB6C55D823ACD43100651456 /* fireImages in Resources */,
 				FEFA59CE205FB1A8001F50D8 /* yw_1222.jpg in Resources */,
 				FEFA59CF205FB1A8001F50D8 /* tt_video_doubleClickApprove.bundle in Resources */,
 				3D7D2F4922704CAB00A95FAF /* Icon@2x.png in Resources */,
@@ -1094,6 +1108,7 @@
 				FEFA5A06205FB1A8001F50D8 /* sound5.caf in Resources */,
 				3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				FEFA5A13205FB1A8001F50D8 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
+				FB6C55CF23ACD41800651456 /* firework.json in Resources */,
 				D37495E223965409006D44D2 /* gaode_house_detail_style.data in Resources */,
 				3DB49F8E2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				FEFA5A15205FB1A8001F50D8 /* NewsInHouse.debug.xcconfig in Resources */,
@@ -1103,7 +1118,6 @@
 				FEFA5A1C205FB1A8001F50D8 /* NewsResource.xcassets in Resources */,
 				FEFA5A1D205FB1A8001F50D8 /* FrameworkResource.xcassets in Resources */,
 				FEFA5A1E205FB1A8001F50D8 /* Account.xcassets in Resources */,
-				FBA5894523ACA6F10053EC79 /* springBianPao.json in Resources */,
 				FEFA5A1F205FB1A8001F50D8 /* NewsInHouseTodayExtenstion.release.xcconfig in Resources */,
 				FEFA5A20205FB1A8001F50D8 /* NewsInHouse.release.xcconfig in Resources */,
 				D37495E023965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */,

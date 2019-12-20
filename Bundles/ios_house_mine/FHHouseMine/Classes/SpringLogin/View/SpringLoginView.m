@@ -94,7 +94,7 @@
     _springBgView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_spring_login_bg"]];
     [self.containerView addSubview:_springBgView];
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"springBianPao" ofType:@"json"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"firework" ofType:@"json"];
     self.animationView = [LOTAnimationView animationWithFilePath:path];
     _animationView.contentMode = UIViewContentModeScaleToFill;
     _animationView.loopAnimation = YES;
@@ -173,29 +173,27 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(self.scrollView);
         make.width.mas_equalTo(312);
-        make.height.mas_equalTo(467);
+        make.height.mas_equalTo(553);
     }];
     
     [self.animationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.containerView).offset(10);
-        make.left.right.mas_equalTo(self.containerView);
-        make.height.mas_equalTo(176);
+        make.top.left.right.mas_equalTo(self.containerView);
+        make.height.mas_equalTo(160);
     }];
     
     [self.springBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.containerView).offset(10);
-        make.left.right.mas_equalTo(self.containerView);
-        make.height.mas_equalTo(393);
+        make.top.left.right.mas_equalTo(self.containerView);
+        make.height.mas_equalTo(447);
     }];
     
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.containerView);
+        make.top.mas_equalTo(self.springBgView.mas_bottom).offset(40);
         make.centerX.mas_equalTo(self.containerView);
         make.width.height.mas_equalTo(24);
     }];
     
     [self.phoneBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.springBgView).offset(167);
+        make.top.mas_equalTo(self.springBgView).offset(221);
         make.left.mas_equalTo(self.springBgView).offset(43);
         make.width.mas_equalTo(230);
         make.height.mas_equalTo(45);
