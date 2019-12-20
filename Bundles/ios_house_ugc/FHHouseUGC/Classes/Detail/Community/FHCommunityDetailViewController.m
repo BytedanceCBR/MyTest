@@ -386,12 +386,12 @@
 
 - (void)postMenuViewWillShow {
     self.bageView.alpha = 0;
-    self.groupChatBtn.hidden = YES;
+    self.groupChatBtn.alpha = 0.0f;
 }
 
 - (void)postMenuDidHide {
     self.bageView.alpha = 1;
-    self.groupChatBtn.hidden = NO;
+    self.groupChatBtn.alpha = 1.0f;
 }
 
 //去到群聊
