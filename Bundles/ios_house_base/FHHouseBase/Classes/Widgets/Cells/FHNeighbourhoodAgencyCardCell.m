@@ -221,7 +221,7 @@
         make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-15);
     }];
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(36);
+        make.width.height.mas_equalTo(30);
         make.right.mas_equalTo(self.bottomInfoView.mas_right).offset(-15);
         make.centerY.mas_equalTo(self.avator);
     }];

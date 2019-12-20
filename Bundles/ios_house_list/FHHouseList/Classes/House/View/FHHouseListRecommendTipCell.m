@@ -85,7 +85,7 @@
 {
     if (!_leftLine) {
         _leftLine = [[UIView alloc]init];
-        _leftLine.backgroundColor = [UIColor colorWithHexString:@"#d8d8d8"];
+        _leftLine.backgroundColor = [UIColor themeGray6];
     }
     return _leftLine;
 }
@@ -94,7 +94,7 @@
 {
     if (!_rightLine) {
         _rightLine = [[UIView alloc]init];
-        _rightLine.backgroundColor = [UIColor colorWithHexString:@"#d8d8d8"];
+        _rightLine.backgroundColor = [UIColor themeGray6];
     }
     return _rightLine;
 }

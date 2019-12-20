@@ -178,9 +178,8 @@
 
 - (void)updateWithConfigData:(FHConfigDataModel *)configModel
 {
-    // todo zjing data
     _configModel = configModel;
-    NSArray *items = configModel.houseOpData2.items;
+    NSArray *items = configModel.rentOpData.items;
     if (items.count > 5) {
         _items = [items subarrayWithRange:NSMakeRange(0, 5 )];
     }else{

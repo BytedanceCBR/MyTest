@@ -1089,11 +1089,13 @@ extern NSString *const INSTANT_DATA_KEY;
         
         NSDictionary *infoDict = @{@"tracer":params};
         userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
-        
+        url = [NSURL URLWithString:openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }else{
+        NSMutableDictionary *infoDict = @{}.mutableCopy;
         NSDictionary *param = [self addEnterHouseListLog:model.openUrl];
         if (param) {
-            NSDictionary *infoDict = @{@"tracer":param};
+            infoDict[@"tracer"] = param;
             userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
             if (originFrom.length == 0) {
                 originFrom = param[UT_ORIGIN_FROM];
@@ -1103,10 +1105,16 @@ extern NSString *const INSTANT_DATA_KEY;
                 SETTRACERKV(UT_ORIGIN_FROM, originFrom);
             }
         }
+        if ([model.openUrl isKindOfClass:[NSString class]]) {
+            NSURL *url = [NSURL URLWithString:model.openUrl];
+            if ([model.openUrl containsString:@"://commute_list"]){
+                //通勤找房
+                [[FHCommuteManager sharedInstance] tryEnterCommutePage:model.openUrl logParam:infoDict];
+            }else{
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+            }
+        }
     }
-    url = [NSURL URLWithString:openUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    
 }
 
 -(void)tapRentBanner

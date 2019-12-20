@@ -238,7 +238,7 @@
 
 - (void)dealloc
 {
-    [self removeGestureRecognizer:_tapGes];// todo zjing zhangyuanke confirm ???
+//    [self removeGestureRecognizer:_tapGes];// todo zjing zhangyuanke confirm ???
     [_timer invalidate];
 }
 

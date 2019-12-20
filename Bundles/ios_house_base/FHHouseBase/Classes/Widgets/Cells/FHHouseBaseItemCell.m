@@ -297,7 +297,7 @@
 {
     if (!_distanceLabel) {
         _distanceLabel = [[UILabel alloc] init];
-        _distanceLabel.textAlignment = NSTextAlignmentRight;
+        _distanceLabel.textAlignment = NSTextAlignmentLeft;
     }
     return _distanceLabel;
 }
@@ -846,7 +846,8 @@
     [_rightInfoView addSubview:self.subTitleLabel];
     [_rightInfoView addSubview:self.statInfoLabel];
     [_rightInfoView addSubview:self.tagLabel];
-    
+    [_rightInfoView addSubview:self.distanceLabel];
+
     [titleView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.flexDirection = YGFlexDirectionRow;
@@ -900,7 +901,14 @@
         layout.height = YGPointValue(16);
         layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth] - 10);
     }];
-    
+    self.distanceLabel.hidden = YES;
+    [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.marginTop = YGPointValue(8);
+        layout.marginLeft = YGPointValue(0);
+        layout.height = YGPointValue(16);
+        layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth] - 10);
+    }];
     
     _priceBgView = [[UIView alloc] init];
     
@@ -1388,6 +1396,7 @@
                 }];
             }
             [self.mainTitleLabel.yoga markDirty];
+            [self updateSamllTitlesLayout:attributeString.length > 0];
         } else if (houseType == FHHouseTypeRentHouse) {
             
             self.tagLabel.attributedText =  attributeString;
@@ -1419,21 +1428,15 @@
             }];
             [self.mainTitleLabel.yoga markDirty];
             [self.subTitleLabel.yoga markDirty];
+            [self.distanceLabel.yoga markDirty];
             [self.rightInfoView.yoga markDirty];
             [self.rightInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                 layout.flexGrow = 0;
             }];
             FHImageModel *imageModel = [commonModel.houseImage firstObject];
             [self updateMainImageWithUrl:imageModel.url];
-            // todo zjing 租房是否还保留榜字等tag
-            if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
-                self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
-                self.imageTagLabel.text = commonModel.houseImageTag.text;
-                self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
-                self.imageTagLabelBgView.hidden = NO;
-            }else {
-                self.imageTagLabelBgView.hidden = YES;
-            }
+            self.imageTagLabelBgView.hidden = YES;
+            [self updateSamllTitlesLayout:attributeString.length > 0];
         } else if (houseType == FHHouseTypeNeighborhood) {
             
             self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
@@ -1475,13 +1478,12 @@
             }
             
             [self hideRecommendReason];
-//            [self updateTitlesLayout:YES];
+            [self updateSamllTitlesLayout:YES];
         } else {
             self.pricePerSqmLabel.text = @"";
         }
         
         [self hideRecommendReason];
-        [self updateSamllTitlesLayout:YES];
 
         [self.contentView.yoga applyLayoutPreservingOrigin:NO];
     }
@@ -1529,28 +1531,35 @@
         NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",infoText] attributes:attr];
         
         [commuteAttr appendAttributedString:timeAttr];
-        
         self.distanceLabel.attributedText = commuteAttr;
-        
+//        [self.rightInfoView addSubview:self.distanceLabel];
+        self.distanceLabel.hidden = NO;
         if (!_distanceLabel){
-            [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                layout.isEnabled = YES;
-                layout.marginLeft = YGPointValue(10);
-                layout.alignSelf = YGAlignCount;
-                layout.flexGrow = 1;
-            }];
+//            [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+//                layout.isEnabled = YES;
+//                layout.marginTop = YGPointValue(10);
+//                layout.alignSelf = YGAlignCount;
+//                layout.flexGrow = 1;
+//            }];
         }
-        [self.priceBgView addSubview:self.distanceLabel];
+//        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+//            layout.isEnabled = YES;
+//            layout.marginTop = YGPointValue(4);
+//            layout.marginLeft = YGPointValue(-3);
+//            layout.height = YGPointValue(15);
+//        }];
         //因为有表情 强制计算宽度
-        [self.distanceLabel sizeToFit];
-        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.width = YGPointValue(ceil(self.distanceLabel.frame.size.width));//x 设备上会出现因为小数计算显示不全的，改为上取整
-        }];
-        _priceBgView.yoga.justifyContent = YGJustifySpaceBetween;
+//        [self.distanceLabel sizeToFit];
+//        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+//            layout.width = YGPointValue(ceil(self.distanceLabel.frame.size.width));//x 设备上会出现因为小数计算显示不全的，改为上取整
+//        }];
+//        self.leftInfoView.yoga.justifyContent = YGJustifySpaceBetween;
         [self.distanceLabel.yoga markDirty];
+//        [self.rightInfoView.yoga markDirty];
     }else{
-        [_distanceLabel removeFromSuperview];
-        _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
+        self.distanceLabel.hidden = YES;
+//        [_distanceLabel removeFromSuperview];
+//        _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     }
 }
 
