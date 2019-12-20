@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHIntroduceItemView : UIView
 
 - (instancetype)initWithFrame:(CGRect)frame model:(FHIntroduceItemModel *)model;
-
+//播放动画
 - (void)play;
 
 @property(nonatomic , weak) id<FHIntroduceItemViewDelegate> delegate;

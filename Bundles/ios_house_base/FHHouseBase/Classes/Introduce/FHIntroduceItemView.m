@@ -71,13 +71,6 @@
     }];
 }
 
-- (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
-    UILabel *label = [[UILabel alloc] init];
-    label.font = font;
-    label.textColor = textColor;
-    return label;
-}
-
 - (void)play {
     if(self.model.played){
         return;

@@ -10,6 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/** 春节活动 管理器
+ *
+ * 负责管理春节活动
+ */
+
 @interface FHMinisdkManager : NSObject
 
 //春节活动进来为YES，app第一次启动时候需要
@@ -26,9 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
     
 //在我们App完成指定任务后调用
 - (void)taskComplete:(BDDTaskFinishBlock)finishBlock;
-
+//执行任务
 - (void)excuteTask;
-
+//任务完成
 - (void)taskFinished;
 
 - (void)goSpring;

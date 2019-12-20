@@ -82,7 +82,7 @@
     self.model.items = items;
 }
 
-#pragma mark - 记录状态，完成任务后不在上报
+#pragma mark - 记录状态，显示过就不在显示了
 
 - (void)setAlreadyShow:(BOOL)alreadyShow {
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:alreadyShow] forKey:kFHIntroduceAlreadyShow];
