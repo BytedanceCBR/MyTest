@@ -151,6 +151,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL ischanged;
 // 来自详情页
 @property (nonatomic, assign)   BOOL       isFromDetail;
+// 是否已编辑
+@property (nonatomic, assign) BOOL hasEdit;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 
