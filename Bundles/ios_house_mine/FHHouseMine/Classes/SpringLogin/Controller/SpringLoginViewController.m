@@ -13,6 +13,7 @@
 #import "TTAccountLoginManager.h"
 #import "TTAccountManager.h"
 #import "ToastManager.h"
+#import <FHIntroduceManager.h>
 
 @interface SpringLoginViewController ()<TTRouteInitializeProtocol>
 
@@ -66,6 +67,10 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    
+    if([FHIntroduceManager sharedInstance].isShowing){
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
     
 //外部链接拉活App调用，ackToken通过url传递
 - (void)appBecomeActive:(NSString *)ackToken;
-    
+
 //在我们App完成指定任务后调用
 - (void)taskComplete:(BDDTaskFinishBlock)finishBlock;
 //执行任务

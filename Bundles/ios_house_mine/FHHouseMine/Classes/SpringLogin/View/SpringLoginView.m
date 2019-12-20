@@ -15,6 +15,7 @@
 #import "ToastManager.h"
 #import "FHNavBarView.h"
 #import <TTBaseLib/UIViewAdditions.h>
+#import <Lottie/LOTAnimationView.h>
 
 @implementation SpringLoginAcceptButton : UIButton
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
@@ -64,6 +65,8 @@
 @property(nonatomic, strong) UIView *phoneBgView;
 @property(nonatomic, strong) UIView *varifyCodeBgView;
 
+@property (nonatomic , strong) LOTAnimationView *animationView;
+
 @end
 
 @implementation SpringLoginView
@@ -91,6 +94,13 @@
     _springBgView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_spring_login_bg"]];
     [self.containerView addSubview:_springBgView];
     
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"springBianPao" ofType:@"json"];
+    self.animationView = [LOTAnimationView animationWithFilePath:path];
+    _animationView.contentMode = UIViewContentModeScaleToFill;
+    _animationView.loopAnimation = YES;
+    [self.containerView addSubview:_animationView];
+    [_animationView play];
+    
     self.closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_closeBtn setImage:[UIImage imageNamed:@"fh_spring_login_close"] forState:UIControlStateNormal];
     _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
@@ -105,6 +115,7 @@
     _phoneInput.font = [UIFont themeFontRegular:14];
     _phoneInput.textColor = [UIColor colorWithHexString:@"a05700"];
     _phoneInput.placeholder = @"请输入手机号";
+//    _phoneInput.tintColor = [UIColor colorWithHexString:@"a05700"];
     [_phoneInput setValue:[UIColor colorWithHexString:@"e1b067"] forKeyPath:@"_placeholderLabel.textColor"];
     _phoneInput.keyboardType = UIKeyboardTypePhonePad;
     _phoneInput.returnKeyType = UIReturnKeyDone;
@@ -118,6 +129,7 @@
     _varifyCodeInput.font = [UIFont themeFontRegular:14];
     _varifyCodeInput.textColor = [UIColor colorWithHexString:@"a05700"];
     _varifyCodeInput.placeholder = @"请输入验证码";
+//    _varifyCodeInput.tintColor = [UIColor colorWithHexString:@"a05700"];
     [_varifyCodeInput setValue:[UIColor colorWithHexString:@"e1b067"] forKeyPath:@"_placeholderLabel.textColor"];
     _varifyCodeInput.keyboardType = UIKeyboardTypePhonePad;
     _varifyCodeInput.returnKeyType = UIReturnKeyGo;
@@ -162,6 +174,12 @@
         make.center.mas_equalTo(self.scrollView);
         make.width.mas_equalTo(312);
         make.height.mas_equalTo(467);
+    }];
+    
+    [self.animationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.containerView).offset(10);
+        make.left.right.mas_equalTo(self.containerView);
+        make.height.mas_equalTo(176);
     }];
     
     [self.springBgView mas_makeConstraints:^(MASConstraintMaker *make) {
