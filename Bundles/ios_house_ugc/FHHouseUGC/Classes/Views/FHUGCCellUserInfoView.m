@@ -203,6 +203,7 @@
         viewModel.isTop = NO;
     }
     viewModel.cellType = self.cellModel.cellType;
+    viewModel.hasEdit = self.cellModel.hasEdit;
     [dislikeView refreshWithModel:viewModel];
     CGPoint point = _moreBtn.center;
     [dislikeView showAtPoint:point

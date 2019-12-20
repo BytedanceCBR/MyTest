@@ -137,12 +137,16 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
             }else{
                 word.items = @[word];
             }
-            // 编辑 & 删除
-            if((word.type == FHFeedOperationWordTypeDelete || word.type == FHFeedOperationWordTypeEdit) && isShowDelete){
+            // 编辑
+            if(word.type == FHFeedOperationWordTypeEdit && isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC){
                 [items addObject:word];
             }
             // 编辑记录
-            if (hasEdit && word.type == FHFeedOperationWordTypeEditHistory) {
+            if (word.type == FHFeedOperationWordTypeEditHistory && hasEdit && viewModel.cellType == FHUGCFeedListCellTypeUGC) {
+                [items addObject:word];
+            }
+            // 删除
+            if((word.type == FHFeedOperationWordTypeDelete) && isShowDelete){
                 [items addObject:word];
             }
             //显示删除就不会显示举报
