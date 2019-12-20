@@ -49,7 +49,7 @@ def fhPods
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
     
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev'
-    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '6954dc86e3a0977a65622b7221435ca4d47ab70d'
+#   pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '6954dc86e3a0977a65622b7221435ca4d47ab70d'
 #    pod 'FHCommonUI', :path => '../../ios_common_ui'
     pod 'FHCommonUI', '0.0.12'
 
