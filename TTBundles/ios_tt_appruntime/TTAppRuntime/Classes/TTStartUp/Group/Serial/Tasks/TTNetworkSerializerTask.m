@@ -187,8 +187,8 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     [TTNetworkManager shareInstance].isKeepPlainQuery = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isKeepPlainQuery;
 
     [TTNetworkManager shareInstance].ServerConfigHostFirst = @"dm.haoduofangs.com";
-    [TTNetworkManager shareInstance].ServerConfigHostSecond = @"dm.bytedance.com";
-    [TTNetworkManager shareInstance].ServerConfigHostThird = @"dm.pstatp.com";
+    [TTNetworkManager shareInstance].ServerConfigHostSecond = @"dm-lq.haoduofangs.com";
+    [TTNetworkManager shareInstance].ServerConfigHostThird = @"dm-hl.haoduofangs.com";
 
     [[TTNetworkManager shareInstance] setDomainBase:@"i.haoduofangs.com"];
     [[TTNetworkManager shareInstance] setDomainLog:@"log.haoduofangs.com"];
