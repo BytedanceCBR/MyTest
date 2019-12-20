@@ -69,21 +69,26 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
     if(operationList.count == 0){
         operationList = @[
                           @{
-                              @"id": @"1",
-                              @"title": @"举报",
-                              @"subTitle": @"广告、低俗、重复、过时",
-                              @"serverType":@"report"
-                              },
-                          @{
                               @"id": @"8",
                               @"title": @"编辑",
                               @"serverType":@"edit"
                               },
                           @{
+                              @"id": @"9",
+                              @"title": @"编辑记录",
+                              @"serverType":@"edit_history"
+                              },
+                          @{
                               @"id": @"2",
                               @"title": @"删除",
                               @"serverType":@"delete"
-                              }
+                              },
+                          @{
+                              @"id": @"1",
+                              @"title": @"举报",
+                              @"subTitle": @"广告、低俗、重复、过时",
+                              @"serverType":@"report"
+                              },
                           ].mutableCopy;
 
     }
@@ -113,7 +118,11 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
     return operationList;
 }
 
-+ (NSArray<FHFeedOperationWord *> *)operationWordList:(NSString *)userId {
++ (NSArray<FHFeedOperationWord *> *)operationWordListWith:(FHFeedOperationViewModel *)viewModel {
+    
+    NSString *userId = viewModel.userID;
+    BOOL hasEdit = viewModel.hasEdit;
+    
     NSMutableArray<FHFeedOperationWord *> *items = @[].mutableCopy;
 
     NSArray *operationList = [self operationList];
@@ -128,13 +137,16 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
             }else{
                 word.items = @[word];
             }
-            
-            //显示删除就不会显示举报
-            if(word.type == FHFeedOperationWordTypeReport && !isShowDelete){
-                [items addObject:word];
-            }
             // 编辑 & 删除
             if((word.type == FHFeedOperationWordTypeDelete || word.type == FHFeedOperationWordTypeEdit) && isShowDelete){
+                [items addObject:word];
+            }
+            // 编辑记录
+            if (hasEdit && word.type == FHFeedOperationWordTypeEditHistory) {
+                [items addObject:word];
+            }
+            //显示删除就不会显示举报
+            if(word.type == FHFeedOperationWordTypeReport && !isShowDelete){
                 [items addObject:word];
             }
         }
@@ -147,22 +159,10 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
     
     if(viewModel.permission.count > 0){
         NSArray *operationList = [self operationList:viewModel.permission];
-        
+        BOOL hasEdit = viewModel.hasEdit;
         // 管理员
         NSString *userId = viewModel.userID;
-        BOOL isShowDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:userId]; // 是自己发的内容，第一条添加编辑选项，帖子
-        if (isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC) {
-            NSDictionary *dict = @{
-                                   @"id": @"8",
-                                   @"title": @"编辑",
-                                   @"serverType":@"edit"
-                                   };
-            FHFeedOperationWord *editData = [[FHFeedOperationWord alloc] initWithDict:dict];
-            if (editData) {
-                editData.items = @[editData];
-                [items addObject:editData];
-            }
-        }
+        BOOL isShowDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:userId]; // 是自己发的内容
         
         for (NSDictionary *dict in operationList) {
             if ([dict isKindOfClass:[NSDictionary class]]) {
@@ -173,16 +173,31 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
                     word.items = @[word];
                 }
                 
+                // 置顶 加精逻辑--不展示某些选项
                 if((word.type == FHFeedOperationWordTypeTop && viewModel.isTop) || (word.type == FHFeedOperationWordTypeCancelTop && !viewModel.isTop) || (word.type == FHFeedOperationWordTypeGood && viewModel.isGood) || (word.type == FHFeedOperationWordTypeCancelGood && !viewModel.isGood)){
                     continue;
                 }
-                
+                // 编辑添加
+                if (word.type == FHFeedOperationWordTypeEdit) {
+                    if (isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC) {
+                        [items addObject:word];
+                    }
+                    continue;
+                }
+                // 编辑历史
+                if (word.type == FHFeedOperationWordTypeEditHistory) {
+                    if (hasEdit && viewModel.cellType == FHUGCFeedListCellTypeUGC) {
+                        [items addObject:word];
+                    }
+                    continue;
+                }
+                // 添加其他
                 [items addObject:word];
             }
         }
         
     }else{
-        items = [self operationWordList:viewModel.userID];
+        items = [self operationWordListWith:viewModel];
     }
     
     return items;
