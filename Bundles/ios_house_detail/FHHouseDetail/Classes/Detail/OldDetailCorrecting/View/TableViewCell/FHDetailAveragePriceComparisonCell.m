@@ -97,7 +97,7 @@
 - (void)updateCurPricePosition:(CGFloat)curPrice minPrice:(CGFloat)minPrice maxPrice:(CGFloat)maxPrice {
     if(curPrice >= minPrice && curPrice <= maxPrice && minPrice < maxPrice){
         CGFloat diff = (curPrice - minPrice)/(maxPrice - minPrice);
-        CGFloat width = ([UIScreen mainScreen].bounds.size.width - 120) * diff;
+        CGFloat width = ([UIScreen mainScreen].bounds.size.width - 150) * diff;
         [_currentPointView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self.leftPointView).offset(width);
         }];
