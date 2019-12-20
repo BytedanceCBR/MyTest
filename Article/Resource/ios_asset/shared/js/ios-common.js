@@ -864,8 +864,7 @@ if (window.wendaContext = e, "is_author" in e && (e.is_author ? ($(".follow-butt
 $(".author-function-buttons").hide(), $(".wenda-info").show()) : "wenda" === Page.article.type && Page.h5_settings.is_liteapp ? ($(".follow-button").hide(), 
 $(".author-function-buttons").hide(), $(".wenda-info").hide()) : ($(".author-function-buttons").show(), 
 $(".follow-button").show(), $(".wenda-info").hide())), "is_author" in e && e.is_author ? (Page.author.isAuthorSelf = !!e.is_author, 
-$(".wd-footer .editor-edit-answer").attr("href", e.edit_answer_schema).show(), $(".wd-footer .dislike-and-report").hide()) : ($(".wd-footer .editor-edit-answer").hide(), 
-"detail_related_report_style" in wenda_extra && 0 !== wenda_extra.detail_related_report_style && wenda_extra.wd_version >= 13 ? $(".wd-footer .dislike-and-report").hide() : $(".wd-footer .dislike-and-report").show()), 
+$(".wd-footer .dislike-and-report").hide()) : "detail_related_report_style" in wenda_extra && 0 !== wenda_extra.detail_related_report_style && wenda_extra.wd_version >= 13 ? $(".wd-footer .dislike-and-report").hide() : $(".wd-footer .dislike-and-report").show(), 
 "is_author" in e && e.is_author || "detail_related_report_style" in wenda_extra && (2 === wenda_extra.detail_related_report_style || 3 === wenda_extra.detail_related_report_style) && wenda_extra.wd_version >= 13 && ($(".report").hide(), 
 $(".sep.for-report").hide()), "brow_count" in e && ($(".brow-count").text(e.brow_count), 
 formatCount(".brow-count", e.brow_count, "0")), "all_brow_count" in e || "fans_count" in e) {
