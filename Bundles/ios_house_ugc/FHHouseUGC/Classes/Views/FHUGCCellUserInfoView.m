@@ -292,6 +292,8 @@
         [self trackConfirmPopupShow:@"own_see_popup_show"];
     } else if(view.selectdWord.type == FHFeedOperationWordTypeEdit) {
         [[ToastManager manager] showToast:@"编辑按钮点击了"];
+    } else if(view.selectdWord.type == FHFeedOperationWordTypeEditHistory) {
+        [[ToastManager manager] showToast:@"编辑历史按钮点击了"];
     }
 }
 

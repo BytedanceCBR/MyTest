@@ -247,6 +247,8 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         type = FHFeedOperationWordTypeSelfLook;
     }else if([serverKey isEqualToString:@"edit"]){
         type = FHFeedOperationWordTypeEdit;
+    }else if([serverKey isEqualToString:@"edit_history"]){
+        type = FHFeedOperationWordTypeEditHistory;
     }else{
         type = FHFeedOperationWordTypeOther;
     }

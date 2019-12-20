@@ -159,6 +159,10 @@
         case FHFeedOperationOptionTypeEdit: {
             icon = [UIImage imageNamed:@"fh_ugc_feed_edit"];
         }
+        // add by zyk 编辑历史
+        case FHFeedOperationOptionTypeEditList: {
+            icon = [UIImage imageNamed:@"fh_ugc_feed_edit"];
+        }
             break;
     }
     
