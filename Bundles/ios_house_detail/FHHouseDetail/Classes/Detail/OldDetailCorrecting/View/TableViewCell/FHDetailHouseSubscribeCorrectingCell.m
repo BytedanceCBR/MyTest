@@ -214,7 +214,22 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (void)setPhoneNumber {
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-    self.phoneNum = (NSString *)[sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    id loginPhoneCache = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
+    
+    NSString *phoneNum = nil;
+    if ([phoneCache isKindOfClass:[NSString class]]) {
+        NSString *cacheNum = (NSString *)phoneCache;
+        if (cacheNum.length > 0) {
+            phoneNum = cacheNum;
+        }
+    }else if ([loginPhoneCache isKindOfClass:[NSString class]]) {
+        NSString *cacheNum = (NSString *)loginPhoneCache;
+        if (cacheNum.length > 0) {
+            phoneNum = cacheNum;
+        }
+    }
+    self.phoneNum = phoneNum;
     [self showFullPhoneNum:NO];
 }
 
