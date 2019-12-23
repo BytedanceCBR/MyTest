@@ -112,7 +112,7 @@
     }
     
     if([FHEnvContext isSpringHangOpen]){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectMake(0, 0, 72, 72)];
+        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
         [self.view addSubview:_springView];
     }
 }
@@ -131,8 +131,8 @@
     if([FHEnvContext isSpringHangOpen]){
         [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view).offset(-bottom - 45);
-            make.width.height.mas_equalTo(72);
-            make.right.mas_equalTo(self.view).offset(-21);
+            make.width.height.mas_equalTo(80);
+            make.right.mas_equalTo(self.view).offset(-13);
         }];
     }
 }
