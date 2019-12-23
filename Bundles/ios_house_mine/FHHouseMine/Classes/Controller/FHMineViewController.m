@@ -18,6 +18,7 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "TTReachability.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHSpringHangView.h"
 
 @interface FHMineViewController ()<UIViewControllerErrorHandler>
 
@@ -30,6 +31,8 @@
 @property (nonatomic, strong) UIButton *settingBtn;
 @property (nonatomic, assign) CGFloat headerViewHeight;
 @property (nonatomic, assign) CGFloat naviBarHeight;
+//春节活动运营位
+@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -107,6 +110,11 @@
     if (@available(iOS 11.0, *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
+    
+    if([FHEnvContext isSpringHangOpen]){
+        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectMake(0, 0, 72, 72)];
+        [self.view addSubview:_springView];
+    }
 }
 
 - (void)initConstraints {
@@ -119,6 +127,14 @@
         make.top.left.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(-bottom);
     }];
+    
+    if([FHEnvContext isSpringHangOpen]){
+        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.view).offset(-bottom - 45);
+            make.width.height.mas_equalTo(72);
+            make.right.mas_equalTo(self.view).offset(-21);
+        }];
+    }
 }
 
 - (void)initViewModel {

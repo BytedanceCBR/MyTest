@@ -235,6 +235,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isSpringOpen;
 
 /*
+ 判断开启了春节运营活动按钮
+ */
++ (BOOL)isSpringHangOpen;
+
+/*
  判断开启首次安装用户引导
  */
 + (BOOL)isIntroduceOpen;

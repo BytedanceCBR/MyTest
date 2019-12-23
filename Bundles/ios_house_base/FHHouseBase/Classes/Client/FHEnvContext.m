@@ -951,6 +951,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return YES;
 }
 
++ (BOOL)isSpringHangOpen {
+    return YES;
+}
+
 + (BOOL)isIntroduceOpen {
     return YES;
 }
