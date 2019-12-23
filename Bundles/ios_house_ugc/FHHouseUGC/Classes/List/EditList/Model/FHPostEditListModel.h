@@ -1,0 +1,9 @@
+//GENERATED CODE , DON'T EDIT
+#import <JSONModel.h>
+#import <FHBaseModelProtocol.h>
+NS_ASSUME_NONNULL_BEGIN
+
+
+NS_ASSUME_NONNULL_END
+//END OF HEADER
+

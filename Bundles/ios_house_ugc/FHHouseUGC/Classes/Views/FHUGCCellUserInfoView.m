@@ -56,6 +56,15 @@
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self addSubview:_descLabel];
     
+    self.editLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    self.editLabel.text = @"内容已编辑";
+    self.editLabel.textAlignment = NSTextAlignmentLeft;
+    self.editLabel.userInteractionEnabled = YES;
+    [self addSubview:_editLabel];
+    self.editLabel.hidden = YES;
+    UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editButtonOperation)];
+    [self.editLabel addGestureRecognizer:tapGes];
+    
     self.moreBtn = [[UIButton alloc] init];
     [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
     [_moreBtn addTarget:self action:@selector(moreOperation) forControlEvents:UIControlEventTouchUpInside];
@@ -86,7 +95,13 @@
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.icon);
         make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
+        make.height.mas_equalTo(17);
+    }];
+    
+    [self.editLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.icon);
+        make.left.mas_equalTo(self.descLabel.mas_right).offset(10);
+        make.right.mas_lessThanOrEqualTo(self.moreBtn.mas_left).offset(-10);
         make.height.mas_equalTo(17);
     }];
 }
@@ -130,6 +145,25 @@
         self.moreBtn.hidden = NO;
     }
     
+    // 编辑按钮
+    self.editLabel.hidden = !cellModel.hasEdit;
+    if (cellModel.hasEdit) {
+        self.editLabel.text = @"内容已编辑";
+    } else {
+        self.editLabel.text = @"";
+    }
+    [self.editLabel sizeToFit];
+}
+
+// 编辑按钮点击
+- (void)editButtonOperation {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    // add by zyk 添加入口参数
+    dict[@"social_group_id"] = self.cellModel.community.socialGroupId ?: @"";
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_history"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)moreOperation {
@@ -169,6 +203,7 @@
         viewModel.isTop = NO;
     }
     viewModel.cellType = self.cellModel.cellType;
+    viewModel.hasEdit = self.cellModel.hasEdit;
     [dislikeView refreshWithModel:viewModel];
     CGPoint point = _moreBtn.center;
     [dislikeView showAtPoint:point
@@ -258,6 +293,8 @@
         [self trackConfirmPopupShow:@"own_see_popup_show"];
     } else if(view.selectdWord.type == FHFeedOperationWordTypeEdit) {
         [[ToastManager manager] showToast:@"编辑按钮点击了"];
+    } else if(view.selectdWord.type == FHFeedOperationWordTypeEditHistory) {
+        [[ToastManager manager] showToast:@"编辑历史按钮点击了"];
     }
 }
 

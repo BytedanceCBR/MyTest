@@ -121,6 +121,14 @@
     if(fCityId){
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
+    // 附近 Feed添加一个参数
+    __block NSNumber *open_times = [[NSUserDefaults standardUserDefaults] valueForKey:@"user_neighbor_channel_open_times_key"];
+    if (!open_times) {
+        open_times = [NSNumber numberWithInteger:0];
+    }
+    if (open_times && isHead) {
+        [extraDic setValue:[NSString stringWithFormat:@"%ld",[open_times integerValue]] forKey:@"user_neighbor_channel_open_times"];
+    }
 
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
@@ -154,6 +162,13 @@
 
         if(model){
             if(isHead){
+                if (open_times) {
+                    NSInteger val = [open_times integerValue];
+                    val += 1;
+                    open_times = [NSNumber numberWithInteger:val];
+                    [[NSUserDefaults standardUserDefaults] setValue:open_times forKey:@"user_neighbor_channel_open_times_key"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                }
                 if(feedListModel.hasMore){
                     [wself.dataList removeAllObjects];
                 }

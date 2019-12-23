@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong) UIImageView *icon;
 @property(nonatomic ,strong) UILabel *userName;
 @property(nonatomic ,strong) UILabel *descLabel;
+@property(nonatomic ,strong) UILabel *editLabel;
 @property(nonatomic ,strong) UIButton *moreBtn;
 
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
