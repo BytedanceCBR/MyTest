@@ -225,7 +225,7 @@
                 }
             }
             
-            [self setUpSubtableIndex:indexValue enterType:@"switch"];
+            [self setUpSubtableIndex:indexValue];
         };
     }
     return self;
@@ -312,7 +312,7 @@
     self.itemsVCArray = itemVCArrayTmp;
     [self.homeViewController.scrollView setContentSize:CGSizeMake(KFHScreenWidth * configDataModel.houseTypeList.count, self.homeViewController.scrollView.frame.size.height)];
     NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
-    [self setUpSubtableIndex:currentSelectIndex enterType:@"click"];
+    [self setUpSubtableIndex:currentSelectIndex];
     
     if (![FHEnvContext isNetworkConnected]) {
         self.homeViewController.scrollView.scrollEnabled = NO;
@@ -330,13 +330,13 @@
     }
 }
 
-- (void)setUpSubtableIndex:(NSInteger)index enterType:(NSString *)enterType
+- (void)setUpSubtableIndex:(NSInteger)index
 {
     if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
     }
     self.homeViewController.scrollView.contentOffset = CGPointMake(KFHScreenWidth * index, 0);
-    [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:enterType];
+    [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:@"click"];
     self.previousHouseType = self.houseType;
 }
 
@@ -448,7 +448,13 @@
     if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
     }else
     {
-        [self.homeViewController.emptyView.retryButton setTitle:@"先逛逛发现" forState:UIControlStateNormal];
+        NSString *tabName = [FHEnvContext secondTabName];
+        NSString *str = @"先逛逛发现";
+        if(tabName.length > 0){
+            str = [NSString stringWithFormat:@"先逛逛%@",tabName];
+        }
+        
+        [self.homeViewController.emptyView.retryButton setTitle:str forState:UIControlStateNormal];
         
         self.homeViewController.emptyView.retryBlock = ^{
             [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarSecond];
