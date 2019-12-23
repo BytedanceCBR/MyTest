@@ -275,7 +275,7 @@
 {
     if (!_priceLabel) {
         _priceLabel = [[UILabel alloc]init];
-        _priceLabel.textColor = [UIColor themeRed1];
+        _priceLabel.textColor = [UIColor themeOrange1];
         
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
@@ -636,7 +636,7 @@
         self.priceLabel.textColor = [UIColor themeGray3];
     }else
     {
-        self.priceLabel.textColor = [UIColor themeRed1];
+        self.priceLabel.textColor = [UIColor themeOrange1];
     }
     
     FHImageModel *imageModel = commonModel.images.firstObject;
@@ -712,7 +712,7 @@
         self.priceLabel.textColor = [UIColor themeGray3];
     }else
     {
-        self.priceLabel.textColor = [UIColor themeRed1];
+        self.priceLabel.textColor = [UIColor themeOrange1];
     }
     
     _priceLabel.font = [UIFont themeFontSemibold:16];

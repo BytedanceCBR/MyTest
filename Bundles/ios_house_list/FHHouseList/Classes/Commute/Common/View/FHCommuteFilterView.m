@@ -46,7 +46,7 @@
         _searchButton.layer.cornerRadius = 4;
         _searchButton.layer.masksToBounds = YES;
         _searchButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-        _searchButton.backgroundColor = [UIColor themeRed1];
+        _searchButton.backgroundColor = [UIColor themeOrange1];
         _searchButton.titleLabel.font = [UIFont themeFontRegular:16];
         [_searchButton setTitle:@"开始找房" forState:UIControlStateNormal];
         
@@ -94,7 +94,7 @@
 -(void)setEnableSearch:(BOOL)enableSearch
 {
     _enableSearch = enableSearch;
-    _searchButton.backgroundColor = enableSearch?[UIColor themeRed1]:RGBA(0xff, 0x58, 0x69,0.3);
+    _searchButton.backgroundColor = enableSearch?[UIColor themeOrange1]:RGBA(0xff, 0x58, 0x69,0.3);
 }
 
 -(void)setBoldTitle:(BOOL)boldTitle

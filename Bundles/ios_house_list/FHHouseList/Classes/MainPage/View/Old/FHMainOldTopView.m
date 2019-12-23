@@ -68,18 +68,28 @@
 
 + (CGFloat)entranceHeight
 {
-    return [FHListEntrancesView rowHeight] + 20;
+    if([FHMainOldTopView showEntrance]) {
+        return [FHListEntrancesView rowHeight] + 20;
+    }
+    return 0;
 }
 
 + (CGFloat)totalHeight
 {
     CGFloat bannerHeight = [FHMainOldTopView showBanner] ? [FHMainOldTopView bannerHeight] + 10 : 0;
-    return [FHFakeInputNavbar perferredHeight] + bannerHeight + [FHMainOldTopView entranceHeight];
+    CGFloat entranceHeight = [FHMainOldTopView showEntrance] ? [FHMainOldTopView entranceHeight] : 0;
+
+    return [FHFakeInputNavbar perferredHeight] + bannerHeight + entranceHeight;
 }
 
 + (BOOL)showBanner
 {
     return ([FHMainOldTopView hasValidModel:[[FHEnvContext sharedInstance] getConfigFromCache].houseListBanner]);
+}
+
++ (BOOL)showEntrance
+{
+    return ([[FHEnvContext sharedInstance] getConfigFromCache].houseOpData2.items.count > 0);
 }
 
 - (UIColor *)topBackgroundColor

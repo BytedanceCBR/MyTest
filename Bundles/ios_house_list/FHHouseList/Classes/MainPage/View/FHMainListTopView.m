@@ -82,6 +82,9 @@
 
 -(CGFloat)filterTop
 {
+    if (self.filterBarView.top - [FHFakeInputNavbar perferredHeight] > 0) {
+        return self.filterBarView.top - [FHFakeInputNavbar perferredHeight];
+    }
     return self.filterBarView.top - [FHFakeInputNavbar perferredHeight];
 }
 

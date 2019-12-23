@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) id<FHMainOldTopViewDelegate> delegate;
 - (void)updateWithConfigData:(FHConfigDataModel *)configModel;
 + (BOOL)showBanner;
++ (BOOL)showEntrance;
 
 + (CGFloat)bannerHeight;
 + (CGFloat)entranceHeight;

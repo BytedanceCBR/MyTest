@@ -157,7 +157,7 @@
         button = _buttons[i];
         button.selected = (_currentType == i);
         [button setTitleColor:button.selected?[UIColor whiteColor]:[UIColor themeGray1] forState:UIControlStateNormal];
-        button.backgroundColor = (button.selected?[UIColor themeRed1]:[UIColor themeGray7]);
+        button.backgroundColor = (button.selected?[UIColor themeOrange1]:[UIColor themeGray7]);
     }
 }
 

@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (CGFloat)entranceHeight;
 + (CGFloat)totalHeight;
++ (BOOL)showEntrance;
 
 @end
 

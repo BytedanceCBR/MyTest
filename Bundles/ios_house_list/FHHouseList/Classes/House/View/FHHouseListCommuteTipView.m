@@ -88,7 +88,7 @@
     NSMutableAttributedString *info = [NSMutableAttributedString new];
     if (time.length > 0) {
         NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:14],
-                               NSForegroundColorAttributeName:(highlightTime?[UIColor themeRed1]:[UIColor themeGray2])
+                               NSForegroundColorAttributeName:(highlightTime?[UIColor themeOrange1]:[UIColor themeGray2])
                                };
         NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:time attributes:attr ];
         [info appendAttributedString:timeAttr];

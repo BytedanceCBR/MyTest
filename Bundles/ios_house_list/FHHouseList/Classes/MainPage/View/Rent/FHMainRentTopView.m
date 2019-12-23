@@ -103,12 +103,20 @@
 
 + (CGFloat)entranceHeight
 {
-    return [FHListEntrancesView rowHeight] + 20;
+    if ([self showEntrance]) {
+        return [FHListEntrancesView rowHeight] + 20;
+    }
+    return 0;
 }
 
 + (CGFloat)totalHeight
 {
     return [FHFakeInputNavbar perferredHeight] + [self entranceHeight];
+}
+
++ (BOOL)showEntrance
+{
+    return ([[FHEnvContext sharedInstance] getConfigFromCache].rentOpData.items.count > 0);
 }
 
 - (void)updateWithConfigData:(FHConfigDataModel *)configModel

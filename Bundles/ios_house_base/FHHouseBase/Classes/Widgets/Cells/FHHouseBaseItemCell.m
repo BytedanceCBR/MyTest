@@ -1403,6 +1403,7 @@
         } else if (houseType == FHHouseTypeRentHouse) {
             
             self.tagLabel.attributedText =  attributeString;
+            _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
 
             NSArray *firstRow = [commonModel.bottomText firstObject];
             NSDictionary *bottomText = nil;
@@ -1445,7 +1446,8 @@
             self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
             FHImageModel *imageModel = commonModel.images.firstObject;
             [self updateMainImageWithUrl:imageModel.url];
-            
+            _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
+
             self.imageTagLabelBgView.hidden = YES;
             [self updateImageTopLeft];
             

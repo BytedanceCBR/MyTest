@@ -287,8 +287,11 @@ extern NSString *const INSTANT_DATA_KEY;
             [topView updateWithConfigData:dataModel];
             topView.delegate = self;
             self.topBannerView = topView;
+        }else {
+            UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
+            topView.backgroundColor = [UIColor whiteColor];
+            self.topBannerView = topView;
         }
-        
     }else if (_houseType == FHHouseTypeSecondHandHouse){
         // todo zjing confirm
         if (dataModel.houseOpData2.items.count > 0) {
@@ -299,7 +302,15 @@ extern NSString *const INSTANT_DATA_KEY;
 //            for (FHConfigDataOpData2ItemsModel *item in dataModel.houseOpData.items ) {
 //                [self addOperationShowLog:item.logPb[@"operation_name"]];
 //            }
+        }else {
+            UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
+            topView.backgroundColor = [UIColor whiteColor];
+            self.topBannerView = topView;
         }
+    }else {
+        UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
+        topView.backgroundColor = [UIColor whiteColor];
+        self.topBannerView = topView;
     }
     
 }
@@ -1590,7 +1601,6 @@ extern NSString *const INSTANT_DATA_KEY;
         if (self.topView.superview == self.topContainerView){
             return;
         }
-        
         [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
         }];

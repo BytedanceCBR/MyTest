@@ -12,6 +12,8 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHCommonUI/UIColor+Theme.h>
 
+#define LIST_HOR_MARGIN 15
+
 @interface FHListEntrancesView ()
 
 @property(nonatomic , strong) NSArray *items;
@@ -23,7 +25,7 @@
 
 +(CGFloat)rowHeight
 {
-    return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+    return ceil((SCREEN_WIDTH - 15 * 2)/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -68,7 +70,7 @@
         obj.hidden = YES;
     }];
     
-    CGFloat margin = (SCREEN_WIDTH - countPerRow*itemFrame.size.width - 2*HOR_MARGIN)/(countPerRow-1);
+    CGFloat margin = (SCREEN_WIDTH - countPerRow*itemFrame.size.width - 2*LIST_HOR_MARGIN)/(countPerRow-1);
     UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];;
     for (NSInteger i = 0 ; i < totalCount; i++) {
         FHConfigDataOpDataItemsModel *model = items[i];
@@ -78,7 +80,7 @@
         [itemView updateWithIconUrl:imgModel.url name:model.title placeHolder:placeHolder];
         NSInteger row = i / countPerRow;
         NSInteger col = i % countPerRow;
-        itemView.origin = CGPointMake(HOR_MARGIN+(itemFrame.size.width+margin)*col, row*[self.class rowHeight]+TOP_MARGIN_PER_ROW);
+        itemView.origin = CGPointMake(LIST_HOR_MARGIN+(itemFrame.size.width+margin)*col, row*[self.class rowHeight]+TOP_MARGIN_PER_ROW);
         [itemView setBackgroundColor:[UIColor clearColor]];
         itemView.hidden = NO;
     }

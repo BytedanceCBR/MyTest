@@ -256,8 +256,10 @@
         offsetY = self.topView.height + contentOffset.y;
         if ([FHMainOldTopView showBanner]) {
             offset = [FHMainOldTopView bannerHeight] - 42 + 10;
-        }else {
+        }else if ([FHMainOldTopView showEntrance]) {
             offset = [FHMainOldTopView entranceHeight];
+        }else {
+            offset = [FHFakeInputNavbar perferredHeight];
         }
         if (contentOffset.y >= 0) {
             alpha = 1;
@@ -272,7 +274,11 @@
         }
         bgColor = [oldTopView topBackgroundColor];
     }else if ([self.viewModel.topBannerView isKindOfClass:[FHMainRentTopView class]]) {
-        offset = [FHMainRentTopView entranceHeight]; // todo zjing height
+        if ([FHMainRentTopView showEntrance]) {
+            offset = [FHMainRentTopView entranceHeight];
+        }else {
+            offset = [FHFakeInputNavbar perferredHeight];
+        }
         if (contentOffset.y >= 0) {
             alpha = 1;
         }else if (offset > 0){
