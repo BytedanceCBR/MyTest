@@ -110,6 +110,7 @@
                         cellModel.showCommunity = NO;
                         cellModel.hiddenMore = YES;
                         cellModel.hasEdit = NO;
+                        cellModel.isFromEditHistory = YES;
                         cellModel.tracerDic = [self.viewController.tracerDict copy];
                         [self.dataList addObject:cellModel];
                     }

@@ -82,6 +82,7 @@
     _tableView.estimatedRowHeight = 100;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
+    _tableView.backgroundColor = [UIColor themeGray7];
     if ([TTDeviceHelper isIPhoneXDevice]) {
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
