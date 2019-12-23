@@ -11,6 +11,7 @@
 
 - (instancetype)initWithController:(FHPostEditListController *)viewController tableView:(UITableView *)tableView;
 
-@property (nonatomic, assign) NSInteger currentOffset;
+- (void)startLoadData;
+- (void)loadMore;
 
 @end

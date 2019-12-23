@@ -15,6 +15,8 @@
 
 @interface FHPostEditListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
+@property (nonatomic, assign)   NSInteger       offset;
+@property (nonatomic, assign)   BOOL       hasMore;
 @property(nonatomic, weak) UITableView *tableView;
 @property(nonatomic, weak) FHPostEditListController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
@@ -32,9 +34,19 @@
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        self.offset = 0;
+        self.hasMore = NO;
         self.dataList = [NSMutableArray array];
     }
     return self;
+}
+
+- (void)startLoadData {
+    
+}
+
+- (void)loadMore {
+    
 }
 
 - (void)requestData:(BOOL)isRefresh {
@@ -44,6 +56,15 @@
     }
 
    
+}
+
+- (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    self.tableView.mj_footer.hidden = NO;
+    if (hasMore == NO) {
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }else {
+        [self.tableView.mj_footer endRefreshing];
+    }
 }
 
 #pragma mark - UITableViewDelegate

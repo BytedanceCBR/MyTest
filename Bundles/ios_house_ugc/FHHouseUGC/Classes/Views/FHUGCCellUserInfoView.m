@@ -157,13 +157,7 @@
 
 // 编辑按钮点击
 - (void)editButtonOperation {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    // add by zyk 添加入口参数
-    dict[@"social_group_id"] = self.cellModel.community.socialGroupId ?: @"";
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_history"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    [self gotoPostHistory];
 }
 
 - (void)moreOperation {
@@ -294,7 +288,21 @@
     } else if(view.selectdWord.type == FHFeedOperationWordTypeEdit) {
         [[ToastManager manager] showToast:@"编辑按钮点击了"];
     } else if(view.selectdWord.type == FHFeedOperationWordTypeEditHistory) {
-        [[ToastManager manager] showToast:@"编辑历史按钮点击了"];
+        [self gotoPostHistory];
+    }
+}
+
+// 帖子编辑历史
+- (void)gotoPostHistory {
+    if (self.cellModel.cellType == FHUGCFeedListCellTypeUGC) {
+        // 帖子
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        // add by zyk 添加入口参数
+        dict[@"tid"] = self.cellModel.groupId; // 帖子id
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_history"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
