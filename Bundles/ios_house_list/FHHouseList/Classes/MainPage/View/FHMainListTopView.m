@@ -19,7 +19,6 @@
 @property(nonatomic , strong) UIView *bannerView;
 @property(nonatomic , strong) UIView *filterBarView;
 @property(nonatomic , strong) UIView *filterTagsView;
-@property(nonatomic , strong) UIView *bottomLine;
 @property(nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
 @property(nonatomic , strong) UIView       *theBottomView;
 
@@ -48,8 +47,6 @@
             top = filterTagsView.bottom;
         }
         self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, top, width, NOTIFY_HEIGHT)];
-        _bottomLine = [[UIView alloc]initWithFrame:CGRectMake(0, filterView.bottom - ONE_PIXEL, filterView.width - 2*HOR_MARGIN, ONE_PIXEL)];
-        _bottomLine.backgroundColor = [UIColor themeGray6];
         [self addSubview:_notifyBarView];
         if (bannerView) {
             [self addSubview:bannerView];
@@ -63,8 +60,6 @@
             [self addSubview:filterTagsView];
             self.theBottomView = filterTagsView;
         }
-        [self addSubview:_bottomLine];
-        
         _notifyBarView.hidden = YES;
         self.frame = CGRectMake(0, 0, width, self.theBottomView.bottom);
     }
@@ -117,24 +112,10 @@
     CGRect notifyBarFrame = _notifyBarView.frame;
     notifyBarFrame.origin.y = top;
     _notifyBarView.frame = notifyBarFrame;
-    
-    CGRect bottomFrame = _bottomLine.frame;
-    bottomFrame.origin.y = _filterBarView.bottom - ONE_PIXEL;
-    _bottomLine.frame = bottomFrame;
-    
     CGRect frame = self.frame;
     frame.size.height = self.theBottomView.bottom;
     self.frame = frame;
     return frame;
-}
-
--(void)willMoveToSuperview:(UIView *)newSuperview
-{
-    if ([newSuperview isKindOfClass:[UIScrollView class]]) {
-        self.bottomLine.frame = CGRectMake(HOR_MARGIN, self.filterBarView.bottom - ONE_PIXEL, self.width - 2*HOR_MARGIN, ONE_PIXEL);
-    }else{
-        self.bottomLine.frame = CGRectMake(0, self.filterBarView.bottom - ONE_PIXEL, self.width , ONE_PIXEL);
-    }
 }
 
 @end

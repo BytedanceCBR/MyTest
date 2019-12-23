@@ -67,10 +67,20 @@
 
 @property (nonatomic , assign) FHHouseListSearchType searchType;
 @property(nonatomic , strong) FHMainOldTopTagsView *topTagsView;
+@property(nonatomic , strong) UIView *bottomLine;
 
 @end
 
 @implementation FHHouseListViewController
+
+- (UIView *)bottomLine
+{
+    if (!_bottomLine) {
+        _bottomLine = [[UIView alloc] init];
+        _bottomLine.backgroundColor = [UIColor themeGray6];
+    }
+    return _bottomLine;
+}
 
 -(instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
 {
@@ -211,7 +221,12 @@
     [bridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
     
     [bridge showBottomLine:YES];
-    
+    [self.filterBgControl addSubview:self.bottomLine];
+    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+    }];
 //    if (!self.viewModel.isCommute) {
 //        //非通勤找房下才显示分隔线
 //        UIView *bottomLine = [[UIView alloc] init];

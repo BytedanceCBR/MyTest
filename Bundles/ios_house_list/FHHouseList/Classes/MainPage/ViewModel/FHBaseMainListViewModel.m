@@ -66,6 +66,7 @@
 #import "FHHouseListRedirectTipCell.h"
 #import "FHMainTopViewHelper.h"
 #import "FHCommuteManager.h"
+#import <TTBaseLib/TTDeviceHelper.h>
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -87,9 +88,21 @@ extern NSString *const INSTANT_DATA_KEY;
 
 @interface FHBaseMainListViewModel ()
 
+@property(nonatomic , strong) UIView *bottomLine;
+
 @end
 
+
 @implementation FHBaseMainListViewModel
+
+- (UIView *)bottomLine
+{
+    if (!_bottomLine) {
+        _bottomLine = [[UIView alloc] init];
+        _bottomLine.backgroundColor = [UIColor themeGray6];
+    }
+    return _bottomLine;
+}
 
 -(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj
 {
@@ -247,10 +260,14 @@ extern NSString *const INSTANT_DATA_KEY;
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
     self.houseFilterViewModel.delegate = self;
-    [bridge showBottomLine:YES];// todo zjing filter
 
     self.filterPanel.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterBarHeight);
-    
+    [self.filterBgControl addSubview:self.bottomLine];
+    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+    }];
 }
 
 
