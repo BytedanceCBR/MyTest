@@ -82,10 +82,16 @@
     return ([FHMainOldTopView hasValidModel:[[FHEnvContext sharedInstance] getConfigFromCache].houseListBanner]);
 }
 
+- (UIColor *)topBackgroundColor
+{
+    return _topBgView.backgroundColor; 
+}
+
 - (void)setupUI
 {
     [self addSubview:self.topBgView];
     [self addSubview:self.bottomBgView];
+//    [self addSubview:self.shadowView];
     [self addSubview:self.bannerView];
     [self addSubview:self.bottomContainerView];
     self.bannerView.delegate = self;
@@ -209,11 +215,15 @@
 
 - (void)currentIndexChanged:(NSInteger)currentIndex
 {
-//    if (currentIndex >= 0 && currentIndex < self.model.items.count) {
-//        FHConfigDataRentOpDataItemsModel *opData = self.model.items[currentIndex];
+    if (currentIndex >= 0 && currentIndex < self.bannerOpData.items.count) {
+        FHConfigDataRentOpDataItemsModel *opData = self.bannerOpData.items[currentIndex];
+        if (opData && [FHMainOldTopView showBanner]) {
+            self.topBgView.backgroundColor = [UIColor colorWithHexString:opData.backgroundColor];
+        }
 //        [self addTracerShow:opData index:currentIndex];
-//    }
+    }
 }
+
 - (void)clickBannerWithIndex:(NSInteger)currentIndex
 {
     if (currentIndex >= 0 && currentIndex < self.bannerOpData.items.count) {
@@ -238,7 +248,7 @@
 {
     if (!_bannerView) {
         _bannerView = [[FHHomeScrollBannerView alloc] init];
-        _bannerView.backgroundColor = [UIColor themeHomeColor];
+        _bannerView.backgroundColor = [UIColor clearColor];
         _bannerView.layer.masksToBounds = YES;
         _bannerView.layer.cornerRadius = 12;
     }

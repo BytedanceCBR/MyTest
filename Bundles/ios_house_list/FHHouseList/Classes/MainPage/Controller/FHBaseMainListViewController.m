@@ -89,6 +89,7 @@
         _tableView.estimatedSectionHeaderHeight = 0;
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.scrollsToTop = YES;
+        _tableView.bounces = NO;
     }
     return _tableView;
 }
@@ -249,7 +250,9 @@
     CGFloat offset = 0;
     CGFloat offsetY = 0;
     UIStatusBarStyle statusBarStyle = UIStatusBarStyleDefault;
+    UIColor *bgColor = [UIColor whiteColor];
     if ([self.viewModel.topBannerView isKindOfClass:[FHMainOldTopView class]]) {
+        FHMainOldTopView *oldTopView = (FHMainOldTopView *)self.viewModel.topBannerView;
         offsetY = self.topView.height + contentOffset.y;
         if ([FHMainOldTopView showBanner]) {
             offset = [FHMainOldTopView bannerHeight] - 42 + 10;
@@ -267,6 +270,7 @@
         }else {
             statusBarStyle = UIStatusBarStyleLightContent;
         }
+        bgColor = [oldTopView topBackgroundColor];
     }else if ([self.viewModel.topBannerView isKindOfClass:[FHMainRentTopView class]]) {
         offset = [FHMainRentTopView entranceHeight]; // todo zjing height
         if (contentOffset.y >= 0) {
@@ -274,9 +278,9 @@
         }else if (offset > 0){
             alpha = (self.topView.height + contentOffset.y) / offset;
         }
+        bgColor = [UIColor themeGray8];
     }
     [self.navbar refreshAlpha:alpha];
-    
     if (!self.isViewDidDisapper) {
         [[UIApplication sharedApplication]setStatusBarStyle:statusBarStyle];
     }

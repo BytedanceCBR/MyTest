@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (CGFloat)bannerHeight;
 + (CGFloat)entranceHeight;
 + (CGFloat)totalHeight;
-
+- (UIColor *)topBackgroundColor;
 
 @end
 
