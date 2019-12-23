@@ -72,7 +72,7 @@
             }
             if (tempArray) {
                 [tempArray enumerateObjectsUsingBlock:^(FHSearchFilterConfigOption *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    FHMainOldTagsView *tagView = [[FHMainOldTagsView alloc] initWithFrame:CGRectMake(leftOffset, top, itemWidth, 30)];
+                    FHMainOldTagsView *tagView = [[FHMainOldTagsView alloc] initWithFrame:CGRectMake(leftOffset, top, itemWidth, 28)];
                     [self addSubview:tagView];
                     leftOffset += (itemMargin + itemWidth);
                     tagView.optionData = obj;

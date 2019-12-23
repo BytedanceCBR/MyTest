@@ -32,7 +32,7 @@
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
 #define COMMUTE_HEIGHT     42
-#define kFilterTagsViewHeight 58
+#define kFilterTagsViewHeight 52
 
 @interface FHHouseListViewController ()<TTRouteInitializeProtocol, FHHouseListViewModelDelegate>
 
