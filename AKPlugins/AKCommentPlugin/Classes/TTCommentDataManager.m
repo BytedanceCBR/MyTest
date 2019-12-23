@@ -625,7 +625,7 @@ static TTCommentDataManager *sharedManager;
 }
 
 + (NSString *)commentReplyListURLString {
-    return [NSString stringWithFormat:@"%@/2/comment/v1/reply_list/", [TTCommentDataManager baseURLString]];
+    return [NSString stringWithFormat:@"%@/2/comment/v4/reply_list/", [TTCommentDataManager baseURLString]];
 }
 
 + (NSString*)postCommentURLString {

@@ -116,7 +116,24 @@
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self goToDetail];
+    //这里由于单击和长按都会触发这个方法，长按可能会导致黑屏的问题，所以这个只保留单击跳转，屏蔽长按的情况
+    UITouch *touch = [touches anyObject];
+    BOOL hasLongPress = NO;
+    
+    for (UIGestureRecognizer *gesture in touch.gestureRecognizers) {
+        if([gesture isKindOfClass:[UILongPressGestureRecognizer class]]){
+            hasLongPress = YES;
+            break;
+        }
+    }
+    
+    if(!hasLongPress){
+        [self goToDetail];
+    }
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    NSLog(@"touch_end");
 }
 
 #pragma mark - TTUGCAttributedLabelDelegate

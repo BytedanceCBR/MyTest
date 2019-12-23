@@ -276,6 +276,9 @@
     
     if(self.hidePost){
         [self hiddenPostForUgc];
+    } else {
+        // 隐藏举报按钮
+        self.reportButton.hidden = YES;
     }
 }
 

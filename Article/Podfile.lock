@@ -45,7 +45,7 @@ PODS:
   - BDTFactoryConfigurator (0.1.0.1-binary)
   - BDTrackerProtocol (2.1.1.1-binary)
   - BDTSharedHeaders (0.1.0)
-  - BDUGAccountOnekeyLogin (1.1.6-rc.1)
+  - BDUGAccountOnekeyLogin (1.1.6-rc.0)
   - BDUGContainer (1.1.2)
   - BDUGDeepLink (1.1.1)
   - BDUGKit (1.3.3):
@@ -174,7 +174,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.15-rc.4)
+  - ios_house_im (0.1.15-rc.9)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -246,6 +246,8 @@ PODS:
   - OpenSSL-Universal (1.0.1.20.1-binary)
   - OpenUDID (0.1.0.1-binary)
   - Protobuf (3.0.1-ttv.1-binary)
+  - Quaterback/Main/Core (0.0.2-rc.1)
+  - Quaterback/Main/Default (0.0.2-rc.1)
   - React/base (0.55.13-rc.0.1.binary)
   - React/Core (0.55.13-rc.0.1.binary)
   - React/CxxBridge (0.55.13-rc.0.1.binary)
@@ -288,7 +290,7 @@ PODS:
   - SocketRocket (0.5.1.1-binary)
   - SQLiteRepairKit (1.2.1.1-binary)
   - SSZipArchive (1.6.3.1-binary)
-  - TencentQQSDK (1.1.0-rc.0.1.binary)
+  - TencentQQSDK (1.0.0.1-binary)
   - ToutiaoFrontierWebSocket (0.2.5.1-binary):
     - ToutiaoFrontierWebSocket/Main (= 0.2.5.1-binary)
     - ToutiaoFrontierWebSocket/PB (= 0.2.5.1-binary)
@@ -384,26 +386,28 @@ PODS:
   - TTImagePicker/Model (1.1.6)
   - TTImagePreviewAnimateManager (1.0.13.1-binary)
   - TTImpression (0.0.26.1-binary)
-  - TTIMSDK/Bridges (0.8.8-alpha.1)
-  - TTIMSDK/Feature_ApplicationStatus (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Config (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_ConversationInfo (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_CurrentUser (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_ErrorHandler (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Logger (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Notifier (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Puller (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Sender (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Store (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Essential (0.8.8-alpha.1)
-  - TTIMSDK/Feature_Essential_PB (0.8.8-alpha.1)
-  - TTIMSDK/Feature_WebSocket (0.8.8-alpha.1)
-  - TTIMSDK/Foundation (0.8.8-alpha.1)
-  - TTIMSDK/Foundation_Plugin_TTNetwork (0.8.8-alpha.1)
-  - TTIMSDK/IMKit (0.8.8-alpha.1)
-  - TTIMSDK/IMKit_Core (0.8.8-alpha.1)
-  - TTIMSDK/IMKit_WebSocket (0.8.8-alpha.1)
+  - TTIMSDK/Bridges (1.0.0-rc.34)
+  - TTIMSDK/Feature_ApplicationStatus (1.0.0-rc.34)
+  - TTIMSDK/Feature_Core (1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Config (1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_ConversationInfo (1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_CurrentUser (1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_ErrorHandler (1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Logger (1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Notifier (1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Puller (1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Sender (1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Setting (1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Store (1.0.0-rc.34)
+  - TTIMSDK/Feature_Essential (1.0.0-rc.34)
+  - TTIMSDK/Feature_Essential_PB (1.0.0-rc.34)
+  - TTIMSDK/Feature_WebSocket (1.0.0-rc.34)
+  - TTIMSDK/Foundation (1.0.0-rc.34)
+  - TTIMSDK/Foundation_Plugin_TTNetwork (1.0.0-rc.34)
+  - TTIMSDK/IMKit (1.0.0-rc.34)
+  - TTIMSDK/IMKit_Core (1.0.0-rc.34)
+  - TTIMSDK/IMKit_WebSocket (1.0.0-rc.34)
+  - TTIMSDK/Protocols (1.0.0-rc.34)
   - TTInstallService (1.3.1.1-binary)
   - TTKitchen/Core (3.0.1)
   - TTKitchen/SettingsSyncer (3.0.1)
@@ -417,7 +421,7 @@ PODS:
   - TTMonitor/BackTrace (0.7.11.0.1-binary)
   - TTMonitor/Monitor (0.7.11.0.1-binary)
   - TTNetBusiness (0.0.10.1-binary)
-  - TTNetworkManager (2.2.14.3.1-binary)
+  - TTNetworkManager (2.2.18.1.1-binary)
   - TTNewsAccountBusiness (0.2.4):
     - TTNewsAccountBusiness/Classes (= 0.2.4)
     - TTNewsAccountBusiness/SSCookieManager (= 0.2.4)
@@ -632,7 +636,7 @@ DEPENDENCIES:
   - BDTFactoryConfigurator (= 0.1.0.1-binary)
   - BDTrackerProtocol (= 2.1.1.1-binary)
   - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
-  - BDUGAccountOnekeyLogin (= 1.1.6-rc.1)
+  - BDUGAccountOnekeyLogin (= 1.1.6-rc.0)
   - BDUGContainer (= 1.1.2)
   - BDUGDeepLink (= 1.1.1)
   - BDUGKit (= 1.3.3)
@@ -714,7 +718,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.15-rc.4)
+  - ios_house_im (= 0.1.15-rc.9)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -730,6 +734,8 @@ DEPENDENCIES:
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
   - Protobuf (= 3.0.1-ttv.1-binary)
+  - Quaterback/Main/Core (= 0.0.2-rc.1)
+  - Quaterback/Main/Default (= 0.0.2-rc.1)
   - React/base (= 0.55.13-rc.0.1.binary)
   - React/Core (= 0.55.13-rc.0.1.binary)
   - React/CxxBridge (= 0.55.13-rc.0.1.binary)
@@ -762,7 +768,7 @@ DEPENDENCIES:
   - SocketRocket (= 0.5.1.1-binary)
   - SQLiteRepairKit (= 1.2.1.1-binary)
   - SSZipArchive (= 1.6.3.1-binary)
-  - TencentQQSDK (= 1.1.0-rc.0.1.binary)
+  - TencentQQSDK (= 1.0.0.1-binary)
   - ToutiaoFrontierWebSocket (= 0.2.5.1-binary)
   - TSVToolkit (= 0.1.2.1-binary)
   - TTABManager (= 0.0.7.1-binary)
@@ -818,26 +824,28 @@ DEPENDENCIES:
   - TTImagePicker (from `../AKPlugins/AKImagePicker`)
   - TTImagePreviewAnimateManager (= 1.0.13.1-binary)
   - TTImpression (= 0.0.26.1-binary)
-  - TTIMSDK/Bridges (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_ApplicationStatus (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Config (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_ConversationInfo (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_CurrentUser (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_ErrorHandler (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Logger (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Notifier (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Puller (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Sender (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Core_Store (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Essential (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_Essential_PB (= 0.8.8-alpha.1)
-  - TTIMSDK/Feature_WebSocket (= 0.8.8-alpha.1)
-  - TTIMSDK/Foundation (= 0.8.8-alpha.1)
-  - TTIMSDK/Foundation_Plugin_TTNetwork (= 0.8.8-alpha.1)
-  - TTIMSDK/IMKit (= 0.8.8-alpha.1)
-  - TTIMSDK/IMKit_Core (= 0.8.8-alpha.1)
-  - TTIMSDK/IMKit_WebSocket (= 0.8.8-alpha.1)
+  - TTIMSDK/Bridges (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_ApplicationStatus (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Core (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Config (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_ConversationInfo (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_CurrentUser (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_ErrorHandler (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Logger (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Notifier (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Puller (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Sender (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Setting (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Core_Store (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Essential (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_Essential_PB (= 1.0.0-rc.34)
+  - TTIMSDK/Feature_WebSocket (= 1.0.0-rc.34)
+  - TTIMSDK/Foundation (= 1.0.0-rc.34)
+  - TTIMSDK/Foundation_Plugin_TTNetwork (= 1.0.0-rc.34)
+  - TTIMSDK/IMKit (= 1.0.0-rc.34)
+  - TTIMSDK/IMKit_Core (= 1.0.0-rc.34)
+  - TTIMSDK/IMKit_WebSocket (= 1.0.0-rc.34)
+  - TTIMSDK/Protocols (= 1.0.0-rc.34)
   - TTInstallService (= 1.3.1.1-binary)
   - TTKitchen/Core (= 3.0.1)
   - TTKitchen/SettingsSyncer (= 3.0.1)
@@ -847,7 +855,7 @@ DEPENDENCIES:
   - TTMacroManager (= 1.0.1)
   - TTMonitor (= 0.7.11.0.1-binary)
   - TTNetBusiness (= 0.0.10.1-binary)
-  - TTNetworkManager (= 2.2.14.3.1-binary)
+  - TTNetworkManager (= 2.2.18.1.1-binary)
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
   - TTPersistence (= 0.2.3.1-binary)
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
@@ -1043,7 +1051,7 @@ SPEC CHECKSUMS:
   BDTFactoryConfigurator: c14af7870fcd1fa9c52142d0c01635775543e42d
   BDTrackerProtocol: c7605d2c4034c67976b79adbc8cb1b4826957411
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
-  BDUGAccountOnekeyLogin: fc05dd02e5ccf22928bc071277c0390a46ec8aff
+  BDUGAccountOnekeyLogin: cd9dd6f49cd8535f36ca0ebd412544c92220d541
   BDUGContainer: 28193629e67c7c9244f5d5836bfed611bf631321
   BDUGDeepLink: 44dfefe43051d60cb1fd918ebdca3abcc090d365
   BDUGKit: 215f3f098840a16e1c491447d56e49093f08075d
@@ -1089,7 +1097,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 169fd068b1c32a1ab26d55a2c42bd402b5dccd62
+  ios_house_im: 051caab430b9b1342acaee4371ce841b0119907f
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1105,6 +1113,7 @@ SPEC CHECKSUMS:
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
   Protobuf: 52a446ec094fe19d92c51ef98bd5c975b56d8732
+  Quaterback: ca260f9322c8c0e77d01d28c8e90b2a7394a3f10
   React: 5e1cd3dbd5d3472c64a378caad5cf4468a60c615
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
@@ -1115,7 +1124,7 @@ SPEC CHECKSUMS:
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
   SQLiteRepairKit: 272cadce05957d8b36df6ac573dc8a596649ed28
   SSZipArchive: cc2e2411672daf4be9f5f61d4184ba66f15bcd2b
-  TencentQQSDK: c906ca02c98f63eb6fb8916a6dadf8968c5959f2
+  TencentQQSDK: 64750e415a7c2c41578ec10c88364c9602c3d12b
   ToutiaoFrontierWebSocket: 96f0257673f42edfffdf379681341854b1195937
   TSVToolkit: deb654f65a887a0c314aa70183681f25a8b0d75d
   TTABManager: b22ef5bd7f829192b72ec71d6e5f761e66428b5d
@@ -1154,7 +1163,7 @@ SPEC CHECKSUMS:
   TTImagePicker: 728917a7f6b46e1029ec5fcd755ce7a62f311166
   TTImagePreviewAnimateManager: 89284791379992856207b5b92662037d07cb08eb
   TTImpression: d2d80c26abef863c5be6dc8b6fe10ebef3331b84
-  TTIMSDK: 18b9e0181db32b3a22338d6c76efb5dcf687c7f2
+  TTIMSDK: bfe029a0b27e3d30752bdd07ec5a121566fec48d
   TTInstallService: 278ab1b8adf5f1a632507406386a2a80df58d84f
   TTKitchen: 4a9860af825fc06ca6747379c6036d7c26b9ffe0
   TTKitchenExtension: 8e66b1d9df811a5c483ce1d838c50d6e6042019b
@@ -1163,7 +1172,7 @@ SPEC CHECKSUMS:
   TTMacroManager: 915aadf3841523767f16a230fd97fe546aa800eb
   TTMonitor: e56002040d636af0f7489db64e68e75aadae3843
   TTNetBusiness: e436bc6d648bf01946cc01756c86adfd0d718e5c
-  TTNetworkManager: 0a593aa9a498f73db82d6de88297b823629bd809
+  TTNetworkManager: 1dcc0022373154215625ad06fcaaaee201e36faf
   TTNewsAccountBusiness: 50125377b67c11155b3677cf0e6d3d02ed718a03
   TTPersistence: e0685fe3f0cfd826ccf6917ab5e8227fd6331947
   TTPhotoScrollVC: f34664f26861dbfbf617e47385a2522ba8bf1755
@@ -1215,6 +1224,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 50caa35634b9c55e77edad978c9893899b1b9ed4
+PODFILE CHECKSUM: 64cf68bedfe4d618164d913ca045eda80c7c5eac
 
 COCOAPODS: 1.4.0

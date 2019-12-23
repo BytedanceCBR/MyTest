@@ -79,7 +79,7 @@
 @property(nonatomic, strong) UIView *backView;
 
 //data
-@property(nonatomic, assign) NSString *curCategory;
+@property(nonatomic, copy) NSString *curCategory;
 @property(nonatomic, assign) CLLocationCoordinate2D centerPoint;
 @property(nonatomic, strong) AMapSearchAPI *searchApi;
 @property(nonatomic, strong) NSArray *nameArray;
