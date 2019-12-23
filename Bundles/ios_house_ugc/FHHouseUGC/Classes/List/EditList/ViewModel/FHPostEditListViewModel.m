@@ -107,6 +107,9 @@
                         cellModel.stickStyle = FHFeedContentStickStyleUnknown;
                         cellModel.contentDecoration = nil;
                         cellModel.community = nil;
+                        cellModel.showCommunity = NO;
+                        cellModel.hiddenMore = YES;
+                        cellModel.hasEdit = NO;
                         cellModel.tracerDic = [self.viewController.tracerDict copy];
                         [self.dataList addObject:cellModel];
                     }
@@ -145,13 +148,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
 }
-
 
 #pragma mark - UITableViewDataSource
 
@@ -169,6 +170,5 @@
     }
     return cell;
 }
-
 
 @end
