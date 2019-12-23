@@ -141,7 +141,7 @@ static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 {
     [self.traceEnterCategoryCache setValue:self.enterType forKey:@"enter_type"];
     
-    if (self.traceEnterCategoryCache.allKeys.count > 0 && self.isOriginShowSelf) {
+    if (self.traceEnterCategoryCache.allKeys.count > 0) {
         if (self.traceEnterCategoryCache && self.traceEnterCategoryCache[@"category_name"]) {
             [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
         }
