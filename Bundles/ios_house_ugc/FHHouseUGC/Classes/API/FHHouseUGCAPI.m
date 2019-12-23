@@ -20,6 +20,7 @@
 #import "FHUGCVoteResponseModel.h"
 #import "FHUGCWendaModel.h"
 #import "HMDTTMonitor.h"
+#import <FHUGCEditedPostModel.h>
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -854,6 +855,40 @@
         
         if (completion) {
             completion(ugcWendaModel,error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestPublishEditedPostWithParam:(NSDictionary *)params completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    
+    NSString *queryPath = @"/f100/ugc/post/edit";
+    NSString *url = QURL(queryPath);
+
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:params method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        FHUGCEditedPostModel *editedPostModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                NSInteger statusCode = [json[@"status"] integerValue];
+                success = (statusCode == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:statusCode userInfo:nil];
+                }
+                else
+                {
+                    editedPostModel = [[FHUGCEditedPostModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        
+        if (completion) {
+            completion(editedPostModel,error);
         }
     }];
 }

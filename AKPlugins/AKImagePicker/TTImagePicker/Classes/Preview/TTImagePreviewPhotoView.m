@@ -14,6 +14,7 @@
 #import "TTBaseMacro.h"
 #import "TTImagePreviewViewController.h"
 #import "FLAnimatedImage.h"
+#import <UIImageView+BDWebImage.h>
 
 @interface TTImagePreviewPhotoView()
 
@@ -89,6 +90,17 @@
     // 没有图片时，再加载一次，并设置缓存图片
     if(!self.imageView.image && _model.assetID.length > 0) {
         [self loadImage];
+    }
+    
+    // 展示不在相册中的图片
+    if(!self.imageView.image && _model.imageURL) {
+        __weak typeof(self) wself = self;
+        [self.imageView bd_setImageWithURL:_model.imageURL placeholder:nil options:BDImageRequestDefaultOptions completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            __strong typeof(wself) self = wself;
+            if(!error) {
+                [self resizeSubviews];
+            }
+        }];
     }
 }
 
