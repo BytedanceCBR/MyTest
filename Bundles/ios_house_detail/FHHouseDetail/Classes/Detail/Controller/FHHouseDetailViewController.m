@@ -364,21 +364,31 @@
     self.callCenter = [[CTCallCenter alloc] init];
     _callCenter.callEventHandler = ^(CTCall* call){
         @strongify(self);
-        if ([call.callState isEqualToString:CTCallStateDisconnected]){
-            //未接通
-            [self checkShowSocialAlert];
-        }else if ([call.callState isEqualToString:CTCallStateConnected]){
-            //通话中
-            self.isPhoneCallPickUp = YES;
-        }else if([call.callState isEqualToString:CTCallStateIncoming]){
-            //来电话
-        }else if ([call.callState isEqualToString:CTCallStateDialing]){
-            //正在拨号
-            self.isPhoneCalled = YES;
-        }else{
-            //doNothing
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self callHandlerWith:call];
+        });
     };
+}
+
+- (void)callHandlerWith:(CTCall*)call {
+    if ([call.callState isEqualToString:CTCallStateDisconnected]){
+        //未接通和挂断
+        if (self.isPhoneCalled && self.isPhoneCallPickUp) {
+            [self checkShowFeedbackView];
+        }
+        [self checkShowSocialAlert];
+        self.isPhoneCalled = NO;
+    }else if ([call.callState isEqualToString:CTCallStateConnected]){
+        //通话中
+        self.isPhoneCallPickUp = YES;
+    }else if([call.callState isEqualToString:CTCallStateIncoming]){
+        //来电话
+    }else if ([call.callState isEqualToString:CTCallStateDialing]){
+        //正在拨号
+        self.isPhoneCalled = YES;
+    }else{
+        //doNothing
+    }
 }
 
 // 埋点数据处理:1、paramObj.allParams中的"tracer"字段，2、allParams中的origin_from、report_params等字段
@@ -607,16 +617,6 @@
 }
 
 - (void)applicationDidBecomeActive {
-    // 反馈弹窗
-    if([self isShowFeedbackView]){
-        self.isPhoneCallPickUp = NO;
-        self.isPhoneCallShow = NO;
-        [self addFeedBackView];
-        self.phoneCallRealtorId = nil;
-        self.phoneCallRequestId = nil;
-    }
-    // 数据清除
-    self.isPhoneCallShow = NO;
 }
 
 - (void)checkShowSocialAlert {
@@ -627,6 +627,20 @@
     } else {
         self.viewModel.contactViewModel.socialContactConfig = nil;
     }
+}
+
+// 二手房反馈弹窗
+- (void)checkShowFeedbackView {
+    // 反馈弹窗
+    if([self isShowFeedbackView]){
+        self.isPhoneCallPickUp = NO;
+        self.isPhoneCallShow = NO;
+        [self addFeedBackView];
+        self.phoneCallRealtorId = nil;
+        self.phoneCallRequestId = nil;
+    }
+    // 数据清除
+    self.isPhoneCallShow = NO;
 }
 
 - (BOOL)isShowFeedbackView {

@@ -170,6 +170,20 @@
     return self;
 }
 
+// 从圈子详情页进入投票时带入的圈子信息处理
+- (void)configModelForSocialGroupId: (NSString *)socialGroupId socialGroupName: (NSString *)socialGroupName hasFollowed:(BOOL)followed {
+    
+    if(self.model && followed) {
+        FHUGCVotePublishCityInfo *cityInfo = [[FHUGCVotePublishCityInfo alloc] init];
+        cityInfo.socialGroupId = socialGroupId;
+        cityInfo.socialGroupName = socialGroupName;
+        self.model.cityInfos = @[cityInfo];
+        self.model.isAllSelected = NO;
+        self.model.isPartialSelected = YES;
+        self.model.visibleType = VisibleType_Group;
+    }
+}
+
 - (void)registerCells {
     
     [self.tableView registerClass:[FHUGCVotePublishCityCell class] forCellReuseIdentifier:[FHUGCVotePublishCityCell reusedIdentifier]];
