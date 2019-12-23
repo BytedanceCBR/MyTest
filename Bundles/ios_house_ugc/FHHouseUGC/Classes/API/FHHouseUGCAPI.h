@@ -103,6 +103,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 提问发布请求
 + (TTHttpTask *)requestPublishWendaWithParam: (NSDictionary *)params  completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 帖子编辑历史
++ (TTHttpTask *)requestPostHistoryByGroupId:(NSString *)gid offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

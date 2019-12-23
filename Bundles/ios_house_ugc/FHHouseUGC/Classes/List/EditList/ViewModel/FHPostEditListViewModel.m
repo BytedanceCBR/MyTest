@@ -12,6 +12,8 @@
 #import "ToastManager.h"
 #import "UIScrollView+Refresh.h"
 #import "FHUserTracker.h"
+#import "FHUGCUserFollowModel.h"
+#import "FHPostEditListModel.h"
 
 @interface FHPostEditListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -42,20 +44,45 @@
 }
 
 - (void)startLoadData {
-    
+    self.offset = 0;
+    [self requestData:self.offset];
 }
 
 - (void)loadMore {
-    
+    [self requestData:self.offset];
 }
 
-- (void)requestData:(BOOL)isRefresh {
+- (void)requestData:(NSInteger)offset {
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络不给力,请稍后重试"];
+        self.viewController.isLoadingData = NO;
+        [self.viewController endLoading];
         return;
     }
+    self.viewController.isLoadingData = YES;
+    if (self.requestTask) {
+        [self.requestTask cancel];
+    }
+    if (self.offset == 0) {
+        [self.viewController startLoading];
+    }
+    __weak typeof(self) weakSelf = self;
+    self.requestTask = [FHHouseUGCAPI requestPostHistoryByGroupId:[NSString stringWithFormat:@"%ld",self.tid] offset:self.offset class:[FHUGCPostHistoryModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        [weakSelf.viewController endLoading];
+        weakSelf.viewController.isLoadingData = NO;
+        if (model != NULL && error == NULL) {
+            [weakSelf processDataWith:(FHUGCPostHistoryModel *)model];
+        } else {
+            [weakSelf processDataWith:nil];
+        }
+    }];
+}
 
-   
+- (void)processDataWith:(FHUGCPostHistoryModel *)model {
+    if (model && [model isKindOfClass:[FHUGCPostHistoryModel class]]) {
+        // 有数据
+    }
+    // 后处理
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {

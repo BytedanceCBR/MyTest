@@ -62,6 +62,7 @@
     
     [self configTableView];
     self.viewModel = [[FHPostEditListViewModel alloc] initWithController:self tableView:_tableView];
+    self.viewModel.tid = self.tid;
     [self.view addSubview:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
@@ -96,8 +97,6 @@
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        [self startLoading];
-        self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];

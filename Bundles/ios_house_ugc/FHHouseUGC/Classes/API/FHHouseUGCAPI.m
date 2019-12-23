@@ -20,6 +20,7 @@
 #import "FHUGCVoteResponseModel.h"
 #import "FHUGCWendaModel.h"
 #import "HMDTTMonitor.h"
+#import "FHPostEditListModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -854,6 +855,42 @@
         
         if (completion) {
             completion(ugcWendaModel,error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestPostHistoryByGroupId:(NSString *)gid offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/api/feed/post_history/v1";
+    NSString *url = QURL(queryPath);
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (gid.length > 0) {
+        paramDic[@"query_id"] = gid;
+    }
+    paramDic[@"category"] = @"post_history";
+    paramDic[@"count"] = @(20);
+    paramDic[@"stream_api_version"] = @(88);
+    paramDic[@"offset"] = @(offset);
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        FHUGCPostHistoryModel *listModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                if (error) {
+                    if ([json isKindOfClass:[NSDictionary class]]) {
+                        NSString *msg = json[@"message"];
+                        error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                    }
+                }else{
+                    listModel = [[FHUGCPostHistoryModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        if (completion) {
+            completion(listModel, error);
         }
     }];
 }
