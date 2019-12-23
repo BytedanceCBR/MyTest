@@ -1500,9 +1500,9 @@ s.prototype.open = u, s.prototype.send = l;
 t.exports = u;
 } ]);
 }), window.Slardar && window.Slardar.install({
-sampleRate: .1,
+sampleRate: .01,
 bid: "article_app",
-pid: "article_aikan",
+pid: "article",
 ignoreAjax: [],
 ignoreStatic: []
 }), SelfEvent.prototype.on = function(t, e) {
@@ -2570,7 +2570,7 @@ return null == t ? a : t.call(this, o, a);
 n = e.exports = i, n.getSerialize = o;
 }, {} ]
 }, {}, [ 4 ])(4);
-}), JSVERSION = 385;
+}), JSVERSION = 391;
 
 var globalErrors = [], startTimestamp = Date.now(), flushErrorsTimer;
 
@@ -2591,7 +2591,7 @@ var e = t.data || t;
 e && e.device_id && window.Raven && Raven.config("http://key@m.toutiao.com/log/sentry/v2/183", {
 tags: {
 bid: "article_app",
-pid: "article_aikan",
+pid: "article",
 ac: e.ac,
 aid: e.aid,
 channel: e.channel,
@@ -2607,7 +2607,7 @@ js_version: JSVERSION,
 gid: "",
 service: MONITOR_SERVICE
 },
-ignoreErrors: [ "ReferenceError: Can't find variable: getElementPosition" ],
+ignoreErrors: [ "ReferenceError: Can't find variable: getElementPosition", "Unexpected token ')'" ],
 dataCallback: function(t) {
 var e = [ "lib.js", "iphone.js", "ios-common.js", "android.js", "android-common.js", "lib-forum.js", "iphone-forum.js", "ios-common-forum.js", "android-forum.js", "android-common-forum.js" ], n = [ "js" ], r = [ "v55", "v60", "shared" ], i = "http://s3.pstatp.com/toutiao/app_web_article_online_updates/";
 return t && t.exception && Array.isArray(t.exception.values) && t.exception.values.forEach(function(t) {

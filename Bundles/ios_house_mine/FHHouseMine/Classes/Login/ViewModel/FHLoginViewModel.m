@@ -70,15 +70,20 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 - (BOOL)getOneKeyLoginSwitchOff
 {
+    BOOL disableOneKeyLogin = NO;
     BOOL disableTelecom = NO;
     BOOL disableUnicom = NO;
     BOOL disableMobile = NO;
     NSDictionary *fhSettings = [FHLoginViewModel fhSettings];
     NSDictionary *loginSettings = [fhSettings tt_dictionaryValueForKey:@"login_settings"];
     if (loginSettings) {
+        disableOneKeyLogin = [loginSettings tt_boolValueForKey:@"disable_onekeylogin"];
         disableTelecom = [loginSettings tt_boolValueForKey:@"disable_telecom"];
         disableUnicom = [loginSettings tt_boolValueForKey:@"disable_unicom"];
         disableMobile = [loginSettings tt_boolValueForKey:@"disable_mobile"];
+    }
+    if (disableOneKeyLogin) {
+        return disableOneKeyLogin;
     }
     NSString *service = [TTAccount sharedAccount].service;
     if ([service isEqualToString:TTAccountMobile]) {

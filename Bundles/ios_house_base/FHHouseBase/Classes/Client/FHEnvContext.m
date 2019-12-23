@@ -575,6 +575,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
 {
 
     if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
+        // 存储ugc开关到 UserDefault 中，当本地config缓存读取失败的时候使用
+        [[NSUserDefaults standardUserDefaults] setBool:configModel.ugcCitySwitch forKey:@"kFHUgcCitySwitchKey"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         //        self.generalBizConfig.configCache = configModel;
         [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
         //        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
@@ -716,7 +719,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 + (BOOL)isUGCOpen
 {
-    return [[FHEnvContext sharedInstance] getConfigFromCache].ugcCitySwitch;
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (configData) {
+        return configData.ugcCitySwitch;
+    }
+    // 默认是上次存储的ugc开关，后面可以去除(为了防止 读取缓存congfig失败)
+    BOOL retFlag = [[NSUserDefaults standardUserDefaults] boolForKey:@"kFHUgcCitySwitchKey"];
+    return retFlag;
 }
 
 + (BOOL)isUGCAdUser
@@ -801,7 +810,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 - (TTReachability *)reachability
 {
     if (!_reachability) {
-        _reachability = [TTReachability new];
+        _reachability = [TTReachability reachabilityForInternetConnection];
     }
     return _reachability;
 }

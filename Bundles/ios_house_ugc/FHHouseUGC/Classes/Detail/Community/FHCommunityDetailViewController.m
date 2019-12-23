@@ -34,6 +34,7 @@
     if (self) {
         self.ttTrackStayEnable = YES;
         self.communityId = paramObj.allParams[@"community_id"];
+        self.tabName = paramObj.allParams[@"tab_name"];
         // 取链接中的埋点数据
         NSDictionary *params = paramObj.allParams;
         NSString *enter_from = params[@"enter_from"];
@@ -385,12 +386,12 @@
 
 - (void)postMenuViewWillShow {
     self.bageView.alpha = 0;
-    self.groupChatBtn.hidden = YES;
+    self.groupChatBtn.alpha = 0.0f;
 }
 
 - (void)postMenuDidHide {
     self.bageView.alpha = 1;
-    self.groupChatBtn.hidden = NO;
+    self.groupChatBtn.alpha = 1.0f;
 }
 
 //去到群聊

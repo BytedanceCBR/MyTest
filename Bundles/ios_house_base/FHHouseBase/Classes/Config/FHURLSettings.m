@@ -215,7 +215,7 @@ extern NSString * logBaseURL(void);
 
 + (NSString*)replyedCommentListURLString
 {
-    return [NSString stringWithFormat:@"%@/2/comment/v1/reply_list/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/2/comment/v4/reply_list/", [self baseURL]];
 }
 
 + (NSString*)replyedCommentDigURLString

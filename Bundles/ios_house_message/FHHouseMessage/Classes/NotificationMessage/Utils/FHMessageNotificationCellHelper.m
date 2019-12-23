@@ -53,7 +53,7 @@
             return [cls heightForData:data cellWidth:width];
         }
     }
-    return 44;
+    return CGFLOAT_MIN;
 }
 
 + (CGFloat)tt_newPadding:(CGFloat)normalPadding{

@@ -62,7 +62,7 @@
 
     //切换开关
     WeakSelf;
-    [[[FHEnvContext sharedInstance].configDataReplay skip:1] subscribeNext:^(id _Nullable x) {
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id _Nullable x) {
         StrongSelf;
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *) x;
         if (self.isUgcOpen != xConfigDataModel.ugcCitySwitch) {
