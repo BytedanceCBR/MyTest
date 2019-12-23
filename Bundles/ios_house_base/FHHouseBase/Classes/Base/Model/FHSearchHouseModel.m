@@ -697,7 +697,7 @@
         default:
             break;
     }
-    return @"FHHouseBaseItemCell";
+    return @"FHHouseBaseItemCellList";
 }
 
 @end

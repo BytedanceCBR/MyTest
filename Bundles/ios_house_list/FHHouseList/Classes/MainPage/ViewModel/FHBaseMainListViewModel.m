@@ -164,7 +164,6 @@ extern NSString *const INSTANT_DATA_KEY;
                          NSStringFromClass([FHHouseListNoHouseCell class]),
                          NSStringFromClass([FHPlaceHolderCell class]),
                          NSStringFromClass([FHHomePlaceHolderCell class]),
-                         NSStringFromClass([FHHouseBaseItemCell class]),
                          NSStringFromClass([FHHouseListRedirectTipCell class]),
                          NSStringFromClass([FHNeighbourhoodAgencyCardCell class])
                          ];
@@ -176,6 +175,7 @@ extern NSString *const INSTANT_DATA_KEY;
 - (void)registerCellClasses
 {
     [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceCellId];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHouseBaseItemCellList"];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeRentHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];

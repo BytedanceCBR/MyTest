@@ -123,7 +123,7 @@
             [self initRentHouseImageUI:NO];
         }else if (reuseIdentifier && [reuseIdentifier isEqualToString:@"FHHomeRentHouseItemCell"]) {
             [self initRentHouseImageUI:YES];
-        }else if ([reuseIdentifier isEqualToString:@"FHHouseBaseItemCell"]) {
+        }else if ([reuseIdentifier isEqualToString:@"FHHouseBaseItemCellList"]) {
             [self initSmallImageUI:NO];
         }else
         {
@@ -412,9 +412,6 @@
     [_rightInfoView addSubview:self.statInfoLabel];
     [_rightInfoView addSubview:self.tagLabel];
     
-    _tagLabel.numberOfLines = 0;
-    _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    
     [_mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(-2);
@@ -440,7 +437,7 @@
     
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.marginTop = YGPointValue(4);
+        layout.marginTop = YGPointValue(6);
         layout.marginLeft = YGPointValue(-3);
         layout.height = YGPointValue(15);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
@@ -457,7 +454,7 @@
         layout.flexDirection = YGFlexDirectionRow;
         layout.width = YGPercentValue(100);
         layout.height = YGPointValue(20);
-        layout.marginTop = YGPointValue(5);
+        layout.marginTop = YGPointValue(7);
         layout.alignItems = YGAlignCenter;
     }];
     
