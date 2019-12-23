@@ -14,6 +14,10 @@
 #import "FHUserTracker.h"
 #import "FHUGCUserFollowModel.h"
 #import "FHPostEditListModel.h"
+#import "FHFeedContentModel.h"
+#import "FHMainApi.h"
+#import "FHBaseModelProtocol.h"
+#import "FHPostDetailCell.h"
 
 @interface FHPostEditListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -36,6 +40,7 @@
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        [self.tableView registerClass:[FHPostDetailCell class] forCellReuseIdentifier:NSStringFromClass([FHPostDetailCell class])];
         self.offset = 0;
         self.hasMore = NO;
         self.dataList = [NSMutableArray array];
@@ -45,10 +50,12 @@
 
 - (void)startLoadData {
     self.offset = 0;
+    [self.dataList removeAllObjects];
     [self requestData:self.offset];
 }
 
 - (void)loadMore {
+    self.offset = self.dataList.count;
     [self requestData:self.offset];
 }
 
@@ -81,8 +88,44 @@
 - (void)processDataWith:(FHUGCPostHistoryModel *)model {
     if (model && [model isKindOfClass:[FHUGCPostHistoryModel class]]) {
         // 有数据
+        self.hasMore = model.hasMore;
+        if (model.data.count > 0) {
+            [model.data enumerateObjectsUsingBlock:^(FHUGCPostHistoryDataModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSString *dataStr = obj.content;
+                NSError *jsonParseError;
+                NSData *jsonData = [dataStr dataUsingEncoding:NSUTF8StringEncoding];
+                if (jsonData) {
+                    Class cls = [FHFeedUGCContentModel class];
+                    FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
+                    if (model && !jsonParseError) {
+                        // 网络请求返回
+                        model.isFromDetail = YES;
+                        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+                        cellModel.isFromDetail = YES;
+                        cellModel.feedVC = nil;
+                        cellModel.isStick = NO;
+                        cellModel.stickStyle = FHFeedContentStickStyleUnknown;
+                        cellModel.contentDecoration = nil;
+                        cellModel.community = nil;
+                        cellModel.tracerDic = [self.viewController.tracerDict copy];
+                        [self.dataList addObject:cellModel];
+                    }
+                }
+            }];
+        }
     }
     // 后处理
+    if (self.dataList.count > 0) {
+        self.viewController.hasValidateData = YES;
+        [self.viewController.emptyView hideEmptyView];
+        self.tableView.hasMore = self.hasMore;
+        [self updateTableViewWithMoreData:self.hasMore];
+        [self.tableView reloadData];
+    } else {
+        self.viewController.hasValidateData = NO;
+        // 显示空的关注页面-数据走丢了
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+    }
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -102,10 +145,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    if(indexPath.row < 0 || indexPath.row >= self.dataList.count) {
-        return;
-    }
 
 }
 
@@ -121,10 +160,14 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
-
-
-    return nil;
+    FHPostDetailCell *cell = (FHPostDetailCell *) [tableView dequeueReusableCellWithIdentifier:@"FHPostDetailCell" forIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    NSInteger row = indexPath.row;
+    if (row < self.dataList.count) {
+        FHFeedUGCCellModel *data = self.dataList[row];
+        [cell refreshWithData:data];
+    }
+    return cell;
 }
 
 
