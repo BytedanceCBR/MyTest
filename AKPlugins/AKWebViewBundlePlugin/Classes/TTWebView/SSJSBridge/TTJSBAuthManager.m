@@ -53,6 +53,13 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
                               @"zjurl.cn",           //汽车
                               @"m.quduzixun.com",    //爱看
                               @"m.haoduofangs.com",  //幸福里
+                              @"i.haoduofangs.com",  //幸福里
+                              @"i-lq.haoduofangs.com",//好多房
+                              @"m-lq.haoduofangs.com",//好多房
+                              @"i-hl.haoduofangs.com",//好多房
+                              @"m-hl.haoduofangs.com",//好多房
+                              @"i-lf.haoduofangs.com",//好多房
+                              @"m-lf.haoduofangs.com",//好多房
                               @"99hdf.com",//99好多房
                               @"xflapp.com",//幸福里好多房
                               @"i.haoduofangs.com"]; //幸福里
