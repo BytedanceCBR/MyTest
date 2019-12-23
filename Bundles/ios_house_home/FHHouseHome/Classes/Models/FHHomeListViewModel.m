@@ -225,7 +225,7 @@
                 }
             }
             
-            [self setUpSubtableIndex:indexValue];
+            [self setUpSubtableIndex:indexValue enterType:@"switch"];
         };
     }
     return self;
@@ -312,7 +312,7 @@
     self.itemsVCArray = itemVCArrayTmp;
     [self.homeViewController.scrollView setContentSize:CGSizeMake(KFHScreenWidth * configDataModel.houseTypeList.count, self.homeViewController.scrollView.frame.size.height)];
     NSInteger currentSelectIndex = self.categoryView.segmentedControl.selectedSegmentIndex;
-    [self setUpSubtableIndex:currentSelectIndex];
+    [self setUpSubtableIndex:currentSelectIndex enterType:@"click"];
     
     if (![FHEnvContext isNetworkConnected]) {
         self.homeViewController.scrollView.scrollEnabled = NO;
@@ -330,13 +330,13 @@
     }
 }
 
-- (void)setUpSubtableIndex:(NSInteger)index
+- (void)setUpSubtableIndex:(NSInteger)index enterType:(NSString *)enterType
 {
     if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
     }
     self.homeViewController.scrollView.contentOffset = CGPointMake(KFHScreenWidth * index, 0);
-    [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:@"switch"];
+    [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:enterType];
     self.previousHouseType = self.houseType;
 }
 
