@@ -349,7 +349,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
     
-    if (self.mainTableView.contentOffset.y > [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType]) {
+    if (self.mainTableView.contentOffset.y >= [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType] + 80) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
     

@@ -98,7 +98,7 @@
     [self setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     
     if(self.style == FHUGCFollowButtonStyleBorder){
-        self.layer.borderWidth = 0.5f;
+        self.layer.borderWidth = 1.0f;
         self.layer.borderColor = [[UIColor themeRed1] CGColor];
     }
     

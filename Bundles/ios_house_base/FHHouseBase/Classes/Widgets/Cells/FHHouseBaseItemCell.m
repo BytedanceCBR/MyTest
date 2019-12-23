@@ -225,10 +225,10 @@
 {
     if (!_tagLabel) {
         _tagLabel = [[YYLabel alloc]init];
-        _tagLabel.numberOfLines = 0;
+//        _tagLabel.numberOfLines = 0;
         _tagLabel.font = [UIFont themeFontRegular:12];
         _tagLabel.textColor = [UIColor themeGray3];
-        _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
+//        _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
     return _tagLabel;
 }
@@ -411,6 +411,9 @@
     [_rightInfoView addSubview:self.subTitleLabel];
     [_rightInfoView addSubview:self.statInfoLabel];
     [_rightInfoView addSubview:self.tagLabel];
+    
+    _tagLabel.numberOfLines = 0;
+    _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
     
     [_mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;

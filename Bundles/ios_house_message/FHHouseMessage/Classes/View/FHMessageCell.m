@@ -278,7 +278,7 @@
 
 -(NSAttributedString*)getAtAttributeString:(NSString*)draft {
     
-    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"[有人@我]%@", [self cutLineBreak:draft]]];
+    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"[有人@你]%@", [self cutLineBreak:draft]]];
     NSRange theRange = NSMakeRange(0, 6);
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 0;

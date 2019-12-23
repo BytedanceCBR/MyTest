@@ -66,7 +66,7 @@
 - (UIImageView *)shadowImage {
     if (!_shadowImage) {
         UIImageView *shadowImage = [[UIImageView alloc]init];
-        shadowImage.image = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(20,25,20,25)resizingMode:UIImageResizingModeStretch];
+        shadowImage.image = [[UIImage imageNamed:@"price_bac"] resizableImageWithCapInsets:UIEdgeInsetsMake(25,25,30,25)resizingMode:UIImageResizingModeStretch];
         [self addSubview:shadowImage];
         _shadowImage = shadowImage;
     }

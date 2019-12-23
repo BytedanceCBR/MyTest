@@ -204,7 +204,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     // 清空数据源
     [self.items removeAllObjects];
-    // 添加头滑动图片 && 视频
     BOOL hasVideo = NO;
     BOOL hasVR = NO;
     BOOL isInstant = model.isInstantData;
@@ -225,6 +224,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }else {
         contactPhone.isFormReport = YES;
     }
+    // 添加头滑动图片 && 视频
     if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
         hasVideo = YES;
     }
@@ -598,18 +598,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (model.data.housePricingRank.buySuggestion.content.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailSuggestTipModel *infoModel = [[FHDetailSuggestTipModel alloc] init];
-        infoModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
-        [infoModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
-        infoModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
-        //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
-        //        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
         if (self.detailTracerDic) {
             [paramsDict addEntriesFromDictionary:self.detailTracerDic];
         }
         paramsDict[@"page_type"] = [self pageTypeString];
-        infoModel.phoneCallViewModel.tracerDict = paramsDict;
         infoModel.buySuggestion = model.data.housePricingRank.buySuggestion;
+                infoModel.extraInfo = model.data.baseExtra;
+        infoModel.contactViewModel = self.contactViewModel;
         infoModel.contactPhone = contactPhone;
         infoModel.houseModelType = FHHouseModelTypeTips;
         [self.items addObject:infoModel];

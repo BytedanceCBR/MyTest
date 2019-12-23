@@ -264,7 +264,7 @@
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self.priceView);
         make.height.mas_equalTo(40);
-        make.width.mas_equalTo(.6);
+        make.width.mas_equalTo(.5);
     }];
     [self.priceKeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.priceView).offset(20);
@@ -627,7 +627,7 @@
         chartView.chartMarginLeft = 17;
         chartView.chartMarginRight = 17;
         chartView.backgroundColor = [UIColor clearColor];
-        chartView.yGridLinesColor = [UIColor themeGray6];
+        chartView.yGridLinesColor = [[UIColor themeGray6] colorWithAlphaComponent:0.57];;
         chartView.showYGridLines = YES; // 横着的虚线
         [chartView.chartData enumerateObjectsUsingBlock:^(PNLineChartData *obj, NSUInteger idx, BOOL *stop) {
             obj.pointLabelColor = [UIColor blackColor];

@@ -185,9 +185,9 @@
         return;
     }
     
-    NSInteger numValue = 3759;
+    NSInteger numValue = [NSString stringWithFormat:@"%@", entryModel.activeCountInfo.count];
     NSString *numStr = [NSString stringWithFormat:@"%ld", numValue];
-    NSString *textStr = [NSString stringWithFormat:@" %@", entryModel.activeCountInfo.text];
+    NSString *textStr = [NSString stringWithFormat:@"%@", entryModel.activeCountInfo.text];
     NSString *combineStr = [NSString stringWithFormat:@"%@%@", numStr, textStr];
     if (numValue < 0) {
         numStr = nil;
@@ -198,6 +198,7 @@
     UIColor *numColor = isEmptyString(entryModel.activeCountInfo.numColor) ? [UIColor themeRed1] : [UIColor colorWithHexStr:entryModel.activeCountInfo.numColor];
     UIColor *textColor = isEmptyString(entryModel.activeCountInfo.textColor) ? [UIColor themeGray1] : [UIColor colorWithHexStr:entryModel.activeCountInfo.textColor];
     [aStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"DINAlternate-Bold" size: 14.0f] range:NSMakeRange(0, numStr.length)];
+    [aStr addAttribute:NSKernAttributeName value:@1.0f range:NSMakeRange(0, numStr.length)];
     [aStr addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, numStr.length)];
     [aStr addAttribute:NSForegroundColorAttributeName value:textColor range:NSMakeRange(numStr.length, textStr.length)];
     

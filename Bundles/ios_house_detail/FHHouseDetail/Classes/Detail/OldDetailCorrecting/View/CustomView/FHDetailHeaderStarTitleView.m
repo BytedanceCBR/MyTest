@@ -53,7 +53,7 @@
         make.centerY.mas_equalTo(self.titleLabel).mas_offset(AdaptOffset(-1));
     }];
     [self.starNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.starImageView.mas_right).offset(4);
+        make.left.equalTo(self.starImageView.mas_right).offset(3);
         make.centerY.mas_equalTo(self.titleLabel);
     }];
 }

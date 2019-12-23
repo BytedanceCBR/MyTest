@@ -155,7 +155,7 @@
     [self.topView addSubview:_bottomLineView];
 
     self.searchBtn = [[UIButton alloc] init];
-    [_searchBtn setImage: ICON_FONT_IMG(18, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
+    [_searchBtn setImage: ICON_FONT_IMG(24, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
     _searchBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_searchBtn addTarget:self action:@selector(goToSearch) forControlEvents:UIControlEventTouchUpInside];
     [self.topView addSubview:_searchBtn];
@@ -344,7 +344,7 @@
     }];
 
     [self.searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.topView);
+        make.centerY.mas_equalTo(self.topView).offset(-5);
         make.right.mas_equalTo(self.topView).offset(-20);
         make.width.height.mas_equalTo(24);
     }];

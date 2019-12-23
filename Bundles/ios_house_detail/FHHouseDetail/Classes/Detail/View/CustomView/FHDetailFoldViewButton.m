@@ -68,7 +68,7 @@
     }];
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.keyLabel.mas_right).offset(4);
-        make.centerY.mas_equalTo(self.keyLabel);
+        make.centerY.mas_equalTo(self.keyLabel).offset(-1);
         make.height.width.mas_equalTo(18);
     }];
 }

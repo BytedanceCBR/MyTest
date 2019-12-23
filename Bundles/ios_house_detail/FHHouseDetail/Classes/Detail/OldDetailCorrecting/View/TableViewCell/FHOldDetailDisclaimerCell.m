@@ -54,7 +54,7 @@
     if (model.disclaimer && model.disclaimer.text.length > 0) {
         NSString *text = model.disclaimer.text;
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text];
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:10],NSForegroundColorAttributeName:[UIColor themeGray3]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor themeGray4]};
         [attrText addAttributes:attr range:NSMakeRange(0, attrText.length)];
         [model.disclaimer.richText enumerateObjectsUsingBlock:^(FHDisclaimerModelDisclaimerRichTextModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSRange range = [self rangeOfArray:obj.highlightRange originalLength:text.length];
@@ -67,6 +67,7 @@
                 }
             } longPressAction:nil];
         }];
+        self.disclaimerContent.numberOfLines = 0;
         self.disclaimerContent.attributedText = attrText;
         [self remakeConstraints];
     }
@@ -166,6 +167,8 @@
     _disclaimerContent.numberOfLines = 0;
     _disclaimerContent.textColor = [UIColor themeGray4];
     _disclaimerContent.font = [UIFont themeFontRegular:12];
+    _disclaimerContent.preferredMaxLayoutWidth = SCREEN_WIDTH-40;
+
     [self.contentView addSubview:_disclaimerContent];
     
     [self.ownerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -193,7 +196,7 @@
     [self.disclaimerContent mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(20);
+        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(10 );
         make.bottom.mas_equalTo(-20);
     }];
     
@@ -275,7 +278,6 @@
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
         make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
-        make.height.mas_equalTo(self.lineHeight);
         make.bottom.mas_equalTo(-20);
     }];
 }
