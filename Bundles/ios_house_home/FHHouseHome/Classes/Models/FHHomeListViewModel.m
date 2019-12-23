@@ -336,7 +336,7 @@
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.houseType)];
     }
     self.homeViewController.scrollView.contentOffset = CGPointMake(KFHScreenWidth * index, 0);
-    [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:@"switch"];
+    [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:@"click"];
     self.previousHouseType = self.houseType;
 }
 
@@ -448,7 +448,13 @@
     if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
     }else
     {
-        [self.homeViewController.emptyView.retryButton setTitle:@"先逛逛发现" forState:UIControlStateNormal];
+        NSString *tabName = [FHEnvContext secondTabName];
+        NSString *str = @"先逛逛发现";
+        if(tabName.length > 0){
+            str = [NSString stringWithFormat:@"先逛逛%@",tabName];
+        }
+        
+        [self.homeViewController.emptyView.retryButton setTitle:str forState:UIControlStateNormal];
         
         self.homeViewController.emptyView.retryBlock = ^{
             [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarSecond];
