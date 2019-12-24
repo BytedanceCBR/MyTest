@@ -92,7 +92,7 @@
     if (keyword.length > 0) {
         NSRange range = [name rangeOfString:keyword];
         if (range.location != NSNotFound && range.length > 0) {
-            NSDictionary *highDict = @{NSForegroundColorAttributeName:[UIColor themeRed1]};
+            NSDictionary *highDict = @{NSForegroundColorAttributeName:[UIColor themeOrange1]};
             [titleAttr addAttributes:highDict range:range];
         }
     }

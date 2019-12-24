@@ -18,6 +18,8 @@ static CGFloat kFHScrollBannerHeight = 80; // 轮播图的高度
 @optional
 - (void)currentIndexChanged:(NSInteger)currentIndex;
 - (void)clickBannerWithIndex:(NSInteger)currentIndex;
+@optional
+- (void)currentIndexWillChange:(NSInteger)currentIndex toIndex:(NSInteger)toIndex fraction:(float)fraction;
 
 @end
 

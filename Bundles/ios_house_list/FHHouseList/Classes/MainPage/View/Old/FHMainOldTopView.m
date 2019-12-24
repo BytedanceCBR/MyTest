@@ -244,6 +244,25 @@
     }
 }
 
+- (void)currentIndexWillChange:(NSInteger)currentIndex toIndex:(NSInteger)toIndex fraction:(float)fraction
+{
+    FHConfigDataRentOpDataItemsModel *currentOpData = nil;
+    FHConfigDataRentOpDataItemsModel *toOpData = nil;
+
+    if (currentIndex >= 0 && currentIndex < self.bannerOpData.items.count) {
+        currentOpData = self.bannerOpData.items[currentIndex];
+    }
+    if (toIndex >= 0 && toIndex < self.bannerOpData.items.count) {
+        toOpData = self.bannerOpData.items[toIndex];
+    }
+    if (toOpData && currentOpData && [FHMainOldTopView showBanner]) {
+        self.topBgView.backgroundColor = [UIColor colorByFraction:fraction startValueStr:currentOpData.backgroundColor endValueStr:toOpData.backgroundColor];
+    }
+}
+
+
+
+
 #pragma mark - UI
 
 - (UIView *)topBgView

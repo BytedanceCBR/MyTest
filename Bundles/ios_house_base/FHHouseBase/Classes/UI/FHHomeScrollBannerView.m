@@ -249,6 +249,34 @@
             scrollView.contentOffset = CGPointMake(0.0f, 0.0f);
         }
     }
+    
+    NSInteger fromIndex = 0;
+    NSInteger toIndex = 0;
+    float fraction = 0;
+    if (scrollView.contentOffset.x - self.imageWidth > 0) {
+        fromIndex = self.currentIndex;
+        toIndex = self.currentIndex + 1;
+    } else {
+        fromIndex = self.currentIndex;
+        toIndex = self.currentIndex - 1;
+    }
+    fraction = fabs(scrollView.contentOffset.x - self.imageWidth) / self.imageWidth;
+
+    if (toIndex < 0) {
+        toIndex = self.totalCount - 1;
+    }
+    if (toIndex >= self.totalCount) {
+        toIndex = 0;
+    }
+    if (fromIndex < 0) {
+        fromIndex = self.totalCount - 1;
+    }
+    if (fromIndex >= self.totalCount) {
+        fromIndex = 0;
+    }
+    if (self.delegate && [self.delegate respondsToSelector:@selector(currentIndexWillChange:toIndex:fraction:)]) {
+        [self.delegate currentIndexWillChange:self.currentIndex toIndex:toIndex fraction:fraction];
+    }
 }
 
 // scrollViewWillBeginDragging

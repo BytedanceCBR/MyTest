@@ -68,7 +68,7 @@
     UIImage *img = ICON_FONT_IMG(([TTDeviceHelper isScreenWidthLarge320] ? 14 : 12), @"\U0000e670", [UIColor colorWithHexString:@"#aeadad"]);
     [_allFalseHouseBtn setImage:img forState:UIControlStateNormal];
     [_allFalseHouseBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    [_allFalseHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [_allFalseHouseBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     [backColorView addSubview:_allFalseHouseBtn];
     
     
