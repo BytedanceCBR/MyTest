@@ -290,21 +290,23 @@
  * 用于判断页面是否是同一个页面
  */
 - (BOOL)isSamePageAndParams:(NSURL *)openUrl {
-    NSString *host = openUrl.host;
-    if (host.length > 0) {
-        NSString *result = [[TTProjectLogicManager sharedInstance_tt] logicStringForKey:host];
-        if (result.length > 0) {
-            Class cls = NSClassFromString(result);
-            if ([cls isEqual:[self class]]) {
-                // 页面相同
-                NSURLComponents *components = [[NSURLComponents alloc] initWithString:openUrl.absoluteString];
-                NSMutableDictionary *queryParams = [NSMutableDictionary new];
-                [components.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if (obj.name && obj.value) {
-                        queryParams[obj.name] = obj.value;
-                    }
-                }];
-                return [self isOpenUrlParamsSame:queryParams];
+    if (openUrl && [openUrl isKindOfClass:[NSURL class]]) {
+        NSString *host = openUrl.host;
+        if (host.length > 0) {
+            NSString *result = [[TTProjectLogicManager sharedInstance_tt] logicStringForKey:host];
+            if (result.length > 0) {
+                Class cls = NSClassFromString(result);
+                if ([cls isEqual:[self class]]) {
+                    // 页面相同
+                    NSURLComponents *components = [[NSURLComponents alloc] initWithString:openUrl.absoluteString];
+                    NSMutableDictionary *queryParams = [NSMutableDictionary new];
+                    [components.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if (obj.name && obj.value) {
+                            queryParams[obj.name] = obj.value;
+                        }
+                    }];
+                    return [self isOpenUrlParamsSame:queryParams];
+                }
             }
         }
     }

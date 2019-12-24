@@ -195,7 +195,7 @@ static APNsManager *_sharedManager = nil;
                 // Push同一种页面处理
                 UIViewController *topVC = [UIViewController ttmu_currentViewController];
                 if ([topVC isKindOfClass:[FHBaseViewController class]]) {
-                    BOOL retFlag = [(FHBaseViewController *)topVC isSamePageAndParams:openURL];
+                    BOOL retFlag = [(FHBaseViewController *)topVC isSamePageAndParams:handledOpenURL];
                     if (retFlag) {
                         return;
                     }
