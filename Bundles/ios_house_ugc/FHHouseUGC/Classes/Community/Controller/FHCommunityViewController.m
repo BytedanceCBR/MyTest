@@ -83,27 +83,50 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeMyJoinTab) name:kFHUGCForumPostThreadFinish object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
-    
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-    }
 }
 
 - (void)addSpringView {
-    self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
-    [self.view addSubview:_springView];
-    _springView.hidden = YES;
-    
+    if(!_springView){
+        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+        [self.view addSubview:_springView];
+        _springView.hidden = YES;
+        
+        CGFloat bottom = 49;
+        if (@available(iOS 11.0 , *)) {
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
+        
+        if(_isUgcOpen){
+            [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.bottom.mas_equalTo(self.view).offset(-bottom - 64 - 5);
+                make.width.height.mas_equalTo(80);
+                make.right.mas_equalTo(self.view).offset(-13);
+            }];
+        }else{
+            [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.bottom.mas_equalTo(self.view).offset(-bottom - 45);
+                make.width.height.mas_equalTo(80);
+                make.right.mas_equalTo(self.view).offset(-13);
+            }];
+        }
+    }
+}
+
+- (void)updateSpringView {
     CGFloat bottom = 49;
     if (@available(iOS 11.0 , *)) {
         bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
     }
     
-    [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.view).offset(-bottom - 64 - 5);
-        make.width.height.mas_equalTo(80);
-        make.right.mas_equalTo(self.view).offset(-13);
-    }];
+    if(_isUgcOpen){
+        [_springView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.view).offset(-bottom - 64 - 5);
+        }];
+    }else{
+        [_springView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.view).offset(-bottom - 45);
+        }];
+    }
 }
 
 - (void)dealloc {
@@ -191,6 +214,10 @@
     [self.view addSubview:_containerView];
 
     [self setupSetmentedControl];
+    
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
