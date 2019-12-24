@@ -230,17 +230,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)jumpMainTab;
     
 /*
-    判断开启了春节活动
+判断开启了春节活动，默认YES
 */
 + (BOOL)isSpringOpen;
 
 /*
- 判断开启了春节运营活动按钮
+判断开启了春节运营活动按钮，默认YES
  */
 + (BOOL)isSpringHangOpen;
 
 /*
- 判断开启首次安装用户引导
+判断开启首次安装用户引导，默认YES
  */
 + (BOOL)isIntroduceOpen;
 

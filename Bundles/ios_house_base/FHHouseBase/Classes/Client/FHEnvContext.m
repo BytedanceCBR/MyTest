@@ -34,6 +34,8 @@
 #import "FHMainApi.h"
 #import <FHMinisdkManager.h>
 #import <FHIntroduceManager.h>
+#import <TTSettingsManager.h>
+#import <NSDictionary+TTAdditions.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -957,11 +959,23 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
     
 + (BOOL)isSpringOpen {
-    return YES;
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSString *isSpringOpen = [archSettings tt_stringValueForKey:@"f_spring_festival_2020"];
+    if(isSpringOpen){
+        return [isSpringOpen boolValue];
+    }else{
+        return YES;
+    }
 }
 
 + (BOOL)isSpringHangOpen {
-    return YES;
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSString *isSpringOperationOpen = [archSettings tt_stringValueForKey:@"f_spring_festival_2020_operation"];
+    if(isSpringOperationOpen){
+        return [isSpringOperationOpen boolValue];
+    }else{
+        return YES;
+    }
 }
 
 + (BOOL)isIntroduceOpen {
