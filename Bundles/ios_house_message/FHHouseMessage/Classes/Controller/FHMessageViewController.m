@@ -94,6 +94,11 @@
     [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(pushTipHeight);
     }];
+    
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show];
+    }
 }
 
 

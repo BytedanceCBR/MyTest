@@ -463,7 +463,9 @@
 }
 
 - (void)trackStartedByAppWillEnterForground {
-    //春节活动
-//    [[FHMinisdkManager sharedInstance] goSpring];
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show];
+    }
 }
 @end

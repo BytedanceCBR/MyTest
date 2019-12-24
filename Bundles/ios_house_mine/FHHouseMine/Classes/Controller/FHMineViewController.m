@@ -19,6 +19,7 @@
 #import "TTReachability.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHSpringHangView.h"
+#import "UIViewController+Track.h"
 
 @interface FHMineViewController ()<UIViewControllerErrorHandler>
 
@@ -261,6 +262,19 @@
 
 - (BOOL)tt_hasValidateData {
     return self.viewModel.dataList.count == 0 ? NO : YES; //默认会显示空
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show];
+    }
 }
 
 @end

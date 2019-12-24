@@ -557,8 +557,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
-    //春节活动
-//    [[FHMinisdkManager sharedInstance] goSpring];
+    
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+        [self.springView show];
+    }
 }
 
 - (void)dealloc
