@@ -78,10 +78,6 @@
                            ];
     }
     [self.viewController showSegmentControl:isShow];
-    //春节活动
-    if([FHEnvContext isSpringHangOpen]){
-        [self.viewController updateSpringView];
-    }
 }
 
 - (void)initDataArray {

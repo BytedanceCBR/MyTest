@@ -115,7 +115,7 @@
     _phoneInput.font = [UIFont themeFontRegular:14];
     _phoneInput.textColor = [UIColor colorWithHexString:@"a05700"];
     _phoneInput.placeholder = @"请输入手机号";
-//    _phoneInput.tintColor = [UIColor colorWithHexString:@"a05700"];
+    _phoneInput.tintColor = [UIColor colorWithHexString:@"a05700"];
     [_phoneInput setValue:[UIColor colorWithHexString:@"e1b067"] forKeyPath:@"_placeholderLabel.textColor"];
     _phoneInput.keyboardType = UIKeyboardTypePhonePad;
     _phoneInput.returnKeyType = UIReturnKeyDone;
@@ -129,7 +129,7 @@
     _varifyCodeInput.font = [UIFont themeFontRegular:14];
     _varifyCodeInput.textColor = [UIColor colorWithHexString:@"a05700"];
     _varifyCodeInput.placeholder = @"请输入验证码";
-//    _varifyCodeInput.tintColor = [UIColor colorWithHexString:@"a05700"];
+    _varifyCodeInput.tintColor = [UIColor colorWithHexString:@"a05700"];
     [_varifyCodeInput setValue:[UIColor colorWithHexString:@"e1b067"] forKeyPath:@"_placeholderLabel.textColor"];
     _varifyCodeInput.keyboardType = UIKeyboardTypePhonePad;
     _varifyCodeInput.returnKeyType = UIReturnKeyGo;

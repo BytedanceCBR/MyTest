@@ -15,6 +15,7 @@
 #import "TTReachability.h"
 #import "FHErrorView.h"
 #import "UIViewAdditions.h"
+#import <FHIntroduceManager.h>
 
 @interface FHBaseViewController ()<TTRouteInitializeProtocol, UIViewControllerErrorHandler>
 
@@ -89,7 +90,7 @@
     [super viewDidLoad];
     // push过来的页面默认状态栏是隐藏的
     UIApplication *application = [UIApplication sharedApplication];
-    if(application.statusBarHidden){
+    if(application.statusBarHidden && ![FHIntroduceManager sharedInstance].isShowing){
         [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     }
     

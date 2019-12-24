@@ -68,9 +68,9 @@
         }
         
         [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 45);
+            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
             make.width.height.mas_equalTo(80);
-            make.right.mas_equalTo(self.view).offset(-13);
+            make.right.mas_equalTo(self.view).offset(-2);
         }];
     }
 }

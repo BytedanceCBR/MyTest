@@ -96,35 +96,10 @@
             bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
         }
         
-        if(_isUgcOpen){
-            [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.view).offset(-bottom - 64 - 5);
-                make.width.height.mas_equalTo(80);
-                make.right.mas_equalTo(self.view).offset(-13);
-            }];
-        }else{
-            [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self.view).offset(-bottom - 45);
-                make.width.height.mas_equalTo(80);
-                make.right.mas_equalTo(self.view).offset(-13);
-            }];
-        }
-    }
-}
-
-- (void)updateSpringView {
-    CGFloat bottom = 49;
-    if (@available(iOS 11.0 , *)) {
-        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-    }
-    
-    if(_isUgcOpen){
-        [_springView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 64 - 5);
-        }];
-    }else{
-        [_springView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 45);
+        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
+            make.width.height.mas_equalTo(80);
+            make.right.mas_equalTo(self.view).offset(-2);
         }];
     }
 }
