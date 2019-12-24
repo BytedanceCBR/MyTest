@@ -32,6 +32,9 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <FHEnvContext.h>
+#import "FHBaseViewController.h"
+#import "TTUIResponderHelper.h"
+#import "UIViewController+TTMovieUtil.h"
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
@@ -189,25 +192,14 @@ static APNsManager *_sharedManager = nil;
                     }
                 }
             } else {
-                // push对消息特殊处理
-//                if ([[handledOpenURL host] isEqualToString:@"message_detail_list"]) {
-////                    if (![TTAccountManager isLogin]) {
-////                        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-////                            if (type == TTAccountAlertCompletionEventTypeDone) {
-////                                //登录成功 走发送逻辑
-////                                if ([TTAccountManager isLogin]) {
-////                                    [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-////                                    [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL];                        }
-////                             }
-////                        }];
-////                    } else
-////                    {
-//                        [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-//                        [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL];
-////                    }
-//                    
-//                    return;
-//                }
+                // Push同一种页面处理
+                UIViewController *topVC = [UIViewController ttmu_currentViewController];
+                if ([topVC isKindOfClass:[FHBaseViewController class]]) {
+                    BOOL retFlag = [(FHBaseViewController *)topVC isSamePageAndParams:openURL];
+                    if (retFlag) {
+                        return;
+                    }
+                }
                 
                 id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
                 [envBridge setTraceValue:@"push" forKey:@"origin_from"];
