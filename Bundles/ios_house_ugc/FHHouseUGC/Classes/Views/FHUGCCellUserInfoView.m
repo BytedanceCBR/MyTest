@@ -22,6 +22,7 @@
 #import <FHUGCConfig.h>
 #import "FHFeedOperationResultModel.h"
 #import <TTCommentDataManager.h>
+#import <TTAssetModel.h>
 
 @implementation FHUGCCellUserInfoView
 
@@ -292,7 +293,7 @@
         }];
         [self trackConfirmPopupShow:@"own_see_popup_show"];
     } else if(view.selectdWord.type == FHFeedOperationWordTypeEdit) {
-        [[ToastManager manager] showToast:@"编辑按钮点击了"];
+        [self gotoEditPostVC];
     } else if(view.selectdWord.type == FHFeedOperationWordTypeEditHistory) {
         [[ToastManager manager] showToast:@"编辑历史按钮点击了"];
     }
@@ -489,6 +490,55 @@
         NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
+}
+
+- (void)gotoEditPostVC {
+    
+    if(self.cellModel.cellType != FHUGCFeedListCellTypeUGC) {
+        [[ToastManager manager] showToast:@"编辑按钮点击了, 但不是贴子类型, 不支持编辑"];
+        return;
+    }
+    
+    // 跳转发布器
+//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+//    tracerDict[@"element_type"] = @"feed_publisher";
+//    tracerDict[@"page_type"] = @"community_group_detail";
+//    [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
+//
+//    NSMutableDictionary *traceParam = @{}.mutableCopy;
+//    NSMutableDictionary *dict = @{}.mutableCopy;
+//    traceParam[@"page_type"] = @"feed_publisher";
+//    traceParam[@"enter_from"] = @"community_group_detail";
+    
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+//    dic[@"select_group_id"] = self.data.socialGroupId;
+//    dic[@"select_group_name"] = self.data.socialGroupName;
+//    dic[TRACER_KEY] = traceParam;
+//    dic[VCTITLE_KEY] = @"发帖";
+    
+    // Feed 文本内容传入图文发布器
+    dic[@"post_content"] = self.cellModel.content;
+    dic[@"post_content_rich_span"] = self.cellModel.contentRichSpan;
+        
+    // Feed 图片信息传入图文发布器
+    NSMutableArray *outerInputAssets = [NSMutableArray array];
+    [self.cellModel.imageList enumerateObjectsUsingBlock:^(FHFeedContentImageListModel * _Nonnull imageModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        TTAssetModel *outerAssetModel = [TTAssetModel modelWithImageWidth:imageModel.width height:imageModel.height url:imageModel.url uri:imageModel.uri];
+        [outerInputAssets addObject:outerAssetModel];
+    }];
+    dic[@"outerInputAssets"] = outerInputAssets;
+    
+    // Feed 圈子信息传入图文发布器
+    dic[@"select_group_id"] = self.cellModel.community.socialGroupId;
+    dic[@"select_group_name"] = self.cellModel.community.name;
+    
+    // 是否是来自外部传入编辑
+    dic[@"isOuterEdit"] = @(YES);
+    dic[@"outerPostId"] = self.cellModel.groupId;
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
+    NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
 
 #pragma mark - 埋点
