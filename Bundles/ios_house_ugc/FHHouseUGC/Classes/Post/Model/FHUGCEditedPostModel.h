@@ -10,8 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface FHUGCEditedPostModelData : JSONModel
+@property (nonatomic, copy) NSString *threadCell;
+@end
+
 @interface FHUGCEditedPostModel : JSONModel<FHBaseModelProtocol>
-@property (nonatomic, strong)   NSDictionary *data;
+@property (nonatomic, strong)   FHUGCEditedPostModelData *data;
 @property (nonatomic, copy)     NSString *status;
 @property (nonatomic, copy)     NSString *message;
 @end

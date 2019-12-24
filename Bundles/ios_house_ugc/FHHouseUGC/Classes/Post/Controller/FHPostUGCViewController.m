@@ -50,8 +50,6 @@
 #import "NSString+UGCUtils.h"
 #import "FHTopicHeaderModel.h"
 #import "FHTopicListModel.h"
-#import <FRUploadImageManager.h>
-#import <FHHouseUGCAPI.h>
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -122,7 +120,6 @@ static NSInteger const kMaxPostImageCount = 9;
 
 @property (nonatomic, assign)   BOOL isOuterEdit;
 @property (nonatomic, copy)     NSString *outerPostId;
-@property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
 @end
 
 @implementation FHPostUGCViewController
@@ -969,6 +966,7 @@ static NSInteger const kMaxPostImageCount = 9;
     
     // 收集参数数据模型
     TTPostThreadModel *postThreadModel = [[TTPostThreadModel alloc] init];
+    postThreadModel.postID = self.outerPostId;
     postThreadModel.content = inputText;
     postThreadModel.contentRichSpans = [TTRichSpans JSONStringForRichSpans:richSpans];
     postThreadModel.mentionUsers = [mentionUsers componentsJoinedByString:@","];
@@ -996,10 +994,16 @@ static NSInteger const kMaxPostImageCount = 9;
         postThreadModel.social_group_name = self.selectView.communityName;
     }
     
+    // TODO: 报数相关
+//    postThreadModel.enterFrom =
+//    postThreadModel.pageType =
+//    postThreadModel.elementFrom =
     
     // 外部传入图文发布器数据，重新编辑后发布
     if(self.isOuterEdit) {
-        [self postEditedThreadWith:postThreadModel];
+        [[TTPostThreadCenter sharedInstance_tt] postEditedThreadWithPostThreadModel:postThreadModel finishBlock:^{
+            [self dismissSelf];
+        }];
     }
     // 图文发布器内部编辑后发布
     else {
@@ -1007,161 +1011,6 @@ static NSInteger const kMaxPostImageCount = 9;
             [self postFinished:YES task:task];
         }];
     }
-}
-
-#pragma mark - 外部带入帖子信息编辑发布
-
-- (FRUploadImageManager *)uploadImageManager {
-    if (!_uploadImageManager) {
-        _uploadImageManager = [[FRUploadImageManager alloc] init];
-    }
-    return _uploadImageManager;
-}
-
-- (void)uploadImagesWith:(TTPostThreadModel *)postThreadModel {
-    
-    NSMutableArray<FRUploadImageModel *> * images = (NSMutableArray<FRUploadImageModel*> *)[NSMutableArray array];
-    // 图片压缩任务
-    NSArray<TTUGCImageCompressTask*> *taskImages = self.addImagesView.selectedImageCacheTasks;
-    // 选中的图片
-    NSArray<UIImage*> *thumbImages = self.addImagesView.selectedThumbImages;
-    
-    // 构造图片上传数据模型
-    for (int i = 0; i < [taskImages count]; i ++) {
-        TTUGCImageCompressTask* task = [taskImages objectAtIndex:i];
-        UIImage* thumbImage = nil;
-        if (thumbImages.count > i) {
-            thumbImage = thumbImages[i];
-        }
-        FRUploadImageModel * model = [[FRUploadImageModel alloc] initWithCacheTask:task thumbnail:thumbImage];
-        model.webURI = task.assetModel.imageURI;
-        model.imageOriginWidth = task.assetModel.width;
-        model.imageOriginHeight = task.assetModel.height;
-        [images addObject:model];
-    }
-    
-    WeakSelf;
-    [self.uploadImageManager uploadPhotos:images extParameter:@{} progressBlock:^(int expectCount, int receivedCount) {
-        StrongSelf;
-        // TODO: 展示进度
-        
-    } finishBlock:^(NSError *error, NSArray<FRUploadImageModel*> *finishUpLoadModels) {
-        StrongSelf;
-        NSError *finishError = nil;
-        for (FRUploadImageModel *model in finishUpLoadModels) {
-            if (isEmptyString(model.webURI)) {
-                finishError = [NSError errorWithDomain:kFRPostThreadErrorDomain code:TTPostThreadErrorCodeUploadImgError userInfo:nil];
-                break;
-            }
-        }
-        
-        if (error || finishError) {
-            [self endLoading];
-            //端监控
-            //图片上传失败
-            NSMutableDictionary * monitorDictionary = [NSMutableDictionary dictionary];
-            [monitorDictionary setValue:@(images.count) forKey:@"img_count"];
-            NSMutableArray * imageNetworks = [NSMutableArray arrayWithCapacity:images.count];
-            
-            for (FRUploadImageModel * imageModel in images) {
-                NSInteger status = isEmptyString(imageModel.webURI)?0:1;
-                NSInteger code = 0;
-                if (imageModel.error) {
-                    code = imageModel.error.code;
-                }
-                [imageNetworks addObject:@{@"network":@(imageModel.networkConsume)
-                                           , @"local":@(imageModel.localCompressConsume)
-                                           , @"status":@(status)
-                                           , @"code":@(code)
-                                           , @"count":@(imageModel.uploadCount)
-                                           , @"size":@(imageModel.size)
-                                           , @"gif":@(imageModel.isGIF)
-                                           }];
-            }
-            [monitorDictionary setValue:imageNetworks.copy forKey:@"img_networks"];
-            if (error) {
-                [monitorDictionary setValue:@(error.code) forKey:@"error"];
-            }
-            
-            [[ToastManager manager] showToast:@"发布失败！"];
-        }
-        else {
-            
-            // 插入上传完成的图片URIs
-            NSMutableDictionary *reqParams = [self constructEditedPostReqParamsFromThreadModel:postThreadModel];
-            NSMutableArray<NSString *> *imageUris = [NSMutableArray array];
-            [finishUpLoadModels enumerateObjectsUsingBlock:^(FRUploadImageModel * _Nonnull imageModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                if(imageModel.webURI.length > 0) {
-                    [imageUris addObject:imageModel.webURI];
-                }
-            }];
-            reqParams[@"image_uris"] = imageUris;
-            
-            // 带图片链接发布
-            [self postEditedPostWith:reqParams];
-        }
-    }];
-}
-
-- (void)postEditedThreadWith: (TTPostThreadModel *)postThreadModel {
-    
-    [self startLoading];
-    
-    if(self.addImagesView.selectedImages.count > 0) {
-        [self uploadImagesWith:postThreadModel];
-    }
-    // 没有选中图片就直接发布
-    else {
-        NSMutableDictionary *reqParams = [self constructEditedPostReqParamsFromThreadModel:postThreadModel];
-        [self postEditedPostWith: reqParams];
-    }
-}
-
-// 从postThreadModel转换出请求参数
-- (NSMutableDictionary *)constructEditedPostReqParamsFromThreadModel:(TTPostThreadModel *)postThreadModel {
-    
-    NSMutableDictionary *publishParams = [NSMutableDictionary dictionary];
-    
-    if(postThreadModel) {
-        
-        if(self.outerPostId.length > 0) {
-            publishParams[@"post_id"] = @(self.outerPostId.longLongValue);
-        }
-        
-        if(postThreadModel.social_group_id.length > 0) {
-            publishParams[@"social_group_id"] = @(postThreadModel.social_group_id.longLongValue);
-        }
-        
-        publishParams[@"content"] = postThreadModel.content;
-        publishParams[@"content_rich_span"] = postThreadModel.contentRichSpans;
-        publishParams[@"mention_concern"] = postThreadModel.mentionConcerns;
-        publishParams[@"mention_user"] = postThreadModel.mentionUsers;
-    
-// TODO: 埋点参数
-//        publishParams[@"enter_from"] =
-//        publishParams[@"page_type"] =
-//        publishParams[@"element_from"] =
-    }
-    return publishParams;
-}
-
-// 真正发送请求
-- (void)postEditedPostWith:(NSMutableDictionary *)params {
-    
-    WeakSelf;
-    [FHHouseUGCAPI requestPublishEditedPostWithParam:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        StrongSelf;
-        [self endLoading];
-        
-        if(error) {
-            [[ToastManager manager] showToast:error.localizedDescription];
-            return;
-        }
-        
-        
-        [self postFinished:YES];
-    }];
-    
 }
 
 #pragma mark - 图文发布器内部编辑后发布
