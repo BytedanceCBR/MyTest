@@ -28,6 +28,7 @@
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import <FHMinisdkManager.h>
 #import "UIViewController+Track.h"
+#import "FHSpringHangView.h"
 
 @interface FHCommunityViewController ()
 
@@ -39,6 +40,8 @@
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
+//春节活动运营位
+@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -80,6 +83,27 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeMyJoinTab) name:kFHUGCForumPostThreadFinish object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
+    
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+    }
+}
+
+- (void)addSpringView {
+    self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    [self.view addSubview:_springView];
+    _springView.hidden = YES;
+    
+    CGFloat bottom = 49;
+    if (@available(iOS 11.0 , *)) {
+        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
+    [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.view).offset(-bottom - 64 - 5);
+        make.width.height.mas_equalTo(80);
+        make.right.mas_equalTo(self.view).offset(-13);
+    }];
 }
 
 - (void)dealloc {
@@ -178,6 +202,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear];
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show];
+    }
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     [self addUgcGuide];
 

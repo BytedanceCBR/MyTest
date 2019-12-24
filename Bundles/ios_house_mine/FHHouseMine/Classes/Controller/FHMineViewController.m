@@ -50,10 +50,35 @@
     [self initViewModel];
     [self setupHeaderView];
     [self initSignal];
+    
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+    }
+}
+
+- (void)addSpringView {
+    self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    [self.view addSubview:_springView];
+    _springView.hidden = YES;
+    
+    CGFloat bottom = 49;
+    if (@available(iOS 11.0 , *)) {
+        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
+    [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.view).offset(-bottom - 45);
+        make.width.height.mas_equalTo(80);
+        make.right.mas_equalTo(self.view).offset(-13);
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show];
+    }
     [self.viewModel updateHeaderView];
     [self loadData];
 }
@@ -110,11 +135,6 @@
     if (@available(iOS 11.0, *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    
-    if([FHEnvContext isSpringHangOpen]){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
-        [self.view addSubview:_springView];
-    }
 }
 
 - (void)initConstraints {
@@ -127,14 +147,6 @@
         make.top.left.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(-bottom);
     }];
-    
-    if([FHEnvContext isSpringHangOpen]){
-        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 45);
-            make.width.height.mas_equalTo(80);
-            make.right.mas_equalTo(self.view).offset(-13);
-        }];
-    }
 }
 
 - (void)initViewModel {

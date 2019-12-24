@@ -28,12 +28,16 @@
 #import <FHCHousePush/FHPushMessageTipView.h>
 #import <FHHouseBase/FHBaseTableView.h>
 #import <FHMessageNotificationManager.h>
+#import "FHSpringHangView.h"
+#import <FHEnvContext.h>
 
 @interface FHMessageViewController ()
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
 @property (nonatomic, copy)     NSString       *enter_from;// 外部传入
+//春节活动运营位
+@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -54,6 +58,27 @@
 //     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
+    
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+    }
+}
+
+- (void)addSpringView {
+    self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    [self.view addSubview:_springView];
+    _springView.hidden = YES;
+    
+    CGFloat bottom = 49;
+    if (@available(iOS 11.0 , *)) {
+        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
+    [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.view).offset(-bottom - 45);
+        make.width.height.mas_equalTo(80);
+        make.right.mas_equalTo(self.view).offset(-13);
+    }];
 }
 
 - (void)applicationDidBecomeActive
@@ -76,7 +101,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    [self.viewModel viewWillAppear];
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show];
+    }
     [FHBubbleTipManager shareInstance].canShowTip = NO;
     [self startLoadData];
     [self applicationDidBecomeActive];

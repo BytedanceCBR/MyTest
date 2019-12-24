@@ -37,6 +37,7 @@
 #import <TTThemedAlertController.h>
 #import <FHUtils.h>
 #import <FHMinisdkManager.h>
+#import "FHSpringHangView.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -58,6 +59,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
+//春节活动运营位
+@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -96,6 +99,26 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+    }
+}
+
+- (void)addSpringView {
+    self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    [self.view addSubview:_springView];
+    _springView.hidden = YES;
+    
+    CGFloat bottom = 49;
+    if (@available(iOS 11.0 , *)) {
+        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
+    [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.view).offset(-bottom - 45);
+        make.width.height.mas_equalTo(80);
+        make.right.mas_equalTo(self.view).offset(-13);
+    }];
 }
 
 - (void)scrollMainTableToTop
@@ -357,6 +380,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show];
+    }
     
     if(!_initedViews){
         [self dealyIniViews];

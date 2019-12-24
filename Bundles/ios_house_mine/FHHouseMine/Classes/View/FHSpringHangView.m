@@ -9,6 +9,10 @@
 #import <Masonry.h>
 #import "UIButton+TTAdditions.h"
 #import <TTRoute.h>
+#import <FHUtils.h>
+
+#define kFHSpringViewCloseNotification @"kFHSpringViewCloseNotification"
+#define kFHSpringViewCloseDate @"kFHSpringViewCloseDate"
 
 @interface FHSpringHangView ()
 
@@ -25,6 +29,8 @@
     if (self) {
         [self initView];
         [self initConstaints];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeView:) name:kFHSpringViewCloseNotification object:nil];
     }
     return self;
 }
@@ -61,14 +67,46 @@
     }];
 }
 
+- (void)show {
+    NSString *midNightIntervalStr = [FHUtils contentForKey:kFHSpringViewCloseDate];
+    if (midNightIntervalStr) {
+        NSDate *date = [NSDate date];
+        NSTimeInterval interval = [date timeIntervalSince1970] - [midNightIntervalStr doubleValue];
+        //小于1天，不在显示
+        if(interval < 24 * 60 * 60){
+            return;
+        }
+    }
+    
+    self.hidden = NO;
+}
+
 - (void)close {
-    [self removeFromSuperview];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHSpringViewCloseNotification object:nil];
+    NSTimeInterval midNightInterval = [self getMidnightInterval];
+    if(midNightInterval > 0){
+        NSString *midNightIntervalStr = [NSString stringWithFormat:@"%0.0f",midNightInterval];
+        [FHUtils setContent:midNightIntervalStr forKey:kFHSpringViewCloseDate];
+    }
+        
+}
+
+- (void)closeView:(NSNotification *)noti {
+    self.hidden = YES;
 }
 
 - (void)goToSpring:(UITapGestureRecognizer *)sender {
-    NSString *urlStr = @"sslocal://webview?url=www.baidu.com";
+    NSString *urlStr = @"sslocal://webview?url=https://www.baidu.com";
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+}
+
+- (NSTimeInterval)getMidnightInterval {
+    NSDateComponents *comp = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitYear | NSCalendarUnitMonth fromDate:[NSDate date]];
+    [comp setHour:0];
+    [comp setMinute:0];
+    [comp setSecond:0];
+    return [[[NSCalendar currentCalendar] dateFromComponents:comp] timeIntervalSince1970];
 }
 
 @end
