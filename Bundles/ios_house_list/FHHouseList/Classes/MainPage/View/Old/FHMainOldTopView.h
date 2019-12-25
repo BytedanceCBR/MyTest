@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)selecteOldItem:(FHConfigDataOpDataItemsModel *)item;
 -(void)clickBannerItem:(FHConfigDataRentOpDataItemsModel *)item withIndex:(NSInteger)index;
 -(void)showBannerItem:(FHConfigDataRentOpDataItemsModel *)item withIndex:(NSInteger)index;
+-(void)willChangeTopViewBackgroundColor:(UIColor *)bgColor;
 
 @end
 

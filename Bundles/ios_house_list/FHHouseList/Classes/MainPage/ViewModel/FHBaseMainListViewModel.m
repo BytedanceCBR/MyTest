@@ -78,7 +78,7 @@
 
 
 #define kFilterBarHeight 44
-#define kFilterTagsViewHeight 50
+#define kFilterTagsViewHeight 40
 #define MAX_ICON_COUNT 4
 #define ICON_HEADER_HEIGHT ([FHMainRentTopView totalHeight])
 
@@ -1271,6 +1271,11 @@ extern NSString *const INSTANT_DATA_KEY;
         NSURL *url = [NSURL URLWithString:openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
+}
+
+-(void)willChangeTopViewBackgroundColor:(UIColor *)bgColor
+{
+    self.navbar.backgroundColor = bgColor;
 }
 
 -(void)rentBannerLoaded:(UIView *)bannerView

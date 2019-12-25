@@ -46,7 +46,7 @@
         _imageHeight = kFHScrollBannerHeight;
         _enableTimer = YES;
         _hasPausedTimer = NO;
-        _timeDuration = 3.0;
+        _timeDuration = 5.0;
         _indexViewSize = 5;
         [self setupUI];
     }

@@ -260,7 +260,11 @@
         toOpData = self.bannerOpData.items[toIndex];
     }
     if (toOpData && currentOpData && [FHMainOldTopView showBanner]) {
-        self.topBgView.backgroundColor = [UIColor colorByFraction:fraction startValueStr:currentOpData.backgroundColor endValueStr:toOpData.backgroundColor];
+        UIColor *bgColor = [UIColor colorByFraction:fraction startValueStr:currentOpData.backgroundColor endValueStr:toOpData.backgroundColor];
+        self.topBgView.backgroundColor = bgColor;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(willChangeTopViewBackgroundColor:)]) {
+            [self.delegate willChangeTopViewBackgroundColor:bgColor];
+        }
     }
 }
 

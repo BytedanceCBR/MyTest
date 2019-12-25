@@ -8,7 +8,7 @@
 #import "FHCommuteSlider.h"
 #import <FHCommonUI/UIColor+Theme.h>
 
-#define THUMB_IMAGE_WIDTH 48
+#define THUMB_IMAGE_WIDTH 50
 #define LINE_HEIGHT  4
 
 

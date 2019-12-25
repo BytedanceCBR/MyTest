@@ -274,19 +274,24 @@
         }
         bgColor = [oldTopView topBackgroundColor];
     }else if ([self.viewModel.topBannerView isKindOfClass:[FHMainRentTopView class]]) {
-        if ([FHMainRentTopView showEntrance]) {
-            offset = [FHMainRentTopView entranceHeight];
-        }else {
-            offset = [FHFakeInputNavbar perferredHeight];
-        }
+//        if ([FHMainRentTopView showEntrance]) {
+//            offset = [FHMainRentTopView entranceHeight];
+//        }else {
+//            offset = [FHFakeInputNavbar perferredHeight];
+//        }
+        offsetY = self.topView.height + contentOffset.y;
+        offset = [FHFakeInputNavbar perferredHeight];
+
         if (contentOffset.y >= 0) {
             alpha = 1;
-        }else if (offset > 0){
-            alpha = (self.topView.height + contentOffset.y) / offset;
+        } else {
+            CGFloat notiBarHeight = self.viewModel.animateShowNotify ? self.topView.notifyHeight : 0;
+            alpha = (offsetY - notiBarHeight) / offset;
         }
         bgColor = [UIColor themeGray8];
     }
     [self.navbar refreshAlpha:alpha];
+    self.navbar.backgroundColor = bgColor;
     if (!self.isViewDidDisapper) {
         [[UIApplication sharedApplication]setStatusBarStyle:statusBarStyle];
     }
