@@ -230,7 +230,7 @@
         if (opData && [FHMainOldTopView showBanner]) {
             self.topBgView.backgroundColor = [UIColor colorWithHexString:opData.backgroundColor];
         }
-        if (self.delegate && [self.delegate respondsToSelector:@selector(clickBannerItem:withIndex:)]) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(showBannerItem:withIndex:)]) {
             [self.delegate showBannerItem:opData withIndex:currentIndex];
         }
     }
