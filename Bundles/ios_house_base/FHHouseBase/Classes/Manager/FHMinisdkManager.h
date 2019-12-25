@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //春节活动进来为YES，app第一次启动时候需要
 @property(nonatomic, assign) BOOL isSpring;
+@property(nonatomic, assign) BOOL isShowing;
 @property(nonatomic, strong) NSURL *url;
     
 + (instancetype)sharedInstance;

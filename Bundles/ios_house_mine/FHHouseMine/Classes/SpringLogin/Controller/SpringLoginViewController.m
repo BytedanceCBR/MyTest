@@ -15,6 +15,7 @@
 #import "ToastManager.h"
 #import <FHIntroduceManager.h>
 #import "UIViewController+Track.h"
+#import <FHMinisdkManager.h>
 
 @interface SpringLoginViewController ()<TTRouteInitializeProtocol,TTUIViewControllerTrackProtocol>
 
@@ -69,6 +70,8 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    
+    [FHMinisdkManager sharedInstance].isShowing = YES;
     
     if([FHIntroduceManager sharedInstance].isShowing){
         [[UIApplication sharedApplication] setStatusBarHidden:YES];

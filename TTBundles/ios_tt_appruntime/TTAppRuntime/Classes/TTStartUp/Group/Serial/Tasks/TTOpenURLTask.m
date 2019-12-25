@@ -39,25 +39,28 @@ extern BOOL kFHInAppPushTipsHidden;
     BOOL ret = [[TTRoute sharedRoute] canOpenURL:url];
     if ([url.host isEqualToString:@"main"] || [url.host isEqualToString:@"home"] || [url.host isEqualToString:@"spring"]){
         
-        if([url.host isEqualToString:@"spring"] && ret){
-            //需要切换tab
-            if ([FHEnvContext isUGCOpen] && [FHEnvContext isUGCAdUser]) {
-                [[FHEnvContext sharedInstance] jumpUGCTab];
-            }else{
-                if (![FHEnvContext isCurrentCityNormalOpen]) {
+        if([url.host isEqualToString:@"spring"]){
+            //正在显示登录页时候直接返回
+            if([FHMinisdkManager sharedInstance].isShowing){
+                return NO;
+            }
+            
+            if(ret){
+                //需要切换tab
+                if ([FHEnvContext isUGCOpen] && [FHEnvContext isUGCAdUser]) {
                     [[FHEnvContext sharedInstance] jumpUGCTab];
                 }else{
-                    [[FHEnvContext sharedInstance] jumpMainTab];
+                    if (![FHEnvContext isCurrentCityNormalOpen]) {
+                        [[FHEnvContext sharedInstance] jumpUGCTab];
+                    }else{
+                        [[FHEnvContext sharedInstance] jumpMainTab];
+                    }
                 }
-            }
-        }
-        
-        //这里加这句话是因为第一次安装时候，上面Route不起作用，进不去
-        if([url.host isEqualToString:@"spring"]){
-            [FHMinisdkManager sharedInstance].url = url;
-            if(!ret){
+            }else{
+                //这里加这句话是因为第一次安装时候，上面Route不起作用，进不去
                 [FHMinisdkManager sharedInstance].isSpring = YES;
             }
+            [FHMinisdkManager sharedInstance].url = url;
         }
         
         //这三种必须分开判断，要不然直接crash

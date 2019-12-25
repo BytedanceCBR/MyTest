@@ -19,6 +19,7 @@
 #import <YYText/NSAttributedString+YYText.h>
 #import "TTAccountMobileCaptchaAlertView.h"
 #import "TTThemedAlertController.h"
+#import <FHMinisdkManager.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -213,6 +214,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)close {
     [self popViewController:NO];
+    [FHMinisdkManager sharedInstance].isShowing = NO;
 }
 
 - (void)quickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha {
