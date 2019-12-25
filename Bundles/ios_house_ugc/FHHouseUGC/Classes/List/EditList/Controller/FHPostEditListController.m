@@ -39,7 +39,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         NSDictionary *params = paramObj.allParams;
-        int64_t tid = [[paramObj.allParams objectForKey:@"tid"] longLongValue];
+        int64_t tid = [[paramObj.allParams objectForKey:@"query_id"] longLongValue];
         self.tid = tid;
     }
     return self;

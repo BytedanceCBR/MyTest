@@ -299,7 +299,7 @@
         // 帖子
         NSMutableDictionary *dict = @{}.mutableCopy;
         // add by zyk 添加入口参数
-        dict[@"tid"] = self.cellModel.groupId; // 帖子id
+        dict[@"query_id"] = self.cellModel.groupId; // 帖子id
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_history"];
