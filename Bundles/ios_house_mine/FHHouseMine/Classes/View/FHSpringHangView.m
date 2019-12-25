@@ -96,7 +96,7 @@
 }
 
 - (void)goToSpring:(UITapGestureRecognizer *)sender {
-    NSString *urlStr = @"sslocal://webview?url=https://www.baidu.com";
+    NSString *urlStr = @"sslocal://webview?url=https://m.haoduofangs.com/magic/page/ejs/5e02dc7854c8b002583c0773?appType=manyhouse";
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
