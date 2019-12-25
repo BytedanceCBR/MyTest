@@ -564,6 +564,11 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         [images addObject:model];
     }
     
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    if (postThreadModel.postID) {
+        userInfo[@"group_id"] = postThreadModel.postID;
+    }
+    
     WeakSelf;
     [self.uploadImageManager uploadPhotos:images extParameter:@{} progressBlock:^(int expectCount, int receivedCount) {
         StrongSelf;
@@ -606,10 +611,10 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
                 [monitorDictionary setValue:@(error.code) forKey:@"error"];
             }
             
-            [[ToastManager manager] showToast:@"发布失败！"];
+            [[ToastManager manager] showToast:@"编辑失败"];
             
             // 更新帖子发布失败
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
         }
         else {
             
