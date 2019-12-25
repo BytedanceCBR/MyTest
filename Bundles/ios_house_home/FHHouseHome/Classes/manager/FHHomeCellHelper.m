@@ -347,6 +347,12 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTrace addEntriesFromDictionary:traceParams];
         }
         
+        //首页工具箱里面的icon追加上报
+        NSString *enterFrom = dictTrace[@"enter_from"];
+        if(enterFrom && [enterFrom isEqualToString:@"tools_box"]){
+            [self addCLickIconLog:itemModel];
+        }
+        
         [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
         [dictTrace setValue:@"click" forKey:@"enter_type"];
         
@@ -716,6 +722,14 @@ static NSMutableArray  * _Nullable identifierArr;
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"page_type"] = @"maintab";
     [FHUserTracker writeEvent:@"city_market_click" params:param];
+}
+
++(void)addCLickIconLog:(FHConfigDataOpDataItemsModel *)itemModel
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"log_pb"] = itemModel.logPb ?: @"be_null";
+    param[@"page_type"] = @"tools_box";
+    [FHUserTracker writeEvent:@"click_icon" params:param];
 }
 
 //匹配房源名称

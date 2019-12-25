@@ -246,6 +246,7 @@
 
 - (void)didItemClick:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
      if ([TTReachability isNetworkConnected]) {
+         [self addCLickIconLog:model];
          FHMineItemType type = [model.id integerValue];
          if(type == FHMineItemTypeSugSubscribe || type == FHMineItemTypeFeedback){
              [self jumpWithMoreAction:model];
@@ -402,11 +403,12 @@
     [self.viewController refreshContentOffset:scrollView.contentOffset];
 }
 
-//#pragma mark - TTAccountMulticaastProtocol
-//
-//// 帐号切换
-//- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
-//    [self requestMineConfig];
-//}
+- (void)addCLickIconLog:(FHMineConfigDataIconOpDataMyIconItemsModel *)model
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"log_pb"] = model.logPb ?: @"be_null";
+    param[@"page_type"] = @"minetab";
+    [FHUserTracker writeEvent:@"click_icon" params:param];
+}
 
 @end
