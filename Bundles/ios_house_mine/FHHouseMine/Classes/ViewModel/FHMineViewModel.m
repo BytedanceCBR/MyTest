@@ -19,6 +19,7 @@
 #import "TTReachability.h"
 #import "FHMineConfigModel.h"
 #import "FHMineMutiItemCell.h"
+#import <FHCommuteManager.h>
 
 #define mutiItemCellId @"mutiItemCellId"
 
@@ -248,6 +249,14 @@
          FHMineItemType type = [model.id integerValue];
          if(type == FHMineItemTypeSugSubscribe || type == FHMineItemTypeFeedback){
              [self jumpWithMoreAction:model];
+         }else if ([model.openUrl containsString:@"://commute_list"]){
+             NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+             if (model.reportParams) {
+                 [tracer addEntriesFromDictionary:model.reportParams];
+             }
+             tracer[@"enter_type"] = @"click";
+             //通勤找房
+             [[FHCommuteManager sharedInstance] tryEnterCommutePage:model.openUrl logParam:tracer];
          }else{
              //埋点
              NSMutableDictionary *dict = [NSMutableDictionary dictionary];

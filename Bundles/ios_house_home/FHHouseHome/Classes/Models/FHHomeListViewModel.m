@@ -723,7 +723,7 @@
         
         CGFloat offSetY = scrollView.contentOffset.y;
         
-        if (offSetY < self.headerHeight) {
+        if (offSetY < self.headerHeight + 80) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"headerViewToTop" object:nil];
             [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
         }else

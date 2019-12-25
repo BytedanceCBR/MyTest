@@ -75,6 +75,11 @@
         if(paramObj.allParams[@"begin_show_comment"]) {
             self.beginShowComment = [paramObj.allParams[@"begin_show_comment"] boolValue];
         }
+        if(paramObj.allParams[@"msg_id"]) {
+            self.msgID = paramObj.allParams[@"msg_id"];
+        } else {
+            
+        }
         NSString *report_params = paramObj.allParams[@"report_params"];
         if ([report_params isKindOfClass:[NSString class]]) {
             NSDictionary *params = [self getDictionaryFromJSONString:report_params];
@@ -576,8 +581,12 @@
                        options:(TTCommentLoadOptions)options
                    finishBlock:(TTCommentLoadFinishBlock)finishBlock
 {
+    if (self.msgID.length > 0 && [offset integerValue] <= 0) {
+        // 标记需要置顶
+        [self.commentViewController tt_markStickyCellNeedsAnimation];
+    }
     TTCommentDataManager *commentDataManager = [[TTCommentDataManager alloc] init];
-    [commentDataManager startFetchCommentsWithGroupModel:self.groupModel forLoadMode:loadMode  loadMoreOffset:offset loadMoreCount:@(TTCommentDefaultLoadMoreFetchCount) msgID:0 options:options finishBlock:finishBlock];
+    [commentDataManager startFetchCommentsWithGroupModel:self.groupModel forLoadMode:loadMode  loadMoreOffset:offset loadMoreCount:@(TTCommentDefaultLoadMoreFetchCount) msgID:self.msgID options:options finishBlock:finishBlock];
 }
 
 - (SSThemedView *)tt_commentHeaderView
@@ -616,6 +625,11 @@
         [weakSelf p_scrollToCommentIfNeeded];
         weakSelf.hasLoadedComment = YES;
     });
+    
+    // 输入框去除：回复 XXX
+    if ([self.commentViewController respondsToSelector:@selector(tt_clearDefaultReplyCommentModel)]) {
+        [self.commentViewController tt_clearDefaultReplyCommentModel];
+    }
     
     if ([self.commentViewController respondsToSelector:@selector(tt_defaultReplyCommentModel)] && self.commentViewController.tt_defaultReplyCommentModel) {
         NSString *userName = self.commentViewController.tt_defaultReplyCommentModel.userName;

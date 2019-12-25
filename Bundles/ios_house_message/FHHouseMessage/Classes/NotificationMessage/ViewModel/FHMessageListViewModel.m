@@ -145,11 +145,7 @@
     }
 
     if (!cell) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"preventCrashCellIdentifier"];
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"preventCrashCellIdentifier"];
-        }
-        cell.textLabel.text = @"";
+        cell = [UITableViewCell new];
     }
     return cell;
 }
@@ -163,7 +159,7 @@
         TTRouteUserInfo *userInfo = nil;
         NSMutableDictionary *dict = @{}.mutableCopy;
         if([bodyUrl containsString:@"comment_detail"]){
-            dict[@"hidePost"] = @(1);
+            //dict[@"hidePost"] = @(1);
         }
         
         NSMutableDictionary *traceParam = @{}.mutableCopy;

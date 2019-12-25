@@ -12,6 +12,7 @@
 #import <FHCommonDefines.h>
 #import <ReactiveObjC.h>
 #import "FHUserTracker.h"
+#import <TTAccount.h>
 
 @interface FHUGCVotePublishViewController()
 
@@ -25,13 +26,22 @@
 
 @property (nonatomic, strong) UIButton *publishBtn;
 
+// 数据区
+@property (nonatomic, assign) BOOL hasSocialGroup;      // 是否外部带入圈子信息
+@property (nonatomic, copy) NSString *selectGroupId;
+@property (nonatomic, copy) NSString *selectGroupName;
+@property (nonatomic, assign) BOOL isSelectectGroupFollowed;
+
 @end
 
 @implementation FHUGCVotePublishViewController
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
-        
+        self.selectGroupId = [paramObj.allParams tt_stringValueForKey:@"select_group_id"];
+        self.selectGroupName = [paramObj.allParams tt_stringValueForKey:@"select_group_name"];
+        self.isSelectectGroupFollowed = [paramObj.allParams tta_boolForKey:@"select_group_followed"];
+        self.hasSocialGroup = self.selectGroupId.length > 0 && self.selectGroupName.length > 0;
     }
     return self;
 }
@@ -43,6 +53,12 @@
     [self configNavigation];
     // 添加tableView
     [self.view addSubview:self.tableView];
+    
+    // 从圈子详情页带入的圈子信息
+    if(self.hasSocialGroup) {
+        [self.viewModel configModelForSocialGroupId:self.selectGroupId socialGroupName:self.selectGroupName hasFollowed:self.isSelectectGroupFollowed];
+    }
+    
     // 初始化配置工作
     [self.viewModel reloadTableView];
     // 注册通知

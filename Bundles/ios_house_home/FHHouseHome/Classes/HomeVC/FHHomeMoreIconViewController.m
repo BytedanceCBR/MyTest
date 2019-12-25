@@ -107,9 +107,27 @@
 
 - (void)sendStayPageTrace
 {
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSArray<FHConfigDataOpDataItemsModel> * opDataArray = (NSArray<FHConfigDataOpDataItemsModel> *)configData.toolboxData.items;
+    
     NSMutableDictionary *paramsTrace = [NSMutableDictionary new];
     [paramsTrace setValue:@"maintab" forKey:@"enter_from"];
     [paramsTrace setValue:@"tools_box" forKey:@"page_type"];
+    
+    NSMutableString *opDataIdStr = [NSMutableString new];
+    BOOL isFirst = YES;
+    for (FHConfigDataOpDataItemsModel * model in opDataArray) {
+        if (isFirst && model.id) {
+            [opDataIdStr appendString:model.id];
+        }else
+        {
+            if (model.id) {
+                [opDataIdStr appendString:[NSString stringWithFormat:@"_%@",model.id]];
+            }
+        }
+        isFirst = NO;
+    }
+    [paramsTrace setValue:opDataIdStr forKey:@"tools_name"];
     
     NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
     if (duration == 0) {//当前页面没有在展示过
