@@ -58,7 +58,7 @@
     // 判断标签数据
     if (self.tagsFilterData) {
         CGFloat itemWidth = (SCREEN_WIDTH - 30 - 10 * 3) / 4.0;
-        CGFloat top = 14;
+        CGFloat top = 6;
         CGFloat itemMargin = 10;
         __block CGFloat leftOffset = 15;
         if ([self.tagsFilterData.options isKindOfClass:[NSArray class]]) {

@@ -78,7 +78,7 @@
 
 
 #define kFilterBarHeight 44
-#define kFilterTagsViewHeight 58
+#define kFilterTagsViewHeight 50
 #define MAX_ICON_COUNT 4
 #define ICON_HEADER_HEIGHT ([FHMainRentTopView totalHeight])
 
