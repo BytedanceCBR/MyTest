@@ -717,7 +717,8 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         }
         
         // 更新帖子发布失败
-          [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
+        [[ToastManager manager] showToast:@"编辑失败"];
     }];
     
 }
