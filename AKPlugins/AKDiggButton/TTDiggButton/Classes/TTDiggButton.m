@@ -33,7 +33,7 @@
         button.imageName = @"digup_video";
         button.selectedImageName = @"digup_video_press";
         button.selectedTitleColorThemeKey = @"red1";
-        button.titleColorThemeKey = @"grey3";
+        button.titleColorThemeKey = @"grey1";
         button.styleType = styleType;
         button.backgroundColor = [UIColor clearColor];
         [button setDiggCount:0];
@@ -61,7 +61,7 @@
         case TTDiggButtonStyleTypeBothSmall:{
             self.imageName = @"comment_like_icon";
             self.selectedImageName = @"comment_like_icon_press";
-            self.titleColorThemeKey = @"grey3";
+            self.titleColorThemeKey = @"grey1";
             self.imageEdgeInsets = UIEdgeInsetsMake(-1, 0, 1, 0);
             //            self.titleEdgeInsets = UIEdgeInsetsMake(-0.5, 0, 0.5, 0);
             if ([TTDeviceHelper OSVersionNumber] < 8.f) {
@@ -136,9 +136,9 @@
         case TTDiggButtonStyleTypeCommentOnly: {
             self.imageName = @"comment_like_icon";
             self.selectedImageName = @"comment_like_icon_press";
-            self.tintColorThemeKey = @"grey3";
-            self.selectedTintColorThemeKey = @"red1";
-            self.titleColorThemeKey = @"grey3";
+            self.tintColorThemeKey = @"grey1";
+            self.selectedTintColorThemeKey = @"orange4";
+            self.titleColorThemeKey = @"grey1";
             self.imageEdgeInsets = UIEdgeInsetsMake(-1, 0, 1, 5);
 //            [self setTitleEdgeInsets:UIEdgeInsetsMake(1, 6, 0, 0)];
 

@@ -553,7 +553,7 @@
     self.hasVotedLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, bottomHeight, ([UIScreen mainScreen].bounds.size.width - 40 - 10) / 2, 38)];
     self.hasVotedLabel.layer.cornerRadius = 19;
     self.hasVotedLabel.clipsToBounds = YES;
-    self.hasVotedLabel.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
+    self.hasVotedLabel.backgroundColor = [UIColor colorWithHexString:@"#ff9629" alpha:0.24];
     self.hasVotedLabel.text = @"已投票";
     self.hasVotedLabel.font = [UIFont themeFontRegular:16];
     self.hasVotedLabel.textAlignment = NSTextAlignmentCenter;
@@ -563,13 +563,13 @@
     FHUGCLoadingButton *editBtn = [[FHUGCLoadingButton alloc] initWithFrame:CGRectMake(self.hasVotedLabel.right + 10, bottomHeight, ([UIScreen mainScreen].bounds.size.width - 40 - 10) / 2, 38)];
     editBtn.layer.cornerRadius = 19;
     editBtn.layer.borderWidth = 0.5;
-    editBtn.layer.borderColor = [UIColor themeRed1].CGColor;
+    editBtn.layer.borderColor = [UIColor themeOrange4].CGColor;
     editBtn.backgroundColor = [UIColor themeWhite];
     editBtn.titleLabel.font = [UIFont themeFontRegular:16];
     [editBtn setTitle:@"修改投票" forState:UIControlStateNormal];
     [editBtn setTitle:@"修改投票" forState:UIControlStateHighlighted];
-    [editBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    [editBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
+    [editBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
+    [editBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateHighlighted];
     [editBtn addTarget:self action:@selector(editButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBgView addSubview:editBtn];
     self.editButton = editBtn;
@@ -580,13 +580,13 @@
     // 投票按钮
     FHUGCLoadingButton *voteBtn = [[FHUGCLoadingButton alloc] initWithFrame:CGRectMake(20, bottomHeight, [UIScreen mainScreen].bounds.size.width - 40, 38)];
     voteBtn.layer.cornerRadius = 19;
-    voteBtn.backgroundColor = [UIColor themeRed1];
+    voteBtn.backgroundColor = [UIColor themeOrange4];
     voteBtn.titleLabel.font = [UIFont themeFontRegular:16];
     [voteBtn setTitle:@"确定投票" forState:UIControlStateNormal];
     [voteBtn setTitle:@"确定投票" forState:UIControlStateHighlighted];
     [voteBtn setTitleColor:[UIColor themeWhite] forState:UIControlStateNormal];
     [voteBtn setTitleColor:[UIColor themeWhite] forState:UIControlStateHighlighted];
-    voteBtn.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
+    voteBtn.backgroundColor = [UIColor colorWithHexString:@"#ff9629" alpha:0.24];
     voteBtn.enabled = NO;
     [voteBtn addTarget:self action:@selector(voteButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBgView addSubview:voteBtn];
@@ -802,10 +802,10 @@
         self.voteButton.hidden = NO;
         if (hasSelected) {
             // 有选中项
-            self.voteButton.backgroundColor = [UIColor themeRed1];
+            self.voteButton.backgroundColor = [UIColor themeOrange4];
             self.voteButton.enabled = YES;
         } else {
-            self.voteButton.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
+            self.voteButton.backgroundColor = [UIColor colorWithHexString:@"#ff9629" alpha:0.24];
             self.voteButton.enabled = NO;
         }
     }
@@ -832,7 +832,7 @@
         self.editButton.hidden = YES;
         self.hasVotedLabel.hidden = YES;
         self.voteButton.hidden = NO;
-        self.voteButton.backgroundColor = [UIColor colorWithHexString:@"#ff5869" alpha:0.24];
+        self.voteButton.backgroundColor = [UIColor colorWithHexString:@"#ff9629" alpha:0.24];
         [self.voteButton setTitle:@"投票已结束" forState:UIControlStateNormal];
         [self.voteButton setTitle:@"投票已结束" forState:UIControlStateHighlighted];
         self.voteButton.enabled = NO;
