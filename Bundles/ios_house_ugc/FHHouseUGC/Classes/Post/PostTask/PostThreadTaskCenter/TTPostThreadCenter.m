@@ -632,7 +632,11 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
 - (void)postEditedThreadWith: (TTPostThreadModel *)postThreadModel {
     
     // 编辑完成开始发送更新请求
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumBeginPostEditedThreadNotification object:nil userInfo:nil];
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    if (postThreadModel.postID) {
+        userInfo[@"group_id"] = postThreadModel.postID;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumBeginPostEditedThreadNotification object:nil userInfo:userInfo];
     
     if(postThreadModel.taskImages.count > 0) {
         [self uploadImagesWith:postThreadModel];

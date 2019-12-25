@@ -550,12 +550,13 @@
 }
 
 - (void)gotoEditPostVC {
-    
     if(self.cellModel.cellType != FHUGCFeedListCellTypeUGC) {
-        [[ToastManager manager] showToast:@"编辑按钮点击了, 但不是贴子类型, 不支持编辑"];
         return;
     }
-    
+    if (self.editState == FHUGCPostEditStateSending) {
+        // 编辑发送中
+        return;
+    }
     // 跳转发布器
 //    NSMutableDictionary *tracerDict = @{}.mutableCopy;
 //    tracerDict[@"element_type"] = @"feed_publisher";
