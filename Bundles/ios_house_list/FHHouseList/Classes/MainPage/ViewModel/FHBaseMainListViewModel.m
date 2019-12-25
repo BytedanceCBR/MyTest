@@ -89,6 +89,7 @@ extern NSString *const INSTANT_DATA_KEY;
 @interface FHBaseMainListViewModel ()
 
 @property(nonatomic , strong) UIView *bottomLine;
+@property (nonatomic, strong) NSMutableDictionary *showCache;
 
 @end
 
@@ -112,7 +113,7 @@ extern NSString *const INSTANT_DATA_KEY;
         _houseList = [NSMutableArray new];
         _sugesstHouseList = [NSMutableArray new];
         _showHouseDict = [NSMutableDictionary new];
-        
+        _showCache = [NSMutableDictionary new];
         _currentRecommendHouseDataModel = nil;
         _houseDataModel = nil;
         
@@ -298,10 +299,16 @@ extern NSString *const INSTANT_DATA_KEY;
             FHMainOldTopView *topView = [[FHMainOldTopView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, OLD_ICON_HEADER_HEIGHT)];
             topView.delegate = self;
             self.topBannerView = topView;
-            [topView updateWithConfigData:dataModel];
-//            for (FHConfigDataOpData2ItemsModel *item in dataModel.houseOpData.items ) {
-//                [self addOperationShowLog:item.logPb[@"operation_name"]];
-//            }
+            NSMutableDictionary *tracerDict = @{}.mutableCopy;
+            if ([self baseLogParam]) {
+                [tracerDict addEntriesFromDictionary:[self baseLogParam]];
+            }
+            tracerDict[UT_PAGE_TYPE] = [self pageTypeString];
+            [topView updateWithConfigData:dataModel tracerDict:tracerDict];
+            for (FHConfigDataOpData2ItemsModel *item in dataModel.houseOpData.items ) {
+                [self addOperationShowLog:item.logPb];
+            }
+            [self.showCache removeAllObjects];
         }else {
             UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
             topView.backgroundColor = [UIColor whiteColor];
@@ -1186,7 +1193,40 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     
     NSDictionary *logpbDict = model.logPb;
-    [self addOperationClickLog:logpbDict[@"operation_name"]];
+//    [self addOperationClickLog:logpbDict[@"operation_name"]];
+    [self addClickIconLog:model.logPb];
+}
+
+- (void)addBannerShow:(FHConfigDataRentOpDataItemsModel *)opData index:(NSInteger)index {
+    // banner show 唯一性判断(地址)
+    NSString *tracerKey = [NSString stringWithFormat:@"_%p_",opData];
+    if (tracerKey.length > 0) {
+        if (self.showCache[tracerKey]) {
+            return;
+        }
+        self.showCache[tracerKey] = @(1);
+    }
+    NSString *opId = opData.id;
+    if (opId.length > 0) {
+    } else {
+        opId = @"be_null";
+    }
+    // 添加埋点
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    NSDictionary *baseParams = [self baseLogParam];
+    params[UT_ENTER_FROM] = baseParams[UT_ENTER_FROM];
+    params[UT_ELEMENT_FROM] = @"banner";
+    params[@"rank"] = @(index);
+    params[UT_PAGE_TYPE] = baseParams[UT_PAGE_TYPE];
+    params[@"item_title"] = opData.title.length > 0 ? opData.title : @"be_null";
+    params[@"item_id"] = opId;
+    params[@"description"] = opData.descriptionStr.length > 0 ? opData.descriptionStr : @"be_null";
+    NSString *origin_from = @"be_null";
+    if (opData.logPb && [opData.logPb isKindOfClass:[NSDictionary class]]) {
+        origin_from = opData.logPb[@"origin_from"];
+    }
+    params[@"origin_from"] = origin_from;
+    [FHUserTracker writeEvent:@"banner_show" params:params];
 }
 
 - (void)clickBannerItem:(FHConfigDataRentOpDataItemsModel *)opData withIndex:(NSInteger)index
@@ -1197,11 +1237,13 @@ extern NSString *const INSTANT_DATA_KEY;
         opId = @"be_null";
     }
     NSMutableDictionary *params = [NSMutableDictionary new];
-    params[@"page_type"] = [self pageTypeString];
-    params[@"enter_from"] = @"maintab_ad";// todo zjing event
+    NSDictionary *baseParams = [self baseLogParam];
+    params[UT_ENTER_FROM] = baseParams[UT_ENTER_FROM];
+    params[UT_ELEMENT_FROM] = @"banner";
     params[@"rank"] = @(index);
-    params[@"item_id"] = opId;
+    params[UT_PAGE_TYPE] = baseParams[UT_PAGE_TYPE];
     params[@"item_title"] = opData.title.length > 0 ? opData.title : @"be_null";
+    params[@"item_id"] = opId;
     params[@"description"] = opData.descriptionStr.length > 0 ? opData.descriptionStr : @"be_null";
     NSString *origin_from = @"be_null";
     if (opData.logPb && [opData.logPb isKindOfClass:[NSDictionary class]]) {
@@ -1215,7 +1257,7 @@ extern NSString *const INSTANT_DATA_KEY;
     if (opData.openUrl.length > 0) {
         NSMutableDictionary *trace_params = [NSMutableDictionary new];
         trace_params[@"origin_from"] = origin_from;
-        trace_params[@"enter_from"] = @"maintab_ad";
+        trace_params[@"enter_from"] = baseParams[UT_ENTER_FROM];
         
         NSDictionary *infoDict = @{@"tracer":trace_params};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
@@ -1944,22 +1986,32 @@ extern NSString *const INSTANT_DATA_KEY;
     self.canChangeHouseSearchDic = YES;
 }
 
-- (void)addOperationShowLog:(NSString *)operationName
+- (void)addOperationShowLog:(NSDictionary *)logPb
 {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"operation_name"] = operationName ? : @"be_null";
+    tracerDict[@"operation_name"] = logPb[@"operation_name"] ? : @"be_null";
     tracerDict[UT_PAGE_TYPE] = [self pageTypeString];
     [FHUserTracker writeEvent:@"operation_show" params:tracerDict];
 }
 
-- (void)addOperationClickLog:(NSString *)operationName
+//- (void)addOperationClickLog:(NSDictionary *)logPb
+//{
+//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+//    tracerDict[@"operation_name"] = logPb[@"operation_name"] ? : @"be_null";
+//    tracerDict[UT_PAGE_TYPE] = [self pageTypeString];
+//    tracerDict[UT_LOG_PB] = logPb ? : @"be_null";
+//    [FHUserTracker writeEvent:@"operation_click" params:tracerDict];
+//}
+
+- (void)addClickIconLog:(NSDictionary *)logPb
 {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"operation_name"] = operationName ? : @"be_null";
+    NSDictionary *baseParams = [self baseLogParam];
+    tracerDict[UT_ENTER_FROM] = baseParams[UT_ENTER_FROM] ? : @"be_null";
     tracerDict[UT_PAGE_TYPE] = [self pageTypeString];
-    [FHUserTracker writeEvent:@"operation_click" params:tracerDict];
+    tracerDict[UT_LOG_PB] = logPb ? : @"be_null";
+    [FHUserTracker writeEvent:@"click_icon" params:tracerDict];
 }
-
 
 -(void)addStayLog:(NSTimeInterval)duration
 {

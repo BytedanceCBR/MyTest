@@ -20,6 +20,7 @@
 #import "FHMainTopViewHelper.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import <TTRoute.h>
+#import <FHHouseBase/FHUserTracker.h>
 
 #define kCellId @"cell_id"
 #define ITEM_HOR_MARGIN  10
@@ -37,7 +38,7 @@
 @property(nonatomic , strong) FHListEntrancesView *bottomContainerView;
 @property(nonatomic , strong)  FHConfigDataModel *configModel;
 @property (nonatomic, strong) FHConfigDataMainPageBannerOpDataModel *bannerOpData ;
-
+@property (nonatomic, strong) NSDictionary *tracerDict;
 @end
 
 
@@ -50,7 +51,6 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
         [self setupUI];
         [self initConstraints];
     }
@@ -136,9 +136,10 @@
     }];
 }
 
-- (void)updateWithConfigData:(FHConfigDataModel *)configModel
+- (void)updateWithConfigData:(FHConfigDataModel *)configModel tracerDict:(NSDictionary *)tracerDict
 {
     _configModel = configModel;
+    _tracerDict = tracerDict;
     NSArray *items = configModel.houseOpData2.items;
     if (items.count > 5) {
         _items = [items subarrayWithRange:NSMakeRange(0, 5 )];
@@ -185,7 +186,6 @@
             }
         }
     }
-//    [self.tracerDic removeAllObjects];
     [self.bannerView setURLs:imageUrls];
 }
 
@@ -230,9 +230,13 @@
         if (opData && [FHMainOldTopView showBanner]) {
             self.topBgView.backgroundColor = [UIColor colorWithHexString:opData.backgroundColor];
         }
-//        [self addTracerShow:opData index:currentIndex];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(clickBannerItem:withIndex:)]) {
+            [self.delegate showBannerItem:opData withIndex:currentIndex];
+        }
     }
 }
+
+
 
 - (void)clickBannerWithIndex:(NSInteger)currentIndex
 {

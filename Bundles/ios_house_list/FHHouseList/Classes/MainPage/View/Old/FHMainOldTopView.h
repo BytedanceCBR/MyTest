@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMainOldTopView : UIView
 
 @property(nonatomic , weak) id<FHMainOldTopViewDelegate> delegate;
-- (void)updateWithConfigData:(FHConfigDataModel *)configModel;
+- (void)updateWithConfigData:(FHConfigDataModel *)configModel tracerDict:(NSDictionary *)tracerDict;
 + (BOOL)showBanner;
 + (BOOL)showEntrance;
 
@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)selecteOldItem:(FHConfigDataOpDataItemsModel *)item;
 -(void)clickBannerItem:(FHConfigDataRentOpDataItemsModel *)item withIndex:(NSInteger)index;
+-(void)showBannerItem:(FHConfigDataRentOpDataItemsModel *)item withIndex:(NSInteger)index;
 
 @end
 
