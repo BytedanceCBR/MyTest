@@ -66,13 +66,14 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
     }
     
     //为了防止config接口无内容，默认的值
+    // 默认先不添加编辑 以为现在只有管理员可以编辑
+    /*@{
+     @"id": @"8",
+     @"title": @"编辑",
+     @"serverType":@"edit"
+     },*/
     if(operationList.count == 0){
         operationList = @[
-                          @{
-                              @"id": @"8",
-                              @"title": @"编辑",
-                              @"serverType":@"edit"
-                              },
                           @{
                               @"id": @"9",
                               @"title": @"编辑记录",
