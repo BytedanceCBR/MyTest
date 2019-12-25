@@ -14,8 +14,9 @@
 #import "TTAccountManager.h"
 #import "ToastManager.h"
 #import <FHIntroduceManager.h>
+#import "UIViewController+Track.h"
 
-@interface SpringLoginViewController ()<TTRouteInitializeProtocol>
+@interface SpringLoginViewController ()<TTRouteInitializeProtocol,TTUIViewControllerTrackProtocol>
 
 @property(nonatomic, strong) SpringLoginViewModel *viewModel;
 @property(nonatomic ,strong) SpringLoginView *loginView;
@@ -62,6 +63,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.ttTrackStayEnable = YES;
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor = [UIColor clearColor];
     [self initView];
@@ -117,5 +119,16 @@
         }
     }
 }
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self.loginView startAnimation];
+}
+
 
 @end

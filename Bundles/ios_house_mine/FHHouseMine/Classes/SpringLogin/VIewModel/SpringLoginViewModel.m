@@ -70,7 +70,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)showLoginView {
     [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin] showAcceptBox:YES];
     [self.view.acceptCheckBox setSelected:NO];
-//    [self checkToEnableConfirmBtn];
+    [self checkToEnableConfirmBtn];
     [self addEnterCategoryLog];
 }
 
@@ -170,7 +170,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         textField.text = [text substringToIndex:limit];
     }
     //设置登录和获取验证码是否可点击
-//    [self checkToEnableConfirmBtn];
+    [self checkToEnableConfirmBtn];
 }
 
 - (void)checkToEnableConfirmBtn {
@@ -200,7 +200,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)acceptCheckBoxChange:(BOOL)selected {
     self.view.acceptCheckBox.selected = !selected;
-//    [self checkToEnableConfirmBtn];
+    if(self.view.acceptCheckBox.selected){
+        [self.view showTipView:NO];
+    }
+    [self checkToEnableConfirmBtn];
 }
 
 - (void)confirm {
@@ -232,7 +235,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     [self traceLogin];
     if (!self.view.acceptCheckBox.selected) {
-        [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私政策》"];
+//        [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私政策》"];
+        [self.view showTipView:YES];
         return;
     }
     

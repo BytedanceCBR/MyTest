@@ -65,7 +65,8 @@
 @property(nonatomic, strong) UIView *phoneBgView;
 @property(nonatomic, strong) UIView *varifyCodeBgView;
 
-@property (nonatomic , strong) LOTAnimationView *animationView;
+@property(nonatomic , strong) LOTAnimationView *animationView;
+@property(nonatomic , strong) UIImageView *tipView;
 
 @end
 
@@ -158,11 +159,14 @@
     [self.scrollView addSubview:_acceptCheckBox];
     
     self.confirmBtn = [[UIButton alloc] init];
-//    _confirmBtn.alpha = 0.6;
     [_confirmBtn addTarget:self action:@selector(confirm) forControlEvents:UIControlEventTouchUpInside];
-    [_confirmBtn setImage:[UIImage imageNamed:@"fh_spring_login_button"] forState:UIControlStateNormal];
+    [_confirmBtn setImage:[UIImage imageNamed:@"fh_spring_login_button_disable"] forState:UIControlStateNormal];
     [self.springBgView addSubview:_confirmBtn];
 
+    self.tipView = [[UIImageView alloc] init];
+    _tipView.image = [UIImage imageNamed:@"fh_spring_no_check_tip"];
+    _tipView.hidden = YES;
+    [self addSubview:_tipView];
 }
 
 - (void)initConstraints {
@@ -232,6 +236,13 @@
         make.width.mas_equalTo(147);
         make.height.mas_equalTo(63);
     }];
+    
+    [self.tipView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.acceptCheckBox.mas_top).offset(-4);
+        make.right.mas_equalTo(self.springBgView).offset(-33);
+        make.width.mas_equalTo(80);
+        make.height.mas_equalTo(28);
+    }];
 }
 
 - (void)setAgreementContent:(NSAttributedString *)attrText showAcceptBox:(BOOL)showAcceptBox {
@@ -297,15 +308,23 @@
 }
 
 - (void)enableConfirmBtn:(BOOL)enabled {
-    if (enabled) {
-        self.confirmBtn.alpha = 1;
-    } else {
-        self.confirmBtn.alpha = 0.6;
+    if(enabled){
+        [_confirmBtn setImage:[UIImage imageNamed:@"fh_spring_login_button"] forState:UIControlStateNormal];
+    }else{
+        [_confirmBtn setImage:[UIImage imageNamed:@"fh_spring_login_button_disable"] forState:UIControlStateNormal];
     }
 }
 
 - (void)enableSendVerifyCodeBtn:(BOOL)enabled {
     self.sendVerifyCodeBtn.enabled = enabled;
+}
+
+- (void)showTipView:(BOOL)isShow {
+    self.tipView.hidden = !isShow;
+}
+
+- (void)startAnimation {
+    [_animationView play];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {

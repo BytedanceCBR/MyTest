@@ -50,7 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)enableConfirmBtn:(BOOL)enabled;
 - (void)enableSendVerifyCodeBtn:(BOOL)enabled;
 - (void)setAgreementContent:(NSAttributedString *)attrText showAcceptBox:(BOOL)showAcceptBox;
-
+- (void)showTipView:(BOOL)isShow;
+- (void)startAnimation;
 @end
 
 NS_ASSUME_NONNULL_END
