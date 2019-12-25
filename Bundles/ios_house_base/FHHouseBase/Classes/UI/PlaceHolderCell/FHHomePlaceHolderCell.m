@@ -49,9 +49,9 @@
         CGFloat vleft = HOR_MARGIN+85+10;
         CGFloat vWidth = (SCREEN_WIDTH - vleft - HOR_MARGIN);
         _placeHolderImageView.frame = CGRectMake(HOR_MARGIN, 10, 85, 64);
-        _view1.frame = CGRectMake(vleft, 12, vWidth, 10);
-        _view2.frame = CGRectMake(vleft, _view1.bottom + 10, vWidth-44, 10);
-        _view3.frame = CGRectMake(vleft, _view2.bottom + 10, _view2.centerX - vleft + 10 , 10);
+        _view1.frame = CGRectMake(vleft, 10, vWidth, 14);
+        _view2.frame = CGRectMake(vleft, _view1.bottom + 9, vWidth-44, 14);
+        _view3.frame = CGRectMake(vleft, _view2.bottom + 13, _view2.centerX - vleft + 10 , 14);
                 
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -62,9 +62,9 @@
     _topOffset = topOffset;
     
     _placeHolderImageView.top = topOffset;
-    _view1.top = topOffset+2;
-    _view2.top = _view1.bottom + 10;
-    _view3.top = _view2.bottom + 10;
+    _view1.top = topOffset;
+    _view2.top = _view1.bottom + 9;
+    _view3.top = _view2.bottom + 13;
     
 }
 
