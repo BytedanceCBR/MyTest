@@ -1197,7 +1197,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [self addClickIconLog:model.logPb];
 }
 
-- (void)addBannerShow:(FHConfigDataRentOpDataItemsModel *)opData index:(NSInteger)index {
+- (void)showBannerItem:(FHConfigDataRentOpDataItemsModel *)opData index:(NSInteger)index {
     // banner show 唯一性判断(地址)
     NSString *tracerKey = [NSString stringWithFormat:@"_%p_",opData];
     if (tracerKey.length > 0) {
