@@ -1197,7 +1197,12 @@ extern NSString *const INSTANT_DATA_KEY;
     [self addClickIconLog:model.logPb];
 }
 
-- (void)showBannerItem:(FHConfigDataRentOpDataItemsModel *)opData index:(NSInteger)index {
+- (void)showBannerItem:(FHConfigDataRentOpDataItemsModel *)item withIndex:(NSInteger)index
+{
+    FHConfigDataRentOpDataItemsModel *opData = item;
+    if (!opData) {
+        return;
+    }
     // banner show 唯一性判断(地址)
     NSString *tracerKey = [NSString stringWithFormat:@"_%p_",opData];
     if (tracerKey.length > 0) {
@@ -1217,7 +1222,7 @@ extern NSString *const INSTANT_DATA_KEY;
     params[UT_ENTER_FROM] = baseParams[UT_ENTER_FROM];
     params[UT_ELEMENT_FROM] = @"banner";
     params[@"rank"] = @(index);
-    params[UT_PAGE_TYPE] = baseParams[UT_PAGE_TYPE];
+    params[UT_PAGE_TYPE] = [self pageTypeString];
     params[@"item_title"] = opData.title.length > 0 ? opData.title : @"be_null";
     params[@"item_id"] = opId;
     params[@"description"] = opData.descriptionStr.length > 0 ? opData.descriptionStr : @"be_null";
@@ -1226,6 +1231,7 @@ extern NSString *const INSTANT_DATA_KEY;
         origin_from = opData.logPb[@"origin_from"];
     }
     params[@"origin_from"] = origin_from;
+    params[UT_LOG_PB] = opData.logPb ? : @"be_null";
     [FHUserTracker writeEvent:@"banner_show" params:params];
 }
 
@@ -1241,7 +1247,7 @@ extern NSString *const INSTANT_DATA_KEY;
     params[UT_ENTER_FROM] = baseParams[UT_ENTER_FROM];
     params[UT_ELEMENT_FROM] = @"banner";
     params[@"rank"] = @(index);
-    params[UT_PAGE_TYPE] = baseParams[UT_PAGE_TYPE];
+    params[UT_PAGE_TYPE] = [self pageTypeString];
     params[@"item_title"] = opData.title.length > 0 ? opData.title : @"be_null";
     params[@"item_id"] = opId;
     params[@"description"] = opData.descriptionStr.length > 0 ? opData.descriptionStr : @"be_null";
@@ -1250,7 +1256,7 @@ extern NSString *const INSTANT_DATA_KEY;
         origin_from = opData.logPb[@"origin_from"];
     }
     params[@"origin_from"] = origin_from;
-    
+    params[UT_LOG_PB] = opData.logPb ? : @"be_null";
     [FHUserTracker writeEvent:@"banner_click" params:params];
     
     // 页面跳转，origin_from：服务端下方，如果进入到房源相关页面需要透传
@@ -1991,6 +1997,7 @@ extern NSString *const INSTANT_DATA_KEY;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"operation_name"] = logPb[@"operation_name"] ? : @"be_null";
     tracerDict[UT_PAGE_TYPE] = [self pageTypeString];
+    tracerDict[UT_LOG_PB] = logPb ? : @"be_null";
     [FHUserTracker writeEvent:@"operation_show" params:tracerDict];
 }
 
