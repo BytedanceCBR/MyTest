@@ -9,8 +9,10 @@
 
 @interface FHPostEditListViewModel : NSObject
 
+@property (nonatomic, assign) int64_t tid; //帖子ID--必须
 - (instancetype)initWithController:(FHPostEditListController *)viewController tableView:(UITableView *)tableView;
 
-@property (nonatomic, assign) NSInteger currentOffset;
+- (void)startLoadData;
+- (void)loadMore;
 
 @end

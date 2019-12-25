@@ -22,9 +22,11 @@
 #import "FHBaseTableView.h"
 #import "FHRefreshCustomFooter.h"
 #import "FHPostEditListViewModel.h"
+#import "TTReachability.h"
 
 @interface FHPostEditListController ()
 
+@property (nonatomic, assign) int64_t tid; //帖子ID--必须
 @property (nonatomic, strong) FHPostEditListViewModel *viewModel;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
@@ -36,7 +38,9 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        NSDictionary *params = paramObj.allParams;
+        int64_t tid = [[paramObj.allParams objectForKey:@"tid"] longLongValue];
+        self.tid = tid;
     }
     return self;
 }
@@ -46,6 +50,7 @@
     self.ttTrackStayEnable = YES;
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
+    [self startLoadData];
 }
 
 - (void)setupUI {
@@ -57,6 +62,7 @@
     
     [self configTableView];
     self.viewModel = [[FHPostEditListViewModel alloc] initWithController:self tableView:_tableView];
+    self.viewModel.tid = self.tid;
     [self.view addSubview:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
@@ -73,9 +79,10 @@
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    _tableView.estimatedRowHeight = 0;
+    _tableView.estimatedRowHeight = 100;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
+    _tableView.backgroundColor = [UIColor themeGray7];
     if ([TTDeviceHelper isIPhoneXDevice]) {
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
@@ -89,8 +96,24 @@
     _refreshFooter.hidden = YES;
 }
 
+- (void)startLoadData {
+    if ([TTReachability isNetworkConnected]) {
+        [self.viewModel startLoadData];
+    } else {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    }
+}
+
+// 重新加载
+- (void)retryLoadData {
+    if (!self.isLoadingData) {
+        [self startLoadData];
+    }
+}
+
+// 加载更多
 - (void)loadMore {
-    // [self realRequestWithOffset:self.viewModel.currentOffset];
+    [self.viewModel loadMore];
 }
 
 @end
