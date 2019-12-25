@@ -24,15 +24,52 @@
 #import <TTCommentDataManager.h>
 #import <TTAssetModel.h>
 
+@interface FHUGCCellUserInfoView()
+
+@property (nonatomic, assign)   FHUGCPostEditState       editState;
+
+@end
+
 @implementation FHUGCCellUserInfoView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        self.editState = FHUGCPostEditStateNone;
         [self initViews];
         [self initConstraints];
+        [self setupNoti];
     }
     return self;
+}
+
+- (void)setupNoti {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumBeginPostEditedThreadNotification" object:nil]; // 编辑完成 显示“发送中...”
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadFailureNotification" object:nil]; // 编辑帖子发送失败
+}
+
+- (void)postEditNoti:(NSNotification *)noti {
+    self.editState = FHUGCPostEditStateNone;
+    if (self.cellModel && self.cellModel.cellType == FHUGCFeedListCellTypeUGC) {
+        NSString *notiName = noti.name;
+        NSDictionary *userInfo = noti.userInfo;
+        if (notiName.length > 0 && userInfo) {
+            NSString *groupId = userInfo[@"group_id"];
+            if (groupId.length >0 && [groupId isEqualToString:self.cellModel.groupId]) {
+                // 同一个帖子
+                if ([notiName isEqualToString:@"kTTForumBeginPostEditedThreadNotification"]) {
+                    self.editState = FHUGCPostEditStateSending;
+                } else if ([notiName isEqualToString:@"kTTForumPostEditedThreadSuccessNotification"]) {
+                    self.editState = FHUGCPostEditStateDone;
+                } else if ([notiName isEqualToString:@"kTTForumPostEditedThreadFailureNotification"]) {
+                    self.editState = FHUGCPostEditStateDone;
+                }
+            }
+        }
+    }
+    // 是否显示
+    self.editingLabel.hidden = !(self.editState == FHUGCPostEditStateSending);
 }
 
 - (void)initViews {
@@ -65,6 +102,14 @@
     self.editLabel.hidden = YES;
     UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editButtonOperation)];
     [self.editLabel addGestureRecognizer:tapGes];
+    
+    self.editingLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    self.editingLabel.text = @"发送中...";
+    self.editingLabel.textAlignment = NSTextAlignmentLeft;
+    self.editingLabel.userInteractionEnabled = NO;
+    [self addSubview:_editingLabel];
+    self.editingLabel.hidden = YES;
+    
     
     self.moreBtn = [[UIButton alloc] init];
     [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
@@ -104,6 +149,10 @@
         make.left.mas_equalTo(self.descLabel.mas_right).offset(10);
         make.right.mas_lessThanOrEqualTo(self.moreBtn.mas_left).offset(-10);
         make.height.mas_equalTo(17);
+    }];
+    
+    [self.editingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.editLabel);
     }];
 }
 
@@ -199,6 +248,7 @@
     }
     viewModel.cellType = self.cellModel.cellType;
     viewModel.hasEdit = self.cellModel.hasEdit;
+    viewModel.groupSource  =self.cellModel.groupSource;
     [dislikeView refreshWithModel:viewModel];
     CGPoint point = _moreBtn.center;
     [dislikeView showAtPoint:point
@@ -299,7 +349,7 @@
         // 帖子
         NSMutableDictionary *dict = @{}.mutableCopy;
         // add by zyk 添加入口参数
-        dict[@"tid"] = self.cellModel.groupId; // 帖子id
+        dict[@"query_id"] = self.cellModel.groupId; // 帖子id
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_history"];
@@ -501,12 +551,13 @@
 }
 
 - (void)gotoEditPostVC {
-    
     if(self.cellModel.cellType != FHUGCFeedListCellTypeUGC) {
-        [[ToastManager manager] showToast:@"编辑按钮点击了, 但不是贴子类型, 不支持编辑"];
         return;
     }
-    
+    if (self.editState == FHUGCPostEditStateSending) {
+        // 编辑发送中
+        return;
+    }
     // 跳转发布器
 //    NSMutableDictionary *tracerDict = @{}.mutableCopy;
 //    tracerDict[@"element_type"] = @"feed_publisher";

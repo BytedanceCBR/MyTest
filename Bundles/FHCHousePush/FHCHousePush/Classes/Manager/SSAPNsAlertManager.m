@@ -448,7 +448,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                     }
                 }
             } else {
-                // Push同一种页面处理，应用内暂时不做处理
+                // Push同一种页面处理，应用内暂时不做处理--后续考虑好是否要打开
                 /*
                 UIViewController *topVC = [UIViewController ttmu_currentViewController];
                 if ([topVC isKindOfClass:[FHBaseViewController class]]) {
