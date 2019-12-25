@@ -254,7 +254,7 @@
     // 检查是否选择了要发布的小区
     NSString *socialGroupId = self.selectGroupId;
     if(socialGroupId.length <= 0) {
-        [[ToastManager manager] showToast:@"请选择要发布的小区！"];
+        [[ToastManager manager] showToast:@"请选择要发布的圈子！"];
         return;
     }
     

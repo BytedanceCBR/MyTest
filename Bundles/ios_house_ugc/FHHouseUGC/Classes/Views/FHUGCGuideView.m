@@ -78,7 +78,7 @@
     [self addSubview:_imageView];
     
     self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 15, self.bounds.size.width - 20, 18)];
-    _contentLabel.text = [[FHUGCConfig sharedInstance] searchLeadSuggest] ? [[FHUGCConfig sharedInstance] searchLeadSuggest] : @"点击搜索与你相关的圈子";
+    _contentLabel.text = [[FHUGCConfig sharedInstance] searchLeadSuggest] ? [[FHUGCConfig sharedInstance] searchLeadSuggest] : @"点击搜索你感兴趣的圈子";
     _contentLabel.textColor = [UIColor whiteColor];
     _contentLabel.font = [UIFont themeFontMedium:13];
     [self addSubview:_contentLabel];
