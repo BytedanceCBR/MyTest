@@ -53,9 +53,45 @@
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         // 关注状态变化
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
+        // 编辑成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
     }
     
     return self;
+}
+
+// 编辑发送成功 - 更新数据
+- (void)postEditNoti:(NSNotification *)noti {
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *groupId = userInfo[@"group_id"];
+        if (groupId.length > 0) {
+            __block NSUInteger index = -1;
+            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([cellModel.groupId isEqualToString:groupId]) {
+                    index = idx;
+                }
+            }];
+            // 找到 要更新的数据
+            if (index >= 0 && index < self.dataList.count) {
+                NSString *thread_cell = userInfo[@"thread_cell"];
+                if (thread_cell && [thread_cell isKindOfClass:[NSString class]]) {
+                    FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:thread_cell];
+                    cellModel.categoryId = self.categoryId;
+                    cellModel.feedVC = self.viewController;
+                    cellModel.tableView = self.tableView;
+                    cellModel.isFromDetail = NO;
+                    if (cellModel) {
+                        self.dataList[index] = cellModel;
+                    }
+                    // 异步一下
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.tableView reloadData];
+                    });
+                }
+            }
+        }
+    }
 }
 
 - (void)viewWillAppear {

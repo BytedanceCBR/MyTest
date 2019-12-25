@@ -193,6 +193,7 @@ static APNsManager *_sharedManager = nil;
                 }
             } else {
                 // Push同一种页面处理
+                /* 需求未明确 先注释吧
                 UIViewController *topVC = [UIViewController ttmu_currentViewController];
                 if ([topVC isKindOfClass:[FHBaseViewController class]]) {
                     BOOL retFlag = [(FHBaseViewController *)topVC isSamePageAndParams:handledOpenURL];
@@ -200,6 +201,7 @@ static APNsManager *_sharedManager = nil;
                         return;
                     }
                 }
+                 */
                 
                 id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
                 [envBridge setTraceValue:@"push" forKey:@"origin_from"];

@@ -61,6 +61,8 @@ typedef NS_ENUM(NSInteger, TTFeedDislikeViewPushFrom) {
 @property (nonatomic, assign)   FHUGCFeedListCellType       cellType;
 //编辑记录
 @property (nonatomic, assign)   BOOL       hasEdit;
+//区分来源
+@property (nonatomic, copy , nullable) NSString *groupSource;
 @end
 
 //------------------------------------------------------------------

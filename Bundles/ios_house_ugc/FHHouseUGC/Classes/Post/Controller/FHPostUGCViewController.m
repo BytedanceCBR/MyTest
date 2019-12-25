@@ -1661,7 +1661,8 @@ static NSInteger const kMaxPostImageCount = 9;
     if (item) {
         self.selectView.groupId = item.socialGroupId;
         self.selectView.communityName = item.socialGroupName;
-        self.selectView.followed = NO;
+        FHUGCScialGroupDataModel * model = [[FHUGCConfig sharedInstance] socialGroupData:item.socialGroupId];
+        self.selectView.followed = model ? [model.hasFollow boolValue] : NO;
         [self refreshPostButtonUI];
         
         NSMutableDictionary *param = [NSMutableDictionary dictionary];

@@ -564,6 +564,11 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         [images addObject:model];
     }
     
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    if (postThreadModel.postID) {
+        userInfo[@"group_id"] = postThreadModel.postID;
+    }
+    
     WeakSelf;
     [self.uploadImageManager uploadPhotos:images extParameter:@{} progressBlock:^(int expectCount, int receivedCount) {
         StrongSelf;
@@ -606,10 +611,10 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
                 [monitorDictionary setValue:@(error.code) forKey:@"error"];
             }
             
-            [[ToastManager manager] showToast:@"发布失败！"];
+            [[ToastManager manager] showToast:@"编辑失败"];
             
             // 更新帖子发布失败
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
         }
         else {
             
@@ -632,7 +637,11 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
 - (void)postEditedThreadWith: (TTPostThreadModel *)postThreadModel {
     
     // 编辑完成开始发送更新请求
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumBeginPostEditedThreadNotification object:nil userInfo:nil];
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    if (postThreadModel.postID) {
+        userInfo[@"group_id"] = postThreadModel.postID;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumBeginPostEditedThreadNotification object:nil userInfo:userInfo];
     
     if(postThreadModel.taskImages.count > 0) {
         [self uploadImagesWith:postThreadModel];
@@ -674,7 +683,12 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
 
 // 真正发送请求
 - (void)postEditedPostWith:(NSMutableDictionary *)params {
-    
+    NSString *post_id = nil;
+    if (params[@"post_id"]) {
+        post_id = [NSString stringWithFormat:@"%@",params[@"post_id"]];
+    }
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    userInfo[@"group_id"] = post_id;
     WeakSelf;
     [FHHouseUGCAPI requestPublishEditedPostWithParam:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
@@ -682,7 +696,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         if(error) {
             [[ToastManager manager] showToast:error.localizedDescription];
             // 更新帖子发布失败
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
             return;
         }
         
@@ -695,7 +709,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
                 // 模型转换
                 FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:jsonString];
                 
-                NSMutableDictionary *userInfo = @{}.mutableCopy;
+                userInfo[@"group_id"] = post_id;
                 userInfo[@"thread_cell"] = jsonString;
                 userInfo[@"social_group_id"] = params[@"social_group_id"];
                 userInfo[@"publish_type"] = @(FHUGCPublishTypePost);
@@ -708,7 +722,8 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         }
         
         // 更新帖子发布失败
-          [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
+        [[ToastManager manager] showToast:@"编辑失败"];
     }];
     
 }

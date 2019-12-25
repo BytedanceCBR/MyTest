@@ -431,7 +431,8 @@
     if (item) {
         self.socialGroupSelectEntry.groupId = item.socialGroupId;
         self.socialGroupSelectEntry.communityName = item.socialGroupName;
-        self.socialGroupSelectEntry.followed = NO;
+        FHUGCScialGroupDataModel * model = [[FHUGCConfig sharedInstance] socialGroupData:item.socialGroupId];
+        self.socialGroupSelectEntry.followed = model ? [model.hasFollow boolValue] : NO;
         
         self.selectGroupId = self.socialGroupSelectEntry.groupId;
         self.selectGroupName = self.socialGroupSelectEntry.communityName;
