@@ -9,6 +9,8 @@
 #import "SSWebViewBackButtonView.h"
 #import "UIButton+TTAdditions.h"
 #import "UIImage+TTThemeExtension.h"
+#import <UIImage+FIconFont.h>
+#import <UIColor+Theme.h>
 
 #define kButtonPadding 12.f
 #define kSSWebViewBackButtonViewWidth 56
@@ -88,12 +90,12 @@
 
 - (void)refreshButtonStyle {
     if (_style == SSWebViewBackButtonStyleDefault) {
-        [_backButton setImage:[UIImage themedImageNamed:@"lefterbackicon_titlebar"] forState:UIControlStateNormal];
-        [_closeButton setImage:[UIImage themedImageNamed:@"titlebar_close"] forState:UIControlStateNormal];
+        [_backButton setImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
+        [_closeButton setImage:ICON_FONT_IMG(24, @"\U0000e673", [UIColor themeWhite]) forState:UIControlStateNormal];
     }
     else if (_style == SSWebViewBackButtonStyleLightContent) {
-        [_backButton setImage:[UIImage themedImageNamed:@"white_lefterbackicon_titlebar"] forState:UIControlStateNormal];
-        [_closeButton setImage:[UIImage themedImageNamed:@"titlebar_close_white"] forState:UIControlStateNormal];
+        [_backButton setImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeWhite]) forState:UIControlStateNormal];
+        [_closeButton setImage:ICON_FONT_IMG(24, @"\U0000e673", [UIColor themeWhite]) forState:UIControlStateNormal];
     }
 }
 

@@ -22,6 +22,8 @@
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTUIWidget/SSMotionRender.h>
 #import <KVOController/NSObject+FBKVOController.h>
+#import <UIImage+FIconFont.h>
+#import <UIColor+Theme.h>
 
 //#import "TTUGCEmojiTextAttachment.h"
 
@@ -82,7 +84,7 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         _commentButton = commentButton;
         [_commentButton addTarget:self action:@selector(commentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         _commentButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        _commentButton.imageName = @"tab_comment";
+        [_commentButton setImage:ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal];
 
         self.badgeLabel = [[SSThemedLabel alloc] init];
         self.badgeLabel.backgroundColorThemeKey = kColorBackground7;
@@ -96,15 +98,17 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
         TTAlphaThemedButton *digButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _digButton = digButton;
         _digButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
-        _digButton.imageName = @"tab_like";
-        _digButton.selectedImageName = @"tab_like_press";
+        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
+        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:digButton];
         
         SSThemedButton *nextButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         [self addSubview:nextButton];
         _nextButton = nextButton;
-        _nextButton.imageName = @"tab_next";
+        UIImage *backArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+        UIImage *nextArrowImage = [UIImage imageWithCGImage:backArrowImage.CGImage scale:backArrowImage.scale orientation:UIImageOrientationDown];
+        [_nextButton setImage:nextArrowImage forState:UIControlStateNormal];
         _nextButton.hitTestEdgeInsets = toolBarButtonHitTestInsets;
         [_nextButton addTarget:self action:@selector(nextButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         
