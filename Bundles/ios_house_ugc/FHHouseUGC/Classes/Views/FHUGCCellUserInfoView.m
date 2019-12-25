@@ -248,6 +248,7 @@
     }
     viewModel.cellType = self.cellModel.cellType;
     viewModel.hasEdit = self.cellModel.hasEdit;
+    viewModel.groupSource  =self.cellModel.groupSource;
     [dislikeView refreshWithModel:viewModel];
     CGPoint point = _moreBtn.center;
     [dislikeView showAtPoint:point

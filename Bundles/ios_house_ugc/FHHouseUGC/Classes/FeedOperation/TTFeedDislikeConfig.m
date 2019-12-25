@@ -138,7 +138,7 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
                 word.items = @[word];
             }
             // 编辑
-            if(word.type == FHFeedOperationWordTypeEdit && isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC){
+            if(word.type == FHFeedOperationWordTypeEdit && isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC && [viewModel.groupSource isEqualToString:@"113"]){
                 [items addObject:word];
             }
             // 编辑记录
@@ -181,9 +181,9 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
                 if((word.type == FHFeedOperationWordTypeTop && viewModel.isTop) || (word.type == FHFeedOperationWordTypeCancelTop && !viewModel.isTop) || (word.type == FHFeedOperationWordTypeGood && viewModel.isGood) || (word.type == FHFeedOperationWordTypeCancelGood && !viewModel.isGood)){
                     continue;
                 }
-                // 编辑添加
+                // 编辑添加 113 是小端的帖子
                 if (word.type == FHFeedOperationWordTypeEdit) {
-                    if (isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC) {
+                    if (isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC && [viewModel.groupSource isEqualToString:@"113"]) {
                         [items addObject:word];
                     }
                     continue;

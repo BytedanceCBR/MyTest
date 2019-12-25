@@ -151,6 +151,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL ischanged;
 // 来自详情页
 @property (nonatomic, assign)   BOOL       isFromDetail;
+// 区分是否是头条的帖子 （113）
+@property (nonatomic, copy , nullable) NSString *groupSource;
 // 是否已编辑
 @property (nonatomic, assign) BOOL hasEdit;
 // 是否来源于编辑历史页面
