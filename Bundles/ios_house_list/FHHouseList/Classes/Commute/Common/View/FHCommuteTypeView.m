@@ -156,8 +156,8 @@
     for (NSInteger i = 0 ; i < _buttons.count ; i++) {
         button = _buttons[i];
         button.selected = (_currentType == i);
-        [button setTitleColor:button.selected?[UIColor whiteColor]:[UIColor themeGray1] forState:UIControlStateNormal];
-        button.backgroundColor = (button.selected?[UIColor themeOrange1]:[UIColor themeGray7]);
+        [button setTitleColor:button.selected?[UIColor themeOrange1]:[UIColor themeGray1] forState:UIControlStateNormal];
+        button.backgroundColor = (button.selected?[UIColor themeOrange2]:[UIColor themeGray8]);
     }
 }
 

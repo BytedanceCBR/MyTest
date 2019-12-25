@@ -94,7 +94,7 @@
 -(void)setEnableSearch:(BOOL)enableSearch
 {
     _enableSearch = enableSearch;
-    _searchButton.backgroundColor = enableSearch?[UIColor themeOrange1]:RGBA(0xff, 0x58, 0x69,0.3);
+    _searchButton.backgroundColor = enableSearch?[UIColor themeOrange1]:RGBA(0xff, 0x96, 0x29,0.3);
 }
 
 -(void)setBoldTitle:(BOOL)boldTitle

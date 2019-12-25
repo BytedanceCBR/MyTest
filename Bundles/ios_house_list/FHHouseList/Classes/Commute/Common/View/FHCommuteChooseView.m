@@ -180,7 +180,7 @@
                            };
     NSDictionary *hattr = @{
                             NSFontAttributeName:[UIFont themeFontRegular:14],
-                            NSForegroundColorAttributeName:[UIColor themeOrange1]
+                            NSForegroundColorAttributeName:[UIColor themeOrange4]
                             };
     
     for (NSInteger i = 0 ; i < _items.count ; i++) {
