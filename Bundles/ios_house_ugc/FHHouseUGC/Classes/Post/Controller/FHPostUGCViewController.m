@@ -332,7 +332,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void) createInputComponent {
     // select view
-    if (!self.hasSocialGroup) {
+    if (!self.hasSocialGroup && !self.isOuterEdit) {
         CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
         self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, SCREEN_WIDTH, 44) type: FHPostUGCMainViewType_Post];
         [self.view addSubview:self.selectView];
@@ -366,7 +366,7 @@ static NSInteger const kMaxPostImageCount = 9;
         }
     }
     
-    if(isShowSelectedGroupHistory && selectedGroup) {
+    if(isShowSelectedGroupHistory && selectedGroup && !self.isOuterEdit) {
         CGRect frame = self.selectView.bounds;
         frame.origin.y = self.selectView.bottom;
         self.selectedGrouplHistoryView = [[FHPostUGCSelectedGroupHistoryView alloc] initWithFrame:frame delegate:self historyModel:selectedGroup];
@@ -767,7 +767,7 @@ static NSInteger const kMaxPostImageCount = 9;
     
     NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
-    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
+    BOOL shouldAlert = [self checkPostContentChanged];
     
     if (!shouldAlert) {
         [self postFinished:NO];
@@ -821,8 +821,8 @@ static NSInteger const kMaxPostImageCount = 9;
         return;
     }
     
-    if (![self.selectView hasValidData] && !self.hasSocialGroup) {
-        [[ToastManager manager] showToast:@"请选择要发布的小区！"];
+    if (![self.selectView hasValidData] && !self.hasSocialGroup && !self.isOuterEdit) {
+        [[ToastManager manager] showToast:@"请选择要发布的圈子！"];
         return;
     }
     
@@ -1103,23 +1103,78 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)refreshPostButtonUI {
     //发布器
-    if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
-        self.postButton.enabled = YES;
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
-    } else {
-        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateHighlighted];
-        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
-        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
-        self.postButton.enabled = NO;
-    }
+    [self refreshPostButtonValidStatus];
+    
     // 选择小区
     if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
         self.selectView.groupId = self.selectGroupId;
         self.selectView.communityName = self.selectGroupName;
         self.selectView.followed = YES;
         self.selectView.rightImageView.hidden = YES;
+    }
+}
+
+- (void)refreshPostButtonValidStatus {
+    
+    BOOL isEnablePostButton = [self checkPostContentChanged];
+    
+    [self setPostButtonEnable:isEnablePostButton];
+}
+
+- (BOOL)checkPostContentChanged {
+    
+    BOOL ret = NO;
+    
+    if(self.isOuterEdit) {
+        
+        NSString *outerContent = self.postPreContent;
+        NSMutableString *outerImageUris = [NSMutableString string];
+        [self.outerInputAssets enumerateObjectsUsingBlock:^(TTAssetModel * _Nonnull model, NSUInteger idx, BOOL * _Nonnull stop) {
+            if(model.imageURI.length > 0) {
+                [outerImageUris appendFormat:@"%@", model.imageURI];
+            }
+        }];
+        
+        TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
+        [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        NSString *currentContent = richSpanText.text;
+        NSMutableString *currentImageUris = [NSMutableString string];
+        [self.addImagesView.selectedImageCacheTasks enumerateObjectsUsingBlock:^(TTUGCImageCompressTask * _Nonnull task, NSUInteger idx, BOOL * _Nonnull stop) {
+            if(task.assetModel.imageURI.length > 0) {
+                [currentImageUris appendFormat:@"%@", task.assetModel.imageURI];
+            }
+            
+            if(task.preCompressFilePath.length > 0) {
+                [currentImageUris appendFormat:@"%@", task.preCompressFilePath];
+            }
+        }];
+        
+        ret = !([currentContent isEqualToString:outerContent] &&  [currentImageUris isEqualToString:outerImageUris]);
+    }
+    else {
+        
+        NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        ret = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
+    }
+    
+    return ret;
+}
+
+- (void)setPostButtonEnable:(BOOL)isEnable {
+    
+    self.postButton.enabled = isEnable;
+    
+    if(isEnable) {
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
+    }
+    else {
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateHighlighted];
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
     }
 }
 
