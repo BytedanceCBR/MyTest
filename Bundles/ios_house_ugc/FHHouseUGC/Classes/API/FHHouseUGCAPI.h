@@ -107,6 +107,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 帖子编辑历史
 + (TTHttpTask *)requestPostHistoryByGroupId:(NSString *)gid offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+// Feed编辑帖子发布请求
++ (TTHttpTask *)requestPublishEditedPostWithParam:(NSDictionary *)params  completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
