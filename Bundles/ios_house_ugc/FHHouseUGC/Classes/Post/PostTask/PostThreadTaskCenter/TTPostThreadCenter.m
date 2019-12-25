@@ -674,7 +674,12 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
 
 // 真正发送请求
 - (void)postEditedPostWith:(NSMutableDictionary *)params {
-    
+    NSString *post_id = nil;
+    if (params[@"post_id"]) {
+        post_id = [NSString stringWithFormat:@"%@",params[@"post_id"]];
+    }
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    userInfo[@"group_id"] = post_id;
     WeakSelf;
     [FHHouseUGCAPI requestPublishEditedPostWithParam:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
@@ -682,7 +687,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         if(error) {
             [[ToastManager manager] showToast:error.localizedDescription];
             // 更新帖子发布失败
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
             return;
         }
         
@@ -695,7 +700,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
                 // 模型转换
                 FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:jsonString];
                 
-                NSMutableDictionary *userInfo = @{}.mutableCopy;
+                userInfo[@"group_id"] = post_id;
                 userInfo[@"thread_cell"] = jsonString;
                 userInfo[@"social_group_id"] = params[@"social_group_id"];
                 userInfo[@"publish_type"] = @(FHUGCPublishTypePost);
@@ -708,7 +713,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         }
         
         // 更新帖子发布失败
-          [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:nil];
+          [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
     }];
     
 }

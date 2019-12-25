@@ -861,7 +861,7 @@
 }
 
 + (TTHttpTask *)requestPostHistoryByGroupId:(NSString *)gid offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-    NSString *queryPath = @"/api/feed/post_history/v1";
+    NSString *queryPath = @"/api/feed/post_history/v1/?";
     NSString *url = QURL(queryPath);
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (gid.length > 0) {

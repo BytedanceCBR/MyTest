@@ -159,6 +159,7 @@
         case FHFeedOperationOptionTypeEdit: {
             icon = [UIImage imageNamed:@"fh_ugc_feed_edit"];
         }
+            break;
         case FHFeedOperationOptionTypeEditList: {
             icon = [UIImage imageNamed:@"fh_ugc_feed_edit_history"];
         }
