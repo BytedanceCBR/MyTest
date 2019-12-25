@@ -25,7 +25,7 @@
 #import <FHHouseBase/FHLocManager.h>
 
 #define BANNER_HEIGHT SCREEN_WIDTH*(224/375.0)
-#define INPUT_BG_HEIGHT 46
+#define INPUT_BG_HEIGHT 40
 @interface FHCommuteConfigViewController ()<FHCommutePOISearchDelegate>
 
 @property(nonatomic , strong) UIImageView *topBanner;
@@ -86,19 +86,19 @@
  
     _inputBgView = [[UIView alloc] init];
     CALayer *clayer = [CALayer layer];
-    clayer.frame = CGRectMake(0, 0, SCREEN_WIDTH - 2*HOR_MARGIN, INPUT_BG_HEIGHT);
+    clayer.frame = CGRectMake(0, 0, SCREEN_WIDTH - 2*HOR_MARGIN_NEW, INPUT_BG_HEIGHT);
     clayer.backgroundColor = [[UIColor whiteColor]CGColor];
-    clayer.cornerRadius = 4;
+    clayer.cornerRadius = 20;
     clayer.masksToBounds = YES;
     
     _inputBgShadowView = [[UIView alloc]init];
-    _inputBgShadowView.layer.cornerRadius = 4;
+    _inputBgShadowView.layer.cornerRadius = 20;
     _inputBgShadowView.backgroundColor = [UIColor whiteColor];
     
     CALayer *slayer = _inputBgShadowView.layer;
     slayer.frame = clayer.frame;
     slayer.shadowColor = [[UIColor blackColor]CGColor];
-    slayer.shadowRadius = 5;
+    slayer.shadowRadius = 20;
     slayer.shadowOpacity = 0.1;
     slayer.shadowOffset = CGSizeMake(2, 6);
     
@@ -218,7 +218,7 @@
     }
     
     [_backButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
         make.top.mas_equalTo(topMargin);
         make.size.mas_equalTo(CGSizeMake(24, 24));
     }];
@@ -229,16 +229,16 @@
     }];
     
     [_bannerTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
-        make.right.mas_lessThanOrEqualTo(self.view).offset(-HOR_MARGIN);
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
+        make.right.mas_lessThanOrEqualTo(self.view).offset(-HOR_MARGIN_NEW);
         make.top.mas_equalTo(topMargin + 64);
         make.height.mas_equalTo(45);
     }];
     
     [_bannerSubtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
         make.top.mas_equalTo(self.bannerTitleLabel.mas_bottom).offset(0);
-        make.right.mas_lessThanOrEqualTo(self.view).offset(-HOR_MARGIN);
+        make.right.mas_lessThanOrEqualTo(self.view).offset(-HOR_MARGIN_NEW);
         make.height.mas_equalTo(20);
     }];
     
@@ -250,8 +250,8 @@
     
     
     [_inputBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
-        make.right.mas_equalTo(self.view).offset(-HOR_MARGIN);
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
+        make.right.mas_equalTo(self.view).offset(-HOR_MARGIN_NEW);
         make.top.mas_equalTo(_topBanner.mas_bottom).offset(-19);
         make.height.mas_equalTo(INPUT_BG_HEIGHT);
     }];

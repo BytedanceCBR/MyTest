@@ -93,13 +93,13 @@
 {
  
     [_tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
-        make.right.mas_lessThanOrEqualTo(-HOR_MARGIN).priorityLow();
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
+        make.right.mas_lessThanOrEqualTo(-HOR_MARGIN_NEW).priorityLow();
         make.bottom.mas_equalTo(self.mas_centerY).offset(-4);
     }];
     
     [_iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
         make.centerY.mas_equalTo(self.locationLabel);
         make.size.mas_equalTo(CGSizeMake(16, 16));
     }];
@@ -112,14 +112,14 @@
     }];
     
     [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left. mas_equalTo(HOR_MARGIN);
-        make.right.mas_equalTo(-HOR_MARGIN).priorityLow();
+        make.left. mas_equalTo(HOR_MARGIN_NEW);
+        make.right.mas_equalTo(-HOR_MARGIN_NEW).priorityLow();
         make.bottom.mas_equalTo(self);
         make.height.mas_equalTo(ONE_PIXEL);
     }];
     
     [_refreshButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-HOR_MARGIN).priorityLow();
+        make.right.mas_equalTo(-HOR_MARGIN_NEW).priorityLow();
         make.centerY.mas_equalTo(_locationLabel);
         make.size.mas_equalTo(CGSizeMake(20, 20));
     }];
@@ -133,8 +133,8 @@
     }];
     
     [_notInCityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
-        make.right.mas_equalTo(-HOR_MARGIN).priorityLow();
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
+        make.right.mas_equalTo(-HOR_MARGIN_NEW).priorityLow();
         make.top.mas_equalTo(20);
         make.bottom.mas_lessThanOrEqualTo(self.notInCityBgView);
     }];
@@ -176,7 +176,7 @@
 //    if (_refreshButton.hidden == showRefresh) {
 //        _refreshButton.hidden = !showRefresh;
 //        [_locationLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.right.mas_equalTo(self).offset(showRefresh?-40:-HOR_MARGIN);
+//            make.right.mas_equalTo(self).offset(showRefresh?-40:-HOR_MARGIN_NEW);
 //        }];
 //    }    
 //}

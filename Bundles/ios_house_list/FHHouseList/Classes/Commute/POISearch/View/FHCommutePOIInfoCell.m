@@ -66,16 +66,16 @@
     [self.contentView addSubview:_addressLabel];
     
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
 //        make.top.mas_equalTo(TOP_MARGIN);
-        make.right.mas_lessThanOrEqualTo(-HOR_MARGIN);
+        make.right.mas_lessThanOrEqualTo(-HOR_MARGIN_NEW);
         make.height.mas_equalTo(20);
         make.bottom.mas_equalTo(self.addressLabel.mas_top).offset(-ITEM_VER_MARGIN);
     }];
     
     [_addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
-        make.right.mas_lessThanOrEqualTo(self.contentView).offset(-HOR_MARGIN);
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
+        make.right.mas_lessThanOrEqualTo(self.contentView).offset(-HOR_MARGIN_NEW);
         make.bottom.mas_equalTo(self.contentView);
 //        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(ITEM_VER_MARGIN);
     }];

@@ -46,14 +46,14 @@
         
         
         [_tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(HOR_MARGIN);
+            make.left.mas_equalTo(HOR_MARGIN_NEW);
             make.bottom.mas_equalTo(self).offset(-TIP_TO_BOTTOM);
             make.height.mas_equalTo(TIP_HEIGHT);
             make.right.mas_lessThanOrEqualTo(self.actionButton.mas_left).offset(-10);
         }];
         
         [_actionButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self).offset(-HOR_MARGIN/2);
+            make.right.mas_equalTo(self).offset(-HOR_MARGIN_NEW/2);
             make.width.mas_equalTo(ACTION_WIDTH);
             make.top.bottom.mas_equalTo(self);
         }];

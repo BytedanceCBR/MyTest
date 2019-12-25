@@ -42,11 +42,11 @@
         [self addSubview:_timeChooseView];
  
         _searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _searchButton.frame = CGRectMake(HOR_MARGIN, self.height - insets.bottom - SEARCH_BTN_HEIGHT, self.width - 2*HOR_MARGIN, SEARCH_BTN_HEIGHT);
-        _searchButton.layer.cornerRadius = 4;
+        _searchButton.frame = CGRectMake(HOR_MARGIN_NEW, self.height - insets.bottom - SEARCH_BTN_HEIGHT, self.width - 2*HOR_MARGIN_NEW, SEARCH_BTN_HEIGHT);
+        _searchButton.layer.cornerRadius = 22;
         _searchButton.layer.masksToBounds = YES;
         _searchButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-        _searchButton.backgroundColor = [UIColor themeOrange1];
+        _searchButton.backgroundColor = [UIColor themeOrange4];
         _searchButton.titleLabel.font = [UIFont themeFontRegular:16];
         [_searchButton setTitle:@"开始找房" forState:UIControlStateNormal];
         
@@ -94,7 +94,7 @@
 -(void)setEnableSearch:(BOOL)enableSearch
 {
     _enableSearch = enableSearch;
-    _searchButton.backgroundColor = enableSearch?[UIColor themeOrange1]:RGBA(0xff, 0x96, 0x29,0.3);
+    _searchButton.backgroundColor = enableSearch?[UIColor themeOrange4]:RGBA(0xff, 0x96, 0x29,0.3);
 }
 
 -(void)setBoldTitle:(BOOL)boldTitle

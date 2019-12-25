@@ -15,7 +15,7 @@
 
 #define THUMB_IMAGE_WIDTH 48
 #define SLIDER_TOP_TIP    10
-#define TIME_HOR_MARGIN   30
+#define TIME_HOR_MARGIN_NEW   30
 #define TIME_ITEM_WIDTH   17
 
 
@@ -47,10 +47,10 @@
         _titleLabel.text = @"期望通勤时长/分钟";
         [_titleLabel sizeToFit];
         CGRect labelFrame = _titleLabel.frame;
-        labelFrame.origin.x = HOR_MARGIN;
+        labelFrame.origin.x = HOR_MARGIN_NEW;
         _titleLabel.frame = labelFrame;
         
-        _slider = [[FHCommuteSlider  alloc] initWithFrame:CGRectMake(HOR_MARGIN, 0, SCREEN_WIDTH - 2*HOR_MARGIN, THUMB_IMAGE_WIDTH)];
+        _slider = [[FHCommuteSlider  alloc] initWithFrame:CGRectMake(HOR_MARGIN_NEW, 0, SCREEN_WIDTH - 2*HOR_MARGIN_NEW, THUMB_IMAGE_WIDTH)];
         _slider.maxValue = 100;
         _slider.minValue = 0;
         _slider.type = type;
@@ -84,16 +84,16 @@
 -(void)initConstraints
 {
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
-        make.right.mas_lessThanOrEqualTo(self).offset(-HOR_MARGIN);
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
+        make.right.mas_lessThanOrEqualTo(self).offset(-HOR_MARGIN_NEW);
         make.top.mas_equalTo(self);
         make.height.mas_equalTo(24);
     }];
     
     [_slider mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(SLIDER_TOP_TIP);
-        make.left.mas_equalTo(HOR_MARGIN);
-        make.right.mas_equalTo(self).offset(-HOR_MARGIN);
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
+        make.right.mas_equalTo(self).offset(-HOR_MARGIN_NEW);
         make.height.mas_equalTo(THUMB_IMAGE_WIDTH);
     }];
 }
@@ -134,9 +134,9 @@
             [self setNeedsDisplay];
         }
     }else{
-        CGFloat width = (CGRectGetWidth(self.bounds) - 2*TIME_HOR_MARGIN - TIME_ITEM_WIDTH*_items.count)/(_items.count - 1) + TIME_ITEM_WIDTH;
+        CGFloat width = (CGRectGetWidth(self.bounds) - 2*TIME_HOR_MARGIN_NEW - TIME_ITEM_WIDTH*_items.count)/(_items.count - 1) + TIME_ITEM_WIDTH;
         
-        CGFloat offset = TIME_HOR_MARGIN+width*_currentIndex+TIME_ITEM_WIDTH/2;
+        CGFloat offset = TIME_HOR_MARGIN_NEW+width*_currentIndex+TIME_ITEM_WIDTH/2;
         CGPoint sliderOffset = [_slider convertPoint:CGPointMake(offset, 0) fromView:self];
         
         _slider.value = sliderOffset.x / _slider.frame.size.width * _slider.maxValue;
@@ -172,7 +172,7 @@
         return;
     }
     
-    CGFloat width = (CGRectGetWidth(rect) - 2*TIME_HOR_MARGIN - TIME_ITEM_WIDTH*_items.count)/(_items.count - 1);
+    CGFloat width = (CGRectGetWidth(rect) - 2*TIME_HOR_MARGIN_NEW - TIME_ITEM_WIDTH*_items.count)/(_items.count - 1);
     
     NSDictionary *attr = @{
                            NSFontAttributeName:[UIFont themeFontRegular:14],
@@ -185,7 +185,7 @@
     
     for (NSInteger i = 0 ; i < _items.count ; i++) {
         NSString *item = _items[i];
-        [item drawAtPoint:CGPointMake(TIME_HOR_MARGIN+(width+TIME_ITEM_WIDTH)*i, CGRectGetHeight(rect)-20) withAttributes:(i == _currentIndex)?hattr:attr];
+        [item drawAtPoint:CGPointMake(TIME_HOR_MARGIN_NEW+(width+TIME_ITEM_WIDTH)*i, CGRectGetHeight(rect)-20) withAttributes:(i == _currentIndex)?hattr:attr];
     }
     
 }
