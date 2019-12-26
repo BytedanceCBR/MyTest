@@ -289,7 +289,7 @@
 {
     FHDetailNeighborhoodInfoCorrectingModel *model = (FHDetailNeighborhoodInfoCorrectingModel *)self.currentData;
     if (model) {
-        NSString *headerName = [NSString stringWithFormat:@"%@小区",model.neighborhoodInfo.name];
+        NSString *headerName = [NSString stringWithFormat:@"%@",model.neighborhoodInfo.name];
         self.headerView.titleStr = headerName;
         NSString *areaName = model.neighborhoodInfo.areaName;
         NSString *districtName = model.neighborhoodInfo.districtName;
