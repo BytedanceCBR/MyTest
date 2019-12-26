@@ -177,6 +177,10 @@
 //VR详情页
 "house_vr_web" = "FHVRDetailWebViewController";
 
+//新增工具箱
+"toolbox" = "FHHomeMoreIconViewController";
+
+
 //UGC相关
 "ugc_post" = "FHPostUGCViewController";
 "thread_detail" = "FHPostDetailViewController";

@@ -76,7 +76,7 @@
     self.commentBtn = [[UIButton alloc] init];
     _commentBtn.opaque = YES;
     _commentBtn.imageView.contentMode = UIViewContentModeCenter;
-    [_commentBtn setImage:ICON_FONT_IMG(20, @"\U0000e699", nil) forState:UIControlStateNormal];// @"fh_ugc_comment"
+    [_commentBtn setImage:ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeGray1]) forState:UIControlStateNormal];// @"fh_ugc_comment"
     [_commentBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     _commentBtn.titleLabel.font = [UIFont themeFontRegular:14];
     [_commentBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
@@ -88,7 +88,7 @@
     
     self.likeBtn = [[UIButton alloc] init];
     _likeBtn.imageView.contentMode = UIViewContentModeCenter;
-    [_likeBtn setImage:ICON_FONT_IMG(20, @"\U0000e69c", nil) forState:UIControlStateNormal];// @"fh_ugc_comment"
+    [_likeBtn setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];// @"fh_ugc_comment"
     [_likeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     _likeBtn.titleLabel.font = [UIFont themeFontRegular:14];
     [_likeBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
@@ -98,22 +98,7 @@
     _likeBtn.titleLabel.layer.masksToBounds = YES;
     _likeBtn.titleLabel.backgroundColor = [UIColor whiteColor];
     [self addSubview:_likeBtn];
-    
-//    self.likeView = [[UIView alloc] init];
-//    _likeView.userInteractionEnabled = YES;
-//    [self addSubview:_likeView];
-//
-//    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(like:)];
-//    [self.likeView addGestureRecognizer:singleTap];
-//
-//    self.likeImageView = [[UIImageView alloc] init];
-//    _likeImageView.image = ICON_FONT_IMG(20, @"\U0000e69c", nil);//@"fh_ugc_like"
-//    [self.likeView addSubview:_likeImageView];
-//
-//    self.likeLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
-//    [_likeLabel sizeToFit];
-//    [self.likeView addSubview:_likeLabel];
-    
+
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
     [self addSubview:_bottomSepView];
@@ -170,13 +155,13 @@
     [self.likeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self).offset(2);
         make.right.mas_equalTo(self).offset(-20);
-        make.height.mas_equalTo(20);
+        make.height.mas_equalTo(24);
     }];
     
     [self.commentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self).offset(2);
         make.right.mas_equalTo(self.likeBtn.mas_left).offset(-20);
-        make.height.mas_equalTo(20);
+        make.height.mas_equalTo(24);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -249,29 +234,20 @@
 - (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg {
     NSInteger count = [diggCount integerValue];
     if(count == 0){
-//        self.likeLabel.text = @"赞";
         [self.likeBtn setTitle:@"赞" forState:UIControlStateNormal];
     }else{
-//        self.likeLabel.text = [TTBusinessManager formatCommentCount: count];
         [self.likeBtn setTitle:[TTBusinessManager formatCommentCount: count] forState:UIControlStateNormal];
     }
     if([userDigg boolValue]){
-//        self.likeImageView.image = ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeRed1]);//"fh_ugc_like_selected"
-//        self.likeLabel.textColor = [UIColor themeRed1];
-        
-        [self.likeBtn setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeRed1]) forState:UIControlStateNormal];
-        [self.likeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [self.likeBtn setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateNormal];
+        [self.likeBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
         
     }else{
-//        self.likeImageView.image =  ICON_FONT_IMG(20, @"\U0000e69c", nil);//@"fh_ugc_like"
-//        self.likeLabel.textColor = [UIColor themeGray1];
-        
-        [self.likeBtn setImage:ICON_FONT_IMG(20, @"\U0000e69c", nil) forState:UIControlStateNormal];
+        [self.likeBtn setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
         [self.likeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     }
     //补充逻辑，如果用户状态为已点赞，但是点赞数为零，这时候默认点赞数设为1
     if([userDigg boolValue] && count == 0){
-//        self.likeLabel.text = @"1";
         [self.likeBtn setTitle:@"1" forState:UIControlStateNormal];
     }
 }

@@ -236,7 +236,7 @@
     self.toolbarView.digCountValue = [NSString stringWithFormat:@"%ld",self.viewModel.digg_count];
     if (self.viewModel.user_digg == 1) {
         // 点赞
-        self.toolbarView.digCountLabel.textColor = [UIColor themeRed1];
+        self.toolbarView.digCountLabel.textColor = [UIColor themeOrange4];
     } else {
         // 取消点赞
         self.toolbarView.digCountLabel.textColor = [UIColor themeGray1];

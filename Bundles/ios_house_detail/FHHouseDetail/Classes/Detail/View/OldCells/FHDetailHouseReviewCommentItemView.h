@@ -24,7 +24,7 @@
 @property(nonatomic, strong) FHDetailHouseReviewCommentModel *curData;
 @property(nonatomic, weak) id <FHDetailHouseReviewCommentItemViewDelegate> delegate;
 @property(nonatomic, strong) TTUGCAttributedLabel *commentView;
-
+@property (nonatomic, weak) UIImageView *identifyBacima;
 + (CGFloat)heightForData:(FHDetailHouseReviewCommentModel *)data;
 
 - (void)refreshWithData:(NSObject *)data;

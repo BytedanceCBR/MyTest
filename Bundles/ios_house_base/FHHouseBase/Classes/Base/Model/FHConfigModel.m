@@ -335,10 +335,13 @@
     return @{
              @"houseTypeList": @"house_type_list",
              @"opData2": @"op_data_2",
+             @"toolboxData":@"toolbox_data",
              @"opData2list": @"op_data_2_list",
              @"opData": @"op_data",
+             @"houseOpData2": @"house_op_data_2",
              @"rentOpData": @"rent_op_data",
              @"mainPageBannerOpData": @"main_page_banner",
+             @"houseListBanner": @"house_list_banner",
              @"houseOpData": @"house_op_data",
              @"entryInfo": @"entry_info",
              @"currentCityId": @"current_city_id",
@@ -380,6 +383,7 @@
     return @{
              @"opData2list":[FHConfigDataOpData2ListModel class],
              @"entryInfo":[FHConfigDataEntryInfoModel class],
+             @"toolboxData":[FHConfigDataOpData2Model class],
              @"hotCityList":[FHConfigDataHotCityListModel class],
              @"cityList":[FHConfigDataCityListModel class],
              @"banners":[FHConfigDataBannersModel class],
@@ -407,6 +411,7 @@
     NSArray *keys = @[
                       @"op_data_2",
                       @"op_data_2_list",
+                      @"toolbox_data",
                       @"op_data",
                       @"rent_op_data",
                       @"main_page_banner",
@@ -471,8 +476,10 @@
 DICT_PROP_GET(FHConfigDataOpData2Model,opData2,@"op_data_2")
 ARRAY_PROP_GET(FHConfigDataOpData2ListModel,opData2list,@"op_data_2_list")
 DICT_PROP_GET(FHConfigDataOpDataModel,opData,@"op_data")
+DICT_PROP_GET(FHConfigDataOpDataModel,houseOpData2,@"house_op_data_2")
 DICT_PROP_GET(FHConfigDataRentOpDataModel,rentOpData,@"rent_op_data")
 DICT_PROP_GET(FHConfigDataMainPageBannerOpDataModel ,mainPageBannerOpData,@"main_page_banner")
+DICT_PROP_GET(FHConfigDataMainPageBannerOpDataModel ,houseListBanner,@"house_list_banner")
 DICT_PROP_GET(FHConfigDataOpData2Model ,houseOpData,@"house_op_data")
 ARRAY_PROP_GET(FHConfigDataHotCityListModel, hotCityList,@"hot_city_list");
 ARRAY_PROP_GET(FHConfigDataCityListModel ,cityList,@"city_list")

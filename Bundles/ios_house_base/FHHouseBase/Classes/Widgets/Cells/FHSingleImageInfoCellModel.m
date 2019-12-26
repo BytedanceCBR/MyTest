@@ -248,22 +248,27 @@
             if (element.content && element.textColor && element.backgroundColor) {
                 
                 NSMutableString *reulstString = element.content;
-                if (reulstString.length * 10 > ([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90)) {
-                    
-                    NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
-                    
-                    for (NSInteger i = 0; i < paramsArrary.count; i++) {
-                        reulstString = [self cutStringFromString:reulstString];
+                if (tagList.count > 1) {
+                    if (reulstString.length * 10 > ([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90)) {
                         
-                        if (reulstString.length * 8 < ([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90 - 10))
-                        {
-                            break;
+                        NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
+                        
+                        for (NSInteger i = 0; i < paramsArrary.count; i++) {
+                            reulstString = [self cutStringFromString:reulstString];
+                            
+                            if (reulstString.length * 8 < ([UIScreen mainScreen].bounds.size.width  - 40 - 72 - 90 - 10))
+                            {
+                                break;
+                            }
                         }
                     }
+                }else
+                {
+                    reulstString = element.content;
                 }
-
-                UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor colorWithHexString:@"#f85959"];
-                UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor colorWithRed:248/255.0 green:89/255.0 blue:89/255.0 alpha:0.08];
+          
+                UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor themeRed4];
+                UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor whiteColor];
                 NSAttributedString *attr = [self.class createSmallTagAttrString:reulstString isFirst:idx == 0 textColor:textColor backgroundColor:backgroundColor];
                 [attrTexts addObject:attr];
             }
@@ -311,7 +316,7 @@
 +(NSAttributedString *)createSmallTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
     
     NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@",text]];
-    attributeText.yy_font = [UIFont themeFontRegular:10];
+    attributeText.yy_font = [UIFont themeFontRegular:12];
     attributeText.yy_color = textColor;
     NSRange substringRange = [attributeText.string rangeOfString:text];
     [attributeText yy_setTextBinding:[YYTextBinding bindingWithDeleteConfirm:NO] range:substringRange];

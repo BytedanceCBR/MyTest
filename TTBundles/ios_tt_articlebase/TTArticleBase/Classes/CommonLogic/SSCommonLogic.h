@@ -1401,7 +1401,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)imCanStart;
 //是否禁用详情页秒开
 +(BOOL)disableDetailInstantShow;
-
+//经纪人评价弹窗是否强制使用
++(BOOL)isForceEnableRealtorConfirmBtn;
 
 @end
 

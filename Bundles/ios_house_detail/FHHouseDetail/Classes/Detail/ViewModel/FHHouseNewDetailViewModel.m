@@ -636,7 +636,6 @@
         staticMapModel.title = model.data.coreInfo.name;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.coreInfo.gaodeImage;
-        staticMapModel.useStarHeader = NO;
         staticMapModel.mapOnly = NO;
         [self.items addObject:staticMapModel];
 

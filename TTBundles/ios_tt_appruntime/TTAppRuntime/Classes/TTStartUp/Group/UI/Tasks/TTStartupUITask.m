@@ -56,16 +56,16 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
 
     if (hasSelectedCity) {
-        if (![FHEnvContext isCurrentCityNormalOpen] && lastCityId) {
-            [[FHEnvContext sharedInstance] jumpUGCTab];
-        }else
-        {
+//        if (![FHEnvContext isCurrentCityNormalOpen] && lastCityId) {
+//            [[FHEnvContext sharedInstance] jumpUGCTab];
+//        }else
+//        {
             if ([FHEnvContext isUGCAdUser]) {
                 if ([FHEnvContext isUGCOpen]) {
                     [[FHEnvContext sharedInstance] jumpUGCTab];
                 }
             }
-        }
+//        }
     }
 
     if (lastCityId) {

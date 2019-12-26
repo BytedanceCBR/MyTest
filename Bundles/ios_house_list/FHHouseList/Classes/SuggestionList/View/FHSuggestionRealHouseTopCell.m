@@ -44,39 +44,39 @@
 - (void)setupUITypeBottom
 {
     UIView *backColorView = [UIView new];
-    [backColorView setBackgroundColor:[UIColor themeGray7]];
+    [backColorView setBackgroundColor:[UIColor colorWithHexString:@"#fafbfa"]];
     [self.contentView addSubview:backColorView];
     [backColorView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
-        make.centerY.equalTo(self.contentView);
-        make.height.mas_equalTo(30);
+        make.top.mas_equalTo(10);
+        make.height.mas_equalTo(46);
     }];
     
     _falseHouseLabel = [[UILabel alloc] init];
-    _falseHouseLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 12 : 10];
+    _falseHouseLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 14 : 12];
     _falseHouseLabel.textColor = [UIColor themeGray3];
     _falseHouseLabel.textAlignment = NSTextAlignmentLeft;
     [backColorView addSubview:_falseHouseLabel];
     [_falseHouseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(backColorView).offset(-15);
+        make.centerX.equalTo(backColorView).offset(-10);
         make.centerY.equalTo(backColorView);
         make.height.mas_equalTo(30);
     }];
 
     _allFalseHouseBtn = [FHExtendHotAreaButton buttonWithType:UIButtonTypeCustom];
     _allFalseHouseBtn.isExtend = YES;
-    UIImage *img = ICON_FONT_IMG(([TTDeviceHelper isScreenWidthLarge320] ? 12 : 10), @"\U0000e670", [UIColor themeGray3]);
+    UIImage *img = ICON_FONT_IMG(([TTDeviceHelper isScreenWidthLarge320] ? 14 : 12), @"\U0000e670", [UIColor colorWithHexString:@"#aeadad"]);
     [_allFalseHouseBtn setImage:img forState:UIControlStateNormal];
     [_allFalseHouseBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    [_allFalseHouseBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [_allFalseHouseBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     [backColorView addSubview:_allFalseHouseBtn];
     
     
     [_allFalseHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.falseHouseLabel.mas_right).offset(5);
+        make.left.equalTo(self.falseHouseLabel.mas_right).offset(4);
         make.centerY.equalTo(_falseHouseLabel);
-        make.width.mas_equalTo(12);
-        make.height.mas_equalTo(12);
+        make.width.mas_equalTo(16);
+        make.height.mas_equalTo(16);
     }];
     
     _maskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -163,7 +163,7 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 50;
+    return 66;
 }
 
 - (void)refreshUI:(JSONModel *)data

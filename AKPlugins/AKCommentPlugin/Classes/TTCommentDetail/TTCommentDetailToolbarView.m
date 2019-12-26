@@ -14,7 +14,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import "UIColor+Theme.h"
+#import <UIColor+Theme.h>
 #import "UIFont+House.h"
 #import "Masonry.h"
 

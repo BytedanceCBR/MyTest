@@ -367,7 +367,6 @@ typedef enum : NSUInteger {
     if(isEmpty) {
         [self traceAlertShowWhenUserDecideWithEventName:@"notice_empty_popup_show"];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            [self exitPage];
             [self traceAlertClickWhenUserDecideWithOptionName:@"cancel"];
         }];
         UIAlertAction *confirmEmptyAction = [UIAlertAction actionWithTitle:@"清空" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

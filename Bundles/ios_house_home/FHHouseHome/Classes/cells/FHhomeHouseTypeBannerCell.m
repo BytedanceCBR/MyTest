@@ -37,6 +37,8 @@
 
 - (void)refreshData:(FHHouseType)houseType
 {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     
     if (!dataModel.opData2list || dataModel.opData2list.count == 0) {
@@ -67,7 +69,7 @@
     CGFloat scaleRatio = 0.9;
 
     CGFloat imageWidth = viewWidth * scaleRatio;
-    CGFloat imageHeight = viewWidth * 69 / 82 * scaleRatio;
+    CGFloat imageHeight = viewWidth * scaleRatio * 0.92;
     
     for (NSInteger i = 0; i < items.count; i++) {
         if (i > 3) {
@@ -92,7 +94,7 @@
         }
         
         [backImage setBackgroundColor:[UIColor whiteColor]];
-        backImage.layer.cornerRadius = 2;
+        backImage.layer.cornerRadius = 10;
         backImage.userInteractionEnabled = YES;
         backImage.layer.masksToBounds = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(houseTypeBannerClick:)];
@@ -108,9 +110,10 @@
         // 设置阴影的路径 此处效果为在view周边添加宽度为4的阴影效果
         UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(- shaderWidht, -shaderWidht, shaderBackView.frame.size.width + shaderWidht * 2, shaderBackView.frame.size.height + shaderWidht * 2)];
         shaderBackView.layer.shadowPath = path.CGPath;
-        shaderBackView.layer.shadowOffset = CGSizeMake(0, 0);
-        shaderBackView.layer.shadowColor = [UIColor themeGray3].CGColor;
-        shaderBackView.layer.shadowOpacity = 0.2;
+        shaderBackView.layer.shadowOffset = CGSizeMake(0, 4);
+        shaderBackView.layer.shadowRadius = 6;
+        shaderBackView.layer.shadowColor = [UIColor blackColor].CGColor;
+        shaderBackView.layer.shadowOpacity = 0.1;
         
         backImage.tag = i;
         [containView addSubview:shaderBackView];
@@ -122,8 +125,8 @@
             if ([tagImageModel.url isKindOfClass:[NSString class]]) {
                 [hotImage bd_setImageWithURL:[NSURL URLWithString:tagImageModel.url]];
             }
-            [hotImage setBackgroundColor:[UIColor whiteColor]];
-            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 17 : 18.5), 3.5, 21, 11)];
+            [hotImage setBackgroundColor:[UIColor clearColor]];
+            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 25.5 : 27.5), 3.5, 30, 13)];
             [containView addSubview:hotImage];
         }
         
@@ -142,8 +145,7 @@
             if(titleLabel.text.length > 5)
             {
                 [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  5, 14, backImage.frame.size.width - 10, 20)];
-            }else
-            {
+            }else{
                 [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  10, 14, backImage.frame.size.width - 10, 20)];
             }
         }

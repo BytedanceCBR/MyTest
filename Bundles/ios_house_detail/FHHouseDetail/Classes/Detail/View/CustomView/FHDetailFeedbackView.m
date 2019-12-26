@@ -28,6 +28,7 @@
 #import "MAAnnotationView.h"
 #import "YYTextView.h"
 #import "NSString+BTDAdditions.h"
+#import "SSCommonLogic.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <TTSandBoxHelper.h>
 #import <TTBaseLib/UITextView+TTAdditions.h>
@@ -238,14 +239,18 @@
 - (void)checkConfirmButtonEnableState {
     BOOL enabled = YES;
 
-    if (self.selectStar < 4) {
-        if (self.inputTextView.text.length >= 5 && !isEmptyString([self.inputTextView.text btd_trimmed])) {
-            enabled = YES;
-        } else {
-            enabled = NO;
-        }
-    } else {
+    if ([SSCommonLogic isForceEnableRealtorConfirmBtn]) {
         enabled = YES;
+    } else {
+        if (self.selectStar < 4) {
+            if (self.inputTextView.text.length >= 5 && !isEmptyString([self.inputTextView.text btd_trimmed])) {
+                enabled = YES;
+            } else {
+                enabled = NO;
+            }
+        } else {
+            enabled = YES;
+        }
     }
 
     if (enabled) {

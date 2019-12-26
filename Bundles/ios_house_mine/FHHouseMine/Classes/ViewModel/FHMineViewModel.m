@@ -19,6 +19,7 @@
 #import "TTReachability.h"
 #import "FHMineConfigModel.h"
 #import "FHMineMutiItemCell.h"
+#import <FHCommuteManager.h>
 
 #define mutiItemCellId @"mutiItemCellId"
 
@@ -245,9 +246,18 @@
 
 - (void)didItemClick:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
      if ([TTReachability isNetworkConnected]) {
+         [self addCLickIconLog:model];
          FHMineItemType type = [model.id integerValue];
          if(type == FHMineItemTypeSugSubscribe || type == FHMineItemTypeFeedback){
              [self jumpWithMoreAction:model];
+         }else if ([model.openUrl containsString:@"://commute_list"]){
+             NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+             if (model.reportParams) {
+                 [tracer addEntriesFromDictionary:model.reportParams];
+             }
+             tracer[@"enter_type"] = @"click";
+             //通勤找房
+             [[FHCommuteManager sharedInstance] tryEnterCommutePage:model.openUrl logParam:tracer];
          }else{
              //埋点
              NSMutableDictionary *dict = [NSMutableDictionary dictionary];
@@ -393,11 +403,12 @@
     [self.viewController refreshContentOffset:scrollView.contentOffset];
 }
 
-//#pragma mark - TTAccountMulticaastProtocol
-//
-//// 帐号切换
-//- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
-//    [self requestMineConfig];
-//}
+- (void)addCLickIconLog:(FHMineConfigDataIconOpDataMyIconItemsModel *)model
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"log_pb"] = model.logPb ?: @"be_null";
+    param[@"page_type"] = @"minetab";
+    [FHUserTracker writeEvent:@"click_icon" params:param];
+}
 
 @end

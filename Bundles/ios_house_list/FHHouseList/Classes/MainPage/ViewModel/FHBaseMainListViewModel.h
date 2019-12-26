@@ -10,6 +10,7 @@
 #import <FHCommonUI/FHFakeInputNavbar.h>
 #import <FHCommonUI/FHErrorView.h>
 
+
 NS_ASSUME_NONNULL_BEGIN
 @class TTRouteParamObj;
 @class FHBaseMainListViewController;
@@ -36,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , assign) BOOL showRealHouseTop;
 @property (nonatomic , assign) BOOL showFakeHouseTop;
 @property (nonatomic , strong) NSString * realHouseQuery;
+@property(nonatomic , assign) BOOL animateShowNotify;
 
 -(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj;
 
