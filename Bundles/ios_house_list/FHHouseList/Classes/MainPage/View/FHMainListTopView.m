@@ -17,21 +17,30 @@
 @interface FHMainListTopView ()
 
 @property(nonatomic , strong) UIView *bannerView;
+@property(nonatomic , strong) UIView *filterView;
+@property(nonatomic , strong) UIView *filterBgView;
 @property(nonatomic , strong) UIView *filterBarView;
 @property(nonatomic , strong) UIView *filterTagsView;
 @property(nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
 @property(nonatomic , strong) UIView       *theBottomView;
-
+@property(nonatomic , strong) CAShapeLayer *maskLayer;
 @end
 
 @implementation FHMainListTopView
+
+- (UIView *)filterBgView
+{
+    if (!_filterBgView) {
+        _filterBgView = [[UIView alloc]init];
+    }
+    return _filterBgView;
+}
 
 -(instancetype)initWithBannerView:(UIView *)bannerView filterView:(UIView *)filterView filterTagsView:(UIView *)filterTagsView 
 {
     self = [super initWithFrame:CGRectZero];
     if (self) {
         self.bannerView = bannerView;
-        self.filterBarView = filterView;
         self.filterTagsView = filterTagsView;
         
         CGFloat width = SCREEN_WIDTH;
@@ -39,11 +48,21 @@
         CGFloat top = 0;
         bannerView.top = top;
         top = bannerView.bottom;
-        filterView.top = bannerView.bottom;
-        top = filterView.bottom;
+        if (filterView) {
+            _filterView = filterView;
+            [self addSubview:self.filterBgView];
+            [self.filterBgView addSubview:filterView];
+            self.filterBgView.width = filterView.width;
+            self.filterBgView.height = filterView.height;
+            self.filterBgView.top = bannerView.bottom;
+            top = self.filterBgView.bottom;
+            self.filterBarView = self.filterBgView;
+        }
+//        filterView.top = bannerView.bottom;
+//        top = filterView.bottom;
         // 目前只有二手房大类页有tags标签，而且要做实验-setting控制
         if (filterTagsView) {
-            filterTagsView.top = filterView.bottom;
+            filterTagsView.top = self.filterBgView.bottom;
             top = filterTagsView.bottom;
         }
         self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, top, width, NOTIFY_HEIGHT)];
@@ -53,8 +72,18 @@
             self.theBottomView = bannerView;
         }
         if (filterView) {
-            [self addSubview:filterView];
-            self.theBottomView = filterView;
+            _filterView.layer.masksToBounds = YES;
+            self.filterBgView.backgroundColor = [UIColor themeGray7];
+            [self.filterBgView addSubview:filterView];
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, width, 15) byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
+            CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+            maskLayer.backgroundColor = [UIColor themeGray7].CGColor;
+            maskLayer.frame = CGRectMake(0, 0, width, 15);
+            maskLayer.path = maskPath.CGPath;
+            maskLayer.fillColor = [UIColor whiteColor].CGColor;
+            self.maskLayer = maskLayer;
+            [filterView.layer addSublayer:maskLayer];
+            self.theBottomView = self.filterBgView;
         }
         if (filterTagsView) {
             [self addSubview:filterTagsView];
@@ -93,6 +122,11 @@
     return self.theBottomView.bottom;
 }
 
+- (void)showFilterCorner:(BOOL)isShow
+{
+    self.maskLayer.hidden = !isShow;
+}
+
 -(CGFloat)notifyHeight
 {
     return NOTIFY_HEIGHT;
@@ -120,5 +154,6 @@
     self.frame = frame;
     return frame;
 }
+
 
 @end
