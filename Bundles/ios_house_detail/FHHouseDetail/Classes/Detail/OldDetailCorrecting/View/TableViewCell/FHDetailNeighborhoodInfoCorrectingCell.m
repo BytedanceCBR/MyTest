@@ -24,7 +24,7 @@
 #import <FHCommonUI/UIView+House.h>
 #import <FHCommonDefines.h>
 #import <TTBaseLib/UIButton+TTAdditions.h>
-#import "FHDetailSchoolInfoItemView.h"
+#import "FHOldDetailSchoolInfoItemView.h"
 #import "FHDetailNeighborhoodTitleView.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHHouseDetailContactViewModel.h"
@@ -349,27 +349,25 @@
         if (item.schoolList.count < 1) {
             continue;
         }
-        FHDetailSchoolInfoItemModel *schoolInfoModel = [[FHDetailSchoolInfoItemModel alloc]init];
+        FHOldDetailSchoolInfoItemModel *schoolInfoModel = [[FHOldDetailSchoolInfoItemModel alloc]init];
         schoolInfoModel.schoolItem = item;
         schoolInfoModel.tableView = model.tableView;
-        FHDetailSchoolInfoItemView *itemView = [[FHDetailSchoolInfoItemView alloc]initWithSchoolInfoModel:schoolInfoModel];
+        FHOldDetailSchoolInfoItemView *itemView = [[FHOldDetailSchoolInfoItemView alloc]initWithSchoolInfoModel:schoolInfoModel];
         sumHeight += itemView.bottomY;
         __weak typeof(self)wself = self;
-        itemView.foldBlock = ^(FHDetailSchoolInfoItemView *theItemView, CGFloat height) {
+        itemView.foldBlock = ^(FHOldDetailSchoolInfoItemView *theItemView, CGFloat height) {
             
             [model.tableView beginUpdates];
+             [wself refreshSchoolViewFrame];
             [UIView animateWithDuration:0.3 animations:^{
                 [wself refreshItemsView];
             } completion:^(BOOL finished) {
             }];
-            
-            [wself refreshSchoolViewFrame];
-            [wself setNeedsUpdateConstraints];
             [model.tableView endUpdates];
   
         };
         [self.schoolView addSubview:itemView];
-        itemView.frame = CGRectMake(0, lastItemView.bottom, SCREEN_WIDTH, itemView.bottomY);
+        itemView.frame = CGRectMake(0, lastItemView.bottom, SCREEN_WIDTH-30-97, itemView.bottomY);
         lastItemView = itemView;
     }
     [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -380,8 +378,8 @@
 {
     CGFloat viewHeight = 0;
     __block UIView *lastView = nil;
-    for (FHDetailSchoolInfoItemView *itemView in self.schoolView.subviews) {
-        if (![itemView isKindOfClass:[FHDetailSchoolInfoItemView class]]) {
+    for (FHOldDetailSchoolInfoItemView *itemView in self.schoolView.subviews) {
+        if (![itemView isKindOfClass:[FHOldDetailSchoolInfoItemView class]]) {
             continue;
         }
         itemView.height = [itemView viewHeight];
@@ -394,8 +392,8 @@
 - (void)refreshSchoolViewFrame
 {
     CGFloat viewHeight = 0;
-    for (FHDetailSchoolInfoItemView *itemView in self.schoolView.subviews) {
-        if (![itemView isKindOfClass:[FHDetailSchoolInfoItemView class]]) {
+    for (FHOldDetailSchoolInfoItemView *itemView in self.schoolView.subviews) {
+        if (![itemView isKindOfClass:[FHOldDetailSchoolInfoItemView class]]) {
             continue;
         }
         viewHeight += itemView.viewHeight;
@@ -403,6 +401,12 @@
     [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(viewHeight);
     }];
+        [self setNeedsUpdateConstraints];
+        [self updateConstraintsIfNeeded];
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            [self layoutIfNeeded];
+        }];
 }
 
 - (void)showLabelWithKey:(NSString *)key value:(NSString *)value parentView:(UIView *)parentView
