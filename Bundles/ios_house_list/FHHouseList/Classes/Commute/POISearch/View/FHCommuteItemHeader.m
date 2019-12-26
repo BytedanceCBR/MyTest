@@ -26,8 +26,8 @@
         [self addSubview:_tipLabel];
         
         [_tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(HOR_MARGIN);
-            make.right.mas_lessThanOrEqualTo(self).offset(-HOR_MARGIN);
+            make.left.mas_equalTo(HOR_MARGIN_NEW);
+            make.right.mas_lessThanOrEqualTo(self).offset(-HOR_MARGIN_NEW);
             make.bottom.mas_equalTo(self);
             make.height.mas_equalTo(20);
         }];

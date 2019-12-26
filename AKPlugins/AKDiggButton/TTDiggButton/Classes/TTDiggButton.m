@@ -133,7 +133,8 @@
                 self.titleLabel.font = [UIFont systemFontOfSize:[self digButtonFontSize] weight:UIFontWeightThin];
 #pragma clang diagnostic pop
             }
-            self.titleColorThemeKey = kColorText13;
+            [self setTitleColor:[UIColor colorWithHexStr:@"0x979f9c"] forState:UIControlStateNormal];
+            [self setTitleColor:[UIColor themeOrange4] forState:UIControlStateSelected];
         }
         break;
         case TTDiggButtonStyleTypeCommentOnly: {
@@ -150,7 +151,8 @@
                 self.titleLabel.font = [UIFont systemFontOfSize:[self digButtonFontSize] weight:UIFontWeightThin];
 #pragma clang diagnostic pop
             }
-            self.titleColorThemeKey = kColorText13;
+            [self setTitleColor:[UIColor colorWithHexStr:@"0x979f9c"] forState:UIControlStateNormal];
+            [self setTitleColor:[UIColor themeOrange4] forState:UIControlStateSelected];
         }
         default:
         break;

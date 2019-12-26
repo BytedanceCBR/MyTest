@@ -10,19 +10,39 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import "FHMainOldTopCell.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
+#import <FHHouseBase/FHHomeScrollBannerView.h>
+#import <FHHouseBase/FHHomeEntranceItemView.h>
+#import <Masonry.h>
+#import <FHCommonUI/FHFakeInputNavbar.h>
+#import <FHHouseBase/FHConfigModel.h>
+#import <TTBaseLib/UIViewAdditions.h>
+#import "FHListEntrancesView.h"
+#import <FHHouseBase/FHEnvContext.h>
+#import <TTRoute.h>
+#import <FHHouseBase/FHUserTracker.h>
 
 #define kCellId @"cell_id"
 #define ITEM_HOR_MARGIN  10
 #define TOP_PADDING      14
 #define BOTTOM_PADDING   4
+#define kFHMainEntranceCountPerRow 5
 
+@interface FHMainOldTopView ()<FHBannerViewIndexProtocol>
 
-@interface FHMainOldTopView ()<UICollectionViewDelegate,UICollectionViewDataSource>
+@property(nonatomic , strong) NSArray<FHConfigDataOpDataItemsModel *> *items;
 
-@property(nonatomic , strong) UICollectionView *collectionView;
-@property(nonatomic , strong) UICollectionViewFlowLayout *layout;
-
+@property(nonatomic , strong) UIView *topBgView;
+@property(nonatomic , strong) FHHomeScrollBannerView *bannerView;
+@property(nonatomic , strong) UIView *bottomBgView;
+@property(nonatomic , strong) FHListEntrancesView *bottomContainerView;
+@property(nonatomic , strong)  FHConfigDataModel *configModel;
+@property (nonatomic, strong) FHConfigDataMainPageBannerOpDataModel *bannerOpData ;
+@property (nonatomic, strong) NSDictionary *tracerDict;
 @end
+
+
+
+
 
 @implementation FHMainOldTopView
 
@@ -30,95 +50,271 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        layout.headerReferenceSize = CGSizeMake(HOR_MARGIN, 1);
-        layout.footerReferenceSize = CGSizeMake(HOR_MARGIN, 1);
-        
-        CGRect f = self.bounds;
-        f.size.height -= BOTTOM_PADDING;
-        //CGRectMake(0, 15, frame.size.width, frame.size.height - BOTTOM_PADDING - 15)
-        _collectionView = [[FHBaseCollectionView alloc]initWithFrame:f collectionViewLayout:layout];
-        _collectionView.delegate = self;
-        _collectionView.dataSource = self;
-        
-        [_collectionView registerClass:[FHMainOldTopCell class] forCellWithReuseIdentifier:kCellId];
-        
-        _layout = layout;
-        
-        [self addSubview:_collectionView];
-        
-        self.backgroundColor = [UIColor whiteColor];
-        _collectionView.backgroundColor = [UIColor whiteColor];
-        
+        [self setupUI];
+        [self initConstraints];
     }
     return self;
 }
 
--(void)setItems:(NSArray *)items
++ (CGFloat)bannerHeight
 {
-    if (items.count > 3) {
-        _items = [items subarrayWithRange:NSMakeRange(0, 3 )];
+    if([FHMainOldTopView showBanner]) {
+        return ceil(([UIScreen mainScreen].bounds.size.width - kFHScrollBannerLeftRightMargin * 2) / 335.0f * 140);
+    }else {
+        return 0;
+    }
+}
+
++ (CGFloat)entranceHeight
+{
+    if([FHMainOldTopView showEntrance]) {
+        return [FHListEntrancesView rowHeight] + 20;
+    }
+    return 0;
+}
+
++ (CGFloat)totalHeight
+{
+    CGFloat bannerHeight = [FHMainOldTopView showBanner] ? [FHMainOldTopView bannerHeight] + 10 : 0;
+    CGFloat entranceHeight = [FHMainOldTopView showEntrance] ? [FHMainOldTopView entranceHeight] : 0;
+
+    return [FHFakeInputNavbar perferredHeight] + bannerHeight + entranceHeight;
+}
+
++ (BOOL)showBanner
+{
+    return ([FHMainOldTopView hasValidModel:[[FHEnvContext sharedInstance] getConfigFromCache].houseListBanner]);
+}
+
++ (BOOL)showEntrance
+{
+    return ([[FHEnvContext sharedInstance] getConfigFromCache].houseOpData2.items.count > 0);
+}
+
+- (UIColor *)topBackgroundColor
+{
+    return _topBgView.backgroundColor; 
+}
+
+- (void)setupUI
+{
+    [self addSubview:self.topBgView];
+    [self addSubview:self.bottomBgView];
+//    [self addSubview:self.shadowView];
+    [self addSubview:self.bannerView];
+    [self addSubview:self.bottomContainerView];
+    self.bannerView.delegate = self;
+    [self.bannerView setContent:[UIScreen mainScreen].bounds.size.width - kFHScrollBannerLeftRightMargin * 2 height:[FHMainOldTopView bannerHeight]];
+    self.bottomBgView.hidden = [FHMainOldTopView showBanner] ? NO : YES;
+    self.topBgView.backgroundColor = [UIColor themeGray8];
+    self.bottomBgView.backgroundColor = [UIColor themeGray8];
+}
+
+- (void)initConstraints
+{
+    [self.topBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(0);
+        make.height.mas_equalTo([FHMainOldTopView bannerHeight] + 10 + [FHFakeInputNavbar perferredHeight]);
+    }];
+    CGFloat bannerMargin = [FHMainOldTopView bannerHeight] > 0 ? 10 : 0;
+    [self.bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.top.mas_equalTo([FHFakeInputNavbar perferredHeight] + bannerMargin);
+        make.height.mas_equalTo([FHMainOldTopView bannerHeight]);
+    }];
+    [self.bottomContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(self.bannerView.mas_bottom);
+        make.height.mas_equalTo([FHMainOldTopView entranceHeight]);
+    }];
+    [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(self.bannerView.mas_bottom).mas_offset(-40);
+        make.bottom.mas_equalTo(self.bottomContainerView);
+    }];
+}
+
+- (void)updateWithConfigData:(FHConfigDataModel *)configModel tracerDict:(NSDictionary *)tracerDict
+{
+    _configModel = configModel;
+    _tracerDict = tracerDict;
+    NSArray *items = configModel.houseOpData2.items;
+    if (items.count > 5) {
+        _items = [items subarrayWithRange:NSMakeRange(0, 5 )];
     }else{
         _items = items;
     }
-    [self.collectionView reloadData];
-}
-
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return _items.count;
-}
-
--(__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-    FHMainOldTopCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellId forIndexPath:indexPath];
-    
-    FHConfigDataOpData2ItemsModel *model = _items[indexPath.item];
-    [cell updateWithModel:model];
-    
-    return cell;
-}
-
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([self.delegate respondsToSelector:@selector(selecteOldItem:)]) {
-        FHConfigDataOpData2ItemsModel *model = _items[indexPath.item];
-        [self.delegate selecteOldItem:model];
+    [self.bottomContainerView updateWithItems:_items];
+    _bannerOpData = configModel.houseListBanner;
+    if ([FHMainOldTopView showBanner]) {
+        if (_bannerOpData.items.count > 0) {
+            FHConfigDataRentOpDataItemsModel *opData = _bannerOpData.items[0];
+            self.topBgView.backgroundColor = [UIColor colorWithHexString:opData.backgroundColor];
+        }else {
+            self.topBgView.backgroundColor = [UIColor themeGray8];
+        }
     }
-    
+    [self updateBannerWithModel:self.bannerOpData];
+
+    __weak typeof(self)wself = self;
+    self.bottomContainerView.clickBlock = ^(NSInteger clickIndex , FHConfigDataOpDataItemsModel *itemModel){
+        if ([wself.delegate respondsToSelector:@selector(selecteOldItem:)]) {
+            FHConfigDataOpDataItemsModel *model = wself.items[clickIndex];
+            [wself.delegate selecteOldItem:model];
+        }
+    };
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+// 注意cell的刷新频率问题
+- (void)updateBannerWithModel:(FHConfigDataMainPageBannerOpDataModel *)model
 {
-    return ITEM_HOR_MARGIN;
+    [self.bannerView removeTimer];
+    // 获取图片数据数组
+    NSMutableArray *opDatas = [[NSMutableArray alloc] init];
+    NSMutableArray *imageUrls = [NSMutableArray new];
+    for (int i = 0; i < model.items.count; i++) {
+        FHConfigDataRentOpDataItemsModel *opData = model.items[i];
+        if ([FHMainOldTopView isValidModel:opData]) {
+            if (opData.image.count > 0) {
+                FHConfigDataRentOpDataItemsImageModel *opImage = opData.image[0];
+                if (opImage.url.length > 0) {
+                    [imageUrls addObject:opImage.url];
+                    [opDatas addObject:opData];
+                }
+            }
+        }
+    }
+    [self.bannerView setURLs:imageUrls];
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
++ (BOOL)hasValidModel:(FHConfigDataMainPageBannerOpDataModel *)mainPageOpData {
+    if (mainPageOpData && [mainPageOpData isKindOfClass:[FHConfigDataMainPageBannerOpDataModel class]]) {
+        for (int i = 0; i < mainPageOpData.items.count; i++) {
+            FHConfigDataRentOpDataItemsModel *tModel = mainPageOpData.items[i];
+            if ([self isValidModel:tModel]) {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
++ (BOOL)isValidModel:(FHConfigDataRentOpDataItemsModel *)tModel
 {
-    CGFloat width = [self widthForItem:self.items.count < 2? 2:self.items.count];
-    return CGSizeMake(width, self.collectionView.frame.size.height - TOP_PADDING );
+    if (tModel == nil) {
+        return NO;
+    }
+    BOOL retFlag = NO;
+    if (tModel.openUrl.length > 0 && tModel.image.count > 0 && tModel.id.length > 0) {
+        NSURL *tUrl = [NSURL URLWithString:tModel.openUrl];
+        // 是否有效的openUrl
+        if ([[TTRoute sharedRoute] canOpenURL:tUrl]) {
+            FHConfigDataRentOpDataItemsImageModel *imageModel = tModel.image[0];
+            if (imageModel.url.length > 0) {
+                // 有图片url
+                retFlag = YES;
+            }
+        }
+    }
+    return retFlag;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+#pragma mark - FHBannerViewIndexProtocol
+
+- (void)currentIndexChanged:(NSInteger)currentIndex
 {
-    return UIEdgeInsetsMake(TOP_PADDING, 0, 0, 0);
+    if (currentIndex >= 0 && currentIndex < self.bannerOpData.items.count) {
+        FHConfigDataRentOpDataItemsModel *opData = self.bannerOpData.items[currentIndex];
+        if (opData && [FHMainOldTopView showBanner]) {
+            self.topBgView.backgroundColor = [UIColor colorWithHexString:opData.backgroundColor];
+        }
+        if (self.delegate && [self.delegate respondsToSelector:@selector(showBannerItem:withIndex:)]) {
+            [self.delegate showBannerItem:opData withIndex:currentIndex];
+        }
+    }
 }
 
--(CGFloat)widthForItem:(NSInteger)totalCount
+
+
+- (void)clickBannerWithIndex:(NSInteger)currentIndex
 {
-    return floor((CGRectGetWidth(self.bounds) - 2*HOR_MARGIN - ITEM_HOR_MARGIN*(totalCount-1))/totalCount*2)/2;
-    
+    if (currentIndex >= 0 && currentIndex < self.bannerOpData.items.count) {
+        FHConfigDataRentOpDataItemsModel *opData = self.bannerOpData.items[currentIndex];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(clickBannerItem:withIndex:)]) {
+            [self.delegate clickBannerItem:opData withIndex:currentIndex];
+        }
+    }
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+- (void)currentIndexWillChange:(NSInteger)currentIndex toIndex:(NSInteger)toIndex fraction:(float)fraction
+{
+    FHConfigDataRentOpDataItemsModel *currentOpData = nil;
+    FHConfigDataRentOpDataItemsModel *toOpData = nil;
 
+    if (currentIndex >= 0 && currentIndex < self.bannerOpData.items.count) {
+        currentOpData = self.bannerOpData.items[currentIndex];
+    }
+    if (toIndex >= 0 && toIndex < self.bannerOpData.items.count) {
+        toOpData = self.bannerOpData.items[toIndex];
+    }
+    if (toOpData && currentOpData && [FHMainOldTopView showBanner]) {
+        UIColor *bgColor = [UIColor colorByFraction:fraction startValueStr:currentOpData.backgroundColor endValueStr:toOpData.backgroundColor];
+        self.topBgView.backgroundColor = bgColor;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(willChangeTopViewBackgroundColor:)]) {
+            [self.delegate willChangeTopViewBackgroundColor:bgColor];
+        }
+    }
+}
+
+
+
+
+#pragma mark - UI
+
+- (UIView *)topBgView
+{
+    if (!_topBgView) {
+        _topBgView = [[UIView alloc]init];
+    }
+    return _topBgView;
+}
+
+- (FHHomeScrollBannerView *)bannerView
+{
+    if (!_bannerView) {
+        _bannerView = [[FHHomeScrollBannerView alloc] init];
+        _bannerView.backgroundColor = [UIColor clearColor];
+        _bannerView.layer.masksToBounds = YES;
+        _bannerView.layer.cornerRadius = 12;
+    }
+    return _bannerView;
+}
+
+- (UIView *)bottomBgView
+{
+    if (!_bottomBgView) {
+        _bottomBgView = [[UIView alloc]init];
+        _bottomBgView.backgroundColor = [UIColor whiteColor];
+        _bottomBgView.layer.masksToBounds = YES;
+        _bottomBgView.layer.cornerRadius = 10;
+    }
+    return _bottomBgView;
+}
+
+- (FHListEntrancesView *)bottomContainerView
+{
+    if (!_bottomContainerView) {
+        _bottomContainerView = [[FHListEntrancesView alloc]init];
+        _bottomContainerView.backgroundColor = [UIColor themeGray8];
+        _bottomContainerView.countPerRow = kFHMainEntranceCountPerRow;
+    }
+    return _bottomContainerView;
+}
+
+
+- (void)dealloc
+{
+    NSLog(@"zjing");
+}
 @end

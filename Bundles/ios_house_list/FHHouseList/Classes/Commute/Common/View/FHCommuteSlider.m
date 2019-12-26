@@ -8,7 +8,7 @@
 #import "FHCommuteSlider.h"
 #import <FHCommonUI/UIColor+Theme.h>
 
-#define THUMB_IMAGE_WIDTH 48
+#define THUMB_IMAGE_WIDTH 50
 #define LINE_HEIGHT  4
 
 
@@ -30,7 +30,7 @@
         _minLineLayer = [CALayer layer];
         _minLineLayer.cornerRadius = 2;
         _minLineLayer.bounds = CGRectMake(0, 0, 0, 4);
-        _minLineLayer.backgroundColor = [[UIColor themeRed1] CGColor];
+        _minLineLayer.backgroundColor = [[UIColor themeOrange4] CGColor];
         
         _maxLineLayer = [CALayer layer];
         _maxLineLayer.cornerRadius = 2;
@@ -166,7 +166,7 @@
     }
 }
 
--(UIImage *)thumbForType:(FHCommuteType)type
+-(UIImage *)thumbForType:(FHCommuteType)type // todo zjing UI
 {
     NSString *name = nil;
     switch (type) {

@@ -140,7 +140,7 @@
     }else {
         [_containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.shadowImage).offset(30);
-            make.bottom.mas_equalTo(self.shadowImage).offset(30);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-30);
         }];
     }
 }

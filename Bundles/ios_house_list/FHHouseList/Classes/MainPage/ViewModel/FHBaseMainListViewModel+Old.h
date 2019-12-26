@@ -18,12 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(TTHttpTask *)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend query:(NSString *)query completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion;
 
-- (void)updateRedirectTipInfo;
-
-- (void)closeRedirectTip;
-
-- (void)clickRedirectTip;
-
+-(void)clickRedirectTip:(NSString *)openUrl;
 
 @end
 
