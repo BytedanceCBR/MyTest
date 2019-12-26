@@ -33,6 +33,7 @@
 @property (nonatomic, strong) UILabel *bottomStatusBar;
 @property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
+@property (nonatomic, strong) FHDetailUGCGroupChatButton *bottomGroupChatBtn;// 新房群聊入口
 @property (nonatomic, strong) FHDetailFeedbackView *feedbackView;
 @property(nonatomic , strong) FHDetailQuestionButton *questionBtn;
 
@@ -272,6 +273,11 @@
     self.viewModel.bottomBar = _bottomBar;
     _bottomBar.hidden = YES;
     
+    self.bottomGroupChatBtn = [[FHDetailUGCGroupChatButton alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:_bottomGroupChatBtn];
+    self.bottomBar.bottomGroupChatBtn = _bottomGroupChatBtn;// 这样子改动最小
+    _bottomGroupChatBtn.hidden = YES;
+    
     _bottomStatusBar = [[UILabel alloc]init];
     _bottomStatusBar.textAlignment = NSTextAlignmentCenter;
     _bottomStatusBar.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
@@ -325,6 +331,12 @@
     [_bottomMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.bottomBar.mas_top);
         make.left.right.bottom.mas_equalTo(self.view);
+    }];
+    
+    [_bottomGroupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(26);
+        make.right.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.bottomBar.mas_top).offset(-16);
     }];
     
     [self.view bringSubviewToFront:_navBar];
