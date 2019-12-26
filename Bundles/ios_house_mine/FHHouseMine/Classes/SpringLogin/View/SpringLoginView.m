@@ -166,7 +166,7 @@
     self.tipView = [[UIImageView alloc] init];
     _tipView.image = [UIImage imageNamed:@"fh_spring_no_check_tip"];
     _tipView.hidden = YES;
-    [self addSubview:_tipView];
+    [self.springBgView addSubview:_tipView];
 }
 
 - (void)initConstraints {
