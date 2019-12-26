@@ -17,7 +17,6 @@
 #import <FHHouseBase/FHConfigModel.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import "FHListEntrancesView.h"
-#import "FHMainTopViewHelper.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import <TTRoute.h>
 #import <FHHouseBase/FHUserTracker.h>

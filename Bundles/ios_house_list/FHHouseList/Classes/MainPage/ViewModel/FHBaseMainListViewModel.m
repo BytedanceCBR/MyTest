@@ -64,7 +64,6 @@
 #import "FHNeighbourhoodAgencyCardCell.h"
 #import <FHHouseDetail/FHDetailBaseModel.h>
 #import "FHHouseListRedirectTipCell.h"
-#import "FHMainTopViewHelper.h"
 #import "FHCommuteManager.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 
@@ -279,12 +278,7 @@ extern NSString *const INSTANT_DATA_KEY;
     if (_houseType == FHHouseTypeRentHouse) {
         FHConfigDataRentOpDataModel *rentModel = dataModel.rentOpData;
         if (rentModel.items.count > 0) {
-            
-            CGFloat bannerHeight = 0;
-            if ([FHMainRentTopView cacheImageForRentBanner:dataModel.rentBanner]) {
-                bannerHeight = [FHMainRentTopView bannerHeight:dataModel.rentBanner];
-            }
-            FHMainRentTopView *topView = [[FHMainRentTopView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT + bannerHeight) banner:dataModel.rentBanner];
+            FHMainRentTopView *topView = [[FHMainRentTopView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT) banner:dataModel.rentBanner];
             [topView updateWithConfigData:dataModel];
             topView.delegate = self;
             self.topBannerView = topView;
@@ -294,7 +288,6 @@ extern NSString *const INSTANT_DATA_KEY;
             self.topBannerView = topView;
         }
     }else if (_houseType == FHHouseTypeSecondHandHouse){
-        // todo zjing confirm
         if (dataModel.houseOpData2.items.count > 0) {
             FHMainOldTopView *topView = [[FHMainOldTopView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, OLD_ICON_HEADER_HEIGHT)];
             topView.delegate = self;
