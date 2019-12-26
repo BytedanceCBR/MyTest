@@ -84,7 +84,7 @@ NS_INLINE CGFloat kDigImageViewLeftPadding() {
     if (!_digImageView) {
         _digImageView = [[SSThemedImageView alloc] initWithFrame:CGRectZero];
         _digImageView.contentMode = UIViewContentModeScaleAspectFill;
-        _digImageView.imageName = ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]);
+        _digImageView.image = ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]);
         [self addSubview:_digImageView];
     }
     return _digImageView;

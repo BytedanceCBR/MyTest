@@ -921,7 +921,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 {
     [self _showPlusOneDiggAnimation];
 
-    CGFloat viewWidth = 300;
+    CGFloat viewWidth = 100;
     NSString *animationPath = [[NSBundle mainBundle] pathForResource:@"like" ofType:@"json" inDirectory:@"HTSVideoPlay.bundle"];
     LOTAnimationView *animationView = [LOTAnimationView animationWithFilePath:animationPath];
     animationView.contentMode = UIViewContentModeScaleAspectFit;

@@ -38,6 +38,7 @@
 #import "TTAccountManager.h"
 #import "SSMyUserModel.h"
 #import <TTBusinessManager+StringUtils.h>
+#import <UIColor+Theme.h>
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"
@@ -240,6 +241,8 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         digCountLabelText = @"赞";
     }
     self.toolbarView.digCountLabel.text = digCountLabelText;
+    self.toolbarView.digCountLabel.textColor = self.pageState.detailModel.userDigg ? [UIColor themeOrange4] : [UIColor themeGray1];
+    
 
     NSString *title;
     if (self.hasNestedInModalContainer) {
