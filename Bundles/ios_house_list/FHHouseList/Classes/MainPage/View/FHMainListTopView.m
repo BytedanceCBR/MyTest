@@ -50,8 +50,6 @@
         top = bannerView.bottom;
         if (filterView) {
             _filterView = filterView;
-            [self addSubview:self.filterBgView];
-            [self.filterBgView addSubview:filterView];
             self.filterBgView.width = filterView.width;
             self.filterBgView.height = filterView.height;
             self.filterBgView.top = bannerView.bottom;
@@ -72,9 +70,10 @@
             self.theBottomView = bannerView;
         }
         if (filterView) {
+            [self addSubview:self.filterBgView];
+            [self.filterBgView addSubview:filterView];
             _filterView.layer.masksToBounds = YES;
             self.filterBgView.backgroundColor = [UIColor themeGray7];
-            [self.filterBgView addSubview:filterView];
             UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, width, 15) byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
             CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
             maskLayer.backgroundColor = [UIColor themeGray7].CGColor;
