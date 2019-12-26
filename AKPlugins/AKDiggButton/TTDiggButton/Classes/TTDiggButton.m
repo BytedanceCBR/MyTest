@@ -12,6 +12,8 @@
 #import <TTBaseLib/TTBusinessManager.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTThemed/UIImage+TTThemeExtension.h>
+#import <UIColor+Theme.h>
+#import <UIImage+FIconFont.h>
 
 
 @interface TTDiggButton()
@@ -47,6 +49,7 @@
     _styleType = styleType;
     self.tintColorThemeKey = nil;
     self.selectedTintColorThemeKey = nil;
+        
     switch (_styleType) {
         case TTDiggButtonStyleTypeDigitalOnly:{
             self.titleLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:15.f]];
@@ -114,9 +117,9 @@
         }
         break;
         case TTDiggButtonStyleTypeBigNumber:{
-            self.imageName = @"comment_like_icon";
-            self.selectedImageName = @"comment_like_icon_press";
-            self.highlightedImageName = @"comment_like_icon_press";
+            [self setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor colorWithHexStr:@"0x979f9c"]) forState:UIControlStateNormal];
+            [self setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
+            [self setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateHighlighted];
             [self setTitleEdgeInsets:UIEdgeInsetsMake(1, 0, 0, 0)];
             if ([TTDeviceHelper OSVersionNumber] < 8.f) {
 #pragma clang diagnostic push
@@ -134,14 +137,10 @@
         }
         break;
         case TTDiggButtonStyleTypeCommentOnly: {
-            self.imageName = @"comment_like_icon";
-            self.selectedImageName = @"comment_like_icon_press";
-            self.tintColorThemeKey = @"grey1";
-            self.selectedTintColorThemeKey = @"orange4";
-            self.titleColorThemeKey = @"grey1";
+            [self setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor colorWithHexStr:@"0x979f9c"]) forState:UIControlStateNormal];
+            [self setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
             self.imageEdgeInsets = UIEdgeInsetsMake(-1, 0, 1, 5);
-//            [self setTitleEdgeInsets:UIEdgeInsetsMake(1, 6, 0, 0)];
-
+            
             if ([TTDeviceHelper OSVersionNumber] < 8.f) {
                 self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:[self digButtonFontSize]];
             }
@@ -151,6 +150,7 @@
                 self.titleLabel.font = [UIFont systemFontOfSize:[self digButtonFontSize] weight:UIFontWeightThin];
 #pragma clang diagnostic pop
             }
+            self.titleColorThemeKey = kColorText13;
         }
         default:
         break;
@@ -300,7 +300,8 @@
         if (self.selected) {
             type = TTDiggButtonClickTypeAlreadyDigg;
         }else{
-            [SSMotionRender motionInView:self.imageView byType:SSMotionTypeZoomInAndDisappear image:[UIImage themedImageNamed:@"add_all_dynamic.png"] offsetPoint:CGPointMake(4.f, -9.f)];
+            UIImage *addOneImage = [UIImage themedImageNamed:@"add_all_dynamic.png"];
+            [SSMotionRender motionInView:self.imageView byType:SSMotionTypeZoomInAndDisappear image:addOneImage offsetPoint:CGPointMake(4.f, -9.f)];
         }
         if (selected ) {
             self.imageView.transform = CGAffineTransformMakeScale(1.f, 1.f);
