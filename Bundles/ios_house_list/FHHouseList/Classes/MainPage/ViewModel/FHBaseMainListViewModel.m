@@ -820,9 +820,9 @@ extern NSString *const INSTANT_DATA_KEY;
             [self.tableView.mj_footer endRefreshing];
         }
         
-        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && _showRealHouseTop) {
-            self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
-        }
+//        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && _showRealHouseTop) {
+//            self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
+//        }
         
         if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && !self.showRealHouseTop && !hideRefreshTip) {
             [self showNotifyMessage:refreshTip];
