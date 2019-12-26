@@ -34,11 +34,11 @@ t;
 function formatCount(e, t, a) {
 var n = "";
 if ("number" != typeof t || 0 === t) n = a || "赞"; else if (1e4 > t) n = t; else if (1e8 > t) {
-var o = (Math.floor(t / 1e3) / 10).toFixed(1);
-n = (o.indexOf(".0") > -1 || o >= 10 ? o.slice(0, -2) : o) + "万";
+var i = (Math.floor(t / 1e3) / 10).toFixed(1);
+n = (i.indexOf(".0") > -1 || i >= 10 ? i.slice(0, -2) : i) + "万";
 } else {
-var o = (Math.floor(t / 1e7) / 10).toFixed(1);
-n = (o.indexOf(".0") > -1 || o >= 10 ? o.slice(0, -2) : o) + "亿";
+var i = (Math.floor(t / 1e7) / 10).toFixed(1);
+n = (i.indexOf(".0") > -1 || i >= 10 ? i.slice(0, -2) : i) + "亿";
 }
 return e && $(e).each(function() {
 $(this).attr("realnum", t).html(n);
@@ -49,7 +49,7 @@ function commentTimeFormat(e) {
 var t, a = new Date(), n = "";
 try {
 if (t = new Date(1e3 * e), isNaN(t.getTime())) throw new Error("Invalid Date");
-} catch (o) {
+} catch (i) {
 return "";
 }
 return n += t.getFullYear() < a.getFullYear() ? t.getFullYear() + "-" : "", n += t.getMonth() >= 9 ? t.getMonth() + 1 : "0" + (t.getMonth() + 1), 
@@ -64,27 +64,27 @@ return t[2] <= 9 && t.splice(2, 0, 0), t[0] <= 9 && t.unshift(0), t.join("");
 }
 
 function formatTime(e) {
-var t = 6e4, a = 60 * t, n = new Date(), o = n.getTime(), i = new Date(n.getFullYear(), n.getMonth(), n.getDate()), r = new Date(+e);
+var t = 6e4, a = 60 * t, n = new Date(), i = n.getTime(), o = new Date(n.getFullYear(), n.getMonth(), n.getDate()), r = new Date(+e);
 if (isNaN(r.getTime())) return "";
-var s = o - e;
+var s = i - e;
 if (0 > s) return "";
 if (t > s) return "刚刚";
 if (a > s) return Math.floor(s / t) + "分钟前";
 if (24 * a > s) return Math.floor(s / a) + "小时前";
-for (var l = (r.getHours() > 9 ? r.getHours() : "0" + r.getHours()) + ":" + (r.getMinutes() > 9 ? r.getMinutes() : "0" + r.getMinutes()), c = 0; c++ <= 8; ) if (i.setDate(i.getDate() - 1), 
-e > i.getTime()) return 1 === c ? "昨天 " + l : 2 === c ? "前天 " + l : c + "天前";
+for (var l = (r.getHours() > 9 ? r.getHours() : "0" + r.getHours()) + ":" + (r.getMinutes() > 9 ? r.getMinutes() : "0" + r.getMinutes()), c = 0; c++ <= 8; ) if (o.setDate(o.getDate() - 1), 
+e > o.getTime()) return 1 === c ? "昨天 " + l : 2 === c ? "前天 " + l : c + "天前";
 return (r.getFullYear() < n.getFullYear() ? r.getFullYear() + "年" : "") + (r.getMonth() + 1) + "月" + r.getDate() + "日";
 }
 
 function send_umeng_event(e, t, a) {
 var n = "bytedance://" + event_type + "?category=umeng&tag=" + e + "&label=" + encodeURIComponent(t);
-if (a) for (var o in a) {
-var i = a[o];
-if ("extra" === o && "object" == typeof i) if (client.isAndroid) n += "&extra=" + JSON.stringify(i); else {
+if (a) for (var i in a) {
+var o = a[i];
+if ("extra" === i && "object" == typeof o) if (client.isAndroid) n += "&extra=" + JSON.stringify(o); else {
 var r = "";
-for (var s in i) r += "object" == typeof i[s] ? "&" + s + "=" + JSON.stringify(i[s]) : "&" + s + "=" + encodeURIComponent(i[s]);
+for (var s in o) r += "object" == typeof o[s] ? "&" + s + "=" + JSON.stringify(o[s]) : "&" + s + "=" + encodeURIComponent(o[s]);
 n += r;
-} else n += "&" + o + "=" + i;
+} else n += "&" + i + "=" + o;
 }
 try {
 window.webkit.messageHandlers.observe.postMessage(n);
@@ -112,18 +112,18 @@ location.href = a;
 
 function send_exposure_event_once(e, t, a) {
 function n() {
-i && clearTimeout(i), i = setTimeout(function() {
-var a = o(e, r);
+o && clearTimeout(o), o = setTimeout(function() {
+var a = i(e, r);
 console.info(a, e), a && (t(), document.removeEventListener("scroll", n, !1));
 }, 50);
 }
-function o(e, t) {
-var n = e.getBoundingClientRect(), o = n.top, i = n.height || n.bottom - n.top, r = o;
-return a && (r = o + i), t >= r;
+function i(e, t) {
+var n = e.getBoundingClientRect(), i = n.top, o = n.height || n.bottom - n.top, r = i;
+return a && (r = i + o), t >= r;
 }
 if (e && "function" == typeof t) {
-var i = 0, r = window.innerHeight;
-o(e, r) ? t() : document.addEventListener("scroll", n, !1);
+var o = 0, r = window.innerHeight;
+i(e, r) ? t() : document.addEventListener("scroll", n, !1);
 }
 }
 
@@ -132,8 +132,8 @@ var a = e.getBoundingClientRect(), n = window.innerHeight || document.body.clien
 return t ? a.height < n ? a.top >= 0 && a.top <= n && a.bottom >= 0 && a.bottom <= n : a.top <= 0 && a.bottom >= n : a.top <= n && a.bottom >= 0;
 }
 
-function sendUmengWhenTargetShown(e, t, a, n, o, i) {
-e && (isElementInViewportY(e, o) ? i && 3 === i.version ? sendUmengEventV3(t, n, !!i.isDoubleSend) : send_umeng_event(t, a, n) : imprProcessQueue.push(arguments));
+function sendUmengWhenTargetShown(e, t, a, n, i, o) {
+e && (isElementInViewportY(e, i) ? o && 3 === o.version ? sendUmengEventV3(t, n, !!o.isDoubleSend) : send_umeng_event(t, a, n) : imprProcessQueue.push(arguments));
 }
 
 function wendaCacheAdd(e) {
@@ -147,7 +147,6 @@ WendaCacheUmeng = [];
 }
 
 function buildServerVIcon(e, t) {
-return ""
 var a = Page.h5_settings.user_verify_info_conf["" + e];
 if (!a) return "";
 if (a = a[t], !a) return "";
@@ -157,7 +156,6 @@ return t = client.isIOS ? a.web_icon_ios : client.isSeniorAndroid ? a.web_icon_a
 }
 
 function buildServerVIcon2(e, t) {
-return ""
 var a = Page.h5_settings.user_verify_info_conf["" + e];
 if (!a) return "";
 if (a = a[t], !a) return "";
@@ -227,7 +225,7 @@ group_id: ""
 };
 return e;
 }
-var o = {
+var i = {
 v55: {
 android: a,
 ios: n
@@ -236,7 +234,7 @@ v60: {
 ios: t,
 android: t
 }
-}, i = {
+}, o = {
 article: {},
 author: {},
 tags: [],
@@ -254,17 +252,17 @@ return t;
 },
 wenda: function() {
 var t = e.wenda_extra, a = t.user || {};
-e.wenda_extra.title = _.escape(e.wenda_extra.title), i.article = {
+e.wenda_extra.title = _.escape(e.wenda_extra.title), o.article = {
 title: t.title,
 publishTime: t.show_time
-}, i.author = {
+}, o.author = {
 userId: a.user_id,
 name: a.user_name,
-link: i.h5_settings.is_liteapp ? "javascript:;" : a.schema + "&group_id=" + t.ansid + "&from_page=detail_answer_wenda",
+link: o.h5_settings.is_liteapp ? "sslocal://profile?refer=all&uid=" + a.user_id + "&from_page=wenda_detail" : a.schema + "&group_id=" + t.ansid + "&from_page=detail_answer_wenda",
 intro: a.user_intro,
 avatar: a.user_profile_image_url,
 isAuthorSelf: !1,
-verifiedContent: a.is_verify ? "" : "",
+verifiedContent: a.is_verify ? "PLACE_HOLDER" : "",
 medals: a.medals
 };
 var n = {
@@ -273,24 +271,24 @@ auth_info: ""
 };
 try {
 n = JSON.parse(a.user_auth_info);
-} catch (o) {}
-if (i.author.auth_type = a.user_auth_info ? n.auth_type || 0 : "", i.author.auth_info = n.auth_info, 
+} catch (i) {}
+if (o.author.auth_type = a.user_auth_info ? n.auth_type || 0 : "", o.author.auth_info = n.auth_info, 
 a.user_decoration) {
 var r = {};
 try {
 r = JSON.parse(a.user_decoration);
-} catch (o) {}
-i.author.user_decoration = r;
+} catch (i) {}
+o.author.user_decoration = r;
 }
-"is_following" in t && (i.author.followState = t.is_following ? "following" : ""), 
-i.wenda_extra = t, i.wenda_extra.aniok = client.isSeniorAndroid, i.statistics.group_id = t.ansid;
+"is_following" in t && (o.author.followState = t.is_following ? "following" : ""), 
+o.wenda_extra = t, o.wenda_extra.aniok = client.isSeniorAndroid, o.statistics.group_id = t.ansid;
 },
 forum: function() {
 var t = e.forum_extra, a = t.user_info || {};
-t.forum_info || {}, i.article = {
+t.forum_info || {}, o.article = {
 title: t.thread_title || "",
 publishTime: formatTime(1e3 * t.publish_timestamp)
-}, i.author = {
+}, o.author = {
 userId: a.id,
 name: a.name,
 link: a.schema + "&group_id=" + t.thread_id + "&from_page=detail_topic" + (t.category_name ? "&category_name=" + t.category_name : ""),
@@ -306,12 +304,12 @@ auth_info: ""
 };
 try {
 n = JSON.parse(a.user_auth_info);
-} catch (o) {}
-i.author.auth_type = a.user_auth_info ? n.auth_type || "0" : "", i.author.auth_info = n.auth_info, 
-"is_following" in t && (i.author.followState = t.is_following ? "following" : "");
+} catch (i) {}
+o.author.auth_type = a.user_auth_info ? n.auth_type || "0" : "", o.author.auth_info = n.auth_info, 
+"is_following" in t && (o.author.followState = t.is_following ? "following" : "");
 var r = [];
 "object" == typeof a.media && a.media.name && r.push(a.media.name), a.verified_content && r.push(a.verified_content), 
-i.author.intro = r.join("，"), i.tags = t.label_list, i.forum_extra = t, i.forumStatisticsParams = {
+o.author.intro = r.join("，"), o.tags = t.label_list, o.forum_extra = t, o.forumStatisticsParams = {
 value: t.thread_id,
 ext_value: t.forum_id,
 extra: {
@@ -325,89 +323,89 @@ category_id: t.category_id
 },
 pgc: function() {
 var t = e.h5_extra, a = t.media || {};
-i.article = {
+o.article = {
 title: t.title,
 publishTime: t.publish_stamp ? formatTime(1e3 * t.publish_stamp) : t.publish_time
-}, i.author = {
+}, o.author = {
 userId: t.media_user_id,
 mediaId: a.id,
 name: a.name,
-link: "sslocal://profile?refer=all&source=article_top_author&uid=" + t.media_user_id + "&group_id=" + i.statistics.group_id + "&from_page=article_detail" + (t.category_name ? "&category_name=" + t.category_name : ""),
+link: "sslocal://profile?refer=all&source=article_top_author&uid=" + t.media_user_id + "&group_id=" + o.statistics.group_id + "&from_page=detail_article" + (t.category_name ? "&category_name=" + t.category_name : ""),
 intro: a.description,
 avatar: a.avatar_url,
 isAuthorSelf: !!t.is_author
-}, (i.h5_settings.is_liteapp || !t.media_user_id) && (i.author.link = (i.h5_settings.is_liteapp && client.isIOS ? "sslocal" : "bytedance") + "://profile?refer=all&uid=" + t.media_user_id + "&from_page=article_detail");
+}, (o.h5_settings.is_liteapp || !t.media_user_id) && (o.author.link = "sslocal://profile?refer=all&uid=" + t.media_user_id + "&from_page=article_detail");
 var n = {
 auth_type: "",
 auth_info: ""
 };
 try {
 n = JSON.parse(a.user_auth_info);
-} catch (o) {}
-if (i.author.auth_type = a.user_auth_info ? n.auth_type || 0 : "", i.author.auth_info = n.auth_info, 
-i.author.verifiedContent = false && i.author.auth_info || "", a.user_decoration) {
+} catch (i) {}
+if (o.author.auth_type = a.user_auth_info ? n.auth_type || 0 : "", o.author.auth_info = n.auth_info, 
+o.author.verifiedContent = a.user_verified && o.author.auth_info || "", a.user_decoration) {
 var r = {};
 try {
 r = JSON.parse(a.user_decoration);
-} catch (o) {}
-i.author.user_decoration = r;
+} catch (i) {}
+o.author.user_decoration = r;
 }
-"is_subscribed" in t && (i.author.followState = t.is_subscribed ? "following" : ""), 
-t.is_original && i.tags.push("原创"), t.category_name && (i.category_name = t.category_name), 
-t.log_pb && (i.log_pb = t.log_pb);
+"is_subscribed" in t && (o.author.followState = t.is_subscribed ? "following" : ""), 
+t.is_original && o.tags.push("原创"), t.category_name && (o.category_name = t.category_name), 
+t.log_pb && (o.log_pb = t.log_pb);
 },
 zhuanma: function() {
 var t = e.h5_extra;
-i.article = {
+o.article = {
 title: t.title,
 publishTime: t.publish_time || "0000-00-00 00:00"
-}, i.author.name = t.source;
+}, o.author.name = t.source;
 },
 common: function() {
 var t = e.h5_extra;
-if ("custom_style" in e && (i.customStyle = e.custom_style), "pay_status" in t && (i.pay_status = Page && Page.pay_status && -1 != Page.pay_status && -1 == t.pay_status.status ? Page.pay_status : t.pay_status.status, 
-i.auto_pay_status = t.pay_status.auto_pay_status), "novel_data" in t) {
-if ("object" == typeof t.novel_data) i.novel_data = t.novel_data; else if ("string" == typeof t.novel_data) try {
-i.novel_data = JSON.parse(t.novel_data);
+if ("custom_style" in e && (o.customStyle = e.custom_style), "pay_status" in t && (o.pay_status = Page && Page.pay_status && -1 != Page.pay_status && -1 == t.pay_status.status ? Page.pay_status : t.pay_status.status, 
+o.auto_pay_status = t.pay_status.auto_pay_status), "novel_data" in t) {
+if ("object" == typeof t.novel_data) o.novel_data = t.novel_data; else if ("string" == typeof t.novel_data) try {
+o.novel_data = JSON.parse(t.novel_data);
 } catch (a) {}
-i.novel_data.can_read = i.h5_settings.is_liteapp || 0 == t.novel_data.book_free_status || 0 == t.novel_data.need_pay || 1 == i.pay_status || 3 == i.pay_status, 
-i.novel_data.use_deep_reader = client.isIOS && client.isNewsArticleVersionNoLessThan("6.5.3") || client.isAndroid && client.isNewsArticleVersionNoLessThan("6.5.6");
+o.novel_data.can_read = o.h5_settings.is_liteapp || 0 == t.novel_data.book_free_status || 0 == t.novel_data.need_pay || 1 == o.pay_status || 3 == o.pay_status, 
+o.novel_data.use_deep_reader = client.isIOS && client.isNewsArticleVersionNoLessThan("6.5.3") || client.isAndroid && client.isNewsArticleVersionNoLessThan("6.5.6");
 }
 var n = t.ab_client || [];
-i.topbuttonType = "pgc" !== i.article.type || n.indexOf("f7") > -1 ? "concern" : "digg";
+o.topbuttonType = "pgc" !== o.article.type || n.indexOf("f7") > -1 ? "concern" : "digg";
 try {
-i.h5_settings = "object" == typeof t.h5_settings ? t.h5_settings : JSON.parse(t.h5_settings);
+o.h5_settings = "object" == typeof t.h5_settings ? t.h5_settings : JSON.parse(t.h5_settings);
 } catch (a) {
-i.h5_settings = {};
+o.h5_settings = {};
 }
-i.h5_settings.pgc_over_head = !!i.h5_settings.pgc_over_head && "pgc" === i.article.type, 
-i.h5_settings.is_liteapp = !!t.is_lite;
+o.h5_settings.pgc_over_head = !!o.h5_settings.pgc_over_head && "pgc" === o.article.type, 
+o.h5_settings.is_liteapp = !!t.is_lite;
 try {
-i.isRedFocusButton = "red" === i.h5_settings.tt_follow_button_template.color_style;
+o.isRedFocusButton = "red" === o.h5_settings.tt_follow_button_template.color_style;
 } catch (a) {
-i.isRedFocusButton = !1;
+o.isRedFocusButton = !1;
 }
-if (i.h5_settings.tt_follow_button_template && i.h5_settings.tt_follow_button_template.color_style && "blue" != i.h5_settings.tt_follow_button_template.color_style && "red" != i.h5_settings.tt_follow_button_template.color_style && (i.focusButtonStyle = i.h5_settings.tt_follow_button_template.color_style), 
-i.h5_settings.user_verify_info_conf) {
-if ("string" == typeof i.h5_settings.user_verify_info_conf) try {
-i.h5_settings.user_verify_info_conf = JSON.parse(i.h5_settings.user_verify_info_conf);
+if (o.h5_settings.tt_follow_button_template && o.h5_settings.tt_follow_button_template.color_style && "blue" != o.h5_settings.tt_follow_button_template.color_style && "red" != o.h5_settings.tt_follow_button_template.color_style && (o.focusButtonStyle = o.h5_settings.tt_follow_button_template.color_style), 
+o.h5_settings.user_verify_info_conf) {
+if ("string" == typeof o.h5_settings.user_verify_info_conf) try {
+o.h5_settings.user_verify_info_conf = JSON.parse(o.h5_settings.user_verify_info_conf);
 } catch (a) {
-i.h5_settings.user_verify_info_conf = {};
+o.h5_settings.user_verify_info_conf = {};
 }
-i.h5_settings.user_verify_info_conf = trans_v_info(i.h5_settings.user_verify_info_conf), 
-i.useServerV = !0;
-} else i.useServerV = !1;
-i.hasExtraSpace = !i.h5_settings.is_liteapp && client.isSeniorAndroid, i.hideFollowButton = !!t.hideFollowButton, 
-i.statistics = {
+o.h5_settings.user_verify_info_conf = trans_v_info(o.h5_settings.user_verify_info_conf), 
+o.useServerV = !0;
+} else o.useServerV = !1;
+o.hasExtraSpace = !o.h5_settings.is_liteapp && client.isSeniorAndroid, o.hideFollowButton = !!t.hideFollowButton, 
+o.statistics = {
 group_id: t.str_group_id || t.group_id || "",
 item_id: t.str_item_id || t.item_id || ""
-}, i.showUserDecoration = client.isNewsArticleVersionNoLessThan("6.5.6");
+}, o.showUserDecoration = client.isNewsArticleVersionNoLessThan("6.5.6");
 }
 };
 "object" != typeof e && (e = window);
 var s = r.getArticleType();
-return i.article.type = s, r.common(), window.OldPage && (i.hasExtraSpace = OldPage.hasExtraSpace), 
-r[s](), i.pageSettings = o[APP_VERSION][CLIENT_VERSION](), i.article.type = s, i;
+return o.article.type = s, r.common(), window.OldPage && (o.hasExtraSpace = OldPage.hasExtraSpace), 
+r[s](), o.pageSettings = i[APP_VERSION][CLIENT_VERSION](), o.article.type = s, o;
 }
 
 function buildHeader(e) {
@@ -431,7 +429,7 @@ a.length > 0 ? a.replaceWith(t) : $(document.body).append(t), Page.novel_data &&
 }
 
 function processWendaArticle() {
-var e, t = Page.wenda_extra, a = t.show_post_answer_strategy || {}, n = t.wd_version || 0, o = Page.h5_settings.is_liteapp, i = "show_top" in a && !o, r = "show_default" in a && !o, s = [ "wt" ];
+var e, t = Page.wenda_extra, a = t.show_post_answer_strategy || {}, n = t.wd_version || 0, i = Page.h5_settings.is_liteapp, o = "show_top" in a && !i, r = "show_default" in a && !i, s = [ "wt" ];
 if (window.wendaStatisticsParams = {
 value: t.qid,
 ext_value: t.nice_ans_count,
@@ -444,12 +442,12 @@ group_id: t.ansid
 }, window.assignThroughWendaNiceanscount = function(e) {
 wendaStatisticsParams.ext_value = e;
 }, 1 > n || n >= 3 && 1 == t.showMode) $("header").find(".tt-title").remove(); else {
-t.wd_version >= 13 && s.push("no-icon"), i ? (Page.wenda_extra.showBigAns = 1, e = $('<div class="' + s.join(" ") + '">' + t.title + '</div><div class="ft"><span class="see-all-answers" id="total-answer-count">个回答</span><span class="hide-placeholder">&nbsp;</span></div><a class="big-answer-buttoon go-to-answer" data-type="big" href="' + urlAddQueryParams(a.show_top.schema, {
+t.wd_version >= 13 && s.push("no-icon"), o ? (Page.wenda_extra.showBigAns = 1, e = $('<div class="' + s.join(" ") + '">' + t.title + '</div><div class="ft"><span class="see-all-answers" id="total-answer-count">个回答</span><span class="hide-placeholder">&nbsp;</span></div><a class="big-answer-buttoon go-to-answer" data-type="big" href="' + urlAddQueryParams(a.show_top.schema, {
 source: "answer_detail_top_write_answer"
 }) + '">' + a.show_top.text + '</a><div class="big-answer-buttoon-gap"></div>')) : e = $(r ? '<div class="' + s.join(" ") + '">' + t.title + '</div><div class="ft"><a class="go-to-answer go-to-answer-small" data-type="small" href="' + urlAddQueryParams(a.show_default.schema, {
 source: "answer_detail_write_answer"
 }) + '">回答</a><span class="see-all-answers" id="total-answer-count">个回答</span></div>' : '<div class="' + s.join(" ") + '">' + t.title + '</div><div class="ft"><span class="see-all-answers" id="total-answer-count">个回答</span><span class="hide-placeholder">&nbsp;</span></div>');
-var l = i ? "bigans" : r ? "smlans" : "noans";
+var l = o ? "bigans" : r ? "smlans" : "noans";
 $("header").find(".tt-title").removeClass("tt-title").addClass("wenda-title " + l + " title-type" + (t.answer_detail_type || 0)).html(e).on("click", function() {
 return "wenda_title_handle" in t && t.wenda_title_handle ? void (ToutiaoJSBridge && ToutiaoJSBridge.call("clickWendaDetailHeader")) : void ("need_return" in t ? t.need_return ? ToutiaoJSBridge && ToutiaoJSBridge.call("close") : t.list_schema && (window.location.href = t.list_schema) : [ "click_answer", "click_answer_fold" ].indexOf(t.enter_from) > -1 ? ToutiaoJSBridge && ToutiaoJSBridge.call("close") : t.list_schema && (window.location.href = t.list_schema));
 }), new PressState({
@@ -457,7 +455,7 @@ bindSelector: ".wenda-title,.big-answer-buttoon",
 exceptSelector: ".go-to-answer-small,.see-all-answers",
 pressedClass: "pressing",
 removeLatency: 500
-}), i ? $(".go-to-answer").on("click", function(e) {
+}), o ? $(".go-to-answer").on("click", function(e) {
 e.stopPropagation(), send_umeng_event("answer_detail", "top_write_answer", wendaStatisticsParams);
 }) : r && (window.wenda_extra && window.wenda_extra.answer_detail_type && wendaCacheAdd(function() {}), 
 $(".go-to-answer").on("click", function(e) {
@@ -484,7 +482,7 @@ var isShowBottomUser = 0, wendaUserTmpl = function(obj) {
 var __t, __p = "";
 with (Array.prototype.join, obj || {}) __p += '<div class="wenda-bt-panel"><div class="wenda-bt-user" topbutton-type="' + (null == (__t = data.topbuttonType) ? "" : __t) + '"><div class="authorbar wenda">', 
 __p += '<a class="author-avatar-link pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '"><div class="author-avatar"><img class="author-avatar-img" src="' + (null == (__t = data.author.avatar) ? "" : __t) + '"></div>', 
-false && data.author.auth_info && (__p += "" + (null == (__t = buildServerVIcon2(data.author.auth_type, "avatar_icon")) ? "" : __t)),
+data.useServerV && data.author.auth_info && (__p += "" + (null == (__t = buildServerVIcon2(data.author.auth_type, "avatar_icon")) ? "" : __t)), 
 __p += "</a>", __p += '<div class="author-function-buttons"><button class="subscribe-button-bottom follow-button ' + (null == (__t = "followState" in data.author ? data.author.followState : "disabled") ? "" : __t) + " " + (null == (__t = data.isRedFocusButton ? "red-follow-button" : "") ? "" : __t) + '"data-user-id="' + (null == (__t = data.author.userId) ? "" : __t) + '"data-media-id="' + (null == (__t = data.author.mediaId) ? "" : __t) + '"style="display: ' + (null == (__t = data.author.isAuthorSelf || "wenda" === data.article.type && data.h5_settings.is_liteapp || "forum" === data.article.type && "following" === data.author.followState || data.hideFollowButton ? "none" : "block") ? "" : __t) + ';"id="subscribe"><i class="iconfont focusicon">&nbsp;</i><i class="redpack"></i></button></div>', 
 __p += '<div class="author-bar ' + (null == (__t = "" !== data.author.intro ? " auth-intro" : "") ? "" : __t) + '"><div class="name-link-wrap"><div class="name-link-w"><a class="author-name-link pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '">' + (null == (__t = data.author.name) ? "" : __t) + "</a></div></div>", 
 "" !== data.author.intro && (__p += '<a class="sub-title-w" href="' + (null == (__t = data.author.link) ? "" : __t) + '"><span class="sub-title">' + (null == (__t = data.author.intro) ? "" : __t) + "</span></a>"), 
@@ -658,10 +656,10 @@ aniok: "false"
 function getElementPosition(e) {
 var t = /^.image:nth-child\((\d+)\)$/, a = e.match(t);
 a && (e = ".image-container:nth-child(" + a[1] + ")>.image");
-var n = "{{0,0},{0,0}}", o = document.querySelector(e);
-if (o) {
-var i = o.getBoundingClientRect();
-n = "{{" + (i.left + window.pageXOffset) + "," + (i.top + window.pageYOffset) + "},{" + i.width + "," + i.height + "}}";
+var n = "{{0,0},{0,0}}", i = document.querySelector(e);
+if (i) {
+var o = i.getBoundingClientRect();
+n = "{{" + (o.left + window.pageXOffset) + "," + (o.top + window.pageYOffset) + "},{" + o.width + "," + o.height + "}}";
 }
 return n;
 }
@@ -708,13 +706,13 @@ strings: getThreeStrings()
 function getThreeStrings() {
 var e = "", t = "", a = "", n = document.getSelection();
 if ("Range" !== n.type) return [ e, t, a ];
-var o = n.getRangeAt(0);
-if (!o) return [ e, t, a ];
+var i = n.getRangeAt(0);
+if (!i) return [ e, t, a ];
 try {
-e = o.startContainer.textContent.substring(0, o.startOffset).substr(-20), t = o.toString(), 
-a = o.endContainer.textContent.substring(o.endOffset).substring(0, 20);
-} catch (i) {}
-return o.detach(), o = null, [ e, t, a ];
+e = i.startContainer.textContent.substring(0, i.startOffset).substr(-20), t = i.toString(), 
+a = i.endContainer.textContent.substring(i.endOffset).substring(0, 20);
+} catch (o) {}
+return i.detach(), i = null, [ e, t, a ];
 }
 
 function subscribe_switch(e) {
@@ -779,17 +777,17 @@ novel_id: t.id
 }));
 }
 
-function dealOptionalStockButton(e, t, a, n, o) {
-e.stopPropagation(), send_umeng_event("stock", "article_add_stock", o);
-var i, r = 0, s = t.attr("data-stock"), l = 0;
+function dealOptionalStockButton(e, t, a, n, i) {
+e.stopPropagation(), send_umeng_event("stock", "article_add_stock", i);
+var o, r = 0, s = t.attr("data-stock"), l = 0;
 n.forEach(function(e, t) {
-e.code == s && (l = t, i = e.market), 0 == e.selected && r++;
+e.code == s && (l = t, o = e.market), 0 == e.selected && r++;
 }), 1 != n[l].selected && $.ajax({
 url: "http://ic.snssdk.com/stock/like/",
 dataType: "jsonp",
 data: {
 code: s,
-market: i
+market: o
 },
 beforeSend: function() {
 return n[l].isclicking || 1 == n[l].selected ? !1 : void (n[l].isclicking = !0);
@@ -821,8 +819,8 @@ function wendaCooperateCard() {
 var cooperateCardTmpl = function(obj) {
 var __t, __p = "";
 with (Array.prototype.join, obj || {}) __p += '<div class="wenda-panel-co"><div class="wenda-cooperate"><div class="authorbar wenda clearfix"><a class="author-avatar-link pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '"><div class="author-avatar"><img class="author-avatar-img" src="' + (null == (__t = data.author.avatar) ? "" : __t) + '"></div>', 
-false && data.author.auth_info && (__p += "" + (null == (__t = buildServerVIcon2(data.author.auth_type, "avatar_icon")) ? "" : __t)),
-__p += "</a>", false && data.author.user_decoration && data.author.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = data.author.user_decoration.url) ? "" : __t) + ')"></div>'),
+data.useServerV && data.author.auth_info && (__p += "" + (null == (__t = buildServerVIcon2(data.author.auth_type, "avatar_icon")) ? "" : __t)), 
+__p += "</a>", data.showUserDecoration && data.author.user_decoration && data.author.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = data.author.user_decoration.url) ? "" : __t) + ')"></div>'), 
 __p += '<div class="avatar-decoration avatar-night-mask"></div><div class="author-bar"><div class="name-link-wrap"><div class="name-link-w"><a class="author-name-link pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '">' + (null == (__t = data.author.name) ? "" : __t) + '<span class="cooper-tag">问答战略合作伙伴</span></a></div></div><a class="sub-title-w" href="' + (null == (__t = data.author.link) ? "" : __t) + '"><span class="sub-title">' + (null == (__t = data.author.cooperate_text) ? "" : __t) + '</span></a></div></div><a class="cooperate-link" href="' + (null == (__t = data.author.cooperate_link) ? "" : __t) + '"><span class="txt">查看官方网站<em class="iconfont">&#xe644;</em></span></a></div></div>';
 return __p;
 };
@@ -868,10 +866,9 @@ $(".author-function-buttons").hide(), $(".wenda-info").hide()) : ($(".author-fun
 $(".follow-button").show(), $(".wenda-info").hide())), "is_author" in e && e.is_author ? (Page.author.isAuthorSelf = !!e.is_author, 
 $(".wd-footer .editor-edit-answer").attr("href", e.edit_answer_schema).show(), $(".wd-footer .dislike-and-report").hide()) : ($(".wd-footer .editor-edit-answer").hide(), 
 "detail_related_report_style" in wenda_extra && 0 !== wenda_extra.detail_related_report_style && wenda_extra.wd_version >= 13 ? $(".wd-footer .dislike-and-report").hide() : $(".wd-footer .dislike-and-report").show()), 
-"is_author" in e && e.is_author || ("detail_related_report_style" in wenda_extra && (2 === wenda_extra.detail_related_report_style || 3 === wenda_extra.detail_related_report_style) && wenda_extra.wd_version >= 13 ? ($(".report").hide(), 
-$(".sep.for-report").hide()) : ($(".report").show(), "detail_related_report_style" in wenda_extra && 1 === wenda_extra.detail_related_report_style && wenda_extra.wd_version >= 13 ? $(".report").removeClass("no-icon") : $(".sep.for-report").show())), 
-"brow_count" in e && ($(".brow-count").text(e.brow_count), formatCount(".brow-count", e.brow_count, "0")), 
-"all_brow_count" in e || "fans_count" in e) {
+"is_author" in e && e.is_author || "detail_related_report_style" in wenda_extra && (2 === wenda_extra.detail_related_report_style || 3 === wenda_extra.detail_related_report_style) && wenda_extra.wd_version >= 13 && ($(".report").hide(), 
+$(".sep.for-report").hide()), "brow_count" in e && ($(".brow-count").text(e.brow_count), 
+formatCount(".brow-count", e.brow_count, "0")), "all_brow_count" in e || "fans_count" in e) {
 var t = [];
 "all_brow_count" in e && t.push(formatCount(!1, e.all_brow_count, "0") + "阅读"), 
 "fans_count" in e && t.push(formatCount(!1, e.fans_count, "0") + "粉丝"), t.length > 0 && setTimeout(function() {
@@ -886,7 +883,7 @@ aniok: "false"
 "is_buryed" in e && "bury_count" in e && (e.is_buryed && $("#bury").attr({
 "wenda-state": "buryed",
 aniok: "false"
-}), formatCount(".bury-count", e.bury_count, "踩"), e.is_buryed && $(".dislike-and-report").css("color", "#999999").text("已反对"), 
+}), formatCount(".bury-count", e.bury_count, "踩"), e.is_buryed && $(".dislike-and-report").addClass("is-buryed").text("已反对"), 
 wenda_extra.wd_version >= 6)) {
 var a = e.is_buryed;
 $('[item="dislike-and-report"]').on("click", function() {
@@ -901,9 +898,7 @@ a = !a));
 });
 }
 if ("is_show_bury" in e && e.is_show_bury && $("#bury").show().parent().removeClass("only-one").addClass("only-two"), 
-Page.h5_settings.is_liteapp && wenda_extra.wd_version < 3 && ToutiaoJSBridge.call("appInfo", {}, function(e) {
-1206 === e.aid && e.versionCode >= 631 && $(".bottom-buttons").hide();
-}), "is_concern_user" in e && change_following_state(!!e.is_concern_user), "ans_count" in e && ($("#total-answer-count").html(e.ans_count + "个回答").css("display", "inline-block"), 
+"is_concern_user" in e && change_following_state(!!e.is_concern_user), "ans_count" in e && ($("#total-answer-count").html(e.ans_count + "个回答").css("display", "inline-block"), 
 $("#total-answer-count-index").html("全部" + e.ans_count + "个回答")), "nice_ans_count" in e && "wenda_extra" in window && ("function" == typeof window.assignThroughWendaNiceanscount ? window.assignThroughWendaNiceanscount(e.nice_ans_count) : window.wenda_extra.nice_ans_count = e.nice_ans_count), 
 "question_schema" in e && e.question_schema && (window.wenda_extra.list_schema = e.question_schema), 
 "post_answer_schema" in e && e.post_answer_schema && $(".go-to-answer").attr("href", urlAddQueryParams(e.post_answer_schema, {
@@ -914,7 +909,7 @@ source: "big" === $(".go-to-answer").attr("data-type") ? "answer_detail_top_writ
 var n = e.gd_ext_json || {};
 if ("string" == typeof e.gd_ext_json) try {
 n = JSON.parse(e.gd_ext_json);
-} catch (o) {
+} catch (i) {
 n = {};
 }
 window.wenda_extra.gd_ext_json = n, "category_name" in n && "wenda" === Page.article.type && (Page.author.link = Page.author.link + "&category_name=" + n.category_name, 
@@ -923,14 +918,14 @@ $(".sub-title-w").attr("href", Page.author.link));
 }
 if (WendaRuleTip(e.tips_data || {}), (!("show_next" in e) || e.show_next) && ($(".serial").show(), 
 "has_next" in e)) {
-var i = $("#next_answer_link");
-e.has_next ? (i.attr("href", e.next_answer_schema), i.attr("onclick", null)) : (i.attr("onclick", null), 
-i.addClass("disabled").on("click", function() {
+var o = $("#next_answer_link");
+e.has_next ? (o.attr("href", e.next_answer_schema), o.attr("onclick", null)) : (o.attr("onclick", null), 
+o.addClass("disabled").on("click", function() {
 ToutiaoJSBridge.call("toast", {
 text: "这是最后一个回答",
 icon_type: ""
 });
-}), needCleanDoms.push(i));
+}), needCleanDoms.push(o));
 }
 }
 }(), function() {
@@ -977,7 +972,7 @@ score_card_info_string = score_card_info_string > -1 && 5 > score_card_info_stri
 var startTime, lastTimeOutThx, lastTimeOutDone, starQuestions = [ "为文章打分", "这篇文章是否有价值？", "你后悔看过本文吗？", "本文是否浪费了你的时间？", "与其他文章相比，你觉得本文如何？" ], starInfo = [ "轻触打分", "浪费时间", "后悔点进来", "没什么感觉", "比较受益", "非常受益" ], $template = $(scoreCardTemplateFunction({
 question: starQuestions[score_card_info_string]
 })), $stars = $template.find(".star"), score = 0, has_scored = !1;
-$template.on("touchstart", ".star", function(e) {
+$template.on("click", ".star", function(e) {
 var t = parseInt(e.target.getAttribute("data-index"));
 e.target.getAttribute("data-selected"), $stars.forEach(function(e, a) {
 t >= a ? e.setAttribute("data-selected", "true") : e.setAttribute("data-selected", "false");
@@ -1022,7 +1017,7 @@ $(".info-wrapper").removeClass("move"), $(".p-scorecard").removeClass("moveUp"),
 $stars.forEach(function(e) {
 e.setAttribute("data-selected", "false");
 }), score = 0, document.querySelector(".info").innerHTML = starInfo[score];
-}), $("footer").append($template), send_exposure_event_once($template.get(0), function() {
+}), $("footer").prepend($template), send_exposure_event_once($template.get(0), function() {
 startTime = Date.now(), send_umeng_event("score_card", "show", {
 value: group_id,
 extra: {
@@ -1058,7 +1053,7 @@ style: Page.h5_settings.score_card_style
 $template.on("click", ".emoji-button", function(e) {
 var t = $(e.target).closest(".emoji-button"), a = parseInt(t.attr("data-score"));
 if (a !== last_score) {
-var n = t.attr("data-type"), o = parseInt(t.attr("data-index")), i = {
+var n = t.attr("data-type"), i = parseInt(t.attr("data-index")), o = {
 evaluate_id: JSON.stringify({
 gid: group_id,
 style: "face",
@@ -1068,10 +1063,10 @@ interval: Date.now() - startTime
 survey_type: "point",
 prefer_id: a
 };
-if ($.extend(!0, i, networkCommonParams), $.ajax({
+if ($.extend(!0, o, networkCommonParams), $.ajax({
 url: "https://eva.snssdk.com/eva/survey.json",
 dataType: "jsonp",
-data: i,
+data: o,
 error: function() {},
 success: function() {}
 }), !has_scored) {
@@ -1082,9 +1077,9 @@ localStorage.setItem("article_detail_score", scoredArticle);
 has_scored = !0;
 }
 if (last_score = a, $emojiButtons.forEach(function(e, t) {
-o === t ? e.setAttribute("data-status", "selected") : e.setAttribute("data-status", "unselected");
+i === t ? e.setAttribute("data-status", "selected") : e.setAttribute("data-status", "unselected");
 }), 2 == Page.h5_settings.score_card_style || 3 == Page.h5_settings.score_card_style) {
-emojiAnimationArray[o] && emojiAnimationArray[o].destroy();
+emojiAnimationArray[i] && emojiAnimationArray[i].destroy();
 var s = bodymovin.loadAnimation({
 container: document.querySelector("#" + n + "-press-animation"),
 path: 3 == Page.h5_settings.score_card_style ? baseFilePath() + "images/score-" + n + "/data2.json" : baseFilePath() + "images/score-" + n + "/data.json",
@@ -1092,7 +1087,7 @@ renderer: "svg",
 loop: !1,
 autoplay: !0
 });
-emojiAnimationArray[o] = s;
+emojiAnimationArray[i] = s;
 }
 send_umeng_event("score_card", "click", {
 value: group_id,
@@ -1101,11 +1096,11 @@ score: a,
 interval: Date.now() - startTime
 }
 }), 3 == Page.h5_settings.score_card_style && (lastTimeOutDone && clearTimeout(lastTimeOutDone), 
-document.getElementById("thx-press-emoji").className = n + "-press", document.getElementById("thx-word").innerHTML = "您对本文的评价是：" + letters[score_card_info_string][o], 
+document.getElementById("thx-press-emoji").className = n + "-press", document.getElementById("thx-word").innerHTML = "您对本文的评价是：" + letters[score_card_info_string][i], 
 lastTimeOutDone = setTimeout(function() {
 $(".p-scorecard").addClass("moveUp");
 }, 1e3)), (4 == Page.h5_settings.score_card_style || 5 == Page.h5_settings.score_card_style) && (lastTimeOutDone && clearTimeout(lastTimeOutDone), 
-document.getElementById("thx-press-emoji").className = n + "-press", document.getElementById("thx-word").innerHTML = "您对本文的评价是：" + letters[score_card_info_string][o], 
+document.getElementById("thx-press-emoji").className = n + "-press", document.getElementById("thx-word").innerHTML = "您对本文的评价是：" + letters[score_card_info_string][i], 
 lastTimeOutDone = setTimeout(function() {
 $(".p-scorecard").addClass("moveUp");
 }, 300));
@@ -1114,7 +1109,7 @@ $(".p-scorecard").addClass("moveUp");
 $(".p-scorecard").removeClass("moveUp"), $(".emoji-button").forEach(function(e) {
 e.setAttribute("data-status", "init");
 }), last_score = -1;
-}), $("footer").append($template), send_exposure_event_once($template.get(0), function() {
+}), $("footer").prepend($template), send_exposure_event_once($template.get(0), function() {
 startTime = Date.now(), send_umeng_event("score_card", "show", {
 value: group_id,
 extra: {
@@ -1135,10 +1130,10 @@ if (e) {
 var n = e.split(",");
 if (n.indexOf(a) > -1) return;
 }
-var o = {};
+var i = {};
 client.isAndroid && client.isNewsArticleVersionNoLessThan("6.2.5") || client.isIOS && client.isNewsArticleVersionNoLessThan("6.2.6") ? ToutiaoJSBridge.call("TTNetwork.commonParams", {}, function(e) {
-o = e.data || e, 1 === Page.h5_settings.score_card_style ? processScoreCardByStar(o) : (Page.h5_settings.score_card_style > 1 || Page.h5_settings.score_card_style < 6) && processScoreCardByEmoji(o);
-}) : 1 === Page.h5_settings.score_card_style ? processScoreCardByStar(o) : (Page.h5_settings.score_card_style > 1 || Page.h5_settings.score_card_style < 6) && processScoreCardByEmoji(o);
+i = e.data || e, 1 === Page.h5_settings.score_card_style ? processScoreCardByStar(i) : (Page.h5_settings.score_card_style > 1 || Page.h5_settings.score_card_style < 6) && processScoreCardByEmoji(i);
+}) : 1 === Page.h5_settings.score_card_style ? processScoreCardByStar(i) : (Page.h5_settings.score_card_style > 1 || Page.h5_settings.score_card_style < 6) && processScoreCardByEmoji(i);
 }
 }
 
@@ -1225,31 +1220,31 @@ images: wenda_extra.image_list
 }));
 $template.on("click", ".pic-cell-pic", function() {
 for (var e = $(this), t = e.attr("data-index"), a = [], n = 0; n < wenda_extra.image_list.length; n++) a.push("https://p1.pstatp.com/large/" + wenda_extra.image_list[n].web_uri);
-var o = e.offset();
-location.href = "ios" == window.CLIENT_VERSION ? "bytedance://full_image?index=" + t + "&url=" + a[t] + "&left=" + o.left + "&top=" + o.top + "&width=" + e.width() + "&height=" + e.height() : "bytedance://large_image?index=" + t + "&url=" + a[t] + "&left=" + o.left + "&top=" + o.top + "&width=" + e.width() + "&height=" + e.height();
+var i = e.offset();
+location.href = "ios" == window.CLIENT_VERSION ? "bytedance://full_image?index=" + t + "&url=" + a[t] + "&left=" + i.left + "&top=" + i.top + "&width=" + e.width() + "&height=" + e.height() : "bytedance://large_image?index=" + t + "&url=" + a[t] + "&left=" + i.left + "&top=" + i.top + "&width=" + e.width() + "&height=" + e.height();
 }), $template.addClass(1 === wenda_extra.image_list.length ? "col-1" : 2 === wenda_extra.image_list.length || 4 === wenda_extra.image_list.length ? "col-2" : "col-3"), 
 $("footer").prepend($template).addClass("has-wenda-pic-cell");
 }
 }
 
-function oldMotorDealerContextRender(e, t, a, n, o) {
-var i = $(e({
-data: o
+function motorDealerContextRender(e, t, a, n, i) {
+var o = $(e({
+data: i
 })), r = {
 page_id: "page_detail",
 data_from: "motor_media",
 group_id: Page.statistics.group_id,
 media_id: Page.author.mediaId,
 media_name: Page.author.name,
-series_id: o.series_id,
-series_name: o.series_name,
-position: o.pos,
+series_id: i.series_id,
+series_name: i.series_name,
+position: i.pos,
 req_id: n,
-card_id: o.card_id,
-card_type: o.card_type,
+card_id: i.card_id,
+card_type: i.card_type,
 extra_params: JSON.stringify({})
 };
-i.data("series_id", o.series_id), i.data("series_name", o.series_name), i.on("focus", ".j-motor-form-user", function() {
+o.data("series_id", i.series_id), o.data("series_name", i.series_name), o.on("focus", ".j-motor-form-user", function() {
 sendUmengEventV3("web_clk_event", $.extend({
 obj_id: "detail_scard_n_consultation_focus",
 focus_dom: "user_name"
@@ -1265,7 +1260,7 @@ obj_id: "detail_scard_n_consultation"
 }, r), !1);
 var e = $(this), t = e.closest(".motor-form-body"), n = t.find("[name=userName]"), s = t.find("[name=userMobile]"), l = t.find("[name=userAgree]"), c = n.val(), d = s.val(), u = l.is(":checked");
 return "" === c ? (n.addClass("error").next(".motor-form-tip").show(), !1) : (n.removeClass("error").next(".motor-form-tip").hide(), 
-"" !== d && /^1[3|4|5|7|8|9]\d{9}$/.test(d) ? (s.removeClass("error").next(".motor-form-tip").hide(), 
+"" !== d && /^1[3|4|5|6|7|8|9]\d{9}$/.test(d) ? (s.removeClass("error").next(".motor-form-tip").hide(), 
 u ? ($("article").find(".motor-form-body [name=userName]").val(c), $("article").find(".motor-form-body [name=userMobile]").val(d), 
 sendUmengEventV3("web_clk_event", $.extend({
 obj_id: "detail_scard_n_consultation_sure"
@@ -1275,8 +1270,8 @@ data: {
 user_name: c,
 phone: d,
 city_name: a,
-dealer_ids: o.dealer_ids.join(","),
-car_id: o.car_id,
+dealer_ids: i.dealer_ids.join(","),
+car_id: i.car_id,
 data_from: "motor_media",
 extra: JSON.stringify({
 zt: "motor_media"
@@ -1284,8 +1279,8 @@ zt: "motor_media"
 },
 dataType: "jsonp",
 success: function(t) {
-e.removeAttr("disabled").text("立即获取最低价"), t.data && "true" === t.data.result ? (i.find(".motor-form-edit").hide(), 
-i.find(".motor-form-sheet").show(), i.find(".j-close-dealer-card").hide()) : ToutiaoJSBridge.call("toast", {
+e.removeAttr("disabled").text("立即获取最低价"), t.data && "true" === t.data.result ? (o.find(".motor-form-edit").hide(), 
+o.find(".motor-form-sheet").show(), o.find(".j-close-dealer-card").hide()) : ToutiaoJSBridge.call("toast", {
 text: "提交失败，请稍后重试",
 icon_type: "icon_error"
 });
@@ -1302,8 +1297,8 @@ cancel_text: "取消"
 }).on("click", ".j-motor-sheet-rewrite", function() {
 sendUmengEventV3("web_clk_event", $.extend({
 obj_id: "detail_scard_n_consultation_rewrite"
-}, r), !1), i.find(".motor-form-edit").show(), i.find(".motor-form-sheet").hide();
-}), i.find(".j-close-dealer-card").on("click", function(e) {
+}, r), !1), o.find(".motor-form-edit").show(), o.find(".motor-form-sheet").hide();
+}), o.find(".j-close-dealer-card").on("click", function(e) {
 e.preventDefault(), e.stopPropagation(), ToutiaoJSBridge.call("alert", {
 title: "提示",
 message: "确定要隐藏此内容？",
@@ -1318,32 +1313,33 @@ $.ajax({
 url: "https://i.snssdk.com/motor/operation/activity/zhuduan/dislike/",
 data: {
 device_id: t,
-series_id: o.series_id,
+series_id: i.series_id,
 group_id: Page.statistics.group_id,
 media_id: Page.author.mediaId
 },
 dataType: "jsonp",
 success: function(e) {
-"success" === e.message ? i.hide() : console.warn(e.message);
+"success" === e.message ? o.hide() : console.warn(e.message);
 },
 error: function(e, t) {
-i.hide(), console.warn(e, t);
+o.hide(), console.warn(e, t);
 }
 });
 })) : void sendUmengEventV3("web_clk_event", $.extend({
 obj_id: "detail_scard_n_consultation_close_cancel"
 }, r), !1);
 });
-}), i.find(".j-motor-form-head").on("click", function(e) {
+}), o.find(".j-motor-form-head").on("click", function(e) {
+var t = client.isIOS && parseFloat(client.osVersion) > 8;
 e.preventDefault(), sendUmengEventV3("web_clk_event", $.extend({
 obj_id: "detail_scard_n_consultation_gotoCar"
 }, r), !1);
-var t = "https://m.dcdapp.com/motor/m/car_series/index?series_id=" + o.series_id + "&zt=tt_card_article";
-location.href = "sslocal://webview?url=" + encodeURIComponent(t) + "&title=" + o.series_name + "&use_wk=1";
-}), needCleanDoms.push(i), o.pos > t ? $("article > div p:nth-of-type(" + Math.ceil(t / 2) + ")").before(i) : $("article > div p:nth-of-type(" + o.pos + ")").before(i), 
+var a = "https://m.dcdapp.com/motor/m/car_series/index?series_id=" + i.series_id + "&zt=tt_card_article";
+location.href = "sslocal://webview?url=" + encodeURIComponent(a) + "&title=" + i.series_name + (t ? "&use_wk=1" : "");
+}), needCleanDoms.push(o), i.pos > t ? $("article > div p:nth-of-type(" + Math.ceil(t / 2) + ")").after(o) : $("article > div p:nth-of-type(" + i.pos + ")").after(o), 
 sendUmengEventV3("web_show_event", $.extend({
 obj_id: "detail_scard_n_consultation_render"
-}, r), !1), sendUmengWhenTargetShown(i.get(0), "web_show_event", "", $.extend({
+}, r), !1), sendUmengWhenTargetShown(o.get(0), "web_show_event", "", $.extend({
 obj_id: "detail_scard_n_consultation"
 }, r), !0, {
 version: 3,
@@ -1351,136 +1347,41 @@ isDoubleSend: !1
 });
 }
 
-function motorDealerContextRender(e, t, a, n, o) {
-var i = $(e({
-data: o
-})), r = {
-page_id: "page_detail",
-data_from: "motor_media",
-group_id: Page.statistics.group_id,
-media_id: Page.author.mediaId,
-media_name: Page.author.name,
-series_id: o.series_id,
-series_name: o.series_name,
-position: o.pos,
-req_id: n,
-card_id: o.card_id,
-card_type: o.card_type,
-extra_params: JSON.stringify({})
-};
-i.data("series_id", o.series_id), i.data("series_name", o.series_name), i.find(".j-motor-enter").on("click", function(e) {
-e.stopPropagation(), e.preventDefault(), sendUmengEventV3("web_clk_event", $.extend({
-obj_id: "detail_scard_n_consultation_open"
-}, r), !1), i.find(".motor-form-body").show(), $(this).hide();
-}), i.find(".j-motor-form-normal").on("click", function(e) {
-e.preventDefault(), sendUmengEventV3("web_clk_event", $.extend({
-obj_id: "detail_scard_n_consultation_gotoCar"
-}, r), !1);
-var t = "https://m.dcdapp.com/motor/m/car_series/index?series_id=" + o.series_id + "&zt=tt_card_article";
-location.href = "sslocal://webview?url=" + encodeURIComponent(t) + "&title=" + o.series_name + "&use_wk=1";
-}), i.find(".j-motor-form-user").on("focus", function() {
-sendUmengEventV3("web_clk_event", $.extend({
-obj_id: "detail_scard_n_consultation_focus",
-focus_dom: "user_name"
-}, r), !1);
-}), i.find(".j-motor-form-mobile").on("focus", function() {
-sendUmengEventV3("web_clk_event", $.extend({
-obj_id: "detail_scard_n_consultation_focus",
-focus_dom: "phone"
-}, r), !1);
-}), i.find(".j-motor-form-btn").on("click", function() {
-sendUmengEventV3("web_clk_event", $.extend({
-obj_id: "detail_scard_n_consultation"
-}, r), !1);
-var e = $(this), t = e.closest(".motor-form-body"), n = t.find("[name=userName]"), s = t.find("[name=userMobile]"), l = t.find("[name=userAgree]"), c = n.val(), d = s.val(), u = l.is(":checked");
-return "" === c ? (n.addClass("error").next(".motor-form-tip").show(), !1) : (n.removeClass("error").next(".motor-form-tip").hide(), 
-"" !== d && /^1[3|4|5|7|8|9]\d{9}$/.test(d) ? (s.removeClass("error").next(".motor-form-tip").hide(), 
-u ? ($("article").find(".motor-form-body [name=userName]").val(c), $("article").find(".motor-form-body [name=userMobile]").val(d), 
-sendUmengEventV3("web_clk_event", $.extend({
-obj_id: "detail_scard_n_consultation_sure"
-}, r), !1), e.attr("disabled", "disabled").text("提交中..."), void $.ajax({
-url: "https://i.snssdk.com/motor/dealer/m/v1/commit_inquiry_info/",
-data: {
-user_name: c,
-phone: d,
-city_name: a,
-dealer_ids: o.dealer_ids.join(","),
-car_id: o.car_id,
-data_from: "motor_media",
-extra: JSON.stringify({
-zt: "motor_media"
-})
-},
-dataType: "jsonp",
-success: function(t) {
-e.removeAttr("disabled").text("立即获取最低价"), t.data && "true" === t.data.result ? (i.find(".motor-form-edit").hide(), 
-i.find(".motor-form-sheet").show(), i.find(".j-close-dealer-card").hide()) : ToutiaoJSBridge.call("toast", {
-text: "提交失败，请稍后重试",
-icon_type: "icon_error"
-});
-},
-error: function(t, a) {
-e.removeAttr("disabled").text("立即获取最低价"), console.warn(t, a);
+function searchLablesRender(data) {
+var templateFunction = function(obj) {
+var __t, __p = "";
+with (Array.prototype.join, obj || {}) {
+__p += '<div class="pcard search ' + (null == (__t = 1 == data.labels_style ? "search-a" : "search-b") ? "" : __t) + '"><div class="title pcard-vertical-top-border">为你推荐</div>';
+for (var i = 0; i < data.labels_words.length; i++) __p += '<a href="' + (null == (__t = data.labels_words[i].link) ? "" : __t) + '" class="lable" data-index="' + (null == (__t = i) ? "" : __t) + '" data-keyword="' + (null == (__t = data.labels_words[i].word) ? "" : __t) + '"><div>' + (null == (__t = data.labels_words[i].word) ? "" : __t) + "</div></a>";
+__p += "</div>";
 }
-})) : (ToutiaoJSBridge.call("alert", {
-title: "温馨提醒",
-message: "请勾选《个人信息保护声明》后进行询价，我们将保护您的个人信息安全",
-confirm_text: "确认",
-cancel_text: "取消"
-}), !1)) : (s.addClass("error").next(".motor-form-tip").show(), !1));
-}), i.find(".j-motor-sheet-rewrite").on("click", function() {
-sendUmengEventV3("web_clk_event", $.extend({
-obj_id: "detail_scard_n_consultation_rewrite"
-}, r), !1), i.find(".motor-form-edit").show(), i.find(".motor-form-sheet").hide();
-}), i.find(".j-close-dealer-card").on("click", function(e) {
-e.preventDefault(), e.stopPropagation(), ToutiaoJSBridge.call("alert", {
-title: "提示",
-message: "确定要隐藏此内容？",
-confirm_text: "确认",
-cancel_text: "取消"
-}, function(e) {
-return e.code ? (sendUmengEventV3("web_clk_event", $.extend({
-obj_id: "detail_scard_n_consultation_close"
-}, r), !1), void ToutiaoJSBridge.call("appInfo", {}, function(e) {
-var t = e.device_id || 0;
-$.ajax({
-url: "https://i.snssdk.com/motor/operation/activity/zhuduan/dislike/",
-data: {
-device_id: t,
-series_id: o.series_id,
-group_id: Page.statistics.group_id,
-media_id: Page.author.mediaId
-},
-dataType: "jsonp",
-success: function(e) {
-"success" === e.message ? i.hide() : console.warn(e.message);
-},
-error: function(e, t) {
-i.hide(), console.warn(e, t);
+return __p;
+}, $template = $(templateFunction({
+data: data
+}));
+$("footer").append($template), $template.find(".lable").on("click", function() {
+send_umeng_event("search_card", "click_search_card", {
+extra: {
+index: parseInt(this.dataset.index) + 1,
+enter_from: "article_tag_wap",
+card_type: "search",
+keyword: this.dataset.keyword,
+style: data.labels_style
 }
 });
-})) : void sendUmengEventV3("web_clk_event", $.extend({
-obj_id: "detail_scard_n_consultation_close_cancel"
-}, r), !1);
-});
-}), needCleanDoms.push(i), o.pos > t ? $("article > div p:nth-of-type(" + Math.ceil(t / 2) + ")").before(i) : $("article > div p:nth-of-type(" + o.pos + ")").before(i), 
-sendUmengEventV3("web_show_event", $.extend({
-obj_id: "detail_scard_n_consultation_render"
-}, r), !1), sendUmengWhenTargetShown(i.get(0), "web_show_event", "", $.extend({
-obj_id: "detail_scard_n_consultation"
-}, r), !0, {
-version: 3,
-isDoubleSend: !1
-});
+}), sendUmengWhenTargetShown($template.get(0), "search_card", "show_search_card", {
+source: "article_tag_wap",
+style: data.labels_style
+}, !0), needCleanDoms.push($template);
 }
 
 function followActionHandler() {
-var e = $(this), t = e.data("userId"), a = e.data("mediaId"), n = e.hasClass("following"), o = e.attr("data-concerntype") || "", i = Page.article.type, r = "" === o, s = Page.hasExtraSpace && r;
+var e = $(this), t = e.data("userId"), a = e.data("mediaId"), n = e.hasClass("following"), i = e.attr("data-concerntype") || "", o = Page.article.type, r = "" === i, s = Page.hasExtraSpace && r;
 if (!e.hasClass("disabled")) if ($(".subscribe-button").addClass("disabled"), $("header").addClass("canmoving"), 
-$(".boot-outer-container").css("display", "none"), "pgc" === i) doFollowMedia(t, a, n, o), 
+$(".boot-outer-container").css("display", "none"), "pgc" === o) doFollowMedia(t, a, n, i), 
 s && !Page.author.hasRedPack && (n ? "open" === $("header").attr("sugstate") ? NativePlayGif.willStart(function() {
 $("header").attr("sugstate", "no");
-}) : $("header").attr("sugstate", "no") : doRecommendUsers(Page.author.userId, recommendUsersSuccess, recommendUsersError)); else if ("wenda" === i) {
+}) : $("header").attr("sugstate", "no") : doRecommendUsers(Page.author.userId, recommendUsersSuccess, recommendUsersError)); else if ("wenda" === o) {
 doFollowUser(t, a, n, void 0, followSource.wenda, "answer_detail_top_card");
 var l = $.extend({}, wenda_extra.gd_ext_json || {}, {
 source: "answer_detail_top_card",
@@ -1494,7 +1395,7 @@ Page.author.hasRedPack && (l.is_redpacket = 1), sendUmengEventV3(n ? "rt_unfollo
 s && (client.isAndroid && client.isNewsArticleVersionNoLessThan("6.2.5") || client.isIOS && client.isNewsArticleVersionNoLessThan("6.3.3")) && (n ? "open" === $("header").attr("sugstate") ? NativePlayGif.willStart(function() {
 $("header").attr("sugstate", "no");
 }) : $("header").attr("sugstate", "no") : doRecommendUsers(Page.author.userId, recommendUsersSuccess, recommendUsersError));
-} else "forum" === i && (doFollowUser(t, a, n, void 0, followSource.forum, "detail"), 
+} else "forum" === o && (doFollowUser(t, a, n, void 0, followSource.forum, "detail"), 
 s && (client.isAndroid && client.isNewsArticleVersionNoLessThan("6.2.5") || client.isIOS && client.isNewsArticleVersionNoLessThan("6.2.6")) && (n ? "open" === $("header").attr("sugstate") ? NativePlayGif.willStart(function() {
 $("header").attr("sugstate", "no");
 }) : $("header").attr("sugstate", "no") : doRecommendUsers(Page.author.userId, recommendUsersSuccess, recommendUsersError)), 
@@ -1516,7 +1417,7 @@ var e = $(this), t = e.data("userId"), a = e.data("mediaId"), n = e.hasClass("fo
 if (!e.hasClass("disabled")) {
 if ($(".subscribe-button-bottom").addClass("disabled"), $(".boot-outer-container").css("display", "none"), 
 "wenda" === Page.article.type) {
-var o = $.extend({}, wenda_extra.gd_ext_json || {}, {
+var i = $.extend({}, wenda_extra.gd_ext_json || {}, {
 source: "answer_detail_bottom_card",
 position: "detail",
 to_user_id: t,
@@ -1524,7 +1425,7 @@ follow_type: "from_group",
 group_id: wenda_extra.ansid,
 server_source: 80
 });
-Page.author.hasRedPack && (o.is_redpacket = 1), sendUmengEventV3(n ? "rt_unfollow" : "rt_follow", o);
+Page.author.hasRedPack && (i.is_redpacket = 1), sendUmengEventV3(n ? "rt_unfollow" : "rt_follow", i);
 }
 doFollowUser(t, a, n, void 0, followSource[Page.article.type] || "", "wenda" === Page.article.type ? "answer_detail_bottom_card" : "detail_bottom");
 }
@@ -1543,21 +1444,21 @@ source: "article_detail"
 
 function mediasugCardClickHandler(e) {
 if (!$(e.target).is(".ms-subs")) {
-var t = $(this).attr("it-is-user-id"), a = "", n = "", o = "";
+var t = $(this).attr("it-is-user-id"), a = "", n = "", i = "";
 "pgc" === Page.article.type ? (send_umeng_event("detail", "sub_rec_click", {
 value: t,
 extra: {
 source: "article_detail",
 profile_user_id: Page.author.userId
 }
-}), a = "detail_follow_card_article", n = Page.category_name, o = Page.statistics.group_id) : "forum" === Page.article.type ? (send_umeng_event("follow_card", "click_avatar", {
+}), a = "detail_follow_card_article", n = Page.category_name, i = Page.statistics.group_id) : "forum" === Page.article.type ? (send_umeng_event("follow_card", "click_avatar", {
 value: forum_extra.thread_id,
 ext_value: t,
 extra: {
 source: "weitoutiao_detail",
 profile_user_id: Page.author.userId
 }
-}), a = "detail_follow_card_topic", n = Page.forum_extra.category_name, o = Page.forum_extra.thread_id) : "wenda" === Page.article.type && (send_umeng_event("follow_card", "click_avatar", {
+}), a = "detail_follow_card_topic", n = Page.forum_extra.category_name, i = Page.forum_extra.thread_id) : "wenda" === Page.article.type && (send_umeng_event("follow_card", "click_avatar", {
 value: wenda_extra.ansid,
 ext_value: t,
 extra: {
@@ -1565,12 +1466,12 @@ source: "wenda_detail",
 profile_user_id: Page.author.userId
 }
 }), a = "detail_follow_card_wenda", n = wenda_extra.gd_ext_json ? wenda_extra.gd_ext_json.category_name : "", 
-o = wenda_extra.ansid), window.location.href = "sslocal://profile?uid=" + t + ("wenda" === Page.article.type ? "&refer=wenda" : "") + "&group_id=" + o + "&from_page=" + a + "&profile_user_id=" + Page.author.userId + (n ? "&category_name=" + n : "");
+i = wenda_extra.ansid), window.location.href = "sslocal://profile?uid=" + t + ("wenda" === Page.article.type ? "&refer=wenda" : "") + "&group_id=" + i + "&from_page=" + a + "&profile_user_id=" + Page.author.userId + (n ? "&category_name=" + n : "");
 }
 }
 
 function mediasugFollowAction() {
-var e = $(this), t = null != e.attr("isfollowing"), a = e.closest(".ms-item").attr("it-is-user-id"), n = e.closest(".ms-item").attr("it-is-media-id"), o = e.attr("reason"), i = followSource[Page.article.type + "_sug"], r = e.closest(".ms-item").data("index");
+var e = $(this), t = null != e.attr("isfollowing"), a = e.closest(".ms-item").attr("it-is-user-id"), n = e.closest(".ms-item").attr("it-is-media-id"), i = e.attr("reason"), o = followSource[Page.article.type + "_sug"], r = e.closest(".ms-item").data("index");
 if (e.attr("disabled", !0), "wenda" === Page.article.type) sendUmengEventV3(t ? "rt_unfollow" : "rt_follow", $.extend({}, wenda_extra.gd_ext_json || {}, {
 source: "answer_detail_follow_card",
 position: "detail",
@@ -1603,8 +1504,8 @@ source: "weitoutiao_detail"
 ToutiaoJSBridge.call("user_follow_action", {
 id: a,
 action: t ? "unfollow" : "dofollow",
-reason: o,
-source: i,
+reason: i,
+source: o,
 order: r,
 from: "sug"
 }, function(n) {
@@ -1615,7 +1516,7 @@ source: "article_detail",
 profile_user_id: Page.author.userId
 }
 }), e.attr("isfollowing", t ? null : ""), doRecommendUsers(Page.author.userId, function(e) {
-if (Array.isArray(e)) for (var n = e.length, o = 0; n > o; o++) e[o].user_id == a && (e[o].is_following = !t);
+if (Array.isArray(e)) for (var n = e.length, i = 0; n > i; i++) e[i].user_id == a && (e[i].is_following = !t);
 }, function() {}));
 });
 }
@@ -1630,7 +1531,7 @@ var t = e.querySelector(".ms-list").classList;
 }, !1);
 var n = window.MutationObserver || window.WebKitMutationObserver;
 if (n) {
-var o = new n(function(e) {
+var i = new n(function(e) {
 e.forEach(function(e) {
 var t = e.attributeName;
 if ("sugstate" === t) {
@@ -1640,11 +1541,11 @@ console.info("SUG-OEPN"), mediasugScroll.open(), $(document).on("scroll", medias
 ToutiaoJSBridge.on("webviewScrollEvent", function(e) {
 mediasugScroll.webviewScroll(e);
 });
-var n, o;
-"pgc" === Page.article.type ? (n = "article_detail", o = Page.statistics.group_id) : "forum" === Page.article.type ? (n = "weitoutiao_detail", 
-o = forum_extra.thread_id) : "wenda" === Page.article.type && (n = "wenda_detail", 
-o = wenda_extra.ansid), send_umeng_event("follow_card", "show", {
-value: o,
+var n, i;
+"pgc" === Page.article.type ? (n = "article_detail", i = Page.statistics.group_id) : "forum" === Page.article.type ? (n = "weitoutiao_detail", 
+i = forum_extra.thread_id) : "wenda" === Page.article.type && (n = "wenda_detail", 
+i = wenda_extra.ansid), send_umeng_event("follow_card", "show", {
+value: i,
 extra: {
 source: n
 }
@@ -1655,7 +1556,7 @@ mediasugScroll.pushimpr(!0));
 }
 });
 });
-o.observe(document.getElementsByTagName("header")[0], {
+i.observe(document.getElementsByTagName("header")[0], {
 attributes: !0
 });
 }
@@ -1687,16 +1588,16 @@ __p += "";
 for (var i = 0; i < data.length; i++) {
 var item = data[i];
 __p += '<div class="ms-item" it-is-user-id="' + (null == (__t = item.user_id) ? "" : __t) + '" data-index="' + (null == (__t = i + 1) ? "" : __t) + '" it-is-media-id="' + (null == (__t = item.media_id ? item.media_id : "") ? "" : __t) + '"><div class="ms-avatar"><div class="ms-avatar-wrap"><img class="ms-avatar-image" src="' + (null == (__t = item.avatar_url) ? "" : __t) + '"></div>', 
-useServerV && false && item.user_auth_info && item.user_auth_info.auth_type && (__p += "" + (null == (__t = buildServerVIcon2(item.user_auth_info.auth_type, "avatar_icon")) ? "" : __t)),
-__p += "</div>", false && item.user_decoration && item.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = item.user_decoration.url) ? "" : __t) + ')"></div>'),
-__p += '<div class="avatar-decoration avatar-night-mask"></div><div class="ms-name-wrap"><div class="ms-name ' + (null == (__t = !fa && false ? "" : "") ? "" : __t) + '">' + (null == (__t = item.name) ? "" : __t) + '</div></div><div class="ms-desc">' + (null == (__t = item.reason_description) ? "" : __t) + '</div><button reason="' + (null == (__t = item.reason) ? "" : __t) + '" class="ms-subs ' + (null == (__t = isRedFocusButton ? "ms-red-btn" : "") ? "" : __t) + '" ' + (null == (__t = item.is_following ? " isfollowing " : "") ? "" : __t) + " " + (null == (__t = item.is_followed ? " isfollowed " : "") ? "" : __t) + ' ><span class="focus-icon">&nbsp;</span></button></div>';
+useServerV && item.user_verified && item.user_auth_info && item.user_auth_info.auth_type && (__p += "" + (null == (__t = buildServerVIcon2(item.user_auth_info.auth_type, "avatar_icon")) ? "" : __t)), 
+__p += "</div>", Page.showUserDecoration && item.user_decoration && item.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = item.user_decoration.url) ? "" : __t) + ')"></div>'), 
+__p += '<div class="avatar-decoration avatar-night-mask"></div><div class="ms-name-wrap"><div class="ms-name ' + (null == (__t = !useServerV && item.user_verified ? " verified" : "") ? "" : __t) + '">' + (null == (__t = item.name) ? "" : __t) + '</div></div><div class="ms-desc">' + (null == (__t = item.reason_description) ? "" : __t) + '</div><button reason="' + (null == (__t = item.reason) ? "" : __t) + '" class="ms-subs ' + (null == (__t = isRedFocusButton ? "ms-red-btn" : "") ? "" : __t) + '" ' + (null == (__t = item.is_following ? " isfollowing " : "") ? "" : __t) + " " + (null == (__t = item.is_followed ? " isfollowed " : "") ? "" : __t) + ' ><span class="focus-icon">&nbsp;</span></button></div>';
 }
 __p += "";
 }
 return __p;
 }, MediasugTemplateString = MediasugTemplateFunction({
 data: list,
-useServerV: false,
+useServerV: Page.useServerV,
 isRedFocusButton: Page.isRedFocusButton
 });
 $("#mediasug-list-html").html(MediasugTemplateString).css("width", 150 * list.length + 10 + 15 + "px"), 
@@ -1710,13 +1611,13 @@ sendBytedanceRequest("enable_swipe");
 }
 }
 
-function doFollowUser(e, t, a, n, o, i) {
+function doFollowUser(e, t, a, n, i, o) {
 subscribeTimeoutTimer = setTimeout(change_following_state, 1e4, a, !0), ToutiaoJSBridge.call("user_follow_action", {
 id: e,
 action: a ? "unfollow" : "dofollow",
 reason: n,
-source: o,
-from: i
+source: i,
+from: o
 }, function(e) {
 clearTimeout(subscribeTimeoutTimer), e && "object" == typeof e && 1 === +e.code ? change_following_state(!!e.status, !0) : change_following_state(a, !0);
 });
@@ -1779,11 +1680,11 @@ $(t).addClass("border").wrap('<div class="table-wrap horizontal_scroll_android"/
 }) : client.isIOS && $("table").each(function(e, t) {
 var a = $(t);
 if (a.addClass("border").wrap('<div class="table-wrap horizontal_scroll"/>'), a.width() > innerWidth - 30) {
-var n = a.parent(), o = $('<div class="swipe_tip">左滑查看更多</div>');
-n.append(o), n.on("touchstart", function() {
-o.css("opacity", "0");
+var n = a.parent(), i = $('<div class="swipe_tip">左滑查看更多</div>');
+n.append(i), n.on("touchstart", function() {
+i.css("opacity", "0");
 }).on("scroll touchend", function() {
-0 === this.scrollLeft && o.css("opacity", "1");
+0 === this.scrollLeft && i.css("opacity", "1");
 }), needCleanDoms.push(n);
 }
 });
@@ -1794,10 +1695,10 @@ var e = this.parentNode;
 e && (e.style.background = "black");
 var t = $(this), a = this.dataset;
 if (!a.width && !a.height) {
-var n = .75, o = 0, i = n, r = "", s = this.naturalWidth, l = this.naturalHeight;
-s && l && (o = l / s, n >= o ? i = o : r = "height: 100%; width: auto;");
+var n = .75, i = 0, o = n, r = "", s = this.naturalWidth, l = this.naturalHeight;
+s && l && (i = l / s, n >= i ? o = i : r = "height: 100%; width: auto;");
 var c = t.clientWidth;
-t.css("height", c * i + "px"), this.setAttribute("style", r), e.setAttribute("data-video-size", JSON.stringify({
+t.css("height", c * o + "px"), this.setAttribute("style", r), e.setAttribute("data-video-size", JSON.stringify({
 normal: {
 h: l,
 w: s
@@ -1813,8 +1714,8 @@ e && e.removeChild(this);
 
 function processCustomVideo() {
 $(".custom-video").each(function(e, t) {
-var a = $(t), n = t.dataset, o = n.width, i = n.height, r = .75, s = 0, l = r, c = "";
-o && i && (s = i / o, r >= s ? l = s : c = "height: 100%; width: auto;");
+var a = $(t), n = t.dataset, i = n.width, o = n.height, r = .75, s = 0, l = r, c = "";
+i && o && (s = o / i, r >= s ? l = s : c = "height: 100%; width: auto;");
 var d = t.clientWidth;
 if (a.css("height", d * l + "px"), n.wendaSource && "object" == typeof window.wenda_extra) {
 var u = formatDuration(n.duration);
@@ -1881,8 +1782,8 @@ case "user_action":
 console.info("user_action", e), subscribeTimeoutTimer && clearTimeout(subscribeTimeoutTimer);
 var t = $(".subscribe-button"), n = t.data("userId");
 if (e.id == n && "status" in e) change_following_state(!!e.status, !0); else {
-var o = $('[it-is-user-id="' + e.id + '"]');
-o.length > 0 && "status" in e && (o.find(".ms-subs").attr("isfollowing", e.status ? "" : null).attr("disabled", null), 
+var i = $('[it-is-user-id="' + e.id + '"]');
+i.length > 0 && "status" in e && (i.find(".ms-subs").attr("isfollowing", e.status ? "" : null).attr("disabled", null), 
 e.status && mediasugScroll.next(), doRecommendUsers(Page.author.userId, function(t) {
 if (Array.isArray(t)) for (var a = t.length, n = 0; a > n; n++) t[n].user_id == e.id && (t[n].is_following = !!e.status);
 }, function() {}));
@@ -1890,11 +1791,11 @@ if (Array.isArray(t)) for (var a = t.length, n = 0; a > n; n++) t[n].user_id == 
 break;
 
 case "wenda_digg":
-var i = $("#digg").attr("data-answerid");
+var o = $("#digg").attr("data-answerid");
 if (window.wenda_extra && window.wenda_extra.wd_version >= 8 && e.id === window.wenda_extra.ansid) {
 var r = +$(".digg-count-special").attr("realnum");
 "status" in e && (1 == e.status ? formatCount(".digg-count-special", r + 1, "0") : r > 0 && formatCount(".digg-count-special", r - 1, "0"));
-} else if (e.id == i && "digged" !== $("#digg").attr("wenda-state")) {
+} else if (e.id == o && "digged" !== $("#digg").attr("wenda-state")) {
 $("#digg").attr("wenda-state", "digged");
 var r = +$("#digg").find(".digg-count").attr("realnum");
 formatCount(".digg-count", r + 1, "赞"), formatCount(".digg-count-special", r + 1, "0");
@@ -1902,8 +1803,8 @@ formatCount(".digg-count", r + 1, "赞"), formatCount(".digg-count-special", r +
 break;
 
 case "wenda_bury":
-var i = $("#bury").attr("data-answerid");
-if (e.id == i && "buryed" !== $("#bury").attr("wenda-state")) {
+var o = $("#bury").attr("data-answerid");
+if (e.id == o && "buryed" !== $("#bury").attr("wenda-state")) {
 $("#bury").attr("wenda-state", "buryed");
 var s = +$("#bury").find(".bury-count").attr("realnum");
 formatCount(".bury-count", s + 1, "踩");
@@ -1928,8 +1829,8 @@ case "block_action":
 if (console.info(e), 1 == e.status) {
 var t = $(".subscribe-button"), n = t.data("userId");
 if (e.id == n) change_following_state(!1, !0); else {
-var o = $('[it-is-user-id="' + e.id + '"]');
-o.length > 0 && o.find(".ms-subs").attr("isfollowing", null);
+var i = $('[it-is-user-id="' + e.id + '"]');
+i.length > 0 && i.find(".ms-subs").attr("isfollowing", null);
 }
 }
 }
@@ -1940,8 +1841,8 @@ var e = /[\u2e80-\u2eff\u3000-\u303f\u3200-\u9fff\uf900-\ufaff\ufe30-\ufe4f]/, t
 a && document.body.classList.add("huawei"), $("article p").each(function(a, n) {
 if (!(n.classList.contains("pgc-img-caption") || !n.textContent || $(n).find(".image").length > 0)) if (e.test(n.textContent)) {
 if (t.test(n.textContent)) {
-var o = n.textContent.match(t);
-o.forEach(function(e) {
+var i = n.textContent.match(t);
+i.forEach(function(e) {
 n.innerHTML = n.innerHTML.replace(e, function(e) {
 return '<br class="sysbr">' + e;
 });
@@ -1952,46 +1853,43 @@ return '<br class="sysbr">' + e;
 }
 
 function processNovelSeria() {
-if (!Page.novel_data.show_bookshelf_window || !client.isNewsArticleVersionNoLessThan("6.4.7")) return void (location.href = $("#next_serial_link").attr("href"));
-var e = !0, t = {
-category_name: "novel_channel",
-enter_from: "detail",
-item_id: Page.statistics.item_id,
-novel_id: Page.novel_data.book_id,
-group_id: Page.statistics.group_id
-};
-ToutiaoJSBridge.call("getSubScribedChannelList", {}, function(a) {
-var n = a.list || [];
-n.slice(0, 6).indexOf("novel_channel") > -1 && (e = !1), t.popup_type = e ? "top_channel" : "add_bookshelf", 
-sendUmengEventV3("show_addbookshelf_popup", t), ToutiaoJSBridge.call("alert", {
-title: "加入书架",
-message: "喜欢这本书就加入书架吧\n(头条首页选择小说频道，可找到书架)",
-confirm_text: "确认",
-cancel_text: "取消"
-}, function(a) {
-1 == a.code ? ($.ajax({
-url: "https://ic.snssdk.com/novel/book/bookshelf/v1/add/",
-dataType: "jsonp",
-data: {
-book_id: Page.novel_data.book_id
-},
-success: function(e) {
-ToutiaoJSBridge.call("toast", {
-text: 0 != e.code ? "添加失败" : "添加成功",
-con_type: 0 != e.code ? "icon_error" : "icon_success"
-}), setTimeout(function() {
-location.href = $("#next_serial_link").attr("href");
-}, 200);
-}
-}), e && ToutiaoJSBridge.call("addChannel", {
+ToutiaoJSBridge.call("getSubScribedChannelList", {}, function(e) {
+var t = e.list || [];
+t.slice(0, 6).indexOf("novel_channel") < 1 && (ToutiaoJSBridge.call("addChannel", {
 category: "novel_channel",
 web_url: "https://ic.snssdk.com/novel_channel/",
 name: "小说",
 type: 5,
 flags: 1
-})) : location.href = $("#next_serial_link").attr("href"), t.clicked_button = 1 == a.code ? "yes" : "no", 
-sendUmengEventV3("click_addbookshelf_popup", t);
+}), sendUmengEventV3("read_add_novelchannel", {
+is_novel: 1
+})), location.href = $("#next_serial_link").attr("href");
 });
+}
+
+function processHref() {
+$("article a").each(function(e, t) {
+try {
+if (-1 === t.className.indexOf("pgc-commodity-link") && -1 === t.className.indexOf("out-link")) {
+var a = t.getAttribute("href");
+a && a.indexOf("http") > -1 && (t.setAttribute("data-origin-href", a), t.setAttribute("href", "sslocal://webview?url=" + encodeURIComponent(a)));
+}
+} catch (n) {
+console.error(n);
+}
+});
+}
+
+function processIosHref() {
+$("article a").each(function(e, t) {
+try {
+if (-1 === t.className.indexOf("pgc-commodity-link") && -1 === t.className.indexOf("out-link")) {
+var a = t.getAttribute("redirect-link");
+a && a.indexOf("webview") > -1 && t.setAttribute("href", a);
+}
+} catch (n) {
+console.error(n);
+}
 });
 }
 
@@ -2010,10 +1908,10 @@ Page.is_login = e && (e.is_login || 1 == e.code), needUpdateContent && (buildArt
 needUpdateContent = !1), processArticle(), buildFooter(window.Page), globalContext && contextRenderer(globalContext);
 })); else {
 if (Slardar && Slardar.sendCustomTimeLog("start_build_article", window.CLIENT_VERSION + "_" + window.APP_VERSION, +new Date() - startTimestamp), 
-Slardar && Slardar.sendCustomCountLog("fe_article_version", JSVERSION), window.OldPage = window.Page, 
-TouTiao.setDayMode(Page.pageSettings.is_daymode ? 1 : 0), TouTiao.setFontSize(Page.pageSettings.font_size), 
-buildUIStyle(Page.h5_settings), buildHeader(window.Page), buildArticle(globalContent), 
-needUpdateContent = !1, !Page.novel_data || Page.can_read) return buildFooter(window.Page), 
+Slardar && Slardar.sendCustomCountLog("fe_article_version", JSVERSION), Slardar && Slardar.sendCustomCountLog("article_type", Page && Page.article && Page.article.type ? Page.article.type : "unknow"), 
+window.OldPage = window.Page, TouTiao.setDayMode(Page.pageSettings.is_daymode ? 1 : 0), 
+TouTiao.setFontSize(Page.pageSettings.font_size), buildUIStyle(Page.h5_settings), 
+buildHeader(window.Page), buildArticle(globalContent), needUpdateContent = !1, !Page.novel_data || Page.can_read) return buildFooter(window.Page), 
 functionName(), !0;
 setTimeout(function() {
 ToutiaoJSBridge.call("is_login", {}, function(e) {
@@ -2167,7 +2065,7 @@ function doInitVideo() {
 }
 
 function checkWindowSize() {
-window.iH = window.innerHeight, window.aW = window.innerWidth, window.aW <= 0 || window.iH <= 0 ? imageSizeInitTimer = setTimeout(function() {
+window.iH = window.innerHeight, window.aW = window.innerWidth - 30, window.aW <= 0 || window.iH <= 0 ? imageSizeInitTimer = setTimeout(function() {
 checkWindowSize();
 }, 250) : (doInitImage(), doInitVideo());
 }
@@ -2179,11 +2077,11 @@ bindRepostEvent();
 break;
 
 case "pgc":
-processTable(), pgcEvent.emit("card-render", document.body);
+processTable(), processIosHref(), pgcEvent.emit("card-render", document.body);
 break;
 
 case "wenda":
-processTable();
+processTable(), processIosHref();
 }
 }
 
@@ -2208,30 +2106,30 @@ $.extend(t, n), void (location.hash = hash2string(t)));
 };
 }(), getMeta = function() {
 for (var e = document.getElementsByTagName("meta"), t = {}, a = 0, n = e.length; n > a; a++) {
-var o = e[a].name.toLowerCase(), i = e[a].getAttribute("content");
-o && i && (t[o] = i);
+var i = e[a].name.toLowerCase(), o = e[a].getAttribute("content");
+i && o && (t[i] = o);
 }
 return function(e) {
 return t[e];
 };
 }(), urlAddQueryParams = function(e, t) {
-var a, n = [], o = "?";
+var a, n = [], i = "?";
 for (a in t) t.hasOwnProperty(a) && n.push(a + "=" + encodeURIComponent(t[a]));
-return -1 !== e.indexOf("?") && (o = "&"), [ e, o, n.join("&") ].join("");
+return -1 !== e.indexOf("?") && (i = "&"), [ e, i, n.join("&") ].join("");
 }, event_type = client.isAndroid ? "log_event" : "custom_event", sendBytedanceRequest = function() {
 function e() {
 r.length > 0 && (n.src = r.shift(), l = Date.now(), t());
 }
 function t() {
-clearTimeout(i), i = setTimeout(e, s);
+clearTimeout(o), o = setTimeout(e, s);
 }
-var a = "SEND-BYTE--DANCE-REQUEST", n = document.getElementById(a), o = "bytedance://";
+var a = "SEND-BYTE--DANCE-REQUEST", n = document.getElementById(a), i = "bytedance://";
 n || (n = document.createElement("iframe"), n.id = a, n.style.display = "none", 
 document.body.appendChild(n));
-var i, r = [], s = 100, l = Date.now() - s - 1;
+var o, r = [], s = 100, l = Date.now() - s - 1;
 return function(e) {
 var a = Date.now();
-0 === r.length && a - l > s ? (n.src = o + e, l = a) : (r.push(o + e), t());
+0 === r.length && a - l > s ? (n.src = i + e, l = a) : (r.push(i + e), t());
 };
 }(), WendaCacheUmeng = [];
 
@@ -2258,22 +2156,22 @@ $("body").append(e);
 }
 },
 _bindEvent: function() {
-var t = this.settings.holder, a = "" == this.settings.exceptSelector ? this.settings.bindSelector : [ this.settings.bindSelector, this.settings.exceptSelector ].join(","), n = this.settings.exceptSelector, o = this.settings.pressedClass, i = parseInt(this.settings.triggerLatency), r = parseInt(this.settings.removeLatency);
+var t = this.settings.holder, a = "" == this.settings.exceptSelector ? this.settings.bindSelector : [ this.settings.bindSelector, this.settings.exceptSelector ].join(","), n = this.settings.exceptSelector, i = this.settings.pressedClass, o = parseInt(this.settings.triggerLatency), r = parseInt(this.settings.removeLatency);
 $(t).on("touchstart", a, function(t) {
 if (!$(this).is(n)) {
 var a = $(this);
 e.mytimer = setTimeout(function() {
-a.addClass(o);
-}, i), e.tar = t.target;
+a.addClass(i);
+}, o), e.tar = t.target;
 }
 }), $(t).on("touchmove", a, function() {
-$(this).is(n) || (clearTimeout(e.mytimer), $(this).removeClass(o), e.tar = null);
+$(this).is(n) || (clearTimeout(e.mytimer), $(this).removeClass(i), e.tar = null);
 }), $(t).on("touchend touchcancel", a, function(t) {
 if (!$(this).is(n) && e.tar === t.target) {
-clearTimeout(e.mytimer), $(this).hasClass(o) || $(this).addClass(o);
+clearTimeout(e.mytimer), $(this).hasClass(i) || $(this).addClass(i);
 var a = $(this);
 setTimeout(function() {
-a.removeClass(o);
+a.removeClass(i);
 }, r);
 }
 });
@@ -2284,13 +2182,13 @@ a.removeClass(o);
 var baseFilePath = function() {
 function e() {
 for (var e = document.querySelectorAll("script"), a = 0, n = e.length; n > a; a++) {
-var o = e[a].src, i = o.indexOf("/v55/js/lib.js");
-if (i > -1) {
-t = o.substr(0, i);
+var i = e[a].src, o = i.indexOf("/v55/js/lib.js");
+if (o > -1) {
+t = i.substr(0, o);
 break;
 }
-if (i = o.indexOf("/v60/js/lib.js"), i > -1) {
-t = o.substr(0, i);
+if (o = i.indexOf("/v60/js/lib.js"), o > -1) {
+t = i.substr(0, o);
 break;
 }
 }
@@ -2311,7 +2209,7 @@ return e(), function(a) {
 t ? "function" == typeof a && a(t) : a && e(a);
 };
 }(), fnTimeCountDown = function(e, t, a, n) {
-var o = {
+var i = {
 time_delta: t - new Date().getTime(),
 zero: function(e) {
 var e = parseInt(e, 10);
@@ -2319,21 +2217,21 @@ return e > 0 ? (9 >= e && (e = "0" + e), String(e)) : "00";
 },
 dv: function() {
 e = e || Date.now();
-var t = new Date(e), a = new Date(), i = Math.round((t.getTime() - (a.getTime() + this.time_delta)) / 1e3), r = {
+var t = new Date(e), a = new Date(), o = Math.round((t.getTime() - (a.getTime() + this.time_delta)) / 1e3), r = {
 sec: "00",
 mini: "00",
 hour: "00"
 };
-return i > 0 ? (r.sec = o.zero(i % 60), r.mini = Math.floor(i / 60) > 0 ? o.zero(Math.floor(i / 60) % 60) : "00", 
-r.hour = Math.floor(i / 3600) > 0 ? o.zero(Math.floor(i / 3600) % 24) : "00") : n && n(), 
+return o > 0 ? (r.sec = i.zero(o % 60), r.mini = Math.floor(o / 60) > 0 ? i.zero(Math.floor(o / 60) % 60) : "00", 
+r.hour = Math.floor(o / 3600) > 0 ? i.zero(Math.floor(o / 3600) % 24) : "00") : n && n(), 
 r;
 },
 ui: function() {
-a.sec && (a.sec.innerHTML = o.dv().sec + "秒"), a.mini && (a.mini.innerHTML = o.dv().mini + "分"), 
-a.hour && (a.hour.innerHTML = o.dv().hour + "小时"), setTimeout(o.ui, 1e3);
+a.sec && (a.sec.innerHTML = i.dv().sec + "秒"), a.mini && (a.mini.innerHTML = i.dv().mini + "分"), 
+a.hour && (a.hour.innerHTML = i.dv().hour + "小时"), setTimeout(i.ui, 1e3);
 }
 };
-o.ui();
+i.ui();
 }, renderHeader = function(obj) {
 var __t, __p = "";
 with (Array.prototype.join, obj || {}) {
@@ -2343,11 +2241,11 @@ __p += "", __p += "", "zhuanma" == data.article.type) __p += '<div class="zhuanm
 if (__p += '<div class="authorbar ' + (null == (__t = data.article.type) ? "" : __t) + '" id="profile">', 
 __p += '<a class="author-avatar-link pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '"><div class="author-avatar"><img class="author-avatar-img" src="' + (null == (__t = data.author.avatar) ? "" : __t) + '"></div>', 
 data.useServerV && data.author.auth_info && (__p += "" + (null == (__t = buildServerVIcon2(data.author.auth_type, "avatar_icon")) ? "" : __t)), 
-__p += "</a>", false && data.author.user_decoration && data.author.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = data.author.user_decoration.url) ? "" : __t) + ')"></div>'),
+__p += "</a>", data.showUserDecoration && data.author.user_decoration && data.author.user_decoration.url && (__p += '<div class="avatar-decoration" style="background-image: url(' + (null == (__t = data.author.user_decoration.url) ? "" : __t) + ')"></div>'), 
 __p += '<a class="avatar-decoration avatar-night-mask pgc-link" href="' + (null == (__t = data.author.link) ? "" : __t) + '"></a>', 
 __p += "", "wenda" === data.article.type ? __p += '<div class="wenda-info" style="display: ' + (null == (__t = data.author.isAuthorSelf ? "block" : "none") ? "" : __t) + ';"><span class="read-info brow-count"></span><span class="like-info digg-count-special"></span></div>' : "forum" === data.article.type && (__p += '<div class="wenda-info" style="display: ' + (null == (__t = data.author.isAuthorSelf ? "block" : "none") ? "" : __t) + ';"><span></span></div>'), 
 __p += "", __p += '<div class="author-function-buttons" style="display: ' + (null == (__t = data.author.isAuthorSelf || "wenda" === data.article.type && data.h5_settings.is_liteapp || "forum" === data.article.type && "following" === data.author.followState || data.hideFollowButton ? "none" : "block") ? "" : __t) + ';"><div class="mediasug-arrow-button iconfont"></div><button class="subscribe-button follow-button ' + (null == (__t = "followState" in data.author ? data.author.followState : "disabled") ? "" : __t) + " " + (null == (__t = data.isRedFocusButton ? "red-follow-button" : "") ? "" : __t) + " " + (null == (__t = data.focusButtonStyle) ? "" : __t) + '"data-user-id="' + (null == (__t = data.author.userId) ? "" : __t) + '"data-media-id="' + (null == (__t = data.author.mediaId) ? "" : __t) + '"id="subscribe"><i class="iconfont focusicon">&nbsp;</i><i class="redpack"></i></button></div>', 
-__p += '<div class="author-bar"><div class="name-link-wrap"><div class="name-link-w ' + (null == (__t = "wenda" === data.article.type && 0 === data.tags.length ? "no-intro" : "") ? "" : __t) + '">', 
+__p += '<div class="author-bar"><div class="name-link-wrap"><div class="name-link-w ' + (null == (__t = "wenda" === data.article.type && "" === data.author.intro && 0 === data.tags.length ? "no-intro" : "") ? "" : __t) + '">', 
 ("forum" === data.article.type || "wenda" === data.article.type) && data.author.medals && data.h5_settings.ugc_user_medal) {
 __p += '<div class="article-medal">';
 for (var medal in data.author.medals) {
@@ -2365,7 +2263,7 @@ for (var tag in data.tags) __p += "", __p += "原创" == data.tags[tag] ? '<div 
 __p += "";
 __p += "";
 }
-__p += "</div>", "pgc" === data.article.type ? __p += '<span class="sub-title">' + (null == (__t = data.article.publishTime) ? "" : __t) + "</span>" : "forum" === data.article.type && (__p += '<span class="sub-title">' + (null == (__t = data.article.publishTime) ? "" : __t) + (null == (__t = data.author.remarkName && data.article.publishTime ? "&nbsp;&middot;&nbsp;" : "") ? "" : __t) + (null == (__t = data.author.remarkName ? data.author.remarkName : "") ? "" : __t) + "</span>"), 
+__p += "</div>", __p += "pgc" === data.article.type ? '<span class="sub-title">' + (null == (__t = data.article.publishTime) ? "" : __t) + (null == (__t = data.author.auth_info && data.article.publishTime ? "&nbsp;&middot;&nbsp;" : "") ? "" : __t) + (null == (__t = data.author.auth_info) ? "" : __t) + "</span>" : "forum" === data.article.type ? '<span class="sub-title">' + (null == (__t = data.article.publishTime) ? "" : __t) + (null == (__t = (data.author.intro || data.author.remarkName) && data.article.publishTime ? "&nbsp;&middot;&nbsp;" : "") ? "" : __t) + (null == (__t = data.author.remarkName ? data.author.remarkName : data.author.intro) ? "" : __t) + "</span>" : '<span class="sub-title">' + (null == (__t = data.author.intro) ? "" : __t) + "</span>", 
 __p += "</a></div></div>", __p += '<div class="mediasug-outer-container"><div class="mediasug-inner-container"><div class="ms-pointer"></div><div class="ms-title">相关推荐</div><div class="ms-list" id="mediasug-list"><div class="ms-list-scroller" id="mediasug-list-html"></div></div></div></div>';
 } else __p += '<div class="empty_authorbar"></div>';
 __p += "", __p += "", data.h5_settings.pgc_over_head && (__p += '<div class="tt-title pgc-over-head">' + (null == (__t = data.article.title) ? "" : __t) + "</div>"), 
@@ -2376,8 +2274,8 @@ return __p;
 var __t, __p = "";
 with (Array.prototype.join, obj || {}) __p += "<footer>", data.wenda_extra && (__p += "", 
 data.wenda_extra.wd_version >= 3 ? (__p += '<div class="wd-footer"><a href="#" class="link-more" id="wd-link-more" style="display:none;">了解更多</a><div class="publish-datetime">' + (null == (__t = data.article.publishTime) ? "" : __t) + "</div>", 
-__p += data.wenda_extra.wd_version >= 6 ? '<a class="editor-edit-answer no-icon" style="display:none">编辑</a><div item="dislike-and-report" class="dislike-and-report no-icon" style="display:none;" >反对</div>' : '<a class="editor-edit-answer" style="display:none">编辑</a><div class="dislike-and-report" onclick="ToutiaoJSBridge.call(\'dislike\', {options: 0x11});">不喜欢</div>',
-__p += "</div>") : __p += '<div class="wenda-bottom clearfix"><div class="create-time">' + (null == (__t = data.article.publishTime) ? "" : __t) + '</div></div><div class="bottom-buttons only-one"><div id="digg" data-answerid="' + (null == (__t = data.wenda_extra.ansid) ? "" : __t) + '" class="ib like" wenda-state="" aniok="' + (null == (__t = data.wenda_extra.aniok) ? "" : __t) + '"><span class="ibinner"><i class="iconfont iconb">&nbsp;</i><span class="b digg-count" realnum="0">赞</span></span></div><div id="bury" data-answerid="' + (null == (__t = data.wenda_extra.ansid) ? "" : __t) + '" class="ib unlike" wenda-state="" aniok="' + (null == (__t = data.wenda_extra.aniok) ? "" : __t) + '" style="display: none;"><span class="ibinner"><i class="iconfont iconb">&nbsp;</i><span class="b bury-count" realnum="0">踩</span></span></div></div>', 
+__p += data.wenda_extra.wd_version >= 6 ? '<a class="report no-icon" style="display:none" onclick="ToutiaoJSBridge.call(\'report\')">举报</a><span style="display:none" class="sep for-report" style="font-size:12px;">|</span><a class="editor-edit-answer no-icon" style="display:none">编辑</a><div item="dislike-and-report" class="dislike-and-report no-icon" style="display:none;" >反对</div>' : '<a class="editor-edit-answer" style="display:none">编辑</a><div class="dislike-and-report" onclick="ToutiaoJSBridge.call(\'dislike\', {options: 0x11});">不喜欢</div>', 
+__p += "</div>") : __p += '<div class="wenda-bottom clearfix"><div class="create-time">' + (null == (__t = data.article.publishTime) ? "" : __t) + '</div></div><div class="bottom-buttons only-one" style="display:none"><div id="digg" data-answerid="' + (null == (__t = data.wenda_extra.ansid) ? "" : __t) + '" class="ib like" wenda-state="" aniok="' + (null == (__t = data.wenda_extra.aniok) ? "" : __t) + '"><span class="ibinner"><i class="iconfont iconb">&nbsp;</i><span class="b digg-count" realnum="0">赞</span></span></div><div id="bury" data-answerid="' + (null == (__t = data.wenda_extra.ansid) ? "" : __t) + '" class="ib unlike" wenda-state="" aniok="' + (null == (__t = data.wenda_extra.aniok) ? "" : __t) + '" style="display: none;"><span class="ibinner"><i class="iconfont iconb">&nbsp;</i><span class="b bury-count" realnum="0">踩</span></span></div></div>', 
 __p += ""), __p += "", data.novel_data ? (__p += "", data.novel_data.can_read ? (__p += "", 
 data.novel_data.show_new_keep_reading ? (__p += '<div class="serial special-serial">', 
 data.novel_data.next_group_url && (__p += '<a class="next special-next" id="next_serial_link" href="' + (null == (__t = data.novel_data.use_deep_reader && data.novel_data.next_deep_reader_schema_url ? data.novel_data.next_deep_reader_schema_url : data.novel_data.next_group_url) ? "" : __t) + '">点击继续阅读 <i class="iconfont icon-next"></i></a>'), 
@@ -2395,14 +2293,14 @@ setDayMode: setDayMode
 var e = "out", t = !0;
 return function(a) {
 if (a && a.needRecord && (t = a.needRecord), t) {
-var n = $(".pcard.forum").get(0), o = "out", i = n.getBoundingClientRect();
-i.bottom <= (window.innerHeight || document.body.clientHeight) && (o = "in"), "in" === o && "out" === e && (console.info("weitoutiao_in"), 
+var n = $(".pcard.forum").get(0), i = "out", o = n.getBoundingClientRect();
+o.bottom <= (window.innerHeight || document.body.clientHeight) && (i = "in"), "in" === i && "out" === e && (console.info("weitoutiao_in"), 
 send_umeng_event("widget", "show_wtt", {
 value: $("[data-content]").get(0).dataset.id,
 extra: {
 card_type: "1"
 }
-}), t = !1), e = o;
+}), t = !1), e = i;
 }
 };
 }(), contextRenderer = function(context) {
@@ -2423,35 +2321,59 @@ position: positions.join(","),
 req_id: reqId,
 extra_params: JSON.stringify({})
 }, !1);
-var paragraphLen = $("article > div p").length, cityName = context.motor_info.city_name || "北京", oldTemplateFunction = function(obj) {
+var paragraphLen = $("article > div p").length, cityName = context.motor_info.city_name || "北京", templateFunction = function(obj) {
 var __t, __p = "";
-with (Array.prototype.join, obj || {}) __p += '<div class="pcard motor-dealer-old"><em class="iconfont close-dealer-card j-close-dealer-card" style="' + (null == (__t = data.dislike_show ? "initial" : "none") ? "" : __t) + '">&#xe66e;</em><div class="motor-form-edit"><div class="motor-form-head j-motor-form-head"><h3 class="motor-car-name">' + (null == (__t = data.series_name) ? "" : __t) + '</h3><p class="motor-car-price">' + (null == (__t = data.text1 || "厂商指导价") ? "" : __t) + '：<span class="price">' + (null == (__t = data.price) ? "" : __t) + '</span></p></div><div class="motor-form-body"><input type="text" class="motor-form-user j-motor-form-user" name="userName" placeholder="输入您的姓名" /><span class="motor-form-tip">请输入您的姓名</span><input type="tel" class="motor-form-mobile j-motor-form-mobile" name="userMobile" maxlength="11" placeholder="输入您的手机号" /><span class="motor-form-tip">请输入正确的手机号</span><label for="motor-form-agree-' + (null == (__t = data.pos) ? "" : __t) + '" class="motor-form-agree-wrap"><input type="checkbox" id="motor-form-agree-' + (null == (__t = data.pos) ? "" : __t) + '" class="motor-form-agree" name="userAgree" checked="checked" /><i class="pcard-icon motor-icon-cb"></i><span class="motor-form-agree-label">同意<a class="motor-form-agree-link" href="sslocal://webview?url=http%3A%2F%2Fi.snssdk.com%2Fmotor%2Fugc%2Fstatement.html&hide_bar=1">《个人信息保护声明》</a></span></label><button class="motor-form-btn j-motor-form-btn">' + (null == (__t = data.text2 || "立即获取最低价") ? "" : __t) + '</button></div><p class="motor-form-foot">我们将为你选出<strong>最低报价</strong>的4S店为你服务</p></div><div class="motor-form-sheet"><h4 class="motor-sheet-car">' + (null == (__t = data.series_name) ? "" : __t) + '</h4><p class="motor-sheet-title">您的资料已经成功提交</p><p class="motor-sheet-tip">我们将为你选出<strong>最低报价</strong>的4S店为你服务</p><button class="motor-sheet-rewrite j-motor-sheet-rewrite"><em class="iconfont">&#xe654;</em>重新填写</button></div></div>';
-return __p;
-}, templateFunction = function(obj) {
-var __t, __p = "";
-with (Array.prototype.join, obj || {}) __p += '<div class="pcard motor-dealer"><em class="iconfont close-dealer-card j-close-dealer-card" style="display: ' + (null == (__t = data.dislike_show ? "initial" : "none") ? "" : __t) + ';">&#xe66e;</em><div class="motor-form-edit"><div class="motor-form-normal j-motor-form-normal"><div class="motor-form-left"><h3 class="motor-car-name">' + (null == (__t = data.series_name) ? "" : __t) + '</h3><p class="motor-car-price">' + (null == (__t = data.text1 || "厂商指导价") ? "" : __t) + '：<span class="price">' + (null == (__t = data.price) ? "" : __t) + '</span></p></div><button class="motor-form-right motor-form-enter-btn j-motor-enter">' + (null == (__t = data.text3 || "展开询价") ? "" : __t) + '<em class="iconfont">&#xe609;</em></button></div><div class="motor-form-body"><input type="text" class="motor-form-input motor-form-user j-motor-form-user" name="userName" placeholder="输入您的姓名" /><span class="motor-form-tip">请输入您的姓名</span><input type="tel" class="motor-form-input motor-form-mobile j-motor-form-mobile" name="userMobile" maxlength="11" placeholder="输入您的手机号" /><span class="motor-form-tip">请输入正确的手机号</span><label for="motor-form-agree-' + (null == (__t = data.pos) ? "" : __t) + '" class="motor-form-agree-wrap"><input type="checkbox" id="motor-form-agree-' + (null == (__t = data.pos) ? "" : __t) + '" class="motor-form-agree" name="userAgree" checked="checked" /><i class="pcard-icon motor-icon-cb"></i><span class="motor-form-agree-label">同意<a class="motor-form-agree-link" href="sslocal://webview?url=http%3A%2F%2Fi.snssdk.com%2Fmotor%2Fugc%2Fstatement.html&hide_bar=1">《个人信息保护声明》</a></span></label><button class="motor-form-btn j-motor-form-btn">' + (null == (__t = data.text2 || "立即获取最低价") ? "" : __t) + '</button><p class="motor-form-foot">我们将为你选出最低报价的4S店为你服务</p></div></div><div class="motor-form-sheet"><h4 class="motor-sheet-car">' + (null == (__t = data.series_name) ? "" : __t) + '</h4><p class="motor-sheet-title">您的资料已经成功提交</p><p class="motor-sheet-tip">我们将为你选出最低报价的4S店为你服务</p><button class="motor-sheet-rewrite j-motor-sheet-rewrite"><em class="iconfont">&#xe654;</em>重新填写</button></div></div>';
+with (Array.prototype.join, obj || {}) __p += '<div class="pcard motor-dealer-old"><em class="iconfont close-dealer-card j-close-dealer-card" style="' + (null == (__t = data.dislike_show ? "initial" : "none") ? "" : __t) + '">&#xe66e;</em><div class="motor-form-edit"><div class="motor-form-head j-motor-form-head"><h3 class="motor-car-name">' + (null == (__t = data.series_name) ? "" : __t) + '</h3><p class="motor-car-price">' + (null == (__t = data.text1 || "厂商指导价") ? "" : __t) + '：<span class="price">' + (null == (__t = data.price) ? "" : __t) + '</span></p></div><div class="motor-form-body">', 
+1 === data.card_type && (__p += '<input type="text" class="motor-form-user j-motor-form-user" name="userName" placeholder="输入您的姓名" /><span class="motor-form-tip">请输入您的姓名</span>'), 
+__p += '<input type="tel" class="motor-form-mobile j-motor-form-mobile" name="userMobile" maxlength="11" placeholder="输入您的手机号" /><span class="motor-form-tip">请输入正确的手机号</span><label for="motor-form-agree-' + (null == (__t = data.pos) ? "" : __t) + '" class="motor-form-agree-wrap"><input type="checkbox" id="motor-form-agree-' + (null == (__t = data.pos) ? "" : __t) + '" class="motor-form-agree" name="userAgree" checked="checked" /><i class="pcard-icon motor-icon-cb"></i><span class="motor-form-agree-label">同意<a class="motor-form-agree-link" href="sslocal://webview?url=http%3A%2F%2Fi.snssdk.com%2Fmotor%2Fugc%2Fstatement.html&hide_bar=1">《个人信息保护声明》</a></span></label><button class="motor-form-btn j-motor-form-btn">' + (null == (__t = data.text2 || "立即获取最低价") ? "" : __t) + '</button></div><p class="motor-form-foot">我们将为你选出<strong>最低报价</strong>的4S店为你服务</p></div><div class="motor-form-sheet"><h4 class="motor-sheet-car">' + (null == (__t = data.series_name) ? "" : __t) + '</h4><p class="motor-sheet-title">您的资料已经成功提交</p><p class="motor-sheet-tip">我们将为你选出<strong>最低报价</strong>的4S店为你服务</p><button class="motor-sheet-rewrite j-motor-sheet-rewrite"><em class="iconfont">&#xe654;</em>重新填写</button></div></div>';
 return __p;
 };
 dealerCards.forEach(function(e) {
-e.card_type || 1, 1 === e.card_type ? oldMotorDealerContextRender(oldTemplateFunction, paragraphLen, cityName, reqId, e) : motorDealerContextRender(templateFunction, paragraphLen, cityName, reqId, e);
+motorDealerContextRender(templateFunction, paragraphLen, cityName, reqId, e);
 });
 }
 wendaContextRender(context), function() {
 var cardTemplateFunctions = {
 fiction: function(obj) {
 var __t, __p = "";
-with (Array.prototype.join, obj || {}) __p += '<a class="pcard fiction" href="' + (null == (__t = url) ? "" : _.escape(__t)) + '"><div class="pcard-container pcard-vertical-border"><div class="pcard-clearfix"><div class="pcard-pull-left" style="position: relative"><img class="fiction-image" src="' + (null == (__t = poster) ? "" : _.escape(__t)) + '"/><span class="tag ' + (null == (__t = 0 == free_status || 2 == free_status ? "free" : 3 == free_status ? "sell" : "") ? "" : __t) + '"></span></div><div class="fiction-right"><button class="button pcard-button fiction-button pcard-pull-right ' + (null == (__t = isRedButton ? "red-pcard-button" : "") ? "" : __t) + " " + (null == (__t = buttonStyle ? buttonStyle : "") ? "" : __t) + '" action="concern" is-concerned="' + (null == (__t = Boolean(is_concerned)) ? "" : _.escape(__t)) + '" concern-id="' + (null == (__t = concern_id) ? "" : _.escape(__t)) + '" forum-id="' + (null == (__t = forum_id) ? "" : _.escape(__t)) + '" book-id="' + (null == (__t = book_id) ? "" : _.escape(__t)) + '">' + (null == (__t = is_concerned ? "查看书架" : "加入书架") ? "" : _.escape(__t)) + '</button><div class="pcard-h16 pcard-w1 pcard-o1" style="margin-top: 2px">' + (null == (__t = name) ? "" : _.escape(__t)) + '</div><div class="pcard-h14 pcard-w1" style="margin-top: 4px">' + (null == (__t = 0 == creation_status ? "已完结" : "连载中") ? "" : __t) + " " + (null == (__t = word_number) ? "" : _.escape(__t)) + "</div>", 
+with (Array.prototype.join, obj || {}) __p += '<a class="pcard fiction" href="' + (null == (__t = url) ? "" : _.escape(__t)) + '"><div class="pcard-container pcard-vertical-border"><div class="pcard-clearfix"><div class="pcard-pull-left" style="position: relative"><img class="fiction-image" src="' + (null == (__t = poster) ? "" : _.escape(__t)) + '"/><span class="tag ' + (null == (__t = 0 == free_status || 2 == free_status ? "free" : 3 == free_status ? "sell" : "") ? "" : __t) + '"></span></div><div class="fiction-right"><button class="button pcard-button fiction-button pcard-pull-right ' + (null == (__t = isRedButton ? "red-pcard-button" : "") ? "" : __t) + '" action="concern" is-concerned="' + (null == (__t = Boolean(is_concerned)) ? "" : _.escape(__t)) + '" concern-id="' + (null == (__t = concern_id) ? "" : _.escape(__t)) + '" forum-id="' + (null == (__t = forum_id) ? "" : _.escape(__t)) + '" book-id="' + (null == (__t = book_id) ? "" : _.escape(__t)) + '">' + (null == (__t = is_concerned ? "查看书架" : "加入书架") ? "" : _.escape(__t)) + '</button><div class="pcard-h16 pcard-w1 pcard-o1" style="margin-top: 2px">' + (null == (__t = name) ? "" : _.escape(__t)) + '</div><div class="pcard-h14 pcard-w1" style="margin-top: 4px">' + (null == (__t = 0 == creation_status ? "已完结" : "连载中") ? "" : __t) + " " + (null == (__t = word_number) ? "" : _.escape(__t)) + "</div>", 
 0 == free_status ? __p += '<div class="pcard-h14 pcard-w1" style="margin-top: 4px">免费书籍，自由畅读</div>' : 1 == free_status ? __p += '<div class="pcard-h14 pcard-w1" style="margin-top: 4px">' + (null == (__t = base_price) ? "" : _.escape(__t)) + "书币／千字</div>" : (2 == free_status || 3 == free_status) && (__p += '<div class="pcard-h12 pcard-o1" style="margin-top: 6px"><span class="pcard-w9 pcard-w-delete origin-price">' + (null == (__t = base_price) ? "" : _.escape(__t)) + '书币／千字</span> &nbsp; <span class="pcard-w1 sale-price">' + (null == (__t = discount_price) ? "" : _.escape(__t)) + '书币／千字</span></div><div class="pcard-h12 pcard-w4 sale" style="margin-top: 4px">限时' + (null == (__t = 2 == free_status ? "免费" : "特价") ? "" : __t) + '，还剩<span id="day"></span><span id="hour"></span><span id="mini"></span><span id="sec"></span></div>'), 
 __p += "</div></div></div></a>";
 return __p;
 },
 auto: function(obj) {
 var __t, __p = "";
-with (Array.prototype.join, obj || {}) __p += '<div class="pcard  auto"><div class="pcard-caption"><span class="pcard-h14 pcard-w1">相关车型</span><span class="pcard-h14 pcard-w3 pcard-vr icon-vr width16"></span><span class="pcard-h14 pcard-w3">数据来源于' + (null == (__t = data.data_source_show) ? "" : __t) + '</span></div><div class="p-autocard pcard-container pcard-vertical-border" data-href="' + (null == (__t = data.open_url) ? "" : __t) + '" data-content="content"><div class="pcard-clearfix"><div class="auto-image pcard-pull-left ' + (null == (__t = "dongchedi" == data.data_source ? "no-bg" : "") ? "" : __t) + '" style="background-image: url(' + (null == (__t = data.cover_url) ? "" : __t) + ');"></div><div class="container-right"><button type="button" class="pcard-button pcard-pull-right ' + (null == (__t = data.isRedButton ? "red-pcard-button" : "") ? "" : __t) + " " + (null == (__t = data.buttonStyle ? data.buttonStyle : "") ? "" : __t) + '" data-href="' + (null == (__t = "dongchedi" == data.data_source && data.xunjia_web_url ? data.xunjia_web_url : data.open_url) ? "" : __t) + '" style="margin-top: ' + (null == (__t = "dongchedi" === data.data_source ? "18px" : "") ? "" : __t) + '">' + (null == (__t = "dongchedi" == data.data_source ? "询底价" : "详情") ? "" : __t) + '</button><div class="" style="margin-right: 88px;"><div class="pcard-h16 pcard-w1" style="margin-bottom: 5px; padding-top: ' + (null == (__t = "dongchedi" === data.data_source ? "10px" : "") ? "" : __t) + '">' + (null == (__t = data.car_series) ? "" : __t) + "</div>", 
+with (Array.prototype.join, obj || {}) __p += '<div class="pcard  auto"><div class="pcard-caption"><span class="pcard-h14 pcard-w1">相关车型</span><span class="pcard-h14 pcard-w3 pcard-vr icon-vr width16"></span><span class="pcard-h14 pcard-w3">数据来源于' + (null == (__t = data.data_source_show) ? "" : __t) + '</span></div><div class="p-autocard pcard-container pcard-vertical-border" data-href="' + (null == (__t = data.open_url) ? "" : __t) + '" data-content="content"><div class="pcard-clearfix"><div class="auto-image pcard-pull-left ' + (null == (__t = "dongchedi" == data.data_source ? "no-bg" : "") ? "" : __t) + '" style="background-image: url(' + (null == (__t = data.cover_url) ? "" : __t) + ');"></div><div class="container-right"><button type="button" class="pcard-button auto-button pcard-pull-right ' + (null == (__t = data.isRedButton ? "red-pcard-button" : "") ? "" : __t) + '" data-href="' + (null == (__t = "dongchedi" == data.data_source && data.xunjia_web_url ? data.xunjia_web_url : data.open_url) ? "" : __t) + '" style="margin-top: ' + (null == (__t = "dongchedi" === data.data_source ? "18px" : "") ? "" : __t) + '">' + (null == (__t = "dongchedi" == data.data_source ? data.dealer_text : "详情") ? "" : __t) + '</button><div class="" style="margin-right: 88px;"><div class="pcard-h16 pcard-w1" style="margin-bottom: 5px; padding-top: ' + (null == (__t = "dongchedi" === data.data_source ? "10px" : "") ? "" : __t) + '">' + (null == (__t = data.car_series) ? "" : __t) + "</div>", 
 "rate" in data && (__p += '<div class="pcard-h12 iconfont film-star-score" style="margin-bottom: 5px;">' + (null == (__t = buildScoreByStar(Math.ceil(2 * data.rate))) ? "" : __t) + "&nbsp;" + (null == (__t = data.rate) ? "" : __t) + "</div>"), 
 __p += "</div>", __p += "dongchedi" == data.data_source ? '<div class="pcard-w1 pcard-o1"><span class="pcard-w4 pcard-h16">' + (null == (__t = data.show_agent_price ? data.show_agent_price : "暂无报价") ? "" : __t) + '</span><span class="pcard-w4 pcard-h12">' + (null == (__t = data.show_agent_price ? data.show_agent_price_unit : "") ? "" : __t) + '</span>&nbsp;<span class="pcard-w3 pcard-h12 pcard-w-delete">' + (null == (__t = data.show_agent_price ? data.show_origin_price ? data.show_origin_price : "暂无报价" : "") ? "" : __t) + (null == (__t = data.show_agent_price && data.show_origin_price ? data.show_origin_price_unit : "") ? "" : __t) + "</span></div>" : '<div class="pcard-h14 pcard-w1">' + (null == (__t = data.price_prefix) ? "" : __t) + '<span class="pcard-w4">' + (null == (__t = data.price) ? "" : __t) + "</span></div>", 
 __p += "</div></div>", Array.isArray(data.jump_url) && data.jump_url.length >= 4 && (__p += '<div class="mt8"><a class="pcard-h14 pcard-w1-a" href="' + (null == (__t = data.jump_url[0]) ? "" : __t) + '" data-label="card_ask">询底价</a><span class="pcard-h14 pcard-w3 pcard-vr icon-vr" style="width: 30px;"></span><a class="pcard-h14 pcard-w1-a" href="' + (null == (__t = data.jump_url[1]) ? "" : __t) + '" data-label="card_second">二手车</a><span class="pcard-h14 pcard-w3 pcard-vr icon-vr" style="width: 30px;"></span><a class="pcard-h14 pcard-w1-a" href="' + (null == (__t = data.jump_url[2]) ? "" : __t) + '" data-label="card_sale">厂商活动</a><span class="pcard-h14 pcard-w3 pcard-vr icon-vr" style="width: 30px;"></span><a class="pcard-h14 pcard-w1-a" href="' + (null == (__t = data.jump_url[3]) ? "" : __t) + '" data-label="card_stages">分期买车</a></div>'), 
 __p += "</div></div>";
+return __p;
+},
+auto_muti: function(obj) {
+var __t, __p = "";
+with (Array.prototype.join, obj || {}) {
+__p += '<div class="pcard auto-muti"><div class="pcard-caption"><span class="pcard-h14 pcard-w1">相关车型</span><span class="pcard-h14 pcard-w3 pcard-vr icon-vr width16"></span><span class="pcard-h14 pcard-w3">数据来源于懂车帝</span></div><ul class="auto-muti-list ' + (null == (__t = 2 === data.series_list.length ? "" : "auto-inelastic-list") ? "" : __t) + '">';
+for (var i = 0; i < data.series_list.length; i++) __p += '<li class="auto-muti-item ' + (null == (__t = 2 === data.series_list.length ? "auto-elastic-item" : "auto-inelastic-item") ? "" : __t) + '"><div class="auto-muti-item-inner pcard-container pcard-border" data-href="' + (null == (__t = data.series_list[i].open_url) ? "" : __t) + '" data-index="' + (null == (__t = i) ? "" : __t) + '"><img class="auto-image no-bg" src="' + (null == (__t = data.series_list[i].cover) ? "" : __t) + '" alt="' + (null == (__t = data.series_list[i].series_name) ? "" : __t) + '的图片"><p class="pcard-h14 pcard-w1 series-name pcard-o1">' + (null == (__t = data.series_list[i].series_name) ? "" : __t) + '</p><p class="pcard-h14 pcard-w1 pcard-bold">' + (null == (__t = data.series_list[i].agent_price_wenan) ? "" : __t) + '</p><button type="button" data-href="' + (null == (__t = data.series_list[i].dealer_open_url) ? "" : __t) + '" data-index="' + (null == (__t = i) ? "" : __t) + '" class="pcard-button red-pcard-button" name="dealer">' + (null == (__t = data.series_list[i].dealer_text || "询底价") ? "" : __t) + '</button></div><!-- <i class="close-icon pcard-w9 pcard-icon" name="close">&#xe66e;</i> --></li>';
+__p += "</ul></div>";
+}
+return __p;
+},
+auto_complex: function(obj) {
+var __t, __p = "";
+with (Array.prototype.join, obj || {}) {
+if (__p += '<div class="pcard auto-complex"><div class="pcard-caption"><span class="pcard-h14 pcard-w1">相关车型</span><span class="pcard-h14 pcard-w3 pcard-vr icon-vr width16"></span><span class="pcard-h14 pcard-w3">数据来源于懂车帝</span></div><div data-href="' + (null == (__t = data.open_url) ? "" : __t) + '" class="series-wrap pcard-container pcard-vertical-border"><img src="' + (null == (__t = data.cover) ? "" : __t) + '" class="auto-image pcard-pull-left no-bg" alt="' + (null == (__t = data.series_name) ? "" : __t) + '的图片" /><div class="series-info"><h4 class="pcard-h16 pcard-w1 pcard-bold">' + (null == (__t = data.series_name) ? "" : __t) + '</h4><p class="series-price pcard-w1 pcard-o1">', 
+data.show_agent_price ? __p += '<span class="highlight-price pcard-w4 pcard-h16 pcard-bold">' + (null == (__t = data.show_agent_price) ? "" : __t) + '</span><span class="pcard-w4 pcard-h12">' + (null == (__t = data.show_agent_price_unit) ? "" : __t) + "</span>" : (__p += "", 
+__p += data.show_official_price ? '<span class="highlight-price pcard-w4 pcard-h16 pcard-bold">' + (null == (__t = data.show_official_price) ? "" : __t) + '</span><span class="pcard-w4 pcard-h12">' + (null == (__t = data.show_official_price_unit) ? "" : __t) + "</span>" : '<span class="pcard-w4 pcard-h12">' + (null == (__t = data.official_price_wenan) ? "" : __t) + "</span>                    ", 
+__p += ""), __p += '<span class="pcard-w3 pcard-h12 pcard-w-delete">' + (null == (__t = "暂无报价" !== data.official_price_wenan ? data.official_price_wenan : "") ? "" : __t) + '</span></p></div><button type="button" data-href="' + (null == (__t = data.dealer_open_url) ? "" : __t) + '" class="pcard-button pcard-pull-right red-pcard-button">' + (null == (__t = data.dealer_text || "询底价") ? "" : __t) + "</button></div>", 
+Array.isArray(data.car_models_list)) {
+__p += '<ul class="car-list">';
+for (var i = 0; i < data.car_models_list.length; i++) __p += '<li class="car-item pcard-vertical-bottom-border" data-href="' + (null == (__t = data.car_models_list[i].open_url) ? "" : __t) + '" data-index="' + (null == (__t = i) ? "" : __t) + '"><span class="pcard-w1 pcard-h16 pcard-o1">' + (null == (__t = data.car_models_list[i].year) ? "" : __t) + "款 " + (null == (__t = data.car_models_list[i].car_name) ? "" : __t) + '</span><span class="car-price pcard-w4 pcard-h16">' + (null == (__t = data.car_models_list[i].price) ? "" : __t) + "</span></li>";
+__p += "</ul>";
+}
+__p += "", data.car_models_count && (__p += '<p data-href="' + (null == (__t = data.open_more_url) ? "" : __t) + '" class="more-link pcard-h14 pcard-w1">查看全部' + (null == (__t = data.car_models_count) ? "" : __t) + '款车<i class="more-icon pcard-icon icon-rarrow"></i></p>'), 
+__p += "</div>";
+}
 return __p;
 },
 stock: function(obj) {
@@ -2467,7 +2389,7 @@ __p += "</a>", __p += 0 == _tempStock.selected ? '<a class="button pcard-pull-ri
 __p += "</div>";
 }
 __p += '</div><a class="pcard-w1 pcard-h14 pcard-footer" href="sslocal://webview?hide_bar=1&bounce_disable=1&url=http%3A%2F%2Fic.snssdk.com%2Fstock%2Fget_quota%2F%23tab%3Dportfolio" data-label="card_selected">进入我的自选股<span><i class="pcard-icon opstock-iconfont icon-rarrow opstock-rarrow"></i></span></a>';
-} else __p += '<div class="pcard-caption"><span class="pcard-h14 pcard-w1">相关股票</span></div><div class="pcard-container pcard-border opstock-body-single" ><div class="pcard-clearfix"><div class="pcard-pull-left opstock-block ' + (null == (__t = 2 === data[0].rise ? "opstock-upblock" : 3 === data[0].rise ? "opstock-downblock" : "opstock-stopblock") ? "" : __t) + '" data-label="card_content" data-href="' + (null == (__t = data[0].url) ? "" : __t) + '"><div class="opstock-price">' + (null == (__t = 0 === data[0].rise ? "停牌" : data[0].price) ? "" : __t) + '</div><div class="opstock-change">' + (null == (__t = 0 === data[0].rise ? 0 : data[0].change) ? "" : __t) + "(" + (null == (__t = 0 === data[0].rise ? "0.00%" : data[0].rate) ? "" : __t) + ')</div></div><div class="opstock-right opstock-info"><button class="button pcard-button pcard-pull-right opstock-button-single ml8 mt16 ' + (null == (__t = isRedButton ? "red-pcard-button" : "") ? "" : __t) + " " + (null == (__t = buttonStyle ? buttonStyle : "") ? "" : __t) + '" ' + (null == (__t = data[0].selected ? "selected" : "") ? "" : __t) + ' data-stock="' + (null == (__t = data[0].code) ? "" : __t) + '" action="addStock" type=\'single\'><i class="pcard-icon opstock-iconfont icon-plus"></i></button><div class="pcard-h16 pcard-w1 pcard-o1" style="font-weight: bold; margin-top: 8px;" data-label="card_content" data-href="' + (null == (__t = data[0].url) ? "" : __t) + '">' + (null == (__t = data[0].name) ? "" : _.escape(__t)) + '</div><div class="pcard-h14 pcard-w3" style="margin-top: 4px;" data-label="card_content" data-href="' + (null == (__t = data[0].url) ? "" : __t) + '">', 
+} else __p += '<div class="pcard-caption"><span class="pcard-h14 pcard-w1">相关股票</span></div><div class="pcard-container pcard-border opstock-body-single" ><div class="pcard-clearfix"><div class="pcard-pull-left opstock-block ' + (null == (__t = 2 === data[0].rise ? "opstock-upblock" : 3 === data[0].rise ? "opstock-downblock" : "opstock-stopblock") ? "" : __t) + '" data-label="card_content" data-href="' + (null == (__t = data[0].url) ? "" : __t) + '"><div class="opstock-price">' + (null == (__t = 0 === data[0].rise ? "停牌" : data[0].price) ? "" : __t) + '</div><div class="opstock-change">' + (null == (__t = 0 === data[0].rise ? 0 : data[0].change) ? "" : __t) + "(" + (null == (__t = 0 === data[0].rise ? "0.00%" : data[0].rate) ? "" : __t) + ')</div></div><div class="opstock-right opstock-info"><button class="button pcard-button pcard-pull-right opstock-button-single ml8 mt16 ' + (null == (__t = isRedButton ? "red-pcard-button" : "") ? "" : __t) + '" ' + (null == (__t = data[0].selected ? "selected" : "") ? "" : __t) + ' data-stock="' + (null == (__t = data[0].code) ? "" : __t) + '" action="addStock" type=\'single\'><i class="pcard-icon opstock-iconfont icon-plus"></i></button><div class="pcard-h16 pcard-w1 pcard-o1" style="font-weight: bold; margin-top: 8px;" data-label="card_content" data-href="' + (null == (__t = data[0].url) ? "" : __t) + '">' + (null == (__t = data[0].name) ? "" : _.escape(__t)) + '</div><div class="pcard-h14 pcard-w3" style="margin-top: 4px;" data-label="card_content" data-href="' + (null == (__t = data[0].url) ? "" : __t) + '">', 
 ("HK" == data[0].market || "US" == data[0].market) && (__p += '<i class="pcard-icon opstock-iconfont ' + (null == (__t = "HK" == data[0].market ? "icon-hk" : "icon-us") ? "" : __t) + '"></i>'), 
 __p += "" + (null == (__t = data[0].code) ? "" : _.escape(__t)) + '</div></div></div><a class="pcard-w1 pcard-h14 pcard-footer" href="sslocal://webview?hide_bar=1&bounce_disable=1&url=http%3A%2F%2Fic.snssdk.com%2Fstock%2Fget_quota%2F%23tab%3Dportfolio" data-label="card_selected">进入我的自选股<span><i class="pcard-icon opstock-iconfont icon-rarrow opstock-rarrow"></i></span></a></div>';
 __p += "</div>";
@@ -2502,11 +2424,6 @@ var __t, __p = "";
 with (Array.prototype.join, obj || {}) __p += '<div class="pcard score-star" style="margin-top: 15px;"><div class="p-scorecard pcard-container pcard-vertical-border"><div class="pcard-clearfix score-wrapper"><div class="info-wrapper"><div class="title question pcard-h16 pcard-w1" style="margin-top: 3px;">' + (null == (__t = question) ? "" : __t) + '</div><div class="title thx-letter pcard-h16 pcard-w1" style="margin-top: 2px;">谢谢你为文章打分！</div></div><div class="star-wrap mt11"><span class="star" data-index="0" data-selected="false"></span><span class="star" data-index="1" data-selected="false"></span><span class="star" data-index="2" data-selected="false"></span><span class="star" data-index="3" data-selected="false"></span><span class="star" data-index="4" data-selected="false"></span></div><div class="info pcard-h12 pcard-w1 mt11" style="margin-bottom: 3px;">轻触打分</div></div><div class="pcard-clearfix result-wrapper"><div class="thx-press" style="margin-top: 2px;"><span class="press"></span></div><div class="pcard-h16 pcard-w1 mt8">感谢你的打分，你的打分对我们很重要！</div><a class="rescore-button pcard-h12 pcard-w1">重新打分</a></div></div></div>';
 return __p;
 },
-group_chat: function(obj) {
-var __t, __p = "";
-with (Array.prototype.join, obj || {}) __p += '<div class="pcard  aikan-qq"><div class="wrapper pcard-border"><div class="avatar"><img src="' + (null == (__t = data.coverImage) ? "" : __t) + '" alt="头像" class="image"></div><div class="pcard-h18 title">' + (null == (__t = data.qq_group_name) ? "" : __t) + '</div><div class="pcard-h14 supplement">' + (null == (__t = data.qq_group_desc) ? "" : __t) + '</div><div class="pcard-h14 dynamic">' + (null == (__t = data.people_num) ? "" : __t) + '</div><a class="pcard-h16 enter " href=' + (null == (__t = data.schema) ? "" : __t) + "><img class='qq-icon'src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAh1BMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////9qkf8RAAAALHRSTlMA/PDj2MBbLfnm3c+Q9vLrnJZ9USYjIA0IxqqlhoRzTzQQC9+3oYhrYlM8KNw1y7UAAADhSURBVDjL1dPHFsIgEIVhIJBeNMYYe+/3/Z/PlUcJF4/b/Otvw8wgBti0ngdxMl9Hv9lsgXeL/Q/XpPiUPr3uoPGdnvngCHZnj2tlD8qGwxz9xhymDkz4BOFGpzkhMGRwQ2DN4IXAnD/abcTH7bZk96AILMhlXMHauDCjUDsuAm/XhyvwcrJoWtBzO/h62LD2wpUNT4Dk0NgwgDFEZQaVDeNyOmYrbBVsqCZiS+9xW9iwFaI7Oq46CNH8c+I3wVuTT8jqwsRyKuyoiwJ3fxGDd11KQBZVZrKkjKWMlQ7FoHoBHm5nLnqnuccAAAAASUVORK5CYII=\" />进入群聊</a></div></div>";
-return __p;
-},
 score_emoji: function(obj) {
 var __t, __p = "";
 with (Array.prototype.join, obj || {}) __p += '<div class="pcard score-emoji ' + (null == (__t = 5 == style ? "has-title" : "") ? "" : __t) + '" style="margin-top: 15px"><div class="p-scorecard pcard-container ' + (null == (__t = 2 == style || 5 == style ? "pcard-vertical-top-border" : "") ? "" : __t) + ' "><div class="pcard-clearfix score-wrapper">', 
@@ -2523,7 +2440,8 @@ return __p;
 };
 if ("wenda" === Page.article.type && window.wenda_extra && window.wenda_extra.mis_coop_user && window.wenda_extra.mis_coop_user.uid === Page.author.userId) return void wendaCooperateCard();
 var isShowWendaFooter = 1;
-if (!("cards" in context && Array.isArray(context.cards))) return void ("wenda" === Page.article.type && isShowWendaFooter && processWendaFooter());
+if (!("cards" in context && Array.isArray(context.cards))) return "wenda" === Page.article.type && isShowWendaFooter && processWendaFooter(), 
+void ("pgc" === Page.article.type && !Page.novel_data && Page.h5_settings.score_card_style && processScoreCard());
 if (context.cards.forEach(function(e) {
 var t = e.type, a = {
 value: Page.statistics.group_id,
@@ -2534,8 +2452,9 @@ card_id: e.id
 }
 };
 if (t in cardTemplateFunctions) {
-if (e.isRedButton = Page.isRedFocusButton, e.buttonStyle = Page.focusButtonStyle, 
-"auto" === t) {
+e.isRedButton = Page.isRedFocusButton;
+var n = client.isIOS && parseFloat(client.osVersion) > 8;
+if ("auto" === t) {
 e.data_source_show = {
 dongchedi: "懂车帝",
 yiche: "易车"
@@ -2544,39 +2463,64 @@ e.show_origin_price = e.show_origin_price.toFixed(2), e.show_origin_price_unit =
 e.pd_eries_agent_min_price && e.pd_eries_agent_min_price > 0 && (e.show_agent_price = parseFloat(e.pd_eries_agent_min_price), 
 e.show_agent_price = e.show_agent_price.toFixed(2), e.show_agent_price_unit = "万起"), 
 /^http/.test(e.xunjia_web_url) && (e.xunjia_web_url = "sslocal://webview?url=" + encodeURIComponent(e.xunjia_web_url)), 
+e.dealer_text = e.xunjia_web_url.indexOf("growthactivity/halfPrice") > 0 || e.open_url.indexOf("growthactivity/halfPrice") > 0 || e.xunjia_web_url.indexOf("growthactivity%2FhalfPrice") > 0 || e.open_url.indexOf("growthactivity%2FhalfPrice") > 0 ? "限时半价" : "询底价", 
 a.extra.data_source = "wenda_extra" in Page ? e.data_source + "_wenda" : e.data_source;
-var n = $(cardTemplateFunctions[t]({
+var i = $(cardTemplateFunctions[t]({
 data: e
 }));
-} else if ("stock" == t) {
-var o = [], i = [];
-try {
-i = JSON.parse(e.keyphrase_stock);
-} catch (r) {}
-if (i.forEach(function(t) {
-if (e.stocks[t]) try {
-o.push(JSON.parse(e.stocks[t]));
-} catch (a) {}
-}), 0 == o.length) return;
-send_umeng_event("stock", "article_with_card", a);
-var s = [];
-if (s = o.filter(function(e) {
-return 0 == e.selected;
-}), 0 == s.length) return;
-o.map(function(e) {
-e.url = "sslocal://webview?hide_bar=1&bounce_disable=1&url=" + encodeURIComponent("http://ic.snssdk.com/stock/slice/?code=" + e.market + e.code + "&from=article"), 
-1 == e.selected && s.push(e);
+} else if ("auto_muti" === t) {
+var o = e.data;
+o.series_list.map(function(e, t) {
+var a = t + 1;
+e.open_url = "sslocal://webview?url=" + encodeURIComponent(e.open_web_url + "&zt=tt_article_bottom_muti_series_" + a) + "&title=" + encodeURIComponent(e.series_name) + (n ? "&use_wk=1" : ""), 
+e.dealer_open_url = "sslocal://webview?url=" + encodeURIComponent(e.dealer_web_url + "&zt=tt_article_bottom_muti_dealer_" + a) + (n ? "&use_wk=1" : "");
 });
-var n = $(cardTemplateFunctions[t]({
-data: s,
-isRedButton: e.isRedButton,
-buttonStyle: e.buttonStyle
+var i = $(cardTemplateFunctions[t]({
+data: o
+}));
+} else if ("auto_complex" === t) {
+var o = e.data;
+"暂无报价" !== o.official_price_wenan && (o.show_official_price = parseFloat(o.official_price_wenan), 
+o.show_official_price = o.show_official_price.toFixed(2), o.show_official_price_unit = "万起"), 
+"暂无报价" !== o.agent_price_wenan && (o.show_agent_price = parseFloat(o.agent_price_wenan), 
+o.show_agent_price = o.show_agent_price.toFixed(2), o.show_agent_price_unit = "万起"), 
+o.open_url = "sslocal://webview?url=" + encodeURIComponent(o.open_web_url + "&zt=tt_article_bottom_complex_series") + "&title=" + encodeURIComponent(o.series_name) + (n ? "&use_wk=1" : ""), 
+o.open_more_url = "sslocal://webview?url=" + encodeURIComponent(o.open_web_url + "&zt=tt_article_bottom_complex_more") + "&title=" + encodeURIComponent(o.series_name) + (n ? "&use_wk=1" : ""), 
+o.dealer_open_url = "sslocal://webview?url=" + encodeURIComponent(o.dealer_web_url + "&zt=tt_article_bottom_complex_dealer") + (n ? "&use_wk=1" : ""), 
+o.car_models_list.map(function(e, t) {
+e.open_url = "sslocal://webview?url=" + encodeURIComponent(e.open_web_url + "&zt=tt_article_bottom_complex_car_" + (t + 1)) + (n ? "&use_wk=1" : "");
+});
+var i = $(cardTemplateFunctions[t]({
+data: o
+}));
+} else if ("stock" == t) {
+var r = [], s = [];
+try {
+s = JSON.parse(e.keyphrase_stock);
+} catch (l) {}
+if (s.forEach(function(t) {
+if (e.stocks[t]) try {
+r.push(JSON.parse(e.stocks[t]));
+} catch (a) {}
+}), 0 == r.length) return;
+send_umeng_event("stock", "article_with_card", a);
+var c = [];
+if (c = r.filter(function(e) {
+return 0 == e.selected;
+}), 0 == c.length) return;
+r.map(function(e) {
+e.url = "sslocal://webview?hide_bar=1&bounce_disable=1&url=" + encodeURIComponent("http://ic.snssdk.com/stock/slice/?code=" + e.market + e.code + "&from=article"), 
+1 == e.selected && c.push(e);
+});
+var i = $(cardTemplateFunctions[t]({
+data: c,
+isRedButton: e.isRedButton
 }));
 } else if ("weitoutiao" == t) {
 e = e.weitoutiao;
 try {
 e.user.auth = JSON.parse(e.user.auth);
-} catch (r) {}
+} catch (l) {}
 if ("image" === e.content_type && e.images && Array.isArray(e.images)) {
 switch (e.images.length) {
 case 1:
@@ -2600,50 +2544,106 @@ e.img_width = Math.floor(e.img_width), e.img_height = Math.floor(e.img_height);
 "video" === e.content_type && (e.img_width = innerWidth - 30, e.img_height = 9 * e.img_width / 16, 
 e.img_width = Math.floor(e.img_width), e.img_height = Math.floor(e.img_height)), 
 e.useServerV = Page.useServerV;
-var n = $(cardTemplateFunctions[t]({
+var i = $(cardTemplateFunctions[t]({
 data: e
 }));
 } else if ("fiction" == t) {
 if ("pgc" === Page.article.type && Page.novel_data && !Page.novel_data.can_read) return;
 e.base_price && (e.base_price = parseInt(e.base_price)), e.discount_price && (e.discount_price = parseInt(e.discount_price));
-var n = $(cardTemplateFunctions[t](e));
+var i = $(cardTemplateFunctions[t](e));
 if (e.benefit_time && e.time_now && e.benefit_time > e.time_now && e.benefit_time - e.time_now < 86400) {
-var l = {
-sec: n.find("#sec").get(0),
-mini: n.find("#mini").get(0),
-hour: n.find("#hour").get(0)
+var d = {
+sec: i.find("#sec").get(0),
+mini: i.find("#mini").get(0),
+hour: i.find("#hour").get(0)
 };
-fnTimeCountDown(1e3 * e.benefit_time, 1e3 * e.time_now, l, function() {
-n.find(".tag").css("display", "none"), n.find(".sale").css("display", "none"), n.find(".sale-price").css("display", "none"), 
-n.find(".origin-price").removeClass("pcard-w-delete pcard-w9").addClass("pcard-w1");
+fnTimeCountDown(1e3 * e.benefit_time, 1e3 * e.time_now, d, function() {
+i.find(".tag").css("display", "none"), i.find(".sale").css("display", "none"), i.find(".sale-price").css("display", "none"), 
+i.find(".origin-price").removeClass("pcard-w-delete pcard-w9").addClass("pcard-w1");
 });
-} else n.find("#day").text(e.benefit_time <= e.time_now ? "0天" : Math.floor((e.benefit_time - e.time_now) / 86400) + "天");
-} else if ("group_chat" === t) {
-var c = e.data || {}, d = c.link ? c.link : "", u = c.qq_link ? c.qq_link : "";
-e.coverImage = c.coverImage || "http://p3.pstatp.com/large/7bcf0002fa942ff0784d.png", 
-e.link = d, e.qq_link = u, e.qq_group_name = c.qq_group_name || "", e.qq_group_desc = c.qq_group_desc || "", 
-e.people_num = c.people_num || "", e.schema = client.isAndroid ? u : "sslocal://webview?url=" + encodeURIComponent(d);
-var n = $(cardTemplateFunctions[t]({
-data: e
-}));
-} else var n = $(cardTemplateFunctions[t](e));
-n.on("click", ".button", function(t) {
+} else i.find("#day").text(e.benefit_time <= e.time_now ? "0天" : Math.floor((e.benefit_time - e.time_now) / 86400) + "天");
+} else var i = $(cardTemplateFunctions[t](e));
+if (i.on("click", ".button", function(t) {
 t.stopPropagation(), send_umeng_event("detail", "click_card_button", a);
-var n = $(this), o = n.attr("action");
-"concern" === o ? dealNovelButton(t, e, n, a) : "addStock" == o && dealOptionalStockButton(t, n, e, s, a);
-}), "auto" === t ? (n.find("[data-label]").on("click", function(e) {
+var n = $(this), i = n.attr("action");
+"concern" === i ? dealNovelButton(t, e, n, a) : "addStock" == i && dealOptionalStockButton(t, n, e, c, a);
+}), "auto" === t) i.find("[data-label]").on("click", function(e) {
 e.stopPropagation(), send_umeng_event("detail", "click_" + this.dataset.label, a);
-}), n.find('[type="button"]').on("click", function(e) {
+}), i.find('[type="button"]').on("click", function(e) {
 e.stopPropagation(), location.href = this.dataset.href, send_umeng_event("detail", "click_card_button", a);
-}), n.on("click", "[data-content]", function() {
+}), i.on("click", "[data-content]", function() {
 location.href = this.dataset.href, send_umeng_event("detail", "click_card_content", a);
-})) : "stock" === t ? (n.find('[data-label="card_selected"]').on("click", function(e) {
+}); else if ("auto_muti" === t) {
+var u = e.data.series_list, _ = {
+page_id: "page_detail",
+group_id: Page.statistics.group_id,
+media_id: Page.author.mediaId,
+media_name: Page.author.name,
+card_type: t,
+extra_params: JSON.stringify({})
+};
+i.find(".auto-muti-item-inner").on("click", function() {
+var e = this.dataset;
+location.href = e.href, sendUmengEventV3("web_clk_event", $.extend({
+obj_id: "auto_muti_series_click",
+series_name: u[e.index].series_name,
+series_id: u[e.index].series_id,
+series_index: 1 * e.index + 1
+}, _), !1);
+}), i.find('[type="button"]').on("click", function(e) {
+e.stopPropagation();
+var t = this.dataset;
+location.href = t.href, sendUmengEventV3("web_clk_event", $.extend({
+obj_id: "auto_muti_dealer_click",
+series_name: u[t.index].series_name,
+series_id: u[t.index].series_id,
+series_index: 1 * t.index + 1
+}, _), !1);
+}), i.find(".auto-inelastic-list").on("touchstart touchmove", function() {
+sendBytedanceRequest("disable_swipe");
+}).on("touchend touchcancel", function() {
+sendBytedanceRequest("enable_swipe");
+});
+} else if ("auto_complex" === t) {
+var p = e.data.car_models_list, _ = {
+page_id: "page_detail",
+group_id: Page.statistics.group_id,
+media_id: Page.author.mediaId,
+media_name: Page.author.name,
+series_name: e.data.series_name,
+series_id: e.data.series_id,
+card_type: t,
+extra_params: JSON.stringify({})
+};
+i.find(".series-wrap").on("click", function() {
+location.href = this.dataset.href, sendUmengEventV3("web_clk_event", $.extend({
+obj_id: "auto_complex_series_click"
+}, _), !1);
+}), i.find('[type="button"]').on("click", function(e) {
+e.stopPropagation(), location.href = this.dataset.href, sendUmengEventV3("web_clk_event", $.extend({
+obj_id: "auto_complex_dealer_click"
+}, _), !1);
+}), i.find(".more-link").on("click", function() {
+location.href = this.dataset.href, sendUmengEventV3("web_clk_event", $.extend({
+obj_id: "auto_complex_more_click"
+}, _), !1);
+}), i.find(".car-item").on("click", function() {
+location.href = this.dataset.href;
+var e = this.dataset;
+sendUmengEventV3("web_clk_event", $.extend({
+obj_id: "auto_complex_car_click",
+car_name: p[e.index].car_name,
+car_id: p[e.index].car_id,
+car_index: 1 * e.index + 1
+}, _), !1);
+});
+} else "stock" === t ? (i.find('[data-label="card_selected"]').on("click", function(e) {
 e.stopPropagation(), send_umeng_event("stock", "article_into_mystock", a);
-}), n.find('[data-label="card_detail"]').on("click", function(e) {
+}), i.find('[data-label="card_detail"]').on("click", function(e) {
 e.stopPropagation(), send_umeng_event("stock", "article_into_stock", a);
-}), n.find('[data-label="card_content"]').on("click", function(e) {
+}), i.find('[data-label="card_content"]').on("click", function(e) {
 e.stopPropagation(), location.href = this.dataset.href, send_umeng_event("stock", "article_into_stock", a);
-})) : "weitoutiao" === t ? n.on("click", "[data-content]", function() {
+})) : "weitoutiao" === t ? i.on("click", "[data-content]", function() {
 send_umeng_event("widget", "go_detail", {
 value: this.dataset.id,
 extra: {
@@ -2651,17 +2651,15 @@ enter_from: "widget_wtt",
 card_type: 1
 }
 }), location.href = this.dataset.href;
-}) : "group_chat" === t ? n.on("click", ".enter", function() {
-send_umeng_event("detail", "enter_group_chat", a);
-}) : n.on("click", function() {
+}) : i.on("click", function() {
 send_umeng_event("detail", "click_card_content", a);
-}), needCleanDoms.push(n), "wenda" === Page.article.type ? (isShowWendaFooter = 0, 
-$("footer").append(n)) : "pgc" == Page.article.type && Page.novel_data && Page.novel_data.show_new_keep_reading ? $("footer").append(n) : $("footer").prepend(n), 
+});
+needCleanDoms.push(i), "wenda" === Page.article.type ? (isShowWendaFooter = 0, $("footer").append(i)) : "pgc" == Page.article.type && Page.novel_data && Page.novel_data.show_new_keep_reading ? $("footer").append(i) : $("footer").prepend(i), 
 "weitoutiao" === t && ($(".content .title").width() < $(".content .title-inner").width() && $(".content .title-wrap").before('<div class="whole-forum"><a class="whole-forum-inner">全文</a></div>'), 
 sendWeitoutiaoCardDisplayEvent({
 needRecord: !0
 }), $(document).on("scroll", sendWeitoutiaoCardDisplayEvent), needCleanDoms.push($(document))), 
-sendUmengWhenTargetShown(n.get(0), "detail", "card_show", a, !0);
+sendUmengWhenTargetShown(i.get(0), "detail", "card_show", a, !0);
 }
 }), "wenda" === Page.article.type && isShowWendaFooter) {
 processWendaFooter(), context.wenda_context && void 0 !== context.wenda_context.scoring && processScoreCardWenda(context.wenda_context.scoring), 
@@ -2675,6 +2673,8 @@ picture_count: wenda_extra.image_list ? wenda_extra.image_list.length : ""
 };
 sendUmengEventV3("answer_detail_show", $.extend(logData, Page.wenda_extra.gd_ext_json));
 }
+}(), function() {
+context.labels && context.labels.labels_words.length > 0 && searchLablesRender(context.labels);
 }(), function() {
 if ("know_more_url" in context) {
 var e = $('<p><a href="sslocal://webview?url=' + encodeURIComponent(context.know_more_url) + '&title=%E7%BD%91%E9%A1%B5%E6%B5%8F%E8%A7%88">了解更多</a></p>');
@@ -2713,20 +2713,26 @@ position: "detail"
 version: 3
 })));
 }(), function() {
-"car_image_info" in context && ("IOSImageProcessor" in window ? window.IOSImageProcessor.addAutoScript(context.car_image_info) : "AndroidImageProcessor" in window && window.AndroidImageProcessor.addAutoScript(context.car_image_info));
+if ("car_image_info" in context) {
+for (var e in context.car_image_info) {
+var t = context.car_image_info[e].open_url;
+t && (t.indexOf("growthactivity/halfPrice") > -1 || t.indexOf("growthactivity%2FhalfPrice") > -1) && (context.car_image_info[e].dealer_text = "限时半价");
+}
+"IOSImageProcessor" in window ? window.IOSImageProcessor.addAutoScript(context.car_image_info) : "AndroidImageProcessor" in window && window.AndroidImageProcessor.addAutoScript(context.car_image_info);
+}
 }(), globalCachedContext = null, canSetContext = !1, Slardar && Slardar.sendCustomTimeLog("end_context_render", window.CLIENT_VERSION + "_" + window.APP_VERSION, +new Date() - startTimestamp);
 }
 }, change_following_state = function() {
 function e(e) {
-var t = $("header"), n = $(".subscribe-button"), o = $(".subscribe-button-bottom");
+var t = $("header"), n = $(".subscribe-button"), i = $(".subscribe-button-bottom");
 a = void 0, Page && Page.author && (Page.author.followState = e ? "following" : ""), 
 e ? ($(".author-function-buttons").removeClass("redpack-button redpack-button-just-word"), 
-n.addClass("following").removeClass("disabled"), t.attr("fbs", "following"), o.addClass("following").removeClass("disabled")) : (n.removeClass("following disabled"), 
-t.attr("fbs", ""), t.attr("sugstate", "no"), o.removeClass("following disabled"));
+n.addClass("following").removeClass("disabled"), t.attr("fbs", "following"), i.addClass("following").removeClass("disabled")) : (n.removeClass("following disabled"), 
+t.attr("fbs", ""), t.attr("sugstate", "no"), i.removeClass("following disabled"));
 }
 var t, a;
-return function(n, o, i) {
-"function" == typeof i && i(n), o ? n !== a && (clearTimeout(t), a = n, t = setTimeout(e, 450, n, i)) : e(n, i);
+return function(n, i, o) {
+"function" == typeof o && o(n), i ? n !== a && (clearTimeout(t), a = n, t = setTimeout(e, 450, n, o)) : e(n, o);
 };
 }(), followSource = {
 pgc: 30,
@@ -2736,7 +2742,7 @@ forum_sug: 69,
 wenda: 28,
 wenda_sug: 71
 }, doRecommendUsers = function() {
-function e(e, n, o) {
+function e(e, n, i) {
 $.ajax({
 dataType: "jsonp",
 url: "http://ic.snssdk.com/api/2/relation/follow_recommends/",
@@ -2745,12 +2751,12 @@ timeout: 1e4,
 beforeSend: function() {
 return t ? !1 : void (t = !0);
 },
-success: function(t, i, r) {
+success: function(t, o, r) {
 "article" in Page && ("success" === t.message && "object" == typeof t.data && Array.isArray(t.data.recommend_users) && t.data.recommend_users.length >= 3 ? (a[e.to_user_id] = t.data.recommend_users, 
-domPrepare(), n(t.data.recommend_users)) : o(t, i, r));
+domPrepare(), n(t.data.recommend_users)) : i(t, o, r));
 },
 error: function(e, t, a) {
-o(a, t, e);
+i(a, t, e);
 },
 complete: function() {
 t = !1;
@@ -2758,10 +2764,10 @@ t = !1;
 });
 }
 var t = !1, a = {}, n = {};
-return function(t, o, i, r) {
-if ("function" == typeof o && "function" == typeof i) {
+return function(t, i, o, r) {
+if ("function" == typeof i && "function" == typeof o) {
 if (r && r.deleteCache) return void (a[t] && delete a[t]);
-if (a[t]) return void o(a[t]);
+if (a[t]) return void i(a[t]);
 var s, l;
 "pgc" === Page.article.type ? (s = "article_detail", l = Page.statistics.group_id) : "forum" === Page.article.type ? (s = "weitoutiao_detail", 
 l = Page.forumStatisticsParams.value) : (s = Page.article.type + "_detail", l = Page.wenda_extra.ansid);
@@ -2772,15 +2778,15 @@ source: s,
 group_id: l
 };
 (client.isAndroid && client.isNewsArticleVersionNoLessThan("6.2.5") || client.isIOS && client.isNewsArticleVersionNoLessThan("6.2.6")) && $.isEmptyObject(n) ? getCommonParams(function(t) {
-n = t.data || t, $.extend(!0, c, n), e(c, o, i);
-}) : ($.extend(!0, c, n), e(c, o, i));
+n = t.data || t, $.extend(!0, c, n), e(c, i, o);
+}) : ($.extend(!0, c, n), e(c, i, o));
 }
 };
 }(), mediasugScroll = function() {
-var e, t, a, n = innerWidth, o = 150, i = 0, r = {}, s = 0, l = !1, c = [], d = "in", u = null, p = 0, f = $("header").height() + 232;
+var e, t, a, n = innerWidth, i = 150, o = 0, r = {}, s = 0, l = !1, c = [], d = "in", u = null, p = 0, f = $("header").height() + 232;
 return {
 init: function(d) {
-l || (l = !0, r = d, s = d.length, n = innerWidth, i = s * o + 24, this.imprcache = {}, 
+l || (l = !0, r = d, s = d.length, n = innerWidth, o = s * i + 24, this.imprcache = {}, 
 this.imprlog = [], c = [], "pgc" === Page.article.type ? (e = "article", t = Page.statistics.group_id) : "forum" === Page.article.type ? (e = "weitoutiao", 
 t = Page.forumStatisticsParams.value) : (e = Page.article.type, t = Page.wenda_extra.ansid), 
 this.sendResult = {
@@ -2796,23 +2802,23 @@ impressions_out: []
 }, a = _.throttle(mediasugScroll.handler, 150), f = $("header").height() + 232);
 },
 range: function(e) {
-var t = Math.floor(e / o);
+var t = Math.floor(e / i);
 t = Math.max(t, 0), e += n;
-var a = Math.ceil(e / o);
+var a = Math.ceil(e / i);
 a = Math.min(a, s) - 1;
-for (var i = []; a >= t; ) i[i.length] = t++;
-return i;
+for (var o = []; a >= t; ) o[o.length] = t++;
+return o;
 },
 pushimpr: function(a) {
 if (l) {
 if (this.sendResult.impressions_in = [], Object.keys(this.imprcache).length > 0) {
 this.sendResult.impressions_out = [];
 for (var n in this.imprcache) {
-var o = this.imprcache[n];
+var i = this.imprcache[n];
 this.imprlog.push({
 uid: n,
-time: o,
-duration: new Date().getTime() - o
+time: i,
+duration: new Date().getTime() - i
 }), console.info("leave", n), this.sendResult.impressions_out.push({
 imp_item_type: 51,
 imp_item_id: n,
@@ -2837,11 +2843,11 @@ var a = this, n = [];
 if (e.forEach(function(e) {
 var t = r[e].user_id;
 if (t in a.imprcache) {
-var o = a.imprcache[t];
+var i = a.imprcache[t];
 a.imprlog.push({
 uid: t,
-time: o,
-duration: new Date().getTime() - o
+time: i,
+duration: new Date().getTime() - i
 }), delete a.imprcache[t], a.sendResult.impressions_in = a.sendResult.impressions_in.filter(function(e) {
 return e.imp_item_id != t;
 }), n.push({
@@ -2859,16 +2865,16 @@ imp_item_extra: {}
 }), console.info("enter", t);
 }), e.length > 0 || t.length > 0) {
 a.sendResult.impressions_out = n;
-var o = {};
-$.extend(!0, o, a.sendResult), ToutiaoJSBridge.call("impression", o);
+var i = {};
+$.extend(!0, i, a.sendResult), ToutiaoJSBridge.call("impression", i);
 }
 },
 handler: function() {
 if (l) {
 for (var e = mediasugScroll.range(this.scrollLeft || 0), t = [], a = {}, n = 0; n < c.length; n++) a[c[n]] = !0;
 for (n = 0; n < e.length; n++) e[n] in a ? delete a[e[n]] : t.push(e[n]);
-var o = Object.keys(a);
-mediasugScroll.dealimpr(o, t), c = e;
+var i = Object.keys(a);
+mediasugScroll.dealimpr(i, t), c = e;
 }
 },
 open: function() {
@@ -2889,8 +2895,8 @@ deleteCache: !0
 },
 horizontalScrollLeft: function(e) {
 null === u && (u = e);
-var t = e - u, a = Math.ceil(p / o) * o - p;
-a = 0 === a ? o : a, $("#mediasug-list").scrollLeft(p + Math.min(t / 2, a)), 2 * o > t && requestAnimationFrame(mediasugScroll.horizontalScrollLeft);
+var t = e - u, a = Math.ceil(p / i) * i - p;
+a = 0 === a ? i : a, $("#mediasug-list").scrollLeft(p + Math.min(t / 2, a)), 2 * i > t && requestAnimationFrame(mediasugScroll.horizontalScrollLeft);
 },
 next: function() {
 var e = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
@@ -2900,9 +2906,9 @@ e(mediasugScroll.horizontalScrollLeft);
 },
 webviewScroll: function(e) {
 if ("open" === $("header").attr("sugstate") && e.rect && !($("body").height() > innerHeight + 232)) {
-var t, a, n, o, i, r, s = $("body").height();
-if (i = e.rect.substring(1, e.rect.length - 1).split(","), t = i[0], a = Math.abs(i[1]), 
-n = i[2], o = i[3], s === innerHeight) r = a >= f ? "out" : "in"; else {
+var t, a, n, i, o, r, s = $("body").height();
+if (o = e.rect.substring(1, e.rect.length - 1).split(","), t = o[0], a = Math.abs(o[1]), 
+n = o[2], i = o[3], s === innerHeight) r = a >= f ? "out" : "in"; else {
 var l = s - innerHeight;
 r = a >= f - l ? "out" : "in";
 }
@@ -2929,7 +2935,7 @@ this.allPicturesCount = e.length, this.pictures = [], this.gifs = [], this.curre
 if (this.threadGGSwitch && ("none" === this.image_type || (1 === this.allPicturesCount ? this.image_type = "origin" : (this.image_type = "thumb", 
 this.lazy_load = !0))), this.isDuoTuThread = this.threadGGSwitch && 1 !== this.allPicturesCount, 
 this.allPicturesCount > 10 && (this.lazy_load = !0), e.forEach(function(e, t) {
-var a = e.getAttribute("type") || "", n = +e.getAttribute("width") || 0, o = +e.getAttribute("height") || 0, i = +e.getAttribute("thumb_width") || 0, r = +e.getAttribute("thumb_height") || 0, s = {
+var a = e.getAttribute("type") || "", n = +e.getAttribute("width") || 0, i = +e.getAttribute("height") || 0, o = +e.getAttribute("thumb_width") || 0, r = +e.getAttribute("thumb_height") || 0, s = {
 index: t,
 holder: e,
 state: IOSImageProcessor.image_type,
@@ -2937,10 +2943,10 @@ url: "",
 href: e.getAttribute("href") || "",
 link: e.getAttribute("redirect-link") || "",
 isGIF: "gif" === a || "2" === a,
-isLONG: n > 3 * o || o > 3 * n,
+isLONG: n > 3 * i || i > 3 * n,
 sizeArray: {
-big: [ n, o ],
-small: [ i, r ]
+big: [ n, i ],
+small: [ o, r ]
 },
 sizeType: IOSImageProcessor.state2size[IOSImageProcessor.image_type],
 probableOffsetTop: void 0,
@@ -2969,32 +2975,32 @@ if (Array.isArray(t) && t.length > 0) for (var a = 0, n = t.length; n > a; a++) 
 },
 renderHolder: function(e, t, a, n) {
 console.info("picture", e, t, a, n);
-var o = document.createDocumentFragment(), i = this.adjustOriginImageScale(e.sizeArray[e.sizeType], e.state);
+var i = document.createDocumentFragment(), o = this.adjustOriginImageScale(e.sizeArray[e.sizeType], e.state);
 if ("" !== e.url) {
 var r = document.createElement("img");
 r.onload = function() {
 console.info("onload", e, this), "function" == typeof n && n();
-var t = this.naturalWidth, a = this.naturalHeight, o = e.sizeArray[e.sizeType];
-(t || a) && (o[0] !== t || o[1] !== a) && (console.info(o[0], t, o[1], a), e.sizeArray[e.sizeType] = [ t, a ], 
+var t = this.naturalWidth, a = this.naturalHeight, i = e.sizeArray[e.sizeType];
+(t || a) && (i[0] !== t || i[1] !== a) && (console.info(i[0], t, i[1], a), e.sizeArray[e.sizeType] = [ t, a ], 
 IOSImageProcessor.renderHolder(e)), this.onload = null;
-}, r.src = e.url, o.appendChild(r);
+}, r.src = e.url, i.appendChild(r);
 }
 var s;
 if (e.isGIF) (IOSImageProcessor.isDuoTuThread || "origin" !== e.state) && (s = document.createElement("i"), 
 s.setAttribute("class", "image-subscript gif-subscript"), s.textContent = "GIF", 
-o.appendChild(s), s = null); else if (e.isLONG && IOSImageProcessor.isDuoTuThread) s = document.createElement("i"), 
+i.appendChild(s), s = null); else if (e.isLONG && IOSImageProcessor.isDuoTuThread) s = document.createElement("i"), 
 s.setAttribute("class", "image-subscript long-subscript"), s.textContent = "长图", 
-o.appendChild(s), s = null; else if (e.autoscript && "big" === e.sizeType) {
+i.appendChild(s), s = null; else if (e.autoscript && "big" === e.sizeType) {
 var l = document.createElement("i");
-l.dataset.href = e.autoscript.open_url, l.innerHTML = '<span class="ovf">' + e.autoscript.series_name + "</span><span>" + e.autoscript.price + '</span><span class="sx">&#xe60a;</span><span>查看详情</span>', 
-l.setAttribute("class", "image-subscript autoscript"), o.appendChild(l), l = null;
+l.dataset.href = e.autoscript.open_url, l.innerHTML = '<span class="ovf">' + e.autoscript.series_name + "</span><span>" + e.autoscript.price + '</span><span class="sx">&#xe60a;</span><span>' + (e.autoscript.dealer_text ? e.autoscript.dealer_text : "查看详情") + "</span>", 
+l.setAttribute("class", "image-subscript autoscript"), i.appendChild(l), l = null;
 }
 "origin" !== e.state && (s = document.createElement("i"), s.classList.add("spinner"), 
-o.appendChild(s), s = null);
+i.appendChild(s), s = null);
 var c = e.holder;
-if (t ? c.setAttribute("index", e.index) : c.innerHTML = "", c.appendChild(o), c.setAttribute("state", e.state), 
-c.setAttribute("bg", i[0] > 140 && i[1] > 44), IOSImageProcessor.threadGGSwitch && 1 === IOSImageProcessor.allPicturesCount && (c.parentNode.style.paddingTop = 0, 
-c.parentNode.style.height = i[1] + "px"), c.style.width = i[0] + "px", c.style.height = i[1] + "px", 
+if (t ? c.setAttribute("index", e.index) : c.innerHTML = "", c.appendChild(i), c.setAttribute("state", e.state), 
+c.setAttribute("bg", o[0] > 140 && o[1] > 44), IOSImageProcessor.threadGGSwitch && 1 === IOSImageProcessor.allPicturesCount && (c.parentNode.style.paddingTop = 0, 
+c.parentNode.style.height = o[1] + "px"), c.style.width = o[0] + "px", c.style.height = o[1] + "px", 
 t || IOSImageProcessor.threadGGSwitch || a) ; else if (c.classList.contains("animation")) NativePlayGif.willStart(), 
 c.addEventListener("transitionend", NativePlayGif.te, !1); else if (NativePlayGif.tellNativeImagesPosition(), 
 IOSImageProcessor.currentViewing.index === e.index) {
@@ -3027,37 +3033,37 @@ index: e
 break;
 
 default:
-var o = this.getBoundingClientRect();
+var i = this.getBoundingClientRect();
 IOSImageProcessor.currentViewing = {
 index: +e,
-left: o.left + window.pageXOffset,
-top: o.top + window.pageYOffset,
-width: Math.round(o.width),
-height: Math.round(o.height)
+left: i.left + window.pageXOffset,
+top: i.top + window.pageYOffset,
+width: Math.round(i.width),
+height: Math.round(i.height)
 };
-var i = "full_image?" + obj2search(IOSImageProcessor.currentViewing);
-sendBytedanceRequest(i), console.info(i), "origin" !== a && ToutiaoJSBridge.call("loadDetailImage", {
+var o = "full_image?" + obj2search(IOSImageProcessor.currentViewing);
+sendBytedanceRequest(o), console.info(o), "origin" !== a && ToutiaoJSBridge.call("loadDetailImage", {
 type: (IOSImageProcessor.isDuoTuThread ? "thumb" : "origin") + "_image",
 index: e
 });
 }
 },
-appendLocalImage: function(e, t, a, n, o) {
+appendLocalImage: function(e, t, a, n, i) {
 console.info("appendLocalImage", arguments);
-var i = IOSImageProcessor.pictures[e];
-if (i.url = t, i.state = a, i.sizeType = IOSImageProcessor.state2size[a], !t && "origin" === a && n && o ? (i.nativePlayGifLoaded = !0, 
-i.sizeArray.big = [ n, o ], IOSImageProcessor.renderHolder(i)) : "boolean" == typeof n && "function" == typeof o ? IOSImageProcessor.renderHolder(i, !1, n, o) : IOSImageProcessor.renderHolder(i), 
+var o = IOSImageProcessor.pictures[e];
+if (o.url = t, o.state = a, o.sizeType = IOSImageProcessor.state2size[a], !t && "origin" === a && n && i ? (o.nativePlayGifLoaded = !0, 
+o.sizeArray.big = [ n, i ], IOSImageProcessor.renderHolder(o)) : "boolean" == typeof n && "function" == typeof i ? IOSImageProcessor.renderHolder(o, !1, n, i) : IOSImageProcessor.renderHolder(o), 
 IOSImageProcessor.HAS_SHOW_ALL_ORIGINS_BUTTON && "origin" === a && (IOSImageProcessor.loadedOrigins++, 
 IOSImageProcessor.allPicturesCount === IOSImageProcessor.loadedOrigins)) {
 var r = document.getElementById("toggle-img");
 r && (r.style.visibility = "hidden");
 }
-var s = i.href, l = s.match(/url=([^&]*)/);
+var s = o.href, l = s.match(/url=([^&]*)/);
 if (l) {
 l = l[0];
 var c = arguments[3], d = arguments[4];
-"number" == typeof c && "number" == typeof d || IOSImageProcessor.pictures.forEach(function(n, o) {
-!n.url && o !== e && n.href.indexOf(l) > -1 && (console.info("找到相同图片", e, o), IOSImageProcessor.appendLocalImage.call(IOSImageProcessor, o, t, a, c, d));
+"number" == typeof c && "number" == typeof d || IOSImageProcessor.pictures.forEach(function(n, i) {
+!n.url && i !== e && n.href.indexOf(l) > -1 && (console.info("找到相同图片", e, i), IOSImageProcessor.appendLocalImage.call(IOSImageProcessor, i, t, a, c, d));
 });
 }
 },
@@ -3082,19 +3088,19 @@ var n = document.createElement(a);
 n.classList.add("image-wrap"), e.insertBefore(n, t), n.appendChild(t);
 }
 this.pictures.forEach(function(t, a) {
-var n = t.holder, o = n.parentNode;
-"P" === o.tagName ? "" !== o.textContent ? (console.info("[" + a + "]所在段落有文本，应当分割"), 
-e(o, n, "span")) : o.querySelectorAll(".image").length > 1 ? (console.info("[" + a + "]所在段落有其他图片，应当分割"), 
-e(o, n, "span")) : (console.info("[" + a + "]正确"), o.classList.add("image-wrap")) : (console.info("[" + a + "]直接加包裹"), 
-e(o, n, "p"));
+var n = t.holder, i = n.parentNode;
+"P" === i.tagName ? "" !== i.textContent ? (console.info("[" + a + "]所在段落有文本，应当分割"), 
+e(i, n, "span")) : i.querySelectorAll(".image").length > 1 ? (console.info("[" + a + "]所在段落有其他图片，应当分割"), 
+e(i, n, "span")) : (console.info("[" + a + "]正确"), i.classList.add("image-wrap")) : (console.info("[" + a + "]直接加包裹"), 
+e(i, n, "p"));
 });
 },
 adjustOriginImageScale: function(e, t) {
-var a = 200, n = 200, o = window.aW / 2;
+var a = 200, n = 200, i = window.aW / 2;
 if (this.isDuoTuThread) return [ "ERROR", "ERROR" ];
-var i, r, s = e[0] / e[1];
-return i = e[0] ? e[0] > o ? window.aW : e[0] : a, r = s ? parseInt(i / s) : n, 
-"none" === t && (r = Math.min(r, .8 * window.iH)), [ i, r ];
+var o, r, s = e[0] / e[1];
+return o = e[0] ? e[0] > i ? window.aW : e[0] : a, r = s ? parseInt(o / s) : n, 
+"none" === t && (r = Math.min(r, .8 * window.iH)), [ o, r ];
 },
 bindEvents: function() {
 $(document.body).on("click", ".image", function(e) {
@@ -3212,44 +3218,44 @@ NativePlayGif.cleanFrames();
 !function() {
 IOSImageProcessor.bindEvents(), bindStatisticsEvents(), bindStatisticsEvents23(), 
 window.onresize = function() {
-window.aW = document.body.offsetWidth || window.innerWidth, console.info("resize", window.aW, window.abcdefg), 
+window.aW = document.body.offsetWidth - 30 || window.innerWidth - 30, console.info("resize", window.aW, window.abcdefg), 
 window.imageInited && IOSImageProcessor.renderAllHolders();
 }, ToutiaoJSBridge.on("menuItemPress", processMenuItemPressEvent);
 }(), !function(e) {
 function t(a) {
 if (n[a]) return n[a].exports;
-var o = n[a] = {
+var i = n[a] = {
 i: a,
 l: !1,
 exports: {}
 };
-return e[a].call(o.exports, o, o.exports, t), o.l = !0, o.exports;
+return e[a].call(i.exports, i, i.exports, t), i.l = !0, i.exports;
 }
 var a = window.webpackJsonp;
-window.webpackJsonp = function(t, n, i) {
-for (var r, s, l = 0, c = []; l < t.length; l++) s = t[l], o[s] && c.push(o[s][0]), 
-o[s] = 0;
+window.webpackJsonp = function(t, n, o) {
+for (var r, s, l = 0, c = []; l < t.length; l++) s = t[l], i[s] && c.push(i[s][0]), 
+i[s] = 0;
 for (r in n) Object.prototype.hasOwnProperty.call(n, r) && (e[r] = n[r]);
-for (a && a(t, n, i); c.length; ) c.shift()();
+for (a && a(t, n, o); c.length; ) c.shift()();
 };
-var n = {}, o = {
+var n = {}, i = {
 1: 0
 };
 return t.e = function(e) {
 function a() {
 s.onerror = s.onload = null, clearTimeout(l);
-var t = o[e];
-0 !== t && (t && t[1](new Error("Loading chunk " + e + " failed.")), o[e] = void 0);
+var t = i[e];
+0 !== t && (t && t[1](new Error("Loading chunk " + e + " failed.")), i[e] = void 0);
 }
-var n = o[e];
+var n = i[e];
 if (0 === n) return new Promise(function(e) {
 e();
 });
 if (n) return n[2];
-var i = new Promise(function(t, a) {
-n = o[e] = [ t, a ];
+var o = new Promise(function(t, a) {
+n = i[e] = [ t, a ];
 });
-n[2] = i;
+n[2] = o;
 var r = document.getElementsByTagName("head")[0], s = document.createElement("script");
 s.type = "text/javascript", s.charset = "utf-8", s.async = !0, s.timeout = 12e4, 
 t.nc && s.setAttribute("nonce", t.nc), s.src = t.p + "" + ({
@@ -3258,7 +3264,7 @@ t.nc && s.setAttribute("nonce", t.nc), s.src = t.p + "" + ({
 "0": "f9ddddaa224c408d0486"
 }[e] + ".js";
 var l = setTimeout(a, 12e4);
-return s.onerror = s.onload = a, r.appendChild(s), i;
+return s.onerror = s.onload = a, r.appendChild(s), o;
 }, t.m = e, t.c = n, t.i = function(e) {
 return e;
 }, t.d = function(e, a, n) {
@@ -3287,38 +3293,38 @@ value: !0
 function n() {
 return null;
 }
-function o(e) {
+function i(e) {
 var t = e.nodeName, a = e.attributes;
 e.attributes = {}, t.defaultProps && b(e.attributes, t.defaultProps), a && b(e.attributes, a);
 }
-function i(e, t) {
-var a, n, o;
+function o(e, t) {
+var a, n, i;
 if (t) {
-for (o in t) if (a = W.test(o)) break;
+for (i in t) if (a = G.test(i)) break;
 if (a) {
 n = e.attributes = {};
-for (o in t) t.hasOwnProperty(o) && (n[W.test(o) ? o.replace(/([A-Z0-9])/, "-$1").toLowerCase() : o] = t[o]);
+for (i in t) t.hasOwnProperty(i) && (n[G.test(i) ? i.replace(/([A-Z0-9])/, "-$1").toLowerCase() : i] = t[i]);
 }
 }
 }
 function r(e, t, n) {
-var o = t && t._preactCompatRendered && t._preactCompatRendered.base;
-o && o.parentNode !== t && (o = null), !o && t && (o = t.firstElementChild);
-for (var i = t.childNodes.length; i--; ) t.childNodes[i] !== o && t.removeChild(t.childNodes[i]);
-var r = a.i(U.c)(e, t, o);
+var i = t && t._preactCompatRendered && t._preactCompatRendered.base;
+i && i.parentNode !== t && (i = null), !i && t && (i = t.firstElementChild);
+for (var o = t.childNodes.length; o--; ) t.childNodes[o] !== i && t.removeChild(t.childNodes[o]);
+var r = a.i(V.c)(e, t, i);
 return t && (t._preactCompatRendered = r && (r._component || {
 base: r
 })), "function" == typeof n && n(), r && r._component || r;
 }
-function s(e, t, n, o) {
-var i = a.i(U.a)(X, {
+function s(e, t, n, i) {
+var o = a.i(V.a)(X, {
 context: e.context
-}, t), s = r(i, n), l = s._component || s.base;
-return o && o.call(l, s), l;
+}, t), s = r(o, n), l = s._component || s.base;
+return i && i.call(l, s), l;
 }
 function l(e) {
 var t = e._preactCompatRendered && e._preactCompatRendered.base;
-return t && t.parentNode === e ? (a.i(U.c)(a.i(U.a)(n), e, t), !0) : !1;
+return t && t.parentNode === e ? (a.i(V.c)(a.i(V.a)(n), e, t), !0) : !1;
 }
 function c(e) {
 return f.bind(null, e);
@@ -3341,31 +3347,31 @@ return e(this.props, this.context);
 });
 }
 function p(e) {
-var t = e[q];
-return t ? t === !0 ? e : t : (t = _(e), Object.defineProperty(t, q, {
+var t = e[J];
+return t ? t === !0 ? e : t : (t = _(e), Object.defineProperty(t, J, {
 configurable: !0,
 value: !0
 }), t.displayName = e.displayName, t.propTypes = e.propTypes, t.defaultProps = e.defaultProps, 
-Object.defineProperty(e, q, {
+Object.defineProperty(e, J, {
 configurable: !0,
 value: t
 }), t);
 }
 function f() {
 for (var e = [], t = arguments.length; t--; ) e[t] = arguments[t];
-return d(e, 2), m(U.a.apply(void 0, e));
+return d(e, 2), m(V.a.apply(void 0, e));
 }
 function m(e) {
 e.preactCompatNormalized = !0, y(e), u(e.nodeName) && (e.nodeName = p(e.nodeName));
 var t = e.attributes.ref, a = t && typeof t;
-return !Z || "string" !== a && "number" !== a || (e.attributes.ref = v(t, Z)), w(e), 
+return !K || "string" !== a && "number" !== a || (e.attributes.ref = v(t, K)), w(e), 
 e;
 }
 function h(e, t) {
-for (var n = [], o = arguments.length - 2; o-- > 0; ) n[o] = arguments[o + 2];
+for (var n = [], i = arguments.length - 2; i-- > 0; ) n[i] = arguments[i + 2];
 if (!g(e)) return e;
-var i = e.attributes || e.props, r = a.i(U.a)(e.nodeName || e.type, i, e.children || i && i.children), s = [ r, t ];
-return n && n.length ? s.push(n) : t && t.children && s.push(t.children), m(U.d.apply(void 0, s));
+var o = e.attributes || e.props, r = a.i(V.a)(e.nodeName || e.type, o, e.children || o && o.children), s = [ r, t ];
+return n && n.length ? s.push(n) : t && t.children && s.push(t.children), m(V.d.apply(void 0, s));
 }
 function g(e) {
 return e && (e instanceof H || e.$$typeof === F);
@@ -3379,11 +3385,11 @@ function w(e) {
 var t = e.nodeName, a = e.attributes;
 if (a && "string" == typeof t) {
 var n = {};
-for (var o in a) n[o.toLowerCase()] = o;
+for (var i in a) n[i.toLowerCase()] = i;
 if (n.ondoubleclick && (a.ondblclick = a[n.ondoubleclick], delete a[n.ondoubleclick]), 
 n.onchange && ("textarea" === t || "input" === t.toLowerCase() && !/^fil|che|rad/i.test(a.type))) {
-var i = n.oninput || "oninput";
-a[i] || (a[i] = j([ a[i], a[n.onchange] ]), delete a[n.onchange]);
+var o = n.oninput || "oninput";
+a[o] || (a[o] = E([ a[o], a[n.onchange] ]), delete a[n.onchange]);
 }
 }
 }
@@ -3392,7 +3398,7 @@ var t = e.attributes || (e.attributes = {});
 nt.enumerable = "className" in t, t.className && (t.class = t.className), Object.defineProperty(t, "className", nt);
 }
 function b(e) {
-for (var t = arguments, a = 1, n = void 0; a < arguments.length; a++) if (n = t[a]) for (var o in n) n.hasOwnProperty(o) && (e[o] = n[o]);
+for (var t = arguments, a = 1, n = void 0; a < arguments.length; a++) if (n = t[a]) for (var i in n) n.hasOwnProperty(i) && (e[i] = n[i]);
 return e;
 }
 function x(e, t) {
@@ -3400,44 +3406,44 @@ for (var a in e) if (!(a in t)) return !0;
 for (var n in t) if (e[n] !== t[n]) return !0;
 return !1;
 }
-function k(e) {
+function P(e) {
 return e && e.base || e;
 }
-function P() {}
+function k() {}
 function S(e) {
 function t(e, t) {
-I(this), B.call(this, e, t, G), E.call(this, e, t);
+I(this), B.call(this, e, t, z), j.call(this, e, t);
 }
 return e = b({
 constructor: t
 }, e), e.mixins && C(e, T(e.mixins)), e.statics && b(t, e.statics), e.propTypes && (t.propTypes = e.propTypes), 
 e.defaultProps && (t.defaultProps = e.defaultProps), e.getDefaultProps && (t.defaultProps = e.getDefaultProps()), 
-P.prototype = B.prototype, t.prototype = b(new P(), e), t.displayName = e.displayName || "Component", 
+k.prototype = B.prototype, t.prototype = b(new k(), e), t.displayName = e.displayName || "Component", 
 t;
 }
 function T(e) {
 for (var t = {}, a = 0; a < e.length; a++) {
 var n = e[a];
-for (var o in n) n.hasOwnProperty(o) && "function" == typeof n[o] && (t[o] || (t[o] = [])).push(n[o]);
+for (var i in n) n.hasOwnProperty(i) && "function" == typeof n[i] && (t[i] || (t[i] = [])).push(n[i]);
 }
 return t;
 }
 function C(e, t) {
-for (var a in t) t.hasOwnProperty(a) && (e[a] = j(t[a].concat(e[a] || K), "getDefaultProps" === a || "getInitialState" === a || "getChildContext" === a));
+for (var a in t) t.hasOwnProperty(a) && (e[a] = E(t[a].concat(e[a] || Z), "getDefaultProps" === a || "getInitialState" === a || "getChildContext" === a));
 }
 function I(e) {
 for (var t in e) {
 var a = e[t];
-"function" != typeof a || a.__bound || J.hasOwnProperty(t) || ((e[t] = a.bind(e)).__bound = !0);
+"function" != typeof a || a.__bound || W.hasOwnProperty(t) || ((e[t] = a.bind(e)).__bound = !0);
 }
 }
 function N(e, t, a) {
 return "string" == typeof t && (t = e.constructor.prototype[t]), "function" == typeof t ? t.apply(e, a) : void 0;
 }
-function j(e, t) {
+function E(e, t) {
 return function() {
-for (var a, n = arguments, o = this, i = 0; i < e.length; i++) {
-var r = N(o, e[i], n);
+for (var a, n = arguments, i = this, o = 0; o < e.length; o++) {
+var r = N(i, e[o], n);
 if (t && null != r) {
 a || (a = {});
 for (var s in r) r.hasOwnProperty(s) && (a[s] = r[s]);
@@ -3446,36 +3452,36 @@ for (var s in r) r.hasOwnProperty(s) && (a[s] = r[s]);
 return a;
 };
 }
-function E(e, t) {
-A.call(this, e, t), this.componentWillReceiveProps = j([ A, this.componentWillReceiveProps || "componentWillReceiveProps" ]), 
-this.render = j([ A, $, this.render || "render", O ]);
+function j(e, t) {
+$.call(this, e, t), this.componentWillReceiveProps = E([ $, this.componentWillReceiveProps || "componentWillReceiveProps" ]), 
+this.render = E([ $, O, this.render || "render", A ]);
 }
-function A(e) {
+function $(e) {
 if (e) {
 var t = e.children;
 if (t && Array.isArray(t) && 1 === t.length && ("string" == typeof t[0] || "function" == typeof t[0] || t[0] instanceof H) && (e.children = t[0], 
 e.children && "object" == typeof e.children && (e.children.length = 1, e.children[0] = e.children)), 
-z) {
-var a = "function" == typeof this ? this : this.constructor, n = this.propTypes || a.propTypes, o = this.displayName || a.name;
-n && D.a.checkPropTypes(n, e, "prop", o);
+q) {
+var a = "function" == typeof this ? this : this.constructor, n = this.propTypes || a.propTypes, i = this.displayName || a.name;
+n && U.a.checkPropTypes(n, e, "prop", i);
 }
 }
-}
-function $() {
-Z = this;
 }
 function O() {
-Z === this && (Z = null);
+K = this;
+}
+function A() {
+K === this && (K = null);
 }
 function B(e, t, a) {
-U.e.call(this, e, t), this.state = this.getInitialState ? this.getInitialState() : {}, 
-this.refs = {}, this._refProxies = {}, a !== G && E.call(this, e, t);
+V.e.call(this, e, t), this.state = this.getInitialState ? this.getInitialState() : {}, 
+this.refs = {}, this._refProxies = {}, a !== z && j.call(this, e, t);
 }
-function L(e, t) {
+function R(e, t) {
 B.call(this, e, t);
 }
 a.d(t, "version", function() {
-return V;
+return D;
 }), a.d(t, "DOM", function() {
 return tt;
 }), a.d(t, "Children", function() {
@@ -3493,23 +3499,23 @@ return h;
 }), a.d(t, "isValidElement", function() {
 return g;
 }), a.d(t, "findDOMNode", function() {
-return k;
+return P;
 }), a.d(t, "unmountComponentAtNode", function() {
 return l;
 }), a.d(t, "Component", function() {
 return B;
 }), a.d(t, "PureComponent", function() {
-return L;
+return R;
 }), a.d(t, "unstable_renderSubtreeIntoContainer", function() {
 return s;
 }), a.d(t, "__spread", function() {
 return b;
 });
-var R = a(24), D = a.n(R), U = a(21);
+var L = a(24), U = a.n(L), V = a(21);
 a.d(t, "PropTypes", function() {
-return D.a;
+return U.a;
 });
-var V = "15.1.0", M = "a abbr address area article aside audio b base bdi bdo big blockquote body br button canvas caption cite code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd keygen label legend li link main map mark menu menuitem meta meter nav noscript object ol optgroup option output p param picture pre progress q rp rt ruby s samp script section select small source span strong style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr circle clipPath defs ellipse g image line linearGradient mask path pattern polygon polyline radialGradient rect stop svg text tspan".split(" "), F = "undefined" != typeof Symbol && Symbol.for && Symbol.for("react.element") || 60103, q = "undefined" != typeof Symbol ? Symbol.for("__preactCompatWrapper") : "__preactCompatWrapper", J = {
+var D = "15.1.0", M = "a abbr address area article aside audio b base bdi bdo big blockquote body br button canvas caption cite code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd keygen label legend li link main map mark menu menuitem meta meter nav noscript object ol optgroup option output p param picture pre progress q rp rt ruby s samp script section select small source span strong style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr circle clipPath defs ellipse g image line linearGradient mask path pattern polygon polyline radialGradient rect stop svg text tspan".split(" "), F = "undefined" != typeof Symbol && Symbol.for && Symbol.for("react.element") || 60103, J = "undefined" != typeof Symbol ? Symbol.for("__preactCompatWrapper") : "__preactCompatWrapper", W = {
 constructor: 1,
 render: 1,
 shouldComponentUpdate: 1,
@@ -3520,9 +3526,9 @@ componentWillMount: 1,
 componentDidMount: 1,
 componentWillUnmount: 1,
 componentDidUnmount: 1
-}, W = /^(?:accent|alignment|arabic|baseline|cap|clip|color|fill|flood|font|glyph|horiz|marker|overline|paint|stop|strikethrough|stroke|text|underline|unicode|units|v|vector|vert|word|writing|x)[A-Z]/, G = {}, z = "undefined" == typeof e || !a.i({
+}, G = /^(?:accent|alignment|arabic|baseline|cap|clip|color|fill|flood|font|glyph|horiz|marker|overline|paint|stop|strikethrough|stroke|text|underline|unicode|units|v|vector|vert|word|writing|x)[A-Z]/, z = {}, q = "undefined" == typeof e || !a.i({
 NODE_ENV: "production"
-}) || !1, H = a.i(U.a)("a", null).constructor;
+}) || !1, H = a.i(V.a)("a", null).constructor;
 H.prototype.$$typeof = F, H.prototype.preactCompatUpgraded = !1, H.prototype.preactCompatNormalized = !1, 
 Object.defineProperty(H.prototype, "type", {
 get: function() {
@@ -3541,19 +3547,19 @@ this.attributes = e;
 },
 configurable: !0
 });
-var Y = U.b.event;
-U.b.event = function(e) {
+var Y = V.b.event;
+V.b.event = function(e) {
 return Y && (e = Y(e)), e.persist = Object, e.nativeEvent = e, e;
 };
-var Q = U.b.vnode;
-U.b.vnode = function(e) {
+var Q = V.b.vnode;
+V.b.vnode = function(e) {
 if (!e.preactCompatUpgraded) {
 e.preactCompatUpgraded = !0;
 var t = e.nodeName, a = e.attributes = b({}, e.attributes);
-"function" == typeof t ? (t[q] === !0 || t.prototype && "isReactComponent" in t.prototype) && (e.children && "" === String(e.children) && (e.children = void 0), 
-e.children && (a.children = e.children), e.preactCompatNormalized || m(e), o(e)) : (e.children && "" === String(e.children) && (e.children = void 0), 
+"function" == typeof t ? (t[J] === !0 || t.prototype && "isReactComponent" in t.prototype) && (e.children && "" === String(e.children) && (e.children = void 0), 
+e.children && (a.children = e.children), e.preactCompatNormalized || m(e), i(e)) : (e.children && "" === String(e.children) && (e.children = void 0), 
 e.children && (a.children = e.children), a.defaultValue && (a.value || 0 === a.value || (a.value = a.defaultValue), 
-delete a.defaultValue), i(e, a));
+delete a.defaultValue), o(e, a));
 }
 Q && Q(e);
 };
@@ -3563,7 +3569,7 @@ return this.props.context;
 }, X.prototype.render = function(e) {
 return e.children[0];
 };
-for (var Z, K = [], et = {
+for (var K, Z = [], et = {
 map: function(e, t, a) {
 return null == e ? null : (e = et.toArray(e), a && a !== e && (t = t.bind(a)), e.map(t));
 },
@@ -3578,7 +3584,7 @@ if (e = et.toArray(e), 1 !== e.length) throw new Error("Children.only() expects 
 return e[0];
 },
 toArray: function(e) {
-return null == e ? [] : K.concat(e);
+return null == e ? [] : Z.concat(e);
 }
 }, tt = {}, at = M.length; at--; ) tt[M[at]] = c(M[at]);
 var nt = {
@@ -3590,7 +3596,7 @@ set: function(e) {
 this.class = e;
 }
 };
-b(B.prototype = new U.e(), {
+b(B.prototype = new V.e(), {
 constructor: B,
 isReactComponent: {},
 replaceState: function(e, t) {
@@ -3604,14 +3610,14 @@ return this.base;
 isMounted: function() {
 return !!this.base;
 }
-}), P.prototype = B.prototype, L.prototype = new P(), L.prototype.isPureReactComponent = !0, 
-L.prototype.shouldComponentUpdate = function(e, t) {
+}), k.prototype = B.prototype, R.prototype = new k(), R.prototype.isPureReactComponent = !0, 
+R.prototype.shouldComponentUpdate = function(e, t) {
 return x(this.props, e) || x(this.state, t);
 };
-var ot = {
-version: V,
+var it = {
+version: D,
 DOM: tt,
-PropTypes: D.a,
+PropTypes: U.a,
 Children: et,
 render: r,
 createClass: S,
@@ -3619,14 +3625,14 @@ createFactory: c,
 createElement: f,
 cloneElement: h,
 isValidElement: g,
-findDOMNode: k,
+findDOMNode: P,
 unmountComponentAtNode: l,
 Component: B,
-PureComponent: L,
+PureComponent: R,
 unstable_renderSubtreeIntoContainer: s,
 __spread: b
 };
-t["default"] = ot;
+t["default"] = it;
 }.call(t, a(5));
 }, function() {}, function(e, t) {
 "use strict";
@@ -3640,12 +3646,12 @@ function n(e) {
 for (var t = {}, a = 0, n = e.length; n > a; a++) t[e[a].name] = e[a].value;
 return t;
 }
-function o(e) {
-for (var t = {}, a = e.attributes, n = e.dataset, o = 0, i = a.length; i > o; o++) "class" !== a[o].name && (t[a[o].name] = a[o].value);
-for (var o in n) t[o] = n[o];
+function i(e) {
+for (var t = {}, a = e.attributes, n = e.dataset, i = 0, o = a.length; o > i; i++) "class" !== a[i].name && (t[a[i].name] = a[i].value);
+for (var i in n) t[i] = n[i];
 return t;
 }
-function i(e) {
+function o(e) {
 e = e.toLowerCase();
 var t = /\b(\w)|\s(\w)/g;
 return e.replace(t, function(e) {
@@ -3661,8 +3667,8 @@ value: !0
 }), t.default = {
 map: a,
 attr: n,
-buildAttrs: o,
-firstUpper: i,
+buildAttrs: i,
+firstUpper: o,
 formatTime: r
 };
 }, function(e) {
@@ -3688,9 +3694,9 @@ return t.join("");
 };
 e.exports = t;
 }, function(e, t) {
-var a, n, o;
-!function(i, r) {
-n = [ t, e ], a = r, o = "function" == typeof a ? a.apply(t, n) : a, !(void 0 !== o && (e.exports = o));
+var a, n, i;
+!function(o, r) {
+n = [ t, e ], a = r, i = "function" == typeof a ? a.apply(t, n) : a, !(void 0 !== i && (e.exports = i));
 }(this, function(e, t) {
 "use strict";
 function a() {
@@ -3703,12 +3709,12 @@ delete window[e];
 window[e] = void 0;
 }
 }
-function o(e) {
+function i(e) {
 var t = document.getElementById(e);
 t && document.getElementsByTagName("head")[0].removeChild(t);
 }
-function i(e) {
-var t = arguments.length <= 1 || void 0 === arguments[1] ? {} : arguments[1], i = e, s = t.timeout || r.timeout, l = t.jsonpCallback || r.jsonpCallback, c = void 0;
+function o(e) {
+var t = arguments.length <= 1 || void 0 === arguments[1] ? {} : arguments[1], o = e, s = t.timeout || r.timeout, l = t.jsonpCallback || r.jsonpCallback, c = void 0;
 return new Promise(function(r, d) {
 var u = t.jsonpCallbackFunction || a(), _ = l + "_" + u;
 window[u] = function(e) {
@@ -3717,16 +3723,16 @@ ok: !0,
 json: function() {
 return Promise.resolve(e);
 }
-}), c && clearTimeout(c), o(_), n(u);
-}, i += -1 === i.indexOf("?") ? "?" : "&";
+}), c && clearTimeout(c), i(_), n(u);
+}, o += -1 === o.indexOf("?") ? "?" : "&";
 var p = document.createElement("script");
-p.setAttribute("src", "" + i + l + "=" + u), t.charset && p.setAttribute("charset", t.charset), 
+p.setAttribute("src", "" + o + l + "=" + u), t.charset && p.setAttribute("charset", t.charset), 
 p.id = _, document.getElementsByTagName("head")[0].appendChild(p), c = setTimeout(function() {
-d(new Error("JSONP request to " + e + " timed out")), n(u), o(_), window[u] = function() {
+d(new Error("JSONP request to " + e + " timed out")), n(u), i(_), window[u] = function() {
 n(u);
 };
 }, s), p.onerror = function() {
-d(new Error("JSONP request to " + e + " failed")), n(u), o(_), c && clearTimeout(c);
+d(new Error("JSONP request to " + e + " failed")), n(u), i(_), c && clearTimeout(c);
 };
 });
 }
@@ -3735,7 +3741,7 @@ timeout: 5e3,
 jsonpCallback: "callback",
 jsonpCallbackFunction: null
 };
-t.exports = i;
+t.exports = o;
 });
 }, function(e) {
 function t() {
@@ -3757,7 +3763,7 @@ return c.call(this, e, 0);
 }
 }
 }
-function o(e) {
+function i(e) {
 if (d === clearTimeout) return clearTimeout(e);
 if ((d === a || !d) && clearTimeout) return d = clearTimeout, clearTimeout(e);
 try {
@@ -3770,18 +3776,18 @@ return d.call(this, e);
 }
 }
 }
-function i() {
+function o() {
 f && _ && (f = !1, _.length ? p = _.concat(p) : m = -1, p.length && r());
 }
 function r() {
 if (!f) {
-var e = n(i);
+var e = n(o);
 f = !0;
 for (var t = p.length; t; ) {
 for (_ = p, p = []; ++m < t; ) _ && _[m].run();
 m = -1, t = p.length;
 }
-_ = null, f = !1, o(e);
+_ = null, f = !1, i(e);
 }
 }
 function s(e, t) {
@@ -3829,17 +3835,17 @@ return e && e.__esModule ? e : {
 "default": e
 };
 }
-var o = a(15), i = n(o), r = a(22), s = n(r);
+var i = a(15), o = n(i), r = a(22), s = n(r);
 !function() {
 window.Promise || (window.Promise = s.default), pgcEvent.on("card-render", function() {
 var e = {};
-document.querySelector("body"), i.default.init({
+document.querySelector("body"), o.default.init({
 match: /^(tt-|pre)/i,
 text: /^{!--.*--}/,
 context: e
 }).render(this);
 });
-}(), window.ttCard = i.default || {};
+}(), window.ttCard = o.default || {};
 }, function(e, t, a) {
 "use strict";
 function n(e) {
@@ -3847,10 +3853,10 @@ return e && e.__esModule ? e : {
 "default": e
 };
 }
-function o(e, t) {
+function i(e, t) {
 if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
 }
-function i(e, t) {
+function o(e, t) {
 if (!e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
 return !t || "object" != typeof t && "function" != typeof t ? e : t;
 }
@@ -3881,8 +3887,8 @@ return a && e(t.prototype, a), n && e(t, n), t;
 };
 }(), l = a(0), c = n(l), d = function(e) {
 function t(e) {
-o(this, t);
-var a = i(this, (t.__proto__ || Object.getPrototypeOf(t)).call(this, e));
+i(this, t);
+var a = o(this, (t.__proto__ || Object.getPrototypeOf(t)).call(this, e));
 return a.state = {
 show: !0
 }, a.show = function() {
@@ -3929,10 +3935,10 @@ return e && e.__esModule ? e : {
 "default": e
 };
 }
-function o(e, t) {
+function i(e, t) {
 if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
 }
-function i(e, t) {
+function o(e, t) {
 if (!e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
 return !t || "object" != typeof t && "function" != typeof t ? e : t;
 }
@@ -3963,8 +3969,8 @@ return a && e(t.prototype, a), n && e(t, n), t;
 };
 }(), l = a(0), c = n(l), d = function(e) {
 function t(e) {
-o(this, t);
-var a = i(this, (t.__proto__ || Object.getPrototypeOf(t)).call(this, e));
+i(this, t);
+var a = o(this, (t.__proto__ || Object.getPrototypeOf(t)).call(this, e));
 return a.play.bind(a), a.pause.bind(a), a;
 }
 return r(t, e), s(t, [ {
@@ -4063,10 +4069,10 @@ return e && e.__esModule ? e : {
 "default": e
 };
 }
-function o(e, t) {
+function i(e, t) {
 if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
 }
-function i(e, t) {
+function o(e, t) {
 if (!e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
 return !t || "object" != typeof t && "function" != typeof t ? e : t;
 }
@@ -4099,8 +4105,8 @@ return a && e(t.prototype, a), n && e(t, n), t;
 a(1);
 var f = a(2), m = n(f), h = function(e) {
 function t(e) {
-o(this, t);
-var a = i(this, (t.__proto__ || Object.getPrototypeOf(t)).call(this, e));
+i(this, t);
+var a = o(this, (t.__proto__ || Object.getPrototypeOf(t)).call(this, e));
 return a.state = {
 playing: !1,
 progress: 0,
@@ -4159,8 +4165,8 @@ value: function() {}
 }, {
 key: "render",
 value: function() {
-var e = this, t = this.props, a = t.title, n = t.time, o = t.content, i = (t.id, 
-this.state), r = i.playing, s = i.progress, l = i.audioSrc;
+var e = this, t = this.props, a = t.title, n = t.time, i = t.content, o = (t.id, 
+this.state), r = o.playing, s = o.progress, l = o.audioSrc;
 return c.default.createElement("div", {
 className: r ? "musicplayer playing" : "musicplayer not-playing",
 onClick: function() {
@@ -4176,7 +4182,7 @@ className: "music-name"
 className: "music-time"
 }, m.default.formatTime(n))), c.default.createElement("div", {
 className: "music-musician"
-}, o)), c.default.createElement("div", {
+}, i)), c.default.createElement("div", {
 className: "progressbar",
 style: {
 width: s
@@ -4238,12 +4244,12 @@ return e && e.__esModule ? e : {
 "default": e
 };
 }
-function o(e, t) {
+function i(e, t) {
 var a = {};
 for (var n in e) t.indexOf(n) >= 0 || Object.prototype.hasOwnProperty.call(e, n) && (a[n] = e[n]);
 return a;
 }
-function i(e, t) {
+function o(e, t) {
 if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
 }
 function r(e, t) {
@@ -4279,7 +4285,7 @@ return a && e(t.prototype, a), n && e(t, n), t;
 a(1);
 var u = function(e) {
 function t(e) {
-i(this, t);
+o(this, t);
 var a = r(this, (t.__proto__ || Object.getPrototypeOf(t)).call(this, e));
 return a.state = {
 status: "idle",
@@ -4359,7 +4365,7 @@ return a.handleButton(e);
 }, {
 key: "render",
 value: function() {
-var e = this, t = this.props, a = t.logo, n = t.banner, o = t.name, i = t.game_type, r = t.size, s = t.desc, l = t.detail, c = t.download_url_for_ios, u = (t.pkg_name, 
+var e = this, t = this.props, a = t.logo, n = t.banner, i = t.name, o = t.game_type, r = t.size, s = t.desc, l = t.detail, c = t.download_url_for_ios, u = (t.pkg_name, 
 t.download_url_for_android), _ = this.state.status, p = void 0;
 if (a && (p = 1), n && (p = 2), client.isIOS && c) l = c, setTimeout(function() {
 return e.setInstalledState(0);
@@ -4380,9 +4386,9 @@ src: a
 className: "gd1-cont"
 }, d.default.createElement("div", {
 className: "gd1-cont-name"
-}, o), d.default.createElement("div", {
+}, i), d.default.createElement("div", {
 className: "gd1-cont-text"
-}, i, " ", i ? d.default.createElement("span", {
+}, o, " ", o ? d.default.createElement("span", {
 className: "gd1-cont-split"
 }) : "", r), d.default.createElement("div", {
 className: "gd1-cont-text"
@@ -4401,9 +4407,9 @@ className: "gd2-info"
 className: "gd2-cont"
 }, d.default.createElement("div", {
 className: "gd2-cont-name"
-}, o), d.default.createElement("div", {
+}, i), d.default.createElement("div", {
 className: "gd2-cont-text"
-}, i, " ", i ? d.default.createElement("span", {
+}, o, " ", o ? d.default.createElement("span", {
 className: "gd2-cont-split"
 }) : "", r)))) : null;
 }
@@ -4457,7 +4463,7 @@ this.log("click_download"));
 }, {
 key: "componentDidMount",
 value: function() {
-var e = o(this.props, []);
+var e = i(this.props, []);
 e.type = "app", e.source = "pgc", e.tag = "article_card_app_ad", e.item_id = Page.statistics.item_id, 
 e.media_id = Page.author.mediaId, e.log_extra = '{"rit":3,"item_id":0,"convert_id":0}', 
 client.isIOS && e.download_url_for_ios ? e.detail = e.download_url_for_ios : client.isAndroid && e.download_url_for_android && (e.detail = e.detail ? "sslocal://webview?url=" + encodeURIComponent(e.detail) : e.download_url_for_android, 
@@ -4515,9 +4521,9 @@ return e && e.__esModule ? e : {
 Object.defineProperty(t, "__esModule", {
 value: !0
 });
-var o = a(9), i = n(o), r = a(10), s = n(r), l = a(12), c = n(l), d = a(14), u = n(d), _ = a(13), p = n(_);
+var i = a(9), o = n(i), r = a(10), s = n(r), l = a(12), c = n(l), d = a(14), u = n(d), _ = a(13), p = n(_);
 t.default = {
-Audio: i.default,
+Audio: o.default,
 Game: s.default,
 Novel: c.default,
 Temai: u.default,
@@ -4530,10 +4536,10 @@ return e && e.__esModule ? e : {
 "default": e
 };
 }
-function o(e, t) {
+function i(e, t) {
 if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
 }
-function i(e, t) {
+function o(e, t) {
 if (!e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
 return !t || "object" != typeof t && "function" != typeof t ? e : t;
 }
@@ -4566,12 +4572,12 @@ return a && e(t.prototype, a), n && e(t, n), t;
 a(1);
 var d = function(e) {
 function t() {
-return o(this, t), i(this, (t.__proto__ || Object.getPrototypeOf(t)).apply(this, arguments));
+return i(this, t), o(this, (t.__proto__ || Object.getPrototypeOf(t)).apply(this, arguments));
 }
 return r(t, e), s(t, [ {
 key: "render",
 value: function() {
-var e = this.props, t = e.thumb_url, a = e.book_name, n = e.schema_url, o = e.abstract, i = e.author, r = e.category;
+var e = this.props, t = e.thumb_url, a = e.book_name, n = e.schema_url, i = e.abstract, o = e.author, r = e.category;
 return c.default.createElement("div", {
 className: "novel-card"
 }, c.default.createElement("a", {
@@ -4590,11 +4596,11 @@ className: "novel-card-content"
 className: "novel-card-title"
 }, a), c.default.createElement("p", {
 className: "novel-card-abstract"
-}, o), c.default.createElement("div", {
+}, i), c.default.createElement("div", {
 className: "novel-card-detail"
 }, c.default.createElement("span", {
 className: "novel-card-detail-item novel-card-author"
-}, i), c.default.createElement("span", {
+}, o), c.default.createElement("span", {
 className: "novel-card-detail-item novel-card-category"
 }, r), c.default.createElement("i", {
 className: "novel-card-icon"
@@ -4612,10 +4618,10 @@ return e && e.__esModule ? e : {
 "default": e
 };
 }
-function o(e, t) {
+function i(e, t) {
 if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
 }
-function i(e, t) {
+function o(e, t) {
 if (!e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
 return !t || "object" != typeof t && "function" != typeof t ? e : t;
 }
@@ -4651,45 +4657,45 @@ return a && e(t.prototype, a), n && e(t, n), t;
 a(1);
 var u = a(7), _ = n(u), p = a(4), f = n(p), m = a(20), h = n(m), g = function(e) {
 function t(e) {
-o(this, t);
-var a = i(this, (t.__proto__ || Object.getPrototypeOf(t)).call(this, e));
+i(this, t);
+var a = o(this, (t.__proto__ || Object.getPrototypeOf(t)).call(this, e));
 return a.state = {
 phone: null
 }, a.setConfirm = function(e) {
 a.confirm = e;
 }, a.contactDial = function() {
-var e = a.props["contact-phone"], t = a.props.ai_type, n = a.props.is_smart, o = a.props.custom_data;
+var e = a.props["contact-phone"], t = a.props.ai_type, n = a.props.is_smart, i = a.props.custom_data;
 a.log("call", "click", e, {
 actualPhone: e,
 ai_type: t,
 is_smart: n,
-custom_data: o
+custom_data: i
 });
 }, a.dial = function(e) {
 e.preventDefault();
-var t = a.props["contact-phone"], n = a.props.ai_type, o = a.props.is_smart, i = a.props.custom_data;
+var t = a.props["contact-phone"], n = a.props.ai_type, i = a.props.is_smart, o = a.props.custom_data;
 a.getPhone(function(e, r) {
 a.log("call", "click", t, {
 actualPhone: r,
 ai_type: n,
-is_smart: o,
-custom_data: i
+is_smart: i,
+custom_data: o
 });
 }), a.confirm && a.confirm.show();
 }, a.smartDial = function(e) {
 e.preventDefault();
-var t = a.props["contact-phone"], n = a.props.ai_type, o = a.props.is_smart, i = a.props.custom_data;
+var t = a.props["contact-phone"], n = a.props.ai_type, i = a.props.is_smart, o = a.props.custom_data;
 a.getVirtualPhone(function(e, r) {
 a.log("call", "click", t, {
 actualPhone: r,
 ai_type: n,
-is_smart: o,
-custom_data: i
+is_smart: i,
+custom_data: o
 }), location.href = "tel:" + r;
 });
 }, a.log = function(e, t, a, n) {
 t = t || "click";
-var o = {
+var i = {
 value: Page.statistics.item_id,
 extra: {
 action_type: e,
@@ -4697,23 +4703,23 @@ button_value: a,
 action_time: new Date().getTime()
 }
 };
-"call" === e && (o.extra.button_value_show = n.actualPhone, o.extra.ai_type = n.ai_type, 
-o.extra.is_smart = n.is_smart, o.extra.custom_data = n.custom_data), send_umeng_event("embeded_button_ad", t, o);
+"call" === e && (i.extra.button_value_show = n.actualPhone, i.extra.ai_type = n.ai_type, 
+i.extra.is_smart = n.is_smart, i.extra.custom_data = n.custom_data), send_umeng_event("embeded_button_ad", t, i);
 }, a.logWhenShow = function(e, t) {
-var n = a.props.ai_type, o = a.props.is_smart, i = a.props.custom_data;
+var n = a.props.ai_type, i = a.props.is_smart, o = a.props.custom_data;
 sendUmengWhenTargetShown(e, "embeded_button_ad", "show", $.extend({}, {
 value: Page.statistics.item_id,
 extra: {
 action_type: "show",
 button_value: t,
 ai_type: n,
-is_smart: o,
-custom_data: i,
+is_smart: i,
+custom_data: o,
 action_time: new Date().getTime()
 }
 }, !0));
 }, a.getVirtualPhone = function(e) {
-var t = a.props["contact-phone"], n = a.props.custom_data, o = a.props.call_back_url, i = a.props.ai_type;
+var t = a.props["contact-phone"], n = a.props.custom_data, i = a.props.call_back_url, o = a.props.ai_type;
 ToutiaoJSBridge && ToutiaoJSBridge.call("TTNetwork.commonParams", {}, function(a) {
 var r = a.data || a;
 r && r.device_id && $.ajax({
@@ -4722,9 +4728,9 @@ data: {
 item_id: Page.statistics.item_id,
 device_id: r.device_id,
 user_uid: Page.author.userId,
-ai_type: i,
+ai_type: o,
 custom_data: n,
-callback_url: o,
+callback_url: i,
 phone_number: t
 },
 success: function(a) {
@@ -4736,18 +4742,18 @@ e(0, t);
 });
 });
 }, a.getPhone = function(e) {
-var t = a, n = a.props, o = n.hid, i = n.city, r = a.props["contact-phone"];
+var t = a, n = a.props, i = n.hid, o = n.city, r = a.props["contact-phone"];
 if (r) {
 var s = r.split(",");
 if (s.length <= 1) return void a.setState({
 phone: r
 });
 var l = s[0], c = s[1], d = {
-hid: o,
+hid: i,
 fzz: l,
 ext: c,
-city: i,
-cstr: h.default("" + i + o + "callcenter")
+city: o,
+cstr: h.default("" + o + i + "callcenter")
 }, u = [];
 for (var _ in d) u.push(_ + "=" + d[_]);
 var p = u.join("&");
@@ -4771,9 +4777,9 @@ var e = a.state.phone, t = {
 fzz: e,
 cstr: h.default(e + "callcenter")
 }, n = [];
-for (var o in t) n.push(o + "=" + t[o]);
-var i = n.join("&");
-f.default("http://m.leju.com/?site=api&ctl=callcenter&act=cancel&" + i).then(function(e) {
+for (var i in t) n.push(i + "=" + t[i]);
+var o = n.join("&");
+f.default("http://m.leju.com/?site=api&ctl=callcenter&act=cancel&" + o).then(function(e) {
 return e.json();
 }).then(function(e) {
 return 1 == e.status && this.setState({
@@ -4785,9 +4791,9 @@ phone: null
 return r(t, e), l(t, [ {
 key: "render",
 value: function() {
-var e = this, t = this.props["contact-phone"], a = this.props["contact-name"], n = this.props["book-url"], o = this.props["book-name"], i = this.props.city, r = this.props.hid, l = (this.props.house_type, 
+var e = this, t = this.props["contact-phone"], a = this.props["contact-name"], n = this.props["book-url"], i = this.props["book-name"], o = this.props.city, r = this.props.hid, l = (this.props.house_type, 
 this.props.agent_phone, this.props.is_smart), c = (this.props.ai_type, this.props.context), u = this.state.phone, p = 0, f = 0, m = 0;
-return a && t && (p++, f = 1), n && o && (p++, m = 1), "pc" == c.platform ? null : 2 == l || i && r ? /iPhone|XiaoMi/.test(window.navigator.userAgent) || /MI/.test(window.navigator.userAgent.split("/")[1]) ? d.default.createElement("div", {
+return a && t && (p++, f = 1), n && i && (p++, m = 1), "pc" == c.platform ? null : 2 == l || o && r ? /iPhone|XiaoMi/.test(window.navigator.userAgent) || /MI/.test(window.navigator.userAgent.split("/")[1]) ? d.default.createElement("div", {
 className: "cpg-container",
 "button-count": p
 }, f ? d.default.createElement("a", {
@@ -4803,7 +4809,7 @@ onClick: function() {
 return e.log("url", "click", n);
 },
 href: "sslocal://webview?url=" + encodeURIComponent(s(n))
-}, o) : null) : d.default.createElement("div", {
+}, i) : null) : d.default.createElement("div", {
 className: "cpg-container",
 "button-count": p
 }, f ? d.default.createElement("a", {
@@ -4819,10 +4825,10 @@ onClick: function() {
 return e.log("url", "click", n);
 },
 href: "sslocal://webview?url=" + encodeURIComponent(s(n))
-}, o) : null, u ? d.default.createElement(_.default, {
+}, i) : null, u ? d.default.createElement(_.default, {
 phone: u,
 onCancel: this.cancelPhone,
-city: i,
+city: o,
 hid: r,
 ref: this.setConfirm
 }) : null) : 1 == l ? d.default.createElement("div", {
@@ -4844,7 +4850,7 @@ onClick: function() {
 return e.log("url", "click", n);
 },
 href: "sslocal://webview?url=" + encodeURIComponent(s(n))
-}, o) : null) : d.default.createElement("div", {
+}, i) : null) : d.default.createElement("div", {
 className: "cpg-container",
 "button-count": p
 }, f ? d.default.createElement("a", {
@@ -4863,7 +4869,7 @@ onClick: function() {
 return e.log("url", "click", n);
 },
 href: "sslocal://webview?url=" + encodeURIComponent(s(n))
-}, o) : null);
+}, i) : null);
 }
 }, {
 key: "componentDidMount",
@@ -4886,10 +4892,10 @@ return e && e.__esModule ? e : {
 "default": e
 };
 }
-function o(e, t) {
+function i(e, t) {
 if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
 }
-function i(e, t) {
+function o(e, t) {
 if (!e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
 return !t || "object" != typeof t && "function" != typeof t ? e : t;
 }
@@ -4922,13 +4928,13 @@ return a && e(t.prototype, a), n && e(t, n), t;
 a(1);
 var d = function(e) {
 function t() {
-return o(this, t), i(this, (t.__proto__ || Object.getPrototypeOf(t)).apply(this, arguments));
+return i(this, t), o(this, (t.__proto__ || Object.getPrototypeOf(t)).apply(this, arguments));
 }
 return r(t, e), s(t, [ {
 key: "render",
 value: function() {
-var e = this.props, t = e.charge_url, a = (e.commodity_id, e.img_url), n = e.price, o = (e.slave_commodity_id, 
-e.source), i = e.title;
+var e = this.props, t = e.charge_url, a = (e.commodity_id, e.img_url), n = e.price, i = (e.slave_commodity_id, 
+e.source), o = e.title;
 return c.default.createElement("div", {
 className: "pgc-commodity"
 }, c.default.createElement("a", {
@@ -4947,13 +4953,13 @@ alt: "特卖"
 className: "pgc-commodity-info"
 }, c.default.createElement("h3", {
 className: "pgc-commodity-title"
-}, i), c.default.createElement("div", {
+}, o), c.default.createElement("div", {
 className: "pgc-commodity-bar"
 }, c.default.createElement("span", {
 className: "pgc-commodity-price"
 }, "￥", n), c.default.createElement("span", {
 className: "pgc-commodity-from"
-}, o), c.default.createElement("span", {
+}, i), c.default.createElement("span", {
 className: "pgc-commodity-buy"
 }, "购买"))))));
 }
@@ -4967,13 +4973,13 @@ return e && e.__esModule ? e : {
 "default": e
 };
 }
-function o(e, t) {
+function i(e, t) {
 if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
 }
 Object.defineProperty(t, "__esModule", {
 value: !0
 });
-var i = Object.assign || function(e) {
+var o = Object.assign || function(e) {
 for (var t = 1; t < arguments.length; t++) {
 var a = arguments[t];
 for (var n in a) Object.prototype.hasOwnProperty.call(a, n) && (e[n] = a[n]);
@@ -4992,7 +4998,7 @@ return a && e(t.prototype, a), n && e(t, n), t;
 };
 }(), s = a(0), l = n(s), c = a(0), d = n(c), u = a(2), _ = n(u), p = a(11), f = n(p), m = {}, h = function() {
 function e() {
-o(this, e), this.init({
+i(this, e), this.init({
 match: /^(tt-|pre)/i,
 selector: ".novel-card, .pgc-commodit, pre[lang]",
 context: {
@@ -5008,7 +5014,7 @@ return e.instance || (e.instance = new e()), e.instance;
 } ]), r(e, [ {
 key: "init",
 value: function(e) {
-return this.config = i({}, this.config, e), this;
+return this.config = o({}, this.config, e), this;
 }
 }, {
 key: "registerCard",
@@ -5040,7 +5046,7 @@ value: function(e) {
 if (e) {
 var t = e.toLowerCase().split("-");
 t.length > 1 && t.shift();
-for (var a = "", n = 0, o = t.length; o > n; n++) a += _.default.firstUpper(t[n]);
+for (var a = "", n = 0, i = t.length; i > n; n++) a += _.default.firstUpper(t[n]);
 return a;
 }
 }
@@ -5050,7 +5056,7 @@ value: function(e) {
 var t = this, n = void 0;
 _.default.map(e, function(e) {
 if (t.checkCardTag(e)) {
-var o = _.default.buildAttrs(e), r = i({}, t.config, o);
+var i = _.default.buildAttrs(e), r = o({}, t.config, i);
 if (t.getComponentByTag(e.nodeName)) n = d.default.createElement(t.getComponentByTag(e.nodeName), r), 
 l.default.render(n, e); else {
 var s = t.resolveTagToComponent(e.nodeName);
@@ -5121,12 +5127,12 @@ for (var t = [], a = 0; a < e.length; a += 2) t.push(parseInt(e.substr(a, 2), 16
 return t;
 },
 bytesToBase64: function(e) {
-for (var a = [], n = 0; n < e.length; n += 3) for (var o = e[n] << 16 | e[n + 1] << 8 | e[n + 2], i = 0; 4 > i; i++) a.push(8 * n + 6 * i <= 8 * e.length ? t.charAt(o >>> 6 * (3 - i) & 63) : "=");
+for (var a = [], n = 0; n < e.length; n += 3) for (var i = e[n] << 16 | e[n + 1] << 8 | e[n + 2], o = 0; 4 > o; o++) a.push(8 * n + 6 * o <= 8 * e.length ? t.charAt(i >>> 6 * (3 - o) & 63) : "=");
 return a.join("");
 },
 base64ToBytes: function(e) {
 e = e.replace(/[^A-Z0-9+\/]/gi, "");
-for (var a = [], n = 0, o = 0; n < e.length; o = ++n % 4) 0 != o && a.push((t.indexOf(e.charAt(n - 1)) & Math.pow(2, -2 * o + 8) - 1) << 2 * o | t.indexOf(e.charAt(n)) >>> 6 - 2 * o);
+for (var a = [], n = 0, i = 0; n < e.length; i = ++n % 4) 0 != i && a.push((t.indexOf(e.charAt(n - 1)) & Math.pow(2, -2 * i + 8) - 1) << 2 * i | t.indexOf(e.charAt(n)) >>> 6 - 2 * i);
 return a;
 }
 };
@@ -5148,11 +5154,11 @@ return e;
 }, e.exports = a;
 }, function(e) {
 "use strict";
-function t(e, t, n, o, i, r, s, l) {
+function t(e, t, n, i, o, r, s, l) {
 if (a(t), !e) {
 var c;
 if (void 0 === t) c = new Error("Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings."); else {
-var d = [ n, o, i, r, s, l ], u = 0;
+var d = [ n, i, o, r, s, l ], u = 0;
 c = new Error(t.replace(/%s/g, function() {
 return d[u++];
 })), c.name = "Invariant Violation";
@@ -5174,8 +5180,8 @@ return null != e && (t(e) || a(e) || !!e._isBuffer);
 };
 }, function(e, t, a) {
 !function() {
-var t = a(16), n = a(3).utf8, o = a(19), i = a(3).bin, r = function(e, a) {
-e.constructor == String ? e = a && "binary" === a.encoding ? i.stringToBytes(e) : n.stringToBytes(e) : o(e) ? e = Array.prototype.slice.call(e, 0) : Array.isArray(e) || (e = e.toString());
+var t = a(16), n = a(3).utf8, i = a(19), o = a(3).bin, r = function(e, a) {
+e.constructor == String ? e = a && "binary" === a.encoding ? o.stringToBytes(e) : n.stringToBytes(e) : i(e) ? e = Array.prototype.slice.call(e, 0) : Array.isArray(e) || (e = e.toString());
 for (var s = t.bytesToWords(e), l = 8 * e.length, c = 1732584193, d = -271733879, u = -1732584194, _ = 271733878, p = 0; p < s.length; p++) s[p] = 16711935 & (s[p] << 8 | s[p] >>> 24) | 4278255360 & (s[p] << 24 | s[p] >>> 8);
 s[l >>> 5] |= 128 << l % 32, s[(l + 64 >>> 9 << 4) + 14] = l;
 for (var f = r._ff, m = r._gg, h = r._hh, g = r._ii, p = 0; p < s.length; p += 16) {
@@ -5216,50 +5222,50 @@ c = c + v >>> 0, d = d + w >>> 0, u = u + y >>> 0, _ = _ + b >>> 0;
 }
 return t.endian([ c, d, u, _ ]);
 };
-r._ff = function(e, t, a, n, o, i, r) {
-var s = e + (t & a | ~t & n) + (o >>> 0) + r;
-return (s << i | s >>> 32 - i) + t;
-}, r._gg = function(e, t, a, n, o, i, r) {
-var s = e + (t & n | a & ~n) + (o >>> 0) + r;
-return (s << i | s >>> 32 - i) + t;
-}, r._hh = function(e, t, a, n, o, i, r) {
-var s = e + (t ^ a ^ n) + (o >>> 0) + r;
-return (s << i | s >>> 32 - i) + t;
-}, r._ii = function(e, t, a, n, o, i, r) {
-var s = e + (a ^ (t | ~n)) + (o >>> 0) + r;
-return (s << i | s >>> 32 - i) + t;
+r._ff = function(e, t, a, n, i, o, r) {
+var s = e + (t & a | ~t & n) + (i >>> 0) + r;
+return (s << o | s >>> 32 - o) + t;
+}, r._gg = function(e, t, a, n, i, o, r) {
+var s = e + (t & n | a & ~n) + (i >>> 0) + r;
+return (s << o | s >>> 32 - o) + t;
+}, r._hh = function(e, t, a, n, i, o, r) {
+var s = e + (t ^ a ^ n) + (i >>> 0) + r;
+return (s << o | s >>> 32 - o) + t;
+}, r._ii = function(e, t, a, n, i, o, r) {
+var s = e + (a ^ (t | ~n)) + (i >>> 0) + r;
+return (s << o | s >>> 32 - o) + t;
 }, r._blocksize = 16, r._digestsize = 16, e.exports = function(e, a) {
 if (void 0 === e || null === e) throw new Error("Illegal argument " + e);
 var n = t.wordsToBytes(r(e, a));
-return a && a.asBytes ? n : a && a.asString ? i.bytesToString(n) : t.bytesToHex(n);
+return a && a.asBytes ? n : a && a.asString ? o.bytesToString(n) : t.bytesToHex(n);
 };
 }();
 }, function(e, t, a) {
 "use strict";
 function n() {}
-function o(e, t) {
-var a, o, i, r, s = B;
-for (r = arguments.length; r-- > 2; ) O.push(arguments[r]);
-for (t && null != t.children && (O.length || O.push(t.children), delete t.children); O.length; ) if ((o = O.pop()) && void 0 !== o.pop) for (r = o.length; r--; ) O.push(o[r]); else "boolean" == typeof o && (o = null), 
-(i = "function" != typeof e) && (null == o ? o = "" : "number" == typeof o ? o = String(o) : "string" != typeof o && (i = !1)), 
-i && a ? s[s.length - 1] += o : s === B ? s = [ o ] : s.push(o), a = i;
+function i(e, t) {
+var a, i, o, r, s = B;
+for (r = arguments.length; r-- > 2; ) A.push(arguments[r]);
+for (t && null != t.children && (A.length || A.push(t.children), delete t.children); A.length; ) if ((i = A.pop()) && void 0 !== i.pop) for (r = i.length; r--; ) A.push(i[r]); else "boolean" == typeof i && (i = null), 
+(o = "function" != typeof e) && (null == i ? i = "" : "number" == typeof i ? i = String(i) : "string" != typeof i && (o = !1)), 
+o && a ? s[s.length - 1] += i : s === B ? s = [ i ] : s.push(i), a = o;
 var l = new n();
 return l.nodeName = e, l.children = s, l.attributes = null == t ? void 0 : t, l.key = null == t ? void 0 : t.key, 
-void 0 !== $.vnode && $.vnode(l), l;
+void 0 !== O.vnode && O.vnode(l), l;
 }
-function i(e, t) {
+function o(e, t) {
 for (var a in t) e[a] = t[a];
 return e;
 }
 function r(e, t) {
-return o(e.nodeName, i(i({}, e.attributes), t), arguments.length > 2 ? [].slice.call(arguments, 2) : e.children);
+return i(e.nodeName, o(o({}, e.attributes), t), arguments.length > 2 ? [].slice.call(arguments, 2) : e.children);
 }
 function s(e) {
-!e._dirty && (e._dirty = !0) && 1 == D.push(e) && ($.debounceRendering || L)(l);
+!e._dirty && (e._dirty = !0) && 1 == U.push(e) && (O.debounceRendering || R)(l);
 }
 function l() {
-var e, t = D;
-for (D = []; e = t.pop(); ) e._dirty && I(e);
+var e, t = U;
+for (U = []; e = t.pop(); ) e._dirty && I(e);
 }
 function c(e, t, a) {
 return "string" == typeof t || "number" == typeof t ? void 0 !== e.splitText : "string" == typeof t.nodeName ? !e._componentConstructor && d(e, t.nodeName) : a || e._componentConstructor === t.nodeName;
@@ -5268,7 +5274,7 @@ function d(e, t) {
 return e.normalizedNodeName === t || e.nodeName.toLowerCase() === t.toLowerCase();
 }
 function u(e) {
-var t = i({}, e.attributes);
+var t = o({}, e.attributes);
 t.children = e.children;
 var a = e.nodeName.defaultProps;
 if (void 0 !== a) for (var n in a) void 0 === t[n] && (t[n] = a[n]);
@@ -5282,21 +5288,21 @@ function p(e) {
 var t = e.parentNode;
 t && t.removeChild(e);
 }
-function f(e, t, a, n, o) {
+function f(e, t, a, n, i) {
 if ("className" === t && (t = "class"), "key" === t) ; else if ("ref" === t) a && a(null), 
-n && n(e); else if ("class" !== t || o) if ("style" === t) {
+n && n(e); else if ("class" !== t || i) if ("style" === t) {
 if (n && "string" != typeof n && "string" != typeof a || (e.style.cssText = n || ""), 
 n && "object" == typeof n) {
-if ("string" != typeof a) for (var i in a) i in n || (e.style[i] = "");
-for (var i in n) e.style[i] = "number" == typeof n[i] && R.test(i) === !1 ? n[i] + "px" : n[i];
+if ("string" != typeof a) for (var o in a) o in n || (e.style[o] = "");
+for (var o in n) e.style[o] = "number" == typeof n[o] && L.test(o) === !1 ? n[o] + "px" : n[o];
 }
 } else if ("dangerouslySetInnerHTML" === t) n && (e.innerHTML = n.__html || ""); else if ("o" == t[0] && "n" == t[1]) {
 var r = t !== (t = t.replace(/Capture$/, ""));
 t = t.toLowerCase().substring(2), n ? a || e.addEventListener(t, h, r) : e.removeEventListener(t, h, r), 
 (e._listeners || (e._listeners = {}))[t] = n;
-} else if ("list" !== t && "type" !== t && !o && t in e) m(e, t, null == n ? "" : n), 
+} else if ("list" !== t && "type" !== t && !i && t in e) m(e, t, null == n ? "" : n), 
 (null == n || n === !1) && e.removeAttribute(t); else {
-var s = o && t !== (t = t.replace(/^xlink\:?/, ""));
+var s = i && t !== (t = t.replace(/^xlink\:?/, ""));
 null == n || n === !1 ? s ? e.removeAttributeNS("http://www.w3.org/1999/xlink", t.toLowerCase()) : e.removeAttribute(t) : "function" != typeof n && (s ? e.setAttributeNS("http://www.w3.org/1999/xlink", t.toLowerCase(), n) : e.setAttribute(t, n));
 } else e.className = n || "";
 }
@@ -5306,47 +5312,47 @@ e[t] = a;
 } catch (n) {}
 }
 function h(e) {
-return this._listeners[e.type]($.event && $.event(e) || e);
+return this._listeners[e.type](O.event && O.event(e) || e);
 }
 function g() {
-for (var e; e = U.pop(); ) $.afterMount && $.afterMount(e), e.componentDidMount && e.componentDidMount();
+for (var e; e = V.pop(); ) O.afterMount && O.afterMount(e), e.componentDidMount && e.componentDidMount();
 }
-function v(e, t, a, n, o, i) {
-V++ || (M = null != o && void 0 !== o.ownerSVGElement, F = null != e && !("__preactattr_" in e));
-var r = w(e, t, a, n, i);
-return o && r.parentNode !== o && o.appendChild(r), --V || (F = !1, i || g()), r;
+function v(e, t, a, n, i, o) {
+D++ || (M = null != i && void 0 !== i.ownerSVGElement, F = null != e && !("__preactattr_" in e));
+var r = w(e, t, a, n, o);
+return i && r.parentNode !== i && i.appendChild(r), --D || (F = !1, o || g()), r;
 }
-function w(e, t, a, n, o) {
-var i = e, r = M;
-if ((null == t || "boolean" == typeof t) && (t = ""), "string" == typeof t || "number" == typeof t) return e && void 0 !== e.splitText && e.parentNode && (!e._component || o) ? e.nodeValue != t && (e.nodeValue = t) : (i = document.createTextNode(t), 
-e && (e.parentNode && e.parentNode.replaceChild(i, e), b(e, !0))), i.__preactattr_ = !0, 
-i;
+function w(e, t, a, n, i) {
+var o = e, r = M;
+if ((null == t || "boolean" == typeof t) && (t = ""), "string" == typeof t || "number" == typeof t) return e && void 0 !== e.splitText && e.parentNode && (!e._component || i) ? e.nodeValue != t && (e.nodeValue = t) : (o = document.createTextNode(t), 
+e && (e.parentNode && e.parentNode.replaceChild(o, e), b(e, !0))), o.__preactattr_ = !0, 
+o;
 var s = t.nodeName;
 if ("function" == typeof s) return N(e, t, a, n);
-if (M = "svg" === s ? !0 : "foreignObject" === s ? !1 : M, s = String(s), (!e || !d(e, s)) && (i = _(s, M), 
+if (M = "svg" === s ? !0 : "foreignObject" === s ? !1 : M, s = String(s), (!e || !d(e, s)) && (o = _(s, M), 
 e)) {
-for (;e.firstChild; ) i.appendChild(e.firstChild);
-e.parentNode && e.parentNode.replaceChild(i, e), b(e, !0);
+for (;e.firstChild; ) o.appendChild(e.firstChild);
+e.parentNode && e.parentNode.replaceChild(o, e), b(e, !0);
 }
-var l = i.firstChild, c = i.__preactattr_, u = t.children;
+var l = o.firstChild, c = o.__preactattr_, u = t.children;
 if (null == c) {
-c = i.__preactattr_ = {};
-for (var p = i.attributes, f = p.length; f--; ) c[p[f].name] = p[f].value;
+c = o.__preactattr_ = {};
+for (var p = o.attributes, f = p.length; f--; ) c[p[f].name] = p[f].value;
 }
-return !F && u && 1 === u.length && "string" == typeof u[0] && null != l && void 0 !== l.splitText && null == l.nextSibling ? l.nodeValue != u[0] && (l.nodeValue = u[0]) : (u && u.length || null != l) && y(i, u, a, n, F || null != c.dangerouslySetInnerHTML), 
-k(i, t.attributes, c), M = r, i;
+return !F && u && 1 === u.length && "string" == typeof u[0] && null != l && void 0 !== l.splitText && null == l.nextSibling ? l.nodeValue != u[0] && (l.nodeValue = u[0]) : (u && u.length || null != l) && y(o, u, a, n, F || null != c.dangerouslySetInnerHTML), 
+P(o, t.attributes, c), M = r, o;
 }
-function y(e, t, a, n, o) {
-var i, r, s, l, d, u = e.childNodes, _ = [], f = {}, m = 0, h = 0, g = u.length, v = 0, y = t ? t.length : 0;
+function y(e, t, a, n, i) {
+var o, r, s, l, d, u = e.childNodes, _ = [], f = {}, m = 0, h = 0, g = u.length, v = 0, y = t ? t.length : 0;
 if (0 !== g) for (var x = 0; g > x; x++) {
-var k = u[x], P = k.__preactattr_, S = y && P ? k._component ? k._component.__key : P.key : null;
-null != S ? (m++, f[S] = k) : (P || (void 0 !== k.splitText ? o ? k.nodeValue.trim() : !0 : o)) && (_[v++] = k);
+var P = u[x], k = P.__preactattr_, S = y && k ? P._component ? P._component.__key : k.key : null;
+null != S ? (m++, f[S] = P) : (k || (void 0 !== P.splitText ? i ? P.nodeValue.trim() : !0 : i)) && (_[v++] = P);
 }
 if (0 !== y) for (var x = 0; y > x; x++) {
 l = t[x], d = null;
 var S = l.key;
-if (null != S) m && void 0 !== f[S] && (d = f[S], f[S] = void 0, m--); else if (!d && v > h) for (i = h; v > i; i++) if (void 0 !== _[i] && c(r = _[i], l, o)) {
-d = r, _[i] = void 0, i === v - 1 && v--, i === h && h++;
+if (null != S) m && void 0 !== f[S] && (d = f[S], f[S] = void 0, m--); else if (!d && v > h) for (o = h; v > o; o++) if (void 0 !== _[o] && c(r = _[o], l, i)) {
+d = r, _[o] = void 0, o === v - 1 && v--, o === h && h++;
 break;
 }
 d = w(d, l, a, n), s = u[x], d && d !== e && d !== s && (null == s ? e.appendChild(d) : d === s.nextSibling ? p(s) : e.insertBefore(d, s));
@@ -5356,7 +5362,7 @@ for (;v >= h; ) void 0 !== (d = _[v--]) && b(d, !1);
 }
 function b(e, t) {
 var a = e._component;
-a ? j(a) : (null != e.__preactattr_ && e.__preactattr_.ref && e.__preactattr_.ref(null), 
+a ? E(a) : (null != e.__preactattr_ && e.__preactattr_.ref && e.__preactattr_.ref(null), 
 (t === !1 || null == e.__preactattr_) && p(e), x(e));
 }
 function x(e) {
@@ -5365,20 +5371,20 @@ var t = e.previousSibling;
 b(e, !0), e = t;
 }
 }
-function k(e, t, a) {
+function P(e, t, a) {
 var n;
 for (n in a) t && null != t[n] || null == a[n] || f(e, n, a[n], a[n] = void 0, M);
 for (n in t) "children" === n || "innerHTML" === n || n in a && t[n] === ("value" === n || "checked" === n ? e[n] : a[n]) || f(e, n, a[n], a[n] = t[n], M);
 }
-function P(e) {
+function k(e) {
 var t = e.constructor.name;
-(q[t] || (q[t] = [])).push(e);
+(J[t] || (J[t] = [])).push(e);
 }
 function S(e, t, a) {
-var n, o = q[e.name];
-if (e.prototype && e.prototype.render ? (n = new e(t, a), E.call(n, t, a)) : (n = new E(t, a), 
-n.constructor = e, n.render = T), o) for (var i = o.length; i--; ) if (o[i].constructor === e) {
-n.nextBase = o[i].nextBase, o.splice(i, 1);
+var n, i = J[e.name];
+if (e.prototype && e.prototype.render ? (n = new e(t, a), j.call(n, t, a)) : (n = new j(t, a), 
+n.constructor = e, n.render = T), i) for (var o = i.length; o--; ) if (i[o].constructor === e) {
+n.nextBase = i[o].nextBase, i.splice(o, 1);
 break;
 }
 return n;
@@ -5386,79 +5392,79 @@ return n;
 function T(e, t, a) {
 return this.constructor(e, a);
 }
-function C(e, t, a, n, o) {
+function C(e, t, a, n, i) {
 e._disable || (e._disable = !0, (e.__ref = t.ref) && delete t.ref, (e.__key = t.key) && delete t.key, 
-!e.base || o ? e.componentWillMount && e.componentWillMount() : e.componentWillReceiveProps && e.componentWillReceiveProps(t, n), 
+!e.base || i ? e.componentWillMount && e.componentWillMount() : e.componentWillReceiveProps && e.componentWillReceiveProps(t, n), 
 n && n !== e.context && (e.prevContext || (e.prevContext = e.context), e.context = n), 
-e.prevProps || (e.prevProps = e.props), e.props = t, e._disable = !1, 0 !== a && (1 !== a && $.syncComponentUpdates === !1 && e.base ? s(e) : I(e, 1, o)), 
+e.prevProps || (e.prevProps = e.props), e.props = t, e._disable = !1, 0 !== a && (1 !== a && O.syncComponentUpdates === !1 && e.base ? s(e) : I(e, 1, i)), 
 e.__ref && e.__ref(e));
 }
 function I(e, t, a, n) {
 if (!e._disable) {
-var o, r, s, l = e.props, c = e.state, d = e.context, _ = e.prevProps || l, p = e.prevState || c, f = e.prevContext || d, m = e.base, h = e.nextBase, w = m || h, y = e._component, x = !1;
+var i, r, s, l = e.props, c = e.state, d = e.context, _ = e.prevProps || l, p = e.prevState || c, f = e.prevContext || d, m = e.base, h = e.nextBase, w = m || h, y = e._component, x = !1;
 if (m && (e.props = _, e.state = p, e.context = f, 2 !== t && e.shouldComponentUpdate && e.shouldComponentUpdate(l, c, d) === !1 ? x = !0 : e.componentWillUpdate && e.componentWillUpdate(l, c, d), 
 e.props = l, e.state = c, e.context = d), e.prevProps = e.prevState = e.prevContext = e.nextBase = null, 
 e._dirty = !1, !x) {
-o = e.render(l, c, d), e.getChildContext && (d = i(i({}, d), e.getChildContext()));
-var k, P, T = o && o.nodeName;
+i = e.render(l, c, d), e.getChildContext && (d = o(o({}, d), e.getChildContext()));
+var P, k, T = i && i.nodeName;
 if ("function" == typeof T) {
-var N = u(o);
-r = y, r && r.constructor === T && N.key == r.__key ? C(r, N, 1, d, !1) : (k = r, 
+var N = u(i);
+r = y, r && r.constructor === T && N.key == r.__key ? C(r, N, 1, d, !1) : (P = r, 
 e._component = r = S(T, N, d), r.nextBase = r.nextBase || h, r._parentComponent = e, 
-C(r, N, 0, d, !1), I(r, 1, a, !0)), P = r.base;
-} else s = w, k = y, k && (s = e._component = null), (w || 1 === t) && (s && (s._component = null), 
-P = v(s, o, d, a || !m, w && w.parentNode, !0));
-if (w && P !== w && r !== y) {
-var E = w.parentNode;
-E && P !== E && (E.replaceChild(P, w), k || (w._component = null, b(w, !1)));
+C(r, N, 0, d, !1), I(r, 1, a, !0)), k = r.base;
+} else s = w, P = y, P && (s = e._component = null), (w || 1 === t) && (s && (s._component = null), 
+k = v(s, i, d, a || !m, w && w.parentNode, !0));
+if (w && k !== w && r !== y) {
+var j = w.parentNode;
+j && k !== j && (j.replaceChild(k, w), P || (w._component = null, b(w, !1)));
 }
-if (k && j(k), e.base = P, P && !n) {
-for (var A = e, O = e; O = O._parentComponent; ) (A = O).base = P;
-P._component = A, P._componentConstructor = A.constructor;
+if (P && E(P), e.base = k, k && !n) {
+for (var $ = e, A = e; A = A._parentComponent; ) ($ = A).base = k;
+k._component = $, k._componentConstructor = $.constructor;
 }
 }
-if (!m || a ? U.unshift(e) : x || (e.componentDidUpdate && e.componentDidUpdate(_, p, f), 
-$.afterUpdate && $.afterUpdate(e)), null != e._renderCallbacks) for (;e._renderCallbacks.length; ) e._renderCallbacks.pop().call(e);
-V || n || g();
+if (!m || a ? V.unshift(e) : x || (e.componentDidUpdate && e.componentDidUpdate(_, p, f), 
+O.afterUpdate && O.afterUpdate(e)), null != e._renderCallbacks) for (;e._renderCallbacks.length; ) e._renderCallbacks.pop().call(e);
+D || n || g();
 }
 }
 function N(e, t, a, n) {
-for (var o = e && e._component, i = o, r = e, s = o && e._componentConstructor === t.nodeName, l = s, c = u(t); o && !l && (o = o._parentComponent); ) l = o.constructor === t.nodeName;
-return o && l && (!n || o._component) ? (C(o, c, 3, a, n), e = o.base) : (i && !s && (j(i), 
-e = r = null), o = S(t.nodeName, c, a), e && !o.nextBase && (o.nextBase = e, r = null), 
-C(o, c, 1, a, n), e = o.base, r && e !== r && (r._component = null, b(r, !1))), 
+for (var i = e && e._component, o = i, r = e, s = i && e._componentConstructor === t.nodeName, l = s, c = u(t); i && !l && (i = i._parentComponent); ) l = i.constructor === t.nodeName;
+return i && l && (!n || i._component) ? (C(i, c, 3, a, n), e = i.base) : (o && !s && (E(o), 
+e = r = null), i = S(t.nodeName, c, a), e && !i.nextBase && (i.nextBase = e, r = null), 
+C(i, c, 1, a, n), e = i.base, r && e !== r && (r._component = null, b(r, !1))), 
 e;
 }
-function j(e) {
-$.beforeUnmount && $.beforeUnmount(e);
+function E(e) {
+O.beforeUnmount && O.beforeUnmount(e);
 var t = e.base;
 e._disable = !0, e.componentWillUnmount && e.componentWillUnmount(), e.base = null;
 var a = e._component;
-a ? j(a) : t && (t.__preactattr_ && t.__preactattr_.ref && t.__preactattr_.ref(null), 
-e.nextBase = t, p(t), P(e), x(t)), e.__ref && e.__ref(null);
+a ? E(a) : t && (t.__preactattr_ && t.__preactattr_.ref && t.__preactattr_.ref(null), 
+e.nextBase = t, p(t), k(e), x(t)), e.__ref && e.__ref(null);
 }
-function E(e, t) {
+function j(e, t) {
 this._dirty = !0, this.context = t, this.props = e, this.state = this.state || {};
 }
-function A(e, t, a) {
+function $(e, t, a) {
 return v(a, e, {}, !1, t, !1);
 }
 a.d(t, "a", function() {
-return o;
+return i;
 }), a.d(t, "d", function() {
 return r;
 }), a.d(t, "e", function() {
-return E;
+return j;
 }), a.d(t, "c", function() {
-return A;
-}), a.d(t, "b", function() {
 return $;
+}), a.d(t, "b", function() {
+return O;
 });
-var $ = {}, O = [], B = [], L = "function" == typeof Promise ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout, R = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i, D = [], U = [], V = 0, M = !1, F = !1, q = {};
-i(E.prototype, {
+var O = {}, A = [], B = [], R = "function" == typeof Promise ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout, L = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i, U = [], V = [], D = 0, M = !1, F = !1, J = {};
+o(j.prototype, {
 setState: function(e, t) {
 var a = this.state;
-this.prevState || (this.prevState = i({}, a)), i(a, "function" == typeof e ? e(a, this.props) : e), 
+this.prevState || (this.prevState = o({}, a)), o(a, "function" == typeof e ? e(a, this.props) : e), 
 t && (this._renderCallbacks = this._renderCallbacks || []).push(t), s(this);
 },
 forceUpdate: function(e) {
@@ -5470,27 +5476,27 @@ render: function() {}
 (function(t) {
 !function(a) {
 function n() {}
-function o(e, t) {
+function i(e, t) {
 return function() {
 e.apply(t, arguments);
 };
 }
-function i(e) {
-if (!(this instanceof i)) throw new TypeError("Promises must be constructed via new");
+function o(e) {
+if (!(this instanceof o)) throw new TypeError("Promises must be constructed via new");
 if ("function" != typeof e) throw new TypeError("not a function");
 this._state = 0, this._handled = !1, this._value = void 0, this._deferreds = [], 
 u(e, this);
 }
 function r(e, t) {
 for (;3 === e._state; ) e = e._value;
-return 0 === e._state ? void e._deferreds.push(t) : (e._handled = !0, void i._immediateFn(function() {
+return 0 === e._state ? void e._deferreds.push(t) : (e._handled = !0, void o._immediateFn(function() {
 var a = 1 === e._state ? t.onFulfilled : t.onRejected;
 if (null === a) return void (1 === e._state ? s : l)(t.promise, e._value);
 var n;
 try {
 n = a(e._value);
-} catch (o) {
-return void l(t.promise, o);
+} catch (i) {
+return void l(t.promise, i);
 }
 s(t.promise, n);
 }));
@@ -5500,8 +5506,8 @@ try {
 if (t === e) throw new TypeError("A promise cannot be resolved with itself.");
 if (t && ("object" == typeof t || "function" == typeof t)) {
 var a = t.then;
-if (t instanceof i) return e._state = 3, e._value = t, void c(e);
-if ("function" == typeof a) return void u(o(a, t), e);
+if (t instanceof o) return e._state = 3, e._value = t, void c(e);
+if ("function" == typeof a) return void u(i(a, t), e);
 }
 e._state = 1, e._value = t, c(e);
 } catch (n) {
@@ -5512,8 +5518,8 @@ function l(e, t) {
 e._state = 2, e._value = t, c(e);
 }
 function c(e) {
-2 === e._state && 0 === e._deferreds.length && i._immediateFn(function() {
-e._handled || i._unhandledRejectionFn(e._value);
+2 === e._state && 0 === e._deferreds.length && o._immediateFn(function() {
+e._handled || o._unhandledRejectionFn(e._value);
 });
 for (var t = 0, a = e._deferreds.length; a > t; t++) r(e, e._deferreds[t]);
 e._deferreds = null;
@@ -5536,13 +5542,13 @@ a = !0, l(t, n);
 }
 }
 var _ = setTimeout;
-i.prototype["catch"] = function(e) {
+o.prototype["catch"] = function(e) {
 return this.then(null, e);
-}, i.prototype.then = function(e, t) {
+}, o.prototype.then = function(e, t) {
 var a = new this.constructor(n);
 return r(this, new d(e, t, a)), a;
-}, i.all = function(e) {
-return new i(function(t, a) {
+}, o.all = function(e) {
+return new o(function(t, a) {
 function n(e, r) {
 try {
 if (r && ("object" == typeof r || "function" == typeof r)) {
@@ -5551,47 +5557,47 @@ if ("function" == typeof s) return void s.call(r, function(t) {
 n(e, t);
 }, a);
 }
-o[e] = r, 0 === --i && t(o);
+i[e] = r, 0 === --o && t(i);
 } catch (l) {
 a(l);
 }
 }
 if (!e || "undefined" == typeof e.length) throw new TypeError("Promise.all accepts an array");
-var o = Array.prototype.slice.call(e);
-if (0 === o.length) return t([]);
-for (var i = o.length, r = 0; r < o.length; r++) n(r, o[r]);
+var i = Array.prototype.slice.call(e);
+if (0 === i.length) return t([]);
+for (var o = i.length, r = 0; r < i.length; r++) n(r, i[r]);
 });
-}, i.resolve = function(e) {
-return e && "object" == typeof e && e.constructor === i ? e : new i(function(t) {
+}, o.resolve = function(e) {
+return e && "object" == typeof e && e.constructor === o ? e : new o(function(t) {
 t(e);
 });
-}, i.reject = function(e) {
-return new i(function(t, a) {
+}, o.reject = function(e) {
+return new o(function(t, a) {
 a(e);
 });
-}, i.race = function(e) {
-return new i(function(t, a) {
-for (var n = 0, o = e.length; o > n; n++) e[n].then(t, a);
+}, o.race = function(e) {
+return new o(function(t, a) {
+for (var n = 0, i = e.length; i > n; n++) e[n].then(t, a);
 });
-}, i._immediateFn = "function" == typeof t && function(e) {
+}, o._immediateFn = "function" == typeof t && function(e) {
 t(e);
 } || function(e) {
 _(e, 0);
-}, i._unhandledRejectionFn = function(e) {
+}, o._unhandledRejectionFn = function(e) {
 "undefined" != typeof console && console && console.warn("Possible Unhandled Promise Rejection:", e);
-}, i._setImmediateFn = function(e) {
-i._immediateFn = e;
-}, i._setUnhandledRejectionFn = function(e) {
-i._unhandledRejectionFn = e;
-}, "undefined" != typeof e && e.exports ? e.exports = i : a.Promise || (a.Promise = i);
+}, o._setImmediateFn = function(e) {
+o._immediateFn = e;
+}, o._setUnhandledRejectionFn = function(e) {
+o._unhandledRejectionFn = e;
+}, "undefined" != typeof e && e.exports ? e.exports = o : a.Promise || (a.Promise = o);
 }(this);
 }).call(t, a(27).setImmediate);
 }, function(e, t, a) {
 "use strict";
-var n = a(17), o = a(18), i = a(25);
+var n = a(17), i = a(18), o = a(25);
 e.exports = function() {
 function e(e, t, a, n, r, s) {
-s !== i && o(!1, "Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types");
+s !== o && i(!1, "Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types");
 }
 function t() {
 return e;
@@ -5637,10 +5643,10 @@ args: t
 };
 return m[f] = n, p(f), f++;
 }
-function o(e) {
+function i(e) {
 delete m[e];
 }
-function i(e) {
+function o(e) {
 var t = e.callback, n = e.args;
 switch (n.length) {
 case 0:
@@ -5669,9 +5675,9 @@ var t = m[e];
 if (t) {
 h = !0;
 try {
-i(t);
+o(t);
 } finally {
-o(e), h = !1;
+i(e), h = !1;
 }
 }
 }
@@ -5726,7 +5732,7 @@ setTimeout(r, 0, e);
 if (!e.setImmediate) {
 var p, f = 1, m = {}, h = !1, g = e.document, v = Object.getPrototypeOf && Object.getPrototypeOf(e);
 v = v && v.setTimeout ? v : e, "[object process]" === {}.toString.call(e.process) ? s() : l() ? c() : e.MessageChannel ? d() : g && "onreadystatechange" in g.createElement("script") ? u() : _(), 
-v.setImmediate = n, v.clearImmediate = o;
+v.setImmediate = n, v.clearImmediate = i;
 }
 }("undefined" == typeof self ? "undefined" == typeof e ? this : e : self);
 }).call(t, a(28), a(5));
@@ -5734,11 +5740,11 @@ v.setImmediate = n, v.clearImmediate = o;
 function n(e, t) {
 this._id = e, this._clearFn = t;
 }
-var o = Function.prototype.apply;
+var i = Function.prototype.apply;
 t.setTimeout = function() {
-return new n(o.call(setTimeout, window, arguments), clearTimeout);
+return new n(i.call(setTimeout, window, arguments), clearTimeout);
 }, t.setInterval = function() {
-return new n(o.call(setInterval, window, arguments), clearInterval);
+return new n(i.call(setInterval, window, arguments), clearInterval);
 }, t.clearTimeout = t.clearInterval = function(e) {
 e && e.close();
 }, n.prototype.unref = n.prototype.ref = function() {}, n.prototype.close = function() {

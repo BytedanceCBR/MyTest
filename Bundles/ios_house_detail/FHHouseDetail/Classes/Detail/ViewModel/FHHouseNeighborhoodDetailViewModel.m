@@ -29,6 +29,7 @@
 #import "FHDetailCommunityEntryCell.h"
 #import "FHDetailBlankLineCell.h"
 #import "FHDetailAgentListCell.h"
+#import "FHDetailStaticMapCell.h"
 #import <HMDTTMonitor.h>
 #import <FHHouseBase/FHHouseNeighborModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
@@ -65,6 +66,7 @@
     [self.tableView registerClass:[FHDetailCommunityEntryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
     [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
+    [self.tableView registerClass:[FHDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
 
 }
 
@@ -176,7 +178,6 @@
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.neighbordhoodStatus.neighborhoodSubStatus;
 
-    // TODO fengbo IMPORTTANT
 //    [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
 
     FHDetailContactModel *contactPhone = nil;
@@ -312,41 +313,73 @@
         infoModel.evaluationInfo = model.data.evaluationInfo;
         [self.items addObject:infoModel];
     }
-    // 周边配套
-    if (model.data.neighborhoodInfo.gaodeLat && model.data.neighborhoodInfo.gaodeLng) {
+
+    //地图
+    if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
+        FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
-        
-        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
-        nearbyMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
-        nearbyMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
-        nearbyMapModel.title = model.data.neighborhoodInfo.name;
-        //        nearbyMapModel.tableView = self.tableView;
-        
-        
-        if (!model.data.neighborhoodInfo.gaodeLat || !model.data.neighborhoodInfo.gaodeLng) {
-            NSMutableDictionary *params = [NSMutableDictionary new];
-            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
-            [params setValue:@"经纬度缺失" forKey:@"reason"];
-            [params setValue:model.data.neighborhoodInfo.id forKey:@"house_id"];
-            [params setValue:@(4) forKey:@"house_type"];
-            [params setValue:model.data.neighborhoodInfo.name forKey:@"name"];
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
-        }
-        
-        
-        [self.items addObject:nearbyMapModel];
-        
-        __weak typeof(self) wSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
-                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
-                    [self reloadData];
-                };
-            }
-        });
+
+        staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+        staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        staticMapModel.houseId = model.data.neighborhoodInfo.id;
+        staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeNeighborhood];
+        staticMapModel.title = model.data.neighborhoodInfo.name;
+        staticMapModel.tableView = self.tableView;
+        staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
+        staticMapModel.useStarHeader = NO;
+        staticMapModel.mapOnly = NO;
+        [self.items addObject:staticMapModel];
+    } else{
+        NSString *eventName = @"detail_map_location_failed";
+        NSDictionary *cat = @{@"status": @(1)};
+
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+        [params setValue:@"经纬度缺失" forKey:@"reason"];
+        [params setValue:model.data.neighborhoodInfo.id forKey:@"house_id"];
+        [params setValue:@(FHHouseTypeNeighborhood) forKey:@"house_type"];
+        [params setValue:model.data.neighborhoodInfo.name forKey:@"name"];
+
+        [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
     }
+
+    // 周边配套
+//    if (model.data.neighborhoodInfo.gaodeLat && model.data.neighborhoodInfo.gaodeLng) {
+//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+//        [self.items addObject:grayLine];
+//
+//        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
+//        nearbyMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+//        nearbyMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+//        nearbyMapModel.title = model.data.neighborhoodInfo.name;
+//        //        nearbyMapModel.tableView = self.tableView;
+//
+//
+//        if (!model.data.neighborhoodInfo.gaodeLat || !model.data.neighborhoodInfo.gaodeLng) {
+//            NSMutableDictionary *params = [NSMutableDictionary new];
+//            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+//            [params setValue:@"经纬度缺失" forKey:@"reason"];
+//            [params setValue:model.data.neighborhoodInfo.id forKey:@"house_id"];
+//            [params setValue:@(4) forKey:@"house_type"];
+//            [params setValue:model.data.neighborhoodInfo.name forKey:@"name"];
+//            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+//        }
+//
+//
+//        [self.items addObject:nearbyMapModel];
+//
+//        __weak typeof(self) wSelf = self;
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
+//                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
+//                    [self reloadData];
+//                };
+//            }
+//        });
+//    }
     // 均价走势
     if (model.data.priceTrend.count > 0) {
         
@@ -388,7 +421,6 @@
 
         /******* 这里的 逻辑   ********/
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:self.houseId];
-        //TODO fengbo important! generate IM Params
 //        [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title :imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
         if (self.detailTracerDic) {

@@ -34,6 +34,7 @@
     if (self) {
         self.ttTrackStayEnable = YES;
         self.communityId = paramObj.allParams[@"community_id"];
+        self.tabName = paramObj.allParams[@"tab_name"];
         // 取链接中的埋点数据
         NSDictionary *params = paramObj.allParams;
         NSString *enter_from = params[@"enter_from"];
@@ -84,6 +85,21 @@
         }
     }
     return self;
+}
+
+// 重载方法
+- (BOOL)isOpenUrlParamsSame:(NSDictionary *)queryParams {
+    /*
+    if (queryParams.count > 0) {
+        NSString *queryId = queryParams[@"community_id"];
+        NSString *queryIdStr = [NSString stringWithFormat:@"%@",queryId];
+        NSString *currentIdStr = [NSString stringWithFormat:@"%@",self.communityId];
+        if (queryIdStr.length > 0 && [queryIdStr isEqualToString:currentIdStr]) {
+            return YES;
+        }
+    }
+     */
+    return NO;
 }
 
 - (void)viewDidLoad {

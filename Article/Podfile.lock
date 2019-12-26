@@ -97,7 +97,7 @@ PODS:
   - Fabric (1.10.2.1-binary)
   - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.9)
+  - FHCommonUI (0.0.11)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -174,7 +174,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.6)
+  - ios_house_im (0.1.15-rc.8)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -246,6 +246,8 @@ PODS:
   - OpenSSL-Universal (1.0.1.20.1-binary)
   - OpenUDID (0.1.0.1-binary)
   - Protobuf (3.0.1-ttv.1-binary)
+  - Quaterback/Main/Core (0.0.2-rc.1)
+  - Quaterback/Main/Default (0.0.2-rc.1)
   - React/base (0.55.13-rc.0.1.binary)
   - React/Core (0.55.13-rc.0.1.binary)
   - React/CxxBridge (0.55.13-rc.0.1.binary)
@@ -288,7 +290,7 @@ PODS:
   - SocketRocket (0.5.1.1-binary)
   - SQLiteRepairKit (1.2.1.1-binary)
   - SSZipArchive (1.6.3.1-binary)
-  - TencentQQSDK (1.1.0-rc.0.1.binary)
+  - TencentQQSDK (1.0.0.1-binary)
   - ToutiaoFrontierWebSocket (0.2.5.1-binary):
     - ToutiaoFrontierWebSocket/Main (= 0.2.5.1-binary)
     - ToutiaoFrontierWebSocket/PB (= 0.2.5.1-binary)
@@ -665,7 +667,7 @@ DEPENDENCIES:
   - Fabric (= 1.10.2.1-binary)
   - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.9)
+  - FHCommonUI (= 0.0.11)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -716,7 +718,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `ae46c4effe162cc2482aa983c5ef870b2297d197`)
+  - ios_house_im (= 0.1.15-rc.8)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -732,6 +734,8 @@ DEPENDENCIES:
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
   - Protobuf (= 3.0.1-ttv.1-binary)
+  - Quaterback/Main/Core (= 0.0.2-rc.1)
+  - Quaterback/Main/Default (= 0.0.2-rc.1)
   - React/base (= 0.55.13-rc.0.1.binary)
   - React/Core (= 0.55.13-rc.0.1.binary)
   - React/CxxBridge (= 0.55.13-rc.0.1.binary)
@@ -764,7 +768,7 @@ DEPENDENCIES:
   - SocketRocket (= 0.5.1.1-binary)
   - SQLiteRepairKit (= 1.2.1.1-binary)
   - SSZipArchive (= 1.6.3.1-binary)
-  - TencentQQSDK (= 1.1.0-rc.0.1.binary)
+  - TencentQQSDK (= 1.0.0.1-binary)
   - ToutiaoFrontierWebSocket (= 0.2.5.1-binary)
   - TSVToolkit (= 0.1.2.1-binary)
   - TTABManager (= 0.0.7.1-binary)
@@ -959,9 +963,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
-  ios_house_im:
-    :commit: ae46c4effe162cc2482aa983c5ef870b2297d197
-    :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -1015,11 +1016,6 @@ EXTERNAL SOURCES:
   yoga:
     :path: ../ReactCommon/yoga
 
-CHECKOUT OPTIONS:
-  ios_house_im:
-    :commit: ae46c4effe162cc2482aa983c5ef870b2297d197
-    :git: git@code.byted.org:fproject/ios_house_im.git
-
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
   AFNetworking: ae73845b1571323685452375dc66d8e98feefa67
@@ -1067,7 +1063,7 @@ SPEC CHECKSUMS:
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
   FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: e18b690a3078c706c73d642679ea9a83b589da02
+  FHCommonUI: f158ae9c2ab31e2bc9d773de202b4ebbb22e1f38
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1093,7 +1089,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 0bef3fe105a0a9ec8435ad67820ed84d6eb4deb1
+  ios_house_im: eb127a1e6fc7a0044b0a3056ecffe09868f5e80e
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1109,6 +1105,7 @@ SPEC CHECKSUMS:
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
   Protobuf: 52a446ec094fe19d92c51ef98bd5c975b56d8732
+  Quaterback: ca260f9322c8c0e77d01d28c8e90b2a7394a3f10
   React: 5e1cd3dbd5d3472c64a378caad5cf4468a60c615
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
@@ -1119,7 +1116,7 @@ SPEC CHECKSUMS:
   SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
   SQLiteRepairKit: 272cadce05957d8b36df6ac573dc8a596649ed28
   SSZipArchive: cc2e2411672daf4be9f5f61d4184ba66f15bcd2b
-  TencentQQSDK: c906ca02c98f63eb6fb8916a6dadf8968c5959f2
+  TencentQQSDK: 64750e415a7c2c41578ec10c88364c9602c3d12b
   ToutiaoFrontierWebSocket: 96f0257673f42edfffdf379681341854b1195937
   TSVToolkit: deb654f65a887a0c314aa70183681f25a8b0d75d
   TTABManager: b22ef5bd7f829192b72ec71d6e5f761e66428b5d
@@ -1219,6 +1216,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 8e39809a683de9dacd03ac36778d99e35f0ecc83
+PODFILE CHECKSUM: bdf68608be04249158afe85e7652ca635a76980c
 
 COCOAPODS: 1.4.0

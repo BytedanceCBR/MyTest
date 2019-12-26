@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TTHttpTask *)requestTopicList:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
-+ (TTHttpTask *)requestCommunityDetail:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
++ (TTHttpTask *)requestCommunityDetail:(NSString *)communityId tabName:(NSString *)tabName class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 + (TTHttpTask *)requestFeedListWithCategory:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
@@ -103,6 +103,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 提问发布请求
 + (TTHttpTask *)requestPublishWendaWithParam: (NSDictionary *)params  completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 帖子编辑历史
++ (TTHttpTask *)requestPostHistoryByGroupId:(NSString *)gid offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// Feed编辑帖子发布请求
++ (TTHttpTask *)requestPublishEditedPostWithParam:(NSDictionary *)params  completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

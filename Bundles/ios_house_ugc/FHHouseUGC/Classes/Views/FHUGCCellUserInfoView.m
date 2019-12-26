@@ -22,16 +22,54 @@
 #import <FHUGCConfig.h>
 #import "FHFeedOperationResultModel.h"
 #import <TTCommentDataManager.h>
+#import <TTAssetModel.h>
+
+@interface FHUGCCellUserInfoView()
+
+@property (nonatomic, assign)   FHUGCPostEditState       editState;
+
+@end
 
 @implementation FHUGCCellUserInfoView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        self.editState = FHUGCPostEditStateNone;
         [self initViews];
         [self initConstraints];
+        [self setupNoti];
     }
     return self;
+}
+
+- (void)setupNoti {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumBeginPostEditedThreadNotification" object:nil]; // 编辑完成 显示“发送中...”
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadFailureNotification" object:nil]; // 编辑帖子发送失败
+}
+
+- (void)postEditNoti:(NSNotification *)noti {
+    self.editState = FHUGCPostEditStateNone;
+    if (self.cellModel && self.cellModel.cellType == FHUGCFeedListCellTypeUGC) {
+        NSString *notiName = noti.name;
+        NSDictionary *userInfo = noti.userInfo;
+        if (notiName.length > 0 && userInfo) {
+            NSString *groupId = userInfo[@"group_id"];
+            if (groupId.length >0 && [groupId isEqualToString:self.cellModel.groupId]) {
+                // 同一个帖子
+                if ([notiName isEqualToString:@"kTTForumBeginPostEditedThreadNotification"]) {
+                    self.editState = FHUGCPostEditStateSending;
+                } else if ([notiName isEqualToString:@"kTTForumPostEditedThreadSuccessNotification"]) {
+                    self.editState = FHUGCPostEditStateDone;
+                } else if ([notiName isEqualToString:@"kTTForumPostEditedThreadFailureNotification"]) {
+                    self.editState = FHUGCPostEditStateDone;
+                }
+            }
+        }
+    }
+    // 是否显示
+    self.editingLabel.hidden = !(self.editState == FHUGCPostEditStateSending);
 }
 
 - (void)initViews {
@@ -55,6 +93,23 @@
     
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self addSubview:_descLabel];
+    
+    self.editLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    self.editLabel.text = @"内容已编辑";
+    self.editLabel.textAlignment = NSTextAlignmentLeft;
+    self.editLabel.userInteractionEnabled = YES;
+    [self addSubview:_editLabel];
+    self.editLabel.hidden = YES;
+    UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editButtonOperation)];
+    [self.editLabel addGestureRecognizer:tapGes];
+    
+    self.editingLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    self.editingLabel.text = @"发送中...";
+    self.editingLabel.textAlignment = NSTextAlignmentLeft;
+    self.editingLabel.userInteractionEnabled = NO;
+    [self addSubview:_editingLabel];
+    self.editingLabel.hidden = YES;
+    
     
     self.moreBtn = [[UIButton alloc] init];
     [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
@@ -86,8 +141,18 @@
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.icon);
         make.left.mas_equalTo(self.icon.mas_right).offset(10);
-        make.right.mas_equalTo(self.moreBtn.mas_left).offset(-20);
         make.height.mas_equalTo(17);
+    }];
+    
+    [self.editLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.icon);
+        make.left.mas_equalTo(self.descLabel.mas_right).offset(10);
+        make.right.mas_lessThanOrEqualTo(self.moreBtn.mas_left).offset(-10);
+        make.height.mas_equalTo(17);
+    }];
+    
+    [self.editingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.editLabel);
     }];
 }
 
@@ -130,6 +195,19 @@
         self.moreBtn.hidden = NO;
     }
     
+    // 编辑按钮
+    self.editLabel.hidden = !cellModel.hasEdit;
+    if (cellModel.hasEdit) {
+        self.editLabel.text = @"内容已编辑";
+    } else {
+        self.editLabel.text = @"";
+    }
+    [self.editLabel sizeToFit];
+}
+
+// 编辑按钮点击
+- (void)editButtonOperation {
+    [self gotoPostHistory];
 }
 
 - (void)moreOperation {
@@ -168,7 +246,9 @@
         viewModel.isGood = NO;
         viewModel.isTop = NO;
     }
-
+    viewModel.cellType = self.cellModel.cellType;
+    viewModel.hasEdit = self.cellModel.hasEdit;
+    viewModel.groupSource  =self.cellModel.groupSource;
     [dislikeView refreshWithModel:viewModel];
     CGPoint point = _moreBtn.center;
     [dislikeView showAtPoint:point
@@ -256,6 +336,24 @@
             [wself setOperationSelfLook:view.selectdWord.serverType];
         }];
         [self trackConfirmPopupShow:@"own_see_popup_show"];
+    } else if(view.selectdWord.type == FHFeedOperationWordTypeEdit) {
+        [self gotoEditPostVC];
+    } else if(view.selectdWord.type == FHFeedOperationWordTypeEditHistory) {
+        [self gotoPostHistory];
+    }
+}
+
+// 帖子编辑历史
+- (void)gotoPostHistory {
+    if (self.cellModel.cellType == FHUGCFeedListCellTypeUGC) {
+        // 帖子
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        // add by zyk 添加入口参数
+        dict[@"query_id"] = self.cellModel.groupId; // 帖子id
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_history"];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
 
@@ -450,6 +548,57 @@
         NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
+}
+
+- (void)gotoEditPostVC {
+    if(self.cellModel.cellType != FHUGCFeedListCellTypeUGC) {
+        return;
+    }
+    if (self.editState == FHUGCPostEditStateSending) {
+        // 编辑发送中
+        [[ToastManager manager] showToast:@"帖子编辑中，请稍后"];
+        return;
+    }
+    // 跳转发布器
+//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+//    tracerDict[@"element_type"] = @"feed_publisher";
+//    tracerDict[@"page_type"] = @"community_group_detail";
+//    [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
+//
+//    NSMutableDictionary *traceParam = @{}.mutableCopy;
+//    NSMutableDictionary *dict = @{}.mutableCopy;
+//    traceParam[@"page_type"] = @"feed_publisher";
+//    traceParam[@"enter_from"] = @"community_group_detail";
+    
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+//    dic[@"select_group_id"] = self.data.socialGroupId;
+//    dic[@"select_group_name"] = self.data.socialGroupName;
+//    dic[TRACER_KEY] = traceParam;
+//    dic[VCTITLE_KEY] = @"发帖";
+    
+    // Feed 文本内容传入图文发布器
+    dic[@"post_content"] = self.cellModel.content;
+    dic[@"post_content_rich_span"] = self.cellModel.contentRichSpan;
+        
+    // Feed 图片信息传入图文发布器
+    NSMutableArray *outerInputAssets = [NSMutableArray array];
+    [self.cellModel.imageList enumerateObjectsUsingBlock:^(FHFeedContentImageListModel * _Nonnull imageModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        TTAssetModel *outerAssetModel = [TTAssetModel modelWithImageWidth:imageModel.width height:imageModel.height url:imageModel.url uri:imageModel.uri];
+        [outerInputAssets addObject:outerAssetModel];
+    }];
+    dic[@"outerInputAssets"] = outerInputAssets;
+    
+    // Feed 圈子信息传入图文发布器
+    dic[@"select_group_id"] = self.cellModel.community.socialGroupId;
+    dic[@"select_group_name"] = self.cellModel.community.name;
+    
+    // 是否是来自外部传入编辑
+    dic[@"isOuterEdit"] = @(YES);
+    dic[@"outerPostId"] = self.cellModel.groupId;
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
+    NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
 
 #pragma mark - 埋点

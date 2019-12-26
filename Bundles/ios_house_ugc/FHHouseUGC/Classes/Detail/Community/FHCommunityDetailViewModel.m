@@ -256,7 +256,7 @@
         return;
     }
     WeakSelf;
-    [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+    [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId tabName:self.viewController.tabName class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
         
         [_viewController tt_endUpdataData];

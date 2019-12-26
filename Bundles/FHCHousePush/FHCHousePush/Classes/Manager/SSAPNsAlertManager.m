@@ -26,6 +26,8 @@
 #import "FHCHousePushUtils.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTAppRuntime/TTProjectLogicManager.h>
+#import "FHBaseViewController.h"
+#import "UIViewController+TTMovieUtil.h"
 
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 
@@ -447,26 +449,16 @@ static NSString * const kTTAPNsImportanceKey = @"important";
 //                    }
 //                }
             } else {
-                // push对消息特殊处理
-//                if ([[openURL host] isEqualToString:@"message_detail_list"]) {
-////                    if (![TTAccountManager isLogin]) {
-////                        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-////                            if (type == TTAccountAlertCompletionEventTypeDone) {
-////                                //登录成功 走发送逻辑
-////                                if ([TTAccountManager isLogin]) {
-////                                    [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-////                                    [[TTRoute sharedRoute] openURLByPushViewController:openURL];
-////                                }
-////                            }
-////                        }];
-////                    } else
-////                    {
-//                        [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-//                        [[TTRoute sharedRoute] openURLByPushViewController:openURL];
-////                    }
-//
-//                    return;
-//                }
+                // Push同一种页面处理，应用内暂时不做处理--后续考虑好是否要打开
+                /*
+                UIViewController *topVC = [UIViewController ttmu_currentViewController];
+                if ([topVC isKindOfClass:[FHBaseViewController class]]) {
+                    BOOL retFlag = [(FHBaseViewController *)topVC isSamePageAndParams:openURL];
+                    if (retFlag) {
+                        return;
+                    }
+                }
+                 */
                 NSDictionary* info = @{@"isFromPush": @(1),
                                        @"tracer":@{@"enter_from": @"push",
                                                    @"enter_type": @"click",

@@ -20,6 +20,8 @@
 #import "FHUGCVoteResponseModel.h"
 #import "FHUGCWendaModel.h"
 #import "HMDTTMonitor.h"
+#import "FHPostEditListModel.h"
+#import <FHUGCEditedPostModel.h>
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -47,17 +49,50 @@
     return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
 }
 
-+ (TTHttpTask *)requestCommunityDetail:(NSString *)communityId class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestCommunityDetail:(NSString *)communityId tabName:(NSString *)tabName class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     NSString *queryPath = @"/f100/ugc/social_group_basic_info";
     NSString *url = QURL(queryPath);
     
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"social_group_id"] = communityId ?: @"";
-    
+    if(tabName){
+        paramDic[@"tab_name"] = tabName;
+    }
+    NSDate *startDate = [NSDate date];
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         __block NSError *backError = error;
+        
+        NSDate *backDate = [NSDate date];
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            if (backError) {
+                code = backError.code;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            }
             id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:obj class:cls error:&backError];
+            serDate = [NSDate date];
+            if (!model) {
+                // model 为nil
+                code = 1;
+                resultType = FHNetworkMonitorTypeBizFailed + 1;
+            } else {
+                // model 不为nil
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || backError != nil) {
+                        code = [status integerValue];
+                        errMsg = backError.domain;
+                        resultType = FHNetworkMonitorTypeBizFailed+code;
+                    }
+                }
+            }
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
@@ -122,10 +157,48 @@
 
     Class cls = NSClassFromString(@"FHFeedListModel");
 
+    NSDate *startDate = [NSDate date];
+    NSString *requestLogPath = @"";
+    if (queryPath.length > 0) {
+        NSURL *url = [NSURL URLWithString:queryPath];
+        if (url && url.path.length > 0) {
+            requestLogPath = [NSString stringWithFormat:@"%@_%@",url.path,category];
+        }
+    }
+    
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:queryPath params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         __block NSError *backError = error;
+        NSDate *backDate = [NSDate date];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            if (backError) {
+                code = backError.code;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            }
+            
             id <FHBaseModelProtocol> model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
+            serDate = [NSDate date];
+            if (!model) {
+                // model 为nil
+                code = 1;
+                resultType = FHNetworkMonitorTypeBizFailed + 1;
+            } else {
+                // model 不为nil
+                if ([model respondsToSelector:@selector(status)]) {
+                    NSString *status = [model performSelector:@selector(status)];
+                    if (status.integerValue != 0 || backError != nil) {
+                        code = [status integerValue];
+                        errMsg = backError.domain;
+                        resultType = FHNetworkMonitorTypeBizFailed+code;
+                    }
+                }
+            }
+            [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model, backError);
@@ -783,6 +856,75 @@
         
         if (completion) {
             completion(ugcWendaModel,error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestPostHistoryByGroupId:(NSString *)gid offset:(NSInteger)offset class:(Class)cls completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    NSString *queryPath = @"/api/feed/post_history/v1/?";
+    NSString *url = QURL(queryPath);
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (gid.length > 0) {
+        paramDic[@"query_id"] = gid;
+    }
+    paramDic[@"category"] = @"post_history";
+    paramDic[@"count"] = @(20);
+    paramDic[@"stream_api_version"] = @(88);
+    paramDic[@"offset"] = @(offset);
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        FHUGCPostHistoryModel *listModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                if (error) {
+                    if ([json isKindOfClass:[NSDictionary class]]) {
+                        NSString *msg = json[@"message"];
+                        error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                    }
+                }else{
+                    listModel = [[FHUGCPostHistoryModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        if (completion) {
+            completion(listModel, error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestPublishEditedPostWithParam:(NSDictionary *)params completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    
+    NSString *queryPath = @"/f100/ugc/post/edit";
+    NSString *url = QURL(queryPath);
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:params method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        FHUGCEditedPostModel *editedPostModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                NSInteger statusCode = [json[@"status"] integerValue];
+                success = (statusCode == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:statusCode userInfo:nil];
+                }
+                else
+                {
+                    editedPostModel = [[FHUGCEditedPostModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        if (completion) {
+            completion(editedPostModel,error);
         }
     }];
 }
