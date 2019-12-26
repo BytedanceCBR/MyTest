@@ -45,6 +45,9 @@ extern BOOL kFHInAppPushTipsHidden;
                 return NO;
             }
             
+            //报一个拉活进入的埋点
+            [[FHMinisdkManager sharedInstance] addActivationLog];
+            
             if(ret){
                 //需要切换tab
                 if ([FHEnvContext isUGCOpen] && [FHEnvContext isUGCAdUser]) {

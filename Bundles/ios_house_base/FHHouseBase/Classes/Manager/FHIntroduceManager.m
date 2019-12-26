@@ -104,8 +104,7 @@
 }
 
 - (BOOL)alreadyShow {
-    return NO;
-//    return [[[NSUserDefaults standardUserDefaults] objectForKey:kFHIntroduceAlreadyShow] boolValue];
+    return [[[NSUserDefaults standardUserDefaults] objectForKey:kFHIntroduceAlreadyShow] boolValue];
 }
 
 #pragma mark - 埋点

@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)taskFinished;
 
 - (void)goSpring;
+
+- (void)addActivationLog;
     
 @end
 

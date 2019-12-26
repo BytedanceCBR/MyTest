@@ -13,6 +13,7 @@
 #import <TTAccountManager.h>
 #import <FHEnvContext.h>
 #import <FHUserTracker.h>
+#import <TTTabBarProvider.h>
 
 //固定值
 #define taskID @"503"
@@ -66,7 +67,6 @@
             //完成任务
             [self addFinishTaskLog];
         }
-        
         //不管成功还是失败，都会设置空，登录就不会在上报，除非重新从主端拉活
         self.url = nil;
     };
@@ -112,6 +112,13 @@
     });
 }
 
+- (BOOL)isCurrentTabFirst {
+    if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey]) {
+        return YES;
+    }
+    return NO;
+}
+
 - (void)gotoLogin {
     __weak typeof(self) wSelf = self;
     self.retryCount = 0;
@@ -122,10 +129,12 @@
         return;
     }
     
+    
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
 
-    [params setObject:@"spring" forKey:@"enter_from"];
-    [params setObject:@"click" forKey:@"enter_type"];
+    NSString *enterFrom = [self isCurrentTabFirst] ? @"maintab" : @"neartab";
+    
+    [params setObject:enterFrom forKey:@"enter_from"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
 
@@ -201,6 +210,12 @@
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"task_name"] = @"festival_login";
     TRACK_EVENT(@"finish_task", tracerDict);
+}
+
+- (void)addActivationLog {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"is_reactive"] = @"1";
+    TRACK_EVENT(@"activation", tracerDict);
 }
     
 @end

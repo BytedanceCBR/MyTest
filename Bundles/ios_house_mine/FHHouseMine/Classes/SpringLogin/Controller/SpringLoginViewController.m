@@ -36,17 +36,12 @@
     if (self) {
         NSDictionary *params = paramObj.allParams;
         self.needPopVC = YES;
-        self.tracerModel = [[FHTracerModel alloc] init];
-        self.tracerModel.enterFrom = params[@"enter_from"];
-        self.tracerModel.enterType = params[@"enter_type"];
         
         if(params[@"enter_from"]){
             self.tracerDict[@"enter_from"] = params[@"enter_from"];
         }
         
-        if(params[@"enter_type"]){
-            self.tracerDict[@"enter_type"] = params[@"enter_type"];
-        }
+        self.tracerDict[@"enter_type"] = @"be_null";
         
         self.tracerDict[@"page_type"] = @"festival_version_1";
         
@@ -155,6 +150,8 @@
 
 - (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = [self.tracerDict mutableCopy];
+    tracerDict[@"login_type"] = @"other_login";
+
     TRACK_EVENT(@"login_page", tracerDict);
 }
 
