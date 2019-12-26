@@ -27,7 +27,6 @@
 //#import "TTSFActivityManager.h"
 //#import "TTSFResourcesManager.h"
 //#import "Bubble-Swift.h"
-#import "FHHouseFindListViewController.h"
 #import "FHMessageViewController.h"
 #import "FHMineViewController.h"
 #import <FHHouseFind/FHHouseFindViewController.h>

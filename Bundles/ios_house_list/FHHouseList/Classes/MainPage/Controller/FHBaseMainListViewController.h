@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong , readonly) UITableView *tableView;
 @property(nonatomic , strong, readonly) UIView *containerView;
 
+- (void)refreshContentOffset:(CGPoint)contentOffset;
+
 @end
 
 NS_ASSUME_NONNULL_END

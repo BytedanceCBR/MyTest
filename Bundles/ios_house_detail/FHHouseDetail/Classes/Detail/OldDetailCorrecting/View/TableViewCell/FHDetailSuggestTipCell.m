@@ -76,7 +76,7 @@
         self.infoLab.text = model.buySuggestion.content;
     }
     FHDetailContactModel *contactPhone = model.contactPhone;
-    if (contactPhone.unregistered) {
+    if (contactPhone.unregistered || model.extraInfo.bargain.openUrl.length <= 0) {
         self.imBtn.hidden = YES;
         [self.infoLab mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.shadowImage).offset(-50);

@@ -17,23 +17,10 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHEnvContext.h>
+#import <FHHouseBase/FHHomeEntranceItemView.h>
 
-#define ITEM_PER_ROW  5
-#define TOP_MARGIN_PER_ROW 10
-#define NORMAL_ICON_WIDTH  56
-#define NORMAL_NAME_HEIGHT 20
-#define NORMAL_ITEM_WIDTH  40
-#define ITEM_TAG_BASE      100
 
-@interface FHHomeEntranceItemView : UIControl
 
-@property(nonatomic , strong) UIImageView *iconView;
-@property(nonatomic , strong) UILabel *nameLabel;
-
--(instancetype)initWithFrame:(CGRect)frame iconSize:(CGSize)iconSize;
--(void)updateWithIconUrl:(NSString *)iconUrl name:(NSString *)name placeHolder:(UIImage *)placeHolder;
-
-@end
 
 @interface FHHomeEntrancesCell ()
 
@@ -151,34 +138,3 @@
 
 @end
 
-@implementation FHHomeEntranceItemView
-
--(instancetype)initWithFrame:(CGRect)frame iconSize:(CGSize)iconSize
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake((frame.size.width - iconSize.width)/2, 0, iconSize.width, iconSize.height)];
-        [self addSubview:_iconView];
-        [self.iconView setBackgroundColor:[UIColor clearColor]];
-        
-        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, frame.size.height - 20, frame.size.width, 20)];
-        _nameLabel.textColor = [UIColor themeGray2];
-        _nameLabel.font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:12] : [UIFont themeFontRegular:12];
-        _nameLabel.textAlignment = NSTextAlignmentCenter;
-        [_nameLabel setBackgroundColor:[UIColor clearColor]];
-        
-        [self addSubview:_nameLabel];
-        self.clipsToBounds = NO;
-    }
-    return self;
-}
-
--(void)updateWithIconUrl:(NSString *)iconUrl name:(NSString *)name placeHolder:(UIImage *)placeHolder
-{
-    [self.iconView bd_setImageWithURL:[NSURL URLWithString:iconUrl] placeholder:placeHolder];
-    _nameLabel.text = name;
-    [_nameLabel sizeToFit];
-    _nameLabel.centerX = self.width/2;
-}
-
-@end

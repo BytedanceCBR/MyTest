@@ -19,6 +19,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property(nonatomic, weak) FHTextField *textField;
 @property(nonatomic, weak) UIImageView *bacIma;
 @property(nonatomic, weak) UIImageView *titleImage;
+@property(nonatomic, weak) UIView *lineView;
 @property (nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic, assign) CGFloat offsetY;
 @property(nonatomic, strong) NSString *phoneNum;
@@ -173,6 +174,16 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
     return _legalAnnouncement;
 }
+
+- (UIView *)lineView {
+    if (!_lineView) {
+        UIView *lineView = [[UIView alloc]init];
+        lineView.backgroundColor = [UIColor colorWithHexStr:@"#9c6d4346"];
+        [self.bacIma addSubview:lineView];
+        _lineView = lineView;
+    }
+    return _lineView;
+}
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
@@ -209,6 +220,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [self.legalAnnouncement mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.textField.mas_bottom).offset(10);
         make.left.mas_equalTo(self.textField);
+    }];
+    [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.legalAnnouncement.mas_bottom).offset(2);
+        make.left.right.mas_equalTo(self.legalAnnouncement);
+        make.height.mas_equalTo(.3);
     }];
 }
 

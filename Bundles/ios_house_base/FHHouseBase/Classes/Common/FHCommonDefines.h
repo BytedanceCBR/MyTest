@@ -18,6 +18,7 @@
 #define SCREEN_HEIGHT     CGRectGetHeight([[UIScreen mainScreen] bounds])
 #define SCREEN_SCALE      [[UIScreen mainScreen]scale]
 #define HOR_MARGIN        20
+#define HOR_MARGIN_NEW        15
 #define ONE_PIXEL         (1.0/[[UIScreen mainScreen]scale])
 
 #define SYS_IMG(name)     [UIImage imageNamed:name]

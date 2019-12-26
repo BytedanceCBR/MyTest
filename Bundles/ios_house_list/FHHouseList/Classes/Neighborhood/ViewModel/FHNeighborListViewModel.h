@@ -1,5 +1,5 @@
 //
-//  FHNeighborViewModel.h
+//  FHNeighborListViewModel.h
 //  FHHouseList
 //
 //  Created by 春晖 on 2018/12/6.
@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @class FHNeighborListViewController;
 
-@interface FHNeighborViewModel : FHBaseHouseListViewModel
+@interface FHNeighborListViewModel : FHBaseHouseListViewModel
 
 @property (nonatomic , strong) NSMutableArray *houseList;
 @property (nonatomic , copy) NSString *searchId;

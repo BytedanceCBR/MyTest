@@ -1,11 +1,11 @@
 //
-//  FHNeighborViewModel.m
+//  FHNeighborListViewModel.m
 //  FHHouseList
 //
 //  Created by 春晖 on 2018/12/6.
 //
 
-#import "FHNeighborViewModel.h"
+#import "FHNeighborListViewModel.h"
 #import "FHNeighborListViewController.h"
 #import "FHPlaceHolderCell.h"
 #import "FHHouseListAPI.h"
@@ -24,7 +24,7 @@
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
 
-@interface FHNeighborViewModel ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHNeighborListViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHNeighborListViewController *listController;
@@ -34,7 +34,7 @@
 @property(nonatomic , strong) NSString * neiborHoorId;
 @end
 
-@implementation FHNeighborViewModel
+@implementation FHNeighborListViewModel
 
 -(instancetype)initWithController:(FHNeighborListViewController *)viewController tableView:(UITableView *)tableView {
     self = [super init];
