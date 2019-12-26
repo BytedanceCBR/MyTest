@@ -12,6 +12,7 @@
 #import <TTTabBarItem.h>
 #import "UIViewController+TTMovieUtil.h"
 #import "FHHomeConfigManager.h"
+#import <JSONAdditions.h>
 
 @interface FHHomeSchemaObject()<TTRouteInitializeProtocol>
 
@@ -43,6 +44,35 @@
                 }
             }
         }
+        
+        if([paramObj.allParams.allKeys containsObject:@"jumpList"]){
+            NSString *str = paramObj.allParams[@"jumpList"];
+            if([str isKindOfClass:[NSString class]]){
+                id jsonValue = [str tt_JSONValue];
+                if([jsonValue isKindOfClass:[NSArray class]]){
+                    NSArray *jumpList = (NSArray *)jsonValue;
+                    for (NSInteger i = 0; i < jumpList.count; i++) {
+                        NSString *urlStr = jumpList[i];
+                        if(!isEmptyString(urlStr)){
+                            NSURL *url = [NSURL URLWithString:urlStr];
+                            if(i == jumpList.count - 1){
+                                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                            }else{
+                                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+                                    [nav pushViewController:routeObj.instance animated:NO];
+                                }];
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+//        NSArray *array = @[@"sslocal://ugc_community_detail?community_id=6703403120271032580",@"sslocal://thread_detail?fid=6564242300"];
+//
+//        NSString *str = [[array tt_JSONRepresentation] stringByAddingPercentEscapesUsingEncoding:kCFStringEncodingUTF8];
+        
         
         //为运营活动准备的测试代码，后续会完善 by xsm
         
