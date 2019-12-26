@@ -556,6 +556,7 @@
     }
     if (self.editState == FHUGCPostEditStateSending) {
         // 编辑发送中
+        [[ToastManager manager] showToast:@"帖子编辑中，请稍后"];
         return;
     }
     // 跳转发布器
