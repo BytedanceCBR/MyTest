@@ -116,7 +116,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         };
         
         _bottomBar.bottomBarGroupChatBlock = ^{
-            wself.ugcLoginType = 1;
+            wself.ugcLoginType = FHUGCCommunityLoginTypeMemberTalk;
             [wself groupChatAction];
         };
  
@@ -398,13 +398,17 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
     }
     // @"" 隐藏加群看房 按钮
-    [self.bottomBar refreshBottomBarWithGroupChatTitle:groupChatTitle];
     if (groupChatTitle.length > 0) {
+        self.bottomBar.bottomGroupChatBtn.hidden = NO;
+        self.bottomBar.bottomGroupChatBtn.titleLabel.text = groupChatTitle;
+        [self.bottomBar.bottomGroupChatBtn.titleLabel sizeToFit];
         // 添加埋点
         NSMutableDictionary *params = @{}.mutableCopy;
         [params addEntriesFromDictionary:[self baseParams]];
         params[@"element_type"] = @"community_member_talk";
         [FHUserTracker writeEvent:@"element_show" params:params];
+    } else {
+        self.bottomBar.bottomGroupChatBtn.hidden = YES;
     }
 }
 
@@ -777,10 +781,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     reportDic[@"group_id"] = group_id ?: @"be_null";
     NSString *pageType = self.tracerDict[@"page_type"] ? : @"be_null";
     [reportDic setValue:pageType forKey:@"enter_from"];
-    if (self.ugcLoginType == 1) {
+    if (self.ugcLoginType == FHUGCCommunityLoginTypeMemberTalk) {
         // community_member_talk(底部群聊入口)
         [reportDic setValue:@"community_member_talk" forKey:@"element_from"];
-    } else if (self.ugcLoginType == 2) {
+    } else if (self.ugcLoginType == FHUGCCommunityLoginTypeTip) {
         // community_tip(群聊引导弹窗)
         [reportDic setValue:@"community_tip" forKey:@"element_from"];
     }
@@ -826,10 +830,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *pageType = self.tracerDict[@"page_type"] ? : @"be_null";
     [params setObject:pageType forKey:@"enter_from"];
-    if (self.ugcLoginType == 1) {
+    if (self.ugcLoginType == FHUGCCommunityLoginTypeMemberTalk) {
         // community_member_talk(底部群聊入口)
         [params setObject:@"community_member_talk" forKey:@"enter_type"];
-    } else if (self.ugcLoginType == 2) {
+    } else if (self.ugcLoginType == FHUGCCommunityLoginTypeTip) {
         // community_tip(群聊引导弹窗)
         [params setObject:@"community_tip" forKey:@"enter_type"];
     }
@@ -884,9 +888,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"enter_from"] = page_type ?: @"be_null";
     tracerDic[@"enter_type"] = @"click";
     tracerDic[@"group_id"] = group_id ?: @"be_null";
-    if (self.ugcLoginType == 1) {
+    if (self.ugcLoginType == FHUGCCommunityLoginTypeMemberTalk) {
          tracerDic[@"click_position"] = @"community_member_talk";
-    } else if (self.ugcLoginType == 2) {
+    } else if (self.ugcLoginType == FHUGCCommunityLoginTypeTip) {
         tracerDic[@"click_position"] = @"community_tip";
     }
     tracerDic[@"card_type"] = @"be_null";
@@ -895,15 +899,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 }
 
 - (void)startUGCLoading {
-    self.bottomBar.groupChatBtn.enabled = NO;
-    self.bottomBar.groupChatBtn.alpha = 0.5;
+    self.bottomBar.bottomGroupChatBtn.enabled = NO;
+    self.bottomBar.bottomGroupChatBtn.alpha = 0.5;
     ((FHBaseViewController *)self.belongsVC).hasValidateData = NO;
     [(FHBaseViewController *)self.belongsVC startLoading];
 }
 
 - (void)endUGCLoading {
-    self.bottomBar.groupChatBtn.enabled = YES;
-    self.bottomBar.groupChatBtn.alpha = 1;
+    self.bottomBar.bottomGroupChatBtn.enabled = YES;
+    self.bottomBar.bottomGroupChatBtn.alpha = 1;
     ((FHBaseViewController *)self.belongsVC).hasValidateData = YES;
     [(FHBaseViewController *)self.belongsVC endLoading];
 }
