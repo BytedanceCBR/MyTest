@@ -113,10 +113,12 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         }
                         [[ToastManager manager] dismissCustomLoading];
                         
+                        NSString *defaultTabName = [FHEnvContext defaultTabName];
                         if ([FHEnvContext isUGCOpen] && [FHEnvContext isUGCAdUser]) {
                             [[FHEnvContext sharedInstance] jumpUGCTab];
-                        }else
-                        {
+                        }else if(defaultTabName.length > 0){
+                            [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
+                        }else{
                             if (![self isCurrentCityNormalOpen]) {
                                 [[FHEnvContext sharedInstance] jumpUGCTab];
                             }else
@@ -215,8 +217,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         }
                         [[ToastManager manager] dismissCustomLoading];
                         
-                        if ([FHEnvContext isUGCOpen]) {
-                            [[FHEnvContext sharedInstance] jumpUGCTab];
+                        NSString *defaultTabName = [FHEnvContext defaultTabName];
+                        if(defaultTabName.length > 0){
+                            [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
+                        }else{
+                            if ([FHEnvContext isUGCOpen]) {
+                                [[FHEnvContext sharedInstance] jumpUGCTab];
+                            }
                         }
                     }
                     //重试3次请求频道
@@ -957,6 +964,24 @@ static NSInteger kGetLightRequestRetryCount = 3;
         })];
     }
 }
+
+- (void)jumpTab:(NSString *)tabName
+{
+    // 进历史
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:kFHHouseMixedCategoryID withShow:NO];
+    [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+    //    [[EnvContext shared].client.messageManager startSyncCategoryBadge];
+    if ([TTTabBarManager sharedTTTabBarManager].tabItems.count > 1) {
+        if(tabName){
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:({
+                NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+                [userInfo setValue:tabName forKey:@"tag"];
+                [userInfo setValue:@1 forKey:@"needToRoot"];
+                [userInfo copy];
+            })];
+        }
+    }
+}
     
 + (BOOL)isSpringOpen {
     NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
@@ -980,6 +1005,40 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 + (BOOL)isIntroduceOpen {
     return YES;
+}
+
++ (NSString *)defaultTabName {
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (configData.jumpPageOnStartup) {
+        return configData.jumpPageOnStartup;
+    }
+    return @"tab_stream";
+}
+
++ (NSString *)enterTabLogName {
+    NSString *tabName = @"be_null";
+    NSString *currentTabIdentifier = [self getCurrentTabIdentifier];
+
+    NSDictionary *tagDic = [TTArticleTabBarController tagToLogEventName];
+    tabName = tagDic[currentTabIdentifier];
+    if([currentTabIdentifier isEqualToString:kFHouseFindTabKey]){
+        if([FHEnvContext isUGCOpen]){
+            tabName = @"neighborhood_tab";
+        }else{
+            tabName = @"discover_tab";
+        }
+    }
+    return tabName;
+}
+
++ (NSString *)getCurrentTabIdentifier {
+    UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
+    TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)mainWindow.rootViewController;
+    if ([rootTabController isKindOfClass:[TTArticleTabBarController class]]) {
+        TTArticleTabBarController *vc = (TTArticleTabBarController *)rootTabController;
+        return [vc currentTabIdentifier];
+    }
+    return nil;
 }
 
 @end

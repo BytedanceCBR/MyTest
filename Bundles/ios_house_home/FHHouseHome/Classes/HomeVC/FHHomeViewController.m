@@ -406,7 +406,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     //春节活动运营位
     if([FHEnvContext isSpringHangOpen]){
         [self addSpringView];
-        [self.springView show:@"maintab"];
+        [self.springView show:[FHEnvContext enterTabLogName]];
     }
     
     //春节活动
@@ -561,7 +561,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     //春节活动运营位
     if([FHEnvContext isSpringHangOpen]){
         [self addSpringView];
-        [self.springView show:@"maintab"];
+        [self.springView show:[FHEnvContext enterTabLogName]];
     }
 }
 

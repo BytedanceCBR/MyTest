@@ -49,9 +49,12 @@ extern BOOL kFHInAppPushTipsHidden;
             [[FHMinisdkManager sharedInstance] addActivationLog];
             
             if(ret){
+                NSString *defaultTabName = [FHEnvContext defaultTabName];
                 //需要切换tab
                 if ([FHEnvContext isUGCOpen] && [FHEnvContext isUGCAdUser]) {
                     [[FHEnvContext sharedInstance] jumpUGCTab];
+                }else if(defaultTabName.length > 0){
+                    [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
                 }else{
                     if (![FHEnvContext isCurrentCityNormalOpen]) {
                         [[FHEnvContext sharedInstance] jumpUGCTab];

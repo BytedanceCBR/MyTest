@@ -97,7 +97,7 @@
     
     //春节活动运营位
     if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:@"message"];
+        [self.springView show:[FHEnvContext enterTabLogName]];
     }
 }
 
@@ -110,7 +110,7 @@
     [super viewWillAppear:animated];
     //春节活动运营位
     if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:@"message"];
+        [self.springView show:[FHEnvContext enterTabLogName]];
     }
     [FHBubbleTipManager shareInstance].canShowTip = NO;
     [self startLoadData];

@@ -80,7 +80,7 @@
     [super viewWillAppear:animated];
     //春节活动运营位
     if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:@"minetab"];
+        [self.springView show:[FHEnvContext enterTabLogName]];
     }
     [self.viewModel updateHeaderView];
     [self loadData];
@@ -273,7 +273,7 @@
 - (void)trackStartedByAppWillEnterForground {
     //春节活动运营位
     if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:@"minetab"];
+        [self.springView show:[FHEnvContext enterTabLogName]];
     }
 }
 

@@ -63,7 +63,7 @@
         }
         
         if(isCompleted){
-            self.alreadyReport = YES;
+//            self.alreadyReport = YES;
             //完成任务
             [self addFinishTaskLog];
         }
@@ -103,10 +103,10 @@
 
 - (void)taskFinished {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if(self.alreadyReport){
-            self.url = nil;
-            return;
-        }
+//        if(self.alreadyReport){
+//            self.url = nil;
+//            return;
+//        }
         
         [[FHMinisdkManager sharedInstance] taskComplete:self.finishBlock];
     });
@@ -132,7 +132,7 @@
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
 
-    NSString *enterFrom = [self isCurrentTabFirst] ? @"maintab" : @"neartab";
+    NSString *enterFrom = [FHEnvContext enterTabLogName];
     
     [params setObject:enterFrom forKey:@"enter_from"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop

@@ -442,6 +442,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataTabConfigModel> *tabConfig;
 @property (nonatomic, strong , nullable) FHConfigDataUgcCategoryConfigModel *ugcCategoryConfig ;
 @property (nonatomic, strong , nullable) FHRealtorEvaluatioinConfigModel *realtorEvaluationConfig ;
+@property (nonatomic, copy , nullable) NSString *jumpPageOnStartup;
 
 @property (nonatomic, strong , nullable) NSDictionary *originDict;
 

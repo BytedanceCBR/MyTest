@@ -228,6 +228,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)jumpUGCTab;
 
 - (void)jumpMainTab;
+
+- (void)jumpTab:(NSString *)tabName;
     
 /*
 判断开启了春节活动，默认YES
@@ -243,6 +245,21 @@ NS_ASSUME_NONNULL_BEGIN
 判断开启首次安装用户引导，默认YES
  */
 + (BOOL)isIntroduceOpen;
+/*
+ 第一次启动和切城市默认跳转的tab
+ 
+ 可能的值
+ tab_stream,
+ tab_f_find,
+ tab_message,
+ tab_mine
+ */
++ (NSDictionary *)defaultTabName;
+
+/*
+ 返回当前tab的埋点值
+ */
++ (NSString *)enterTabLogName;
 
 
 @end
