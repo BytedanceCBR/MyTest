@@ -8,6 +8,7 @@
 #import "FHIntroduceManager.h"
 #import <FHIntroduceView.h>
 #import "FHIntroduceModel.h"
+#import <FHUserTracker.h>
 
 #define kFHIntroduceAlreadyShow @"kFHIntroduceAlreadyShow"
 
@@ -16,6 +17,7 @@
 @property (nonatomic , strong) FHIntroduceView *view;
 @property (nonatomic , strong) FHIntroduceModel *model;
 @property (nonatomic , assign) BOOL isShowing;
+@property (nonatomic, assign) NSTimeInterval enterTimestamp;
 
 @end
 
@@ -36,6 +38,8 @@
     if (self) {
         _isShowing = NO;
         [self generateModel];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
 }
@@ -45,12 +49,14 @@
     self.view = [[FHIntroduceView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height) model:self.model];
     [keyWindow addSubview:_view];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    [self addGoDetailLog];
 }
 
 - (void)hideIntroduceView {
     self.isShowing = NO;
     [self.view removeFromSuperview];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [self addStayCategoryLog];
 }
 
 - (void)generateModel {
@@ -82,6 +88,14 @@
     self.model.items = items;
 }
 
+- (void)applicationDidEnterBackground {
+    [self addStayCategoryLog];
+}
+
+- (void)applicationDidBecomeActive {
+    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+}
+
 #pragma mark - 记录状态，显示过就不在显示了
 
 - (void)setAlreadyShow:(BOOL)alreadyShow {
@@ -90,7 +104,33 @@
 }
 
 - (BOOL)alreadyShow {
-    return [[[NSUserDefaults standardUserDefaults] objectForKey:kFHIntroduceAlreadyShow] boolValue];
+    return NO;
+//    return [[[NSUserDefaults standardUserDefaults] objectForKey:kFHIntroduceAlreadyShow] boolValue];
+}
+
+#pragma mark - 埋点
+- (void)addGoDetailLog {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"enter_from"] = @"be_null";
+    dict[@"page_type"] = @"introduction";
+    TRACK_EVENT(@"go_detail", dict);
+    
+    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+}
+
+- (void)addStayCategoryLog {
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - self.enterTimestamp;
+    if (duration <= 0 || duration >= 24*60*60) {
+        return;
+    }
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"enter_from"] = @"be_null";
+    dict[@"page_type"] = @"introduction";
+    dict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
+    TRACK_EVENT(@"stay_page", dict);
+    
+    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
 }
 
 @end

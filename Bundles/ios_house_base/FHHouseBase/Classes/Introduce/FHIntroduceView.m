@@ -11,6 +11,7 @@
 #import <UIViewAdditions.h>
 #import "FHIntroduceManager.h"
 #import <Masonry.h>
+#import <FHUserTracker.h>
 
 @interface FHIntroduceView ()<FHIntroduceItemViewDelegate>
 
@@ -20,6 +21,8 @@
 @property (nonatomic , strong) UIImageView *indicatorView;
 @property (nonatomic , strong) UIButton *jumpBtn;
 @property (nonatomic , strong) NSMutableArray *itemViewList;
+@property (nonatomic , assign) NSInteger lastIndex;
+@property (nonatomic , assign) NSTimeInterval enterTimestamp;
 
 @end
 
@@ -80,7 +83,7 @@
     
     self.jumpBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 20, 64, 32)];
     [_jumpBtn setImage:[UIImage imageNamed:@"fh_introduce_jump"] forState:UIControlStateNormal];
-    [_jumpBtn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
+    [_jumpBtn addTarget:self action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
     _jumpBtn.right = self.right - 20;
     [_containerView addSubview:_jumpBtn];
 }
@@ -96,12 +99,20 @@
         
         FHIntroduceItemView *itemView = self.itemViewList[0];
         [itemView play];
+        
+        self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
     }
+}
+
+- (void)jump {
+    [self addClickOptionLog:@"skip"];
+    [[FHIntroduceManager sharedInstance] hideIntroduceView];
 }
 
 #pragma mark - FHIntroduceItemViewDelegate
 
 - (void)close {
+    [self addClickOptionLog:@"start"];
     [[FHIntroduceManager sharedInstance] hideIntroduceView];
 }
 
@@ -116,6 +127,11 @@
     if(curPage < self.itemViewList.count){
         FHIntroduceItemView *itemView = self.itemViewList[curPage];
         [itemView play];
+        
+        if(_lastIndex != curPage){
+            [self addIntroductionShowLog];
+            _lastIndex = curPage;
+        }
     }
 }
 
@@ -137,6 +153,36 @@
             self.indicatorView.image = nil;
         }
     }
+}
+
+#pragma mark - 埋点
+- (void)addIntroductionShowLog {
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - self.enterTimestamp;
+    if (duration <= 0 || duration >= 24*60*60) {
+        return;
+    }
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"rank"] = @(_lastIndex);
+    dict[@"value"] = @"be_null";
+    dict[@"page_type"] = @"introduction";
+    dict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
+    TRACK_EVENT(@"introduction _show", dict);
+    
+    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+}
+
+- (void)addClickOptionLog:(NSString *)clickPosition {
+    NSInteger curPage = ceil(self.scrollView.contentOffset.x / self.scrollView.frame.size.width);
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"rank"] = @(curPage);
+    dict[@"value"] = @"be_null";
+    dict[@"page_type"] = @"introduction";
+    if(clickPosition){
+        dict[@"click_position"] = clickPosition;
+    }
+    
+    TRACK_EVENT(@"click_option", dict);
 }
 
 @end

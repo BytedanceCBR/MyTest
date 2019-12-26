@@ -72,7 +72,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin] showAcceptBox:YES];
     [self.view.acceptCheckBox setSelected:NO];
     [self checkToEnableConfirmBtn];
-    [self addEnterCategoryLog];
 }
 
 - (NSMutableAttributedString *)protocolAttrTextByIsOneKeyLogin {
@@ -215,6 +214,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)close {
     [self popViewController:NO];
     [FHMinisdkManager sharedInstance].isShowing = NO;
+    
+    [self traceClickOption];
 }
 
 - (void)quickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha {
@@ -297,20 +298,21 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)traceAnnounceAgreement {
-    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict].mutableCopy;
+    NSMutableDictionary *tracerDict = [self.viewController.tracerDict mutableCopy];
     tracerDict[@"click_position"] = @"login_agreement";
     TRACK_EVENT(@"click_login_agreement", tracerDict);
 }
 
 - (void)traceLogin {
-    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    NSMutableDictionary *tracerDict = [self.viewController.tracerDict mutableCopy];
     tracerDict[@"login_agreement"] = self.view.acceptCheckBox.isSelected ? @"1" : @"0";
     TRACK_EVENT(@"click_login", tracerDict);
 }
 
-- (void)addEnterCategoryLog {
-    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
-    TRACK_EVENT(@"login_page", tracerDict);
+- (void)traceClickOption {
+    NSMutableDictionary *tracerDict = [self.viewController.tracerDict mutableCopy];
+    tracerDict[@"click_position"] = @"quit";
+    TRACK_EVENT(@"click_option", tracerDict);
 }
 
 - (void)popViewController:(BOOL)animated {
@@ -383,7 +385,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)traceVerifyCode {
-    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    NSMutableDictionary *tracerDict = [self.viewController.tracerDict mutableCopy];
     tracerDict[@"is_resent"] = @(self.isVerifyCodeRetry);
     TRACK_EVENT(@"click_verifycode", tracerDict);
 }

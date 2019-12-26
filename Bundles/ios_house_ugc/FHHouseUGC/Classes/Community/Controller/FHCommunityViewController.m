@@ -206,7 +206,7 @@
     [self.viewModel viewWillAppear];
     //春节活动运营位
     if([FHEnvContext isSpringHangOpen]){
-        [self.springView show];
+        [self.springView show:@"neartab"];
     }
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     [self addUgcGuide];
@@ -465,7 +465,7 @@
 - (void)trackStartedByAppWillEnterForground {
     //春节活动运营位
     if([FHEnvContext isSpringHangOpen]){
-        [self.springView show];
+        [self.springView show:@"neartab"];
     }
 }
 @end

@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSpringHangView : UIView
 
-- (void)show;
+- (void)show:(NSString *)pageType;
 
 @end
 

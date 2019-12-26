@@ -10,6 +10,7 @@
 #import "UIButton+TTAdditions.h"
 #import <TTRoute.h>
 #import <FHUtils.h>
+#import <FHUserTracker.h>
 
 #define kFHSpringViewCloseNotification @"kFHSpringViewCloseNotification"
 #define kFHSpringViewCloseDate @"kFHSpringViewCloseDate"
@@ -18,6 +19,7 @@
 
 @property(nonatomic , strong) UIView *bgView;
 @property(nonatomic , strong) UIButton *closeBtn;
+@property(nonatomic , copy) NSString *pageType;
 
 @end
 
@@ -67,7 +69,7 @@
     }];
 }
 
-- (void)show {
+- (void)show:(NSString *)pageType {
     NSString *midNightIntervalStr = [FHUtils contentForKey:kFHSpringViewCloseDate];
     if (midNightIntervalStr) {
         NSDate *date = [NSDate date];
@@ -78,7 +80,9 @@
         }
     }
     
+    _pageType = pageType;
     self.hidden = NO;
+    [self addPandentShowLog];
 }
 
 - (void)close {
@@ -88,7 +92,7 @@
         NSString *midNightIntervalStr = [NSString stringWithFormat:@"%0.0f",midNightInterval];
         [FHUtils setContent:midNightIntervalStr forKey:kFHSpringViewCloseDate];
     }
-        
+    [self addPandentCloseLog];
 }
 
 - (void)closeView:(NSNotification *)noti {
@@ -99,6 +103,7 @@
     NSString *urlStr = @"sslocal://webview?url=https://m.haoduofangs.com/magic/page/ejs/5e02dc7854c8b002583c0773?appType=manyhouse";
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    [self addPandentClickLog];
 }
 
 - (NSTimeInterval)getMidnightInterval {
@@ -107,6 +112,35 @@
     [comp setMinute:0];
     [comp setSecond:0];
     return [[[NSCalendar currentCalendar] dateFromComponents:comp] timeIntervalSince1970];
+}
+
+#pragma mark - 埋点
+
+- (void)addPandentShowLog {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"value"] = @"be_null";
+    if(_pageType){
+        tracerDict[@"page_type"] = _pageType;
+    }
+    TRACK_EVENT(@"pandent_show", tracerDict);
+}
+
+- (void)addPandentCloseLog {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"value"] = @"be_null";
+    if(_pageType){
+        tracerDict[@"page_type"] = _pageType;
+    }
+    TRACK_EVENT(@"pandent_close", tracerDict);
+}
+
+- (void)addPandentClickLog {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"value"] = @"be_null";
+    if(_pageType){
+        tracerDict[@"page_type"] = _pageType;
+    }
+    TRACK_EVENT(@"pandent_click", tracerDict);
 }
 
 @end

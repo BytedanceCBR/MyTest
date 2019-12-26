@@ -39,6 +39,17 @@
         self.tracerModel = [[FHTracerModel alloc] init];
         self.tracerModel.enterFrom = params[@"enter_from"];
         self.tracerModel.enterType = params[@"enter_type"];
+        
+        if(params[@"enter_from"]){
+            self.tracerDict[@"enter_from"] = params[@"enter_from"];
+        }
+        
+        if(params[@"enter_type"]){
+            self.tracerDict[@"enter_type"] = params[@"enter_type"];
+        }
+        
+        self.tracerDict[@"page_type"] = @"festival_version_1";
+        
         if ([params[@"isCheckUGCADUser"] isKindOfClass:[NSNumber class]]) {
             self.isFromMineTab = [params[@"isCheckUGCADUser"] boolValue];
         }else
@@ -76,6 +87,8 @@
     if([FHIntroduceManager sharedInstance].isShowing){
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
     }
+    
+    [self addEnterCategoryLog];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -88,6 +101,8 @@
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+    
+    [self addStayPageLog];
 }
 
 - (void)initView {
@@ -126,12 +141,33 @@
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
-    
+    [self addStayPageLog];
 }
 
 - (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
     [self.loginView startAnimation];
 }
 
+#pragma mark - 埋点
+
+- (void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = [self.tracerDict mutableCopy];
+    TRACK_EVENT(@"login_page", tracerDict);
+}
+
+-(void)addStayPageLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    TRACK_EVENT(@"stay_page", tracerDict);
+    
+    [self tt_resetStayTime];
+}
 
 @end
