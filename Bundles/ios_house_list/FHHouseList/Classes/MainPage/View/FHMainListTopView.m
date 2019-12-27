@@ -96,16 +96,19 @@
 
 -(CGFloat)showNotify:(NSString *)message willCompletion:(void (^)(void))willCompletion
 {
-    self.height = self.notifyBarView.bottom;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:^(ArticleListNotifyBarView *barView) {
-        
-    }];
-    if (willCompletion) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            willCompletion();
-        });
+    if (message.length > 0) {
+        self.height = self.notifyBarView.bottom;
+        [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:^(ArticleListNotifyBarView *barView) {
+            
+        }];
+        if (willCompletion) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                willCompletion();
+            });
+        }
+        return self.notifyBarView.bottom;
     }
-    return self.notifyBarView.bottom;
+    return self.theBottomView.bottom;
 }
 
 -(CGFloat)filterTop
