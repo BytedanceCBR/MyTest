@@ -317,7 +317,7 @@ def appPods
 
     #-----头条UI组件库-----
     # add by zjing for test
-    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '8930d870e3f49e16378f2cdb1d6c27bc25c0f923'
+    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '2e12181ffeebf87e5b55b7769bfd98abd40cb6e6'
 #    pod 'TTUIWidget','1.4.9-alpha.0-fproject'
 #    pod 'TTUIWidget', :path => '../../testPod/tt_pods_ui', :inhibit_warnings => false
 
