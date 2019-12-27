@@ -871,7 +871,7 @@ extern NSString *const INSTANT_DATA_KEY;
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[wself class] searchItemModelByDict:itemDict];
             
-            if (idx == 0 && ![theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+            if (idx == 0 && [theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
                 hideRefreshTip = YES;
             }
 
@@ -1011,7 +1011,7 @@ extern NSString *const INSTANT_DATA_KEY;
             self.tableView.contentOffset = CGPointMake(0, 0);
         }
         
-        if (self.isRefresh && self.viewModelDelegate && (itemArray.count > 0 || recommendItemArray.count > 0) && !_showRealHouseTop && !hideRefreshTip) {
+        if (self.isRefresh && self.viewModelDelegate && (itemArray.count > 0 || recommendItemArray.count > 0) && !hideRefreshTip) {
             [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
         }
      
