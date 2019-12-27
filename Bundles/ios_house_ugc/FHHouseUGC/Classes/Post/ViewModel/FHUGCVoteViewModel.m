@@ -26,6 +26,7 @@
 #import "FHFeedUGCCellModel.h"
 #import "FHPostUGCViewController.h"
 #import <TTUGCDefine.h>
+#import <FHUGCVoteDatePickerView.h>
 
 #define OPTION_START_INDEX  2
 #define DATEPICKER_HEIGHT 200
@@ -39,7 +40,7 @@
 @property (nonatomic, strong) UIView *addOptionFooterView;
 @property (nonatomic, assign) BOOL isDatePickerHidden;
 @property (nonatomic, strong) FHUGCVoteBottomPopView *bottomPopView;
-@property (nonatomic, strong) UIDatePicker *datePicker;
+@property (nonatomic, strong) FHUGCVoteDatePickerView *datePicker;
 @property (nonatomic, strong) UIView *dateSelectView;
 @end
 
@@ -67,7 +68,7 @@
         [cancelButton addTarget:self action:@selector(dateCancelAction:) forControlEvents:UIControlEventTouchUpInside];
         
         UILabel *titleLabel = [UILabel new];
-        titleLabel.text = @"投票截止日期";
+        titleLabel.text = @"投票截止时间";
         titleLabel.textColor = [UIColor themeGray1];
         titleLabel.textAlignment = NSTextAlignmentCenter;
         titleLabel.font = [UIFont themeFontRegular:16];
@@ -106,14 +107,11 @@
     return _dateSelectView;
 }
 
-- (UIDatePicker *)datePicker {
+- (FHUGCVoteDatePickerView *)datePicker {
     if(!_datePicker) {
-        _datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, TOP_BAR_HEIGHT, SCREEN_WIDTH, DATEPICKER_HEIGHT)];
-        _datePicker.datePickerMode = UIDatePickerModeDateAndTime;
-        _datePicker.minimumDate = [NSDate date];
-        _datePicker.maximumDate = [[NSDate date] dateByAddingTimeInterval:30 * 24 * 60 * 60];
+        _datePicker = [[FHUGCVoteDatePickerView alloc] initWithFrame:CGRectMake(0, TOP_BAR_HEIGHT, SCREEN_WIDTH, DATEPICKER_HEIGHT) minimumDate:[NSDate date] maximumDate:[[NSDate date] dateByAddingTimeInterval:30 * 24 * 60 * 60]];
         NSDate *defaultVoteDeadline = [[NSDate date] dateByAddingTimeInterval:7 * 24 * 60 * 60];
-        _datePicker.date = defaultVoteDeadline;
+        _datePicker.date = self.model.deadline ? self.model.deadline : defaultVoteDeadline;
     }
     return _datePicker;
 }
@@ -667,6 +665,10 @@
 
 - (void)showDatePicker {
     [self.viewController.view endEditing:YES];
+    [self.datePicker removeFromSuperview];
+    self.datePicker = nil;
+    [self.dateSelectView removeFromSuperview];
+    self.dateSelectView = nil;
     [self.bottomPopView showOnView:self.viewController.view withView:self.dateSelectView];
 }
 
@@ -695,6 +697,12 @@
 }
 
 - (void)dateConfirmAction:(UIButton *)sender {
+    
+    if([self.datePicker.date timeIntervalSinceDate:[NSDate date]] < 0) {
+        [[ToastManager manager] showToast:@"截止日期必须大于当前时间"];
+        return;
+    }
+    
     NSIndexPath *datePickCellIndexPath = [NSIndexPath indexPathForRow:2 inSection:0];
     [self.tableView reloadRowsAtIndexPaths:@[datePickCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.bottomPopView hide];
