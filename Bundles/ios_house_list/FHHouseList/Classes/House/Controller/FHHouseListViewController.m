@@ -28,6 +28,7 @@
 #import "FHCommuteManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHMainOldTopTagsView.h"
+#import <TTNavigationController.h>
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
@@ -454,14 +455,11 @@
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
-    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
-
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear:animated];
-    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
     [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
 
@@ -579,6 +577,12 @@
     }
     [self.houseFilterViewModel trigerConditionChanged];
 
+    
+    WeakSelf;
+    self.panBeginAction = ^{
+        StrongSelf;
+        [self.view endEditing:YES];
+    };
 }
 
 -(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder inputText:(NSString *)inputText{
@@ -597,13 +601,6 @@
     self.navbar.placeHolder = placeholder;
     self.navbar.inputText = inputText;
     self.associationalWord = placeholder;
-}
-
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    
-    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
-        [self.view endEditing:YES];
-    }
 }
 
 -(void)setupUI {
