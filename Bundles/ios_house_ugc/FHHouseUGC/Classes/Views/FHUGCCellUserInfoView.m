@@ -576,6 +576,13 @@
     NSMutableDictionary *tracerDict = [self.cellModel.tracerDic mutableCopy];
     tracerDict[@"click_position"] = @"edit";
     TRACK_EVENT(@"click_edit", tracerDict);
+    
+    NSString *page_type = tracerDict[@"page_type"];
+    if (page_type) {
+        tracerDict[@"enter_from"] = page_type;
+    }
+    [tracerDict removeObjectForKey:@"click_position"];
+    tracerDict[UT_ENTER_TYPE] = @"click";
     dic[TRACER_KEY] = tracerDict;
     
     // Feed 文本内容传入图文发布器
