@@ -112,10 +112,9 @@
     }
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.datas.count>3) {
-        if (indexPath.row == self.datas.count -1) {
-            return CGSizeMake(94, 210);
-        }
+    id data = self.datas[indexPath.row];
+    if ([data isKindOfClass:[FHDetailMoreItemModel class]]) {
+        return CGSizeMake(94, 210);
     }
     return CGSizeMake(150, 210);
 }
