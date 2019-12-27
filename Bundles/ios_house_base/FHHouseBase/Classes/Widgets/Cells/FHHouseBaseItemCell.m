@@ -66,7 +66,7 @@
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHCornerView *imageTagLabelBgView;
 @property(nonatomic, strong) UIView *maskVRImageView;
-@property(nonatomic, strong) UIImageView *houseMainImageBackView;
+@property(nonatomic, strong) UIView *houseMainImageBackView;
 
 @property(nonatomic, strong) UIView *rightInfoView;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //主title lable
@@ -153,7 +153,7 @@
         _mainImageView.layer.cornerRadius = 4;
         _mainImageView.clipsToBounds = YES;
         _mainImageView.layer.borderWidth = 0.5;
-        _mainImageView.layer.borderColor = [UIColor themeGray6].CGColor;
+        _mainImageView.layer.borderColor = [UIColor colorWithHexString:@"e1e1e1"].CGColor;
     }
     return _mainImageView;
 }
@@ -272,12 +272,16 @@
     return _pricePerSqmLabel;
 }
 
--(UIImageView *)houseMainImageBackView
+-(UIView *)houseMainImageBackView
 {
     if (!_houseMainImageBackView) {
-        _houseMainImageBackView = [[UIImageView alloc]init];
-        [_houseMainImageBackView setImage:[UIImage imageNamed:@"base_house_image_back"]];
-        _houseMainImageBackView.contentMode = UIViewContentModeScaleAspectFill;
+        _houseMainImageBackView = [[UIView alloc] init];
+        _houseMainImageBackView.backgroundColor = [UIColor whiteColor];
+        CALayer * layer = _houseMainImageBackView.layer;
+        layer.shadowOffset = CGSizeMake(0, 4);
+        layer.shadowRadius = 6;
+        layer.shadowColor = [UIColor blackColor].CGColor;;
+        layer.shadowOpacity = 0.2;
     }
     return _houseMainImageBackView;
 }
@@ -557,14 +561,14 @@
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(MAIN_SMALL_IMG_TOP - 2);
-        layout.left = YGPointValue(3);
-        layout.width = YGPointValue(MAIN_SMALL_IMG_BACK_WIDTH - 3);
-        layout.height = YGPointValue(MAIN_SMALL_IMG_BACK_HEIGHT - 2);
+        layout.top = YGPointValue(MAIN_SMALL_IMG_TOP + 3);
+        layout.left = YGPointValue(MAIN_SMALL_IMG_LEFT + 3);
+        layout.width = YGPointValue(MAIN_SMALL_IMG_WIDTH - 6);
+        layout.height = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 6);
     }];
     
     [self.leftInfoView addSubview:self.houseVideoImageView];
-    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
+//    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
     
     [_houseVideoImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -795,10 +799,10 @@
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(MAIN_SMALL_IMG_TOP - 2);
-        layout.left = YGPointValue(3);
-        layout.width = YGPointValue(MAIN_SMALL_IMG_BACK_WIDTH - 3);
-        layout.height = YGPointValue(MAIN_SMALL_IMG_BACK_HEIGHT - 2);
+        layout.top = YGPointValue(MAIN_SMALL_IMG_TOP + 3);
+        layout.left = YGPointValue(MAIN_SMALL_IMG_LEFT + 3);
+        layout.width = YGPointValue(MAIN_SMALL_IMG_WIDTH - 6);
+        layout.height = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 6);
     }];
     
     [self.leftInfoView addSubview:self.houseVideoImageView];
@@ -1030,7 +1034,7 @@
     }
     
     [self hideRecommendReason];
-    //    [self updateTitlesLayout:YES];
+//        [self updateTitlesLayout:YES];
     
     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
 }
