@@ -19,7 +19,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property(nonatomic, weak) FHTextField *textField;
 @property(nonatomic, weak) UIImageView *bacIma;
 @property(nonatomic, weak) UIImageView *titleImage;
-@property(nonatomic, weak) UIView *lineView;
 @property (nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic, assign) CGFloat offsetY;
 @property(nonatomic, strong) NSString *phoneNum;
@@ -164,6 +163,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
         legalAnnouncement.textAlignment = NSTextAlignmentLeft;
         NSDictionary *dic = @{NSKernAttributeName:@1.5f};
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"点击订阅即视为同意《个人信息保护声明》" attributes:dic];
+          [attrStr addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(10, @"个人信息保护声明".length)];
+//        // 下划线
+//        NSDictionary *attribtDic = @{NSUnderlineStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle]};
+//        NSMutableAttributedString *attribtStr = [[NSMutableAttributedString alloc]initWithString:textStr attributes:attribtDic];
+//         NSMutableAttributedString *attribtStr = [[NSMutableAttributedString alloc]init];
         legalAnnouncement.attributedText = [attrStr copy];
         legalAnnouncement.font = [UIFont themeFontRegular:10];
         UITapGestureRecognizer *tipTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(legalAnnouncementClick)];
@@ -173,16 +177,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
         _legalAnnouncement = legalAnnouncement;
     }
     return _legalAnnouncement;
-}
-
-- (UIView *)lineView {
-    if (!_lineView) {
-        UIView *lineView = [[UIView alloc]init];
-        lineView.backgroundColor = [UIColor colorWithHexStr:@"#9c6d4346"];
-        [self.bacIma addSubview:lineView];
-        _lineView = lineView;
-    }
-    return _lineView;
 }
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -220,11 +214,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [self.legalAnnouncement mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.textField.mas_bottom).offset(10);
         make.left.mas_equalTo(self.textField);
-    }];
-    [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.legalAnnouncement.mas_bottom).offset(2);
-        make.left.right.mas_equalTo(self.legalAnnouncement);
-        make.height.mas_equalTo(.3);
     }];
 }
 

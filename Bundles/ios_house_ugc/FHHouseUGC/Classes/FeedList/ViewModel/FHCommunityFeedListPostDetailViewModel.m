@@ -761,15 +761,16 @@
                 for (NSInteger i = 0; i < self.dataList.count; i++) {
                     FHFeedUGCCellModel *item = self.dataList[i];
                     //最后还没找到，插到最后
+                    
+                    if(!item.isStick || (item.isStick && (item.stickStyle != FHFeedContentStickStyleTop && item.stickStyle != FHFeedContentStickStyleTopAndGood))){
+                        //找到第一个不是置顶的cell
+                        [self.dataList insertObject:originCellModel atIndex:i];
+                        break;
+                    }
+                    
                     if(i == (self.dataList.count - 1)){
                         [self.dataList insertObject:originCellModel atIndex:(i + 1)];
                         break;
-                    }else{
-                        if(!item.isStick || (item.isStick && (item.stickStyle != FHFeedContentStickStyleTop && item.stickStyle != FHFeedContentStickStyleTopAndGood))){
-                            //找到第一个不是置顶的cell
-                            [self.dataList insertObject:originCellModel atIndex:i];
-                            break;
-                        }
                     }
                 }
                 

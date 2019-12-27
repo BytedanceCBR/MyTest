@@ -891,7 +891,7 @@ DEPENDENCIES:
   - TTThemed (= 0.1.36.1-binary)
   - TTTracker (= 10.0.5.1-binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
-  - TTUIWidget (from `git@code.byted.org:TTIOS/tt_pods_ui.git`, commit `8930d870e3f49e16378f2cdb1d6c27bc25c0f923`)
+  - TTUIWidget (from `git@code.byted.org:TTIOS/tt_pods_ui.git`, commit `06196c84dd28afb068d98f60c72d3e632a4d0f43`)
   - TTUserProfile (from `../TTBundles/ios_tt_userprofile`)
   - TTUserSettings (= 0.3.4)
   - TTVContainerScrollView (= 0.1.2.1-binary)
@@ -1010,7 +1010,7 @@ EXTERNAL SOURCES:
   TTUGCFoundation:
     :path: ../Vendor/TTUGCFoundation
   TTUIWidget:
-    :commit: 8930d870e3f49e16378f2cdb1d6c27bc25c0f923
+    :commit: 06196c84dd28afb068d98f60c72d3e632a4d0f43
     :git: git@code.byted.org:TTIOS/tt_pods_ui.git
   TTUserProfile:
     :path: ../TTBundles/ios_tt_userprofile
@@ -1021,7 +1021,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   TTUIWidget:
-    :commit: 8930d870e3f49e16378f2cdb1d6c27bc25c0f923
+    :commit: 06196c84dd28afb068d98f60c72d3e632a4d0f43
     :git: git@code.byted.org:TTIOS/tt_pods_ui.git
 
 SPEC CHECKSUMS:
@@ -1224,6 +1224,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 19779841cc03fea5a758741f47285e2e89fe471d
+PODFILE CHECKSUM: 4cc2c8ff2f7237b1ef7b7683dd2ad6f18a140671
 
 COCOAPODS: 1.4.0

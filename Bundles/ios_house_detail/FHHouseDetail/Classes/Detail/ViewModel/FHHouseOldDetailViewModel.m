@@ -411,7 +411,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         infoModel.baseViewModel = self;
         infoModel.tableView = self.tableView;
         infoModel.houseModelType = FHHouseModelTypeOutlineInfo;
-        infoModel.hideReport = model.data.baseExtra.detective ? YES : NO;
+        infoModel.hideReport = NO;
         [self.items addObject:infoModel];
     }
     // 房源榜单
@@ -916,12 +916,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         //        trackInfo[UT_ENTER_FROM] = position;
         [popLayer showDetectiveReasonInfoData:(FHDetailDataBaseExtraDetectiveReasonInfo *)model trackInfo:trackInfo];
     }
-    //    else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-    //        position = @"happiness_eye";
-    //        trackInfo[UT_ENTER_FROM] = position;
-    //        [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model trackInfo:trackInfo];
-    //
-    //    }
+        else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
+            position = @"happiness_eye";
+            trackInfo[UT_ENTER_FROM] = position;
+            [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model trackInfo:trackInfo];
+    
+        }
     
     [self addClickOptionLog:position];
     
