@@ -824,8 +824,12 @@ extern NSString *const INSTANT_DATA_KEY;
 //            self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
 //        }
         
-        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && !self.showRealHouseTop && !hideRefreshTip) {
-            [self showNotifyMessage:refreshTip];
+        if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
+            if (!_showFilter && !self.showRealHouseTop && !hideRefreshTip) {
+                [self showNotifyMessage:refreshTip];
+            }else {
+                [self configNotifyInfo:[self.topView filterBottom] isShow:NO];
+            }
         }
                 
         if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
@@ -1695,7 +1699,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if (isTop) {
             [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
         }else{
-            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+            self.tableView.contentOffset = CGPoint Make(0, [self.topView filterTop] -topViewHeight);
         }
     }else{
         if (isTop) {
