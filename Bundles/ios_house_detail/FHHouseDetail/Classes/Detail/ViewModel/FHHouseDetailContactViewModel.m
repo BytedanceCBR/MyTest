@@ -1030,6 +1030,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         case FHHouseTypeSecondHandHouse:
             return @"old_detail_button";
             break;
+        case FHHouseTypeNewHouse:
+            return @"new_detail_button";
+            break;
             
         default:
             break;
