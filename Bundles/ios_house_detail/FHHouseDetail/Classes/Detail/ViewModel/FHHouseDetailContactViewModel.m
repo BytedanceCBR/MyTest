@@ -901,7 +901,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)startUGCLoading {
     self.bottomBar.bottomGroupChatBtn.enabled = NO;
-    self.bottomBar.bottomGroupChatBtn.alpha = 0.5;
+    self.bottomBar.bottomGroupChatBtn.alpha = 1;
     ((FHBaseViewController *)self.belongsVC).hasValidateData = NO;
     [(FHBaseViewController *)self.belongsVC startLoading];
 }

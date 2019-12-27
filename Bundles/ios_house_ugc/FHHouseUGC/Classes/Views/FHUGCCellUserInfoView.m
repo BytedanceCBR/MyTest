@@ -348,7 +348,10 @@
     if (self.cellModel.cellType == FHUGCFeedListCellTypeUGC) {
         // 帖子
         NSMutableDictionary *dict = @{}.mutableCopy;
-        // add by zyk 添加入口参数
+        NSMutableDictionary *tracerDict = [self.cellModel.tracerDic mutableCopy];
+        tracerDict[@"click_position"] = @"edit_record";
+        TRACK_EVENT(@"click_edit", tracerDict);
+        dict[TRACER_KEY] = tracerDict;
         dict[@"query_id"] = self.cellModel.groupId; // 帖子id
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
@@ -560,21 +563,12 @@
         return;
     }
     // 跳转发布器
-//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-//    tracerDict[@"element_type"] = @"feed_publisher";
-//    tracerDict[@"page_type"] = @"community_group_detail";
-//    [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
-//
-//    NSMutableDictionary *traceParam = @{}.mutableCopy;
-//    NSMutableDictionary *dict = @{}.mutableCopy;
-//    traceParam[@"page_type"] = @"feed_publisher";
-//    traceParam[@"enter_from"] = @"community_group_detail";
-    
     NSMutableDictionary *dic = [NSMutableDictionary new];
-//    dic[@"select_group_id"] = self.data.socialGroupId;
-//    dic[@"select_group_name"] = self.data.socialGroupName;
-//    dic[TRACER_KEY] = traceParam;
-//    dic[VCTITLE_KEY] = @"发帖";
+
+    NSMutableDictionary *tracerDict = [self.cellModel.tracerDic mutableCopy];
+    tracerDict[@"click_position"] = @"edit";
+    TRACK_EVENT(@"click_edit", tracerDict);
+    dic[TRACER_KEY] = tracerDict;
     
     // Feed 文本内容传入图文发布器
     dic[@"post_content"] = self.cellModel.content;
