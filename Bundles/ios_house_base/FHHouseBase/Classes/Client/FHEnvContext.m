@@ -1012,7 +1012,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if (configData.jumpPageOnStartup) {
         return configData.jumpPageOnStartup;
     }
-    return @"tab_stream";
+    return nil;
 }
 
 + (NSString *)enterTabLogName {
