@@ -1699,7 +1699,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if (isTop) {
             [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
         }else{
-            self.tableView.contentOffset = CGPoint Make(0, [self.topView filterTop] -topViewHeight);
+            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
         }
     }else{
         if (isTop) {
