@@ -55,7 +55,7 @@
 
 
 @property(nonatomic, strong) UIImageView *houseVideoImageView;
-@property(nonatomic, strong) UIImageView *houseMainImageBackView;
+@property(nonatomic, strong) UIView *houseMainImageBackView;
 
 
 @property(nonatomic, strong) UILabel *imageTagLabel;
@@ -142,17 +142,21 @@
         _mainImageView.layer.cornerRadius = 4;
         _mainImageView.clipsToBounds = YES;
         _mainImageView.layer.borderWidth = 0.5;
-        _mainImageView.layer.borderColor = [UIColor themeGray6].CGColor;
+        _mainImageView.layer.borderColor = [UIColor colorWithHexString:@"e1e1e1"].CGColor;
     }
     return _mainImageView;
 }
 
--(UIImageView *)houseMainImageBackView
+-(UIView *)houseMainImageBackView
 {
     if (!_houseMainImageBackView) {
-        _houseMainImageBackView = [[UIImageView alloc]init];
-        [_houseMainImageBackView setImage:[UIImage imageNamed:@"base_house_image_back"]];
-        _houseMainImageBackView.contentMode = UIViewContentModeScaleAspectFill;
+        _houseMainImageBackView = [[UIView alloc] init];
+        _houseMainImageBackView.backgroundColor = [UIColor whiteColor];
+        CALayer * layer = _houseMainImageBackView.layer;
+        layer.shadowOffset = CGSizeMake(0, 4);
+        layer.shadowRadius = 6;
+        layer.shadowColor = [UIColor blackColor].CGColor;;
+        layer.shadowOpacity = 0.2;
     }
     return _houseMainImageBackView;
 }
@@ -367,9 +371,10 @@
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(MAIN_IIMAGE_TOP - 1);
-        layout.width = YGPointValue(MAIN_IMG_BACK_WIDTH);
-        layout.height = YGPointValue(MAIN_IMG_BACK_HEIGHT);
+        layout.top = YGPointValue(MAIN_IIMAGE_TOP + 3);
+        layout.left = YGPointValue(8.5);
+        layout.width = YGPointValue(MAIN_IMG_WIDTH - 6);
+        layout.height = YGPointValue(MAIN_IMG_HEIGHT - 6);
     }];
     
     
