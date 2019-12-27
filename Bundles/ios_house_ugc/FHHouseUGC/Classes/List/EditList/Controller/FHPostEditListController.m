@@ -41,8 +41,15 @@
         NSDictionary *params = paramObj.allParams;
         int64_t tid = [[paramObj.allParams objectForKey:@"query_id"] longLongValue];
         self.tid = tid;
+        self.tracerDict[@"enter_type"] = @"click";
+        self.tracerDict[@"category_name"] = [self pageType];
+        self.tracerDict[@"page_type"] = [self pageType];
     }
     return self;
+}
+
+- (NSString *)pageType {
+    return @"edit_record_list";
 }
 
 - (void)viewDidLoad {
@@ -51,6 +58,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [self startLoadData];
+    [self addGoDetailLog];
 }
 
 - (void)setupUI {
@@ -114,6 +122,42 @@
 // 加载更多
 - (void)loadMore {
     [self.viewModel loadMore];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayPageLog];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+#pragma mark - Tracer
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self addStayPageLog];
+}
+
+-(void)addGoDetailLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [tracerDict removeObjectForKey:@"page_type"];
+    [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
+}
+
+-(void)addStayPageLog {
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [tracerDict removeObjectForKey:@"page_type"];
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
+    [self tt_resetStayTime];
 }
 
 @end

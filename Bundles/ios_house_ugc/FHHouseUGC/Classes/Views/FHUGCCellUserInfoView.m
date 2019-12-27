@@ -207,7 +207,7 @@
 
 // 编辑按钮点击
 - (void)editButtonOperation {
-    [self gotoPostHistory];
+    [self gotoPostHistory:@"content_has_edit"];
 }
 
 - (void)moreOperation {
@@ -339,18 +339,26 @@
     } else if(view.selectdWord.type == FHFeedOperationWordTypeEdit) {
         [self gotoEditPostVC];
     } else if(view.selectdWord.type == FHFeedOperationWordTypeEditHistory) {
-        [self gotoPostHistory];
+        [self gotoPostHistory:@"edit_record_selection"];
     }
 }
 
 // 帖子编辑历史
-- (void)gotoPostHistory {
+- (void)gotoPostHistory:(NSString *)element_from {
     if (self.cellModel.cellType == FHUGCFeedListCellTypeUGC) {
         // 帖子
         NSMutableDictionary *dict = @{}.mutableCopy;
         NSMutableDictionary *tracerDict = [self.cellModel.tracerDic mutableCopy];
         tracerDict[@"click_position"] = @"edit_record";
         TRACK_EVENT(@"click_edit", tracerDict);
+        
+        NSString *page_type = tracerDict[@"page_type"];
+        if (page_type) {
+            tracerDict[@"enter_from"] = page_type;
+        }
+        tracerDict[@"element_from"] = element_from;
+        [tracerDict removeObjectForKey:@"click_position"];
+        
         dict[TRACER_KEY] = tracerDict;
         dict[@"query_id"] = self.cellModel.groupId; // 帖子id
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
