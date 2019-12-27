@@ -411,7 +411,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         infoModel.baseViewModel = self;
         infoModel.tableView = self.tableView;
         infoModel.houseModelType = FHHouseModelTypeOutlineInfo;
-        infoModel.hideReport = model.data.baseExtra.detective ? YES : NO;
+        infoModel.hideReport = NO;
         [self.items addObject:infoModel];
     }
     // 房源榜单
