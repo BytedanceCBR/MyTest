@@ -43,6 +43,7 @@
         self.tid = tid;
         self.tracerDict[@"enter_type"] = @"click";
         self.tracerDict[@"category_name"] = [self pageType];
+        self.tracerDict[@"page_type"] = [self pageType];
     }
     return self;
 }
@@ -143,6 +144,7 @@
 
 -(void)addGoDetailLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [tracerDict removeObjectForKey:@"page_type"];
     [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
 }
 
@@ -152,6 +154,7 @@
         return;
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    [tracerDict removeObjectForKey:@"page_type"];
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
     [self tt_resetStayTime];
