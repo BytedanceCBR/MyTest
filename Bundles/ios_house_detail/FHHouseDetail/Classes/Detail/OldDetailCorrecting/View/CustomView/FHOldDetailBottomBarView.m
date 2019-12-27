@@ -46,7 +46,6 @@
 
 - (void)setupUI
 {
-    _showIM = NO;
     UIView *topLine = [[UIView alloc]init];
     topLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:topLine];

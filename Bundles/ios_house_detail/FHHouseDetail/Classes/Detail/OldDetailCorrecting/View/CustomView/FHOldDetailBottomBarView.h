@@ -6,24 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FHDetailBaseModel.h"
-
+#import "FHDetailBottomBar.h"
 NS_ASSUME_NONNULL_BEGIN
 
 
-@interface FHOldDetailBottomBarView : UIView
-
-@property(nonatomic, copy)void(^bottomBarContactBlock)(void);
-@property(nonatomic, copy)void(^bottomBarRealtorBlock)(void);
-@property(nonatomic, copy)void(^bottomBarLicenseBlock)(void);
-@property(nonatomic, copy)void(^bottomBarImBlock)(void);
-@property(nonatomic, copy)void(^bottomBarGroupChatBlock)(void);
-@property (nonatomic, assign)   BOOL       showIM;
-
-- (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle chatTitle:(NSString *)chatTitle;
-- (void)startLoading;
-- (void)stopLoading;
-
+@interface FHOldDetailBottomBarView : FHDetailBottomBar
 @end
 
 NS_ASSUME_NONNULL_END

@@ -25,6 +25,7 @@
 #import "TTInstallIDManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHDetailQuestionButton.h"
+#import "FHDetailBottomBarView.h"
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -32,7 +33,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UILabel *bottomStatusBar;
 @property (nonatomic, strong) UIView *bottomMaskView;
-@property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
+@property (nonatomic, strong) FHDetailBottomBar *bottomBar;
 @property (nonatomic, strong) FHDetailUGCGroupChatButton *bottomGroupChatBtn;// 新房群聊入口
 @property (nonatomic, strong) FHDetailFeedbackView *feedbackView;
 @property(nonatomic , strong) FHDetailQuestionButton *questionBtn;
@@ -125,6 +126,7 @@
         }else {
             [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_schema_error" metric:nil category:@{@"status":@(0)} extra:nil];
         }
+        
         
         self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
     }
@@ -268,7 +270,7 @@
     _bottomMaskView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_bottomMaskView];
     
-    if (_houseType == FHHouseTypeSecondHandHouse) {
+    if (_houseType == FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeNewHouse) {
         _bottomBar = [[FHOldDetailBottomBarView alloc]initWithFrame:CGRectZero];
     }else {
          _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];

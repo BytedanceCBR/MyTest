@@ -6,9 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FHDetailBottomBarView.h"
 #import "FHDetailNavBar.h"
 #import "FHHouseType.h"
+#import "FHDetailBottomBar.h"
 #import <FHHouseBase/FHHouseContactDefines.h>
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 
@@ -48,8 +48,8 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign)   FHUGCCommunityLoginType       ugcLoginType; // 1：community_member_talk(底部群聊入口), 2：community_tip(群聊引导弹窗)
 
 
-- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
-- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId;
+- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBar *)bottomBar;
+- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBar *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId;
 // 在线联系点击
 - (void)onlineActionWithExtraDict:(NSDictionary *)extraDict;
 // 拨打电话 + 询底价填表单

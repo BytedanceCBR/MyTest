@@ -44,7 +44,6 @@
 
 - (void)setupUI
 {
-    _showIM = NO;
     UIView *topLine = [[UIView alloc]init];
     topLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:topLine];
@@ -133,10 +132,7 @@
     [self.leftView addGestureRecognizer:tap];
 }
 
-- (void)setBottomGroupChatBtn:(FHDetailUGCGroupChatButton *)bottomGroupChatBtn {
-    _bottomGroupChatBtn = bottomGroupChatBtn;
-    [bottomGroupChatBtn addTarget:self action:@selector(groupBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-}
+
 
 - (void)contactBtnDidClick:(UIButton *)btn
 {
@@ -165,11 +161,7 @@
     }
 }
 
-- (void)groupBtnClick:(UIButton *)btn {
-    if (self.bottomBarGroupChatBlock) {
-        self.bottomBarGroupChatBlock();
-    }
-}
+
 
 - (void)displayLicense:(BOOL)isDisplay
 {
@@ -449,57 +441,4 @@
 @end
 
 
-@interface FHDetailUGCGroupChatButton ()
 
-@property (nonatomic, strong)   UIImageView       *bgView;
-@property (nonatomic, strong)   UIImageView       *rightIcon;
-
-@end
-
-@implementation FHDetailUGCGroupChatButton
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setupUI];
-    }
-    return self;
-}
-
-- (void)setupUI {
-    self.bgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_ugc_group_chat_bg"]];
-    [self addSubview:self.bgView];
-    [self addSubview:self.titleLabel];
-    self.rightIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_ugc_group_chat_right"]];
-    [self addSubview:self.rightIcon];
-    
-    [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self);
-    }];
-    [self.rightIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
-        make.right.mas_equalTo(self).offset(-10);
-        make.width.mas_equalTo(3);
-        make.height.mas_equalTo(6);
-    }];
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(18);
-        make.left.mas_equalTo(self).offset(15);
-        make.centerY.mas_equalTo(self);
-        make.right.mas_equalTo(self.rightIcon.mas_left).offset(-5);
-    }];
-}
-
-- (UILabel *)titleLabel
-{
-    if (!_titleLabel) {
-        _titleLabel = [[UILabel alloc]init];
-        _titleLabel.text = @"加入看盘群";
-        _titleLabel.font = [UIFont themeFontRegular:12];
-        _titleLabel.textColor = [UIColor themeRed1];
-    }
-    return _titleLabel;
-}
-
-@end

@@ -61,7 +61,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property (nonatomic, copy) NSString *houseId;
 @property (nonatomic, weak) FHDetailNavBar *navBar;
 @property (nonatomic, weak) UILabel *bottomStatusBar;
-@property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
+@property (nonatomic, weak) FHDetailBottomBar *bottomBar;
 @property (nonatomic, strong) TTShareManager *shareManager;
 @property (nonatomic, copy)     NSDictionary       *shareExtraDic;// 额外分享参数字典
 @property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
@@ -71,7 +71,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 @implementation FHHouseDetailContactViewModel
 
-- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId
+- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBar *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId
 {
     self = [self initWithNavBar:navBar bottomBar:bottomBar];
     if (self) {
@@ -139,7 +139,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     return self;
 }
 
--(instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar
+-(instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBar *)bottomBar
 {
     self = [super init];
     if (self) {
