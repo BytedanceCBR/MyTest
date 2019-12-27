@@ -50,7 +50,6 @@
 #import "NSString+UGCUtils.h"
 #import "FHTopicHeaderModel.h"
 #import "FHTopicListModel.h"
-#import <UIViewController+Track.h>
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
@@ -133,7 +132,6 @@ static NSInteger const kMaxPostImageCount = 9;
             
             self.useDraftFirst = [params tt_boolValueForKey:@"use_draft_first"];
             self.isOuterEdit = [params tta_boolForKey:@"isOuterEdit"];
-            self.ttTrackStayEnable = self.isOuterEdit;
             self.outerPostId = [params tta_stringForKey:@"outerPostId"];
             //Post hint
             self.postContentHint = [params tt_stringValueForKey:@"post_content_hint"];
@@ -1563,8 +1561,6 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:self.originStatusBarStyle];
-    
-    [self addStayPageLog];
 }
 
 - (void)viewDidEnterBackground {
@@ -1690,28 +1686,4 @@ static NSInteger const kMaxPostImageCount = 9;
         TRACK_EVENT(UT_GO_DETAIL, param);
     }
 }
-
--(void)addStayPageLog {
-    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
-    if (duration == 0) {
-        return;
-    }
-    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    tracerDict[UT_PAGE_TYPE] = @"feed_publisher";
-     [FHUserTracker writeEvent:@"stay_page" params:tracerDict];
-    [self tt_resetStayTime];
-}
-
-#pragma mark - TTUIViewControllerTrackProtocol
-
-- (void)trackEndedByAppWillEnterBackground {
-    [self addStayPageLog];
-}
-
-- (void)trackStartedByAppWillEnterForground {
-    [self tt_resetStayTime];
-    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
-}
-
 @end
