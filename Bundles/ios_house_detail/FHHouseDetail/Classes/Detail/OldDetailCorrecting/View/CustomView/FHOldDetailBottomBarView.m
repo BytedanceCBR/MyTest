@@ -195,7 +195,7 @@
     }
     self.showIM = showIM;
 
-    self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
+    self.leftView.hidden = contactPhone.unregistered ;
     self.imChatBtn.hidden = !showIM;
 
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
@@ -242,12 +242,9 @@
         realtorContentWidth = labelWidth + avatarWidth + avatarLabelMargin + avatarLeftMargin;
     }
 
-    CGFloat leftWidth = contactPhone.showRealtorinfo == 1 ? realtorContentWidth : 0;
-
-    if (!showIM) {
-
-        if (contactPhone.showRealtorinfo != 1)  {
-            
+    CGFloat leftWidth = contactPhone.unregistered == false ? realtorContentWidth : 0;
+        if (contactPhone.unregistered)  {
+            self.avatarView.hidden = YES;
         // 阴影颜色
             _contactBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#ff9629"].CGColor;
             _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
@@ -258,24 +255,23 @@
                 make.left.mas_equalTo(self.leftView.mas_right).offset(20);
             }];
         }
-    }
 
     void (^updateBlock)() = ^{
         [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(leftWidth);
         }];
-        if (!showIM)  {
-            CGFloat offset = 20;
-            if (contactPhone.showRealtorinfo == 1) {
-                offset = 10;
-            }
-            [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.centerY.equalTo(self);
-                make.right.mas_equalTo(self).offset(-20);
-                make.height.mas_equalTo(44);
-                make.left.mas_equalTo(self.leftView.mas_right).offset(offset);
-            }];
-        }
+//        if (!showIM)  {
+//            CGFloat offset = 20;
+//            if (contactPhone.showRealtorinfo == 1) {
+//                offset = 10;
+//            }
+//            [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+//                make.centerY.equalTo(self);
+//                make.right.mas_equalTo(self).offset(-20);
+//                make.height.mas_equalTo(44);
+//                make.left.mas_equalTo(self.leftView.mas_right).offset(offset);
+//            }];
+//        }
     };
 
     updateBlock();

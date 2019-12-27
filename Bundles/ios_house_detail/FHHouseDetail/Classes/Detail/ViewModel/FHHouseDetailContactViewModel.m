@@ -355,7 +355,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (!contactPhone.isInstantData) {
         //非列表页带入数据才报埋点
         [self tryTraceImElementShow];
-        if (contactPhone) {
+        if (!contactPhone.unregistered) {
             [self addRealtorShowLog:contactPhone];
             [self addElementShowLog:contactPhone];
         }
