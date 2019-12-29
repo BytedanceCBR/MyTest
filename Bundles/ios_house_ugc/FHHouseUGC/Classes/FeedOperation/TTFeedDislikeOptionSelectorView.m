@@ -115,10 +115,13 @@ UITableViewDataSource
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    FHFeedOperationOption *option = self.options[indexPath.row];
-    BOOL isDoubleLine = option.title.length > 0 && option.subTitle.length > 0;
-    return isDoubleLine ? OPTION_HEIGHT_DOUBLE_LINE : OPTION_HEIGHT_SINGLE_LINE;
+    if(indexPath.row >= 0 && indexPath.row < self.options.count) {
+        FHFeedOperationOption *option = self.options[indexPath.row];
+        BOOL isDoubleLine = option.title.length > 0 && option.subTitle.length > 0;
+        return isDoubleLine ? OPTION_HEIGHT_DOUBLE_LINE : OPTION_HEIGHT_SINGLE_LINE;
+    } else {
+        return OPTION_HEIGHT_DOUBLE_LINE;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
