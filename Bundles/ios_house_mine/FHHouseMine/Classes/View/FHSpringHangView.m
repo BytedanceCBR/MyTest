@@ -11,6 +11,7 @@
 #import <TTRoute.h>
 #import <FHUtils.h>
 #import <FHUserTracker.h>
+#import <FHEnvContext.h>
 
 #define kFHSpringViewCloseNotification @"kFHSpringViewCloseNotification"
 #define kFHSpringViewCloseDate @"kFHSpringViewCloseDate"
@@ -79,10 +80,13 @@
             return;
         }
     }
-    
+    //显示
     _pageType = pageType;
+    if(![FHEnvContext sharedInstance].isShowingSpringHang){
+        [self addPandentShowLog];
+    }
+    [FHEnvContext sharedInstance].isShowingSpringHang = YES;
     self.hidden = NO;
-    [self addPandentShowLog];
 }
 
 - (void)close {
@@ -92,6 +96,8 @@
         NSString *midNightIntervalStr = [NSString stringWithFormat:@"%0.0f",midNightInterval];
         [FHUtils setContent:midNightIntervalStr forKey:kFHSpringViewCloseDate];
     }
+    //隐藏
+    [FHEnvContext sharedInstance].isShowingSpringHang = NO;
     [self addPandentCloseLog];
 }
 

@@ -167,7 +167,7 @@
     dict[@"value"] = @"be_null";
     dict[@"page_type"] = @"introduction";
     dict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
-    TRACK_EVENT(@"introduction _show", dict);
+    TRACK_EVENT(@"introduction_show", dict);
     
     self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
 }

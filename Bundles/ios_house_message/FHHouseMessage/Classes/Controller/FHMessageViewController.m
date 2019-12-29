@@ -94,11 +94,6 @@
     [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(pushTipHeight);
     }];
-    
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
 }
 
 
@@ -108,13 +103,18 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
+    [self startLoadData];
+    [self applicationDidBecomeActive];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     //春节活动运营位
     if([FHEnvContext isSpringHangOpen]){
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
-    [FHBubbleTipManager shareInstance].canShowTip = NO;
-    [self startLoadData];
-    [self applicationDidBecomeActive];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -337,6 +337,11 @@
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
 }
 
 - (BOOL) isAlignToSafeBottom {

@@ -204,10 +204,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear];
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     [self addUgcGuide];
 
@@ -228,6 +224,14 @@
     }
     
     [[FHMinisdkManager sharedInstance] goSpring];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
 }
 
 -(BOOL)shouldAutorotate

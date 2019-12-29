@@ -61,6 +61,8 @@ NS_ASSUME_NONNULL_BEGIN
 //第二个tab小红点显示逻辑，非ugc情况下
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL isShowDots;
+//春节运营位是否正在显示
+@property(nonatomic, assign) BOOL isShowingSpringHang;
 
 
 + (instancetype)sharedInstance;

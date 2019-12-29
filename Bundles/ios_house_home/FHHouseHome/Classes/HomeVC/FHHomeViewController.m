@@ -402,13 +402,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     
     [self checkPasteboard:NO];
-    
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
-    
+
     //春节活动
     [[FHMinisdkManager sharedInstance] goSpring];
 }
@@ -430,6 +424,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
     
 //    if(_isMainTabVC && !self.homeListViewModel){
 //        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];

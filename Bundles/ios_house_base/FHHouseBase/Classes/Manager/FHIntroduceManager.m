@@ -53,10 +53,12 @@
 }
 
 - (void)hideIntroduceView {
+    [self addStayCategoryLog];
+    [self.view addIntroductionShowLog];
+    
     self.isShowing = NO;
     [self.view removeFromSuperview];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [self addStayCategoryLog];
 }
 
 - (void)generateModel {
@@ -89,7 +91,10 @@
 }
 
 - (void)applicationDidEnterBackground {
-    [self addStayCategoryLog];
+    if(self.isShowing){
+        [self addStayCategoryLog];
+        [self.view addIntroductionShowLog];
+    }
 }
 
 - (void)applicationDidBecomeActive {
