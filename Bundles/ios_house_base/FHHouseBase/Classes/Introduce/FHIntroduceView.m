@@ -56,7 +56,7 @@
         top += (safeTop - 20);
     }
     
-    self.containerView = [[UIView alloc] initWithFrame:CGRectMake(0, top, self.bounds.size.width, self.bounds.size.height - top - bottom)];
+    self.containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
     [self addSubview:_containerView];
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.containerView.bounds.size.width, self.containerView.bounds.size.height)];
@@ -75,13 +75,13 @@
         [self.itemViewList addObject:itemView];
     }
     
-    self.indicatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.containerView.bounds.size.height - 20, 40, 4)];
+    self.indicatorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.containerView.bounds.size.height- bottom - 20, 40, 4)];
     _indicatorView.contentMode = UIViewContentModeScaleAspectFit;
     _indicatorView.image = [UIImage imageNamed:@"fh_introduce_indicator_1"];
     _indicatorView.centerX = self.centerX;
     [_containerView addSubview:_indicatorView];
     
-    self.jumpBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 20, 64, 32)];
+    self.jumpBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 20 + top, 64, 32)];
     [_jumpBtn setImage:[UIImage imageNamed:@"fh_introduce_jump"] forState:UIControlStateNormal];
     [_jumpBtn addTarget:self action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
     _jumpBtn.right = self.right - 20;

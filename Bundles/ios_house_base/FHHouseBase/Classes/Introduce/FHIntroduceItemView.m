@@ -54,17 +54,23 @@
 }
 
 - (void)initConstraints {
+    CGFloat bottom = 0;
+    if (@available(iOS 11.0, *)) {
+        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
     [self.animationView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self);
     }];
     
     [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self);
+        make.left.right.mas_equalTo(self);
+        make.bottom.mas_equalTo(self).offset(-bottom);
         make.height.mas_equalTo(56);
     }];
     
     [self.enterBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self).offset(-14);
+        make.bottom.mas_equalTo(self).offset(-14 - bottom);
         make.centerX.mas_equalTo(self);
         make.width.mas_equalTo(260);
         make.height.mas_equalTo(64);
