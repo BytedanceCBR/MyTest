@@ -49,13 +49,14 @@ def fhPods
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
     
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev'
-#    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => 'c639b4033f33f3cf5d129642c923121f266d9186'
+#   pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '6954dc86e3a0977a65622b7221435ca4d47ab70d'
 #    pod 'FHCommonUI', :path => '../../ios_common_ui'
-    pod 'FHCommonUI', '0.0.11'
+    pod 'FHCommonUI', '0.0.12'
 
-    pod 'ios_house_im', '0.1.15-rc.9'
+    pod 'ios_house_im', '0.1.15-rc.10'
 #     pod 'ios_house_im' , :path => '../../ios_house_im'
-#     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '8c2feddad57812c4707d6a997d5a08a3b5baba2b'
+#     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '6079c1f53b2b90e1031ad300ada66eb7a26417b5'
+
 
 
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
@@ -257,7 +258,7 @@ def appPods
     
 
     #-----头条获取installID---
-    pod 'TTInstallService', '1.3.1.1-binary'
+    pod_binary 'TTInstallService', '2.1.3'
 
     #-----头条用户设置库--------
     pod 'TTUserSettings', '0.3.4'
@@ -339,7 +340,7 @@ def appPods
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
     pod_binary 'TTMonitor','0.7.11.0'
-    pod_binary 'Heimdallr','0.7.6', :subspecs => [
+    pod_binary 'Heimdallr','0.7.11-rc.5', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
@@ -352,6 +353,7 @@ def appPods
     'HMDANR',
     'HMDOOM',
     'CrashDetector',
+    'CrashCapture',
     'Log',
     'UITracker',
     'MemorySnapshot',
@@ -365,6 +367,7 @@ def appPods
     'HTTPRequestTracker', #
     'HMDOOMCrash', #
     'HMDWatchDog', #
+    'Runloop',
     'UserException' #
     ]
     pod_binary 'TTMacroManager','1.0.1'
@@ -378,7 +381,7 @@ def appPods
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
     pod_binary 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
     pod 'TTPushManager', '0.0.13.4'
-    pod_binary 'TTReachability', '0.6.2'
+    pod_binary 'TTReachability', '0.8.1'
     pod_binary 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----
     pod_binary 'TTPersistence', '0.2.3'
@@ -399,7 +402,23 @@ def appPods
     #-----头条交互式退出手势----
     pod_binary 'TTImagePreviewAnimateManager', '1.0.13'
     #-----头条日志库-----
-    pod_binary 'TTTracker', '10.0.5'
+    pod_binary 'TTTracker', '1.1.20-rc.4'
+    pod_binary 'BDTracker', '0.5.6-rc.3' , :subspecs => [
+    'InstallBase',
+    'InstallCore',
+    'InstallHome',
+    'Network/Base',
+    'Network/TTNetwork',
+    'TrackerBase',
+    'TrackerCore',
+    'TrackerDatabase',
+    'TrackerHome'
+    ]
+    pod_binary 'BDDataDecorator', '1.0.3' , :subspecs => [
+    'Base',
+    'Data',
+    'TTNet'
+    ]
     #-----头条推送SDK----
     pod_binary 'TTPushSDK', '0.1.1'
     
