@@ -60,11 +60,12 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
     [[TTTracker sharedInstance] setConfigParamsBlock:^(void) {
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
         [params setValue:[TTAccountManager userID] forKey:@"user_id"];
-        if([TTSandBoxHelper isInHouseApp]) {
-            [params setValue:@(NO) forKey:@"need_encrypt"];
-        } else {
+        //in house 环境下也使用下发的加密开关
+//        if([TTSandBoxHelper isInHouseApp]) {
+//            [params setValue:@(NO) forKey:@"need_encrypt"];
+//        } else {
             [params setValue:@([SSCommonLogic useEncrypt]) forKey:@"need_encrypt"];
-        }
+//        }
         
         return [params copy];
     }];
