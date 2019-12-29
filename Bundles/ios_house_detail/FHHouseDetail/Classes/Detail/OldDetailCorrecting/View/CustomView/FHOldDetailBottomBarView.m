@@ -195,7 +195,7 @@
     }
     self.showIM = showIM;
 
-    self.leftView.hidden = contactPhone.unregistered ;
+    self.leftView.hidden = contactPhone.unregistered || !contactPhone;
     self.imChatBtn.hidden = !showIM;
 
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
@@ -242,8 +242,8 @@
         realtorContentWidth = labelWidth + avatarWidth + avatarLabelMargin + avatarLeftMargin;
     }
 
-    CGFloat leftWidth = contactPhone.unregistered == false ? realtorContentWidth : 0;
-        if (contactPhone.unregistered)  {
+    CGFloat leftWidth = (contactPhone.unregistered == false || !contactPhone )? realtorContentWidth : 0;
+        if (contactPhone.unregistered || !contactPhone)  {
             self.avatarView.hidden = YES;
         // 阴影颜色
             _contactBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#ff9629"].CGColor;
