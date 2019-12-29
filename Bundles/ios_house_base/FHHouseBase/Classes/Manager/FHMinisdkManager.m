@@ -51,6 +51,8 @@
 - (void)initVars {
     self.finishBlock = ^(BOOL isCompleted, NSError *error) {
         if(error){
+            NSString *code = [NSString stringWithFormat:@"%i",error.code];
+            [self addIsApiSuccessLog:NO errorCode:code];
             //重试逻辑
             if(self.retryCount < 1){
                 //3秒后重试，只重试一次
@@ -62,11 +64,10 @@
             return;
         }
         
-        if(isCompleted){
-//            self.alreadyReport = YES;
-            //完成任务
-            [self addFinishTaskLog];
-        }
+        //接口返回成功
+        [self addIsApiSuccessLog:YES errorCode:nil];
+        [self addFinishTaskLog:isCompleted];
+
         //不管成功还是失败，都会设置空，登录就不会在上报，除非重新从主端拉活
         self.url = nil;
     };
@@ -206,9 +207,10 @@
 
 #pragma mark -  埋点
 
-- (void)addFinishTaskLog {
+- (void)addFinishTaskLog:(BOOL)isCompleted {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"task_name"] = @"festival_login";
+    tracerDict[@"complete"] = @(isCompleted);
     TRACK_EVENT(@"finish_task", tracerDict);
 }
 
@@ -216,6 +218,16 @@
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"is_reactive"] = @"1";
     TRACK_EVENT(@"activation", tracerDict);
+}
+
+- (void)addIsApiSuccessLog:(BOOL)success errorCode:(NSString *)errorCode {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    tracerDict[@"api_name"] = @"spring_festival_login_task";
+    tracerDict[@"recall_success"] = @(success);
+    if(errorCode){
+        tracerDict[@"code"] = errorCode;
+    }
+    TRACK_EVENT(@"is_api_success", tracerDict);
 }
     
 @end
