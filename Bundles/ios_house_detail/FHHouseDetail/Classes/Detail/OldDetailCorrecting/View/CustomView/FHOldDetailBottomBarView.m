@@ -195,7 +195,7 @@
     }
     self.showIM = showIM;
 
-    self.leftView.hidden = contactPhone.unregistered || !contactPhone;
+    self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
     self.imChatBtn.hidden = !showIM;
 
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
@@ -242,9 +242,12 @@
         realtorContentWidth = labelWidth + avatarWidth + avatarLabelMargin + avatarLeftMargin;
     }
 
-    CGFloat leftWidth = (contactPhone.unregistered == false || !contactPhone )? realtorContentWidth : 0;
-        if (contactPhone.unregistered || !contactPhone)  {
-            self.avatarView.hidden = YES;
+    CGFloat leftWidth = contactPhone.showRealtorinfo == 1 ? realtorContentWidth : 0;
+
+    if (!showIM) {
+
+        if (contactPhone.showRealtorinfo != 1)  {
+            
         // 阴影颜色
             _contactBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#ff9629"].CGColor;
             _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
@@ -255,7 +258,7 @@
                 make.left.mas_equalTo(self.leftView.mas_right).offset(20);
             }];
         }
-
+    }
     void (^updateBlock)() = ^{
         [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(leftWidth);
