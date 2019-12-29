@@ -178,6 +178,7 @@
                            @"houseVideo": @"house_video",
                            @"searchId": @"search_id",
                            @"gaodeImageUrl": @"gaode_image_url",
+                           @"gaodeImage": @"gaode_image",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

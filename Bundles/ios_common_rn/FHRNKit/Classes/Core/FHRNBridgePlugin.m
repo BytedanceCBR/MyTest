@@ -128,6 +128,7 @@
     
     NSString *houseType = [param tt_stringValueForKey:@"houseType"];
     NSString *realtorId = [param tt_stringValueForKey:@"realtorId"];
+
     //    NSString *reportParams = [param tt_stringValueForKey:@"report_params"];
     NSString *reportParamsStr = [param tt_stringValueForKey:@"report_params"];
     NSMutableString *processString = [NSMutableString stringWithString:reportParamsStr];
@@ -141,6 +142,11 @@
     
     NSDictionary *reportParamsDict = [FHUtils dictionaryWithJsonString:processString];
     NSMutableDictionary *callParams = [NSMutableDictionary new];
+    
+    if ([param isKindOfClass:[NSDictionary class]]) {
+        [callParams addEntriesFromDictionary:param];
+    }
+    
     if ([reportParamsDict isKindOfClass:[NSDictionary class]]) {
         [callParams addEntriesFromDictionary:reportParamsDict];
     }
@@ -151,19 +157,20 @@
         [callParams setValue:houseType forKey:@"house_type"];
     }
     
-    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
-    {
-        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
-            callParams[@"follow_id"] = callParams[@"group_id"];
-        }
-    }
+//    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
+//    {
+//        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
+//            callParams[@"follow_id"] = callParams[@"group_id"];
+//        }
+//    }
     
-    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
-    {
-        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
-            callParams[@"house_id"] = callParams[@"group_id"];
-        }
-    }
+//    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
+//    {
+//        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
+//            callParams[@"house_id"] = callParams[@"group_id"];
+//        }
+//    }
+//
     
     if ([callParams[@"log_pb"] isKindOfClass:[NSString class]]) {
         callParams[@"log_pb"] = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];

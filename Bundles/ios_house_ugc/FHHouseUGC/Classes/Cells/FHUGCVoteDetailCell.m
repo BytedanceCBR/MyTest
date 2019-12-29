@@ -22,6 +22,9 @@
 #import "ToastManager.h"
 #import "FHUGCVoteResponseModel.h"
 #import "FHUserTracker.h"
+#import <MJRefresh.h>
+#import <FHRefreshCustomFooter.h>
+#import <UIScrollView+Refresh.h>
 
 #define leftMargin 20
 #define rightMargin 20
@@ -870,12 +873,30 @@
     if (animated) {
         [self.tableView beginUpdates];
     }
+    //这里设置隐藏是因为在只有一个投票时候，改变高度会导致footer文字和内容有重叠，效果不好
+    self.tableView.mj_footer.hidden = YES;
     [UIView animateWithDuration:0.3 animations:^{
         [self refreshWithData:self.voteInfo];
         [self.detailCell setupUIFrames];
+    } completion:^(BOOL finished) {
+        [self updateTableViewWithMoreData];
     }];
     if (animated) {
         [self.tableView endUpdates];
+    }
+}
+
+//这里是因为设置隐藏之后，在设置回来时候，文字就变了，所以需要根据实际情况设置正确的文字
+- (void)updateTableViewWithMoreData {
+    self.tableView.mj_footer.hidden = NO;
+    if (self.tableView.hasMore) {
+        [self.tableView.mj_footer endRefreshing];
+    }else {
+        if([self.tableView.mj_footer isKindOfClass:[FHRefreshCustomFooter class]]){
+            FHRefreshCustomFooter *refreshFooter = (FHRefreshCustomFooter *)self.tableView.mj_footer;
+            [refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
+        }
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
 }
 

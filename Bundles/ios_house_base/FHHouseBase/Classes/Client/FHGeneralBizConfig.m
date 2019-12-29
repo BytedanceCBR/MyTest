@@ -12,7 +12,8 @@
 #import "FHLazyLoadModel.h"
 #import <YYModel/YYModel.h>
 #import "FHUGCConfigModel.h"
-
+#import <Heimdallr/HMDTTMonitor.h>
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
@@ -27,6 +28,7 @@ static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 
 @interface FHGeneralBizConfig ()
 @property (nonatomic, strong) YYCache *generalConfigCache;
+@property (nonatomic, strong) YYCache *legacyGeneralConfigCache;
 @property (nonatomic, strong) YYCache *searchConfigCache;
 @property (nonatomic, strong) YYCache *userSelectCache;
 @property (nonatomic, strong) YYCache *userDefaultSelectCityCache;
@@ -41,9 +43,20 @@ static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 - (YYCache *)generalConfigCache
 {
     if (!_generalConfigCache) {
-        _generalConfigCache = [YYCache cacheWithName:kGeneralCacheName];
+        //默认缓存放于caches目录下，有可能会被系统删掉
+        NSString *cacheFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        NSString *path = [cacheFolder stringByAppendingPathComponent:kGeneralCacheName];
+        _generalConfigCache = [YYCache cacheWithPath:path];
     }
     return _generalConfigCache;
+}
+
+- (YYCache *)legacyGeneralConfigCache
+{
+    if (!_legacyGeneralConfigCache) {
+        _legacyGeneralConfigCache = [YYCache cacheWithName:kGeneralCacheName];
+    }
+    return _legacyGeneralConfigCache;
 }
 
 - (YYCache *)searchConfigCache
@@ -148,6 +161,9 @@ static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 - (FHConfigDataModel *)getGeneralConfigFromLocal
 {
     NSString *configJsonStr = [self.generalConfigCache objectForKey:kGeneralKey];
+    if (!configJsonStr) {
+        configJsonStr = [self.legacyGeneralConfigCache objectForKey:kGeneralKey];
+    }
     NSDictionary *configDict = [FHUtils dictionaryWithJsonString:configJsonStr];
     
     if ([configDict isKindOfClass:[NSDictionary class]]) {
@@ -157,12 +173,23 @@ static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
             return configModel;
         }else
         {
+            [self addNilLocalConfigMonitor:@"get model failed"];
             return nil;
         }
     }else
     {
+        [self addNilLocalConfigMonitor:@"load cache failed"];
         return nil;
     }
+}
+
+-(void)addNilLocalConfigMonitor:(NSString *)msg
+{
+    if ([TTSandBoxHelper isAPPFirstLaunch]) {
+        //首次启动 没有本地缓存
+        return;
+    }
+    [[HMDTTMonitor defaultManager] hmdTrackService:@"config_load_local_failed" attributes:@{@"message":msg?:@"load local error"}];
 }
 
 -(FHConfigDataModel*)lazyInitConfig:(NSDictionary*)config {
