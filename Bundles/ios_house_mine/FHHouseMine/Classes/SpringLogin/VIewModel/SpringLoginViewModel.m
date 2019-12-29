@@ -259,6 +259,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
         if (self.needPopVC) {
             [self popViewController:YES];
+            [FHMinisdkManager sharedInstance].isShowing = NO;
         }
         [self loginSuccessedWithPhoneNum:phoneNumber];
         
