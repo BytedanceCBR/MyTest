@@ -145,10 +145,10 @@
     }];
     
     [self.editLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.icon);
+        make.centerY.mas_equalTo(self.descLabel);
         make.left.mas_equalTo(self.descLabel.mas_right).offset(10);
         make.right.mas_lessThanOrEqualTo(self.moreBtn.mas_left).offset(-10);
-        make.height.mas_equalTo(17);
+        make.height.mas_equalTo(23);
     }];
     
     [self.editingLabel mas_makeConstraints:^(MASConstraintMaker *make) {

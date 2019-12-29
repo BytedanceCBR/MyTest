@@ -71,24 +71,26 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
-            if (backError) {
+            id<FHBaseModelProtocol> model = nil;
+            if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
-            }
-            id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:obj class:cls error:&backError];
-            serDate = [NSDate date];
-            if (!model) {
-                // model 为nil
-                code = 1;
-                resultType = FHNetworkMonitorTypeBizFailed + 1;
             } else {
-                // model 不为nil
-                if ([model respondsToSelector:@selector(status)]) {
-                    NSString *status = [model performSelector:@selector(status)];
-                    if (status.integerValue != 0 || backError != nil) {
-                        code = [status integerValue];
-                        errMsg = backError.domain;
-                        resultType = FHNetworkMonitorTypeBizFailed+code;
+                model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:obj class:cls error:&backError];
+                serDate = [NSDate date];
+                if (!model) {
+                    // model 为nil
+                    code = 1;
+                    resultType = FHNetworkMonitorTypeBizFailed + 1;
+                } else {
+                    // model 不为nil
+                    if ([model respondsToSelector:@selector(status)]) {
+                        NSString *status = [model performSelector:@selector(status)];
+                        if (status.integerValue != 0 || backError != nil) {
+                            code = [status integerValue];
+                            errMsg = backError.domain;
+                            resultType = FHNetworkMonitorTypeBizFailed+code;
+                        }
                     }
                 }
             }
@@ -176,25 +178,26 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
-            if (backError) {
+            id <FHBaseModelProtocol> model = nil;
+            if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
-            }
-            
-            id <FHBaseModelProtocol> model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
-            serDate = [NSDate date];
-            if (!model) {
-                // model 为nil
-                code = 1;
-                resultType = FHNetworkMonitorTypeBizFailed + 1;
             } else {
-                // model 不为nil
-                if ([model respondsToSelector:@selector(status)]) {
-                    NSString *status = [model performSelector:@selector(status)];
-                    if (status.integerValue != 0 || backError != nil) {
-                        code = [status integerValue];
-                        errMsg = backError.domain;
-                        resultType = FHNetworkMonitorTypeBizFailed+code;
+                model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
+                serDate = [NSDate date];
+                if (!model) {
+                    // model 为nil
+                    code = 1;
+                    resultType = FHNetworkMonitorTypeBizFailed + 1;
+                } else {
+                    // model 不为nil
+                    if ([model respondsToSelector:@selector(status)]) {
+                        NSString *status = [model performSelector:@selector(status)];
+                        if (status.integerValue != 0 || backError != nil) {
+                            code = [status integerValue];
+                            errMsg = backError.domain;
+                            resultType = FHNetworkMonitorTypeBizFailed+code;
+                        }
                     }
                 }
             }
