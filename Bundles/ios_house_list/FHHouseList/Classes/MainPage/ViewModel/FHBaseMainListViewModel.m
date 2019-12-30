@@ -1709,8 +1709,12 @@ extern NSString *const INSTANT_DATA_KEY;
                 if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
                     self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
                 } else if (self.tableView.contentOffset.y < self.tableView.height){
-                    //小于一屏再进行设置
-                    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
+                    
+                    if (!self.tableView.isDragging || (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight))) {
+                        //小于一屏再进行设置
+                        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
+                        
+                    }
                 }
             }
         }
