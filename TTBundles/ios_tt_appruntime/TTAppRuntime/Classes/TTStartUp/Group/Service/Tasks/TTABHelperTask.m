@@ -46,7 +46,7 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
     [self registClientABs];
     
     // 用于上报vid，追踪实验数据
-    [TTTracker sharedInstance].vidBlock = ^NSString *{
+    [TTTracker sharedInstance].abSDKVersionBlock = ^NSString *{
         NSString *exposureVid = [BDABTestManager queryExposureExperiments];
         return exposureVid;
     };

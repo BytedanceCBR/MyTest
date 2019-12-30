@@ -55,7 +55,7 @@ static AccountKeyChainManager *s_manager;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(installIDAvailable:)
-                                                 name:kGetInstallIDSucceedNotification
+                                                 name:TTInstallDeviceDidRegisteredNotification
                                                object:nil];
     
 }

@@ -32,6 +32,13 @@
         safeInsets = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets]; \
     }
 
+#ifndef WeakSelf
+#define WeakSelf __weak typeof(self) wself = self
+#endif
+#ifndef StrongSelf
+#define StrongSelf __strong typeof(wself) self = wself
+#endif
+
 #pragma mark - log
 
 #if DEBUG
