@@ -8,6 +8,8 @@
 #import "FHHouseDetailSubPageViewController.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "FHDetailBottomBarView.h"
+#import "FHOldDetailBottomBarView.h"
+
 #import "FHDetailNavBar.h"
 #import "TTDeviceHelper.h"
 #import <TTUIWidget/UIViewController+Track.h>
@@ -17,7 +19,7 @@
 
 @property (nonatomic, strong) FHDetailNavBar *navBar;
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
+@property (nonatomic, strong) FHDetailBottomBar *bottomBar;
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId; // 房源id
@@ -154,7 +156,13 @@
     };
     [self.view addSubview:_navBar];
     
-    _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    
+    
+    if (_houseType == FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeNewHouse){
+        _bottomBar = [[FHOldDetailBottomBarView alloc]initWithFrame:CGRectZero];
+ }else {
+     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+ }
     [self.view addSubview:_bottomBar];
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
