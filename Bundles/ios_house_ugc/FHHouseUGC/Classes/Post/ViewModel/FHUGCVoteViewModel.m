@@ -28,23 +28,88 @@
 #import <TTUGCDefine.h>
 #import <FHUGCVoteDatePickerView.h>
 
-#define OPTION_START_INDEX  2
 #define DATEPICKER_HEIGHT 200
 #define TOP_BAR_HEIGHT 40
 
+@interface FHUGCVoteViewModel() <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate,FHUGCVotePublishBaseViewDelegate, FHUGCVotePublishOptionCellDelegate>
 
-@interface FHUGCVoteViewModel() <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate,FHUGCVotePublishBaseCellDelegate>
 @property (nonatomic, strong) FHUGCVotePublishModel *model;
-@property (nonatomic, weak  ) UITableView *tableView;
+@property (nonatomic, weak  ) UIScrollView *scrollView;
 @property (nonatomic, weak  ) FHUGCVotePublishViewController *viewController;
+
+@property (nonatomic, strong) FHUGCVotePublishScopeView *scopeView;
+@property (nonatomic, strong) FHUGCVotePublishVoteTypeView *typeView;
+@property (nonatomic, strong) FHUGCVotePublishDatePickView *deadlineDateView;
+@property (nonatomic, strong) FHUGCVotePublishTitleView *titleTextView;
+@property (nonatomic, strong) FHUGCVotePublishDescriptionView *descTextView;
+
+@property (nonatomic, strong) UITableView *voteOptionsTableView;
 @property (nonatomic, strong) UIView *addOptionFooterView;
-@property (nonatomic, assign) BOOL isDatePickerHidden;
+
 @property (nonatomic, strong) FHUGCVoteBottomPopView *bottomPopView;
 @property (nonatomic, strong) FHUGCVoteDatePickerView *datePicker;
 @property (nonatomic, strong) UIView *dateSelectView;
+
 @end
 
 @implementation FHUGCVoteViewModel
+
+-(instancetype)initWithScrollView:(UIScrollView *)scrollView ViewController:(FHUGCVotePublishViewController *)viewController {
+    if(self = [super init]) {
+        self.scrollView = scrollView;
+        self.scrollView.delegate = self;
+        self.scrollView.backgroundColor = [UIColor colorWithHexStr:@"#EBEBF0"];
+        self.viewController = viewController;
+        self.model = [FHUGCVotePublishModel new];
+        
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI {
+    
+    // 可见范围
+    self.scopeView = [[FHUGCVotePublishScopeView alloc] initWithFrame:CGRectMake(0, 0, self.scrollView.frame.size.width, CELL_HEIGHT)];
+    self.scopeView.delegate = self;
+    
+    // 投票类型
+    self.typeView = [[FHUGCVotePublishVoteTypeView alloc] initWithFrame:CGRectMake(0, self.scopeView.bottom, self.scopeView.frame.size.width, CELL_HEIGHT)];
+    self.typeView.delegate = self;
+    
+    // 投票截止日期
+    self.deadlineDateView = [[FHUGCVotePublishDatePickView alloc] initWithFrame:CGRectMake(0, self.typeView.bottom, self.typeView.frame.size.width, CELL_HEIGHT)];
+    self.deadlineDateView.hideBottomLine = YES;
+    self.deadlineDateView.delegate = self;
+    [self updateDeadlineDateView];
+    
+    // 标题
+    self.titleTextView = [[FHUGCVotePublishTitleView alloc] initWithFrame:CGRectMake(0, self.deadlineDateView.bottom + 20, self.deadlineDateView.frame.size.width, TITLE_VIEW_HEIGHT)];
+    self.titleTextView.delegate = self;
+    
+    // 描述
+    self.descTextView = [[FHUGCVotePublishDescriptionView alloc] initWithFrame:CGRectMake(0, self.titleTextView.bottom, self.titleTextView.frame.size.width, DESC_VIEW_HEIGHT)];
+    self.descTextView.hideBottomLine = YES;
+    self.descTextView.delegate = self;
+
+    // 投票选项
+    self.voteOptionsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.descTextView.bottom, self.descTextView.frame.size.width, 0) style:UITableViewStyleGrouped];
+    [self updateVoteOptionsViewHeight];
+    [self.voteOptionsTableView registerClass:[FHUGCVotePublishOptionCell class] forCellReuseIdentifier:[FHUGCVotePublishOptionCell reusedIdentifier]];
+    self.voteOptionsTableView.scrollEnabled = NO;
+    self.voteOptionsTableView.delegate = self;
+    self.voteOptionsTableView.dataSource = self;
+    
+    // 上半截
+    [self.scrollView addSubview:self.scopeView];
+    [self.scrollView addSubview:self.typeView];
+    [self.scrollView addSubview:self.deadlineDateView];
+    
+    // 下半截
+    [self.scrollView addSubview:self.titleTextView];
+    [self.scrollView addSubview:self.descTextView];
+    [self.scrollView addSubview:self.voteOptionsTableView];
+}
 
 - (FHUGCVoteBottomPopView *)bottomPopView {
     if(!_bottomPopView) {
@@ -151,23 +216,6 @@
     return _addOptionFooterView;
 }
 
-- (void)reloadTableView {
-    [self.tableView reloadData];
-}
-
--(instancetype)initWithTableView:(UITableView *)tableView ViewController:(FHUGCVotePublishViewController *)viewController {
-    if(self = [super init]) {
-        self.tableView = tableView;
-        [self registerCells];
-        self.tableView.delegate = self;
-        self.tableView.dataSource = self;
-        self.viewController = viewController;
-        self.model = [FHUGCVotePublishModel new];
-        self.isDatePickerHidden = YES;
-    }
-    return self;
-}
-
 // 从圈子详情页进入投票时带入的圈子信息处理
 - (void)configModelForSocialGroupId: (NSString *)socialGroupId socialGroupName: (NSString *)socialGroupName hasFollowed:(BOOL)followed {
     
@@ -179,231 +227,310 @@
         self.model.isAllSelected = NO;
         self.model.isPartialSelected = YES;
         self.model.visibleType = VisibleType_Group;
+        
+        [self updateVoteVisibleScopeView];
     }
-}
-
-- (void)registerCells {
-    
-    [self.tableView registerClass:[FHUGCVotePublishCityCell class] forCellReuseIdentifier:[FHUGCVotePublishCityCell reusedIdentifier]];
-    
-    [self.tableView registerClass:[FHUGCVotePublishTitleCell class] forCellReuseIdentifier:[FHUGCVotePublishTitleCell reusedIdentifier]];
-    
-    [self.tableView registerClass:[FHUGCVotePublishDescriptionCell class] forCellReuseIdentifier:[FHUGCVotePublishDescriptionCell reusedIdentifier]];
-    
-    [self.tableView registerClass:[FHUGCVotePublishOptionCell class] forCellReuseIdentifier:[FHUGCVotePublishOptionCell reusedIdentifier]];
-    
-    [self.tableView registerClass:[FHUGCVotePublishVoteTypeCell class] forCellReuseIdentifier:[FHUGCVotePublishVoteTypeCell reusedIdentifier]];
-    
-    [self.tableView registerClass:[FHUGCVotePublishDatePickCell class] forCellReuseIdentifier:[FHUGCVotePublishDatePickCell reusedIdentifier]];
-    
 }
 
 // MARK: UITableViewDelegate
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.section == 0) {
-        if(indexPath.row == 1) {
-            return CELL_HEIGHT;
-        }
-        else if(indexPath.row == 2) {
-            return self.isDatePickerHidden ? CELL_HEIGHT : CELL_HEIGHT + DATEPICKER_HEIGHT;
-        }
-    } else if(indexPath.section == 1) {
-        if(indexPath.row == 0) {
-            return 70;
-        }
-        else if(indexPath.row == 1) {
-            return 65;
-        }
-        else {
-            return 62;
-        }
-    }
-    return CELL_HEIGHT;
-
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if(section == 0) {
-        return CGFLOAT_MIN;
-    } else {
-        return 20;
-    }
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if(section == 1) {
-        return 62;
-    } else {
-        return CGFLOAT_MIN;
-    }
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if(section == 1) {
-        return self.addOptionFooterView;
-    } else {
-        return nil;
-    }
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return CGFLOAT_MIN;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     return nil;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    
-    if(indexPath.section == 0) {
-        if(indexPath.row == 0) {
-            [self gotoVoteVisibleScopePage];
-        }
-        else if(indexPath.row == 1) {
-            [self gotoVoteTypeSelectPage];
-        }
-        else if(indexPath.row == 2) {
-            [self showDatePicker];
-        } else {
-        }
-    }
-    else if(indexPath.section == 1) {
-        
-    }
-    else {
-        
-    }
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return OPTION_CELL_HEIGHT;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return OPTION_CELL_HEIGHT;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    return self.addOptionFooterView;
 }
 
 // MARK: UITableViewDataSource
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
 }
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    if(section == 0) {
-        return (
-            1       // 可见范围Cell
-            + 1     // 投票类型Cell
-            + 1     // 截止日期Cell
-        );
-    }
-    else if(section == 1) {
-        return (
-            + 1     // 投票标题Cell
-            + 1     // 投票描述Cell
-            + self.model.options.count // 投票选项
-        );
-    } else {
-        return 0;
-    }
+    return self.model.options.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    FHUGCVotePublishBaseCell *cell = nil;
+    FHUGCVotePublishOptionCell *optionCell = [tableView dequeueReusableCellWithIdentifier:[FHUGCVotePublishOptionCell reusedIdentifier] forIndexPath: indexPath];
     
-    if(indexPath.section == 0) {
-        if(indexPath.row == 0) {
-            cell = [tableView dequeueReusableCellWithIdentifier:[FHUGCVotePublishCityCell reusedIdentifier] forIndexPath:indexPath];
-            NSInteger count = self.model.cityInfos.count;
-            FHUGCVotePublishCityCell* cityCell = (FHUGCVotePublishCityCell *)cell;
-            
-            NSMutableString *title = @"未设置";
-            cityCell.cityLabel.textColor = [UIColor themeGray3];
-            
-            if(self.model.isAllSelected) {
-                title = @"全部关注圈子";
-                cityCell.cityLabel.textColor = [UIColor themeGray1];
-            }
-            else if(self.model.isPartialSelected) {
-                if(count > 1) {
-                    title = [NSMutableString stringWithFormat:@"%@等%@个圈子", self.model.cityInfos.firstObject.socialGroupName, @(count)];
-                    cityCell.cityLabel.textColor = [UIColor themeGray1];
-                }
-                else if(count == 0) {
-                    // 默认未设置
-                }
-                else {
-                    title = [NSMutableString stringWithFormat:@"%@", self.model.cityInfos.firstObject.socialGroupName];
-                    cityCell.cityLabel.textColor = [UIColor themeGray1];
-                }
-            }
-            ((FHUGCVotePublishCityCell *)cell).cityLabel.text = title;
-        }
-        else if(indexPath.row == 1) {
-            cell = [tableView dequeueReusableCellWithIdentifier:[FHUGCVotePublishVoteTypeCell reusedIdentifier] forIndexPath:indexPath];
-            
-            [((FHUGCVotePublishVoteTypeCell *)cell) updateWithVoteType:self.model.type];
-            
-        } else if(indexPath.row == 2) {
-            cell = [tableView dequeueReusableCellWithIdentifier:[FHUGCVotePublishDatePickCell reusedIdentifier] forIndexPath:indexPath];
-            FHUGCVotePublishDatePickCell *datePickCell = (FHUGCVotePublishDatePickCell *)cell;
-            datePickCell.dateLabel.text = [datePickCell.dateFormatter stringFromDate:self.datePicker.date];
-            self.model.deadline = self.datePicker.date;
-        } else {
-            cell = [UITableViewCell new];
-        }
-    } else if(indexPath.section == 1) {
-        if(indexPath.row == 0) {
-            cell = [tableView dequeueReusableCellWithIdentifier:[FHUGCVotePublishTitleCell reusedIdentifier] forIndexPath:indexPath];
-        } else if(indexPath.row == 1) {
-            cell = [tableView dequeueReusableCellWithIdentifier:[FHUGCVotePublishDescriptionCell reusedIdentifier] forIndexPath: indexPath];
-        } else {
-            cell = [tableView dequeueReusableCellWithIdentifier:[FHUGCVotePublishOptionCell reusedIdentifier] forIndexPath: indexPath];
-            
-            NSInteger index = indexPath.row - OPTION_START_INDEX;
-            if(index >= 0 && index < self.model.options.count) {
-                FHUGCVotePublishOptionCell *optionCell = (FHUGCVotePublishOptionCell *)cell;
-                [optionCell updateWithOption:self.model.options[index]];
-            }
-        }
+    NSInteger index = indexPath.row;
+    if(index >= 0 && index < self.model.options.count) {
+        [optionCell updateWithOption:self.model.options[index]];
     }
-    cell.delegate = self;
-    return cell;
+    
+    optionCell.delegate = self;
+    
+    return optionCell;
 }
 
-// MARK: FHUGCVotePublishBaseCellDelegate
+// MARK: FHUGCVotePublishBaseViewDelegate
+
+- (void)voteScopeView:(FHUGCVotePublishScopeView *)scopeView tapAction:(UITapGestureRecognizer *)tap {
+    [self gotoVoteVisibleScopePage];
+}
+
+- (void)voteTypeView:(FHUGCVotePublishVoteTypeView *)scopeView tapAction:(UITapGestureRecognizer *)tap {
+    [self gotoVoteTypeSelectPage];
+}
+
+- (void)voteDatePickView:(FHUGCVotePublishDatePickView *)scopeView tapAction:(UITapGestureRecognizer *)tap {
+    [self showDatePicker];
+}
+
+- (void)voteTitleView:(FHUGCVotePublishTitleView *)titleView didInputText:(NSString *)text {
+    self.model.voteTitle = [self validStringConvertWith:text];
+    [self checkIfEnablePublish];
+}
+
+- (void)voteTitleView:(FHUGCVotePublishTitleView *)titleCell didChangeHeight:(CGFloat)newHeight {
+    [self updateTitleViewWithNewHeight:newHeight];
+}
+
+- (void)voteTitleViewDidBeginEditing:(FHUGCVotePublishTitleView *)titleView {
+    [self.viewController scrollToVisibleForView:titleView];
+}
+
+- (void)descriptionView:(FHUGCVotePublishDescriptionView *)descriptionView didInputText:(NSString *)text {
+    self.model.voteDescription = [self validStringConvertWith:text];
+    [self checkIfEnablePublish];
+}
+
+- (void)descriptionView:(FHUGCVotePublishDescriptionView *)descriptionView didChangeHeight:(CGFloat)newHeight {
+    [self updateDescriptionViewWithNewHeight:newHeight];
+}
+
+- (void)descriptionViewDidBeginEditing:(FHUGCVotePublishDescriptionView *)descriptionView {
+    [self.viewController scrollToVisibleForView:descriptionView];
+}
+
+// MARK: UIScrollViewDelegate
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.scrollView endEditing:YES];
+}
+
+// MARK: 函数
+
+- (void)gotoVoteVisibleScopePage {
+    
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"isAllSelected"] = @(self.model.isAllSelected);
+    dict[@"isPartialSelected"] = @(self.model.isPartialSelected);
+    dict[@"visiableType"] = @(self.model.visibleType);
+    dict[@"selectedSocialGroup"] = self.model.cityInfos;
+    WeakSelf;
+    dict[@"resultBlock"] = ^(NSArray<FHUGCVotePublishCityInfo *> *cityInfos, BOOL isAllSelected, BOOL isPartialSelected) {
+        StrongSelf;
+
+        self.model.isPartialSelected = isPartialSelected;
+        self.model.isAllSelected = isAllSelected;
+        self.model.visibleType = VisibleType_Group;
+        self.model.cityInfos = cityInfos;
+        
+        [self updateVoteVisibleScopeView];
+        
+    };
+    NSMutableDictionary *tracer = @{}.mutableCopy;
+    tracer[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM];
+    tracer[UT_PAGE_TYPE] = @"vote_publisher";
+    dict[TRACER_KEY] = tracer;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_vote_publish_visible_scope"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+- (void)updateVoteVisibleScopeView {
+    
+    NSInteger count = self.model.cityInfos.count;
+    
+    NSMutableString *title = @"未设置";
+    self.scopeView.cityLabel.textColor = [UIColor themeGray3];
+    
+    if(self.model.isAllSelected) {
+        title = @"全部关注圈子";
+        self.scopeView.cityLabel.textColor = [UIColor themeGray1];
+    }
+    else if(self.model.isPartialSelected) {
+        if(count > 1) {
+            title = [NSMutableString stringWithFormat:@"%@等%@个圈子", self.model.cityInfos.firstObject.socialGroupName, @(count)];
+            self.scopeView.cityLabel.textColor = [UIColor themeGray1];
+        }
+        else if(count == 0) {
+            // 默认未设置
+        }
+        else {
+            title = [NSMutableString stringWithFormat:@"%@", self.model.cityInfos.firstObject.socialGroupName];
+            self.scopeView.cityLabel.textColor = [UIColor themeGray1];
+        }
+    }
+    self.scopeView.cityLabel.text = title;
+    
+    [self checkIfEnablePublish];
+}
+
+- (void)gotoVoteTypeSelectPage {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    dict[TRACER_KEY] = traceParam;
+    dict[@"voteType"] = @(self.model.type);
+    WeakSelf;
+    dict[@"resultBlock"] = ^(FHUGCVotePublishVoteTypeModel * selectedModel) {
+        StrongSelf;
+        self.model.type = selectedModel.type;
+        [self updateVoteTypeView];
+    };
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_vote_publish_type_select"];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+- (void)updateVoteTypeView {
+    [self.typeView updateWithVoteType:self.model.type];
+    [self checkIfEnablePublish];
+}
+
+- (void)showDatePicker {
+    [self.viewController.view endEditing:YES];
+    [self.datePicker removeFromSuperview];
+    self.datePicker = nil;
+    [self.dateSelectView removeFromSuperview];
+    self.dateSelectView = nil;
+    [self.bottomPopView showOnView:self.viewController.view withView:self.dateSelectView];
+}
+
+- (void)checkIfEnablePublish {
+    
+    BOOL hasTitle = self.model.voteTitle.length > 0;
+    
+    NSMutableArray<NSString *> *validOptions = [NSMutableArray array];
+    [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
+        if(option.content.length > 0) {
+            [validOptions addObject:option.content];
+        }
+    }];
+    
+    BOOL hasOption = validOptions.count >= 2;
+    BOOL hasVisibleScope = self.model.isAllSelected || self.model.isPartialSelected;
+    BOOL hasVoteType = self.model.type != VoteType_Unknown;
+    
+    BOOL isEnablePublish = hasTitle && hasOption && hasVisibleScope && hasVoteType;
+    [self.viewController enablePublish: isEnablePublish];
+}
+
+- (void)dateCancelAction:(UIButton *)sender {
+    [self.bottomPopView hide];
+}
+
+- (void)dateConfirmAction:(UIButton *)sender {
+    if([self.datePicker.date timeIntervalSinceDate:[NSDate date]] < 0) {
+        [[ToastManager manager] showToast:@"截止日期必须大于当前时间"];
+        return;
+    }
+    [self updateDeadlineDateView];
+    [self.bottomPopView hide];
+}
+
+- (void)updateDeadlineDateView {
+    self.model.deadline = self.datePicker.date;
+    self.deadlineDateView.dateLabel.text = [self.deadlineDateView.dateFormatter stringFromDate:self.datePicker.date];
+    [self checkIfEnablePublish];
+}
+
+- (void)updateTitleViewWithNewHeight:(CGFloat)newHeight {
+    CGRect frame = self.titleTextView.frame;
+    frame.size.height = newHeight;
+    self.titleTextView.frame = frame;
+    
+    // 更新投票描述位置
+    [self updateDescriptionViewLocation];
+}
+
+- (void)updateDescriptionViewWithNewHeight:(CGFloat)newHeight {
+    CGRect frame = self.descTextView.frame;
+    frame.size.height = newHeight;
+    self.descTextView.frame = frame;
+    
+    // 更新投票选项位置
+    [self updateVoteOptionsViewLocation];
+}
+
+- (void)updateDescriptionViewLocation {
+    // 更新投票描述位置
+    CGRect descTextViewFrame = self.descTextView.frame;
+    descTextViewFrame.origin.y = self.titleTextView.bottom;
+    self.descTextView.frame = descTextViewFrame;
+    
+    // 更新投票选项位置
+    [self updateVoteOptionsViewLocation];
+}
+
+- (void)updateVoteOptionsViewLocation {
+    CGRect frame = self.voteOptionsTableView.frame;
+    frame.origin.y = self.descTextView.bottom;
+    self.voteOptionsTableView.frame = frame;
+    
+    // 更新滚动视图的内容大小
+    [self updateScrollViewContentSize];
+}
+
+- (void)updateVoteOptionsViewHeight {
+    CGRect frame = self.voteOptionsTableView.frame;
+    CGFloat optionViewMinHeight = self.scrollView.frame.size.height - self.descTextView.bottom;
+    frame.size.height = MAX((self.model.options.count + 1) * OPTION_CELL_HEIGHT, optionViewMinHeight);
+    self.voteOptionsTableView.frame = frame;
+
+    [self updateScrollViewContentSize];
+}
+
+- (void)updateScrollViewContentSize {
+    CGSize contentSize = self.scrollView.contentSize;
+    contentSize.height = MAX(self.voteOptionsTableView.bottom, self.scrollView.frame.size.height);
+    self.scrollView.contentSize = contentSize;
+}
+
+- (BOOL)isEditedVote {
+    
+    __block BOOL ret = NO;
+    
+    if(self.model.voteTitle.length > 0) {
+        ret = YES;
+    }
+    
+    if(self.model.voteDescription.length > 0) {
+        ret = YES;
+    }
+    
+    [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
+        if(option.content.length > 0) {
+            ret = YES;
+            *stop = YES;
+        }
+    }];
+    
+    if(self.model.isAllSelected || self.model.isPartialSelected) {
+        ret = YES;
+    }
+    
+    return ret;
+}
 
 - (NSString *)validStringConvertWith:(NSString *)originString {
     return [[originString stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 }
 
-- (void)voteTitleCell:(FHUGCVotePublishTitleCell *)titleCell didInputText:(NSString *)text {
-    self.model.voteTitle = [self validStringConvertWith:text];
-    [self checkIfEnablePublish];
-}
-
-- (void)descriptionCell:(FHUGCVotePublishDescriptionCell *)descriptionCell didInputText:(NSString *)text {
-    self.model.voteDescription = [self validStringConvertWith:text];
-    [self checkIfEnablePublish];
-}
-
-- (void)optionCell:(FHUGCVotePublishOptionCell *)optionCell didInputText:(NSString *)text {
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:optionCell];
-    NSInteger optionStartIndex = OPTION_START_INDEX;
-    NSUInteger index = MIN(MAX(indexPath.row - optionStartIndex, 0), self.model.options.count);
-    if(index < self.model.options.count) {
-        self.model.options[index].content = [self validStringConvertWith:text];
-        [self checkIfEnablePublish];
-    }
-}
-
-- (void)datePickerCell:(FHUGCVotePublishDatePickCell *)datePickerCell didSelectedDate:(NSDate *)date {
-    self.model.deadline = date;
-}
-
-- (void)datePickerCell:(FHUGCVotePublishDatePickCell *)datePickerCell toggleWithStatus:(BOOL)isHidden {
-    
-    self.isDatePickerHidden = isHidden;
-    [self reloadTableView];
-}
-
-// MARK: UIScrollViewDelegate
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self.tableView endEditing:YES];
-}
-
-// MARK: 函数
 - (void)publish {
     
     NSMutableString *socialGroupIds = [NSMutableString string];
@@ -542,58 +669,69 @@
         [options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
             option.isValid = YES;
         }];
-        
-        FHUGCVotePublishOptionCell *optionCell0 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:OPTION_START_INDEX inSection:1]];
+
+        FHUGCVotePublishOptionCell *optionCell0 = [self.voteOptionsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
         [optionCell0 updateWithOption:options[0]];
-        
-        FHUGCVotePublishOptionCell *optionCell1 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow: OPTION_START_INDEX + 1 inSection:1]];
-        
+
+        FHUGCVotePublishOptionCell *optionCell1 = [self.voteOptionsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+
         [optionCell1 updateWithOption:options[1]];
     }
-    
+
     if(options.count <= OPTION_COUNT_MAX) {
         self.model.options = options;
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] inSection:1];
-        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        if(options.count == OPTION_COUNT_MAX) {
-            self.addOptionFooterView.alpha = 0;
-            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-        } else {
-             [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-        }
+        
+        [self.voteOptionsTableView beginUpdates];
+        [self updateVoteOptionsViewHeight];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.voteOptionsTableView numberOfRowsInSection:0] inSection:0];
+        [self.voteOptionsTableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.scrollView setContentOffset:CGPointMake(0, self.scrollView.contentSize.height - self.scrollView.bounds.size.height) animated:YES];
+        [self.voteOptionsTableView endUpdates];
+    }
+    
+    self.addOptionFooterView.alpha = (self.model.options.count < OPTION_COUNT_MAX) ? 1 : 0;
+}
+
+#pragma mark - FHUGCVotePublishOptionCellDelegate
+
+- (void)optionCell:(FHUGCVotePublishOptionCell *)optionCell didInputText:(NSString *)text {
+    NSIndexPath *indexPath = [self.voteOptionsTableView indexPathForCell:optionCell];
+    NSUInteger index = indexPath.row;
+    if(index < self.model.options.count) {
+        self.model.options[index].content = [self validStringConvertWith:text];
+        [self checkIfEnablePublish];
     }
 }
 
 - (void)deleteOptionCell:(FHUGCVotePublishOptionCell *)optionCell {
     NSMutableArray *options = [NSMutableArray arrayWithArray:self.model.options];
-    NSInteger optionStartIndex = OPTION_START_INDEX;
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:optionCell];
-    if(indexPath.row >= optionStartIndex) {
-        NSUInteger index = MIN(MAX(indexPath.row - optionStartIndex, 0), options.count);
-        
+    NSIndexPath *indexPath = [self.voteOptionsTableView indexPathForCell:optionCell];
+    if(indexPath.row >= 0) {
+        NSUInteger index = indexPath.row;
+
         if(self.model.options.count <= OPTION_COUNT_MIN + 1) {
             [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
                 option.isValid = NO;
             }];
-            
+
             NSMutableArray *indexPaths = [NSMutableArray array];
             for(NSInteger i = 0; i < options.count; i++) {
                 if(i == index) {
                     continue;
                 }
-                
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i + optionStartIndex inSection:1];
+
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
                 [indexPaths addObject:indexPath];
             }
-            
+
             [indexPaths enumerateObjectsUsingBlock:^(NSIndexPath *  _Nonnull indexPath, NSUInteger idx, BOOL * _Nonnull stop) {
-                FHUGCVotePublishOptionCell *optionCell = [self.tableView cellForRowAtIndexPath:indexPath];
-                [optionCell updateWithOption:self.model.options[indexPath.row - optionStartIndex]];
+                FHUGCVotePublishOptionCell *optionCell = [self.voteOptionsTableView cellForRowAtIndexPath:indexPath];
+                [optionCell updateWithOption:self.model.options[indexPath.row]];
             }];
         }
         // 删除的Cell本身是当前键盘输入点，删除前转移焦点, 防止键盘消失引起抖动
         if([optionCell.optionTextField isFirstResponder]) {
-            
+
             NSIndexPath *nextResponderCellIndexPath = nil;
             // 如果删除的不是最后一个Cell，焦点转移到下一个Cell， 是最后一个Cell，则焦点转移到上一个Cell
             if(index == 0) {
@@ -603,135 +741,28 @@
             } else {
                 nextResponderCellIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
             }
-            
-            FHUGCVotePublishOptionCell *nextResponderCell = [self.tableView cellForRowAtIndexPath:nextResponderCellIndexPath];
+
+            FHUGCVotePublishOptionCell *nextResponderCell = [self.voteOptionsTableView cellForRowAtIndexPath:nextResponderCellIndexPath];
             [nextResponderCell.optionTextField becomeFirstResponder];
         }
-        
+
         [options removeObjectAtIndex:index];
         self.model.options = options;
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
-        if(self.model.options.count < OPTION_COUNT_MAX) {
-            self.addOptionFooterView.alpha = 1;
-        }
+        WeakSelf;
+        [self.voteOptionsTableView performBatchUpdates:^{
+            StrongSelf;
+            [self.voteOptionsTableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            self.addOptionFooterView.alpha = (self.model.options.count < OPTION_COUNT_MAX) ? 1 : 0;
+        } completion:^(BOOL finished) {
+            // 动画执行完成后更新
+            [self updateVoteOptionsViewHeight];
+        }];
     }
 }
 
-- (void)gotoVoteVisibleScopePage {
-    
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"isAllSelected"] = @(self.model.isAllSelected);
-    dict[@"isPartialSelected"] = @(self.model.isPartialSelected);
-    dict[@"visiableType"] = @(self.model.visibleType);
-    dict[@"selectedSocialGroup"] = self.model.cityInfos;
-    WeakSelf;
-    dict[@"resultBlock"] = ^(NSArray<FHUGCVotePublishCityInfo *> *cityInfos, BOOL isAllSelected, BOOL isPartialSelected) {
-        StrongSelf;
-
-        self.model.isPartialSelected = isPartialSelected;
-        self.model.isAllSelected = isAllSelected;
-        self.model.visibleType = VisibleType_Group;
-        self.model.cityInfos = cityInfos;
-        [self reloadTableView];
-        [self checkIfEnablePublish];
-    };
-    NSMutableDictionary *tracer = @{}.mutableCopy;
-    tracer[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM];
-    tracer[UT_PAGE_TYPE] = @"vote_publisher";
-    dict[TRACER_KEY] = tracer;
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_vote_publish_visible_scope"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+- (void)optionCellDidBeginEditing:(FHUGCVotePublishOptionCell *)optionCell {
+    [self.viewController scrollToVisibleForView:optionCell];
 }
 
-- (void)gotoVoteTypeSelectPage {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    dict[TRACER_KEY] = traceParam;
-    dict[@"voteType"] = @(self.model.type);
-    WeakSelf;
-    dict[@"resultBlock"] = ^(FHUGCVotePublishVoteTypeModel * selectedModel) {
-        StrongSelf;
-        self.model.type = selectedModel.type;
-        [self reloadTableView];
-        [self checkIfEnablePublish];
-    };
-    
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_vote_publish_type_select"];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-}
-
-- (void)showDatePicker {
-    [self.viewController.view endEditing:YES];
-    [self.datePicker removeFromSuperview];
-    self.datePicker = nil;
-    [self.dateSelectView removeFromSuperview];
-    self.dateSelectView = nil;
-    [self.bottomPopView showOnView:self.viewController.view withView:self.dateSelectView];
-}
-
-- (void)checkIfEnablePublish {
-    
-    BOOL hasTitle = self.model.voteTitle.length > 0;
-    
-    NSMutableArray<NSString *> *validOptions = [NSMutableArray array];
-    [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
-        if(option.content.length > 0) {
-            [validOptions addObject:option.content];
-        }
-    }];
-    
-    BOOL hasOption = validOptions.count >= 2;
-    BOOL hasVisibleScope = self.model.isAllSelected || self.model.isPartialSelected;
-    BOOL hasVoteType = self.model.type != VoteType_Unknown;
-    
-    BOOL isEnablePublish = hasTitle && hasOption && hasVisibleScope && hasVoteType;
-    [self.viewController enablePublish: isEnablePublish];
-}
-
-
-- (void)dateCancelAction:(UIButton *)sender {
-    [self.bottomPopView hide];
-}
-
-- (void)dateConfirmAction:(UIButton *)sender {
-    
-    if([self.datePicker.date timeIntervalSinceDate:[NSDate date]] < 0) {
-        [[ToastManager manager] showToast:@"截止日期必须大于当前时间"];
-        return;
-    }
-    
-    NSIndexPath *datePickCellIndexPath = [NSIndexPath indexPathForRow:2 inSection:0];
-    [self.tableView reloadRowsAtIndexPaths:@[datePickCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.bottomPopView hide];
-    [self checkIfEnablePublish];
-}
-
-- (BOOL)isEditedVote {
-    
-    __block BOOL ret = NO;
-    
-    if(self.model.voteTitle.length > 0) {
-        ret = YES;
-    }
-    
-    if(self.model.voteDescription.length > 0) {
-        ret = YES;
-    }
-    
-    [self.model.options enumerateObjectsUsingBlock:^(FHUGCVotePublishOption * _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
-        if(option.content.length > 0) {
-            ret = YES;
-            *stop = YES;
-        }
-    }];
-    
-    if(self.model.isAllSelected || self.model.isPartialSelected) {
-        ret = YES;
-    }
-    
-    return ret;
-}
 @end

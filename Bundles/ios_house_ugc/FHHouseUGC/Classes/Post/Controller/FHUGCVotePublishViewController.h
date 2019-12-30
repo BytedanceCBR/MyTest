@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCVotePublishViewController : FHBaseViewController
 - (void)enablePublish: (BOOL)isEnable;
+- (void)scrollToVisibleForView:(UIView *)view;
 @end
 
 NS_ASSUME_NONNULL_END

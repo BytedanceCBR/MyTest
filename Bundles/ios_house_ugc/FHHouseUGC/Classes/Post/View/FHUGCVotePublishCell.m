@@ -13,25 +13,74 @@
 #import <FHCommonDefines.h>
 #import <FHUGCCategoryHelper.h>
 
-@implementation FHUGCVotePublishTextView
+@interface FHUGCVotePublishBaseView()
+@property (nonatomic, strong) UIView *bottomLineView;
 @end
 
-@implementation FHUGCVotePublishBaseCell
-+ (NSString *)reusedIdentifier {
-    return NSStringFromClass(self.class);
+@implementation FHUGCVotePublishBaseView
+
+- (UIView *)bottomLineView {
+    if(!_bottomLineView) {
+        _bottomLineView = [UIView new];
+        _bottomLineView.backgroundColor = [UIColor themeGray4];
+    }
+    return _bottomLineView;
 }
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.clipsToBounds = YES;
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
+- (void)setHideBottomLine:(BOOL)hideBottomLine {
+    _hideBottomLine = hideBottomLine;
+    self.bottomLineView.hidden = hideBottomLine;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor themeWhite];
+        [self addSubview:self.bottomLineView];
+        
+        [self.bottomLineView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self).offset(PADDING);
+            make.right.equalTo(self);
+            make.bottom.equalTo(self);
+            make.height.mas_equalTo(0.5);
+        }];
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+        [self addGestureRecognizer:tap];
     }
     return self;
 }
+
+- (void)tapAction: (UITapGestureRecognizer *)tap {}
+
 @end
 
-// MARK: 城市选择Cell
-@implementation FHUGCVotePublishCityCell
+// MARK: 城市选择
+@implementation FHUGCVotePublishScopeView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        
+        [self addSubview:self.titleLabel];
+        [self addSubview:self.cityLabel];
+        [self addSubview:self.rightArrow];
+        
+        [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self);
+            make.left.equalTo(self).offset(PADDING);
+        }];
+        
+        [self.cityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.titleLabel);
+            make.right.equalTo(self.rightArrow.mas_left).offset(-10);
+        }];
+        
+        [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.titleLabel);
+            make.right.equalTo(self).offset(-PADDING);
+        }];
+    }
+    return self;
+}
 
 - (UILabel *)titleLabel {
     if(!_titleLabel) {
@@ -62,191 +111,47 @@
     return _rightArrow;
 }
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        [self.contentView addSubview:self.titleLabel];
-        [self.contentView addSubview:self.cityLabel];
-        [self.contentView addSubview:self.rightArrow];
+- (void)tapAction:(UITapGestureRecognizer *)tap {
+    if([self.delegate respondsToSelector:@selector(voteScopeView:tapAction:)]) {
+        [self.delegate voteScopeView:self tapAction:tap];
+    }
+}
+@end
+
+// MARK: 投票类型
+@interface FHUGCVotePublishVoteTypeView()
+@property (nonatomic, strong) NSArray<NSString *> *types;
+@end
+
+@implementation FHUGCVotePublishVoteTypeView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        
+        [self addSubview:self.titleLabel];
+        [self addSubview:self.typeLabel];
+        [self addSubview:self.rightArrow];
         
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.contentView);
-            make.left.equalTo(self.contentView).offset(PADDING);
+            make.top.equalTo(self);
+            make.left.equalTo(self).offset(PADDING);
+            make.right.equalTo(self.typeLabel.mas_left).offset(-10);
+            make.height.mas_equalTo(CELL_HEIGHT);
         }];
         
-        [self.cityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.titleLabel);
+        [self.typeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.titleLabel);
             make.right.equalTo(self.rightArrow.mas_left).offset(-10);
+            
         }];
         
         [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.titleLabel);
-            make.right.equalTo(self.contentView).offset(-PADDING);
+            make.right.equalTo(self).offset(-PADDING);
         }];
     }
     return self;
 }
-@end
-
-// MARK: 投票标题Cell
-@implementation FHUGCVotePublishTitleCell
-
-
-- (UITextView *)contentTextView {
-    if(!_contentTextView) {
-        _contentTextView  = [[UITextView alloc] initWithFrame:CGRectMake(PADDING, 23, SCREEN_WIDTH - 2 * PADDING, 32)];
-        _contentTextView.font = [UIFont themeFontRegular:22];
-        _contentTextView.textColor = [UIColor themeGray1];
-        _contentTextView.clipsToBounds = YES;
-        _contentTextView.delegate = self;
-    }
-    return _contentTextView;
-}
-
-- (void)textViewDidChange:(UITextView *)textView {
-    
-}
-
--(UITextField *)contentTextField {
-    if(!_contentTextField) {
-        _contentTextField = [[UITextField alloc] initWithFrame:CGRectMake(PADDING, 23, SCREEN_WIDTH - 2 * PADDING, 32)];
-        _contentTextField.placeholder = @"投票标题";
-        [_contentTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
-        _contentTextField.font = [UIFont themeFontRegular:22];
-        _contentTextField.textColor = [UIColor themeGray1];
-        _contentTextField.clipsToBounds = YES;
-        [_contentTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
-    }
-    return _contentTextField;
-}
-
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        [self.contentView addSubview:self.contentTextField];
-    }
-    return self;
-}
-
-- (void)textFieldDidChange:(UITextField *)textField {
-    
-    [textField textFieldDidChangeLimitTextLength:TITLE_LENGTH_LIMIT];
-    
-    if([self.delegate respondsToSelector:@selector(voteTitleCell:didInputText:)]) {
-        [self.delegate voteTitleCell:self didInputText:textField.text];
-    }
-
-}
-@end
-// MARK: 投票描述Cell
-@implementation FHUGCVotePublishDescriptionCell
-
--(UITextField *)contentTextField {
-    if(!_contentTextField) {
-        _contentTextField = [[UITextField alloc] initWithFrame:CGRectMake(PADDING, 20, SCREEN_WIDTH - 2 * PADDING, 33)];
-        _contentTextField.placeholder = @"补充描述(选填)";
-        _contentTextField.clipsToBounds = YES;
-        [_contentTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
-        _contentTextField.textAlignment = NSTextAlignmentLeft;
-        _contentTextField.font = [UIFont themeFontRegular:18];
-        _contentTextField.textColor = [UIColor themeGray1];
-        [_contentTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
-    }
-    return _contentTextField;
-}
-
-- (void)textFieldDidChange: (UITextField *)textField {
-    
-    [textField textFieldDidChangeLimitTextLength:DESCRIPTION_LENGTH_LIMIT];
-    
-    if([self.delegate respondsToSelector:@selector(descriptionCell:didInputText:)]) {
-        [self.delegate descriptionCell:self didInputText:textField.text];
-    }
-}
-
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        [self.contentView addSubview:self.contentTextField];
-    }
-    return self;
-}
-@end
-
-// MARK: 投票选项Cell
-@implementation FHUGCVotePublishOptionCell
-
--(UIButton *)deleteButton {
-    if(!_deleteButton) {
-        _deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _deleteButton.userInteractionEnabled = YES;
-        [_deleteButton setImage:[UIImage imageNamed:@"fh_ugc_vote_publish_delete_option_invalid"] forState:UIControlStateDisabled];
-        [_deleteButton setImage:[UIImage imageNamed:@"fh_ugc_vote_publish_delete_option_valid"] forState:UIControlStateNormal];
-        [_deleteButton addTarget:self action:@selector(deleteOptionAction:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _deleteButton;
-}
-
-- (UITextField *)optionTextField {
-    if(!_optionTextField) {
-        _optionTextField = [UITextField new];
-        _optionTextField.placeholder = @"选项";
-        [_optionTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
-        _optionTextField.font = [UIFont themeFontRegular:16];
-        _optionTextField.textColor = [UIColor themeGray1];
-        _optionTextField.clipsToBounds = YES;
-        [_optionTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
-    }
-    return _optionTextField;
-}
-
-- (void)textFieldDidChange:(UITextField *)textField {
-    
-    [textField textFieldDidChangeLimitTextLength:OPTION_LENGTH_LIMIT];
-    
-    if([self.delegate respondsToSelector:@selector(optionCell:didInputText:)]) {
-        [self.delegate optionCell:self didInputText:textField.text];
-    }
-}
-
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        
-        [self.contentView addSubview:self.deleteButton];
-        [self.contentView addSubview:self.optionTextField];
-        
-        [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.height.mas_offset(40);
-            make.left.equalTo(self.contentView).offset(PADDING - 11);
-            make.centerY.equalTo(self.optionTextField);
-        }];
-        
-        [self.optionTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.deleteButton.mas_right).offset(8);
-            make.top.equalTo(self.contentView).offset(24);
-            make.bottom.equalTo(self.contentView).offset(-16);
-            make.right.equalTo(self.contentView).offset(-PADDING);
-        }];
-    }
-    return self;
-}
-
-- (void)deleteOptionAction: (UIButton *)sender {
-    if([self.delegate respondsToSelector:@selector(deleteOptionCell:)]) {
-        [self.delegate deleteOptionCell:self];
-    }
-}
-
-- (void)updateWithOption:(FHUGCVotePublishOption *)option {
-    self.optionTextField.text = option.content;
-    self.deleteButton.enabled = option.isValid;
-}
-
-@end
-
-// MARK: 投票类型Cell
-@interface FHUGCVotePublishVoteTypeCell()
-@property (nonatomic, strong) NSArray<NSString *> *types;
-
-@end
-@implementation FHUGCVotePublishVoteTypeCell
 
 - (NSArray<NSString *> *)types {
     if(!_types) {
@@ -288,44 +193,48 @@
     return _rightArrow;
 }
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        [self.contentView addSubview:self.titleLabel];
-        [self.contentView addSubview:self.typeLabel];
-        [self.contentView addSubview:self.rightArrow];
+- (void)tapAction:(UITapGestureRecognizer *)tap {
+    if([self.delegate respondsToSelector:@selector(voteTypeView:tapAction:)]) {
+        [self.delegate voteTypeView:self tapAction:tap];
+    }
+}
+@end
+
+
+
+// MARK: 投票日期选择
+@interface FHUGCVotePublishDatePickView()
+@property (nonatomic, strong)NSDateFormatter *dateFormatter;
+@end
+
+@implementation FHUGCVotePublishDatePickView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        
+        [self addSubview:self.titleLabel];
+        [self addSubview:self.dateLabel];
+        [self addSubview:self.rightArrow];
         
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView);
-            make.left.equalTo(self.contentView).offset(PADDING);
-            make.right.equalTo(self.typeLabel.mas_left).offset(-10);
+            make.top.equalTo(self);
+            make.left.equalTo(self).offset(PADDING);
+            make.right.equalTo(self.dateLabel.mas_left).offset(-PADDING);
             make.height.mas_equalTo(CELL_HEIGHT);
         }];
         
-        [self.typeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.bottom.equalTo(self.titleLabel);
             make.right.equalTo(self.rightArrow.mas_left).offset(-10);
-            
         }];
         
         [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.titleLabel);
-            make.right.equalTo(self.contentView).offset(-PADDING);
+            make.right.equalTo(self).offset(-PADDING);
         }];
-        
     }
     return self;
 }
-
-@end
-
-
-
-// MARK: 投票日期选择Cell
-@interface FHUGCVotePublishDatePickCell()
-@property (nonatomic, strong)NSDateFormatter *dateFormatter;
-@end
-
-@implementation FHUGCVotePublishDatePickCell
 
 - (NSDateFormatter *)dateFormatter {
     if(!_dateFormatter) {
@@ -362,32 +271,227 @@
     return _rightArrow;
 }
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+- (void)tapAction:(UITapGestureRecognizer *)tap {
+    if([self.delegate respondsToSelector:@selector(voteDatePickView:tapAction:)]) {
+        [self.delegate voteDatePickView:self tapAction:tap];
+    }
+}
+@end
+
+// MARK: 投票标题
+@interface FHUGCVotePublishTitleView() <TTUGCTextViewDelegate>
+@end
+@implementation FHUGCVotePublishTitleView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        [self addSubview:self.contentTextView];
+    }
+    return self;
+}
+
+- (TTUGCTextView *)contentTextView {
+    if(!_contentTextView) {
+        _contentTextView  = [[TTUGCTextView alloc] initWithFrame:CGRectMake(PADDING, 15, SCREEN_WIDTH - 2 * PADDING, 47)];
+        _contentTextView.internalGrowingTextView.internalTextView.font = [UIFont themeFontRegular:22];
+        _contentTextView.typingAttributes = @{
+            NSForegroundColorAttributeName: [UIColor themeGray1],
+            NSFontAttributeName: [UIFont themeFontRegular:22]
+        };
+        _contentTextView.contentInset = UIEdgeInsetsZero;
+        
+        _contentTextView.internalGrowingTextView.placeholder = @"投票标题";
+        _contentTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
+        
+        _contentTextView.delegate = self;
+        _contentTextView.textLenDelegate = self;
+        
+        _contentTextView.internalGrowingTextView.minHeight = _contentTextView.frame.size.height;
+        _contentTextView.internalGrowingTextView.maxHeight = CGFLOAT_MAX;
+        _contentTextView.clipsToBounds = YES;
+        _contentTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
+    }
+    return _contentTextView;
+}
+
+- (void)textViewDidChange:(TTUGCTextView *)textView {
     
-        [self.contentView addSubview:self.titleLabel];
-        [self.contentView addSubview:self.dateLabel];
-        [self.contentView addSubview:self.rightArrow];
+    [textView textViewDidChangeLimitTextLength:TITLE_LENGTH_LIMIT];
+    
+    if([self.delegate respondsToSelector:@selector(voteTitleView:didInputText:)]) {
+        [self.delegate voteTitleView:self didInputText:textView.text];
+    }
+}
+
+- (void)textView:(TTUGCTextView *)textView didChangeHeight:(float)height withDiffHeight:(CGFloat)diffHeight {
+    
+    CGFloat measureHeight = textView.internalGrowingTextView.measureHeight;
+    
+    CGRect frame = textView.frame;
+    frame.size.height = measureHeight;
+    textView.frame = frame;
+    
+    CGFloat ret = measureHeight + (TITLE_VIEW_HEIGHT - textView.internalGrowingTextView.minHeight);
+    
+    if([self.delegate respondsToSelector:@selector(voteTitleView:didChangeHeight:)]) {
+        [self.delegate voteTitleView:self didChangeHeight:ret];
+    }
+}
+
+- (void)textViewDidBeginEditing:(TTUGCTextView *)textView {
+    if([self.delegate respondsToSelector:@selector(voteTitleViewDidBeginEditing:)]) {
+        [self.delegate voteTitleViewDidBeginEditing:self];
+    }
+}
+@end
+// MARK: 投票描述
+@interface FHUGCVotePublishDescriptionView() <TTUGCTextViewDelegate>
+@end
+@implementation FHUGCVotePublishDescriptionView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        [self addSubview:self.contentTextView];
+    }
+    return self;
+}
+ 
+- (TTUGCTextView *)contentTextView {
+    if(!_contentTextView) {
+        _contentTextView  = [[TTUGCTextView alloc] initWithFrame:CGRectMake(PADDING, 15, SCREEN_WIDTH - 2 * PADDING, 42)];
+        _contentTextView.internalGrowingTextView.internalTextView.font = [UIFont themeFontRegular:18];
+        _contentTextView.typingAttributes = @{
+            NSForegroundColorAttributeName: [UIColor themeGray1],
+            NSFontAttributeName: [UIFont themeFontRegular:18]
+        };
         
-        [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView);
-            make.left.equalTo(self.contentView).offset(PADDING);
-            make.right.equalTo(self.dateLabel.mas_left).offset(-PADDING);
-            make.height.mas_equalTo(CELL_HEIGHT);
+        _contentTextView.contentInset = UIEdgeInsetsZero;
+        
+        _contentTextView.internalGrowingTextView.placeholder = @"补充描述(选填)";
+        _contentTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
+        
+        _contentTextView.delegate = self;
+        _contentTextView.textLenDelegate = self;
+        
+        _contentTextView.internalGrowingTextView.minHeight = _contentTextView.frame.size.height;
+        _contentTextView.internalGrowingTextView.maxHeight = CGFLOAT_MAX;
+        _contentTextView.clipsToBounds = YES;
+        _contentTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
+    }
+    return _contentTextView;
+}
+
+- (void)textViewDidChange:(TTUGCTextView *)textView {
+    
+    [textView textViewDidChangeLimitTextLength:DESCRIPTION_LENGTH_LIMIT];
+    
+    if([self.delegate respondsToSelector:@selector(descriptionView:didInputText:)]) {
+        [self.delegate descriptionView:self didInputText:textView.text];
+    }
+}
+
+- (void)textView:(TTUGCTextView *)textView didChangeHeight:(float)height withDiffHeight:(CGFloat)diffHeight {
+
+    CGFloat measureHeight = textView.internalGrowingTextView.measureHeight;
+    
+    CGRect frame = textView.frame;
+    frame.size.height = measureHeight;
+    textView.frame = frame;
+    
+    CGFloat ret = measureHeight  + (DESC_VIEW_HEIGHT - textView.internalGrowingTextView.minHeight);
+    
+    if([self.delegate respondsToSelector:@selector(descriptionView:didChangeHeight:)]) {
+        [self.delegate descriptionView:self didChangeHeight:ret];
+    }
+}
+
+- (void)textViewDidBeginEditing:(TTUGCTextView *)textView {
+    if([self.delegate respondsToSelector:@selector(descriptionViewDidBeginEditing:)]) {
+        [self.delegate descriptionViewDidBeginEditing:self];
+    }
+}
+@end
+
+// MARK: 投票选项Cell
+@interface FHUGCVotePublishOptionCell()<UITextFieldDelegate>
+@end
+@implementation FHUGCVotePublishOptionCell
+
++ (NSString *)reusedIdentifier {
+    return NSStringFromClass(self.class);
+}
+
+- (UIButton *)deleteButton {
+    if(!_deleteButton) {
+        _deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _deleteButton.userInteractionEnabled = YES;
+        [_deleteButton setImage:[UIImage imageNamed:@"fh_ugc_vote_publish_delete_option_invalid"] forState:UIControlStateDisabled];
+        [_deleteButton setImage:[UIImage imageNamed:@"fh_ugc_vote_publish_delete_option_valid"] forState:UIControlStateNormal];
+        [_deleteButton addTarget:self action:@selector(deleteOptionAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _deleteButton;
+}
+
+- (UITextField *)optionTextField {
+    if(!_optionTextField) {
+        _optionTextField = [UITextField new];
+        _optionTextField.placeholder = @"选项";
+        [_optionTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
+        _optionTextField.font = [UIFont themeFontRegular:16];
+        _optionTextField.textColor = [UIColor themeGray1];
+        _optionTextField.clipsToBounds = YES;
+        _optionTextField.tintColor = [UIColor themeRed1];
+        _optionTextField.delegate = self;
+        [_optionTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    }
+    return _optionTextField;
+}
+
+- (void)textFieldDidChange:(UITextField *)textField {
+    
+    [textField textFieldDidChangeLimitTextLength:OPTION_LENGTH_LIMIT];
+    
+    if([self.delegate respondsToSelector:@selector(optionCell:didInputText:)]) {
+        [self.delegate optionCell:self didInputText:textField.text];
+    }
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        [self addSubview:self.deleteButton];
+        [self addSubview:self.optionTextField];
+        
+        [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_offset(40);
+            make.left.equalTo(self).offset(PADDING - 11);
+            make.centerY.equalTo(self.optionTextField);
         }];
         
-        [self.dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.equalTo(self.titleLabel);
-            make.right.equalTo(self.rightArrow.mas_left).offset(-10);
-        }];
-        
-        [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.titleLabel);
-            make.right.equalTo(self.contentView).offset(-PADDING);
+        [self.optionTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.deleteButton.mas_right).offset(8);
+            make.top.equalTo(self).offset(24);
+            make.bottom.equalTo(self).offset(-16);
+            make.right.equalTo(self).offset(-PADDING);
         }];
     }
     return self;
 }
 
-@end
+- (void)deleteOptionAction: (UIButton *)sender {
+    if([self.delegate respondsToSelector:@selector(deleteOptionCell:)]) {
+        [self.delegate deleteOptionCell:self];
+    }
+}
 
+- (void)updateWithOption:(FHUGCVotePublishOption *)option {
+    self.optionTextField.text = option.content;
+    self.deleteButton.enabled = option.isValid;
+}
+#pragma mark - UITextFieldDelegate
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if([self.delegate respondsToSelector:@selector(optionCellDidBeginEditing:)]) {
+        [self.delegate optionCellDidBeginEditing:self];
+    }
+}
+@end
