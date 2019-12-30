@@ -825,10 +825,10 @@ extern NSString *const INSTANT_DATA_KEY;
 //        }
         
         if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
-            if (!_showFilter && !self.showRealHouseTop && !hideRefreshTip) {
+            if (!_showFilter && !hideRefreshTip) {
                 [self showNotifyMessage:refreshTip];
             }else {
-                [self configNotifyInfo:[self.topView filterBottom] isShow:NO];
+                [self showNotifyMessage:nil];
             }
         }
                 

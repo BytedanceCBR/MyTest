@@ -138,8 +138,8 @@
         }
         break;
         case TTDiggButtonStyleTypeCommentOnly: {
-            [self setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor colorWithHexStr:@"0x979f9c"]) forState:UIControlStateNormal];
-            [self setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
+            [self setImage:ICON_FONT_IMG(20, @"\U0000e69c", [UIColor colorWithHexStr:@"0x979f9c"]) forState:UIControlStateNormal];
+            [self setImage:ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
             self.imageEdgeInsets = UIEdgeInsetsMake(-1, 0, 1, 5);
             
             if ([TTDeviceHelper OSVersionNumber] < 8.f) {
