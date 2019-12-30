@@ -168,17 +168,17 @@
     return _houseVideoImageView;
 }
 
-//-(UILabel *)imageTagLabel
-//{
-//    if (!_imageTagLabel) {
-//        _imageTagLabel = [[UILabel alloc]init];
-//        _imageTagLabel.text = @"新上";
-//        _imageTagLabel.textAlignment = NSTextAlignmentCenter;
-//        _imageTagLabel.font = [UIFont themeFontRegular:10];
-//        _imageTagLabel.textColor = [UIColor whiteColor];
-//    }
-//    return _imageTagLabel;
-//}
+-(UILabel *)imageTagLabel
+{
+    if (!_imageTagLabel) {
+        _imageTagLabel = [[UILabel alloc]init];
+        _imageTagLabel.text = @"新上";
+        _imageTagLabel.textAlignment = NSTextAlignmentCenter;
+        _imageTagLabel.font = [UIFont themeFontRegular:10];
+        _imageTagLabel.textColor = [UIColor whiteColor];
+    }
+    return _imageTagLabel;
+}
 
 -(FHCornerItemLabel *)tagTitleLabel {
     if (!_tagTitleLabel) {
@@ -191,15 +191,15 @@
     return _tagTitleLabel;
 }
 
-//-(FHCornerView *)imageTagLabelBgView
-//{
-//    if (!_imageTagLabelBgView) {
-//        _imageTagLabelBgView = [[FHCornerView alloc]init];
-//        _imageTagLabelBgView.backgroundColor = [UIColor themeRed3];
-//        _imageTagLabelBgView.hidden = YES;
-//    }
-//    return _imageTagLabelBgView;
-//}
+-(FHCornerView *)imageTagLabelBgView
+{
+    if (!_imageTagLabelBgView) {
+        _imageTagLabelBgView = [[FHCornerView alloc]init];
+        _imageTagLabelBgView.backgroundColor = [UIColor themeRed3];
+        _imageTagLabelBgView.hidden = YES;
+    }
+    return _imageTagLabelBgView;
+}
 
 -(UILabel *)mainTitleLabel
 {
@@ -546,8 +546,8 @@
     [_leftInfoView addSubview:self.houseMainImageBackView];
     [_leftInfoView addSubview:self.mainImageView];
     
-    //    [_leftInfoView addSubview:self.imageTagLabelBgView];
-    //    [_imageTagLabelBgView addSubview:self.imageTagLabel];
+        [_leftInfoView addSubview:self.imageTagLabelBgView];
+        [_imageTagLabelBgView addSubview:self.imageTagLabel];
     
     [_mainImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -784,8 +784,8 @@
     [_leftInfoView addSubview:self.houseMainImageBackView];
     [_leftInfoView addSubview:self.mainImageView];
     
-    //    [_leftInfoView addSubview:self.imageTagLabelBgView];
-    //    [_imageTagLabelBgView addSubview:self.imageTagLabel];
+        [_leftInfoView addSubview:self.imageTagLabelBgView];
+        [_imageTagLabelBgView addSubview:self.imageTagLabel];
     
     [_mainImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -1590,16 +1590,16 @@
     FHImageModel *imageModel = model.houseImage.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
-    //    if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
-    //        self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
-    //        self.imageTagLabel.text = model.houseImageTag.text;
-    //        self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
-    //        self.imageTagLabelBgView.hidden = NO;
-    //    }else {
-    //        self.imageTagLabelBgView.hidden = YES;
-    //    }
+        if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
+            self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
+            self.imageTagLabel.text = model.houseImageTag.text;
+            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+            self.imageTagLabelBgView.hidden = NO;
+        }else {
+            self.imageTagLabelBgView.hidden = YES;
+        }
     
-    //    [self updateImageTopLeft];
+//        [self updateImageTopLeft];
     
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
