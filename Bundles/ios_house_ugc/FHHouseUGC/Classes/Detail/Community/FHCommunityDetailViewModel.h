@@ -43,4 +43,6 @@
 
 - (void)gotoWendaPublish;
 
+- (void)updateNavBarWithAlpha:(CGFloat)alpha;
+
 @end
