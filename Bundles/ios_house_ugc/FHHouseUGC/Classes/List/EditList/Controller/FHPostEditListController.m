@@ -62,8 +62,8 @@
 }
 
 - (void)setupUI {
-    [self setupDefaultNavBar:YES];
-    [self setTitle:@"编辑记录"];
+    [self setupDefaultNavBar:NO];
+    self.customNavBarView.title.text = @"编辑记录";
     self.ttNeedHideBottomLine = NO;
     
     CGFloat height = [FHFakeInputNavbar perferredHeight];

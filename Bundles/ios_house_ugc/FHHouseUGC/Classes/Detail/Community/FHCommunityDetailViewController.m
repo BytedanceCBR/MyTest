@@ -328,6 +328,7 @@
     self.viewModel.shareButton = self.shareButton;
     [self.viewModel addGoDetailLog];
     [self.viewModel addPublicationsShowLog];
+    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
     [self.viewModel requestData:NO refreshFeed:NO showEmptyIfFailed:YES showToast:NO];
 }
 

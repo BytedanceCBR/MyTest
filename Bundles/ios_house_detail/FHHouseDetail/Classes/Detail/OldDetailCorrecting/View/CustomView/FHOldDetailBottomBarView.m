@@ -259,23 +259,22 @@
             }];
         }
     }
-
     void (^updateBlock)() = ^{
         [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(leftWidth);
         }];
-        if (!showIM)  {
-            CGFloat offset = 20;
-            if (contactPhone.showRealtorinfo == 1) {
-                offset = 10;
-            }
-            [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.centerY.equalTo(self);
-                make.right.mas_equalTo(self).offset(-20);
-                make.height.mas_equalTo(44);
-                make.left.mas_equalTo(self.leftView.mas_right).offset(offset);
-            }];
-        }
+//        if (!showIM)  {
+//            CGFloat offset = 20;
+//            if (contactPhone.showRealtorinfo == 1) {
+//                offset = 10;
+//            }
+//            [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+//                make.centerY.equalTo(self);
+//                make.right.mas_equalTo(self).offset(-20);
+//                make.height.mas_equalTo(44);
+//                make.left.mas_equalTo(self.leftView.mas_right).offset(offset);
+//            }];
+//        }
     };
 
     updateBlock();
