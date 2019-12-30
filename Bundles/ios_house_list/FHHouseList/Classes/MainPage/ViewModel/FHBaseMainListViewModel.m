@@ -681,8 +681,8 @@ extern NSString *const INSTANT_DATA_KEY;
         __block BOOL hideRefreshTip = NO;
         
         NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
-        if (wself.stayTraceDict) {
-            [traceDictParams addEntriesFromDictionary:wself.stayTraceDict];
+        if ([self.viewController.tracerModel logDict]) {
+            [traceDictParams addEntriesFromDictionary:[self.viewController.tracerModel logDict]];
         }
         [items enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
@@ -2049,7 +2049,10 @@ extern NSString *const INSTANT_DATA_KEY;
      */
     
     self.stayTraceDict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",duration];
-    
+    self.stayTraceDict[UT_SEARCH_ID] = self.searchId;
+    self.stayTraceDict[UT_ORIGIN_SEARCH_ID] = self.originSearchId;
+    self.stayTraceDict[UT_ORIGIN_FROM] = self.originFrom;
+
     TRACK_EVENT(@"stay_category", self.stayTraceDict);
     [self.viewController tt_resetStayTime];
     
