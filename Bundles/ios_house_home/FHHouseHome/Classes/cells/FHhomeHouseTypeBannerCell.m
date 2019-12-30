@@ -156,7 +156,7 @@
         
         CGFloat titleAddLbaelWidth = 25;
         CGFloat letftPading = 0;
-        if (itemModel.title.length > 5) {
+        if (itemModel.title.length >= 5) {
             titleAddLbaelWidth = 20;
             letftPading = 5;
         }
