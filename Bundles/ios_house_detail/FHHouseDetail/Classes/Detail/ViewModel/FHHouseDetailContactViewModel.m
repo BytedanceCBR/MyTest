@@ -239,7 +239,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 //todo 增加埋点的东西
 - (void)jump2RealtorDetail
 {
-    [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES extra:nil];
+    if (self.houseType != FHHouseTypeNewHouse) {
+          [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES extra:nil];
+    }
 }
 
 - (void)licenseAction
