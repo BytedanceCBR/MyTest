@@ -15,7 +15,6 @@
 #import "FHHouseUGCAPI.h"
 #import <ToastManager.h>
 #import <FHUGCVotePublishTypeSelectViewController.h>
-#import <TTInstallBaseMacro.h>
 #import "FHUGCVoteBottomPopView.h"
 #import <WDDefines.h>
 #import "FHUGCVoteModel.h"

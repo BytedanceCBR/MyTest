@@ -473,7 +473,6 @@ static BOOL s_loginAlertShowing = NO;
     [[TTRoute sharedRoute] openURLByPresentViewController:[NSURL URLWithString:@"fschema://flogin"] userInfo:userInfo];
 }
 
-
 + (void)showQuickFLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginCompletionBlock)complete
 {
     TTAcountFLoginDelegate *delegate = [[TTAcountFLoginDelegate alloc] init];
