@@ -87,7 +87,7 @@
 
 - (void)addSpringView {
     if(!_springView){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
         [self.view addSubview:_springView];
         _springView.hidden = YES;
         
@@ -98,8 +98,9 @@
         
         [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.height.mas_equalTo(80);
-            make.right.mas_equalTo(self.view).offset(-2);
+            make.width.mas_equalTo(84);
+            make.height.mas_equalTo(79);
+            make.right.mas_equalTo(self.view).offset(-11);
         }];
     }
 }

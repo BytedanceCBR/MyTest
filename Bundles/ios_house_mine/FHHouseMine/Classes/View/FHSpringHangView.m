@@ -59,14 +59,16 @@
 
 - (void)initConstaints {
     [_bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self).offset(8);
-        make.right.mas_equalTo(self).offset(-8);
+        make.width.mas_equalTo(69);
+        make.height.mas_equalTo(58);
         make.left.bottom.mas_equalTo(self);
     }];
     
     [_closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.right.mas_equalTo(self.bgView);
-        make.width.height.mas_equalTo(12);
+        make.top.mas_equalTo(self.bgView).offset(-15);
+        make.right.mas_equalTo(self.bgView).offset(7);
+        make.width.mas_equalTo(14);
+        make.height.mas_equalTo(15);
     }];
 }
 
