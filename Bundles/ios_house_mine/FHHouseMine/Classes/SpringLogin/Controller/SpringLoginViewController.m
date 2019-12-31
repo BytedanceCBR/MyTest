@@ -115,7 +115,7 @@
     self.viewModel = [[SpringLoginViewModel alloc] initWithView:self.loginView controller:self];
     self.viewModel.needPopVC = self.needPopVC;
     self.viewModel.present = self.present;
-    self.viewModel.isNeedCheckUGCAdUser = self.isFromMineTab;
+    self.viewModel.isNeedCheckUGCAdUser = YES;
     self.viewModel.loginDelegate = self.loginDelegate;
 }
 
