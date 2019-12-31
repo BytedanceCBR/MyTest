@@ -350,6 +350,7 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         NSMutableDictionary *tracerDict = [self.cellModel.tracerDic mutableCopy];
         tracerDict[@"click_position"] = @"edit_record";
+        tracerDict[@"enter_type"] = @"be_null";
         TRACK_EVENT(@"click_edit", tracerDict);
         
         NSString *page_type = tracerDict[@"page_type"];
@@ -575,6 +576,7 @@
 
     NSMutableDictionary *tracerDict = [self.cellModel.tracerDic mutableCopy];
     tracerDict[@"click_position"] = @"edit";
+    tracerDict[@"enter_type"] = @"be_null";
     TRACK_EVENT(@"click_edit", tracerDict);
     dic[TRACER_KEY] = tracerDict;
     
