@@ -171,6 +171,11 @@ static APNsManager *_sharedManager = nil;
         [TTTracker eventV3:@"push_click" params:param];
 
         [FHLocManager sharedInstance].isShowHomeViewController = NO;
+        
+        UIViewController *topVC = [UIViewController ttmu_currentViewController];
+        if ([topVC isKindOfClass:[FHBaseViewController class]]) {
+            [topVC.view endEditing:YES];
+        }
 
         NSString *appURL = paramObj.scheme;
         if (isEmptyString(appURL) || [TTRoute conformsToRouteWithScheme:appURL]) {

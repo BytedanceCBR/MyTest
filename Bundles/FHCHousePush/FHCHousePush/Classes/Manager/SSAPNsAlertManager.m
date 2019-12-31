@@ -434,6 +434,11 @@ static NSString * const kTTAPNsImportanceKey = @"important";
             param[@"title_id"] = @([titleId longLongValue]);
 
             [TTTracker eventV3:@"push_click" params:param];
+            
+            UIViewController *topVC = [UIViewController ttmu_currentViewController];
+            if ([topVC isKindOfClass:[FHBaseViewController class]]) {
+                [topVC.view endEditing:YES];
+            }
 
 //            NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
             if ([[openURL host] isEqualToString:@"main"]) {
