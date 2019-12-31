@@ -345,7 +345,7 @@
     tracerDic[@"rank"] = @(0);
     tracerDic[@"card_type"] = @"left_pic";
     tracerDic[@"log_pb"] = model.neighborhoodInfo.logPb ? model.neighborhoodInfo.logPb : @"be_null";
-    tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
+    tracerDic[@"house_type"] = @"neighborhood";
     tracerDic[@"element_type"] = @"neighborhood_detail";
     tracerDic[@"search_id"] = model.neighborhoodInfo.searchId.length > 0 ? model.neighborhoodInfo.searchId : @"be_null";
     tracerDic[@"group_id"] = model.neighborhoodInfo.groupId.length > 0 ? model.neighborhoodInfo.groupId : (model.neighborhoodInfo.id ? model.neighborhoodInfo.id : @"be_null");

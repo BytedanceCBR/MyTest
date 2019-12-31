@@ -287,7 +287,7 @@
     tracerDic[@"rank"] = @(0);
     tracerDic[@"card_type"] = @"left_pic";
     tracerDic[@"log_pb"] = logPb ? logPb : @"be_null";
-    tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
+    tracerDic[@"house_type"] = @"neighborhood";
     tracerDic[@"element_type"] = @"neighborhood_detail";
     tracerDic[@"search_id"] = searchId;
     tracerDic[@"group_id"] = groupId;
