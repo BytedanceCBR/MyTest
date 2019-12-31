@@ -30,6 +30,7 @@
 @property (nonatomic, assign) NSInteger followStatus;
 @property (nonatomic, copy) NSString *customHouseId; //
 @property (nonatomic, copy) NSString *fromStr; //
+@property (nonatomic, assign) NSInteger targetType;
 @property (nonatomic, strong) TTRouteParamObj *paramObj;
 
 @end
@@ -69,6 +70,7 @@
             self.customHouseId = paramObj.allParams[@"floor_plan_id"];
         }
         self.fromStr = [self fromStrBySourceUrl:paramObj.host];
+        self.targetType = [self targetTypeBySourceUrl:paramObj.host];
         
         if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
             self.houseId = paramObj.allParams[@"neighborhood_id"];
@@ -131,6 +133,14 @@
     }
     return fromStr;
 }
+- (NSInteger )targetTypeBySourceUrl:(NSString *)host
+{
+    NSInteger targetType = 0;
+    if ([host isEqualToString:@"floor_plan_detail"]) {
+        targetType = 8;
+    }
+    return targetType;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -176,6 +186,7 @@
     self.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
     self.contactViewModel.customHouseId = self.customHouseId;
     self.contactViewModel.fromStr = self.fromStr;
+    self.contactViewModel.targetType = self.targetType;
     self.contactViewModel.searchId = self.searchId;
     self.contactViewModel.imprId = self.imprId;
     NSMutableDictionary *tracer = @{}.mutableCopy;
