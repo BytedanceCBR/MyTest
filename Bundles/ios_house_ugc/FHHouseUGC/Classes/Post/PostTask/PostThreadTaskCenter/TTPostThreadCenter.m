@@ -615,9 +615,13 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
             
             // 更新帖子发布失败
             [[NSNotificationCenter defaultCenter] postNotificationName:kTTForumPostEditedThreadFailureNotification object:nil userInfo:userInfo];
+            
+            // 图片上传失败
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_edit_upload_image" metric:monitorDictionary category:@{@"status":@(1)} extra:nil];
         }
         else {
-            
+            // 图片上传成功
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_edit_upload_image" metric:nil category:@{@"status":@(0)} extra:nil];
             // 插入上传完成的图片URIs
             NSMutableDictionary *reqParams = [self constructEditedPostReqParamsFromThreadModel:postThreadModel];
             NSMutableArray<NSString *> *imageUris = [NSMutableArray array];
