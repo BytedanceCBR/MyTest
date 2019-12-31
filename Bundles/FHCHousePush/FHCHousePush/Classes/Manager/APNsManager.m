@@ -173,7 +173,7 @@ static APNsManager *_sharedManager = nil;
         [FHLocManager sharedInstance].isShowHomeViewController = NO;
         
         UIViewController *topVC = [UIViewController ttmu_currentViewController];
-        if ([topVC isKindOfClass:[FHBaseViewController class]]) {
+        if ([topVC isKindOfClass:[UIViewController class]]) {
             [topVC.view endEditing:YES];
         }
 

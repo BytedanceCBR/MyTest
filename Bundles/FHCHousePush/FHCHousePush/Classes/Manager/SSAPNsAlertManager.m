@@ -436,7 +436,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
             [TTTracker eventV3:@"push_click" params:param];
             
             UIViewController *topVC = [UIViewController ttmu_currentViewController];
-            if ([topVC isKindOfClass:[FHBaseViewController class]]) {
+            if ([topVC isKindOfClass:[UIViewController class]]) {
                 [topVC.view endEditing:YES];
             }
 
