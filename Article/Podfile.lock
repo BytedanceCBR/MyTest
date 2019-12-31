@@ -40,6 +40,7 @@ PODS:
   - BDDataDecorator/Base (1.0.3)
   - BDDataDecorator/Data (1.0.3)
   - BDDataDecorator/TTNet (1.0.3)
+  - BDDiamond20/minisdk (1.0.2.1-binary)
   - BDMobileRuntime (0.3.38)
   - BDSSOAuthSDK (1.1.0)
   - BDTArticle (0.2.3)
@@ -657,6 +658,7 @@ DEPENDENCIES:
   - BDDataDecorator/Base (= 1.0.3)
   - BDDataDecorator/Data (= 1.0.3)
   - BDDataDecorator/TTNet (= 1.0.3)
+  - BDDiamond20/minisdk (= 1.0.2.1-binary)
   - BDMobileRuntime (= 0.3.38)
   - BDSSOAuthSDK
   - BDTArticle (from `../AKPlugins/BDTArticle`)
@@ -1076,6 +1078,7 @@ SPEC CHECKSUMS:
   BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
   BDDataDecorator: 00acdc652e265768c706d2ec539bd376a02aaaf7
+  BDDiamond20: 007b60a6e75162c8383bf6491bf4f7306fd333f4
   BDMobileRuntime: 83175e738acd91083ea560cf0fd4e34612987b80
   BDSSOAuthSDK: 50464c9dd31869a9fe999723f68b931e8acab644
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
@@ -1258,6 +1261,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 0f49900e0e6802820a1929ee33c40200e5709420
+PODFILE CHECKSUM: 84ea350262dd3158b5b7a8371c94fd2e2550c4fb
 
 COCOAPODS: 1.4.0

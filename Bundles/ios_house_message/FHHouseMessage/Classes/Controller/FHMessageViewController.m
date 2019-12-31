@@ -28,12 +28,16 @@
 #import <FHCHousePush/FHPushMessageTipView.h>
 #import <FHHouseBase/FHBaseTableView.h>
 #import <FHMessageNotificationManager.h>
+#import "FHSpringHangView.h"
+#import <FHEnvContext.h>
 
 @interface FHMessageViewController ()
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
 @property (nonatomic, copy)     NSString       *enter_from;// 外部传入
+//春节活动运营位
+@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -54,6 +58,30 @@
 //     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
+    
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+    }
+}
+
+- (void)addSpringView {
+    if(!_springView){
+        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
+        [self.view addSubview:_springView];
+        _springView.hidden = YES;
+        
+        CGFloat bottom = 49;
+        if (@available(iOS 11.0 , *)) {
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
+        
+        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
+            make.width.mas_equalTo(84);
+            make.height.mas_equalTo(79);
+            make.right.mas_equalTo(self.view).offset(-11);
+        }];
+    }
 }
 
 - (void)applicationDidBecomeActive
@@ -76,10 +104,18 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    [self.viewModel viewWillAppear];
+
     [FHBubbleTipManager shareInstance].canShowTip = NO;
     [self startLoadData];
     [self applicationDidBecomeActive];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -302,6 +338,11 @@
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
 }
 
 - (BOOL) isAlignToSafeBottom {
