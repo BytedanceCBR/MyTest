@@ -239,7 +239,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isSpringOpen;
 
 /*
-判断开启了春节运营活动按钮，默认YES
+判断开启了春节运营活动按钮，默认NO
  */
 + (BOOL)isSpringHangOpen;
 
