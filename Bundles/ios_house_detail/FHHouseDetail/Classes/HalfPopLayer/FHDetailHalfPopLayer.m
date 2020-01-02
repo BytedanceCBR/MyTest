@@ -69,7 +69,7 @@
         _menu = [[FHDetailHalfPopTopBar alloc] initWithFrame:CGRectZero];
         _menu.headerActionBlock = ^(BOOL isClose) {
             if (isClose) {
-                [self addPopClickLog:@"cancel"];
+                [wself addPopClickLog:@"cancel"];
                 [wself dismiss:YES];
             }else{
                 [wself report];
