@@ -120,7 +120,11 @@
                 NSString *thread_cell = userInfo[@"thread_cell"];
                 if (thread_cell && [thread_cell isKindOfClass:[NSString class]]) {
                     FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:thread_cell];
+                    FHFeedUGCCellModel *lastCellModel = self.dataList[index];
                     cellModel.isFromDetail = NO;
+                    cellModel.isStick = lastCellModel.isStick;
+                    cellModel.stickStyle = lastCellModel.stickStyle;
+                    cellModel.contentDecoration = lastCellModel.contentDecoration;
                     if (cellModel) {
                         self.dataList[index] = cellModel;
                     }
