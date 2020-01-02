@@ -81,14 +81,14 @@ TTAccountMulticastProtocol
 
 - (void)uploadDeviceID
 {
-    [[TTInstallIDManager sharedInstance] setDidRegisterBlock:^(NSString *deviceID, NSString *installID) {
+    
+    [[TTInstallIDManager sharedInstance] observeDeviceDidRegistered:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
         TTChannelRequestParam *param = [TTChannelRequestParam requestParam];
         param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
         param.versionCode = [TTSandBoxHelper fhVersionCode];
         [TouTiaoPushSDK sendRequestWithParam:param completionHandler:^(TTBaseResponse *response) {
             
         }];
-        
     }];
 }
 

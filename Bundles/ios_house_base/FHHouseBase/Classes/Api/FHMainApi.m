@@ -484,7 +484,7 @@
         if ([exceptionDict isKindOfClass:[NSDictionary class]]) {
             [customDict addEntriesFromDictionary:exceptionDict];
         }
-        [[HMDUserExceptionTracker sharedTracker] trackUserExceptionWithType:[NSString stringWithFormat:@"api_error:%@",sPath?:@""] Log:errorMsg?:@"api_biz_error" CustomParams:customDict filters:filterDict callback:nil];
+        [[HMDUserExceptionTracker sharedTracker] trackUserExceptionWithExceptionType:@"NetworkError" title:@"api_error" subTitle:sPath?:@"" customParams:customDict filters:filterDict callback:nil];
     }
     
 }

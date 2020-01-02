@@ -11,7 +11,6 @@
 #import "TTIconFontDefine.h"
 #import "TTLabelTextHelper.h"
 #import "TTFollowThemeButton.h"
-#import <TTInstallJSONHelper.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <Masonry/Masonry.h>

@@ -61,6 +61,8 @@ NS_ASSUME_NONNULL_BEGIN
 //第二个tab小红点显示逻辑，非ugc情况下
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL isShowDots;
+//春节运营位是否正在显示
+@property(nonatomic, assign) BOOL isShowingSpringHang;
 
 
 + (instancetype)sharedInstance;
@@ -226,6 +228,40 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)checkZLink;
 
 - (void)jumpUGCTab;
+
+- (void)jumpMainTab;
+
+- (void)jumpTab:(NSString *)tabName;
+    
+/*
+判断开启了春节活动，默认YES
+*/
++ (BOOL)isSpringOpen;
+
+/*
+判断开启了春节运营活动按钮，默认YES
+ */
++ (BOOL)isSpringHangOpen;
+
+/*
+判断开启首次安装用户引导，默认YES
+ */
++ (BOOL)isIntroduceOpen;
+/*
+ 第一次启动和切城市默认跳转的tab
+ 
+ 可能的值
+ tab_stream,
+ tab_f_find,
+ tab_message,
+ tab_mine
+ */
++ (NSDictionary *)defaultTabName;
+
+/*
+ 返回当前tab的埋点值
+ */
++ (NSString *)enterTabLogName;
 
 
 @end

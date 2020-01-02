@@ -37,12 +37,37 @@ PODS:
   - BDALog (0.1.12.1-binary)
   - BDAlogProtocol (0.1.7)
   - BDAssert/Core (2.0.0)
+  - BDDataDecorator/Base (1.0.3)
+  - BDDataDecorator/Data (1.0.3)
+  - BDDataDecorator/TTNet (1.0.3)
+  - BDDiamond20/minisdk (1.0.2.1-binary)
   - BDMobileRuntime (0.3.38)
   - BDSSOAuthSDK (1.1.0)
   - BDTArticle (0.2.3)
   - BDTBasePlayer (0.3.47)
   - BDTExploreOrderedData (0.1.7)
   - BDTFactoryConfigurator (0.1.0.1-binary)
+  - BDTracker/InstallBase (0.5.6-rc.3.1.binary)
+  - BDTracker/InstallCore (0.5.6-rc.3.1.binary):
+    - BDTracker/InstallCore/Config (= 0.5.6-rc.3.1.binary)
+    - BDTracker/InstallCore/ICloud (= 0.5.6-rc.3.1.binary)
+    - BDTracker/InstallCore/Keychain (= 0.5.6-rc.3.1.binary)
+  - BDTracker/InstallCore/Config (0.5.6-rc.3.1.binary)
+  - BDTracker/InstallCore/ICloud (0.5.6-rc.3.1.binary)
+  - BDTracker/InstallCore/Keychain (0.5.6-rc.3.1.binary)
+  - BDTracker/InstallHome (0.5.6-rc.3.1.binary)
+  - BDTracker/Network/Base (0.5.6-rc.3.1.binary)
+  - BDTracker/Network/TTNetwork (0.5.6-rc.3.1.binary):
+    - BDTracker/Network/TTNetwork/Install (= 0.5.6-rc.3.1.binary)
+    - BDTracker/Network/TTNetwork/NetworkBase (= 0.5.6-rc.3.1.binary)
+    - BDTracker/Network/TTNetwork/Tracker (= 0.5.6-rc.3.1.binary)
+  - BDTracker/Network/TTNetwork/Install (0.5.6-rc.3.1.binary)
+  - BDTracker/Network/TTNetwork/NetworkBase (0.5.6-rc.3.1.binary)
+  - BDTracker/Network/TTNetwork/Tracker (0.5.6-rc.3.1.binary)
+  - BDTracker/TrackerBase (0.5.6-rc.3.1.binary)
+  - BDTracker/TrackerCore (0.5.6-rc.3.1.binary)
+  - BDTracker/TrackerDatabase (0.5.6-rc.3.1.binary)
+  - BDTracker/TrackerHome (0.5.6-rc.3.1.binary)
   - BDTrackerProtocol (2.1.1.1-binary)
   - BDTSharedHeaders (0.1.0)
   - BDUGAccountOnekeyLogin (1.1.6-rc.0)
@@ -97,7 +122,7 @@ PODS:
   - Fabric (1.10.2.1-binary)
   - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.11)
+  - FHCommonUI (0.0.12)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -116,32 +141,34 @@ PODS:
   - FMDB/standard (2.7.5.1-binary)
   - Gaia (1.0.7-rc.1)
   - Godzippa (1.1.0.1-binary)
-  - Heimdallr/ALog (0.7.6.1-binary)
-  - Heimdallr/CloudCommand (0.7.6.1-binary)
-  - Heimdallr/Core (0.7.6.1-binary)
-  - Heimdallr/CrashDetector (0.7.6.1-binary)
-  - Heimdallr/DeviceInfo (0.7.6.1-binary)
-  - Heimdallr/HMDANR (0.7.6.1-binary)
-  - Heimdallr/HMDConfig (0.7.6.1-binary)
-  - Heimdallr/HMDOOM (0.7.6.1-binary)
-  - Heimdallr/HMDOOMCrash (0.7.6.1-binary)
-  - Heimdallr/HMDSession (0.7.6.1-binary)
-  - Heimdallr/HMDStart (0.7.6.1-binary)
-  - Heimdallr/HMDStore (0.7.6.1-binary)
-  - Heimdallr/HMDURLProtocolTracker (0.7.6.1-binary)
-  - Heimdallr/HMDWatchDog (0.7.6.1-binary)
-  - Heimdallr/HTTPRequestTracker (0.7.6.1-binary)
-  - Heimdallr/Log (0.7.6.1-binary)
-  - Heimdallr/Mach (0.7.6.1-binary)
-  - Heimdallr/MemorySnapshot (0.7.6.1-binary)
-  - Heimdallr/Monitors (0.7.6.1-binary)
-  - Heimdallr/Network (0.7.6.1-binary)
-  - Heimdallr/TTMonitor (0.7.6.1-binary)
-  - Heimdallr/TTNet (0.7.6.1-binary)
-  - Heimdallr/UITracker (0.7.6.1-binary)
-  - Heimdallr/Upload (0.7.6.1-binary)
-  - Heimdallr/UserException (0.7.6.1-binary)
-  - Heimdallr/Utility (0.7.6.1-binary)
+  - Heimdallr/ALog (0.7.11-rc.5.1.binary)
+  - Heimdallr/CloudCommand (0.7.11-rc.5.1.binary)
+  - Heimdallr/Core (0.7.11-rc.5.1.binary)
+  - Heimdallr/CrashCapture (0.7.11-rc.5.1.binary)
+  - Heimdallr/CrashDetector (0.7.11-rc.5.1.binary)
+  - Heimdallr/DeviceInfo (0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDANR (0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDConfig (0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDOOM (0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDOOMCrash (0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDSession (0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDStart (0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDStore (0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDURLProtocolTracker (0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDWatchDog (0.7.11-rc.5.1.binary)
+  - Heimdallr/HTTPRequestTracker (0.7.11-rc.5.1.binary)
+  - Heimdallr/Log (0.7.11-rc.5.1.binary)
+  - Heimdallr/Mach (0.7.11-rc.5.1.binary)
+  - Heimdallr/MemorySnapshot (0.7.11-rc.5.1.binary)
+  - Heimdallr/Monitors (0.7.11-rc.5.1.binary)
+  - Heimdallr/Network (0.7.11-rc.5.1.binary)
+  - Heimdallr/Runloop (0.7.11-rc.5.1.binary)
+  - Heimdallr/TTMonitor (0.7.11-rc.5.1.binary)
+  - Heimdallr/TTNet (0.7.11-rc.5.1.binary)
+  - Heimdallr/UITracker (0.7.11-rc.5.1.binary)
+  - Heimdallr/Upload (0.7.11-rc.5.1.binary)
+  - Heimdallr/UserException (0.7.11-rc.5.1.binary)
+  - Heimdallr/Utility (0.7.11-rc.5.1.binary)
   - HTSVideoPlay (0.3.9):
     - HTSVideoPlay/Yoga (= 0.3.9)
     - HTSVideoPlay/YogaKit (= 0.3.9)
@@ -174,7 +201,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.1)
-  - ios_house_im (0.1.15-rc.9)
+  - ios_house_im (0.1.15-rc.10)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -408,7 +435,7 @@ PODS:
   - TTIMSDK/IMKit_Core (1.0.0-rc.34)
   - TTIMSDK/IMKit_WebSocket (1.0.0-rc.34)
   - TTIMSDK/Protocols (1.0.0-rc.34)
-  - TTInstallService (1.3.1.1-binary)
+  - TTInstallService (2.1.3.1-binary)
   - TTKitchen/Core (3.0.1)
   - TTKitchen/SettingsSyncer (3.0.1)
   - TTKitchenExtension (1.0.14)
@@ -468,7 +495,7 @@ PODS:
   - TTPreloaderSDK (1.4.20-rc.0)
   - TTPushManager (0.0.13.4)
   - TTPushSDK (0.1.1.1-binary)
-  - TTReachability (0.6.2.1-binary)
+  - TTReachability (0.8.1.1-binary)
   - TTRegistry (7.4.0.3)
   - TTReporter (0.2.1.1-binary)
   - TTRexxar/Core (0.8.10.1-binary)
@@ -491,7 +518,7 @@ PODS:
   - TTShare/TTShareBusiness/TTShareWeChatBusiness (0.3.3)
   - TTTAttributedLabel (1.13.3.1-binary)
   - TTThemed (0.1.36.1-binary)
-  - TTTracker (10.0.5.1-binary)
+  - TTTracker (1.1.20-rc.4.1.binary)
   - TTUGCFoundation (0.1.3):
     - TTUGCFoundation/RequestMonitor (= 0.1.3)
     - TTUGCFoundation/TTUGCActionDataService (= 0.1.3)
@@ -628,12 +655,25 @@ DEPENDENCIES:
   - BDALog (= 0.1.12.1-binary)
   - BDAlogProtocol (= 0.1.7)
   - BDAssert/Core (= 2.0.0)
+  - BDDataDecorator/Base (= 1.0.3)
+  - BDDataDecorator/Data (= 1.0.3)
+  - BDDataDecorator/TTNet (= 1.0.3)
+  - BDDiamond20/minisdk (= 1.0.2.1-binary)
   - BDMobileRuntime (= 0.3.38)
   - BDSSOAuthSDK
   - BDTArticle (from `../AKPlugins/BDTArticle`)
   - BDTBasePlayer (from `../AKPlugins/BDTBasePlayer`)
   - BDTExploreOrderedData (from `../AKPlugins/BDTExploreOrderedData`)
   - BDTFactoryConfigurator (= 0.1.0.1-binary)
+  - BDTracker/InstallBase (= 0.5.6-rc.3.1.binary)
+  - BDTracker/InstallCore (= 0.5.6-rc.3.1.binary)
+  - BDTracker/InstallHome (= 0.5.6-rc.3.1.binary)
+  - BDTracker/Network/Base (= 0.5.6-rc.3.1.binary)
+  - BDTracker/Network/TTNetwork (= 0.5.6-rc.3.1.binary)
+  - BDTracker/TrackerBase (= 0.5.6-rc.3.1.binary)
+  - BDTracker/TrackerCore (= 0.5.6-rc.3.1.binary)
+  - BDTracker/TrackerDatabase (= 0.5.6-rc.3.1.binary)
+  - BDTracker/TrackerHome (= 0.5.6-rc.3.1.binary)
   - BDTrackerProtocol (= 2.1.1.1-binary)
   - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
   - BDUGAccountOnekeyLogin (= 1.1.6-rc.0)
@@ -667,7 +707,7 @@ DEPENDENCIES:
   - Fabric (= 1.10.2.1-binary)
   - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.11)
+  - FHCommonUI (= 0.0.12)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -686,39 +726,41 @@ DEPENDENCIES:
   - FMDB/standard (= 2.7.5.1-binary)
   - Gaia (= 1.0.7-rc.1)
   - Godzippa (= 1.1.0.1-binary)
-  - Heimdallr/ALog (= 0.7.6.1-binary)
-  - Heimdallr/CloudCommand (= 0.7.6.1-binary)
-  - Heimdallr/Core (= 0.7.6.1-binary)
-  - Heimdallr/CrashDetector (= 0.7.6.1-binary)
-  - Heimdallr/DeviceInfo (= 0.7.6.1-binary)
-  - Heimdallr/HMDANR (= 0.7.6.1-binary)
-  - Heimdallr/HMDConfig (= 0.7.6.1-binary)
-  - Heimdallr/HMDOOM (= 0.7.6.1-binary)
-  - Heimdallr/HMDOOMCrash (= 0.7.6.1-binary)
-  - Heimdallr/HMDSession (= 0.7.6.1-binary)
-  - Heimdallr/HMDStart (= 0.7.6.1-binary)
-  - Heimdallr/HMDStore (= 0.7.6.1-binary)
-  - Heimdallr/HMDURLProtocolTracker (= 0.7.6.1-binary)
-  - Heimdallr/HMDWatchDog (= 0.7.6.1-binary)
-  - Heimdallr/HTTPRequestTracker (= 0.7.6.1-binary)
-  - Heimdallr/Log (= 0.7.6.1-binary)
-  - Heimdallr/Mach (= 0.7.6.1-binary)
-  - Heimdallr/MemorySnapshot (= 0.7.6.1-binary)
-  - Heimdallr/Monitors (= 0.7.6.1-binary)
-  - Heimdallr/Network (= 0.7.6.1-binary)
-  - Heimdallr/TTMonitor (= 0.7.6.1-binary)
-  - Heimdallr/TTNet (= 0.7.6.1-binary)
-  - Heimdallr/UITracker (= 0.7.6.1-binary)
-  - Heimdallr/Upload (= 0.7.6.1-binary)
-  - Heimdallr/UserException (= 0.7.6.1-binary)
-  - Heimdallr/Utility (= 0.7.6.1-binary)
+  - Heimdallr/ALog (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/CloudCommand (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/Core (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/CrashCapture (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/CrashDetector (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/DeviceInfo (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDANR (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDConfig (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDOOM (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDOOMCrash (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDSession (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDStart (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDStore (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDURLProtocolTracker (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/HMDWatchDog (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/HTTPRequestTracker (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/Log (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/Mach (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/MemorySnapshot (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/Monitors (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/Network (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/Runloop (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/TTMonitor (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/TTNet (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/UITracker (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/Upload (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/UserException (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/Utility (= 0.7.11-rc.5.1.binary)
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESGeckoKit (= 0.4.0.1-binary)
   - IESVideoPlayer (= 0.1.16)
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.1)
-  - ios_house_im (= 0.1.15-rc.9)
+  - ios_house_im (= 0.1.15-rc.10)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -846,7 +888,7 @@ DEPENDENCIES:
   - TTIMSDK/IMKit_Core (= 1.0.0-rc.34)
   - TTIMSDK/IMKit_WebSocket (= 1.0.0-rc.34)
   - TTIMSDK/Protocols (= 1.0.0-rc.34)
-  - TTInstallService (= 1.3.1.1-binary)
+  - TTInstallService (= 2.1.3.1-binary)
   - TTKitchen/Core (= 3.0.1)
   - TTKitchen/SettingsSyncer (= 3.0.1)
   - TTKitchenExtension (= 1.0.14)
@@ -866,7 +908,7 @@ DEPENDENCIES:
   - TTPreloaderSDK (= 1.4.20-rc.0)
   - TTPushManager (= 0.0.13.4)
   - TTPushSDK (= 0.1.1.1-binary)
-  - TTReachability (= 0.6.2.1-binary)
+  - TTReachability (= 0.8.1.1-binary)
   - TTRegistry (= 7.4.0.3)
   - TTReporter (= 0.2.1.1-binary)
   - TTRexxar/Core (= 0.8.10.1-binary)
@@ -889,7 +931,7 @@ DEPENDENCIES:
   - TTShare/TTShareBusiness/TTShareWeChatBusiness (from `../AKPlugins/TTShare`)
   - TTTAttributedLabel (= 1.13.3.1-binary)
   - TTThemed (= 0.1.36.1-binary)
-  - TTTracker (= 10.0.5.1-binary)
+  - TTTracker (= 1.1.20-rc.4.1.binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
   - TTUIWidget (= 1.4.9-alpha.0-fproject)
   - TTUserProfile (from `../TTBundles/ios_tt_userprofile`)
@@ -1035,12 +1077,15 @@ SPEC CHECKSUMS:
   BDALog: 2c34fe6b9e0f7107abb36d41ca3baf1ee33113bb
   BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
+  BDDataDecorator: 00acdc652e265768c706d2ec539bd376a02aaaf7
+  BDDiamond20: 007b60a6e75162c8383bf6491bf4f7306fd333f4
   BDMobileRuntime: 83175e738acd91083ea560cf0fd4e34612987b80
   BDSSOAuthSDK: 50464c9dd31869a9fe999723f68b931e8acab644
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
   BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
   BDTFactoryConfigurator: c14af7870fcd1fa9c52142d0c01635775543e42d
+  BDTracker: 70e700cd7f6eb74a302ee6ab770e389510a20e26
   BDTrackerProtocol: c7605d2c4034c67976b79adbc8cb1b4826957411
   BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
   BDUGAccountOnekeyLogin: cd9dd6f49cd8535f36ca0ebd412544c92220d541
@@ -1063,7 +1108,7 @@ SPEC CHECKSUMS:
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
   FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: f158ae9c2ab31e2bc9d773de202b4ebbb22e1f38
+  FHCommonUI: 953a6e88f4cf037f4e2f3dad6ff1df95d86db1c6
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1082,14 +1127,14 @@ SPEC CHECKSUMS:
   FMDB: ea2aa07bb88b08b5e9675a49c4fe77df17b5f791
   Gaia: 8d07f88e57c49364734d1fb5ea331f37c225c619
   Godzippa: 8f1a58014e75d07ad73e1bb9148a9c01ba17c1bf
-  Heimdallr: fbbf0b9b4c9e501e808f09599c46e12adad854f3
+  Heimdallr: 75674d681ce236382e069e207d63bbba652757e3
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
   IESGeckoKit: e6cca571ecaf0b5a9af925cd34eda889aa9311de
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 36bcc1ba8d4acfc80cbb3c3737b739f2f1169e86
-  ios_house_im: 051caab430b9b1342acaee4371ce841b0119907f
+  ios_house_im: 7b555cb4e5bfc14a92ecc32a8832579bde990bc8
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1156,7 +1201,7 @@ SPEC CHECKSUMS:
   TTImagePreviewAnimateManager: 89284791379992856207b5b92662037d07cb08eb
   TTImpression: d2d80c26abef863c5be6dc8b6fe10ebef3331b84
   TTIMSDK: bfe029a0b27e3d30752bdd07ec5a121566fec48d
-  TTInstallService: 278ab1b8adf5f1a632507406386a2a80df58d84f
+  TTInstallService: f93af3e3857aaf059346f49f3066629332253edc
   TTKitchen: 4a9860af825fc06ca6747379c6036d7c26b9ffe0
   TTKitchenExtension: 8e66b1d9df811a5c483ce1d838c50d6e6042019b
   TTLCSService: d9fc936bba13993ecc454b486a15a403a9fdbdc4
@@ -1175,7 +1220,7 @@ SPEC CHECKSUMS:
   TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
   TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
   TTPushSDK: 3302f3e57c39cf8e14233769b28cb07d5f403966
-  TTReachability: 7e6a58fa568af74e428e24394899caa3d8bddb00
+  TTReachability: c0bf20b83472624dc09da6a49b201d0d22eaf775
   TTRegistry: da0948df15bacc1b90bb9ff8eb621b812ea9eebb
   TTReporter: 55c6785c79fb8b35a44105d760ac3493cc2ed365
   TTRexxar: 40c20cd090918e9816f74b0decced7094f000647
@@ -1188,7 +1233,7 @@ SPEC CHECKSUMS:
   TTShare: e5faa4ed799189e7dec34372f61794c6a011c2a6
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
   TTThemed: 921e544fa8ca8c34b3a091af38b8612609c18480
-  TTTracker: 53b746772e7240481e57bee23ae866924fdc0193
+  TTTracker: d1481220d85ff096407300e9899aafc76e767d78
   TTUGCFoundation: 122bc1a5271b79b073460ec6691c3e3f2df86593
   TTUIWidget: 1c194626c37434ce974daabf17674bfbf50e532d
   TTUserProfile: e9f6d23e86b3c1232b15a79a239e5d3a27e5b2f3
@@ -1216,6 +1261,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: d8a52abf929622d416291c72f4d6611b71a8dafe
+PODFILE CHECKSUM: 84ea350262dd3158b5b7a8371c94fd2e2550c4fb
 
 COCOAPODS: 1.4.0

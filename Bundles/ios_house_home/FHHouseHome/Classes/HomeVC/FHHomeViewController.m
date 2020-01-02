@@ -36,6 +36,8 @@
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <TTThemedAlertController.h>
 #import <FHUtils.h>
+#import <FHMinisdkManager.h>
+#import "FHSpringHangView.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -57,6 +59,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
+//春节活动运营位
+@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -75,6 +79,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.ttNeedIgnoreZoomAnimation = YES;
+    self.ttTrackStayEnable = YES;
     [self.view addSubview:self.topBar];
     
     FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
@@ -93,7 +98,26 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    
+}
+
+- (void)addSpringView {
+    if(!_springView){
+        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
+        [self.view addSubview:_springView];
+        _springView.hidden = YES;
+        
+        CGFloat bottom = 49;
+        if (@available(iOS 11.0 , *)) {
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
+        
+        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
+            make.width.mas_equalTo(84);
+            make.height.mas_equalTo(79);
+            make.right.mas_equalTo(self.view).offset(-11);
+        }];
+    }
 }
 
 - (void)scrollMainTableToTop
@@ -379,6 +403,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     
     [self checkPasteboard:NO];
+
+    //春节活动
+    [[FHMinisdkManager sharedInstance] goSpring];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -398,6 +425,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
     
 //    if(_isMainTabVC && !self.homeListViewModel){
 //        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
@@ -525,6 +557,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
 }
 
 - (void)dealloc
