@@ -272,8 +272,8 @@ PODS:
   - OpenSSL-Universal (1.0.1.20.1-binary)
   - OpenUDID (0.1.0.1-binary)
   - Protobuf (3.0.1-ttv.1-binary)
-  - Quaterback/Main/Core (0.0.2-rc.1)
-  - Quaterback/Main/Default (0.0.2-rc.1)
+  - Quaterback/Main/Core (0.0.2-rc.6)
+  - Quaterback/Main/Default (0.0.2-rc.6)
   - React/base (0.55.13-rc.0.1.binary)
   - React/Core (0.55.13-rc.0.1.binary)
   - React/CxxBridge (0.55.13-rc.0.1.binary)
@@ -774,8 +774,8 @@ DEPENDENCIES:
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
   - Protobuf (= 3.0.1-ttv.1-binary)
-  - Quaterback/Main/Core (= 0.0.2-rc.1)
-  - Quaterback/Main/Default (= 0.0.2-rc.1)
+  - Quaterback/Main/Core (= 0.0.2-rc.6)
+  - Quaterback/Main/Default (= 0.0.2-rc.6)
   - React/base (= 0.55.13-rc.0.1.binary)
   - React/Core (= 0.55.13-rc.0.1.binary)
   - React/CxxBridge (= 0.55.13-rc.0.1.binary)
@@ -1155,7 +1155,7 @@ SPEC CHECKSUMS:
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
   Protobuf: 52a446ec094fe19d92c51ef98bd5c975b56d8732
-  Quaterback: ca260f9322c8c0e77d01d28c8e90b2a7394a3f10
+  Quaterback: 864147799c58357703c2a7da4e3b49317e639247
   React: 5e1cd3dbd5d3472c64a378caad5cf4468a60c615
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
@@ -1266,6 +1266,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: f08ecc1028da63e8df0ce31c586949de0b194d25
+PODFILE CHECKSUM: b7f8d5f5eae1733c4c1e2890f62935a70a054d21
 
 COCOAPODS: 1.4.0

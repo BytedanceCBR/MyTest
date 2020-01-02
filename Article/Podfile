@@ -573,7 +573,7 @@ def appPods
     
     pod_binary 'TTAppStoreStarManager', '1.0.12'
     
-    pod 'Quaterback', '0.0.2-rc.1', :subspecs => [
+    pod 'Quaterback', '0.0.2-rc.6', :subspecs => [
     'Main/Core',
     'Main/Default'
     ]
