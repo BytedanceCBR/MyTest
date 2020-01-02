@@ -36,10 +36,7 @@
 
 - (void)bindCountryBtnClickAction
 {
-    [[[self.suspendSearchBar.changeCountryBtn rac_signalForControlEvents:UIControlEventTouchUpInside] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(__kindof UIControl * _Nullable x)
-    {
-        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpCountryList:self.viewController];
-    }];
+
 }
 
 - (void)bindSearchBtnClickAction
@@ -99,9 +96,6 @@
             self.suspendSearchBar.rollDatas = listData;
         }
     }];
-    
-    self.suspendSearchBar.countryLabel.text = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
-    [self.suspendSearchBar updateCountryLabelLayout:self.suspendSearchBar.countryLabel.text];
 }
 
 - (void)requestPanelRollScreen:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion

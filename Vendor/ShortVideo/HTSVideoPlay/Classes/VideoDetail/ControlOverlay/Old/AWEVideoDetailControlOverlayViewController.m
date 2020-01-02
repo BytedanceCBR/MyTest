@@ -78,6 +78,8 @@
 #import "TSVRecommendCardModel.h"
 #import "TSVRecommendCardViewModel.h"
 #import "FHCommonApi.h"
+#import <UIColor+Theme.h>
+#import <UIImage+FIconFont.h>
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
 static const CGFloat kCheckChallengeButtonHeight = 28;
@@ -452,20 +454,22 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [_operationView addSubview:_inputButton];
 
     _commentButton = [[TSVIconLabelButton alloc] initWithImage:@"hts_vp_comments" label:nil];
+    _commentButton.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeWhite]);
     _commentButton.label.textAlignment = NSTextAlignmentLeft;
     _commentButton.label.textColor = [UIColor tt_defaultColorForKey:kColorText7];
     [_commentButton addTarget:self action:@selector(_onCommentButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.operationView addSubview:_commentButton];
 
     _likeButton = [[TSVIconLabelButton alloc] initWithImage:@"hts_vp_like" label:nil];
+    _likeButton.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
     _likeButton.label.textAlignment = NSTextAlignmentLeft;
-    _likeButton.label.textColor = [UIColor tt_defaultColorForKey:kColorText7];
+    _likeButton.label.textColor = [UIColor themeWhite];
     [_likeButton addTarget:self action:@selector(_onLikeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.operationView addSubview:_likeButton];
     
     self.shareButton = [[UIButton alloc] init];
     self.shareButton.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
-    [self.shareButton setImage:[UIImage imageNamed:@"hts_vp_more"] forState:UIControlStateNormal];
+    [self.shareButton setImage:ICON_FONT_IMG(24, @"\U0000E692",[UIColor themeWhite]) forState:UIControlStateNormal];
     [self.shareButton addTarget:self action:@selector(_onShareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.operationView addSubview:self.shareButton];
 
@@ -826,8 +830,9 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     
     self.likeButton.labelString = [TTBusinessManager formatCommentCount:self.model.diggCount];
     self.likeButton.imageString = self.model.userDigg ? @"hts_vp_like_press" : @"hts_vp_like";
+    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
     self.likeButton.selected = self.model.userDigg;
-    self.likeButton.label.textColor = [UIColor tt_defaultColorForKey:self.model.userDigg ? kColorText4 : kColorText7];
+    self.likeButton.label.textColor = self.model.userDigg ? [UIColor themeOrange4] : [UIColor themeWhite];
 
     NSString *musicLabelString = self.viewModel.musicLabelString;
     if (!isEmptyString(musicLabelString)) {
@@ -895,8 +900,9 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 {
     self.likeButton.labelString = [TTBusinessManager formatCommentCount:self.model.diggCount];
     self.likeButton.imageString = self.model.userDigg ? @"hts_vp_like_press" : @"hts_vp_like";
+    self.likeButton.iconImageView.image = self.model.userDigg ? ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) : ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeWhite]);
     self.likeButton.selected = self.model.userDigg;
-    self.likeButton.label.textColor = [UIColor tt_defaultColorForKey:self.model.userDigg ? kColorText4 : kColorText7];
+    self.likeButton.label.textColor = self.model.userDigg ? [UIColor themeOrange4] : [UIColor themeWhite];
     [self.view setNeedsLayout];
 }
 
@@ -915,7 +921,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 {
     [self _showPlusOneDiggAnimation];
 
-    CGFloat viewWidth = 300;
+    CGFloat viewWidth = 100;
     NSString *animationPath = [[NSBundle mainBundle] pathForResource:@"like" ofType:@"json" inDirectory:@"HTSVideoPlay.bundle"];
     LOTAnimationView *animationView = [LOTAnimationView animationWithFilePath:animationPath];
     animationView.contentMode = UIViewContentModeScaleAspectFit;

@@ -58,6 +58,9 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postTopSuccess:) name:kFHUGCTopPostNotification object:nil];
         // 加精或取消加精成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
+        
+        // 编辑成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
     }
     
     return self;
@@ -69,6 +72,49 @@
 
 - (BOOL)isNotInAllTab {
     return self.tabName && ![self.tabName isEqualToString:tabAll];
+}
+
+// 编辑发送成功 - 更新数据
+- (void)postEditNoti:(NSNotification *)noti {
+    //多个tab时候，仅仅更新全部页面数据
+    if([self isNotInAllTab]){
+        return;
+    }
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *groupId = userInfo[@"group_id"];
+        if (groupId.length > 0) {
+            __block NSUInteger index = -1;
+            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([cellModel.groupId isEqualToString:groupId]) {
+                    index = idx;
+                }
+            }];
+            // 找到 要更新的数据
+            if (index >= 0 && index < self.dataList.count) {
+                NSString *thread_cell = userInfo[@"thread_cell"];
+                if (thread_cell && [thread_cell isKindOfClass:[NSString class]]) {
+                    FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:thread_cell];
+                    FHFeedUGCCellModel *lastCellModel = self.dataList[index];
+                    cellModel.categoryId = self.categoryId;
+                    cellModel.feedVC = self.viewController;
+                    cellModel.tableView = self.tableView;
+                    cellModel.showCommunity = NO;
+                    cellModel.isFromDetail = NO;
+                    cellModel.isStick = lastCellModel.isStick;
+                    cellModel.stickStyle = lastCellModel.stickStyle;
+                    cellModel.contentDecoration = lastCellModel.contentDecoration;
+                    if (cellModel) {
+                        self.dataList[index] = cellModel;
+                    }
+                    // 异步一下
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.tableView reloadData];
+                    });
+                }
+            }
+        }
+    }
 }
 
 // 发帖成功，插入数据

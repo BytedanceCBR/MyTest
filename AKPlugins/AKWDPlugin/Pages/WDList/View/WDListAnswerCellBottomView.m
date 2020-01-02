@@ -13,6 +13,7 @@
 #import "UIColor+Theme.h"
 #import "WDAnswerService.h"
 #import "FHUserTracker.h"
+#import <UIImage+FIconFont.h>
 
 @interface WDListAnswerCellBottomView ()
 
@@ -36,13 +37,13 @@
     self.backgroundColor = [UIColor whiteColor];
     // 评论
     self.commentBtn = [[WDListAnswerCellBottomButton alloc] init];
-    self.commentBtn.icon.image = [UIImage imageNamed:@"f_ask_message_noraml"];
+    self.commentBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e699", [UIColor themeGray1]);
     self.commentBtn.textLabel.text = @"0";
     [self.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.commentBtn];
     // 点赞
     self.followBtn = [[WDListAnswerCellBottomButton alloc] init];
-    self.followBtn.icon.image = [UIImage imageNamed:@"f_ask_favorite_noraml"];// f_ask_favorite_selected
+    self.followBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]);
     self.followBtn.textLabel.text = @"0";
     [self.followBtn addTarget:self action:@selector(followBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.followBtn];
@@ -70,11 +71,11 @@
         self.followBtn.textLabel.text = [NSString stringWithFormat:@"%lld",[ansEntity.diggCount longLongValue]];
         if (ansEntity.isDigg) {
             self.followBtn.followed = YES;
-            self.followBtn.icon.image = [UIImage imageNamed:@"f_ask_favorite_selected"];//
-            self.followBtn.textLabel.textColor = [UIColor themeRed1];
+            self.followBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e6b1", [UIColor themeOrange4]);
+            self.followBtn.textLabel.textColor = [UIColor themeOrange4];
         } else {
             self.followBtn.followed = NO;
-            self.followBtn.icon.image = [UIImage imageNamed:@"f_ask_favorite_noraml"];// f_ask_favorite_selected
+            self.followBtn.icon.image = ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]);
             self.followBtn.textLabel.textColor = [UIColor themeGray1];
         }
     }

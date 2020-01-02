@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHHomeViewController.h"
 #import "FHHouseType.h"
+#import "FHHomeBaseScrollView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,6 +17,13 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
     FHHomeCategoryTraceTypeStay = 2, //stay
     FHHomeCategoryTraceTypeRefresh = 3  //刷新
 };
+
+static const NSUInteger kFHHomeListHeaderSearchSection = 0;
+static const NSUInteger kFHHomeListHeaderBaseViewSection = 1;
+static const NSUInteger kFHHomeListHouseTypeBannerViewSection = 2;
+static const NSUInteger kFHHomeListHouseBaseViewSection = 3;
+
+static const NSUInteger kFHHomeHeaderViewSectionHeight = 45;
 
 @class FHHomeSearchPanelViewModel;
 
@@ -45,6 +53,8 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 - (void)setUpTableScrollOffsetZero;
 
 - (void)setIsShowRefreshTip:(BOOL)isShowRefreshTip;
+
+- (void)selectIndexHouseType:(NSInteger)indexValue;
 
 @end
 

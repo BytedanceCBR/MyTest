@@ -242,10 +242,10 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     // 108: topbar   49:tahbar  45:sectionHeader
     if ([TTDeviceHelper isIPhoneXSeries]) {
-        return MAIN_SCREENH_HEIGHT - 108 - 49 - 45 + padding;
+        return MAIN_SCREENH_HEIGHT - 108 - 49  + padding;
     }else
     {
-        return MAIN_SCREENH_HEIGHT - 84 - 49 - 45 + padding;
+        return MAIN_SCREENH_HEIGHT - 64 - 49  + padding;
     }
 }
 
@@ -303,9 +303,6 @@ static NSMutableArray  * _Nullable identifierArr;
             }else {
                 height += 10;
             }
-        }else
-        {
-            height += 10;
         }
     }
     self.headerHeight = height;
@@ -331,22 +328,31 @@ static NSMutableArray  * _Nullable identifierArr;
 }
 
 #pragma mark 填充数据 fill data =======================
-
-+ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model
-{
++ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:(NSDictionary *)traceParams{
+    
     FHHomeEntrancesCell *cellEntrance = cell;
     
     NSInteger countItems = model.items.count;
-    if (countItems > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2) {
-        countItems = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
-    }
+//    if (countItems > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2) {
+//        countItems = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
+//    }
     
     [cell updateWithItems:model.items];
-    
     
     cellEntrance.clickBlock = ^(NSInteger clickIndex , FHConfigDataOpDataItemsModel *itemModel){
         NSMutableDictionary *dictTrace = [NSMutableDictionary new];
         [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+
+        if ([traceParams isKindOfClass:[NSDictionary class]]) {
+            [dictTrace addEntriesFromDictionary:traceParams];
+        }
+        
+        //首页工具箱里面的icon追加上报
+        NSString *enterFrom = dictTrace[@"enter_from"];
+        if(enterFrom && [enterFrom isEqualToString:@"tools_box"]){
+            [self addCLickIconLog:itemModel];
+        }
+        
         [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
         [dictTrace setValue:@"click" forKey:@"enter_type"];
         
@@ -358,8 +364,7 @@ static NSMutableArray  * _Nullable identifierArr;
         if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
             [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
             [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
-        }else
-        {
+        }else{
             [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
             [dictTrace setValue:@"be_null" forKey:@"origin_from"];
         }
@@ -368,7 +373,6 @@ static NSMutableArray  * _Nullable identifierArr;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         
         if ([itemModel.openUrl isKindOfClass:[NSString class]]) {
-            
             NSURL *url = [NSURL URLWithString:itemModel.openUrl];
             if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
@@ -495,7 +499,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 make.bottom.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? -10 : -8);
             }];
         }
-        itemView.backgroundColor = [UIColor whiteColor];
+        itemView.backgroundColor = [UIColor clearColor];
         if (isNeedAllocNewItems) {
             [itemsArray addObject:itemView];
         }
@@ -620,7 +624,7 @@ static NSMutableArray  * _Nullable identifierArr;
     cell.fd_enforceFrameLayout = NO; //
     
     if ([cell isKindOfClass:[FHHomeEntrancesCell class]] && [model isKindOfClass:[FHConfigDataOpDataModel class]]) {
-        [self fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model];
+        [self fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:nil];
     }
     
     if ([cell isKindOfClass:[FHHomeBannerCell class]] && [model isKindOfClass:[FHConfigDataOpData2Model class]]) {
@@ -718,6 +722,61 @@ static NSMutableArray  * _Nullable identifierArr;
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"page_type"] = @"maintab";
     [FHUserTracker writeEvent:@"city_market_click" params:param];
+}
+
++(void)addCLickIconLog:(FHConfigDataOpDataItemsModel *)itemModel
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"log_pb"] = itemModel.logPb ?: @"be_null";
+    param[@"page_type"] = @"tools_box";
+    [FHUserTracker writeEvent:@"click_icon" params:param];
+}
+
+//匹配房源名称
++ (NSArray <NSString *>*)matchHouseSegmentedTitleArray
+{
+    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSMutableArray *titleArrays = [[NSMutableArray alloc] initWithCapacity:3];
+    for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
+        NSNumber *houseTypeNum = configDataModel.houseTypeList[i];
+        if ([houseTypeNum isKindOfClass:[NSNumber class]]) {
+            NSString * houseStr = [self matchHouseString:[houseTypeNum integerValue]];
+            if (kIsNSString(houseStr) && houseStr.length != 0) {
+                [titleArrays addObject:houseStr];
+            }
+        }
+    }
+    return titleArrays;
+}
+
++ (NSString *)matchHouseString:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+        {
+            return @"新房";
+        }
+            break;
+        case FHHouseTypeRentHouse:
+        {
+            return @"租房";
+        }
+            break;
+        case FHHouseTypeNeighborhood:
+        {
+            return @"小区";
+        }
+            break;
+        case FHHouseTypeSecondHandHouse:
+        {
+            return @"二手房";
+        }
+            break;
+            
+        default:
+            return @"";
+            break;
+    }
 }
 
 @end

@@ -411,7 +411,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeRentHouse];
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
-        staticMapModel.useStarHeader = NO;
         staticMapModel.mapOnly = YES;
         [self.items addObject:staticMapModel];
 

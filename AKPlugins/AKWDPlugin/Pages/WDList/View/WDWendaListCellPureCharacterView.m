@@ -10,6 +10,7 @@
 #import "WDListCellLayoutModel.h"
 #import "WDUIHelper.h"
 #import "WDLayoutHelper.h"
+#import <UIColor+Theme.h>
 
 @interface WDWendaListCellPureCharacterView ()
 
@@ -79,7 +80,7 @@
     NSMutableAttributedString *appendToken = [[NSMutableAttributedString alloc] initWithString:@"全文"
                                                                               attributes:@{
                                                                                            NSFontAttributeName : [UIFont systemFontOfSize:fontSize],
-                                                                                           NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:@"red1"]}
+                                                                                           NSForegroundColorAttributeName : [UIColor themeRed3]}
                                         ];
     [token appendAttributedString:appendToken];
     return token;

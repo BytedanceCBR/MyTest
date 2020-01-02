@@ -287,6 +287,9 @@
         case FHSearchCardTypeGuessYouWantContent:
             itemModel = [[FHSearchGuessYouWantContentModel alloc]initWithDictionary:itemDict error:&jerror];
             break;
+        case FHSearchCardTypeRedirectTip:
+            itemModel = [[FHSearchHouseDataRedirectTipsModel alloc]initWithDictionary:itemDict error:&jerror];
+            break;
         default:
             break;
     }

@@ -18,9 +18,8 @@
 @interface FHDetailBottomOpenAllView ()
 
 @property (nonatomic, strong)   UIButton       *openAllBtn;
-@property (nonatomic, strong)   UILabel       *title;
-@property (nonatomic, strong)   UIImageView       *settingArrowImageView;
-@property (nonatomic, strong)   UIView       *topBorderView;
+
+
 
 
 @end

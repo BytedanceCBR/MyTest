@@ -11,6 +11,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
+#import <UIImage+FIconFont.h>
 
 @interface WDListBottomButton()
 
@@ -76,7 +77,7 @@
 - (void)setupUI {
     self.backgroundColor = [UIColor whiteColor];
     self.iconImageView = [[UIImageView alloc] init];
-    self.iconImageView.image = [UIImage imageNamed:@"ask_anwser_red_normal"];
+    self.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e6b3", [UIColor themeRed1]);
     [self addSubview:_iconImageView];
     self.titleLabel = [self labelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeRed1]];
     [self addSubview:_titleLabel];

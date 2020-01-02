@@ -11,6 +11,7 @@
 #import <UIColor+Theme.h>
 #import "TTDeviceHelper.h"
 #import "FHExtendHotAreaButton.h"
+#import <UIImage+FIconFont.h>
 
 @interface FHCityListNavBarView ()
 
@@ -34,8 +35,9 @@
     CGFloat statusBarHeight = (isIphoneX ? 44 : 20);
     // backBtn
     _backBtn = [[FHExtendHotAreaButton alloc] init];
-    [_backBtn setImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-    [_backBtn setImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+    UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+    [_backBtn setImage:blackBackArrowImage forState:UIControlStateNormal];
+    [_backBtn setImage:blackBackArrowImage forState:UIControlStateHighlighted];
     [self addSubview:_backBtn];
     [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(24);

@@ -36,7 +36,7 @@
     _searchAreaPanel = [UIButton buttonWithType:UIButtonTypeCustom];
     _searchAreaPanel.backgroundColor = [UIColor themeGray7];
     _searchAreaPanel.layer.masksToBounds = YES;
-    _searchAreaPanel.layer.cornerRadius = 4.0;
+    _searchAreaPanel.layer.cornerRadius = 17.0f;
     [_searchAreaPanel addTarget:self action:@selector(onSearchClicked) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_searchAreaPanel];
 
@@ -59,7 +59,7 @@
 -(void)initConstraints{
 
     [self.searchAreaPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self).insets(UIEdgeInsetsMake(4, 20, 10, 20));
+        make.edges.mas_equalTo(self).insets(UIEdgeInsetsMake(3, 20, 9, 20));
     }];
 
     [self.searchIcon mas_makeConstraints:^(MASConstraintMaker *make) {

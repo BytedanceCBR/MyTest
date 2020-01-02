@@ -13,6 +13,7 @@
 #import "TTDeviceHelper.h"
 #import "FHExtendHotAreaButton.h"
 #import <TTDeviceHelper.h>
+#import <UIImage+FIconFont.h>
 
 @interface FHDetailMapPageNaviBarView ()
 
@@ -26,9 +27,9 @@
 
 @implementation FHDetailMapPageNaviBarView
 
-- (instancetype)initWithBackImage:(UIImage *)image
-{
-    if (self = [super init]) {
+
+-(instancetype)init {
+    if(self = [super init]) {
         [self setupViews];
     }
     return self;
@@ -44,8 +45,9 @@
     }
     
     _backBtn = [[FHExtendHotAreaButton alloc] init];
-    [_backBtn setImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-    [_backBtn setImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+    UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+    [_backBtn setImage:blackBackArrowImage forState:UIControlStateNormal];
+    [_backBtn setImage:blackBackArrowImage forState:UIControlStateHighlighted];
     [self addSubview:_backBtn];
     [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(24);
@@ -103,72 +105,4 @@
         self.naviMapActionBlock();
     }
 }
-
-
-//lazy var backBtn: ExtendHotAreaButton = {
-//    let btn = ExtendHotAreaButton()
-//    return btn
-//}()
-//
-//lazy var title: UILabel = {
-//    let label = UILabel()
-//    label.textAlignment = .center
-//    return label
-//}()
-//
-//lazy var rightBtn: UIButton = {
-//    let re = UIButton()
-//    return re
-//}()
-//
-//lazy var seperatorLine: UIView = {
-//    let re = UIView()
-//    re.backgroundColor = hexStringToUIColor(hex: kFHSilver2Color)
-//    return re
-//}()
-//
-//
-//init(backBtnImg: UIImage = #imageLiteral(resourceName: "icon-return")) {
-//    super.init(frame: CGRect.zero)
-//    backBtn.setBackgroundImage(backBtnImg, for: .normal)
-//    backBtn.setBackgroundImage(#imageLiteral(resourceName: "icon-return"), for: .highlighted)
-//
-//    addSubview(backBtn)
-//    backBtn.snp.makeConstraints { maker in
-//        maker.left.equalTo(12)
-//        maker.width.height.equalTo(24)
-//        maker.bottom.equalTo(-10)
-//    }
-//
-//    addSubview(rightBtn)
-//    rightBtn.snp.makeConstraints { maker in
-//        maker.centerY.equalTo(backBtn.snp.centerY)
-//        maker.right.equalTo(-12)
-//        maker.height.equalTo(24)
-//    }
-//
-//    addSubview(title)
-//    title.snp.makeConstraints { maker in
-//        maker.left.greaterThanOrEqualTo(backBtn.snp.right).offset(10)
-//        maker.centerY.equalTo(backBtn.snp.centerY)
-//        maker.height.equalTo(28)
-//        maker.centerX.equalToSuperview()
-//        maker.right.lessThanOrEqualTo(rightBtn.snp.left).offset(-10).priority(.high)
-//    }
-//
-//    addSubview(seperatorLine)
-//    seperatorLine.snp.makeConstraints { maker in
-//        maker.height.equalTo(0.5)
-//        maker.left.right.bottom.equalToSuperview()
-//    }
-//}
-
-/*
- // Only override drawRect: if you perform custom drawing.
- // An empty implementation adversely affects performance during animation.
- - (void)drawRect:(CGRect)rect {
- // Drawing code
- }
- */
-
 @end

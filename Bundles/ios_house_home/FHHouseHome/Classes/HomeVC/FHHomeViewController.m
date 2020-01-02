@@ -28,7 +28,6 @@
 #import <FHCommuteManager.h>
 #import <TTUIResponderHelper.h>
 #import "TTTabBarController.h"
-#import <TTTopBar.h>
 #import <FHHomeSearchPanelViewModel.h>
 #import <ExploreLogicSetting.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
@@ -36,6 +35,9 @@
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <TTThemedAlertController.h>
 #import <FHUtils.h>
+#import "FHHomeBaseScrollView.h"
+#import <FHHomeMainViewController.h>
+#import <FHHouseBase/FHHomeScrollBannerView.h>
 #import <FHMinisdkManager.h>
 #import "FHSpringHangView.h"
 
@@ -43,7 +45,6 @@ static CGFloat const kShowTipViewHeight = 32;
 
 static CGFloat const kSectionHeaderHeight = 38;
 
-static NSString * const kFUGCPrefixStr = @"fugc";
 
 @interface FHHomeViewController ()<TTAppUpdateHelperProtocol>
 
@@ -54,8 +55,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, strong) ArticleListNotifyBarView * notifyBar;
 @property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic) BOOL adUGCHadJump;
-@property (nonatomic, strong) TTTopBar *topBar;
-@property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
+@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
@@ -79,6 +79,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.ttNeedIgnoreZoomAnimation = YES;
+
     self.ttTrackStayEnable = YES;
     [self.view addSubview:self.topBar];
     
@@ -96,8 +97,18 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     [self resetMaintableView];
     self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+- (void)bindIndexChangedBlock
+{
+    __weak typeof(self) weakSelf = self;
+    if ([self.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
+        FHHomeMainViewController *mainVC = (FHHomeMainViewController *)self.parentViewController;
+        mainVC.topView.indexHouseChangeBlock = ^(NSInteger index) {
+            [weakSelf.homeListViewModel selectIndexHouseType:index];
+        };
+    }
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 - (void)addSpringView {
@@ -129,14 +140,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 -(void)dealyIniViews
 {
-    
-    //如果是inhouse的，弹升级弹窗
-    if ([TTSandBoxHelper isInHouseApp] && _isMainTabVC) {
-        //#if INHOUSE
-        [self checkLocalTestUpgradeVersionAlert];
-        //#endif
-    }
-    
+
     [self addDefaultEmptyViewFullScreen];
     
     if (!_isMainTabVC) {
@@ -144,8 +148,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self.mainTableView removeFromSuperview];
         [self.emptyView showEmptyWithTip:@"功能暂未开通" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
-    
-    [self.view bringSubviewToFront:self.topBar];
     
     self.mainTableView.scrollsToTop = YES;
 }
@@ -162,14 +164,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self.mainTableView removeFromSuperview];
     }
     
-    self.mainTableView = [[FHHomeBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.mainTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.mainTableView.decelerationRate = 0.5;
     self.mainTableView.showsVerticalScrollIndicator = NO;
     
-//    if (_isMainTabVC) {
-//        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
-//    }
-    
+
     [self.view addSubview:self.mainTableView];
     
     self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -180,13 +179,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     // Do any additional setup after loading the view.
     
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.mainTableView.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor themeHomeColor];
+    self.mainTableView.backgroundColor = [UIColor themeHomeColor];
     FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!configModel) {
         [self tt_startUpdate];
     }
-    
     
     if (self.notifyBar) {
         [self.notifyBar removeFromSuperview];
@@ -199,9 +197,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         make.top.left.right.equalTo(self.mainTableView);
         make.height.mas_equalTo(32);
     }];
-    
-    
-    [self.view bringSubviewToFront:self.topBar];
 }
 
 #pragma mark - notifications
@@ -224,21 +219,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)setUpMainTableConstraints
 {
-    if ([TTDeviceHelper isIPhoneXDevice]) {
-        [self.mainTableView setFrame:CGRectMake(0.0f, 64 + 44, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 44 - 49)];
+    if ([TTDeviceHelper isIPhoneXSeries]) {
+        [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 44 - 49)];
     }else
     {
-        [self.mainTableView setFrame:CGRectMake(0.0f, 64 + 20, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 20 - 49)];
+        [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 49)];
     }
-}
-
-- (void)setupTopBarConstraints
-{
-    [self.topBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo([TTDeviceHelper isIPhoneXSeries] ? 44 : 20);
-        make.left.right.equalTo(self.view);
-        make.height.mas_equalTo(64);
-    }];
 }
 
 - (TTTopBar *)topBar {
@@ -246,8 +232,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         _topBar = [[TTTopBar alloc] init];
         _topBar.isShowTopSearchPanel = YES;
         _topBar.tab = @"home";
-        [self.view addSubview:_topBar];
-        [self setupTopBarConstraints];
         _topBar.delegate = self;
         [_topBar setupSubviews];
     }
@@ -388,21 +372,15 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.isShowing = YES;
     self.isShowRefreshTip = NO;
     
-    if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
-        [self.homeListViewModel checkCityStatus];
-    }
-    
     [self scrollToTopEnable:YES];
     
     self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
     
-    if (self.mainTableView.contentOffset.y > [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType]) {
+    if (self.mainTableView.contentOffset.y >= [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType] + 80) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
     
     self.stayTime = [[NSDate date] timeIntervalSince1970];
-    
-    [self checkPasteboard:NO];
 
     //春节活动
     [[FHMinisdkManager sharedInstance] goSpring];
@@ -431,11 +409,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
     
-//    if(_isMainTabVC && !self.homeListViewModel){
-//        self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
-//    }
-    
-    
     //开屏广告启动不会展示，保留逻辑代码
     if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
         self.adColdHadJump = YES;
@@ -459,27 +432,18 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         }
     }
     
-    [FHEnvContext addTabUGCGuid];
     
-    [TTSandBoxHelper setAppFirstLaunchForAd];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
+    
+    [self bindIndexChangedBlock];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-}
-
-- (void)_willEnterForeground:(NSNotification *)notification
-{
-    if (self.isShowing) {
-        [self checkPasteboard:NO];
-    }
 }
 
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
-    //        if (duration) {
-    //            [tracerDict setValue:@((int)duration) forKey:@"stay_time"];
-    //        }
     [tracerDict setValue:@"main" forKey:@"tab_name"];
     [tracerDict setValue:@(0) forKey:@"with_tips"];
     [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
@@ -489,7 +453,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
     }
 }
-
 
 - (void)traceJump2AdEvent:(NSString *)urlString
 {
@@ -574,15 +537,16 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 #pragma mark init views
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
-        _scrollView = [[UIScrollView alloc] init];
+        _scrollView = [[FHHomeBaseScrollView alloc] init];
         _scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
         _scrollView.pagingEnabled = YES;
         _scrollView.bounces = NO;
+//        _scrollView.decelerationRate = 0.5;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.scrollsToTop = NO;
         _scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width*4, 0);
-        _scrollView.backgroundColor = [UIColor whiteColor];
+        _scrollView.backgroundColor = [UIColor themeHomeColor];
         if (@available(iOS 11.0 , *)) {
             _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
@@ -590,164 +554,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     return _scrollView;
 }
 
-#pragma mark 内测弹窗
-- (void)checkLocalTestUpgradeVersionAlert
-{
-    //内测弹窗
-    NSString * iidValue = [[TTInstallIDManager sharedInstance] installID];
-    NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
-    NSString * channelValue = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
-    NSString * aidValue = @"1370";
-    NSString * baseUrl = [CommonURLSetting baseURL];
-    //    NSString * baseUrl = @"https://i.snssdk.com";
-    
-    [TTAppUpdateHelper sharedInstance].delegate = self;
-    [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
-        [self.view addSubview:view];
-    } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
-        //        if (!downloadUrl) {
-        //            return;
-        //        }
-        //        NSURL *url = [NSURL URLWithString:downloadUrl];
-        //        [[UIApplication sharedApplication] openURL:url];
-    } closeBlock:^{
-        
-    }];
-}
 
-/** 通知代理对象已获取到弹窗升级Title和具体升级内容,如果自定义弹窗，必须实现此方法
- @params title 弹窗升级title,ex: 6.x.x内测更新了..
- @param content 更新具体内容
- @params tipVersion 弹窗升级版本号,ex: 6.7.8
- @param downloadUrl TF弹窗下载地址
- */
-//- (void)showUpdateTipTitle:(NSString *)title content:(NSString *)content tipVersion:(NSString *)tipVersion updateButtonText:(NSString *)text downloadUrl:(NSString *)downloadUrl error:(NSError * _Nullable)error
-//{
-//
-//}
 
-/** 通知代理对象弹窗需要remove
- *  代理对象需要在此方法里面将弹窗remove掉
- */
-- (void)dismissTipView
-{
-    
-}
-
-///*
-// 判断是否是内测包，当打包注入与头条主工程不一致时
-// 可以实现自行进行判断，默认与头条判断方式相同
-// 通过检查bundleID是否有inHouse字段进行判断
-// */
-- (BOOL)decideIsInhouseApp
-{
-    return YES;
-}
-//
-///*
-// 判断是否是LR包，当打包注入与头条主工程不一致时
-// 可以实现自行进行判断，默认与头条判断方式相同
-// 通过检查buildinfo字段进行判断
-// 注意：只有lr包才弹内测弹窗，如果业务方没有
-// lr包的概念，则返回YES即可
-// */
-- (BOOL)decideIsLrPackage
-{
-    return YES;
-}
-//
-///*
-// 判断是否需要上报用户did，主要用来上报用户是否安装tTestFlight
-// 的情况，业务方可以自行通过开关控制
-// */
-//- (BOOL)decideShouldReportDid
-//{
-//
-//}
-
-#pragma mark UGC线上线下推广
-
-- (void)checkPasteboard:(BOOL)isAutoJump
-{
-    __weak typeof(self) weakSelf = self;
-    //据说主线程读剪切板会导致app卡死。。。改为子线程读
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-        NSArray<NSString *> *pasteboardStrs = [pasteboard strings];
-
-        if (([pasteboardStrs isKindOfClass:[NSArray class]] && pasteboardStrs.count > 0)) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __block NSString *pasteboardStr = nil;
-                [pasteboardStrs enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if ([obj hasPrefix:kFUGCPrefixStr]) {
-                        pasteboardStr = obj;
-                        *stop = YES;
-                    }
-                }];
-                
-                if (pasteboardStr) {
-                    NSString *base64Str = [pasteboardStr stringByReplacingOccurrencesOfString:kFUGCPrefixStr withString:@""];
-                    
-                    if (base64Str) {
-                        [weakSelf requestSendUGCUserAD:base64Str];
-                    }
-                    //清空剪切板
-                    NSMutableArray * strs = pasteboardStrs.mutableCopy;
-                    [strs removeObject:pasteboardStr];
-                    pasteboard.strings = strs;
-                }
-            });
-        }
-    });
-}
-
-- (void)requestSendUGCUserAD:(NSString *)requestStr
-{
-    NSMutableDictionary *params = [NSMutableDictionary new];
-    [params setValue:requestStr forKey:@"promotion_code"];
-    __weak typeof(self) weakSelf = self;
-
-    [FHMainApi uploadUGCPostPromotionparams:params completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
-        
-        if (!error && [result isKindOfClass:[NSDictionary class]]) {
-            NSNumber *cityId = nil;
-            NSString *alertStr = nil;
-            NSNumber *inviteStatus = nil;
-            NSDictionary *dataDict = result[@"data"];
-            if ([dataDict isKindOfClass:[NSDictionary class]] && [dataDict[@"city_id"] isKindOfClass:[NSNumber class]]) {
-                cityId = dataDict[@"city_id"];
-            }
-            
-            if ([dataDict isKindOfClass:[NSDictionary class]] && [dataDict[@"tips"] isKindOfClass:[NSString class]]) {
-                alertStr = dataDict[@"tips"];
-            }
-            
-            if ([dataDict isKindOfClass:[NSDictionary class]] && [dataDict[@"invite_status"] isKindOfClass:[NSNumber class]]) {
-                inviteStatus = dataDict[@"invite_status"];
-            }
-            
-            if (alertStr && [inviteStatus isKindOfClass:[NSNumber class]] && [inviteStatus integerValue] != 2) {
-                TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:alertStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
-                
-                [alertVC addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-                    
-                }];
-                
-                UIViewController *topVC = [TTUIResponderHelper topmostViewController];
-                if (topVC) {
-                    [alertVC showFrom:topVC animated:YES];
-                }
-                
-                [FHUtils setContent:@"1" forKey:kFHUGCPromotionUser];
-            }
-            
-            if ([inviteStatus integerValue] != 2 && cityId) {
-                [[FHEnvContext sharedInstance] switchCityConfigForUGCADUser:cityId];
-            }
-            //只保存数据
-            [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
-        }
-    }];
-}
 
 @end

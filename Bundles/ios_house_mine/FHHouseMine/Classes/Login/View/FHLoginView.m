@@ -138,7 +138,7 @@
     self.acceptCheckBox = [[FHLoginAcceptButton alloc] init];
     self.acceptCheckBox.hotAreaInsets = UIEdgeInsetsMake(20, 30, 0, 30);
     self.acceptCheckBox.hotAreaInsets2 = UIEdgeInsetsMake(20, 30, 20, 0);
-    [_acceptCheckBox setImage:[UIImage imageNamed:@"checkbox-checked"] forState:UIControlStateSelected];
+    [_acceptCheckBox setImage:[UIImage imageNamed:@"login_checkbox-checked"] forState:UIControlStateSelected];
     [_acceptCheckBox setImage:[UIImage imageNamed:@"ic-filter-normal"] forState:UIControlStateNormal];
     [_acceptCheckBox addTarget:self action:@selector(acceptCheckBoxChange) forControlEvents:UIControlEventTouchUpInside];
     [self.scrollView addSubview:_acceptCheckBox];

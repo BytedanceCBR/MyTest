@@ -17,6 +17,9 @@
 
 #define CLASS_NAME(Class) NSStringFromClass([Class class])
 
+#define OPTION_HEIGHT_SINGLE_LINE 53
+#define OPTION_HEIGHT_DOUBLE_LINE 70
+
 @interface TTFeedDislikeOptionSelectorView () <
 UITableViewDelegate,
 UITableViewDataSource
@@ -48,7 +51,17 @@ UITableViewDataSource
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.tableView.frame = self.bounds;
-    self.contentSizeInPopup = CGSizeMake(self.width, self.options.count * 70.0);
+    
+    __block NSInteger doubleLineCount = 0;
+    __block NSInteger singleLineCount = 0;
+    [self.options enumerateObjectsUsingBlock:^(FHFeedOperationOption *  _Nonnull option, NSUInteger idx, BOOL * _Nonnull stop) {
+        if(option.title.length > 0 && option.subTitle.length > 0) {
+            doubleLineCount += 1;
+        } else {
+            singleLineCount += 1;
+        }
+    }];
+    self.contentSizeInPopup = CGSizeMake(self.width, singleLineCount * OPTION_HEIGHT_SINGLE_LINE + doubleLineCount * OPTION_HEIGHT_DOUBLE_LINE);
 }
 
 - (void)refreshWithkeywords:(NSArray<FHFeedOperationWord *> *)keywords {
@@ -102,7 +115,13 @@ UITableViewDataSource
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 70.0;
+    if(indexPath.row >= 0 && indexPath.row < self.options.count) {
+        FHFeedOperationOption *option = self.options[indexPath.row];
+        BOOL isDoubleLine = option.title.length > 0 && option.subTitle.length > 0;
+        return isDoubleLine ? OPTION_HEIGHT_DOUBLE_LINE : OPTION_HEIGHT_SINGLE_LINE;
+    } else {
+        return OPTION_HEIGHT_DOUBLE_LINE;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -129,6 +148,8 @@ UITableViewDataSource
         case FHFeedOperationOptionTypeCancelTop:
         case FHFeedOperationOptionTypeGood:
         case FHFeedOperationOptionTypeCancelGood:
+        case FHFeedOperationOptionTypeEdit:
+        case FHFeedOperationOptionTypeEditList:
         case FHFeedOperationOptionTypeSelfLook: {
             [self finishWithKeyword:option.words.firstObject optionType:option.type];
         }
