@@ -18,6 +18,7 @@
 #import "FHCommonDefines.h"
 #import "FHUserTracker.h"
 #import <UIViewController+NavigationBarStyle.h>
+#import <UIImage+FIconFont.h>
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol, FHUGCPostMenuViewDelegate>
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
@@ -292,14 +293,16 @@
 - (void)setNavBar:(BOOL)showJoinButton {
     if (showJoinButton) {
         self.customNavBarView.title.textColor = [UIColor themeGray1];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+        [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
         self.shareButton.hidden = YES;
         [self.customNavBarView setNaviBarTransparent:NO];
     } else {
         self.customNavBarView.title.textColor = [UIColor whiteColor];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
-        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+        UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
+        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
         self.shareButton.hidden = NO;
         [self.customNavBarView setNaviBarTransparent:YES];
     }

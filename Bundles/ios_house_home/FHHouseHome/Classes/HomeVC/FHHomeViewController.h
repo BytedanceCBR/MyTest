@@ -11,8 +11,11 @@
 #import "UIScrollView+Refresh.h"
 #import "UIViewController+Track.h"
 #import "FHHomeBaseTableView.h"
+#import <TTTopBar.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+@class FHHomeBaseScrollView;
 
 @interface FHHomeViewController : FHBaseViewController <UIViewControllerErrorHandler>
 
@@ -20,8 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHHomeBaseTableView *mainTableView;
 @property (nonatomic, assign) TTReloadType reloadFromType;
 @property (nonatomic, assign) BOOL isMainTabVC;
-@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) FHHomeBaseScrollView *scrollView;
 @property (nonatomic, assign) BOOL isShowRefreshTip;
+@property (nonatomic, strong) TTTopBar *topBar;
 
 - (void)pullAndRefresh;
 
@@ -40,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)hideImmediately;
 
 - (void)resetMaintableView;
+
+- (void)bindIndexChangedBlock;
 
 @end
 

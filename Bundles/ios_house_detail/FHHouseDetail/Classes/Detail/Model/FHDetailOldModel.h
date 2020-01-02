@@ -88,6 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel> *schoolDictList;
 @property (nonatomic, assign) BOOL useSchoolIm;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoSchoolConsult *schoolConsult;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *neighborhoodImage;
 
 @end
 
@@ -362,6 +363,15 @@ typedef enum : NSInteger {
 
 @end
 
+@interface FHDetailDataBaseExtraSuggestInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *buttonText;
+@property (nonatomic, copy , nullable) NSString *realtorId;
+@property (nonatomic, copy , nullable) NSString *autoText;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
+
 @interface FHDetailDataBaseExtraNeighborhoodModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *baseTitle;
@@ -377,6 +387,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialModel *official;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraBudgetModel *budget;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraFloorInfoModel *floorInfo;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraSuggestInfoModel *bargain;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraNeighborhoodModel *neighborhoodInfo;
 
 @end

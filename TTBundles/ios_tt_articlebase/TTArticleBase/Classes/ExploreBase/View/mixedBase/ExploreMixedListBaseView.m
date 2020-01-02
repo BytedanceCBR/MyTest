@@ -175,6 +175,7 @@
 #import <FHUtils.h>
 #import <TTTabBarItem.h>
 #import <HMDTTMonitor.h>
+#import <UIColor+Theme.h>
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -740,11 +741,13 @@ TTRefreshViewDelegate
         }
     }];
     
+    
     [_listView tt_addDefaultPullUpLoadMoreWithHandler:^{
         __strong typeof(self) sself = wself;
         sself.refreshFromType = ListDataOperationReloadFromTypeLoadMore;
         [wself loadMoreWithUmengLabel:[wself modifyEventLabelForRefreshEvent:@"load_more"]];
     }];
+    [_listView.pullDownView setUpRefreshBackColor:[UIColor themeHomeColor]];
 }
 
 - (void)didFinishLoadTable
@@ -979,8 +982,7 @@ TTRefreshViewDelegate
         }
     }
         
-    
-    self.listView.backgroundColor = [UIColor whiteColor];
+    self.listView.backgroundColor = [UIColor themeHomeColor];
 }
 
 - (void)willAppear
@@ -1284,7 +1286,7 @@ TTRefreshViewDelegate
     [super themeChanged:notification];
 //    self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
     
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor themeHomeColor];
     self.listView.backgroundColor = self.backgroundColor;
 }
 
@@ -2141,6 +2143,7 @@ TTRefreshViewDelegate
     }
 
     [self tt_startUpdate];
+    [self.ttLoadingView setBackgroundColor:[UIColor themeHomeColor]];
 //    //有开屏广告展示的时候首页列表页初始化和广告同步进行，故此优化仅针对于无开屏广告展示且读取本地缓存的时候
 //    static BOOL isFirst = YES; // 只是第一次启动时异步调用，之后同步调用，避免切换频道闪白问题
 //    if (fromLocal && ![SSADManager shareInstance].adShow && [SSCommonLogic shouldUseOptimisedLaunch] /*&& isFirst*/) {
@@ -3041,9 +3044,9 @@ TTRefreshViewDelegate
 
 - (void)setListTopInset:(CGFloat)topInset BottomInset:(CGFloat)bottomInset
 {
-//    [self setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
-//    [self.listView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
-//    [self.listView setScrollIndicatorInsets:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self.listView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
+    [self.listView setScrollIndicatorInsets:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
 }
 
 - (void)clearListContent

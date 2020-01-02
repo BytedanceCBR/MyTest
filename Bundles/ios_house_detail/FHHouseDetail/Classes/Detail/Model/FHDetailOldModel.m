@@ -122,6 +122,7 @@
                            @"gaodeImageUrl": @"gaode_image_url",
                            @"evaluationInfo": @"evaluation_info",
                            @"schoolDictList": @"school_dict_list",
+                           @"neighborhoodImage":@"neighborhood_images",
                            @"useSchoolIm": @"use_school_im",
                            @"schoolConsult": @"school_consult",
                            @"gaodeImage": @"gaode_image",
@@ -377,6 +378,25 @@
     NSDictionary *dict = @{
                            @"baseTitle": @"base_title",
                            @"baseContent":@"base_content",
+                           @"openUrl":@"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailDataBaseExtraSuggestInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"buttonText": @"button_text",
+                           @"realtorId":@"base_id",
+                           @"autoText":@"auto_text",
                            @"openUrl":@"open_url",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

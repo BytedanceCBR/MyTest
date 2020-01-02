@@ -14,8 +14,6 @@
 #import "UIColor+Theme.h"
 
 @interface FHDetailHeaderView ()
-
-@property (nonatomic, strong)   UILabel       *loadMore;
 @property (nonatomic, strong)   UIImageView       *arrowsImg;
 
 @end

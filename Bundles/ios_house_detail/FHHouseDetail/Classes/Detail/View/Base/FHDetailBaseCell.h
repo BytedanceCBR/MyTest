@@ -13,6 +13,7 @@
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
 #import "FHHouseDetailBaseViewModel.h"
+#import "FHHouseShadowImageType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 当前cell的模型数据
 @property (nonatomic, weak , nullable) id currentData;
 
+//用于展示背景图
+@property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
 // 当前方法不需重写
 + (Class)cellViewClass;
 

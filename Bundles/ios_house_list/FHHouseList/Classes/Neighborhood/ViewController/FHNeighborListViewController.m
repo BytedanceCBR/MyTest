@@ -7,7 +7,7 @@
 
 #import "FHNeighborListViewController.h"
 #import "FHHouseType.h"
-#import "FHNeighborViewModel.h"
+#import "FHNeighborListViewModel.h"
 #import "TTReachability.h"
 #import "UIViewAdditions.h"
 #import "FHRefreshCustomFooter.h"
@@ -27,7 +27,7 @@
 @property (nonatomic, copy) NSString *neighborhoodId;
 @property (nonatomic, copy) NSString *houseId;
 
-@property (nonatomic, strong) FHNeighborViewModel *viewModel;
+@property (nonatomic, strong) FHNeighborListViewModel *viewModel;
 @property (nonatomic, strong) TTRouteParamObj *paramObj;
 
 @property (nonatomic, assign) FHNeighborListVCType neighborListVCType;
@@ -142,7 +142,7 @@
     }];
     
     [self configTableView];
-    self.viewModel = [[FHNeighborViewModel alloc] initWithController:self tableView:_tableView];
+    self.viewModel = [[FHNeighborListViewModel alloc] initWithController:self tableView:_tableView];
     [self.view addSubview:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);

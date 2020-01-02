@@ -107,7 +107,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _isShowAllBtns = YES;
         
         self.ttHideNavigationBar = YES;
-
+        
         _addedToContainer = NO;
         
         self.photoViewPools = [[NSMutableSet alloc] initWithCapacity:5];
@@ -118,7 +118,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _isRotating = NO;
         
         _whiteMaskViewEnable = YES;
-
+        
         _statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden];
         _lastStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
         [self setCurrentStatusStyle];
@@ -307,7 +307,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _bottomBar.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_bottomBar];
     }
-
+    
     
     if (self.mediaHeaderModel.contactViewModel) {
         CGFloat itemWidth = self.view.width - 40;
@@ -443,10 +443,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
         NSMutableDictionary *extraDic = @{@"realtor_position":@"online",
-                                   @"position":@"online",
-                                   @"element_from":[self elementFrom],
-                                   @"from":@"app_oldhouse_picview"
-                                   }.mutableCopy;
+                                          @"position":@"online",
+                                          @"element_from":[self elementFrom],
+                                          @"from":@"app_oldhouse_picview"
+                                          }.mutableCopy;
         NSString *vid = [self videoId];
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
@@ -459,9 +459,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
         NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
-                                   @"position":@"report_button",
-                                   @"element_from":[self elementFrom]
-                                   }.mutableCopy;
+                                          @"position":@"report_button",
+                                          @"element_from":[self elementFrom]
+                                          }.mutableCopy;
         NSString *vid = [self videoId];
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
@@ -488,7 +488,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (FHLoadingButton *)contactBtn {
     if (!_contactBtn) {
-         _contactBtn = [[FHLoadingButton alloc]init];
+        _contactBtn = [[FHLoadingButton alloc]init];
         _contactBtn.layer.cornerRadius = 4;
         _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
         _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#151515"];
@@ -1000,7 +1000,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         else {
             [_vedioViewPools removeObject:showVedioView];
         }
- 
+        
         showVedioView.frame = [self frameForPageAtIndex:index];
         if (self.mediaHeaderModel.vedioModel) {
             
@@ -1142,7 +1142,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-
+    
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -1454,7 +1454,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     [self resetStatusStyle];
     self.containerView.alpha = (1 - yFraction * 2 / 3);
     [UIView animateWithDuration:0.15 animations:^{
-//        self.indexPromptLabel.alpha = 0;
+        //        self.indexPromptLabel.alpha = 0;
     }];
 }
 
@@ -1464,7 +1464,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     self.photoScrollView.frame = [self frameForPagingScrollView];
     self.containerView.alpha = 1;
     [UIView animateWithDuration:0.15 animations:^{
-//        self.indexPromptLabel.alpha = 1;
+        //        self.indexPromptLabel.alpha = 1;
         [self setCurrentStatusStyle];
     }];
 }
@@ -1522,7 +1522,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 containerView.backgroundColor = [UIColor blackColor];
             }
             largeImageView.frame = beginFrame;
-            
+            largeImageView.alpha = 1;
             UIView *originalSupperView = largeImageView.superview;
             [containerView addSubview:largeImageView];
             [rootViewController.view addSubview:self.view]; //图片放大动画情况下，先加入view再加入遮罩
@@ -1597,7 +1597,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 || (UIInterfaceOrientationIsLandscape(_enterOrientation) && UIInterfaceOrientationIsPortrait(currentOrientation))) {
                 [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
                 
-                [UIView animateWithDuration:.35f animations:^{
+                [UIView animateWithDuration:.2f animations:^{
                     self.view.alpha = 0.0f;
                 } completion:^(BOOL finished) {
                     kFHStaticPhotoBrowserAtTop = NO;
@@ -1676,10 +1676,11 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             
-            [UIView animateWithDuration:0.4f animations:^{
-                self.containerView.backgroundColor = [UIColor clearColor];
-                containerView.backgroundColor = [UIColor clearColor];
-                largeImageView.frame = endFrame;
+            [UIView animateWithDuration:0.25f animations:^{
+                
+                largeImageView.alpha = 0;
+                self.containerView.alpha = 0;
+                containerView.alpha = 0;
             } completion:^(BOOL finished) {
                 [containerView removeFromSuperview];
                 kFHStaticPhotoBrowserAtTop = NO;

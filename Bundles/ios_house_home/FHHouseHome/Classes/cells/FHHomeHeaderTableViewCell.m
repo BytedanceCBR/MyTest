@@ -9,7 +9,7 @@
 #import "FHHomeTableViewDelegate.h"
 #import "FHHomeConfigManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
-
+#import <UIColor+Theme.h>
 @interface FHHomeHeaderTableViewCell()
 @property (nonatomic, strong) FHHomeTableViewDelegate *tableViewDelegate;
 @end
@@ -49,16 +49,16 @@
 - (void)refreshUI:(FHHomeHeaderCellPositionType)type
 {
     [[FHHomeCellHelper sharedInstance] refreshFHHomeTableUI:_contentTableView andType:type];
-    self.contentTableView.backgroundColor = [UIColor whiteColor];
-    self.backgroundColor = [UIColor whiteColor];
-    self.contentView.backgroundColor = [UIColor whiteColor];
+    self.contentTableView.backgroundColor = [UIColor themeHomeColor];
+    self.backgroundColor = [UIColor themeHomeColor];
+    self.contentView.backgroundColor = [UIColor themeHomeColor];
 }
 
 - (void)refreshUI
 {
-    self.contentTableView.backgroundColor = [UIColor whiteColor];
-    self.backgroundColor = [UIColor whiteColor];
-    self.contentView.backgroundColor = [UIColor whiteColor];
+    self.contentTableView.backgroundColor = [UIColor themeHomeColor];
+    self.backgroundColor = [UIColor themeHomeColor];
+    self.contentView.backgroundColor = [UIColor themeHomeColor];
 }
 
 - (void)refreshWithData:(nonnull id)data

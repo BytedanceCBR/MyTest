@@ -48,8 +48,8 @@
         make.width.mas_equalTo(labelWidth);
     }];
     self.titleLabel.text = title;
-    self.titleLabel.font = isSelected ? [UIFont themeFontRegular:20.0f] : [UIFont themeFontRegular:16.0f];
-    self.titleLabel.textColor = isSelected ? [UIColor themeRed1] : [UIColor themeGray1];
+    self.titleLabel.font = isSelected ? [UIFont themeFontSemibold:20.0f] : [UIFont themeFontRegular:16.0f];
+    self.titleLabel.textColor = isSelected ? [UIColor themeOrange1] : [UIColor themeGray1];
 }
 
 - (void)refreshWithData:(id)data {
