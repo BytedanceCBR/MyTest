@@ -1890,7 +1890,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     if(needToRoot){
         //这里处理关闭pesent出来的view
         UIViewController *topVC = [UIViewController ttmu_currentViewController];
-        [topVC viewWillDisappear:NO];
+        
         if(topVC.presentingViewController){
             [topVC dismissViewControllerAnimated:NO completion:nil];
         }
@@ -1899,6 +1899,12 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         if([vc isKindOfClass:[UINavigationController class]]){
             UINavigationController *naviVC = (UINavigationController *)vc;
             [naviVC popToRootViewControllerAnimated:NO];
+            
+            //有些页面禁用了pan手势，但是在某些情况下比如直接push切换tab等操作 不会触发关闭当前的view，导致没有设置回来 by xsm
+            if([naviVC isKindOfClass:[TTNavigationController class]]){
+                TTNavigationController *vc = (TTNavigationController *)naviVC;
+                vc.panRecognizer.enabled = YES;
+            }
         }
     }
     
