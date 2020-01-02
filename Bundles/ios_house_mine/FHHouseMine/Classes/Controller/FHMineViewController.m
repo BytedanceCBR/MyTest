@@ -18,6 +18,8 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "TTReachability.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHSpringHangView.h"
+#import "UIViewController+Track.h"
 
 @interface FHMineViewController ()<UIViewControllerErrorHandler>
 
@@ -30,6 +32,8 @@
 @property (nonatomic, strong) UIButton *settingBtn;
 @property (nonatomic, assign) CGFloat headerViewHeight;
 @property (nonatomic, assign) CGFloat naviBarHeight;
+//春节活动运营位
+@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -47,6 +51,30 @@
     [self initViewModel];
     [self setupHeaderView];
     [self initSignal];
+    
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+    }
+}
+
+- (void)addSpringView {
+    if(!_springView){
+        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
+        [self.view addSubview:_springView];
+        _springView.hidden = YES;
+        
+        CGFloat bottom = 49;
+        if (@available(iOS 11.0 , *)) {
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
+        
+        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
+            make.width.mas_equalTo(84);
+            make.height.mas_equalTo(79);
+            make.right.mas_equalTo(self.view).offset(-11);
+        }];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -58,6 +86,10 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self refreshContentOffset:self.tableView.contentOffset];
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -231,6 +263,19 @@
 
 - (BOOL)tt_hasValidateData {
     return self.viewModel.dataList.count == 0 ? NO : YES; //默认会显示空
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
 }
 
 @end

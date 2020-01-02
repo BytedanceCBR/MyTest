@@ -572,12 +572,13 @@ def appPods
     pod 'BDUGDeepLink', '1.1.1'
     
     pod_binary 'TTAppStoreStarManager', '1.0.12'
-    
-    pod 'Quaterback', '0.0.2-rc.6', :subspecs => [
+
+    pod_binary 'BDDiamond20', '1.0.2', :subspecs => ['minisdk']
+
+    pod 'Quaterback', '0.0.2-rc.7', :subspecs => [
     'Main/Core',
     'Main/Default'
     ]
-#    pod 'BDDiamond20', :git => 'git@code.byted.org:liuhanhong/qi_project_ios.git', :branch => 'develop', :subspecs => ['minisdk']
 
 end
 

@@ -40,6 +40,7 @@ PODS:
   - BDDataDecorator/Base (1.0.3)
   - BDDataDecorator/Data (1.0.3)
   - BDDataDecorator/TTNet (1.0.3)
+  - BDDiamond20/minisdk (1.0.2.1-binary)
   - BDMobileRuntime (0.3.38)
   - BDSSOAuthSDK (1.1.0)
   - BDTArticle (0.2.3)
@@ -272,8 +273,8 @@ PODS:
   - OpenSSL-Universal (1.0.1.20.1-binary)
   - OpenUDID (0.1.0.1-binary)
   - Protobuf (3.0.1-ttv.1-binary)
-  - Quaterback/Main/Core (0.0.2-rc.6)
-  - Quaterback/Main/Default (0.0.2-rc.6)
+  - Quaterback/Main/Core (0.0.2-rc.7)
+  - Quaterback/Main/Default (0.0.2-rc.7)
   - React/base (0.55.13-rc.0.1.binary)
   - React/Core (0.55.13-rc.0.1.binary)
   - React/CxxBridge (0.55.13-rc.0.1.binary)
@@ -657,6 +658,7 @@ DEPENDENCIES:
   - BDDataDecorator/Base (= 1.0.3)
   - BDDataDecorator/Data (= 1.0.3)
   - BDDataDecorator/TTNet (= 1.0.3)
+  - BDDiamond20/minisdk (= 1.0.2.1-binary)
   - BDMobileRuntime (= 0.3.38)
   - BDSSOAuthSDK
   - BDTArticle (from `../AKPlugins/BDTArticle`)
@@ -774,8 +776,8 @@ DEPENDENCIES:
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
   - Protobuf (= 3.0.1-ttv.1-binary)
-  - Quaterback/Main/Core (= 0.0.2-rc.6)
-  - Quaterback/Main/Default (= 0.0.2-rc.6)
+  - Quaterback/Main/Core (= 0.0.2-rc.7)
+  - Quaterback/Main/Default (= 0.0.2-rc.7)
   - React/base (= 0.55.13-rc.0.1.binary)
   - React/Core (= 0.55.13-rc.0.1.binary)
   - React/CxxBridge (= 0.55.13-rc.0.1.binary)
@@ -1084,6 +1086,7 @@ SPEC CHECKSUMS:
   BDAlogProtocol: 187e7105123599bef3b935ec41b40f49112b5fd8
   BDAssert: 7b1b4dd1138bd7ab31cabd3d75b340a49f6902d7
   BDDataDecorator: 00acdc652e265768c706d2ec539bd376a02aaaf7
+  BDDiamond20: 007b60a6e75162c8383bf6491bf4f7306fd333f4
   BDMobileRuntime: 83175e738acd91083ea560cf0fd4e34612987b80
   BDSSOAuthSDK: 50464c9dd31869a9fe999723f68b931e8acab644
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
@@ -1155,7 +1158,7 @@ SPEC CHECKSUMS:
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
   Protobuf: 52a446ec094fe19d92c51ef98bd5c975b56d8732
-  Quaterback: 864147799c58357703c2a7da4e3b49317e639247
+  Quaterback: 5bec7c8a4aa0652c04f163680c52a65fccb10e32
   React: 5e1cd3dbd5d3472c64a378caad5cf4468a60c615
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
@@ -1266,6 +1269,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 22a98aadc5817639d105c10eda2f0fd7d8468ea9
+PODFILE CHECKSUM: c9c2cf519c0403b67d378483d59b6e8e6a12956e
 
 COCOAPODS: 1.4.0

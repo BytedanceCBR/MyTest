@@ -72,6 +72,16 @@
 				<string>tencent1107515843</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>bddiamond</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>snssdk1370bdd20</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>0.8.6.0</string>

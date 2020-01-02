@@ -12,6 +12,8 @@
 #import <TTTabBarItem.h>
 #import "UIViewController+TTMovieUtil.h"
 #import "FHHomeConfigManager.h"
+#import <FHEnvContext.h>
+#import <FHMinisdkManager.h>
 
 @interface FHHomeSchemaObject()<TTRouteInitializeProtocol>
 
@@ -22,7 +24,6 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super init];
     if (self) {
-        
         //sslocal://home?tab=community
         if([paramObj.allParams.allKeys containsObject:@"tab"])
         {
@@ -44,6 +45,17 @@
             }
         }
         
+        //处理春节活动过来的 ack_token
+        if([FHEnvContext isSpringOpen]){
+            NSString *ackToken = paramObj.allParams[@"ack_token"];
+            NSString *vid = paramObj.allParams[@"vid"];
+            if(ackToken){
+                [[FHMinisdkManager sharedInstance] appBecomeActive:ackToken];
+            }
+            //执行任务
+            [[FHMinisdkManager sharedInstance] excuteTask];
+        }
+
         //为运营活动准备的测试代码，后续会完善 by xsm
         
 //        NSURL *url2 = [NSURL URLWithString:@"sslocal://ugc_community_detail?community_id=6703403120271032580"];

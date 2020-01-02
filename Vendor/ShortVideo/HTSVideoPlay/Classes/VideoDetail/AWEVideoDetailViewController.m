@@ -264,6 +264,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         _ruleID = [params[AWEVideoRuleId] copy];
         _groupSource = [params[VideoGroupSource] copy] ?: @"";
         _showComment = [params[AWEVideoShowComment] copy];
+        
         if (!_showComment) {
             _showComment = [extraParams[AWEVideoShowComment] copy];
         }
