@@ -25,6 +25,7 @@
 #import "TTInstallIDManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHDetailQuestionButton.h"
+#import "TTNavigationController.h"
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -184,6 +185,12 @@
     [self tt_resetStayTime];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    //有些页面禁用了pan手势，但是在某些情况下比如直接push切换tab等操作 不会触发关闭当前的view，导致没有设置回来 by xsm
+    if([self.navigationController isKindOfClass:[TTNavigationController class]]){
+        TTNavigationController *naviVC = (TTNavigationController *)self.navigationController;
+        naviVC.panRecognizer.enabled = YES;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
