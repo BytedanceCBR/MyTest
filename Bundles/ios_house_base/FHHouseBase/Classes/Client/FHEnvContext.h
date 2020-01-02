@@ -26,6 +26,8 @@
 #define kUGCTitleNearbyList @"nearby_list"
 #define kSecondTab @"tab_community"
 
+extern NSString *const PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION;
+
 static NSString *const kFHUserSelectCityNotification = @"k_fh_user_select_city";
 
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
@@ -227,6 +229,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)jumpUGCTab;
 
+
+/**
+ * 权限隐私弹窗
+ */
+
+-(BOOL)hasConfirmPermssionProtocol;
+
+-(void)userConfirmedPermssionProtocol;
 
 @end
 

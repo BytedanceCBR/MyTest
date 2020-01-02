@@ -32,13 +32,34 @@
 #import "TTInstallIDManager.h"
 #import "TTSandBoxHelper.h"
 #import <FHUtils.h>
+#import <FHHouseBase/FHPermissionAlertViewController.h>
+
+extern NSString *const PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION;
 
 DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 @implementation TTStartupUITask
 
+-(instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPermissionConfirmNotification:) name:PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION object:nil];
+    }
+    return self;
+}
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (NSString *)taskIdentifier {
     return @"UI";
+}
+
+- (BOOL)isResident {
+    return YES;
 }
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
@@ -50,32 +71,10 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     [self registerHomePageViewControllers];
     [[self class] setLaunchController];
     
-    //待首页view初始化后 再执行切tab
-    
-    NSString *lastCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
-
-    if (hasSelectedCity) {
-        if (![FHEnvContext isCurrentCityNormalOpen] && lastCityId) {
-            [[FHEnvContext sharedInstance] jumpUGCTab];
-        }else
-        {
-            if ([FHEnvContext isUGCAdUser]) {
-                if ([FHEnvContext isUGCOpen]) {
-                    [[FHEnvContext sharedInstance] jumpUGCTab];
-                }
-            }
-        }
+    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [self handleAfterHomeInitial];
     }
-
-    if (lastCityId) {
-        [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
-    }
-
-    // 后续inhouse功能都可以在此处添加添加
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self configInHouseFunc];
-    });
+   
 }
 
 // 是否在内测版本开启某些功能
@@ -94,7 +93,11 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 + (void)setLaunchController
 {
-    [self setPhoneLaunchViewController];
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [self showPermissionAlertPage];
+    }else{
+        [self setPhoneLaunchViewController];
+    }
 }
 
 + (void)setPhoneLaunchViewController
@@ -118,6 +121,42 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 #else
     ssoBlock();
 #endif
+}
+
+-(void)handleAfterHomeInitial
+{
+    //待首页view初始化后 再执行切tab
+    
+    NSString *lastCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+    
+    if (hasSelectedCity) {
+        if (![FHEnvContext isCurrentCityNormalOpen] && lastCityId) {
+            [[FHEnvContext sharedInstance] jumpUGCTab];
+        }else
+        {
+            if ([FHEnvContext isUGCAdUser]) {
+                if ([FHEnvContext isUGCOpen]) {
+                    [[FHEnvContext sharedInstance] jumpUGCTab];
+                }
+            }
+        }
+    }
+    
+    if (lastCityId) {
+        [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
+    }
+    
+    // 后续inhouse功能都可以在此处添加添加
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self configInHouseFunc];
+    });
+}
+
++ (void)showPermissionAlertPage
+{
+    [FHPermissionAlertViewController show];
+    [SharedAppDelegate.window makeKeyAndVisible];
 }
 
 + (void)setRootViewControllerWithStoryboardName:(NSString *)name {
@@ -202,6 +241,13 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 - (NSString *)fifthTabBarIdentifier
 {
     return kTTTabMineTabKey;
+}
+
+-(void)onPermissionConfirmNotification:(NSNotification *)notification
+{
+    [[self class] setLaunchController];
+    [self handleAfterHomeInitial];
+    [NewsBaseDelegate startRegisterRemoteNotification];
 }
 
 @end

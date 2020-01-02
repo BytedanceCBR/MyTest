@@ -929,6 +929,23 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 }
 
+-(BOOL)hasConfirmPermssionProtocol
+{
+    NSNumber *show = [[NSUserDefaults standardUserDefaults] objectForKey:@"SHOW_PERMISSION_ALERT"];
+    
+    return [show boolValue];
+}
+
+-(void)userConfirmedPermssionProtocol
+{
+    [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"SHOW_PERMISSION_ALERT"];
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION object:nil];
+    
+}
+
 @end
 
 // 升级TTRoute后需要验当前场景
@@ -945,3 +962,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 @end
+
+
+NSString *const PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION = @"_PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION_";

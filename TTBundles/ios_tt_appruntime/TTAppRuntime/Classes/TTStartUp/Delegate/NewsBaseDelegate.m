@@ -82,6 +82,8 @@
 #import "GAIAEngine+TTBase.h"
 #import "BDUGDeepLinkManager.h"
 #import <Heimdallr/HMDTTMonitor.h>
+#import <FHHouseBase/FHEnvContext.h>
+
 
 ///...
 //#import "TVLManager.h"
@@ -281,6 +283,10 @@ static NSTimeInterval lastTime;
 
 + (void)startRegisterRemoteNotificationAfterDelay:(float)secs
 {
+    if (![[FHEnvContext sharedInstance ] hasConfirmPermssionProtocol]) {
+        return;
+    }
+    
     [[TTAuthorizeManager sharedManager].pushObj filterAuthorizeStrategyWithCompletionHandler:^{
         [self startRegisterRemoteNotificationAfterAuthorizeWithDelay:secs];
     } sysAuthFlag:0]; //显示系统弹窗前显示自有弹窗的逻辑下掉，0代表直接显示系统弹窗，1代表先自有弹窗，再系统弹窗
@@ -675,6 +681,8 @@ static NSTimeInterval lastTime;
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"route_nav_controller_wrong" attributes:@{@"class":[NSString stringWithFormat:@"%@",_navigationController]?:@"unknown"}];
                 _navigationController = nil;
             }
+        }else if ([rootTabController isKindOfClass:[TTNavigationController class]]) {
+            _navigationController = (TTNavigationController *)rootTabController;            
         }
 //    }
     
