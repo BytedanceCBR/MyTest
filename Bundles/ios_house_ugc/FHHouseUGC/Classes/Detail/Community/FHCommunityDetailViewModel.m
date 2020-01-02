@@ -190,7 +190,7 @@
         WeakSelf;
         _guideView = [[FHUGCGuideView alloc] initWithFrame:self.viewController.view.bounds andType:FHUGCGuideViewTypeDetail];
         [self.viewController.view layoutIfNeeded];
-        CGRect rect = [self.viewController.headerView.followButton convertRect:self.viewController.headerView.followButton.bounds toView:self.viewController.view];
+        CGRect rect = [self.viewController.headerView.followButton convertRect:self.viewController.headerView.followButton.bounds toView:[UIApplication sharedApplication].keyWindow];
         _guideView.focusBtnTopY = rect.origin.y;
         _guideView.clickBlock = ^{
             [wself hideGuideView];

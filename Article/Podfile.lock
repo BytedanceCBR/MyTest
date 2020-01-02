@@ -174,7 +174,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.2-rc.2-UI)
-  - ios_house_im (0.1.15-rc.9)
+  - ios_house_im (0.1.15-rc.11)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -718,7 +718,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.2-rc.2-UI)
-  - ios_house_im (= 0.1.15-rc.9)
+  - ios_house_im (= 0.1.15-rc.11)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -1097,7 +1097,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 94e1f730e288221ccc283f91f2b024cd147c83b1
-  ios_house_im: 051caab430b9b1342acaee4371ce841b0119907f
+  ios_house_im: 48b24c152e8e9c6051555fe944e228023e759096
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1224,6 +1224,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 19779841cc03fea5a758741f47285e2e89fe471d
+PODFILE CHECKSUM: 9f2cfb8ed86e133f6b18d4592bf636bd0de7d862
 
 COCOAPODS: 1.4.0

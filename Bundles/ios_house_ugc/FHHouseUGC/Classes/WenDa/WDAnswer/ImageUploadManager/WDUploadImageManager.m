@@ -15,6 +15,7 @@
 #import <TTBaseLib/NetworkUtilities.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import "UIImage+WDUploadIdentify.h"
+#import "HMDTTMonitor.h"
 
 #ifndef dispatch_main_async_safe
 #define dispatch_main_async_safe(block)\
@@ -241,6 +242,8 @@ static NSUInteger const kAllImageMaxImageRetryTime = 10;
         NSString * webURI = nil;
         
         if (!error) {
+            // 上传图片成功
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_write_answer_upload_image" metric:nil category:@{@"status":@(0)} extra:nil];
             if ([jsonObj isKindOfClass:[NSDictionary class]]) {
                 NSDictionary * data = [jsonObj objectForKey:@"data"];
                 if ([data isKindOfClass:[NSDictionary class]]) {
@@ -250,6 +253,9 @@ static NSUInteger const kAllImageMaxImageRetryTime = 10;
                     }
                 }
             }
+        } else {
+            // 上传图片失败
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_write_answer_upload_image" metric:nil category:@{@"status":@(1)} extra:nil];
         }
         
         if (finishBlock) {
