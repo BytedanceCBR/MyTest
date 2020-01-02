@@ -8,6 +8,8 @@
 #import "FHHouseDetailSubPageViewController.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "FHDetailBottomBarView.h"
+#import "FHOldDetailBottomBarView.h"
+
 #import "FHDetailNavBar.h"
 #import "TTDeviceHelper.h"
 #import <TTUIWidget/UIViewController+Track.h>
@@ -17,7 +19,7 @@
 
 @property (nonatomic, strong) FHDetailNavBar *navBar;
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
+@property (nonatomic, strong) FHDetailBottomBar *bottomBar;
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId; // 房源id
@@ -28,6 +30,7 @@
 @property (nonatomic, assign) NSInteger followStatus;
 @property (nonatomic, copy) NSString *customHouseId; //
 @property (nonatomic, copy) NSString *fromStr; //
+@property (nonatomic, assign) NSInteger targetType;
 @property (nonatomic, strong) TTRouteParamObj *paramObj;
 
 @end
@@ -67,6 +70,7 @@
             self.customHouseId = paramObj.allParams[@"floor_plan_id"];
         }
         self.fromStr = [self fromStrBySourceUrl:paramObj.host];
+        self.targetType = [self targetTypeBySourceUrl:paramObj.host];
         
         if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
             self.houseId = paramObj.allParams[@"neighborhood_id"];
@@ -129,6 +133,14 @@
     }
     return fromStr;
 }
+- (NSInteger )targetTypeBySourceUrl:(NSString *)host
+{
+    NSInteger targetType = 0;
+    if ([host isEqualToString:@"floor_plan_detail"]) {
+        targetType = 8;
+    }
+    return targetType;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -154,7 +166,13 @@
     };
     [self.view addSubview:_navBar];
     
-    _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    
+    
+    if (_houseType == FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeNewHouse){
+        _bottomBar = [[FHOldDetailBottomBarView alloc]initWithFrame:CGRectZero];
+ }else {
+     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+ }
     [self.view addSubview:_bottomBar];
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
@@ -168,6 +186,7 @@
     self.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
     self.contactViewModel.customHouseId = self.customHouseId;
     self.contactViewModel.fromStr = self.fromStr;
+    self.contactViewModel.targetType = self.targetType;
     self.contactViewModel.searchId = self.searchId;
     self.contactViewModel.imprId = self.imprId;
     NSMutableDictionary *tracer = @{}.mutableCopy;

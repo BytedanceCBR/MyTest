@@ -47,6 +47,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 举报成功
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
+        // 编辑成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
     }
     
     return self;
@@ -54,6 +56,45 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// 编辑发送成功 - 更新数据
+- (void)postEditNoti:(NSNotification *)noti {
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *groupId = userInfo[@"group_id"];
+        if (groupId.length > 0) {
+            __block NSUInteger index = -1;
+            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([cellModel.groupId isEqualToString:groupId]) {
+                    index = idx;
+                }
+            }];
+            // 找到 要更新的数据
+            if (index >= 0 && index < self.dataList.count) {
+                NSString *thread_cell = userInfo[@"thread_cell"];
+                if (thread_cell && [thread_cell isKindOfClass:[NSString class]]) {
+                    FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:thread_cell];
+                    FHFeedUGCCellModel *lastCellModel = self.dataList[index];
+                    cellModel.categoryId = self.categoryId;
+                    cellModel.feedVC = self.viewController;
+                    cellModel.tableView = self.tableView;
+                    cellModel.enterFrom = [self.viewController categoryName];
+                    cellModel.isFromDetail = NO;
+                    cellModel.isStick = lastCellModel.isStick;
+                    cellModel.stickStyle = lastCellModel.stickStyle;
+                    cellModel.contentDecoration = lastCellModel.contentDecoration;
+                    if (cellModel) {
+                        self.dataList[index] = cellModel;
+                    }
+                    // 异步一下
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.tableView reloadData];
+                    });
+                }
+            }
+        }
+    }
 }
 
 - (void)configTableView {
@@ -121,6 +162,14 @@
     if(fCityId){
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
+    // 附近 Feed添加一个参数
+    __block NSNumber *open_times = [[NSUserDefaults standardUserDefaults] valueForKey:@"user_neighbor_channel_open_times_key"];
+    if (!open_times) {
+        open_times = [NSNumber numberWithInteger:0];
+    }
+    if (open_times && isHead) {
+        [extraDic setValue:[NSString stringWithFormat:@"%ld",[open_times integerValue]] forKey:@"user_neighbor_channel_open_times"];
+    }
 
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
@@ -154,6 +203,13 @@
 
         if(model){
             if(isHead){
+                if (open_times) {
+                    NSInteger val = [open_times integerValue];
+                    val += 1;
+                    open_times = [NSNumber numberWithInteger:val];
+                    [[NSUserDefaults standardUserDefaults] setValue:open_times forKey:@"user_neighbor_channel_open_times_key"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                }
                 if(feedListModel.hasMore){
                     [wself.dataList removeAllObjects];
                 }
@@ -254,7 +310,9 @@
         //符合引导页显示条件时
         for (NSInteger i = 0; i < self.dataList.count; i++) {
             FHFeedUGCCellModel *cellModel = self.dataList[i];
-            if(cellModel.cellType != FHUGCFeedListCellTypeUGCRecommend && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner2){
+            if(cellModel.cellType != FHUGCFeedListCellTypeUGCRecommend && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner2 &&
+                (cellModel.community.name.length > 0)
+               ) {
                 if(self.guideCellModel){
                     self.guideCellModel.isInsertGuideCell = NO;
                 }

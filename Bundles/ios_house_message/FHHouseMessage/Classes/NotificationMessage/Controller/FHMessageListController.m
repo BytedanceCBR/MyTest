@@ -62,6 +62,11 @@
     [[FHMessageNotificationTipsManager sharedManager] clearTipsModel];
 }
 
+// Push不支持连续进入两个互动消息页面--TODO：后续还需刷新页面
+- (BOOL)isOpenUrlParamsSame:(NSDictionary *)queryParams {
+    return NO;
+}
+
 - (void)initView {
     [self setupDefaultNavBar:YES];
     self.automaticallyAdjustsScrollViewInsets = NO;

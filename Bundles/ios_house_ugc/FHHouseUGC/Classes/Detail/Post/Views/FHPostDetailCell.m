@@ -39,6 +39,7 @@
 @property (nonatomic, assign)   BOOL       hasOriginItem;
 @property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
 @property (nonatomic, strong)   UIImageView       *positionImageView;
+@property (nonatomic, strong)   UIView       *editHistorySepView;
 
 @end
 
@@ -129,6 +130,12 @@
     
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCommunityDetail)];
     [self.positionView addGestureRecognizer:singleTap];
+    
+    // 编辑历史底部灰条(只有编辑历史展示)
+    self.editHistorySepView = [[UIView alloc] init];
+    self.editHistorySepView.backgroundColor = [UIColor themeGray7];
+    [self.contentView addSubview:self.editHistorySepView];
+    self.editHistorySepView.hidden = YES;
 }
 
 - (void)setupConstraints {
@@ -150,6 +157,11 @@
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
         make.height.mas_equalTo(self.multiImageView.viewHeight);
+    }];
+    
+    [self.editHistorySepView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.contentView).offset(0);
+        make.height.mas_equalTo(6);
     }];
     
     if (self.showCommunity) {
@@ -307,6 +319,9 @@
     // 小区
     self.position.text = cellModel.community.name;
     [self.position sizeToFit];
+    
+    // 是否来源于编辑历史
+    self.editHistorySepView.hidden = !cellModel.isFromEditHistory;
 }
 
 + (CGFloat)heightForData:(id)data {

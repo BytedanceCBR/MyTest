@@ -334,7 +334,7 @@
         } else if ([type isEqualToString:@"1"]) {
             // 群聊
             if (self.contactViewModel) {
-                self.contactViewModel.ugcLoginType = 2;
+                self.contactViewModel.ugcLoginType = FHUGCCommunityLoginTypeTip;
                 [self.contactViewModel groupChatAction];
             }
         }

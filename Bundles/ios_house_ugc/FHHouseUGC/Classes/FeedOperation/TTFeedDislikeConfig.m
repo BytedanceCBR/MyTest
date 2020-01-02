@@ -66,19 +66,30 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
     }
     
     //为了防止config接口无内容，默认的值
+    // 默认先不添加编辑 以为现在只有管理员可以编辑
+    /*@{
+     @"id": @"8",
+     @"title": @"编辑",
+     @"serverType":@"edit"
+     },*/
     if(operationList.count == 0){
         operationList = @[
+                          @{
+                              @"id": @"9",
+                              @"title": @"编辑记录",
+                              @"serverType":@"edit_history"
+                              },
+                          @{
+                              @"id": @"2",
+                              @"title": @"删除",
+                              @"serverType":@"delete"
+                              },
                           @{
                               @"id": @"1",
                               @"title": @"举报",
                               @"subTitle": @"广告、低俗、重复、过时",
                               @"serverType":@"report"
                               },
-                          @{
-                              @"id": @"2",
-                              @"title": @"删除",
-                              @"serverType":@"delete"
-                              }
                           ].mutableCopy;
 
     }
@@ -108,7 +119,11 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
     return operationList;
 }
 
-+ (NSArray<FHFeedOperationWord *> *)operationWordList:(NSString *)userId {
++ (NSArray<FHFeedOperationWord *> *)operationWordListWith:(FHFeedOperationViewModel *)viewModel {
+    
+    NSString *userId = viewModel.userID;
+    BOOL hasEdit = viewModel.hasEdit;
+    
     NSMutableArray<FHFeedOperationWord *> *items = @[].mutableCopy;
 
     NSArray *operationList = [self operationList];
@@ -123,13 +138,20 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
             }else{
                 word.items = @[word];
             }
-            
-            //显示删除就不会显示举报
-            if(word.type == FHFeedOperationWordTypeReport && !isShowDelete){
+            // 编辑
+            if(word.type == FHFeedOperationWordTypeEdit && isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC && [viewModel.groupSource isEqualToString:@"113"]){
                 [items addObject:word];
             }
-            
-            if(word.type == FHFeedOperationWordTypeDelete && isShowDelete){
+            // 编辑记录
+            if (word.type == FHFeedOperationWordTypeEditHistory && hasEdit && viewModel.cellType == FHUGCFeedListCellTypeUGC) {
+                [items addObject:word];
+            }
+            // 删除
+            if((word.type == FHFeedOperationWordTypeDelete) && isShowDelete){
+                [items addObject:word];
+            }
+            //显示删除就不会显示举报
+            if(word.type == FHFeedOperationWordTypeReport && !isShowDelete){
                 [items addObject:word];
             }
         }
@@ -142,6 +164,10 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
     
     if(viewModel.permission.count > 0){
         NSArray *operationList = [self operationList:viewModel.permission];
+        BOOL hasEdit = viewModel.hasEdit;
+        // 管理员
+        NSString *userId = viewModel.userID;
+        BOOL isShowDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:userId]; // 是自己发的内容
         
         for (NSDictionary *dict in operationList) {
             if ([dict isKindOfClass:[NSDictionary class]]) {
@@ -152,16 +178,31 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
                     word.items = @[word];
                 }
                 
+                // 置顶 加精逻辑--不展示某些选项
                 if((word.type == FHFeedOperationWordTypeTop && viewModel.isTop) || (word.type == FHFeedOperationWordTypeCancelTop && !viewModel.isTop) || (word.type == FHFeedOperationWordTypeGood && viewModel.isGood) || (word.type == FHFeedOperationWordTypeCancelGood && !viewModel.isGood)){
                     continue;
                 }
-                
+                // 编辑添加 113 是小端的帖子
+                if (word.type == FHFeedOperationWordTypeEdit) {
+                    if (isShowDelete && viewModel.cellType == FHUGCFeedListCellTypeUGC && [viewModel.groupSource isEqualToString:@"113"]) {
+                        [items addObject:word];
+                    }
+                    continue;
+                }
+                // 编辑历史
+                if (word.type == FHFeedOperationWordTypeEditHistory) {
+                    if (hasEdit && viewModel.cellType == FHUGCFeedListCellTypeUGC) {
+                        [items addObject:word];
+                    }
+                    continue;
+                }
+                // 添加其他
                 [items addObject:word];
             }
         }
         
     }else{
-        items = [self operationWordList:viewModel.userID];
+        items = [self operationWordListWith:viewModel];
     }
     
     return items;
@@ -224,6 +265,10 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         type = FHFeedOperationWordTypeCancelGood;
     }else if([serverKey isEqualToString:@"self_visiable"]){
         type = FHFeedOperationWordTypeSelfLook;
+    }else if([serverKey isEqualToString:@"edit"]){
+        type = FHFeedOperationWordTypeEdit;
+    }else if([serverKey isEqualToString:@"edit_history"]){
+        type = FHFeedOperationWordTypeEditHistory;
     }else{
         type = FHFeedOperationWordTypeOther;
     }

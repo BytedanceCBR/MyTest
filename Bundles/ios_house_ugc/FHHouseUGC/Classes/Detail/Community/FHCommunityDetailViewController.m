@@ -88,6 +88,21 @@
     return self;
 }
 
+// 重载方法
+- (BOOL)isOpenUrlParamsSame:(NSDictionary *)queryParams {
+    /*
+    if (queryParams.count > 0) {
+        NSString *queryId = queryParams[@"community_id"];
+        NSString *queryIdStr = [NSString stringWithFormat:@"%@",queryId];
+        NSString *currentIdStr = [NSString stringWithFormat:@"%@",self.communityId];
+        if (queryIdStr.length > 0 && [queryIdStr isEqualToString:currentIdStr]) {
+            return YES;
+        }
+    }
+     */
+    return NO;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -313,6 +328,7 @@
     self.viewModel.shareButton = self.shareButton;
     [self.viewModel addGoDetailLog];
     [self.viewModel addPublicationsShowLog];
+    [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
     [self.viewModel requestData:NO refreshFeed:NO showEmptyIfFailed:YES showToast:NO];
 }
 
