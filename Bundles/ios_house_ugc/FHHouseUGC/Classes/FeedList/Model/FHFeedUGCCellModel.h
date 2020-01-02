@@ -65,6 +65,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *url;
 @end
 
+
+typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
+    FHFeedUGCDiggType_Unknown, // 未知
+    FHFeedUGCDiggType_Increase,// 点赞加一
+    FHFeedUGCDiggType_Decrease,// 点选减一
+};
 @interface FHFeedUGCCellModel : NSObject
 
 @property (nonatomic, assign) FHUGCFeedListCellType cellType;
@@ -83,6 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedUGCCellUserModel *user ;
 @property (nonatomic, copy , nullable) NSString *diggCount;
 @property (nonatomic, copy , nullable) NSString *userDigg;
+@property (nonatomic, assign) FHFeedUGCDiggType lastUserDiggType; // 上一次点赞操作的类型
 @property (nonatomic, copy , nullable) NSString *commentCount;
 @property (nonatomic, copy , nullable) NSString *contentRichSpan;
 @property (nonatomic, copy , nullable) NSString *content;
