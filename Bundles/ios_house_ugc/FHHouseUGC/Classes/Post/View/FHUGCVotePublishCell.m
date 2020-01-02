@@ -293,23 +293,28 @@
 - (TTUGCTextView *)contentTextView {
     if(!_contentTextView) {
         _contentTextView  = [[TTUGCTextView alloc] initWithFrame:CGRectMake(PADDING, 15, SCREEN_WIDTH - 2 * PADDING, 47)];
+        
+        // 伸缩视图配置
+        _contentTextView.internalGrowingTextView.placeholder = @"投票标题";
+        _contentTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
+        _contentTextView.internalGrowingTextView.minHeight = _contentTextView.frame.size.height;
+        _contentTextView.internalGrowingTextView.maxHeight = CGFLOAT_MAX;
+        _contentTextView.internalGrowingTextView.minNumberOfLines = 1;
+        _contentTextView.internalGrowingTextView.maxNumberOfLines = 10;
+        _contentTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
+        
+        // 内部 UITextView 配置
         _contentTextView.internalGrowingTextView.internalTextView.font = [UIFont themeFontRegular:22];
+        
+        // TTUGCTextView 配置
         _contentTextView.typingAttributes = @{
             NSForegroundColorAttributeName: [UIColor themeGray1],
             NSFontAttributeName: [UIFont themeFontRegular:22]
         };
-        _contentTextView.contentInset = UIEdgeInsetsZero;
-        
-        _contentTextView.internalGrowingTextView.placeholder = @"投票标题";
-        _contentTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
-        
         _contentTextView.delegate = self;
         _contentTextView.textLenDelegate = self;
-        
-        _contentTextView.internalGrowingTextView.minHeight = _contentTextView.frame.size.height;
-        _contentTextView.internalGrowingTextView.maxHeight = CGFLOAT_MAX;
         _contentTextView.clipsToBounds = YES;
-        _contentTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
+        
     }
     return _contentTextView;
 }
@@ -359,24 +364,27 @@
 - (TTUGCTextView *)contentTextView {
     if(!_contentTextView) {
         _contentTextView  = [[TTUGCTextView alloc] initWithFrame:CGRectMake(PADDING, 15, SCREEN_WIDTH - 2 * PADDING, 42)];
+    
+        // 伸缩视图配置
+        _contentTextView.internalGrowingTextView.placeholder = @"补充描述(选填)";
+        _contentTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
+        _contentTextView.internalGrowingTextView.minHeight = _contentTextView.frame.size.height;
+        _contentTextView.internalGrowingTextView.maxHeight = CGFLOAT_MAX;
+        _contentTextView.internalGrowingTextView.minNumberOfLines = 1;
+        _contentTextView.internalGrowingTextView.maxNumberOfLines = 10;
+        _contentTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
+        
+        // 内部 UITextView 配置
         _contentTextView.internalGrowingTextView.internalTextView.font = [UIFont themeFontRegular:18];
+        
+        // TTUGCTextView 配置
         _contentTextView.typingAttributes = @{
             NSForegroundColorAttributeName: [UIColor themeGray1],
             NSFontAttributeName: [UIFont themeFontRegular:18]
         };
-        
-        _contentTextView.contentInset = UIEdgeInsetsZero;
-        
-        _contentTextView.internalGrowingTextView.placeholder = @"补充描述(选填)";
-        _contentTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
-        
         _contentTextView.delegate = self;
         _contentTextView.textLenDelegate = self;
-        
-        _contentTextView.internalGrowingTextView.minHeight = _contentTextView.frame.size.height;
-        _contentTextView.internalGrowingTextView.maxHeight = CGFLOAT_MAX;
         _contentTextView.clipsToBounds = YES;
-        _contentTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
     }
     return _contentTextView;
 }
