@@ -375,6 +375,7 @@
              @"tabConfig": @"tab_config",
              @"ugcCategoryConfig": @"ugc_category_config",
              @"realtorEvaluationConfig": @"realtor_evaluation",
+             @"jumpPageOnStartup":@"jump_page_on_startup",
              };
 }
 

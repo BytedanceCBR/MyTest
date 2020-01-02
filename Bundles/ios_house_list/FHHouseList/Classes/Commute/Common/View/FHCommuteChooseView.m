@@ -15,7 +15,7 @@
 
 #define THUMB_IMAGE_WIDTH 48
 #define SLIDER_TOP_TIP    10
-#define TIME_HOR_MARGIN_NEW   30
+#define TIME_HOR_MARGIN_NEW   20
 #define TIME_ITEM_WIDTH   17
 
 

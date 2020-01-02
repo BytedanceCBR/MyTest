@@ -303,14 +303,14 @@
             self.icon.image = [UIImage imageNamed:@"default_image"];
         }
         
-//        if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
-//            self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
-//            self.imageTagLabel.text = model.houseImageTag.text;
-//            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
-//            self.imageTagLabelBgView.hidden = NO;
-//        }else {
-//            self.imageTagLabelBgView.hidden = YES;
-//        }
+        if (model.houseImageTag.text) {
+            self.imageTagLabel.textColor = [UIColor whiteColor];
+            self.imageTagLabel.text = model.houseImageTag.text;
+            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexStr:@"#f3ae0c"];
+            self.imageTagLabelBgView.hidden = NO;
+        }else {
+            self.imageTagLabelBgView.hidden = YES;
+        }
         
         self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
         
@@ -374,13 +374,12 @@
         make.left.mas_equalTo(self.icon);
         make.top.mas_equalTo(self.icon).mas_offset(0);
         make.height.mas_equalTo(@20);
-        make.width.mas_equalTo(@48);
     }];
     
     [self.imageTagLabelBgView addSubview:self.imageTagLabel];
     [self.imageTagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(@0);
-        make.right.mas_equalTo(@0);
+        make.left.mas_equalTo(6);
+        make.right.mas_equalTo(-6);
         make.center.mas_equalTo(self.imageTagLabelBgView);
     }];
     

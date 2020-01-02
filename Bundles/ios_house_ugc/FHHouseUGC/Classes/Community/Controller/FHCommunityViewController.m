@@ -26,6 +26,9 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
+#import <FHMinisdkManager.h>
+#import "UIViewController+Track.h"
+#import "FHSpringHangView.h"
 
 @interface FHCommunityViewController ()
 
@@ -37,6 +40,8 @@
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
+//春节活动运营位
+@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -49,6 +54,7 @@
     self.hasShowDots = NO;
     self.isUgcOpen = [FHEnvContext isUGCOpen];
     self.alreadyShowGuide = NO;
+    self.ttTrackStayEnable = YES;
 
     [self initView];
     [self initConstraints];
@@ -77,6 +83,26 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeMyJoinTab) name:kFHUGCForumPostThreadFinish object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
+}
+
+- (void)addSpringView {
+    if(!_springView){
+        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
+        [self.view addSubview:_springView];
+        _springView.hidden = YES;
+        
+        CGFloat bottom = 49;
+        if (@available(iOS 11.0 , *)) {
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
+        
+        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
+            make.width.mas_equalTo(84);
+            make.height.mas_equalTo(79);
+            make.right.mas_equalTo(self.view).offset(-11);
+        }];
+    }
 }
 
 - (void)dealloc {
@@ -164,6 +190,10 @@
     [self.view addSubview:_containerView];
 
     [self setupSetmentedControl];
+    
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -192,6 +222,16 @@
             [FHEnvContext hideFindTabRedDotsLimitCount];
             self.hasShowDots = YES;
         }
+    }
+    
+    [[FHMinisdkManager sharedInstance] goSpring];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show:[FHEnvContext enterTabLogName]];
     }
 }
 
@@ -422,5 +462,18 @@
     reportParams[@"origin_from"] = @"community_search";
     reportParams[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
     [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
 }
 @end

@@ -28,6 +28,7 @@
 #import <Masonry/Masonry.h>
 #import "Log.h"
 #import <FHEnvContext.h>
+#import <FHIntroduceManager.h>
 
 @interface ArticleTabBarStyleNewsListViewController ()<TTInteractExitProtocol>
 
@@ -147,7 +148,7 @@
 {
     [super viewWillAppear:animated];
 
-    if (![TTAdSplashMediator shareInstance].adWillShow) {
+    if (![TTAdSplashMediator shareInstance].adWillShow && ![FHIntroduceManager sharedInstance].isShowing) {
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
     }
     

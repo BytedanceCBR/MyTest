@@ -321,7 +321,7 @@ SINGLETON_GCD(TTTabBarManager);
             item.normalTitleColor = [UIColor tt_themedColorForKey:@"TabBarTitleColor"];
             item.highlightedTitleColor = [UIColor themeRed4];
 //            item.highlightedTitleColor = [UIColor tt_themedColorForKey:@"TabBarTitleHighlightedColor"];
-            item.ttBadgeView.backgroundColorThemeKey = kColorBackground7;
+            item.ttBadgeView.backgroundColorThemeKey = @"orange1";
         }
         
         //设自定义的小红点位置

@@ -93,17 +93,30 @@
 
 - (void)refreshWithData:(id)data
 {
-    self.currentData = data;
-    if ([data isKindOfClass:[FHSearchHouseDataRedirectTipsModel class]]) {
-        FHSearchHouseDataRedirectTipsModel *model = (FHSearchHouseDataRedirectTipsModel *)data;
-        self.leftLabel.text = model.text;
-        [self.rightBtn setTitle:model.text2 forState:UIControlStateNormal];
-        [self.rightBtn sizeToFit];
-        CGFloat btnWidth = self.rightBtn.width + 32;
-        [self.rightBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(btnWidth);
-        }];
+    if (self.currentData == data || ![data isKindOfClass:[FHSearchHouseDataRedirectTipsModel class]]) {
+        return;
     }
+    self.currentData = data;
+    FHSearchHouseDataRedirectTipsModel *model = (FHSearchHouseDataRedirectTipsModel *)data;
+    self.leftLabel.text = model.text;
+    [self.rightBtn setTitle:model.text2 forState:UIControlStateNormal];
+    [self.rightBtn sizeToFit];
+    CGFloat btnWidth = self.rightBtn.width + 32;
+    [self.rightBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(btnWidth);
+    }];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.containerView.left = 15;
+    self.containerView.width = [UIScreen mainScreen].bounds.size.width - 15 * 2;
+    [self.rightBtn sizeToFit];
+    self.rightBtn.width += 32;
+    self.rightBtn.left = self.containerView.width - 15 - self.rightBtn.width;
+    self.leftLabel.left = 15;
+    self.leftLabel.right = self.rightBtn.left - 5;
 }
 
 + (CGFloat)heightForData:(id)data

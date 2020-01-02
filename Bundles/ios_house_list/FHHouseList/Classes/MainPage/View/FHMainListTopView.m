@@ -50,8 +50,6 @@
         top = bannerView.bottom;
         if (filterView) {
             _filterView = filterView;
-            [self addSubview:self.filterBgView];
-            [self.filterBgView addSubview:filterView];
             self.filterBgView.width = filterView.width;
             self.filterBgView.height = filterView.height;
             self.filterBgView.top = bannerView.bottom;
@@ -72,9 +70,10 @@
             self.theBottomView = bannerView;
         }
         if (filterView) {
+            [self addSubview:self.filterBgView];
+            [self.filterBgView addSubview:filterView];
             _filterView.layer.masksToBounds = YES;
             self.filterBgView.backgroundColor = [UIColor themeGray7];
-            [self.filterBgView addSubview:filterView];
             UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, width, 15) byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
             CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
             maskLayer.backgroundColor = [UIColor themeGray7].CGColor;
@@ -97,16 +96,19 @@
 
 -(CGFloat)showNotify:(NSString *)message willCompletion:(void (^)(void))willCompletion
 {
-    self.height = self.notifyBarView.bottom;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:^(ArticleListNotifyBarView *barView) {
-        
-    }];
-    if (willCompletion) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            willCompletion();
-        });
+    if (message.length > 0) {
+        self.height = self.notifyBarView.bottom;
+        [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:^(ArticleListNotifyBarView *barView) {
+            
+        }];
+        if (willCompletion) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                willCompletion();
+            });
+        }
+        return self.notifyBarView.bottom;
     }
-    return self.notifyBarView.bottom;
+    return self.theBottomView.bottom;
 }
 
 -(CGFloat)filterTop

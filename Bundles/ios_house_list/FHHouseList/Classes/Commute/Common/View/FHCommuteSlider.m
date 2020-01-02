@@ -8,7 +8,7 @@
 #import "FHCommuteSlider.h"
 #import <FHCommonUI/UIColor+Theme.h>
 
-#define THUMB_IMAGE_WIDTH 50
+#define THUMB_IMAGE_WIDTH 48
 #define LINE_HEIGHT  4
 
 
@@ -129,12 +129,13 @@
 }
 
 -(void)layoutSubviews
+
 {
     [super layoutSubviews];
     
     CGFloat offsetx = ((_value- _minValue)/(_maxValue-_minValue))*CGRectGetWidth(self.frame)-THUMB_IMAGE_WIDTH/2 ;
     if (offsetx < 1) {
-        offsetx = -6;
+        offsetx = -10;
     }else if (offsetx + THUMB_IMAGE_WIDTH/2 > CGRectGetWidth(self.frame)){
         offsetx = CGRectGetWidth(self.frame) - THUMB_IMAGE_WIDTH/2;
     }
@@ -144,7 +145,7 @@
     
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
-    
+    CGFloat minLineX = offsetx > 0 ? 0 : 10;
     _minLineLayer.frame = CGRectMake(0, (CGRectGetHeight(frame)-LINE_HEIGHT)/2, offsetx+THUMB_IMAGE_WIDTH/2, LINE_HEIGHT);
     _maxLineLayer.frame = CGRectMake(offsetx+THUMB_IMAGE_WIDTH/2,(CGRectGetHeight(frame)-LINE_HEIGHT)/2 , CGRectGetWidth(self.frame) - offsetx-THUMB_IMAGE_WIDTH/2, LINE_HEIGHT);
     [CATransaction commit];

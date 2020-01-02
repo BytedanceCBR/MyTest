@@ -681,13 +681,13 @@ extern NSString *const INSTANT_DATA_KEY;
         __block BOOL hideRefreshTip = NO;
         
         NSMutableDictionary *traceDictParams = [NSMutableDictionary new];
-        if (wself.stayTraceDict) {
-            [traceDictParams addEntriesFromDictionary:wself.stayTraceDict];
+        if ([self.viewController.tracerModel logDict]) {
+            [traceDictParams addEntriesFromDictionary:[self.viewController.tracerModel logDict]];
         }
         [items enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[self class] searchItemModelByDict:itemDict];
-            if (idx == 0 && ![theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+            if (idx == 0 && [theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
                 hideRefreshTip = YES;
             }
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
@@ -820,12 +820,16 @@ extern NSString *const INSTANT_DATA_KEY;
             [self.tableView.mj_footer endRefreshing];
         }
         
-        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && _showRealHouseTop) {
-            self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
-        }
+//        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && _showRealHouseTop) {
+//            self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
+//        }
         
-        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter && !self.showRealHouseTop && !hideRefreshTip) {
-            [self showNotifyMessage:refreshTip];
+        if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
+            if (!_showFilter && !hideRefreshTip) {
+                [self showNotifyMessage:refreshTip];
+            }else {
+                [self showNotifyMessage:nil];
+            }
         }
                 
         if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
@@ -1705,8 +1709,12 @@ extern NSString *const INSTANT_DATA_KEY;
                 if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
                     self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
                 } else if (self.tableView.contentOffset.y < self.tableView.height){
-                    //小于一屏再进行设置
-                    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
+                    
+                    if (!self.tableView.isDragging || (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight))) {
+                        //小于一屏再进行设置
+                        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
+                        
+                    }
                 }
             }
         }
@@ -2041,7 +2049,10 @@ extern NSString *const INSTANT_DATA_KEY;
      */
     
     self.stayTraceDict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",duration];
-    
+    self.stayTraceDict[UT_SEARCH_ID] = self.searchId;
+    self.stayTraceDict[UT_ORIGIN_SEARCH_ID] = self.originSearchId;
+    self.stayTraceDict[UT_ORIGIN_FROM] = self.originFrom;
+
     TRACK_EVENT(@"stay_category", self.stayTraceDict);
     [self.viewController tt_resetStayTime];
     

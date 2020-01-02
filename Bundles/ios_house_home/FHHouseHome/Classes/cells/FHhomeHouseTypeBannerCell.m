@@ -146,7 +146,7 @@
             {
                 [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  5, 14, backImage.frame.size.width - 10, 20)];
             }else{
-                [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  10, 14, backImage.frame.size.width - 10, 20)];
+                [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  8, 14, backImage.frame.size.width - 10, 20)];
             }
         }
         
@@ -156,7 +156,7 @@
         
         CGFloat titleAddLbaelWidth = 25;
         CGFloat letftPading = 0;
-        if (itemModel.title.length > 5) {
+        if (itemModel.title.length >= 5) {
             titleAddLbaelWidth = 20;
             letftPading = 5;
         }
@@ -176,12 +176,12 @@
             UILabel *titleAddLabel = [UILabel new];
             titleAddLabel.text = itemModel.addDescription;
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth  - letftPading, titleLabel.frame.origin.y + 8, titleAddLbaelWidth, 10)];
+                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth  - letftPading, titleLabel.frame.origin.y + 6, titleAddLbaelWidth, 11)];
             }else
             {
-                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth + 3 - letftPading, titleLabel.frame.origin.y + 5, titleAddLbaelWidth, 10)];
+                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth + 1 - letftPading, titleLabel.frame.origin.y + 5, titleAddLbaelWidth, 11)];
             }
-            titleAddLabel.font = [UIFont themeFontRegular:6];
+            titleAddLabel.font = [UIFont themeFontRegular:8];
             titleAddLabel.textColor = [UIColor themeGray1];
             titleAddLabel.textAlignment = 0;
             [containView addSubview:titleAddLabel];

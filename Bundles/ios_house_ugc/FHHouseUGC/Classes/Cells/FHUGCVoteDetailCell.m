@@ -563,13 +563,13 @@
     FHUGCLoadingButton *editBtn = [[FHUGCLoadingButton alloc] initWithFrame:CGRectMake(self.hasVotedLabel.right + 10, bottomHeight, ([UIScreen mainScreen].bounds.size.width - 40 - 10) / 2, 38)];
     editBtn.layer.cornerRadius = 19;
     editBtn.layer.borderWidth = 0.5;
-    editBtn.layer.borderColor = [UIColor themeOrange4].CGColor;
+    editBtn.layer.borderColor = [UIColor themeOrange1].CGColor;
     editBtn.backgroundColor = [UIColor themeWhite];
     editBtn.titleLabel.font = [UIFont themeFontRegular:16];
     [editBtn setTitle:@"修改投票" forState:UIControlStateNormal];
     [editBtn setTitle:@"修改投票" forState:UIControlStateHighlighted];
-    [editBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
-    [editBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateHighlighted];
+    [editBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+    [editBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateHighlighted];
     [editBtn addTarget:self action:@selector(editButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBgView addSubview:editBtn];
     self.editButton = editBtn;
