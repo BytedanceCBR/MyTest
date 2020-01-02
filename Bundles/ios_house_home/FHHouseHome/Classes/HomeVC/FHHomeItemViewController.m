@@ -207,9 +207,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)currentViewIsShowing
 {
-    [self.traceEnterCategoryCache setValue:@"switch" forKey:@"enter_type"];
+    [self.traceEnterCategoryCache setValue:self.enterType forKey:@"enter_type"];
     
-    if (self.traceEnterCategoryCache.allKeys.count > 0 && self.isOriginShowSelf) {
+    if (self.traceEnterCategoryCache.allKeys.count > 0) {
         if (self.traceEnterCategoryCache && self.traceEnterCategoryCache[@"category_name"]) {
             [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
         }
@@ -517,7 +517,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     tracerDict[@"category_name"] = [self pageTypeString] ? : @"be_null";
     tracerDict[@"enter_from"] = @"maintab";
-    tracerDict[@"enter_type"] = self.enterType ? : @"switch";
+    tracerDict[@"enter_type"] = self.enterType ? : @"click";
     tracerDict[@"element_from"] = @"maintab_list";
     tracerDict[@"search_id"] = self.currentSearchId ? : @"be_null";
     tracerDict[@"origin_from"] = [self pageTypeString]  ? : @"be_null";

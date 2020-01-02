@@ -33,6 +33,8 @@
 // SSAppPageController
 "home"                  = "FHHomeSchemaObject";
 "main"                  = "FHHomeSchemaObject";
+//春节活动临时加的，和main行为一致
+"spring"                = "FHHomeSchemaObject";
 
 //"profile"               = "ArticleMomentProfileViewController"; //旧版个人主页
 "profile"               = "FHPersonalHomePageController"; //新版个人主页
@@ -207,3 +209,5 @@
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";
+
+"spring_login" = "SpringLoginViewController";

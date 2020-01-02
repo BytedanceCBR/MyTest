@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FHHouseDetailContactViewModel;
 // 小区信息（二手房、租房）
-@interface FHDetailNeighborhoodInfoCorrectingCell : FHDetailBaseCell
+@interface FHDetailNeighborhoodInfoCorrectingCell : FHDetailBaseCell<FHDetailScrollViewDidScrollProtocol>
 
 @end
 

@@ -124,6 +124,8 @@
 @property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, weak) FHDetailNeighborhoodConsultCorrectingView *consultView;
 @property (nonatomic, weak) UIView *schoolView;
+@property (nonatomic, strong)   NSMutableDictionary       *houseShowCache; // 埋点缓存
+
 @end
 
 @implementation FHDetailNeighborhoodInfoCorrectingCell
@@ -318,6 +320,40 @@
     }
 }
 
+#pragma mark - FHDetailScrollViewDidScrollProtocol
+
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
+    if (vcParentView) {
+        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+        if (UIScreen.mainScreen.bounds.size.height - point.y > 150) {
+            [self addHouseShowLog];
+        }
+    }
+}
+
+// 添加house_show 埋点
+- (void)addHouseShowLog
+{
+    FHDetailNeighborhoodInfoCorrectingModel *model = (FHDetailNeighborhoodInfoCorrectingModel *)self.currentData;
+    NSString *tempKey = [NSString stringWithFormat:@"%ld", model.neighborhoodInfo.id];
+    if ([self.houseShowCache valueForKey:tempKey]) {
+        return;
+    }
+    [self.houseShowCache setValue:@(YES) forKey:tempKey];
+    // house_show
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    tracerDic[@"rank"] = @(0);
+    tracerDic[@"card_type"] = @"left_pic";
+    tracerDic[@"log_pb"] = model.neighborhoodInfo.logPb ? model.neighborhoodInfo.logPb : @"be_null";
+    tracerDic[@"house_type"] = @"neighborhood";
+    tracerDic[@"element_type"] = @"neighborhood_detail";
+    tracerDic[@"search_id"] = model.neighborhoodInfo.searchId.length > 0 ? model.neighborhoodInfo.searchId : @"be_null";
+    tracerDic[@"group_id"] = model.neighborhoodInfo.groupId.length > 0 ? model.neighborhoodInfo.groupId : (model.neighborhoodInfo.id ? model.neighborhoodInfo.id : @"be_null");
+    tracerDic[@"impr_id"] = model.neighborhoodInfo.imprId.length > 0 ? model.neighborhoodInfo.imprId : @"be_null";
+    [tracerDic removeObjectsForKeys:@[@"element_from"]];
+    [FHUserTracker writeEvent:@"house_show" params:tracerDic];
+}
+
 - (void)imAction
 {
     FHDetailNeighborhoodInfoCorrectingModel *model = (FHDetailNeighborhoodInfoCorrectingModel *)self.currentData;
@@ -433,6 +469,7 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _houseShowCache = [NSMutableDictionary new];
         [self setupUI];
     }
     return self;

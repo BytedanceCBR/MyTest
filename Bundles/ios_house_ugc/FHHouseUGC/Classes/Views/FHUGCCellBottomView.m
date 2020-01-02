@@ -325,16 +325,21 @@
             if(user_digg == 0){
                 //取消点赞
                 self.cellModel.userDigg = @"0";
-                if(diggCount > 0){
+                if(diggCount > 0 && self.cellModel.lastUserDiggType != FHFeedUGCDiggType_Decrease){
                     diggCount = diggCount - 1;
+                    self.cellModel.lastUserDiggType = FHFeedUGCDiggType_Decrease;
                 }
             }else{
                 //点赞
                 self.cellModel.userDigg = @"1";
-                diggCount = diggCount + 1;
+                if(self.cellModel.lastUserDiggType != FHFeedUGCDiggType_Increase) {
+                    diggCount = diggCount + 1;
+                    self.cellModel.lastUserDiggType = FHFeedUGCDiggType_Increase;
+                }
             }
             
             self.cellModel.diggCount = [NSString stringWithFormat:@"%i",diggCount];
+            
             if (self.cellModel.hasVideo) {
                 // 视频点赞
                 self.cellModel.videoFeedItem.article.diggCount = diggCount;

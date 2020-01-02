@@ -95,11 +95,15 @@
                 NSString *thread_cell = userInfo[@"thread_cell"];
                 if (thread_cell && [thread_cell isKindOfClass:[NSString class]]) {
                     FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:thread_cell];
+                    FHFeedUGCCellModel *lastCellModel = self.dataList[index];
                     cellModel.categoryId = self.categoryId;
                     cellModel.feedVC = self.viewController;
                     cellModel.tableView = self.tableView;
                     cellModel.showCommunity = NO;
                     cellModel.isFromDetail = NO;
+                    cellModel.isStick = lastCellModel.isStick;
+                    cellModel.stickStyle = lastCellModel.stickStyle;
+                    cellModel.contentDecoration = lastCellModel.contentDecoration;
                     if (cellModel) {
                         self.dataList[index] = cellModel;
                     }
@@ -490,9 +494,7 @@
             originCellModel.contentDecoration = cellModel.contentDecoration;
             originCellModel.ischanged = YES;
             
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-            FHUGCBaseCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-            [cell refreshWithData:originCellModel];
+            [self refreshCell:originCellModel];
         }
     }
 }
@@ -805,15 +807,16 @@
                 for (NSInteger i = 0; i < self.dataList.count; i++) {
                     FHFeedUGCCellModel *item = self.dataList[i];
                     //最后还没找到，插到最后
+                    
+                    if(!item.isStick || (item.isStick && (item.stickStyle != FHFeedContentStickStyleTop && item.stickStyle != FHFeedContentStickStyleTopAndGood))){
+                        //找到第一个不是置顶的cell
+                        [self.dataList insertObject:originCellModel atIndex:i];
+                        break;
+                    }
+                    
                     if(i == (self.dataList.count - 1)){
                         [self.dataList insertObject:originCellModel atIndex:(i + 1)];
                         break;
-                    }else{
-                        if(!item.isStick || (item.isStick && (item.stickStyle != FHFeedContentStickStyleTop && item.stickStyle != FHFeedContentStickStyleTopAndGood))){
-                            //找到第一个不是置顶的cell
-                            [self.dataList insertObject:originCellModel atIndex:i];
-                            break;
-                        }
                     }
                 }
                 

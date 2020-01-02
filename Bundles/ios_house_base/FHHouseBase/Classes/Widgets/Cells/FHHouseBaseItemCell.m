@@ -66,7 +66,7 @@
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHCornerView *imageTagLabelBgView;
 @property(nonatomic, strong) UIView *maskVRImageView;
-@property(nonatomic, strong) UIImageView *houseMainImageBackView;
+@property(nonatomic, strong) UIView *houseMainImageBackView;
 
 @property(nonatomic, strong) UIView *rightInfoView;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //主title lable
@@ -153,7 +153,7 @@
         _mainImageView.layer.cornerRadius = 4;
         _mainImageView.clipsToBounds = YES;
         _mainImageView.layer.borderWidth = 0.5;
-        _mainImageView.layer.borderColor = [UIColor themeGray6].CGColor;
+        _mainImageView.layer.borderColor = [UIColor colorWithHexString:@"e1e1e1"].CGColor;
     }
     return _mainImageView;
 }
@@ -168,17 +168,17 @@
     return _houseVideoImageView;
 }
 
-//-(UILabel *)imageTagLabel
-//{
-//    if (!_imageTagLabel) {
-//        _imageTagLabel = [[UILabel alloc]init];
-//        _imageTagLabel.text = @"新上";
-//        _imageTagLabel.textAlignment = NSTextAlignmentCenter;
-//        _imageTagLabel.font = [UIFont themeFontRegular:10];
-//        _imageTagLabel.textColor = [UIColor whiteColor];
-//    }
-//    return _imageTagLabel;
-//}
+-(UILabel *)imageTagLabel
+{
+    if (!_imageTagLabel) {
+        _imageTagLabel = [[UILabel alloc]init];
+        _imageTagLabel.text = @"新上";
+        _imageTagLabel.textAlignment = NSTextAlignmentCenter;
+        _imageTagLabel.font = [UIFont themeFontRegular:10];
+        _imageTagLabel.textColor = [UIColor whiteColor];
+    }
+    return _imageTagLabel;
+}
 
 -(FHCornerItemLabel *)tagTitleLabel {
     if (!_tagTitleLabel) {
@@ -191,15 +191,15 @@
     return _tagTitleLabel;
 }
 
-//-(FHCornerView *)imageTagLabelBgView
-//{
-//    if (!_imageTagLabelBgView) {
-//        _imageTagLabelBgView = [[FHCornerView alloc]init];
-//        _imageTagLabelBgView.backgroundColor = [UIColor themeRed3];
-//        _imageTagLabelBgView.hidden = YES;
-//    }
-//    return _imageTagLabelBgView;
-//}
+-(FHCornerView *)imageTagLabelBgView
+{
+    if (!_imageTagLabelBgView) {
+        _imageTagLabelBgView = [[FHCornerView alloc]init];
+        _imageTagLabelBgView.backgroundColor = [UIColor themeRed3];
+        _imageTagLabelBgView.hidden = YES;
+    }
+    return _imageTagLabelBgView;
+}
 
 -(UILabel *)mainTitleLabel
 {
@@ -267,17 +267,21 @@
         }else {
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
         }
-        _pricePerSqmLabel.textColor = [UIColor themeGray3];
+        _pricePerSqmLabel.textColor = [UIColor themeGray1];
     }
     return _pricePerSqmLabel;
 }
 
--(UIImageView *)houseMainImageBackView
+-(UIView *)houseMainImageBackView
 {
     if (!_houseMainImageBackView) {
-        _houseMainImageBackView = [[UIImageView alloc]init];
-        [_houseMainImageBackView setImage:[UIImage imageNamed:@"base_house_image_back"]];
-        _houseMainImageBackView.contentMode = UIViewContentModeScaleAspectFill;
+        _houseMainImageBackView = [[UIView alloc] init];
+        _houseMainImageBackView.backgroundColor = [UIColor whiteColor];
+        CALayer * layer = _houseMainImageBackView.layer;
+        layer.shadowOffset = CGSizeMake(0, 4);
+        layer.shadowRadius = 6;
+        layer.shadowColor = [UIColor blackColor].CGColor;;
+        layer.shadowOpacity = 0.2;
     }
     return _houseMainImageBackView;
 }
@@ -542,8 +546,8 @@
     [_leftInfoView addSubview:self.houseMainImageBackView];
     [_leftInfoView addSubview:self.mainImageView];
     
-    //    [_leftInfoView addSubview:self.imageTagLabelBgView];
-    //    [_imageTagLabelBgView addSubview:self.imageTagLabel];
+        [_leftInfoView addSubview:self.imageTagLabelBgView];
+        [_imageTagLabelBgView addSubview:self.imageTagLabel];
     
     [_mainImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -557,14 +561,14 @@
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(MAIN_SMALL_IMG_TOP - 2);
-        layout.left = YGPointValue(3);
-        layout.width = YGPointValue(MAIN_SMALL_IMG_BACK_WIDTH - 3);
-        layout.height = YGPointValue(MAIN_SMALL_IMG_BACK_HEIGHT - 2);
+        layout.top = YGPointValue(MAIN_SMALL_IMG_TOP + 3);
+        layout.left = YGPointValue(MAIN_SMALL_IMG_LEFT + 3);
+        layout.width = YGPointValue(MAIN_SMALL_IMG_WIDTH - 6);
+        layout.height = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 6);
     }];
     
     [self.leftInfoView addSubview:self.houseVideoImageView];
-    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
+//    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
     
     [_houseVideoImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -780,8 +784,8 @@
     [_leftInfoView addSubview:self.houseMainImageBackView];
     [_leftInfoView addSubview:self.mainImageView];
     
-    //    [_leftInfoView addSubview:self.imageTagLabelBgView];
-    //    [_imageTagLabelBgView addSubview:self.imageTagLabel];
+        [_leftInfoView addSubview:self.imageTagLabelBgView];
+        [_imageTagLabelBgView addSubview:self.imageTagLabel];
     
     [_mainImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -795,10 +799,10 @@
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(MAIN_SMALL_IMG_TOP - 2);
-        layout.left = YGPointValue(3);
-        layout.width = YGPointValue(MAIN_SMALL_IMG_BACK_WIDTH - 3);
-        layout.height = YGPointValue(MAIN_SMALL_IMG_BACK_HEIGHT - 2);
+        layout.top = YGPointValue(MAIN_SMALL_IMG_TOP + 3);
+        layout.left = YGPointValue(MAIN_SMALL_IMG_LEFT + 3);
+        layout.width = YGPointValue(MAIN_SMALL_IMG_WIDTH - 6);
+        layout.height = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 6);
     }];
     
     [self.leftInfoView addSubview:self.houseVideoImageView];
@@ -1030,7 +1034,7 @@
     }
     
     [self hideRecommendReason];
-    //    [self updateTitlesLayout:YES];
+//        [self updateTitlesLayout:YES];
     
     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
 }
@@ -1586,16 +1590,16 @@
     FHImageModel *imageModel = model.houseImage.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
-    //    if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
-    //        self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
-    //        self.imageTagLabel.text = model.houseImageTag.text;
-    //        self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
-    //        self.imageTagLabelBgView.hidden = NO;
-    //    }else {
-    //        self.imageTagLabelBgView.hidden = YES;
-    //    }
+        if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
+            self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
+            self.imageTagLabel.text = model.houseImageTag.text;
+            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+            self.imageTagLabelBgView.hidden = NO;
+        }else {
+            self.imageTagLabelBgView.hidden = YES;
+        }
     
-    //    [self updateImageTopLeft];
+//        [self updateImageTopLeft];
     
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
@@ -1904,7 +1908,7 @@
     }
     NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:originPrice];
     [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
-    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray3] range:NSMakeRange(0, originPrice.length)];
+    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray1] range:NSMakeRange(0, originPrice.length)];
     return attri;
 }
 

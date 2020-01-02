@@ -535,7 +535,7 @@ CGFloat const userInfoHeight = 40.f;
 
 - (void)digg
 {
-    CGFloat viewWidth = 300;
+    CGFloat viewWidth = 100;
     NSString *animationPath = [[NSBundle mainBundle] pathForResource:@"like" ofType:@"json" inDirectory:@"HTSVideoPlay.bundle"];
     LOTAnimationView *animationView = [LOTAnimationView animationWithFilePath:animationPath];
     animationView.contentMode = UIViewContentModeScaleAspectFit;

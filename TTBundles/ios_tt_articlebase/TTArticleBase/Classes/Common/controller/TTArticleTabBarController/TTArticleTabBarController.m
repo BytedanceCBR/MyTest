@@ -1903,6 +1903,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         return;
     }
     
+    //相同tab不在操作 by xsm
+    if([[self currentTabIdentifier] isEqualToString:tag]){
+        return;
+    }
+    
     [self setSelectedIndexWithTag:tag];
 }
 

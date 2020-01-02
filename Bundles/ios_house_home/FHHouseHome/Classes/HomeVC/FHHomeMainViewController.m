@@ -24,6 +24,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @interface FHHomeMainViewController ()<TTAppUpdateHelperProtocol>
 @property (nonatomic,strong)FHHomeMainViewModel *viewModel;
 @property (nonatomic, assign) BOOL isShowing;
+@property (nonatomic, assign) BOOL isHaveCheckUpgrage;
 
 @end
 
@@ -49,8 +50,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self checkPasteboard:NO];
     
     //如果是inhouse的，弹升级弹窗
-    if ([TTSandBoxHelper isInHouseApp]) {
+    if ([TTSandBoxHelper isInHouseApp] && !self.isHaveCheckUpgrage) {
         //#if INHOUSE
+        self.isHaveCheckUpgrage = YES;
         [self checkLocalTestUpgradeVersionAlert];
         //#endif
     }
@@ -75,7 +77,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)initView {
     self.view.backgroundColor = [UIColor themeHomeColor];
-    
+    self.isHaveCheckUpgrage = NO;
+
     self.topView = [[FHHomeMainTopView alloc] init];
     _topView.backgroundColor = [UIColor themeHomeColor];
     [self.view addSubview:_topView];

@@ -1149,6 +1149,8 @@ static NSInteger const kMaxPostImageCount = 9;
             
             if(task.preCompressFilePath.length > 0) {
                 [currentImageUris appendFormat:@"%@", task.preCompressFilePath];
+            } else if(task.assetModel.assetID.length > 0) {
+                [currentImageUris appendFormat:@"%@", task.assetModel.assetID];
             }
         }];
         

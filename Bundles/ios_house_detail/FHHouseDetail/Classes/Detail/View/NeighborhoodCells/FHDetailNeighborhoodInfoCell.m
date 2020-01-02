@@ -122,6 +122,7 @@
 @property (nonatomic, assign)   CGFloat       topHeight;
 @property (nonatomic, strong)   FHDetailNeighborhoodConsultView       *consultView;
 @property (nonatomic, strong)   UIView       *schoolView;
+@property (nonatomic, strong)   NSMutableDictionary       *houseShowCache; // 埋点缓存
 
 @end
 
@@ -243,6 +244,59 @@
     }
 }
 
+#pragma mark - FHDetailScrollViewDidScrollProtocol
+
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
+    if (vcParentView) {
+        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+        if (UIScreen.mainScreen.bounds.size.height - point.y > 150) {
+            [self addHouseShowLog];
+        }
+    }
+}
+
+// 添加house_show 埋点
+- (void)addHouseShowLog
+{
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
+    NSDictionary *logPb = nil;
+    NSString *searchId = nil;
+    NSString *groupId = nil;
+    NSString *imprId = nil;
+
+    if (model.neighborhoodInfo) {
+        FHDetailOldDataNeighborhoodInfoModel *neighborhoodInfo = model.neighborhoodInfo;
+        logPb = neighborhoodInfo.logPb;
+        searchId = neighborhoodInfo.searchId;
+        groupId = neighborhoodInfo.groupId.length > 0 ? neighborhoodInfo.groupId : ( neighborhoodInfo.id ? neighborhoodInfo.id : @"be_null");
+        imprId = neighborhoodInfo.imprId.length > 0 ? neighborhoodInfo.imprId : @"be_null";
+    }else if (model.rent_neighborhoodInfo) {
+        FHRentDetailResponseDataNeighborhoodInfoModel *neighborhoodInfo = model.rent_neighborhoodInfo;
+        logPb = neighborhoodInfo.logPb;
+        searchId = neighborhoodInfo.searchId;
+        groupId = neighborhoodInfo.id ? neighborhoodInfo.id : @"be_null";
+        imprId = neighborhoodInfo.imprId.length > 0 ? neighborhoodInfo.imprId : @"be_null";
+    }
+    NSString *tempKey = [NSString stringWithFormat:@"%ld", groupId];
+    if ([self.houseShowCache valueForKey:tempKey]) {
+        return;
+    }
+    [self.houseShowCache setValue:@(YES) forKey:tempKey];
+    // house_show
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    tracerDic[@"rank"] = @(0);
+    tracerDic[@"card_type"] = @"left_pic";
+    tracerDic[@"log_pb"] = logPb ? logPb : @"be_null";
+    tracerDic[@"house_type"] = @"neighborhood";
+    tracerDic[@"element_type"] = @"neighborhood_detail";
+    tracerDic[@"search_id"] = searchId;
+    tracerDic[@"group_id"] = groupId;
+    tracerDic[@"impr_id"] = imprId;
+    [tracerDic removeObjectsForKeys:@[@"element_from"]];
+    [FHUserTracker writeEvent:@"house_show" params:tracerDic];
+}
+
+
 - (void)imAction
 {
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
@@ -361,6 +415,7 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _houseShowCache = [NSMutableDictionary new];
         [self setupUI];
     }
     return self;

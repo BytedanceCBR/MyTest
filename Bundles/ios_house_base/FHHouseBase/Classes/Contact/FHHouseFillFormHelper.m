@@ -103,7 +103,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
         [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
-        [wself addClickConfirmLog:configModel alertView:alertView];
+        [wself addClickConfirmLog:configModel alertView:alert];
     };
 
     alertView.tipClickBlock = ^{
@@ -161,13 +161,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         };
         alertView.leftClickBlock = ^(NSString * _Nonnull phoneNum,FHDetailNoticeAlertView *alert) {
             [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
-            [wself addClickConfirmLog:configModel alertView:alertView];
+            [wself addClickConfirmLog:configModel alertView:alert];
         };
     }else {
         alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
         alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
             [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
-            [wself addClickConfirmLog:configModel alertView:alertView];
+            [wself addClickConfirmLog:configModel alertView:alert];
         };
     }
     if (configModel.chooseAgencyList.count > 0) {
