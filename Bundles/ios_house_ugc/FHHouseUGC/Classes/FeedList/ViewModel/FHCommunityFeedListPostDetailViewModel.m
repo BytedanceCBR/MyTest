@@ -490,9 +490,7 @@
             originCellModel.contentDecoration = cellModel.contentDecoration;
             originCellModel.ischanged = YES;
             
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-            FHUGCBaseCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-            [cell refreshWithData:originCellModel];
+            [self refreshCell:originCellModel];
         }
     }
 }
