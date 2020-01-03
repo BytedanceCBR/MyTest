@@ -18,6 +18,8 @@
 #import <TTAppUpdateHelper.h>
 #import <TTInstallIDManager.h>
 #import <CommonURLSetting.h>
+#import <FHMinisdkManager.h>
+#import "FHSpringHangView.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -25,6 +27,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic,strong)FHHomeMainViewModel *viewModel;
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL isHaveCheckUpgrage;
+//春节活动运营位
+@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -56,6 +60,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self checkLocalTestUpgradeVersionAlert];
         //#endif
     }
+    
+    //春节活动
+    [[FHMinisdkManager sharedInstance] goSpring];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -73,6 +80,32 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [TTSandBoxHelper setAppFirstLaunchForAd];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
+}
+
+- (void)addSpringView {
+    if(!_springView){
+        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
+        [self.view addSubview:_springView];
+        _springView.hidden = YES;
+        
+        CGFloat bottom = 49;
+        if (@available(iOS 11.0 , *)) {
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
+        
+        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
+            make.width.mas_equalTo(84);
+            make.height.mas_equalTo(79);
+            make.right.mas_equalTo(self.view).offset(-11);
+        }];
+    }
 }
 
 - (void)initView {
@@ -168,6 +201,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 {
     if (self.isShowing) {
         [self checkPasteboard:NO];
+    }
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+        [self.springView show:[FHEnvContext enterTabLogName]];
     }
 }
 
