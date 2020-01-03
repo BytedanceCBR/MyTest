@@ -33,6 +33,7 @@
 #import "TTSandBoxHelper.h"
 #import <FHUtils.h>
 #import <FHHouseBase/FHPermissionAlertViewController.h>
+#import <FHHouseBase/FHIntroduceManager.h>
 
 extern NSString *const PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION;
 
@@ -248,6 +249,14 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     [[self class] setLaunchController];
     [self handleAfterHomeInitial];
     [NewsBaseDelegate startRegisterRemoteNotification];
+    
+    if([FHEnvContext isIntroduceOpen]){
+        if([FHIntroduceManager sharedInstance].alreadyShow){
+            return;
+        }
+        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
+        [FHIntroduceManager sharedInstance].alreadyShow = YES;
+    }
 }
 
 @end

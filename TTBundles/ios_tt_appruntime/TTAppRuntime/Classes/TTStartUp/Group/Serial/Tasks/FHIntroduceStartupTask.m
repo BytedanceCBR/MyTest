@@ -15,7 +15,7 @@
 #import "TTLaunchDefine.h"
 #import "NewsBaseDelegate.h"
 #import "FHIntroduceManager.h"
-#import <FHEnvContext.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 DEC_TASK("FHIntroduceStartupTask",FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
@@ -28,7 +28,7 @@ DEC_TASK("FHIntroduceStartupTask",FHTaskTypeUI,TASK_PRIORITY_HIGH);
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     //只显示一次
-    if([FHEnvContext isIntroduceOpen]){
+    if([FHEnvContext isIntroduceOpen] && [[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]){
         if([FHIntroduceManager sharedInstance].alreadyShow){
             return;
         }
@@ -36,5 +36,7 @@ DEC_TASK("FHIntroduceStartupTask",FHTaskTypeUI,TASK_PRIORITY_HIGH);
         [FHIntroduceManager sharedInstance].alreadyShow = YES;
     }
 }
+
+
 
 @end
