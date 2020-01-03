@@ -122,7 +122,7 @@ PODS:
   - Fabric (1.10.2.1-binary)
   - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.13)
+  - FHCommonUI (0.0.13.1-bugfix)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -707,7 +707,7 @@ DEPENDENCIES:
   - Fabric (= 1.10.2.1-binary)
   - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.13)
+  - FHCommonUI (= 0.0.13.1-bugfix)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -1116,7 +1116,7 @@ SPEC CHECKSUMS:
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
   FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: 6dd1e73d212812d44001e45a736d6a01e013461f
+  FHCommonUI: 7275d416bfffc7934032d69365bbed5f61112908
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1269,6 +1269,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 52b898d0c67aa61cf74038b530e1eafd58d5191d
+PODFILE CHECKSUM: 8f6d7164e1d26b3d99f24cd6afbb02ed76109c1a
 
 COCOAPODS: 1.4.0
