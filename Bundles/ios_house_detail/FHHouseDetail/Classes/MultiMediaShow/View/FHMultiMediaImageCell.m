@@ -41,7 +41,6 @@
     if (!placeholder) {
         placeholder = self.placeHolder;
     }
-    
     [self.imageView bd_setImageWithURL:url placeholder:placeholder];
 }
 

@@ -79,6 +79,8 @@
     self.forumID = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    // 编辑成功
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
     return self;
 }
 
@@ -90,6 +92,8 @@
         self.forumID = forumID;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+        // 编辑成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
     }
     return self;
 }
@@ -117,6 +121,69 @@
                     currentGroupData.countText = groupData.countText;
                     [self.detailController headerInfoChanged];
                     [self reloadData];
+                }
+            }
+        }
+    }
+}
+
+// 编辑发送成功 - 更新数据
+- (void)postEditNoti:(NSNotification *)noti {
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        NSString *groupId = userInfo[@"group_id"];
+        if (groupId.length > 0) {
+            __block NSUInteger index = -1;
+            __block BOOL showCommunity = NO;
+            [self.items enumerateObjectsUsingBlock:^(id  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([cellModel isKindOfClass:[FHFeedUGCCellModel class]]) {
+                    if ([((FHFeedUGCCellModel *)cellModel).groupId isEqualToString:groupId]) {
+                        index = idx;
+                        showCommunity = ((FHFeedUGCCellModel *)cellModel).showCommunity;
+                    }
+                }
+            }];
+            // 找到 要更新的数据
+            if (index >= 0 && index < self.items.count) {
+                NSString *thread_cell = userInfo[@"thread_cell"];
+                if (thread_cell && [thread_cell isKindOfClass:[NSString class]]) {
+                    NSError *jsonParseError;
+                    NSData *jsonData = [thread_cell dataUsingEncoding:NSUTF8StringEncoding];
+                    if (jsonData) {
+                        FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
+                        // 网络请求返回
+                        model.isFromDetail = YES;
+                        if (self.shareInfo == nil && model.shareInfo) {
+                            self.shareInfo = model.shareInfo;
+                        }
+                        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeedUGCContent:model];
+                        cellModel.isFromDetail = YES;
+                        cellModel.feedVC = self.detailData.feedVC;
+                        cellModel.isStick = self.detailData.isStick;
+                        cellModel.stickStyle = self.detailData.stickStyle;
+                        cellModel.contentDecoration = nil;
+                        if (cellModel.community.socialGroupId.length <= 0) {
+                            cellModel.community = self.detailData.community;
+                        }
+                        cellModel.showCommunity = showCommunity;
+                        cellModel.tracerDic = [self.detailController.tracerDict copy];
+                        if (cellModel) {
+                            self.items[index] = cellModel;
+                        }
+                        // 异步一下 以及重新布局
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.detailController remove_comment_vc];
+                            [self.tableView reloadData];
+                            [self.detailController re_add_comment_vc];
+                            self.tableView.hidden = NO;
+                            [self.detailController show_comment_view];
+                        });
+                        // 页面布局问题修复
+                        __weak typeof(self) weakSelf = self;
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [weakSelf.detailController refresh_page_view];
+                        });
+                    }
                 }
             }
         }

@@ -44,7 +44,6 @@
 
 - (void)setupUI
 {
-    _showIM = NO;
     UIView *topLine = [[UIView alloc]init];
     topLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:topLine];
@@ -125,21 +124,15 @@
         make.height.mas_equalTo(44);
     }];
     
-    // 加群看房 需求
-    [self addSubview:self.groupChatBtn];
-    self.groupChatBtn.hidden = YES;
-    [self.groupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.contactBtn);
-    }];
-    
     [self.contactBtn addTarget:self action:@selector(contactBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.licenceIcon addTarget:self action:@selector(licenseBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.imChatBtn addTarget:self action:@selector(imBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    [self.groupChatBtn addTarget:self action:@selector(groupBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     self.leftView.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jump2RealtorDetail)];
     [self.leftView addGestureRecognizer:tap];
 }
+
+
 
 - (void)contactBtnDidClick:(UIButton *)btn
 {
@@ -168,11 +161,7 @@
     }
 }
 
-- (void)groupBtnClick:(UIButton *)btn {
-    if (self.bottomBarGroupChatBlock) {
-        self.bottomBarGroupChatBlock();
-    }
-}
+
 
 - (void)displayLicense:(BOOL)isDisplay
 {
@@ -319,44 +308,6 @@
     }
     
 }
-// - (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle chatTitle:(NSString *)chatTitle 之后调用
-- (void)refreshBottomBarWithGroupChatTitle:(NSString *)groupChatTitle {
-    if (groupChatTitle.length > 0) {
-        self.groupChatBtn.hidden = NO;
-        [self.groupChatBtn setTitle:groupChatTitle forState:UIControlStateNormal];
-        [self.groupChatBtn setTitle:groupChatTitle forState:UIControlStateHighlighted];
-        // 隐藏IM
-        self.imChatBtn.hidden = YES;
-        CGFloat width = ([UIScreen mainScreen].bounds.size.width - 40 - 9) / 2.0;
-        [self.groupChatBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(10);
-            make.bottom.mas_equalTo(-10);
-            make.right.mas_equalTo(-20);
-            make.height.mas_equalTo(44);
-            make.width.mas_equalTo(width);
-        }];
-        [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(10);
-            make.left.mas_equalTo(20);
-            make.bottom.mas_equalTo(-10);
-            make.height.mas_equalTo(44);
-            make.width.mas_equalTo(width);
-        }];
-    } else {
-        self.groupChatBtn.hidden = YES;
-        CGFloat width = [UIScreen mainScreen].bounds.size.width - 40;
-        [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(10);
-            make.left.mas_equalTo(20);
-            make.bottom.mas_equalTo(-10);
-            make.height.mas_equalTo(44);
-            make.width.mas_equalTo(width);
-        }];
-        [self.groupChatBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self.contactBtn);
-        }];
-    }
-}
 
 - (void)refreshIdentifyView:(UIImageView *)identifyView withUrl:(NSString *)imageUrl
 {
@@ -476,26 +427,6 @@
     return _imChatBtn;
 }
 
-- (UIButton *)groupChatBtn {
-    if (!_groupChatBtn) {
-        _groupChatBtn = [[UIButton alloc] init];
-        _groupChatBtn.layer.cornerRadius = 4;
-        _groupChatBtn.backgroundColor = [UIColor themeWhite];
-        _groupChatBtn.layer.borderWidth = 1;
-        _groupChatBtn.layer.borderColor = [UIColor themeRed1].CGColor;
-        if ([TTDeviceHelper is568Screen]) {
-            _groupChatBtn.titleLabel.font = [UIFont themeFontRegular:14];
-        } else {
-            _groupChatBtn.titleLabel.font = [UIFont themeFontRegular:16];
-        }
-        [_groupChatBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-        [_groupChatBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
-        [_groupChatBtn setTitle:@"加群看房" forState:UIControlStateNormal];
-        [_groupChatBtn setTitle:@"加群看房" forState:UIControlStateHighlighted];
-    }
-    return _groupChatBtn;
-}
-
 - (UIButton *)licenceIcon
 {
     if (!_licenceIcon) {
@@ -508,5 +439,6 @@
 }
 
 @end
+
 
 

@@ -135,6 +135,7 @@ typedef void(^RefreshCompletionBlock)(BOOL isSucess);
 
 -(void)resetWithDefaultAnimateViewWithConfigureSuccessCompletion:(RefreshCompletionBlock)completion;
 
+- (void)setUpRefreshBackColor:(UIColor *)color;
 
 @property (nonatomic, assign, readwrite) PullDirectionState state;
 @property (nonatomic, assign, readwrite) NSInteger lastTime;

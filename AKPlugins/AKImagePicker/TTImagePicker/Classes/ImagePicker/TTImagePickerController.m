@@ -145,7 +145,7 @@
         self.retainSelf = self;
         
         UIAlertView * authAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"无访问权限", nil)
-                                                             message:NSLocalizedString(@"请在手机的「设置-隐私-照片」选项中，允许爱看访问你的相册", nil)
+                                                             message:NSLocalizedString(@"请在手机的「设置-隐私-照片」选项中，允许幸福里访问你的相册", nil)
                                                             delegate:self
                                                    cancelButtonTitle:@"确定"
                                                    otherButtonTitles:nil];
@@ -479,7 +479,7 @@
         // 无权限
         
         UIAlertView * authAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"无访问权限", nil)
-                                                             message:NSLocalizedString(@"请在手机的「设置-隐私-照片」选项中，允许爱看访问你的相机", nil)
+                                                             message:NSLocalizedString(@"请在手机的「设置-隐私-照片」选项中，允许幸福里访问你的相机", nil)
                                                             delegate:self
                                                    cancelButtonTitle:@"确定"
                                                    otherButtonTitles:nil];

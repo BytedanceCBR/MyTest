@@ -41,7 +41,7 @@
 
 - (CGFloat)showSchoolItem:(FHDetailDataNeighborhoodInfoSchoolInfoModel *)item parentView:(UIView *)parentView bottomY:(CGFloat)bottomY
 {
-    UILabel *nameKey = [UILabel createLabel:@"学校资源" textColor:@"" fontSize:15];
+    UILabel *nameKey = [UILabel createLabel:@"学校资源:" textColor:@"" fontSize:15];
     [nameKey sizeToFit];
     nameKey.left = 20;
     nameKey.top = bottomY + 4;

@@ -24,6 +24,8 @@
 #import <TTInstallIDManager.h>
 #import <TTArticleCategoryManager.h>
 #import "FHHouseUGCAPI.h"
+#import <FHIntroduceManager.h>
+#import <FHMinisdkManager.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -380,8 +382,10 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 }
                 
                 BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+                BOOL isShowIntoduceView = [FHIntroduceManager sharedInstance].isShowing;
+                BOOL isShowSpringLoginView = [FHMinisdkManager sharedInstance].isShowing;
                 
-                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity) {
+                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity && !isShowIntoduceView && !isShowSpringLoginView) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
                 }
                 
@@ -440,6 +444,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     {
         return;
     }
+    
+    if (model.data.cityAvailability) {
+        [FHUtils setContent:@(model.data.cityAvailability.enable.boolValue) forKey:kFHCityIsOpenKey];
+    }
+    
     configData.originDict = nil;
     [FHEnvContext sharedInstance].generalBizConfig.configCache = model.data;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{

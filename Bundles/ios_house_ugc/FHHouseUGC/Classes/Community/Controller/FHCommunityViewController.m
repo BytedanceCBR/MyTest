@@ -26,6 +26,9 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
+#import <FHMinisdkManager.h>
+#import "UIViewController+Track.h"
+#import "FHSpringHangView.h"
 
 @interface FHCommunityViewController ()
 
@@ -37,6 +40,8 @@
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
+//春节活动运营位
+@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -49,6 +54,7 @@
     self.hasShowDots = NO;
     self.isUgcOpen = [FHEnvContext isUGCOpen];
     self.alreadyShowGuide = NO;
+    self.ttTrackStayEnable = YES;
 
     [self initView];
     [self initConstraints];
@@ -77,6 +83,26 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeMyJoinTab) name:kFHUGCForumPostThreadFinish object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
+}
+
+- (void)addSpringView {
+    if(!_springView){
+        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
+        [self.view addSubview:_springView];
+        _springView.hidden = YES;
+        
+        CGFloat bottom = 49;
+        if (@available(iOS 11.0 , *)) {
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
+        
+        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
+            make.width.mas_equalTo(84);
+            make.height.mas_equalTo(79);
+            make.right.mas_equalTo(self.view).offset(-11);
+        }];
+    }
 }
 
 - (void)dealloc {
@@ -155,7 +181,7 @@
     [self.topView addSubview:_bottomLineView];
 
     self.searchBtn = [[UIButton alloc] init];
-    [_searchBtn setImage: ICON_FONT_IMG(18, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
+    [_searchBtn setImage: ICON_FONT_IMG(24, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
     _searchBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_searchBtn addTarget:self action:@selector(goToSearch) forControlEvents:UIControlEventTouchUpInside];
     [self.topView addSubview:_searchBtn];
@@ -164,6 +190,10 @@
     [self.view addSubview:_containerView];
 
     [self setupSetmentedControl];
+    
+    if([FHEnvContext isSpringHangOpen]){
+        [self addSpringView];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -192,6 +222,16 @@
             [FHEnvContext hideFindTabRedDotsLimitCount];
             self.hasShowDots = YES;
         }
+    }
+    
+    [[FHMinisdkManager sharedInstance] goSpring];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show:[FHEnvContext enterTabLogName]];
     }
 }
 
@@ -259,7 +299,7 @@
             NSForegroundColorAttributeName: [UIColor themeGray3]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
 
-    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontMedium:18],
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
             NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
@@ -267,9 +307,12 @@
     _segmentControl.isNeedNetworkCheck = NO;
     _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(9, 10, 0, 10);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-    _segmentControl.selectionIndicatorWidth = 24.0f;
-    _segmentControl.selectionIndicatorHeight = 12.0f;
-    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
+    _segmentControl.selectionIndicatorWidth = 20.0f;
+    _segmentControl.selectionIndicatorHeight = 4.0f;
+    _segmentControl.selectionIndicatorCornerRadius = 2.0f;
+//    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
+    _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+//    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
 
     [self.topView addSubview:_segmentControl];
 
@@ -307,13 +350,13 @@
         [titles addObject:@"附近"];
     }
         
-    [titles addObject:@"发现"];
+//    [titles addObject:@"发现"];
     
-    if(titles.count == 3){
+    if(titles.count == 2){
         return titles;
     }
     
-    return @[@"关注", @"附近", @"发现"];
+    return @[@"关注", @"附近"];
 }
 
 - (void)initConstraints {
@@ -337,11 +380,11 @@
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(top);
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(60);
+        make.height.mas_equalTo(44);
     }];
 
     [self.searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.topView);
+        make.centerY.mas_equalTo(self.topView).offset(-5);
         make.right.mas_equalTo(self.topView).offset(-20);
         make.width.height.mas_equalTo(24);
     }];
@@ -354,8 +397,8 @@
     [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.topView);
         make.width.mas_equalTo([self.segmentControl totalSegmentedControlWidth]);
-        make.top.mas_equalTo(self.topView).offset(6);
-        make.bottom.mas_equalTo(self.topView).offset(-4);
+        make.height.mas_equalTo(44);
+        make.bottom.mas_equalTo(self.topView).offset(-8);
     }];
 
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -378,7 +421,7 @@
     if (isShow) {
         _collectionView.backgroundColor = [UIColor themeGray7];
         [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(60);
+            make.height.mas_equalTo(44);
         }];
     } else {
         _collectionView.backgroundColor = [UIColor whiteColor];
@@ -419,5 +462,18 @@
     reportParams[@"origin_from"] = @"community_search";
     reportParams[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
     [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    //春节活动运营位
+    if([FHEnvContext isSpringHangOpen]){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
 }
 @end

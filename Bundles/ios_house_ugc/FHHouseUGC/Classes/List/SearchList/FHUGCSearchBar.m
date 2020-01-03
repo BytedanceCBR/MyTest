@@ -13,6 +13,8 @@
 #import "FHExtendHotAreaButton.h"
 #define MIN_HEIGHT    44
 
+#define SEARCH_AREA_PANEL_HEIGHT 34
+
 @interface FHUGCSearchBar ()
 
 @property (nonatomic, strong)   UIView       *searchAreaPanel;
@@ -47,7 +49,7 @@
     _searchAreaPanel = [[UIView alloc] init];
     _searchAreaPanel.backgroundColor = [UIColor themeGray7];
     _searchAreaPanel.layer.masksToBounds = YES;
-    _searchAreaPanel.layer.cornerRadius = 4.0;
+    _searchAreaPanel.layer.cornerRadius = SEARCH_AREA_PANEL_HEIGHT / 2.0f;
     [self addSubview:_searchAreaPanel];
     
     _leftView = [[UIView alloc] init];
@@ -69,7 +71,7 @@
         } else {
             make.right.mas_equalTo(self.backBtn.mas_left).offset(-20);
         }
-        make.height.mas_equalTo(33);
+        make.height.mas_equalTo(SEARCH_AREA_PANEL_HEIGHT);
     }];
     [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self).offset(-20);

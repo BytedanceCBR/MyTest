@@ -97,6 +97,7 @@
 #import "FHUGCGuideView.h"
 #import "FHUGCConfig.h"
 #import "FHUnreadMsgModel.h"
+#import "UIViewController+TTMovieUtil.h"
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -1887,10 +1888,23 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     //在跳转之前先把现在的导航控制器pop到根视图,需要在通知中传入needToRoot的值，这是为了不影响其他地方的跳转逻辑
     BOOL needToRoot = [notification.userInfo tt_boolValueForKey:@"needToRoot"];
     if(needToRoot){
+        //这里处理关闭pesent出来的view
+        UIViewController *topVC = [UIViewController ttmu_currentViewController];
+        
+        if(topVC.presentingViewController){
+            [topVC dismissViewControllerAnimated:NO completion:nil];
+        }
+
         id vc = self.selectedViewController;
         if([vc isKindOfClass:[UINavigationController class]]){
             UINavigationController *naviVC = (UINavigationController *)vc;
             [naviVC popToRootViewControllerAnimated:NO];
+            
+            //有些页面禁用了pan手势，但是在某些情况下比如直接push切换tab等操作 不会触发关闭当前的view，导致没有设置回来 by xsm
+            if([naviVC isKindOfClass:[TTNavigationController class]]){
+                TTNavigationController *vc = (TTNavigationController *)naviVC;
+                vc.panRecognizer.enabled = YES;
+            }
         }
     }
     
@@ -1903,6 +1917,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         return;
     }
     
+    //相同tab不在操作 by xsm
+    if([[self currentTabIdentifier] isEqualToString:tag]){
+        return;
+    }
+    
     [self setSelectedIndexWithTag:tag];
 }
 
@@ -1911,8 +1930,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     
     self.autoEnterTab = YES;
     NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:tag];
-    
-    [((TTTabbar *)self.tabBar) setSelectedIndex:index];
+    TTTabbar *tab = (TTTabbar *)self.tabBar;
+    //这里加上这个判断，已经在这个tab就不在切换了 by xsm，要不然push不了新页面
+    if(tab.selectedIndex != index){
+        [((TTTabbar *)self.tabBar) setSelectedIndex:index];
+    }
 }
 
 #pragma mark -- TTInterfaceTabBarControllerProtocol

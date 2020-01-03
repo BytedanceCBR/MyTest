@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)showSegmentControl:(BOOL)isShow;
 - (void)hideGuideView;
 - (void)hideRedPoint;
+- (void)updateSpringView;
 
 @end
 

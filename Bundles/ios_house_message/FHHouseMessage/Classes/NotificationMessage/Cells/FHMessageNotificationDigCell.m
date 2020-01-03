@@ -11,6 +11,8 @@
 #import "TTImageView.h"
 #import "FHMessageNotificationCellHelper.h"
 #import <TTBaseLib/UIViewAdditions.h>
+#import <UIImage+FIconFont.h>
+#import <UIColor+Theme.h>
 
 NS_INLINE CGFloat kDigImageViewWidth() {
     return [FHMessageNotificationCellHelper tt_newPadding:20.f];
@@ -82,7 +84,7 @@ NS_INLINE CGFloat kDigImageViewLeftPadding() {
     if (!_digImageView) {
         _digImageView = [[SSThemedImageView alloc] initWithFrame:CGRectZero];
         _digImageView.contentMode = UIViewContentModeScaleAspectFill;
-        _digImageView.imageName = @"noticeicon_like";
+        _digImageView.image = ICON_FONT_IMG(20, @"\U0000e69c", [UIColor themeGray1]);
         [self addSubview:_digImageView];
     }
     return _digImageView;

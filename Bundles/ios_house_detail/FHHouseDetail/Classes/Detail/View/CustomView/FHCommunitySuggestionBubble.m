@@ -77,4 +77,11 @@
     CGFloat labelSize = fminf(140, preferSize.width);
     return labelSize;
 }
+
+- (void)setBacColor:(UIColor *)bacColor {
+    self.backgroundColor = bacColor;
+}
+- (void)setCornerRadius:(CGFloat)cornerRadius {
+    self.layer.cornerRadius = cornerRadius;
+}
 @end

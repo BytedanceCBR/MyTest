@@ -18,6 +18,13 @@
 #import "TTAdPromotionContentItem.h"
 #import <TTRoute/TTRoute.h>
 
+#ifndef WeakSelf
+#define WeakSelf __weak typeof(self) wself = self
+#endif
+#ifndef StrongSelf
+#define StrongSelf __strong typeof(wself) self = wself
+#endif
+
 @implementation WDListViewModel (ShareCategory)
 
 #pragma mark - Util

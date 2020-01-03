@@ -27,7 +27,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.8.4</string>
+	<string>0.8.7</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -72,9 +72,19 @@
 				<string>tencent1107515843</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>bddiamond</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>snssdk1370bdd20</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>0.8.4.0</string>
+	<string>6.8.6.0</string>
 	<key>CHANNEL_NAME</key>
 	<string>local_test</string>
 	<key>Fabric</key>
@@ -231,6 +241,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UPDATE_VERSION_CODE</key>
-	<string>68401</string>
+	<string>68701</string>
 </dict>
 </plist>

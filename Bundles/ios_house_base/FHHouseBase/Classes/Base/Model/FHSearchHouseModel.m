@@ -578,6 +578,7 @@
                                    @"neighborhoodName": @"neighborhood_name",
                                    @"neighborhoodPrice": @"neighborhood_price",
                                    @"displayStatusInfo": @"display_status_info",
+                                   @"districtAreaName": @"district_area_name",
                                    @"contactModel": @"realtor_info",
                                    @"logPb": @"log_pb",
                                    };
@@ -676,6 +677,27 @@
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
+}
+
++ (NSString *)cellIdentifierByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+            return @"FHHouseBaseNewHouseCell";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"FHHouseBaseItemCellSecond";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"FHHouseBaseItemCellRent";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"FHHouseBaseItemCellNeighborhood";
+            break;
+        default:
+            break;
+    }
+    return @"FHHouseBaseItemCellList";
 }
 
 @end

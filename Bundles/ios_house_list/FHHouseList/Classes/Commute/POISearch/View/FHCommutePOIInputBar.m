@@ -71,7 +71,7 @@
         [self addSubview:_cancelButton];
         
         [_searechField mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(HOR_MARGIN);
+            make.left.mas_equalTo(HOR_MARGIN_NEW);
             make.bottom.mas_equalTo(self).offset(-BAR_BOTTOM_MARGIN);
             make.right.mas_equalTo(self).offset(-BAR_RIGHT_MARGIN);
             make.height.mas_equalTo(BAR_HEIGHT);

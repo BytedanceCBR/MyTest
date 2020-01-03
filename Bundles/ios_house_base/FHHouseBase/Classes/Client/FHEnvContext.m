@@ -32,6 +32,10 @@
 #import <TTArticleTabBarController.h>
 #import <TTCategoryBadgeNumberManager.h>
 #import "FHMainApi.h"
+#import <FHMinisdkManager.h>
+#import <FHIntroduceManager.h>
+#import <TTSettingsManager.h>
+#import <NSDictionary+TTAdditions.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -83,7 +87,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
         
         __block NSInteger retryGetLightCount = kGetLightRequestRetryCount;
         
-        [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
+        if(![FHIntroduceManager sharedInstance].isShowing){
+            [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
+        }
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
             
@@ -107,10 +113,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         }
                         [[ToastManager manager] dismissCustomLoading];
                         
+                        NSString *defaultTabName = [FHEnvContext defaultTabName];
                         if ([FHEnvContext isUGCOpen] && [FHEnvContext isUGCAdUser]) {
                             [[FHEnvContext sharedInstance] jumpUGCTab];
-                        }else
-                        {
+
+                        }else if(defaultTabName.length > 0){
+                            [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
+                        }else{
                             if (![self isCurrentCityNormalOpen]) {
                                 [[FHEnvContext sharedInstance] jumpUGCTab];
                             }else
@@ -140,7 +149,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
                     completion(NO);
                 }
                 [[ToastManager manager] dismissCustomLoading];
-                [[ToastManager manager] showToast:@"切换城市失败"];
+                if(![FHIntroduceManager sharedInstance].isShowing){
+                    [[ToastManager manager] showToast:@"切换城市失败"];
+                }
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
                 
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:1 extra:paramsExtra];
@@ -207,8 +218,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         }
                         [[ToastManager manager] dismissCustomLoading];
                         
-                        if ([FHEnvContext isUGCOpen]) {
-                            [[FHEnvContext sharedInstance] jumpUGCTab];
+                        NSString *defaultTabName = [FHEnvContext defaultTabName];
+                        if(defaultTabName.length > 0){
+                            [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
+                        }else{
+                            if ([FHEnvContext isUGCOpen]) {
+                                [[FHEnvContext sharedInstance] jumpUGCTab];
+                            }
                         }
                     }
                     //重试3次请求频道
@@ -311,7 +327,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
  */
 + (BOOL)isCurrentCityNormalOpen
 {
-    return [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue;
+    NSNumber *isOpen = [FHUtils contentForKey:kFHCityIsOpenKey];
+    if ([isOpen isKindOfClass:[NSNumber class]] && isOpen.boolValue) {
+        return YES;
+    }
+    return NO;
 }
 
 /*
@@ -405,18 +425,19 @@ static NSInteger kGetLightRequestRetryCount = 3;
 + (void)showRedPointForNoUgc
 {
     if(![self isUGCOpen]){
-        if([FHEnvContext sharedInstance].hasShowDots){
-            //显示过
-            if([FHEnvContext sharedInstance].isShowDots){
-                [self showFindTabRedDots];
-            }else{
-                [self hideFindTabRedDots];
-            }
-        }else{
-            //没显示过
-            [self showFindTabRedDotsLimitCount];
-            [FHEnvContext sharedInstance].hasShowDots = YES;
-        }
+//        if([FHEnvContext sharedInstance].hasShowDots){
+//            //显示过
+//            if([FHEnvContext sharedInstance].isShowDots){
+//                [self showFindTabRedDots];
+//            }else{
+//                [self hideFindTabRedDots];
+//            }
+//        }else{
+//            //没显示过
+//            [self showFindTabRedDotsLimitCount];
+//            [FHEnvContext sharedInstance].hasShowDots = YES;
+//        }
+        [self hideFindTabRedDots];
     }
 }
 
@@ -532,6 +553,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //更新公共参数
     [self updateRequestCommonParams];
+    
+    //初始化拉新拉活sdk
+    if([FHEnvContext isSpringOpen]){
+        [[FHMinisdkManager sharedInstance] initTask];
+    }
     
     NSString *startFeedCatgegory = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getFeedStartCategoryName];
     
@@ -768,8 +794,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
         if ([self isUGCOpen]) {
             [tabItem setTitle:@"邻里"];
         }else{
-            [tabItem setTitle:@"发现"];
+            [tabItem setTitle:@"找房"];
         }
+    }
+    
+    if ([self isUGCOpen]) {
+        [tabItem setNormalImage:[UIImage imageNamed:@"tab-ugc"] highlightedImage:[UIImage imageNamed:@"tab-ugc_press"] loadingImage:nil];
+    }else{
+        [tabItem setNormalImage:[UIImage imageNamed:@"tab-search"] highlightedImage:[UIImage imageNamed:@"tab-search_press"] loadingImage:nil];
     }
 }
 
@@ -926,7 +958,99 @@ static NSInteger kGetLightRequestRetryCount = 3;
             [userInfo copy];
         })];
     }
+}
 
+- (void)jumpMainTab
+{
+    // 进历史
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:kFHHouseMixedCategoryID withShow:NO];
+    [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+    //    [[EnvContext shared].client.messageManager startSyncCategoryBadge];
+    if ([TTTabBarManager sharedTTTabBarManager].tabItems.count > 1) {
+        NSString *tabItemIdentifier = [TTTabBarManager sharedTTTabBarManager].tabItems[0].identifier;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:({
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            [userInfo setValue:tabItemIdentifier forKey:@"tag"];
+            [userInfo setValue:@1 forKey:@"needToRoot"];
+            [userInfo copy];
+        })];
+    }
+}
+
+- (void)jumpTab:(NSString *)tabName
+{
+    // 进历史
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:kFHHouseMixedCategoryID withShow:NO];
+    [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+    //    [[EnvContext shared].client.messageManager startSyncCategoryBadge];
+    if ([TTTabBarManager sharedTTTabBarManager].tabItems.count > 1) {
+        if(tabName){
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:({
+                NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+                [userInfo setValue:tabName forKey:@"tag"];
+                [userInfo setValue:@1 forKey:@"needToRoot"];
+                [userInfo copy];
+            })];
+        }
+    }
+}
+    
++ (BOOL)isSpringOpen {
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSString *isSpringOpen = [archSettings tt_stringValueForKey:@"f_spring_festival_2020"];
+    if(isSpringOpen){
+        return [isSpringOpen boolValue];
+    }else{
+        return YES;
+    }
+}
+
++ (BOOL)isSpringHangOpen {
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSString *isSpringOperationOpen = [archSettings tt_stringValueForKey:@"f_spring_festival_2020_operation"];
+    if(isSpringOperationOpen){
+        return [isSpringOperationOpen boolValue];
+    }else{
+        return NO;
+    }
+}
+
++ (BOOL)isIntroduceOpen {
+    return YES;
+}
+
++ (NSString *)defaultTabName {
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (configData.jumpPageOnStartup) {
+        return configData.jumpPageOnStartup;
+    }
+    return nil;
+}
+
++ (NSString *)enterTabLogName {
+    NSString *tabName = @"be_null";
+    NSString *currentTabIdentifier = [self getCurrentTabIdentifier];
+
+    NSDictionary *tagDic = [TTArticleTabBarController tagToLogEventName];
+    tabName = tagDic[currentTabIdentifier];
+    if([currentTabIdentifier isEqualToString:kFHouseFindTabKey]){
+        if([FHEnvContext isUGCOpen]){
+            tabName = @"neighborhood_tab";
+        }else{
+            tabName = @"discover_tab";
+        }
+    }
+    return tabName;
+}
+
++ (NSString *)getCurrentTabIdentifier {
+    UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
+    TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)mainWindow.rootViewController;
+    if ([rootTabController isKindOfClass:[TTArticleTabBarController class]]) {
+        TTArticleTabBarController *vc = (TTArticleTabBarController *)rootTabController;
+        return [vc currentTabIdentifier];
+    }
+    return nil;
 }
 
 -(BOOL)hasConfirmPermssionProtocol

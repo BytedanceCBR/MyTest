@@ -27,7 +27,6 @@
 //#import "TTSFActivityManager.h"
 //#import "TTSFResourcesManager.h"
 //#import "Bubble-Swift.h"
-#import "FHHouseFindListViewController.h"
 #import "FHMessageViewController.h"
 #import "FHMineViewController.h"
 #import <FHHouseFind/FHHouseFindViewController.h>
@@ -36,6 +35,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <FHHouseUGC/FHCommunityViewController.h>
 #import <FHHomeViewController.h>
+#import <FHHomeMainViewController.h>
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 
@@ -71,7 +71,8 @@ static NSString *lastTabIdentifier;
 + (UIViewController *)rootVCForIdentifier:(NSString *)identifier {
     if ([identifier isEqualToString:kTTTabHomeTabKey]) {
         UIViewController *homeVC;
-        homeVC = [[FHHomeViewController alloc] init];
+//        homeVC = [[FHHomeViewController alloc] init];
+        homeVC = [[FHHomeMainViewController alloc] init];
 //        homeVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
         return homeVC;
     } else if ([identifier isEqualToString:kTTTabVideoTabKey]) {

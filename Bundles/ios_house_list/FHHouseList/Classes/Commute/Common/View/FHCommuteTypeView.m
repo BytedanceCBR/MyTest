@@ -25,7 +25,7 @@
 @implementation FHCommuteTypeView
 
 +(CGFloat)cellWidth {
-    CGFloat collectionViewWidth = [UIScreen mainScreen].bounds.size.width - HOR_MARGIN * 2;
+    CGFloat collectionViewWidth = [UIScreen mainScreen].bounds.size.width - HOR_MARGIN_NEW * 2;
     // 75 * 4 + 9 * 3  每行显示4个晒选项，每个晒选项间隔9像素
     if (327 > collectionViewWidth) {
         return (collectionViewWidth - 9 * 2) / 3;
@@ -65,20 +65,20 @@
 -(void)initConstraints
 {
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
+        make.left.mas_equalTo(HOR_MARGIN_NEW);
         make.top.mas_equalTo(self);
-        make.right.mas_lessThanOrEqualTo(-HOR_MARGIN);
+        make.right.mas_lessThanOrEqualTo(-HOR_MARGIN_NEW);
         make.height.mas_equalTo(24);
     }];
     
     CGFloat cellWidth = [FHCommuteTypeView cellWidth];
-    CGFloat padding = (CGRectGetWidth(self.bounds) - 4*cellWidth - 2*HOR_MARGIN)/3;
+    CGFloat padding = (CGRectGetWidth(self.bounds) - 4*cellWidth - 2*HOR_MARGIN_NEW)/3;
     
     UIButton *button;
     for (NSInteger i = 0 ; i < _buttons.count ; i++) {
         button = _buttons[i];
         [button mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(HOR_MARGIN+(cellWidth + padding)*i);
+            make.left.mas_equalTo(HOR_MARGIN_NEW+(cellWidth + padding)*i);
             make.bottom.mas_equalTo(self);
             make.size.mas_equalTo(CGSizeMake(cellWidth, BUTTON_HEIGHT));
         }];
@@ -139,12 +139,12 @@
 //    [super layoutSubviews];
 //
 //    CGFloat cellWidth = [FHCommuteTypeView cellWidth];
-//    CGFloat padding = (CGRectGetWidth(self.bounds) - 4*cellWidth - 2*HOR_MARGIN)/3;
+//    CGFloat padding = (CGRectGetWidth(self.bounds) - 4*cellWidth - 2*HOR_MARGIN_NEW)/3;
 //
 //    UIButton *button;
 //    for (NSInteger i = 0 ; i < _buttons.count ; i++) {
 //        button = _buttons[i];
-//        button.frame = CGRectMake(HOR_MARGIN+(cellWidth + padding)*i, self.bounds.size.height - BUTTON_HEIGHT, cellWidth, BUTTON_HEIGHT);
+//        button.frame = CGRectMake(HOR_MARGIN_NEW+(cellWidth + padding)*i, self.bounds.size.height - BUTTON_HEIGHT, cellWidth, BUTTON_HEIGHT);
 //    }
 //
 //    
@@ -156,8 +156,8 @@
     for (NSInteger i = 0 ; i < _buttons.count ; i++) {
         button = _buttons[i];
         button.selected = (_currentType == i);
-        [button setTitleColor:button.selected?[UIColor whiteColor]:[UIColor themeGray1] forState:UIControlStateNormal];
-        button.backgroundColor = (button.selected?[UIColor themeRed1]:[UIColor themeGray7]);
+        [button setTitleColor:button.selected?[UIColor themeOrange1]:[UIColor themeGray1] forState:UIControlStateNormal];
+        button.backgroundColor = (button.selected?[UIColor themeOrange2]:[UIColor themeGray8]);
     }
 }
 

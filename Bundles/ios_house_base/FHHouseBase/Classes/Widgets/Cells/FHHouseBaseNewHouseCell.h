@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshWithData:(id)data;
 
+-(void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast;
+
 -(void)updateHomeNewHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel;
 
 -(void)updateHouseListNewHouseCellModel:(FHSearchHouseItemModel *)commonModel;

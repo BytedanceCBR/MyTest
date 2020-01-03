@@ -336,14 +336,14 @@
 - (UIImage *)collectYellowImage
 {
     if (!_collectYellowImage) {
-        _collectYellowImage = ICON_FONT_IMG(24, @"\U0000e6b2", [UIColor themeRed1]);// @"detail_collect_yellow"
+        _collectYellowImage = ICON_FONT_IMG(24, @"\U0000e6b2", [UIColor colorWithHexStr:@"#ff9629"]);// @"detail_collect_yellow"
     }
     return _collectYellowImage;
 }
 - (UIImage *)backBlackImage
 {
     if (!_backBlackImage) {
-        _backBlackImage = ICON_FONT_IMG(24, @"\U0000e68a", nil); // detail_back_black
+        _backBlackImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]); // detail_back_black
     }
     return _backBlackImage;
 }

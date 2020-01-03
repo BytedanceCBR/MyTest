@@ -9,7 +9,6 @@
 #import "TTRApp.h"
 #import "TTJSBAuthManager.h"
 #import "TTInstallIDManager.h"
-#import "SmAntiFraud.h"
 
 #import <TTRexxar/TTRexxarNotificationCenter.h>
 #import <TTRexxar/TTRJSBForwarding.h>
@@ -28,7 +27,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @implementation TTRApp
 
 + (void)load {
-    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.deviceInfo" for:@"deviceInfo"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.sendNotification" for:@"sendNotification"];
 }
 
@@ -156,13 +154,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }];
 }
 
-- (void)deviceInfoWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    NSMutableDictionary *deviceInfo = [[[SmAntiFraud shareInstance] getDeviceInfoWithConfiguration:nil] mutableCopy];
-    if (callback) {
-        callback(TTRJSBMsgSuccess, @{@"code": @"1",
-                                     @"data": [deviceInfo copy]});
-    }
-}
 
 - (void)sendNotificationWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     NSString *name = [param tt_stringValueForKey:@"type"];

@@ -118,6 +118,8 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, strong)   FHTopicHeaderModel  *topicHeaderModel; // 话题详情页进发布器传入的话题数据
 @property (nonatomic, assign)   BOOL isAddedTopicHeaderModel;
 
+@property (nonatomic, assign)   BOOL isOuterEdit;
+@property (nonatomic, copy)     NSString *outerPostId;
 @end
 
 @implementation FHPostUGCViewController
@@ -129,7 +131,8 @@ static NSInteger const kMaxPostImageCount = 9;
         if ([params isKindOfClass:[NSDictionary class]]) {
             
             self.useDraftFirst = [params tt_boolValueForKey:@"use_draft_first"];
-            
+            self.isOuterEdit = [params tta_boolForKey:@"isOuterEdit"];
+            self.outerPostId = [params tta_stringForKey:@"outerPostId"];
             //Post hint
             self.postContentHint = [params tt_stringValueForKey:@"post_content_hint"];
             self.postPreContent = [params tt_stringValueForKey:@"post_content"];
@@ -137,11 +140,20 @@ static NSInteger const kMaxPostImageCount = 9;
             if (!isEmptyString(self.postPreContent) || !isEmptyString(self.postPreContentRichSpan)) {
                 self.postPreContent = self.postPreContent ?: @"";
                 self.richSpanText = [[[TTRichSpanText alloc] initWithText:self.postPreContent richSpansJSONString:self.postPreContentRichSpan] replaceWhitelistLinks];
+                NSString *highlight_color_string = [NSString hexStringWithColor:[UIColor themeRed3]];
+                [self.richSpanText.richSpans.links enumerateObjectsUsingBlock:^(TTRichSpanLink * _Nonnull spanLink, NSUInteger idx, BOOL * _Nonnull stop) {
+                    NSMutableDictionary *userInfo = spanLink.userInfo.mutableCopy;
+                    userInfo[@"color_info"] = @{
+                        @"day": highlight_color_string,
+                        @"night": highlight_color_string
+                    };
+                    spanLink.userInfo = userInfo;
+                }];
             } else {
                 self.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpans:nil];
             }
             self.outerInputRichSpanText = self.richSpanText;
-            
+            self.outerInputAssets = [params tt_arrayValueForKey:@"outerInputAssets"];
             self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
             // 选中圈子
             self.selectGroupId = [params tt_stringValueForKey:@"select_group_id"];
@@ -226,6 +238,8 @@ static NSInteger const kMaxPostImageCount = 9;
     // App 内push
     self.lastInAppPushTipsHidden = kFHInAppPushTipsHidden;
     kFHInAppPushTipsHidden = YES;// 不展示
+    
+    [self addGoDetailLog];
 }
 
 - (void)restoreData {
@@ -320,7 +334,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void) createInputComponent {
     // select view
-    if (!self.hasSocialGroup) {
+    if (!self.hasSocialGroup && !self.isOuterEdit) {
         CGFloat top = MAX(self.ttNavigationBar.bottom, [TTDeviceHelper isIPhoneXSeries] ? 88 : 64);
         self.selectView = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, top, SCREEN_WIDTH, 44) type: FHPostUGCMainViewType_Post];
         [self.view addSubview:self.selectView];
@@ -354,7 +368,7 @@ static NSInteger const kMaxPostImageCount = 9;
         }
     }
     
-    if(isShowSelectedGroupHistory && selectedGroup) {
+    if(isShowSelectedGroupHistory && selectedGroup && !self.isOuterEdit) {
         CGRect frame = self.selectView.bounds;
         frame.origin.y = self.selectView.bottom;
         self.selectedGrouplHistoryView = [[FHPostUGCSelectedGroupHistoryView alloc] initWithFrame:frame delegate:self historyModel:selectedGroup];
@@ -755,7 +769,7 @@ static NSInteger const kMaxPostImageCount = 9;
     
     NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
-    BOOL shouldAlert = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
+    BOOL shouldAlert = [self checkPostContentChanged];
     
     if (!shouldAlert) {
         [self postFinished:NO];
@@ -809,8 +823,8 @@ static NSInteger const kMaxPostImageCount = 9;
         return;
     }
     
-    if (![self.selectView hasValidData] && !self.hasSocialGroup) {
-        [[ToastManager manager] showToast:@"请选择要发布的小区！"];
+    if (![self.selectView hasValidData] && !self.hasSocialGroup && !self.isOuterEdit) {
+        [[ToastManager manager] showToast:@"请选择要发布的圈子！"];
         return;
     }
     
@@ -874,33 +888,45 @@ static NSInteger const kMaxPostImageCount = 9;
     [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     NSMutableArray *mentionUsers = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
-    for (TTRichSpanLink *link in richSpanText.richSpans.links) {
-        NSString *userId = [link.userInfo tt_stringValueForKey:@"user_id"];
-        if (!isEmptyString(userId)) {
-            [mentionUsers addObject:userId];
-        }
-    }
-    
     NSMutableArray *mentionConcerns = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
-    NSMutableArray *hashtagNames = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
     NSMutableArray *createdConcerns = [NSMutableArray arrayWithCapacity:richSpanText.richSpans.links.count];
+    
     for (TTRichSpanLink *link in richSpanText.richSpans.links) {
-        if ([link.link isEqualToString:TTUGCSelfCreateHashtagLinkURLString]) {
-            NSString *forumName = [link.userInfo tt_stringValueForKey:@"forum_name"];
-            if (!isEmptyString(forumName)) {
-                [createdConcerns addObject:forumName];
+        
+        // 外部传入编辑Feed，获取@用户和话题数组
+        if(self.isOuterEdit) {
+            switch (link.type) {
+                case TTRichSpanLinkTypeAt:
+                    if(link.idStr.length > 0) {
+                        [mentionUsers addObject:link.idStr];
+                    }
+                    break;
+                case TTRichSpanLinkTypeHashtag:
+                    if(link.idStr.length > 0) {
+                        [mentionConcerns addObject:link.idStr];
+                    }
+                    break;
+                default:
+                    break;
             }
-        } else {
-            NSString *concernId = [link.userInfo tt_stringValueForKey:@"concern_id"];
-            if (!isEmptyString(concernId)) {
-                [mentionConcerns addObject:concernId];
+        }
+        
+        // 内部用户输入内容发布获取@用户和话题数组
+        else {
+            NSString *userId = [link.userInfo tt_stringValueForKey:@"user_id"];
+            if (!isEmptyString(userId)) {
+                [mentionUsers addObject:userId];
             }
-            
-            NSString *forumName = [link.userInfo tt_stringValueForKey:@"forum_name"];
-            if (!isEmptyString(forumName)) {
-                [hashtagNames addObject:forumName];
-            } else if (link.type == TTRichSpanLinkTypeHashtag && !isEmptyString(link.text)) {
-                [hashtagNames addObject:link.text];
+            if ([link.link isEqualToString:TTUGCSelfCreateHashtagLinkURLString]) {
+                NSString *forumName = [link.userInfo tt_stringValueForKey:@"forum_name"];
+                if (!isEmptyString(forumName)) {
+                    [createdConcerns addObject:forumName];
+                }
+            } else {
+                NSString *concernId = [link.userInfo tt_stringValueForKey:@"concern_id"];
+                if (!isEmptyString(concernId)) {
+                    [mentionConcerns addObject:concernId];
+                }
             }
         }
     }
@@ -940,7 +966,9 @@ static NSInteger const kMaxPostImageCount = 9;
         richSpans = [[TTRichSpans alloc] initWithRichSpanLinks:[links copy] imageInfoModelsDict:richSpans.imageInfoModesDict];
     }
     
+    // 收集参数数据模型
     TTPostThreadModel *postThreadModel = [[TTPostThreadModel alloc] init];
+    postThreadModel.postID = self.outerPostId;
     postThreadModel.content = inputText;
     postThreadModel.contentRichSpans = [TTRichSpans JSONStringForRichSpans:richSpans];
     postThreadModel.mentionUsers = [mentionUsers componentsJoinedByString:@","];
@@ -958,6 +986,8 @@ static NSInteger const kMaxPostImageCount = 9;
     postThreadModel.longitude = longitude;
     postThreadModel.latitude = latitude;
     postThreadModel.hasSocialGroup = self.hasSocialGroup;
+    postThreadModel.extraTrack = self.trackDict.copy;
+    
     if (self.hasSocialGroup) {
         postThreadModel.social_group_id = self.selectGroupId;
         postThreadModel.social_group_name = self.selectGroupName;
@@ -966,13 +996,27 @@ static NSInteger const kMaxPostImageCount = 9;
         postThreadModel.social_group_name = self.selectView.communityName;
     }
     
+    // TODO: 报数相关
+//    postThreadModel.enterFrom =
+//    postThreadModel.pageType =
+//    postThreadModel.elementFrom =
     
-    postThreadModel.extraTrack = self.trackDict.copy;
-    
-    [[TTPostThreadCenter sharedInstance_tt] postThreadWithPostThreadModel:postThreadModel finishBlock:^(TTPostThreadTask *task) {
-        [self postFinished:YES task:task];
-    }];
+    // 外部传入图文发布器数据，重新编辑后发布
+    if(self.isOuterEdit) {
+        [[TTPostThreadCenter sharedInstance_tt] postEditedThreadWithPostThreadModel:postThreadModel finishBlock:^{
+            [self dismissSelf];
+        }];
+    }
+    // 图文发布器内部编辑后发布
+    else {
+        [[TTPostThreadCenter sharedInstance_tt] postThreadWithPostThreadModel:postThreadModel finishBlock:^(TTPostThreadTask *task) {
+            [self postFinished:YES task:task];
+        }];
+    }
 }
+
+#pragma mark - 图文发布器内部编辑后发布
+
 - (void)postFinished:(BOOL)hasSent {
     [self postFinished:hasSent task:nil];
 }
@@ -1061,23 +1105,80 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)refreshPostButtonUI {
     //发布器
-    if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
-        self.postButton.enabled = YES;
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
-    } else {
-        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateHighlighted];
-        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
-        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
-        self.postButton.enabled = NO;
-    }
+    [self refreshPostButtonValidStatus];
+    
     // 选择小区
     if (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) {
         self.selectView.groupId = self.selectGroupId;
         self.selectView.communityName = self.selectGroupName;
         self.selectView.followed = YES;
         self.selectView.rightImageView.hidden = YES;
+    }
+}
+
+- (void)refreshPostButtonValidStatus {
+    
+    BOOL isEnablePostButton = [self checkPostContentChanged];
+    
+    [self setPostButtonEnable:isEnablePostButton];
+}
+
+- (BOOL)checkPostContentChanged {
+    
+    BOOL ret = NO;
+    
+    if(self.isOuterEdit) {
+        
+        NSString *outerContent = self.postPreContent;
+        NSMutableString *outerImageUris = [NSMutableString string];
+        [self.outerInputAssets enumerateObjectsUsingBlock:^(TTAssetModel * _Nonnull model, NSUInteger idx, BOOL * _Nonnull stop) {
+            if(model.imageURI.length > 0) {
+                [outerImageUris appendFormat:@"%@", model.imageURI];
+            }
+        }];
+        
+        TTRichSpanText *richSpanText = [self.inputTextView.richSpanText restoreWhitelistLinks];
+        [richSpanText trimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        NSString *currentContent = richSpanText.text;
+        NSMutableString *currentImageUris = [NSMutableString string];
+        [self.addImagesView.selectedImageCacheTasks enumerateObjectsUsingBlock:^(TTUGCImageCompressTask * _Nonnull task, NSUInteger idx, BOOL * _Nonnull stop) {
+            if(task.assetModel.imageURI.length > 0) {
+                [currentImageUris appendFormat:@"%@", task.assetModel.imageURI];
+            }
+            
+            if(task.preCompressFilePath.length > 0) {
+                [currentImageUris appendFormat:@"%@", task.preCompressFilePath];
+            } else if(task.assetModel.assetID.length > 0) {
+                [currentImageUris appendFormat:@"%@", task.assetModel.assetID];
+            }
+        }];
+        
+        ret = !([currentContent isEqualToString:outerContent] &&  [currentImageUris isEqualToString:outerImageUris]);
+    }
+    else {
+        
+        NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        ret = !isEmptyString(inputText) || self.addImagesView.selectedImageCacheTasks.count != 0;
+    }
+    
+    return ret;
+}
+
+- (void)setPostButtonEnable:(BOOL)isEnable {
+    
+    self.postButton.enabled = isEnable;
+    
+    if(isEnable) {
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
+    }
+    else {
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateHighlighted];
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
     }
 }
 
@@ -1564,7 +1665,8 @@ static NSInteger const kMaxPostImageCount = 9;
     if (item) {
         self.selectView.groupId = item.socialGroupId;
         self.selectView.communityName = item.socialGroupName;
-        self.selectView.followed = NO;
+        FHUGCScialGroupDataModel * model = [[FHUGCConfig sharedInstance] socialGroupData:item.socialGroupId];
+        self.selectView.followed = model ? [model.hasFollow boolValue] : NO;
         [self refreshPostButtonUI];
         
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
@@ -1572,6 +1674,18 @@ static NSInteger const kMaxPostImageCount = 9;
         param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
         param[@"click_position"] = @"last_published_neighborhood";
         TRACK_EVENT(@"click_last_published_neighborhood", param);
+    }
+}
+
+
+- (void)addGoDetailLog {
+    if(self.isOuterEdit) {
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_PAGE_TYPE] = @"feed_publisher";
+        param[UT_LOG_PB] = self.tracerModel.logPb;
+        param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
+        param[UT_ENTER_TYPE] = self.tracerModel.enterType;
+        TRACK_EVENT(UT_GO_DETAIL, param);
     }
 }
 @end

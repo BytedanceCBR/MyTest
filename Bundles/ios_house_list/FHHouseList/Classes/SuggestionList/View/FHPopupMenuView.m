@@ -62,9 +62,9 @@
         [self.popMenuContainer addSubview:menuView];
         menuView.label.text = [[FHHouseTypeManager sharedInstance] stringValueForType:obj.houseType];
         if (obj.isSelected) {
-            menuView.label.textColor = [UIColor themeRed1];
+            menuView.label.textColor = [UIColor themeOrange1];
         } else {
-            menuView.label.textColor = [UIColor themeGray3];
+            menuView.label.textColor = [UIColor themeGray1];
         }
         menuView.menuItem = obj;
         [menuView addTarget:self action:@selector(menuClick:) forControlEvents:UIControlEventTouchUpInside];

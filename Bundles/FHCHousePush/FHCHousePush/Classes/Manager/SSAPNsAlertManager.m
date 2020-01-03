@@ -26,6 +26,8 @@
 #import "FHCHousePushUtils.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTAppRuntime/TTProjectLogicManager.h>
+#import "FHBaseViewController.h"
+#import "UIViewController+TTMovieUtil.h"
 
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 
@@ -432,40 +434,36 @@ static NSString * const kTTAPNsImportanceKey = @"important";
             param[@"title_id"] = @([titleId longLongValue]);
 
             [TTTracker eventV3:@"push_click" params:param];
+            
+            UIViewController *topVC = [UIViewController ttmu_currentViewController];
+            if ([topVC isKindOfClass:[UIViewController class]]) {
+                [topVC.view endEditing:YES];
+            }
 
 //            NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
             if ([[openURL host] isEqualToString:@"main"]) {
-                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
-                NSDictionary* params = [obj queryParams];
-                if (params != nil) {
-                    NSString* target = params[@"select_tab"];
-                    if (target != nil && target.length > 0) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
-                    } else {
-                        NSAssert(false, @"推送消息的tag为空");
+                [[TTRoute sharedRoute] openURL:openURL userInfo:nil objHandler:nil];
+//                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
+//                NSDictionary* params = [obj queryParams];
+//                if (params != nil) {
+//                    NSString* target = params[@"select_tab"];
+//                    if (target != nil && target.length > 0) {
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
+//                    } else {
+//                        NSAssert(false, @"推送消息的tag为空");
+//                    }
+//                }
+            } else {
+                // Push同一种页面处理，应用内暂时不做处理--后续考虑好是否要打开
+                /*
+                UIViewController *topVC = [UIViewController ttmu_currentViewController];
+                if ([topVC isKindOfClass:[FHBaseViewController class]]) {
+                    BOOL retFlag = [(FHBaseViewController *)topVC isSamePageAndParams:openURL];
+                    if (retFlag) {
+                        return;
                     }
                 }
-            } else {
-                // push对消息特殊处理
-//                if ([[openURL host] isEqualToString:@"message_detail_list"]) {
-////                    if (![TTAccountManager isLogin]) {
-////                        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-////                            if (type == TTAccountAlertCompletionEventTypeDone) {
-////                                //登录成功 走发送逻辑
-////                                if ([TTAccountManager isLogin]) {
-////                                    [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-////                                    [[TTRoute sharedRoute] openURLByPushViewController:openURL];
-////                                }
-////                            }
-////                        }];
-////                    } else
-////                    {
-//                        [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-//                        [[TTRoute sharedRoute] openURLByPushViewController:openURL];
-////                    }
-//
-//                    return;
-//                }
+                 */
                 NSDictionary* info = @{@"isFromPush": @(1),
                                        @"tracer":@{@"enter_from": @"push",
                                                    @"enter_type": @"click",

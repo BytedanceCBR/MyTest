@@ -10,7 +10,6 @@
 #import "SSAvatarView+VerifyIcon.h"
 #import "TTIconLabel.h"
 #import "TTProfileThemeConstants.h"
-#import <TTInstallJSONHelper.h>
 #import <Masonry/Masonry.h>
 #import <TTBaseLib/UIViewAdditions.h>
 
