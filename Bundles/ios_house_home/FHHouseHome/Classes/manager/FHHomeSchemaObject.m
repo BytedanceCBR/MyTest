@@ -45,7 +45,7 @@
             [self handleMultiPush:paramObj.allParams];
         }
         //处理春节活动过来的 ack_token
-        if([FHEnvContext isSpringOpen]){
+        if([FHEnvContext isSpringOpen] && [paramObj.host isEqualToString:@"spring"]){
             NSString *ackToken = paramObj.allParams[@"ack_token"];
             NSString *vid = paramObj.allParams[@"vid"];
             if(ackToken){
