@@ -64,7 +64,11 @@
 
             [wself.dataList addObjectsFromArray:responseModel.data.list];
             wself.tableView.hidden = NO;
-            [wself.viewController.emptyView hideEmptyView];
+            if(wself.dataList.count <= 0) {
+                [wself.viewController.emptyView showEmptyWithTip:@"暂无话题" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+            } else {
+                [wself.viewController.emptyView hideEmptyView];
+            }
             [wself.tableView reloadData];
         } else {
             if (isRefresh) {
