@@ -52,7 +52,7 @@
     [self.subTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.zoneTypeView);
         make.left.equalTo(self.titleLab.mas_right).offset(15);
-//        make.right.equalTo(self.amountLab.mas_right).offset(-15);
+        make.right.equalTo(self.amountLab.mas_left).offset(-15);
     }];
     [self.regionLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.titleLab);
@@ -62,6 +62,8 @@
         make.left.equalTo(self.regionLab.mas_right).offset(5);
         make.top.equalTo(self.titleLab.mas_bottom).offset(3);
     }];
+    [self.subTitleLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+    [self.amountLab setContentCompressionResistancePriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
 }
 
 - (UIView *)zoneTypeView {
@@ -135,6 +137,7 @@
         UILabel *amountLab = [[UILabel alloc]init];
         amountLab.textColor = [UIColor themeGray1];
         amountLab.font = [UIFont themeFontSemibold:14];
+        amountLab.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:amountLab];
         _amountLab = amountLab;
     }
