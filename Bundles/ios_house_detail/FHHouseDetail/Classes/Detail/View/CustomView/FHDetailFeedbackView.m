@@ -89,6 +89,9 @@
 
 - (void)show:(UIView *)parentView {
     [parentView addSubview:self];
+    [self mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(parentView);
+    }];
     [self initVars];
     [self traceRealtorEvaluatePopupShow];
 }
