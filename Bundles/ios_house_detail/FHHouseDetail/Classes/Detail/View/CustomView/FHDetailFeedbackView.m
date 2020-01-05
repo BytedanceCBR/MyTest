@@ -80,8 +80,10 @@
 
 @property(nonatomic, strong) NSMutableArray *selections;
 @property(nonatomic, assign) BOOL *hasShowInputView;
+@property(nonatomic, assign) BOOL *addKeyboradCallback;
 @property(nonatomic, strong) NSMutableArray *selectionedArray;
 @property(nonatomic, assign) NSInteger selectStar;
+
 
 @end
 
@@ -111,8 +113,7 @@
     if (self) {
         [self initViews];
         [self initConstaints];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeNotifiction:) name:UIKeyboardWillChangeFrameNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
+        _addKeyboradCallback = NO;
         [self resetViewState];
     }
     return self;
@@ -282,6 +283,13 @@
 
 - (void)showInputView {
     self.hasShowInputView = YES;
+
+    if (!_addKeyboradCallback) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeNotifiction:) name:UIKeyboardWillChangeFrameNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
+    }
+
+    _addKeyboradCallback = YES;
 
     [self.starBtn3 mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.dividerView.mas_bottom).offset(20);
