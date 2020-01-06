@@ -36,6 +36,7 @@
 #import "FHBaseViewController.h"
 #import "TTUIResponderHelper.h"
 #import "UIViewController+TTMovieUtil.h"
+#import "FHIntroduceManager.h"
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
@@ -102,7 +103,10 @@ static APNsManager *_sharedManager = nil;
 
 - (void)handleRemoteNotification:(NSDictionary *)userInfo
 {
-    
+    //当push进来引导页已经在显示了，则关闭
+    if([FHIntroduceManager sharedInstance].isShowing){
+        [[FHIntroduceManager sharedInstance] hideIntroduceView];
+    }
     //news_notification_view埋点，用户在后台点击推送时上报，如果有rid则上报rid
     NSString *rid = [userInfo tt_stringValueForKey:@"rid"];
     NSString *postBack = [userInfo tt_stringValueForKey:@"post_back"];
@@ -187,6 +191,8 @@ static APNsManager *_sharedManager = nil;
             [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
 
             if ([[handledOpenURL host] isEqualToString:@"main"]) {
+                NSString * str = [openURL stringByAppendingString:@"&needToRoot=0"];
+                handledOpenURL = [TTStringHelper URLWithURLString:str];
                 [[TTRoute sharedRoute] openURL:handledOpenURL userInfo:nil objHandler:nil];
 //                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:handledOpenURL];
 //                NSDictionary* params = [obj queryParams];
