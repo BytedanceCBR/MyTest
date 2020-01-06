@@ -116,6 +116,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         NSString *defaultTabName = [FHEnvContext defaultTabName];
                         if ([FHEnvContext isUGCOpen] && [FHEnvContext isUGCAdUser]) {
                             [[FHEnvContext sharedInstance] jumpUGCTab];
+
                         }else if(defaultTabName.length > 0){
                             [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
                         }else{
@@ -326,7 +327,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
  */
 + (BOOL)isCurrentCityNormalOpen
 {
-    return [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue;
+    NSNumber *isOpen = [FHUtils contentForKey:kFHCityIsOpenKey];
+    if ([isOpen isKindOfClass:[NSNumber class]] && isOpen.boolValue) {
+        return YES;
+    }
+    return NO;
 }
 
 /*
@@ -420,18 +425,19 @@ static NSInteger kGetLightRequestRetryCount = 3;
 + (void)showRedPointForNoUgc
 {
     if(![self isUGCOpen]){
-        if([FHEnvContext sharedInstance].hasShowDots){
-            //显示过
-            if([FHEnvContext sharedInstance].isShowDots){
-                [self showFindTabRedDots];
-            }else{
-                [self hideFindTabRedDots];
-            }
-        }else{
-            //没显示过
-            [self showFindTabRedDotsLimitCount];
-            [FHEnvContext sharedInstance].hasShowDots = YES;
-        }
+//        if([FHEnvContext sharedInstance].hasShowDots){
+//            //显示过
+//            if([FHEnvContext sharedInstance].isShowDots){
+//                [self showFindTabRedDots];
+//            }else{
+//                [self hideFindTabRedDots];
+//            }
+//        }else{
+//            //没显示过
+//            [self showFindTabRedDotsLimitCount];
+//            [FHEnvContext sharedInstance].hasShowDots = YES;
+//        }
+        [self hideFindTabRedDots];
     }
 }
 
@@ -788,8 +794,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
         if ([self isUGCOpen]) {
             [tabItem setTitle:@"邻里"];
         }else{
-            [tabItem setTitle:@"发现"];
+            [tabItem setTitle:@"找房"];
         }
+    }
+    
+    if ([self isUGCOpen]) {
+        [tabItem setNormalImage:[UIImage imageNamed:@"tab-ugc"] highlightedImage:[UIImage imageNamed:@"tab-ugc_press"] loadingImage:nil];
+    }else{
+        [tabItem setNormalImage:[UIImage imageNamed:@"tab-search"] highlightedImage:[UIImage imageNamed:@"tab-search_press"] loadingImage:nil];
     }
 }
 

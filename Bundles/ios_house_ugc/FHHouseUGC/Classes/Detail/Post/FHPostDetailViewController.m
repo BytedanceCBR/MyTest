@@ -21,6 +21,7 @@
 #import <TTBusinessManager+StringUtils.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHUGCShareManager.h"
+#import <UIImage+FIconFont.h>
 
 @interface FHPostDetailViewController ()
 
@@ -216,6 +217,10 @@
     self.naviHeaderView.hidden = YES;
     self.followButton.hidden = YES;
     self.shareButton.hidden = NO;
+    
+    UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
+    [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
 }
 
 - (void)startLoadData {

@@ -48,7 +48,7 @@
     [self addSubview:_nameLabel];
     
     self.iconView = [[UIImageView alloc] init];
-    _iconView.backgroundColor = [UIColor themeGray7];
+    _iconView.backgroundColor = [UIColor clearColor];
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:_imageName] placeholder:nil];
     _iconView.contentMode = UIViewContentModeScaleAspectFit;
     [self addSubview:_iconView];

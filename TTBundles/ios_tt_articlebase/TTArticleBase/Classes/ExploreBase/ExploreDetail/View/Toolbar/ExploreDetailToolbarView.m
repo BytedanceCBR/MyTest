@@ -22,6 +22,8 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import <UIImage+FIconFont.h>
+#import <UIColor+Theme.h>
 
 @interface ExploreDetailToolbarView ()
 
@@ -471,10 +473,17 @@
 
 - (void)setViewStyle:(TTDetailViewStyle)viewStyle {
     _viewStyle = viewStyle;
+    
+    UIImage *input_emoji = ICON_FONT_IMG(24, @"\U0000e651", [UIColor themeGray1]);
+    UIImage *tab_comment = ICON_FONT_IMG(24, @"\U0000e699", [UIColor themeGray1]);
+    UIImage *tab_collect = ICON_FONT_IMG(24, @"\U0000e696", [UIColor themeGray1]);
+    UIImage *tab_collect_press = ICON_FONT_IMG(24, @"\U0000e6b2", [UIColor themeOrange4]);
+    UIImage *tab_share = ICON_FONT_IMG(24, @"\U0000e692", [UIColor themeGray1]);
+    
     if (viewStyle == TTDetailViewStyleLightContent) {
         self.backgroundColorThemeKey = nil;
         self.backgroundColor = [UIColor clearColor];
-
+        
         _emojiButton.imageName = @"input_emoji";
         _commentButton.imageName = @"icon_details_comment";
         [_commentButton setTintColor:[UIColor whiteColor]];
@@ -512,11 +521,12 @@
     else if (viewStyle == TTDetailViewStyleDarkContent || viewStyle == TTDetailViewStyleArticleComment) {
         self.backgroundColorThemeKey = kColorBackground4;
 
-        _emojiButton.imageName = @"input_emoji";
-        _commentButton.imageName = @"tab_comment";
-        _collectButton.imageName = @"tab_collect";
-        _collectButton.selectedImageName = @"tab_collect_press";
-        _shareButton.imageName = [self _shareIconName];
+        [_emojiButton setImage:input_emoji forState:UIControlStateNormal];
+        [_commentButton setImage:tab_comment forState:UIControlStateNormal];
+        [_collectButton setImage:tab_collect forState:UIControlStateNormal];
+        [_collectButton setImage:tab_collect_press forState:UIControlStateSelected];
+        [_shareButton setImage:tab_share forState:UIControlStateNormal];
+        
         _writeButton.borderColors = nil;
         _writeButton.borderColorThemeKey = @"grey6";
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
@@ -529,10 +539,11 @@
         _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
     }
     else if (viewStyle == TTDetailViewStylePhotoComment) {
-        _emojiButton.imageName = @"input_emoji";
-        _commentButton.imageName = @"icon_details_comment";
-        _collectButton.imageName = @"icon_details_collect";
-        _shareButton.imageName = [self _photoShareIconName];
+        
+        [_emojiButton setImage:input_emoji forState:UIControlStateNormal];
+        [_commentButton setImage:tab_comment forState:UIControlStateNormal];
+        [_collectButton setImage:tab_collect forState:UIControlStateNormal];
+        [_shareButton setImage:tab_share forState:UIControlStateNormal];
         
         _writeButton.titleColorThemeKey = kColorText7;
 //        [_writeButton setImageName:@"write_new"];
@@ -552,7 +563,7 @@
     else if (viewStyle == TTDetailViewStylePhotoOnlyWriteButton) {
         self.backgroundColorThemeKey = kColorBackground4;
 
-        _emojiButton.imageName = @"input_emoji";
+        [_emojiButton setImage:input_emoji forState:UIControlStateNormal];
 
         _writeButton.borderColorThemeKey = kColorLine1;
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
@@ -567,11 +578,11 @@
     else if (viewStyle == TTDetailViewStyleCommentDetail) {
         self.backgroundColorThemeKey = kColorBackground4;
 
-        _emojiButton.imageName = @"input_emoji";
-        _digButton.imageName = @"digup_tabbar";
-        _digButton.selectedImageName = @"digup_tabbar_press";
-        _digButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
-        _shareButton.imageName = @"tab_share";
+        [_emojiButton setImage:input_emoji forState:UIControlStateNormal];
+        [_shareButton setImage:tab_share forState:UIControlStateNormal];
+        
+        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e69c", [UIColor themeGray1]) forState:UIControlStateNormal];
+        [_digButton setImage:ICON_FONT_IMG(24, @"\U0000e6b1", [UIColor themeOrange4]) forState:UIControlStateSelected];
         
         _writeButton.borderColorThemeKey = kColorLine1;
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
@@ -644,14 +655,6 @@
     _commentLabel.hidden = !toolbarLabelEnabled;
     _collectLabel.hidden = !toolbarLabelEnabled;
     _shareLabel.hidden = !toolbarLabelEnabled;
-}
-
-- (NSString *)_shareIconName {
-    return @"tab_share";
-}
-
-- (NSString *)_photoShareIconName {
-    return @"icon_details_share";
 }
 
 @end

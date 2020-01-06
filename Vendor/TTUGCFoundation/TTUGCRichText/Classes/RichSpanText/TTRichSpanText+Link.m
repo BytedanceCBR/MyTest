@@ -127,6 +127,7 @@ static char kReplaceLinksAsInactiveLinksKey;
             TTRichSpanLink *replacedLink = [[TTRichSpanLink alloc] initWithStart:start length:length link:link.link text:link.text imageInfoModels:link.imageInfoModels type:link.type flagType:link.flagType];
 
             replacedLink.userInfo = userInfo;
+            replacedLink.idStr = link.idStr;
             [replacedLinkRichSpanLinks addObject:replacedLink];
         }
     }
@@ -209,6 +210,7 @@ static char kReplaceLinksAsInactiveLinksKey;
 
             TTRichSpanLink *replacedLink = [[TTRichSpanLink alloc] initWithStart:start length:length link:link.link text:link.text imageInfoModels:link.imageInfoModels type:link.type flagType:link.flagType];
             replacedLink.userInfo = link.userInfo;
+            replacedLink.idStr = link.idStr;
             [replacedLinkRichSpanLinks addObject:replacedLink];
         }
     }

@@ -55,7 +55,7 @@
 
 
 @property(nonatomic, strong) UIImageView *houseVideoImageView;
-@property(nonatomic, strong) UIImageView *houseMainImageBackView;
+@property(nonatomic, strong) UIView *houseMainImageBackView;
 
 
 @property(nonatomic, strong) UILabel *imageTagLabel;
@@ -75,6 +75,7 @@
 @property(nonatomic, strong) UIView *bottomRecommendViewBack;//底部背景
 @property(nonatomic, strong) UIImageView *bottomIconImageView; //活动icon
 @property(nonatomic, strong) UILabel *bottomRecommendLabel; //活动title
+@property(nonatomic, strong) UIView *houseCellBackView;//背景色
 
 //@property(nonatomic, strong) UIButton *closeBtn; //x按钮
 @property(nonatomic, strong) YYLabel *trueHouseLabel; // 天眼验真
@@ -141,17 +142,21 @@
         _mainImageView.layer.cornerRadius = 4;
         _mainImageView.clipsToBounds = YES;
         _mainImageView.layer.borderWidth = 0.5;
-        _mainImageView.layer.borderColor = [UIColor themeGray6].CGColor;
+        _mainImageView.layer.borderColor = [UIColor colorWithHexString:@"e1e1e1"].CGColor;
     }
     return _mainImageView;
 }
 
--(UIImageView *)houseMainImageBackView
+-(UIView *)houseMainImageBackView
 {
     if (!_houseMainImageBackView) {
-        _houseMainImageBackView = [[UIImageView alloc]init];
-        [_houseMainImageBackView setImage:[UIImage imageNamed:@"base_house_image_back"]];
-        _houseMainImageBackView.contentMode = UIViewContentModeScaleAspectFill;
+        _houseMainImageBackView = [[UIView alloc] init];
+        _houseMainImageBackView.backgroundColor = [UIColor whiteColor];
+        CALayer * layer = _houseMainImageBackView.layer;
+        layer.shadowOffset = CGSizeMake(0, 4);
+        layer.shadowRadius = 6;
+        layer.shadowColor = [UIColor blackColor].CGColor;;
+        layer.shadowOpacity = 0.2;
     }
     return _houseMainImageBackView;
 }
@@ -274,7 +279,7 @@
 {
     if (!_priceLabel) {
         _priceLabel = [[UILabel alloc]init];
-        _priceLabel.textColor = [UIColor themeRed1];
+        _priceLabel.textColor = [UIColor themeOrange1];
         
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
@@ -320,7 +325,7 @@
 
 -(CGFloat)contentMaxWidth
 {
-    return  SCREEN_WIDTH - HOR_MARGIN * 2  - MAIN_IMG_WIDTH - INFO_TO_ICON_MARGIN; //根据UI图 直接计算出来
+    return  SCREEN_WIDTH - HOR_MARGIN * 2  - MAIN_IMG_WIDTH - INFO_TO_ICON_MARGIN - 7; //根据UI图 直接计算出来
 }
 
 -(void)initUI
@@ -334,10 +339,25 @@
         layout.alignItems = YGAlignFlexStart;
     }];
     
+    self.houseCellBackView = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.contentView addSubview:self.houseCellBackView];
+    self.houseCellBackView.hidden = YES;
+    [self.houseCellBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.position = YGPositionTypeAbsolute;
+        layout.left = YGPointValue(15);
+        layout.right = YGPointValue(15);
+        layout.width = YGPointValue(SCREEN_WIDTH - 30);
+        layout.height = YGPointValue(130);
+        layout.flexGrow = 1;
+    }];
+    [self.houseCellBackView setBackgroundColor:[UIColor whiteColor]];
+    [self.houseCellBackView.yoga markDirty];
+    
     self.leftInfoView = [[UIView alloc] init];
     [_leftInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.width = YGPointValue(MAIN_IMG_WIDTH);
+        layout.width = YGPointValue(MAIN_IMG_WIDTH + 6);
         layout.height = YGPointValue(CELL_HEIGHT);
     }];
     
@@ -351,10 +371,10 @@
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(MAIN_IIMAGE_TOP - 1);
-        layout.left = YGPointValue(-4.5);
-        layout.width = YGPointValue(MAIN_IMG_BACK_WIDTH);
-        layout.height = YGPointValue(MAIN_IMG_BACK_HEIGHT);
+        layout.top = YGPointValue(MAIN_IIMAGE_TOP + 3);
+        layout.left = YGPointValue(8.5);
+        layout.width = YGPointValue(MAIN_IMG_WIDTH - 6);
+        layout.height = YGPointValue(MAIN_IMG_HEIGHT - 6);
     }];
     
     
@@ -362,6 +382,7 @@
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
         layout.top = YGPointValue(MAIN_IIMAGE_TOP);
+        layout.left = YGPointValue(5.5);
         layout.width = YGPointValue(MAIN_IMG_WIDTH);
         layout.height = YGPointValue(MAIN_IMG_HEIGHT);
     }];
@@ -571,6 +592,27 @@
     
 }
 
+-(void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast
+{
+    self.houseCellBackView.hidden = NO;
+    [self.contentView setBackgroundColor:[UIColor themeHomeColor]];
+    if (isFirst) {
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = self.houseCellBackView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        self.houseCellBackView.layer.mask = maskLayer;
+    } else if (isLast){
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = self.houseCellBackView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        self.houseCellBackView.layer.mask = maskLayer;
+    }else
+    {
+        self.houseCellBackView.layer.mask = nil;
+    }
+}
 
 -(void)updateMainImageWithUrl:(NSString *)url
 {
@@ -599,7 +641,7 @@
         self.priceLabel.textColor = [UIColor themeGray3];
     }else
     {
-        self.priceLabel.textColor = [UIColor themeRed1];
+        self.priceLabel.textColor = [UIColor themeOrange1];
     }
     
     FHImageModel *imageModel = commonModel.images.firstObject;
@@ -675,7 +717,7 @@
         self.priceLabel.textColor = [UIColor themeGray3];
     }else
     {
-        self.priceLabel.textColor = [UIColor themeRed1];
+        self.priceLabel.textColor = [UIColor themeOrange1];
     }
     
     _priceLabel.font = [UIFont themeFontSemibold:16];

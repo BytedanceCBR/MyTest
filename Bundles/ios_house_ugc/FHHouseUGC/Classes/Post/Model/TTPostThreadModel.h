@@ -45,4 +45,10 @@
 @property (nonatomic, copy)     NSString       *social_group_id;   // 选中的小区ID
 @property (nonatomic, copy)     NSString       *social_group_name; // 选中的小区name
 
+
+// 编辑帖子报数相关
+@property (nonatomic, copy)     NSString       *enterFrom;
+@property (nonatomic, copy)     NSString       *pageType;
+@property (nonatomic, copy)     NSString       *elementFrom;
+
 @end

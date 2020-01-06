@@ -16,23 +16,11 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBase/FHCommonDefines.h>
+#import <FHEnvContext.h>
+#import <FHHouseBase/FHHomeEntranceItemView.h>
 
-#define ITEM_PER_ROW  5
-#define TOP_MARGIN_PER_ROW 10
-#define NORMAL_ICON_WIDTH  40
-#define NORMAL_NAME_HEIGHT 20
-#define NORMAL_ITEM_WIDTH  40
-#define ITEM_TAG_BASE      100
 
-@interface FHHomeEntranceItemView : UIControl
 
-@property(nonatomic , strong) UIImageView *iconView;
-@property(nonatomic , strong) UILabel *nameLabel;
-
--(instancetype)initWithFrame:(CGRect)frame iconSize:(CGSize)iconSize;
--(void)updateWithIconUrl:(NSString *)iconUrl name:(NSString *)name placeHolder:(UIImage *)placeHolder;
-
-@end
 
 @interface FHHomeEntrancesCell ()
 
@@ -45,7 +33,12 @@
 
 +(CGFloat)rowHeight
 {
-    return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+    if([[FHEnvContext sharedInstance] getConfigFromCache].mainPageBannerOpData.items.count > 0){
+        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW;
+    }else
+    {
+        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW + 10;
+    }
 }
 
 +(CGFloat)cellHeightForModel:(id)model
@@ -99,7 +92,8 @@
     if(self.itemViews.count < totalCount){
         CGSize iconSize = CGSizeMake(ceil(NORMAL_ICON_WIDTH*ratio), ceil(NORMAL_ICON_WIDTH*ratio));
         for (NSInteger i = _itemViews.count; i < totalCount; i++) {
-            FHHomeEntranceItemView *itemView = [[FHHomeEntranceItemView alloc] initWithFrame:itemFrame iconSize:iconSize];       
+            FHHomeEntranceItemView *itemView = [[FHHomeEntranceItemView alloc] initWithFrame:itemFrame iconSize:iconSize];
+            [itemView setBackgroundColor:[UIColor clearColor]];
             [itemView addTarget:self action:@selector(onItemAction:) forControlEvents:UIControlEventTouchUpInside];
             [self.itemViews addObject:itemView];
             [self.contentView addSubview:itemView];
@@ -121,8 +115,12 @@
         NSInteger row = i / countPerRow;
         NSInteger col = i % countPerRow;
         itemView.origin = CGPointMake(HOR_MARGIN+(itemFrame.size.width+margin)*col, row*[self.class rowHeight]+TOP_MARGIN_PER_ROW);
+        [itemView setBackgroundColor:[UIColor clearColor]];
         itemView.hidden = NO;
     }
+    
+    [self.contentView setBackgroundColor:[UIColor themeHomeColor]];
+    [self setBackgroundColor:[UIColor themeHomeColor]];
 }
 
 -(void)onItemAction:(FHHomeEntranceItemView *)itemView
@@ -140,32 +138,3 @@
 
 @end
 
-@implementation FHHomeEntranceItemView
-
--(instancetype)initWithFrame:(CGRect)frame iconSize:(CGSize)iconSize
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake((frame.size.width - iconSize.width)/2, 0, iconSize.width, iconSize.height)];
-        [self addSubview:_iconView];
-        
-        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, frame.size.height - 20, frame.size.width, 20)];
-        _nameLabel.font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:14] : [UIFont themeFontRegular:12];
-        _nameLabel.textColor = [UIColor themeGray1];
-        _nameLabel.textAlignment = NSTextAlignmentCenter;
-        
-        [self addSubview:_nameLabel];
-        self.clipsToBounds = NO;
-    }
-    return self;
-}
-
--(void)updateWithIconUrl:(NSString *)iconUrl name:(NSString *)name placeHolder:(UIImage *)placeHolder
-{
-    [self.iconView bd_setImageWithURL:[NSURL URLWithString:iconUrl] placeholder:placeHolder];
-    _nameLabel.text = name;
-    [_nameLabel sizeToFit];
-    _nameLabel.centerX = self.width/2;
-}
-
-@end

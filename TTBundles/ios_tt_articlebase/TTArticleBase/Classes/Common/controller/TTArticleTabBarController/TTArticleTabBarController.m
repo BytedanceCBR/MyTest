@@ -1930,8 +1930,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     
     self.autoEnterTab = YES;
     NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:tag];
-    
-    [((TTTabbar *)self.tabBar) setSelectedIndex:index];
+    TTTabbar *tab = (TTTabbar *)self.tabBar;
+    //这里加上这个判断，已经在这个tab就不在切换了 by xsm，要不然push不了新页面
+    if(tab.selectedIndex != index){
+        [((TTTabbar *)self.tabBar) setSelectedIndex:index];
+    }
 }
 
 #pragma mark -- TTInterfaceTabBarControllerProtocol

@@ -444,6 +444,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     {
         return;
     }
+    
+    if (model.data.cityAvailability) {
+        [FHUtils setContent:@(model.data.cityAvailability.enable.boolValue) forKey:kFHCityIsOpenKey];
+    }
+    
     configData.originDict = nil;
     [FHEnvContext sharedInstance].generalBizConfig.configCache = model.data;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{

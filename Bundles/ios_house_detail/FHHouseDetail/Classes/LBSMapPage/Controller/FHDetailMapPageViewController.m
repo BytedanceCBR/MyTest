@@ -26,6 +26,7 @@
 #import "FHMyMAAnnotation.h"
 #import "FHDetailMapView.h"
 #import "FHFakeInputNavbar.h"
+#import <UIImage+FIconFont.h>
 
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
@@ -145,7 +146,7 @@ static MAMapView *kFHPageMapView = nil;
 
 - (void)setUpNaviBar
 {
-    _naviBar = [[FHDetailMapPageNaviBarView alloc] initWithBackImage:[UIImage imageNamed:@"icon-return"]];
+    _naviBar = [[FHDetailMapPageNaviBarView alloc] init];
     [self.view addSubview:_naviBar];
     
     

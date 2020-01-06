@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithDownText:(NSString *)down upText:(NSString *)up isFold:(BOOL)isFold;
 @property (nonatomic, assign)   BOOL       isFold;
+@property (nonatomic, strong)   UILabel *keyLabel;
+@property (nonatomic, strong) UIImage *foldImage;
+@property (nonatomic, strong) UIImage *openImage;
 
 @end
 

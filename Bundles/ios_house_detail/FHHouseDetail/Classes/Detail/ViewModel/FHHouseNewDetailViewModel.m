@@ -334,7 +334,7 @@
         } else if ([type isEqualToString:@"1"]) {
             // 群聊
             if (self.contactViewModel) {
-                self.contactViewModel.ugcLoginType = 2;
+                self.contactViewModel.ugcLoginType = FHUGCCommunityLoginTypeTip;
                 [self.contactViewModel groupChatAction];
             }
         }
@@ -636,7 +636,6 @@
         staticMapModel.title = model.data.coreInfo.name;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.coreInfo.gaodeImage;
-        staticMapModel.useStarHeader = NO;
         staticMapModel.mapOnly = NO;
         [self.items addObject:staticMapModel];
 

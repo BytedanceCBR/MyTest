@@ -15,6 +15,7 @@
 #import "FHHouseBaseInfoModel.h"
 #import "FHNewHouseItemModel.h"
 #import "FHRentFacilitiesModel.h"
+#import "FHHouseType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -310,10 +311,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *bottomTip;
 @property (nonatomic, copy , nullable) FHImageModel *banner;
 @property (nonatomic, assign) NSInteger offset;
-
-#pragma mark todo zjing
-//@property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
-
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHSearchHouseDataModel *recommendSearchModel;
 
@@ -343,8 +340,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *bottomTip;
 @property (nonatomic, copy , nullable) FHImageModel *banner;
 @property (nonatomic, assign) NSInteger offset;
-
-#pragma mark todo zjing
 @property (nonatomic, strong , nullable) NSArray<NSDictionary *> *items;
 @property (nonatomic, strong , nullable) NSArray<FHSearchBaseItemModel *> *searchItems;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
@@ -377,6 +372,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayStatusInfo;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
+@property (nonatomic, copy , nullable) NSString *districtAreaName;
 
 @property (nonatomic, strong , nullable) NSDictionary *tracerDict;
 @property(nonatomic, weak) UIViewController *belongsVC;
@@ -400,7 +396,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *cellStyle;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
-@property (nonatomic, strong, nullable) FHHouseItemHouseExternalModel *externalInfo;
+@property (nonatomic, strong, nullable) FHHouseItemHouseExternalModel *externalInfo; // 已下线
 @property (nonatomic, strong, nullable) FHSearchHouseVRModel *vrInfo;
 @property (nonatomic, copy , nullable) FHSearchHouseDataItemsFakeReasonModel *fakeReason;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsBaseInfoMapModel *baseInfoMap ;
@@ -409,7 +405,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImage;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsRecommendReasonsModel> *recommendReasons;
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsRecommendReasonsModel> *recommendReasons;// 已下线
 @property (nonatomic, copy , nullable) NSString *displaySubtitle;
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *displayBuiltYear;
@@ -418,7 +414,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsHouseImageTagModel *houseTitleTag ;
 @property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, strong) NSArray* bottomText;
-@property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ;
+@property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ; // 先下线
 @property (nonatomic, strong , nullable) FHHouseListHouseAdvantageTagModel *advantageDescription ;
 
 @property (nonatomic, copy , nullable) NSString *id;
@@ -450,6 +446,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isRecommendCell;
 @property (nonatomic, assign) BOOL isLastCell;
+
++ (NSString *)cellIdentifierByHouseType:(FHHouseType)houseType;
 
 @end
 

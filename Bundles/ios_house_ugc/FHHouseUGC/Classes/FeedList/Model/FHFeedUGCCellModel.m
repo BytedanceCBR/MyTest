@@ -602,6 +602,8 @@
     cellModel.showLookMore = YES;
     cellModel.needLinkSpan = YES;
     cellModel.numberOfLines = 3;
+    cellModel.hasEdit = [model.hasEdit boolValue];
+    cellModel.groupSource = model.groupSource;
     //目前仅支持话题类型
     cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt), @(TTRichSpanLinkTypeLink)];
     

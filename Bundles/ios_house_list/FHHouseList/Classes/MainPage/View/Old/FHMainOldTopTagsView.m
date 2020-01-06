@@ -57,10 +57,10 @@
     }
     // 判断标签数据
     if (self.tagsFilterData) {
-        CGFloat itemWidth = (SCREEN_WIDTH - 40 - 13 * 3) / 4.0;
-        CGFloat top = 14;
-        CGFloat itemMargin = 13;
-        __block CGFloat leftOffset = 20;
+        CGFloat itemWidth = (SCREEN_WIDTH - 30 - 10 * 3) / 4.0;
+        CGFloat top = 6;
+        CGFloat itemMargin = 10;
+        __block CGFloat leftOffset = 15;
         if ([self.tagsFilterData.options isKindOfClass:[NSArray class]]) {
             NSArray *tempArray = nil;
             if (self.tagsFilterData.options.count >= 4) {
@@ -72,7 +72,7 @@
             }
             if (tempArray) {
                 [tempArray enumerateObjectsUsingBlock:^(FHSearchFilterConfigOption *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    FHMainOldTagsView *tagView = [[FHMainOldTagsView alloc] initWithFrame:CGRectMake(leftOffset, top, itemWidth, 30)];
+                    FHMainOldTagsView *tagView = [[FHMainOldTagsView alloc] initWithFrame:CGRectMake(leftOffset, top, itemWidth, 28)];
                     [self addSubview:tagView];
                     leftOffset += (itemMargin + itemWidth);
                     tagView.optionData = obj;
@@ -183,7 +183,7 @@
 
 - (void)setupUI {
     _label = [[UILabel alloc] init];
-    _label.textColor = [UIColor colorWithHexStr:@"#45494d"];
+    _label.textColor = [UIColor themeGray1];
     _label.font = [UIFont themeFontRegular:12];
     _label.textAlignment = NSTextAlignmentCenter;
     [self addSubview:_label];
@@ -202,11 +202,11 @@
 - (void)setIsSelected:(BOOL)isSelected {
     _isSelected = isSelected;
     if (isSelected) {
-        self.backgroundColor = [UIColor colorWithHexStr:@"ffeef0"];
-        _label.textColor = [UIColor colorWithHexStr:@"#ff5969"];
+        self.backgroundColor = [UIColor themeOrange2];
+        _label.textColor = [UIColor themeOrange1];
     } else {
-        self.backgroundColor = [UIColor themeGray7];
-        _label.textColor = [UIColor colorWithHexStr:@"#45494d"];
+        self.backgroundColor = [UIColor themeGray8];
+        _label.textColor = [UIColor themeGray1];
     }
 }
 

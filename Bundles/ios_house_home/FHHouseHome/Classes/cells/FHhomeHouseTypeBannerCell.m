@@ -37,6 +37,8 @@
 
 - (void)refreshData:(FHHouseType)houseType
 {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     
     if (!dataModel.opData2list || dataModel.opData2list.count == 0) {
@@ -67,7 +69,7 @@
     CGFloat scaleRatio = 0.9;
 
     CGFloat imageWidth = viewWidth * scaleRatio;
-    CGFloat imageHeight = viewWidth * 69 / 82 * scaleRatio;
+    CGFloat imageHeight = viewWidth * scaleRatio * 0.92;
     
     for (NSInteger i = 0; i < items.count; i++) {
         if (i > 3) {
@@ -92,7 +94,7 @@
         }
         
         [backImage setBackgroundColor:[UIColor whiteColor]];
-        backImage.layer.cornerRadius = 2;
+        backImage.layer.cornerRadius = 10;
         backImage.userInteractionEnabled = YES;
         backImage.layer.masksToBounds = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(houseTypeBannerClick:)];
@@ -108,9 +110,10 @@
         // 设置阴影的路径 此处效果为在view周边添加宽度为4的阴影效果
         UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(- shaderWidht, -shaderWidht, shaderBackView.frame.size.width + shaderWidht * 2, shaderBackView.frame.size.height + shaderWidht * 2)];
         shaderBackView.layer.shadowPath = path.CGPath;
-        shaderBackView.layer.shadowOffset = CGSizeMake(0, 0);
-        shaderBackView.layer.shadowColor = [UIColor themeGray3].CGColor;
-        shaderBackView.layer.shadowOpacity = 0.2;
+        shaderBackView.layer.shadowOffset = CGSizeMake(0, 4);
+        shaderBackView.layer.shadowRadius = 6;
+        shaderBackView.layer.shadowColor = [UIColor blackColor].CGColor;
+        shaderBackView.layer.shadowOpacity = 0.1;
         
         backImage.tag = i;
         [containView addSubview:shaderBackView];
@@ -122,8 +125,8 @@
             if ([tagImageModel.url isKindOfClass:[NSString class]]) {
                 [hotImage bd_setImageWithURL:[NSURL URLWithString:tagImageModel.url]];
             }
-            [hotImage setBackgroundColor:[UIColor whiteColor]];
-            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 17 : 18.5), 3.5, 21, 11)];
+            [hotImage setBackgroundColor:[UIColor clearColor]];
+            [hotImage setFrame:CGRectMake(backImage.frame.size.width - ([TTDeviceHelper isScreenWidthLarge320] ? 25.5 : 27.5), 3.5, 30, 13)];
             [containView addSubview:hotImage];
         }
         
@@ -142,9 +145,8 @@
             if(titleLabel.text.length > 5)
             {
                 [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  5, 14, backImage.frame.size.width - 10, 20)];
-            }else
-            {
-                [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  10, 14, backImage.frame.size.width - 10, 20)];
+            }else{
+                [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  8, 14, backImage.frame.size.width - 10, 20)];
             }
         }
         
@@ -154,7 +156,7 @@
         
         CGFloat titleAddLbaelWidth = 25;
         CGFloat letftPading = 0;
-        if (itemModel.title.length > 5) {
+        if (itemModel.title.length >= 5) {
             titleAddLbaelWidth = 20;
             letftPading = 5;
         }
@@ -174,12 +176,12 @@
             UILabel *titleAddLabel = [UILabel new];
             titleAddLabel.text = itemModel.addDescription;
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth  - letftPading, titleLabel.frame.origin.y + 8, titleAddLbaelWidth, 10)];
+                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth  - letftPading, titleLabel.frame.origin.y + 6, titleAddLbaelWidth, 11)];
             }else
             {
-                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth + 3 - letftPading, titleLabel.frame.origin.y + 5, titleAddLbaelWidth, 10)];
+                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth + 1 - letftPading, titleLabel.frame.origin.y + 5, titleAddLbaelWidth, 11)];
             }
-            titleAddLabel.font = [UIFont themeFontRegular:6];
+            titleAddLabel.font = [UIFont themeFontRegular:8];
             titleAddLabel.textColor = [UIColor themeGray1];
             titleAddLabel.textAlignment = 0;
             [containView addSubview:titleAddLabel];

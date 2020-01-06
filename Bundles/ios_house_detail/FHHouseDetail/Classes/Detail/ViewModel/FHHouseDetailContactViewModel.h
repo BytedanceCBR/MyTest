@@ -6,9 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FHDetailBottomBarView.h"
 #import "FHDetailNavBar.h"
 #import "FHHouseType.h"
+#import "FHDetailBottomBar.h"
 #import <FHHouseBase/FHHouseContactDefines.h>
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 
@@ -18,6 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHDetailImShareInfoModel;
 @class FHHouseContactConfigModel;
 @class FHHouseNewsSocialModel;
+
+typedef enum : NSUInteger {
+    FHUGCCommunityLoginTypeMemberTalk = 1, // 群聊按钮
+    FHUGCCommunityLoginTypeTip = 2,// 群聊引导弹窗
+} FHUGCCommunityLoginType;
 
 @interface FHHouseDetailContactViewModel : NSObject
 
@@ -33,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)     NSString       *phoneCallName;// 电话咨询 或者 询底价 名称
 @property (nonatomic, copy, nullable) NSString *customHouseId;// floor_plan_detail:floor_plan_id
 @property (nonatomic, copy, nullable) NSString *fromStr;//floor_plan_detail:app_floor_plan
+@property (nonatomic, assign) NSInteger targetType;//新房子页面电话线索新增类型
 @property (nonatomic, strong) FHDetailImShareInfoModel* imShareInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
 @property (nonatomic, copy , nullable) NSString *subTitle;
@@ -40,11 +46,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   FHHouseNewsSocialModel       *socialInfo;// 新房圈子信息
 @property (nonatomic, strong)   FHHouseContactConfigModel    *socialContactConfig;// 圈子拨打电话存储数据
 @property (nonatomic, assign)   BOOL  needRefetchSocialGroupData;// 进入下个页面返回 是否需要重新拉取圈子数据
-@property (nonatomic, assign)   NSInteger       ugcLoginType; // 1：community_member_talk(底部群聊入口), 2：community_tip(群聊引导弹窗)
+@property (nonatomic, assign)   FHUGCCommunityLoginType       ugcLoginType; // 1：community_member_talk(底部群聊入口), 2：community_tip(群聊引导弹窗)
 
 
-- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
-- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId;
+- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBar *)bottomBar;
+- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBar *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId;
 // 在线联系点击
 - (void)onlineActionWithExtraDict:(NSDictionary *)extraDict;
 // 拨打电话 + 询底价填表单

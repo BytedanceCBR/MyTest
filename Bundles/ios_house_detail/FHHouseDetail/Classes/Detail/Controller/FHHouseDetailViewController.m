@@ -8,7 +8,7 @@
 #import "FHHouseDetailViewController.h"
 #import "FHHouseDetailBaseViewModel.h"
 #import "TTReachability.h"
-#import "FHDetailBottomBarView.h"
+#import "FHOldDetailBottomBarView.h"
 #import "FHDetailNavBar.h"
 #import "TTDeviceHelper.h"
 #import "UIFont+House.h"
@@ -25,6 +25,7 @@
 #import "TTInstallIDManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHDetailQuestionButton.h"
+#import "FHDetailBottomBarView.h"
 #import "TTNavigationController.h"
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
@@ -33,7 +34,8 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UILabel *bottomStatusBar;
 @property (nonatomic, strong) UIView *bottomMaskView;
-@property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
+@property (nonatomic, strong) FHDetailBottomBar *bottomBar;
+@property (nonatomic, strong) FHDetailUGCGroupChatButton *bottomGroupChatBtn;// 新房群聊入口
 @property (nonatomic, strong) FHDetailFeedbackView *feedbackView;
 @property(nonatomic , strong) FHDetailQuestionButton *questionBtn;
 
@@ -125,6 +127,7 @@
         }else {
             [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_schema_error" metric:nil category:@{@"status":@(0)} extra:nil];
         }
+        
         
         self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
     }
@@ -274,10 +277,20 @@
     _bottomMaskView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_bottomMaskView];
     
-    _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    if (_houseType == FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeNewHouse) {
+        _bottomBar = [[FHOldDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    }else {
+         _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    }
+    
     [self.view addSubview:_bottomBar];
     self.viewModel.bottomBar = _bottomBar;
     _bottomBar.hidden = YES;
+    
+    self.bottomGroupChatBtn = [[FHDetailUGCGroupChatButton alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:_bottomGroupChatBtn];
+    self.bottomBar.bottomGroupChatBtn = _bottomGroupChatBtn;// 这样子改动最小
+    _bottomGroupChatBtn.hidden = YES;
     
     _bottomStatusBar = [[UILabel alloc]init];
     _bottomStatusBar.textAlignment = NSTextAlignmentCenter;
@@ -305,7 +318,7 @@
     [self.questionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-20);
         make.height.mas_equalTo(40);
-        make.bottom.mas_equalTo(self.view).mas_offset(-80 - bottomMargin);
+        make.bottom.mas_equalTo(self.view).mas_offset(-100 - bottomMargin);
     }];
     
     [self addDefaultEmptyViewFullScreen];
@@ -316,7 +329,7 @@
     }];
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(64);
+        make.height.mas_equalTo(_houseType ==FHHouseTypeSecondHandHouse? 80:64);
         if (@available(iOS 11.0, *)) {
             make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
         }else {
@@ -332,6 +345,12 @@
     [_bottomMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.bottomBar.mas_top);
         make.left.right.bottom.mas_equalTo(self.view);
+    }];
+    
+    [_bottomGroupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(26);
+        make.right.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.bottomBar.mas_top).offset(-16);
     }];
     
     [self.view bringSubviewToFront:_navBar];
@@ -569,7 +588,7 @@
     _tableView.estimatedSectionHeaderHeight = 0;
 }
 
--(void)tapAction:(id)tap {
+- (void)tapAction:(id)tap {
     [_tableView endEditing:YES];
 }
 
@@ -706,7 +725,7 @@
 - (FHDetailFeedbackView *)feedbackView {
     if (!_feedbackView) {
         __weak typeof(self) wself = self;
-        _feedbackView = [[FHDetailFeedbackView alloc] initWithFrame:self.view.bounds];
+        _feedbackView = [[FHDetailFeedbackView alloc] initWithFrame:UIScreen.mainScreen.bounds];
         _feedbackView.navVC = self.navigationController;
         _feedbackView.viewModel = self.viewModel;
     }

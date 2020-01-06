@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)   UILabel       *label;
 
+
+@property (nonatomic, strong)   UILabel       *loadMore;
+
 @property (nonatomic, assign)   BOOL       isShowLoadMore;
 
 @end
