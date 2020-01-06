@@ -604,7 +604,7 @@ static NSString * const TTRichSpansKeyImageList = @"image_list";
         NSData *richSpanTextData = [base64String base64DecodedData];
         TTRichSpanText *richSpanText = [NSKeyedUnarchiver unarchiveObjectWithData:richSpanTextData];
         self.text = richSpanText.text;
-        self.richSpans = richSpanText.richSpans;
+        self.richSpans = richSpanText.richSpans?:[[TTRichSpans alloc] initWithRichSpanLinks:@[] imageInfoModelsDict:@{}];
     }
     return self;
 }
