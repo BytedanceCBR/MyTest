@@ -47,6 +47,9 @@
     TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:controller];
     
     [UIApplication sharedApplication].delegate.window.rootViewController = navigationController;
+    
+    [[FHEnvContext sharedInstance] pauseForPermissionProtocol];
+    
 }
 
 -(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

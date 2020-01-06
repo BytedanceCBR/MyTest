@@ -278,6 +278,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)userConfirmedPermssionProtocol;
 
+-(void)pauseForPermissionProtocol;
+
+-(void)resumeForPermissionProtocl;
+
 @end
+
 
 NS_ASSUME_NONNULL_END

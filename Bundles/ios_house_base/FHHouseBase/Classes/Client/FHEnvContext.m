@@ -36,6 +36,7 @@
 #import <FHIntroduceManager.h>
 #import <TTSettingsManager.h>
 #import <NSDictionary+TTAdditions.h>
+#import <TTLocationManager/TTLocationManager.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -45,7 +46,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
 @property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
-
+@property (atomic ,   assign) BOOL inPasueFOrPermission;
 @end
 
 @implementation FHEnvContext
@@ -1068,6 +1069,37 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION object:nil];
     
+    [self resumeForPermissionProtocl];
+    
+}
+
+-(void)pauseForPermissionProtocol
+{
+    if (self.inPasueFOrPermission) {
+        return;
+    }
+    self.inPasueFOrPermission = YES;
+    TTLocationManager *locationManager = [TTLocationManager sharedManager];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:locationManager name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+-(void)resumeForPermissionProtocl
+{
+    if (!self.inPasueFOrPermission) {
+        return;
+    }
+    
+    self.inPasueFOrPermission = NO;
+    
+    TTLocationManager *locationManager = [TTLocationManager sharedManager];
+    if ([locationManager respondsToSelector:@selector(applicationWillEnterForeground:)]) {
+        [[NSNotificationCenter defaultCenter] addObserver:locationManager
+                                                 selector:@selector(applicationWillEnterForeground:)
+                                                     name:UIApplicationWillEnterForegroundNotification
+                                                   object:nil];
+    }
+
 }
 
 @end

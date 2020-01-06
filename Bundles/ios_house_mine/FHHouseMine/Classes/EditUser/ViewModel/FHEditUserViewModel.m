@@ -22,6 +22,7 @@
 #import <FHCommonApi.h>
 #import "FHUserInfoManager.h"
 #import "FHHomePageSettingController.h"
+#import <AssetsLibrary/ALAssetsLibrary.h>
 
 @interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate,FHEditUserBaseCellDelegate,FHHomePageSettingControllerDelegate>
 
@@ -212,6 +213,18 @@
 }
 
 - (void)changeAvatar {
+    
+    ALAuthorizationStatus photoAuthStatus = [ALAssetsLibrary authorizationStatus];
+    if (photoAuthStatus == ALAuthorizationStatusDenied) {
+        NSString *msg = @"请在手机的「设置-隐私-照片」选项中，允许幸福里访问你的相册";
+        [self showAlertWithTitle:@"无访问权限" msg:msg callback:nil];
+        return ;
+    } else if (photoAuthStatus == ALAuthorizationStatusRestricted) {
+        NSString *msg = @"请在手机的「设置-通用-访问限制」选项中，允许访问相册";
+        [self showAlertWithTitle:@"无访问权限" msg:msg callback:nil];
+        return;
+    }
+    
     UIActionSheet      *actionSheet = nil;
     NSArray<NSNumber*> *imageSourceTypes = nil;
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -244,6 +257,13 @@
     wrapperTrackEvent(@"edit_profile", @"account_setting_avatar");
 }
 
+- (void)showAlertWithTitle:(NSString *)title msg:(NSString *)msg callback:(void(^)(void))callback
+{
+    TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:title message:msg preferredType:TTThemedAlertControllerTypeAlert];
+    [alert addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeCancel actionBlock:callback];
+    [alert showFrom:self.viewController animated:YES];
+}
+
 #pragma mark - pick image and upload image
 
 - (void)imagePickerWithSource:(UIImagePickerControllerSourceType)sourceType forAvatar:(BOOL)bAvatar {
@@ -251,6 +271,13 @@
     UIImagePickerControllerDidFinishBlock completionCallback = ^(UIImagePickerController *picker, NSDictionary *info) {
         __strong typeof(wself) sself = wself;
         [picker dismissViewControllerAnimated:YES completion:NULL];
+        ALAuthorizationStatus photoAuthStatus = [ALAssetsLibrary authorizationStatus];
+        if (photoAuthStatus == ALAuthorizationStatusDenied) {
+            NSString *msg = @"请在手机的「设置-隐私-照片」选项中，允许幸福里访问你的相册";
+            [self showAlertWithTitle:@"无访问权限" msg:msg callback:nil];
+            return ;
+        }
+        
         // iOS 9 的系统 bug，在 iPad 不能选取图片显示区域，系统自动给截了左上角区域；
         // workaround : iPad 暂时先取 `UIImagePickerControllerOriginalImage` (会导致图片挤压变形).
         NSString *imageType = UIImagePickerControllerEditedImage;
