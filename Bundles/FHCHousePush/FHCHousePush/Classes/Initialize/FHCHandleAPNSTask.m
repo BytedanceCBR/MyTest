@@ -33,6 +33,7 @@
 #import <TTAppRuntime/TTProjectLogicManager.h>
 #import "TTLaunchDefine.h"
 #import <HMDTTMonitor.h>
+#import <FHIntroduceManager.h>
 
 DEC_TASK_N(FHCHandleAPNSTask,FHTaskTypeSerial,TASK_PRIORITY_HIGH+12);
 
@@ -259,13 +260,13 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
         [dict setValue:[userInfo tt_stringValueForKey:@"attachment"]
                 forKey:kSSAPNsAlertManagerAttachmentKey];
         
-        //        //如果有开屏广告正在显示 就滞后显示推送弹窗
+        //        //如果有开屏广告正在显示 就滞后显示推送弹窗, 增加一个引导页显示的条件 by xsm
         //        if(![[SSADManager shareInstance] isSplashADShowed]) {
         //            [[SSAPNsAlertManager sharedManager] showRemoteNotificationAlert:dict];
         //        } else {
         //            [[self class] setRemoteNotificationDict:dict];
         //        }
-        if (![[TTAdSplashMediator shareInstance] isAdShowing]) {
+        if (![[TTAdSplashMediator shareInstance] isAdShowing] && ![FHIntroduceManager sharedInstance].isShowing) {
 //#undef NSLog
 //            NSLog(@"add by zjing for test---notification:%@",userInfo);
             

@@ -13,6 +13,7 @@
 #import <ReactiveObjC.h>
 #import "FHUserTracker.h"
 #import <TTAccount.h>
+#import <FHBubbleTipManager.h>
 
 @interface FHUGCVotePublishViewController()
 
@@ -31,9 +32,8 @@
 @property (nonatomic, copy) NSString *selectGroupId;
 @property (nonatomic, copy) NSString *selectGroupName;
 @property (nonatomic, assign) BOOL isSelectectGroupFollowed;
-
-
 @property (nonatomic, weak) UIView *firstResponderView;
+@property (nonatomic, assign) BOOL  lastCanShowMessageTip;
 @end
 
 @implementation FHUGCVotePublishViewController
@@ -51,6 +51,11 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
+    
+    // 禁止在发布器页面弹出IM顶部消息弹窗
+    self.lastCanShowMessageTip = [FHBubbleTipManager shareInstance].canShowTip;
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
+    
     // 配置导航条
     [self configNavigation];
     // 添加ScrollView
@@ -63,6 +68,10 @@
     }
     // 注册通知
     [self registerNotification];
+}
+
+-(void)dealloc {
+    [FHBubbleTipManager shareInstance].canShowTip = self.lastCanShowMessageTip;
 }
 
 - (void)registerNotification {

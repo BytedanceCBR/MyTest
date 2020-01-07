@@ -139,14 +139,17 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
 
-    [self presentAlertSpringLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-        if (type == TTAccountAlertCompletionEventTypeDone) {
-            // 登录成功
-            if ([TTAccountManager isLogin]) {
-                [wSelf taskFinished];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self presentAlertSpringLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    [wSelf taskFinished];
+                }
             }
-        }
-    }];
+        }];
+        self.url = nil;
+    });
 }
 
 - (void)presentAlertSpringLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginAlertPhoneInputCompletionBlock)complete {

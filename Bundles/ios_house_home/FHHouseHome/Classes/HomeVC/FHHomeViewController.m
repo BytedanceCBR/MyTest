@@ -38,8 +38,8 @@
 #import "FHHomeBaseScrollView.h"
 #import <FHHomeMainViewController.h>
 #import <FHHouseBase/FHHomeScrollBannerView.h>
-#import <FHMinisdkManager.h>
-#import "FHSpringHangView.h"
+//#import <FHMinisdkManager.h>
+//#import "FHSpringHangView.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -60,7 +60,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
 //春节活动运营位
-@property (nonatomic, strong) FHSpringHangView *springView;
+//@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -111,25 +111,25 @@ static CGFloat const kSectionHeaderHeight = 38;
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
-- (void)addSpringView {
-    if(!_springView){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
-        [self.view addSubview:_springView];
-        _springView.hidden = YES;
-        
-        CGFloat bottom = 49;
-        if (@available(iOS 11.0 , *)) {
-            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-        }
-        
-        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(84);
-            make.height.mas_equalTo(79);
-            make.right.mas_equalTo(self.view).offset(-11);
-        }];
-    }
-}
+//- (void)addSpringView {
+//    if(!_springView){
+//        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
+//        [self.view addSubview:_springView];
+//        _springView.hidden = YES;
+//        
+//        CGFloat bottom = 49;
+//        if (@available(iOS 11.0 , *)) {
+//            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+//        }
+//        
+//        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
+//            make.width.mas_equalTo(84);
+//            make.height.mas_equalTo(79);
+//            make.right.mas_equalTo(self.view).offset(-11);
+//        }];
+//    }
+//}
 
 - (void)scrollMainTableToTop
 {
@@ -383,7 +383,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 
     //春节活动
-    [[FHMinisdkManager sharedInstance] goSpring];
+//    [[FHMinisdkManager sharedInstance] goSpring];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -403,11 +403,11 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
+//    //春节活动运营位
+//    if([FHEnvContext isSpringHangOpen]){
+//        [self addSpringView];
+//        [self.springView show:[FHEnvContext enterTabLogName]];
+//    }
     
     //开屏广告启动不会展示，保留逻辑代码
     if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
@@ -521,11 +521,11 @@ static CGFloat const kSectionHeaderHeight = 38;
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
     
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
+//    //春节活动运营位
+//    if([FHEnvContext isSpringHangOpen]){
+//        [self addSpringView];
+//        [self.springView show:[FHEnvContext enterTabLogName]];
+//    }
 }
 
 - (void)dealloc
