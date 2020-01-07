@@ -18,7 +18,7 @@
 
 @property (nonatomic, strong) TTAssetModel *assetModel;
 
-@property (nonatomic, assign) iCloudSyncStatus status;
+@property (nonatomic, assign) FHiCloudSyncStatus status;
 
 @property (nonatomic, strong) NSString *preCompressFilePath; //压缩前本地存储
 

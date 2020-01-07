@@ -50,6 +50,7 @@
 #import "NSString+UGCUtils.h"
 #import "FHTopicHeaderModel.h"
 #import "FHTopicListModel.h"
+#import "SSAPNsAlertManager.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
