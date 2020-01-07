@@ -286,13 +286,13 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 - (void)setFocusTimerState {
     //关注列表有数据，才会触发小红点逻辑
     if([FHEnvContext isUGCOpen]){
-        if(self.followList.count > 0){
+//        if(self.followList.count > 0){
             [self setHasNewTimerInteralAndGetNewFirstTime];
-        }else{
-            [self stopTimer];
-            self.ugcFocusHasNew = NO;
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
-        }
+//        }else{
+//            [self stopTimer];
+//            self.ugcFocusHasNew = NO;
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
+//        }
     }else{
         [self stopTimer];
     }
