@@ -428,6 +428,11 @@ static NSTimeInterval lastTime;
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [[FHEnvContext sharedInstance] addOpenUrlItem:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+        return YES;
+    }
+    
     WeakSelf;
     [TTLaunchOrientationHelper executeBlockAfterStatusbarOrientationNormal:^{
         StrongSelf;
@@ -509,6 +514,11 @@ static NSTimeInterval lastTime;
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [[FHEnvContext sharedInstance] addRemoteNotification:application userInfo:userInfo];
+        return ;
+    }
+    
     WeakSelf;
     [TTLaunchOrientationHelper executeBlockAfterStatusbarOrientationNormal:^{
         StrongSelf;
@@ -565,6 +575,12 @@ static NSTimeInterval lastTime;
 #endif
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler {
+    
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [[FHEnvContext sharedInstance] addContinueActivity:application activity:userActivity restorationHandler:restorationHandler];
+        return YES;
+    }
+    
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     for(TTStartupTask *task in self.residentTasks) {

@@ -282,6 +282,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)resumeForPermissionProtocl;
 
+-(void)addOpenUrlItem:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation;
+
+-(void)addContinueActivity:(UIApplication *)application activity:(NSUserActivity *)activity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler;
+
+-(void)addRemoteNotification:(UIApplication *)application userInfo:(NSDictionary *)userInfo;
+
 @end
 
 

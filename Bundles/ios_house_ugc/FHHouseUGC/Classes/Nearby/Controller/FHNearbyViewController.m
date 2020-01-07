@@ -165,7 +165,7 @@
     __weak typeof(self) wself = self;
     self.needRefresh = NO;
     [self trackLocationAuthShow];
-    self.alertVC = [[TTThemedAlertController alloc] initWithTitle:@"你还没有开启定位服务哦" message:@"请在手机设置中开启定位服务，获取更多周边小区趣事" preferredType:TTThemedAlertControllerTypeAlert];
+    self.alertVC = [[TTThemedAlertController alloc] initWithTitle:@"您还没有开启定位权限" message:@"请前往系统设置开启，以便我们更好地为您推荐房源及丰富信息推荐维度" preferredType:TTThemedAlertControllerTypeAlert];
     [_alertVC addActionWithGrayTitle:@"我知道了" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
         [wself trackLocationAuthClick:YES];
         wself.needRefresh = YES;
