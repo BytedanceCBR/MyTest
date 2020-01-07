@@ -155,12 +155,14 @@
     }
 }
 
-- (void)changeMyJoinTab {
-    self.currentTabIndex = 0;
-    [self initCell:@"default"];
-
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.currentTabIndex inSection:0];
-    [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+- (void)changeTab:(NSInteger)index {
+    if(index < self.dataArray.count){
+        self.currentTabIndex = index;
+        [self initCell:@"default"];
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.currentTabIndex inSection:0];
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+    }
 }
 
 

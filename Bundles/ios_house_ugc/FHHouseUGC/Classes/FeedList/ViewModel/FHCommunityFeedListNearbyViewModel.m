@@ -28,6 +28,7 @@
 #import <TTVPlayVideo.h>
 #import <TTVFeedCellWillDisplayContext.h>
 #import <TTVFeedCellAction.h>
+#import "TTUGCDefine.h"
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
@@ -43,10 +44,10 @@
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
+        // 发帖成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
-        // 举报成功
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
         // 编辑成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
     }
@@ -339,6 +340,53 @@
             [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }
     }
+}
+
+// 发帖成功，插入数据
+- (void)postThreadSuccess:(NSNotification *)noti {
+    FHFeedUGCCellModel *cellModel = noti.userInfo[@"cell_model"];
+    if(cellModel) {
+        [self insertPostData:cellModel];
+    }
+}
+// 发帖和发投票后插入逻辑
+- (void)insertPostData:(FHFeedUGCCellModel *)cellModel {
+    if (cellModel == nil) {
+        return;
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (cellModel) {
+            //去重逻辑
+            [self removeDuplicaionModel:cellModel.groupId];
+            
+            // JOKER: 找到第一个非置顶贴的下标
+            __block NSUInteger index = self.dataList.count;
+            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
+                
+                //这里的只是针对附近的tab，而且后面的类型根据实际需求改变
+                if(!isStickTop && cellModel.cellType != FHUGCFeedListCellTypeUGCHotTopic) {
+                    index = idx;
+                    *stop = YES;
+                }
+            }];
+            // 插入在置顶贴的下方
+            [self.dataList insertObject:cellModel atIndex:index];
+            [self.tableView reloadData];
+            [self.tableView layoutIfNeeded];
+            self.needRefreshCell = NO;
+            // JOKER: 发贴成功插入贴子后，滚动使露出
+            if(index <= 1) {
+                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+            } else {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+                [self.tableView setContentOffset:rect.origin
+                                        animated:YES];
+            }
+        }
+    });
 }
 
 - (void)postDeleteSuccess:(NSNotification *)noti {
