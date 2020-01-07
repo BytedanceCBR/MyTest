@@ -311,10 +311,10 @@
         _contentTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
         _contentTextView.internalGrowingTextView.font = [UIFont themeFontRegular:_contentTextView.textViewFontSize];
         _contentTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
-        _contentTextView.internalGrowingTextView.minNumberOfLines = 1;
-        _contentTextView.internalGrowingTextView.maxNumberOfLines = 10;
         _contentTextView.internalGrowingTextView.minHeight = TITLE_TEXTVIEW_MIN_HEIGHT;
         _contentTextView.internalGrowingTextView.maxHeight = CGFLOAT_MAX;
+        _contentTextView.internalGrowingTextView.minNumberOfLines = 1;
+        _contentTextView.internalGrowingTextView.maxNumberOfLines = 10;
     }
     return _contentTextView;
 }
@@ -396,10 +396,11 @@
         _contentTextView.internalGrowingTextView.placeholderColor = [UIColor themeGray3];
         _contentTextView.internalGrowingTextView.font = [UIFont themeFontRegular:_contentTextView.textViewFontSize];
         _contentTextView.internalGrowingTextView.tintColor = [UIColor themeRed1];
-        _contentTextView.internalGrowingTextView.minNumberOfLines = 1;
-        _contentTextView.internalGrowingTextView.maxNumberOfLines = 10;
         _contentTextView.internalGrowingTextView.minHeight = DESC_TEXTVIEW_MIN_HEIGHT;
         _contentTextView.internalGrowingTextView.maxHeight = CGFLOAT_MAX;
+        _contentTextView.internalGrowingTextView.minNumberOfLines = 1;
+        _contentTextView.internalGrowingTextView.maxNumberOfLines = 10;
+
     }
     return _contentTextView;
 }
