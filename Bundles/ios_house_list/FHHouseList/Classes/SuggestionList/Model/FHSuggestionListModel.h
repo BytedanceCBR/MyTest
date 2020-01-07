@@ -64,6 +64,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, strong , nullable) FHSuggestionResponseDataLogPbModel *logPb ;
 @property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, copy , nullable) NSString *oldName;
+@property (nonatomic, copy , nullable) NSString *tag;
+@property (nonatomic, copy , nullable) NSString *tag2;
+@property (nonatomic, copy , nullable) NSString *recallType;
 @property (nonatomic, copy , nullable) NSString *tips2;
 @property (nonatomic, copy , nullable) NSString *text2;
 @property (nonatomic, copy , nullable) NSString *score;

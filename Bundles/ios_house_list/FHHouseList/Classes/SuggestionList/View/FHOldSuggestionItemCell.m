@@ -103,7 +103,7 @@
     if (!_subTitleLab) {
         UILabel *subTitleLab = [[UILabel alloc]init];
         subTitleLab.textColor = [UIColor themeGray1];
-        subTitleLab.font = [UIFont themeFontSemibold:14];
+        subTitleLab.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:subTitleLab];
         _subTitleLab = subTitleLab;
     }
@@ -114,7 +114,7 @@
     if (!_regionLab) {
         UILabel *regionLab = [[UILabel alloc]init];
         regionLab.textColor = [UIColor themeGray3];
-        regionLab.font = [UIFont themeFontSemibold:14];
+        regionLab.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:regionLab];
         _regionLab = regionLab;
     }
@@ -125,7 +125,7 @@
     if (!_villageLab) {
         UILabel *villageLab = [[UILabel alloc]init];
         villageLab.textColor = [UIColor themeGray3];
-        villageLab.font = [UIFont themeFontSemibold:14];
+        villageLab.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:villageLab];
         _villageLab = villageLab;
     }
@@ -136,7 +136,7 @@
     if (!_amountLab) {
         UILabel *amountLab = [[UILabel alloc]init];
         amountLab.textColor = [UIColor themeGray1];
-        amountLab.font = [UIFont themeFontSemibold:14];
+        amountLab.font = [UIFont themeFontRegular:14];
         amountLab.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:amountLab];
         _amountLab = amountLab;
@@ -147,20 +147,23 @@
 - (void)setModel:(FHSuggestionResponseDataModel *)model {
     if (model) {
         _model = model;
-        NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:16.0];
-        NSAttributedString *text2 = [self processHighlightedDefault:model.text2 textColor:[UIColor themeGray3] fontSize:14.0];
-        
-        self.titleLab.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1] fontSize:16.0];
-        self.subTitleLab.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1] fontSize:14.0];
-//
+        NSAttributedString *text1 = [self processHighlightedDefault:model.name textColor:[UIColor themeGray1] fontSize:16.0];
+        self.titleLab.attributedText = [self processHighlighted:text1 originText:model.name textColor:[UIColor themeOrange1] fontSize:16.0];
+        self.subTitleLab.text = model.oldName;
+        self.zoneTypeLab.text = model.recallType;
+            CGFloat zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
+        [self.zoneTypeView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_offset(zoneTypeLabWidth+12);
+        }];
+        self.regionLab.text = model.tag;
+        self.villageLab.text = model.tag2;
         self.amountLab.text = model.tips;
-//        self.villageLab.text = model.tips2;
     }
 }
 
 // 1、默认
 - (NSAttributedString *)processHighlightedDefault:(NSString *)text textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
-    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};
+    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontSemibold:fontSize],NSForegroundColorAttributeName:textColor};
     NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
     
     return attrStr;
@@ -178,7 +181,7 @@
 // 3、高亮
 - (NSAttributedString *)processHighlighted:(NSAttributedString *)text originText:(NSString *)originText textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
     if (self.highlightedText.length > 0) {
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontSemibold:fontSize],NSForegroundColorAttributeName:textColor};
         NSMutableAttributedString * tempAttr = [[NSMutableAttributedString alloc] initWithAttributedString:text];
         
         NSMutableString *string = [NSMutableString stringWithString:self.highlightedText];
