@@ -83,6 +83,9 @@
 #import "BDUGDeepLinkManager.h"
 #import <Heimdallr/HMDTTMonitor.h>
 
+#if INHOUSE
+#import "TTStartupDebugGroup.h"
+#endif
 ///...
 //#import "TVLManager.h"
 
@@ -259,6 +262,10 @@ static NSTimeInterval lastTime;
 //#ifdef DEBUG
 //    [self didFinishDebugLaunchingForApplication:application WithOptions:launchOptions];
 //#endif
+    
+#if INHOUSE
+    [TTStartupDebugGroup checkShouldSimulateStartCrash];
+#endif
     
     uint64_t mainEndTime = [NSObject currentUnixTime];
     dispatch_barrier_sync(self.barrierQueue, ^{
