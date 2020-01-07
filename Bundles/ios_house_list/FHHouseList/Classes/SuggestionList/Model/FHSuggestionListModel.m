@@ -92,7 +92,9 @@
                            @"openUrl": @"open_url",
                            @"houseType": @"house_type",
                            @"oldName":@"old_name",
-                           @"recallType":@"recall_type"
+                           @"recallType":@"recall_type",
+                           @"countDisplay":@"count_display"
+
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

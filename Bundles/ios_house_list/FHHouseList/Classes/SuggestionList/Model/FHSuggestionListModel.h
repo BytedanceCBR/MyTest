@@ -74,6 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *score;
 @property (nonatomic, copy , nullable) NSString *query;
 @property (nonatomic, copy , nullable) NSString *houseType;
+@property (nonatomic, copy , nullable) NSString *countDisplay;
 @property (nonatomic, copy , nullable) NSString *tips;
 @property (nonatomic, copy , nullable) NSString *id;
 

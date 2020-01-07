@@ -157,7 +157,7 @@
         }];
         self.regionLab.text = model.tag;
         self.villageLab.text = model.tag2;
-        self.amountLab.text = model.tips;
+        self.amountLab.text = model.countDisplay;
     }
 }
 
