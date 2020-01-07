@@ -341,7 +341,7 @@ def appPods
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
     pod_binary 'TTMonitor','0.7.11.0'
-    pod_binary 'Heimdallr','0.7.11-rc.5', :subspecs => [
+    pod 'Heimdallr','0.7.11', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
