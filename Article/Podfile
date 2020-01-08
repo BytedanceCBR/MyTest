@@ -125,7 +125,7 @@ def appDevelopPods
     pod 'TTDiggButton', :path => '../AKPlugins/AKDiggButton', :inhibit_warnings => false
     
     #-----头条图片/视频选择器-----
-    pod 'TTImagePicker', '7.5.5.1'
+    pod 'TTImagePicker', '7.5.5.2'
     #    pod 'TTImagePicker', :path => '../AKPlugins/AKImagePicker', :inhibit_warnings => false
     
     #-----平台化UIModel库-----
