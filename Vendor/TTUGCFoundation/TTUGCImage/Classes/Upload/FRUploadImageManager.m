@@ -128,7 +128,7 @@
     if (_expectedCount == 0) {
         [self callFinishModels:_finishUpLoadModels error:nil];
     } else {
-        TTMainSafeExecuteBlock(^{
+        FHMainSafeExecuteBlock(^{
             for (int i = 0; i < kSynchronizedCount; i ++) {
                 [self upLoadNext];
             }
@@ -152,7 +152,7 @@
         }
         if (_needUploadModels.count > 0) {
             _expectedCount = _needUploadModels.count + _finishUpLoadModels.count;
-            TTMainSafeExecuteBlock(^{
+            FHMainSafeExecuteBlock(^{
                 for (int i = 0; i < kSynchronizedCount; i ++) {
                     [self upLoadNext];
                 }

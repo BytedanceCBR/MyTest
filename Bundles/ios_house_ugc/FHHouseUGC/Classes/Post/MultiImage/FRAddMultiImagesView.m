@@ -248,7 +248,7 @@
     TTImagePickerController *imgPick = [[TTImagePickerController alloc] initWithDelegate:self];
     imgPick.maxImagesCount = self.selectionLimit - [self.selectedImageCacheTasks count];
     imgPick.isRequestPhotosBack = NO;
-    imgPick.isAllowGifPhoto = NO;
+    imgPick.isHideGIF = YES;
     [imgPick presentOn:self.viewController.navigationController];
     
     [TTTrackerWrapper eventV3:@"click_add_image" params:nil];
