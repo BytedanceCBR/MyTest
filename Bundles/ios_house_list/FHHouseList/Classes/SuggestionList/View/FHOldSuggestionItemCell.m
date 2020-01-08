@@ -51,8 +51,8 @@
     }];
     [self.subTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.zoneTypeView);
-        make.left.equalTo(self.titleLab.mas_right).offset(15);
-        make.right.equalTo(self.amountLab.mas_left).offset(-15);
+        make.left.equalTo(self.titleLab.mas_right).offset(5);
+        make.right.mas_lessThanOrEqualTo(self.amountLab.mas_left).offset(-15);
     }];
     [self.regionLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.titleLab);
@@ -75,6 +75,7 @@
         UIView *zoneTypeView = [[UIView alloc]init];
         zoneTypeView.backgroundColor = [UIColor themeGray7];
         zoneTypeView.layer.cornerRadius = 9;
+        zoneTypeView.hidden = YES;
         [self.contentView addSubview:zoneTypeView];
         _zoneTypeView = zoneTypeView;
     }
@@ -154,9 +155,10 @@
         if(model.name.length>0){
             NSAttributedString *text1 = [self processHighlightedDefault:model.name textColor:[UIColor themeGray1] fontSize:16.0];
             self.titleLab.attributedText = [self processHighlighted:text1 originText:model.name textColor:[UIColor themeOrange1] fontSize:16.0];
+            [self.titleLab sizeToFit];
         }
-        if (model.recallType.length<0) {
-            self.zoneTypeView.hidden = YES;
+        if (model.recallType.length > 0) {
+            self.zoneTypeView.hidden = NO;
         };
         self.subTitleLab.text = model.oldName;
         self.zoneTypeLab.text = model.recallType;
