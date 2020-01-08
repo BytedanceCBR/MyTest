@@ -61,9 +61,13 @@
     [self.villageLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.regionLab.mas_right).offset(5);
         make.top.equalTo(self.titleLab.mas_bottom).offset(3);
+        make.right.equalTo(self.amountLab.mas_right);
     }];
+    [self.regionLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+    [self.villageLab setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.subTitleLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
-    [self.amountLab setContentCompressionResistancePriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
+    [self.amountLab setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.amountLab setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 }
 
 - (UIView *)zoneTypeView {
@@ -147,8 +151,13 @@
 - (void)setModel:(FHSuggestionResponseDataModel *)model {
     if (model) {
         _model = model;
-        NSAttributedString *text1 = [self processHighlightedDefault:model.name textColor:[UIColor themeGray1] fontSize:16.0];
-        self.titleLab.attributedText = [self processHighlighted:text1 originText:model.name textColor:[UIColor themeOrange1] fontSize:16.0];
+        if(model.name.length>0){
+            NSAttributedString *text1 = [self processHighlightedDefault:model.name textColor:[UIColor themeGray1] fontSize:16.0];
+            self.titleLab.attributedText = [self processHighlighted:text1 originText:model.name textColor:[UIColor themeOrange1] fontSize:16.0];
+        }
+        if (model.recallType.length<0) {
+            self.zoneTypeView.hidden = YES;
+        };
         self.subTitleLab.text = model.oldName;
         self.zoneTypeLab.text = model.recallType;
             CGFloat zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
