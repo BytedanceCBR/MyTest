@@ -22,7 +22,6 @@
 
 @interface FHUGCHotCommunityCell()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
-@property(nonatomic ,strong) FHUGCCellHeaderView *headerView;
 @property(nonatomic ,strong) FHBaseCollectionView *collectionView;
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property(nonatomic ,strong) NSMutableArray *dataList;
@@ -57,13 +56,6 @@
 - (void)initViews {
     self.contentView.backgroundColor = [UIColor whiteColor];
     
-    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
-    _headerView.titleLabel.text = @"热门话题";
-    _headerView.bottomLine.hidden = YES;
-    _headerView.refreshBtn.hidden = YES;
-    [_headerView.moreBtn addTarget:self action:@selector(moreData) forControlEvents:UIControlEventTouchUpInside];
-    [self.contentView addSubview:_headerView];
-    
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_bottomSepView];
@@ -90,14 +82,8 @@
 }
 
 - (void)initConstraints {
-    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(5);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(headerViewHeight);
-    }];
-    
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(4);
+        make.top.mas_equalTo(self.contentView).offset(5);
         make.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(180);
     }];
@@ -133,7 +119,7 @@
 }
 
 + (CGFloat)heightForData:(id)data {
-    return 320;
+    return 195;
 }
 
 - (void)moreData {
