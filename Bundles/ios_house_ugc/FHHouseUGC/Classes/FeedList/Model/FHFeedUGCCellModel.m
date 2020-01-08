@@ -753,7 +753,7 @@
 + (FHFeedUGCCellModel *)modelFromFake {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.groupId = @"1000051";
-    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotCommunity;
     
     return cellModel;
 }

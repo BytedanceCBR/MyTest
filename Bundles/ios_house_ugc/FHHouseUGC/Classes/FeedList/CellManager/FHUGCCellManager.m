@@ -21,6 +21,7 @@
 #import "FHUGCSmallVideoCell.h"
 #import "FHUGCVoteDetailCell.h"
 #import "FHUGCEmptyCell.h"
+#import "FHUGCHotCommunityCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -54,6 +55,7 @@
                                 @"FHUGCSmallVideoCell",
                                 @"FHUGCVoteDetailCell",
                                 @"FHUGCEmptyCell",
+                                @"FHUGCHotCommunityCell",
                                 //可扩展
                                  ];
 }
@@ -106,6 +108,9 @@
         
         case FHUGCFeedListCellSubTypeUGCVoteDetail:
             return [FHUGCVoteDetailCell class];
+            
+        case FHUGCFeedListCellSubTypeUGCHotCommunity:
+            return [FHUGCHotCommunityCell class];
 
         default:
             break;

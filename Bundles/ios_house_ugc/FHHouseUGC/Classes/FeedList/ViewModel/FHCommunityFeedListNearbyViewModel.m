@@ -275,6 +275,12 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    //fake
+    if(isHead){
+        [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
+        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake].groupId];
+    }
+    
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
@@ -366,7 +372,7 @@
                 BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
                 
                 //这里的只是针对附近的tab，而且后面的类型根据实际需求改变
-                if(!isStickTop && cellModel.cellType != FHUGCFeedListCellTypeUGCHotTopic) {
+                if(!isStickTop && cellModel.cellType != FHUGCFeedListCellTypeUGCHotCommunity) {
                     index = idx;
                     *stop = YES;
                 }
