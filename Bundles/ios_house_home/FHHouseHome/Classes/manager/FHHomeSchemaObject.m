@@ -45,7 +45,7 @@
             [self handleMultiPush:paramObj.allParams];
         }
         //处理春节活动过来的 ack_token
-        if([FHEnvContext isSpringOpen]){
+        if([FHEnvContext isSpringOpen] && [paramObj.host isEqualToString:@"spring"]){
             NSString *ackToken = paramObj.allParams[@"ack_token"];
             NSString *vid = paramObj.allParams[@"vid"];
             if(ackToken){
@@ -63,10 +63,11 @@
 - (void)handleChangeTab:(NSDictionary *)params {
     if (params != nil) {
         NSString* target = params[@"select_tab"];
+        NSInteger needToRoot = [params[@"needToRoot"] isEqualToString:@"0"] ? 0 : 1;
         if (target != nil && target.length > 0) {
             NSDictionary *userInfo = @{
                                        @"tag":target,
-                                       @"needToRoot":@1
+                                       @"needToRoot":@(needToRoot)
                                        };
             [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:userInfo];
         }

@@ -366,7 +366,7 @@ static const float kSegementedMainPadingBottom = 10;
         [self.topBackCityContainer addSubview:topTipForCityLabel];
         
         [topTipForCityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.equalTo(self.topBackCityContainer);
+            make.left.equalTo(cityLabel.mas_right).offset(10);
             make.height.mas_equalTo(20);
             make.centerY.equalTo(citySwichButton);
             make.width.mas_equalTo(183);
