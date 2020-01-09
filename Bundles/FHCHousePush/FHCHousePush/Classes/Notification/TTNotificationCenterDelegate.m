@@ -20,6 +20,7 @@
 #import "ArticleAPNsManager.h"
 #import <TTAdSplashMediator.h>
 #import <TTAppRuntime/NewsBaseDelegate.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 static NSString *const kNotificationCategoryIdentifierArticleDetail = @"article_detail";
 static NSString *const kNotificationCategoryIdentifierArticleDetailNoDislike = @"article_detail_no_dislike";
@@ -164,6 +165,11 @@ typedef void(^NotificationActionCompletionBlock) (void);
 didReceiveNotificationResponse:(UNNotificationResponse *)response
          withCompletionHandler:(void (^)())completionHandler {
 
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [[FHEnvContext sharedInstance] addUNRemoteNOtification:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
+        return;
+    }
+    
     [TTAdSplashMediator shareInstance].splashADShowType = TTAdSplashShowTypeHide;
     NSDictionary *payload = response.notification.request.content.userInfo;
     if ([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {

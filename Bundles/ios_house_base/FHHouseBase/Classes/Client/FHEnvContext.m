@@ -38,6 +38,7 @@
 #import <NSDictionary+TTAdditions.h>
 #import <TTLocationManager/TTLocationManager.h>
 #import "FHStashModel.h"
+#import <UserNotifications/UserNotifications.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -1059,14 +1060,12 @@ static NSInteger kGetLightRequestRetryCount = 3;
 -(BOOL)hasConfirmPermssionProtocol
 {
     NSNumber *show = [[NSUserDefaults standardUserDefaults] objectForKey:@"SHOW_PERMISSION_ALERT"];
-    
     return [show boolValue];
 }
 
 -(void)userConfirmedPermssionProtocol
 {
     [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"SHOW_PERMISSION_ALERT"];
-    
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION object:nil];
@@ -1119,6 +1118,12 @@ static NSInteger kGetLightRequestRetryCount = 3;
         if (notificationItem) {
             [[UIApplication sharedApplication].delegate application:notificationItem.application didReceiveLocalNotification:notificationItem.userInfo];
         }
+        
+        FHUNRemoteNOficationStashItem *unnotificationItem = [_stashModel unnotificationItem];
+        if (unnotificationItem) {
+            [[UNUserNotificationCenter currentNotificationCenter].delegate userNotificationCenter:unnotificationItem.center didReceiveNotificationResponse:unnotificationItem.response withCompletionHandler:unnotificationItem.completionHandler];
+        }
+        
     }
     
     self.stashModel = nil;
@@ -1146,6 +1151,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
 -(void)addRemoteNotification:(UIApplication *)application userInfo:(NSDictionary *)userInfo
 {
     [self.stashModel addRemoteNotification:application userInfo:userInfo];
+}
+
+-(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler
+{
+    [self.stashModel addUNRemoteNOtification:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
 }
 
 @end

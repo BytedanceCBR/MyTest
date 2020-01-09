@@ -12,7 +12,7 @@
 @property(nonatomic , strong) FHOpenUrlStashItem *openUrlStashItem;
 @property(nonatomic , strong) FHContinueActivityStashItem *activityItem;
 @property(nonatomic , strong) FHRemoteNotificationStashItem *notificationItem;
-
+@property(nonatomic , strong) FHUNRemoteNOficationStashItem *unnotificationItem;
 @end
 
 @implementation FHStashModel
@@ -58,6 +58,20 @@
     return _notificationItem;
 }
 
+-(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler
+{
+    _unnotificationItem = [[FHUNRemoteNOficationStashItem alloc] init];
+    _unnotificationItem.center = center;
+    _unnotificationItem.response = response;
+    _unnotificationItem.completionHandler = completionHandler;
+}
+
+
+-(FHUNRemoteNOficationStashItem *)unnotificationItem
+{
+    return _unnotificationItem;
+}
+
 @end
 
 
@@ -75,6 +89,12 @@
 
 
 @implementation FHRemoteNotificationStashItem
+
+
+@end
+
+@implementation FHUNRemoteNOficationStashItem
+
 
 
 @end
