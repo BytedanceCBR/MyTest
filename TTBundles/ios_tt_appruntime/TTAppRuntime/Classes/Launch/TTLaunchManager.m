@@ -160,9 +160,9 @@ static NSDate *preMainDate = nil;
     }
     
     [self updateTaskRecords:taskList];
-    
+#ifndef DEBUG
     NSLog(@"[LAUNCH] tasks takes %f S ",[[NSDate date]timeIntervalSinceDate:s]);
-    
+#endif
 }
 
 -(TTStartupTask *)startTask:(task_header_info *)headerInfo withApplication:(UIApplication *)application andOptions:(NSDictionary *)options

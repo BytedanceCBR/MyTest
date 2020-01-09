@@ -34,6 +34,7 @@
 #import "TTLaunchDefine.h"
 #import <HMDTTMonitor.h>
 #import <FHIntroduceManager.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 DEC_TASK_N(FHCHandleAPNSTask,FHTaskTypeSerial,TASK_PRIORITY_HIGH+12);
 
@@ -93,11 +94,16 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
-    [NewsBaseDelegate startRegisterRemoteNotification];
-    //如果展示开屏广告时候有弹窗延迟弹出
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(splashViewDisappearAnimationDidFinished:) name:@"kTTAdSplashShowFinish" object:nil];
     
     [SharedAppDelegate setIsColdLaunch:YES];
+    
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        return;
+    }
+    
+    [NewsBaseDelegate startRegisterRemoteNotification];
+    //如果展示开屏广告时候有弹窗延迟弹出
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(splashViewDisappearAnimationDidFinished:) name:@"kTTAdSplashShowFinish" object:nil];        
     
     if ([TTDeviceHelper OSVersionNumber] < 10.0 && [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]) {
         double delayInSeconds = 1;
