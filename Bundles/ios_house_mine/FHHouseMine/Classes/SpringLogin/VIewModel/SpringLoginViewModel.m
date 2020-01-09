@@ -84,10 +84,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                                       NSForegroundColorAttributeName: [UIColor colorWithHexString:@"a90c05"],
                                       };
     
-    attrText = [[NSMutableAttributedString alloc] initWithString:@"我已阅读并同意 《幸福里用户协议》及《隐私政策》"];
+    attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
     [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
-    userProtocolRange = NSMakeRange(9, 7);
-    privacyRange = NSMakeRange(19, 4);
+    userProtocolRange = NSMakeRange(7, 7);
+    privacyRange = NSMakeRange(17, 4);
     YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
     [attrText yy_setTextUnderline:decoration range:userProtocolRange];
     [attrText yy_setTextUnderline:decoration range:privacyRange];
