@@ -26,6 +26,8 @@
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <TTReachability/TTReachability.h>
 #import <TTSandBoxHelper.h>
+#import <FHHouseDetail/FHHouseDetailAPI.h>
+#import <FHCommonUI/FHFeedbackView.h>
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -212,6 +214,55 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 + (void)addClueCallErrorRateLog:categoryDict extraDict:(NSDictionary *)extraDict
 {
     [[HMDTTMonitor defaultManager]hmdTrackService:@"clue_call_error_rate" metric:nil category:categoryDict extra:extraDict];
+}
+
+- (void)submitRealtorEvaluation:(NSString *)content scoreCount:(NSInteger)scoreCount scoreTags:(NSArray<NSString *> *)scoreTags traceParams:(NSDictionary *)traceParams
+{
+    NSString *realtorId = traceParams[@"realtor_id"];
+    NSString *targetId = traceParams[@"target_id"];
+    NSInteger targetType = traceParams[@"target_type"];
+
+    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType realtorId:realtorId content:content score:scoreCount tags:scoreTags completion:^(bool succss, NSError *_Nonnull error) {
+        if (succss) {
+            [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
+        } else {
+            [[ToastManager manager] showToast:@"提交失败"];
+        }
+    }];
+}
+
+- (id)getRealtorEvaluationModel
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHRealtorEvaluatioinConfigModel *evaluationConfig = dataModel.realtorEvaluationConfig;
+    if (!evaluationConfig) {
+        return nil;
+    }
+    FHRealtorEvaluationModel *evaluationModel = [[FHRealtorEvaluationModel alloc]init];
+    evaluationModel.scoreTags = evaluationConfig.scoreTags;
+    evaluationModel.goodPlaceholder = evaluationConfig.goodPlaceholder;
+    evaluationModel.badPlaceholder = evaluationConfig.badPlaceholder;
+    if (evaluationConfig.goodTags.count > 0) {
+        NSMutableArray *tags = @[].mutableCopy;
+        for (FHRealtorEvaluatioinTagModel *tag in evaluationConfig.goodTags) {
+            FHRealtorEvaluationTagModel *newTag = [[FHRealtorEvaluationTagModel alloc]init];
+            newTag.id = tag.id;
+            newTag.text = tag.text;
+            [tags addObject:newTag];
+        }
+        evaluationModel.goodTags = tags;
+    }
+    if (evaluationConfig.badTags.count > 0) {
+        NSMutableArray *tags = @[].mutableCopy;
+        for (FHRealtorEvaluatioinTagModel *tag in evaluationConfig.badTags) {
+            FHRealtorEvaluationTagModel *newTag = [[FHRealtorEvaluationTagModel alloc]init];
+            newTag.id = tag.id;
+            newTag.text = tag.text;
+            [tags addObject:newTag];
+        }
+        evaluationModel.badTags = tags;
+    }
+    return evaluationModel;
 }
 
 @end

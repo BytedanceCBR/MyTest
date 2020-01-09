@@ -726,7 +726,6 @@
     if (!_feedbackView) {
         __weak typeof(self) wself = self;
         _feedbackView = [[FHDetailFeedbackView alloc] initWithFrame:UIScreen.mainScreen.bounds];
-        _feedbackView.navVC = self.navigationController;
         _feedbackView.viewModel = self.viewModel;
     }
     return _feedbackView;

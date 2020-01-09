@@ -562,21 +562,23 @@
     }];
 }
 
-+ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)houseId realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nonnull))completion {
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nonnull))completion
+{
     NSString *path = @"/f100/api/associate/realtor_evaluation/assign";
     NSMutableDictionary *param = [NSMutableDictionary new];
-    param[@"device_id"] = @([[[TTInstallIDManager sharedInstance] deviceID] longLongValue]);
-    param[@"house_id"] = @(houseId.longLongValue);
-    param[@"score"] = @(score);
-    param[@"tag_ids"] = tags;
-
+    if ([[TTInstallIDManager sharedInstance] deviceID]) {
+        param[@"device_id"] = @([[[TTInstallIDManager sharedInstance] deviceID] longLongValue]);
+    }
     if(!isEmptyString(realtorId)){
         param[@"realtor_id"] = @(realtorId.longLongValue);;
     }
-
+    param[@"target_id"] = @(targetId.longLongValue);
+    param[@"target_type"] = @(targetType);
+    param[@"score"] = @(score);
     if(!isEmptyString(content)) {
         param[@"content"] = content;
     }
+    param[@"tag_ids"] = tags;
 
     return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
         BOOL success = NO;
