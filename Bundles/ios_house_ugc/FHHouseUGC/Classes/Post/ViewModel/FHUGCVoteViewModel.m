@@ -49,6 +49,8 @@
 @property (nonatomic, strong) FHUGCVoteDatePickerView *datePicker;
 @property (nonatomic, strong) UIView *dateSelectView;
 
+@property (nonatomic, assign) BOOL isPublishing;
+
 @end
 
 @implementation FHUGCVoteViewModel
@@ -589,6 +591,7 @@
     }
     
     WeakSelf;
+    self.isPublishing = YES;
     [FHHouseUGCAPI requestVotePublishWithParam:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
@@ -657,6 +660,11 @@
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(2)} extra:nil];
             }
         }
+        
+        
+        
+        // 发布请求结束，防止发布按钮被快速连续点击多次，造出多次发布投票, 放在最后面
+        self.isPublishing = NO;
     }];
 }
 

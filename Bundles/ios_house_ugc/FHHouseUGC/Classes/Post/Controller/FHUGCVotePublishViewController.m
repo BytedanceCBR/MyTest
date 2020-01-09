@@ -191,6 +191,11 @@
 
 - (void)publishAction: (UIButton *)publishBtn {
     
+    if(self.viewModel.isPublishing) {
+        // 防止连点发布
+        return ;
+    }
+    
     NSMutableDictionary *params = @{}.mutableCopy;
     params[UT_PAGE_TYPE] = @"vote_publisher";
     params[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
