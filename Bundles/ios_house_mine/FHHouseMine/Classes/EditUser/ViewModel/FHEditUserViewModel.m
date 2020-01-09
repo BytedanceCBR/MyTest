@@ -23,6 +23,8 @@
 #import "FHUserInfoManager.h"
 #import "FHHomePageSettingController.h"
 #import <TTImagePicker/TTImagePickerController.h>
+#import <AssetsLibrary/ALAssetsLibrary.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate,FHEditUserBaseCellDelegate,FHHomePageSettingControllerDelegate,TTImagePickerControllerDelegate>
 
@@ -214,6 +216,7 @@
 }
 
 - (void)changeAvatar {
+    
     UIActionSheet      *actionSheet = nil;
     NSArray<NSNumber*> *imageSourceTypes = nil;
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -250,13 +253,60 @@
     wrapperTrackEvent(@"edit_profile", @"account_setting_avatar");
 }
 
+- (void)showAlertWithTitle:(NSString *)title msg:(NSString *)msg callback:(void(^)(void))callback
+{
+    TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:title message:msg preferredType:TTThemedAlertControllerTypeAlert];
+    [alert addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeCancel actionBlock:callback];
+    [alert showFrom:self.viewController animated:YES];
+}
+
+-(BOOL)showAuthAlert:(UIImagePickerControllerSourceType)sourceType
+{
+    if (sourceType == UIImagePickerControllerSourceTypeCamera) {
+        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        if ((authStatus == AVAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)) {
+            // 无权限
+            UIAlertView * authAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"无访问权限", nil)
+                                                                 message:NSLocalizedString(@"请在手机的[设置-隐私-照片]选项中，允许幸福里访问你的相机", nil)
+                                                                delegate:self
+                                                       cancelButtonTitle:@"确定"
+                                                       otherButtonTitles:nil];
+            
+            [authAlert addButtonWithTitle:NSLocalizedString(@"去设置", nil)];
+            [authAlert show];
+            return YES;
+        }
+    }else{
+        ALAuthorizationStatus photoAuthStatus = [ALAssetsLibrary authorizationStatus];
+        if (photoAuthStatus == ALAuthorizationStatusDenied) {
+            UIAlertView * authAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"无访问权限", nil)
+                                                                 message:NSLocalizedString(@"请在手机的[设置-隐私-照片]选项中，允许幸福里访问你的相册", nil)
+                                                                delegate:self
+                                                       cancelButtonTitle:@"确定"
+                                                       otherButtonTitles:nil];
+            [authAlert addButtonWithTitle:NSLocalizedString(@"去设置", nil)];
+            [authAlert show];
+            return YES;
+        }
+    }
+    return NO;
+}
+
 #pragma mark - pick image and upload image
 
 - (void)imagePickerWithSource:(UIImagePickerControllerSourceType)sourceType forAvatar:(BOOL)bAvatar {
+    
+    if ([self showAuthAlert:sourceType]) {
+        return;
+    }            
     __weak typeof(self) wself = self;
     UIImagePickerControllerDidFinishBlock completionCallback = ^(UIImagePickerController *picker, NSDictionary *info) {
         __strong typeof(wself) sself = wself;
         [picker dismissViewControllerAnimated:YES completion:NULL];
+        if ([sself showAuthAlert:sourceType]) {
+            return;
+        }
+        
         // iOS 9 的系统 bug，在 iPad 不能选取图片显示区域，系统自动给截了左上角区域；
         // workaround : iPad 暂时先取 `UIImagePickerControllerOriginalImage` (会导致图片挤压变形).
         NSString *imageType = UIImagePickerControllerEditedImage;
@@ -501,6 +551,17 @@
 - (void)reloadAuthDesc:(NSInteger)auth {
     self.userInfo.homePageAuth = auth;
     [self reloadViewModel];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != alertView.cancelButtonIndex) {
+        NSURL * url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([TTDeviceHelper OSVersionNumber] >= 10.0) {
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+        }else {
+            [[UIApplication sharedApplication] openURL:url];
+        }
+    }
 }
 
 @end
