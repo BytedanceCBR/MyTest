@@ -294,12 +294,14 @@
     [self checkIfEnablePublish];
 }
 
-- (void)voteTitleView:(FHUGCVotePublishTitleView *)titleCell didChangeHeight:(CGFloat)newHeight {
+- (void)voteTitleView:(FHUGCVotePublishTitleView *)titleView didChangeHeight:(CGFloat)newHeight {
     [self updateTitleViewWithNewHeight:newHeight];
+    self.viewController.firstResponderView = titleView;
+    [self.viewController scrollToVisibleForFirstResponderView];
 }
 
 - (void)voteTitleViewDidBeginEditing:(FHUGCVotePublishTitleView *)titleView {
-    [self.viewController scrollToVisibleForView:titleView];
+    self.viewController.firstResponderView = titleView;
 }
 
 - (void)descriptionView:(FHUGCVotePublishDescriptionView *)descriptionView didInputText:(NSString *)text {
@@ -309,10 +311,12 @@
 
 - (void)descriptionView:(FHUGCVotePublishDescriptionView *)descriptionView didChangeHeight:(CGFloat)newHeight {
     [self updateDescriptionViewWithNewHeight:newHeight];
+    self.viewController.firstResponderView = descriptionView;
+    [self.viewController scrollToVisibleForFirstResponderView];
 }
 
 - (void)descriptionViewDidBeginEditing:(FHUGCVotePublishDescriptionView *)descriptionView {
-    [self.viewController scrollToVisibleForView:descriptionView];
+    self.viewController.firstResponderView = descriptionView;
 }
 
 // MARK: UIScrollViewDelegate
@@ -748,20 +752,18 @@
         [options removeObjectAtIndex:index];
         self.model.options = options;
         
-        WeakSelf;
-        [self.voteOptionsTableView performBatchUpdates:^{
-            StrongSelf;
-            [self.voteOptionsTableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            self.addOptionFooterView.alpha = (self.model.options.count < OPTION_COUNT_MAX) ? 1 : 0;
-        } completion:^(BOOL finished) {
+        [self.voteOptionsTableView beginUpdates];
+        [self.voteOptionsTableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        self.addOptionFooterView.alpha = (self.model.options.count < OPTION_COUNT_MAX) ? 1 : 0;
+        [self.voteOptionsTableView endUpdates];
+        
             // 动画执行完成后更新
-            [self updateVoteOptionsViewHeight];
-        }];
+        [self updateVoteOptionsViewHeight];
     }
 }
 
 - (void)optionCellDidBeginEditing:(FHUGCVotePublishOptionCell *)optionCell {
-    [self.viewController scrollToVisibleForView:optionCell];
+    self.viewController.firstResponderView = optionCell;
 }
 
 @end
