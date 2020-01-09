@@ -368,18 +368,20 @@
          didFinishPickingPhotos:(NSArray<UIImage *> *)photos
                    sourceAssets:(NSArray<TTAssetModel *> *)assets {
     
-    [[TTImagePickerManager manager] getPhotosWithAssets:assets completion:^(NSArray<UIImage *> *photos) {
-        
-        if (photos.count > 0) {
-            UIImage* photo = [photos objectAtIndex:0];
+    if (photos.count > 0) {
+        UIImage *image = [photos firstObject];
+        UIImage *scaleImage = [[self class]cropSquareImage:image];
+        [self uploadImage:scaleImage];
+    }else if (assets.count > 0){
+        TTAssetModel *model = [assets firstObject];
+        WeakSelf;
+        [[TTImagePickerManager manager] getPhotoWithAsset:model.asset completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
             if (photo) {
-                UIImage *scaleImage = [[self class]cropSquareImage:photo];
-                if (scaleImage) {
-                    [self uploadImage:scaleImage];
-                }
+                [wself uploadImage:photo];
             }
-        }
-    }];
+        }];
+        
+    }
 }
 
 // 以图片中心为中心，以最小边为边长，裁剪正方形图片

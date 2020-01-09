@@ -21,6 +21,7 @@
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTImagePicker/TTImagePickerController.h>
+#import <TTBaseLib/TTBaseMacro.h>
 
 #define kPhotoSourceSelectActionSheetTag 100
 #define TipLabelFontSize 12.f
@@ -614,21 +615,24 @@
 - (void)ttimagePickerController:(TTImagePickerController *)picker
          didFinishPickingPhotos:(NSArray<UIImage *> *)photos
                    sourceAssets:(NSArray<TTAssetModel *> *)assets {
-    
-    [[TTImagePickerManager manager] getPhotosWithAssets:assets completion:^(NSArray<UIImage *> *photos) {
-
-        if (photos.count > 0) {
-            UIImage* photo = [photos objectAtIndex:0];
+    if (photos.count > 0) {
+        UIImage *image = [photos firstObject];
+        UIImage *scaleImage = [[self class]cropSquareImage:image];
+        if (scaleImage) {
+            [self pickedImage:scaleImage withReferenceURL:nil];
+        }
+    }else if (assets.count > 0){
+        TTAssetModel *model = [assets firstObject];
+        WeakSelf;
+        [[TTImagePickerManager manager] getPhotoWithAsset:model.asset completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
             if (photo) {
-                //                NSURL *imageURL = [info objectForKey:UIImagePickerControllerReferenceURL];
-                UIImage *scaleImage = [[self class]cropSquareImage:photo];
+                UIImage *scaleImage = [[wself class]cropSquareImage:photo];
                 if (scaleImage) {
-                    // todo zjing test
-                    [self pickedImage:scaleImage withReferenceURL:nil];
+                    [wself pickedImage:scaleImage withReferenceURL:nil];
                 }
             }
-        }
-    }];
+        }];
+    }
 }
 
 // 以图片中心为中心，以最小边为边长，裁剪正方形图片
