@@ -349,7 +349,9 @@
 
 - (TTImagePickerController *)getTTImagePicker {
     [TTImagePickerManager manager].accessIcloud = YES;
-    _ttImagePickerController = [[TTImagePickerController alloc] initWithDelegate:self];
+    if (!_ttImagePickerController) {
+        _ttImagePickerController = [[TTImagePickerController alloc] initWithDelegate:self];
+    }
     _ttImagePickerController.maxImagesCount = 1;
     _ttImagePickerController.isRequestPhotosBack = NO;
     //    _ttImagePickerController.isHideGIF = YES;

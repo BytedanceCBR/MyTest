@@ -20,6 +20,7 @@
 #import "UITextView+TTAdditions.h"
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
+#import <TTImagePicker/TTImagePickerController.h>
 
 #define kPhotoSourceSelectActionSheetTag 100
 #define TipLabelFontSize 12.f
@@ -32,11 +33,13 @@
 #define imgSendButtonDefaultImgName @"uploadpic_repost.png"
 #define imgSendButtonPressImgName @"uploadpic_repost_press.png"
 
-@interface SSFeedbackPostViewBase()
+@interface SSFeedbackPostViewBase() <TTImagePickerControllerDelegate>
 
 @property(nonatomic, retain)    SSPublishProgressView * submitProgressView;
 @property(nonatomic, retain)    UIPopoverController *popover;
 @property(nonatomic, retain)    SSThemedLabel * tipLabel;
+@property (nonatomic, strong) TTImagePickerController *ttImagePickerController;
+
 @end
 
 @implementation SSFeedbackPostViewBase
@@ -513,24 +516,25 @@
 
 - (void)openPickerControllerByType:(UIImagePickerControllerSourceType)sourceType
 {
-    UIImagePickerController *tController = [[UIImagePickerController alloc] init];
-    tController.delegate = self;
-    tController.sourceType = sourceType;
-    
-    if ([TTDeviceHelper isPadDevice]) {
-        UIPopoverController *popOverController = [[UIPopoverController alloc] initWithContentViewController:tController];
-        self.popover = popOverController;
-        [_popover presentPopoverFromRect:_imageButton.frame inView:_containerView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    }
-    else {
-        UINavigationController *nav = (UINavigationController *)[TTUIResponderHelper topViewControllerFor: self];
-        if ([nav isKindOfClass:[UINavigationController class]]) {
-            [nav presentViewController:tController animated:YES completion:NULL];
-        }
-        else {
-            [nav.navigationController presentViewController:tController animated:YES completion:NULL];
-        }
-    }
+    [self imagePickerResponser];
+//    UIImagePickerController *tController = [[UIImagePickerController alloc] init];
+//    tController.delegate = self;
+//    tController.sourceType = sourceType;
+//
+//    if ([TTDeviceHelper isPadDevice]) {
+//        UIPopoverController *popOverController = [[UIPopoverController alloc] initWithContentViewController:tController];
+//        self.popover = popOverController;
+//        [_popover presentPopoverFromRect:_imageButton.frame inView:_containerView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+//    }
+//    else {
+//        UINavigationController *nav = (UINavigationController *)[TTUIResponderHelper topViewControllerFor: self];
+//        if ([nav isKindOfClass:[UINavigationController class]]) {
+//            [nav presentViewController:tController animated:YES completion:NULL];
+//        }
+//        else {
+//            [nav.navigationController presentViewController:tController animated:YES completion:NULL];
+//        }
+//    }
     
 }
 
@@ -576,5 +580,74 @@
         [picker dismissViewControllerAnimated:YES completion:NULL];
     }
 }
+
+//调用图片选择器
+- (void) imagePickerResponser
+{
+    [[self getTTImagePicker] presentOn:self.viewController.navigationController];
+}
+
+
+#pragma mark --- ttimage picker delegate ---
+
+- (TTImagePickerController *)getTTImagePicker {
+    [TTImagePickerManager manager].accessIcloud = YES;
+    if (!_ttImagePickerController) {
+        _ttImagePickerController = [[TTImagePickerController alloc] initWithDelegate:self];
+    }
+    _ttImagePickerController.maxImagesCount = 1;
+    _ttImagePickerController.isRequestPhotosBack = NO;
+    //    _ttImagePickerController.isHideGIF = YES;
+    return _ttImagePickerController;
+}
+
+- (void)ttimagePickerController:(TTImagePickerController *)picker didFinishTakePhoto:(UIImage *)photo selectedAssets:(NSArray<TTAssetModel *> *)assets withInfo:(NSDictionary *)info {
+    if (photo != nil) {
+        NSURL *imageURL = [info objectForKey:UIImagePickerControllerReferenceURL];
+        UIImage *scaleImage = [[self class]cropSquareImage:photo];
+        if (scaleImage) {
+            [self pickedImage:scaleImage withReferenceURL:imageURL];
+        }
+    }
+}
+
+- (void)ttimagePickerController:(TTImagePickerController *)picker
+         didFinishPickingPhotos:(NSArray<UIImage *> *)photos
+                   sourceAssets:(NSArray<TTAssetModel *> *)assets {
+    
+    [[TTImagePickerManager manager] getPhotosWithAssets:assets completion:^(NSArray<UIImage *> *photos) {
+
+        if (photos.count > 0) {
+            UIImage* photo = [photos objectAtIndex:0];
+            if (photo) {
+                //                NSURL *imageURL = [info objectForKey:UIImagePickerControllerReferenceURL];
+                UIImage *scaleImage = [[self class]cropSquareImage:photo];
+                if (scaleImage) {
+                    // todo zjing test
+                    [self pickedImage:scaleImage withReferenceURL:nil];
+                }
+            }
+        }
+    }];
+}
+
+// 以图片中心为中心，以最小边为边长，裁剪正方形图片
++ (UIImage *)cropSquareImage:(UIImage *)image
+{
+    CGImageRef sourceImageRef = [image CGImage];//将UIImage转换成CGImageRef
+    
+    CGFloat _imageWidth = image.size.width * image.scale;
+    CGFloat _imageHeight = image.size.height * image.scale;
+    CGFloat _width = _imageWidth > _imageHeight ? _imageHeight : _imageWidth;
+    CGFloat _offsetX = (_imageWidth - _width) / 2;
+    CGFloat _offsetY = (_imageHeight - _width) / 2;
+    
+    CGRect rect = CGRectMake(_offsetX, _offsetY, _width, _width);
+    CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, rect);//按照给定的矩形区域进行剪裁
+    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+    
+    return newImage;
+}
+
 
 @end
