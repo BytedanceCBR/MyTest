@@ -175,7 +175,7 @@
 
 - (FHUGCVoteDatePickerView *)datePicker {
     if(!_datePicker) {
-        _datePicker = [[FHUGCVoteDatePickerView alloc] initWithFrame:CGRectMake(0, TOP_BAR_HEIGHT, SCREEN_WIDTH, DATEPICKER_HEIGHT) minimumDate:[NSDate date] maximumDate:[[NSDate date] dateByAddingTimeInterval:30 * 24 * 60 * 60]];
+        _datePicker = [[FHUGCVoteDatePickerView alloc] initWithFrame:CGRectMake(0, TOP_BAR_HEIGHT, SCREEN_WIDTH, DATEPICKER_HEIGHT) minimumDate:[NSDate date] maximumDate:[[NSDate date] dateByAddingTimeInterval:29 * 24 * 60 * 60]];
         NSDate *defaultVoteDeadline = [[NSDate date] dateByAddingTimeInterval:7 * 24 * 60 * 60];
         _datePicker.date = self.model.deadline ? self.model.deadline : defaultVoteDeadline;
     }
@@ -598,8 +598,13 @@
         if(error) {
             [[ToastManager manager] showToast:@"发布投票失败!"];
             [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_vote_publish" metric:nil category:@{@"status":@(1)} extra:nil];
+            
+            // 发布请求结束，防止发布按钮被快速连续点击多次，造出多次发布投票, 放在最后面
+            self.isPublishing = NO;
+            
             return;
         }
+        
         if([model isKindOfClass:[FHUGCVoteModel class]]) {
             FHUGCVoteModel *voteModel = (FHUGCVoteModel *)model;
             if(voteModel.data.length > 0) {
