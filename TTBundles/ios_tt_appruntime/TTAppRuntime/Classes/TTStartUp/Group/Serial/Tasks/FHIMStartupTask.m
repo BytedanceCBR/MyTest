@@ -97,7 +97,8 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
 }
 
-- (void)tryGetPhoneNumber:(nonnull NSString *)userId withImprId:(nonnull NSString *)imprId tracer:(nonnull NSDictionary *)tracer withBlock:(nullable PhoneCallback)finishBlock{
+- (void)tryGetPhoneNumber:(NSString *)userId withImprId:(NSString *)imprId tracer:(NSDictionary *)tracer clueParams:(NSDictionary *)clueParams withBlock:(PhoneCallback)finishBlock
+{
     if (isEmptyString(userId)) {
         finishBlock(@"click_call", imprId,true);
         [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_UID extra:@{@"client_type":@"client_c"}];
