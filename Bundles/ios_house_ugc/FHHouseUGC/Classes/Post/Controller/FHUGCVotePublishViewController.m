@@ -32,8 +32,10 @@
 @property (nonatomic, copy) NSString *selectGroupId;
 @property (nonatomic, copy) NSString *selectGroupName;
 @property (nonatomic, assign) BOOL isSelectectGroupFollowed;
-@property (nonatomic, weak) UIView *firstResponderView;
 @property (nonatomic, assign) BOOL  lastCanShowMessageTip;
+
+@property (nonatomic, assign) CGRect keyboardEndFrame;
+@property (nonatomic, assign) BOOL keyboardIsShow;
 @end
 
 @implementation FHUGCVotePublishViewController
@@ -98,26 +100,30 @@
 
 - (void)keyboardDidChangeFrame: (NSNotification *)notification {
     CGRect beginFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-    CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    BOOL isShrinked = beginFrame.origin.y < endFrame.origin.y;
-    if(!isShrinked) {
-        if(self.firstResponderView) {
-            UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-            CGRect keyboardRect = [keyWindow convertRect:endFrame toView:self.scrollView];
-            
-            CGRect rect = [self.firstResponderView convertRect:self.firstResponderView.bounds toView:self.scrollView];
-            
-            CGFloat offsetY = (rect.origin.y + rect.size.height) - keyboardRect.origin.y;
-            
-            if(offsetY > 0) {
-                CGPoint contentOffset = self.scrollView.contentOffset;
-                contentOffset.y += offsetY;
-                [self.scrollView setContentOffset:contentOffset animated:YES];
-            }
+    self.keyboardEndFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    self.keyboardIsShow = beginFrame.origin.y >= self.keyboardEndFrame.origin.y;
+    
+    // 键盘弹起时，如果有输入焦点视图，则滚动到其露出
+    [self scrollToVisibleForFirstResponderView];
+
+}
+
+- (void)scrollToVisibleForFirstResponderView {
+    if(self.firstResponderView && self.keyboardIsShow) {
+        UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+        CGRect keyboardRect = [keyWindow convertRect:self.keyboardEndFrame toView:self.scrollView];
+        
+        CGRect rect = [self.firstResponderView convertRect:self.firstResponderView.bounds toView:self.scrollView];
+        
+        CGFloat offsetY = (rect.origin.y + rect.size.height) - keyboardRect.origin.y;
+        
+        if(offsetY > 0) {
+            CGPoint contentOffset = self.scrollView.contentOffset;
+            contentOffset.y += offsetY;
+            [self.scrollView setContentOffset:contentOffset animated:YES];
         }
-    } else {
-        self.firstResponderView = nil;
     }
+    self.firstResponderView = nil;
 }
 
 - (void)configNavigation {
@@ -244,10 +250,6 @@
         [self.publishBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
     }
     self.publishBtn.enabled = isEnable;
-}
-
-- (void)scrollToVisibleForView:(UIView *)view {
-    self.firstResponderView = view;
 }
 @end
                       
