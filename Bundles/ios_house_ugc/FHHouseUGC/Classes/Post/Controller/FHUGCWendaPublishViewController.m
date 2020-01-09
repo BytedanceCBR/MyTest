@@ -254,7 +254,7 @@
     // 检查是否选择了要发布的小区
     NSString *socialGroupId = self.selectGroupId;
     if(socialGroupId.length <= 0) {
-        [[ToastManager manager] showToast:@"请选择要发布的小区！"];
+        [[ToastManager manager] showToast:@"请选择要发布的圈子！"];
         return;
     }
     
@@ -431,7 +431,8 @@
     if (item) {
         self.socialGroupSelectEntry.groupId = item.socialGroupId;
         self.socialGroupSelectEntry.communityName = item.socialGroupName;
-        self.socialGroupSelectEntry.followed = NO;
+        FHUGCScialGroupDataModel * model = [[FHUGCConfig sharedInstance] socialGroupData:item.socialGroupId];
+        self.socialGroupSelectEntry.followed = model ? [model.hasFollow boolValue] : NO;
         
         self.selectGroupId = self.socialGroupSelectEntry.groupId;
         self.selectGroupName = self.socialGroupSelectEntry.communityName;

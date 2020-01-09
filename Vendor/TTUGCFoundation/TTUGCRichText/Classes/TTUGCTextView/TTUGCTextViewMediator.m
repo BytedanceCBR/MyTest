@@ -122,7 +122,7 @@
             }
         }else{
             wSelf.isSelectViewControllerVisible = NO;
-            [wSelf.textView becomeFirstResponder];
+//            [wSelf.textView becomeFirstResponder];
         }
     }];
 }

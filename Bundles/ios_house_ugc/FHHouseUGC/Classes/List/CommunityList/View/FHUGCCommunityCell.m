@@ -178,10 +178,10 @@
     if (!_chooseButton) {
         _chooseButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _chooseButton.layer.cornerRadius = 4;
-        _chooseButton.layer.borderColor = [UIColor themeRed1].CGColor;
+        _chooseButton.layer.borderColor = [UIColor themeOrange1].CGColor;
         _chooseButton.layer.borderWidth = 0.5;
         _chooseButton.titleLabel.font = [UIFont themeFontRegular:12];
-        [_chooseButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [_chooseButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
         [_chooseButton setTitle:@"选择" forState:UIControlStateNormal];
         _chooseButton.userInteractionEnabled = NO;
     }

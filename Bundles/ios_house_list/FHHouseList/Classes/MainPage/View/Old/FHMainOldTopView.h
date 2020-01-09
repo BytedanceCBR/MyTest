@@ -8,18 +8,31 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class FHConfigDataOpData2ItemsModel;
+@class FHConfigDataOpDataItemsModel,FHConfigDataModel,FHConfigDataRentOpDataItemsModel;
 @protocol FHMainOldTopViewDelegate;
+
+
+
 @interface FHMainOldTopView : UIView
 
-@property(nonatomic , strong) NSArray<FHConfigDataOpData2ItemsModel *> *items;
 @property(nonatomic , weak) id<FHMainOldTopViewDelegate> delegate;
+- (void)updateWithConfigData:(FHConfigDataModel *)configModel tracerDict:(NSDictionary *)tracerDict;
++ (BOOL)showBanner;
++ (BOOL)showEntrance;
+
++ (CGFloat)bannerHeight;
++ (CGFloat)entranceHeight;
++ (CGFloat)totalHeight;
+- (UIColor *)topBackgroundColor;
 
 @end
 
 @protocol FHMainOldTopViewDelegate <NSObject>
 
--(void)selecteOldItem:(FHConfigDataOpData2ItemsModel *)item;
+-(void)selecteOldItem:(FHConfigDataOpDataItemsModel *)item;
+-(void)clickBannerItem:(FHConfigDataRentOpDataItemsModel *)item withIndex:(NSInteger)index;
+-(void)showBannerItem:(FHConfigDataRentOpDataItemsModel *)item withIndex:(NSInteger)index;
+-(void)willChangeTopViewBackgroundColor:(UIColor *)bgColor;
 
 @end
 

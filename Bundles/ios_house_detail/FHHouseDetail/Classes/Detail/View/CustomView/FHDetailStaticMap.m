@@ -39,7 +39,7 @@
 @property(nonatomic, assign) CGFloat targetWidth;
 @property(nonatomic, assign) CGFloat targetHeight;
 @property(nonatomic, strong) NSString *cacheKey;
-@property(nonatomic, strong) NSError *error;
+@property(atomic, strong) NSError *error;
 @end
 
 @implementation FHStaticMapTransformer
@@ -64,7 +64,7 @@
     if (expectedHeight != heightPixel) {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"bad_picture[width:%tu,height:%tu]", widthPixel, heightPixel]};
         self.error = [NSError errorWithDomain:@"transformer" code:1 userInfo:userInfo];
-        return nil;
+        return image;
     }
 
     //居中裁剪

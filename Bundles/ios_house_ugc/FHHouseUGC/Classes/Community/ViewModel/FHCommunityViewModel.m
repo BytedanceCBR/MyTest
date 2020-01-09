@@ -12,7 +12,7 @@
 #import <FHEnvContext.h>
 
 #define kCellId @"cellId"
-#define maxCellCount 3
+#define maxCellCount 2
 
 @interface FHCommunityViewModel ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -69,12 +69,11 @@
         self.dataArray = @[
                            @(FHCommunityCollectionCellTypeMyJoin),
                            @(FHCommunityCollectionCellTypeNearby),
-                           @(FHCommunityCollectionCellTypeDiscovery)
                            ];
     }else{
         self.currentTabIndex = 0;
         self.dataArray = @[
-                           @(FHCommunityCollectionCellTypeDiscovery)
+                           @(FHCommunityCollectionCellTypeFindHouse)
                            ];
     }
     [self.viewController showSegmentControl:isShow];
@@ -90,7 +89,6 @@
     self.dataArray = @[
                        @(FHCommunityCollectionCellTypeMyJoin),
                        @(FHCommunityCollectionCellTypeNearby),
-                       @(FHCommunityCollectionCellTypeDiscovery)
                        ];
 }
 
@@ -103,12 +101,7 @@
 
 - (void)setCurrentTabIndex:(NSInteger)currentTabIndex {
     _currentTabIndex = currentTabIndex;
-    if (currentTabIndex >= 2) {
-        self.searchBtn.hidden = YES;
-        [self.viewController hideGuideView];
-    } else {
-        self.searchBtn.hidden = NO;
-    }
+    self.searchBtn.hidden = NO;
 }
 
 //顶部tabView点击事件
@@ -222,7 +215,7 @@
     }
     
     if(self.viewController.isUgcOpen){
-        top += 60;
+        top += 44;
     }
     
     CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - top - bottom);

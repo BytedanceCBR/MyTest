@@ -235,6 +235,10 @@
         if (!SSIsEmptyDictionary(link.userInfo)) {
             [dict setValue:link.userInfo forKey:@"user_info"];
         }
+        
+        if(link.idStr) {
+            [dict setValue:link.idStr forKey:@"id_str"];
+        }
     }
     
     return [richSpanLinkDict copy];
@@ -286,6 +290,7 @@
                                                                     type:[richSpanDict tt_integerValueForKey:@"type"]
                                                                 flagType:[richSpanDict tt_integerValueForKey:@"flag"]];
     richSpanLink.userInfo = [richSpanDict tt_dictionaryValueForKey:@"user_info"];
+    richSpanLink.idStr = [richSpanDict tt_stringValueForKey:@"id_str"];
     richSpanLink.originDictionary = [richSpanDict copy];
     
     return richSpanLink;
@@ -599,7 +604,7 @@ static NSString * const TTRichSpansKeyImageList = @"image_list";
         NSData *richSpanTextData = [base64String base64DecodedData];
         TTRichSpanText *richSpanText = [NSKeyedUnarchiver unarchiveObjectWithData:richSpanTextData];
         self.text = richSpanText.text;
-        self.richSpans = richSpanText.richSpans;
+        self.richSpans = richSpanText.richSpans?:[[TTRichSpans alloc] initWithRichSpanLinks:@[] imageInfoModelsDict:@{}];
     }
     return self;
 }
@@ -969,6 +974,8 @@ static NSString * const TTRichSpansKeyImageList = @"image_list";
                                                                         type:obj.type
                                                                     flagType:obj.flagType];
                 link.userInfo = obj.userInfo;
+                link.idStr = obj.idStr;
+                link.originDictionary = obj.originDictionary;
                 [links addObject:link];
             }
         }

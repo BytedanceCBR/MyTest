@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UIImageView *arrowView;
 @end
 
-@interface FHDetailStaticMapCellModel : NSObject
+@interface FHDetailStaticMapCellModel : FHDetailBaseModel
 
 @property(nonatomic, weak, nullable) UITableView *tableView;
 @property(nonatomic, copy, nullable) NSString *gaodeLng;
@@ -32,8 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *houseType;
 @property(nonatomic, copy, nullable) NSString *score;
 @property(nonatomic, strong, nullable) FHDetailGaodeImageModel *staticImage;
-@property(nonatomic, assign) BOOL useStarHeader;
 @property(nonatomic, assign) BOOL mapOnly;
+@property(nonatomic, assign) BOOL useNativeMap; //降级控制，外部不使用
 @end
 
 @interface FHDetailStaticMapCell : FHDetailBaseCell

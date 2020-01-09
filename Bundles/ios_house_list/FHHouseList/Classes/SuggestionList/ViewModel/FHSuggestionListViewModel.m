@@ -589,8 +589,8 @@
                 NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
                 NSAttributedString *text2 = [self processHighlightedDefault:model.text2 textColor:[UIColor themeGray3] fontSize:12.0];
                 
-                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeRed1] fontSize:15.0];
-                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeRed1] fontSize:12.0];
+                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1] fontSize:15.0];
+                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1] fontSize:12.0];
                 
                 cell.secondaryLabel.text = model.tips;
                 cell.secondarySubLabel.text = model.tips2;
@@ -609,7 +609,7 @@
                     NSAttributedString *text2 = [self processHighlightedGray:model.text2];
                     [resultText appendAttributedString:text2];
                 }
-                cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeRed1] fontSize:15.0];
+                cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeOrange1] fontSize:15.0];
                 cell.secondaryLabel.text = model.tips;
                 if (indexPath.row == self.sugListData.count - 1) {
                     // 末尾

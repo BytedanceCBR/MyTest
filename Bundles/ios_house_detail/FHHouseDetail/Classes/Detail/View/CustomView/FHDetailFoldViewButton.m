@@ -20,7 +20,6 @@
 @interface FHDetailFoldViewButton ()
 
 @property (nonatomic, strong)   UIImageView       *iconView;
-@property (nonatomic, strong)   UILabel       *keyLabel;
 @property (nonatomic, copy)     NSString       *upText;
 @property (nonatomic, copy)     NSString       *downText;
 
@@ -51,6 +50,8 @@
 - (void)setupUI {
     _upText = @"收起";
     _downText = @"展开";
+    _foldImage = [UIImage imageNamed:@"arrowicon-feed-3"];
+    _openImage = [UIImage imageNamed:@"arrowicon-feed-2"];
     _iconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-2"]];
     [self addSubview:_iconView];
     _keyLabel = [[UILabel alloc] init];
@@ -61,12 +62,13 @@
     
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self).offset(-11);
-        make.top.mas_equalTo(self).offset(20);
+//        make.top.mas_equalTo(self).offset(20);
+        make.centerY.mas_equalTo(self);
         make.height.mas_equalTo(18);
     }];
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.keyLabel.mas_right).offset(4);
-        make.centerY.mas_equalTo(self.keyLabel);
+        make.centerY.mas_equalTo(self.keyLabel).offset(-1);
         make.height.width.mas_equalTo(18);
     }];
 }
@@ -75,11 +77,19 @@
     _isFold = isFold;
     if (isFold) {
         _keyLabel.text = self.downText;
-        _iconView.image = [UIImage imageNamed:@"arrowicon-feed-3"];
+        _iconView.image = _openImage;
     } else {
         _keyLabel.text = self.upText;
-        _iconView.image = [UIImage imageNamed:@"arrowicon-feed-2"];
+        _iconView.image = _foldImage;
     }
 }
 
+- (void)setFoldImage:(UIImage *)foldImage {
+    _foldImage = foldImage;
+
+}
+- (void)setOpenImage:(UIImage *)openImage {
+    _openImage = openImage;
+    _iconView.image = openImage;
+}
 @end

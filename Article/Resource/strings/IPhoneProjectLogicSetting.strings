@@ -33,6 +33,8 @@
 // SSAppPageController
 "home"                  = "FHHomeSchemaObject";
 "main"                  = "FHHomeSchemaObject";
+//春节活动临时加的，和main行为一致
+"spring"                = "FHHomeSchemaObject";
 
 //"profile"               = "ArticleMomentProfileViewController"; //旧版个人主页
 "profile"               = "FHPersonalHomePageController"; //新版个人主页
@@ -177,6 +179,10 @@
 //VR详情页
 "house_vr_web" = "FHVRDetailWebViewController";
 
+//新增工具箱
+"toolbox" = "FHHomeMoreIconViewController";
+
+
 //UGC相关
 "ugc_post" = "FHPostUGCViewController";
 "thread_detail" = "FHPostDetailViewController";
@@ -199,6 +205,9 @@
 "ugc_vote_publish_type_select" = "FHUGCVotePublishTypeSelectViewController"; // 投票发布器投票类型选择页
 "ugc_vote_publish_visible_scope" = "FHUGCVotePublishVisibleScopeController"; // 投票发布器投票可见范围
 "ugc_vote_detail" = "FHVoteDetailViewController";// 投票详情页
+"ugc_post_history" = "FHPostEditListController";// 帖子编辑历史页面
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";
+
+"spring_login" = "SpringLoginViewController";

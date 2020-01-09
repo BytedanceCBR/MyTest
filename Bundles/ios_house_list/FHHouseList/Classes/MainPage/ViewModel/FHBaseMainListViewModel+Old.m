@@ -109,48 +109,13 @@
     return task;
 }
 
-- (void)updateRedirectTipInfo
+-(void)clickRedirectTip:(NSString *)openUrl
 {
-    if (self.showRedirectTip && self.redirectTips) {
-        
-        self.redirectTipView.hidden = NO;
-        self.redirectTipView.text = self.redirectTips.text;
-        self.redirectTipView.text1 = self.redirectTips.text2;
-        [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(36);
-        }];
-        
-        NSDictionary *params = @{@"page_type":@"city_switch",
-                                 @"enter_from":@"search"};
-        [FHUserTracker writeEvent:@"city_switch_show" params:params];
-        
-    }else {
-        self.redirectTipView.hidden = YES;
-        [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
-    }
-}
-
-- (void)closeRedirectTip
-{
-    self.showRedirectTip = NO;
-    self.redirectTipView.hidden = YES;
-    [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(0);
-    }];
-    NSDictionary *params = @{@"click_type":@"cancel",
-                             @"enter_from":@"search"};
-    [FHUserTracker writeEvent:@"city_click" params:params];
-}
-
-- (void)clickRedirectTip
-{
-    if (self.redirectTips.openUrl.length > 0) {
+    if (openUrl.length > 0) {
         
         [FHEnvContext sharedInstance].refreshConfigRequestType = @"switch_house";
 
-        [FHEnvContext openSwitchCityURL:self.redirectTips.openUrl completion:^(BOOL isSuccess) {
+        [FHEnvContext openSwitchCityURL:openUrl completion:^(BOOL isSuccess) {
             // 进历史
             if (isSuccess) {
                 FHCityListViewModel *cityListViewModel = [[FHCityListViewModel alloc] initWithController:nil tableView:nil];

@@ -32,6 +32,11 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <FHEnvContext.h>
+#import <JSONAdditions.h>
+#import "FHBaseViewController.h"
+#import "TTUIResponderHelper.h"
+#import "UIViewController+TTMovieUtil.h"
+#import "FHIntroduceManager.h"
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
@@ -98,7 +103,10 @@ static APNsManager *_sharedManager = nil;
 
 - (void)handleRemoteNotification:(NSDictionary *)userInfo
 {
-    
+    //当push进来引导页已经在显示了，则关闭
+    if([FHIntroduceManager sharedInstance].isShowing){
+        [[FHIntroduceManager sharedInstance] hideIntroduceView];
+    }
     //news_notification_view埋点，用户在后台点击推送时上报，如果有rid则上报rid
     NSString *rid = [userInfo tt_stringValueForKey:@"rid"];
     NSString *postBack = [userInfo tt_stringValueForKey:@"post_back"];
@@ -167,6 +175,11 @@ static APNsManager *_sharedManager = nil;
         [TTTracker eventV3:@"push_click" params:param];
 
         [FHLocManager sharedInstance].isShowHomeViewController = NO;
+        
+        UIViewController *topVC = [UIViewController ttmu_currentViewController];
+        if ([topVC isKindOfClass:[UIViewController class]]) {
+            [topVC.view endEditing:YES];
+        }
 
         NSString *appURL = paramObj.scheme;
         if (isEmptyString(appURL) || [TTRoute conformsToRouteWithScheme:appURL]) {
@@ -178,36 +191,30 @@ static APNsManager *_sharedManager = nil;
             [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
 
             if ([[handledOpenURL host] isEqualToString:@"main"]) {
-                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:handledOpenURL];
-                NSDictionary* params = [obj queryParams];
-                if (params != nil) {
-                    NSString* target = params[@"select_tab"];
-                    if (target != nil && target.length > 0) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
-                    } else {
-                        NSAssert(false, @"推送消息的tag为空");
+                NSString * str = [openURL stringByAppendingString:@"&needToRoot=0"];
+                handledOpenURL = [TTStringHelper URLWithURLString:str];
+                [[TTRoute sharedRoute] openURL:handledOpenURL userInfo:nil objHandler:nil];
+//                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:handledOpenURL];
+//                NSDictionary* params = [obj queryParams];
+//                if (params != nil) {
+//                    NSString* target = params[@"select_tab"];
+//                    if (target != nil && target.length > 0) {
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:@{@"tag": target}];
+//                    } else {
+//                        NSAssert(false, @"推送消息的tag为空");
+//                    }
+//                    
+            } else {
+                // Push同一种页面处理
+                /* 需求未明确 先注释吧
+                UIViewController *topVC = [UIViewController ttmu_currentViewController];
+                if ([topVC isKindOfClass:[FHBaseViewController class]]) {
+                    BOOL retFlag = [(FHBaseViewController *)topVC isSamePageAndParams:handledOpenURL];
+                    if (retFlag) {
+                        return;
                     }
                 }
-            } else {
-                // push对消息特殊处理
-//                if ([[handledOpenURL host] isEqualToString:@"message_detail_list"]) {
-////                    if (![TTAccountManager isLogin]) {
-////                        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-////                            if (type == TTAccountAlertCompletionEventTypeDone) {
-////                                //登录成功 走发送逻辑
-////                                if ([TTAccountManager isLogin]) {
-////                                    [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-////                                    [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL];                        }
-////                             }
-////                        }];
-////                    } else
-////                    {
-//                        [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-//                        [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL];
-////                    }
-//                    
-//                    return;
-//                }
+                 */
                 
                 id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
                 [envBridge setTraceValue:@"push" forKey:@"origin_from"];

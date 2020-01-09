@@ -20,7 +20,6 @@
 #import <TTNetBusiness/TTRouteSelectionServerConfig.h>
 #import <TTNetBusiness/TTHttpsControlManager.h>
 #import "TTLocationManager.h"  //add by songlu
-#import "TTFingerprintManager.h"
 #import <CommonCrypto/CommonCrypto.h>
 #import "SSCookieManager.h"
 #import "AKTaskSettingHelper.h"
@@ -168,9 +167,9 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
             [commonParams setValue:cityId forKey:@"city_id"];
         }
 
-        if (/*[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled &&*/ !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {
-            [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
-        }
+//        if (/*[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled &&*/ !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {
+//            [commonParams addEntriesFromDictionary:@{@"fp":[TTFingerprintManager sharedInstance].fingerprint}];
+//        }
 
 //      NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
 

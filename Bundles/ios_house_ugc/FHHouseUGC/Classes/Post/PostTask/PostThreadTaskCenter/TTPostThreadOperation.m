@@ -21,6 +21,7 @@
 #import <TTBaseLib/NSObject+TTAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTUGCFoundation/TTUGCDefine.h>
+#import "HMDTTMonitor.h"
 
 @interface TTPostThreadOperation ()
 
@@ -405,6 +406,9 @@
                 [monitorDictionary setValue:@(error.code) forKey:@"error"];
             }
             
+            // 图片上传失败
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_upload_image" metric:monitorDictionary category:@{@"status":@(1)} extra:nil];
+            
             [[TTPostThreadBridge sharedInstance] monitorPostThreadStatus:TTPostThreadStatusImageUploadFailed
                                                                    extra:[monitorDictionary copy]
                                                                    retry:self.task.errorPosition != TTPostThreadTaskErrorPositionNone];
@@ -414,6 +418,9 @@
             [self updateToState:TTPostThreadOperationStateFailed];
         }
         else {
+            // 图片上传成功
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_upload_image" metric:nil category:@{@"status":@(0)} extra:nil];
+            
             if (!isEmptyString(self.task.postID)) {
                 [self postEditedThread];
             } else {

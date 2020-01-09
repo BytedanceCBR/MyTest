@@ -127,6 +127,7 @@ static FHHouseDislikeView *__visibleDislikeView;
         [_dislikeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_dislikeBtn.titleLabel setFont:[UIFont themeFontMedium:13]];
         _okBtn.layer.cornerRadius = 4;
+        [_okBtn setBackgroundColor:[UIColor themeRed4]];
         
     }
     return self;
