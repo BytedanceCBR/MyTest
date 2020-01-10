@@ -574,8 +574,8 @@
         }
     }
 
-    [FHHouseDetailAPI requestRealtorEvaluationFeedback:self.viewModel.houseId targetType:self.viewModel.houseType realtorId:self.realtorId content:self.inputTextView.text score:self.selectStar
-                                                  tags:tags completion:^(bool succss, NSError *_Nonnull error) {
+    [FHHouseDetailAPI requestRealtorEvaluationFeedback:self.viewModel.houseId targetType:self.viewModel.houseType evaluationType:0 realtorId:self.realtorId content:self.inputTextView.text score:self.selectStar
+                                                  tags:tags completion:^(bool succss, NSError *_Nullable error) {
                 if (succss) {
                     [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
                 } else {

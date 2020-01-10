@@ -223,7 +223,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     NSString *targetId = traceParams[@"target_id"];
     NSInteger targetType = traceParams[@"target_type"];
 
-    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType realtorId:realtorId content:content score:scoreCount tags:scoreTags completion:^(bool succss, NSError *_Nonnull error) {
+    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:1 realtorId:realtorId content:content score:scoreCount tags:scoreTags completion:^(bool succss, NSError *_Nullable error) {
         if (succss) {
             [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
         } else {

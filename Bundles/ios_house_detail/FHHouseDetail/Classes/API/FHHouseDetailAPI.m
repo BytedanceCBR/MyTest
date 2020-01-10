@@ -562,7 +562,7 @@
     }];
 }
 
-+ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nonnull))completion
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion
 {
     NSString *path = @"/f100/api/associate/realtor_evaluation/assign";
     NSMutableDictionary *param = [NSMutableDictionary new];
@@ -572,8 +572,10 @@
     if(!isEmptyString(realtorId)){
         param[@"realtor_id"] = @(realtorId.longLongValue);;
     }
+    param[@"house_id"] = @(targetId.longLongValue);
     param[@"target_id"] = @(targetId.longLongValue);
     param[@"target_type"] = @(targetType);
+    param[@"type"] = @(evaluationType);
     param[@"score"] = @(score);
     if(!isEmptyString(content)) {
         param[@"content"] = content;
