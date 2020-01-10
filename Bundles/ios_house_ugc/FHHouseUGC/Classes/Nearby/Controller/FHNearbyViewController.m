@@ -173,7 +173,7 @@
         wself.lastRequestTime = [[NSDate date] timeIntervalSince1970];
     }];
     
-    [_alertVC addActionWithTitle:@"开启定位" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+    [_alertVC addActionWithTitle:@"前往设置" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         [wself trackLocationAuthClick:NO];
         wself.needRefresh = YES;
         NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
