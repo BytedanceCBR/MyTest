@@ -113,7 +113,7 @@ typedef enum : NSUInteger {
         if(wself.isReadOnly) {
             [wself exitPage];
         } else {
-            [wself showAlertToAskUserDecision];
+            [wself showAlertToAskUserDecision: YES];
         }
     };
     
@@ -277,7 +277,7 @@ typedef enum : NSUInteger {
 - (void)completeButtonPressed:(UIButton *)sender {
     [self traceCompletedButtonPressed];
     if(self.textView.text.length == 0) {
-        [self showAlertToAskUserDecision];
+        [self showAlertToAskUserDecision:NO];
     } else {
         [self showActionSheet];
     }
@@ -355,16 +355,18 @@ typedef enum : NSUInteger {
     [self goBack];
 }
 
-- (void)showAlertToAskUserDecision {
+- (void)showAlertToAskUserDecision:(BOOL)isLeftButtonAction {
     
     [self.textView resignFirstResponder];
     
     BOOL isEmpty = (self.textView.text.length == 0) && ![self.textView.text isEqualToString:self.content];
-    NSString *title = isEmpty ? @"确定清空公告栏?" : @"退出编辑?";
+    BOOL isShowEmptyAlert = isEmpty && !isLeftButtonAction;
+    
+    NSString *title = isShowEmptyAlert ? @"确定清空公告栏?" : @"退出编辑?";
     
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
     
-    if(isEmpty) {
+    if(isShowEmptyAlert) {
         [self traceAlertShowWhenUserDecideWithEventName:@"notice_empty_popup_show"];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             [self traceAlertClickWhenUserDecideWithOptionName:@"cancel"];
