@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+@class UNUserNotificationCenter;
+@class UNNotificationResponse;
 
 @interface FHOpenUrlStashItem : NSObject
 
@@ -33,6 +35,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHUNRemoteNOficationStashItem : NSObject
+
+@property(nonatomic , strong) UNUserNotificationCenter *center;
+@property(nonatomic , strong) UNNotificationResponse *response;
+@property(nonatomic , copy)  void (^completionHandler)();
+
+@end
+
 @interface FHStashModel : NSObject
 
 
@@ -47,6 +57,10 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)addRemoteNotification:(UIApplication *)application userInfo:(NSDictionary *)userInfo;
 
 -(FHRemoteNotificationStashItem *)notificationItem;
+
+-(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler ;
+
+-(FHUNRemoteNOficationStashItem *)unnotificationItem;
 
 @end
 

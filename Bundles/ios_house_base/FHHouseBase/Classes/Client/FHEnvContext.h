@@ -48,6 +48,8 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 
 @class FHMessageManager;
 @class TTReachability;
+@class UNUserNotificationCenter;
+@class UNNotificationResponse;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHEnvContext : NSObject
@@ -287,6 +289,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)addContinueActivity:(UIApplication *)application activity:(NSUserActivity *)activity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler;
 
 -(void)addRemoteNotification:(UIApplication *)application userInfo:(NSDictionary *)userInfo;
+
+-(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler ;
 
 @end
 

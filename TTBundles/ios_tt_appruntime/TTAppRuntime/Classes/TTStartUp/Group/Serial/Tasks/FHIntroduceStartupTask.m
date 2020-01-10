@@ -27,8 +27,11 @@ DEC_TASK("FHIntroduceStartupTask",FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
+
+    BOOL fromAPNS = [[self class] isFromAPNSWithOptions:launchOptions];
     //只显示一次
-    if([FHEnvContext isIntroduceOpen] && [[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]){
+    if([FHEnvContext isIntroduceOpen] && !fromAPNS && [[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]){
+    //只显示一次,push进来不显示
         if([FHIntroduceManager sharedInstance].alreadyShow){
             return;
         }
