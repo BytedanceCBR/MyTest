@@ -20,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 - (void)goToSecretProtocol;
 
-@optional
-- (void)acceptCheckBoxChange:(BOOL)selected;
+//@optional
+//- (void)acceptCheckBoxChange:(BOOL)selected;
 
 @optional
 - (void)otherLoginAction;
@@ -39,7 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHLoginView : UIView
 
-@property(nonatomic, strong) FHLoginAcceptButton *acceptCheckBox;
 @property(nonatomic, strong) UIScrollView *scrollView;
 @property(nonatomic, strong) UITextField *phoneInput;
 @property(nonatomic, strong) UITextField *varifyCodeInput;
