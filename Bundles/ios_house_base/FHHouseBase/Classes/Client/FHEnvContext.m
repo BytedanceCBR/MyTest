@@ -1036,7 +1036,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
     NSString *currentTabIdentifier = [self getCurrentTabIdentifier];
 
     NSDictionary *tagDic = [TTArticleTabBarController tagToLogEventName];
-    tabName = tagDic[currentTabIdentifier];
+    if(currentTabIdentifier && tagDic[currentTabIdentifier]){
+        tabName = tagDic[currentTabIdentifier];
+    }
     if([currentTabIdentifier isEqualToString:kFHouseFindTabKey]){
         if([FHEnvContext isUGCOpen]){
             tabName = @"neighborhood_tab";
