@@ -102,21 +102,21 @@
         if (numberOfLines > 0) {
             parseEmojiCount = (100 * (numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:font.pointSize needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:(font.pointSize - 2) needParseCount:parseEmojiCount];
         if (attrStr) {
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
             [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
             [attributes setValue:font forKey:NSFontAttributeName];
             
-            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-            
-            paragraphStyle.minimumLineHeight = 21;
-            paragraphStyle.maximumLineHeight = 21;
-            paragraphStyle.lineSpacing = 2;
-            
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-            [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+            if(numberOfLines != 1){
+                NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+                paragraphStyle.minimumLineHeight = 21;
+                paragraphStyle.maximumLineHeight = 21;
+                paragraphStyle.lineSpacing = 2;
+                paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+                [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+            }
             
             [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
             

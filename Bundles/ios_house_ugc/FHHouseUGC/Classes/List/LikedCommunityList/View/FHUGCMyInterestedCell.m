@@ -30,7 +30,7 @@
 @property(nonatomic, strong) FHUGCFollowButton *joinBtn;
 @property(nonatomic, strong) UIView *bottomSepLine1;
 @property(nonatomic, strong) UIView *bottomSepLine2;
-
+@property(nonatomic, strong) TTUGCAttributedLabel *announcementLabel;
 @property(nonatomic, strong) TTUGCAttributedLabel *postDescLabel;
 @property(nonatomic, strong) UIImageView *postIcon;
 @property(nonatomic, strong) UIImageView *locationIcon;
@@ -114,6 +114,13 @@
         _descLabel.text = model.socialGroup.countText;
         _sourceLabel.text = model.socialGroup.suggestReason;
         _postDescLabel.text = model.threadInfo.content;
+        
+        if(isEmptyString(model.socialGroup.announcement)){
+            self.announcementLabel.hidden = YES;
+        }else{
+            self.announcementLabel.hidden = NO;
+            [FHUGCCellHelper setRichContent:_announcementLabel content:model.socialGroup.announcement font:[UIFont themeFontRegular:10] numberOfLines:1];
+        }
         //内容
         if(isEmptyString(model.threadInfo.content)){
             self.postDescLabel.hidden = YES;
@@ -140,7 +147,7 @@
             make.centerY.mas_equalTo(self.postIcon);
             make.left.mas_equalTo(self.containerView).offset(10);
             make.right.mas_equalTo(self.postIcon.mas_left).offset(-10);
-            make.height.mas_equalTo(40);
+//            make.height.mas_equalTo(40);
         }];
         
         [self.bottomSepLine2 mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -192,6 +199,9 @@
     
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeGray3]];
     [self.containerView addSubview:_descLabel];
+    
+    self.announcementLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    [self.containerView addSubview:_announcementLabel];
     
     self.sourceLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor themeGray3]];
     [self.containerView addSubview:_sourceLabel];
@@ -245,7 +255,7 @@
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.containerView).offset(14);
+        make.top.mas_equalTo(self.containerView).offset(10);
         make.left.mas_equalTo(self.icon.mas_right).offset(10);
         make.right.mas_equalTo(self.joinBtn.mas_left).offset(-10);
         make.height.mas_equalTo(21);
@@ -253,6 +263,13 @@
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(2);
+        make.left.mas_equalTo(self.titleLabel);
+        make.right.mas_equalTo(self.titleLabel);
+        make.height.mas_equalTo(17);
+    }];
+    
+    [self.announcementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.descLabel.mas_bottom);
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self.titleLabel);
         make.height.mas_equalTo(17);
@@ -275,7 +292,7 @@
         make.centerY.mas_equalTo(self.postIcon);
         make.left.mas_equalTo(self.containerView).offset(10);
         make.right.mas_equalTo(self.postIcon.mas_left).offset(-10);
-        make.height.mas_equalTo(40);
+//        make.height.mas_equalTo(40);
     }];
     
     [self.bottomSepLine2 mas_makeConstraints:^(MASConstraintMaker *make) {
