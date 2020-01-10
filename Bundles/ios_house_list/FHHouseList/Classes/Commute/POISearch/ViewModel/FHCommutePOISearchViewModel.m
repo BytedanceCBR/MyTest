@@ -461,7 +461,6 @@
           }
       }];
     
-    
     [alertVC showFrom:self.viewController.navigationController animated:YES];
     
 }

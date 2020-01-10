@@ -15,7 +15,6 @@
 #import <TTAccountBusiness.h>
 
 #import "TTUserProfileInputView.h"
-#import "ArticleMobileNumberViewController.h"
 #import "ArticleMobilePasswordViewController.h"
 #import "ArticleMobileChangeViewController.h"
 #import "TTEditUserProfileViewController.h"

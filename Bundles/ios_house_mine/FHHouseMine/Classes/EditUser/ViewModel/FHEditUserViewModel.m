@@ -22,15 +22,17 @@
 #import <FHCommonApi.h>
 #import "FHUserInfoManager.h"
 #import "FHHomePageSettingController.h"
+#import <TTImagePicker/TTImagePickerController.h>
 #import <AssetsLibrary/ALAssetsLibrary.h>
 #import <AVFoundation/AVFoundation.h>
 
-@interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate,FHEditUserBaseCellDelegate,FHHomePageSettingControllerDelegate>
+@interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate,FHEditUserBaseCellDelegate,FHHomePageSettingControllerDelegate,TTImagePickerControllerDelegate>
 
 @property(nonatomic, strong) NSArray *dataList;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) FHEditableUserInfo *userInfo;
 @property(nonatomic, weak) FHEditUserController *viewController;
+@property (nonatomic, strong) TTImagePickerController *ttImagePickerController;
 
 @end
 
@@ -230,7 +232,11 @@
             UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
             if (buttonIndex < [imageSourceTypes count])
                 sourceType = [imageSourceTypes[buttonIndex] unsignedIntegerValue];
-            [self imagePickerWithSource:sourceType forAvatar:YES];
+            if (buttonIndex == 1) {
+                [self imagePickerResponser];
+            }else {
+                [self imagePickerWithSource:sourceType forAvatar:YES];
+            }
         }
         
         // log
@@ -380,6 +386,70 @@
     };
     
     [FHMineAPI uploadUserPhoto:image completion:didCompletedBlock];
+}
+
+//调用图片选择器
+- (void) imagePickerResponser
+{
+    [[self getTTImagePicker] presentOn:self.viewController.navigationController];
+}
+
+
+#pragma mark --- ttimage picker delegate ---
+
+- (TTImagePickerController *)getTTImagePicker {
+    [TTImagePickerManager manager].accessIcloud = YES;
+    if (!_ttImagePickerController) {
+        _ttImagePickerController = [[TTImagePickerController alloc] initWithDelegate:self];
+    }
+    _ttImagePickerController.maxImagesCount = 1;
+    _ttImagePickerController.isRequestPhotosBack = NO;
+    //    _ttImagePickerController.isHideGIF = YES;
+    return _ttImagePickerController;
+}
+
+- (void)ttimagePickerController:(TTImagePickerController *)picker didFinishTakePhoto:(UIImage *)photo selectedAssets:(NSArray<TTAssetModel *> *)assets withInfo:(NSDictionary *)info {
+    if (photo != nil) {
+        [self uploadImage:photo];
+    }
+}
+
+- (void)ttimagePickerController:(TTImagePickerController *)picker
+         didFinishPickingPhotos:(NSArray<UIImage *> *)photos
+                   sourceAssets:(NSArray<TTAssetModel *> *)assets {
+    
+    if (photos.count > 0) {
+        UIImage *image = [photos firstObject];
+        UIImage *scaleImage = [[self class]cropSquareImage:image];
+        [self uploadImage:scaleImage];
+    }else if (assets.count > 0){
+        TTAssetModel *model = [assets firstObject];
+        WeakSelf;
+        [[TTImagePickerManager manager] getPhotoWithAsset:model.asset completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+            if (photo) {
+                [wself uploadImage:photo];
+            }
+        }];
+        
+    }
+}
+
+// 以图片中心为中心，以最小边为边长，裁剪正方形图片
++ (UIImage *)cropSquareImage:(UIImage *)image
+{
+    CGImageRef sourceImageRef = [image CGImage];//将UIImage转换成CGImageRef
+    
+    CGFloat _imageWidth = image.size.width * image.scale;
+    CGFloat _imageHeight = image.size.height * image.scale;
+    CGFloat _width = _imageWidth > _imageHeight ? _imageHeight : _imageWidth;
+    CGFloat _offsetX = (_imageWidth - _width) / 2;
+    CGFloat _offsetY = (_imageHeight - _width) / 2;
+    
+    CGRect rect = CGRectMake(_offsetX, _offsetY, _width, _width);
+    CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, rect);//按照给定的矩形区域进行剪裁
+    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+    
+    return newImage;
 }
 
 - (NSString *)getHomeAuthDesc:(NSInteger)auth {
