@@ -91,22 +91,22 @@
     
     return str;
 }
-- (iCloudSyncStatus)status
+- (FHiCloudSyncStatus)status
 {
     if (!self.assetModel) {
-        return iCloudSyncStatusNone;
+        return FHiCloudSyncStatusNone;
     }
     //icloud已有图
     if (![[TTImagePickerManager manager] isNeedIcloudSync:self.assetModel.asset]) {
-        return iCloudSyncStatusNone;
+        return FHiCloudSyncStatusNone;
     }
     if (!self.photoResult) {
-        return iCloudSyncStatusExecuting;
+        return FHiCloudSyncStatusExecuting;
     }
     if (!self.photoResult.data && !self.photoResult.image) {
-        return iCloudSyncStatusFailed;
+        return FHiCloudSyncStatusFailed;
     }
-    return iCloudSyncStatusSuccess;
+    return FHiCloudSyncStatusSuccess;
 }
 
 - (BOOL)isCompressed {
@@ -116,10 +116,10 @@
 - (void)iCloud_addCompleteBlock:(iCloudSyncCompletion)block {
     [self.iCloudCompletes addObject:block];
     
-    if (self.status == iCloudSyncStatusSuccess) {
+    if (self.status == FHiCloudSyncStatusSuccess) {
         block(YES);
     }
-    if (self.status == iCloudSyncStatusFailed) {
+    if (self.status == FHiCloudSyncStatusFailed) {
         block(NO);
     }
 }
@@ -231,7 +231,7 @@
                 block(success? _executingTask.realFilePath: nil);
             }
         }
-        TTMainSafeExecuteBlock( ^{
+        FHMainSafeExecuteBlock( ^{
             _executingTask = nil;
             [self p_releaseWaiting];
         });
@@ -240,7 +240,7 @@
 
 - (void)queryFilePathWithTask:(TTUGCImageCompressTask*)task complete:(void (^)(NSString *))block {
     WeakSelf;
-    TTMainSafeExecuteBlock( ^{
+    FHMainSafeExecuteBlock( ^{
         StrongSelf;
         if (task) {
             NSString *preCompressFilePath = [NSHomeDirectory() stringByAppendingFormat:@"%@_pre", task.key];
@@ -483,7 +483,7 @@
 
 - (void)removeCompressTask:(TTUGCImageCompressTask *)task {
     if (task) {
-        TTMainSafeExecuteBlock(^{
+        FHMainSafeExecuteBlock(^{
             if ([self.waitingTasks containsObject:task]) {
                 [self.waitingTasks removeObject:task];
             }
@@ -498,7 +498,7 @@
 - (void)deleteTask:(TTUGCImageCompressTask *)task {
     if (task) {
         [self removeCompressTask:task];
-        TTMainSafeExecuteBlock(^{
+        FHMainSafeExecuteBlock(^{
             if ([_fileManager fileExistsAtPath:task.realFilePath]) {
                 [_fileManager removeItemAtPath:task.realFilePath error:nil];
             }
@@ -578,7 +578,7 @@
 
 #pragma - mark Private method
 - (void)p_prepareTask:(TTUGCImageCompressTask **)task {
-    TTMainSafeSyncExecuteBlock(^{
+    FHMainSafeSyncExecuteBlock(^{
         if ([_executingTask isEqual:*task]) {
             *task = _executingTask;
             return;
