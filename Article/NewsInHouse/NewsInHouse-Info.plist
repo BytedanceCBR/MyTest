@@ -189,9 +189,9 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>以便我们更好地为您推荐房源及丰富信息推荐维度</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>方便您使用拍照功能上传头像，发送图片以及发帖</string>
+	<string>方便您使用发语音功能</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>要允许幸福里访问您设备上的照片、媒体内容和文件吗？</string>
+	<string>以便您正常发送、发布及保存图片</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>以便您正常发送、发布及保存图片</string>
 	<key>SSAppID</key>
