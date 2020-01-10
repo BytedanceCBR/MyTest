@@ -193,7 +193,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>要允许幸福里访问您设备上的照片、媒体内容和文件吗？</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>方便您使用拍照功能上传头像，发送图片以及发帖</string>
+	<string>以便您正常发送、发布及保存图片</string>
 	<key>SSAppID</key>
 	<string>1370</string>
 	<key>SSMID</key>
