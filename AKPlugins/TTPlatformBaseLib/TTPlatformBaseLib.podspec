@@ -79,7 +79,7 @@ s.subspec 'TTTrackerWrapper' do |ss|
     ss.requires_arc =   true
     ss.source_files =   'TTPlatformBaseLib/TTTrackerWrapper/*.{h,m}'
     ss.public_header_files = 'TTPlatformBaseLib/TTTrackerWrapper/*.h'
-    ss.dependency 'TTTracker'
+   # ss.dependency 'TTTracker'
 end
 
 
@@ -87,5 +87,5 @@ end
 # s.public_header_files = 'TTPlatformBaseLib/Classes/**/*.h'
 # s.frameworks      = 'Crashlytics', 'Fabric'
 
-    s.dependency 'SSZipArchive', '~> 1.6.2'
+  #  s.dependency 'SSZipArchive', '~> 1.6.2'
 end

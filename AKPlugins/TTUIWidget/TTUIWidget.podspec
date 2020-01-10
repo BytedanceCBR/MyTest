@@ -33,13 +33,4 @@ end
   }
 
 #s.frameworks      = 'Crashlytics', 'Fabric'
-  s.dependency 'TTBaseLib'
-  s.dependency 'TTThemed'
-  s.dependency 'TTImage'
-  s.dependency 'TTRoute'
-  s.dependency 'TTVerifyKit'
-  s.dependency 'KVOController'
-  s.dependency 'Masonry', '1.0.1'
-  s.dependency "TTKitchen"
-  s.dependency 'lottie-ios'
-end
+  end

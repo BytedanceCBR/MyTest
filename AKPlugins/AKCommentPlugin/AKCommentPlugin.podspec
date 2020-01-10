@@ -46,7 +46,7 @@ Pod::Spec.new do |s|
   s.dependency 'BDTArticle'
   s.dependency 'SDWebImage'
   s.dependency 'YYWebImage'
-  s.dependency 'YYCache'
+  #s.dependency 'YYCache'
   s.dependency 'Crashlytics'
   s.dependency 'TTFriendRelation'
   s.dependency 'TTEntry'

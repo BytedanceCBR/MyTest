@@ -32,12 +32,6 @@ Pod::Spec.new do |s|
     ss.source_files = 'Classes/**/*.{h,m}', 'Classes/TTAccountBusiness.{h,m}'
     ss.public_header_files = 'Classes/**/*.h', 'Classes/TTAccountBusiness.h'
     ss.private_header_files = 'Classes/AccountManager/**/AccountManager.h'
-    ss.dependency "TTAccountSDK/Account"
-    ss.dependency "TTAccountSDK/WeChatAccount"
-    ss.dependency "TTAccountLogin"
-    ss.dependency "TTPlatformBaseLib/TTKeyChainStorage"
-    ss.dependency "TTServiceKit"
-    ss.dependency "TTInstallService"
   end
 
 end

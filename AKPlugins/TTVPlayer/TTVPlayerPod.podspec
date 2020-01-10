@@ -42,12 +42,4 @@ Pod::Spec.new do |s|
         '#import "TTVPlayerPrefix.h"'
     ]
     
-    s.dependency 'TTBaseLib'
-    s.dependency 'libextobjc'
-    s.dependency 'TTReachability'
-    s.dependency 'TTVideoEngine'
-    s.dependency 'TTPlayerSDK'
-    #s.dependency 'TTVideoEngine', '>= 1.9.4.5'
-    #s.dependency 'TTPlayerSDK', '>= 2.8.0.0'
-    s.dependency 'Masonry'
 end

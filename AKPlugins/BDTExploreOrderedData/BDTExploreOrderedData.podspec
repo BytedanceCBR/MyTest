@@ -23,9 +23,9 @@ ExploreOrderedData是一个包含ExploreOrderedData类的pod库，方便其它po
   s.ios.deployment_target = '7.0'
   s.source_files = 'BDTExploreOrderedData/Classes/**/*'
 
-    s.dependency 'TTEntityBase', '~> 0.2'
-    s.dependency 'BDTArticle', '~> 0.1'
-    s.dependency 'TTPlatformUIModel/TTCategory', '~> 0.2'
-    s.dependency 'BDTSharedHeaders', '~> 0.1'
+  #  s.dependency 'TTEntityBase', '~> 0.2'
+   # s.dependency 'BDTArticle', '~> 0.1'
+#    s.dependency 'TTPlatformUIModel/TTCategory', '~> 0.2'
+   # s.dependency 'BDTSharedHeaders', '~> 0.1'
 
 end

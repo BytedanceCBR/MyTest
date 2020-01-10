@@ -33,7 +33,7 @@ Pod::Spec.new do |s|
   s.dependency 'TTPlatformUIModel'
   s.dependency 'TTThemed'
   s.dependency 'Crashlytics'
-  s.dependency 'TTEntry'
+#  s.dependency 'TTEntry'
   s.dependency 'TTUGCFoundation/RequestMonitor'
 
 # s.dependency 'TTEntry' 相互依赖了，先去掉

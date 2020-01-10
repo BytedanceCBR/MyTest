@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
 
   s.source_files = 'TTPhotoScrollVC/Classes/**/*'
   s.dependency 'TTThemed'
-  s.dependency 'TTImagePicker/Category'
+#  s.dependency 'TTImagePicker/Category'
   s.dependency 'SDWebImage'
   s.dependency 'TTTracker'
   s.dependency 'TTImagePreviewAnimateManager'
