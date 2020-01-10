@@ -32,7 +32,6 @@
 #import "TTSandBoxHelper.h"
 //#import <TTLiveMainUI/TTLiveMainViewController.h>
 
-#import "ArticleMobileSettingViewController.h"
 #import "TTPersistence.h"
 #import "TTURLUtils.h"
 #import "WDCommonLogic.h"

@@ -103,6 +103,10 @@ static APNsManager *_sharedManager = nil;
 
 - (void)handleRemoteNotification:(NSDictionary *)userInfo
 {
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        //正在展示隐私弹窗        
+        return;
+    }
     //当push进来引导页已经在显示了，则关闭
     if([FHIntroduceManager sharedInstance].isShowing){
         [[FHIntroduceManager sharedInstance] hideIntroduceView];
