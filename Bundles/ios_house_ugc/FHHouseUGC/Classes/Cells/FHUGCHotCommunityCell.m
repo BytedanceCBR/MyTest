@@ -8,7 +8,7 @@
 #import "FHUGCHotCommunityCell.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHBaseCollectionView.h"
-#import "FHUGCHotTopicSubCell.h"
+#import "FHUGCHotCommunitySubCell.h"
 #import <TTRoute.h>
 #import "FHUserTracker.h"
 #import "FHUGCHotCommunityLayout.h"
@@ -78,14 +78,14 @@
     
     [self.contentView addSubview:_collectionView];
     
-    [_collectionView registerClass:[FHUGCHotTopicSubCell class] forCellWithReuseIdentifier:cellId];
+    [_collectionView registerClass:[FHUGCHotCommunitySubCell class] forCellWithReuseIdentifier:cellId];
 }
 
 - (void)initConstraints {
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(5);
+        make.top.mas_equalTo(self.contentView).offset(15);
         make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(180);
+        make.height.mas_equalTo(188);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -119,7 +119,7 @@
 }
 
 + (CGFloat)heightForData:(id)data {
-    return 195;
+    return 223;
 }
 
 - (void)moreData {
@@ -166,10 +166,12 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    FHUGCBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
+    FHUGCHotCommunitySubCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
     
     if (indexPath.row < self.dataList.count) {
-        [cell refreshWithData:self.dataList[indexPath.row]];
+        [cell refreshWithData:self.dataList[indexPath.row] index:indexPath.row];
+    }else{
+        [cell refreshWithData:nil index:indexPath.row];
     }
     
     return cell;

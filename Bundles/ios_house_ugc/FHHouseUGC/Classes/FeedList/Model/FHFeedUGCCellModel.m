@@ -665,6 +665,12 @@
         [desc appendAttributedString:publishTimeAStr];
     }
     
+    NSString *read = @"  已读 2334";
+    if(![read isEqualToString:@""]){
+        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
+        [desc appendAttributedString:readAStr];
+    }
+    
     // 法务合规，如果没有定位权限，不展示位置信息
     if(!isEmptyString(model.distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
         NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
@@ -690,6 +696,12 @@
     if(![publishTime isEqualToString:@""]){
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
         [desc appendAttributedString:publishTimeAStr];
+    }
+    
+    NSString *read = @"  已读 2334";
+    if(![read isEqualToString:@""]){
+        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
+        [desc appendAttributedString:readAStr];
     }
     
     // 法务合规，如果没有定位权限，不展示位置信息

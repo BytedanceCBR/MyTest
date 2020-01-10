@@ -88,7 +88,7 @@
     }
 }
 
-+ (void)setRichContent:(TTUGCAttributedLabel *)label content:(NSString *)content font:(UIFont *)font numberOfLines:(NSInteger)numberOfLines {
++ (void)setRichContent:(TTUGCAttributedLabel *)label content:(NSString *)content font:(UIFont *)font numberOfLines:(NSInteger)numberOfLines color:(UIColor *)color {
     TTRichSpanText *richContent = [[TTRichSpanText alloc] initWithText:content richSpans:nil];
     
     TTRichSpanText *threadContent = [[TTRichSpanText alloc] initWithText:@"" richSpanLinks:nil imageInfoModelDictionary:nil];
@@ -106,7 +106,7 @@
         if (attrStr) {
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
-            [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
+            [attributes setValue:color forKey:NSForegroundColorAttributeName];
             [attributes setValue:font forKey:NSFontAttributeName];
             
             if(numberOfLines != 1){

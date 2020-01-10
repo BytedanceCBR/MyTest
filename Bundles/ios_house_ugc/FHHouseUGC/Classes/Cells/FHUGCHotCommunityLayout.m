@@ -13,6 +13,7 @@
 @property (nonatomic, strong) NSMutableArray *attrsArray;
 //内容的高度
 @property (nonatomic, assign) CGFloat contentHeight;
+@property (nonatomic, assign) CGSize firstItemSize;
 
 @end
 
@@ -22,6 +23,7 @@
     self = [super init];
     if (self) {
         _attrsArray = [NSMutableArray array];
+        _firstItemSize = CGSizeMake(100, 188);
     }
     return self;
 }
@@ -89,15 +91,15 @@
             destRow = (indexPath.row - 1) % eachRowItemCount + 1;
         }
     }
-    
+
     if(indexPath.row == 0){
         x = self.sectionInset.left;
         y = self.sectionInset.top;
     }else if((indexPath.row == itemCount - 1) && itemCount % 2 == 0){
-        x = self.sectionInset.left + (lastOneDestRow + 1) * (w + self.minimumLineSpacing);
+        x = self.sectionInset.left + lastOneDestRow  * (w + self.minimumLineSpacing) + self.firstItemSize.width + self.minimumLineSpacing;
         y = self.sectionInset.top;
     }else{
-        x = self.sectionInset.left + destRow * (w + self.minimumLineSpacing);
+        x = self.sectionInset.left + (destRow - 1) * (w + self.minimumLineSpacing) + self.firstItemSize.width + self.minimumLineSpacing;
         y = self.sectionInset.top + destColumn * (h + self.minimumLineSpacing);
     }
     
@@ -113,10 +115,12 @@
 
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath itemCount:(NSInteger)itemCount {
     if(indexPath.row == 0){
-        return CGSizeMake(90, 180);
-    }else if((indexPath.row == itemCount - 1) && itemCount % 2 == 0){
-        return CGSizeMake(90, 180);
-    }else{
+        return self.firstItemSize;
+    }
+//    else if((indexPath.row == itemCount - 1) && itemCount % 2 == 0){
+//        return CGSizeMake(90, 180);
+//    }
+    else{
         return CGSizeMake(90, 90);
     }
 }
