@@ -1113,17 +1113,24 @@ static NSInteger kGetLightRequestRetryCount = 3;
         
         FHContinueActivityStashItem *activityItem = [_stashModel stashActivityItem];
         if (activityItem) {
-            [[UIApplication sharedApplication].delegate application:activityItem.application continueUserActivity:activityItem.activity restorationHandler:activityItem.restorationHandler];
+            if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(application:continueUserActivity:restorationHandler:)]) {
+                [[UIApplication sharedApplication].delegate application:activityItem.application continueUserActivity:activityItem.activity restorationHandler:activityItem.restorationHandler];
+            }
         }
         
         FHRemoteNotificationStashItem *notificationItem = [_stashModel notificationItem];
         if (notificationItem) {
-            [[UIApplication sharedApplication].delegate application:notificationItem.application didReceiveLocalNotification:notificationItem.userInfo];
+            if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
+                [[UIApplication sharedApplication].delegate application:notificationItem.application didReceiveRemoteNotification:notificationItem.userInfo];
+            }
+
         }
         
         FHUNRemoteNOficationStashItem *unnotificationItem = [_stashModel unnotificationItem];
         if (unnotificationItem) {
-            [[UNUserNotificationCenter currentNotificationCenter].delegate userNotificationCenter:unnotificationItem.center didReceiveNotificationResponse:unnotificationItem.response withCompletionHandler:unnotificationItem.completionHandler];
+            if ([[UNUserNotificationCenter currentNotificationCenter].delegate respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:)]) {
+                [[UNUserNotificationCenter currentNotificationCenter].delegate userNotificationCenter:unnotificationItem.center didReceiveNotificationResponse:unnotificationItem.response withCompletionHandler:unnotificationItem.completionHandler];
+            }
         }
         
     }
