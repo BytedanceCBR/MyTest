@@ -43,15 +43,17 @@ def fhPods
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev'
     #    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '8ec6c554795f3f07a618a8ae8cded496a41134de'
     #    pod 'FHCommonUI', :path => '../../library/ios_common_ui'
-    pod 'FHCommonUI', '0.0.14'
+    #pod 'FHCommonUI', '0.0.14'
+    pod 'FHCommonUI',:path => '../../ios_common_ui'
     
-    pod 'ios_house_im', '0.1.15-alpha.0-mergebc'
-#    pod 'ios_house_im' , :path => '../../ios_house_im'
-#    pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9b0e3bbed9e332c6bbd459c91f45962bd86728a2'
+    # pod 'ios_house_im', '0.1.15-alpha.0-mergebc'
+    pod 'ios_house_im' , :path => '../../ios_house_im'
+    #    pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9b0e3bbed9e332c6bbd459c91f45962bd86728a2'
 
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
-    pod 'ios_house_filter' , '1.0.2'
-    
+     #     pod 'ios_house_filter' , '1.0.2'
+    pod 'ios_house_filter' , :path => '../../ios_house_filter'
+
 end
 
 def appDevelopPods
@@ -622,6 +624,36 @@ post_install do |installer|
         end
     end
     
+    # 升级pod，解决framework头文件包含问题
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+          config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||=
+          [
+          '${PODS_ROOT}/AMap3DMap',
+          '${PODS_ROOT}/AMapLocation',
+          '${PODS_ROOT}/AMapSearch',
+          '${PODS_ROOT}/AMapFoundation',
+          '${PODS_ROOT}/React',
+          '${PODS_ROOT}/BDTFactoryConfigurator',
+          '${PODS_ROOT}/TYRZApiSDK/TYRZApiSDK/Classes',
+          '${PODS_ROOT}/EAccountApiSDK/EAccountApiSDK/Classes',
+          '${PODS_ROOT}/GoogleMaps/Maps/Frameworks',
+          '${PODS_ROOT}/GoogleMaps/Base/Frameworks',
+          '${PODS_ROOT}/BDUGUnionSDK/BDUGUnionSDK/Classes',
+          '${PODS_ROOT}/TTABManager',
+          '${PODS_ROOT}/TTNetBusiness/ios',
+          '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes'
+          ]
+        end
+
+        if target.name == "FHRNKit" || target.name == "TTDebug"
+          target.build_configurations.each do |config|
+            config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)','${PODS_ROOT}/Headers/Public/React']
+          end
+        end
+    end
+    
+        
     # Xcode 11目前和CocoaPods有兼容问题，会导致Assets.car这个文件，由于出现在两处Output File而报错
     # 一处是Xcode自带的Copy Bundle Resources，一处是CocoaPods的[CP] Copy Pods Resources
     # 这个问题在Xcode 10上也有小概率发生，现在统一临时Fix下，参考CocoaPods/CocoaPods#8122
