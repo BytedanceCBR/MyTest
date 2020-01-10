@@ -26,6 +26,8 @@
 #define kUGCTitleNearbyList @"nearby_list"
 #define kSecondTab @"tab_community"
 
+extern NSString *const PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION;
+
 static NSString *const kFHUserSelectCityNotification = @"k_fh_user_select_city";
 
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
@@ -46,6 +48,8 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 
 @class FHMessageManager;
 @class TTReachability;
+@class UNUserNotificationCenter;
+@class UNNotificationResponse;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHEnvContext : NSObject
@@ -268,6 +272,27 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)enterTabLogName;
 
 
+/**
+ * 权限隐私弹窗
+ */
+
+-(BOOL)hasConfirmPermssionProtocol;
+
+-(void)userConfirmedPermssionProtocol;
+
+-(void)pauseForPermissionProtocol;
+
+-(void)resumeForPermissionProtocl;
+
+-(void)addOpenUrlItem:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation;
+
+-(void)addContinueActivity:(UIApplication *)application activity:(NSUserActivity *)activity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler;
+
+-(void)addRemoteNotification:(UIApplication *)application userInfo:(NSDictionary *)userInfo;
+
+-(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler ;
+
 @end
+
 
 NS_ASSUME_NONNULL_END
