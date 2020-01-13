@@ -6,7 +6,7 @@
 //
 
 #import "FHHomePageSettingCell.h"
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import <UIFont+House.h>
 #import "Masonry.h"
 #import "FHHomePageSettingItemModel.h"

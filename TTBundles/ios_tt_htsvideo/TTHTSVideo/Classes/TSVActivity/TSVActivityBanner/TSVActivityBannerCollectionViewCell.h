@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TSVActivityBannerCollectionViewCellViewModel.h"
-#import <ExploreOrderedData.h>
+#import "ExploreOrderedData.h"
 
 @interface TSVActivityBannerCollectionViewCell : UICollectionViewCell
 

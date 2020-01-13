@@ -10,7 +10,7 @@
 #import "SSkeyChainStorage.h"
 #import "SSCookieManager.h"
 #import <TTInstallService/TTInstallIDManager.h>
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import "TTAccountManager.h"
 
 

@@ -11,9 +11,9 @@
 #import <FHEnvContext.h>
 #import <FHMainApi.h>
 #import "TTThemedAlertController.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import "FHUtils.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import "TTSandBoxHelper+House.h"
 #import <TTAppUpdateHelper.h>
 #import <TTInstallIDManager.h>

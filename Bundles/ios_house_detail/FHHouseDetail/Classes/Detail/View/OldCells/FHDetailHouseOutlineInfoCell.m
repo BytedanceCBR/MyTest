@@ -18,7 +18,7 @@
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 
 @interface FHDetailHouseOutlineInfoCell ()
 

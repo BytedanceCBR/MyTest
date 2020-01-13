@@ -21,7 +21,7 @@
 #import <TTBusinessManager+StringUtils.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHUGCShareManager.h"
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHPostDetailViewController ()
 

@@ -30,7 +30,7 @@
 #import "NSString+BTDAdditions.h"
 #import "SSCommonLogic.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import <TTBaseLib/UITextView+TTAdditions.h>
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width

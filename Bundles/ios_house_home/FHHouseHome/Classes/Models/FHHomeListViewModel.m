@@ -21,7 +21,7 @@
 #import <FHRefreshCustomFooter.h>
 #import <TTArticleCategoryManager.h>
 #import "FHHomeCellHelper.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import "FHHomeItemViewController.h"
 #import "FHHomeSearchPanelViewModel.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>

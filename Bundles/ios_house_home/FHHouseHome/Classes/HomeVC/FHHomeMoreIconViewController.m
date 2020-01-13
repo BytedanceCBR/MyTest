@@ -12,7 +12,7 @@
 #import <FHHomeCellHelper.h>
 #import <FHHomeEntrancesCell.h>
 #import <FHEnvContext.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import "UIViewController+Track.h"
 
 @interface FHHomeMoreIconViewController ()<TTRouteInitializeProtocol,UITableViewDelegate,UITableViewDataSource>

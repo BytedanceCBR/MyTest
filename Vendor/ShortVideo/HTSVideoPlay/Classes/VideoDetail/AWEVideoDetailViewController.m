@@ -43,7 +43,7 @@
 #import "TTNavigationController.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceHelper.h"
-#import <TTModuleBridge.h>
+#import "TTModuleBridge.h"
 #import "AWEVideoConstants.h"
 #import "AWEVideoContainerViewController.h"
 #import "AWEVideoDetailControlOverlayViewController.h"

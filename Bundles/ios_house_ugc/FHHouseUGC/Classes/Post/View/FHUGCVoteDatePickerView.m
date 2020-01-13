@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCVoteDatePickerView.h"
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import <UIFont+House.h>
 
 @interface FHUGCVoteDatePickerView() <UIPickerViewDataSource, UIPickerViewDelegate>

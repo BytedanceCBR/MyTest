@@ -35,7 +35,7 @@
 #import "FHFeedUGCCellModel.h"
 #import <TTUGCDefine.h>
 #import <FHUGCCategoryHelper.h>
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 #define kSegmentViewHeight 52
 

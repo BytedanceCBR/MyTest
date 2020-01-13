@@ -8,7 +8,7 @@
 #import "FHSugSubscribeItemCell.h"
 #import "Masonry.h"
 #import <UIFont+House.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "FHUserTracker.h"
 

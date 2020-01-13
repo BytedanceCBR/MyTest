@@ -7,7 +7,7 @@
 
 #import "FHhomeHouseTypeBannerCell.h"
 #import <UIFont+House.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import "FHEnvContext.h"
 #import "FHConfigModel.h"
 #import "UIImageView+BDWebImage.h"

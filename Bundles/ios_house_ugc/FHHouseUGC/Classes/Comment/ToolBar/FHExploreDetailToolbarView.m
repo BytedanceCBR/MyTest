@@ -25,7 +25,7 @@
 #import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHExploreDetailToolbarView ()
 

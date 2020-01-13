@@ -26,7 +26,7 @@
 #import "FHUserTracker.h"
 #import "UIImage+FIconFont.h"
 #import <Lottie/LOTAnimationView.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import <FHShadowView.h>
 
 #define MAIN_NORMAL_TOP     10

@@ -10,7 +10,7 @@
 #import "TTWeakPushAlertView.h"
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "UIView+CustomTimingFunction.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import "NSTimer+NoRetain.h"
 #import "TTInAppPushSettings.h"
 #import "TTPushAlertModel.h"

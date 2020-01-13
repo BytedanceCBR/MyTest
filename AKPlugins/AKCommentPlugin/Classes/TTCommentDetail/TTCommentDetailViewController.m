@@ -38,7 +38,7 @@
 #import "TTAccountManager.h"
 #import "SSMyUserModel.h"
 #import <TTBusinessManager+StringUtils.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"

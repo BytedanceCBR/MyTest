@@ -25,7 +25,7 @@
 #import "TTDeviceUIUtils.h"
 #import "TSVTransitionAnimationManager.h"
 #import "TTHorizontalHuoShanLoadingCell.h"
-#import <extobjc.h>
+#import "extobjc.h"
 #import "ArticleImpressionHelper.h"
 #import "TTDeviceHelper.h"
 #import "TTShortVideoHelper.h"

@@ -18,7 +18,7 @@
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import "FHDetailFoldViewButton.h"
 
 #define foldHeight 367 //当文本高度+标题高度（36）+headerView高度（52+18）>367折叠

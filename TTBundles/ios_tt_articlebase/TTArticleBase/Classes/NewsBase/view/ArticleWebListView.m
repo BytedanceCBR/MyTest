@@ -21,7 +21,7 @@
 #import "Masonry.h"
 #import "NewsListLogicManager.h"
 #import <SSCommonLogic.h>
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 
 @interface ArticleWebListView()<YSWebViewDelegate>
 @property(nonatomic, retain)SSWebViewContainer * webContainer;

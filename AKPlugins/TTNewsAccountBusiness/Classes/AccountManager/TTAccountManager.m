@@ -11,7 +11,7 @@
 #import "TTAccountManager+HTSAccountBridge.h"
 #import "NSStringAdditions.h"
 #import "TTIndicatorView.h"
-#import <TTModuleBridge.h>
+#import "TTModuleBridge.h"
 #import "SSCookieManager.h"
 #import "AccountManager.h"
 #import "SSMyUserModel.h"

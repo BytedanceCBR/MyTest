@@ -9,7 +9,7 @@
 #import "AccountButton.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIImage+TTThemeExtension.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import "TTThemedAlertController.h"
 #import "TTAccountBusiness.h"
 

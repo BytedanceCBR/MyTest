@@ -10,7 +10,7 @@
 #import "TTRoute.h"
 #import <TTRouteDefine.h>
 #import <TTUIWidget/SSViewControllerBase.h>
-#import <TTStringHelper.h>
+#import "TTStringHelper.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>

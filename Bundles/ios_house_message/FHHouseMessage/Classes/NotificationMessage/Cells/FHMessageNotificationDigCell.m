@@ -11,8 +11,8 @@
 #import "TTImageView.h"
 #import "FHMessageNotificationCellHelper.h"
 #import <TTBaseLib/UIViewAdditions.h>
-#import <UIImage+FIconFont.h>
-#import <UIColor+Theme.h>
+#import "UIImage+FIconFont.h"
+#import "UIColor+Theme.h"
 
 NS_INLINE CGFloat kDigImageViewWidth() {
     return [FHMessageNotificationCellHelper tt_newPadding:20.f];

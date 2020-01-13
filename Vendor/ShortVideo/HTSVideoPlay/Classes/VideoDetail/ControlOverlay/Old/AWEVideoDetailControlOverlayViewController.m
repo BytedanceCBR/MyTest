@@ -78,8 +78,8 @@
 #import "TSVRecommendCardModel.h"
 #import "TSVRecommendCardViewModel.h"
 #import "FHCommonApi.h"
-#import <UIColor+Theme.h>
-#import <UIImage+FIconFont.h>
+#import "UIColor+Theme.h"
+#import "UIImage+FIconFont.h"
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
 static const CGFloat kCheckChallengeButtonHeight = 28;

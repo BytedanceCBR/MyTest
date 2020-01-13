@@ -9,7 +9,7 @@
 #import "AWEVideoDetailManager.h"
 #import "AWEVideoPlayNetworkManager.h"
 #import "BTDMacros.h"
-#import <TTModuleBridge.h>
+#import "TTModuleBridge.h"
 #import "DetailActionRequestManager.h"
 
 static NSString * const TT_DOMAIN = @"https://is.haoduofangs.com";

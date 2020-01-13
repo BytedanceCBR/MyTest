@@ -8,7 +8,7 @@
 #import "FHHouseFindResultTopHeader.h"
 #import "Masonry.h"
 #import <UIFont+House.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import "FHUtils.h"
 
 @interface FHHouseFindResultTopHeader ()

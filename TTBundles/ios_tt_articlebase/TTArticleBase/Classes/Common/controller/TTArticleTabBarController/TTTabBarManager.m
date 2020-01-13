@@ -35,7 +35,7 @@
 #import "TTTabBarCustomMiddleModel.h"
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 
 NSString *kTTTabBarZipDownloadSuccess = @"kTTTabBarZipDownloadSuccess";
 

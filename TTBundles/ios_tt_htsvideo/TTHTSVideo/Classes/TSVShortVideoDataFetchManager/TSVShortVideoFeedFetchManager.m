@@ -11,7 +11,7 @@
 #import "ExploreFetchListManager.h"
 #import "ExploreOrderedData+TTBusiness.h"
 #import "ListDataHeader.h"
-#import <extobjc.h>
+#import "extobjc.h"
 #import "TTShortVideoModel.h"
 #import "TTShortVideoModel+TTAdFactory.h"
 #import "ExploreOrderedData+TTBusiness.h"

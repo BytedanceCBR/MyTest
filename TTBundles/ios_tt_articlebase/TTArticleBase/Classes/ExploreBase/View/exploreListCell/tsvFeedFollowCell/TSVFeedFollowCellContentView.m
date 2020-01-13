@@ -17,8 +17,8 @@
 #import "NSObject+FBKVOController.h"
 #import <TTRelevantDurationTracker.h>
 
-#import <TSVDebugInfoView.h>
-#import <TSVDebugInfoConfig.h>
+#import "TSVDebugInfoView.h"
+#import "TSVDebugInfoConfig.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 

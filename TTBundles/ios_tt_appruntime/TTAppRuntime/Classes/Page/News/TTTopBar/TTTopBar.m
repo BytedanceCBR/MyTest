@@ -32,7 +32,7 @@
 //#import "Bubble-Swift.h"
 #import <UIFont+House.h>
 #import "UIImageView+BDWebImage.h"
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import "FHEnvContext.h"
 
 #import "UIImageAdditions.h"

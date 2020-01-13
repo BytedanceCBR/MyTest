@@ -26,7 +26,7 @@
 #import <TTInstallIDManager.h>
 #import <CommonURLSetting.h>
 #import <FHCommuteManager.h>
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import "TTTabBarController.h"
 #import <FHHomeSearchPanelViewModel.h>
 #import <ExploreLogicSetting.h>

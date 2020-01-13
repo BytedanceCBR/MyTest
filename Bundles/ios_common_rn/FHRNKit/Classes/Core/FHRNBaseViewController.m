@@ -19,7 +19,7 @@
 #import <TTRNKitViewWrapper.h>
 #import <TTRNKitViewWrapper+Private.h>
 #import "UIViewAdditions.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import <UIViewController+Refresh_ErrorHandler.h>
 #import "RCTRootView.h"
 #import <RCTDevLoadingView.h>

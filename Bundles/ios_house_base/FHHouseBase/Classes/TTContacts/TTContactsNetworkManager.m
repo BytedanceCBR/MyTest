@@ -12,7 +12,7 @@
 #import "TTNetworkManager.h"
 #import <NSDataAdditions.h>
 #import <CommonCrypto/CommonCrypto.h>
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import "FHURLSettings.h"
 
 #import "CocoaSecurity.h"

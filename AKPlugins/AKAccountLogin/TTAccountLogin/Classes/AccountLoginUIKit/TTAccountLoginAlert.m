@@ -13,7 +13,7 @@
 #import <UIButton+TTAdditions.h>
 #import <TTLabelTextHelper.h>
 #import "TTIndicatorView.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import "TTThemeManager.h"
 #import "UIViewAdditions.h"
 #import "TTAccountLoginManager.h"

@@ -17,7 +17,7 @@
 
 #import "TTAlphaThemedButton.h"
 #import <UIButton+TTAdditions.h>
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 
 #import "TTEditUserProfileViewModel+Network.h"
 

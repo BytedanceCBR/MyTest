@@ -14,7 +14,7 @@
 #import <MAMapKit/MAMapKit.h>
 
 #import "TTDeviceHelper.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import "UIViewAdditions.h"
 #import <FHEnvContext.h>
 #import <ToastManager.h>
@@ -26,7 +26,7 @@
 #import "FHMyMAAnnotation.h"
 #import "FHDetailMapView.h"
 #import "FHFakeInputNavbar.h"
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;

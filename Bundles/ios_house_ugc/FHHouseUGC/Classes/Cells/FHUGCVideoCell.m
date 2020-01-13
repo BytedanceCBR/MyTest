@@ -22,8 +22,8 @@
 #import <TTVCellPlayMovie.h>
 #import <TTVFeedCellMoreActionManager.h>
 #import <TTVVideoArticle+Extension.h>
-#import <TTUIResponderHelper.h>
-#import <TTStringHelper.h>
+#import "TTUIResponderHelper.h"
+#import "TTStringHelper.h"
 #import <TTVFeedCellSelectContext.h>
 #import <TTVFeedItem+TTVArticleProtocolSupport.h>
 #import <JSONAdditions.h>

@@ -12,7 +12,7 @@
 #import <TTDialogDirector/TTDialogDirector.h>
 #import "UIViewAdditions.h"
 #import "NSDictionary+TTAdditions.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import "TTDeviceHelper.h"
 
 #define kTTInterfaceTipViewScaleSize 0.96

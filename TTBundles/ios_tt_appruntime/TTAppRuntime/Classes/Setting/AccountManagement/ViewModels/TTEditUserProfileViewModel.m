@@ -9,7 +9,7 @@
 #import "TTEditUserProfileViewModel.h"
 #import "NSStringAdditions.h"
 #import <NSObject+FBKVOController.h>
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 
 #import "SSMyUserModel.h"
 #import "TTAccountBusiness.h"

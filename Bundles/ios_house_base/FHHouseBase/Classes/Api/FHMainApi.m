@@ -10,7 +10,7 @@
 #import "FHURLSettings.h"
 #import "FHHouseType.h"
 #import "FHCommonDefines.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import "FHJSONHTTPRequestSerializer.h"
 #import "FHEnvContext.h"

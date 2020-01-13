@@ -15,7 +15,7 @@
 #import "TTInteractExitHelper.h"
 #import "UIViewAdditions.h"
 #import "TTTrackerWrapper.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import "Masonry.h"
 #import "TTAlphaThemedButton.h"
 #import "UIImage+TTThemeExtension.h"

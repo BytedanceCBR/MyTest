@@ -7,7 +7,7 @@
 //
 
 #import <YYImage/YYImage.h>
-#import <TTImageView.h>
+#import "TTImageView.h"
 
 @protocol TSVImageViewProtocol <NSObject>
 

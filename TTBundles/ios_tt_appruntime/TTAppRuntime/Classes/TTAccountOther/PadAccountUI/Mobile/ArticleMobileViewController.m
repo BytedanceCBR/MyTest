@@ -12,7 +12,7 @@
 #import "TTThemedAlertController.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTDeviceHelper.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import "UIImage+TTThemeExtension.h"
 
 #import "TTAccountBusiness.h"

@@ -29,7 +29,7 @@
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
 #import <TTUGCFoundation/TTRichSpanText+Emoji.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import "TTRichSpanText+Link.h"
 
 @interface TTCommentDetailHeaderUIHelper : NSObject

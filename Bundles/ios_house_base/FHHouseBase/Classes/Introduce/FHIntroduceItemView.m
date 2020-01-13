@@ -7,7 +7,7 @@
 
 #import "FHIntroduceItemView.h"
 #import "Masonry.h"
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import <UIFont+House.h>
 #import <Lottie/LOTAnimationView.h>
 

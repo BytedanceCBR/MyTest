@@ -7,7 +7,7 @@
 #if INHOUSE
 
 #import "TSVDebugViewController.h"
-#import <TSVDebugInfoConfig.h>
+#import "TSVDebugInfoConfig.h"
 #import "AWEVideoConstants.h"
 #import "TTSettingsManager+SaveSettings.h"
 #import <TTArticleBase/SSCommonLogic.h>

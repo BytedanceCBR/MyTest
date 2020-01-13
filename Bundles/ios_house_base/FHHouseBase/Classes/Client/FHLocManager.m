@@ -19,7 +19,7 @@
 #import "FHHouseBridgeManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import <NSTimer+NoRetain.h>
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import <HMDTTMonitor.h>
 #import <TTInstallIDManager.h>
 #import <TTArticleCategoryManager.h>

@@ -10,7 +10,7 @@
 #import "WDListCellLayoutModel.h"
 #import "WDUIHelper.h"
 #import "WDLayoutHelper.h"
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 
 @interface WDWendaListCellPureCharacterView ()
 

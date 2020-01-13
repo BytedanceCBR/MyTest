@@ -13,7 +13,7 @@
 #import "UIColor+Theme.h"
 #import "WDAnswerService.h"
 #import "FHUserTracker.h"
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 @interface WDListAnswerCellBottomView ()
 

@@ -175,7 +175,7 @@
 #import "FHUtils.h"
 #import <TTTabBarItem.h>
 #import <HMDTTMonitor.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5

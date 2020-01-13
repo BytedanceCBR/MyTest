@@ -10,7 +10,7 @@
 #import "TTNavigationController.h"
 #import "TTThemedAlertController.h"
 #import "TTDeviceHelper.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import "TTAccountBusiness.h"
 #import "TTTrackerWrapper.h"
 

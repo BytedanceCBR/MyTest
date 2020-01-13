@@ -33,7 +33,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"

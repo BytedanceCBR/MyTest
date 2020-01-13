@@ -10,8 +10,8 @@
 #define TTUGCPostCenterProtocol_h
 
 #import <Foundation/Foundation.h>
-#import <TTServiceCenter.h>
-#import <TTRecordedVideo.h>
+#import "TTServiceCenter.h"
+#import "TTRecordedVideo.h"
 
 //通知
 extern NSString * const TTPostTaskBeginNotification;            //进入发布队列

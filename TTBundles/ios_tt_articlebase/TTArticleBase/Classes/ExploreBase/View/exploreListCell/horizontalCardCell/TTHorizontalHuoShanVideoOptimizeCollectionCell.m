@@ -17,8 +17,8 @@
 #import "TSVAvatarImageView.h"
 #import "TSVTagInfoView.h"
 
-#import <TSVDebugInfoView.h>
-#import <TSVDebugInfoConfig.h>
+#import "TSVDebugInfoView.h"
+#import "TSVDebugInfoConfig.h"
 #import "UIViewAdditions.h"
 #import "ExploreOrderedData+TTBusiness.h"
 

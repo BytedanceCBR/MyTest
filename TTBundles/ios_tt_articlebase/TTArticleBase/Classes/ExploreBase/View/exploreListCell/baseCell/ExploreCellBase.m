@@ -39,7 +39,7 @@
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
 #import "TTLayOutCellViewBase.h"
 #import "HTSVideoPageParamHeader.h"
-#import <TSVDebugInfoConfig.h>
+#import "TSVDebugInfoConfig.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <Masonry/Masonry.h>

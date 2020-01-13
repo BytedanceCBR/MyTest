@@ -10,7 +10,7 @@
 #import "TTShortVideoModel.h"
 #import "AWEVideoConstants.h"
 #import "TTShortVideoModel.h"
-#import <extobjc.h>
+#import "extobjc.h"
 #import <TTBaseLib/UIImageAdditions.h>
 #import "TTShareManager.h"
 #import "TSVVideoShareManager.h"

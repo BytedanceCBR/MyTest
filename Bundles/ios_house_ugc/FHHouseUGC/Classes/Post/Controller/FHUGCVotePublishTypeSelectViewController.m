@@ -10,7 +10,7 @@
 #import <FHCommonDefines.h>
 #import "Masonry.h"
 #import <UIFont+House.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 
 #define PADDING 20
 

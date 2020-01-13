@@ -6,7 +6,7 @@
 //
 
 #import "FHIntroduceView.h"
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import "FHIntroduceItemView.h"
 #import "UIViewAdditions.h"
 #import "FHIntroduceManager.h"

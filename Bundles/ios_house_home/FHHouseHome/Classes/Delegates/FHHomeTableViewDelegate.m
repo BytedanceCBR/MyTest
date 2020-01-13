@@ -11,7 +11,7 @@
 #import <UITableView+FDTemplateLayoutCell.h>
 #import "FHHomeScrollBannerCell.h"
 #import "FHHomeEntrancesCell.h"
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 
 @interface FHHomeTableViewDelegate()
 {

@@ -25,7 +25,7 @@
 #import "TTLaunchDefine.h"
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <TTReachability/TTReachability.h>
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 

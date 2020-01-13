@@ -18,7 +18,7 @@
 #import "FHCommonDefines.h"
 #import "FHUserTracker.h"
 #import "UIViewController+NavigationBarStyle.h"
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol, FHUGCPostMenuViewDelegate>
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
