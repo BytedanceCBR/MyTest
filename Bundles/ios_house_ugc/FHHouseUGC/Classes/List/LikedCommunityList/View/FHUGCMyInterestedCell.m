@@ -132,6 +132,10 @@
         self.joinBtn.groupId = model.socialGroup.socialGroupId;
         self.joinBtn.followed = [model.socialGroup.hasFollow boolValue];
         self.joinBtn.tracerDic = self.tracerDic;
+        
+        //内容
+        [FHUGCCellHelper setRichContent:_postDescLabel content:model.threadInfo.content font:[UIFont themeFontRegular:16] numberOfLines:maxLines color:[UIColor themeGray1]];
+        
         [self updateImageConstraints:model];
     }
 }
@@ -184,8 +188,6 @@
         }else{
             self.postDescLabel.hidden = NO;
             self.bottomSepLine1.hidden = NO;
-            //内容
-            [FHUGCCellHelper setRichContent:_postDescLabel content:model.threadInfo.content font:[UIFont themeFontRegular:16] numberOfLines:maxLines color:[UIColor themeGray1]];
             
             [self.postDescLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.bottomSepLine1.mas_bottom).offset(15);
@@ -246,7 +248,6 @@
     _bottomSepLine2.backgroundColor = [UIColor whiteColor];
     [self.containerView addSubview:_bottomSepLine2];
     
-//    self.postDescLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
     self.postDescLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
     [self.containerView addSubview:_postDescLabel];
     
