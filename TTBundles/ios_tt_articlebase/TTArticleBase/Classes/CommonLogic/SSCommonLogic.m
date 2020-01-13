@@ -30,7 +30,7 @@
 
 #import "SSInHouseFeatureManager.h"
 #import "TTVSettingsConfiguration.h"
-#import <TTSettingsManager.h>
+#import "TTSettingsManager.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 
 

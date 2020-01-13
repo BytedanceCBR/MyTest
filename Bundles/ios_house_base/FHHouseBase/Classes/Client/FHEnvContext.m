@@ -34,7 +34,7 @@
 #import "FHMainApi.h"
 #import <FHMinisdkManager.h>
 #import <FHIntroduceManager.h>
-#import <TTSettingsManager.h>
+#import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import <TTLocationManager/TTLocationManager.h>
 #import "FHStashModel.h"

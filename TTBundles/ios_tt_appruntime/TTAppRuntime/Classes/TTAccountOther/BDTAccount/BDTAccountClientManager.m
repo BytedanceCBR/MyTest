@@ -11,7 +11,7 @@
 #import "TTAccountSDK.h"
 #import "TTUIResponderHelper.h"
 #import "TTAccountBindingMobileViewController.h"
-#import <TTSettingsManager.h>
+#import "TTSettingsManager.h"
 #import "UIViewController+BDTAccountModalPresentor.h"
 #import <TTAccountSDK/TTAccount+PlatformAuthLogin.h>
 

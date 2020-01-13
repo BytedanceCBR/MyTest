@@ -34,10 +34,10 @@
 #import "TTAccountManager.h"
 #import "ExploreListHelper.h"
 #import "AWEVideoConstants.h"
-#import <TTSettingsManager.h>
+#import "TTSettingsManager.h"
 #import "IESVideoPlayer.h"
 #import "AWEVideoConstants.h"
-#import <TSVPrefetchVideoManager.h>
+#import "TSVPrefetchVideoManager.h"
 #import "TTHTSVideoConfiguration.h"
 #import "TTHTSVideoConfiguration.h"
 #import "TTMonitor.h"

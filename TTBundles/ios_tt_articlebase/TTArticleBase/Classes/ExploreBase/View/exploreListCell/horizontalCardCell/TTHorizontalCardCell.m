@@ -34,7 +34,7 @@
 #import "TSVChannelDecoupledConfig.h"
 #import "TSVShortVideoDecoupledFetchManager.h"
 #import "ReactiveObjC.h"
-#import <TSVPrefetchVideoManager.h>
+#import "TSVPrefetchVideoManager.h"
 #import "TTUISettingHelper.h"
 //#import "ExploreOrderDataSimpleWitnessRecorder.h"
 #import "TSVHorizontalCardCellInfoView.h"

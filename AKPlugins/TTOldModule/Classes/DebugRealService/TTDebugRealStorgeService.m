@@ -10,7 +10,7 @@
 #import "TTMonitorReporter.h"
 #import "TTMonitorConfiguration.h"
 #import "FMDB.h"
-#import "TTExtensions.h"
+#import "TTNetworkHelper.h"
 
 #define kDebugRealDB @"debugreal.sqlite"
 #define kNetworkDebugRealDirectory @"network_debugreal"
