@@ -15,9 +15,11 @@
 @interface FHUGCHotCommunitySubCell ()
 
 @property(nonatomic, strong) UIImageView *bgView;
-@property(nonatomic, strong) UIView *bgCoverView;
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *descLabel;
+
+@property(nonatomic ,strong) UILabel *tagLabel;
+@property(nonatomic ,strong) UIView *tagView;
 
 @end
 
@@ -57,18 +59,31 @@
     _bgView.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_bgView];
     
-    self.bgCoverView = [[UIView alloc] init];
-    _bgCoverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
-    [self.bgView addSubview:_bgCoverView];
-    
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor whiteColor]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor blackColor]];
     _titleLabel.textAlignment = NSTextAlignmentLeft;
-    _titleLabel.numberOfLines = 3;
+    _titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
+    _titleLabel.numberOfLines = 2;
+    _titleLabel.text = @"#幸福攻略";
     [self.bgView addSubview:_titleLabel];
     
-    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor whiteColor]];
+    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor blackColor]];
     _descLabel.textAlignment = NSTextAlignmentLeft;
+    _descLabel.text = @"20218人参与";
     [self.bgView addSubview:_descLabel];
+    
+    self.tagView = [[UIView alloc] init];
+    _tagView.backgroundColor = [UIColor themeOrange1];
+    _tagView.layer.masksToBounds= YES;
+    _tagView.layer.cornerRadius = 4;
+    _tagView.userInteractionEnabled = YES;
+    _tagView.hidden = YES;
+    [self.bgView addSubview:_tagView];
+    
+    self.tagLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor whiteColor]];
+    [_tagLabel sizeToFit];
+    [_tagLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [_tagLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [_tagView addSubview:_tagLabel];
 }
 
 - (void)initConstains {
@@ -76,15 +91,10 @@
         make.edges.mas_equalTo(self.contentView);
     }];
     
-    [self.bgCoverView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.bgView);
-    }];
-    
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bgView).offset(8);
+        make.top.mas_equalTo(self.bgView).offset(28);
         make.left.mas_equalTo(self.bgView).offset(8);
         make.right.mas_equalTo(self.bgView).offset(-8);
-        make.height.mas_lessThanOrEqualTo(60);
     }];
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -92,6 +102,19 @@
         make.left.mas_equalTo(self.bgView).offset(8);
         make.right.mas_equalTo(self.bgView).offset(-8);
         make.height.mas_equalTo(14);
+    }];
+    
+    [self.tagView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self);
+        make.top.mas_equalTo(self);
+        make.height.mas_equalTo(15);
+    }];
+    
+    [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.tagView).offset(7);
+        make.right.mas_equalTo(self.tagView).offset(-7);
+        make.centerY.mas_equalTo(self.tagView);
+        make.height.mas_equalTo(15);
     }];
 }
 
