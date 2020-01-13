@@ -16,7 +16,7 @@
 #define rightMargin 20
 #define cellId @"cellId"
 
-#define headerViewHeight 40
+#define headerViewHeight 44
 #define bottomSepViewHeight 5
 
 @interface FHUGCHotTopicCell()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
@@ -27,6 +27,7 @@
 @property(nonatomic ,strong) NSMutableArray *sourceList;
 @property(nonatomic ,strong) NSArray *dataList;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
+@property(nonatomic ,strong) UIView *seprateLine;
 
 @end
 
@@ -59,11 +60,17 @@
     self.contentView.backgroundColor = [UIColor whiteColor];
     
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
-    _headerView.titleLabel.text = @"热门话题";
+    _headerView.titleLabel.text = @"话题榜";
     _headerView.bottomLine.hidden = YES;
     _headerView.refreshBtn.hidden = YES;
+    [_headerView.moreBtn setTitle:@"查看全部" forState:UIControlStateNormal];
+    [_headerView setMoreBtnLayout];
     [_headerView.moreBtn addTarget:self action:@selector(moreData) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_headerView];
+    
+    self.seprateLine = [[UIView alloc] init];
+    _seprateLine.backgroundColor = [UIColor themeGray7];
+    [self.contentView addSubview:_seprateLine];
     
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
@@ -74,9 +81,10 @@
 
 - (void)initCollectionView {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-    flowLayout.minimumLineSpacing = 8;
-    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 4, 0, 4);
+    flowLayout.minimumLineSpacing = 0;
+    flowLayout.minimumInteritemSpacing = 0;
+//    flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
     
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     _collectionView.showsHorizontalScrollIndicator = NO;
@@ -92,15 +100,24 @@
 
 - (void)initConstraints {
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(5);
-        make.left.right.mas_equalTo(self.contentView);
+        make.top.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(headerViewHeight);
     }];
     
+    [self.headerView.moreBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(65);
+    }];
+    
+    [self.seprateLine mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.headerView.mas_bottom);
+        make.left.right.mas_equalTo(self.headerView);
+        make.height.mas_equalTo(1);
+    }];
+    
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(4);
+        make.top.mas_equalTo(self.seprateLine.mas_bottom).offset(10);
         make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(90);
+        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-3);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -129,7 +146,14 @@
 }
 
 + (CGFloat)heightForData:(id)data {
-    return 160;
+    CGFloat height = headerViewHeight + 1 + 10 + bottomSepViewHeight + 3;
+    if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
+        FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
+        NSArray *dataList = model.hotTopicList;
+        NSInteger row = floor(model.hotTopicList.count / 2.0);
+        height += (46 * row);
+    }
+    return height;
 }
 
 - (void)moreData {
@@ -176,10 +200,10 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    FHUGCBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
+    FHUGCHotTopicSubCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
     
     if (indexPath.row < self.dataList.count) {
-        [cell refreshWithData:self.dataList[indexPath.row]];
+        [cell refreshWithData:self.dataList[indexPath.row] index:indexPath.row];
     }
     
     return cell;
@@ -210,7 +234,7 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(90, 90);
+    return CGSizeMake([UIScreen mainScreen].bounds.size.width/2 - 4 , 46);
 }
 
 - (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
