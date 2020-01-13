@@ -8,7 +8,7 @@
 #import "FHUGCRecommendCell.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCRecommendSubCell.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "FHUserTracker.h"
 #import "FHCommunityList.h"
 

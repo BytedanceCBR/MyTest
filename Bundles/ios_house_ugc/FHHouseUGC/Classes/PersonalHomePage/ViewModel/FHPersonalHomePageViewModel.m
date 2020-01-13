@@ -25,7 +25,7 @@
 #import "HTSVideoPageParamHeader.h"
 #import "FHUGCSmallVideoCell.h"
 #import "AWEVideoConstants.h"
-#import <TTURLUtils.h>
+#import "TTURLUtils.h"
 #import "FHUGCVideoCell.h"
 #import <TTVFeedPlayMovie.h>
 #import <TTVPlayVideo.h>

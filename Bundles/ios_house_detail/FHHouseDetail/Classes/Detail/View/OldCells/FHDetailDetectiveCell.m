@@ -9,7 +9,7 @@
 #import "FHDetectiveTopView.h"
 #import "FHDetectiveContainerView.h"
 #import <FHCommonUI/FHRoundShadowView.h>
-#import <Masonry.h>
+#import "Masonry.h"
 #import "FHDetailOldModel.h"
 #import <TTRoute/TTRoute.h>
 #import "FHDetectiveItemView.h"

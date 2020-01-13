@@ -9,7 +9,7 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "FHUserTracker.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHUGCFeedGuideView ()

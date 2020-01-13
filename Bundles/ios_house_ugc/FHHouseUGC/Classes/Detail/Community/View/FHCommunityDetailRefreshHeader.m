@@ -7,7 +7,7 @@
 
 #import "FHCommunityDetailRefreshHeader.h"
 #import <FHCommonUI/UIView+House.h>
-#import <Masonry.h>
+#import "Masonry.h"
 
 @interface FHCommunityDetailRefreshHeader ()
 

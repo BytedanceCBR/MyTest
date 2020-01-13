@@ -21,7 +21,7 @@
 #import "TTSandBoxHelper.h"
 #import "TTArticleCategoryManager.h"
 #import "FHHomeScrollBannerCell.h"
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import <TTAppUpdateHelper.h>
 #import <TTInstallIDManager.h>
 #import <CommonURLSetting.h>
@@ -33,8 +33,8 @@
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <TTArticleTabBarController.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
-#import <TTThemedAlertController.h>
-#import <FHUtils.h>
+#import "TTThemedAlertController.h"
+#import "FHUtils.h"
 #import "FHHomeBaseScrollView.h"
 #import <FHHomeMainViewController.h>
 #import <FHHouseBase/FHHomeScrollBannerView.h>

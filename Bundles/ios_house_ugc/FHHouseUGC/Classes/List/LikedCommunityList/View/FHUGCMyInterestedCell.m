@@ -8,7 +8,7 @@
 #import "FHUGCMyInterestedCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <UIImageView+BDWebImage.h>
 #import "TTDeviceHelper.h"
 #import "FHUGCMyInterestModel.h"

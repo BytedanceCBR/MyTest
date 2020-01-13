@@ -7,7 +7,7 @@
 
 #import "FHMapSearchViewModel.h"
 #import <AMapFoundationKit/AMapFoundationKit.h>
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "FHHouseType.h"
 #import "TTNetworkManager.h"
 #import "FHMapSearchTypes.h"

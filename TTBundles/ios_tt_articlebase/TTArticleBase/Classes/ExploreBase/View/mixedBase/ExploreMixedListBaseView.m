@@ -7,7 +7,7 @@
 //
 
 #import "ExploreMixedListBaseView.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "Article.h"
 #import "WapData.h"
 #import "HuoShan.h"
@@ -172,7 +172,7 @@
 #import <FHHomeCellHelper.h>
 #import "SSCommonLogic.h"
 #import "TTSandBoxHelper.h"
-#import <FHUtils.h>
+#import "FHUtils.h"
 #import <TTTabBarItem.h>
 #import <HMDTTMonitor.h>
 #import <UIColor+Theme.h>

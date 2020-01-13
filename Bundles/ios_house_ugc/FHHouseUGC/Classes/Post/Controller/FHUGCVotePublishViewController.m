@@ -10,7 +10,7 @@
 #import "SSNavigationBar.h"
 #import <WDDefines.h>
 #import <FHCommonDefines.h>
-#import <ReactiveObjC.h>
+#import "ReactiveObjC.h"
 #import "FHUserTracker.h"
 #import <TTAccount.h>
 #import <FHBubbleTipManager.h>

@@ -8,7 +8,7 @@
 
 #import "TTAccountBindingMobileViewController.h"
 #import <TTUserPrivacyView.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "SSWebViewController.h"
 #import "ArticleMobileCaptchaAlertView.h"
 #import <NSTimer+TTNoRetainRef.h>

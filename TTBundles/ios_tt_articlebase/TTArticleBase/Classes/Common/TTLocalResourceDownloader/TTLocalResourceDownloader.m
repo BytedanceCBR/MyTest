@@ -10,7 +10,7 @@
 #import "SSZipArchive.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <TTReachability/TTReachability.h>
-#import <NetworkUtilities.h>
+#import "NetworkUtilities.h"
 #import <TTImageDownloader.h>
 #import <TTVersionHelper/TTVersionHelper.h>
 #import <TTBaseLib/TTDeviceHelper.h>

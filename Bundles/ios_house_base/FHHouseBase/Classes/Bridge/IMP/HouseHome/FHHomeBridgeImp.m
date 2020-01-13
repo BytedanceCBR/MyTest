@@ -16,7 +16,7 @@
 #import "TTCategoryBadgeNumberManager.h"
 #import "TTTabBarProvider.h"
 #import "FHUtils.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import <FHLocManager.h>
 #import "ArticleURLSetting.h"
 #import <TTArticleBase/SSCommonLogic.h>

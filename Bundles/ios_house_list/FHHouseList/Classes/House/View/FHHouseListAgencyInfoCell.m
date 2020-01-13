@@ -10,7 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry/Masonry.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
 @interface FHHouseListAgencyInfoCell ()
 

@@ -24,7 +24,7 @@
 #import "TTModalContainerController.h"
 #import "TTPhotoNewCommentViewController.h"
 #import "TTAdPromotionManager.h"
-#import <TTIndicatorView.h>
+#import "TTIndicatorView.h"
 #import <TTBaseLib/NetworkUtilities.h>
 #import <TTServiceKit/TTServiceCenter.h>
 #import "TTAdManagerProtocol.h"

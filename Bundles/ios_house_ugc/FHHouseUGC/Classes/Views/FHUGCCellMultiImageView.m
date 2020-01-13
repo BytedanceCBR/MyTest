@@ -8,7 +8,7 @@
 #import "FHUGCCellMultiImageView.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <UIImageView+BDWebImage.h>
 #import "FHFeedUGCCellModel.h"
 #import "TTPhotoScrollViewController.h"

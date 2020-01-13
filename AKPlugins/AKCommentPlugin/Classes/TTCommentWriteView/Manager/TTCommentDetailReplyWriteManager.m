@@ -13,7 +13,7 @@
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTNetworkManager/TTNetworkUtil.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTCommentDetailReplyCommentModel.h"
 #import "TTCommentDefines.h"
 #import "TTCommentDataManager.h"

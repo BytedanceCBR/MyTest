@@ -8,8 +8,8 @@
 #import "TTFriendRelationService.h"
 #import "TTFriendRelationEntity.h"
 #import <pthread/pthread.h>
-#import <NSObject+TTAdditions.h>
-#import <TTBaseMacro.h>
+#import "NSObject+TTAdditions.h"
+#import "TTBaseMacro.h"
 #import <TTAccountManager.h>
 
 @interface TTFriendRelationService() {

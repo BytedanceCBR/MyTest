@@ -15,7 +15,7 @@
 #import "FHMultiMediaVideoCell.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <NSString+URLEncoding.h>
-#import <FHUtils.h>
+#import "FHUtils.h"
 #import "FHMultiMediaModel.h"
 #import "FHCommonDefines.h"
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>

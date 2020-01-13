@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TTGroupModel.h"
 #import "TTActivity.h"
-#import <TTShareMacros.h>
+#import "TTShareMacros.h"
 
 @class TTActivityShareManager;
 

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTThemeManager.h>
+#import "TTThemeManager.h"
 
 @class TTTabBarItem;
 @class TTTabBarImageModel;

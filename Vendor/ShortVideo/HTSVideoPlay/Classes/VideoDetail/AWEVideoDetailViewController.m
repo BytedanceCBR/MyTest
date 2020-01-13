@@ -40,9 +40,9 @@
 #import "EXTKeyPathCoding.h"
 #import "TTURLUtils.h"
 #import <MBProgressHUD/MBProgressHUD.h>
-#import <TTNavigationController.h>
-#import <UIImage+TTThemeExtension.h>
-#import <TTDeviceHelper.h>
+#import "TTNavigationController.h"
+#import "UIImage+TTThemeExtension.h"
+#import "TTDeviceHelper.h"
 #import <TTModuleBridge.h>
 #import "AWEVideoConstants.h"
 #import "AWEVideoContainerViewController.h"
@@ -54,7 +54,7 @@
 #import "HTSVideoPageParamHeader.h"
 #import "TTImagePreviewAnimateManager.h"
 #import "TSVShortVideoDetailExitManager.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import "UIViewController+TabBarSnapShot.h"
 #import "UIImageView+WebCache.h"

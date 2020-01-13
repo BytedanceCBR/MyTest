@@ -7,7 +7,7 @@
 
 #import "FHVideoErrorView.h"
 #import "UIImage+TTVHelper.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "TTDeviceHelper.h"
 #import "UIFont+House.h"
 #import "UIButton+TTAdditions.h"

@@ -8,7 +8,7 @@
 #import "TTVNetworkMonitorReducer.h"
 #import "TTVPlayerState.h"
 #import "TTVPlayerAction.h"
-#import <NetworkUtilities.h>
+#import "NetworkUtilities.h"
 #import <TTReachability.h>
 #import "TTVPlayer+Engine.h"
 

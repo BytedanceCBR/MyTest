@@ -7,12 +7,12 @@
 
 #import "FHDetailMapPageNaviBarView.h"
 #import "FHExtendHotAreaButton.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <UIFont+House.h>
 #import <UIColor+Theme.h>
 #import "TTDeviceHelper.h"
 #import "FHExtendHotAreaButton.h"
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import <UIImage+FIconFont.h>
 
 @interface FHDetailMapPageNaviBarView ()

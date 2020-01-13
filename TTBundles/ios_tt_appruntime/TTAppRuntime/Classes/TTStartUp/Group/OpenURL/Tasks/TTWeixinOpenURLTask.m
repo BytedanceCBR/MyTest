@@ -7,7 +7,7 @@
 //
 
 #import "TTWeixinOpenURLTask.h"
-#import <TTWeChatShare.h>
+#import "TTWeChatShare.h"
 #import <TTAccountAuthWeChat.h>
 #import "TTLaunchDefine.h"
 

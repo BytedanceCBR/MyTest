@@ -16,7 +16,7 @@
 #import "UIViewAdditions.h"
 #import <TTThemeConst.h>
 #import <Masonry/Masonry.h>
-#import <UIImage+TTThemeExtension.h>
+#import "UIImage+TTThemeExtension.h"
 #import "TTAsyncCornerImageView+VerifyIcon.h"
 #import "NSDictionary+TTAdditions.h"
 #import "NSStringAdditions.h"

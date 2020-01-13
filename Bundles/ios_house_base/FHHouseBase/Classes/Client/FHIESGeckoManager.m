@@ -12,7 +12,7 @@
 #import "SSZipArchive.h"
 #import "FHHouseBridgeManager.h"
 #import <FHEnvContext.h>
-#import <NSDictionary+TTAdditions.h>
+#import "NSDictionary+TTAdditions.h"
 #import "IESGeckoCacheManager.h"
 
 @implementation FHIESGeckoManager

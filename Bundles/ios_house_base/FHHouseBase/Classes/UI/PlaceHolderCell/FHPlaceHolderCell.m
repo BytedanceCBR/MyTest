@@ -6,7 +6,7 @@
 //
 
 #import "FHPlaceHolderCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 
 #define HOR_MARGIN 20

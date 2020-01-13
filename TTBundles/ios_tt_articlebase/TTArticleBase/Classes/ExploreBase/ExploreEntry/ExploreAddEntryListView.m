@@ -18,7 +18,7 @@
 #import "SSNavigationBar.h"
 
 #import "UIImage+TTThemeExtension.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "ExploreEntryDefines.h"
 #import "ArticleURLSetting.h"

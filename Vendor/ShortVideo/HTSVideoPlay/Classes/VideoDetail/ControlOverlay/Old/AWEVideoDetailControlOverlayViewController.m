@@ -46,7 +46,7 @@
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import "TTModuleBridge.h"
 #import <Lottie/Lottie.h>
-#import <UIView+CustomTimingFunction.h>
+#import "UIView+CustomTimingFunction.h"
 #import "TSVWriteCommentButton.h"
 #import "UIView+Yoga.h"
 #import "SSMotionRender.h"
@@ -66,9 +66,9 @@
 #import <TTRoute/TTRoute.h>
 #import "TSVTitleLabelConfigurator.h"
 #import "TSVDebugInfoConfig.h"
-#import <TTNavigationController.h>
+#import "TTNavigationController.h"
 #import "TSVDetailRouteHelper.h"
-#import <NSDictionary+TTAdditions.h>
+#import "NSDictionary+TTAdditions.h"
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TSVAvatarImageView.h"
 #import "HTSVideoSwitch.h"

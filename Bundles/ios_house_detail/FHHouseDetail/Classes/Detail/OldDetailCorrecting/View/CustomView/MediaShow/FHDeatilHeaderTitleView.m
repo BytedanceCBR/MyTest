@@ -8,7 +8,7 @@
 #import "FHDeatilHeaderTitleView.h"
 #import "FHHouseTagsModel.h"
 #import <TTThemed/SSThemed.h>
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"

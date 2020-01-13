@@ -31,7 +31,7 @@
 #import "TTAccountManager.h"
 #import "TTHorizontalPagingView.h"
 #import "IMManager.h"
-#import <TTThemedAlertController.h>
+#import "TTThemedAlertController.h"
 #import "FHFeedUGCCellModel.h"
 #import <TTUGCDefine.h>
 #import <FHUGCCategoryHelper.h>

@@ -23,7 +23,7 @@
 //#import "TTIMManager.h"
 //#import "TTSettingMineTabManager.h"
 
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTAccountMulticastDispatcher.h>
 #import "TTAccountTestSettings.h"
 #import "TTJSBAuthManager.h"

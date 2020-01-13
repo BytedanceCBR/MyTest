@@ -36,7 +36,7 @@
 #import "TTPlatformSwitcher.h"
 //#import "TTFollowCategoryMixedListView.h"
 #import "TTModalContainerController.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import "TTFeedGuideView.h"
 //#import "SSADManager.h"
 #import "TTAdSplashMediator.h"

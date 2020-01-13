@@ -12,7 +12,7 @@
 #import "TTThirdPartyAccountsHeader.h"
 
 #import "TTUserProfileInputView.h"
-#import <TTIndicatorView.h>
+#import "TTIndicatorView.h"
 #import "TTSettingConstants.h"
 #import <TTBaseLib/TTDeviceUIUtils.h>
 

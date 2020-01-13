@@ -17,7 +17,7 @@
 #import "TTSettingMineTabManager.h"
 #import "TTSettingMineTabGroup.h"
 #import "TTSettingMineTabEntry.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "ArticleFetchSettingsManager.h"
 
 #import "ExploreMovieView.h"
@@ -49,7 +49,7 @@
 
 //#import "TTUGCPermissionService.h"
 //#import "TTPostUGCEntrance.h"
-#import <TTIndicatorView.h>
+#import "TTIndicatorView.h"
 #import "TTAdSplashMediator.h"
 //#import "TTPLManager.h"
 #import "TTBadgeTrackerHelper.h"

@@ -20,7 +20,7 @@
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import <FHEnvContext.h>
 #import <FHLocManager.h>
 #import <FHEnvContext.h>

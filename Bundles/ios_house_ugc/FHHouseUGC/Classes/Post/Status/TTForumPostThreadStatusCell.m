@@ -13,7 +13,7 @@
 #import "TTPostThreadCenter.h"
 #import "TTTrackerWrapper.h"
 #import "TTUGCAttributedLabel.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTRichSpanText.h"
 #import "TTRichSpanText+Link.h"
 #import "TTRichSpanText+Emoji.h"

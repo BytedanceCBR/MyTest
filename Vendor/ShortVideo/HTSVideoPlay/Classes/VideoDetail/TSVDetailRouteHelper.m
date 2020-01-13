@@ -6,7 +6,7 @@
 //
 
 #import "TSVDetailRouteHelper.h"
-#import <TTNavigationController.h>
+#import "TTNavigationController.h"
 #import "TTCustomAnimationDelegate.h"
 
 @implementation TSVDetailRouteHelper

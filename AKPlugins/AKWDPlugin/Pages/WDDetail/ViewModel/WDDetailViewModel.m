@@ -25,7 +25,7 @@
 #import "TTThemeManager.h"
 #import "TTStringHelper.h"
 #import "TTUserSettings/TTUserSettingsManager+NetworkTraffic.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTBaseLib/JSONAdditions.h>
 #import <TTDetailWebviewGIFManager.h>
 

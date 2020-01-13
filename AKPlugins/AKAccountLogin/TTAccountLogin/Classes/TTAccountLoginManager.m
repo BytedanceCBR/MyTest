@@ -10,7 +10,7 @@
 #import "TTAccountNavigationController.h"
 #import "TTAccountPadNavigationController.h"
 #import <TTUIResponderHelper.h>
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import "TTAccountLoginConfLogic.h"
 #import <TTSandBoxHelper.h>
 #import <TTAccountSDK/TTAccount+PlatformAuthLogin.h>

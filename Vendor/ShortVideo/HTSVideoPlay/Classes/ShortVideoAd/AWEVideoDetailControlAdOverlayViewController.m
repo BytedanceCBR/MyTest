@@ -41,7 +41,7 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import <BDWebImage/SDWebImageAdapter.h>
-#import <UIView+CustomTimingFunction.h>
+#import "UIView+CustomTimingFunction.h"
 
 @import AssetsLibrary;
 

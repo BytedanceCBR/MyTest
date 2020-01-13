@@ -8,7 +8,7 @@
 
 #import "TTNewFollowingManager.h"
 #import "TTNetworkManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTArticleBase/CommonURLSetting.h>
 
 @implementation TTNewFollowingManager

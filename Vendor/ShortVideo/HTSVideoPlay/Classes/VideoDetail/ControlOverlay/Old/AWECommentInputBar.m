@@ -15,7 +15,7 @@
 #import "UIImageAdditions.h"
 #import <TTUGCFoundation/TTUGCTextView.h>
 #import <TTUGCFoundation/TTUGCTextViewMediator.h>
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "UIColor+Theme.h"
 #import <TTBaseLib/UITextView+TTAdditions.h>
 #import <TTUGCFoundation/TTRichSpanText.h>

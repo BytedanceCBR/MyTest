@@ -23,7 +23,7 @@
 #import "SDWebImageManager.h"
 #import <TTBaseLib/JSONAdditions.h>
 #import "TTIndicatorView.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTAuthorizeManager.h"
 #import "WDListCellViewModel.h"
 #import "WDListCellDataModel.h"

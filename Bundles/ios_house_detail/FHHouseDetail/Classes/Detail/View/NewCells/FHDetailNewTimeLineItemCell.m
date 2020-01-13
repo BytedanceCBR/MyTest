@@ -6,7 +6,7 @@
 //
 
 #import "FHDetailNewTimeLineItemCell.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import <FHEnvContext.h>
 
 @interface FHDetailNewTimeLineItemCell ()

@@ -12,7 +12,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <CoreMotion/CoreMotion.h>
 #import "TTVPlayerStateStore.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIButton+TTAdditions.h"
 #import "TTMovieAdjustView.h"
 #import "TTMovieBrightnessView.h"

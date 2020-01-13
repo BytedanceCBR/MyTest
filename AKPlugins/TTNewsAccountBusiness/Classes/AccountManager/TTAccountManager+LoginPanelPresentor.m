@@ -7,7 +7,7 @@
 //
 
 #import "TTAccountManager.h"
-#import <TTAccountLoginManager.h>
+#import "TTAccountLoginManager.h"
 #import <TTUIResponderHelper.h>
 #import <TTModuleBridge.h>
 #import "TTAccountManager+HTSAccountBridge.h"

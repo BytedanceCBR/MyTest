@@ -10,7 +10,7 @@
 #import "UILabel+House.h"
 #import "FHDetailOldModel.h"
 #import "BDWebImage.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "TTTAttributedLabel.h"
 #import "FHUGCCellHelper.h"
 #import "PNColor.h"

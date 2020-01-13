@@ -9,7 +9,7 @@
 #import "FHUGCCellHeaderView.h"
 #import "FHBaseCollectionView.h"
 #import "FHUGCHotTopicSubCell.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "FHUserTracker.h"
 
 #define leftMargin 20

@@ -9,7 +9,7 @@
 #import "ExploreDetailManager.h"
 #import "NewsDetailLogicManager.h"
 #import "ExploreItemActionManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "NewsDetailConstant.h"
 
 #import "TTUIResponderHelper.h"

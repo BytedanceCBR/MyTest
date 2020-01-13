@@ -10,7 +10,7 @@
 #import "TTFeedBaseDelegate.h"
 #import "TTFeedMultiDeleteViewModel.h"
 #import "ArticleTitleImageView.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTAuthorizeManager.h"
 #import "TTNavigationController.h"
 #import "ExploreOrderedData+TTBusiness.h"
@@ -30,7 +30,7 @@
 
 #import "TTUGCDefine.h"
 #import "TTLoginDialogStrategyManager.h"
-#import <TTAccountSDK.h>
+#import "TTAccountSDK.h"
 //#import "Thread.h"
 #import "ExploreMomentDefine.h"
 //#import "Bubble-Swift.h"

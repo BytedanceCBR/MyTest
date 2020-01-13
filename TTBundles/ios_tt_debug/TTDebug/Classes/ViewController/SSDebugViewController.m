@@ -45,7 +45,7 @@
 #import "TTVideoTip.h"
 #import "TTLogServer.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 //#import "TTABAuthorizationManager.h"
 #import "TTCanvasBundleManager.h"

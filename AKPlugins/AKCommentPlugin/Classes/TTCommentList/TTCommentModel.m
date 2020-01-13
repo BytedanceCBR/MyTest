@@ -11,7 +11,7 @@
 #import "TTCommentReplyModel.h"
 #import <TTPlatformUIModel/TTGroupModel.h>
 #import <TTPlatformUIModel/TTForumModel.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTBaseLib/TTStringHelper.h>
 
 @interface TTCommentModel ()

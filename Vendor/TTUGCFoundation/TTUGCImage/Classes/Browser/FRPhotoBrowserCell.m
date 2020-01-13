@@ -17,8 +17,8 @@
 #import "TTIndicatorView.h"
 #import "TTThemedAlertController.h"
 #import "ALAssetsLibrary+TTImagePicker.h"
-#import <SSViewBase.h>
-#import <UIView+CustomTimingFunction.h>
+#import "SSViewBase.h"
+#import "UIView+CustomTimingFunction.h"
 #import "UIViewAdditions.h"
 #import "TTBaseMacro.h"
 #import "FRImageInfoModel.h"

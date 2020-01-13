@@ -14,7 +14,7 @@
 #import <UIFont+House.h>
 #import "TTRoute.h"
 #import "FHUGCScialGroupModel.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 
 @interface FHCommunityDetailHeaderView ()
 

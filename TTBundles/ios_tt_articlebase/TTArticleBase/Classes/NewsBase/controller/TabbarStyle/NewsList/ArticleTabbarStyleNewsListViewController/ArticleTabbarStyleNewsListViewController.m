@@ -20,7 +20,7 @@
 #import "TTInteractExitHelper.h"
 #import <TTServiceKit/TTServiceCenter.h>
 #import "TTAdManagerProtocol.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import "TTInterfaceTipHeader.h"
 #import "TTTopBar.h"
 #import "TTCustomAnimationDelegate.h"

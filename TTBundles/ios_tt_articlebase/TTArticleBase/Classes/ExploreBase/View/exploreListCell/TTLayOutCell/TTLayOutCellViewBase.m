@@ -26,7 +26,7 @@
 //#import "TTLayOutUFLargePicCellModel.h"
 //#import "RecommendCardCache.h"
 #import <TTTracker/TTTrackerProxy.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTRichSpanText+Emoji.h"
 #import "UILabel+Tapping.h"
 

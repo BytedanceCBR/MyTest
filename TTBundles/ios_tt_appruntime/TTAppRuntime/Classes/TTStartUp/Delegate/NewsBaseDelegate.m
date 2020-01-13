@@ -7,8 +7,8 @@
 //
 
 #import "NewsBaseDelegate.h"
-#import <TTWeChatShare.h>
-#import <TTAccountBusiness.h>
+#import "TTWeChatShare.h"
+#import "TTAccountBusiness.h"
 #import "TTRoute.h"
 #import "TTIndicatorView.h"
 #import "SSFeedbackManager.h"

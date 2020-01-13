@@ -7,7 +7,7 @@
 
 #import "FHHomeItemViewController.h"
 #import <FHRefreshCustomFooter.h>
-#import <TTBaseMacro.h>
+#import "TTBaseMacro.h"
 #import <FHEnvContext.h>
 #import <ToastManager.h>
 #import <UIScrollView+Refresh.h>

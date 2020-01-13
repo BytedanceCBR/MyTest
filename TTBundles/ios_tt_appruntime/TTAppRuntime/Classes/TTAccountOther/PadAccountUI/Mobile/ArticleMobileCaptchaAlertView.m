@@ -7,9 +7,9 @@
 //
 
 #import "ArticleMobileCaptchaAlertView.h"
-#import <SSThemed.h>
-#import <TTDeviceHelper.h>
-#import <TTAccountBusiness.h>
+#import "SSThemed.h"
+#import "TTDeviceHelper.h"
+#import "TTAccountBusiness.h"
 #import <BDTSharedHeaders/SSCommonDefines.h>
 
 

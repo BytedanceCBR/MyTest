@@ -8,7 +8,7 @@
 #import "FHMapSearchHouseListViewController.h"
 #import <Masonry/Masonry.h>
 #import <MJRefresh.h>
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "FHMapSearchModel.h"
 #import "FHHouseAreaHeaderView.h"
 #import "UIColor+Theme.h"

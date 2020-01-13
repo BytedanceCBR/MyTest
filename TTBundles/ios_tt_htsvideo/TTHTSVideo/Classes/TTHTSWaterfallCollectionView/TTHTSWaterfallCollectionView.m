@@ -23,7 +23,7 @@
 #import <HTSVideoPlay/HTSVideoPageParamHeader.h>
 #import <TTUIWidget/TTNavigationController.h>
 #import <TTBaseLib/TTURLUtils.h>
-#import <ReactiveObjC.h>
+#import "ReactiveObjC.h"
 
 #import "TTFeedDislikeView.h"
 #import "TSVTransitionAnimationManager.h"

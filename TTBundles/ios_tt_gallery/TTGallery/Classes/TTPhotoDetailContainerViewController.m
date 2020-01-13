@@ -20,7 +20,7 @@
 #import "TTImagePreviewAnimateManager.h"
 #import "TTPhotoTabViewController.h"
 #import "TTCollectionPageViewController.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <Crashlytics/Answers.h>
 #import <TTArticleBase/SSCommonLogic.h>

@@ -8,7 +8,7 @@
 #import "FHHomeRequestAPI.h"
 #import "FHMainApi.h"
 #import <FHHomeHouseModel.h>
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "FHEnvContext.h"
 
 #define DEFULT_ERROR @"请求错误"

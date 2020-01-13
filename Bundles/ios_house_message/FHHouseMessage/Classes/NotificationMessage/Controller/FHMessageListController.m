@@ -10,7 +10,7 @@
 #import "FHMessageNotificationBaseCell.h"
 #import "FHMessageNotificationManager.h"
 
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "UIScrollView+Refresh.h"
 #import "FHMessageNotificationCellHelper.h"
 #import "FHMessageNotificationTipsManager.h"

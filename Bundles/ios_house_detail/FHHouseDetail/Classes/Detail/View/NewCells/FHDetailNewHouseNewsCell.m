@@ -6,7 +6,7 @@
 //
 
 #import "FHDetailNewHouseNewsCell.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 
 @interface FHDetailNewHouseNewsCell ()
 @end

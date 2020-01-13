@@ -11,7 +11,7 @@
 #import "TTActivityShareManager.h" //Share系列
 #import "SSActivityView.h"
 #import "ArticleShareManager.h"
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 
 @interface TTArticleDetailViewController (Share)<SSActivityViewDelegate, UIActionSheetDelegate, TTActivityShareManagerDelegate,TTShareManagerDelegate>
 @property(nonatomic, strong) SSActivityView *navMoreShareView;

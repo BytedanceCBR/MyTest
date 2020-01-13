@@ -36,7 +36,7 @@
 #import "TTAccountManager.h"
 //#import "FRForumServer.h"
 #import "TTCommentDataManager.h"
-#import <ExploreMomentDefine_Enums.h>
+#import "ExploreMomentDefine_Enums.h"
 #import "ExploreMomentDefine.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTBusinessManager+StringUtils.h>

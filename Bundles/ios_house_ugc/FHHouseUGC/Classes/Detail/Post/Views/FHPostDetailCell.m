@@ -14,7 +14,7 @@
 #import "FHUGCCellHelper.h"
 #import "FHCommentBaseDetailViewModel.h"
 #import "FHUGCCellOriginItemView.h"
-#import <TTIndicatorView.h>
+#import "TTIndicatorView.h"
 
 #define leftMargin 20
 #define rightMargin 20

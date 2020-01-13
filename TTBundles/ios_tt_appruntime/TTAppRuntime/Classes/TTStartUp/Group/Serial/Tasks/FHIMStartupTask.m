@@ -16,7 +16,7 @@
 #import "FHIMAccountCenterImpl.h"
 #import "FHBubbleTipManager.h"
 #import "FHURLSettings.h"
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import <FHEnvContext.h>
 #import "ToastManager.h"
 #import <TTArticleBase/SSCommonLogic.h>

@@ -7,7 +7,7 @@
 
 #import "TTPersonalHomeMultiplePlatformFollowersInfoViewModel.h"
 #import "TTPersonalHomeSinglePlatformFollowersInfoViewModel.h"
-#import <ReactiveObjC.h>
+#import "ReactiveObjC.h"
 #import "TTAccountManager.h"
 
 @interface TTPersonalHomeMultiplePlatformFollowersInfoViewModel()

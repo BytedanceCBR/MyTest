@@ -8,7 +8,7 @@
 //
 
 #import "BDTAccountClientManager.h"
-#import <TTAccountSDK.h>
+#import "TTAccountSDK.h"
 #import <TTUIResponderHelper.h>
 #import "TTAccountBindingMobileViewController.h"
 #import <TTSettingsManager.h>

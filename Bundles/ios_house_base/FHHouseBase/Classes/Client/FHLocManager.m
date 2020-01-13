@@ -17,7 +17,7 @@
 #import "FHUtils.h"
 #import "FHHouseEnvContextBridge.h"
 #import "FHHouseBridgeManager.h"
-#import <NSDictionary+TTAdditions.h>
+#import "NSDictionary+TTAdditions.h"
 #import <NSTimer+NoRetain.h>
 #import <TTUIResponderHelper.h>
 #import <HMDTTMonitor.h>

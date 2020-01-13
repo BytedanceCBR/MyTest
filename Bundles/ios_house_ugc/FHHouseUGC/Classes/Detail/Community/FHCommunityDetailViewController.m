@@ -13,11 +13,11 @@
 #import "TTBaseMacro.h"
 #import "FHUGCFollowButton.h"
 #import <UILabel+House.h>
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import "FHUGCPostMenuView.h"
 #import "FHCommonDefines.h"
 #import "FHUserTracker.h"
-#import <UIViewController+NavigationBarStyle.h>
+#import "UIViewController+NavigationBarStyle.h"
 #import <UIImage+FIconFont.h>
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol, FHUGCPostMenuViewDelegate>

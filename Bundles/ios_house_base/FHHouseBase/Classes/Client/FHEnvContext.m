@@ -23,7 +23,7 @@
 #import "FHMessageManager.h"
 #import <HMDTTMonitor.h>
 #import "FHIESGeckoManager.h"
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import <BDALog/BDAgileLog.h>
 #import "FHUGCConfigModel.h"
 #import <TTTabBarManager.h>
@@ -35,7 +35,7 @@
 #import <FHMinisdkManager.h>
 #import <FHIntroduceManager.h>
 #import <TTSettingsManager.h>
-#import <NSDictionary+TTAdditions.h>
+#import "NSDictionary+TTAdditions.h"
 #import <TTLocationManager/TTLocationManager.h>
 #import "FHStashModel.h"
 #import <UserNotifications/UserNotifications.h>

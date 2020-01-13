@@ -7,7 +7,7 @@
 
 #import "TTPersonalHomeSinglePlatformFollowersInfoViewModel.h"
 #import "TTPersonalHomeSinglePlatformFollowersInfoModel.h"
-#import <ReactiveObjC.h>
+#import "ReactiveObjC.h"
 #import "TTNetworkManager.h"
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>

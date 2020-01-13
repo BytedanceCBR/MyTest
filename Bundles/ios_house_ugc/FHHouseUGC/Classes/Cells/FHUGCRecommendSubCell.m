@@ -8,7 +8,7 @@
 #import "FHUGCRecommendSubCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <UIImageView+BDWebImage.h>
 #import "FHUGCFollowButton.h"
 #import "FHFeedContentModel.h"

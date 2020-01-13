@@ -25,7 +25,7 @@
 #import "FHHomeItemViewController.h"
 #import "FHHomeSearchPanelViewModel.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
-#import <FHUtils.h>
+#import "FHUtils.h"
 #import <FHHomeMainViewController.h>
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width

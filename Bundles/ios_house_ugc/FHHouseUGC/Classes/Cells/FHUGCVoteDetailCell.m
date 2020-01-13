@@ -16,7 +16,7 @@
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
 #import <TTBusinessManager+StringUtils.h>
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "TTAccountManager.h"
 #import "FHHouseUGCAPI.h"
 #import "ToastManager.h"

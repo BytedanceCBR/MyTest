@@ -7,11 +7,11 @@
 //
 
 #import "ArticleMobileSettingViewController.h"
-#import <TTNavigationController.h>
-#import <TTThemedAlertController.h>
-#import <TTDeviceHelper.h>
+#import "TTNavigationController.h"
+#import "TTThemedAlertController.h"
+#import "TTDeviceHelper.h"
 #import <TTUIResponderHelper.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTTrackerWrapper.h"
 
 

@@ -6,7 +6,7 @@
 //
 
 #import "FHDetailNewMutiFloorPanCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"

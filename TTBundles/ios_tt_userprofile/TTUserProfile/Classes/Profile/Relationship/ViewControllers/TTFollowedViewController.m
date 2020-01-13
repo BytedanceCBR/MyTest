@@ -7,8 +7,8 @@
 //
 
 #import "TTFollowedViewController.h"
-#import <SSThemed.h>
-#import <TTAccountBusiness.h>
+#import "SSThemed.h"
+#import "TTAccountBusiness.h"
 #import "TTFollowedCell.h"
 #import "TTFirstFollowedCell.h"
 #import "TTFollowedModel.h"

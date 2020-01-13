@@ -6,7 +6,7 @@
 //
 //
 #import <UIKit/UIKit.h>
-#import <SSThemed.h>
+#import "SSThemed.h"
 
 @interface AWEVideoPlayReporReasonCell : SSThemedTableViewCell
 

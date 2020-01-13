@@ -8,7 +8,7 @@
 #import "FHUGCVotePublishTypeSelectViewController.h"
 #import <WDDefines.h>
 #import <FHCommonDefines.h>
-#import <Masonry.h>
+#import "Masonry.h"
 #import <UIFont+House.h>
 #import <UIColor+Theme.h>
 

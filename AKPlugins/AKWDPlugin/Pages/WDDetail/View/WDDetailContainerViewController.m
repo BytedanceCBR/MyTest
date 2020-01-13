@@ -18,7 +18,7 @@
 #import "NetworkUtilities.h"
 #import "SSThemed.h"
 #import "TTDeviceHelper.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import <KVOController/NSObject+FBKVOController.h>
 #import "ExploreOrderedData.h"
 

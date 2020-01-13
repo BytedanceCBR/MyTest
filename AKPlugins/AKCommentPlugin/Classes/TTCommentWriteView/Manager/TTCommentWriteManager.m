@@ -20,7 +20,7 @@
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTEntry/SSPGCActionManager.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTCommentDataManager.h"
 #import "TTCommentDefines.h"
 #import "TTCommentWriteView.h"

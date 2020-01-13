@@ -11,7 +11,7 @@
 #import "TTFlexManager.h"
 #import <UIKit/UIKit.h>
 #import <FLEXManager.h>
-#import <TTNavigationController.h>
+#import "TTNavigationController.h"
 #import <TTUIResponderHelper.h>
 #import <NSObject+FBKVOController.h>
 #import <Aspects.h>

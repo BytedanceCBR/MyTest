@@ -5,7 +5,7 @@
 //  Created by liuyu on 2019/12/5.
 //
 #import "FHOldDetailDisclaimerCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
@@ -15,7 +15,7 @@
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
 #import <YYText.h>
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 #import <TTPhotoScrollViewController.h>
 #import "UIColor+Theme.h"
 

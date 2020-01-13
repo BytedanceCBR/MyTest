@@ -9,7 +9,7 @@
 //去掉上传用户通讯录
 #import "TTContactsNetworkManager.h"
 #import "FHURLSettings.h"
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import <NSDataAdditions.h>
 #import <CommonCrypto/CommonCrypto.h>
 #import <TTSandBoxHelper.h>

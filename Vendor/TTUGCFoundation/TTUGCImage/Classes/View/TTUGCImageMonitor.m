@@ -8,9 +8,9 @@
 #import "TTUGCImageMonitor.h"
 #import <pthread.h>
 #import <mach/mach_time.h>
-#import <TTTrackerWrapper.h>
+#import "TTTrackerWrapper.h"
 #import "NetworkUtilities.h"
-#import <TTMonitor.h>
+#import "TTMonitor.h"
 #import "TTUGCImageHelper.h"
 
 @interface TTUGCImageMonitorModel : NSObject

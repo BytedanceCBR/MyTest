@@ -17,7 +17,7 @@
 #import "ExploreOrderedData+TTBusiness.h"
 #import "TSVShortVideoOriginalData.h"
 #import "TTAdShortVideoModel.h"
-#import <ReactiveObjC.h>
+#import "ReactiveObjC.h"
 #import <BDTSharedHeaders/SSCommonDefines.h>
 
 @interface TSVShortVideoFeedFetchManager ()

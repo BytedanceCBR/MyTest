@@ -17,10 +17,10 @@
 #import "TTUGCBDGIFLoadManager.h"
 #import "NSData+ImageContentType.h"
 #import "TTMonitor.h"
-#import <TTThemeManager.h>
+#import "TTThemeManager.h"
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <NetworkUtilities.h>
+#import "NetworkUtilities.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 
 #import "TTUGCImageMonitor.h"

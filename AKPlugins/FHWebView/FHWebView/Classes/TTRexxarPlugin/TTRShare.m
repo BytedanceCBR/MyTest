@@ -17,7 +17,7 @@
 //#import "TTDetailModel.h"
 
 //#import "TTProfileShareService.h"
-//#import <TTAccountBusiness.h>
+//#import "TTAccountBusiness.h"
 #import <TTRoute/TTRouteDefine.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTImage/TTImageDownloader.h>

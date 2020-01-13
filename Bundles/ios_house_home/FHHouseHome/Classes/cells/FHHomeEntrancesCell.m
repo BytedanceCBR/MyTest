@@ -7,7 +7,7 @@
 
 #import "FHHomeEntrancesCell.h"
 #import "FHHomeCellHelper.h"
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import <FHHomeCellHelper.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <Masonry/Masonry.h>

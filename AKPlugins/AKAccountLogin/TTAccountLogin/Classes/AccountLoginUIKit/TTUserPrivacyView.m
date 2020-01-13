@@ -7,9 +7,9 @@
 //
 
 #import "TTUserPrivacyView.h"
-#import <TTDeviceUIUtils.h>
+#import "TTDeviceUIUtils.h"
 #import <UIButton+TTAdditions.h>
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 
 
 

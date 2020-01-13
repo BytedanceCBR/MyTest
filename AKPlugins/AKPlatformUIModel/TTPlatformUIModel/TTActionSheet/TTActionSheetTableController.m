@@ -19,7 +19,7 @@
 #import "TTKeyboardListener.h"
 #import "UIColor+TTThemeExtension.h"
 #import "TTUIResponderHelper.h"
-#import <SSThemed.h>
+#import "SSThemed.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
 #import "TTDeviceUIUtils.h"
