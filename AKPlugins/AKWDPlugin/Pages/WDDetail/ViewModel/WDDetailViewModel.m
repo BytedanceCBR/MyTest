@@ -17,7 +17,7 @@
 #import "WDCommonLogic.h"
 
 #import "ArticleJSManager.h"
-#import <TTUserSettingsManager+FontSettings.h>
+#import "TTUserSettingsManager+FontSettings.h"
 #import "YSWebView.h"
 #import "TTDeviceHelper.h"
 #import "ArticleJSManager.h"

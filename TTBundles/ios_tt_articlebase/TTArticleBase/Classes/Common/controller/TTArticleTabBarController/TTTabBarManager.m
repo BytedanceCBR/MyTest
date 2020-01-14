@@ -31,7 +31,7 @@
 #import "TTArticleTabBarController.h"
 #import "UITabBarController+TabbarConfig.h"
 #import "TTSettingsManager.h"
-#import <Lottie/Lottie.h>
+#import <lottie-ios/Lottie/Lottie.h>
 #import "TTTabBarCustomMiddleModel.h"
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>

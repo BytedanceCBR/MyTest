@@ -45,7 +45,7 @@
 #import "UIViewAdditions.h"
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import "TTModuleBridge.h"
-#import <Lottie/Lottie.h>
+#import <lottie-ios/Lottie/Lottie.h>
 #import "UIView+CustomTimingFunction.h"
 #import "TSVWriteCommentButton.h"
 #import "UIView+Yoga.h"

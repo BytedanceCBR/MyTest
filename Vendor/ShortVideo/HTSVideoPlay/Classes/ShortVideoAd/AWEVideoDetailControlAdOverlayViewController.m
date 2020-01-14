@@ -36,7 +36,7 @@
 #import "UIButton+TTAdditions.h"
 #import "UIView+Yoga.h"
 #import "UIViewAdditions.h"
-#import <Lottie/Lottie.h>
+#import <lottie-ios/Lottie/Lottie.h>
 #import <Masonry/Masonry.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTThemed/UIColor+TTThemeExtension.h>

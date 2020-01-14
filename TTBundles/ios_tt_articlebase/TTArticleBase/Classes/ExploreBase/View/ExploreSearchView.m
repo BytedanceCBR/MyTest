@@ -18,7 +18,7 @@
 
 #import "TTRoute.h"
 #import "ArticleSearchBar.h"
-#import <TTUserSettingsManager+FontSettings.h>
+#import "TTUserSettingsManager+FontSettings.h"
 
 #import "TTLocationManager.h"
 #import "TTIndicatorView.h"
