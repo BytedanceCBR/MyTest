@@ -566,15 +566,16 @@
 {
     NSString *path = @"/f100/api/associate/realtor_evaluation/assign";
     NSMutableDictionary *param = [NSMutableDictionary new];
-    if ([[TTInstallIDManager sharedInstance] deviceID]) {
-        param[@"device_id"] = @([[[TTInstallIDManager sharedInstance] deviceID] longLongValue]);
-    }
     if(!isEmptyString(realtorId)){
         param[@"realtor_id"] = @(realtorId.longLongValue);;
     }
-    param[@"house_id"] = @(targetId.longLongValue);
-    param[@"target_id"] = @(targetId.longLongValue);
-    param[@"target_type"] = @(targetType);
+    // evaluationType[int]:反馈类型 0:电话后反馈 1:IM反馈
+    if (evaluationType == 1) {
+        param[@"target_id"] = @(targetId.longLongValue);
+        param[@"target_type"] = @(targetType);
+    }else {
+        param[@"house_id"] = @(targetId.longLongValue);
+    }
     param[@"type"] = @(evaluationType);
     param[@"score"] = @(score);
     if(!isEmptyString(content)) {

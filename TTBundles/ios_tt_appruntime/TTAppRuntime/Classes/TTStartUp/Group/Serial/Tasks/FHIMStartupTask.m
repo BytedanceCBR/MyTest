@@ -28,6 +28,7 @@
 #import <TTSandBoxHelper.h>
 #import <FHHouseDetail/FHHouseDetailAPI.h>
 #import <FHCommonUI/FHFeedbackView.h>
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -222,8 +223,9 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     NSString *realtorId = traceParams[@"realtor_id"];
     NSString *targetId = traceParams[@"target_id"];
     NSInteger targetType = traceParams[@"target_type"];
+    NSInteger evaluationType = [traceParams btd_integerValueForKey:@"evaluation_type"];
 
-    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:1 realtorId:realtorId content:content score:scoreCount tags:scoreTags completion:^(bool succss, NSError *_Nullable error) {
+    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:scoreCount tags:scoreTags completion:^(bool succss, NSError *_Nullable error) {
         if (succss) {
             [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
         } else {

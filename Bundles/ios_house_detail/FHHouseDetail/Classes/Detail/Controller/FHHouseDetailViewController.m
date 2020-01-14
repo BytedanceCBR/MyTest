@@ -745,7 +745,8 @@
         NSMutableDictionary *traceParams = @{}.mutableCopy;
         traceParams[@"realtor_id"] = self.phoneCallRealtorId;
         traceParams[@"target_id"] = self.houseId;
-//        traceParams[@"target_type"] = self.targetType;
+        tracerDic[@"star_num"] = @(scoreCount);
+        traceParams[@"evaluation_type"] = @(0);
         [[FHIMConfigManager shareInstance]submitRealtorEvaluation:content scoreCount:scoreCount scoreTags:scoreTags traceParams:traceParams];
         
         tracerDic[@"click_position"] = @"confirm";
@@ -768,7 +769,7 @@
         [tracerDic addEntriesFromDictionary:self.viewModel.detailTracerDic];
     }
     tracerDic[@"enter_from"] = @"realtor_evaluate_popup";
-    tracerDic[@"realtor_id"] = self.self.phoneCallRealtorId ?: UT_BE_NULL;
+    tracerDic[@"realtor_id"] = self.phoneCallRealtorId ?: UT_BE_NULL;
     tracerDic[@"request_id"] = self.phoneCallRequestId ?: UT_BE_NULL;
     TRACK_EVENT(@"click_feedback", tracerDic);
 }
