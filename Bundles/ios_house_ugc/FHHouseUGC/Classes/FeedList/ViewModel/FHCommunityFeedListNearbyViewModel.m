@@ -897,7 +897,7 @@
 - (void)trackElementShow:(NSInteger)rank elementType:(NSString *)elementType {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"element_type"] = elementType ? elementType : @"be_null";
-    dict[@"page_type"] = @"nearby_list";
+    dict[@"page_type"] = @"hot_discuss_feed";
     dict[@"enter_from"] = @"neighborhood_tab";
     dict[@"rank"] = @(rank);
     

@@ -88,6 +88,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 //帖子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellUserModel *user ;
 @property (nonatomic, copy , nullable) NSString *diggCount;
+@property (nonatomic, copy , nullable) NSString *readCount;
 @property (nonatomic, copy , nullable) NSString *userDigg;
 @property (nonatomic, assign) FHFeedUGCDiggType lastUserDiggType; // 上一次点赞操作的类型
 @property (nonatomic, copy , nullable) NSString *commentCount;

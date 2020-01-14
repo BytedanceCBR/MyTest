@@ -18,13 +18,6 @@
 
 @end
 
-//@implementation FHFeedUGCCellImageListUrlListModel
-//
-//@end
-//
-//@implementation FHFeedUGCCellImageListModel
-//
-//@end
 @implementation FHFeedUGCVoteModel
 
 @end
@@ -89,7 +82,8 @@
                  type == FHUGCFeedListCellTypeUGCHotTopic ||
                  type == FHUGCFeedListCellTypeUGCVote ||
                  type == FHUGCFeedListCellTypeUGCSmallVideo ||
-                 type == FHUGCFeedListCellTypeUGCVoteInfo){
+                 type == FHUGCFeedListCellTypeUGCVoteInfo ||
+                 type == FHUGCFeedListCellTypeUGCHotCommunity){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -199,9 +193,7 @@
             
             [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
             
-            double time = [model.publishTime doubleValue];
-            NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
-            cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
+            cellModel.desc = [self generateUGCDescWithCreateTime:model.publishTime readCount:model.readCount distanceInfo:nil];
             
             cellModel.userDigg = model.userDigg;
             cellModel.diggCount = model.diggCount;
@@ -321,9 +313,7 @@
         //处理大图
         cellModel.largeImageList = model.rawData.content.answer.largeImageList;
         
-        double time = [model.rawData.content.answer.createTime doubleValue];
-        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
-        cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
+        cellModel.desc = [self generateUGCDescWithCreateTime:model.rawData.content.answer.createTime readCount:nil distanceInfo:nil];
         
         cellModel.diggCount = model.rawData.content.answer.diggCount;
         cellModel.commentCount = model.rawData.content.answer.commentCount;
@@ -376,6 +366,8 @@
         double time = [model.rawData.commentBase.createTime doubleValue];
         NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
         cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
+        
+        cellModel.desc = [self generateUGCDescWithCreateTime:model.rawData.commentBase.createTime readCount:model.rawData.commentBase.action.readCount distanceInfo:nil];
         
         cellModel.diggCount = model.rawData.commentBase.action.diggCount;
         cellModel.commentCount = model.rawData.commentBase.action.commentCount;
@@ -594,6 +586,7 @@
     cellModel.content = model.content;
     cellModel.contentRichSpan = model.contentRichSpan;
     cellModel.diggCount = model.diggCount;
+    cellModel.readCount = model.readCount;
     cellModel.commentCount = model.commentCount;
     cellModel.userDigg = model.userDigg;
     cellModel.desc = [self generateUGCDesc:model];
@@ -655,6 +648,10 @@
 }
 
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
+    return [self generateUGCDescWithCreateTime:model.createTime readCount:model.readCount distanceInfo:model.distanceInfo];
+}
+
++ (NSAttributedString *)generateUGCDescFromRawData:(FHFeedContentRawDataModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [model.createTime doubleValue];
     
@@ -687,26 +684,26 @@
     return desc;
 }
 
-+ (NSAttributedString *)generateUGCDescFromRawData:(FHFeedContentRawDataModel *)model {
++ (NSAttributedString *)generateUGCDescWithCreateTime:(NSString *)createTime readCount:(NSString *)readCount distanceInfo:(NSString *)distanceInfo {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
-    double time = [model.createTime doubleValue];
+    double time = [createTime doubleValue];
     
     NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
     
-    if(![publishTime isEqualToString:@""]){
+    if(!isEmptyString(publishTime)){
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
         [desc appendAttributedString:publishTimeAStr];
     }
     
-    NSString *read = @"  已读 2334";
-    if(![read isEqualToString:@""]){
+    if(!isEmptyString(readCount)){
+        NSString *read = [NSString stringWithFormat:@"  已读 %@",readCount];
         NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
         [desc appendAttributedString:readAStr];
     }
     
     // 法务合规，如果没有定位权限，不展示位置信息
-    if(!isEmptyString(model.distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
-        NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
+    if(!isEmptyString(distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
+        NSString *distance = [NSString stringWithFormat:@"   %@",distanceInfo];
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.bounds = CGRectMake(8, 0, 8, 8);
         attachment.image = [UIImage imageNamed:@"fh_ugc_location"];
