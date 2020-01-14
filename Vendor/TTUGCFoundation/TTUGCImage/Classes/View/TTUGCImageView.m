@@ -8,7 +8,7 @@
 #import "TTUGCImageView.h"
 #import <objc/runtime.h>
 #import <TTBaseLib/UIImageAdditions.h>
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+TTThemeExtension.h"
 #import <TTImage/TTWebImageManager.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTUserSettings/TTUserSettingsManager+NetworkTraffic.h>

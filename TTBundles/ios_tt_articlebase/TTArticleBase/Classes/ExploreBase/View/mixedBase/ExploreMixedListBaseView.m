@@ -168,7 +168,7 @@
 #import "FHFeedHouseItemCell.h"
 #import "FHEnvContext.h"
 #import "FHLocManager.h"
-#import <FHHomeCellHelper.h>
+#import "FHHomeCellHelper.h"
 #import "SSCommonLogic.h"
 #import "TTSandBoxHelper.h"
 #import "FHUtils.h"

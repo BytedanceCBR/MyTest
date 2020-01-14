@@ -11,7 +11,7 @@
 #import "AKPhotoCarouselCellModel.h"
 
 #import <NSTimer+NoRetain.h>
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+TTThemeExtension.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/TTBaseMacro.h>

@@ -8,7 +8,7 @@
 
 #import "FRPhotoBrowserViewController.h"
 #import "FRPhotoBrowserCell.h"
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+TTThemeExtension.h"
 #import "FRPhotoBrowserModel.h"
 #import "TTImagePreviewAnimateManager.h"
 #import "NetworkUtilities.h"

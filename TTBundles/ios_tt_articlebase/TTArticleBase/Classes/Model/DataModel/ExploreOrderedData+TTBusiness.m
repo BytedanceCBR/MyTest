@@ -13,7 +13,7 @@
 #import "NSDictionary+TTAdditions.h"
 #import "NSString-Extension.h"
 #import "JSONAdditions.h"
-#import <TTFollowManager.h>
+#import "TTFollowManager.h"
 #import "Article+TTADComputedProperties.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 #import <objc/runtime.h>

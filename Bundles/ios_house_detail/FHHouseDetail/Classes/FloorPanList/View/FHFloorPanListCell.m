@@ -7,7 +7,7 @@
 
 #import "FHFloorPanListCell.h"
 #import "FHDetailNewModel.h"
-#import <BDWebImage.h>
+#import "BDWebImage.h"
 
 @interface FHFloorPanListCell ()
 @property (nonatomic , strong) UIImageView *iconView;

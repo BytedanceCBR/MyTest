@@ -11,7 +11,7 @@
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "Masonry.h"
-#import <BDWebImage.h>
+#import "BDWebImage.h"
 #import "UIColor+Theme.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHCommonDefines.h>

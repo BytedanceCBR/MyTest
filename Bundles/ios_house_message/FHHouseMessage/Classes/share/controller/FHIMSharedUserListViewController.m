@@ -15,7 +15,7 @@
 #import "TTRoute.h"
 #import "Masonry.h"
 #import "ReactiveObjC.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "FHChatUserInfo.h"
 #import "FHUserTracker.h"
 #import "TTReachability.h"

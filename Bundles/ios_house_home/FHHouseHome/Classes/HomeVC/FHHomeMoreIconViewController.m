@@ -9,7 +9,7 @@
 #import "TTRoute.h"
 #import <FHBaseTableView.h>
 #import <FHConfigModel.h>
-#import <FHHomeCellHelper.h>
+#import "FHHomeCellHelper.h"
 #import <FHHomeEntrancesCell.h>
 #import "FHEnvContext.h"
 #import "UIColor+Theme.h"

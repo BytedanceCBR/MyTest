@@ -21,7 +21,7 @@
 #import <TTQQZoneActivity.h>
 #import <TTCopyActivity.h>
 #import "FHUserTracker.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "TTAccountManager.h"
 
 @interface FHUGCShareManager ()<TTShareManagerDelegate>

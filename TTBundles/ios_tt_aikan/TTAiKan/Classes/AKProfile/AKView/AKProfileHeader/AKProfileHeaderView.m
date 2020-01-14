@@ -9,7 +9,7 @@
 #import "AKProfileHeaderViewLogined.h"
 #import "AKProfileHeaderViewUnLogin.h"
 
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+TTThemeExtension.h"
 #import <TTAccountManager.h>
 @interface AKProfileHeaderView () <AKProfileHeaderViewUnLoginDelegate,AKProfileHeaderViewLoginedDelegate>
 

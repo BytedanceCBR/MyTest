@@ -15,7 +15,7 @@
 #import "TTWechatContentItem.h"
 #import "TTQQFriendContentItem.h"
 #import "TTQQZoneContentItem.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "FHURLSettings.h"
 #import <TTWechatTimelineActivity.h>
 #import <TTWechatActivity.h>

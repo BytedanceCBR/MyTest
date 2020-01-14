@@ -12,7 +12,7 @@
 #import <FHHouseBase/FHConfigModel.h>
 #import "UITableView+FDTemplateLayoutCell.h"
 #import <FHHouseBase/FHSpringboardView.h>
-#import <BDWebImage.h>
+#import "BDWebImage.h"
 #import "UIColor+Theme.h"
 #import "TTRoute.h"
 #import "FHUserTracker.h"

@@ -14,7 +14,7 @@
 #import "TTPhotoScrollViewController.h"
 #import "TTBaseMacro.h"
 #import "TTInteractExitHelper.h"
-#import <TTImageView+TrafficSave.h>
+#import "TTImageView+TrafficSave.h"
 #import <FHUGCCellHelper.h>
 
 #define itemPadding 4

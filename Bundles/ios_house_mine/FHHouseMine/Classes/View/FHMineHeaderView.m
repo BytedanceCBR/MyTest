@@ -6,7 +6,7 @@
 //
 
 #import "FHMineHeaderView.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import <Masonry/Masonry.h>
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"

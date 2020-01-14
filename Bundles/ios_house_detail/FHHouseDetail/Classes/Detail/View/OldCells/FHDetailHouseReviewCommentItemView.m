@@ -9,7 +9,7 @@
 #import "MASConstraintMaker.h"
 #import "UILabel+House.h"
 #import "FHDetailOldModel.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "Masonry.h"
 #import "TTTAttributedLabel.h"
 #import "FHUGCCellHelper.h"

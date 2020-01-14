@@ -19,7 +19,7 @@
 #import "UILabel+House.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
-#import <BTDMacros.h>
+#import "BTDMacros.h"
 
 @interface FHDetailAgentListCell ()
 

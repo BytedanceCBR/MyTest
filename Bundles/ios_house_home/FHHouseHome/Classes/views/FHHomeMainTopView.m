@@ -18,7 +18,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHHomeConfigManager.h"
 #import "FHHouseType.h"
-#import <FHHomeCellHelper.h>
+#import "FHHomeCellHelper.h"
 #import "UIImage+FIconFont.h"
 
 static const float kSegementedOneWidth = 50;
