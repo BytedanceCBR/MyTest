@@ -8,7 +8,7 @@
 
 #import "TTAccountLoginPlatformLoginView.h"
 #import "TTAlphaThemedButton.h"
-#import <UIButton+TTAdditions.h>
+#import "UIButton+TTAdditions.h"
 #import "UIViewAdditions.h"
 #import "TTThemeManager.h"
 #import "Masonry.h"

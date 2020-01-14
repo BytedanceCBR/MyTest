@@ -27,7 +27,7 @@
 #import <BDALog/BDAgileLog.h>
 #import "FHUGCConfigModel.h"
 #import <TTTabBarManager.h>
-#import <TTTabBarItem.h>
+#import "TTTabBarItem.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <TTArticleTabBarController.h>
 #import <TTCategoryBadgeNumberManager.h>

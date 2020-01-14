@@ -46,7 +46,7 @@
 //#import "TTContactsGuideManager.h"
 #import "TTTabBarProvider.h"
 #import "ExploreExtenstionDataHelper.h"
-#import <TTAppUpdateHelper.h>
+#import "TTAppUpdateHelper.h"
 #import "FHHomeSearchPanelViewModel.h"
 #import "FHEnvContext.h"
 #import "TTLaunchTracer.h"
@@ -60,8 +60,8 @@
 #import "CommonURLSetting.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTTabBarController.h"
-#import <FHCommuteManager.h>
-#import <TTTabBarItem.h>
+#import "FHCommuteManager.h"
+#import "TTTabBarItem.h"
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol>
 

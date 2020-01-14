@@ -8,7 +8,7 @@
 
 #import "TTAccountSDKRegister.h"
 #import "TTAccountBusiness.h"
-#import <TTAccountLoginConfLogic.h>
+#import "TTAccountLoginConfLogic.h"
 #import "TTSandBoxHelper.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "SSCookieManager.h"

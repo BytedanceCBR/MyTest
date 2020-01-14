@@ -9,7 +9,7 @@
 #import "TTCookieManager.h"
 #import "TTLocationManager.h"
 #import "NSString+URLEncoding.h"
-#import <TTBaseMacro.h>
+#import "TTBaseMacro.h"
 
 static NSString *const kLocationCookieKey = @"toutiaocity";
 

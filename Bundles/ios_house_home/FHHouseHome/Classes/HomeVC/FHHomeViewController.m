@@ -22,10 +22,10 @@
 #import "TTArticleCategoryManager.h"
 #import "FHHomeScrollBannerCell.h"
 #import "TTDeviceHelper.h"
-#import <TTAppUpdateHelper.h>
+#import "TTAppUpdateHelper.h"
 #import "TTInstallIDManager.h"
 #import <CommonURLSetting.h>
-#import <FHCommuteManager.h>
+#import "FHCommuteManager.h"
 #import "TTUIResponderHelper.h"
 #import "TTTabBarController.h"
 #import <FHHomeSearchPanelViewModel.h>

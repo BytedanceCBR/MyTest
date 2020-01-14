@@ -19,7 +19,7 @@
 #import "TTReachability.h"
 #import "FHMineConfigModel.h"
 #import "FHMineMutiItemCell.h"
-#import <FHCommuteManager.h>
+#import "FHCommuteManager.h"
 
 #define mutiItemCellId @"mutiItemCellId"
 

@@ -11,7 +11,7 @@
 #import <FHUGCConfig.h>
 #import <FHCommunityList.h>
 #import <WDDefines.h>
-#import <TTAccountManager.h>
+#import "TTAccountManager.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
 #import <FHPostUGCSelectedGroupHistoryView.h>

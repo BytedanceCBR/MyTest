@@ -10,7 +10,7 @@
 #import <pthread/pthread.h>
 #import "NSObject+TTAdditions.h"
 #import "TTBaseMacro.h"
-#import <TTAccountManager.h>
+#import "TTAccountManager.h"
 
 @interface TTFriendRelationService() {
     pthread_mutex_t lock;

@@ -16,7 +16,7 @@
 #import "SSMyUserModel.h"
 
 #import "TTAlphaThemedButton.h"
-#import <UIButton+TTAdditions.h>
+#import "UIButton+TTAdditions.h"
 #import "TTUIResponderHelper.h"
 
 #import "TTEditUserProfileViewModel+Network.h"

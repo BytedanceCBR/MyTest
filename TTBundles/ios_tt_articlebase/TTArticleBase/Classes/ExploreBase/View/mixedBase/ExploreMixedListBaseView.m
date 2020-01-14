@@ -172,7 +172,7 @@
 #import "SSCommonLogic.h"
 #import "TTSandBoxHelper.h"
 #import "FHUtils.h"
-#import <TTTabBarItem.h>
+#import "TTTabBarItem.h"
 #import "HMDTTMonitor.h"
 #import "UIColor+Theme.h"
 #import <TTUIWidget/TTRefreshAnimationView.h>

@@ -9,7 +9,7 @@
 #import "AKProfileHeaderInfoView.h"
 #import "AKProfileHeaderViewDefine.h"
 #import "AKProfileHeaderViewLogined.h"
-#import <TTAccountManager.h>
+#import "TTAccountManager.h"
 #import "UIColor+TTThemeExtension.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 

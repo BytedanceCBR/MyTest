@@ -15,7 +15,7 @@
 #import "FHUtils.h"
 #import "TTSandBoxHelper.h"
 #import "TTSandBoxHelper+House.h"
-#import <TTAppUpdateHelper.h>
+#import "TTAppUpdateHelper.h"
 #import "TTInstallIDManager.h"
 #import <CommonURLSetting.h>
 #import "FHMinisdkManager.h"

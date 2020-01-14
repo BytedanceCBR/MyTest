@@ -11,7 +11,7 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "FHHomeTrendBubbleView.h"
-#import <NSTimer+TTNoRetainRef.h>
+#import "NSTimer+TTNoRetainRef.h"
 #import "TTRoute.h"
 #import "TTBaseMacro.h"
 #import "UIViewAdditions.h"

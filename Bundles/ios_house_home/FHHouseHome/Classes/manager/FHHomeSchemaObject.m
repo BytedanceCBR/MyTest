@@ -9,7 +9,7 @@
 #import "TTRoute.h"
 #import <TTTabBarProvider.h>
 #import <TTTabBarManager.h>
-#import <TTTabBarItem.h>
+#import "TTTabBarItem.h"
 #import "UIViewController+TTMovieUtil.h"
 #import "FHHomeConfigManager.h"
 #import "JSONAdditions.h"
