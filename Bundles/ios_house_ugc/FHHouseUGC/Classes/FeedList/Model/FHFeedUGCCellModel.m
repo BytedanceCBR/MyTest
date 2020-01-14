@@ -82,8 +82,7 @@
                  type == FHUGCFeedListCellTypeUGCHotTopic ||
                  type == FHUGCFeedListCellTypeUGCVote ||
                  type == FHUGCFeedListCellTypeUGCSmallVideo ||
-                 type == FHUGCFeedListCellTypeUGCVoteInfo ||
-                 type == FHUGCFeedListCellTypeUGCHotCommunity){
+                 type == FHUGCFeedListCellTypeUGCVoteInfo){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -447,14 +446,20 @@
         }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
         cellModel.groupId = model.rawData.groupId;
-        if(model.recommendSocialGroupList){
-            cellModel.recommendSocialGroupList = model.recommendSocialGroupList;
+        cellModel.hotCommunityCellType = model.rawData.subCellType;
+        if([model.rawData.subCellType isEqualToString:@"hot_social"]){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotCommunity;
+            cellModel.hotCellList = model.rawData.hotCellList;
         }else{
-            cellModel.recommendSocialGroupList = model.rawData.recommendSocialGroupList;
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
+            cellModel.elementFrom = @"like_neighborhood";
+            if(model.recommendSocialGroupList){
+                cellModel.recommendSocialGroupList = model.recommendSocialGroupList;
+            }else{
+                cellModel.recommendSocialGroupList = model.rawData.recommendSocialGroupList;
+            }
         }
-        cellModel.elementFrom = @"like_neighborhood";
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotTopic;

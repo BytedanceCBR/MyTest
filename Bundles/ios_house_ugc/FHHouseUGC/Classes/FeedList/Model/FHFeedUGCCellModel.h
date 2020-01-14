@@ -165,6 +165,10 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, assign) BOOL hasEdit;
 // 是否来源于编辑历史页面
 @property (nonatomic, assign) BOOL isFromEditHistory;
+// 热门小区，买房问答
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotCellListModel> *hotCellList;
+//热门小区的二级类型，用来区分热门小区和感兴趣的小区
+@property (nonatomic, copy , nullable) NSString *hotCommunityCellType;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

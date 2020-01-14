@@ -12,6 +12,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHUGCModel.h"
 #import <FHCornerView.h>
+#import "FHUGCHotCommunityCell.h"
 
 @interface FHUGCHotCommunitySubCell ()
 
@@ -40,16 +41,42 @@
     return self;
 }
 
-- (void)refreshWithData:(id)data index:(NSInteger)index {
-    //首先处理背景色
-    
-    
-//    if([data isKindOfClass:[FHFeedContentRawDataHotTopicListModel class]]){
-//        FHFeedContentRawDataHotTopicListModel *model = (FHUGCScialGroupDataModel *)data;
-//        _titleLabel.text = model.forumName;
-//        _descLabel.text = model.talkCountStr;
-//        [self.bgView bd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholder:nil];
-//    }
+- (void)refreshWithData:(id)data {
+    if([data isKindOfClass:[FHFeedContentRawDataHotCellListModel class]]){
+        FHFeedContentRawDataHotCellListModel *model = (FHFeedContentRawDataHotCellListModel *)data;
+        _titleLabel.text = model.title;
+        _descLabel.text = model.desc;
+        [self.bgView bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
+        
+        if(model.tips){
+            _tagView.hidden = NO;
+            _tagLabel.text = model.tips.content;
+            _tagView.backgroundColor = [UIColor colorWithHexString:model.tips.color];
+        }else{
+            _tagView.hidden = YES;
+        }
+        
+        if([model.hotCellType isEqualToString:youwenbida]){
+            _bgView.backgroundColor = [UIColor themeGray7];
+            _titleLabel.hidden = YES;
+            _descLabel.hidden = YES;
+            _lookAllLabel.hidden = YES;
+            _lookAllImageView.hidden = YES;
+        }else if([model.hotCellType isEqualToString:more]){
+            _bgView.backgroundColor = [UIColor themeOrange2];
+            _titleLabel.hidden = YES;
+            _descLabel.hidden = YES;
+            _lookAllLabel.hidden = NO;
+            _lookAllImageView.hidden = NO;
+            _lookAllLabel.text = model.title;
+        }else{
+            _bgView.backgroundColor = [UIColor themeGray7];
+            _titleLabel.hidden = NO;
+            _descLabel.hidden = NO;
+            _lookAllLabel.hidden = YES;
+            _lookAllImageView.hidden = YES;
+        }
+    }
 }
 
 - (void)initView {
@@ -64,16 +91,14 @@
     _bgView.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_bgView];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor blackColor]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor whiteColor]];
     _titleLabel.textAlignment = NSTextAlignmentLeft;
     _titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
     _titleLabel.numberOfLines = 2;
-//    _titleLabel.text = @"#幸福攻略";
     [self.bgView addSubview:_titleLabel];
     
-    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor blackColor]];
+    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor whiteColor]];
     _descLabel.textAlignment = NSTextAlignmentLeft;
-//    _descLabel.text = @"20218人参与";
     [self.bgView addSubview:_descLabel];
     
     self.tagView = [[FHCornerView alloc] init];
@@ -83,7 +108,6 @@
     
     self.tagLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor whiteColor]];
     [_tagLabel sizeToFit];
-    _tagLabel.text = @"新";
     [_tagLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_tagLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_tagView addSubview:_tagLabel];
@@ -91,10 +115,12 @@
     self.lookAllLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeOrange1]];
     _lookAllLabel.textAlignment = NSTextAlignmentRight;
     _lookAllLabel.text = @"查看全部";
+    _lookAllLabel.hidden = YES;
     [self.bgView addSubview:_lookAllLabel];
     
     self.lookAllImageView = [[UIImageView alloc] init];
     _lookAllImageView.image = [UIImage imageNamed:@"fh_ugc_look_all"];
+    _lookAllImageView.hidden = YES;
     [self.bgView addSubview:_lookAllImageView];
 }
 

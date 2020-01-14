@@ -275,11 +275,11 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    //fake
-    if(isHead){
-        [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
-        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake].groupId];
-    }
+//    //fake
+//    if(isHead){
+//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
+//        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake].groupId];
+//    }
     
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
@@ -372,7 +372,7 @@
                 BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
                 
                 //这里的只是针对附近的tab，而且后面的类型根据实际需求改变
-                if(!isStickTop && cellModel.cellType != FHUGCFeedListCellTypeUGCHotCommunity) {
+                if(!isStickTop && cellModel.cellSubType != FHUGCFeedListCellSubTypeUGCHotCommunity) {
                     index = idx;
                     *stop = YES;
                 }
@@ -888,7 +888,10 @@
     }
     
     if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
-        [self trackElementShow:rank elementType:@"like_neighborhood"];
+        //对于热门小区的展现，在cell里面报，这里就不报了
+        if(![cellModel.hotCommunityCellType isEqualToString:@"hot_social"]){
+            [self trackElementShow:rank elementType:@"like_neighborhood"];
+        }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
         [self trackElementShow:rank elementType:@"hot_topic"];
     }

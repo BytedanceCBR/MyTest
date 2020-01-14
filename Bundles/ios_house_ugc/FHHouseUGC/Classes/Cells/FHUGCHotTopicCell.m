@@ -176,9 +176,8 @@
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)self.currentData;
         NSMutableDictionary *param = [NSMutableDictionary new];
         param[@"element_type"] = @"hot_topic";
-        param[@"page_type"] = @"nearby_list";
+        param[@"page_type"] = @"hot_discuss_feed";
         param[@"enter_from"] = @"neighborhood_tab";
-        param[@"rank"] = model.tracerDic[@"rank"];
         TRACK_EVENT(@"click_more", param);
     }
 }
@@ -263,8 +262,8 @@
 - (void)trackClientShow:(FHFeedContentRawDataHotTopicListModel *)model rank:(NSInteger)rank {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
 
-    tracerDict[@"element_from"] = @"hot_topic";
-    tracerDict[@"page_type"] = @"nearby_list";
+    tracerDict[@"element_type"] = @"hot_topic";
+    tracerDict[@"page_type"] = @"hot_discuss_feed";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"rank"] = @(rank);
     tracerDict[@"concern_id"] = model.forumId;

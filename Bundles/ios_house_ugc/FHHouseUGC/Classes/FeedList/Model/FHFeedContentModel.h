@@ -10,6 +10,27 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
     FHFeedContentStickStyleTopAndGood = 3,    //置顶和加精
 };
 
+@protocol FHFeedContentRawDataHotCellListModel<NSObject>
+@end
+
+@interface FHFeedContentRawDataHotCellListTipsModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *color;
+@property (nonatomic, copy , nullable) NSString *content;
+@end
+
+@interface FHFeedContentRawDataHotCellListModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, copy , nullable) NSString *hotCellType;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *avatar;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataHotCellListTipsModel *tips ;
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *desc;
+@end
+
 @interface FHFeedContentRawDataVideoPlayAddrModel : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray *urlList;
@@ -615,12 +636,15 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 // 新
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *commentCount;
+@property (nonatomic, copy , nullable) NSString *readCount;
 @property (nonatomic, copy , nullable) NSString *diggCount;
 @property (nonatomic, copy , nullable) NSString *userDigg;
 @property (nonatomic, copy , nullable) NSString *distance;
 @property (nonatomic, copy , nullable) NSString *distanceInfo;
 // 是否被删除
 @property (nonatomic, copy)     NSString       *status;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotCellListModel> *hotCellList;
+@property (nonatomic, copy , nullable) NSString *subCellType;
 
 @end
 

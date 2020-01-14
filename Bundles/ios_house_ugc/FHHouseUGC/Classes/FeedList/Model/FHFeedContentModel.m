@@ -474,8 +474,11 @@
                            @"logPb":@"log_pb",
                            @"commentCount":@"comment_count",
                            @"diggCount":@"digg_count",
+                           @"readCount":@"read_count",
                            @"userDigg":@"is_digg",
                            @"distanceInfo":@"distance_info",
+                           @"subCellType": @"sub_cell_type",
+                           @"hotCellList": @"hot_cell_list",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -1035,6 +1038,30 @@
      return dict[keyName]?:keyName;
   }];
 }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataHotCellListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"logPb": @"log_pb",
+                           @"hotCellType": @"hot_cell_type",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataHotCellListTipsModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

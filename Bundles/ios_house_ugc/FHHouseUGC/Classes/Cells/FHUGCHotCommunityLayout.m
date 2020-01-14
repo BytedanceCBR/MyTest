@@ -6,6 +6,8 @@
 //
 
 #import "FHUGCHotCommunityLayout.h"
+#import "FHFeedUGCCellModel.h"
+#import "FHUGCHotCommunityCell.h"
 
 @interface FHUGCHotCommunityLayout ()
 
@@ -158,6 +160,15 @@
 }
 
 - (BOOL)isFirstItemLarge {
+    if(self.dataList.count > 0){
+        id data = [self.dataList firstObject];
+        if([data isKindOfClass:[FHFeedContentRawDataHotCellListModel class]]){
+            FHFeedContentRawDataHotCellListModel *model = (FHFeedContentRawDataHotCellListModel *)data;
+            if([model.hotCellType isEqualToString:youwenbida]){
+                return YES;
+            }
+        }
+    }
     return NO;
 }
 

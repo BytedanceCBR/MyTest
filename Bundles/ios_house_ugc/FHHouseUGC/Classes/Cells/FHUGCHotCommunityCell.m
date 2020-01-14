@@ -12,6 +12,7 @@
 #import <TTRoute.h>
 #import "FHUserTracker.h"
 #import "FHUGCHotCommunityLayout.h"
+#import "FHCommunityList.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -109,12 +110,8 @@
     [self.clientShowDict removeAllObjects];
     self.currentData = data;
     
-//    FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
-//    self.dataList = model.hotTopicList;
-    [_dataList removeAllObjects];
-    for (NSInteger i = 0; i < 9; i++) {
-        [_dataList addObject:@(i)];
-    }
+    FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
+    self.dataList = model.hotCellList;
     self.flowLayout.dataList = _dataList;
     
     [self.collectionView reloadData];
@@ -163,7 +160,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
-//        [self traceClientShowAtIndexPath:indexPath];
+        [self traceClientShowAtIndexPath:indexPath];
     }
 }
 
@@ -171,9 +168,7 @@
     FHUGCHotCommunitySubCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
     
     if (indexPath.row < self.dataList.count) {
-        [cell refreshWithData:self.dataList[indexPath.row] index:indexPath.row];
-    }else{
-        [cell refreshWithData:nil index:indexPath.row];
+        [cell refreshWithData:self.dataList[indexPath.row]];
     }
     
     return cell;
@@ -181,25 +176,36 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
-//    if(indexPath.row < self.dataList.count){
-//        FHFeedContentRawDataHotTopicListModel *model = self.dataList[indexPath.row];
-//        NSMutableDictionary *dict = @{}.mutableCopy;
-//        // 埋点
-//        NSMutableDictionary *traceParam = @{}.mutableCopy;
-//        traceParam[@"enter_from"] = @"nearby_list";
-//        traceParam[@"element_from"] = @"hot_topic";
-//        traceParam[@"enter_type"] = @"click";
-//        traceParam[@"rank"] = @(indexPath.row);
-//        traceParam[@"log_pb"] = model.logPb;
-//        dict[@"tracer"] = traceParam;
-//
-//        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//        //跳转到话题详情页
-//        if(model.schema.length > 0){
-//            NSURL *openUrl = [NSURL URLWithString:model.schema];
-//            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-//        }
-//    }
+    if(indexPath.row < self.dataList.count){
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        FHFeedContentRawDataHotCellListModel *model = self.dataList[indexPath.row];
+        if([model.hotCellType isEqualToString:youwenbida]){
+            
+        }else if([model.hotCellType isEqualToString:more]){
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"action_type"] = @(FHCommunityListTypeFollow);
+            dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdRecommend);
+            NSMutableDictionary *traceParam = @{}.mutableCopy;
+            traceParam[@"enter_type"] = @"click";
+            traceParam[@"enter_from"] = @"hot_discuss_feed";
+            traceParam[@"element_from"] = @"top_operation_position";
+            dict[@"tracer"] = traceParam;
+        }else{
+            NSMutableDictionary *traceParam = @{}.mutableCopy;
+            traceParam[@"enter_from"] = @"hot_discuss_feed";
+            traceParam[@"element_from"] = @"top_operation_position";
+            if(model.logPb){
+                traceParam[@"log_pb"] = model.logPb;
+            }
+            dict[@"tracer"] = traceParam;
+        }
+
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        if(model.url.length > 0){
+            NSURL *openUrl = [NSURL URLWithString:model.url];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        }
+    }
 }
 
 - (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
@@ -207,34 +213,51 @@
         return;
     }
     
-    FHFeedContentRawDataHotTopicListModel *model = self.dataList[indexPath.row];
+    FHFeedContentRawDataHotCellListModel *model = self.dataList[indexPath.row];
     
     if (!self.clientShowDict) {
         self.clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *forumId = model.forumId;
-    if(forumId){
-        if (self.clientShowDict[forumId]) {
+    NSString *itemId = model.id;
+    if(itemId){
+        if (self.clientShowDict[itemId]) {
             return;
         }
         
-        self.clientShowDict[forumId] = @(indexPath.row);
+        self.clientShowDict[itemId] = @(indexPath.row);
         [self trackClientShow:model rank:indexPath.row];
     }
 }
 
-- (void)trackClientShow:(FHFeedContentRawDataHotTopicListModel *)model rank:(NSInteger)rank {
+- (void)trackClientShow:(FHFeedContentRawDataHotCellListModel *)model rank:(NSInteger)rank {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    NSString *eventName = nil;
+    if([model.hotCellType isEqualToString:youwenbida]){
+        eventName = @"element_show";
+        tracerDict[@"element_type"] = @"buyer_experts_group";
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+        tracerDict[@"enter_from"] = @"neighborhood_tab";
+        if(model.logPb){
+            tracerDict[@"log_pb"] = model.logPb;
+        }
+    }else if([model.hotCellType isEqualToString:social]){
+        eventName = @"community_group_show";
+        tracerDict[@"element_type"] = @"top_operation_position";
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+        tracerDict[@"enter_from"] = @"neighborhood_tab";
+        tracerDict[@"rank"] = @(rank);
+        if(model.id){
+            tracerDict[@"group_id"] = model.id;
+        }
+        if(model.logPb){
+            tracerDict[@"log_pb"] = model.logPb;
+        }
+    }
     
-    tracerDict[@"element_from"] = @"hot_topic";
-    tracerDict[@"page_type"] = @"nearby_list";
-    tracerDict[@"enter_from"] = @"neighborhood_tab";
-    tracerDict[@"rank"] = @(rank);
-    tracerDict[@"concern_id"] = model.forumId;
-    tracerDict[@"log_pb"] = model.logPb;
-    
-    TRACK_EVENT(@"topic_show", tracerDict);
+    if(eventName){
+        TRACK_EVENT(eventName, tracerDict);
+    }
 }
 
 @end
