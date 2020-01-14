@@ -6,7 +6,7 @@
 //
 
 #import "FHPostDetailCell.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"

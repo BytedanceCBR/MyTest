@@ -7,7 +7,7 @@
 
 #import "FHArticleMultiImageCell.h"
 #import "FHArticleCellBottomView.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
 #import <TTImageView+TrafficSave.h>

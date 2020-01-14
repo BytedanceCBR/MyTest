@@ -10,7 +10,7 @@
 #import <Masonry/Masonry.h>
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUtils.h"
 #import "UIButton+TTAdditions.h"
 #import <FHHouseBase/UIImage+FIconFont.h>

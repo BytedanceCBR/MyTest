@@ -11,7 +11,7 @@
 #import "Masonry.h"
 #import "TTDeviceHelper.h"
 #import "FHPersonalHomePageItemView.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "TTRoute.h"
 #import "TTPhotoScrollViewController.h"
 #import "TTBaseMacro.h"

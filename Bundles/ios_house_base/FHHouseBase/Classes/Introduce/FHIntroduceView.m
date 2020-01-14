@@ -11,7 +11,7 @@
 #import "UIViewAdditions.h"
 #import "FHIntroduceManager.h"
 #import "Masonry.h"
-#import <FHUserTracker.h>
+#import "FHUserTracker.h"
 
 @interface FHIntroduceView ()<FHIntroduceItemViewDelegate>
 

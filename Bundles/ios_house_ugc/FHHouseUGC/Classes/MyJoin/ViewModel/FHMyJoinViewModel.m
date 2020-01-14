@@ -6,7 +6,7 @@
 //
 
 #import "FHMyJoinViewModel.h"
-#import <TTHttpTask.h>
+#import "TTHttpTask.h"
 #import "FHMyJoinNeighbourhoodCell.h"
 #import "FHUGCConfig.h"
 #import "FHMessageNotificationTipsManager.h"

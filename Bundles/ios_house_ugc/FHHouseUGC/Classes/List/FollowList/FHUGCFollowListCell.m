@@ -8,7 +8,7 @@
 #import "FHUGCFollowListCell.h"
 #import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "FHUGCFollowButton.h"

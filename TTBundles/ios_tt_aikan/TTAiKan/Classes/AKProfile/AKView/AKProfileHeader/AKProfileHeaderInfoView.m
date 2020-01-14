@@ -7,7 +7,7 @@
 #import "AKProfileHeaderInfoView.h"
 #import "AKProfileHeaderViewDefine.h"
 
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import <UIColor+TTThemeExtension.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>

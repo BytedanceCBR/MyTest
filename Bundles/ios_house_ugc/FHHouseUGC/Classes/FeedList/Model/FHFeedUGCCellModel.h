@@ -11,8 +11,8 @@
 #import "FHHouseUGCHeader.h"
 #import "TTRichSpanText.h"
 #import "TTRichSpanText+Emoji.h"
-#import <TTVFeedItem+Extension.h>
-#import <TTVFeedListItem.h>
+#import "TTVFeedItem+Extension.h"
+#import "TTVFeedListItem.h"
 
 @class FHCommunityFeedListController;
 

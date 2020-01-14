@@ -7,7 +7,7 @@
 //
 
 #import "TTQQSDKRegister.h"
-#import <TTShareApiConfig.h>
+#import "TTShareApiConfig.h"
 #import "NewsBaseDelegate.h"
 #import "TTProjectLogicManager.h"
 #import "TTLaunchDefine.h"

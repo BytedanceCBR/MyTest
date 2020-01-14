@@ -18,7 +18,7 @@
 #import "TTDeviceHelper.h"
 #import "TTUIResponderHelper.h"
 #import <FHRNBaseViewController.h>
-#import <UIViewController+Refresh_ErrorHandler.h>
+#import "UIViewController+Refresh_ErrorHandler.h"
 #import <FHEnvContext.h>
 #import "NSDictionary+TTAdditions.h"
 #import "FHUtils.h"

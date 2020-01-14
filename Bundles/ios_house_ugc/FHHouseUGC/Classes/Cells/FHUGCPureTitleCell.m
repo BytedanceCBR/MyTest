@@ -8,7 +8,7 @@
 #import "FHUGCPureTitleCell.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "TTUGCAttributedLabel.h"
 #import "FHUGCCellHelper.h"
 #import "FHUGCCellOriginItemView.h"

@@ -15,7 +15,7 @@
 #import "TTDeviceHelper.h"
 #import <UIButton+TTAdditions.h>
 #import "TTRoute.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHHomeConfigManager.h"
 #import "FHHouseType.h"
 #import <FHHomeCellHelper.h>

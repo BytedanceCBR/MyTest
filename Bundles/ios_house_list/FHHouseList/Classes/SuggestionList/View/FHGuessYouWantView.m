@@ -12,7 +12,7 @@
 #import "TTDeviceHelper.h"
 #import "FHUserTracker.h"
 #import <BDImageView.h>
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import <BDImageView.h>
 
 @interface FHGuessYouWantView ()

@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHCommunityFeedListBaseViewModel.h"
 #import "FHUGCCommentListController.h"
-#import <TTHttpTask.h>
+#import "TTHttpTask.h"
 #import "FHUGCCellManager.h"
 #import <FHCommonUI/FHRefreshCustomFooter.h>
 #import "FHUGCBaseCell.h"
@@ -19,7 +19,7 @@
 #import "TSVShortVideoDetailExitManager.h"
 #import "HTSVideoPageParamHeader.h"
 #import "AWEVideoConstants.h"
-#import <TTVFeedListItem.h>
+#import "TTVFeedListItem.h"
 #import <TTReachability.h>
 
 NS_ASSUME_NONNULL_BEGIN

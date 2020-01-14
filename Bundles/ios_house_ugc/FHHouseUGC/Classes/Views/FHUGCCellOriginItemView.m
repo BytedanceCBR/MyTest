@@ -16,7 +16,7 @@
 #import "UIButton+TTAdditions.h"
 #import "FHUserTracker.h"
 #import "TTUGCAttributedLabel.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "TTRoute.h"
 #import "JSONAdditions.h"
 #import "FHUGCCellHelper.h"

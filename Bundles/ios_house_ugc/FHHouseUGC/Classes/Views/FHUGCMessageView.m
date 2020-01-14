@@ -9,7 +9,7 @@
 #import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "TTBaseMacro.h"
 
 #define iconWidth 30

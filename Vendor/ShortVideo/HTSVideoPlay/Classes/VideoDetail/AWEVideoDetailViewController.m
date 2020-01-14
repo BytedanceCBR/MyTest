@@ -113,7 +113,7 @@
 #import <FHPostDetailCommentWriteView.h>
 #import "SSCommonLogic.h"
 #import "SSCommentInputHeader.h"
-#import <FHUserTracker.h>
+#import "FHUserTracker.h"
 
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 

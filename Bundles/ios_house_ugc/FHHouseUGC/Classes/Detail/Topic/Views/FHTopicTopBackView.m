@@ -11,7 +11,7 @@
 #import "UIFont+House.h"
 #import "TTDeviceHelper.h"
 #import "FHCommonDefines.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 
 @interface FHTopicTopBackView()
 

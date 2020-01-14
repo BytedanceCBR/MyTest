@@ -12,8 +12,8 @@
 #import "TTUGCEmojiParser.h"
 #import "FHFeedUGCContentModel.h"
 #import "FHFeedUGCCellModel.h"
-#import <TTVFeedListItem.h>
-#import <AWECommentModel.h>
+#import "TTVFeedListItem.h"
+#import "AWECommentModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -12,7 +12,7 @@
 #import "TTAccountLoginManager.h"
 #import <TTAccountManager.h>
 #import <FHEnvContext.h>
-#import <FHUserTracker.h>
+#import "FHUserTracker.h"
 #import <TTTabBarProvider.h>
 
 //固定值

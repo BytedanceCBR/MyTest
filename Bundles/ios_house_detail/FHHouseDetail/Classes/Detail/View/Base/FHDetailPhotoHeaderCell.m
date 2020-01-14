@@ -8,7 +8,7 @@
 #import "FHDetailPhotoHeaderCell.h"
 #import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "TTShareManager.h"
 #import <TTPhotoScrollViewController.h>

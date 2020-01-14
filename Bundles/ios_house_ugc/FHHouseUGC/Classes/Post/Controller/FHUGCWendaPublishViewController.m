@@ -13,7 +13,7 @@
 #import <WDDefines.h>
 #import <TTAccountManager.h>
 #import <FHEnvContext.h>
-#import <FHUserTracker.h>
+#import "FHUserTracker.h"
 #import <FHPostUGCSelectedGroupHistoryView.h>
 #import <TTUGCTextView.h>
 #import <TTUGCToolbar.h>
@@ -30,7 +30,7 @@
 #import <FHPostUGCViewController.h>
 #import <FHFeedUGCCellModel.h>
 #import <TTUGCDefine.h>
-#import <FHUserTracker.h>
+#import "FHUserTracker.h"
 
 // 选择小区圈子控件的高度
 #define ENTRY_HEIGHT                44
