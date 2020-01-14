@@ -19,7 +19,7 @@
 #import <YYText/NSAttributedString+YYText.h>
 #import "TTAccountMobileCaptchaAlertView.h"
 #import "TTThemedAlertController.h"
-#import <FHMinisdkManager.h>
+#import "FHMinisdkManager.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;

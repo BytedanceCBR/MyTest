@@ -32,7 +32,7 @@
 #import <TTArticleTabBarController.h>
 #import <TTCategoryBadgeNumberManager.h>
 #import "FHMainApi.h"
-#import <FHMinisdkManager.h>
+#import "FHMinisdkManager.h"
 #import "FHIntroduceManager.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"

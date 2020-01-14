@@ -650,6 +650,7 @@ post_install do |installer|
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
           '${PODS_ROOT}/Crashlytics/iOS',
+          '${PODS_ROOT}/Fabric/iOS',
           '${PODS_ROOT}/UMengAnalytics/umsdk_IOS_analyics_idfa_v4.1.4',
           ]
         end

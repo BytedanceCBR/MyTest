@@ -27,7 +27,7 @@
 #import "TTArticleCategoryManager.h"
 //#import "TTRepostViewController.h"
 //#import "TTRepostOriginModels.h"
-#import <FRApiModel.h>
+#import "FRApiModel.h"
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "ArticleURLSetting.h"
 #import "TTInteractExitHelper.h"

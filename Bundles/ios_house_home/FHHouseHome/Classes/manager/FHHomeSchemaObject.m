@@ -15,7 +15,7 @@
 #import "JSONAdditions.h"
 #import <TTArticleTabBarController.h>
 #import "FHEnvContext.h"
-#import <FHMinisdkManager.h>
+#import "FHMinisdkManager.h"
 
 @interface FHHomeSchemaObject()<TTRouteInitializeProtocol>
 

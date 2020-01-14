@@ -25,7 +25,7 @@
 #import <TTArticleCategoryManager.h>
 #import "FHHouseUGCAPI.h"
 #import "FHIntroduceManager.h"
-#import <FHMinisdkManager.h>
+#import "FHMinisdkManager.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称

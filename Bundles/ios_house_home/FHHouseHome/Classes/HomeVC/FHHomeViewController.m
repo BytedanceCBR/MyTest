@@ -38,7 +38,7 @@
 #import "FHHomeBaseScrollView.h"
 #import "FHHomeMainViewController.h"
 #import <FHHouseBase/FHHomeScrollBannerView.h>
-//#import <FHMinisdkManager.h>
+//#import "FHMinisdkManager.h"
 //#import "FHSpringHangView.h"
 
 static CGFloat const kShowTipViewHeight = 32;

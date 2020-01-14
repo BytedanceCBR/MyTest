@@ -26,7 +26,7 @@
 #import <TTAppRuntime/NewsBaseDelegate.h>
 #import <TTService/TTDetailContainerViewController.h>
 #import <TTAppRuntime/TTBackgroundModeTask.h>
-#import <TTAdSplashMediator.h>
+#import "TTAdSplashMediator.h"
 #import <TTAppRuntime/SSUserSettingManager.h>
 //#import <TTAppRuntime/TTIntroduceViewTask.h>
 #import <TTAppRuntime/TTStartupTasksTracker.h>

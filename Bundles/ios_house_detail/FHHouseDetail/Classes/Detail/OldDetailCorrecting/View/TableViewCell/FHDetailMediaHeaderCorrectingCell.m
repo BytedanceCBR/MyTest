@@ -14,7 +14,7 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "FHMultiMediaVideoCell.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
-#import <NSString+URLEncoding.h>
+#import "NSString+URLEncoding.h"
 #import "FHUtils.h"
 #import "FHMultiMediaModel.h"
 #import "FHCommonDefines.h"

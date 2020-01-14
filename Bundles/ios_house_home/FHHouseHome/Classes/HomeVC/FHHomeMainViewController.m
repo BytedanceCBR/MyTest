@@ -18,7 +18,7 @@
 #import <TTAppUpdateHelper.h>
 #import "TTInstallIDManager.h"
 #import <CommonURLSetting.h>
-#import <FHMinisdkManager.h>
+#import "FHMinisdkManager.h"
 #import "FHSpringHangView.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";

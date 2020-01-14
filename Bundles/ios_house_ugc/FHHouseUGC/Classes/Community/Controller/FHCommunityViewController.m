@@ -26,7 +26,7 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
-#import <FHMinisdkManager.h>
+#import "FHMinisdkManager.h"
 #import "UIViewController+Track.h"
 #import "FHSpringHangView.h"
 

@@ -15,7 +15,7 @@
 #import "ToastManager.h"
 #import "FHIntroduceManager.h"
 #import "UIViewController+Track.h"
-#import <FHMinisdkManager.h>
+#import "FHMinisdkManager.h"
 
 @interface SpringLoginViewController ()<TTRouteInitializeProtocol,TTUIViewControllerTrackProtocol>
 
