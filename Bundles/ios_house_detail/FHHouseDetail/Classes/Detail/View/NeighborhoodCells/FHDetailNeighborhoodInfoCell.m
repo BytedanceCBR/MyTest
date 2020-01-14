@@ -22,7 +22,7 @@
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 #import <FHCommonUI/UIView+House.h>
-#import <FHCommonDefines.h>
+#import "FHCommonDefines.h"
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import "FHDetailSchoolInfoItemView.h"
 #import "FHDetailHeaderViewNoMargin.h"

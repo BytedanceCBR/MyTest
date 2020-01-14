@@ -7,7 +7,7 @@
 
 #import "FHUGCVotePublishVisibleScopeController.h"
 #import <WDDefines.h>
-#import <FHCommonDefines.h>
+#import "FHCommonDefines.h"
 #import "Masonry.h"
 #import "FHLocManager.h"
 #import <FHHouseUGCAPI.h>

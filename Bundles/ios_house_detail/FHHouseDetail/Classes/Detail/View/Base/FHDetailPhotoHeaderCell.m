@@ -11,7 +11,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "TTShareManager.h"
-#import <TTPhotoScrollViewController.h>
+#import "TTPhotoScrollViewController.h"
 #import "FHUserTracker.h"
 #import "FHFloorPanPicShowViewController.h"
 #import "FHDetailPictureViewController.h"

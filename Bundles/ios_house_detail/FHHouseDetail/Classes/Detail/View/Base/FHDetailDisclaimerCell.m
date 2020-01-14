@@ -15,9 +15,9 @@
 #import "TTRoute.h"
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
-#import <YYText.h>
+#import "YYText.h"
 #import "TTShareManager.h"
-#import <TTPhotoScrollViewController.h>
+#import "TTPhotoScrollViewController.h"
 #import "UIColor+Theme.h"
 
 @interface FHDetailDisclaimerCell ()

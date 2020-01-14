@@ -27,6 +27,7 @@
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import "FHUtils.h"
 #import "FHHomeMainViewController.h"
+#import <TTUIWidget/TTRefreshAnimationView.h>
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -135,7 +136,9 @@
         }];
         
         [self.tableViewV setBackgroundColor:[UIColor themeHomeColor]];
-        [self.tableViewV.pullDownView setUpRefreshBackColor:[UIColor themeHomeColor]];
+        self.tableViewV.pullDownView.backgroundColor = [UIColor themeHomeColor];
+        self.tableViewV.pullDownView.bgView.backgroundColor = [UIColor themeHomeColor];
+        self.tableViewV.pullDownView.defaultRefreshAnimateView.backgroundColor = [UIColor themeHomeColor];
         //       __block NSString *previousCityId = configDataModel.currentCityId;
         //订阅config变化发送网络请求
         [FHHomeCellHelper sharedInstance].isFirstLanuch = YES;

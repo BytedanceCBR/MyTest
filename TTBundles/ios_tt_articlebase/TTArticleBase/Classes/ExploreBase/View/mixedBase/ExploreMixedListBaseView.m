@@ -175,6 +175,7 @@
 #import <TTTabBarItem.h>
 #import "HMDTTMonitor.h"
 #import "UIColor+Theme.h"
+#import <TTUIWidget/TTRefreshAnimationView.h>
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -746,7 +747,9 @@ TTRefreshViewDelegate
         sself.refreshFromType = ListDataOperationReloadFromTypeLoadMore;
         [wself loadMoreWithUmengLabel:[wself modifyEventLabelForRefreshEvent:@"load_more"]];
     }];
-    [_listView.pullDownView setUpRefreshBackColor:[UIColor themeHomeColor]];
+    _listView.pullDownView.backgroundColor = [UIColor themeHomeColor];
+    _listView.pullDownView.bgView.backgroundColor = [UIColor themeHomeColor];
+    _listView.pullDownView.defaultRefreshAnimateView.backgroundColor = [UIColor themeHomeColor];
 }
 
 - (void)didFinishLoadTable

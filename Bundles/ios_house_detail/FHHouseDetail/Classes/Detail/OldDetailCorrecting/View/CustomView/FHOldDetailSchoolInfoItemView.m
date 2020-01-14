@@ -7,7 +7,7 @@
 
 #import "FHOldDetailSchoolInfoItemView.h"
 #import "FHDetailBaseModel.h"
-#import <FHCommonDefines.h>
+#import "FHCommonDefines.h"
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import <FHCommonUI/UILabel+House.h>
 #import <FHCommonUI/UIFont+House.h>

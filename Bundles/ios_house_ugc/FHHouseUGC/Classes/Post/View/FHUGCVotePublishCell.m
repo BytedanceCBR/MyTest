@@ -10,7 +10,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "ReactiveObjC.h"
-#import <FHCommonDefines.h>
+#import "FHCommonDefines.h"
 #import <FHUGCCategoryHelper.h>
 
 #define TITLE_TEXTVIEW_MIN_HEIGHT 47

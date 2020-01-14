@@ -9,7 +9,7 @@
 #import "FHUGCVotePublishViewController.h"
 #import "FHUGCVotePublishModel.h"
 #import "FHUGCVotePublishCell.h"
-#import <FHCommonDefines.h>
+#import "FHCommonDefines.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHCommunityList.h"
 #import "FHHouseUGCAPI.h"
