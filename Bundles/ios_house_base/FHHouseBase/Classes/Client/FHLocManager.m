@@ -18,13 +18,13 @@
 #import "FHHouseEnvContextBridge.h"
 #import "FHHouseBridgeManager.h"
 #import "NSDictionary+TTAdditions.h"
-#import <NSTimer+NoRetain.h>
+#import "NSTimer+NoRetain.h"
 #import "TTUIResponderHelper.h"
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
 #import <TTArticleCategoryManager.h>
 #import "FHHouseUGCAPI.h"
-#import <FHIntroduceManager.h>
+#import "FHIntroduceManager.h"
 #import <FHMinisdkManager.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称

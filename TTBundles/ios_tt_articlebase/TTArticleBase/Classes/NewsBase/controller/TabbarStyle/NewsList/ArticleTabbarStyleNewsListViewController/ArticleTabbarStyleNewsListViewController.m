@@ -28,7 +28,7 @@
 #import <Masonry/Masonry.h>
 #import "Log.h"
 #import "FHEnvContext.h"
-#import <FHIntroduceManager.h>
+#import "FHIntroduceManager.h"
 
 @interface ArticleTabBarStyleNewsListViewController ()<TTInteractExitProtocol>
 

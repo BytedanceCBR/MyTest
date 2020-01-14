@@ -13,7 +13,7 @@
 #import "TTAccountLoginManager.h"
 #import "TTAccountManager.h"
 #import "ToastManager.h"
-#import <FHIntroduceManager.h>
+#import "FHIntroduceManager.h"
 #import "UIViewController+Track.h"
 #import <FHMinisdkManager.h>
 

@@ -33,7 +33,7 @@
 #import <TTAppRuntime/TTProjectLogicManager.h>
 #import "TTLaunchDefine.h"
 #import "HMDTTMonitor.h"
-#import <FHIntroduceManager.h>
+#import "FHIntroduceManager.h"
 #import <FHHouseBase/FHEnvContext.h>
 
 DEC_TASK_N(FHCHandleAPNSTask,FHTaskTypeSerial,TASK_PRIORITY_HIGH+12);
