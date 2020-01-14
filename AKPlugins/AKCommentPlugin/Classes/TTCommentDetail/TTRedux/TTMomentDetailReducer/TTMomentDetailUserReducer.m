@@ -10,7 +10,7 @@
 #import "TTCommentDetailReplyCommentModel.h"
 #import "TTMomentDetailAction.h"
 #import "TTMomentDetailStore.h"
-#import <TTNetworkUtil.h>
+#import "TTNetworkUtil.h"
 #import <TTRoute/TTRoute.h>
 #import <TTEntry/TTFollowNotifyServer.h>
 

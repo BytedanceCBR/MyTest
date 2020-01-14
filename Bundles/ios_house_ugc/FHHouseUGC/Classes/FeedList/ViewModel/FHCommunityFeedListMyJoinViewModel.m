@@ -21,7 +21,7 @@
 #import <FHEnvContext.h>
 #import <TTAccountManager.h>
 #import "TTURLUtils.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import "TSVShortVideoDetailExitManager.h"
 #import "HTSVideoPageParamHeader.h"
 #import "FHUGCVideoCell.h"

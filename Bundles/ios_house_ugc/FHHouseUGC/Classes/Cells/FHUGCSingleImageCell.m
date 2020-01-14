@@ -14,7 +14,7 @@
 #import "FHUGCCellHelper.h"
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import "UIViewAdditions.h"
 
 #define leftMargin 20

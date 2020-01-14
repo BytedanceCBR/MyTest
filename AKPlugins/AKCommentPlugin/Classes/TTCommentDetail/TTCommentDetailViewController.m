@@ -37,7 +37,7 @@
 #import "TTCommentModel.h"
 #import "TTAccountManager.h"
 #import "SSMyUserModel.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import "UIColor+Theme.h"
 
 

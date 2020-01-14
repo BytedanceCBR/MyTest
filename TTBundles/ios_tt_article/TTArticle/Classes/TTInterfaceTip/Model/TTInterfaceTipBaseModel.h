@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TTInterfaceTipHeader.h"
-#import <TTDialogDirector.h>
+#import "TTDialogDirector.h"
 
 @class TTInterfaceTipManager;
 @interface TTInterfaceTipBaseModel : NSObject

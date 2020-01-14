@@ -104,7 +104,7 @@ BOOL _ignoreInterrupt;
 - (void)addNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(connectionChanged:)
-                                                 name:kReachabilityChangedNotification
+                                                 name:TTReachabilityChangedNotification
                                                object:nil];
     TTNetworkStartNotifier();
 }

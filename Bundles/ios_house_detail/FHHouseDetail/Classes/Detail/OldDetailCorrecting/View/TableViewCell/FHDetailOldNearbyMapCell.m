@@ -14,9 +14,9 @@
 #import <MAMapKit/MAMapKit.h>
 #import <AMapSearchKit/AMapSearchKit.h>
 
-#import <HMSegmentedControl.h>
+#import "HMSegmentedControl.h"
 #import <FHEnvContext.h>
-#import <ToastManager.h>
+#import "ToastManager.h"
 
 #import "FHMyMAAnnotation.h"
 #import "FHDetailNearbyMapItemCell.h"
@@ -24,7 +24,7 @@
 #import "FHDetailHeaderView.h"
 #import "UIColor+Theme.h"
 #import "TTRoute.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import "FHDetailMapView.h"
 #import "FHDetailHeaderStarTitleView.h"
 #import <FHHouseBase/FHBaseTableView.h>

@@ -8,7 +8,7 @@
 #import "FHUGCCellHelper.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import "TTVFeedListItem.h"
 #import <TTVFeedCellAction.h>
 #import <TTRichSpanText+Comment.h>

@@ -208,7 +208,7 @@ static TTThemedAlertControllerManager *manager;
 }
 
 - (void)ttv_addObserver {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ttv_netChanged:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ttv_netChanged:) name:TTReachabilityChangedNotification object:nil];
     [self.playerStateStore registerForActionClass:[TTVPlayerStateAction class] observer:self];
 
 }

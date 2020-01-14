@@ -6,7 +6,7 @@
 //
 
 #import "FHHouseFindResultViewModel.h"
-#import <FHHouseType.h>
+#import "FHHouseType.h"
 #import <FHHouseBaseItemCell.h>
 #import "FHErrorView.h"
 #import <FHSingleImageInfoCellModel.h>

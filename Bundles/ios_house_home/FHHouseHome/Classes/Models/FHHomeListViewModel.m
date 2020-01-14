@@ -17,7 +17,7 @@
 #import "ToastManager.h"
 #import <TTUIWidget/ArticleListNotifyBarView.h>
 #import <UIScrollView+Refresh.h>
-#import <MJRefresh.h>
+#import "MJRefresh.h"
 #import <FHRefreshCustomFooter.h>
 #import <TTArticleCategoryManager.h>
 #import "FHHomeCellHelper.h"
@@ -26,7 +26,7 @@
 #import "FHHomeSearchPanelViewModel.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import "FHUtils.h"
-#import <FHHomeMainViewController.h>
+#import "FHHomeMainViewController.h"
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height

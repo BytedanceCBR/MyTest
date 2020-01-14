@@ -15,7 +15,7 @@
 #import "TTAccountManager.h"
 #import "TTForumPostThreadStatusViewModel.h"
 #import "FHEnvContext.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import "FHUtils.h"
 #import "HMDTTMonitor.h"
 

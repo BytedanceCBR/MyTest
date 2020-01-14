@@ -11,7 +11,6 @@
 #import "TTTabBarItem.h"
 #import "TTLocationManager.h"
 #import "CommonURLSetting.h"
-//#import "Bubble-Swift.h"
 #import "TTTabBarManager.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "TTTabBarProvider.h"

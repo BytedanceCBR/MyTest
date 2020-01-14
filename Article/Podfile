@@ -71,7 +71,7 @@ def appDevelopPods
     pod 'TTUserProfile', :path => '../TTBundles/ios_tt_userprofile'
     pod 'TTArticleVideo', :path => '../TTBundles/ios_tt_article_video'
     #-----头条旧业务兼容库-----#
-    pod 'TTOldModule', :path => '../AKPlugins/TTOldModule', :inhibit_warnings => false
+    pod 'TTCompatibleModule', :path => '../AKPlugins/TTCompatibleModule', :inhibit_warnings => false
     #-----问答业务库-----#
     pod 'AKWDPlugin', :path => '../AKPlugins/AKWDPlugin', :inhibit_warnings => false
     

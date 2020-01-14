@@ -166,7 +166,6 @@
 #import "FHHomeConfigManager.h"
 #import "FHFeedHouseCellHelper.h"
 #import "FHFeedHouseItemCell.h"
-//#import "Bubble-Swift.h"
 #import <FHEnvContext.h>
 #import <FHLocManager.h>
 #import <FHHomeCellHelper.h>
@@ -174,7 +173,7 @@
 #import "TTSandBoxHelper.h"
 #import "FHUtils.h"
 #import <TTTabBarItem.h>
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import "UIColor+Theme.h"
 
 #define kPreloadMoreThreshold           10
@@ -947,7 +946,7 @@ TTRefreshViewDelegate
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBeComeactive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
 }
 
 - (void)didAppear

@@ -27,7 +27,7 @@
 #import <TTRNBridgeEngine.h>
 #import "FHRNHelper.h"
 #import "RCTDevLoadingView.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import <TTReachability.h>
 #import <FHEnvContext.h>
 #import <TTCommonBridgeManager.h>
@@ -118,7 +118,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
         
         self.isAppeared = NO;
         _traceCache = [NSMutableArray new];

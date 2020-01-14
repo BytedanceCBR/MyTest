@@ -9,7 +9,7 @@
 
 #import <HTSVideoPlay/TSVAnimatedImageView.h>
 #import "TSVShortVideoOriginalData.h"
-#import <KVOController.h>
+#import "KVOController.h"
 #import "TTDeviceUIUtils.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTUserSettingsManager+FontSettings.h"

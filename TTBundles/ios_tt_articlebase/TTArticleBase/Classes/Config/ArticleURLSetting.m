@@ -8,8 +8,7 @@
 
 #import "ArticleURLSetting.h"
 #import "SSCommonLogic.h"
-//#import "Bubble-Swift.h"
-#import <FHURLSettings.h>
+#import "FHURLSettings.h"
 
 @implementation ArticleURLSetting
 

@@ -114,7 +114,7 @@ TTAccountMulticastProtocol
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shareToPlatformNeedEnterBackground:) name:kShareToPlatformNeedEnterBackground object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
 }
 
 #pragma mark - TTAccountMulticastProtocol
@@ -190,7 +190,7 @@ TTAccountMulticastProtocol
 }
 
 - (void)connectionChanged:(NSNotification *)notification {
-    static BOOL isAppLaunching = YES; // 第一次APP启动会发送kReachabilityChangedNotification通知，过滤掉请求用户信息
+    static BOOL isAppLaunching = YES; // 第一次APP启动会发送TTReachabilityChangedNotification通知，过滤掉请求用户信息
     if (TTNetworkConnected() && !isAppLaunching) {
         if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
             [TTAccountManager startGetAccountStatus:NO context:self];

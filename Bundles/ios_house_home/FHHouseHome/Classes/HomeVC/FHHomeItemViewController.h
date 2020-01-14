@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <FHHouseType.h>
+#import "FHHouseType.h"
 #import <FHTracerModel.h>
 #import "FHHomeListViewModel.h"
 

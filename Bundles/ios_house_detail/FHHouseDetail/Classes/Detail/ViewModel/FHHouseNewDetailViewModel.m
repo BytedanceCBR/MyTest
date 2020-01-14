@@ -25,7 +25,7 @@
 #import "FHDetailDisclaimerCell.h"
 #import "FHDetailNewListSingleImageCell.h"
 #import "FHDetailStaticMapCell.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import <FHHouseBase/FHCommonDefines.h>
 #import "FHDetailNewUGCSocialCell.h"
 #import "FHDetailSocialEntranceView.h"

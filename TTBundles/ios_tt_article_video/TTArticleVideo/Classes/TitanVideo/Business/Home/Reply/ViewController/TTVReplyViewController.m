@@ -23,7 +23,7 @@
 #import "SSActivityView.h"
 //#import "TTPostThreadViewController.h"
 //#import "TTRepostViewController.h"
-#import <KVOController.h>
+#import "KVOController.h"
 #import "TTVCommentListCell.h"
 #import "NetworkUtilities.h"
 #import "TTCommentWriteView.h"
@@ -39,7 +39,7 @@
 #import "ExploreMomentDefine_Enums.h"
 #import "ExploreMomentDefine.h"
 #import <ReactiveObjC/ReactiveObjC.h>
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 
 static const CGFloat kBarHeight = 49;
 #define kDeleteCommentActionSheetTag 10

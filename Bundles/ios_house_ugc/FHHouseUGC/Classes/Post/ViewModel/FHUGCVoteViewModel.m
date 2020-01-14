@@ -13,7 +13,7 @@
 #import "FHUGCScialGroupModel.h"
 #import "FHCommunityList.h"
 #import "FHHouseUGCAPI.h"
-#import <ToastManager.h>
+#import "ToastManager.h"
 #import <FHUGCVotePublishTypeSelectViewController.h>
 #import "FHUGCVoteBottomPopView.h"
 #import <WDDefines.h>

@@ -9,7 +9,7 @@
 #import "TTUGCToolbar.h"
 #import "TTUGCEmojiInputView.h"
 #import "TTUGCEmojiParser.h"
-#import <KVOController.h>
+#import "KVOController.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
 #import <TTRoute/TTRoute.h>

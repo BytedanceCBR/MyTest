@@ -32,7 +32,7 @@
 #import <TTAppRuntime/TTStartupTasksTracker.h>
 #import <TTAppRuntime/TTProjectLogicManager.h>
 #import "TTLaunchDefine.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import <FHIntroduceManager.h>
 #import <FHHouseBase/FHEnvContext.h>
 

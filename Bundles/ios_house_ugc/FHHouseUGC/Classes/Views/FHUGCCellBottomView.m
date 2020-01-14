@@ -16,7 +16,7 @@
 #import "UIButton+TTAdditions.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import "TTMessageCenter.h"
 #import "TTVideoArticleService+Action.h"
 #import "TTVideoArticleServiceMessage.h"

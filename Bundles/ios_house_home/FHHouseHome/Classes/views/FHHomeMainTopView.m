@@ -17,7 +17,7 @@
 #import "TTRoute.h"
 #import <UIImageView+BDWebImage.h>
 #import "FHHomeConfigManager.h"
-#import <FHHouseType.h>
+#import "FHHouseType.h"
 #import <FHHomeCellHelper.h>
 #import "UIImage+FIconFont.h"
 
