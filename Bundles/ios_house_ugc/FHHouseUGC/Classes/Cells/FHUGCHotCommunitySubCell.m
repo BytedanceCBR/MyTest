@@ -11,6 +11,7 @@
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
 #import "FHUGCModel.h"
+#import <FHCornerView.h>
 
 @interface FHUGCHotCommunitySubCell ()
 
@@ -19,7 +20,11 @@
 @property(nonatomic, strong) UILabel *descLabel;
 
 @property(nonatomic ,strong) UILabel *tagLabel;
-@property(nonatomic ,strong) UIView *tagView;
+@property(nonatomic ,strong) FHCornerView *tagView;
+
+//查看全部
+@property(nonatomic ,strong) UILabel *lookAllLabel;
+@property(nonatomic ,strong) UIImageView *lookAllImageView;
 
 @end
 
@@ -63,27 +68,34 @@
     _titleLabel.textAlignment = NSTextAlignmentLeft;
     _titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
     _titleLabel.numberOfLines = 2;
-    _titleLabel.text = @"#幸福攻略";
+//    _titleLabel.text = @"#幸福攻略";
     [self.bgView addSubview:_titleLabel];
     
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor blackColor]];
     _descLabel.textAlignment = NSTextAlignmentLeft;
-    _descLabel.text = @"20218人参与";
+//    _descLabel.text = @"20218人参与";
     [self.bgView addSubview:_descLabel];
     
-    self.tagView = [[UIView alloc] init];
+    self.tagView = [[FHCornerView alloc] init];
     _tagView.backgroundColor = [UIColor themeOrange1];
-    _tagView.layer.masksToBounds= YES;
-    _tagView.layer.cornerRadius = 4;
-    _tagView.userInteractionEnabled = YES;
     _tagView.hidden = YES;
     [self.bgView addSubview:_tagView];
     
     self.tagLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor whiteColor]];
     [_tagLabel sizeToFit];
+    _tagLabel.text = @"新";
     [_tagLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_tagLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_tagView addSubview:_tagLabel];
+    
+    self.lookAllLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeOrange1]];
+    _lookAllLabel.textAlignment = NSTextAlignmentRight;
+    _lookAllLabel.text = @"查看全部";
+    [self.bgView addSubview:_lookAllLabel];
+    
+    self.lookAllImageView = [[UIImageView alloc] init];
+    _lookAllImageView.image = [UIImage imageNamed:@"fh_ugc_look_all"];
+    [self.bgView addSubview:_lookAllImageView];
 }
 
 - (void)initConstains {
@@ -105,8 +117,8 @@
     }];
     
     [self.tagView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self);
-        make.top.mas_equalTo(self);
+        make.left.mas_equalTo(self.bgView);
+        make.top.mas_equalTo(self.bgView);
         make.height.mas_equalTo(15);
     }];
     
@@ -115,6 +127,19 @@
         make.right.mas_equalTo(self.tagView).offset(-7);
         make.centerY.mas_equalTo(self.tagView);
         make.height.mas_equalTo(15);
+    }];
+    
+    [self.lookAllLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.bgView).offset(13);
+        make.centerY.mas_equalTo(self.bgView);
+        make.width.mas_equalTo(48);
+        make.height.mas_equalTo(17);
+    }];
+    
+    [self.lookAllImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.lookAllLabel.mas_right).offset(4);
+        make.centerY.mas_equalTo(self.lookAllLabel);
+        make.width.height.mas_equalTo(12);
     }];
 }
 

@@ -26,6 +26,7 @@
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property(nonatomic ,strong) NSMutableArray *dataList;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
+@property(nonatomic, strong) FHUGCHotCommunityLayout *flowLayout;
 
 @end
 
@@ -64,12 +65,12 @@
 }
 
 - (void)initCollectionView {
-    FHUGCHotCommunityLayout *flowLayout = [[FHUGCHotCommunityLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-    flowLayout.minimumLineSpacing = 8;
-    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    self.flowLayout = [[FHUGCHotCommunityLayout alloc] init];
+    _flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
+    _flowLayout.minimumLineSpacing = 8;
+    _flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     
-    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:_flowLayout];
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor whiteColor];
     
@@ -111,9 +112,10 @@
 //    FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
 //    self.dataList = model.hotTopicList;
     [_dataList removeAllObjects];
-    for (NSInteger i = 0; i < 10; i++) {
+    for (NSInteger i = 0; i < 9; i++) {
         [_dataList addObject:@(i)];
     }
+    self.flowLayout.dataList = _dataList;
     
     [self.collectionView reloadData];
 }
