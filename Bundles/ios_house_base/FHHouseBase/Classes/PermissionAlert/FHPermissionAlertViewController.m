@@ -17,6 +17,8 @@
 #import <TTRoute/TTRoute.h>
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
+#import "FHMainApi.h"
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 #define OUT_HOR_MARGIN     38
 #define IN_HOR_MARGIN      20
@@ -228,6 +230,8 @@
     param[@"popup_name"] = @"privacy";
     
     TRACK_EVENT(@"popup_show", param);
+    
+    [self addPoppReport:YES];
 }
 
 -(void)addConfirmLog:(BOOL)confirm
@@ -242,6 +246,7 @@
     
     TRACK_EVENT(@"popup_click", param);
     
+    [self addPoppReport:NO];
 }
 
 - (BOOL)shouldAutorotate
@@ -255,6 +260,22 @@
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
     return UIInterfaceOrientationPortrait;
+}
+
+-(void)addPoppReport:(BOOL)isShow
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    
+    param[@"channel"] = [TTSandBoxHelper getCurrentChannel];
+    param[@"uuid"] = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    param[@"event"] = isShow? @"popup_show": @"popup_click";
+    param[@"popup_name"] = @"privacy";
+    if (!isShow) {
+        param[@"click_position"] = @"confirm";
+    }
+    
+    [FHMainApi postJsonRequest:@"/f100/api/tool_house/log_event" query:nil params:param completion:^(NSDictionary *_Nullable result, NSError * _Nullable error) {
+    }];
 }
 
 /*
