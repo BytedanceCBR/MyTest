@@ -31,7 +31,7 @@
 #import "TTPushAlertManager.h"
 //#import <TTDialogDirector/CLLocationManager+MutexDialogAdapter.h>
 #import "TTCategory+ConfigDisplayName.h"
-#import <FHLocManager.h>
+#import "FHLocManager.h"
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "SSCommonLogic.h"

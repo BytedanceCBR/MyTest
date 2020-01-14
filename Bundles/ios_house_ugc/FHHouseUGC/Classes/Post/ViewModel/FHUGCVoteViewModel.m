@@ -19,7 +19,7 @@
 #import <WDDefines.h>
 #import "FHUGCVoteModel.h"
 #import "HMDTTMonitor.h"
-#import <TTReachability.h>
+#import "TTReachability.h"
 #import "FHUserTracker.h"
 #import "BTDJSONHelper.h"
 #import "FHFeedUGCCellModel.h"

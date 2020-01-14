@@ -26,7 +26,7 @@
 #import "TTStringHelper.h"
 #import <TTVFeedCellSelectContext.h>
 #import <TTVFeedItem+TTVArticleProtocolSupport.h>
-#import <JSONAdditions.h>
+#import "JSONAdditions.h"
 #import <TTVideoShareMovie.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTVFeedUserOpDataSyncMessage.h>

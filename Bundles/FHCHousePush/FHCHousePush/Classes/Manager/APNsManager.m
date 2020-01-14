@@ -28,11 +28,11 @@
 //#import "TTArticleTabBarController.h"
 //#import "TTLaunchTracer.h"
 #import <FHHouseBase/FHHouseBridgeManager.h>
-#import <FHLocManager.h>
+#import "FHLocManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
-#import <FHEnvContext.h>
-#import <JSONAdditions.h>
+#import "FHEnvContext.h"
+#import "JSONAdditions.h"
 #import "FHBaseViewController.h"
 #import "TTUIResponderHelper.h"
 #import "UIViewController+TTMovieUtil.h"

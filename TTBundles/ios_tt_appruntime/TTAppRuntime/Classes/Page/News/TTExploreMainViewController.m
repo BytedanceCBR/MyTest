@@ -51,7 +51,7 @@
 #import "FHEnvContext.h"
 #import "TTLaunchTracer.h"
 #import "TTCategoryStayTrackManager.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import <TTInstallService/TTInstallIDManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTArticleBase/ExploreLogicSetting.h>

@@ -8,7 +8,7 @@
 
 #import "TTAccountLoggerImp.h"
 #import "TTAccountBusiness.h"
-#import <TTInstallIDManager.h>
+#import "TTInstallIDManager.h"
 #import "TTAccountTestSettings.h"
 #import <UIAlertView+Blocks.h>
 #import <BDTSharedHeaders/SSCommonDefines.h>

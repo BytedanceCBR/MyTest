@@ -135,7 +135,7 @@ static NSMutableDictionary * s_headerParameter;
         [result setValue:[TTExtensions MACAddress] forKey:@"mc"];
         [result setValue:[TTExtensions openUDID] forKey:@"openudid"];
         [result setValue:[(TTMonitorConfiguration *)[TTMonitorConfiguration shareManager] appkey] forKey:@"appkey"];
-        //[result setValue:[TTExtensions getCurrentChannel] forKey:@"channel"];
+        [result setValue:[TTExtensions getCurrentChannel] forKey:@"channel"];
         [result setValue:[TTExtensions ssAppID] forKey:@"aid"];
         NSInteger millisecondsFromGMT =  [[NSTimeZone localTimeZone] secondsFromGMT] / 3600;
         [result setValue:@(millisecondsFromGMT) forKey:@"timezone"];

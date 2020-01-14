@@ -30,7 +30,7 @@
 #import "TTDeviceHelper.h"
 #import "TTShortVideoHelper.h"
 #import "ExploreOrderedData+TTAd.h"
-#import <TTRelevantDurationTracker.h>
+#import "TTRelevantDurationTracker.h"
 #import "TSVChannelDecoupledConfig.h"
 #import "TSVShortVideoDecoupledFetchManager.h"
 #import "ReactiveObjC.h"

@@ -9,7 +9,7 @@
 #import <WDDefines.h>
 #import <FHCommonDefines.h>
 #import "Masonry.h"
-#import <FHLocManager.h>
+#import "FHLocManager.h"
 #import <FHHouseUGCAPI.h>
 #import <FHUGCCommunityListModel.h>
 #import "FHUGCVotePublishModel.h"

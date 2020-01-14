@@ -10,7 +10,7 @@
 #import "NewsBaseDelegate.h"
 #import "SSADManager.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import "TTLaunchDefine.h"
 #import <FHMinisdkManager.h>
 

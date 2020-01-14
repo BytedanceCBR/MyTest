@@ -19,7 +19,7 @@
 #import "FHHouseFindResultTopHeader.h"
 #import "FHHouseFindResultViewController.h"
 #import "FHUtils.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
 
 #define kBaseCellId @"kBaseCellId"

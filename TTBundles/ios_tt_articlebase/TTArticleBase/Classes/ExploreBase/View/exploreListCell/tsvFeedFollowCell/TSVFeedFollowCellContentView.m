@@ -15,7 +15,7 @@
 #import <HTSVideoPlay/HTSVideoPageParamHeader.h>
 #import <TTUIWidget/TTNavigationController.h>
 #import "NSObject+FBKVOController.h"
-#import <TTRelevantDurationTracker.h>
+#import "TTRelevantDurationTracker.h"
 
 #import "TSVDebugInfoView.h"
 #import "TSVDebugInfoConfig.h"

@@ -10,7 +10,7 @@
 #import "FHDetailNewTimeLineItemCell.h"
 #import "FHDetailNewModel.h"
 #import <FHRefreshCustomFooter.h>
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import "FHDetailNewCoreDetailModel.h"
 #import "FHDetailHouseNameCell.h"
 #import "FHFloorPanCorePropertyCell.h"

@@ -19,7 +19,7 @@
 #import "SSWebViewController.h"
 //#import "TTRepostViewController.h"
 //#import "TTRepostOriginModels.h"
-#import <TTRelevantDurationTracker.h>
+#import "TTRelevantDurationTracker.h"
 #import "TTPlatformSwitcher.h"
 #import "TTFeedDislikeView.h"
 //#import "TTRecommendUserCollectionViewWrapper.h"

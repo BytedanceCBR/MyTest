@@ -70,6 +70,8 @@ def appDevelopPods
     pod 'TTService', :path => '../TTBundles/ios_tt_service'
     pod 'TTUserProfile', :path => '../TTBundles/ios_tt_userprofile'
     pod 'TTArticleVideo', :path => '../TTBundles/ios_tt_article_video'
+    # 老的头条监控库添加
+    pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
     #-----头条旧业务兼容库-----#
     pod 'TTCompatibleModule', :path => '../AKPlugins/TTCompatibleModule', :inhibit_warnings => false
     #-----问答业务库-----#
@@ -307,7 +309,7 @@ def appPods
     #-----头条sercive中间件-----
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
-    pod_binary 'TTMonitor','0.7.9.58-rc.3'
+    # pod_binary 'TTMonitor','0.7.9.58-rc.3' #这个版本还是有很多问题
     pod_binary 'Heimdallr','0.7.11-rc.5', :subspecs => [
     'Core',
     'Monitors',

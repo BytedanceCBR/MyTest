@@ -23,7 +23,7 @@
 #import "FHHomeScrollBannerCell.h"
 #import "TTDeviceHelper.h"
 #import <TTAppUpdateHelper.h>
-#import <TTInstallIDManager.h>
+#import "TTInstallIDManager.h"
 #import <CommonURLSetting.h>
 #import <FHCommuteManager.h>
 #import "TTUIResponderHelper.h"

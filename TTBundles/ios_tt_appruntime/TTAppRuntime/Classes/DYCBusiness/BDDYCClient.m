@@ -15,7 +15,7 @@
 #endif
 
 #if __has_include(<TTInstallIDManager.h>)
-#import <TTInstallIDManager.h>
+#import "TTInstallIDManager.h"
 #define BDDYC_HAS_INSTALL 1
 #endif
 

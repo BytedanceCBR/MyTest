@@ -12,9 +12,9 @@
 #import <TTTabBarItem.h>
 #import "UIViewController+TTMovieUtil.h"
 #import "FHHomeConfigManager.h"
-#import <JSONAdditions.h>
+#import "JSONAdditions.h"
 #import <TTArticleTabBarController.h>
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import <FHMinisdkManager.h>
 
 @interface FHHomeSchemaObject()<TTRouteInitializeProtocol>

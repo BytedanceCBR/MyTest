@@ -11,7 +11,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <TTReachability/TTReachability.h>
 #import "NetworkUtilities.h"
-#import <TTImageDownloader.h>
+#import "TTImageDownloader.h"
 #import <TTVersionHelper/TTVersionHelper.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTBaseMacro.h>

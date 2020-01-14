@@ -27,7 +27,7 @@
 #import "TTAdSplashMediator.h"
 #import <Masonry/Masonry.h>
 #import "Log.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import <FHIntroduceManager.h>
 
 @interface ArticleTabBarStyleNewsListViewController ()<TTInteractExitProtocol>

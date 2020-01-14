@@ -16,7 +16,7 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBase/FHCommonDefines.h>
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import <FHHouseBase/FHHomeEntranceItemView.h>
 
 
