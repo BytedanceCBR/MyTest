@@ -430,7 +430,14 @@ extern NSString *const INSTANT_DATA_KEY;
             offset = [FHHouseListViewModel searchOffsetByhouseModel:self.houseDataModel];
         }
     }
-    
+    NSString *queryType = self.houseSearchDic[@"query_type"];
+    if (queryType.length > 0) {
+        if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+            query = [query stringByAppendingString:[NSString stringWithFormat:@"&query_type=%@",queryType]];
+        }else{
+            query = [NSString stringWithFormat:@"query_type=%@",queryType];
+        }
+    }
     NSString *searchId = self.searchId;
 
     if (self.isCommute) {
