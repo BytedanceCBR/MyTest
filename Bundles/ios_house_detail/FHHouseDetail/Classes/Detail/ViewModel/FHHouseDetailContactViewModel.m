@@ -10,11 +10,11 @@
 #import "TTShareManager.h"
 #import "WXApi.h"
 #import <TencentOpenAPI/QQApiInterface.h>
-#import <TTActivityContentItemProtocol.h>
-#import <TTWechatTimelineContentItem.h>
-#import <TTWechatContentItem.h>
-#import <TTQQFriendContentItem.h>
-#import <TTQQZoneContentItem.h>
+#import "TTActivityContentItemProtocol.h"
+#import "TTWechatTimelineContentItem.h"
+#import "TTWechatContentItem.h"
+#import "TTQQFriendContentItem.h"
+#import "TTQQZoneContentItem.h"
 #import "BDWebImage.h"
 #import "FHURLSettings.h"
 #import <TTWechatTimelineActivity.h>

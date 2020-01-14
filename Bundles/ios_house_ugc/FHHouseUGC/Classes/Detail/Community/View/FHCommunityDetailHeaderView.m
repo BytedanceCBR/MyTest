@@ -11,7 +11,7 @@
 #import "FHUGCFollowButton.h"
 #import "SSViewBase.h"
 #import "TTDeviceHelper.h"
-#import <UIFont+House.h>
+#import "UIFont+House.h"
 #import "TTRoute.h"
 #import "FHUGCScialGroupModel.h"
 #import "UIViewAdditions.h"

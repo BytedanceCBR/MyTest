@@ -29,7 +29,7 @@
 #import <FHHouseBaseNewHouseCell.h>
 #import <FHPlaceHolderCell.h>
 #import "UIColor+Theme.h"
-#import <FHHomeMainViewModel.h>
+#import "FHHomeMainViewModel.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 

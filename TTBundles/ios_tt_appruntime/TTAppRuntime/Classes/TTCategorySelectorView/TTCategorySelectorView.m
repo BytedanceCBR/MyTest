@@ -32,7 +32,7 @@
 //#import <TTDialogDirector/CLLocationManager+MutexDialogAdapter.h>
 #import "TTCategory+ConfigDisplayName.h"
 #import <FHLocManager.h>
-#import <UIFont+House.h>
+#import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "SSCommonLogic.h"
 #import <Masonry/Masonry.h>

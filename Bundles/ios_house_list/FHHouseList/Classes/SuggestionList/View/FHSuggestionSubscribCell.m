@@ -6,7 +6,7 @@
 //
 
 #import "FHSuggestionSubscribCell.h"
-#import <UIFont+House.h>
+#import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "Masonry.h"
 #import "FHSugSubscribeModel.h"

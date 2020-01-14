@@ -21,10 +21,10 @@
 #import "TTURLUtils.h"
 
 #import "TTActivityContentItemProtocol.h"
-#import <TTWechatTimelineContentItem.h>
+#import "TTWechatTimelineContentItem.h"
 #import "TTWechatContentItem.h"
-#import <TTQQFriendContentItem.h>
-#import <TTQQZoneContentItem.h>
+#import "TTQQFriendContentItem.h"
+#import "TTQQZoneContentItem.h"
 #import "TTFavouriteContentItem.h"
 #import "TTReportContentItem.h"
 #import "TTDislikeContentItem.h"

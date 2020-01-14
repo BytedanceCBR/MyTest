@@ -27,7 +27,7 @@
 #import <TTUniversalCommentLayout.h>
 #import <TTRichSpanText+Comment.h>
 #import "UIColor+Theme.h"
-#import <UIFont+House.h>
+#import "UIFont+House.h"
 #import "UIImage+FIconFont.h"
 
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"

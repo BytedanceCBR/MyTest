@@ -30,7 +30,7 @@
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "FHHomeSearchPanelView.h"
 //#import "Bubble-Swift.h"
-#import <UIFont+House.h>
+#import "UIFont+House.h"
 #import "UIImageView+BDWebImage.h"
 #import "UIColor+Theme.h"
 #import "FHEnvContext.h"

@@ -71,7 +71,7 @@
 #import <TTKitchenExtension/TTKitchenExtension.h>
 #import "BDPlayerObjManager.h"
 #import "TTDirectForwardWeitoutiaoContentItem.h"
-#import <TTDirectForwardWeitoutiaoActivity.h>
+#import "TTDirectForwardWeitoutiaoActivity.h"
 #import "TTVVideoDetailViewController.h"
 //#import "TTRepostService.h"
 
