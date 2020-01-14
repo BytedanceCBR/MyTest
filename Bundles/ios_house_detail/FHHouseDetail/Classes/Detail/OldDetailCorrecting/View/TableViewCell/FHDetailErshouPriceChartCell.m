@@ -9,7 +9,7 @@
 #import "FHDetailOldModel.h"
 #import "TTDeviceHelper.h"
 #import "FHDetailFoldViewButton.h"
-#import <PNChart.h>
+#import "PNChart.h"
 #import "FHDetailPriceToastView.h"
 #import "UIView+House.h"
 #import "FHDetailHeaderStarTitleView.h"

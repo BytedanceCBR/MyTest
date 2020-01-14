@@ -32,7 +32,7 @@
 #import "TTFollowThemeButton.h"
 #import "TTDeviceHelper.h"
 #import "AWEVideoPlayTransitionBridge.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "TTSettingsManager.h"
 #import "AWEVideoUserInfoManager.h"
 #import "AWEUserModel.h"

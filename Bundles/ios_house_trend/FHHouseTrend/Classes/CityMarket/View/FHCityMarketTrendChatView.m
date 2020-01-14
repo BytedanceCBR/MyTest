@@ -6,7 +6,7 @@
 //
 
 #import "FHCityMarketTrendChatView.h"
-#import <PNChart.h>
+#import "PNChart.h"
 #import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"

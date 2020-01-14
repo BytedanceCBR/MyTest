@@ -9,7 +9,7 @@
 #import "FHHouseType.h"
 #import <FHHouseBaseItemCell.h>
 #import "FHErrorView.h"
-#import <FHSingleImageInfoCellModel.h>
+#import "FHSingleImageInfoCellModel.h"
 #import "FHUserTracker.h"
 #import <FHHouseBridgeManager.h>
 #import "TTRoute.h"
