@@ -19,6 +19,7 @@
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTLaunchDefine.h"
 #import "FHIntroduceManager.h"
+#import <FHHouseBase/FHEnvContext.h>
 
 DEC_TASK_N(TTShowADTask,FHTaskTypeAD,TASK_PRIORITY_HIGH);
 
@@ -39,7 +40,11 @@ DEC_TASK_N(TTShowADTask,FHTaskTypeAD,TASK_PRIORITY_HIGH);
     BOOL isIntroduceShowing = [FHIntroduceManager sharedInstance].isShowing;
     [[self class] settingSplashADShowType:fromAPNS || fromSchema || isIntroduceShowing];
     
-    [[self class] showADSplash];
+    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        //已经展示过隐私弹窗
+        [[self class] showADSplash];
+    }
+    
     [TTAdManageInstance applicationDidFinishLaunching];
 }
 
