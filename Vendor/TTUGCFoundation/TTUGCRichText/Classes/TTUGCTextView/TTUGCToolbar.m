@@ -7,7 +7,6 @@
 //
 
 #import "TTUGCToolbar.h"
-#import "TTUGCEmojiInputView.h"
 #import "TTUGCEmojiParser.h"
 #import <KVOController.h>
 #import "UIViewAdditions.h"
@@ -25,14 +24,11 @@
 
 @property (nonatomic, strong) SSThemedView *containerView;
 @property (nonatomic, strong) SSThemedView *toolbarView;
-@property (nonatomic, strong) SSThemedButton *keyboardButton;
 @property (nonatomic, strong) SSThemedButton *longTextButton;
 @property (nonatomic, strong) SSThemedButton *atButton;
 @property (nonatomic, strong) SSThemedButton *shoppingButton;
 @property (nonatomic, strong) SSThemedButton *hashtagButton;
-@property (nonatomic, strong) SSThemedButton *emojiButton;
 @property (nonatomic, strong) SSThemedButton *picButton;
-@property (nonatomic, strong) TTUGCEmojiInputView *emojiInputView;
 
 @property (nonatomic, assign) CGPoint toolbarViewOrigin;
 
@@ -104,6 +100,14 @@
     self.frame = newFrame;
     self.toolbarView.width = self.width;
     self.toolbarViewOrigin = self.origin;
+    [self refreshButtonsUI];
+}
+
+- (void)layoutToolbarViewWithOrigin:(CGPoint)origin {
+    self.containerView.height = self.frame.size.height;
+    CGPoint toolBarOrigin = [self convertPoint:origin toView:self.containerView];
+    self.toolbarView.origin = toolBarOrigin;
+    self.emojiInputView.top = self.toolbarView.bottom;
     [self refreshButtonsUI];
 }
 
