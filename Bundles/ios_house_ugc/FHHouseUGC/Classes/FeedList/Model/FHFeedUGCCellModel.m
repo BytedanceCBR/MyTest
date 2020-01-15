@@ -13,6 +13,7 @@
 #import <TTVideoApiModel.h>
 #import "TTVFeedItem+Extension.h"
 #import "FHLocManager.h"
+#import <TTBusinessManager+StringUtils.h>
 
 @implementation FHFeedUGCCellCommunityModel
 
@@ -530,7 +531,7 @@
         cellModel.user = user;
         
         // 时间以及距离
-        cellModel.desc = [self generateUGCDescFromRawData:model.rawData];
+        cellModel.desc = [self generateUGCDescWithCreateTime:model.rawData.createTime readCount:model.rawData.readCount distanceInfo:model.rawData.distanceInfo];
         
         cellModel.diggCount = model.rawData.diggCount;
         cellModel.commentCount = model.rawData.commentCount;
@@ -656,39 +657,6 @@
     return [self generateUGCDescWithCreateTime:model.createTime readCount:model.readCount distanceInfo:model.distanceInfo];
 }
 
-+ (NSAttributedString *)generateUGCDescFromRawData:(FHFeedContentRawDataModel *)model {
-    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
-    double time = [model.createTime doubleValue];
-    
-    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
-    
-    if(![publishTime isEqualToString:@""]){
-        NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
-        [desc appendAttributedString:publishTimeAStr];
-    }
-    
-    NSString *read = @"  已读 2334";
-    if(![read isEqualToString:@""]){
-        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
-        [desc appendAttributedString:readAStr];
-    }
-    
-    // 法务合规，如果没有定位权限，不展示位置信息
-    if(!isEmptyString(model.distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
-        NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
-        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
-        attachment.bounds = CGRectMake(8, 0, 8, 8);
-        attachment.image = [UIImage imageNamed:@"fh_ugc_location"];
-        NSAttributedString *attachmentAStr = [NSAttributedString attributedStringWithAttachment:attachment];
-        [desc appendAttributedString:attachmentAStr];
-        
-        NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:distance];
-        [desc appendAttributedString:distanceAStr];
-    }
-    
-    return desc;
-}
-
 + (NSAttributedString *)generateUGCDescWithCreateTime:(NSString *)createTime readCount:(NSString *)readCount distanceInfo:(NSString *)distanceInfo {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [createTime doubleValue];
@@ -698,12 +666,6 @@
     if(!isEmptyString(publishTime)){
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
         [desc appendAttributedString:publishTimeAStr];
-    }
-    
-    if(!isEmptyString(readCount)){
-        NSString *read = [NSString stringWithFormat:@"  已读 %@",readCount];
-        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
-        [desc appendAttributedString:readAStr];
     }
     
     // 法务合规，如果没有定位权限，不展示位置信息
@@ -719,19 +681,29 @@
         [desc appendAttributedString:distanceAStr];
     }
     
+    if(!isEmptyString(readCount)){
+        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[readCount longLongValue]]];
+        if(desc.length > 0){
+            read = [NSString stringWithFormat:@" %@",read];
+        }
+        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
+        [desc appendAttributedString:readAStr];
+    }
+    
     return desc;
 }
 
 + (NSAttributedString *)generateArticleDesc:(FHFeedContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     
-    if(model.source && ![model.source isEqualToString:@""]){
-        NSAttributedString *sourceAStr = [[NSAttributedString alloc] initWithString:model.source];
-        [desc appendAttributedString:sourceAStr];
+    if(!isEmptyString(model.readCount)){
+        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
+        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
+        [desc appendAttributedString:readAStr];
     }
     
-    if(model.commentCount && ![model.commentCount isEqualToString:@""]){
-        NSString *comment = [NSString stringWithFormat:@"%@评论",model.commentCount];
+    if(!isEmptyString(model.commentCount)){
+        NSString *comment = [NSString stringWithFormat:@"%@评论",[TTBusinessManager formatCommentCount:[model.commentCount longLongValue]]];
         if(desc.length > 0){
             comment = [NSString stringWithFormat:@" %@",comment];
         }
@@ -741,7 +713,7 @@
     }
     
     double time = [model.publishTime doubleValue];
-    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time type:@"onlyDate"];
     
     if(![publishTime isEqualToString:@""]){
         if(desc.length > 0){

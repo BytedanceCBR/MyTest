@@ -561,6 +561,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 {
     //切换账号时记录的时间清零，重新显示小红点
     [FHUtils setContent:@(0) forKey:lastRedPointShowKey];
+    [self loadUGCConfigData];
     
     if ([TTAccountManager isLogin]) {
         self.followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];

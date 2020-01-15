@@ -708,7 +708,7 @@
     if(cellModel.community.socialGroupId){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = cellModel.community.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"hot_discuss_feed_from",
+        dict[@"tracer"] = @{@"enter_from":@"hot_discuss_feed",
                             @"enter_type":@"click",
                             @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
                             @"log_pb":cellModel.logPb ?: @"be_null"};
