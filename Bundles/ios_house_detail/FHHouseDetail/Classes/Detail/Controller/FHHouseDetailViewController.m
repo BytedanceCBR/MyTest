@@ -329,7 +329,7 @@
     }];
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(_houseType ==FHHouseTypeSecondHandHouse? 80:64);
+        make.height.mas_equalTo(_houseType ==FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeNewHouse? 80:64);
         if (@available(iOS 11.0, *)) {
             make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
         }else {
