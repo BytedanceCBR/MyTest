@@ -49,14 +49,14 @@ def fhPods
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
     
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev'
-    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '823f42a39179e0678ec5e773baae270967fa0148'
+#    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '823f42a39179e0678ec5e773baae270967fa0148'
 #        pod 'FHCommonUI', :path => '../../library/ios_common_ui'
-#    pod 'FHCommonUI', '0.0.14'
+    pod 'FHCommonUI', '0.0.14.1-bugfix'
 
-#    pod 'ios_house_im', '0.1.15-alpha.0-mergebc'
+    pod 'ios_house_im', '0.1.16.1-bugfix'
 #    pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im'
-    pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '2b53f440389d32c55f1ebf6748cec6165a3e58cd'
-    
+#    pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '2b53f440389d32c55f1ebf6748cec6165a3e58cd'
+
     
     
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
