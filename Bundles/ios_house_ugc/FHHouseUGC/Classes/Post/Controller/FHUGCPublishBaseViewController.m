@@ -54,6 +54,9 @@
     
     [self setupDefaultNavBar:YES];
     
+    
+    [self.titleLabel sizeToFit];
+    
     // 标题
     self.navigationItem.titleView = self.titleLabel;
     
