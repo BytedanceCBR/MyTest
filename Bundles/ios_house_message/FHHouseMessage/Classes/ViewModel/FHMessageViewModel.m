@@ -339,6 +339,7 @@
         [params setValue:title forKey:KSCHEMA_CHAT_TITLE];
         NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
         [tracer setValue:@"message_list" forKey:@"origin_from"];
+        [tracer setValue:@"message_list" forKey:@"enter_from"];
         tracer[@"element_from"] = @"be_null";
         tracer[@"log_pb"] = @"be_null";
         tracer[@"origin_search_id"] = self.viewController.tracerModel.originSearchId;

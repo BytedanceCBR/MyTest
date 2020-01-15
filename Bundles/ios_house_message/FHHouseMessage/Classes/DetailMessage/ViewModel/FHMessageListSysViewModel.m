@@ -184,7 +184,7 @@
     tracer[@"enter_from"] = [self.viewController categoryName];
     tracer[@"element_from"] = @"be_null";
     tracer[@"log_pb"] = model.logPb ? : @"be_null";
-    tracer[@"origin_from"] = self.viewController.tracerModel.originFrom;
+    tracer[@"origin_from"] = [self.viewController originFrom];
     tracer[@"origin_search_id"] = self.originSearchId;
 
     tracer[UT_ENTER_TYPE] = @"click";
