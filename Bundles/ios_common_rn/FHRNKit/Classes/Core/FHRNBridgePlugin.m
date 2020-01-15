@@ -389,7 +389,7 @@
     });
     
     if (!isEmptyString(openURL)) {
-        NSURL *openUrlResultUTF8 =  [NSURL URLWithString:[openURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURL *openUrlResultUTF8 =  [NSURL URLWithString:openURL];
         if(openUrlResultUTF8)
         {
             [[TTRoute sharedRoute] openURLByViewController:openUrlResultUTF8 userInfo:nil];

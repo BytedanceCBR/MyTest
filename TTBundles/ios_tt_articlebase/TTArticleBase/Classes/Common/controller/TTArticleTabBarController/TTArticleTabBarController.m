@@ -98,6 +98,7 @@
 #import "FHUGCConfig.h"
 #import "FHUnreadMsgModel.h"
 #import "UIViewController+TTMovieUtil.h"
+#import <TTLaunchTracer.h>
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -603,6 +604,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [logv3Dic setValue:@"default" forKey:@"enter_type"];
     [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
     
+    
+    [[TTLaunchTracer shareInstance] writeEvent];
 //    if (!self.hasShowDots && ![FHEnvContext isUGCOpen]) {
 //        [FHEnvContext showFindTabRedDots];
 //        self.hasShowDots = YES;
