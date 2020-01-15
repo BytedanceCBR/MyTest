@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
+//1为不可见，其他可见
+@property (nonatomic, copy , nullable) NSString *showStatus;
 @end
 
 @interface FHFeedUGCCellUserModel : NSObject

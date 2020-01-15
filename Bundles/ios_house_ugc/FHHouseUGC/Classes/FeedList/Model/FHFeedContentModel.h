@@ -191,6 +191,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
+@property (nonatomic, copy , nullable) NSString *showStatus;
 @end
 
 @interface FHFeedContentUgcRecommendModel : JSONModel 

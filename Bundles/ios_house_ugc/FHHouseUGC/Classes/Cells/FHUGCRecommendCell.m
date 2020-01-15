@@ -65,7 +65,7 @@
 
 - (void)initViews {
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
-    _headerView.titleLabel.text = @"你可能感兴趣的圈子";
+    _headerView.titleLabel.text = @"猜你喜欢";
     _headerView.bottomLine.hidden = NO;
     [_headerView.refreshBtn addTarget:self action:@selector(changeData) forControlEvents:UIControlEventTouchUpInside];
     [_headerView.moreBtn addTarget:self action:@selector(moreData) forControlEvents:UIControlEventTouchUpInside];

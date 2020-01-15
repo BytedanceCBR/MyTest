@@ -108,7 +108,7 @@
     _positionView.layer.cornerRadius = 4;
     _positionView.userInteractionEnabled = YES;
     _positionView.hidden = YES;
-    [self addSubview:_positionView];
+    [self.contentView addSubview:_positionView];
     
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeOrange1]];
     [_position sizeToFit];

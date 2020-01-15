@@ -166,12 +166,20 @@
         community.name = model.community.name;
         community.url = model.community.url;
         community.socialGroupId = model.community.socialGroupId;
+        community.showStatus = model.community.showStatus;
     }else if(model.rawData.community){
         community.name = model.rawData.community.name;
         community.url = model.rawData.community.url;
         community.socialGroupId = model.rawData.community.socialGroupId;
+        community.showStatus = model.rawData.community.showStatus;
     }
     cellModel.community = community;
+    if([cellModel.community.showStatus isEqualToString:@"1"]){
+        cellModel.showCommunity = NO;
+    }else{
+        cellModel.showCommunity = YES;
+    }
+    
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle){
         if(model.hasVideo && [model.videoStyle integerValue] > 0){
@@ -610,7 +618,13 @@
     community.name = model.community.name;
     community.url = model.community.url;
     community.socialGroupId = model.community.socialGroupId;
+    community.showStatus = model.community.showStatus;
     cellModel.community = community;
+    if([cellModel.community.showStatus isEqualToString:@"1"]){
+        cellModel.showCommunity = NO;
+    }else{
+        cellModel.showCommunity = YES;
+    }
     
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
     user.name = model.user.name;

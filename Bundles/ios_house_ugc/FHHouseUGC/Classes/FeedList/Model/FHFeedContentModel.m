@@ -31,6 +31,7 @@
                            @"name": @"social_group_name",
                            @"url": @"announcement_url",
                            @"socialGroupId": @"social_group_id",
+                           @"showStatus": @"show_status",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

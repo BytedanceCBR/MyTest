@@ -180,7 +180,7 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         FHFeedContentRawDataHotCellListModel *model = self.dataList[indexPath.row];
         if([model.hotCellType isEqualToString:youwenbida]){
-            
+            [self trackClickOptions:model];
         }else if([model.hotCellType isEqualToString:more]){
             NSMutableDictionary *dict = @{}.mutableCopy;
             dict[@"action_type"] = @(FHCommunityListTypeFollow);
@@ -194,6 +194,7 @@
             NSMutableDictionary *traceParam = @{}.mutableCopy;
             traceParam[@"enter_from"] = @"hot_discuss_feed";
             traceParam[@"element_from"] = @"top_operation_position";
+            traceParam[@"rank"] = @(indexPath.row);
             if(model.logPb){
                 traceParam[@"log_pb"] = model.logPb;
             }
@@ -258,6 +259,16 @@
     if(eventName){
         TRACK_EVENT(eventName, tracerDict);
     }
+}
+
+- (void)trackClickOptions:(FHFeedContentRawDataHotCellListModel *)model {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    if([model.hotCellType isEqualToString:youwenbida]){
+        tracerDict[@"element_type"] = @"buyer_experts_group";
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+        tracerDict[@"enter_from"] = @"neighborhood_tab";
+    }
+    TRACK_EVENT(@"click_options", tracerDict);
 }
 
 @end
