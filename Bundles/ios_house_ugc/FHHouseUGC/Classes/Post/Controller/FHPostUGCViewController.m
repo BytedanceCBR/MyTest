@@ -488,6 +488,12 @@ static NSInteger const kMaxPostImageCount = 9;
     };
     self.toolbar.tagDelegate = self;
     
+    // 报数参数设置
+    FHUGCToolbarReportModel *reportModel = [FHUGCToolbarReportModel new];
+    reportModel.enterFrom = self.tracerModel.enterFrom;
+    reportModel.originFrom = self.tracerModel.originFrom;
+    reportModel.pageType = @"feed_publisher";
+    self.toolbar.reportModel = reportModel;
     
     // 圈子选择列表跳转手势
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectCommunityViewClick:)];

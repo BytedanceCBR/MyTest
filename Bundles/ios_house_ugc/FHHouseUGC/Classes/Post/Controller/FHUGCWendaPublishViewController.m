@@ -433,6 +433,14 @@
             [tags addObject:tag];
         }
         self.toolbar.tagDelegate = self;
+        
+        // 报数参数设置
+        FHUGCToolbarReportModel *reportModel = [FHUGCToolbarReportModel new];
+        reportModel.enterFrom = self.tracerModel.enterFrom;
+        reportModel.originFrom = self.tracerModel.originFrom;
+        reportModel.pageType = @"question_publisher";
+        self.toolbar.reportModel = reportModel;
+        
         [self.toolbar layoutTagSelectCollectionViewWithTags:tags];
         
         // 圈子选择列表跳转手势
