@@ -13,18 +13,12 @@
 #import <TTVideoApiModel.h>
 #import "TTVFeedItem+Extension.h"
 #import "FHLocManager.h"
+#import <TTBusinessManager+StringUtils.h>
 
 @implementation FHFeedUGCCellCommunityModel
 
 @end
 
-//@implementation FHFeedUGCCellImageListUrlListModel
-//
-//@end
-//
-//@implementation FHFeedUGCCellImageListModel
-//
-//@end
 @implementation FHFeedUGCVoteModel
 
 @end
@@ -172,12 +166,20 @@
         community.name = model.community.name;
         community.url = model.community.url;
         community.socialGroupId = model.community.socialGroupId;
+        community.showStatus = model.community.showStatus;
     }else if(model.rawData.community){
         community.name = model.rawData.community.name;
         community.url = model.rawData.community.url;
         community.socialGroupId = model.rawData.community.socialGroupId;
+        community.showStatus = model.rawData.community.showStatus;
     }
     cellModel.community = community;
+    if([cellModel.community.showStatus isEqualToString:@"1"]){
+        cellModel.showCommunity = NO;
+    }else{
+        cellModel.showCommunity = YES;
+    }
+    
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle){
         if(model.hasVideo && [model.videoStyle integerValue] > 0){
@@ -199,9 +201,7 @@
             
             [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
             
-            double time = [model.publishTime doubleValue];
-            NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
-            cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
+            cellModel.desc = [self generateUGCDescWithCreateTime:model.publishTime readCount:model.readCount distanceInfo:nil];
             
             cellModel.userDigg = model.userDigg;
             cellModel.diggCount = model.diggCount;
@@ -321,9 +321,7 @@
         //处理大图
         cellModel.largeImageList = model.rawData.content.answer.largeImageList;
         
-        double time = [model.rawData.content.answer.createTime doubleValue];
-        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
-        cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
+        cellModel.desc = [self generateUGCDescWithCreateTime:model.rawData.content.answer.createTime readCount:nil distanceInfo:nil];
         
         cellModel.diggCount = model.rawData.content.answer.diggCount;
         cellModel.commentCount = model.rawData.content.answer.commentCount;
@@ -376,6 +374,8 @@
         double time = [model.rawData.commentBase.createTime doubleValue];
         NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
         cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
+        
+        cellModel.desc = [self generateUGCDescWithCreateTime:model.rawData.commentBase.createTime readCount:model.rawData.commentBase.action.readCount distanceInfo:nil];
         
         cellModel.diggCount = model.rawData.commentBase.action.diggCount;
         cellModel.commentCount = model.rawData.commentBase.action.commentCount;
@@ -455,14 +455,20 @@
         }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
         cellModel.groupId = model.rawData.groupId;
-        if(model.recommendSocialGroupList){
-            cellModel.recommendSocialGroupList = model.recommendSocialGroupList;
+        cellModel.hotCommunityCellType = model.rawData.subCellType;
+        if([model.rawData.subCellType isEqualToString:@"hot_social"]){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotCommunity;
+            cellModel.hotCellList = model.rawData.hotCellList;
         }else{
-            cellModel.recommendSocialGroupList = model.rawData.recommendSocialGroupList;
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
+            cellModel.elementFrom = @"like_neighborhood";
+            if(model.recommendSocialGroupList){
+                cellModel.recommendSocialGroupList = model.recommendSocialGroupList;
+            }else{
+                cellModel.recommendSocialGroupList = model.rawData.recommendSocialGroupList;
+            }
         }
-        cellModel.elementFrom = @"like_neighborhood";
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotTopic;
@@ -533,7 +539,7 @@
         cellModel.user = user;
         
         // 时间以及距离
-        cellModel.desc = [self generateUGCDescFromRawData:model.rawData];
+        cellModel.desc = [self generateUGCDescWithCreateTime:model.rawData.createTime readCount:model.rawData.readCount distanceInfo:model.rawData.distanceInfo];
         
         cellModel.diggCount = model.rawData.diggCount;
         cellModel.commentCount = model.rawData.commentCount;
@@ -594,6 +600,7 @@
     cellModel.content = model.content;
     cellModel.contentRichSpan = model.contentRichSpan;
     cellModel.diggCount = model.diggCount;
+    cellModel.readCount = model.readCount;
     cellModel.commentCount = model.commentCount;
     cellModel.userDigg = model.userDigg;
     cellModel.desc = [self generateUGCDesc:model];
@@ -611,7 +618,13 @@
     community.name = model.community.name;
     community.url = model.community.url;
     community.socialGroupId = model.community.socialGroupId;
+    community.showStatus = model.community.showStatus;
     cellModel.community = community;
+    if([cellModel.community.showStatus isEqualToString:@"1"]){
+        cellModel.showCommunity = NO;
+    }else{
+        cellModel.showCommunity = YES;
+    }
     
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
     user.name = model.user.name;
@@ -655,46 +668,23 @@
 }
 
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
-    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
-    double time = [model.createTime doubleValue];
-    
-    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
-    
-    if(![publishTime isEqualToString:@""]){
-        NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
-        [desc appendAttributedString:publishTimeAStr];
-    }
-    
-    // 法务合规，如果没有定位权限，不展示位置信息
-    if(!isEmptyString(model.distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
-        NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
-        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
-        attachment.bounds = CGRectMake(8, 0, 8, 8);
-        attachment.image = [UIImage imageNamed:@"fh_ugc_location"];
-        NSAttributedString *attachmentAStr = [NSAttributedString attributedStringWithAttachment:attachment];
-        [desc appendAttributedString:attachmentAStr];
-        
-        NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:distance];
-        [desc appendAttributedString:distanceAStr];
-    }
-    
-    return desc;
+    return [self generateUGCDescWithCreateTime:model.createTime readCount:model.readCount distanceInfo:model.distanceInfo];
 }
 
-+ (NSAttributedString *)generateUGCDescFromRawData:(FHFeedContentRawDataModel *)model {
++ (NSAttributedString *)generateUGCDescWithCreateTime:(NSString *)createTime readCount:(NSString *)readCount distanceInfo:(NSString *)distanceInfo {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
-    double time = [model.createTime doubleValue];
+    double time = [createTime doubleValue];
     
     NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
     
-    if(![publishTime isEqualToString:@""]){
+    if(!isEmptyString(publishTime)){
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
         [desc appendAttributedString:publishTimeAStr];
     }
     
     // 法务合规，如果没有定位权限，不展示位置信息
-    if(!isEmptyString(model.distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
-        NSString *distance = [NSString stringWithFormat:@"   %@",model.distanceInfo];
+    if(!isEmptyString(distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
+        NSString *distance = [NSString stringWithFormat:@"   %@",distanceInfo];
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.bounds = CGRectMake(8, 0, 8, 8);
         attachment.image = [UIImage imageNamed:@"fh_ugc_location"];
@@ -703,6 +693,15 @@
         
         NSAttributedString *distanceAStr = [[NSAttributedString alloc] initWithString:distance];
         [desc appendAttributedString:distanceAStr];
+    }
+    
+    if(!isEmptyString(readCount)){
+        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[readCount longLongValue]]];
+        if(desc.length > 0){
+            read = [NSString stringWithFormat:@" %@",read];
+        }
+        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
+        [desc appendAttributedString:readAStr];
     }
     
     return desc;
@@ -711,13 +710,14 @@
 + (NSAttributedString *)generateArticleDesc:(FHFeedContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     
-    if(model.source && ![model.source isEqualToString:@""]){
-        NSAttributedString *sourceAStr = [[NSAttributedString alloc] initWithString:model.source];
-        [desc appendAttributedString:sourceAStr];
+    if(!isEmptyString(model.readCount)){
+        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
+        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
+        [desc appendAttributedString:readAStr];
     }
     
-    if(model.commentCount && ![model.commentCount isEqualToString:@""]){
-        NSString *comment = [NSString stringWithFormat:@"%@评论",model.commentCount];
+    if(!isEmptyString(model.commentCount)){
+        NSString *comment = [NSString stringWithFormat:@"%@评论",[TTBusinessManager formatCommentCount:[model.commentCount longLongValue]]];
         if(desc.length > 0){
             comment = [NSString stringWithFormat:@" %@",comment];
         }
@@ -727,7 +727,7 @@
     }
     
     double time = [model.publishTime doubleValue];
-    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time type:@"onlyDate"];
     
     if(![publishTime isEqualToString:@""]){
         if(desc.length > 0){
@@ -753,7 +753,7 @@
 + (FHFeedUGCCellModel *)modelFromFake {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.groupId = @"1000051";
-    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCVideo;
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotCommunity;
     
     return cellModel;
 }

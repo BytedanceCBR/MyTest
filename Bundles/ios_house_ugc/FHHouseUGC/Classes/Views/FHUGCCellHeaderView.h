@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UIView *bottomLine;
 @property(nonatomic, strong) UIButton *refreshBtn;
 
+- (void)setMoreBtnLayout;
+
 @end
 
 NS_ASSUME_NONNULL_END

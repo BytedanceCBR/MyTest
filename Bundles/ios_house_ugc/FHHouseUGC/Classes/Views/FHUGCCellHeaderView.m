@@ -39,13 +39,7 @@
     [_moreBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
     _moreBtn.titleLabel.font = [UIFont themeFontRegular:14];
     //文字的size
-    CGSize textSize = [_moreBtn.titleLabel.text sizeWithFont:_moreBtn.titleLabel.font];
-    CGSize imageSize = _moreBtn.currentImage.size;
-    CGFloat marginGay = 4;//图片跟文字之间的间距
-    _moreBtn.imageEdgeInsets = UIEdgeInsetsMake(0, textSize.width + marginGay - imageSize.width, 0, - textSize.width - marginGay + imageSize.width);
-    _moreBtn.titleEdgeInsets = UIEdgeInsetsMake(0, - imageSize.width - marginGay, 0, imageSize.width + marginGay);
-    //设置按钮内容靠右
-    _moreBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    [self setMoreBtnLayout];
     [self addSubview:_moreBtn];
     
     self.refreshBtn = [[UIButton alloc] init];
@@ -57,6 +51,7 @@
     [_refreshBtn setTitle:@"换一批" forState:UIControlStateNormal];
     [_refreshBtn setTitleColor:[UIColor themeRed3] forState:UIControlStateNormal];
     _refreshBtn.titleLabel.font = [UIFont themeFontRegular:12];
+    CGFloat marginGay = 4;
     _refreshBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -marginGay/2, 0, marginGay/2);
     _refreshBtn.titleEdgeInsets = UIEdgeInsetsMake(0, marginGay/2, 0, -marginGay/2);
     [self addSubview:_refreshBtn];
@@ -66,6 +61,17 @@
     _bottomLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:_bottomLine];
     
+}
+
+- (void)setMoreBtnLayout {
+    //文字的size
+    CGSize textSize = [_moreBtn.titleLabel.text sizeWithFont:_moreBtn.titleLabel.font];
+    CGSize imageSize = _moreBtn.currentImage.size;
+    CGFloat marginGay = 4;//图片跟文字之间的间距
+    _moreBtn.imageEdgeInsets = UIEdgeInsetsMake(0, textSize.width + marginGay - imageSize.width, 0, - textSize.width - marginGay + imageSize.width);
+    _moreBtn.titleEdgeInsets = UIEdgeInsetsMake(0, - imageSize.width - marginGay, 0, imageSize.width + marginGay);
+    //设置按钮内容靠右
+    _moreBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
 }
 
 - (void)initConstraints {

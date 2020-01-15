@@ -1,37 +1,37 @@
 //
-//  FHUGCHotTopicCell.m
+//  FHUGCHotCommunityCell.m
 //  FHHouseUGC
 //
-//  Created by 谢思铭 on 2019/8/25.
+//  Created by 谢思铭 on 2020/1/8.
 //
 
-#import "FHUGCHotTopicCell.h"
+#import "FHUGCHotCommunityCell.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHBaseCollectionView.h"
-#import "FHUGCHotTopicSubCell.h"
+#import "FHUGCHotCommunitySubCell.h"
 #import <TTRoute.h>
 #import "FHUserTracker.h"
+#import "FHUGCHotCommunityLayout.h"
+#import "FHCommunityList.h"
 
 #define leftMargin 20
 #define rightMargin 20
 #define cellId @"cellId"
 
-#define headerViewHeight 44
+#define headerViewHeight 40
 #define bottomSepViewHeight 5
 
-@interface FHUGCHotTopicCell()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface FHUGCHotCommunityCell()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
-@property(nonatomic ,strong) FHUGCCellHeaderView *headerView;
 @property(nonatomic ,strong) FHBaseCollectionView *collectionView;
 @property(nonatomic ,strong) UIView *bottomSepView;
-@property(nonatomic ,strong) NSMutableArray *sourceList;
-@property(nonatomic ,strong) NSArray *dataList;
+@property(nonatomic ,strong) NSMutableArray *dataList;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
-@property(nonatomic ,strong) UIView *seprateLine;
+@property(nonatomic, strong) FHUGCHotCommunityLayout *flowLayout;
 
 @end
 
-@implementation FHUGCHotTopicCell
+@implementation FHUGCHotCommunityCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -44,7 +44,6 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         _dataList = [NSMutableArray array];
-        _sourceList = [NSMutableArray array];
         [self initUIs];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -59,19 +58,6 @@
 - (void)initViews {
     self.contentView.backgroundColor = [UIColor whiteColor];
     
-    self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
-    _headerView.titleLabel.text = @"话题榜";
-    _headerView.bottomLine.hidden = YES;
-    _headerView.refreshBtn.hidden = YES;
-    [_headerView.moreBtn setTitle:@"查看全部" forState:UIControlStateNormal];
-    [_headerView setMoreBtnLayout];
-    [_headerView.moreBtn addTarget:self action:@selector(moreData) forControlEvents:UIControlEventTouchUpInside];
-    [self.contentView addSubview:_headerView];
-    
-    self.seprateLine = [[UIView alloc] init];
-    _seprateLine.backgroundColor = [UIColor themeGray7];
-    [self.contentView addSubview:_seprateLine];
-    
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_bottomSepView];
@@ -80,13 +66,12 @@
 }
 
 - (void)initCollectionView {
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 4, 0, 4);
-    flowLayout.minimumLineSpacing = 0;
-    flowLayout.minimumInteritemSpacing = 0;
-//    flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    self.flowLayout = [[FHUGCHotCommunityLayout alloc] init];
+    _flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
+    _flowLayout.minimumLineSpacing = 8;
+    _flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     
-    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:_flowLayout];
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor whiteColor];
     
@@ -95,29 +80,14 @@
     
     [self.contentView addSubview:_collectionView];
     
-    [_collectionView registerClass:[FHUGCHotTopicSubCell class] forCellWithReuseIdentifier:cellId];
+    [_collectionView registerClass:[FHUGCHotCommunitySubCell class] forCellWithReuseIdentifier:cellId];
 }
 
 - (void)initConstraints {
-    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(headerViewHeight);
-    }];
-    
-    [self.headerView.moreBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(65);
-    }];
-    
-    [self.seprateLine mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.right.mas_equalTo(self.headerView);
-        make.height.mas_equalTo(1);
-    }];
-    
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.seprateLine.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.contentView).offset(15);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-3);
+        make.height.mas_equalTo(188);
     }];
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -141,25 +111,20 @@
     self.currentData = data;
     
     FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
-    self.dataList = model.hotTopicList;
+    self.dataList = model.hotCellList;
+    self.flowLayout.dataList = _dataList;
+    
     [self.collectionView reloadData];
 }
 
 + (CGFloat)heightForData:(id)data {
-    CGFloat height = headerViewHeight + 1 + 10 + bottomSepViewHeight + 3;
-    if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
-        FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
-        NSArray *dataList = model.hotTopicList;
-        NSInteger row = floor(model.hotTopicList.count / 2.0);
-        height += (46 * row);
-    }
-    return height;
+    return 223;
 }
 
 - (void)moreData {
     // 点击埋点
     [self trackClickMore];
-
+    
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ENTER_TYPE] = @"click";
@@ -176,8 +141,9 @@
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)self.currentData;
         NSMutableDictionary *param = [NSMutableDictionary new];
         param[@"element_type"] = @"hot_topic";
-        param[@"page_type"] = @"hot_discuss_feed";
+        param[@"page_type"] = @"nearby_list";
         param[@"enter_from"] = @"neighborhood_tab";
+        param[@"rank"] = model.tracerDic[@"rank"];
         TRACK_EVENT(@"click_more", param);
     }
 }
@@ -199,10 +165,10 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    FHUGCHotTopicSubCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
+    FHUGCHotCommunitySubCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
     
     if (indexPath.row < self.dataList.count) {
-        [cell refreshWithData:self.dataList[indexPath.row] index:indexPath.row];
+        [cell refreshWithData:self.dataList[indexPath.row]];
     }
     
     return cell;
@@ -210,66 +176,99 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
-    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
     if(indexPath.row < self.dataList.count){
-        FHFeedContentRawDataHotTopicListModel *model = self.dataList[indexPath.row];
         NSMutableDictionary *dict = @{}.mutableCopy;
-        // 埋点
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = @"nearby_list";
-        traceParam[@"element_from"] = @"hot_topic";
-        traceParam[@"enter_type"] = @"click";
-        traceParam[@"rank"] = @(indexPath.row);
-        traceParam[@"log_pb"] = model.logPb;
-        dict[@"tracer"] = traceParam;
-        
+        FHFeedContentRawDataHotCellListModel *model = self.dataList[indexPath.row];
+        if([model.hotCellType isEqualToString:youwenbida]){
+            [self trackClickOptions:model];
+        }else if([model.hotCellType isEqualToString:more]){
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"action_type"] = @(FHCommunityListTypeFollow);
+            dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdRecommend);
+            NSMutableDictionary *traceParam = @{}.mutableCopy;
+            traceParam[@"enter_type"] = @"click";
+            traceParam[@"enter_from"] = @"hot_discuss_feed";
+            traceParam[@"element_from"] = @"top_operation_position";
+            dict[@"tracer"] = traceParam;
+        }else{
+            NSMutableDictionary *traceParam = @{}.mutableCopy;
+            traceParam[@"enter_from"] = @"hot_discuss_feed";
+            traceParam[@"element_from"] = @"top_operation_position";
+            traceParam[@"rank"] = @(indexPath.row);
+            if(model.logPb){
+                traceParam[@"log_pb"] = model.logPb;
+            }
+            dict[@"tracer"] = traceParam;
+        }
+
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        //跳转到话题详情页
-        if(model.schema.length > 0){
-            NSURL *openUrl = [NSURL URLWithString:model.schema];
+        if(model.url.length > 0){
+            NSURL *openUrl = [NSURL URLWithString:model.url];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         }
     }
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake([UIScreen mainScreen].bounds.size.width/2 - 4 , 46);
 }
 
 - (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
     if (indexPath.row >= self.dataList.count) {
         return;
     }
-
-    FHFeedContentRawDataHotTopicListModel *model = self.dataList[indexPath.row];
-
+    
+    FHFeedContentRawDataHotCellListModel *model = self.dataList[indexPath.row];
+    
     if (!self.clientShowDict) {
         self.clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
-    NSString *forumId = model.forumId;
-    if(forumId){
-        if (self.clientShowDict[forumId]) {
+    NSString *itemId = model.id;
+    if(itemId){
+        if (self.clientShowDict[itemId]) {
             return;
         }
-
-        self.clientShowDict[forumId] = @(indexPath.row);
+        
+        self.clientShowDict[itemId] = @(indexPath.row);
         [self trackClientShow:model rank:indexPath.row];
     }
 }
 
-- (void)trackClientShow:(FHFeedContentRawDataHotTopicListModel *)model rank:(NSInteger)rank {
+- (void)trackClientShow:(FHFeedContentRawDataHotCellListModel *)model rank:(NSInteger)rank {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-
-    tracerDict[@"element_type"] = @"hot_topic";
-    tracerDict[@"page_type"] = @"hot_discuss_feed";
-    tracerDict[@"enter_from"] = @"neighborhood_tab";
-    tracerDict[@"rank"] = @(rank);
-    tracerDict[@"concern_id"] = model.forumId;
-    tracerDict[@"log_pb"] = model.logPb;
+    NSString *eventName = nil;
+    if([model.hotCellType isEqualToString:youwenbida]){
+        eventName = @"element_show";
+        tracerDict[@"element_type"] = @"buyer_experts_group";
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+        tracerDict[@"enter_from"] = @"neighborhood_tab";
+        if(model.logPb){
+            tracerDict[@"log_pb"] = model.logPb;
+        }
+    }else if([model.hotCellType isEqualToString:social]){
+        eventName = @"community_group_show";
+        tracerDict[@"element_type"] = @"top_operation_position";
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+        tracerDict[@"enter_from"] = @"neighborhood_tab";
+        tracerDict[@"rank"] = @(rank);
+        if(model.id){
+            tracerDict[@"group_id"] = model.id;
+        }
+        if(model.logPb){
+            tracerDict[@"log_pb"] = model.logPb;
+        }
+    }
     
-    TRACK_EVENT(@"topic_show", tracerDict);
+    if(eventName){
+        TRACK_EVENT(eventName, tracerDict);
+    }
+}
+
+- (void)trackClickOptions:(FHFeedContentRawDataHotCellListModel *)model {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    if([model.hotCellType isEqualToString:youwenbida]){
+        tracerDict[@"element_type"] = @"buyer_experts_group";
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+        tracerDict[@"enter_from"] = @"neighborhood_tab";
+    }
+    TRACK_EVENT(@"click_options", tracerDict);
 }
 
 @end

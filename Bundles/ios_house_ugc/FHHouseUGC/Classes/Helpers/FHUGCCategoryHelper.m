@@ -55,3 +55,46 @@
 }
 
 @end
+
+@implementation TTUGCTextView(Helper)
+
+- (void)textViewDidChangeLimitTextLength:(NSInteger)maxLength {
+    
+    if(maxLength <= 0) {
+        maxLength = NSIntegerMax;
+    }
+    
+    UITextView *textView = self.internalGrowingTextView.internalTextView ;
+    NSString *toBeString = textView.text;
+    NSString *lang = [[UIApplication sharedApplication]textInputMode].primaryLanguage; // 键盘输入模
+    if ([lang isEqualToString:@"zh-Hans"]) { // 简体中文输入，包括简体拼音，健体五笔，简体手写
+        UITextRange *selectedRange = [textView markedTextRange];
+        //获取高亮部分
+        UITextPosition *position = [textView positionFromPosition:selectedRange.start offset:0];
+        // 没有高亮选择的字，则对已输入的文字进行字数统计和限制
+        if (!position) {
+            if (toBeString.length > maxLength)
+            {
+                NSRange rangeIndex = [toBeString rangeOfComposedCharacterSequenceAtIndex:maxLength];
+                if (rangeIndex.length == 1)
+                {
+                    textView.text = [toBeString substringToIndex:maxLength];
+                }
+                else
+                {
+                    NSRange rangeRange = [toBeString rangeOfComposedCharacterSequencesForRange:NSMakeRange(0, maxLength)];
+                    textView.text = [toBeString substringWithRange:rangeRange];
+                }
+            }
+        }
+    }
+    else {
+        // 处理非中文的情况
+        if(textView.text.length > maxLength) {
+            textView.text = [textView.text substringToIndex:maxLength];
+        }
+    }
+}
+
+
+@end
