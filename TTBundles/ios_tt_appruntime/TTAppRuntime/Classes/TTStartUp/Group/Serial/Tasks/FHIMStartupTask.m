@@ -222,7 +222,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 {
     NSString *realtorId = traceParams[@"realtor_id"];
     NSString *targetId = traceParams[@"target_id"];
-    NSInteger targetType = traceParams[@"target_type"];
+    NSInteger targetType = [traceParams btd_integerValueForKey:@"target_type"];
     NSInteger evaluationType = [traceParams btd_integerValueForKey:@"evaluation_type"];
 
     [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:scoreCount tags:scoreTags completion:^(bool succss, NSError *_Nullable error) {
