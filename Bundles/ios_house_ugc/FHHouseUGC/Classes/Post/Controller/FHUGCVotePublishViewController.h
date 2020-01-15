@@ -11,7 +11,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCVotePublishViewController : FHBaseViewController
-- (void)enablePublish: (BOOL)isEnable;
-@end
+// 先把输入视图引用一下，等键盘弹起时再滚动
+@property (nonatomic, weak) UIView *firstResponderView;
 
+- (void)enablePublish: (BOOL)isEnable;
+- (void)scrollToVisibleForFirstResponderView;
+
+@end
 NS_ASSUME_NONNULL_END
