@@ -430,10 +430,9 @@
     }];
     
     BOOL hasOption = validOptions.count >= 2;
-    BOOL hasVisibleScope = self.model.isAllSelected || self.model.isPartialSelected;
     BOOL hasVoteType = self.model.type != VoteType_Unknown;
     
-    BOOL isEnablePublish = hasTitle && hasOption && hasVisibleScope && hasVoteType;
+    BOOL isEnablePublish = hasTitle && hasOption && hasVoteType;
     [self.viewController enablePublish: isEnablePublish];
 }
 
@@ -570,6 +569,7 @@
     params[@"desc"] = voteDescription;
     params[@"content_rich_span"] = @"";
     params[@"social_group_ids"] = socialGroupIds;
+    params[@"bind_type"] = @(socialGroupIds.length > 0 ? 0 : 1); // 参数表示绑定对象类型： 0 = 圈子, 1 = 城市
     params[@"vote_type"] = @(voteType);
     params[@"visible"] = @(self.model.visibleType);
     params[@"deadline"] = @((NSInteger)[self.model.deadline timeIntervalSince1970]);
