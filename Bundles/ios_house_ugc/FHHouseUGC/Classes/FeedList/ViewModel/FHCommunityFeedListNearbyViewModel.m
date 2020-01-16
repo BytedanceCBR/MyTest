@@ -317,13 +317,13 @@
         //符合引导页显示条件时
         for (NSInteger i = 0; i < self.dataList.count; i++) {
             FHFeedUGCCellModel *cellModel = self.dataList[i];
-            if(cellModel.cellType != FHUGCFeedListCellTypeUGCRecommend && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner2 &&
-                (cellModel.community.name.length > 0)
-               ) {
+            if(cellModel.cellType != FHUGCFeedListCellTypeUGCRecommend && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner2 && cellModel.showCommunity) {
                 if(self.guideCellModel){
                     self.guideCellModel.isInsertGuideCell = NO;
+                    self.guideCellModel.ischanged = YES;
                 }
                 cellModel.isInsertGuideCell = YES;
+                cellModel.ischanged = YES;
                 self.guideCellModel = cellModel;
                 //显示以后次数加1
                 if(![FHUGCConfig sharedInstance].isAlreadyShowFeedGuide){
