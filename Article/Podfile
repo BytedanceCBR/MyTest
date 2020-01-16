@@ -189,6 +189,11 @@ def appPods
     ]
     pod 'TTKitchenExtension','1.0.14'
     
+    pod_binary 'TTPerformanceHelper', '0.1.1', :subspecs => [
+    'TTThreadSafeContainer',
+    'TTUserDefaultHelper'
+    ]
+    
     #-----UGC Other-----
     pod 'TTSettingsManager','0.4.9'
     pod 'TTLocationManager','1.2.4'
