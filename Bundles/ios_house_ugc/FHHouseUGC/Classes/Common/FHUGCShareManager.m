@@ -15,11 +15,11 @@
 #import "TTWechatContentItem.h"
 #import "TTQQFriendContentItem.h"
 #import "TTQQZoneContentItem.h"
-#import <TTWechatTimelineActivity.h>
-#import <TTWechatActivity.h>
-#import <TTQQFriendActivity.h>
-#import <TTQQZoneActivity.h>
-#import <TTCopyActivity.h>
+#import "TTWechatTimelineActivity.h"
+#import "TTWechatActivity.h"
+#import "TTQQFriendActivity.h"
+#import "TTQQZoneActivity.h"
+#import "TTCopyActivity.h"
 #import "FHUserTracker.h"
 #import <BDWebImage/BDWebImage.h>
 #import "TTAccountManager.h"

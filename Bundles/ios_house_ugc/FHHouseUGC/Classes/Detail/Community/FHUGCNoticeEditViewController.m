@@ -15,7 +15,7 @@
 #import "TTUGCTextViewMediator.h"
 #import "UIViewAdditions.h"
 #import "NSObject+MultiDelegates.h"
-#import <TTUGCEmojiParser.h>
+#import "TTUGCEmojiParser.h"
 #import "FHUGCNoticeModel.h"
 #import "TTNavigationController.h"
 

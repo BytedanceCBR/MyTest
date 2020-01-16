@@ -16,7 +16,7 @@
 #import "ToastManager.h"
 #import <FHUGCVotePublishTypeSelectViewController.h>
 #import "FHUGCVoteBottomPopView.h"
-#import <WDDefines.h>
+#import "WDDefines.h"
 #import "FHUGCVoteModel.h"
 #import "HMDTTMonitor.h"
 #import "TTReachability.h"
@@ -24,7 +24,7 @@
 #import "BTDJSONHelper.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHPostUGCViewController.h"
-#import <TTUGCDefine.h>
+#import "TTUGCDefine.h"
 #import <FHUGCVoteDatePickerView.h>
 
 #define DATEPICKER_HEIGHT 200

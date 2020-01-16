@@ -13,7 +13,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "TTAccount.h"
 #import "FHChatUserInfoManager.h"
-#import <TTRichSpanText.h>
+#import "TTRichSpanText.h"
 #import <TIMOMessage.h>
 #import <TIMMessageStoreBridge.h>
 

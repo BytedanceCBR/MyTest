@@ -23,8 +23,8 @@
 #import "FHUGCVoteResponseModel.h"
 #import "FHUserTracker.h"
 #import "MJRefresh.h"
-#import <FHRefreshCustomFooter.h>
-#import <UIScrollView+Refresh.h>
+#import "FHRefreshCustomFooter.h"
+#import "UIScrollView+Refresh.h"
 
 #define leftMargin 20
 #define rightMargin 20

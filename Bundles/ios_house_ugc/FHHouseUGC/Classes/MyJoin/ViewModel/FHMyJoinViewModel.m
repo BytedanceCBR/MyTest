@@ -14,7 +14,7 @@
 #import "FHUserTracker.h"
 #import "FHCommunityList.h"
 #import "FHMyJoinAllNeighbourhoodCell.h"
-#import <TTUGCDefine.h>
+#import "TTUGCDefine.h"
 
 #define cellId @"cellId"
 #define allCellId @"allCellId"

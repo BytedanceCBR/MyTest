@@ -16,22 +16,22 @@
 #import "TTRoute.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "FHUGCVideoView.h"
-#import <TTVFeedPlayMovie.h>
-#import <TTVCellPlayMovieProtocol.h>
-#import <TTVPlayVideo.h>
-#import <TTVCellPlayMovie.h>
-#import <TTVFeedCellMoreActionManager.h>
-#import <TTVVideoArticle+Extension.h>
+#import "TTVFeedPlayMovie.h"
+#import "TTVCellPlayMovieProtocol.h"
+#import "TTVPlayVideo.h"
+#import "TTVCellPlayMovie.h"
+#import "TTVFeedCellMoreActionManager.h"
+#import "TTVVideoArticle+Extension.h"
 #import "TTUIResponderHelper.h"
 #import "TTStringHelper.h"
-#import <TTVFeedCellSelectContext.h>
-#import <TTVFeedItem+TTVArticleProtocolSupport.h>
+#import "TTVFeedCellSelectContext.h"
+#import "TTVFeedItem+TTVArticleProtocolSupport.h"
 #import "JSONAdditions.h"
-#import <TTVideoShareMovie.h>
+#import "TTVideoShareMovie.h"
 #import <ReactiveObjC/ReactiveObjC.h>
-#import <TTVFeedUserOpDataSyncMessage.h>
-#import <SSCommonLogic.h>
-#import <TTVFeedItem+TTVConvertToArticle.h>
+#import "TTVFeedUserOpDataSyncMessage.h"
+#import "SSCommonLogic.h"
+#import "TTVFeedItem+TTVConvertToArticle.h"
 
 #define leftMargin 20
 #define rightMargin 20

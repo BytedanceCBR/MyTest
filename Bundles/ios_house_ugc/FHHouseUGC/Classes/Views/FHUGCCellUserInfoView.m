@@ -22,7 +22,7 @@
 #import <FHUGCConfig.h>
 #import "FHFeedOperationResultModel.h"
 #import <TTCommentDataManager.h>
-#import <TTAssetModel.h>
+#import "TTAssetModel.h"
 
 @interface FHUGCCellUserInfoView()
 

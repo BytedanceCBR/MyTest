@@ -18,7 +18,7 @@
 #import <KVOController/KVOController.h>
 #import "TTVFeedItem+Extension.h"
 #import "TTVVideoArticle+Extension.h"
-#import <TTVCellPlayMovie.h>
+#import "TTVCellPlayMovie.h"
 #import "TTMovieStore.h"
 #import "TTUserSettingsManager+FontSettings.h"
 #import "ExploreCellHelper.h"

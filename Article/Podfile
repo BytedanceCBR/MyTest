@@ -239,7 +239,7 @@ def appPods
     pod_binary 'TTRexxar', '0.8.10', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
     #----头条组件协议库-----
     
-    pod_binary 'TTServiceProtocols','0.3.59'
+    pod_binary 'TTServiceProtocols','7.5.7.2'
     pod_binary 'BDTrackerProtocol','2.1.1'
     
     
@@ -652,6 +652,7 @@ post_install do |installer|
           '${PODS_ROOT}/Crashlytics/iOS',
           '${PODS_ROOT}/Fabric/iOS',
           '${PODS_ROOT}/UMengAnalytics/umsdk_IOS_analyics_idfa_v4.1.4',
+          '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/HotSoon/Debug',
           ]
         end
 

@@ -27,7 +27,7 @@
 #import "UIImage+FIconFont.h"
 #import <Lottie/LOTAnimationView.h>
 #import "UIColor+Theme.h"
-#import <FHShadowView.h>
+#import "FHShadowView.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20

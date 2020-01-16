@@ -17,7 +17,7 @@
 #import <FHHouseBase/FHHouseFillFormHelper.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTBaseLib/TTDeviceHelper.h>
-#import <SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import "FHEnvContext.h"
 #import "FHErrorView.h"
 #import "Masonry.h"

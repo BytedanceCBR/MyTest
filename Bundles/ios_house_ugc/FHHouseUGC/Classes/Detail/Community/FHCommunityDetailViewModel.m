@@ -25,7 +25,7 @@
 #import "MJRefresh.h"
 #import "FHCommonDefines.h"
 #import "TTUIResponderHelper.h"
-#import <TTUGCEmojiParser.h>
+#import "TTUGCEmojiParser.h"
 #import "TTAccount.h"
 #import "TTAccount+Multicast.h"
 #import "TTAccountManager.h"
@@ -33,7 +33,7 @@
 #import "IMManager.h"
 #import "TTThemedAlertController.h"
 #import "FHFeedUGCCellModel.h"
-#import <TTUGCDefine.h>
+#import "TTUGCDefine.h"
 #import <FHUGCCategoryHelper.h>
 #import "UIImage+FIconFont.h"
 

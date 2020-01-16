@@ -27,7 +27,7 @@
 #import "TTUserSettings/TTUserSettingsManager+NetworkTraffic.h"
 #import "TTAccountBusiness.h"
 #import <TTBaseLib/JSONAdditions.h>
-#import <TTDetailWebviewGIFManager.h>
+#import "TTDetailWebviewGIFManager.h"
 
 #define kJsMetaImageOriginKey       @"origin"
 #define kJsMetaImageThumbKey        @"thumb"

@@ -20,7 +20,7 @@
 #import "FHEnvContext.h"
 #import "Masonry.h"
 #import "NewsListLogicManager.h"
-#import <SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import "TTUIResponderHelper.h"
 
 @interface ArticleWebListView()<YSWebViewDelegate>

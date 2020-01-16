@@ -29,7 +29,7 @@
 #import <TTKitchen/TTKitchen.h>
 #import "TTUGCRequestManager.h"
 #import "FRApiModel.h"
-#import <BDWebImageManager.h>
+#import "BDWebImageManager.h"
 #import <UIImage+GIF.h>
 #import <TTMonitor/TTMonitor.h>
 #import <BDALog/BDAgileLog.h>
