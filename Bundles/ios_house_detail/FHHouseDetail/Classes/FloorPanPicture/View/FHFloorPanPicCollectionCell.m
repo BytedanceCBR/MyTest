@@ -10,7 +10,7 @@
 #import "UIFont+House.h"
 #import "Masonry.h"
 #import "UIImageView+BDWebImage.h"
-#import <FHHouseBaseItemCell.h>
+#import "FHHouseBaseItemCell.h"
 #import "TTDeviceHelper.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 

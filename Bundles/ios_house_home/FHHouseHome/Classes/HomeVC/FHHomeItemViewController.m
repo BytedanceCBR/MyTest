@@ -16,7 +16,7 @@
 #import <FHHomePlaceHolderCell.h>
 #import "FHhomeHouseTypeBannerCell.h"
 #import "TTDeviceHelper.h"
-#import <FHHouseBaseItemCell.h>
+#import "FHHouseBaseItemCell.h"
 #import "FHHomeCellHelper.h"
 #import <FHPlaceHolderCell.h>
 #import "FHHomeListViewModel.h"

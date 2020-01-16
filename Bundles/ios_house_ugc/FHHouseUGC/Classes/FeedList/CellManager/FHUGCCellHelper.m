@@ -10,8 +10,8 @@
 #import "UIFont+House.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "TTVFeedListItem.h"
-#import <TTVFeedCellAction.h>
-#import <TTRichSpanText+Comment.h>
+#import "TTVFeedCellAction.h"
+#import "TTRichSpanText+Comment.h"
 #import "YYText.h"
 #import "TTRichSpanText+Link.h"
 #import "TTUGCEmojiParser.h"

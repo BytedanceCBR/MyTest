@@ -29,8 +29,8 @@
 #import "FHUGCVideoCell.h"
 #import "TTVFeedPlayMovie.h"
 #import "TTVPlayVideo.h"
-#import <TTVFeedCellWillDisplayContext.h>
-#import <TTVFeedCellAction.h>
+#import "TTVFeedCellWillDisplayContext.h"
+#import "TTVFeedCellAction.h"
 #import "FHFeedListModel.h"
 #import "ToastManager.h"
 #import "TTAccountManager.h"

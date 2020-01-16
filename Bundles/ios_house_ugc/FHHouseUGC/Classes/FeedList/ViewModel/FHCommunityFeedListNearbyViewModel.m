@@ -26,8 +26,8 @@
 #import "FHUGCVideoCell.h"
 #import "TTVFeedPlayMovie.h"
 #import "TTVPlayVideo.h"
-#import <TTVFeedCellWillDisplayContext.h>
-#import <TTVFeedCellAction.h>
+#import "TTVFeedCellWillDisplayContext.h"
+#import "TTVFeedCellAction.h"
 
 @interface FHCommunityFeedListNearbyViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 

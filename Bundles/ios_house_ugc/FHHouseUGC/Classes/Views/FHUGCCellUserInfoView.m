@@ -21,7 +21,7 @@
 #import "TTAccountManager.h"
 #import <FHUGCConfig.h>
 #import "FHFeedOperationResultModel.h"
-#import <TTCommentDataManager.h>
+#import "TTCommentDataManager.h"
 #import "TTAssetModel.h"
 
 @interface FHUGCCellUserInfoView()

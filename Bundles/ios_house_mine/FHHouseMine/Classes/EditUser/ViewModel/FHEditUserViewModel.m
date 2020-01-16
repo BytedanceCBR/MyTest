@@ -19,7 +19,7 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHMineAPI.h"
-#import <FHCommonApi.h>
+#import "FHCommonApi.h"
 #import "FHUserInfoManager.h"
 #import "FHHomePageSettingController.h"
 #import <TTImagePicker/TTImagePickerController.h>
