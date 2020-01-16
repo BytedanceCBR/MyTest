@@ -11,6 +11,10 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "Masonry.h"
+#import "FHUserTracker.h"
+
+@implementation FHUGCToolbarReportModel
+@end
 
 @implementation FHUGCToolBarTag
 - (BOOL)isEqual:(id)object {
@@ -83,6 +87,9 @@
 @property (nonatomic, strong) UICollectionView *tagSelectCollectionView;
 @property (nonatomic, assign) FHPostUGCMainViewType type;
 @property (nonatomic, strong) NSMutableArray<FHUGCToolBarTag *> *tags;
+@property (nonatomic, assign) BOOL isReportedTagsCollectionViewShow;
+@property (nonatomic, strong) NSMutableSet<NSString *> *tagShowReportOnceSet;
+@property (nonatomic, strong) NSMutableArray<FHUGCToolBarTag *> *stageStack;
 @end
 
 @implementation FHUGCToolbar
@@ -94,6 +101,10 @@
 
 - (instancetype)initWithFrame:(CGRect)frame type:(FHPostUGCMainViewType)type {
     if(self = [super initWithFrame:frame]) {
+        self.isReportedTagsCollectionViewShow = NO;
+        self.tagShowReportOnceSet = [NSMutableSet set];
+        self.stageStack = [NSMutableArray array];
+        
         self.type = type;
         self.userInteractionEnabled = YES;
         
@@ -174,6 +185,9 @@
     
     [self.tagSelectCollectionView reloadData];
     [self layoutSuperView];
+    
+    // 热门标签展现埋点
+    [self traceTagsCollectionViewShow];
 }
 
 #pragma mark - 父类键盘事件重载
@@ -304,6 +318,18 @@
     }
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSInteger index = indexPath.row;
+    
+    if(index >= 0 && index < self.tags.count) {
+        FHUGCToolBarTag *tag = self.tags[index];
+        
+        // 热门标签上报展示一次埋点
+        [self traceTagShowOnce:tag];
+    }
+}
+
 #pragma mark - UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -356,6 +382,8 @@
 
 - (void)tagCloseButtonClicked {
     
+    [self stagePopAll];
+    
     if([self.socialGroupSelectEntry hasValidData]) {
         
         FHUGCToolBarTag *tagInfo = [[FHUGCToolBarTag alloc] init];
@@ -388,6 +416,75 @@
             }
             [self.tagSelectCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:tagInfo.index inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
         }
+    }
+}
+
+- (void)stagePushDuplicateTagIfNeedWithGroupId:(NSString *)groupId {
+    
+    [self stagePopAll];
+    
+    FHUGCToolBarTag *tagInfo = [[FHUGCToolBarTag alloc] init];
+    tagInfo.groupId = groupId;
+    
+    NSUInteger index =  [self.tags indexOfObject:tagInfo];
+    if(index != NSNotFound) {
+        [self.stageStack addObject:self.tags[index]];
+        [self.tags removeObjectAtIndex:index];
+        [self.tagSelectCollectionView reloadData];
+    }
+}
+
+- (void)stagePopAll {
+    WeakSelf;
+    [self.stageStack enumerateObjectsUsingBlock:^(FHUGCToolBarTag * _Nonnull tagInfo, NSUInteger idx, BOOL * _Nonnull stop) {
+        StrongSelf;
+        [self.tags insertObject:tagInfo atIndex:tagInfo.index];
+    }];
+    
+    if(self.stageStack.count > 0) {
+        [self.tagSelectCollectionView reloadData];
+    }
+    [self.stageStack removeAllObjects];
+}
+
+#pragma mark - 埋点
+
+- (void)traceTagsCollectionViewShow {
+    
+    if(!self.isReportedTagsCollectionViewShow && self.tags.count > 0) {
+        
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_ENTER_FROM] = self.reportModel.enterFrom;
+        param[UT_ORIGIN_FROM] = self.reportModel.originFrom?:UT_BE_NULL;
+        param[UT_PAGE_TYPE] = self.reportModel.pageType;
+        param[UT_ELEMENT_TYPE] = @"hot_label";
+        TRACK_EVENT(@"element_show", param);
+        self.isReportedTagsCollectionViewShow = YES;
+        
+    }
+}
+
+- (void)traceTagShowOnce:(FHUGCToolBarTag *)tagInfo {
+    
+    if(![self.tagShowReportOnceSet containsObject:tagInfo.groupId]) {
+        
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_ENTER_FROM] = self.reportModel.enterFrom;
+        param[UT_ORIGIN_FROM] = self.reportModel.originFrom?:UT_BE_NULL;
+        param[UT_PAGE_TYPE] = self.reportModel.pageType;
+        param[UT_ELEMENT_TYPE] = @"hot_label";
+        
+        NSString *labelType = @"";
+        
+        if(tagInfo.tagType == FHPostUGCTagType_HotTag) {
+            labelType = @"hot";
+        } else if(tagInfo.tagType == FHPostUGCTagType_LocalHistory) {
+            labelType = @"history";
+        }
+        param[@"label_type"] = labelType;
+        param[@"group_id"] = tagInfo.groupId;
+        TRACK_EVENT(@"topic_show", param);
+        [self.tagShowReportOnceSet addObject:tagInfo.groupId];
     }
 }
 @end

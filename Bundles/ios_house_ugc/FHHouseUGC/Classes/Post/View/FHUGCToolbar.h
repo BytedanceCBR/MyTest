@@ -10,6 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface FHUGCToolbarReportModel : NSObject
+@property (nonatomic, copy) NSString *enterFrom;
+@property (nonatomic, copy) NSString *originFrom;
+@property (nonatomic, copy) NSString *pageType;
+@end
 
 @interface FHUGCToolBarTag : NSObject
 @property (nonatomic,   copy)   NSString *groupId;
@@ -29,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHUGCToolbar : TTUGCToolbar
 
 @property (nonatomic, weak)  id<FHUGCToolbarDelegate> tagDelegate;
+@property (nonatomic, strong) FHUGCToolbarReportModel *reportModel;
 
 @property (nonatomic, strong) UILabel *tipLabel;
 @property (nonatomic, strong) FHPostUGCMainView *socialGroupSelectEntry;
@@ -40,6 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (CGFloat)toolbarHeightWithTags:(NSMutableArray *)tags;
 
 - (void)tagCloseButtonClicked;
+
+- (void)stagePushDuplicateTagIfNeedWithGroupId:(NSString *)groupId;
+
 @end
 
 NS_ASSUME_NONNULL_END

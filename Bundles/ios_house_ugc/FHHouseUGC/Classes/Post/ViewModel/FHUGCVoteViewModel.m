@@ -27,8 +27,9 @@
 #import <TTUGCDefine.h>
 #import <FHUGCVoteDatePickerView.h>
 
-#define DATEPICKER_HEIGHT 200
-#define TOP_BAR_HEIGHT 40
+#define DATEPICKER_HEIGHT   200
+#define TOP_BAR_HEIGHT      40
+#define SECTION_VGAP        20
 
 @interface FHUGCVoteViewModel() <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate,FHUGCVotePublishBaseViewDelegate, FHUGCVotePublishOptionCellDelegate>
 
@@ -70,22 +71,8 @@
 
 - (void)setupUI {
     
-    // 可见范围
-    self.scopeView = [[FHUGCVotePublishScopeView alloc] initWithFrame:CGRectMake(0, 0, self.scrollView.frame.size.width, CELL_HEIGHT)];
-    self.scopeView.delegate = self;
-    
-    // 投票类型
-    self.typeView = [[FHUGCVotePublishVoteTypeView alloc] initWithFrame:CGRectMake(0, self.scopeView.bottom, self.scopeView.frame.size.width, CELL_HEIGHT)];
-    self.typeView.delegate = self;
-    
-    // 投票截止日期
-    self.deadlineDateView = [[FHUGCVotePublishDatePickView alloc] initWithFrame:CGRectMake(0, self.typeView.bottom, self.typeView.frame.size.width, CELL_HEIGHT)];
-    self.deadlineDateView.hideBottomLine = YES;
-    self.deadlineDateView.delegate = self;
-    [self updateDeadlineDateView];
-    
     // 标题
-    self.titleTextView = [[FHUGCVotePublishTitleView alloc] initWithFrame:CGRectMake(0, self.deadlineDateView.bottom + 20, self.deadlineDateView.frame.size.width, TITLE_VIEW_HEIGHT)];
+    self.titleTextView = [[FHUGCVotePublishTitleView alloc] initWithFrame:CGRectMake(0, 0, self.scrollView.frame.size.width, TITLE_VIEW_HEIGHT)];
     self.titleTextView.delegate = self;
     
     // 描述
@@ -101,15 +88,30 @@
     self.voteOptionsTableView.delegate = self;
     self.voteOptionsTableView.dataSource = self;
     
-    // 上半截
-    [self.scrollView addSubview:self.scopeView];
-    [self.scrollView addSubview:self.typeView];
-    [self.scrollView addSubview:self.deadlineDateView];
+    // 可见范围
+    self.scopeView = [[FHUGCVotePublishScopeView alloc] initWithFrame:CGRectMake(0, self.voteOptionsTableView.bottom + SECTION_VGAP, self.voteOptionsTableView.frame.size.width, CELL_HEIGHT)];
+    self.scopeView.delegate = self;
     
-    // 下半截
+    // 投票类型
+    self.typeView = [[FHUGCVotePublishVoteTypeView alloc] initWithFrame:CGRectMake(0, self.scopeView.bottom, self.scopeView.frame.size.width, CELL_HEIGHT)];
+    self.typeView.delegate = self;
+    
+    // 投票截止日期
+    self.deadlineDateView = [[FHUGCVotePublishDatePickView alloc] initWithFrame:CGRectMake(0, self.typeView.bottom, self.typeView.frame.size.width, CELL_HEIGHT)];
+    self.deadlineDateView.hideBottomLine = YES;
+    self.deadlineDateView.delegate = self;
+    [self updateDeadlineDateView];
+    
+    // 上半截
     [self.scrollView addSubview:self.titleTextView];
     [self.scrollView addSubview:self.descTextView];
     [self.scrollView addSubview:self.voteOptionsTableView];
+
+    // 下半截
+    [self.scrollView addSubview:self.scopeView];
+    [self.scrollView addSubview:self.typeView];
+    [self.scrollView addSubview:self.deadlineDateView];
+
 }
 
 - (FHUGCVoteBottomPopView *)bottomPopView {
@@ -493,17 +495,25 @@
 
 - (void)updateVoteOptionsViewHeight {
     CGRect frame = self.voteOptionsTableView.frame;
-    CGFloat optionViewMinHeight = self.scrollView.frame.size.height - self.descTextView.bottom;
-    frame.size.height = MAX((self.model.options.count + 1) * OPTION_CELL_HEIGHT, optionViewMinHeight);
+    frame.size.height = (MIN(self.model.options.count + 1, OPTION_COUNT_MAX)) * OPTION_CELL_HEIGHT;
     self.voteOptionsTableView.frame = frame;
 
     [self updateScrollViewContentSize];
 }
 
 - (void)updateScrollViewContentSize {
+    
+    [self updateBottomViewsLocation];
+    
     CGSize contentSize = self.scrollView.contentSize;
-    contentSize.height = MAX(self.voteOptionsTableView.bottom, self.scrollView.frame.size.height);
+    contentSize.height = MAX(self.deadlineDateView.bottom, self.scrollView.frame.size.height);
     self.scrollView.contentSize = contentSize;
+}
+
+- (void)updateBottomViewsLocation {
+    self.scopeView.top = self.voteOptionsTableView.bottom + SECTION_VGAP;
+    self.typeView.top = self.scopeView.bottom;
+    self.deadlineDateView.top = self.typeView.bottom;
 }
 
 - (BOOL)isEditedVote {
