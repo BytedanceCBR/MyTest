@@ -55,7 +55,7 @@
 #import "FHHouseListRecommendTipCell.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import <FHHouseBaseNewHouseCell.h>
+#import "FHHouseBaseNewHouseCell.h"
 #import "FHMainOldTopTagsView.h"
 #import "FHHouseListRedirectTipCell.h"
 

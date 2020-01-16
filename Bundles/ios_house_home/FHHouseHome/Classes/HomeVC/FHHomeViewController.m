@@ -24,14 +24,14 @@
 #import "TTDeviceHelper.h"
 #import "TTAppUpdateHelper.h"
 #import "TTInstallIDManager.h"
-#import <CommonURLSetting.h>
+#import "CommonURLSetting.h"
 #import "FHCommuteManager.h"
 #import "TTUIResponderHelper.h"
 #import "TTTabBarController.h"
 #import <FHHomeSearchPanelViewModel.h>
-#import <ExploreLogicSetting.h>
+#import "ExploreLogicSetting.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
-#import <TTArticleTabBarController.h>
+#import "TTArticleTabBarController.h"
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import "TTThemedAlertController.h"
 #import "FHUtils.h"
@@ -262,27 +262,43 @@ static CGFloat const kSectionHeaderHeight = 38;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
         
+//    [self.notifyBar showMessage:message
+//              actionButtonTitle:@""
+//                      delayHide:YES
+//                       duration:1.8
+//            bgButtonClickAction:nil
+//         actionButtonClickBlock:nil
+//                   didHideBlock:nil
+//                  willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
+//                      [UIView animateWithDuration:0.3 animations:^{
+//                          UIEdgeInsets inset = self.mainTableView.contentInset;
+//                          inset.top = 0;
+//                          self.mainTableView.contentInset = inset;
+//                          [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
+//                          self.homeListViewModel.isResetingOffsetZero = NO;
+//                      }completion:^(BOOL finished) {
+//                          if(!isImmediately){
+//                              self.isShowRefreshTip = NO;
+//                          }
+//                      }];
+//
+//    }];
+    // add by zyk
+    WeakSelf;
     [self.notifyBar showMessage:message
               actionButtonTitle:@""
                       delayHide:YES
                        duration:1.8
             bgButtonClickAction:nil
          actionButtonClickBlock:nil
-                   didHideBlock:nil
-                  willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {                      
-                      [UIView animateWithDuration:0.3 animations:^{
-                          UIEdgeInsets inset = self.mainTableView.contentInset;
-                          inset.top = 0;
-                          self.mainTableView.contentInset = inset;
-                          [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-                          self.homeListViewModel.isResetingOffsetZero = NO;
-                      }completion:^(BOOL finished) {
-                          if(!isImmediately){
-                              self.isShowRefreshTip = NO;
-                          }
-                      }];
-                      
-    }];
+                   didHideBlock:^(ArticleListNotifyBarView *barView) {
+                         UIEdgeInsets inset = wself.mainTableView.contentInset;
+                         inset.top = 0;
+                         wself.mainTableView.contentInset = inset;
+                         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
+                         wself.homeListViewModel.isResetingOffsetZero = NO;
+                         wself.isShowRefreshTip = NO;
+                   }];
 }
 
 - (void)hideImmediately

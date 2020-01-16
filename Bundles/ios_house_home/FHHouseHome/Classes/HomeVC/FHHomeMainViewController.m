@@ -9,7 +9,7 @@
 #import "FHHomeMainViewModel.h"
 #import "TTDeviceHelper.h"
 #import "FHEnvContext.h"
-#import <FHMainApi.h>
+#import "FHMainApi.h"
 #import "TTThemedAlertController.h"
 #import "TTUIResponderHelper.h"
 #import "FHUtils.h"
@@ -17,7 +17,7 @@
 #import "TTSandBoxHelper+House.h"
 #import "TTAppUpdateHelper.h"
 #import "TTInstallIDManager.h"
-#import <CommonURLSetting.h>
+#import "CommonURLSetting.h"
 #import "FHMinisdkManager.h"
 #import "FHSpringHangView.h"
 

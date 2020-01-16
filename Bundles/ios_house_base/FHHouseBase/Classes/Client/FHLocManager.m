@@ -22,7 +22,7 @@
 #import "TTUIResponderHelper.h"
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
-#import <TTArticleCategoryManager.h>
+#import "TTArticleCategoryManager.h"
 #import "FHHouseUGCAPI.h"
 #import "FHIntroduceManager.h"
 #import "FHMinisdkManager.h"
@@ -108,8 +108,13 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 - (void)showLocationGuideAlert
 {
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"您还没有开启定位权限" message:@"请前往系统设置开启，以便我们更好地为您推荐房源及丰富信息推荐维度" preferredType:TTThemedAlertControllerTypeAlert];
-    [alertVC addActionWithGrayTitle:@"手动选择" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-        
+//    [alertVC addActionWithGrayTitle:@"手动选择" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+//
+//    }];
+    // add by zyk
+    [alertVC addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.text = @"手动选择";
+        textField.textColor = [UIColor grayColor];
     }];
     
     [alertVC addActionWithTitle:@"前往设置" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
@@ -165,7 +170,16 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     NSString *titleStr = [NSString stringWithFormat:@"%@",cityName];
     
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:titleStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
-    [alertVC addActionWithGrayTitle:@"暂不" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+//    [alertVC addActionWithGrayTitle:@"暂不" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+//        NSDictionary *params = @{@"click_type":@"cancel",
+//                                 @"enter_from":@"default"};
+//        [FHEnvContext recordEvent:params andEventKey:@"city_click"];
+//    }];
+    // add by zyk
+    
+    [alertVC addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.text = @"暂不";
+        textField.textColor = [UIColor grayColor];
         NSDictionary *params = @{@"click_type":@"cancel",
                                  @"enter_from":@"default"};
         [FHEnvContext recordEvent:params andEventKey:@"city_click"];

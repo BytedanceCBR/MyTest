@@ -24,7 +24,7 @@
 #import "FHUtils.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHIESGeckoManager.h"
-#import <FHRNHelper.h>
+#import "FHRNHelper.h"
 
 #define IM_OPEN_URL @"im_open_url"
 

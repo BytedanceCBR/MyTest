@@ -15,7 +15,7 @@
 #import "ToastManager.h"
 #import "FHNavBarView.h"
 #import <TTBaseLib/UIViewAdditions.h>
-#import <Lottie/LOTAnimationView.h>
+#import <lottie-ios/Lottie/LOTAnimationView.h>
 
 @implementation SpringLoginAcceptButton : UIButton
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {

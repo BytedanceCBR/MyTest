@@ -10,7 +10,7 @@
 #import <FHHouseBase/FHBusinessManager.h>
 #import "TTBaseMacro.h"
 #import "FHUGCCellHelper.h"
-#import <TTVideoApiModel.h>
+#import "TTVideoApiModel.h"
 #import "TTVFeedItem+Extension.h"
 #import "FHLocManager.h"
 

@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHHouseType.h"
-#import <FHTracerModel.h>
+#import "FHTracerModel.h"
 #import "FHHomeListViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN

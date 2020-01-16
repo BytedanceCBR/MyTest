@@ -26,10 +26,10 @@
 #import "TTDeviceHelper.h"
 #import <BDALog/BDAgileLog.h>
 #import "FHUGCConfigModel.h"
-#import <TTTabBarManager.h>
+#import "TTTabBarManager.h"
 #import "TTTabBarItem.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
-#import <TTArticleTabBarController.h>
+#import "TTArticleTabBarController.h"
 #import <TTCategoryBadgeNumberManager.h>
 #import "FHMainApi.h"
 #import "FHMinisdkManager.h"

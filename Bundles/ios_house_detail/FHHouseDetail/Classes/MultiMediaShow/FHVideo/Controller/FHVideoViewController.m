@@ -13,7 +13,7 @@
 #import "FHVideoErrorView.h"
 #import "FHVideoNetFlowTipView.h"
 #import "FHUserTracker.h"
-#import <TTVFullScreenPart.h>
+#import "TTVFullScreenPart.h"
 #import <BDWebImage/BDWebImageManager.h>
 #import "FHHMDTManager.h"
 

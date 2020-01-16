@@ -7,7 +7,7 @@
 
 #import "FHHomeConfigManager.h"
 #import "TTRoute.h"
-#import <TTArticleCategoryManager.h>
+#import "TTArticleCategoryManager.h"
 #import "FHEnvContext.h"
 #import "TTNetworkManager.h"
 

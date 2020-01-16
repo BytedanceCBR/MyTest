@@ -15,7 +15,7 @@
 #import "UIColor+Theme.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHEnvContext.h>
-#import <YYLabel.h>
+#import "YYLabel.h"
 #import <YYText/NSAttributedString+YYText.h>
 #import "TTAccountMobileCaptchaAlertView.h"
 #import "TTThemedAlertController.h"

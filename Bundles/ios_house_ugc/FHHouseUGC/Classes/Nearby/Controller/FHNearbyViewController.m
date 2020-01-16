@@ -166,7 +166,16 @@
     self.needRefresh = NO;
     [self trackLocationAuthShow];
     self.alertVC = [[TTThemedAlertController alloc] initWithTitle:@"您还没有开启定位权限" message:@"请前往系统设置开启，以便我们更好地为您推荐房源及丰富信息推荐维度" preferredType:TTThemedAlertControllerTypeAlert];
-    [_alertVC addActionWithGrayTitle:@"我知道了" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+//    [_alertVC addActionWithGrayTitle:@"我知道了" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+//        [wself trackLocationAuthClick:YES];
+//        wself.needRefresh = YES;
+//        [wself initView];
+//        wself.lastRequestTime = [[NSDate date] timeIntervalSince1970];
+//    }];
+    // add by zyk
+    [_alertVC addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.text = @"我知道了";
+        textField.textColor = [UIColor grayColor];
         [wself trackLocationAuthClick:YES];
         wself.needRefresh = YES;
         [wself initView];

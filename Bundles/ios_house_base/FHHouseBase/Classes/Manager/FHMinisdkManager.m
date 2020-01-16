@@ -13,7 +13,7 @@
 #import "TTAccountManager.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
-#import <TTTabBarProvider.h>
+#import "TTTabBarProvider.h"
 
 //固定值
 #define taskID @"503"

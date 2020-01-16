@@ -17,10 +17,10 @@
 #import "TTQQZoneContentItem.h"
 #import <BDWebImage/BDWebImage.h>
 #import "FHURLSettings.h"
-#import <TTWechatTimelineActivity.h>
-#import <TTWechatActivity.h>
-#import <TTQQFriendActivity.h>
-#import <TTQQZoneActivity.h>
+#import "TTWechatTimelineActivity.h"
+#import "TTWechatActivity.h"
+#import "TTQQFriendActivity.h"
+#import "TTQQZoneActivity.h"
 #import "FHHouseDetailAPI.h"
 #import "TTReachability.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>

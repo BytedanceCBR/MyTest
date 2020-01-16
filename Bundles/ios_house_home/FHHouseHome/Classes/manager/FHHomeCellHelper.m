@@ -23,7 +23,7 @@
 #import "FHPlaceHolderCell.h"
 #import "FHEnvContext.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
-#import <TTArticleCategoryManager.h>
+#import "TTArticleCategoryManager.h"
 #import "UIFont+House.h"
 #import "FHHomeScrollBannerCell.h"
 #import <FHHouseList/FHCommuteManager.h>

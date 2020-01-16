@@ -10,7 +10,7 @@
 #import "FHHomeSectionHeader.h"
 #import "FHEnvContext.h"
 #import "FHHomeRequestAPI.h"
-#import <FHHomeHouseModel.h>
+#import "FHHomeHouseModel.h"
 #import "TTURLUtils.h"
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
@@ -19,7 +19,7 @@
 #import "UIScrollView+Refresh.h"
 #import "MJRefresh.h"
 #import "FHRefreshCustomFooter.h"
-#import <TTArticleCategoryManager.h>
+#import "TTArticleCategoryManager.h"
 #import "FHHomeCellHelper.h"
 #import "TTSandBoxHelper.h"
 #import "FHHomeItemViewController.h"

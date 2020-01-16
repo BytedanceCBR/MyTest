@@ -12,7 +12,7 @@
 #import "FHUGCShareManager.h"
 #import "TTBaseMacro.h"
 #import "FHUGCFollowButton.h"
-#import <UILabel+House.h>
+#import "UILabel+House.h"
 #import "TTDeviceHelper.h"
 #import "FHUGCPostMenuView.h"
 #import "FHCommonDefines.h"

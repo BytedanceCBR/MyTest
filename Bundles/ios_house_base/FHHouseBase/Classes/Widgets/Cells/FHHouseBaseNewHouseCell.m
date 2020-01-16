@@ -23,7 +23,7 @@
 #import "FHHouseDislikeView.h"
 #import <Lottie/LOTAnimationView.h>
 #import "UIColor+Theme.h"
-#import <FHSearchHouseModel.h>
+#import "FHSearchHouseModel.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20

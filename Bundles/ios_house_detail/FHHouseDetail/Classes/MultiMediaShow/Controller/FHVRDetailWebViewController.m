@@ -6,7 +6,7 @@
 //
 
 #import "FHVRDetailWebViewController.h"
-#import <BDImageView.h>
+#import "BDImageView.h"
 #import <TTUIWidget/UIView+Refresh_ErrorHandler.h>
 
 @interface FHVRDetailWebViewController ()

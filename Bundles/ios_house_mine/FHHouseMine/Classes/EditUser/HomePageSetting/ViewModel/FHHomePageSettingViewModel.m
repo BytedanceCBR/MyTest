@@ -10,7 +10,7 @@
 #import "FHHomePageSettingItemModel.h"
 #import "FHMineAPI.h"
 #import "ToastManager.h"
-#import <FHUserInfoManager.h>
+#import "FHUserInfoManager.h"
 
 @interface FHHomePageSettingViewModel()<UITableViewDelegate,UITableViewDataSource>
 

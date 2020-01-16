@@ -32,7 +32,7 @@
 #import "FHHouseFillFormHelper.h"
 #import "FHHouseContactConfigModel.h"
 #import "FHDetailNoticeAlertView.h"
-#import <TTDeviceHelper+FHHouse.h>
+#import "TTDeviceHelper+FHHouse.h"
 #import "TTUIResponderHelper.h"
 
 @interface FHHouseNewDetailViewModel ()
