@@ -46,7 +46,7 @@ def fhPods
     #    pod 'FHCHousePush' , :git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
     
     pod 'FHWebView', :path => '../AKPlugins/FHWebView'
-    pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'530cea7b9efa340386b124415cfe33a6866d5205
+    pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
     
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev'
     pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '530cea7b9efa340386b124415cfe33a6866d5205'
