@@ -22,9 +22,9 @@
 #import "NSStringAdditions.h"
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
-#import <TTUGCAttributedLabel.h>
-#import <FHUGCCellHelper.h>
-#import <TTUniversalCommentLayout.h>
+#import "TTUGCAttributedLabel.h"
+#import "FHUGCCellHelper.h"
+#import "TTUniversalCommentLayout.h"
 #import "TTRichSpanText+Comment.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"

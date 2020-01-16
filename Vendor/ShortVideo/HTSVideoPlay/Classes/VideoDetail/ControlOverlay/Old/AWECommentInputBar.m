@@ -20,7 +20,7 @@
 #import <TTBaseLib/UITextView+TTAdditions.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTBaseLib/NSObject+MultiDelegates.h>
-#import <TTCommentDefines.h>
+#import "TTCommentDefines.h"
 
 static struct timeval kFHCommentTimeval;
 

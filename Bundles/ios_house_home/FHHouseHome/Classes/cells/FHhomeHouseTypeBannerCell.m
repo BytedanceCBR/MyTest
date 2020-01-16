@@ -14,7 +14,7 @@
 #import "TTDeviceHelper.h"
 #import "FHHouseBridgeManager.h"
 #import "TTRoute.h"
-#import <FHHomeConfigManager.h>
+#import "FHHomeConfigManager.h"
 #import "FHHomeCellHelper.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 

@@ -15,7 +15,7 @@
 #import "TTBaseMacro.h"
 #import "TTInteractExitHelper.h"
 #import "TTImageView+TrafficSave.h"
-#import <FHUGCCellHelper.h>
+#import "FHUGCCellHelper.h"
 
 #define itemPadding 4
 #define kMaxCount 9

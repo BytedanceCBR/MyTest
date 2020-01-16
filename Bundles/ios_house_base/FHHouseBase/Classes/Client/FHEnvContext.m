@@ -30,7 +30,7 @@
 #import "TTTabBarItem.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import "TTArticleTabBarController.h"
-#import <TTCategoryBadgeNumberManager.h>
+#import "TTCategoryBadgeNumberManager.h"
 #import "FHMainApi.h"
 #import "FHMinisdkManager.h"
 #import "FHIntroduceManager.h"

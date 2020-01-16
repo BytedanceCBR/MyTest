@@ -25,7 +25,7 @@
 #import "TTReachability.h"
 #import "FHUserTracker.h"
 #import "UIImage+FIconFont.h"
-#import <Lottie/LOTAnimationView.h>
+#import <lottie-ios/Lottie/LOTAnimationView.h>
 #import "UIColor+Theme.h"
 #import "FHShadowView.h"
 

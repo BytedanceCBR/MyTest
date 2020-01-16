@@ -8,7 +8,7 @@
 
 #import "FHMotionImageView.h"
 #import <CoreMotion/CoreMotion.h>
-#import <Lottie/LOTAnimationView.h>
+#import <lottie-ios/Lottie/LOTAnimationView.h>
 #import "Masonry.h"
 #import "UIImageView+BDWebImage.h"
 #import <BDWebImage/BDWebImageManager.h>

@@ -21,7 +21,7 @@
 #import "FHHouseRecommendReasonView.h"
 #import "UIButton+TTAdditions.h"
 #import "FHHouseDislikeView.h"
-#import <Lottie/LOTAnimationView.h>
+#import <lottie-ios/Lottie/LOTAnimationView.h>
 #import "UIColor+Theme.h"
 #import "FHSearchHouseModel.h"
 

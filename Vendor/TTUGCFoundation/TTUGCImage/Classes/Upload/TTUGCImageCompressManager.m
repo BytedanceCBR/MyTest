@@ -9,10 +9,10 @@
 #import "TTUGCImageCompressManager.h"
 #import <Photos/Photos.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-#import <TTImagePickerManager.h>
+#import "TTImagePickerManager.h"
 #import <TTBaseLib/NSStringAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
-#import <YYImageCoder.h>
+#import "YYImageCoder.h"
 #import "TTUGCImageCompressHelper.h"
 #import "TTImagePickerDefineHead.h"
 #import "TTImagePickerManager.h"

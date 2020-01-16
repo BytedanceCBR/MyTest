@@ -16,7 +16,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTUGCFoundation/FRApiModel.h>
 #import <TTUGCFoundation/FRRequestManager.h>
-#import <Crashlytics/Crashlytics/Answers.h>
+#import <Crashlytics/Answers.h>
 #import <TTUGCFoundation/FRActionDataService.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import "FHCommonApi.h"

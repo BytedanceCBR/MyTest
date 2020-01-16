@@ -9,7 +9,7 @@
 #import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Lottie/LOTAnimationView.h>
+#import <lottie-ios/Lottie/LOTAnimationView.h>
 
 @interface FHIntroduceItemView ()
 
