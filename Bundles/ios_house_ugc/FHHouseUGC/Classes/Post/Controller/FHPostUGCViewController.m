@@ -119,6 +119,7 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy)     NSString *outerPostId;
 @property (nonatomic, strong)   NSMutableArray<FHUGCToolBarTag *> *hotTags;
 @property (nonatomic, assign)   CGRect keyboardFrameForToolbar;
+@property (nonatomic, assign)   BOOL isKeyboardShow;
 @end
 
 @implementation FHPostUGCViewController
@@ -474,7 +475,7 @@ static NSInteger const kMaxPostImageCount = 9;
     self.inputContainerView.height = self.addImagesView.bottom + kAddImagesViewBottomPadding;
     
     // toolbar
-    CGFloat toolbarHeight = [FHUGCToolbar toolbarHeightWithTags:self.hotTags];
+    CGFloat toolbarHeight = [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
     self.toolbar = [[FHUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - toolbarHeight, self.view.width, toolbarHeight) type:FHPostUGCMainViewType_Post];
     self.toolbar.emojiInputView.source = @"post";
     self.toolbar.banHashtagInput = YES;
@@ -1103,7 +1104,7 @@ static NSInteger const kMaxPostImageCount = 9;
     CGFloat targetHeight = self.infoContainerView.bottom + kMidPadding;
     CGFloat containerHeight = self.view.height - 64;
     containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
-    containerHeight += [FHUGCToolbar toolbarHeightWithTags:self.hotTags];
+    containerHeight += [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
     self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
     [self refreshPostButtonUI];
 }
@@ -1255,7 +1256,7 @@ static NSInteger const kMaxPostImageCount = 9;
     CGFloat targetHeight = self.infoContainerView.bottom + kMidPadding;
     CGFloat containerHeight = self.view.height - 64;
     containerHeight = containerHeight >= targetHeight ? containerHeight : targetHeight;
-    containerHeight += [FHUGCToolbar toolbarHeightWithTags:self.hotTags];
+    containerHeight += [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
     self.containerView.contentSize = CGSizeMake(self.containerView.frame.size.width, containerHeight);
 }
 
@@ -1469,8 +1470,8 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)keyboardWillChange:(NSNotification *)notification {
     CGRect keyboardEndFrame = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    
-    if(keyboardEndFrame.origin.y < SCREEN_HEIGHT) {
+    self.isKeyboardShow = keyboardEndFrame.origin.y < SCREEN_HEIGHT;
+    if(self.isKeyboardShow) {
         self.keyboardFrameForToolbar = keyboardEndFrame;
     } else {
         self.keyboardFrameForToolbar = CGRectZero;
@@ -1493,7 +1494,7 @@ static NSInteger const kMaxPostImageCount = 9;
         [self.containerView setContentOffset:CGPointMake(0, fabs(self.containerView.contentOffset.y+offset)) animated:YES];
         return;
     }
-    offset = self.containerView.height - endFrame.size.height - (CGRectGetMaxY(firstResponderFrame) - self.containerView.contentOffset.y) - [FHUGCToolbar toolbarHeightWithTags:self.hotTags];
+    offset = self.containerView.height - endFrame.size.height - (CGRectGetMaxY(firstResponderFrame) - self.containerView.contentOffset.y) - [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
     if (offset < 0) {
         self.keyboardEndFrame = endFrame;
         
@@ -1702,10 +1703,19 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)needRelayoutToolbar {
     
-    CGFloat toolbarHeight = [FHUGCToolbar toolbarHeightWithTags:self.hotTags];
-    self.toolbar.frame = CGRectMake(0, self.view.height - toolbarHeight - self.keyboardFrameForToolbar.size.height, self.view.width, toolbarHeight);
+    CGFloat toolbarHeight = [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
+    CGRect frame = self.toolbar.frame;
+    frame.origin.y = self.view.height - toolbarHeight - self.keyboardFrameForToolbar.size.height;
+    if(self.isKeyboardShow) {
+        frame.origin.y += [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    } else {
+        if(self.toolbar.emojiInputViewVisible) {
+            frame.origin.y -= self.toolbar.emojiInputView.height;
+        }
+    }
+    self.toolbar.frame = frame;
     
-    [self.toolbar layoutTagSelectCollectionViewWithTags:self.hotTags];
+    [self.toolbar layoutTagSelectCollectionViewWithTags:self.hotTags hasSelected:self.hasSocialGroup];
 }
 
 @end

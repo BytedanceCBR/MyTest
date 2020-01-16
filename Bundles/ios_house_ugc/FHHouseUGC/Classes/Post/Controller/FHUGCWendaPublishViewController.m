@@ -439,7 +439,7 @@
         reportModel.pageType = @"question_publisher";
         self.toolbar.reportModel = reportModel;
         
-        [self.toolbar layoutTagSelectCollectionViewWithTags:tags];
+        [self.toolbar layoutTagSelectCollectionViewWithTags:tags hasSelected:self.hasSocialGroup];
         
         // 圈子选择列表跳转手势
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(socialGroupSelectEntryAction:)];
@@ -458,7 +458,7 @@
 }
 
 - (CGFloat)toolbarHeight {
-    CGFloat height = [FHUGCToolbar toolbarHeightWithTags:self.hotTags];
+    CGFloat height = [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
     return height;
 }
 
@@ -1017,10 +1017,15 @@
 
 - (void)needRelayoutToolbar {
     
-    CGFloat toolbarHeight = [FHUGCToolbar toolbarHeightWithTags:self.hotTags];
-    self.toolbar.frame = CGRectMake(0, self.view.height - toolbarHeight - self.keyboardFrameForToolbar.size.height, self.view.width, toolbarHeight);
+    CGFloat toolbarHeight = [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
+    CGRect frame = self.toolbar.frame;
+    frame.origin.y = self.view.height - toolbarHeight - self.keyboardFrameForToolbar.size.height;
+    if(!self.isKeyboardWillHide) {
+        frame.origin.y += [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    }
+    self.toolbar.frame = frame;
     
-    [self.toolbar layoutTagSelectCollectionViewWithTags:self.hotTags];
+    [self.toolbar layoutTagSelectCollectionViewWithTags:self.hotTags hasSelected:self.hasSocialGroup];
     
     CGFloat height = SCREEN_HEIGHT - kNavigationBarHeight - [self toolbarHeight] - (self.isKeyboardWillHide ? 0 : self.keyboardFrameForToolbar.size.height) - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     self.textContentScrollView.height = height;

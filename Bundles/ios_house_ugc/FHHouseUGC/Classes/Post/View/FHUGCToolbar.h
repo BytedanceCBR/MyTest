@@ -41,9 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithFrame:(CGRect)frame type:(FHPostUGCMainViewType)type;
 
-- (void)layoutTagSelectCollectionViewWithTags:(NSArray<FHUGCToolBarTag *> *)tags;
+- (void)layoutTagSelectCollectionViewWithTags:(NSArray<FHUGCToolBarTag *> *)tags hasSelected:(BOOL)isSelected;
 
-+ (CGFloat)toolbarHeightWithTags:(NSMutableArray *)tags;
++ (CGFloat)toolbarHeightWithTags:(NSMutableArray *)tags hasSelected:(BOOL)isSelected;
 
 - (void)tagCloseButtonClicked;
 

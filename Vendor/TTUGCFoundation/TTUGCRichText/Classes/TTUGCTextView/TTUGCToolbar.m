@@ -12,6 +12,7 @@
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
 #import <TTRoute/TTRoute.h>
+#import "TTUIResponderHelper.h"
 
 #define kTTUGCToolbarHeight 80
 #define kTTUGCToolbarButtonSize 44

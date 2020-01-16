@@ -87,6 +87,7 @@
 @property (nonatomic, strong) UICollectionView *tagSelectCollectionView;
 @property (nonatomic, assign) FHPostUGCMainViewType type;
 @property (nonatomic, strong) NSMutableArray<FHUGCToolBarTag *> *tags;
+@property (nonatomic, assign) BOOL isSelected;
 @property (nonatomic, assign) BOOL isReportedTagsCollectionViewShow;
 @property (nonatomic, strong) NSMutableSet<NSString *> *tagShowReportOnceSet;
 @property (nonatomic, strong) NSMutableArray<FHUGCToolBarTag *> *stageStack;
@@ -95,8 +96,12 @@
 @implementation FHUGCToolbar
 
 
-+ (CGFloat)toolbarHeightWithTags:(NSArray *)tags {
-    return FHUGCToolbarHeight + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom + SELECT_ENTRY_HEIGHT + (tags.count > 0 ? TAGS_VIEW_HEIGHT : 0);
++ (CGFloat)toolbarHeightWithTags:(NSArray *)tags hasSelected:(BOOL)isSelected {
+    if(isSelected) {
+        return FHUGCToolbarHeight + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    } else {
+        return FHUGCToolbarHeight + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom + SELECT_ENTRY_HEIGHT + (tags.count > 0 ? TAGS_VIEW_HEIGHT : 0);
+    }
 }
 
 - (instancetype)initWithFrame:(CGRect)frame type:(FHPostUGCMainViewType)type {
@@ -140,6 +145,7 @@
     if(!_socialGroupSelectEntry) {
         _socialGroupSelectEntry = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, self.tipLabel.bottom, self.frame.size.width, SELECT_ENTRY_HEIGHT) type:self.type];
         _socialGroupSelectEntry.backgroundColor = [UIColor themeWhite];
+        _socialGroupSelectEntry.clipsToBounds = YES;
         
         UIView *topLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _socialGroupSelectEntry.width, 0.5)];
         topLine.backgroundColor = [UIColor themeGray6];
@@ -173,14 +179,22 @@
     return _tagSelectCollectionView;
 }
 
-- (void)layoutTagSelectCollectionViewWithTags:(NSMutableArray<FHUGCToolBarTag *> *)tags {
+- (void)layoutTagSelectCollectionViewWithTags:(NSMutableArray<FHUGCToolBarTag *> *)tags hasSelected:(BOOL)isSelected{
     self.tags = tags;
+    self.isSelected = isSelected;
+    
     [self relayoutSelctCollectionView];
 }
 
 - (void)relayoutSelctCollectionView {
+    
+    if(self.isSelected) {
+        self.socialGroupSelectEntry.height = 0;
+    }
+    
     CGRect frame = self.tagSelectCollectionView.frame;
-    frame.size.height = self.tags.count > 0 ? TAGS_VIEW_HEIGHT : 0;
+    frame.origin.y = self.socialGroupSelectEntry.bottom;
+    frame.size.height = (!self.isSelected && self.tags.count > 0) ? TAGS_VIEW_HEIGHT : 0;
     self.tagSelectCollectionView.frame = frame;
     
     [self.tagSelectCollectionView reloadData];
@@ -218,7 +232,7 @@
             break;
     }
     
-    targetY = CGRectGetMinY(keyboardScreenFrame) - [FHUGCToolbar toolbarHeightWithTags:self.tags] + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    targetY = CGRectGetMinY(keyboardScreenFrame) - [FHUGCToolbar toolbarHeightWithTags:self.tags hasSelected:self.isSelected] + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     
     // Emoji 选择器输入情况下，点击 TextView 自动弹出键盘
     if (self.emojiInputViewVisible) {
@@ -269,14 +283,21 @@
             break;
     }
     
-    targetY = CGRectGetMinY(keyboardScreenFrame) - CGRectGetHeight(frame);
     if (self.emojiInputViewVisible) { // 切换到表情输入，收起键盘
         // 提前显示表情选择器
+        targetY = CGRectGetMinY(keyboardScreenFrame) - CGRectGetHeight(frame);
         self.emojiInputView.hidden = !self.emojiInputViewVisible;
         self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_normal";
         self.keyboardButton.accessibilityLabel = @"收起键盘";
         self.emojiButton.imageName = @"fh_ugc_toolbar_keyboard_selected";
         self.emojiButton.accessibilityLabel = @"收起表情选择框";
+    } else {
+        self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_selected";
+        self.keyboardButton.accessibilityLabel = @"弹出键盘";
+        self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
+        self.emojiButton.accessibilityLabel = @"表情";
+        
+        targetY = CGRectGetMinY(keyboardScreenFrame) - [FHUGCToolbar toolbarHeightWithTags:self.tags hasSelected:self.isSelected];
     }
     
     frame.origin.y = targetY;
@@ -290,6 +311,21 @@
             self.emojiInputView.hidden = YES;
         }
     }];
+}
+
+- (void)keyboardAction:(id)sender {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(toolbarDidClickKeyboardButton:)]) {
+        BOOL switchToInput = [self.keyboardButton.imageName isEqualToString:@"fh_ugc_toolbar_keyboard_selected"]; // 这里折衷一下
+        [self.delegate toolbarDidClickKeyboardButton:switchToInput];
+        self.keyboardButton.imageName = switchToInput ? @"fh_ugc_toolbar_keyboard_normal" : @"fh_ugc_toolbar_keyboard_selected";
+        self.keyboardButton.accessibilityLabel = switchToInput ? @"收起键盘" : @"弹出键盘";
+        self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
+        self.emojiButton.accessibilityLabel = @"表情";
+        
+        if(!switchToInput) {
+            [self.tagDelegate needRelayoutToolbar];
+        }
+    }
 }
 
 #pragma mark - UICollectionViewDelegate
