@@ -25,12 +25,5 @@ Pod::Spec.new do |s|
 # s.public_header_files = 'TTPushAuthorizationManager/Classes/**/*.h'
 # s.frameworks      = 'Crashlytics', 'Fabric'
     
-    s.dependency 'TTUIWidget'
-    s.dependency 'TTTracker'
-    s.dependency 'TTBaseLib'
-    s.dependency 'TTPlatformBaseLib'
-    s.dependency 'TTImage'
-    s.dependency 'TTNewsAccountBusiness'
-    s.dependency 'TTNetworkManager'
     
 end

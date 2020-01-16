@@ -11,7 +11,7 @@
 #import "TTDeviceHelper.h"
 #import "TTDeviceUIUtils.h"
 #import "UIButton+TTAdditions.h"
-#import <TTLabelTextHelper.h>
+#import "TTLabelTextHelper.h"
 #import "TTIndicatorView.h"
 #import "TTUIResponderHelper.h"
 #import "TTThemeManager.h"

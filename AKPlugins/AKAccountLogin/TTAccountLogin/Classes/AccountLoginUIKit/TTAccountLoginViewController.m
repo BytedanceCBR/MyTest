@@ -6,7 +6,7 @@
 //
 //
 
-#import <TTLabelTextHelper.h>
+#import "TTLabelTextHelper.h"
 #import "TTIndicatorView.h"
 #import "TTUIResponderHelper.h"
 

@@ -10,7 +10,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "TTThemeManager.h"
 #import <TTVerifyKit/UIImage+Masking.h>
-#import <TTImageInfosModel.h>
+#import "TTImageInfosModel.h"
 #import "TTImageView.h"
 #import <objc/runtime.h>
 
