@@ -46,6 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (CGFloat)toolbarHeightWithTags:(NSMutableArray *)tags;
 
 - (void)tagCloseButtonClicked;
+
+- (void)stagePushDuplicateTagIfNeedWithGroupId:(NSString *)groupId;
+
 @end
 
 NS_ASSUME_NONNULL_END

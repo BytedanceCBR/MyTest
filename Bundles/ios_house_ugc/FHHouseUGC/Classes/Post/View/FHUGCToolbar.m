@@ -89,6 +89,7 @@
 @property (nonatomic, strong) NSMutableArray<FHUGCToolBarTag *> *tags;
 @property (nonatomic, assign) BOOL isReportedTagsCollectionViewShow;
 @property (nonatomic, strong) NSMutableSet<NSString *> *tagShowReportOnceSet;
+@property (nonatomic, strong) NSMutableArray<FHUGCToolBarTag *> *stageStack;
 @end
 
 @implementation FHUGCToolbar
@@ -102,6 +103,7 @@
     if(self = [super initWithFrame:frame]) {
         self.isReportedTagsCollectionViewShow = NO;
         self.tagShowReportOnceSet = [NSMutableSet set];
+        self.stageStack = [NSMutableArray array];
         
         self.type = type;
         self.userInteractionEnabled = YES;
@@ -380,6 +382,8 @@
 
 - (void)tagCloseButtonClicked {
     
+    [self stagePopAll];
+    
     if([self.socialGroupSelectEntry hasValidData]) {
         
         FHUGCToolBarTag *tagInfo = [[FHUGCToolBarTag alloc] init];
@@ -415,6 +419,34 @@
     }
 }
 
+- (void)stagePushDuplicateTagIfNeedWithGroupId:(NSString *)groupId {
+    
+    [self stagePopAll];
+    
+    FHUGCToolBarTag *tagInfo = [[FHUGCToolBarTag alloc] init];
+    tagInfo.groupId = groupId;
+    
+    NSUInteger index =  [self.tags indexOfObject:tagInfo];
+    if(index != NSNotFound) {
+        [self.stageStack addObject:self.tags[index]];
+        [self.tags removeObjectAtIndex:index];
+        [self.tagSelectCollectionView reloadData];
+    }
+}
+
+- (void)stagePopAll {
+    WeakSelf;
+    [self.stageStack enumerateObjectsUsingBlock:^(FHUGCToolBarTag * _Nonnull tagInfo, NSUInteger idx, BOOL * _Nonnull stop) {
+        StrongSelf;
+        [self.tags insertObject:tagInfo atIndex:tagInfo.index];
+    }];
+    
+    if(self.stageStack.count > 0) {
+        [self.tagSelectCollectionView reloadData];
+    }
+    [self.stageStack removeAllObjects];
+}
+
 #pragma mark - 埋点
 
 - (void)traceTagsCollectionViewShow {
@@ -423,7 +455,7 @@
         
         NSMutableDictionary *param = @{}.mutableCopy;
         param[UT_ENTER_FROM] = self.reportModel.enterFrom;
-        param[UT_ORIGIN_FROM] = self.reportModel.originFrom;
+        param[UT_ORIGIN_FROM] = self.reportModel.originFrom?:UT_BE_NULL;
         param[UT_PAGE_TYPE] = self.reportModel.pageType;
         param[UT_ELEMENT_TYPE] = @"hot_label";
         TRACK_EVENT(@"element_show", param);
@@ -438,7 +470,7 @@
         
         NSMutableDictionary *param = @{}.mutableCopy;
         param[UT_ENTER_FROM] = self.reportModel.enterFrom;
-        param[UT_ORIGIN_FROM] = self.reportModel.originFrom;
+        param[UT_ORIGIN_FROM] = self.reportModel.originFrom?:UT_BE_NULL;
         param[UT_PAGE_TYPE] = self.reportModel.pageType;
         param[UT_ELEMENT_TYPE] = @"hot_label";
         

@@ -291,9 +291,7 @@ static NSInteger const kMaxPostImageCount = 9;
                     
                     // 热门圈子标签优先于发布历史
                     NSUInteger index = [self.hotTags indexOfObject:tag];
-                    if(index != NSNotFound) {
-                        self.hotTags[index].tagType = FHPostUGCTagType_HotTag;
-                    } else {
+                    if(index == NSNotFound) {
                         [self.hotTags addObject:tag];
                     }
                 }];
@@ -1648,12 +1646,16 @@ static NSInteger const kMaxPostImageCount = 9;
 - (void)selectedItem:(FHUGCScialGroupDataModel *)item {
     
     if (item) {
-        // 如果有标签选中，则把标签退回标签区
+        
         if([self.toolbar.socialGroupSelectEntry hasValidData]) {
-            if(![item.socialGroupId isEqualToString:self.toolbar.socialGroupSelectEntry.groupId] && self.toolbar.socialGroupSelectEntry.tagType != FHPostUGCTagType_Normal) {
-                [self.toolbar tagCloseButtonClicked];
+            if(![item.socialGroupId isEqualToString:self.toolbar.socialGroupSelectEntry.groupId]) {
+                if(self.toolbar.socialGroupSelectEntry.tagType != FHPostUGCTagType_Normal) {
+                    [self.toolbar tagCloseButtonClicked];
+                }
             } else {
-                return;
+                if(self.toolbar.socialGroupSelectEntry.tagType != FHPostUGCTagType_Normal) {
+                    return;
+                }
             }
         }
         
@@ -1662,6 +1664,7 @@ static NSInteger const kMaxPostImageCount = 9;
         self.toolbar.socialGroupSelectEntry.followed = [item.hasFollow boolValue];
         self.toolbar.socialGroupSelectEntry.tagType = FHPostUGCTagType_Normal;
         self.toolbar.socialGroupSelectEntry.tagIndex = INVALID_TAG_INDEX;
+        [self.toolbar stagePushDuplicateTagIfNeedWithGroupId:item.socialGroupId];
         [self refreshPostButtonUI];
         
         NSMutableDictionary *tracerDict = self.trackDict.mutableCopy;
