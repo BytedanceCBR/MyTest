@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'TTPlatformBaseLib'
-  s.version          = '0.2.13'
+  s.version          = '0.2.29'
   s.summary          = '平台化基础库'
   s.description      = '平台化基础库'
 
@@ -21,11 +21,6 @@ Pod::Spec.new do |s|
   s.resources        = 'TTPlatformBaseLib/Resource/new_icon.ttf','TTPlatformBaseLib/Resource/290-cai978.ttf','TTPlatformBaseLib/Resource/ChatroomIconFont.ttf','TTPlatformBaseLib/Resource/iconfont.ttf'
 #  s.vendored_frameworks = 'Fabric', 'Crashlytics'
 
-s.subspec 'TTPlatformSwitcher' do |ss|
-    ss.requires_arc =   true
-    ss.source_files =   'TTPlatformBaseLib/TTPlatformSwitcher/*.{h,m}'
-    ss.public_header_files = 'TTPlatformBaseLib/TTPlatformSwitcher/*.h'
-end
 
 s.subspec 'TTURLDomainHelper' do |ss|
     ss.requires_arc =   true
@@ -33,35 +28,6 @@ s.subspec 'TTURLDomainHelper' do |ss|
     ss.public_header_files = 'TTPlatformBaseLib/TTURLDomainHelper/*.h'
 end
 
-s.subspec 'TTKeyChainStorage' do |ss|
-    ss.requires_arc =   true
-    ss.source_files =   'TTPlatformBaseLib/TTKeyChainStorage/*.{h,m}'
-    ss.public_header_files = 'TTPlatformBaseLib/TTKeyChainStorage/*.h'
-end
-
-s.subspec 'TTPostDataSerializer' do |ss|
-    ss.requires_arc =   true
-    ss.source_files =   'TTPlatformBaseLib/TTPostDataSerializer/*.{h,m}'
-    ss.public_header_files = 'TTPlatformBaseLib/TTPostDataSerializer/*.h'
-end
-
-s.subspec 'ArticleJSManager' do |ss|
-    ss.requires_arc =   true
-    ss.source_files =   'TTPlatformBaseLib/ArticleJSManager/*.{h,m}'
-    ss.public_header_files = 'TTPlatformBaseLib/ArticleJSManager/*.h'
-end
-
-s.subspec 'TTTAssetCountHelper' do |ss|
-    ss.requires_arc =   true
-    ss.source_files =   'TTPlatformBaseLib/TTAssetCountHelper/*.{h,m}'
-    ss.public_header_files = 'TTPlatformBaseLib/TTAssetCountHelper/*.h'
-end
-
-s.subspec 'TTCategoryManager' do |ss|
-    ss.requires_arc =   true
-    ss.source_files =   'TTPlatformBaseLib/TTCategoryManager/*.{h,m}'
-    ss.public_header_files = 'TTPlatformBaseLib/TTCategoryManager/*.h'
-end
 
 s.subspec 'TTProfileFillManager' do |ss|
     ss.requires_arc =   true
@@ -75,6 +41,7 @@ s.subspec 'TTIconFontDefine' do |ss|
     ss.public_header_files = 'TTPlatformBaseLib/TTIconFontDefine/*.h'
 end
 
+
 s.subspec 'TTTrackerWrapper' do |ss|
     ss.requires_arc =   true
     ss.source_files =   'TTPlatformBaseLib/TTTrackerWrapper/*.{h,m}'
@@ -83,7 +50,7 @@ s.subspec 'TTTrackerWrapper' do |ss|
 end
 
 
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '9.0'
 # s.public_header_files = 'TTPlatformBaseLib/Classes/**/*.h'
 # s.frameworks      = 'Crashlytics', 'Fabric'
 

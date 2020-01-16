@@ -78,7 +78,8 @@ def appDevelopPods
     pod 'TTCompatibleModule', :path => '../AKPlugins/TTCompatibleModule', :inhibit_warnings => false
     #-----问答业务库-----#
     pod 'AKWDPlugin', :path => '../AKPlugins/AKWDPlugin', :inhibit_warnings => false
-    
+    #-----平台基础库-----#
+    pod 'TTPlatformBaseLib'  , :path => '../AKPlugins/TTPlatformBaseLib', :inhibit_warnings => false
     #-----评论业务库-----#
     pod 'AKCommentPlugin', :path => '../AKPlugins/AKCommentPlugin', :inhibit_warnings => false
     #-----头条图片滑动浏览器----
@@ -407,12 +408,12 @@ def appPods
     pod_binary 'TTImpression', '0.0.26'
     #-----平台化基础库-----
     # pod 'TTPlatformBaseLib','1.3.1'
-    pod_binary 'TTPlatformBaseLib'  , '0.2.29' , :subspecs => [
-    'TTProfileFillManager',
-    'TTTrackerWrapper',
-    'TTURLDomainHelper'
-    ]
-    
+#    pod 'TTPlatformBaseLib'  , '0.2.29' , :subspecs => [
+#    'TTProfileFillManager',
+#    'TTTrackerWrapper',
+#    'TTURLDomainHelper'
+#    ]
+
     #----内测升级弹窗----
     pod_binary 'TTAppUpdateHelper', '1.0.9', :subspecs => [
     'TTUpdateHelper',
