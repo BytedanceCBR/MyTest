@@ -377,6 +377,9 @@
                     *stop = YES;
                 }
             }];
+            cellModel.tableView = self.tableView;
+            cellModel.categoryId = self.categoryId;
+            cellModel.feedVC = self.viewController;
             // 插入在置顶贴的下方
             [self.dataList insertObject:cellModel atIndex:index];
             [self.tableView reloadData];
