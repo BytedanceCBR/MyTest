@@ -194,7 +194,10 @@
     
     CGRect frame = self.tagSelectCollectionView.frame;
     frame.origin.y = self.socialGroupSelectEntry.bottom;
-    frame.size.height = (!self.isSelected && self.tags.count > 0) ? TAGS_VIEW_HEIGHT : 0;
+    
+    BOOL hasTagsView = (!self.isSelected && self.tags.count > 0);
+    frame.size.height = hasTagsView ? TAGS_VIEW_HEIGHT : 0;
+    
     self.tagSelectCollectionView.frame = frame;
     
     [self.tagSelectCollectionView reloadData];
