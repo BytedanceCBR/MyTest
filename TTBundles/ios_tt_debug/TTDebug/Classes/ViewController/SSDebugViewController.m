@@ -36,7 +36,6 @@
 //#import "TTFantasyWindowManager.h"
 #import <TTKitchen/TTKitchen.h>
 
-#import "ArticleMobileSettingViewController.h"
 #import "TTPersistence.h"
 #import "TTURLUtils.h"
 #import "WDCommonLogic.h"

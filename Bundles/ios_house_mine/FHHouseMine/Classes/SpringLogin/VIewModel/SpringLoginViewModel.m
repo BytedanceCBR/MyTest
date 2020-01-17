@@ -70,7 +70,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)showLoginView {
     [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin] showAcceptBox:YES];
-    [self.view.acceptCheckBox setSelected:NO];
+//    [self.view.acceptCheckBox setSelected:NO];
     [self checkToEnableConfirmBtn];
 }
 
@@ -84,10 +84,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                                       NSForegroundColorAttributeName: [UIColor colorWithHexString:@"a90c05"],
                                       };
     
-    attrText = [[NSMutableAttributedString alloc] initWithString:@"我已阅读并同意 《幸福里用户协议》及《隐私政策》"];
+    attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
     [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
-    userProtocolRange = NSMakeRange(9, 7);
-    privacyRange = NSMakeRange(19, 4);
+    userProtocolRange = NSMakeRange(7, 7);
+    privacyRange = NSMakeRange(17, 4);
     YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
     [attrText yy_setTextUnderline:decoration range:userProtocolRange];
     [attrText yy_setTextUnderline:decoration range:privacyRange];
@@ -176,7 +176,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)checkToEnableConfirmBtn {
     BOOL hasPhoneInput = self.view.phoneInput.text.length > 0;
     BOOL hasVerifyCodeInput = self.view.varifyCodeInput.text.length > 0;
-    BOOL confirmEnable = hasPhoneInput && hasVerifyCodeInput && self.view.acceptCheckBox.isSelected;
+    BOOL confirmEnable = hasPhoneInput && hasVerifyCodeInput;
     [self.view enableConfirmBtn:confirmEnable];
 }
 
@@ -199,10 +199,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)acceptCheckBoxChange:(BOOL)selected {
-    self.view.acceptCheckBox.selected = !selected;
-    if(self.view.acceptCheckBox.selected){
-        [self.view showTipView:NO];
-    }
+//    self.view.acceptCheckBox.selected = !selected;
+//    if(self.view.acceptCheckBox.selected){
+//        [self.view showTipView:NO];
+//    }
     [self checkToEnableConfirmBtn];
 }
 
@@ -237,11 +237,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     
     [self traceLogin];
-    if (!self.view.acceptCheckBox.selected) {
-//        [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私政策》"];
-        [self.view showTipView:YES];
-        return;
-    }
+//    if (!self.view.acceptCheckBox.selected) {
+////        [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私政策》"];
+//        [self.view showTipView:YES];
+//        return;
+//    }
     
     [[ToastManager manager] showToast:@"正在登录中"];
     
@@ -306,7 +306,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)traceLogin {
     NSMutableDictionary *tracerDict = [self.viewController.tracerDict mutableCopy];
-    tracerDict[@"login_agreement"] = self.view.acceptCheckBox.isSelected ? @"1" : @"0";
+    tracerDict[@"login_agreement"] =  @"1";
     TRACK_EVENT(@"click_login", tracerDict);
 }
 

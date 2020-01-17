@@ -82,6 +82,8 @@
 #import "GAIAEngine+TTBase.h"
 #import "BDUGDeepLinkManager.h"
 #import <Heimdallr/HMDTTMonitor.h>
+#import <FHHouseBase/FHEnvContext.h>
+
 
 #if INHOUSE
 #import "TTStartupDebugGroup.h"
@@ -288,6 +290,10 @@ static NSTimeInterval lastTime;
 
 + (void)startRegisterRemoteNotificationAfterDelay:(float)secs
 {
+    if (![[FHEnvContext sharedInstance ] hasConfirmPermssionProtocol]) {
+        return;
+    }
+    
     [[TTAuthorizeManager sharedManager].pushObj filterAuthorizeStrategyWithCompletionHandler:^{
         [self startRegisterRemoteNotificationAfterAuthorizeWithDelay:secs];
     } sysAuthFlag:0]; //显示系统弹窗前显示自有弹窗的逻辑下掉，0代表直接显示系统弹窗，1代表先自有弹窗，再系统弹窗
@@ -429,6 +435,11 @@ static NSTimeInterval lastTime;
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [[FHEnvContext sharedInstance] addOpenUrlItem:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+        return YES;
+    }
+    
     WeakSelf;
     [TTLaunchOrientationHelper executeBlockAfterStatusbarOrientationNormal:^{
         StrongSelf;
@@ -510,6 +521,11 @@ static NSTimeInterval lastTime;
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [[FHEnvContext sharedInstance] addRemoteNotification:application userInfo:userInfo];
+        return ;
+    }
+    
     WeakSelf;
     [TTLaunchOrientationHelper executeBlockAfterStatusbarOrientationNormal:^{
         StrongSelf;
@@ -566,6 +582,12 @@ static NSTimeInterval lastTime;
 #endif
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler {
+    
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [[FHEnvContext sharedInstance] addContinueActivity:application activity:userActivity restorationHandler:restorationHandler];
+        return YES;
+    }
+    
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     for(TTStartupTask *task in self.residentTasks) {
@@ -682,6 +704,8 @@ static NSTimeInterval lastTime;
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"route_nav_controller_wrong" attributes:@{@"class":[NSString stringWithFormat:@"%@",_navigationController]?:@"unknown"}];
                 _navigationController = nil;
             }
+        }else if ([rootTabController isKindOfClass:[TTNavigationController class]]) {
+            _navigationController = (TTNavigationController *)rootTabController;            
         }
 //    }
     
