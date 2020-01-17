@@ -98,6 +98,7 @@
 #import "FHUGCConfig.h"
 #import "FHUnreadMsgModel.h"
 #import "UIViewController+TTMovieUtil.h"
+#import <TTLaunchTracer.h>
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -603,6 +604,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [logv3Dic setValue:@"default" forKey:@"enter_type"];
     [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
     
+    
+    [[TTLaunchTracer shareInstance] writeEvent];
 //    if (!self.hasShowDots && ![FHEnvContext isUGCOpen]) {
 //        [FHEnvContext showFindTabRedDots];
 //        self.hasShowDots = YES;
@@ -2065,10 +2068,10 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 - (void)showSecondTabRedDots {
     //判断条件 1、不在邻里tab 2、关注页面有新内容 或者 有关注页面有新消息
     if(![[self lastTabIdentifier] isEqualToString:kFHouseFindTabKey]){
-        BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
+//        BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
         BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
         FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
-        if (((model && [model.unread integerValue] > 0) || hasNew) && hasSocialGroups) {
+        if ((model && [model.unread integerValue] > 0) || hasNew) {
             [FHEnvContext showFindTabRedDots];
         }else{
             [FHEnvContext hideFindTabRedDots];

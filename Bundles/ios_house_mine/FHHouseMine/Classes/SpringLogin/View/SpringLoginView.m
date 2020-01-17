@@ -150,13 +150,13 @@
     _agreementLabel.font = [UIFont themeFontRegular:10];
     [self.scrollView addSubview:_agreementLabel];
 
-    self.acceptCheckBox = [[SpringLoginAcceptButton alloc] init];
-    self.acceptCheckBox.hotAreaInsets = UIEdgeInsetsMake(20, 15, 0, 30);
-    self.acceptCheckBox.hotAreaInsets2 = UIEdgeInsetsMake(20, 15, 20, 0);
-    [_acceptCheckBox setImage:[UIImage imageNamed:@"fh_spring_login_checked"] forState:UIControlStateSelected];
-    [_acceptCheckBox setImage:[UIImage imageNamed:@"fh_spring_login_check"] forState:UIControlStateNormal];
-    [_acceptCheckBox addTarget:self action:@selector(acceptCheckBoxChange) forControlEvents:UIControlEventTouchUpInside];
-    [self.scrollView addSubview:_acceptCheckBox];
+//    self.acceptCheckBox = [[SpringLoginAcceptButton alloc] init];
+//    self.acceptCheckBox.hotAreaInsets = UIEdgeInsetsMake(20, 15, 0, 30);
+//    self.acceptCheckBox.hotAreaInsets2 = UIEdgeInsetsMake(20, 15, 20, 0);
+//    [_acceptCheckBox setImage:[UIImage imageNamed:@"fh_spring_login_checked"] forState:UIControlStateSelected];
+//    [_acceptCheckBox setImage:[UIImage imageNamed:@"fh_spring_login_check"] forState:UIControlStateNormal];
+//    [_acceptCheckBox addTarget:self action:@selector(acceptCheckBoxChange) forControlEvents:UIControlEventTouchUpInside];
+//    [self.scrollView addSubview:_acceptCheckBox];
     
     self.confirmBtn = [[UIButton alloc] init];
     [_confirmBtn addTarget:self action:@selector(confirm) forControlEvents:UIControlEventTouchUpInside];
@@ -237,20 +237,20 @@
         make.height.mas_equalTo(63);
     }];
     
-    [self.tipView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.acceptCheckBox.mas_top).offset(-4);
-        make.right.mas_equalTo(self.springBgView).offset(-33);
-        make.width.mas_equalTo(80);
-        make.height.mas_equalTo(28);
-    }];
+//    [self.tipView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.mas_equalTo(self.acceptCheckBox.mas_top).offset(-4);
+//        make.right.mas_equalTo(self.springBgView).offset(-33);
+//        make.width.mas_equalTo(80);
+//        make.height.mas_equalTo(28);
+//    }];
 }
 
 - (void)setAgreementContent:(NSAttributedString *)attrText showAcceptBox:(BOOL)showAcceptBox {
     self.agreementLabel.attributedText = attrText;
     CGFloat boxWidth = 12;
-    CGFloat width = 210;
+    CGFloat width = 230;
     CGSize size = [self.agreementLabel sizeThatFits:CGSizeMake(width, 1000)];
-    self.acceptCheckBox.hidden = !showAcceptBox;
+//    self.acceptCheckBox.hidden = YES; //!showAcceptBox;
     
     [self.agreementLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.varifyCodeBgView);
@@ -259,11 +259,11 @@
         make.height.mas_equalTo(size.height);
     }];
     
-    [self.acceptCheckBox mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.varifyCodeBgView);
-        make.top.mas_equalTo(self.agreementLabel).offset(2);
-        make.width.height.mas_equalTo(boxWidth);
-    }];
+//    [self.acceptCheckBox mas_remakeConstraints:^(MASConstraintMaker *make) {
+//        make.right.mas_equalTo(self.varifyCodeBgView);
+//        make.top.mas_equalTo(self.agreementLabel).offset(2);
+//        make.width.height.mas_equalTo(boxWidth);
+//    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -295,11 +295,11 @@
     }
 }
 
-- (void)acceptCheckBoxChange {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(acceptCheckBoxChange:)]) {
-        [self.delegate acceptCheckBoxChange:self.acceptCheckBox.selected];
-    }
-}
+//- (void)acceptCheckBoxChange {
+//    if (self.delegate && [self.delegate respondsToSelector:@selector(acceptCheckBoxChange:)]) {
+//        [self.delegate acceptCheckBoxChange:self.acceptCheckBox.selected];
+//    }
+//}
 
 - (void)sendVerifyCode {
     if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode)]) {

@@ -16,7 +16,7 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import <TTReachability/TTReachability.h>
 #import <FHHouseBase/NSString+Emoji.h>
-
+#import <TTUIWidget/TTThemedAlertController.h>
 
 #import "FHCommutePOIInputBar.h"
 #import "FHCommutePOIInfoCell.h"
@@ -448,24 +448,21 @@
         self.locationHeaderView.loading = YES;
         return;
     }
-                    
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"开启定位服务" message:@"请允许幸福里使用您的位置来为您提供更好的找房服务" preferredStyle:UIAlertControllerStyleAlert];
+    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"您还没有开启定位权限" message:@"请前往系统设置开启，以便我们更好地为您推荐房源及丰富信息推荐维度" preferredType:TTThemedAlertControllerTypeAlert];
+      [alertVC addActionWithGrayTitle:@"我知道了" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+
+      }];
+      
+      [alertVC addActionWithTitle:@"前往设置" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+          NSURL *jumpUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+          
+          if ([[UIApplication sharedApplication] canOpenURL:jumpUrl]) {
+              [[UIApplication sharedApplication] openURL:jumpUrl];
+          }
+      }];
     
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        
-    }];
+    [alertVC showFrom:self.viewController.navigationController animated:YES];
     
-    UIAlertAction *config = [UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        NSURL *url = [[NSURL alloc] initWithString:UIApplicationOpenSettingsURLString];
-        if( [[UIApplication sharedApplication] canOpenURL:url]) {
-            [[UIApplication sharedApplication] openURL:url];
-        }
-    }];
-    
-    [alert addAction:cancel];
-    [alert addAction:config];
-    
-    [self.viewController presentViewController:alert animated:YES completion:nil];
 }
 
 -(void)tryUseLocation

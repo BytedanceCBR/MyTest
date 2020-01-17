@@ -11,6 +11,7 @@
 //#import "TTLaunchDefine.h"
 //
 //DEC_TASK("TTRequestRefreshADTask",FHTaskTypeAD,TASK_PRIORITY_HIGH);
+#import <FHHouseBase/FHEnvContext.h>
 
 @implementation TTRequestRefreshADTask
 
@@ -24,6 +25,11 @@
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
+    
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        return;
+    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self requestRefreshAd];
     });

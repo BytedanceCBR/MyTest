@@ -47,6 +47,8 @@
 		3DB49F932265E34900A0780E /* iconfont_new.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE42265E34900A0780E /* iconfont_new.ttf */; };
 		3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
 		3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
+		3DC75FF923BB4ABE00614BFF /* permission_tip.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3DC75FF823BB4ABE00614BFF /* permission_tip.txt */; };
+		3DC75FFA23BB4ABE00614BFF /* permission_tip.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3DC75FF823BB4ABE00614BFF /* permission_tip.txt */; };
 		6114B09E21B3E78C00331D12 /* house_refresh.json in Resources */ = {isa = PBXBuildFile; fileRef = 6114B09C21B3E78C00331D12 /* house_refresh.json */; };
 		6114B09F21B3E78C00331D12 /* house_refresh.json in Resources */ = {isa = PBXBuildFile; fileRef = 6114B09C21B3E78C00331D12 /* house_refresh.json */; };
 		6198677D2223E8EE0056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198677C2223E8EE0056B2EF /* NotificationService.m */; };
@@ -320,6 +322,7 @@
 		3DB49EE32265E34900A0780E /* ProjectNightModeThemeUISetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = ProjectNightModeThemeUISetting.strings; sourceTree = "<group>"; };
 		3DB49EE42265E34900A0780E /* iconfont_new.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont_new.ttf; sourceTree = "<group>"; };
 		3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = BubbleImages.xcassets; sourceTree = "<group>"; };
+		3DC75FF823BB4ABE00614BFF /* permission_tip.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = permission_tip.txt; sourceTree = "<group>"; };
 		3F4555FA168C4375001B7373 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		4175CE3C1D16850900F2CFC2 /* AuthorizeHintResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AuthorizeHintResource.xcassets; sourceTree = "<group>"; };
 		438724811BE32BB500854877 /* Settings.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Settings.xcassets; sourceTree = "<group>"; };
@@ -748,6 +751,7 @@
 				3DB49EE02265E34900A0780E /* strings */,
 				D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */,
 				6B50C7B41F5D44EF00BF89A1 /* Weather.xcassets */,
+				3DC75FF823BB4ABE00614BFF /* permission_tip.txt */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -919,7 +923,7 @@
 					};
 					6198678A2223E9A70056B2EF = {
 						CreatedOnToolsVersion = 10.1;
-						DevelopmentTeam = J3249442BT;
+						DevelopmentTeam = 7HSS6X2323;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -928,7 +932,7 @@
 						};
 					};
 					B373C7F92174587A008F9905 = {
-						DevelopmentTeam = J3249442BT;
+						DevelopmentTeam = 7HSS6X2323;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -1051,6 +1055,7 @@
 				3D7D2F3E22704CAA00A95FAF /* Icon.png in Resources */,
 				B373CEC52174587A008F9905 /* NewsResource.xcassets in Resources */,
 				B373CEC62174587A008F9905 /* FrameworkResource.xcassets in Resources */,
+				3DC75FFA23BB4ABE00614BFF /* permission_tip.txt in Resources */,
 				B373CEC82174587A008F9905 /* Account.xcassets in Resources */,
 				FBA5894023AB87200053EC79 /* images in Resources */,
 				B373CEC92174587A008F9905 /* NewsInHouseTodayExtenstion.release.xcconfig in Resources */,
@@ -1097,6 +1102,7 @@
 				FBA5893023AB64D20053EC79 /* introduce_3.json in Resources */,
 				FBA5893123AB64D20053EC79 /* introduce_2.json in Resources */,
 				FEFA59F6205FB1A8001F50D8 /* sound3.caf in Resources */,
+				3DC75FF923BB4ABE00614BFF /* permission_tip.txt in Resources */,
 				FBA5893D23AB64D20053EC79 /* introduce_1.json in Resources */,
 				3D83DD122306A933008B583E /* gaode_style_extra.data in Resources */,
 				3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
@@ -1331,7 +1337,6 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
-				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCRichText/Assets/Emoji.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTBackButtonView.bundle",
@@ -1666,7 +1671,6 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
-				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCRichText/Assets/Emoji.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTBackButtonView.bundle",
@@ -2159,11 +2163,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = com.f100.client.FHNotificationServiceExtension/com.f100.client.FHNotificationServiceExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (C329TW3SDK)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (C329TW3SDK)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (7PZDQUF8CS)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2206,12 +2210,12 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = com.f100.client.FHNotificationServiceExtension/com.f100.client.FHNotificationServiceExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: dachui Wang (J3249442BT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: dachui Wang (J3249442BT)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2238,12 +2242,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (C329TW3SDK)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (C329TW3SDK)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (7PZDQUF8CS)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2297,7 +2301,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = f100_client;
+				PROVISIONING_PROFILE_SPECIFIER = f100.dev;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
@@ -2320,11 +2324,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: dachui Wang (J3249442BT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: dachui Wang (J3249442BT)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				CODE_SIGN_STYLE = Manual;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
@@ -2384,7 +2388,7 @@
 				PRODUCT_MODULE_NAME = Bubble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = f100_distribution_0904;
+				PROVISIONING_PROFILE_SPECIFIER = f100.dist;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;

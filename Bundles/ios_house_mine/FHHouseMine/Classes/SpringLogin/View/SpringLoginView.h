@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SpringLoginView : UIView
 
-@property(nonatomic, strong) SpringLoginAcceptButton *acceptCheckBox;
+//@property(nonatomic, strong) SpringLoginAcceptButton *acceptCheckBox;
 @property(nonatomic, strong) SpringLoginScrollView *scrollView;
 @property(nonatomic, strong) UITextField *phoneInput;
 @property(nonatomic, strong) UITextField *varifyCodeInput;
