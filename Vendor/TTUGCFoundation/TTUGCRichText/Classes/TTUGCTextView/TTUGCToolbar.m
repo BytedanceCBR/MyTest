@@ -105,9 +105,11 @@
 }
 
 - (void)layoutToolbarViewWithOrigin:(CGPoint)origin {
-    self.containerView.height = self.frame.size.height;
-    CGPoint toolBarOrigin = [self convertPoint:origin toView:self.containerView];
-    self.toolbarView.origin = toolBarOrigin;
+    
+    CGRect frame = self.containerView.frame;
+    frame.origin = origin;
+    self.containerView.frame = frame;
+    
     self.emojiInputView.top = self.toolbarView.bottom;
     [self refreshButtonsUI];
 }
