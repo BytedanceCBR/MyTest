@@ -161,23 +161,26 @@
     //目前仅支持话题类型
     cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt), @(TTRichSpanLinkTypeLink)];
     //处理圈子信息
-    FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
+    FHFeedUGCCellCommunityModel *community = nil;
     if(model.community){
+        community = [[FHFeedUGCCellCommunityModel alloc] init];
         community.name = model.community.name;
         community.url = model.community.url;
         community.socialGroupId = model.community.socialGroupId;
         community.showStatus = model.community.showStatus;
     }else if(model.rawData.community){
+        community = [[FHFeedUGCCellCommunityModel alloc] init];
         community.name = model.rawData.community.name;
         community.url = model.rawData.community.url;
         community.socialGroupId = model.rawData.community.socialGroupId;
         community.showStatus = model.rawData.community.showStatus;
     }
     cellModel.community = community;
-    if([cellModel.community.showStatus isEqualToString:@"1"]){
-        cellModel.showCommunity = NO;
-    }else{
+    
+    if(cellModel.community && ![cellModel.community.showStatus isEqualToString:@"1"]){
         cellModel.showCommunity = YES;
+    }else{
+        cellModel.showCommunity = NO;
     }
     
     //处理其他数据
@@ -614,16 +617,19 @@
     //目前仅支持话题类型
     cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt), @(TTRichSpanLinkTypeLink)];
     
-    FHFeedUGCCellCommunityModel *community = [[FHFeedUGCCellCommunityModel alloc] init];
-    community.name = model.community.name;
-    community.url = model.community.url;
-    community.socialGroupId = model.community.socialGroupId;
-    community.showStatus = model.community.showStatus;
+    FHFeedUGCCellCommunityModel *community = nil;
+    if(model.community){
+        community = [[FHFeedUGCCellCommunityModel alloc] init];
+        community.name = model.community.name;
+        community.url = model.community.url;
+        community.socialGroupId = model.community.socialGroupId;
+        community.showStatus = model.community.showStatus;
+    }
     cellModel.community = community;
-    if([cellModel.community.showStatus isEqualToString:@"1"]){
-        cellModel.showCommunity = NO;
-    }else{
+    if(cellModel.community && ![cellModel.community.showStatus isEqualToString:@"1"]){
         cellModel.showCommunity = YES;
+    }else{
+        cellModel.showCommunity = NO;
     }
     
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
