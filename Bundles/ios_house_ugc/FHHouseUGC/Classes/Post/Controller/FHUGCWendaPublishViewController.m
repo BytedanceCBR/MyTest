@@ -827,16 +827,22 @@
         [self publishWendaContentAfterFollowedSocialGroup];
     } else {
         // 先关注
-        WeakSelf;
-        [[FHUGCConfig sharedInstance] followUGCBy:self.selectGroupId isFollow:YES enterFrom:[self pageType]  enterType:@"click" completion:^(BOOL isSuccess) {
-            StrongSelf;
-            if (isSuccess) {
-                [self publishWendaContentAfterFollowedSocialGroup];
-            } else {
-                // 关注请求内部已经做了错误提示，不需要再重复提示了
-                //[[ToastManager manager] showToast:@"发布失败"];
-            }
-        }];
+        if(self.selectGroupId.length > 0) {
+            WeakSelf;
+            [[FHUGCConfig sharedInstance] followUGCBy:self.selectGroupId isFollow:YES enterFrom:[self pageType]  enterType:@"click" completion:^(BOOL isSuccess) {
+                StrongSelf;
+                if (isSuccess) {
+                    [self publishWendaContentAfterFollowedSocialGroup];
+                } else {
+                    // 关注请求内部已经做了错误提示，不需要再重复提示了
+                    //[[ToastManager manager] showToast:@"发布失败"];
+                }
+            }];
+        }
+        
+        else {
+            [self publishWendaContentAfterFollowedSocialGroup];
+        }
     }
 }
 
