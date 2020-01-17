@@ -362,6 +362,8 @@
     self.voteView.height = voteInfo.voteHeight;
     // 更新布局
     [self setupUIFrames];
+    
+    [self showGuideView];
 }
 
 + (CGFloat)heightForData:(id)data {
@@ -414,6 +416,11 @@
         } else {
             height += (24 + 25);
         }
+        
+        if(cellModel.isInsertGuideCell){
+            height += guideViewHeight;
+        }
+        
         return height;
     }
     return 44;
@@ -479,6 +486,30 @@
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = text;
     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
+}
+
+- (void)showGuideView {
+    if(_cellModel.isInsertGuideCell){
+        self.bottomView.height = bottomViewHeight + guideViewHeight;
+    }else{
+        self.bottomView.height = bottomViewHeight;
+    }
+}
+
+- (void)closeGuideView {
+    self.cellModel.isInsertGuideCell = NO;
+    [self.cellModel.tableView beginUpdates];
+    
+    [self showGuideView];
+    self.bottomView.cellModel = self.cellModel;
+    
+    [self setNeedsUpdateConstraints];
+    
+    [self.cellModel.tableView endUpdates];
+    
+    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
+        [self.delegate closeFeedGuide:self.cellModel];
+    }
 }
 
 @end
