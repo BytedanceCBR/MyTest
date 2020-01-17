@@ -768,8 +768,6 @@ static NSInteger const kMaxPostImageCount = 9;
     [self.view endEditing:YES];
     
     [self.toolbar endEditing:YES];
-    
-    [self needRelayoutToolbar];
 }
 
 - (void)tapAction:(UITapGestureRecognizer *)sender {
