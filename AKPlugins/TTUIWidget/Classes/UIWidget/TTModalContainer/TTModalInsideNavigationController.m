@@ -12,19 +12,25 @@
 
 @interface TTModalInsideNavigationController ()<TTModalWrapControllerDelegate>
 
+@property (nonatomic, strong) TTModalWrapController *containerVC;
+@property (nonatomic, strong) UIGestureRecognizer *disabledGesture;
+@property (nonatomic, strong) CAShapeLayer *maskLayer;
+
 @end
 
 @implementation TTModalInsideNavigationController
 
-//var originFrame: CGRect!
-
 - (instancetype)initWithRootViewController:(UIViewController *)rootViewController {
+    return [self initWithRootViewController:rootViewController disabledGesture:nil];
+}
+
+- (instancetype)initWithRootViewController:(UIViewController *)rootViewController disabledGesture:(UIGestureRecognizer *)gestureRecognizer {
+    _disabledGesture = gestureRecognizer;
     self = [super initWithRootViewController:rootViewController];
     if (self) {
         rootViewController.ttNeedHideBottomLine = NO;
         rootViewController.ttNeedTopExpand = NO;
         self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
     }
     return self;
 }
@@ -33,21 +39,24 @@
     UIViewController *containerVC;
     //如果viewController没有实现@protocol TTModalWrapControllerProtocol 则尝试用 上一层navi打开
     if ([viewController conformsToProtocol:@protocol(TTModalWrapControllerProtocol) ]) {
-        containerVC = [[TTModalWrapController alloc] initWithController:(UIViewController<TTModalWrapControllerProtocol> *)viewController];
-        TTModalControllerTitleView *titleView = ((TTModalWrapController *)containerVC).titleView;
+        containerVC = [[TTModalWrapController alloc] initWithController:(UIViewController<TTModalWrapControllerProtocol> *)viewController disabledGesture:_disabledGesture];
+        
+        id<TTModalWrapControllerTitleViewProtocol> titleView = ((TTModalWrapController *)containerVC).titleView;
         if ([viewController respondsToSelector:@selector(leftBarItemStyle)]) {
             titleView.type = [(UIViewController<TTModalWrapControllerProtocol> *)viewController leftBarItemStyle];
         } else {
             titleView.type = self.viewControllers.count? TTModalControllerTitleTypeOnlyBack: TTModalControllerTitleTypeOnlyClose;
         }
-        if ([viewController respondsToSelector:@selector(hiddenTitleViewBottomLineInModalContainer)]) {
-            titleView.hiddenBottomLine = [(UIViewController<TTModalWrapControllerProtocol> *)viewController hiddenTitleViewBottomLineInModalContainer];
+        if ([viewController respondsToSelector:@selector(hiddenTitleViewBottomLineInModalContainer)] && [titleView isKindOfClass:[TTModalControllerTitleView class]]) {
+            TTModalControllerTitleView *defaultTitleView = titleView;
+            defaultTitleView.hiddenBottomLine = [(UIViewController<TTModalWrapControllerProtocol> *)viewController hiddenTitleViewBottomLineInModalContainer];
         }
         
         ((TTModalWrapController *)containerVC).delegate = self;
         [super pushViewController:containerVC animated:animated];
         containerVC.ttNeedHideBottomLine = NO;
         containerVC.ttNeedTopExpand = NO;
+        self.containerVC = containerVC;
         return;
     }
     
@@ -79,7 +88,22 @@
     CAShapeLayer *maskLayer = [CAShapeLayer layer];
     maskLayer.frame = self.view.bounds;
     maskLayer.path = maskPath.CGPath;
-    self.view.layer.mask = maskLayer;
+    self.maskLayer = maskLayer;
+    if (self.disableRoundCorner) {
+        self.view.layer.mask = nil;
+    } else {
+        self.view.layer.mask = maskLayer;
+        
+    }
+}
+
+- (void)setDisableRoundCorner:(BOOL)disableRoundCorner {
+    _disableRoundCorner = disableRoundCorner;
+    if (disableRoundCorner) {
+        self.view.layer.mask = nil;
+    } else {
+        self.view.layer.mask = self.maskLayer;
+    }
 }
 
 - (void)modalWrapController:(TTModalWrapController *)controller backButtonOnClick:(id)sender {
@@ -99,4 +123,5 @@
         [self.modalNavigationDelegate modalInsideNavigationController:self panAtPercent:percent];
     }
 }
+
 @end

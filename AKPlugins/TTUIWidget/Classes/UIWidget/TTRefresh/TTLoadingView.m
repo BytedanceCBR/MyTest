@@ -62,6 +62,12 @@
     _arrowImage.center = CGPointMake(self.width / 2.f, self.height / 2.f);
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    _iconImageView.center = CGPointMake(self.width / 2.f, self.height / 2.f);
+    _arrowImage.center = CGPointMake(self.width / 2.f, self.height / 2.f);
+}
+
 - (void)startLoading
 {
     if(![NSThread isMainThread])
@@ -80,6 +86,7 @@
         _rotateAnimation.toValue = [NSNumber numberWithFloat:M_PI * 2];
         _rotateAnimation.duration = 1;
         _rotateAnimation.repeatCount = HUGE_VALF;
+        _rotateAnimation.removedOnCompletion = NO;
         [_iconImageView.layer addAnimation:_rotateAnimation forKey:@"rotateAnimation"];
     }
 }

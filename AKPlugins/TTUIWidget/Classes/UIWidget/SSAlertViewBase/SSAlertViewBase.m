@@ -11,6 +11,7 @@
 #import <Masonry/Masonry.h>
 #import "TTUIResponderHelper.h"
 #import "UIViewAdditions.h"
+#import "UIView+CustomTimingFunction.h"
 
 @interface SSAlertViewBase()
 
@@ -51,14 +52,20 @@
             aimVC = aimVC.presentedViewController;
         }
         UIView *aimSuperView = (hasPresent && aimVC.view.superview) ? aimVC.view.superview : aimVC.view;
+        self.frame = aimSuperView.bounds;
+        self.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         [aimSuperView addSubview:self];
         [aimSuperView bringSubviewToFront:self];
     }
     
-    [UIView animateWithDuration:0.25 animations:^{
+
+    [CATransaction begin];
+    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithControlPoints:0.22:1: 0.36: 1]];
+    [UIView animateWithDuration:0.45 delay:0 options:0 animations:^{
         self.backgroundColor = [UIColor colorWithHexString:@"00000066"];
         _contentBaseView.origin = CGPointMake(0, 0);
-    }];
+    } completion:nil];
+    [CATransaction commit];
 }
 
 - (void)showOnViewController:(UIViewController *)controller
@@ -71,22 +78,30 @@
         [controller.view addSubview:self];
         [controller.view bringSubviewToFront:self];
     }
-    
-    [UIView animateWithDuration:0.25 animations:^{
+
+
+    [CATransaction begin];
+    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithControlPoints:0.22:1: 0.36: 1]];
+    [UIView animateWithDuration:0.45 delay:0 options:0 animations:^{
         self.backgroundColor = [UIColor colorWithHexString:@"00000066"];
         _contentBaseView.origin = CGPointMake(0, 0);
-    }];
+    } completion:nil];
+    [CATransaction commit];
 }
 
 - (void)dismissWithAnimation:(BOOL)animation
 {
     if (animation) {
-        [UIView animateWithDuration:0.25 animations:^{
+        [CATransaction begin];
+        [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+        [UIView animateWithDuration:0.8 delay:0 options:0 animations:^{
             [self _dismiss];
         } completion:^(BOOL finished) {
             [self dismissDone];
             [self removeFromSuperview];
         }];
+        [CATransaction commit];
+
     }
     else {
         [self _dismiss];

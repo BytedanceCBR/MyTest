@@ -17,9 +17,7 @@
 
 BOOL STATUS_BAR_ORIENTATION_MODIFY = NO;
 
-@interface SSViewControllerBase (){
-    UIStatusBarStyle _lastStyle;
-}
+@interface SSViewControllerBase ()
 @property(nonatomic, copy) TTAppPageCompletionBlock completionBlock;
 @end
 
@@ -58,25 +56,25 @@ BOOL STATUS_BAR_ORIENTATION_MODIFY = NO;
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         [self commonInit];
-        self.ttStatusBarStyle = [[TTThemeManager sharedInstance_tt] statusBarStyle];
+        // todo zjing statusbar
+//        self.ttStatusBarStyle = [[TTThemeManager sharedInstance_tt] statusBarStyle];
         self.completionBlock = [paramObj.userInfo.extra objectForKey:@"completion_block"];
         
     }
     return self;
 }
 
-//- (instancetype)initWithBaseCondition:(NSDictionary *)baseCondition
-//{
-//    self = [super initWithNibName:nil bundle:nil];
-//    if (self) {
-//        [self commonInit];
-//        self.ttStatusBarStyle = [[TTThemeManager sharedInstance_tt] statusBarStyle];
-//        NSDictionary *parameters = [baseCondition dictionaryValueForKey:@"kSSAppPageBaseConditionParamsKey" defalutValue:nil];
-//        self.completionBlock = [parameters objectForKey:@"completion_block"];
-//        
-//    }
-//    return self;
-//}
+- (instancetype)initWithBaseCondition:(NSDictionary *)baseCondition
+{
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        [self commonInit];
+        NSDictionary *parameters = [baseCondition dictionaryValueForKey:@"kSSAppPageBaseConditionParamsKey" defalutValue:nil];
+        self.completionBlock = [parameters objectForKey:@"completion_block"];
+        
+    }
+    return self;
+}
 
 - (void)commonInit {
     // could be extended

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import "TTThemedAlertControllerProtocol.h"
 
 #define IS_PHONE ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
 
@@ -41,23 +42,6 @@
 #define TTThemedAlertControllerTextFieldActionKey   @"textFieldActionKey"
 
 //#define TTThemed
-
-typedef NS_ENUM(NSInteger, TTThemedAlertControllerType)
-{
-    TTThemedAlertControllerTypeAlert,
-    TTThemedAlertControllerTypeActionSheet
-};
-
-typedef NS_ENUM(NSInteger, TTThemedAlertActionType)
-{
-    TTThemedAlertActionTypeCancel,
-    TTThemedAlertActionTypeNormal,
-    TTThemedAlertActionTypeDestructive
-};
-
-typedef void (^TTThemedAlertActionBlock)();
-typedef void (^TTThemedAlertTextFieldActionBlock)(UITextField *textField);
-typedef void (^TTThemedAlertTextViewActionBlock)(UITextView *textView);
 
 @interface TTThemedAlertControllerCommon : NSObject
 

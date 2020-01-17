@@ -69,6 +69,16 @@
     [self.view setTtTargetView:ttView];
 }
 
+- (UIView*)ttLoadingTargetView {
+
+    return self.view.ttLoadingTargetView;
+}
+
+- (void)setTtLoadingTargetView:(UIView *)ttLoadingTargetView {
+
+    [self.view setTtLoadingTargetView:ttLoadingTargetView];
+}
+
 - (BOOL)ttHasLoadCachedData {
     
     return self.view.ttHasLoadCachedData;
@@ -87,6 +97,14 @@
 - (void)setTtNeedShowIndicator:(BOOL)ttNeedShowIndicator {
     
     [self.view setTtNeedShowIndicator:ttNeedShowIndicator];
+}
+
+- (BOOL)ttHiddenLoadingView {
+    return self.view.ttHiddenLoadingView;
+}
+
+- (void)setTtHiddenLoadingView:(BOOL)ttHiddenLoadingView {
+    [self.view setTtHiddenLoadingView:ttHiddenLoadingView];
 }
 
 - (TTFullScreenErrorViewType)ttViewType {

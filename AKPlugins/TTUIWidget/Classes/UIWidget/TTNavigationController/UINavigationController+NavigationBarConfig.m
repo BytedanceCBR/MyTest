@@ -61,25 +61,14 @@
 - (void)tt_reloadTheme
 {
     [self tt_configNavBarWithTheme:self.ttNavBarStyle];
-    
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
-        if (self.topViewController.view.window) {
-            if (self.topViewController.ttStatusBarStyle) {
-                [[UIApplication sharedApplication] setStatusBarStyle:self.topViewController.ttStatusBarStyle animated:YES];
-            }
-            else {
-                [[UIApplication sharedApplication] setStatusBarStyle:[[TTThemeManager sharedInstance_tt] statusBarStyle] animated:YES];
-
-            }
-            
-        }
-    }
-    
-    
 }
 
 - (void)tt_configNavBarWithTheme:(NSString *)style
 {
+    if ([style isEqualToString:@"custom"]) {
+        return;
+    }
+    
     self.navigationBar.translucent =  YES;
     
     if (!style) {

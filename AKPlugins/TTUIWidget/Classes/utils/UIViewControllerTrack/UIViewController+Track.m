@@ -7,6 +7,7 @@
 //
 
 #import "UIViewController+Track.h"
+#import <BDALog/BDAgileLog.h>
 
 @import ObjectiveC;
 
@@ -43,8 +44,6 @@
         } else {
             method_exchangeImplementations(originalMethod2, swizzledMethod2);
         }
-
-        
     });
 }
 
@@ -68,6 +67,7 @@
         [self tt_startTrack];
     }
     
+    BDALOG_INFO(@"%@_enter", NSStringFromClass([self class]));
 }
 
 - (void)tt_track_viewWillDisappear:(BOOL)animated
@@ -86,6 +86,8 @@
             [self tt_setHadObservedNotification:NO];
         }
     }
+    
+    BDALOG_INFO(@"%@_leave", NSStringFromClass([self class]));
 }
 
 - (void)tt_ApplicationDidEnterBackground
@@ -97,6 +99,8 @@
             [self trackEndedByAppWillEnterBackground];
         }
     }
+    
+    BDALOG_INFO(@"应用切换至后台");
 }
 
 - (void)tt_ApplicationWillEnterForeground
@@ -108,6 +112,8 @@
             [self trackStartedByAppWillEnterForground];
         }
     }
+    
+    BDALOG_INFO(@"应用切换至前台");
 }
 
 - (void)tt_startTrack {

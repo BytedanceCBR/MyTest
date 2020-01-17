@@ -9,28 +9,10 @@
 
 #import <UIKit/UIKit.h>
 #import "SSThemed.h"
+#import "TTCategoryItem.h"
 
 typedef void(^TTCategoryItemSelectedHandler)(NSUInteger index);
 typedef void(^TTCategoryItemTappedHandler)(NSUInteger indexOfTappedItem, NSUInteger currentIndex);
-
-typedef NS_ENUM(NSUInteger, TTCategoryItemBadgeStyle) {
-    TTCategoryItemBadgeStyleNone,
-    TTCategoryItemBadgeStylePoint,
-    TTCategoryItemBadgeStyleNumber
-};
-
-#pragma mark - TTCategoryItem
-/** 频道项 */
-@interface TTCategoryItem : NSObject
-
-/** 红点数量 */
-@property (nonatomic, assign) NSInteger badgeNum;
-/** 红点类型 */
-@property (nonatomic, assign) TTCategoryItemBadgeStyle badgeStyle;
-/** 频道名称 */
-@property (nonatomic, copy) NSString * _Nonnull title;
-
-@end
 
 
 #pragma mark - TTHorizontalCategoryBarDelegate
@@ -44,6 +26,13 @@ typedef NS_ENUM(NSUInteger, TTCategoryItemBadgeStyle) {
 /** 红点对于标题的偏移量 */
 - (UIOffset)offsetOfBadgeViewToTitleView;
 
+- (CGFloat)indicatorHeight;
+
+- (CGFloat)indicatorWidthforIndex:(NSInteger)index;
+
+- (CGFloat)indicatorRadius;
+
+- (UIFont *)fontForHightlightItem;
 @end
 
 
@@ -54,6 +43,9 @@ typedef NS_ENUM(NSUInteger, TTCategoryItemBadgeStyle) {
 @property (nonatomic, copy) TTCategoryItemSelectedHandler _Nullable didSelectCategory;
 /** 频道项被点击响应 */
 @property (nonatomic, copy) TTCategoryItemTappedHandler _Nullable didTapCategoryItem;
+
+/** 用于内部展示的CollectionView，只读 */
+@property (nonatomic, strong, readonly) UICollectionView * _Nonnull collectionView;
 
 @property (nonatomic) CGFloat interitemSpacing;//Default 30pt
 @property (nonatomic) CGFloat itemExpandSpacing;

@@ -6,7 +6,7 @@
 //
 //
 
-#import "SSThemed.h"
+#import <TTThemed/SSThemed.h>
 
 /**
  *  动画显示转菊花，用在loadMore和TTIndicator的waitingStyle场景

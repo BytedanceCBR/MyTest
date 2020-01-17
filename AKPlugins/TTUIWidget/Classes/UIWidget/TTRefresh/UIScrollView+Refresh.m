@@ -8,6 +8,8 @@
 
 #import "UIScrollView+Refresh.h"
 #import <objc/runtime.h>
+#import "TTLoadMoreView.h"
+#import "TTStateLoadMoreView.h"
 
 #define BottomInsetNotSet -1
 
@@ -39,17 +41,20 @@ static char TTPullRefreshViewDown, TTPullRefreshViewUp, TTPullRefreshViewMutex, 
         self.pullDownView.actionHandler = actionHandler;
         self.pullDownView.scrollView = self;
         [self.pullDownView startObserve];
-
- 
     }
     self.pullDownView.actionHandler = actionHandler;
-
+    self.pullDownView.accessibilityElementsHidden = YES;
 }
 
 - (void)addPullUpWithInitText:(NSString *)initText pullText:(NSString *)pullText loadingText:(NSString *)loadtingText
                    noMoreText:(NSString *)noMoreText timeText:(NSString *)timeText lastTimeKey:(NSString *)timeKey
                ActioinHandler:(pullActionHandler)actionHandler
 {
+    if (![self.pullUpView isKindOfClass:[TTLoadMoreView class]]) {
+        [self.pullUpView removeFromSuperview];
+        [self.pullUpView removeObserve:self];
+        self.pullUpView = nil;
+    }
     if (!self.pullUpView) {
         NSInteger height = MAX(self.contentSize.height, self.bounds.size.height);
         CGRect frame = CGRectMake(0, height, self.bounds.size.width, kTTPullRefreshHeight);
@@ -63,18 +68,18 @@ static char TTPullRefreshViewDown, TTPullRefreshViewUp, TTPullRefreshViewMutex, 
                                                                lastTimeKey:timeKey];
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         view.isPullUp = YES;
+        self.isDone = NO;
         [self addSubview:view];
 
         self.pullUpView = view;
         self.pullUpView.scrollView = self;
         [self.pullUpView startObserve];
-        
         self.currentRestingContentInsetBottom = BottomInsetNotSet;
-        
+       
         //self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, self.contentInset.bottom+50, self.contentInset.right);
     }
     self.pullUpView.actionHandler = actionHandler;
-
+    self.pullUpView.accessibilityElementsHidden = YES;
 }
 
 - (void)triggerPullDownAndHideAnimationView {
@@ -85,8 +90,13 @@ static char TTPullRefreshViewDown, TTPullRefreshViewUp, TTPullRefreshViewMutex, 
 
 - (void)triggerPullDown
 {
+    [self triggerPullDownWithDefaultRefreshView:YES];
+}
+
+- (void)triggerPullDownWithDefaultRefreshView:(BOOL)useDefaultRefreshView
+{
     if (self.pullDownView && self.pullDownView.state != PULL_REFRESH_STATE_LOADING) {
-        [self.pullDownView triggerRefresh];
+        [self.pullDownView triggerRefreshWithDefaultRefreshView:useDefaultRefreshView];
     }
 }
 
@@ -97,7 +107,7 @@ static char TTPullRefreshViewDown, TTPullRefreshViewUp, TTPullRefreshViewMutex, 
     }
 }
 
-- (void)pullView:(UIView *)view stateChange:(PullDirectionState)state
+- (void)pullView:(UIView *)view stateChange:(PullDirectionState)state 
 {
     if (self.isMutex && self.pullDownView && self.pullUpView) {
         UIView *sibling = ((TTRefreshView *)view).direction == PULL_DIRECTION_DOWN ? self.pullUpView : self.pullDownView;
@@ -317,6 +327,26 @@ static char TTPullRefreshViewDown, TTPullRefreshViewUp, TTPullRefreshViewMutex, 
     objc_setAssociatedObject(self, @selector(ttIntegratedMessageBar), ttIntegratedMessageBar, OBJC_ASSOCIATION_RETAIN);
 }
 
+- (BOOL)autoTriggerPullUpWhenHasError {
+    NSNumber *number = objc_getAssociatedObject(self, @selector(autoTriggerPullUpWhenHasError));
+    return [number boolValue];
+}
+
+- (void)setAutoTriggerPullUpWhenHasError:(BOOL)autoTriggerPullUpWhenHasError {
+    NSNumber *number = [NSNumber numberWithBool:autoTriggerPullUpWhenHasError];
+    objc_setAssociatedObject(self, @selector(autoTriggerPullUpWhenHasError), number, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)autoTriggerPullUpOffset {
+    NSNumber *number = objc_getAssociatedObject(self, @selector(autoTriggerPullUpOffset));
+    return [number floatValue];
+}
+
+- (void)setAutoTriggerPullUpOffset:(CGFloat)autoTriggerPullUpOffset {
+    NSNumber *number = [NSNumber numberWithFloat:autoTriggerPullUpOffset];
+    objc_setAssociatedObject(self, @selector(autoTriggerPullUpOffset), number, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 @end
 
 @implementation UIScrollView (TTSimpleCreates)
@@ -346,6 +376,34 @@ static char TTPullRefreshViewDown, TTPullRefreshViewUp, TTPullRefreshViewMutex, 
                        timeText:nil
                     lastTimeKey:nil
                  ActioinHandler:hander];
+}
+
+- (void)tt_addStatePullUpLoadMoreWithHandler:(pullActionHandler)handler withInset:(UIEdgeInsets)insets
+{
+    if (![self.pullUpView isKindOfClass:[TTStateLoadMoreView class]]) {
+        [self.pullUpView removeFromSuperview];
+        [self.pullUpView removeObserve:self];
+        self.pullUpView = nil;
+    }
+    if (!self.pullUpView) {
+        const NSInteger kPullUpViewHeight = 80;
+        NSInteger height = MAX(self.contentSize.height, self.bounds.size.height);
+        CGRect frame = CGRectMake(0, height, self.bounds.size.width, kPullUpViewHeight);
+        TTStateLoadMoreView *loadMoreview = [[TTStateLoadMoreView alloc] initWithFrame:frame
+                                                   pullDirection:PULL_DIRECTION_UP];
+        
+        loadMoreview.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        loadMoreview.isPullUp = YES;
+        [self addSubview:loadMoreview];
+        
+        self.pullUpView = loadMoreview;
+        self.pullUpView.scrollView = self;
+        [self.pullUpView startObserve];
+        self.currentRestingContentInsetBottom = BottomInsetNotSet;
+        self.originContentInset = UIEdgeInsetsMake(self.contentInset.top, 0, insets.bottom + kPullUpViewHeight, 0);
+        self.contentInset = self.originContentInset;
+    }
+    self.pullUpView.actionHandler = handler;
 }
 
 @end

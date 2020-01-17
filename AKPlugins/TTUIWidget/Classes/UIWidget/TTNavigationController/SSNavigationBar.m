@@ -14,6 +14,7 @@
 #import "TTDeviceHelper.h"
 #import "UIViewAdditions.h"
 #import "NSObject+FBKVOController.h"
+#import "TTBackButtonView.h"
 
 @interface TTNavigationBarItemContainerView ()
 
@@ -66,7 +67,7 @@
 - (UIEdgeInsets)alignmentRectInsets {
     UIEdgeInsets insets = UIEdgeInsetsZero;
     if (self.orientation == SSNavigationButtonOrientationOfLeft) {
-        insets = UIEdgeInsetsMake(0.f, isEmptyString(_button.titleLabel.text) ? 8.f : 2.f, 0.f, 0.f);
+        insets = UIEdgeInsetsMake(0.f, isEmptyString(_button.titleLabel.text) ? 14.f : 2.f, 0.f, 0.f);
     } else if (self.orientation == SSNavigationButtonOrientationOfRight) {
         insets = UIEdgeInsetsMake(0.f, 0.f, 0.f, isEmptyString(_button.titleLabel.text) ? 14.f : 2.f);
     }
@@ -263,7 +264,14 @@
     button.enableHighlightAnim = YES;
     button.frame = containerView.bounds;
     [containerView addSubview:button];
-    button.imageName = @"lefterbackicon_titlebar";
+    button.imageBundle = TTBackButtonView.resourceBundle;
+    if (@available(iOS 11.0, *)) {
+        button.imageName = @"lefterbackicon_titlebar_min";
+        button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    } else {
+        button.imageName = @"lefterbackicon_titlebar";
+    }
+    button.accessibilityLabel = @"返回";
     [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
     return containerView;
 }

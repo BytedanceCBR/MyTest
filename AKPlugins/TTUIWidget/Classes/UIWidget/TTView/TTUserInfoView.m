@@ -12,13 +12,13 @@
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
 #import "TTThemeManager.h"
-#import "TTAsyncLabel.h"
-
+#import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTImage/TTImageView.h>
 #import <TTImage/TTImageInfosModel.h>
 #import <objc/runtime.h>
 
-#define kLogoSpacing    2.f
+#define kLogoSpacing    4.f
+#define kLocalPlaceholderUrl @"file://temp.png" // 不知道这个TTImageInfosModel初始化如果URL为空会怎么样，干脆构造一个fake的URL
 
 @interface TTUserInfoViewHelper : NSObject
 @end
@@ -69,43 +69,26 @@
     return 1.f;
 }
 
-+ (NSString *)verifiedImageURL {
-    static NSString *verifiedImageURL;
++ (NSBundle *)imageBundle {
     static dispatch_once_t onceToken;
+    static NSBundle *bundle;
     dispatch_once(&onceToken, ^{
         NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"TTUIWidgetResources" ofType:@"bundle"];
-        NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
-        NSString *imageName = @"ttuiwidget_all_newv@3x";
-        verifiedImageURL = [bundle URLForResource:imageName withExtension:@"png"].absoluteString;
+        bundle = [NSBundle bundleWithPath:bundlePath];
     });
-    
-    return verifiedImageURL;
+    return bundle;
 }
 
-+ (NSString *)ownerImageURL {
-    static NSString *ownerImageURL;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"TTUIWidgetResources" ofType:@"bundle"];
-        NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
-        NSString *imageName = @"details_original_poster_label@3x";
-        ownerImageURL = [bundle URLForResource:imageName withExtension:@"png"].absoluteString;
-    });
-    
-    return ownerImageURL;
++ (NSString *)verifiedImageName {
+    return @"ttuiwidget_all_newv";
 }
 
-+ (NSString *)authorImageURL {
-    static NSString *authorImageURL;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"TTUIWidgetResources" ofType:@"bundle"];
-        NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
-        NSString *imageName = @"details_author_poster_label@3x";
-        authorImageURL = [bundle URLForResource:imageName withExtension:@"png"].absoluteString;
-    });
++ (NSString *)ownerImageName {
+    return @"details_original_poster_label";
+}
 
-    return authorImageURL;
++ (NSString *)authorImageName {
+    return @"details_author_poster_label";
 }
 
 
@@ -212,6 +195,24 @@
 
 @end
 
+@interface TTImageInfosModel (TTUserInfoView)
+
+@property (nonatomic, assign) NSString *tt_localImageName; //本地图片的ImageName
+
+@end
+
+@implementation TTImageInfosModel (TTUserInfoView)
+
+- (NSString *)tt_localImageName {
+    return objc_getAssociatedObject(self, @selector(tt_localImageName));
+}
+
+- (void)setTt_localImageName:(NSString *)tt_localImageName {
+    objc_setAssociatedObject(self, @selector(tt_localImageName), tt_localImageName, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
 @interface TTUserInfoView ()
 
 @property(nonatomic, strong) NSMutableArray<TTImageInfosModel *> *logoModelArray;
@@ -271,17 +272,17 @@
         _fontSize = fontSize;
         _ownerType = TTOwnerType_CommentAuthor;
         self.centerY = baselineOriginPoint.y;
-        _textColorThemedKey = @"grey1";
+        _textColorThemedKey = kColorText3;
         _titleClickActionExtendToLogos = YES;
 
         _logoModelArray = [NSMutableArray arrayWithCapacity:logoCount];
         _logoViewArray = [NSMutableArray arrayWithCapacity:logoCount];
         
-        _titleLabel = [[TTAsyncLabel alloc] initWithFrame:CGRectZero];
+        _titleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
         _titleLabel.backgroundColor = [UIColor clearColor];
 //        _titleLabel.textColorThemeKey = _textColorThemedKey;
-        _titleLabel.textColor = [UIColor tt_themedColorForKey:@"grey1"];
-        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:fontSize] ? : [UIFont boldSystemFontOfSize:fontSize];
+        _titleLabel.textColor = [UIColor tt_themedColorForKey:_textColorThemedKey];
+        _titleLabel.font = [UIFont systemFontOfSize:fontSize];
         _titleLabel.numberOfLines = 1;
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         
@@ -304,6 +305,29 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     return [self initWithBaselineOrigin:CGPointZero maxWidth:0 limitHeight:0 title:nil fontSize:0 verifiedInfo:nil appendLogoInfoArray:nil];
+}
+
+- (void)layoutSubviews {
+    if (self.titleLabel) {
+        self.titleLabel.centerY = self.height / 2.f;
+    }
+
+    if (self.verifiedLabel) {
+        self.verifiedLabel.centerY = self.height / 2.f;
+    }
+
+    if (self.verifiedSeperateLine) {
+        self.verifiedSeperateLine.centerY = self.height / 2.f;
+    }
+
+    if (self.relationLabel) {
+        self.relationLabel.centerY = self.height / 2.f;
+    }
+
+    for (TTImageView *imageView in self.logoViewArray) {
+        imageView.centerY = self.height / 2.f;
+        imageView.top = ceil(imageView.top);
+    }
 }
 
 - (void)refreshWithTitle:(NSString *)title appendLogoInfoArray:(NSArray<NSDictionary *>*)logoArray
@@ -341,20 +365,13 @@
     [self buildVerifiedViewsIfNeed];
     [self buildRelationLabelIfNeed];
     [self buildOwnerViewIfNeed];
-    CGSize size = [TTLabelTextHelper sizeOfText:title fontSize:_fontSize forWidth:_maxWidth forLineHeight:_titleLabel.font.lineHeight constraintToMaxNumberOfLines:1 firstLineIndent:0 textAlignment:NSTextAlignmentLeft lineBreakMode:_titleLabel.lineBreakMode];
-    if (size.width < _maxWidth - 3) {
-        size.width += 3;
+    _titleLabel.text = title;
+    [_titleLabel sizeToFit];
+    if (_titleLabel.width > _maxWidth) {
+        _titleLabel.width = _maxWidth;
     }
     _titleLabel.left = 0;
     _titleLabel.centerY = self.height / 2;
-    _titleLabel.width = ceilf(size.width);
-    if ([TTDeviceHelper isPadDevice]) {
-        _titleLabel.height = ceilf(size.height + 2);
-    }
-    else {
-        _titleLabel.height = ceilf(size.height + 1);
-    }
-    _titleLabel.text = title;
     _verifiedLabel.text = verifiedInfo;
     [_verifiedLabel sizeToFit];
     _verifiedLabel.width = ceil(_verifiedLabel.width);
@@ -382,17 +399,14 @@
             
         }
     }
-    
-    [self _buildLogoViews];
 
-    CGFloat totalWidth = _titleLabel.width + _logoAreaWidth + _relationLabel.width;
+    CGFloat totalWidth = _titleLabel.width + _relationLabel.width;
     if (_hasVerifiedInfo) {
         totalWidth += _verifiedLabel.width + (2 * [TTUserInfoViewHelper verifiedSeperateLineSpacing]);
     }
-    self.size = CGSizeMake(totalWidth, _titleLabel.height);
-    
-    [self sizeToFit];
-    
+
+    CGSize size = [self _buildLogoViewsWithSize:CGSizeMake(ceilf(totalWidth), _titleLabel.height)];
+    self.size = size;
 }
 
 - (void)buildVerifiedViewsIfNeed {
@@ -411,12 +425,14 @@
     }
 
     if (_isVerifiedUser && !_verifiedModel) {
-        NSString *url = [TTUserInfoViewHelper verifiedImageURL];
-        if (!isEmptyString(url)) {
+        NSString *imageName = [TTUserInfoViewHelper verifiedImageName];
+        if (!isEmptyString(imageName)) {
+            NSString *url = kLocalPlaceholderUrl;
             _verifiedModel = [[TTImageInfosModel alloc] initWithDictionary:@{@"height": @(33),
-                                                                      @"width": @(33),
-                                                                      @"url_list":@[@{@"url":url},@{@"url":url}],
-                                                                      @"url":url}];
+                                                                             @"width": @(33),
+                                                                             @"url_list":@[@{@"url":url},@{@"url":url}],
+                                                                             @"url":url}];
+            _verifiedModel.tt_localImageName = imageName;
         }
     }
 }
@@ -432,19 +448,20 @@
 
 - (void)buildOwnerViewIfNeed {
     if (_isOwner && !_ownerModel) {
-        NSString *url;
+        NSString *imageName;
         if (self.ownerType == TTOwnerType_ContentAuthor) {
-            url = [TTUserInfoViewHelper authorImageURL];
+            imageName = [TTUserInfoViewHelper authorImageName];
         }
         else {
-            url = [TTUserInfoViewHelper ownerImageURL];
+            imageName = [TTUserInfoViewHelper ownerImageName];
         }
-        if (!isEmptyString(url)) {
-            
+        if (!isEmptyString(imageName)) {
+            NSString *url = kLocalPlaceholderUrl;
             _ownerModel = [[TTImageInfosModel alloc] initWithDictionary:@{@"height": @(42),
                                                                       @"width": @(78),
                                                                       @"url_list":@[@{@"url":url},@{@"url":url}],
                                                                       @"url":url}];
+            _ownerModel.tt_localImageName = imageName;
         }
     }
 }
@@ -472,64 +489,29 @@
     [_logoViewArray removeAllObjects];
 }
 
-- (void)_buildLogoViews {
+- (CGSize)_buildLogoViewsWithSize:(CGSize)size {
     /**
      *  UI又说logo尺寸不能超过文字高度，更改限高为字体高度(有修正值)，忽略外部传入limitHeight值
      */
-     //有认证信息时logo大小不能超过认证信息
+    //有认证信息时logo大小不能超过认证信息
     _limitHeight =  (_hasVerifiedInfo? [TTUserInfoViewHelper verifiedContentFontSize]: _fontSize) - 1.f;
-    CGFloat startLogoOriX = 0;
-    CGFloat maxLogoHeight = _titleLabel.height;
+
     _logoAreaWidth = 0;
-    for (TTImageInfosModel *model in _logoModelArray) {
+    for (NSInteger i = 0; i < _logoModelArray.count; i++ ) {
         //限高
+        TTImageInfosModel *model =  [_logoModelArray objectAtIndex:i];
         if (_limitHeight > 0 && model.height > _limitHeight) {
             //等比压缩
             CGFloat height = _limitHeight;
             CGFloat width = height * model.width / model.height;
-            model.width = width;
-            model.height = height;
+            model.width = ceilf(width);
+            model.height = ceilf(height);
         }
-        startLogoOriX += kLogoSpacing;
-        
-        TTImageView *imageView = [[TTImageView alloc] initWithFrame:CGRectMake(startLogoOriX, 0, model.width, model.height)];
-        imageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
-        imageView.enableNightCover = NO;
-        imageView.enableAlphaNightCover = NO;
-        __weak __typeof(imageView)weakImageView = imageView;
-        __weak __typeof(self)weakSelf = self;
-        [imageView setImageWithModel:model placeholderImage:self.placeholderImage options:0 success:^(UIImage *image, BOOL cached) {
-            __strong __typeof(weakImageView)strongImageView = weakImageView;
-            __strong __typeof(weakSelf)strongSelf = weakSelf;
-            if (!strongSelf.disableLogoNightMask) {
-                strongImageView.ttUserInfoNightMaskView.size = strongImageView.bounds.size;
-                [strongImageView.ttUserInfoNightMaskView refreshWithMaskImage:image];
-            }
-        } failure:nil];
-        if (!isEmptyString(model.openURL)) {
-            imageView.userInteractionEnabled = YES;
-            UITapGestureRecognizer *logoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(logoTap:)];
-            [imageView addGestureRecognizer:logoTap];
-        }
-        [_logoViewArray addObject:imageView];
-        [self addSubview:imageView];
-        
-        startLogoOriX += imageView.width;
-        _logoAreaWidth += kLogoSpacing + imageView.width;
-        if (imageView.height > maxLogoHeight) {
-            maxLogoHeight = imageView.height;
-        }
+        _logoAreaWidth += kLogoSpacing + model.width;
     }
-}
+    size.width += _logoAreaWidth; // 先计算logo的width
 
-- (CGSize)sizeThatFits:(CGSize)size
-{
-    /**
-     *  1.horizental方向判断maxWidth。
-     *  2.vertical方向重新layout
-     */
-    CGSize fitsSize = size;
-    if (size.width > _maxWidth) {
+    if (ceilf(size.width) > _maxWidth) {
         CGFloat restWidth = _maxWidth - _titleLabel.width - _logoAreaWidth - _relationLabel.width;
         if (restWidth < 0) {
             _titleLabel.width = ceil(_maxWidth - _logoAreaWidth - _relationLabel.width);
@@ -545,7 +527,7 @@
             _verifiedSeperateLine.hidden = _verifiedLabel.hidden;
             _verifiedLabel.width = restWidth - (2 * [TTUserInfoViewHelper verifiedSeperateLineSpacing]);
         }
-        fitsSize.width = _maxWidth;
+        size.width = _maxWidth;
     }
     CGFloat offset = _titleLabel.right;
     if (_hasVerifiedInfo && !_verifiedLabel.hidden) {
@@ -553,12 +535,57 @@
         _verifiedLabel.left = _verifiedSeperateLine.right + [TTUserInfoViewHelper verifiedSeperateLineSpacing];
         offset = _verifiedLabel.right;
     }
-    for (TTImageView * logo in _logoViewArray) {
-        if (offset) {
-            logo.left += offset;
+
+    CGFloat startLogoOriX = offset;
+    CGFloat maxLogoHeight = _titleLabel.height;
+    for (NSInteger i = 0; i < _logoModelArray.count; i++ ) {
+        //限高
+        TTImageInfosModel *model =  [_logoModelArray objectAtIndex:i];
+        startLogoOriX += (kLogoSpacing);
+
+        CGFloat top = ceilf((size.height - model.height) / 2.f);
+        TTImageView *imageView = [[TTImageView alloc] initWithFrame:CGRectMake(startLogoOriX, top, model.width, model.height)];
+        imageView.imageContentMode = TTImageViewContentModeScaleToFill;
+        imageView.enableNightCover = NO;
+        imageView.enableAlphaNightCover = NO;
+        if (!isEmptyString(model.tt_localImageName)) {
+            NSString *imageName = model.tt_localImageName;
+            NSBundle *imageBundle = [TTUserInfoViewHelper imageBundle];
+            UIImage *image = [UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil];
+            if (image) {
+                [imageView setImage:image];
+                if (!self.disableLogoNightMask) {
+                    imageView.ttUserInfoNightMaskView.size = imageView.bounds.size;
+                    [imageView.ttUserInfoNightMaskView refreshWithMaskImage:image];
+                }
+            }
+        } else {
+            __weak __typeof(imageView) weakImageView = imageView;
+            __weak __typeof(self) weakSelf = self;
+            [imageView setImageWithModel:model placeholderImage:self.placeholderImage options:0 success:^(UIImage *image, BOOL cached) {
+                __strong __typeof(weakImageView) strongImageView = weakImageView;
+                __strong __typeof(weakSelf) strongSelf = weakSelf;
+                if (!strongSelf.disableLogoNightMask) {
+                    strongImageView.ttUserInfoNightMaskView.size = strongImageView.bounds.size;
+                    [strongImageView.ttUserInfoNightMaskView refreshWithMaskImage:image];
+                }
+            } failure:nil];
         }
-        logo.top = (size.height - logo.height)/2 - 2.f;
+        if (!isEmptyString(model.openURL)) {
+            imageView.userInteractionEnabled = YES;
+            UITapGestureRecognizer *logoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(logoTap:)];
+            [imageView addGestureRecognizer:logoTap];
+        }
+        [_logoViewArray addObject:imageView];
+        [self addSubview:imageView];
+        
+        startLogoOriX += imageView.width;
+        if (imageView.height > maxLogoHeight) {
+            maxLogoHeight = imageView.height;
+        }
     }
+
+
     _relationLabel.left = MAX([_logoViewArray lastObject].right, _titleLabel.right);
     _relationLabel.left += 2.f;
     _titleLabel.top = (size.height - _titleLabel.height)/2;
@@ -566,8 +593,9 @@
         _verifiedSeperateLine.centerY = _titleLabel.centerY - 2.f;
         _verifiedLabel.centerY = _titleLabel.centerY - 2.f;
     }
-    _relationLabel.top = _titleLabel.top - 2.f;
-    return fitsSize;
+    _relationLabel.top = ceilf((size.height - _relationLabel.height) / 2.f);
+
+    return size;
 }
 
 - (void)setTextColorThemedKey:(NSString *)textColorThemedKey
@@ -585,7 +613,7 @@
 - (void)themeChanged:(NSNotification *)notification
 {
 //    self.titleLabel.textColorThemeKey = _textColorThemedKey;
-    self.titleLabel.textColor = [UIColor tt_themedColorForKey:kColorText3];
+    self.titleLabel.textColor = [UIColor tt_themedColorForKey:_textColorThemedKey];
     self.backgroundColor = [UIColor clearColor];
 //    [self buildVerifiedViewsIfNeed];
 //    [self buildOwnerViewIfNeed];

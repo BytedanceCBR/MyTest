@@ -14,7 +14,16 @@ typedef enum : NSUInteger {
     TTModalControllerTitleTypeOnlyClose
 } TTModalControllerTitleType;
 
-@interface TTModalControllerTitleView : SSViewBase
+
+@protocol TTModalWrapControllerTitleViewProtocol<NSObject>
+
+@property (nonatomic, assign) TTModalControllerTitleType type;
+@property (nonatomic, copy) void (^closeComplete)(UIButton *sender);
+@property (nonatomic, copy) void (^backComplete)(void);
+
+@end
+
+@interface TTModalControllerTitleView : SSViewBase<TTModalWrapControllerTitleViewProtocol>
 //标题类型：返回按钮 or 关闭按钮
 @property (nonatomic, assign) TTModalControllerTitleType type;
 @property (nonatomic, copy) void (^closeComplete)(UIButton *sender);

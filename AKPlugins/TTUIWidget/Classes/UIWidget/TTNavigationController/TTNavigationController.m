@@ -10,7 +10,6 @@
 #import "UINavigationController+NavigationBarConfig.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "SSThemed.h"
-#import "SSViewControllerBase.h"
 #import "UIViewAdditions.h"
 #import "NSObject+FBKVOController.h"
 #import "TTDeviceHelper.h"
@@ -18,6 +17,12 @@
 #import "UIView+CustomTimingFunction.h"
 #import "UIImageAdditions.h"
 #import <objc/runtime.h>
+#import <BDAssert/BDAssert.h>
+#if __has_include(<BDMobileRuntime/BDNavigationController.h>)
+    #import <BDMobileRuntime/BDContext.h>
+    #import <TTRegistry/TTRegistryDefines.h>
+    #import <TTServiceProtocols/TTTabBarProviderProtocol.h>
+#endif
 
 //#ifndef TTModule
 //#import <Crashlytics/Crashlytics.h>
@@ -26,6 +31,9 @@
 #pragma mark 分割线
 
 static const NSUInteger kTabBarSnapShotTag = 2001;
+static BOOL optimizeSnapshotEnable__ = NO;
+static float ignorePushVCThrottleTimer__ = 0.6f;
+static BOOL fixWKGestureConflictEnable__ = NO;
 
 @interface UINavigationController(TTNavigationController)
 - (void)didShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
@@ -53,6 +61,8 @@ static inline CGFloat navigationBarTop() {
 
 - (void)dealloc
 {
+    _swipeRecognizer.delegate = nil;
+    _panRecognizer.delegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -81,7 +91,7 @@ static inline CGFloat navigationBarTop() {
     self.maskView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.maskView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+    if ([[self class] isPadDevice]) {
         
         self.swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipe:)];
         self.swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
@@ -140,10 +150,6 @@ static inline CGFloat navigationBarTop() {
         return NO;
     }
     
-    if ([self gestureView:otherGestureRecognizer.view isClass:NSClassFromString(@"_TtC6Bubble19CyclePageScrollView")]) {
-        return NO;
-    }
-    
     if ([self gestureView:otherGestureRecognizer.view isClass:NSClassFromString(@"UITableViewWrapperView")]) {
         return YES;
     };
@@ -156,24 +162,59 @@ static inline CGFloat navigationBarTop() {
         return YES;
     };
     
+    if (![[self class] isPadDevice] && [self gestureView:otherGestureRecognizer.view isClass:NSClassFromString(@"_TTInternalPanAvailableScrollView")]) {
+        if ([self.topViewController isKindOfClass:NSClassFromString(@"TTLiveMainViewController")]) {
+            return YES;
+        }
+    };
+    
     // TODO: 解决React Native页面中，存在左右滑动切换tab的页面结构，滑动到最左侧时，无法右滑返回的问题
     if ([self gestureView:otherGestureRecognizer.view isClass:NSClassFromString(@"RCTCustomScrollView")] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+
         UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)otherGestureRecognizer;
         UIScrollView *v = (UIScrollView *)otherGestureRecognizer.view;
         CGPoint velocity = [panGestureRecognizer velocityInView:v];
+        CGPoint location = [panGestureRecognizer locationInView:self.view];
+        NSInteger leftEdge = self.topViewController.ttDragBackLeftEdge;
+        
         BOOL xDirection = 0.5 * abs(velocity.x) > abs(velocity.y);
-        if (v.contentOffset.x == 0 && xDirection && velocity.x > 0) {
+        if (xDirection && velocity.x > 0
+            && (v.contentOffset.x <= 0 || location.x <= leftEdge)) {
+            
             return YES;
         }
     }
-    
-    // 处理iOS11上私信消息中心的会话左滑删除手势失效的问题
-    if (([otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"TTIMChatCenterViewController")] || [otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"FHMyFavoriteViewController")] ||
-        [otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"FHTempMessageViewController")]) &&
-        [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
+    // 解决草稿箱页面左滑删除和上下滑动容易误解返回的问题
+    if ([otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"TTDraftBoxViewController")] &&
         [otherGestureRecognizer.view isKindOfClass:[UITableView class]]) {
-        CGPoint velocity = [(UIPanGestureRecognizer *)otherGestureRecognizer velocityInView:otherGestureRecognizer.view];
-        if (velocity.x < 0) return YES;
+        if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+            CGPoint velocity = [(UIPanGestureRecognizer *)otherGestureRecognizer velocityInView:otherGestureRecognizer.view];
+            if (velocity.y != 0) {
+                return NO;
+            }
+            if (velocity.x < 0) {
+                return YES;
+            }
+        }
+    }
+    
+    // 处理私信消息中心/小程序列表的会话左滑删除手势失效的问题
+    if (([otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"TTIMChatCenterViewController")] ||
+         [otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"TTIMChatCenterViewControllerLegacy")] ||
+         [otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"FHMyFavoriteViewController")] ||
+         [otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"FHTempMessageViewController")] ||
+         [otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"TMAAppListViewController")]) &&
+        [otherGestureRecognizer.view isKindOfClass:[UITableView class]]) {
+        if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+            CGPoint velocity = [(UIPanGestureRecognizer *)otherGestureRecognizer velocityInView:otherGestureRecognizer.view];
+            if (velocity.x < 0) return YES;
+        }
+    }
+    
+    if (!fixWKGestureConflictEnable__) {
+        if ([myPopGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer.view isKindOfClass:NSClassFromString(@"WKContentView")]) {
+            return YES;
+        }
     }
     
     return NO;
@@ -183,23 +224,33 @@ static inline CGFloat navigationBarTop() {
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+    // todo zjing statusbar
     if (self.topViewController.ttNavBarStyle) {
         [self setTtNavBarStyle:self.topViewController.ttNavBarStyle];
     }
-    
     if (!self.topViewController.ttStatusBarStyle) {
+
         [UIApplication sharedApplication].statusBarStyle = [[TTThemeManager sharedInstance_tt] statusBarStyle];
     }
     else {
-        
+
         if ([UIApplication sharedApplication].statusBarStyle != self.topViewController.ttStatusBarStyle) {
-            
+
             [UIApplication sharedApplication].statusBarStyle = self.topViewController.ttStatusBarStyle;
-            
+
         }
     }
+//    [self setNeedsStatusBarAppearanceUpdate];
 }
+
+//- (UIStatusBarStyle)preferredStatusBarStyle{
+//    if (!self.topViewController.ttStatusBarStyle) {
+//        return [[TTThemeManager sharedInstance_tt] statusBarStyle];
+//    }
+//    return self.topViewController.ttStatusBarStyle;
+//    return self.topViewController.preferredStatusBarStyle;
+//    return UIStatusBarStyleLightContent;
+//}
 
 - (BOOL)shouldAutorotate
 {
@@ -232,7 +283,19 @@ static inline CGFloat navigationBarTop() {
     if (self.shouldIgnorePushingViewControllers) {
         return;
     }
-
+    //是否应该忽略本次push，已经有presentedVC的会放弃self的push、改为由presentedVC来push，以支持在presentVC上继续push（例如present、压后台、点通知push的场景）
+    SEL sel = NSSelectorFromString(@"shouldHandlePushBySuper");
+    if ([super respondsToSelector:sel]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        BOOL ret = [super performSelector:sel];
+#pragma clang diagnostic pop
+        if (ret) {
+            [super pushViewController:viewController animated:animated];
+            return;
+        }
+    }
+    
     if (self.childViewControllers.count >= 1) {
         viewController.hidesBottomBarWhenPushed = YES; //viewController是将要被push的控制器
     }
@@ -254,7 +317,7 @@ static inline CGFloat navigationBarTop() {
         [self addCustomNavigationBarForViewController:viewController];
     }
     @catch (NSException * ex) {
-        
+        BDAssert(ex == nil, @"%@ pushViewController failed. exception: %@", viewController, ex);
     }
     
     [self ignorePushViewControllersIfNeeded:animated];
@@ -268,11 +331,22 @@ static inline CGFloat navigationBarTop() {
     if (self.shouldIgnorePushingViewControllers) {
         return;
     }
-
+    //是否应该忽略本次push，已经有presentedVC的会放弃self的push、改为由presentedVC来push，以支持在presentVC上继续push（例如present、压后台、点通知push的场景）
+    SEL sel = NSSelectorFromString(@"shouldHandlePushBySuper");
+    if ([super respondsToSelector:sel]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        BOOL ret = [super performSelector:sel];
+#pragma clang diagnostic pop
+        if (ret) {
+            [super pushViewController:viewController animated:animated];
+            return;
+        }
+    }
+    
     if (self.childViewControllers.count >= 1) {
         viewController.hidesBottomBarWhenPushed = YES; //viewController是将要被push的控制器
     }
-    
     if (([viewController supportedInterfaceOrientations] != UIInterfaceOrientationMaskAll ||[viewController supportedInterfaceOrientations] != UIInterfaceOrientationMaskAllButUpsideDown )
         && ![self orientationMaskSupportsOrientationMask:[viewController supportedInterfaceOrientations] orientation:[[UIApplication sharedApplication] statusBarOrientation]]) {
         
@@ -302,7 +376,7 @@ static inline CGFloat navigationBarTop() {
                 [self.view addSubview:fromViewController.view];
                 [self.view sendSubviewToBack:fromViewController.view];
                 
-                if (![TTDeviceHelper isPadDevice] && [self.viewControllers indexOfObject:fromViewController] == 0 && [self.tabBarController.viewControllers containsObject:self]) {
+                if (![[self class] isPadDevice] && [self.viewControllers indexOfObject:fromViewController] == 0 && [self.tabBarController.viewControllers containsObject:self]) {
                     [self addTabBarSnapshotForSuperView:fromViewController.view];
                 }
                 [fromViewController.view addSubview:_maskView];
@@ -310,12 +384,13 @@ static inline CGFloat navigationBarTop() {
                 
                 CGRect fromVCFrame = CGRectMake(0, 0, CGRectGetWidth(fromViewController.view.frame), CGRectGetHeight(fromViewController.view.frame));
                 fromViewController.view.frame = fromVCFrame;
-//                fromViewController.view.userInteractionEnabled = NO;
+                fromViewController.view.userInteractionEnabled = NO;
                 viewController.view.left = CGRectGetWidth(viewController.view.frame);
                 viewController.view.top = fromViewController.view.top;
-                
-                self.originalColor = self.view.backgroundColor;
-                self.view.backgroundColor = [UIColor blackColor];
+                if (!self.shouldIgnoreBackGroundColor) {
+                    self.originalColor = self.view.backgroundColor;
+                    self.view.backgroundColor = [UIColor blackColor];
+                }
                 [UIView animateWithDuration:0.28 customTimingFunction:CustomTimingFunctionSineOut animation:^{
                     if (!fromViewController.ttNeedIgnoreZoomAnimation) {
                         fromViewController.view.transform = CGAffineTransformMakeScale(0.98, 0.98);
@@ -323,8 +398,10 @@ static inline CGFloat navigationBarTop() {
                     viewController.view.transform = CGAffineTransformMakeTranslation(-CGRectGetWidth(viewController.view.frame), 0);
                     _maskView.alpha = 1.0;
                 } completion:^(BOOL finished) {
-                    self.view.backgroundColor = self.originalColor;
-                    self.originalColor = nil;
+                    if (!self.shouldIgnoreBackGroundColor) {
+                        self.view.backgroundColor = self.originalColor;
+                        self.originalColor = nil;
+                    }
                     if(self.topViewController == viewController) {
                         [fromViewController.view removeFromSuperview];
                         fromViewController.view.transform = CGAffineTransformIdentity;
@@ -351,7 +428,7 @@ static inline CGFloat navigationBarTop() {
             
         }
     } @catch (NSException * ex) {
-        
+        BDAssert(ex == nil, @"%@ pushViewController failed. exception: %@", viewController, ex);
     }
     
     [self ignorePushViewControllersIfNeeded:animated];
@@ -368,9 +445,17 @@ static inline CGFloat navigationBarTop() {
     if (self.shouldIgnorePushingViewControllers) {
         return;
     }
-
-    if (self.childViewControllers.count >= 1) {
-        viewController.hidesBottomBarWhenPushed = YES; //viewController是将要被push的控制器
+    //是否应该忽略本次push，已经有presentedVC的会放弃self的push、改为由presentedVC来push，以支持在presentVC上继续push（例如present、压后台、点通知push的场景）
+    SEL sel = NSSelectorFromString(@"shouldHandlePushBySuper");
+    if ([super respondsToSelector:sel]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        BOOL ret = [super performSelector:sel];
+#pragma clang diagnostic pop
+        if (ret) {
+            [super pushViewController:viewController animated:animated];
+            return;
+        }
     }
     
     if (([viewController supportedInterfaceOrientations] != UIInterfaceOrientationMaskAll ||[viewController supportedInterfaceOrientations] != UIInterfaceOrientationMaskAllButUpsideDown )
@@ -468,7 +553,7 @@ static inline CGFloat navigationBarTop() {
         }
         
     } @catch (NSException * ex) {
-        
+        BDAssert(ex == nil, @"%@ pushViewController failed. exception: %@", viewController, ex);
     }
     
     [self ignorePushViewControllersIfNeeded:YES];
@@ -585,11 +670,9 @@ static inline CGFloat navigationBarTop() {
         vc = [super popViewControllerAnimated:animated];
     }
     @catch (NSException *exception) {
-        
+        BDAssert(exception == nil, @"%@ popViewController failed. exception: %@", self, exception);
     }
-    
-    [self ignorePushViewControllersIfNeeded:animated];
-    
+    //[self ignorePushViewControllersIfNeeded:animated];
     return vc;
 }
 
@@ -608,12 +691,12 @@ static inline CGFloat navigationBarTop() {
         toVC = [self.viewControllers lastObject];
     }
     @catch (NSException *exception) {
-        
+        BDAssert(exception == nil, @"%@ popViewController failed. exception: %@", self, exception);
     }
     
     [self customPopToViewController:toVC fromViewController:fromVC animated:animated];
     
-    [self ignorePushViewControllersIfNeeded:animated];
+   // [self ignorePushViewControllersIfNeeded:animated];
     
     return vc;
 }
@@ -634,7 +717,7 @@ static inline CGFloat navigationBarTop() {
     
     [self customPopToViewController:toVC fromViewController:fromVC animated:animated];
     
-    [self ignorePushViewControllersIfNeeded:animated];
+    //[self ignorePushViewControllersIfNeeded:animated];
     
     return vcs;
 }
@@ -656,7 +739,7 @@ static inline CGFloat navigationBarTop() {
     
     [self customPopToViewController:toVC fromViewController:fromVC animated:animated];
     
-    [self ignorePushViewControllersIfNeeded:animated];
+    //[self ignorePushViewControllersIfNeeded:animated];
     
     return vcs;
 }
@@ -673,7 +756,7 @@ static inline CGFloat navigationBarTop() {
         [self.view addSubview:fromViewController.view];
         [self.view bringSubviewToFront:fromViewController.view];
         
-        if (![TTDeviceHelper isPadDevice] && [self.viewControllers indexOfObject:viewController] == 0 && [self.tabBarController.viewControllers containsObject:self]) {
+        if (![[self class] isPadDevice] && [self.viewControllers indexOfObject:viewController] == 0 && [self.tabBarController.viewControllers containsObject:self]) {
             [self addTabBarSnapshotForSuperView:viewController.view];
         }
         
@@ -687,31 +770,48 @@ static inline CGFloat navigationBarTop() {
         if (!viewController.ttNeedIgnoreZoomAnimation) {
             viewController.view.transform = CGAffineTransformMakeScale(0.98, 0.98);
         }
-        
-        self.originalColor = self.view.backgroundColor;
-        self.view.backgroundColor = [UIColor blackColor];
+        if (!self.shouldIgnoreBackGroundColor) {
+            self.originalColor = self.view.backgroundColor;
+            self.view.backgroundColor = [UIColor blackColor];
+        }
+//        if ([self forbidRevertTabbar]) {
+//            self.tabBarController.tabBar.hidden = YES;
+//        }
         [UIView animateWithDuration:0.15 customTimingFunction:CustomTimingFunctionQuadIn animation:^{
-            fromViewController.view.transform = CGAffineTransformMakeTranslation(CGRectGetWidth(fromVCFrame), 0);
+            fromViewController.view.transform = CGAffineTransformMakeTranslation(CGRectGetWidth(fromViewController.view.frame), 0);
             viewController.view.transform = CGAffineTransformIdentity;
-            self->_maskView.alpha = 0.0;
+            self.maskView.alpha = 0.0;
         } completion:^(BOOL finished) {
-            self.view.backgroundColor = self.originalColor;
-            self.originalColor = nil;
+            if (!self.shouldIgnoreBackGroundColor) {
+                self.view.backgroundColor = self.originalColor;
+                self.originalColor = nil;
+            }
             if(self.topViewController == viewController) {
                 [fromViewController.view removeFromSuperview];
                 fromViewController.view.transform = CGAffineTransformIdentity;
             }
-            [self->_maskView removeFromSuperview];
+            [self.maskView removeFromSuperview];
             fromViewController.view.userInteractionEnabled = YES;
             viewController.view.transform = CGAffineTransformIdentity;
             [self removeTabBarSnapshotForSuperView:viewController.view];
             
-            if (![TTDeviceHelper isPadDevice] && [self.viewControllers indexOfObject:viewController] == 0 && [self.tabBarController.viewControllers containsObject:self]) {
+            if (![[self class] isPadDevice] && [self.viewControllers indexOfObject:viewController] == 0 && [self.tabBarController.viewControllers containsObject:self]) {
+                // todo zjing tabbar
+//                [self handleTabBar];
                 self.tabBarController.tabBar.hidden = NO;
             }
         }];
     }
 }
+
+// todo zjing tabbar
+//- (void)handleTabBar {
+//    if ([self forbidRevertTabbar]) {
+//        self.tabBarController.tabBar.hidden = YES;
+//    } else {
+//        self.tabBarController.tabBar.hidden = NO;
+//    }
+//}
 
 #pragma mark - Private API
 - (void)didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
@@ -723,7 +823,19 @@ static inline CGFloat navigationBarTop() {
     
 }
 
-
+// todo zjing tabbar
+//- (BOOL)forbidRevertTabbar {
+//
+//    return YES;
+//
+//#if __has_include(<BDMobileRuntime/BDNavigationController.h>)
+//    id<TTTabBarProviderProtocol> service = [BDContextGet() findServiceByName:TTTabBarProviderServiceName];
+//    if ([service respondsToSelector:@selector(forbidRevertTabbar)] && [service forbidRevertTabbar]) {
+//        return YES;
+//    }
+//#endif
+//    return NO;
+//}
 
 #pragma mark Gesture Delegate
 
@@ -747,7 +859,7 @@ static inline CGFloat navigationBarTop() {
         if (self.shouldIgnorePushingViewControllers) {
             return NO;
         }
-        else if (![TTDeviceHelper isPadDevice] && UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        else if (![[self class] isPadDevice] && UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
             return NO;
         }
         else
@@ -761,7 +873,9 @@ static inline CGFloat navigationBarTop() {
                 view = view.superview;
             }
         }
-        
+        if ([touch.view isKindOfClass:[UISlider class]]) {
+            return NO;
+        }
     }
     return self.viewControllers.count > 1;
 }
@@ -769,6 +883,35 @@ static inline CGFloat navigationBarTop() {
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && [gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]) {
+        //是否禁止返回到上一级页面
+        if (gestureRecognizer == _swipeRecognizer) {
+            UIViewController *topVC = self.topViewController;
+            while (topVC.childViewControllers.lastObject) {
+                topVC = topVC.childViewControllers.lastObject;
+            }
+            
+            ///将手势控制权交给子VC本身不合理，因为有可能子VC是其他SDK提供的不能修改
+            ///为了兼容 如果子VC没有实现手势控制逻辑，将控制权转交给父VC
+            if (![topVC respondsToSelector:@selector(shouldEnableBackActionWhenPanRight)]
+                && ![topVC respondsToSelector:@selector(shouldEnableBackActionWhenPanRight:)]) {
+                topVC = self.topViewController;
+            }
+            
+            if ([topVC respondsToSelector:@selector(shouldEnableBackActionWhenPanRight)]) {
+                CGPoint velocity = [_panRecognizer velocityInView:_swipeRecognizer.view];
+                BOOL enable = [topVC performSelector:@selector(shouldEnableBackActionWhenPanRight)];
+                if (!enable &&  _swipeRecognizer.direction == UISwipeGestureRecognizerDirectionRight) {
+                    return NO;
+                }
+            }
+            if ([topVC respondsToSelector:@selector(shouldEnableBackActionWhenPanRight:)]) {
+                CGPoint velocity = [_panRecognizer velocityInView:_swipeRecognizer.view];
+                BOOL enable = [topVC performSelector:@selector(shouldEnableBackActionWhenPanRight:) withObject:@(_swipeRecognizer.direction == UISwipeGestureRecognizerDirectionRight)];
+                if (!enable) {
+                    return NO;
+                }
+            }
+        }
         if (!self.topViewController.
             ttDisableDragBack && self.viewControllers.count > 1) {
             return YES;
@@ -778,9 +921,63 @@ static inline CGFloat navigationBarTop() {
     }
     else {
         if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-            if (!self.topViewController.
-                ttDisableDragBack && self.viewControllers.count > 1) {
-                return YES;
+            //是否禁止返回到上一级页面
+            if (gestureRecognizer == _panRecognizer) {
+                UIViewController *topVC = self.topViewController;
+                while (topVC.childViewControllers.lastObject) {
+                    topVC = topVC.childViewControllers.lastObject;
+                }
+                
+                ///将手势控制权交给子VC本身不合理，因为有可能子VC是其他SDK提供的不能修改
+                ///为了兼容 如果子VC没有实现手势控制逻辑，将控制权转交给父VC
+                if (![topVC respondsToSelector:@selector(shouldEnableBackActionWhenPanRight)]
+                    && ![topVC respondsToSelector:@selector(shouldEnableBackActionWhenPanRight:)]) {
+                    topVC = self.topViewController;
+                }
+                
+                if ([topVC respondsToSelector:@selector(shouldEnableBackActionWhenPanRight)]) {
+                    CGPoint velocity = [_panRecognizer velocityInView:_panRecognizer.view];
+                    BOOL enable = [topVC performSelector:@selector(shouldEnableBackActionWhenPanRight)];
+                    if (!enable && velocity.x > 0) {
+                        return NO;
+                    }
+                }
+                if ([topVC respondsToSelector:@selector(shouldEnableBackActionWhenPanRight:)]) {
+                    CGPoint velocity = [_panRecognizer velocityInView:_panRecognizer.view];
+                    BOOL enable = [topVC performSelector:@selector(shouldEnableBackActionWhenPanRight:) withObject:@(velocity.x > 0)];
+                    if (!enable) {
+                        return NO;
+                    }
+                }
+            }
+            
+            BOOL ttDisableDragBack = self.topViewController.ttDisableDragBack;
+            if (!ttDisableDragBack && self.viewControllers.count > 1) {
+                NSInteger leftEdge = self.topViewController.ttDragBackLeftEdge;
+                CGPoint velocity = [_panRecognizer velocityInView:_panRecognizer.view];
+                UIViewController *topVC = self.topViewController;
+                if (leftEdge <= 0 || leftEdge >= CGRectGetWidth(self.view.bounds)) {
+                    // 判断为可以左滑返回
+                } else {
+                    CGPoint point = [gestureRecognizer locationInView:self.view];
+                    if (point.x <= leftEdge) {
+                        // 判断为可以左滑返回
+                    } else {
+                        return NO;
+                    }
+                }
+                
+                // topVC可以控制是否需要velocity.y > velocity.x，才触发左滑返回
+                if ([topVC respondsToSelector:@selector(shouldDisableBackWhenPanUp)]) {
+                    BOOL disable = [topVC performSelector:@selector(shouldDisableBackWhenPanUp)];
+                    if (disable) {
+                        return !(fabs(velocity.y) > fabs(velocity.x));
+                    } else {
+                        return YES;
+                    }
+                } else {
+                    return YES;
+                }
             } else {
                 return NO;
             }
@@ -810,8 +1007,7 @@ static inline CGFloat navigationBarTop() {
 
 - (void)pan:(UIPanGestureRecognizer *)recognizer
 {
-    // 禁止侧滑返回
-    if(self.isBanSideSlideAction) {
+    if (self.topViewController.forbidPanGesture) {
         return;
     }
     
@@ -843,15 +1039,16 @@ static inline CGFloat navigationBarTop() {
                 viewController.view.frame = self.view.bounds;
                 self.insertView = viewController.view;
                 //对tabBar采取截屏方式处理，不改变视图的层级结构以免出bug
-                if (![TTDeviceHelper isPadDevice] && ([self.viewControllers indexOfObject:viewController] == 0) && [self.tabBarController.viewControllers containsObject:self]) {
+                if (![[self class] isPadDevice] && ([self.viewControllers indexOfObject:viewController] == 0) && [self.tabBarController.viewControllers containsObject:self]) {
                     [self addTabBarSnapshotForSuperView:self.insertView];
                 }
                 //加一个shadow
                 self.shadowImage.frame = CGRectMake(-9, 0, 9, CGRectGetHeight(viewController.view.frame));
                 [viewController.view addSubview:self.shadowImage];
-                
-                self.originalColor = self.view.backgroundColor;
-                self.view.backgroundColor = [UIColor blackColor];
+                if (!self.shouldIgnoreBackGroundColor) {
+                    self.originalColor = self.view.backgroundColor;
+                    self.view.backgroundColor = [UIColor blackColor];
+                }
                 self.maskView.frame = viewController.view.bounds;
                 [viewController.view addSubview:_maskView];
                 _maskView.alpha = 1.0f;
@@ -867,9 +1064,6 @@ static inline CGFloat navigationBarTop() {
             
         case UIGestureRecognizerStateChanged:
         {
-            if (fabs(offset.x) < fabs(offset.y) * 0.5) {
-                return;
-            }            
             if (offset.x < 0 ) {
                 
                 [self transitionAtPercent:0];
@@ -899,16 +1093,18 @@ static inline CGFloat navigationBarTop() {
                     [self transitionAtPercent:1];
                     
                 } completion:^{
-                    
-                    self.view.backgroundColor = self.originalColor;
-                    self.originalColor = nil;
-                    
+                    if (!self.shouldIgnoreBackGroundColor) {
+                        self.view.backgroundColor = self.originalColor;
+                        self.originalColor = nil;
+                    }
                     [self transitionAtPercent:0];
                     self.maskView.alpha = 0.0f;
                     self.insertView.transform = CGAffineTransformIdentity;
                     
                     UIViewController *vc = [self.viewControllers lastObject];
-                    
+                    if (self.topViewController.panPopDoneAction) {
+                        self.topViewController.panPopDoneAction();
+                    }
                     if(vc.ttDragToRoot) {
                         [UIView performWithoutAnimation:^{
                             [self popToViewController:[self.viewControllers objectAtIndex:[self topViewControllerIndexWithNoneDragToRoot]]
@@ -919,10 +1115,13 @@ static inline CGFloat navigationBarTop() {
                         [self popViewControllerAnimated:NO];
                     
                     self.panRecognizer.enabled = YES;
-                    
+//                    if ([self forbidRevertTabbar]) {
+//                        self.tabBarController.tabBar.hidden = YES;
+//                    }
                     //tricky code不延时的话可能会出现tabbar从无到有的闪动
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
                         if (self.viewControllers.count == 1 && [self.tabBarController.viewControllers containsObject:self]) {
+//                            [self handleTabBar];
                             self.tabBarController.tabBar.hidden = NO;
                             [self removeTabBarSnapshotForSuperView:self.insertView];
                         } else {
@@ -942,8 +1141,10 @@ static inline CGFloat navigationBarTop() {
                     [self transitionAtPercent:0];
                     
                 } completion:^{
-                    self.view.backgroundColor = self.originalColor;
-                    self.originalColor = nil;
+                    if (!self.shouldIgnoreBackGroundColor) {
+                        self.view.backgroundColor = self.originalColor;
+                        self.originalColor = nil;
+                    }
                     self.maskView.alpha = 0.0f;
                     self.insertView.transform = CGAffineTransformIdentity;
                     [self removeTabBarSnapshotForSuperView:self.insertView];
@@ -970,6 +1171,10 @@ static inline CGFloat navigationBarTop() {
 
 - (void)swipe:(UISwipeGestureRecognizer *)recognizer
 {
+    if (self.topViewController.forbidPanGesture) {
+        return;
+    }
+    
     UIGestureRecognizerState state = recognizer.state;
     switch (state)
     {
@@ -1094,29 +1299,36 @@ static inline CGFloat navigationBarTop() {
 }
 
 - (UIView *)snapShotForTabbar {
+//    if ([self forbidRevertTabbar]) {
+//        return nil;
+//    }
+    
     UITabBar *tabBar = self.tabBarController.tabBar;
     UIView *tabBarSnapShot = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(tabBar.frame), CGRectGetHeight(tabBar.superview.frame))];
     
     //iOS10 TabBar高斯模糊效果的子视图换成了UIVisualEffectview 直接截图是截不到的
     //https://developer.apple.com/reference/uikit/uivisualeffectview
-//    if ([TTDeviceHelper OSVersionNumber] >= 10.f) {
+    if ([TTDeviceHelper OSVersionNumber] >= 10.f) {
         UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:[[TTThemeManager sharedInstance_tt].currentThemeName isEqualToString:@"night"] ? UIBlurEffectStyleDark : UIBlurEffectStyleLight];
         UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         effectView.frame = tabBar.frame;
         [tabBarSnapShot addSubview:effectView];
-//    }
+    }
     
     //tabBar截图
     tabBar.layer.hidden = NO;
-    UIGraphicsBeginImageContextWithOptions(tabBarSnapShot.bounds.size, NO, 0);
+    UIGraphicsBeginImageContextWithOptions(tabBar.bounds.size, NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextTranslateCTM(context, 0, CGRectGetHeight(tabBarSnapShot.frame)-CGRectGetHeight(tabBar.frame));
-    [tabBar.layer renderInContext:context];
+    if (optimizeSnapshotEnable__) {
+        [tabBar drawViewHierarchyInRect:tabBar.bounds afterScreenUpdates:YES];
+    } else {
+        [tabBar.layer renderInContext:context];
+    }
     
     UIImage *image = [UIGraphicsGetImageFromCurrentImageContext() imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UIGraphicsEndImageContext();
     UIImageView *snapShot = [[UIImageView alloc] initWithImage:image];
-    snapShot.frame = tabBarSnapShot.bounds;
+    snapShot.frame = CGRectMake(0, CGRectGetHeight(tabBarSnapShot.bounds)-CGRectGetHeight(tabBar.frame), CGRectGetWidth(tabBarSnapShot.bounds), CGRectGetHeight(tabBar.frame));
     [tabBarSnapShot addSubview:snapShot];
     tabBar.layer.hidden = YES;
     
@@ -1130,7 +1342,26 @@ static inline CGFloat navigationBarTop() {
     return YES;
 }
 
++ (void)optimizeSnapshotEnable:(BOOL)enable {
+    optimizeSnapshotEnable__ = enable;
+}
+
++ (void)setIgnorePushVCThrottleTimer:(float)throttleTimer {
+    ignorePushVCThrottleTimer__ = throttleTimer;
+}
+
++ (void)fixWKGestureConflictEnable:(BOOL)enable {
+    fixWKGestureConflictEnable__ = enable;
+}
+
++ (BOOL)isPadDevice {
+    return [TTDeviceHelper isPadDevice];
+}
+
 - (void)addTabBarSnapshotForSuperView:(UIView *)superView {
+//    if ([self forbidRevertTabbar]) {
+//        return ;
+//    }
     if (![superView viewWithTag:kTabBarSnapShotTag]) {
         [superView addSubview:[self snapShotForTabbar]];
     }
@@ -1175,7 +1406,7 @@ static inline CGFloat navigationBarTop() {
         self.shouldIgnorePushingViewControllers = YES;
         
         //把didShowViewController的保护放在这里 用timer 试一下
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(ignorePushVCThrottleTimer__ * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             self.shouldIgnorePushingViewControllers = NO;
         });
     }
@@ -1196,7 +1427,17 @@ static inline CGFloat navigationBarTop() {
 
 
 @implementation UIViewController (PanLifeCycleBlock)
-@dynamic panBeginAction, panRestoreAction;
+@dynamic panBeginAction, panRestoreAction, panPopDoneAction;
+
+- (void)setForbidPanGesture:(BOOL)forbidPanGesture
+{
+    objc_setAssociatedObject(self, @selector(forbidPanGesture), @(forbidPanGesture), OBJC_ASSOCIATION_ASSIGN);
+}
+
+- (BOOL)forbidPanGesture
+{
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
 
 - (void(^)())panBeginAction
 {
@@ -1218,9 +1459,28 @@ static inline CGFloat navigationBarTop() {
     objc_setAssociatedObject(self, @selector(panRestoreAction), panRestoreAction, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
+- (void (^)())panPopDoneAction
+{
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setPanPopDoneAction:(void (^)(void))panPopDoneAction
+{
+    objc_setAssociatedObject(self, @selector(panPopDoneAction), panPopDoneAction, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 - (void)pushAnimationCompletion
 {
     
+}
+
+@end
+
+@implementation UINavigationController (TTCommonFix)
+
+- (void)pushViewControllerByTransitioningAnimation:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [self pushViewController:viewController animated:animated];
 }
 
 @end

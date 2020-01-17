@@ -84,7 +84,8 @@ def appDevelopPods
     pod 'AKCommentPlugin', :path => '../AKPlugins/AKCommentPlugin', :inhibit_warnings => false
     #-----头条图片滑动浏览器----
     pod 'TTPhotoScrollVC', :path => '../AKPlugins/TTPhotoScrollVC', :inhibit_warnings => false
-    
+    #-----UI库----
+    # pod 'TTUIWidget',:path => '../../tt_pods_ui', :inhibit_warnings => false
     #-----账号登录UI库-----
     pod 'TTAccountLogin', :path => '../AKPlugins/AKAccountLogin', :inhibit_warnings => false
     #-----账号的业务库----
@@ -293,9 +294,7 @@ def appPods
     pod_binary 'TTThemed','0.1.36'
     
     #-----头条UI组件库-----
-    # add by zjing for test
-    #pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '06196c84dd28afb068d98f60c72d3e632a4d0f43'
-    pod 'TTUIWidget','1.2.6'
+    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '57edbf09a86dec979924d180402df4b742bdfb6f'
 
     pod 'Bytedancebase','1.4.0-rc.0', :subspecs => [
     'BDPlatformSDK',

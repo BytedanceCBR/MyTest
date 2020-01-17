@@ -9,7 +9,7 @@
 #import "TTLoadMoreView.h"
 #import "UIScrollView+Refresh.h"
 #import "TTLoadingView.h"
-#import "SSThemed.h"
+#import <TTThemed/SSThemed.h>
 
 @interface TTLoadMoreView ()
 {
@@ -36,7 +36,11 @@
 
 @implementation TTLoadMoreView
 
-- (id)initWithFrame:(CGRect)frame pullDirection:(PullDirectionType)direction
+- (void)dealloc {
+    [self removeObserve:_scrollView];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame pullDirection:(PullDirectionType)direction
 {
     NSString *tmpInit = kTTPullRefreshTextUp;
     NSString *tmpPull = kTTPullRefreshTextRefresh;
@@ -103,8 +107,6 @@
         }
     }
 }
-
-
 
 - (NSString *)getStandardTimestringFromSeconds:(NSInteger)seconds
 {
@@ -229,8 +231,7 @@
     _subtitleLabel.text = [self processRefreshTime:_lastTime];
 }
 
-- (void)startObserve
-{
+- (void)startObserve {
     _isObserving = YES;
     _isObservingContentInset = YES;
     @try {
@@ -238,24 +239,29 @@
         [_scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
         [_scrollView addObserver:self forKeyPath:@"contentInset" options:NSKeyValueObservingOptionNew context:nil];
 
+    } @catch (NSException *exception) {
     }
-    @catch (NSException *exception) {
-        
-    }
-    
 }
+
 
 - (void)removeObserve:(UIScrollView *)scrollView
 {
-    _isObserving = NO;
-    _isObservingContentInset = NO;
-    @try {
-        [scrollView removeObserver:self forKeyPath:@"contentInset"];
-        [scrollView removeObserver:self forKeyPath:@"contentOffset"];
-        [scrollView removeObserver:self forKeyPath:@"contentSize"];
+    if (!scrollView) {
+        return;
     }
-    @catch (NSException *exception) {
-        
+    
+    @try {
+        if (_isObserving) {
+            [scrollView removeObserver:self forKeyPath:@"contentOffset"];
+            [scrollView removeObserver:self forKeyPath:@"contentSize"];
+            _isObserving = NO;
+        }
+
+        if (_isObservingContentInset) {
+            [scrollView removeObserver:self forKeyPath:@"contentInset"];
+            _isObservingContentInset = NO;
+        }
+    } @catch (NSException *exception) {
     }
 }
 
@@ -356,7 +362,6 @@
 {
     CGPoint old = [[change valueForKey:NSKeyValueChangeOldKey] CGPointValue];
     CGPoint new = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
-
     if (!self.enabled) {
         return;
     }
@@ -364,7 +369,6 @@
     if (new.y + self.scrollView.contentInset.top >= 0 && _direction == PULL_DIRECTION_UP && new.y > old.y) {
         [self processPullUp:(float)new.y];
     }
-
 }
 
 
@@ -382,16 +386,16 @@
         return;
     }
     
-    if (self.hasNetError) {
-        return;
-    }
     NSInteger calY = y + _scrollView.bounds.size.height;
     NSInteger height = MAX(_scrollView.contentSize.height, _scrollView.bounds.size.height);
     
     NSInteger bottomInset = _scrollView.contentInset.bottom;
-
     
-    if (calY >= height + bottomInset) {
+    BOOL autoTriggerPullUpWhenHasError = self.scrollView.autoTriggerPullUpWhenHasError;
+    CGFloat offset = self.scrollView.autoTriggerPullUpOffset;
+
+    if ((self.hasNetError && autoTriggerPullUpWhenHasError && calY > height + bottomInset + offset) ||
+        (!self.hasNetError && calY > height + bottomInset)) {
         if (_state != PULL_REFRESH_STATE_LOADING && _state != PULL_REFRESH_STATE_NO_MORE) {
             self.state = PULL_REFRESH_STATE_LOADING;
             [self setScrollInsets:YES];
@@ -429,26 +433,18 @@
 - (void)setScrollViewContentInsetWithOutObserve:(UIEdgeInsets) inset {
     
     if (_scrollView.pullUpView && _scrollView.pullUpView.isObservingContentInset) {
-        
         @try {
-            
             [_scrollView removeObserver:_scrollView.pullUpView forKeyPath:@"contentInset"];
             _scrollView.pullUpView.isObservingContentInset = NO;
+        } @catch (NSException *exception) {
         }
-        @catch (NSException *exception) {
-            
-        }
-        
     }
     if (_scrollView.pullDownView && _scrollView.pullDownView.isObservingContentInset) {
-        
         @try {
-            
             [_scrollView removeObserver:_scrollView.pullDownView forKeyPath:@"contentInset"];
             _scrollView.pullDownView.isObservingContentInset = NO;
         }
         @catch (NSException *exception) {
-            
         }
     }
     
@@ -456,38 +452,26 @@
     
     
     if (_scrollView.pullUpView && !_scrollView.pullUpView.isObservingContentInset) {
-
         @try {
             [_scrollView addObserver:_scrollView.pullUpView forKeyPath:@"contentInset" options:NSKeyValueObservingOptionNew context:nil];
             _scrollView.pullUpView.isObservingContentInset = YES;
-
+        } @catch (NSException *exception) {
         }
-        @catch (NSException *exception) {
-            
-        }
-      
-       
     }
     
     if (_scrollView.pullDownView && !_scrollView.pullDownView.isObservingContentInset) {
-
         @try {
             [_scrollView addObserver:_scrollView.pullDownView forKeyPath:@"contentInset" options:NSKeyValueObservingOptionNew context:nil];
             _scrollView.pullDownView.isObservingContentInset = YES;
-            
-        }
-        @catch (NSException *exception) {
-            
+        } @catch (NSException *exception) {
         }
     }
 }
 
 - (void)doHandler
 {
-    if (!self.hasNetError) {
-        if (_actionHandler) {
-            _actionHandler();
-        }
+    if (_actionHandler) {
+        _actionHandler();
     }
 }
 

@@ -20,6 +20,7 @@
 #import "TTDeviceHelper.h"
 #import "TTUIResponderHelper.h"
 #import "UIViewAdditions.h"
+#import <TTServiceKit/TTModuleBridge.h>
 
 @interface TTThemedAlertController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
 
@@ -42,7 +43,6 @@
 @property (nonatomic, copy) NSString *message;
 @property (nonatomic, assign) CGFloat tableViewWidth;
 @property (nonatomic, assign) BOOL isPopover;
-@property (nonatomic, assign) BOOL isGrayCancelTitle;
 
 @property (nonatomic, strong) NSMutableArray *actionBlockArr;
 @property (nonatomic, strong) NSMutableArray *textFieldArr;
@@ -51,10 +51,21 @@
 @property (nonatomic, strong) TTThemedAlertActionModel *actionSheetCancelAction;
 
 @property (nonatomic, strong) NSDictionary *alertUIConfiguration;
+@property (nonatomic, assign) BOOL isGrayCancelTitle;
 
 @end
 
 @implementation TTThemedAlertController
+
++ (void)load
+{
+    [[TTModuleBridge sharedInstance_tt] registerAction:@"TTThemedAlertController/initWithTitle_message_preferredType" withBlock:^id _Nullable(id  _Nullable object, id  _Nullable params) {
+        NSString *title = (NSString *)params[@"title"];
+        NSString *message = (NSString *)params[@"message"];
+        TTThemedAlertControllerType type = [params[@"type"] integerValue];
+        return [[TTThemedAlertController alloc] initWithTitle:title message:message preferredType:type];
+    }];
+}
 
 #pragma mark - Initialize
 
@@ -68,8 +79,7 @@
         _tableViewWidth = (type == TTThemedAlertControllerTypeAlert) ? TTThemedAlertTableViewWidth : TTThemedActionSheetTableViewWidth;
         _visualEffectView = [[UIView alloc] init];
         _visualEffectView.frame = self.view.frame;
-        _visualEffectView.backgroundColor = [UIColor blackColor];
-        _visualEffectView.alpha = 0;
+        _visualEffectView.backgroundColor = [UIColor clearColor];
         _visualEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
     return self;
@@ -82,6 +92,13 @@
     if ([TTDeviceHelper isPadDevice] && [TTDeviceHelper OSVersionNumber] >= 8.f) {
         [self layoutSubViewsInController];
     }
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    if (self.disableLandscape) {
+        return UIInterfaceOrientationMaskPortrait;
+    }
+    return UIInterfaceOrientationMaskAll;
 }
 
 - (void)layoutSubViewsInController
@@ -217,12 +234,13 @@
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, topMargin, width, 0)];
     _titleLabel.backgroundColor = [UIColor clearColor];
     _titleLabel.textColor = SSGetThemedColorWithKey(kColorText100);
-    _titleLabel.numberOfLines = 2;
+    NSInteger numberOfLines = self.alertUIConfiguration[TTThemedAlertTitleNumberOfLinesKey] ? [self.alertUIConfiguration[TTThemedAlertTitleNumberOfLinesKey] integerValue] : TTThemedAlertDefaultTitleNumberOfLines;
+    _titleLabel.numberOfLines = numberOfLines;
     CGFloat fontSize = self.alertUIConfiguration[TTThemedTitleFontKey] ? [self.alertUIConfiguration[TTThemedTitleFontKey] floatValue] : TTThemedAlertDefaultTitleFontSize;
     _titleLabel.attributedText = [TTLabelTextHelper attributedStringWithString:self.alertTitle fontSize:fontSize lineHeight:lineHeight lineBreakMode:NSLineBreakByTruncatingTail isBoldFontStyle:YES firstLineIndent:0 textAlignment:NSTextAlignmentCenter];
     CGSize textSize = CGSizeZero;
     
-    textSize = CGSizeMake(width, [TTLabelTextHelper heightOfText:self.alertTitle fontSize:fontSize forWidth:width forLineHeight:lineHeight constraintToMaxNumberOfLines:2 firstLineIndent:0 textAlignment:NSTextAlignmentCenter]);
+    textSize = CGSizeMake(width, [TTLabelTextHelper heightOfText:self.alertTitle fontSize:fontSize forWidth:width forLineHeight:lineHeight constraintToMaxNumberOfLines:numberOfLines firstLineIndent:0 textAlignment:NSTextAlignmentCenter]);
     
     CGFloat height = 20;
     CGFloat verticalMargin = self.bannerImageView ? 16 : 10;
@@ -238,11 +256,12 @@
         UILabel *subTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(_titleLabel.left, _titleLabel.bottom + TTThemedAlertControllerTitleSubTitleSpacing, width, 0)];
         subTitleLabel.backgroundColor = [UIColor clearColor];
         subTitleLabel.textColor = SSGetThemedColorWithKey(kColorText100);
-        subTitleLabel.numberOfLines = 3;
         fontSize = self.alertUIConfiguration[TTThemedSubTitleFontKey] ? [self.alertUIConfiguration[TTThemedSubTitleFontKey] floatValue] : TTThemedAlertDefaultSubTitleFontSize;
+        numberOfLines = self.alertUIConfiguration[TTThemedAlertSubTitleNumberOfLinesKey] ? [self.alertUIConfiguration[TTThemedAlertSubTitleNumberOfLinesKey] integerValue] : TTThemedAlertDefaultSubTitleNumberOfLines;
+        subTitleLabel.numberOfLines = numberOfLines;
         subTitleLabel.attributedText = [TTLabelTextHelper attributedStringWithString:self.message fontSize:fontSize lineHeight:16.f lineBreakMode:NSLineBreakByTruncatingTail isBoldFontStyle:NO firstLineIndent:0 textAlignment:NSTextAlignmentCenter];
         
-        subTitleLabel.height = [TTLabelTextHelper heightOfText:self.message fontSize:fontSize forWidth:width forLineHeight:lineHeight constraintToMaxNumberOfLines:3 firstLineIndent:0 textAlignment:NSTextAlignmentCenter];
+        subTitleLabel.height = [TTLabelTextHelper heightOfText:self.message fontSize:fontSize forWidth:width forLineHeight:lineHeight constraintToMaxNumberOfLines:numberOfLines firstLineIndent:0 textAlignment:NSTextAlignmentCenter];
         [self.headerView addSubview:subTitleLabel];
     }
     
@@ -314,7 +333,12 @@
 {
     self.alertView.frame = [self _alertViewFrame];
     if ([TTDeviceHelper OSVersionNumber] >= 8.f) {
-        self.alertView.center = CGPointMake(UIScreenWidth / 2, (UIScreenHeight - [TTKeyboardListener sharedInstance].keyboardHeight) / 2);
+        BOOL avoidKeyboard = self.alertUIConfiguration[TTThemedAlertAvoidKeyboardLayoutKey] ? [self.alertUIConfiguration[TTThemedAlertAvoidKeyboardLayoutKey] boolValue] : TTThemedAlertDefaultAvoidKeyboardLayout;
+        if (avoidKeyboard) {
+            self.alertView.center = CGPointMake(UIScreenWidth / 2, (UIScreenHeight - [TTKeyboardListener sharedInstance].keyboardHeight) / 2);
+        } else {
+            self.alertView.center = CGPointMake(UIScreenWidth / 2, UIScreenHeight / 2);
+        }
     }
     else {
         [self layoutOniOS7WithOrientation:[UIApplication sharedApplication].statusBarOrientation];
@@ -362,10 +386,9 @@
             
             [self.actionSheetView addSubview:self.actionSheetCancelButtonBgView];
             [self.actionSheetView addSubview:self.actionSheetCancelButton];
-            
-            
         }
         
+
         [self.actionSheetView addSubview:self.contentTableView];
         addedContentView = self.actionSheetView;
 
@@ -378,7 +401,7 @@
     
     [self themedMainContentView:addedContentView];
 
-    [self.visualEffectView.superview addSubview:addedContentView];
+    [self.visualEffectView addSubview:addedContentView];
     [self layoutOniOS7WithOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 //    self.view.frame = addedContentView.frame;
 }
@@ -394,7 +417,7 @@
     self.headerView.backgroundColor = SSGetThemedColorWithKey(kColorBackground4);
     self.contentTableView.separatorColor = SSGetThemedColorWithKey(kColorLine1);
     
-    [self.actionSheetCancelButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [self.actionSheetCancelButton setTitleColor:self.actionSheetCancelAction.actionElementModel.elementColor forState:UIControlStateNormal];
     [self.actionSheetCancelButton setBackgroundColor:SSGetThemedColorWithKey(kColorBackground4)];
     
     self.actionSheetCancelButtonBgView.backgroundColor = SSGetThemedColorWithKey(kColorBackground4);
@@ -404,7 +427,12 @@
 {
     if (self.alertType == TTThemedAlertControllerTypeAlert) {
         if ([TTDeviceHelper OSVersionNumber] >= 8.f) {
-            self.alertView.center = CGPointMake(self.parentViewController.view.bounds.size.width / 2, (self.parentViewController.view.bounds.size.height - [TTKeyboardListener sharedInstance].keyboardHeight) / 2);
+            BOOL avoidKeyboard = self.alertUIConfiguration[TTThemedAlertAvoidKeyboardLayoutKey] ? [self.alertUIConfiguration[TTThemedAlertAvoidKeyboardLayoutKey] boolValue] : TTThemedAlertDefaultAvoidKeyboardLayout;
+            if (avoidKeyboard) {
+                self.alertView.center = CGPointMake(self.parentViewController.view.bounds.size.width / 2, (self.parentViewController.view.bounds.size.height - [TTKeyboardListener sharedInstance].keyboardHeight) / 2);
+            } else {
+                self.alertView.center = CGPointMake(self.parentViewController.view.bounds.size.width / 2, self.parentViewController.view.bounds.size.height / 2);
+            }
         }
     }
     else {
@@ -481,25 +509,6 @@
     }
 }
 
-- (void)addActionWithGrayTitle:(nullable NSString *)title actionType:(TTThemedAlertActionType)actionType actionBlock:(nullable TTThemedAlertActionBlock)actionBlock
-{
-    if (title) {
-        TTThemedAlertActionModel *action = [[TTThemedAlertActionModel alloc] initWithAlertType:self.alertType
-                                                                                    actionType:actionType
-                                                                                   actionTitle:title
-                                                                                   actionBlock:actionBlock];
-        action.actionElementModel.elementColor = [UIColor grayColor];
-        [self.actionBlockArr addObject:action];
-        
-        //特殊处理actionSheet的cancelAction
-        if (self.alertType == TTThemedAlertControllerTypeActionSheet &&
-            actionType == TTThemedAlertActionTypeCancel) {
-            self.actionSheetCancelAction = action;
-        }
-        self.isGrayCancelTitle = YES;
-    }
-}
-
 - (void)addTextFieldWithConfigurationHandler:(TTThemedAlertTextFieldActionBlock)actionBlock
 {
     if (self.alertType == TTThemedAlertControllerTypeActionSheet) {
@@ -550,6 +559,22 @@
 - (void)addTTThemedAlertControllerUIConfig:(NSDictionary *)configuration
 {
     self.alertUIConfiguration = configuration;
+}
+
+- (void)addActionWithGrayTitle:(nullable NSString *)title actionType:(TTThemedAlertActionType)actionType actionBlock:(nullable TTThemedAlertActionBlock)actionBlock
+{
+    if (title) {
+        TTThemedAlertActionModel *action = [[TTThemedAlertActionModel alloc] initWithAlertType:self.alertType actionType:actionType actionTitle:title actionBlock:actionBlock];
+        action.actionElementModel.elementColor = [UIColor grayColor];
+        [self.actionBlockArr addObject:action];
+        
+        //特殊处理actionSheet的cancelAction
+        if (self.alertType == TTThemedAlertControllerTypeActionSheet &&
+            actionType == TTThemedAlertActionTypeCancel) {
+            self.actionSheetCancelAction = action;
+        }
+        self.isGrayCancelTitle = YES;
+    }
 }
 
 #pragma mark - Helper
@@ -643,10 +668,12 @@
             CGFloat margin = [self isSingleLineTitle] ? 19 : 21;
             CGFloat width = self.tableViewWidth - 44;
             CGFloat fontSize = self.alertUIConfiguration[TTThemedTitleFontKey] ? [self.alertUIConfiguration[TTThemedTitleFontKey] floatValue] : TTThemedAlertDefaultTitleFontSize;
-            CGFloat contentHeight = margin + [TTLabelTextHelper heightOfText:self.alertTitle fontSize:fontSize forWidth:width forLineHeight:22.f constraintToMaxNumberOfLines:2 firstLineIndent:0 textAlignment:NSTextAlignmentCenter];
+            NSInteger numberOfLines = self.alertUIConfiguration[TTThemedAlertTitleNumberOfLinesKey] ? [self.alertUIConfiguration[TTThemedAlertTitleNumberOfLinesKey] integerValue] : TTThemedAlertDefaultTitleNumberOfLines;
+            CGFloat contentHeight = margin + [TTLabelTextHelper heightOfText:self.alertTitle fontSize:fontSize forWidth:width forLineHeight:22.f constraintToMaxNumberOfLines:numberOfLines firstLineIndent:0 textAlignment:NSTextAlignmentCenter];
             if (!isEmptyString(self.message)) {
                 fontSize = self.alertUIConfiguration[TTThemedSubTitleFontKey] ? [self.alertUIConfiguration[TTThemedSubTitleFontKey] floatValue] : TTThemedAlertDefaultSubTitleFontSize;
-                contentHeight += TTThemedAlertControllerTitleSubTitleSpacing + [TTLabelTextHelper heightOfText:self.message fontSize:fontSize forWidth:width forLineHeight:16.f constraintToMaxNumberOfLines:3 firstLineIndent:0 textAlignment:NSTextAlignmentCenter] + TTThemedAlertControllerBottomMargin;
+                numberOfLines = self.alertUIConfiguration[TTThemedAlertSubTitleNumberOfLinesKey] ? [self.alertUIConfiguration[TTThemedAlertSubTitleNumberOfLinesKey] integerValue] : TTThemedAlertDefaultSubTitleNumberOfLines;
+                contentHeight += TTThemedAlertControllerTitleSubTitleSpacing + [TTLabelTextHelper heightOfText:self.message fontSize:fontSize forWidth:width forLineHeight:16.f constraintToMaxNumberOfLines:numberOfLines firstLineIndent:0 textAlignment:NSTextAlignmentCenter] + TTThemedAlertControllerBottomMargin;
             }
             else {
                 contentHeight += margin;
@@ -880,7 +907,7 @@
 - (void)showContent
 {
     //手动实现面9
-    self.visualEffectView.alpha = 76.f/255.f;
+    self.visualEffectView.backgroundColor = [UIColor colorWithWhite:0 alpha:76.f/255.f];
 }
 
 - (void)addSelfAsChildViewControllerOfViewController:(UIViewController *)viewController
@@ -956,6 +983,9 @@
     else {
         [self showContent];
     }
+    
+    self.visualEffectView.accessibilityViewIsModal = YES;
+    UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, self.titleLabel);
 }
 
 - (void)layoutBeforeAnimation

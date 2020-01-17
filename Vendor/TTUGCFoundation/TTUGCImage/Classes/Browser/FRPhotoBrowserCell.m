@@ -10,8 +10,8 @@
 #import "TTImageInfosModel.h"
 #import "FRPhotoBrowserModel.h"
 #import "TTImageLoadingView.h"
-#import <VVeboImage.h>
-#import <VVeboImageView.h>
+#import "VVeboImage.h"
+#import "VVeboImageView.h"
 #import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "TTIndicatorView.h"

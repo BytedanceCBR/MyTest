@@ -15,7 +15,7 @@
 // 必须是UIView 或者 UIViewController
 @property (nonatomic, copy) NSArray <__kindof UIResponder *> *pages;
 @property (nonatomic, weak) id <TTSwipePageViewControllerDelegate> delegate;
-
+@property (nonatomic, assign) NSUInteger selectedIndex;
 //默认为NO
 @property (nonatomic) BOOL shouldAutoForwordAppearances;
 
@@ -45,6 +45,11 @@
 
 - (void)pageViewControllerWillBeginDragging:(UIScrollView *)scrollView;
 
+- (void)pageViewController:(TTSwipePageViewController *)pageViewController
+           scrollFromIndex:(NSInteger)fromIndex
+                   toIndex:(NSInteger)toIndex
+                   percent:(CGFloat)percent;
+- (BOOL)enableEdgeSwipStrategy;
 @end
 
 @interface UIViewController (TTSWipePageAddition)

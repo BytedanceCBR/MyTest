@@ -25,9 +25,17 @@
 
 @property (nonatomic, assign) IBInspectable  BOOL ttHideNavigationBar;
 
-@property (nonatomic, assign) IBInspectable  NSInteger ttStatusBarStyle;
+@property (nonatomic, assign) IBInspectable  UIStatusBarStyle ttStatusBarStyle __attribute__((deprecated("use -[UIViewController preferredStatusBarStyle] instead")));
 
 @property (nonatomic, assign) IBInspectable  BOOL ttDisableDragBack;
+
+/**
+ * 左侧拖拽返回的边缘大小，
+ * ttDisableDragBack = YES 失效
+ * ttDisableDragBack = NO，ttDragBackLeftEdge = 20；
+ * ttDisableDragBack = NO，(ttDragBackLeftEdge <= 0 || ScreenWidth) 全屏
+ */
+@property (nonatomic, assign) IBInspectable NSInteger ttDragBackLeftEdge;
 
 @property (nonatomic, assign) IBInspectable  BOOL ttDragToRoot;
 

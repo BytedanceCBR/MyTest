@@ -46,8 +46,8 @@ typedef NS_ENUM(NSInteger, SSNavigationButtonOrientation) {
 - (void)setTitleText:(NSString *)title;
 + (CGFloat)navigationBarHeight;
 
-+ (UIButton *)navigationBackButtonWithTarget:(id)target action:(SEL)action;
-+ (UIButton *)navigationButtonOfOrientation:(SSNavigationButtonOrientation)orientation withTitle:(NSString *)title target:(id)target action:(SEL)action;
++ (TTNavigationBarItemContainerView *)navigationBackButtonWithTarget:(id)target action:(SEL)action;
++ (TTNavigationBarItemContainerView *)navigationButtonOfOrientation:(SSNavigationButtonOrientation)orientation withTitle:(NSString *)title target:(id)target action:(SEL)action;
 
 + (UIView *)navigationTitleViewWithTitle:(NSString *)title;
 

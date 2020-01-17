@@ -29,9 +29,12 @@ extern CGFloat const kTipDurationInfinite;
 
 @property (nonatomic,strong) UIView * ttTargetView;
 
+@property (nonatomic, strong) UIView * ttLoadingTargetView;
+
 @property (nonatomic,assign) BOOL ttNeedShowIndicator;
 @property (nonatomic,assign) BOOL ttDisableNotifyBar;
 @property (nonatomic,assign) BOOL ttHasLoadCachedData;
+@property (nonatomic,assign) BOOL ttHiddenLoadingView;
 @property (nonatomic,assign) UIEdgeInsets ttContentInset;
 
 @property (nonatomic,assign) TTFullScreenErrorViewType ttViewType;
