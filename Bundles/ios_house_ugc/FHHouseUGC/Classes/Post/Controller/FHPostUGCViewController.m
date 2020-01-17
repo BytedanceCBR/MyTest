@@ -1709,7 +1709,7 @@ static NSInteger const kMaxPostImageCount = 9;
     if(self.isKeyboardShow) {
         frame.origin.y += [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     } else {
-        if(self.toolbar.emojiInputViewVisible) {
+        if(self.toolbar.emojiInputViewVisible && !self.toolbar.switchToInput) {
             frame.origin.y -= self.toolbar.emojiInputView.height;
         }
     }

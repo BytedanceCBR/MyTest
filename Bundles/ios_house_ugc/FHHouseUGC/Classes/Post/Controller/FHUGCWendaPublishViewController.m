@@ -1023,6 +1023,11 @@
     if(!self.isKeyboardWillHide) {
         frame.origin.y += [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     }
+    else {
+        if(self.toolbar.emojiInputViewVisible && !self.toolbar.switchToInput) {
+            frame.origin.y -= self.toolbar.emojiInputView.height;
+        }
+    }
     self.toolbar.frame = frame;
     
     [self.toolbar layoutTagSelectCollectionViewWithTags:self.hotTags hasSelected:self.hasSocialGroup];

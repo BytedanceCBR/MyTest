@@ -328,6 +328,11 @@
     }
 }
 
+-(BOOL)switchToInput {
+    BOOL switchToInput = [self.keyboardButton.imageName isEqualToString:@"fh_ugc_toolbar_keyboard_selected"];
+    return switchToInput;
+}
+
 #pragma mark - UICollectionViewDelegate
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {

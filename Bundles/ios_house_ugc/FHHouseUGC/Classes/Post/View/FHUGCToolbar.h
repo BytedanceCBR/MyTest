@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)stagePushDuplicateTagIfNeedWithGroupId:(NSString *)groupId;
 
+- (BOOL)switchToInput;
+
 @end
 
 NS_ASSUME_NONNULL_END
