@@ -75,6 +75,15 @@
 
 - (void)initTask {
     [BDMTaskCenterManager sharedInstance].delegate = self;
+    
+    if(!isEmptyString([[TTInstallIDManager sharedInstance] deviceID])){
+        [[BDMTaskCenterManager sharedInstance] uploadAppFirstOpenAfterDownload];
+    }else{
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceDidRefreshed:) name:@"kFHTrackerDidRefreshDeviceId" object:nil];
+    }
+}
+
+- (void)deviceDidRefreshed:(NSNotification *)noti {
     [[BDMTaskCenterManager sharedInstance] uploadAppFirstOpenAfterDownload];
 }
 
