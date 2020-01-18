@@ -61,8 +61,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         //#endif
     }
     
-    //春节活动
-    [[FHMinisdkManager sharedInstance] goSpring];
+    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        //春节活动
+        [[FHMinisdkManager sharedInstance] goSpring];
+    }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{

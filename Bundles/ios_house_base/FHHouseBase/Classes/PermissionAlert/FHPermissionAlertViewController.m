@@ -38,44 +38,67 @@
 @property(nonatomic , assign) NSRange userRange;
 @property(nonatomic , assign) NSRange privacyRange;
 @property(nonatomic , strong) NSDate *enterDate;
+@property(nonatomic , strong) UIImage *snapImage;
 
 @end
 
 @implementation FHPermissionAlertViewController
 
-+(void)show
++(instancetype)showInViewController:(UIViewController *)parentViewController
 {
-    FHPermissionAlertViewController *controller = [[FHPermissionAlertViewController alloc]initWithNibName:nil bundle:nil];
-    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:controller];
     
-    [UIApplication sharedApplication].delegate.window.rootViewController = navigationController;
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    FHPermissionAlertViewController *controller = [[FHPermissionAlertViewController alloc] initWithFrame:window.bounds];
+    [window addSubview:controller];
     
     [[FHEnvContext sharedInstance] pauseForPermissionProtocol];
     
+    return controller;
+    
 }
 
--(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
++ (UIImage *)getImageViewWithView:(UIView *)view
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    UIGraphicsBeginImageContext(view.frame.size);
+    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+//-(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+//{
+//    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+//    if (self) {
+//        self.ttHideNavigationBar = YES;
+//        self.enterDate = [NSDate date];
+//    }
+//    return self;
+//}
+
+
+//- (void)viewDidLoad {
+//    [super viewDidLoad];
+//    // Do any additional setup after loading the view.
+//    [self initUIs];
+//    [self addPopShowLog];
+//}
+//
+//-(void)viewWillAppear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    [self.navigationController setNavigationBarHidden:YES animated:YES];
+//}
+
+-(instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
     if (self) {
-        self.ttHideNavigationBar = YES;
-        self.enterDate = [NSDate date];
+        [self initUIs];
+        [self addPopShowLog];
     }
     return self;
-}
-
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    [self initUIs];
-    [self addPopShowLog];
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (UIImage *)getLaunchImage
@@ -97,7 +120,7 @@
 
 -(void)initUIs
 {
-    _bgImgView = [[UIImageView alloc] initWithImage:[self getLaunchImage]];
+    _bgImgView = [[UIImageView alloc] initWithImage:[self getLaunchImage]];//self.snapImage];//
     
     _maskView = [[UIView alloc]init];
     _maskView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
@@ -168,9 +191,9 @@
     [self.containerView addSubview:_contentLabel];
     [self.containerView addSubview:_confirmButton];
     
-    [self.view addSubview:_bgImgView];
-    [self.view addSubview:_maskView];
-    [self.view addSubview:_containerView];
+    [self addSubview:_bgImgView];
+    [self addSubview:_maskView];
+    [self addSubview:_containerView];
     
     [self initConstraints];
 }
@@ -212,15 +235,33 @@
 
 -(void)showProtocolDetail:(NSString *)urlPath title:(NSString *)title
 {
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@%@&title=%@&hide_more=1",[FHURLSettings baseURL],urlPath,title];
-    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    NSString *jumpUrl = [NSString stringWithFormat:@"%@%@",[FHURLSettings baseURL],urlPath];
+    NSURL *openUrl = [NSURL URLWithString:jumpUrl];
+    if ([[UIApplication sharedApplication] canOpenURL:openUrl]) {
+        [[UIApplication sharedApplication] openURL:openUrl];
+    }
+    
+//    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@%@&title=%@&hide_more=1",[FHURLSettings baseURL],urlPath,title];
+//    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+//
+//    TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:url userInfo:nil];
+//    if ([routeObj.instance isKindOfClass:[UIViewController class]]) {
+//        [self.navigationController pushViewController:(UIViewController *)routeObj.instance animated:YES];
+//    }
+
 }
 
 -(void)confirmAction:(id)sender
 {
     [self addConfirmLog:YES];
+    
+    [self removeFromSuperview];
     [[FHEnvContext sharedInstance] userConfirmedPermssionProtocol];
+    
+//    [self.navigationController dismissViewControllerAnimated:NO completion:^{
+//        [[FHEnvContext sharedInstance] userConfirmedPermssionProtocol];
+//    }];
+    
 }
 
 -(void)addPopShowLog
