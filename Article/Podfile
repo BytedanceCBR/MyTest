@@ -55,7 +55,7 @@ def fhPods
 
 #    pod 'ios_house_im', '0.1.16.2-bugfix'
 #    pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im'
-    pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => 'cc4eab267e7ef6a7b4c4c540c85d4569fadd9b66'
+    pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => 'b804b9b9c6b6991bd62c486eb9a6a90c52ace408'
 
     
     
@@ -298,7 +298,7 @@ def appPods
     #--------------------------------------------------基础工具库-----------------------------------------------#
     #--------------------------------------------------基础工具库-----------------------------------------------#
     #-----头条基础库-----
-    pod_binary 'TTBaseLib','2.0.19', :subspecs => [
+    pod 'TTBaseLib','2.0.19', :subspecs => [
     'TTBaseTool',
     'TTBusinessManager',
     'TTCategory',
@@ -311,7 +311,7 @@ def appPods
     pod_binary 'TTVersionHelper', '1.0.0'
     
     #-----头条主题库-----
-    pod_binary 'TTThemed','0.1.36'
+    pod 'TTThemed','0.1.36'
     
     #-----头条UI组件库-----
     # add by zjing for test
