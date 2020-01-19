@@ -120,7 +120,7 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, strong)   NSMutableArray<FHUGCToolBarTag *> *hotTags;
 @property (nonatomic, assign)   CGRect keyboardFrameForToolbar;
 @property (nonatomic, assign)   BOOL isKeyboardShow;
-@property (nonatomic, assign)   BOOL isWillGotoCommunityList;
+@property (nonatomic, assign)   BOOL isToolbarWillEndEditing;
 @end
 
 @implementation FHPostUGCViewController
@@ -634,7 +634,7 @@ static NSInteger const kMaxPostImageCount = 9;
     [FHUserTracker writeEvent:@"click_like_publisher_neighborhood" params:tracerDict];
     
     self.keyboardVisibleBeforePresent = self.inputTextView.keyboardVisible;
-    self.isWillGotoCommunityList = YES;
+    self.isToolbarWillEndEditing = YES;
     [self endEditing];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"action_type"] = @(FHCommunityListTypeChoose);
@@ -1302,6 +1302,7 @@ static NSInteger const kMaxPostImageCount = 9;
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.isToolbarWillEndEditing = YES;
     [self endEditing];
 }
 
@@ -1711,11 +1712,11 @@ static NSInteger const kMaxPostImageCount = 9;
     if(self.isKeyboardShow) {
         frame.origin.y += [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     } else {
-        if(self.toolbar.emojiInputViewVisible && !self.toolbar.switchToInput && !self.isWillGotoCommunityList) {
+        if(self.toolbar.emojiInputViewVisible && !self.toolbar.switchToInput && !self.isToolbarWillEndEditing) {
             frame.origin.y -= self.toolbar.emojiInputView.height;
         }
     }
-    self.isWillGotoCommunityList = NO;
+    self.isToolbarWillEndEditing = NO;
     self.toolbar.frame = frame;
     [self.toolbar layoutTagSelectCollectionViewWithTags:self.hotTags hasSelected:self.hasSocialGroup];
 }
