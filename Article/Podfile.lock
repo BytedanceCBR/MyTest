@@ -90,25 +90,25 @@ PODS:
   - BDUGSettingsInterface (1.1.0)
   - BDUGTrackerInterface (1.1.1)
   - BDUGUnionSDK (0.1.2.1-binary)
-  - BDWebImage/Core (1.0.15)
-  - BDWebImage/Decoder (1.0.15)
-  - BDWebImage/Download (1.0.15):
-    - BDWebImage/Download/Chromium (= 1.0.15)
-    - BDWebImage/Download/DownloadBase (= 1.0.15)
-    - BDWebImage/Download/URLConnection (= 1.0.15)
-    - BDWebImage/Download/URLSession (= 1.0.15)
-  - BDWebImage/Download/Chromium (1.0.15)
-  - BDWebImage/Download/DownloadBase (1.0.15)
-  - BDWebImage/Download/URLConnection (1.0.15)
-  - BDWebImage/Download/URLSession (1.0.15)
-  - BDWebImage/Monitor (1.0.15):
-    - BDWebImage/Monitor/Heimdallr (= 1.0.15)
-    - BDWebImage/Monitor/TTMonitor (= 1.0.15)
-  - BDWebImage/Monitor/Heimdallr (1.0.15)
-  - BDWebImage/Monitor/TTMonitor (1.0.15)
-  - BDWebImage/SDAdapter (1.0.15):
-    - BDWebImage/SDAdapter/SDMonitor (= 1.0.15)
-  - BDWebImage/SDAdapter/SDMonitor (1.0.15)
+  - BDWebImage/Core (1.0.15.1-binary)
+  - BDWebImage/Decoder (1.0.15.1-binary)
+  - BDWebImage/Download (1.0.15.1-binary):
+    - BDWebImage/Download/Chromium (= 1.0.15.1-binary)
+    - BDWebImage/Download/DownloadBase (= 1.0.15.1-binary)
+    - BDWebImage/Download/URLConnection (= 1.0.15.1-binary)
+    - BDWebImage/Download/URLSession (= 1.0.15.1-binary)
+  - BDWebImage/Download/Chromium (1.0.15.1-binary)
+  - BDWebImage/Download/DownloadBase (1.0.15.1-binary)
+  - BDWebImage/Download/URLConnection (1.0.15.1-binary)
+  - BDWebImage/Download/URLSession (1.0.15.1-binary)
+  - BDWebImage/Monitor (1.0.15.1-binary):
+    - BDWebImage/Monitor/Heimdallr (= 1.0.15.1-binary)
+    - BDWebImage/Monitor/TTMonitor (= 1.0.15.1-binary)
+  - BDWebImage/Monitor/Heimdallr (1.0.15.1-binary)
+  - BDWebImage/Monitor/TTMonitor (1.0.15.1-binary)
+  - BDWebImage/SDAdapter (1.0.15.1-binary):
+    - BDWebImage/SDAdapter/SDMonitor (= 1.0.15.1-binary)
+  - BDWebImage/SDAdapter/SDMonitor (1.0.15.1-binary)
   - Bolts (1.9.0.1-binary):
     - Bolts/AppLinks (= 1.9.0.1-binary)
     - Bolts/Tasks (= 1.9.0.1-binary)
@@ -130,7 +130,7 @@ PODS:
   - Fabric (1.10.2.1-binary)
   - FBRetainCycleDetector (0.1.5-alpha.2.1.binary)
   - FHCHousePush (0.1.0)
-  - FHCommonUI (0.0.14.1-bugfix)
+  - FHCommonUI (0.1.0)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
   - FHHouseFind (0.1.0)
@@ -209,7 +209,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.2)
-  - ios_house_im (0.1.16.1-bugfix)
+  - ios_house_im (0.1.6)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -364,14 +364,14 @@ PODS:
   - TTArticleVideo (0.1.0)
   - TTAudio (0.1.6.1-binary)
   - TTAvatar (0.5.22)
-  - TTBaseLib/TTBaseTool (2.0.19)
-  - TTBaseLib/TTBusinessManager (2.0.19)
-  - TTBaseLib/TTCategory (2.0.19)
-  - TTBaseLib/TTDeviceHelper (2.0.19)
-  - TTBaseLib/TTLabelTextHelper (2.0.19)
-  - TTBaseLib/TTNetworkHelper (2.0.19)
-  - TTBaseLib/TTSandBoxHelper (2.0.19)
-  - TTBaseLib/TTUIResponderHelper (2.0.19)
+  - TTBaseLib/TTBaseTool (2.0.10.1-binary)
+  - TTBaseLib/TTBusinessManager (2.0.10.1-binary)
+  - TTBaseLib/TTCategory (2.0.10.1-binary)
+  - TTBaseLib/TTDeviceHelper (2.0.10.1-binary)
+  - TTBaseLib/TTLabelTextHelper (2.0.10.1-binary)
+  - TTBaseLib/TTNetworkHelper (2.0.10.1-binary)
+  - TTBaseLib/TTSandBoxHelper (2.0.10.1-binary)
+  - TTBaseLib/TTUIResponderHelper (2.0.10.1-binary)
   - TTBatchItemAction (0.1.8.1-binary)
   - TTDebug (0.1.0)
   - TTDebugAssistant (0.2.33.1-binary)
@@ -693,14 +693,14 @@ DEPENDENCIES:
   - BDUGSettingsInterface (= 1.1.0)
   - BDUGTrackerInterface (= 1.1.1)
   - BDUGUnionSDK (= 0.1.2.1-binary)
-  - BDWebImage/Core (= 1.0.15)
-  - BDWebImage/Decoder (= 1.0.15)
-  - BDWebImage/Download (= 1.0.15)
-  - BDWebImage/Download/Chromium (= 1.0.15)
-  - BDWebImage/Download/DownloadBase (= 1.0.15)
-  - BDWebImage/Download/URLSession (= 1.0.15)
-  - BDWebImage/Monitor (= 1.0.15)
-  - BDWebImage/SDAdapter (= 1.0.15)
+  - BDWebImage/Core (= 1.0.15.1-binary)
+  - BDWebImage/Decoder (= 1.0.15.1-binary)
+  - BDWebImage/Download (= 1.0.15.1-binary)
+  - BDWebImage/Download/Chromium (= 1.0.15.1-binary)
+  - BDWebImage/Download/DownloadBase (= 1.0.15.1-binary)
+  - BDWebImage/Download/URLSession (= 1.0.15.1-binary)
+  - BDWebImage/Monitor (= 1.0.15.1-binary)
+  - BDWebImage/SDAdapter (= 1.0.15.1-binary)
   - Bolts (= 1.9.0.1-binary)
   - boringssl (= 0.0.7)
   - ByteDanceKit/Foundation (= 1.0.0-rc.3.1.binary)
@@ -712,7 +712,7 @@ DEPENDENCIES:
   - Fabric (= 1.10.2.1-binary)
   - FBRetainCycleDetector (= 0.1.5-alpha.2.1.binary)
   - FHCHousePush (from `../Bundles/FHCHousePush`)
-  - FHCommonUI (= 0.0.14.1-bugfix)
+  - FHCommonUI (from `git@code.byted.org:fproject/ios_common_ui.git`, commit `530cea7b9efa340386b124415cfe33a6866d5205`)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
   - FHHouseFind (from `../Bundles/ios_house_find`)
@@ -765,7 +765,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.2)
-  - ios_house_im (= 0.1.16.1-bugfix)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `b804b9b9c6b6991bd62c486eb9a6a90c52ace408`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -840,14 +840,14 @@ DEPENDENCIES:
   - TTArticleVideo (from `../TTBundles/ios_tt_article_video`)
   - TTAudio (= 0.1.6.1-binary)
   - TTAvatar (= 0.5.22)
-  - TTBaseLib/TTBaseTool (= 2.0.19)
-  - TTBaseLib/TTBusinessManager (= 2.0.19)
-  - TTBaseLib/TTCategory (= 2.0.19)
-  - TTBaseLib/TTDeviceHelper (= 2.0.19)
-  - TTBaseLib/TTLabelTextHelper (= 2.0.19)
-  - TTBaseLib/TTNetworkHelper (= 2.0.19)
-  - TTBaseLib/TTSandBoxHelper (= 2.0.19)
-  - TTBaseLib/TTUIResponderHelper (= 2.0.19)
+  - TTBaseLib/TTBaseTool (= 2.0.10.1-binary)
+  - TTBaseLib/TTBusinessManager (= 2.0.10.1-binary)
+  - TTBaseLib/TTCategory (= 2.0.10.1-binary)
+  - TTBaseLib/TTDeviceHelper (= 2.0.10.1-binary)
+  - TTBaseLib/TTLabelTextHelper (= 2.0.10.1-binary)
+  - TTBaseLib/TTNetworkHelper (= 2.0.10.1-binary)
+  - TTBaseLib/TTSandBoxHelper (= 2.0.10.1-binary)
+  - TTBaseLib/TTUIResponderHelper (= 2.0.10.1-binary)
   - TTBatchItemAction (= 0.1.8.1-binary)
   - TTDebug (from `../TTBundles/ios_tt_debug`)
   - TTDebugAssistant (= 0.2.33.1-binary)
@@ -985,6 +985,9 @@ EXTERNAL SOURCES:
     :path: ../Vendor/BDTSharedHeaders
   FHCHousePush:
     :path: ../Bundles/FHCHousePush
+  FHCommonUI:
+    :commit: 530cea7b9efa340386b124415cfe33a6866d5205
+    :git: git@code.byted.org:fproject/ios_common_ui.git
   FHHouseBase:
     :path: ../Bundles/ios_house_base
   FHHouseDetail:
@@ -1011,6 +1014,9 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/FHWebView
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
+  ios_house_im:
+    :commit: b804b9b9c6b6991bd62c486eb9a6a90c52ace408
+    :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -1066,6 +1072,12 @@ EXTERNAL SOURCES:
     :path: ../ReactCommon/yoga
 
 CHECKOUT OPTIONS:
+  FHCommonUI:
+    :commit: 530cea7b9efa340386b124415cfe33a6866d5205
+    :git: git@code.byted.org:fproject/ios_common_ui.git
+  ios_house_im:
+    :commit: b804b9b9c6b6991bd62c486eb9a6a90c52ace408
+    :git: git@code.byted.org:fproject/ios_house_im.git
   TTUIWidget:
     :commit: 06196c84dd28afb068d98f60c72d3e632a4d0f43
     :git: git@code.byted.org:TTIOS/tt_pods_ui.git
@@ -1109,7 +1121,7 @@ SPEC CHECKSUMS:
   BDUGSettingsInterface: 5cb90d9373928d36e371c72449061cabe491359f
   BDUGTrackerInterface: c41760f7de16c6f4b84395e71e85875a4cd87611
   BDUGUnionSDK: 837abef87c8d0f8cce87fb945dc18f2317d3d838
-  BDWebImage: b00d26aa808d51a4e4736822a4a01bfda0002a80
+  BDWebImage: 78e38a40cbeaa5d49ec3d9a804826de48b883be6
   Bolts: 1432a62b82e8d832c6fceaa3cce9ddbc18d91893
   boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
   ByteDanceKit: ecd679ebcd80d2937ae10566db6dec1248d7840f
@@ -1120,7 +1132,7 @@ SPEC CHECKSUMS:
   Fabric: f3e4a5d7f80d9da5d9f66c3864d4cd460478436c
   FBRetainCycleDetector: 9efb6dac5baef178b6e60ba2f85112a7aff8dca4
   FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
-  FHCommonUI: 1efc59bd4da1b1338bfae830423fa04846faf453
+  FHCommonUI: b8b7d371281b79d2a206ab3b763ecc37ccf10fb7
   FHHouseBase: b3ba91f88ccd816422731d913c9c8793c369f538
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 4c0b1ba3dfe678a6cc0eb2d7216d470a78b595f0
@@ -1146,7 +1158,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 14cd33ca592b3a726b3f86f8c7ef431bcf58d97a
-  ios_house_im: 3005a8c68dabafc82420c5bfa9aee22bd1940131
+  ios_house_im: 0bef3fe105a0a9ec8435ad67820ed84d6eb4deb1
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1193,7 +1205,7 @@ SPEC CHECKSUMS:
   TTArticleVideo: 6f1853b56a61152991807c7c07d5474b4667aa80
   TTAudio: e9a692e3b6387c2c5efa5a74b44d7f73712fdc1e
   TTAvatar: 519c351b14df985b10dd9878760f9af4fe828997
-  TTBaseLib: 1d0bd46b482c391618dd1ef8fab7b9c00f361670
+  TTBaseLib: 90951f6d790cd0c29288254e39ebc6eca4642e68
   TTBatchItemAction: 6e6ed79565823fe6f3ee77d66d6e3ec5fec4d52f
   TTDebug: b8ba18669b70deaf52dbd0775578e2163cf07c45
   TTDebugAssistant: c1c106b1cef486fb07833e7a9a6316cf2711df5d
@@ -1274,6 +1286,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: b3a5de1c96f190b8ac9b39495c263eb419ceedcd
+PODFILE CHECKSUM: 25f640317ca984c7c2f3e550a128c8833d318e14
 
 COCOAPODS: 1.4.0
