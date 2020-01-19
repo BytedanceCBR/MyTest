@@ -12,6 +12,9 @@
 #import "UIColor+Theme.h"
 #import "Masonry.h"
 #import "FHUserTracker.h"
+#import "TTDeviceHelper.h"
+
+#define EMOJI_INPUT_VIEW_HEIGHT ([TTDeviceHelper isScreenWidthLarge320] ? 216.f : 193.f)
 
 @implementation FHUGCToolbarReportModel
 @end
@@ -91,6 +94,7 @@
 @property (nonatomic, assign) BOOL isReportedTagsCollectionViewShow;
 @property (nonatomic, strong) NSMutableSet<NSString *> *tagShowReportOnceSet;
 @property (nonatomic, strong) NSMutableArray<FHUGCToolBarTag *> *stageStack;
+@property (nonatomic, assign) CGPoint toolbarViewOrigin;
 @end
 
 @implementation FHUGCToolbar
@@ -330,6 +334,66 @@
         }
     }
 }
+
+- (BOOL)endEditing:(BOOL)animated {
+    
+    void (^animations)(void) = ^{
+        self.top = self.toolbarViewOrigin.y;
+    };
+    
+    void (^completion)(BOOL) = ^(BOOL finished) {
+        self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_selected";
+        self.keyboardButton.accessibilityLabel = @"弹出键盘";
+        self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
+        self.emojiButton.accessibilityLabel = @"表情";
+        
+        if (self.emojiInputViewVisible) {
+            self.emojiInputViewVisible = NO;
+        }
+        
+        self.emojiInputView.hidden = !self.emojiInputViewVisible;
+    };
+    
+    if (animated) {
+        
+        [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:animations completion:completion];
+        
+    } else {
+        animations();
+        completion(YES);
+    }
+    
+    return YES;
+}
+
+- (void)emojiAction:(id)sender {
+    if (self.emojiInputViewVisible) {
+        self.emojiInputViewVisible = NO;
+        self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_selected";
+        self.keyboardButton.accessibilityLabel = @"弹出键盘";
+        self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
+        self.emojiButton.accessibilityLabel = @"表情";
+        if (self.delegate && [self.delegate respondsToSelector:@selector(toolbarDidClickEmojiButton:)]) {
+            [self.delegate toolbarDidClickEmojiButton:NO];
+        }
+    } else {
+        self.emojiInputViewVisible = YES;
+        self.emojiInputView.hidden = NO;
+        self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_normal";
+        self.keyboardButton.accessibilityLabel = @"收起键盘";
+        self.emojiButton.imageName = @"fh_ugc_toolbar_keyboard_selected";
+        self.emojiButton.accessibilityLabel = @"收起表情选择框";
+        if (self.delegate && [self.delegate respondsToSelector:@selector(toolbarDidClickEmojiButton:)]) {
+            [self.delegate toolbarDidClickEmojiButton:YES];
+            
+            [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
+                self.top = self.toolbarViewOrigin.y - EMOJI_INPUT_VIEW_HEIGHT;
+            } completion:nil];
+        }
+    }
+}
+
+#pragma mark - 辅助函数
 
 -(BOOL)switchToInput {
     BOOL switchToInput = [self.keyboardButton.imageName isEqualToString:@"fh_ugc_toolbar_keyboard_selected"];
