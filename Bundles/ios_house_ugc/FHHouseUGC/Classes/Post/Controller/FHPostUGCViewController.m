@@ -767,6 +767,8 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)endEditing {
+    self.isToolbarWillEndEditing = YES;
+    
     [self.view endEditing:YES];
     
     [self.toolbar endEditing:YES];

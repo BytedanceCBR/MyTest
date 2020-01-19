@@ -123,7 +123,14 @@
 
 - (void)exitPage {
     [self.view endEditing:YES];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    if (viewControllers && viewControllers.count > 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 #pragma mark - 成员方法
