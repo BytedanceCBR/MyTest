@@ -158,7 +158,7 @@
         WeakSelf;
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             StrongSelf;
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self exitPage];
             
             NSMutableDictionary *params = @{}.mutableCopy;
             params[UT_PAGE_TYPE] = @"vote_publisher";
@@ -186,6 +186,16 @@
         TRACK_EVENT(@"publisher_cancel_popup_show", params);
         
     } else {
+        [self exitPage];
+    }
+}
+
+- (void)exitPage {
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    if (viewControllers && viewControllers.count > 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
