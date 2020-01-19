@@ -587,6 +587,12 @@
 }
 
 - (void)traceTagShowOnce:(FHUGCToolBarTag *)tagInfo {
+
+    BOOL isValid = tagInfo && tagInfo.groupId.length > 0;
+    
+    if(!isValid) {
+        return;
+    }
     
     if(![self.tagShowReportOnceSet containsObject:tagInfo.groupId]) {
         
