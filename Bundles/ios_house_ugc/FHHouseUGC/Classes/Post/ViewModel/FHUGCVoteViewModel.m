@@ -684,7 +684,7 @@
 }
 
 - (void)exitPage {
-    [self.viewController dismissViewControllerAnimated:YES completion:nil];
+    [self.viewController exitPage];
 }
 
 - (void)addOptionAction:(UITapGestureRecognizer *)tap {
