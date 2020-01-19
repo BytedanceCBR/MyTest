@@ -30,7 +30,7 @@ DEC_TASK("FHIntroduceStartupTask",FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
     BOOL fromAPNS = [[self class] isFromAPNSWithOptions:launchOptions];
     //只显示一次
-    if([FHEnvContext isIntroduceOpen] && !fromAPNS ){
+    if([FHEnvContext isIntroduceOpen] && !fromAPNS && [[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]){
     //只显示一次,push进来不显示
         if([FHIntroduceManager sharedInstance].alreadyShow){
             return;

@@ -78,15 +78,7 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
         [self configInHouseFunc];
     });
     
-    [NewsBaseDelegate startRegisterRemoteNotification];
-    
-    if([FHEnvContext isIntroduceOpen]){
-        if([FHIntroduceManager sharedInstance].alreadyShow){
-            return;
-        }
-        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
-        [FHIntroduceManager sharedInstance].alreadyShow = YES;
-    }
+    [NewsBaseDelegate startRegisterRemoteNotification];    
 }
 
 // 是否在内测版本开启某些功能

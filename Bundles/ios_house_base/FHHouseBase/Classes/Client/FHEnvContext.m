@@ -1071,10 +1071,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 -(void)showPermssionPage
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        UIViewController *rootController = [UIApplication sharedApplication].delegate.window.rootViewController;
-        [FHPermissionAlertViewController showInViewController:rootController];
-    });
+    UIViewController *rootController = [UIApplication sharedApplication].delegate.window.rootViewController;
+    [FHPermissionAlertViewController showInViewController:rootController];
 
 }
 
@@ -1165,6 +1163,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
     [self check2CityList];
     
     [NewsBaseDelegate startRegisterRemoteNotification];
+    
+    if([FHEnvContext isIntroduceOpen]){
+        if([FHIntroduceManager sharedInstance].alreadyShow){
+            return;
+        }
+        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
+        [FHIntroduceManager sharedInstance].alreadyShow = YES;
+    }
     
 }
 
