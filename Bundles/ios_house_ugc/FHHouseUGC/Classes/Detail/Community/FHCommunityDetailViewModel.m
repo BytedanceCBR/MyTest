@@ -953,7 +953,7 @@
     self.viewController.emptyView.hidden = YES;
     [self.viewController.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];
     self.viewController.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
-    NSString *subtitle = data.countText;
+    NSString *subtitle = data.contentText;
     self.viewController.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     NSInteger followerCount = [data.followerCount integerValue];
     if (followerCount <= 0) {
