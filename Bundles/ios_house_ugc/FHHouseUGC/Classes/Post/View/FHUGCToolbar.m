@@ -94,6 +94,7 @@
 @property (nonatomic, assign) BOOL isReportedTagsCollectionViewShow;
 @property (nonatomic, strong) NSMutableSet<NSString *> *tagShowReportOnceSet;
 @property (nonatomic, strong) NSMutableArray<FHUGCToolBarTag *> *stageStack;
+@property (nonatomic, assign) CGPoint toolbarViewOriginWhenInit;
 @property (nonatomic, assign) CGPoint toolbarViewOrigin;
 @end
 
@@ -123,6 +124,8 @@
         
         // 修改父类控制布局
         [self layoutSuperView];
+        self.toolbarViewOriginWhenInit = self.origin;
+        self.toolbarViewOrigin = self.origin;
     }
     return self;
 }
@@ -201,6 +204,8 @@
     
     BOOL hasTagsView = (!self.isSelected && self.tags.count > 0);
     frame.size.height = hasTagsView ? TAGS_VIEW_HEIGHT : 0;
+    
+    self.toolbarViewOrigin = CGPointMake(self.toolbarViewOriginWhenInit.x, self.toolbarViewOriginWhenInit.y + (hasTagsView ? 0 : TAGS_VIEW_HEIGHT));
     
     self.tagSelectCollectionView.frame = frame;
     
