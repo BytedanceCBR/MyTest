@@ -96,6 +96,7 @@
 @property (nonatomic, strong) NSMutableArray<FHUGCToolBarTag *> *stageStack;
 @property (nonatomic, assign) CGPoint toolbarViewOriginWhenInit;
 @property (nonatomic, assign) CGPoint toolbarViewOrigin;
+@property (nonatomic, assign) BOOL executeOnceFlag;
 @end
 
 @implementation FHUGCToolbar
@@ -124,8 +125,6 @@
         
         // 修改父类控制布局
         [self layoutSuperView];
-        self.toolbarViewOriginWhenInit = self.origin;
-        self.toolbarViewOrigin = self.origin;
     }
     return self;
 }
@@ -204,12 +203,22 @@
     
     BOOL hasTagsView = (!self.isSelected && self.tags.count > 0);
     frame.size.height = hasTagsView ? TAGS_VIEW_HEIGHT : 0;
-    
-    self.toolbarViewOrigin = CGPointMake(self.toolbarViewOriginWhenInit.x, self.toolbarViewOriginWhenInit.y + (hasTagsView ? 0 : TAGS_VIEW_HEIGHT));
-    
+
     self.tagSelectCollectionView.frame = frame;
     
     [self.tagSelectCollectionView reloadData];
+    
+    if(!self.executeOnceFlag) {
+        self.toolbarViewOriginWhenInit = self.origin;
+        self.toolbarViewOrigin = self.origin;
+        self.executeOnceFlag = YES;
+    }
+    else {
+        if(!self.isSelected) {
+            self.toolbarViewOrigin = CGPointMake(self.toolbarViewOriginWhenInit.x, self.toolbarViewOriginWhenInit.y + (hasTagsView ? 0 : TAGS_VIEW_HEIGHT));
+        }
+    }
+    
     [self layoutSuperView];
     
     // 热门标签展现埋点
@@ -578,6 +587,12 @@
 }
 
 - (void)traceTagShowOnce:(FHUGCToolBarTag *)tagInfo {
+
+    BOOL isValid = tagInfo && tagInfo.groupId.length > 0;
+    
+    if(!isValid) {
+        return;
+    }
     
     if(![self.tagShowReportOnceSet containsObject:tagInfo.groupId]) {
         

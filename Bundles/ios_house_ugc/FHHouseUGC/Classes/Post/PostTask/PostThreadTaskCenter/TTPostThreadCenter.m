@@ -207,13 +207,15 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
                     selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
                 }
                 
-                FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
-                selectedGroup.socialGroupId = task.social_group_id;
-                selectedGroup.socialGroupName = task.social_group_name;
-                NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
-                [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
-                
-                [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
+                if(task.social_group_id.length > 0 && task.social_group_name.length > 0) {
+                    FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
+                    selectedGroup.socialGroupId = task.social_group_id;
+                    selectedGroup.socialGroupName = task.social_group_name;
+                    NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+                    [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
+                    
+                    [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
+                }
             }
         }
         
