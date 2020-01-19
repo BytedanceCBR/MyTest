@@ -645,13 +645,15 @@
             selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
         }
         
-        FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
-        selectedGroup.socialGroupId = self.selectGroupId;
-        selectedGroup.socialGroupName = self.selectGroupName;
-        NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
-        [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
-        
-        [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
+        if(self.selectGroupId.length > 0 && self.selectGroupName.length > 0){
+            FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
+            selectedGroup.socialGroupId = self.selectGroupId;
+            selectedGroup.socialGroupName = self.selectGroupName;
+            NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+            [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
+            
+            [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
+        }
     }
 }
 
