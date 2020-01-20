@@ -559,10 +559,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [self check2CityList];
         
     }else{
-        
-        //检测是否需要打开城市列表
-        [self check2CityList];
-        
+                
         [self showPermssionPage];
     }
 
@@ -1166,6 +1163,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     [[FHMinisdkManager sharedInstance] goSpring];
     
     [self startLocation];
+    [self check2CityList];
     
     [NewsBaseDelegate startRegisterRemoteNotification];
     
