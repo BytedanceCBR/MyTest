@@ -1166,7 +1166,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     [[FHMinisdkManager sharedInstance] goSpring];
     
     [self startLocation];
-    [self check2CityList];
     
     [NewsBaseDelegate startRegisterRemoteNotification];
     
