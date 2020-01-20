@@ -86,6 +86,12 @@ typedef NS_ENUM(NSUInteger, FHUGCPublishType) {
     FHUGCPublishTypeQuestion,   // 发提问
 };
 
+typedef enum : NSUInteger {
+    FHUGCPostEditStateNone,
+    FHUGCPostEditStateSending,
+    FHUGCPostEditStateDone,
+} FHUGCPostEditState; // 帖子编辑状态
+
 //feed中分类的key值
 #define tabAll @"all"                       //全部
 #define tabEssence @"essence"               //加精

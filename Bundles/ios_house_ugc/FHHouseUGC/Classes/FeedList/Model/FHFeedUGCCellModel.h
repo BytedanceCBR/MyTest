@@ -171,6 +171,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotCellListModel> *hotCellList;
 //热门小区的二级类型，用来区分热门小区和感兴趣的小区
 @property (nonatomic, copy , nullable) NSString *hotCommunityCellType;
+//帖子编辑状态。默认是none
+@property (nonatomic, assign) FHUGCPostEditState editState;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

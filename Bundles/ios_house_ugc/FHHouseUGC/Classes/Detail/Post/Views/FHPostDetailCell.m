@@ -272,7 +272,7 @@
     // 设置userInfo
     self.userInfoView.cellModel = cellModel;
     self.userInfoView.userName.text = cellModel.user.name;
-    self.userInfoView.descLabel.attributedText = cellModel.desc;
+    [self.userInfoView updateDescLabel:cellModel];
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     // 内容
     [self.contentLabel setText:cellModel.contentAStr];

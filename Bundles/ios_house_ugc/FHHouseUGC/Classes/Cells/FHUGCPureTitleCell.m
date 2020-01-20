@@ -142,7 +142,7 @@
     //设置userInfo
     self.userInfoView.cellModel = cellModel;
     self.userInfoView.userName.text = cellModel.user.name;
-    self.userInfoView.descLabel.attributedText = cellModel.desc;
+    [self.userInfoView updateDescLabel:cellModel];
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     //设置底部
     self.bottomView.cellModel = cellModel;

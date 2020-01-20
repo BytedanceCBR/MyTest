@@ -10,12 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef enum : NSUInteger {
-    FHUGCPostEditStateNone,
-    FHUGCPostEditStateSending,
-    FHUGCPostEditStateDone,
-} FHUGCPostEditState; // 帖子编辑状态
-
 @interface FHUGCCellUserInfoView : UIView
 
 @property(nonatomic ,strong) UIImageView *icon;
@@ -28,6 +22,8 @@ typedef enum : NSUInteger {
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic, copy) void(^deleteCellBlock)(void);
 @property(nonatomic, copy) void(^reportSuccessBlock)(void);
+
+- (void)updateDescLabel:(FHFeedUGCCellModel *)cellModel;
 
 @end
 
