@@ -35,7 +35,6 @@
 //#import <TTLiveMainUI/TTLiveMainViewController.h>
 //#import "TTFantasyWindowManager.h"
 
-#import "ArticleMobileSettingViewController.h"
 #import "TTPersistence.h"
 #import "TTURLUtils.h"
 #import "WDCommonLogic.h"

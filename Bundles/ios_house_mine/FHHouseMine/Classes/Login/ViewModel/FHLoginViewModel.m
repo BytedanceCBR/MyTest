@@ -129,7 +129,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.view showOneKeyLoginView:isOneKeyLogin];
     [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin] showAcceptBox:YES];
     [self.view updateOneKeyLoginWithPhone:phoneNum service:isOneKeyLogin ? [self serviceNameStr] : nil];
-    [self.view.acceptCheckBox setSelected:NO];
+//    [self.view.acceptCheckBox setSelected:NO];
     [self checkToEnableConfirmBtn];
     if (isOneKeyLogin) {
         [self.view enableSendVerifyCodeBtn:NO];
@@ -200,10 +200,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [wself goToSecretProtocol];
         }];
     } else {
-        attrText = [[NSMutableAttributedString alloc] initWithString:@"我已阅读并同意 《幸福里用户协议》及《隐私政策》"];
+        attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
         [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
-        userProtocolRange = NSMakeRange(9, 7);
-        privacyRange = NSMakeRange(19, 4);
+        userProtocolRange = NSMakeRange(7, 7);
+        privacyRange = NSMakeRange(17, 4);
         YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
         [attrText yy_setTextUnderline:decoration range:userProtocolRange];
         [attrText yy_setTextUnderline:decoration range:privacyRange];
@@ -301,7 +301,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)checkToEnableConfirmBtn {
     BOOL hasPhoneInput = self.view.phoneInput.text.length > 0;
     BOOL hasVerifyCodeInput = self.view.varifyCodeInput.text.length > 0;
-    BOOL confirmEnable = hasPhoneInput && (self.view.isOneKeyLogin || hasVerifyCodeInput) && self.view.acceptCheckBox.isSelected;
+    BOOL confirmEnable = hasPhoneInput && (self.view.isOneKeyLogin || hasVerifyCodeInput);
     [self.view enableConfirmBtn:confirmEnable];
 }
 
@@ -311,10 +311,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)oneKeyLoginAction {
     [self traceLogin];
-    if (!self.view.acceptCheckBox.selected) {
-        [[ToastManager manager] showToast:@"请阅读并同意《隐私政策》和相关协议"];
-        return;
-    }
+//    if (!self.view.acceptCheckBox.selected) {
+//        [[ToastManager manager] showToast:@"请阅读并同意《隐私政策》和相关协议"];
+//        return;
+//    }
     [self requestOneKeyLogin];
 }
 
@@ -362,7 +362,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)acceptCheckBoxChange:(BOOL)selected {
-    self.view.acceptCheckBox.selected = !selected;
+//    self.view.acceptCheckBox.selected = !selected;
     [self checkToEnableConfirmBtn];
 }
 
@@ -390,10 +390,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     
     [self traceLogin];
-    if (!self.view.acceptCheckBox.selected) {
-        [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私政策》"];
-        return;
-    }
+//    if (!self.view.acceptCheckBox.selected) {
+//        [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私政策》"];
+//        return;
+//    }
     
     [[ToastManager manager] showToast:@"正在登录中"];
     
@@ -488,7 +488,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         tracerDict[@"enter_from"] = @"quick_login";
         tracerDict[@"enter_type"] = @"other_login";
     }
-    tracerDict[@"login_agreement"] = self.view.acceptCheckBox.isSelected ? @"1" : @"0";
+    tracerDict[@"login_agreement"] = @"1" ; // : @"0";
     TRACK_EVENT(@"click_login", tracerDict);
 }
 

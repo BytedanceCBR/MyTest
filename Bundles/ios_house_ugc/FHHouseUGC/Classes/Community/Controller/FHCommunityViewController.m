@@ -29,6 +29,7 @@
 #import <FHMinisdkManager.h>
 #import "UIViewController+Track.h"
 #import "FHSpringHangView.h"
+#import <FHHouseBase/FHPermissionAlertViewController.h>
 
 @interface FHCommunityViewController ()
 
@@ -225,7 +226,10 @@
         }
     }
     
-    [[FHMinisdkManager sharedInstance] goSpring];
+    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        //春节活动
+        [[FHMinisdkManager sharedInstance] goSpring];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {

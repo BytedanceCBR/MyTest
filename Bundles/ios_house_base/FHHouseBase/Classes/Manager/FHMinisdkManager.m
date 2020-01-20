@@ -75,6 +75,15 @@
 
 - (void)initTask {
     [BDMTaskCenterManager sharedInstance].delegate = self;
+    
+    if(!isEmptyString([[TTInstallIDManager sharedInstance] deviceID])){
+        [[BDMTaskCenterManager sharedInstance] uploadAppFirstOpenAfterDownload];
+    }else{
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceDidRefreshed:) name:@"kFHTrackerDidRefreshDeviceId" object:nil];
+    }
+}
+
+- (void)deviceDidRefreshed:(NSNotification *)noti {
     [[BDMTaskCenterManager sharedInstance] uploadAppFirstOpenAfterDownload];
 }
 
@@ -134,8 +143,9 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
 
     NSString *enterFrom = [FHEnvContext enterTabLogName];
-    
-    [params setObject:enterFrom forKey:@"enter_from"];
+    if(enterFrom){
+        [params setObject:enterFrom forKey:@"enter_from"];
+    }
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
 

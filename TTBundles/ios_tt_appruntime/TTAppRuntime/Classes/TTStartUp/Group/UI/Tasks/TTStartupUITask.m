@@ -32,6 +32,7 @@
 #import "TTInstallIDManager.h"
 #import "TTSandBoxHelper.h"
 #import <FHUtils.h>
+#import <FHHouseBase/FHIntroduceManager.h>
 
 DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
@@ -76,6 +77,10 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     dispatch_async(dispatch_get_main_queue(), ^{
         [self configInHouseFunc];
     });
+    
+    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [NewsBaseDelegate startRegisterRemoteNotification];
+    }    
 }
 
 // 是否在内测版本开启某些功能

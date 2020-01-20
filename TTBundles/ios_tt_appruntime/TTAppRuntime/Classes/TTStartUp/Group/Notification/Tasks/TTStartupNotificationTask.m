@@ -83,6 +83,7 @@ TTAccountMulticastProtocol
 {
     
     [[TTInstallIDManager sharedInstance] observeDeviceDidRegistered:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHTrackerDidRefreshDeviceId" object:nil];
         TTChannelRequestParam *param = [TTChannelRequestParam requestParam];
         param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
         param.versionCode = [TTSandBoxHelper fhVersionCode];

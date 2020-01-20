@@ -135,13 +135,13 @@
     _agreementLabel.font = [UIFont themeFontRegular:13];
     [self.scrollView addSubview:_agreementLabel];
 
-    self.acceptCheckBox = [[FHLoginAcceptButton alloc] init];
-    self.acceptCheckBox.hotAreaInsets = UIEdgeInsetsMake(20, 30, 0, 30);
-    self.acceptCheckBox.hotAreaInsets2 = UIEdgeInsetsMake(20, 30, 20, 0);
-    [_acceptCheckBox setImage:[UIImage imageNamed:@"login_checkbox-checked"] forState:UIControlStateSelected];
-    [_acceptCheckBox setImage:[UIImage imageNamed:@"ic-filter-normal"] forState:UIControlStateNormal];
-    [_acceptCheckBox addTarget:self action:@selector(acceptCheckBoxChange) forControlEvents:UIControlEventTouchUpInside];
-    [self.scrollView addSubview:_acceptCheckBox];
+//    self.acceptCheckBox = [[FHLoginAcceptButton alloc] init];
+//    self.acceptCheckBox.hotAreaInsets = UIEdgeInsetsMake(20, 30, 0, 30);
+//    self.acceptCheckBox.hotAreaInsets2 = UIEdgeInsetsMake(20, 30, 20, 0);
+//    [_acceptCheckBox setImage:[UIImage imageNamed:@"login_checkbox-checked"] forState:UIControlStateSelected];
+//    [_acceptCheckBox setImage:[UIImage imageNamed:@"ic-filter-normal"] forState:UIControlStateNormal];
+//    [_acceptCheckBox addTarget:self action:@selector(acceptCheckBoxChange) forControlEvents:UIControlEventTouchUpInside];
+//    [self.scrollView addSubview:_acceptCheckBox];
 }
 
 
@@ -152,7 +152,7 @@
         self.subTitleLabel.text = @"登录幸福里，关注好房永不丢失";
         self.serviceLabel.hidden = NO;
         self.otherLoginBtn.hidden = NO;
-        self.acceptCheckBox.hidden = YES;
+//        self.acceptCheckBox.hidden = YES;
         self.varifyCodeInput.hidden = YES;
         self.singleLine2.hidden = YES;
         self.sendVerifyCodeBtn.hidden = YES;
@@ -166,7 +166,7 @@
         self.subTitleLabel.text = @"未注册手机验证后自动注册";
         self.serviceLabel.hidden = YES;
         self.otherLoginBtn.hidden = YES;
-        self.acceptCheckBox.hidden = NO;
+//        self.acceptCheckBox.hidden = NO;
         self.varifyCodeInput.hidden = NO;
         self.singleLine2.hidden = NO;
         self.sendVerifyCodeBtn.hidden = NO;
@@ -272,19 +272,12 @@
     CGFloat topOffset = !self.isOneKeyLogin ? 60 : 0;
     CGFloat width = UIScreen.mainScreen.bounds.size.width - 45 - 3 - 30;
     CGSize size = [self.agreementLabel sizeThatFits:CGSizeMake(width, 1000)];
-    self.acceptCheckBox.hidden = !showAcceptBox;
 
     [self.agreementLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.acceptCheckBox.mas_right).offset(boxOffset);
+        make.left.mas_equalTo(self.titleLabel);
         make.top.mas_equalTo(self.singleLine.mas_bottom).offset(20 + topOffset);
         make.right.mas_equalTo(self.rightView);
         make.height.mas_equalTo(size.height);
-    }];
-
-    [self.acceptCheckBox mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(30);
-        make.top.mas_equalTo(self.agreementLabel).offset(1.5);
-        make.width.height.mas_equalTo(boxWidth);
     }];
 }
 
@@ -330,11 +323,11 @@
     }
 }
 
-- (void)acceptCheckBoxChange {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(acceptCheckBoxChange:)]) {
-        [self.delegate acceptCheckBoxChange:self.acceptCheckBox.selected];
-    }
-}
+//- (void)acceptCheckBoxChange {
+//    if (self.delegate && [self.delegate respondsToSelector:@selector(acceptCheckBoxChange:)]) {
+//        [self.delegate acceptCheckBoxChange:self.acceptCheckBox.selected];
+//    }
+//}
 
 - (void)sendVerifyCode {
     if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode)]) {

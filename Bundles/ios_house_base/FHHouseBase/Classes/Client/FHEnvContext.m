@@ -36,6 +36,11 @@
 #import <FHIntroduceManager.h>
 #import <TTSettingsManager.h>
 #import <NSDictionary+TTAdditions.h>
+#import <TTLocationManager/TTLocationManager.h>
+#import "FHStashModel.h"
+#import <UserNotifications/UserNotifications.h>
+#import "FHPermissionAlertViewController.h"
+#import <TTAppRuntime/NewsBaseDelegate.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -45,7 +50,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
 @property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
-
+@property (atomic ,   assign) BOOL inPasueFOrPermission;
+@property (nonatomic, strong) FHStashModel *stashModel;
+@property (nonatomic, copy)   NSNumber *hasPermission;
 @end
 
 @implementation FHEnvContext
@@ -544,12 +551,18 @@ static NSInteger kGetLightRequestRetryCount = 3;
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
     
-    
-    //开始定位
-    [self startLocation];
-    
-    //检测是否需要打开城市列表
-    [self check2CityList];
+    if ([self hasConfirmPermssionProtocol]) {
+        //开始定位
+        [self startLocation];
+        
+        //检测是否需要打开城市列表
+        [self check2CityList];
+        
+    }else{
+                
+        [self showPermssionPage];
+    }
+
     
     //更新公共参数
     [self updateRequestCommonParams];
@@ -602,6 +615,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 - (void)startLocation
 {
+    if (![self hasConfirmPermssionProtocol]) {
+        return;
+    }
+    
     [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
     
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:YES];
@@ -1032,7 +1049,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
     NSString *currentTabIdentifier = [self getCurrentTabIdentifier];
 
     NSDictionary *tagDic = [TTArticleTabBarController tagToLogEventName];
-    tabName = tagDic[currentTabIdentifier];
+    if(currentTabIdentifier && tagDic[currentTabIdentifier]){
+        tabName = tagDic[currentTabIdentifier];
+    }
     if([currentTabIdentifier isEqualToString:kFHouseFindTabKey]){
         if([FHEnvContext isUGCOpen]){
             tabName = @"neighborhood_tab";
@@ -1053,6 +1072,139 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return nil;
 }
 
+-(void)showPermssionPage
+{
+    UIViewController *rootController = [UIApplication sharedApplication].delegate.window.rootViewController;
+    [FHPermissionAlertViewController showInViewController:rootController];
+
+}
+
+-(BOOL)hasConfirmPermssionProtocol
+{
+    if (!_hasPermission) {
+        _hasPermission = [[NSUserDefaults standardUserDefaults] objectForKey:@"SHOW_PERMISSION_ALERT"];
+    }
+    return [_hasPermission boolValue];
+}
+
+-(void)userConfirmedPermssionProtocol
+{
+    self.hasPermission = @(YES);
+    [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"SHOW_PERMISSION_ALERT"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION object:nil];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self resumeForPermissionProtocl];
+    });
+    
+}
+
+-(void)pauseForPermissionProtocol
+{
+    if (self.inPasueFOrPermission) {
+        return;
+    }
+    self.inPasueFOrPermission = YES;
+    TTLocationManager *locationManager = [TTLocationManager sharedManager];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:locationManager name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+-(void)resumeForPermissionProtocl
+{
+    if (!self.inPasueFOrPermission) {
+        return;
+    }
+    
+    self.inPasueFOrPermission = NO;
+    
+    TTLocationManager *locationManager = [TTLocationManager sharedManager];
+    if ([locationManager respondsToSelector:@selector(applicationWillEnterForeground:)]) {
+        [[NSNotificationCenter defaultCenter] addObserver:locationManager
+                                                 selector:@selector(applicationWillEnterForeground:)
+                                                     name:UIApplicationWillEnterForegroundNotification
+                                                   object:nil];
+    }
+
+    if (_stashModel ) {
+        FHOpenUrlStashItem *item = [_stashModel stashOpenUrlItem];
+        if (item) {
+            [[UIApplication sharedApplication].delegate application:item.application openURL:item.openUrl sourceApplication:item.sourceApplication annotation:item.annotation];
+        }
+        
+        FHContinueActivityStashItem *activityItem = [_stashModel stashActivityItem];
+        if (activityItem) {
+            if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(application:continueUserActivity:restorationHandler:)]) {
+                [[UIApplication sharedApplication].delegate application:activityItem.application continueUserActivity:activityItem.activity restorationHandler:activityItem.restorationHandler];
+            }
+        }
+        
+        FHRemoteNotificationStashItem *notificationItem = [_stashModel notificationItem];
+        if (notificationItem) {
+            if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
+                [[UIApplication sharedApplication].delegate application:notificationItem.application didReceiveRemoteNotification:notificationItem.userInfo];
+            }
+
+        }
+        
+        FHUNRemoteNOficationStashItem *unnotificationItem = [_stashModel unnotificationItem];
+        if (unnotificationItem) {
+            if ([[UNUserNotificationCenter currentNotificationCenter].delegate respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:)]) {
+                [[UNUserNotificationCenter currentNotificationCenter].delegate userNotificationCenter:unnotificationItem.center didReceiveNotificationResponse:unnotificationItem.response withCompletionHandler:unnotificationItem.completionHandler];
+            }
+        }
+        
+    }
+    
+    self.stashModel = nil;
+    
+    [[FHMinisdkManager sharedInstance] goSpring];
+    
+    [self startLocation];
+    [self check2CityList];
+    
+    [NewsBaseDelegate startRegisterRemoteNotification];
+    
+    if([FHEnvContext isIntroduceOpen]){
+        if([FHIntroduceManager sharedInstance].alreadyShow){
+            return;
+        }
+        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
+        [FHIntroduceManager sharedInstance].alreadyShow = YES;
+    }
+    
+}
+
+-(FHStashModel *)stashModel
+{
+    if (!_stashModel) {
+        _stashModel = [[FHStashModel alloc]init];
+    }
+    return _stashModel;
+}
+
+-(void)addOpenUrlItem:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    [self.stashModel addOpenUrlItem:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+}
+
+-(void)addContinueActivity:(UIApplication *)application activity:(NSUserActivity *)activity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler
+{
+    [self.stashModel addContinueActivity:application activity:activity restorationHandler:restorationHandler];
+}
+
+-(void)addRemoteNotification:(UIApplication *)application userInfo:(NSDictionary *)userInfo
+{
+    [self.stashModel addRemoteNotification:application userInfo:userInfo];
+}
+
+-(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler
+{
+    [self.stashModel addUNRemoteNOtification:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
+}
+
 @end
 
 // 升级TTRoute后需要验当前场景
@@ -1069,3 +1221,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 @end
+
+
+NSString *const PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION = @"_PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION_";
