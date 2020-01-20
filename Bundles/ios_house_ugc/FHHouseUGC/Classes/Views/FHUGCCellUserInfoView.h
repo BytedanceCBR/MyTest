@@ -23,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void(^deleteCellBlock)(void);
 @property(nonatomic, copy) void(^reportSuccessBlock)(void);
 
-- (void)updateDescLabel:(FHFeedUGCCellModel *)cellModel;
+- (void)updateDescLabel;
+- (void)updateEditState;
 
 @end
 

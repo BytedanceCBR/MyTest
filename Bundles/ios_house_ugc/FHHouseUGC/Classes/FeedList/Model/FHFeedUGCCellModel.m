@@ -701,7 +701,7 @@
         [desc appendAttributedString:distanceAStr];
     }
     
-    if(!isEmptyString(readCount)){
+    if(!isEmptyString(readCount) && [readCount integerValue] != 0){
         NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[readCount longLongValue]]];
         if(desc.length > 0){
             read = [NSString stringWithFormat:@" %@",read];
@@ -716,7 +716,7 @@
 + (NSAttributedString *)generateArticleDesc:(FHFeedContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     
-    if(!isEmptyString(model.readCount)){
+    if(!isEmptyString(model.readCount) && [model.readCount integerValue] != 0){
         NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
         NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
         [desc appendAttributedString:readAStr];

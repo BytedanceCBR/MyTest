@@ -26,7 +26,7 @@
 
 @interface FHUGCCellUserInfoView()
 
-@property (nonatomic, assign) FHUGCPostEditState editState;
+//@property (nonatomic, assign) FHUGCPostEditState editState;
 //desc文案太长了。这时候会隐藏掉 后面的 内容已编辑 部分 by xsm
 @property (nonatomic, assign) BOOL isDescToLong;
 
@@ -37,7 +37,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.editState = FHUGCPostEditStateNone;
+//        self.editState = FHUGCPostEditStateNone;
         [self initViews];
         [self initConstraints];
         [self setupNoti];
@@ -71,11 +71,7 @@
         }
     }
     // 是否显示
-    if(self.isDescToLong){
-        self.editingLabel.hidden = YES;
-    }else{
-        self.editingLabel.hidden = !(self.cellModel.editState == FHUGCPostEditStateSending);
-    }
+    [self updateEditState];
 }
 
 - (void)initViews {
@@ -202,18 +198,10 @@
     if(pageType && [pageType isEqualToString:@"personal_comment_list"]){
         self.moreBtn.hidden = NO;
     }
-    
-    // 编辑按钮
-    if (cellModel.hasEdit) {
-        self.editLabel.text = @"内容已编辑";
-    } else {
-        self.editLabel.text = @"";
-    }
-    [self.editLabel updateConstraintsIfNeeded];
 }
 
-- (void)updateDescLabel:(FHFeedUGCCellModel *)cellModel {
-    self.descLabel.attributedText = cellModel.desc;
+- (void)updateDescLabel {
+    self.descLabel.attributedText = self.cellModel.desc;
     CGSize size = [self.descLabel sizeThatFits:CGSizeMake(MAXFLOAT, 17)];
     CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10;
     if(size.width + 15 + 60 <= maxWidth){
@@ -229,13 +217,20 @@
     }
 }
 
-- (void)updateEditState:(FHFeedUGCCellModel *)cellModel {
+- (void)updateEditState {
+    // 编辑按钮
+    if (self.cellModel.hasEdit) {
+        self.editLabel.text = @"内容已编辑";
+    } else {
+        self.editLabel.text = @"";
+    }
+    [self.editLabel updateConstraintsIfNeeded];
     // 是否显示
     if(self.isDescToLong){
         self.editLabel.hidden = YES;
         self.editingLabel.hidden = YES;
     }else{
-        self.editLabel.hidden = !cellModel.hasEdit;
+        self.editLabel.hidden = !self.cellModel.hasEdit;
         self.editingLabel.hidden = !(self.cellModel.editState == FHUGCPostEditStateSending);
     }
 }
@@ -601,7 +596,7 @@
     if(self.cellModel.cellType != FHUGCFeedListCellTypeUGC) {
         return;
     }
-    if (self.editState == FHUGCPostEditStateSending) {
+    if (self.cellModel.editState == FHUGCPostEditStateSending) {
         // 编辑发送中
         [[ToastManager manager] showToast:@"帖子编辑中，请稍后"];
         return;
