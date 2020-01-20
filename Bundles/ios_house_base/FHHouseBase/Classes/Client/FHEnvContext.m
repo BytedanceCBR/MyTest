@@ -557,9 +557,15 @@ static NSInteger kGetLightRequestRetryCount = 3;
         
         //检测是否需要打开城市列表
         [self check2CityList];
+        
     }else{
+        
+        //检测是否需要打开城市列表
+        [self check2CityList];
+        
         [self showPermssionPage];
     }
+
     
     //更新公共参数
     [self updateRequestCommonParams];

@@ -78,7 +78,9 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
         [self configInHouseFunc];
     });
     
-    [NewsBaseDelegate startRegisterRemoteNotification];    
+    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        [NewsBaseDelegate startRegisterRemoteNotification];
+    }    
 }
 
 // 是否在内测版本开启某些功能
