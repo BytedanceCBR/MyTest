@@ -20,13 +20,14 @@
 #import <TTArticleBase/SSCommonLogic.h>
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
-#import "FHDetailFeedbackView.h"
 #import "FHEnvContext.h"
 #import "TTInstallIDManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHDetailQuestionButton.h"
 #import "FHDetailBottomBarView.h"
 #import "TTNavigationController.h"
+#import <FHCommonUI/FHFeedbackView.h>
+#import <ios_house_im/FHIMConfigManager.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -36,7 +37,7 @@
 @property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHDetailBottomBar *bottomBar;
 @property (nonatomic, strong) FHDetailUGCGroupChatButton *bottomGroupChatBtn;// 新房群聊入口
-@property (nonatomic, strong) FHDetailFeedbackView *feedbackView;
+@property (nonatomic, strong) FHFeedbackView *feedbackView;
 @property(nonatomic , strong) FHDetailQuestionButton *questionBtn;
 
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
@@ -707,19 +708,70 @@
 }
 
 - (void)addFeedBackView {
-    self.feedbackView.realtorId = self.phoneCallRealtorId;
-    self.feedbackView.requestId = self.phoneCallRequestId;
-    [self.feedbackView show:self.view];
+//    self.feedbackView.realtorId = self.phoneCallRealtorId;
+//    self.feedbackView.requestId = self.phoneCallRequestId;
+//    [self.feedbackView show:self.view];
+    
+    WeakSelf;
+    __block NSMutableDictionary *tracerDic = @{}.mutableCopy;
+    if (self.viewModel.detailTracerDic) {
+        [tracerDic addEntriesFromDictionary:self.viewModel.detailTracerDic];
+    }
+    tracerDic[@"realtor_id"] = self.phoneCallRealtorId ? self.phoneCallRealtorId : @"be_null";
+    //    tracerDic[@"click_position"] = position ? position : @"be_null";
+    tracerDic[@"request_id"] = self.phoneCallRequestId ?: UT_BE_NULL;
+    //    tracerDic[@"star_num"] = num ? num : @"be_null";
+    if (self.viewModel.contactViewModel && self.viewModel.contactViewModel.contactPhone) {
+        tracerDic[@"realtor_logpb"] = self.viewModel.contactViewModel.contactPhone.realtorLogpb;
+    } else {
+        tracerDic[@"realtor_logpb"] = UT_BE_NULL;
+    }
+    FHRealtorEvaluationModel *evaluationModel = [[FHIMConfigManager shareInstance]getRealtorEvaluationModel];
+    if (![evaluationModel isKindOfClass:[FHRealtorEvaluationModel class]]) {
+        evaluationModel = nil;
+    }
+    FHFeedbackView *feedbackView = [[FHFeedbackView alloc]initWithFrame:[UIScreen mainScreen].bounds evalationModel:evaluationModel submitBlock:^(NSString * _Nonnull content, NSInteger scoreCount, NSArray * _Nonnull scoreTags) {
+        StrongSelf;
+        NSMutableDictionary *traceParams = @{}.mutableCopy;
+        traceParams[@"realtor_id"] = self.phoneCallRealtorId;
+        traceParams[@"target_id"] = self.houseId;
+        tracerDic[@"star_num"] = @(scoreCount);
+        traceParams[@"evaluation_type"] = @(0);
+        [[FHIMConfigManager shareInstance]submitRealtorEvaluation:content scoreCount:scoreCount scoreTags:scoreTags traceParams:traceParams];
+        
+        tracerDic[@"click_position"] = @"confirm";
+        tracerDic[@"star_num"] = @(scoreCount);
+        [self addRealtorEvaluatePopupClickLog:tracerDic];
+    } closeBlock:^(FHFeedbackViewCompleteType type) {
+        StrongSelf;
+        tracerDic[@"star_num"] = @(0);
+        tracerDic[@"click_position"] = @"cancel";
+        [self addRealtorEvaluatePopupClickLog:tracerDic];
+    }];
+    [feedbackView showFrom:nil];
+    [self addRealtorEvaluatePopupShowLog:tracerDic];
 }
 
-- (FHDetailFeedbackView *)feedbackView {
-    if (!_feedbackView) {
-        __weak typeof(self) wself = self;
-        _feedbackView = [[FHDetailFeedbackView alloc] initWithFrame:UIScreen.mainScreen.bounds];
-        _feedbackView.navVC = self.navigationController;
-        _feedbackView.viewModel = self.viewModel;
+- (void)addClickFeedbackLog
+{
+    NSMutableDictionary *tracerDic = @{}.mutableCopy;
+    if (self.viewModel.detailTracerDic) {
+        [tracerDic addEntriesFromDictionary:self.viewModel.detailTracerDic];
     }
-    return _feedbackView;
+    tracerDic[@"enter_from"] = @"realtor_evaluate_popup";
+    tracerDic[@"realtor_id"] = self.phoneCallRealtorId ?: UT_BE_NULL;
+    tracerDic[@"request_id"] = self.phoneCallRequestId ?: UT_BE_NULL;
+    TRACK_EVENT(@"click_feedback", tracerDic);
+}
+
+- (void)addRealtorEvaluatePopupShowLog:(NSDictionary *)params
+{
+    [FHUserTracker writeEvent:@"realtor_evaluate_popup_show" params:params];
+}
+
+- (void)addRealtorEvaluatePopupClickLog:(NSDictionary *)params
+{
+    [FHUserTracker writeEvent:@"realtor_evaluate_popup_click" params:params];
 }
 
 - (FHDetailQuestionButton *)questionBtn

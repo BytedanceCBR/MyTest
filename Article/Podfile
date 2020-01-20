@@ -51,17 +51,17 @@ def fhPods
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev'
 #    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '99ed61a6c90f6d7a40e5fc8865c57ee9ef9742e8'
 #    pod 'FHCommonUI', :path => '../../library/ios_common_ui'
-    pod 'FHCommonUI', '0.0.14.2-bugfix'
+    pod 'FHCommonUI', '0.0.14.3-bugfix'
 
-    pod 'ios_house_im', '0.1.16'
-#     pod 'ios_house_im' , :path => '../../ios_house_im'
-#     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '059c899ba46749810ae660876ccc98dabc46de48'
+    pod 'ios_house_im', '0.1.16.3-bugfix'
+#    pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im'
+#    pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => 'b804b9b9c6b6991bd62c486eb9a6a90c52ace408'
 
-
-
-#pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
-pod 'ios_house_filter' , '1.0.2'
-#    pod 'ios_house_filter' , :path => '../../library/ios_house_filter/ios_house_filter'
+    
+    
+    #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
+    pod 'ios_house_filter' , '1.0.2'
+    #    pod 'ios_house_filter' , :path => '../../library/ios_house_filter/ios_house_filter'
 
 end
 
@@ -298,6 +298,7 @@ def appPods
     #--------------------------------------------------基础工具库-----------------------------------------------#
     #--------------------------------------------------基础工具库-----------------------------------------------#
     #-----头条基础库-----
+
     pod_binary 'TTBaseLib','2.0.10', :subspecs => [
     'TTBaseTool',
     'TTBusinessManager',
