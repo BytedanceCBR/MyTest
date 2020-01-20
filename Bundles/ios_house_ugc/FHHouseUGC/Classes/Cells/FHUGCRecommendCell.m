@@ -244,7 +244,9 @@
         }else{
             k = i - self.sourceList.count;
         }
-        [self.dataList addObject:self.sourceList[k]];
+        if(k < self.sourceList.count){
+            [self.dataList addObject:self.sourceList[k]];
+        }
     }
 }
 

@@ -688,6 +688,15 @@
         [desc appendAttributedString:publishTimeAStr];
     }
     
+    if(!isEmptyString(readCount) && [readCount integerValue] != 0){
+        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[readCount longLongValue]]];
+        if(desc.length > 0){
+            read = [NSString stringWithFormat:@" %@",read];
+        }
+        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
+        [desc appendAttributedString:readAStr];
+    }
+    
     // 法务合规，如果没有定位权限，不展示位置信息
     if(!isEmptyString(distanceInfo) && [[FHLocManager sharedInstance] isHaveLocationAuthorization]) {
         NSString *distance = [NSString stringWithFormat:@"   %@",distanceInfo];
@@ -701,22 +710,13 @@
         [desc appendAttributedString:distanceAStr];
     }
     
-    if(!isEmptyString(readCount)){
-        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[readCount longLongValue]]];
-        if(desc.length > 0){
-            read = [NSString stringWithFormat:@" %@",read];
-        }
-        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
-        [desc appendAttributedString:readAStr];
-    }
-    
     return desc;
 }
 
 + (NSAttributedString *)generateArticleDesc:(FHFeedContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     
-    if(!isEmptyString(model.readCount)){
+    if(!isEmptyString(model.readCount) && [model.readCount integerValue] != 0){
         NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
         NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
         [desc appendAttributedString:readAStr];
