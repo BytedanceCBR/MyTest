@@ -39,6 +39,8 @@
 #import <TTLocationManager/TTLocationManager.h>
 #import "FHStashModel.h"
 #import <UserNotifications/UserNotifications.h>
+#import "FHPermissionAlertViewController.h"
+#import <TTAppRuntime/NewsBaseDelegate.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -50,6 +52,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 @property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
 @property (atomic ,   assign) BOOL inPasueFOrPermission;
 @property (nonatomic, strong) FHStashModel *stashModel;
+@property (nonatomic, copy)   NSNumber *hasPermission;
 @end
 
 @implementation FHEnvContext
@@ -548,12 +551,18 @@ static NSInteger kGetLightRequestRetryCount = 3;
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
     
-    
-    //开始定位
-    [self startLocation];
-    
-    //检测是否需要打开城市列表
-    [self check2CityList];
+    if ([self hasConfirmPermssionProtocol]) {
+        //开始定位
+        [self startLocation];
+        
+        //检测是否需要打开城市列表
+        [self check2CityList];
+        
+    }else{
+                
+        [self showPermssionPage];
+    }
+
     
     //更新公共参数
     [self updateRequestCommonParams];
@@ -606,6 +615,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 - (void)startLocation
 {
+    if (![self hasConfirmPermssionProtocol]) {
+        return;
+    }
+    
     [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
     
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:YES];
@@ -1059,14 +1072,24 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return nil;
 }
 
+-(void)showPermssionPage
+{
+    UIViewController *rootController = [UIApplication sharedApplication].delegate.window.rootViewController;
+    [FHPermissionAlertViewController showInViewController:rootController];
+
+}
+
 -(BOOL)hasConfirmPermssionProtocol
 {
-    NSNumber *show = [[NSUserDefaults standardUserDefaults] objectForKey:@"SHOW_PERMISSION_ALERT"];
-    return [show boolValue];
+    if (!_hasPermission) {
+        _hasPermission = [[NSUserDefaults standardUserDefaults] objectForKey:@"SHOW_PERMISSION_ALERT"];
+    }
+    return [_hasPermission boolValue];
 }
 
 -(void)userConfirmedPermssionProtocol
 {
+    self.hasPermission = @(YES);
     [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"SHOW_PERMISSION_ALERT"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
@@ -1136,6 +1159,21 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     
     self.stashModel = nil;
+    
+    [[FHMinisdkManager sharedInstance] goSpring];
+    
+    [self startLocation];
+    [self check2CityList];
+    
+    [NewsBaseDelegate startRegisterRemoteNotification];
+    
+    if([FHEnvContext isIntroduceOpen]){
+        if([FHIntroduceManager sharedInstance].alreadyShow){
+            return;
+        }
+        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
+        [FHIntroduceManager sharedInstance].alreadyShow = YES;
+    }
     
 }
 
