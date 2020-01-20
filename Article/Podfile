@@ -49,9 +49,9 @@ def fhPods
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
 
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev'
-    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '99ed61a6c90f6d7a40e5fc8865c57ee9ef9742e8'
+#    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '99ed61a6c90f6d7a40e5fc8865c57ee9ef9742e8'
 #    pod 'FHCommonUI', :path => '../../library/ios_common_ui'
-#    pod 'FHCommonUI', '0.0.13.1-bugfix'
+    pod 'FHCommonUI', '0.0.14.2-bugfix'
 
     pod 'ios_house_im', '0.1.15-rc.14'
 #     pod 'ios_house_im' , :path => '../../ios_house_im'
