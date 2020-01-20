@@ -194,27 +194,16 @@
     self.tableView.contentOffset = CGPointMake(0, -inset.top);
     self.notifyCompletionBlock = completion;
     WeakSelf;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1.0 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:^(ArticleListNotifyBarView *barView) {
-        if(wself.notifyCompletionBlock) {
-            wself.notifyCompletionBlock();
+    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
+        WeakSelf;
+        if(!isImmediately) {
+            [wself hideIfNeeds];
+        } else {
+            if(wself.notifyCompletionBlock) {
+                wself.notifyCompletionBlock();
+            }
         }
     }];
-    // add by zyk
-//    self.notifyBarView.willBeginHideBlock = ^(CGFloat animationDuration, ArticleListNotifyBarViewAnimationType type) {
-//        if(!isImmediately) {
-//            [wself hideIfNeeds];
-//        }
-//    };
-//    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
-//        WeakSelf;
-//        if(!isImmediately) {
-//            [wself hideIfNeeds];
-//        } else {
-//            if(wself.notifyCompletionBlock) {
-//                wself.notifyCompletionBlock();
-//            }
-//        }
-//    }];
 }
 
 - (void)hideIfNeeds {
