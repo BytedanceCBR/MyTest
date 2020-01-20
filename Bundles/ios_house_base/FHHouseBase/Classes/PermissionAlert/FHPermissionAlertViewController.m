@@ -38,7 +38,6 @@
 @property(nonatomic , assign) NSRange userRange;
 @property(nonatomic , assign) NSRange privacyRange;
 @property(nonatomic , strong) NSDate *enterDate;
-@property(nonatomic , strong) UIImage *snapImage;
 
 @end
 
@@ -67,29 +66,6 @@
     return image;
 }
 
-//-(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-//{
-//    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-//    if (self) {
-//        self.ttHideNavigationBar = YES;
-//        self.enterDate = [NSDate date];
-//    }
-//    return self;
-//}
-
-
-//- (void)viewDidLoad {
-//    [super viewDidLoad];
-//    // Do any additional setup after loading the view.
-//    [self initUIs];
-//    [self addPopShowLog];
-//}
-//
-//-(void)viewWillAppear:(BOOL)animated
-//{
-//    [super viewWillAppear:animated];
-//    [self.navigationController setNavigationBarHidden:YES animated:YES];
-//}
 
 -(instancetype)initWithFrame:(CGRect)frame
 {
@@ -240,15 +216,6 @@
     if ([[UIApplication sharedApplication] canOpenURL:openUrl]) {
         [[UIApplication sharedApplication] openURL:openUrl];
     }
-    
-//    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@%@&title=%@&hide_more=1",[FHURLSettings baseURL],urlPath,title];
-//    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-//
-//    TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:url userInfo:nil];
-//    if ([routeObj.instance isKindOfClass:[UIViewController class]]) {
-//        [self.navigationController pushViewController:(UIViewController *)routeObj.instance animated:YES];
-//    }
-
 }
 
 -(void)confirmAction:(id)sender
@@ -257,10 +224,6 @@
     
     [self removeFromSuperview];
     [[FHEnvContext sharedInstance] userConfirmedPermssionProtocol];
-    
-//    [self.navigationController dismissViewControllerAnimated:NO completion:^{
-//        [[FHEnvContext sharedInstance] userConfirmedPermssionProtocol];
-//    }];
     
 }
 
