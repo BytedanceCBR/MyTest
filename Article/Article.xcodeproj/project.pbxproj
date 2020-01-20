@@ -923,7 +923,7 @@
 					};
 					6198678A2223E9A70056B2EF = {
 						CreatedOnToolsVersion = 10.1;
-						DevelopmentTeam = J3249442BT;
+						DevelopmentTeam = 7HSS6X2323;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -932,7 +932,7 @@
 						};
 					};
 					B373C7F92174587A008F9905 = {
-						DevelopmentTeam = J3249442BT;
+						DevelopmentTeam = 7HSS6X2323;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -2163,11 +2163,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = com.f100.client.FHNotificationServiceExtension/com.f100.client.FHNotificationServiceExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (C329TW3SDK)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (C329TW3SDK)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (7PZDQUF8CS)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2210,12 +2210,12 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = com.f100.client.FHNotificationServiceExtension/com.f100.client.FHNotificationServiceExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: dachui Wang (J3249442BT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: dachui Wang (J3249442BT)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2242,12 +2242,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (C329TW3SDK)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (C329TW3SDK)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (7PZDQUF8CS)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2301,7 +2301,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = f100_client;
+				PROVISIONING_PROFILE_SPECIFIER = f100.dev;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
@@ -2324,11 +2324,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: dachui Wang (J3249442BT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: dachui Wang (J3249442BT)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				CODE_SIGN_STYLE = Manual;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = J3249442BT;
+				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
@@ -2388,7 +2388,7 @@
 				PRODUCT_MODULE_NAME = Bubble;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = f100_distribution_0904;
+				PROVISIONING_PROFILE_SPECIFIER = f100.dist;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;

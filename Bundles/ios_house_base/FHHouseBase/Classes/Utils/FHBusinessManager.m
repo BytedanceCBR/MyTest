@@ -21,6 +21,7 @@
 //static NSDateFormatter *yearMonthWordFormatter;
 
 static NSDateFormatter *noSecondformatter;
+//static NSDateFormatter *onlyDateformatter;
 
 static NSTimeInterval midnightInterval;//午夜时间
 static NSTimeInterval midnightYDInterval;//昨天的午夜时间
@@ -33,6 +34,8 @@ static NSTimeInterval midnightYYInterval;//今年1月1号0点0分0秒
 + (void)initialize {
      noSecondformatter = [[NSDateFormatter alloc] init];
     [noSecondformatter setDateFormat:@"yyyy-MM-dd HH:mm"];
+//    onlyDateformatter = [[NSDateFormatter alloc] init];
+//    [onlyDateformatter setDateFormat:@"yyyy-MM-dd"];
     
     
 #ifndef SS_TODAY_EXTENSTION
@@ -176,6 +179,10 @@ static NSTimeInterval midnightYYInterval;//今年1月1号0点0分0秒
     return [noSecondformatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:timerInterval]];
 }
 
+//+ (NSString*)onlyDateStringSince:(NSTimeInterval)timerInterval {
+//    return [onlyDateformatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:timerInterval]];
+//}
+
 //+ (nullable NSString *)forumCustomtimeStringSince1970:(NSTimeInterval)timeInterval {
 //    NSDate *eventDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
 //    NSString *formatString = @"";
@@ -235,6 +242,11 @@ static NSTimeInterval midnightYYInterval;//今年1月1号0点0分0秒
 
 + (NSString*)ugcCustomtimeAndCustomdateStringSince1970:(NSTimeInterval)timeInterval
 {
+    return [self ugcCustomtimeAndCustomdateStringSince1970:timeInterval type:nil];
+}
+
++ (NSString*)ugcCustomtimeAndCustomdateStringSince1970:(NSTimeInterval)timeInterval type:(NSString *)type;
+{
     NSString *retString = nil;
     if (midnightInterval == 0) {
         [FHBusinessManager refreshMidnightInterval];
@@ -283,7 +295,11 @@ static NSTimeInterval midnightYYInterval;//今年1月1号0点0分0秒
         }
     }
     else{
-        retString = [FHBusinessManager noSecondStringSince:timeInterval];
+        if([type isEqualToString:@"onlyDate"]){
+            retString = [TTBusinessManager onlyDateStringSince:timeInterval];
+        }else{
+            retString = [FHBusinessManager noSecondStringSince:timeInterval];
+        }
     }
     return retString;
 }

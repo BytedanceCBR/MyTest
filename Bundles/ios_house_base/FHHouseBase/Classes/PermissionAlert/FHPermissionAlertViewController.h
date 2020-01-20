@@ -9,9 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHPermissionAlertViewController : UIViewController
+@interface FHPermissionAlertViewController : UIView
 
-+(void)show;
++(instancetype)showInViewController:(UIViewController *)parentViewController;
 
 @end
 

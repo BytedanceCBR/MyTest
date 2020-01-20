@@ -207,13 +207,15 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
                     selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
                 }
                 
-                FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
-                selectedGroup.socialGroupId = task.social_group_id;
-                selectedGroup.socialGroupName = task.social_group_name;
-                NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
-                [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
-                
-                [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
+                if(task.social_group_id.length > 0 && task.social_group_name.length > 0) {
+                    FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
+                    selectedGroup.socialGroupId = task.social_group_id;
+                    selectedGroup.socialGroupName = task.social_group_name;
+                    NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+                    [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
+                    
+                    [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
+                }
             }
         }
         
@@ -381,6 +383,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         task.concernID = postThreadModel.concernID;
         task.social_group_id = postThreadModel.social_group_id;
         task.social_group_name = postThreadModel.social_group_name;
+        task.bindType = postThreadModel.bindType;
         task.hasSocialGroup = postThreadModel.hasSocialGroup;
         task.categoryID = postThreadModel.categoryID;
         [task addTaskImages:postThreadModel.taskImages thumbImages:postThreadModel.thumbImages];
@@ -676,6 +679,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         publishParams[@"content_rich_span"] = postThreadModel.contentRichSpans;
         publishParams[@"mention_concern"] = postThreadModel.mentionConcerns;
         publishParams[@"mention_user"] = postThreadModel.mentionUsers;
+        publishParams[@"bind_type"] = @(postThreadModel.bindType);
     
         // 报数相关
         publishParams[@"enter_from"] = postThreadModel.enterFrom;

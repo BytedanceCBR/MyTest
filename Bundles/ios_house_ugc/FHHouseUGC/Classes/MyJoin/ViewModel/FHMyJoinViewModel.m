@@ -55,18 +55,18 @@
 
         [_collectionView registerClass:[FHMyJoinNeighbourhoodCell class] forCellWithReuseIdentifier:cellId];
         [_collectionView registerClass:[FHMyJoinAllNeighbourhoodCell class] forCellWithReuseIdentifier:allCellId];
-        __weak typeof(self) weakSelf = self;
-        self.viewController.neighbourhoodView.progressView.refreshViewBlk = ^{
-            [weakSelf updateJoinProgressView];
-        };
+//        __weak typeof(self) weakSelf = self;
+//        self.viewController.neighbourhoodView.progressView.refreshViewBlk = ^{
+//            [weakSelf updateJoinProgressView];
+//        };
 
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onUnreadMessageClick)];
         [self.viewController.neighbourhoodView.messageView addGestureRecognizer:singleTap];
         
         [self onUnreadMessageChange];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
     }
 
     return self;
@@ -136,7 +136,7 @@
     self.viewController.neighbourhoodView.messageView.hidden = NO;
 
     CGRect frame = self.viewController.neighbourhoodView.frame;
-    frame.size.height = neighbourhoodViewHeight + self.messageViewHeight + self.viewController.neighbourhoodView.progressView.viewHeight;
+    frame.size.height = neighbourhoodViewHeight + self.messageViewHeight;
     self.viewController.neighbourhoodView.frame = frame;
 
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
@@ -150,7 +150,7 @@
     self.messageViewHeight = 0;
 
     CGRect frame = self.viewController.neighbourhoodView.frame;
-    frame.size.height = neighbourhoodViewHeight + self.messageViewHeight + self.viewController.neighbourhoodView.progressView.viewHeight;
+    frame.size.height = neighbourhoodViewHeight + self.messageViewHeight;
     self.viewController.neighbourhoodView.frame = frame;
 
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
@@ -173,7 +173,7 @@
 // 更新发帖进度视图
 - (void)updateJoinProgressView {
     CGRect frame = self.viewController.neighbourhoodView.frame;
-    frame.size.height = neighbourhoodViewHeight + self.messageViewHeight + self.viewController.neighbourhoodView.progressView.viewHeight;
+    frame.size.height = neighbourhoodViewHeight + self.messageViewHeight;
     self.viewController.neighbourhoodView.frame = frame;
 
     self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;

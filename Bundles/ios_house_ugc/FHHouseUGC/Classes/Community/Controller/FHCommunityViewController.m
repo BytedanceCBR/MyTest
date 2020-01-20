@@ -29,6 +29,7 @@
 #import <FHMinisdkManager.h>
 #import "UIViewController+Track.h"
 #import "FHSpringHangView.h"
+#import <FHHouseBase/FHPermissionAlertViewController.h>
 
 @interface FHCommunityViewController ()
 
@@ -81,7 +82,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
     //tabbar双击的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeMyJoinTab) name:kFHUGCForumPostThreadFinish object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
 }
@@ -225,7 +226,10 @@
         }
     }
     
-    [[FHMinisdkManager sharedInstance] goSpring];
+    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        //春节活动
+        [[FHMinisdkManager sharedInstance] goSpring];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -436,9 +440,9 @@
     [self.viewModel refreshCell:NO];
 }
 
-- (void)changeMyJoinTab {
+- (void)changeTab {
     if (self.navigationController.viewControllers.count <= 1) {
-        [self.viewModel changeMyJoinTab];
+        [self.viewModel changeTab:1];
     }
 }
 
