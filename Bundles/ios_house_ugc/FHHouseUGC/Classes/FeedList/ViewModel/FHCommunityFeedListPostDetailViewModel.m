@@ -31,7 +31,6 @@
 #import <TTVPlayVideo.h>
 #import <TTVFeedCellWillDisplayContext.h>
 #import <TTVFeedCellAction.h>
-#import "FHUGCEmptyCell.h"
 
 @interface FHCommunityFeedListPostDetailViewModel () <UITableViewDelegate, UITableViewDataSource>
 

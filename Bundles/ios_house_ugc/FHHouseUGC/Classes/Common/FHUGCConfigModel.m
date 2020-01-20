@@ -20,6 +20,7 @@
   NSDictionary *dict = @{
     @"leadSuggest": @"lead_suggest",
     @"ugcDistrict": @"ugc_district",
+    @"userAuth": @"user_auth",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

@@ -91,8 +91,8 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     //    static NSString *const kFHUGCPostSuccessNotification = @"k_fh_ugc_post_finish";
     // 删除帖子成功通知 数放在userinfo的：social_group_id
     //    static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
 }
 
 // 发帖成功通知
@@ -104,7 +104,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
             [groupIDs enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if (obj.length > 0) {
                     FHUGCScialGroupDataModel *data = [self socialGroupData:obj];
-                    [self updatePostSuccessScialGroupDataModel:data];
+//                    [self updatePostSuccessScialGroupDataModel:data];
                     // 更新圈子数据
                     [self updateSocialGroupDataWith:data];
                 }
@@ -118,7 +118,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     NSString *groupId = noti.userInfo[@"social_group_id"];
     if (groupId.length > 0) {
         FHUGCScialGroupDataModel *data = [self socialGroupData:groupId];
-        [self updatePostDelSuccessScialGroupDataModel:data];
+//        [self updatePostDelSuccessScialGroupDataModel:data];
         // 更新圈子数据
         [self updateSocialGroupDataWith:data];
     }
@@ -352,50 +352,50 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     }
 }
 
-// 发帖成功 更新帖子数 + 1
-- (void)updatePostSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model {
-    if (model) {
-        NSString *contentCountStr = model.contentCount;
-        NSInteger contentCount = [model.contentCount integerValue];
-        contentCount += 1;
-        NSString *replaceContentCountStr = [TTBusinessManager formatCommentCount:contentCount];
-        NSString *countText = model.countText;
-        // 替换第二个数字（热帖个数）
-        NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
-        // 有数据而且不是起始位置的数据
-        if (range.location >= 0 && range.length > 0) {
-            countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
-            model.contentCount = replaceContentCountStr;
-        } else {
-            model.contentCount = contentCountStr;
-        }
-        model.countText = countText;
-    }
-}
+//// 发帖成功 更新帖子数 + 1
+//- (void)updatePostSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model {
+//    if (model) {
+//        NSString *contentCountStr = model.contentCount;
+//        NSInteger contentCount = [model.contentCount integerValue];
+//        contentCount += 1;
+//        NSString *replaceContentCountStr = [TTBusinessManager formatCommentCount:contentCount];
+//        NSString *countText = model.countText;
+//        // 替换第二个数字（热帖个数）
+//        NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
+//        // 有数据而且不是起始位置的数据
+//        if (range.location >= 0 && range.length > 0) {
+//            countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
+//            model.contentCount = replaceContentCountStr;
+//        } else {
+//            model.contentCount = contentCountStr;
+//        }
+//        model.countText = countText;
+//    }
+//}
 
-// 删帖成功 更新帖子数 - 1
-- (void)updatePostDelSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model {
-    if (model) {
-        NSString *contentCountStr = model.contentCount;
-        NSInteger contentCount = [model.contentCount integerValue];
-        contentCount -= 1;
-        if (contentCount < 0) {
-            contentCount = 0;
-        }
-        NSString *replaceContentCountStr = [TTBusinessManager formatCommentCount:contentCount];
-        NSString *countText = model.countText;
-        // 替换第二个数字（热帖个数）
-        NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
-        // 有数据而且不是起始位置的数据
-        if (range.location >= 0 && range.length > 0) {
-            countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
-            model.contentCount = replaceContentCountStr;
-        } else {
-            model.contentCount = contentCountStr;
-        }
-        model.countText = countText;
-    }
-}
+//// 删帖成功 更新帖子数 - 1
+//- (void)updatePostDelSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model {
+//    if (model) {
+//        NSString *contentCountStr = model.contentCount;
+//        NSInteger contentCount = [model.contentCount integerValue];
+//        contentCount -= 1;
+//        if (contentCount < 0) {
+//            contentCount = 0;
+//        }
+//        NSString *replaceContentCountStr = [TTBusinessManager formatCommentCount:contentCount];
+//        NSString *countText = model.countText;
+//        // 替换第二个数字（热帖个数）
+//        NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
+//        // 有数据而且不是起始位置的数据
+//        if (range.location >= 0 && range.length > 0) {
+//            countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
+//            model.contentCount = replaceContentCountStr;
+//        } else {
+//            model.contentCount = contentCountStr;
+//        }
+//        model.countText = countText;
+//    }
+//}
 
 - (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model {
     [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:model];
@@ -561,6 +561,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 {
     //切换账号时记录的时间清零，重新显示小红点
     [FHUtils setContent:@(0) forKey:lastRedPointShowKey];
+    [self loadUGCConfigData];
     
     if ([TTAccountManager isLogin]) {
         self.followListDataKey = [NSString stringWithFormat:@"%@_%@",kFHFollowListDataKey,[TTAccountManager userID]];

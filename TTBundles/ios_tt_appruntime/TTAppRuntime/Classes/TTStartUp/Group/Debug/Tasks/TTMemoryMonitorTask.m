@@ -9,9 +9,11 @@
 #import "TTMemoryMonitorTask.h"
 #import "TTInstallIDManager.h"
 #import "TTMemoryMonitor.h"
-//#if INHOUSE
-//#import "TTDebugAssistant.h"
-//#endif
+#import <TTBaseLib/TTSandBoxHelper.h>
+#if __has_include(<TTDebugAssistant/TTDebugAssistant.h>)
+#import <TTDebugAssistant/TTDebugAssistant.h>
+#endif
+
 #import "TTLaunchDefine.h"
 
 DEC_TASK("TTMemoryMonitorTask",FHTaskTypeDebug,TASK_PRIORITY_HIGH+1);
@@ -32,10 +34,11 @@ DEC_TASK("TTMemoryMonitorTask",FHTaskTypeDebug,TASK_PRIORITY_HIGH+1);
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"kTTAppMemoryMonitorKey"];
     }
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"kTTAppMemoryMonitorKey"]) {
-      //  [TTMemoryMonitor showMemoryMonitor];
-//#if INHOUSE
-//        [TTDebugAssistant show];
-//#endif
+        if ([TTSandBoxHelper isInHouseApp]) {
+#if __has_include(<TTDebugAssistant.h>)
+//            [TTDebugAssistant show];
+#endif
+        }
     }
 }
 

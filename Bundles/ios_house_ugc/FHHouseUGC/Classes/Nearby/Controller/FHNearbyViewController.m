@@ -14,6 +14,7 @@
 #import "FHUserTracker.h"
 #import "TTArticleTabBarController.h"
 #import "TTTabBarManager.h"
+#import "FHNearbyViewModel.h"
 
 @interface FHNearbyViewController ()
 
@@ -23,6 +24,7 @@
 @property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 @property(nonatomic, assign) BOOL needRefresh;
 @property(nonatomic, strong) TTThemedAlertController *alertVC;
+@property(nonatomic, strong) FHNearbyViewModel *viewModel;
 
 @end
 
@@ -37,6 +39,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
+    [self initViewModel];
+    
     if([[FHLocManager sharedInstance] isHaveLocationAuthorization]){
         self.currentLocaton = [FHLocManager sharedInstance].currentLocaton;
         [self initView];
@@ -44,7 +48,7 @@
     }else{
         [self checkNeedShowLocationAlert];
     }
-    
+
     [self addEnterCategoryLog];
 }
 
@@ -97,6 +101,7 @@
         self.feedVC =[[FHCommunityFeedListController alloc] init];
         _feedVC.listType = FHCommunityFeedListTypeNearby;
         _feedVC.currentLocaton = self.currentLocaton;
+        _feedVC.tableHeaderView = self.headerView;
         _feedVC.view.frame = self.view.bounds;
         _feedVC.tracerDict = [self.tracerDict mutableCopy];
         [self addChildViewController:_feedVC];
@@ -119,6 +124,10 @@
         [self initView];
         self.lastRequestTime = [[NSDate date] timeIntervalSince1970];
     }
+}
+
+- (void)initViewModel {
+    _viewModel = [[FHNearbyViewModel alloc] initWithController:self];
 }
 
 - (void)applicationDidEnterBackground {
@@ -187,6 +196,13 @@
     if (topVC) {
         [_alertVC showFrom:topVC animated:YES];
     }
+}
+
+- (FHNearbyHeaderView *)headerView {
+    if(!_headerView){
+        _headerView = [[FHNearbyHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 0)];
+    }
+    return _headerView;
 }
 
 #pragma mark - 埋点

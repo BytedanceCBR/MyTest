@@ -5,15 +5,20 @@
 //  Created by fengyadong on 17/1/17.
 //
 //
-#if 0
+#if INHOUSE
 #import "NewsBaseDelegate+Debug.h"
 #import "TTStartupDebugGroup.h"
 #import "TTStartupTask.h"
 #import "TTStartupDefine.h"
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 @implementation NewsBaseDelegate (Debug)
 
 - (void)didFinishDebugLaunchingForApplication:(UIApplication *)application WithOptions:(NSDictionary *)options {
+    
+    if (![TTSandBoxHelper isInHouseApp]) {
+        return;
+    }
     TTStartupDebugGroup *group = [TTStartupDebugGroup debugGroup];
     [group.tasks enumerateObjectsUsingBlock:^(TTStartupTask * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj shouldExecuteForApplication:application options:options]) {
