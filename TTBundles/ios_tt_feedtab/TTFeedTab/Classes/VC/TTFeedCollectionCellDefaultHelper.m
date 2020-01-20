@@ -28,9 +28,9 @@
             if ([feedCategory.categoryID isEqualToString:kTTUGCVideoCategoryID] || [feedCategory.categoryID isEqualToString:@"ugc_video_fake"]) {
                 return [TTFeedCollectionHTSListCell class]; // 火山小视频频道 和小视频测试频道
             }
-            else if ([feedCategory.categoryID isEqualToString:kNIHFindHouseCategoryID]) {
-                return [NIHFeedCollectionHouseCell class]; // 找房频道
-            }
+//            else if ([feedCategory.categoryID isEqualToString:kNIHFindHouseCategoryID]) {
+//                return [NIHFeedCollectionHouseCell class]; // 找房频道
+//            }
             
 //            else if ([feedCategory.categoryID isEqualToString:@"question_and_answer"]) {
 //                return [TTFeedCollectionWenDaListCell class]; // 问答频道
@@ -64,7 +64,7 @@
 //             [TTFeedCollectionWenDaListCell class],
 //             [TTFeedCollectionFollowListCell class],
              [TTFeedCollectionHTSListCell class],
-             [NIHFeedCollectionHouseCell class],
+//             [NIHFeedCollectionHouseCell class],
 
              ];
 }
