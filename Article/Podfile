@@ -51,9 +51,9 @@ def fhPods
     #pod 'FHCommonUI'  , :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/zyk_dev'
 #    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '8ec6c554795f3f07a618a8ae8cded496a41134de'
 #    pod 'FHCommonUI', :path => '../../library/ios_common_ui'
-    pod 'FHCommonUI', '0.0.13.1-bugfix'
+    pod 'FHCommonUI', '0.0.14'
 
-    pod 'ios_house_im', '0.1.15-rc.14'
+    pod 'ios_house_im', '0.1.16'
 #     pod 'ios_house_im' , :path => '../../ios_house_im'
 #     pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '059c899ba46749810ae660876ccc98dabc46de48'
 
@@ -125,11 +125,8 @@ def appDevelopPods
     pod 'TTDiggButton', :path => '../AKPlugins/AKDiggButton', :inhibit_warnings => false
     
     #-----头条图片/视频选择器-----
-    pod 'TTImagePicker', :path => '../AKPlugins/AKImagePicker', :inhibit_warnings => false
-    #    :subspecs => [
-    #    'Category',
-    #    'Model'
-    #    ]
+    pod 'TTImagePicker', '7.5.5.2'
+    # pod 'TTImagePicker', :path => '../AKPlugins/AKImagePicker', :inhibit_warnings => false
     
     #-----平台化UIModel库-----
     pod 'TTPlatformUIModel', :path => '../AKPlugins/AKPlatformUIModel', :inhibit_warnings => false
@@ -267,7 +264,7 @@ def appPods
     pod_binary 'TTRexxar', '0.8.10', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
     #----头条组件协议库-----
 
-    pod_binary 'TTServiceProtocols','0.3.59'
+    pod_binary 'TTServiceProtocols','7.5.7.2'
     pod_binary 'BDTrackerProtocol','2.1.1'
 
 
@@ -301,7 +298,7 @@ def appPods
     #--------------------------------------------------基础工具库-----------------------------------------------#
     #--------------------------------------------------基础工具库-----------------------------------------------#
     #-----头条基础库-----
-    pod_binary 'TTBaseLib','2.0.0', :subspecs => [
+    pod_binary 'TTBaseLib','2.0.10', :subspecs => [
     'TTBaseTool',
     'TTBusinessManager',
     'TTCategory',
@@ -389,7 +386,7 @@ def appPods
     pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod_binary 'TTImage', '0.8.4'
-    pod_binary 'BDWebImage', '0.2.2',:subspecs => [
+    pod_binary 'BDWebImage', '1.0.15',:subspecs => [
     'Core',
     'Decoder',
     'Download',
@@ -399,6 +396,7 @@ def appPods
     'SDAdapter',
     'Monitor'
     ]
+    pod_binary 'MMKV', '1.0.23'
     pod_binary 'FLAnimatedImage' , '1.0.12'
     #-----头条交互式退出手势----
     pod_binary 'TTImagePreviewAnimateManager', '1.0.13'
@@ -513,7 +511,6 @@ def appPods
     pod 'TTIMSDK', '1.0.0-rc.34', :subspecs => [
         'IMKit',
         'IMKit_WebSocket',
-        'Feature_ApplicationStatus',
         'IMKit_Core',
         'Foundation_Plugin_TTNetwork',
         'Foundation',
