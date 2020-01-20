@@ -658,6 +658,15 @@
 }
 
 #pragma mark - 选择圈子逻辑
+- (void)endEditing {
+    
+    [self.view endEditing:YES];
+    
+    [self.toolbar endEditing:YES];
+    
+    [self needRelayoutToolbar];
+}
+
 // 点击选择圈子入口，跳转圈子选择列表
 - (void)socialGroupSelectEntryAction:(UITapGestureRecognizer *)sender {
     
@@ -673,6 +682,8 @@
     dict[@"choose_delegate"] = chooseDelegateTable;
     
     [self updateLastResponder];
+    
+    [self endEditing];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ELEMENT_FROM] = @"select_like_publisher_neighborhood";
