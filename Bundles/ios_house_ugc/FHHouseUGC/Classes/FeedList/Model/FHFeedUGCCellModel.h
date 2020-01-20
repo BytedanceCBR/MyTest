@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
+//1为不可见，其他可见
+@property (nonatomic, copy , nullable) NSString *showStatus;
 @end
 
 @interface FHFeedUGCCellUserModel : NSObject
@@ -88,6 +90,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 //帖子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellUserModel *user ;
 @property (nonatomic, copy , nullable) NSString *diggCount;
+@property (nonatomic, copy , nullable) NSString *readCount;
 @property (nonatomic, copy , nullable) NSString *userDigg;
 @property (nonatomic, assign) FHFeedUGCDiggType lastUserDiggType; // 上一次点赞操作的类型
 @property (nonatomic, copy , nullable) NSString *commentCount;
@@ -164,6 +167,12 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, assign) BOOL hasEdit;
 // 是否来源于编辑历史页面
 @property (nonatomic, assign) BOOL isFromEditHistory;
+// 热门小区，买房问答
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotCellListModel> *hotCellList;
+//热门小区的二级类型，用来区分热门小区和感兴趣的小区
+@property (nonatomic, copy , nullable) NSString *hotCommunityCellType;
+//帖子编辑状态。默认是none
+@property (nonatomic, assign) FHUGCPostEditState editState;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

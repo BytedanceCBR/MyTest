@@ -41,6 +41,7 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
     FHUGCFeedListCellSubTypeUGCVideo,                              //视频
     FHUGCFeedListCellSubTypeUGCSmallVideo,                         //小视频
     FHUGCFeedListCellSubTypeUGCVoteDetail,                         //新投票类型
+    FHUGCFeedListCellSubTypeUGCHotCommunity,                       //UGC附近顶部 主推圈子
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
@@ -84,6 +85,12 @@ typedef NS_ENUM(NSUInteger, FHUGCPublishType) {
     FHUGCPublishTypeVote,       // 发投票
     FHUGCPublishTypeQuestion,   // 发提问
 };
+
+typedef enum : NSUInteger {
+    FHUGCPostEditStateNone,
+    FHUGCPostEditStateSending,
+    FHUGCPostEditStateDone,
+} FHUGCPostEditState; // 帖子编辑状态
 
 //feed中分类的key值
 #define tabAll @"all"                       //全部

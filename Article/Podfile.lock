@@ -90,17 +90,25 @@ PODS:
   - BDUGSettingsInterface (1.1.0)
   - BDUGTrackerInterface (1.1.1)
   - BDUGUnionSDK (0.1.2.1-binary)
-  - BDWebImage/Core (0.2.2.1-binary)
-  - BDWebImage/Decoder (0.2.2.1-binary)
-  - BDWebImage/Download (0.2.2.1-binary):
-    - BDWebImage/Download/Chromium (= 0.2.2.1-binary)
-    - BDWebImage/Download/DownloadBase (= 0.2.2.1-binary)
-    - BDWebImage/Download/URLSession (= 0.2.2.1-binary)
-  - BDWebImage/Download/Chromium (0.2.2.1-binary)
-  - BDWebImage/Download/DownloadBase (0.2.2.1-binary)
-  - BDWebImage/Download/URLSession (0.2.2.1-binary)
-  - BDWebImage/Monitor (0.2.2.1-binary)
-  - BDWebImage/SDAdapter (0.2.2.1-binary)
+  - BDWebImage/Core (1.0.15.1-binary)
+  - BDWebImage/Decoder (1.0.15.1-binary)
+  - BDWebImage/Download (1.0.15.1-binary):
+    - BDWebImage/Download/Chromium (= 1.0.15.1-binary)
+    - BDWebImage/Download/DownloadBase (= 1.0.15.1-binary)
+    - BDWebImage/Download/URLConnection (= 1.0.15.1-binary)
+    - BDWebImage/Download/URLSession (= 1.0.15.1-binary)
+  - BDWebImage/Download/Chromium (1.0.15.1-binary)
+  - BDWebImage/Download/DownloadBase (1.0.15.1-binary)
+  - BDWebImage/Download/URLConnection (1.0.15.1-binary)
+  - BDWebImage/Download/URLSession (1.0.15.1-binary)
+  - BDWebImage/Monitor (1.0.15.1-binary):
+    - BDWebImage/Monitor/Heimdallr (= 1.0.15.1-binary)
+    - BDWebImage/Monitor/TTMonitor (= 1.0.15.1-binary)
+  - BDWebImage/Monitor/Heimdallr (1.0.15.1-binary)
+  - BDWebImage/Monitor/TTMonitor (1.0.15.1-binary)
+  - BDWebImage/SDAdapter (1.0.15.1-binary):
+    - BDWebImage/SDAdapter/SDMonitor (= 1.0.15.1-binary)
+  - BDWebImage/SDAdapter/SDMonitor (1.0.15.1-binary)
   - Bolts (1.9.0.1-binary):
     - Bolts/AppLinks (= 1.9.0.1-binary)
     - Bolts/Tasks (= 1.9.0.1-binary)
@@ -202,7 +210,7 @@ PODS:
   - IGListKit/Default (3.4.0.1-binary)
   - IGListKit/Diffing (3.4.0.1-binary)
   - ios_house_filter (1.0.2)
-  - ios_house_im (0.1.15-rc.14)
+  - ios_house_im (0.1.16)
   - JSONModel (1.7.0-private.1-binary)
   - KVOController (1.2.0.1-binary)
   - libextobjc (0.4.1.1-binary):
@@ -256,6 +264,7 @@ PODS:
   - MJExtension (3.0.12.1-binary)
   - MJRefresh (3.1.15.7.1-binary)
   - MLeaksFinder/Core (1.0.3.1-binary)
+  - MMKV (1.0.23.1-binary)
   - OHHTTPStubs (4.2.1.1-binary):
     - OHHTTPStubs/Core (= 4.2.1.1-binary)
     - OHHTTPStubs/Default (= 4.2.1.1-binary)
@@ -356,14 +365,14 @@ PODS:
   - TTArticleVideo (0.1.0)
   - TTAudio (0.1.6.1-binary)
   - TTAvatar (0.5.22)
-  - TTBaseLib/TTBaseTool (2.0.0.1-binary)
-  - TTBaseLib/TTBusinessManager (2.0.0.1-binary)
-  - TTBaseLib/TTCategory (2.0.0.1-binary)
-  - TTBaseLib/TTDeviceHelper (2.0.0.1-binary)
-  - TTBaseLib/TTLabelTextHelper (2.0.0.1-binary)
-  - TTBaseLib/TTNetworkHelper (2.0.0.1-binary)
-  - TTBaseLib/TTSandBoxHelper (2.0.0.1-binary)
-  - TTBaseLib/TTUIResponderHelper (2.0.0.1-binary)
+  - TTBaseLib/TTBaseTool (2.0.10.1-binary)
+  - TTBaseLib/TTBusinessManager (2.0.10.1-binary)
+  - TTBaseLib/TTCategory (2.0.10.1-binary)
+  - TTBaseLib/TTDeviceHelper (2.0.10.1-binary)
+  - TTBaseLib/TTLabelTextHelper (2.0.10.1-binary)
+  - TTBaseLib/TTNetworkHelper (2.0.10.1-binary)
+  - TTBaseLib/TTSandBoxHelper (2.0.10.1-binary)
+  - TTBaseLib/TTUIResponderHelper (2.0.10.1-binary)
   - TTBatchItemAction (0.1.8.1-binary)
   - TTDebug (0.1.0)
   - TTDebugAssistant (0.2.33.1-binary)
@@ -407,11 +416,7 @@ PODS:
     - TTImage/Others (= 0.8.4.1-binary)
   - TTImage/Model (0.8.4.1-binary)
   - TTImage/Others (0.8.4.1-binary)
-  - TTImagePicker (1.1.6):
-    - TTImagePicker/Category (= 1.1.6)
-    - TTImagePicker/Model (= 1.1.6)
-  - TTImagePicker/Category (1.1.6)
-  - TTImagePicker/Model (1.1.6)
+  - TTImagePicker (7.5.5.2)
   - TTImagePreviewAnimateManager (1.0.13.1-binary)
   - TTImpression (0.0.26.1-binary)
   - TTIMSDK/Bridges (1.0.0-rc.34)
@@ -507,7 +512,7 @@ PODS:
   - TTSearch (0.1.0)
   - TTService (0.1.0)
   - TTServiceKit (0.4.1.1-binary)
-  - TTServiceProtocols (0.3.59)
+  - TTServiceProtocols (7.5.7.2)
   - TTSettingsManager/Core (0.4.16)
   - TTSettingsManager/Debug (0.4.16)
   - TTSettingsManager/Performance (0.4.16)
@@ -689,14 +694,14 @@ DEPENDENCIES:
   - BDUGSettingsInterface (= 1.1.0)
   - BDUGTrackerInterface (= 1.1.1)
   - BDUGUnionSDK (= 0.1.2.1-binary)
-  - BDWebImage/Core (= 0.2.2.1-binary)
-  - BDWebImage/Decoder (= 0.2.2.1-binary)
-  - BDWebImage/Download (= 0.2.2.1-binary)
-  - BDWebImage/Download/Chromium (= 0.2.2.1-binary)
-  - BDWebImage/Download/DownloadBase (= 0.2.2.1-binary)
-  - BDWebImage/Download/URLSession (= 0.2.2.1-binary)
-  - BDWebImage/Monitor (= 0.2.2.1-binary)
-  - BDWebImage/SDAdapter (= 0.2.2.1-binary)
+  - BDWebImage/Core (= 1.0.15.1-binary)
+  - BDWebImage/Decoder (= 1.0.15.1-binary)
+  - BDWebImage/Download (= 1.0.15.1-binary)
+  - BDWebImage/Download/Chromium (= 1.0.15.1-binary)
+  - BDWebImage/Download/DownloadBase (= 1.0.15.1-binary)
+  - BDWebImage/Download/URLSession (= 1.0.15.1-binary)
+  - BDWebImage/Monitor (= 1.0.15.1-binary)
+  - BDWebImage/SDAdapter (= 1.0.15.1-binary)
   - Bolts (= 1.9.0.1-binary)
   - boringssl (= 0.0.7)
   - ByteDanceKit/Foundation (= 1.0.0-rc.3.1.binary)
@@ -762,7 +767,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (= 1.0.2)
-  - ios_house_im (= 0.1.15-rc.14)
+  - ios_house_im (= 0.1.16)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -774,6 +779,7 @@ DEPENDENCIES:
   - MJExtension (= 3.0.12.1-binary)
   - MJRefresh (= 3.1.15.7.1-binary)
   - MLeaksFinder/Core (= 1.0.3.1-binary)
+  - MMKV (= 1.0.23.1-binary)
   - OHHTTPStubs (= 4.2.1.1-binary)
   - OpenSSL-Universal (= 1.0.1.20.1-binary)
   - OpenUDID (= 0.1.0.1-binary)
@@ -836,14 +842,14 @@ DEPENDENCIES:
   - TTArticleVideo (from `../TTBundles/ios_tt_article_video`)
   - TTAudio (= 0.1.6.1-binary)
   - TTAvatar (= 0.5.22)
-  - TTBaseLib/TTBaseTool (= 2.0.0.1-binary)
-  - TTBaseLib/TTBusinessManager (= 2.0.0.1-binary)
-  - TTBaseLib/TTCategory (= 2.0.0.1-binary)
-  - TTBaseLib/TTDeviceHelper (= 2.0.0.1-binary)
-  - TTBaseLib/TTLabelTextHelper (= 2.0.0.1-binary)
-  - TTBaseLib/TTNetworkHelper (= 2.0.0.1-binary)
-  - TTBaseLib/TTSandBoxHelper (= 2.0.0.1-binary)
-  - TTBaseLib/TTUIResponderHelper (= 2.0.0.1-binary)
+  - TTBaseLib/TTBaseTool (= 2.0.10.1-binary)
+  - TTBaseLib/TTBusinessManager (= 2.0.10.1-binary)
+  - TTBaseLib/TTCategory (= 2.0.10.1-binary)
+  - TTBaseLib/TTDeviceHelper (= 2.0.10.1-binary)
+  - TTBaseLib/TTLabelTextHelper (= 2.0.10.1-binary)
+  - TTBaseLib/TTNetworkHelper (= 2.0.10.1-binary)
+  - TTBaseLib/TTSandBoxHelper (= 2.0.10.1-binary)
+  - TTBaseLib/TTUIResponderHelper (= 2.0.10.1-binary)
   - TTBatchItemAction (= 0.1.8.1-binary)
   - TTDebug (from `../TTBundles/ios_tt_debug`)
   - TTDebugAssistant (= 0.2.33.1-binary)
@@ -865,7 +871,7 @@ DEPENDENCIES:
   - TTGallery (from `../TTBundles/ios_tt_gallery`)
   - TTHTSVideo (from `../TTBundles/ios_tt_htsvideo`)
   - TTImage (= 0.8.4.1-binary)
-  - TTImagePicker (from `../AKPlugins/AKImagePicker`)
+  - TTImagePicker (= 7.5.5.2)
   - TTImagePreviewAnimateManager (= 1.0.13.1-binary)
   - TTImpression (= 0.0.26.1-binary)
   - TTIMSDK/Bridges (= 1.0.0-rc.34)
@@ -921,7 +927,7 @@ DEPENDENCIES:
   - TTSearch (from `../TTBundles/ios_tt_search`)
   - TTService (from `../TTBundles/ios_tt_service`)
   - TTServiceKit (= 0.4.1.1-binary)
-  - TTServiceProtocols (= 0.3.59)
+  - TTServiceProtocols (= 7.5.7.2)
   - TTSettingsManager/Core (= 0.4.16)
   - TTSettingsManager/Debug
   - TTSettingsManager/Performance (= 0.4.16)
@@ -1035,8 +1041,6 @@ EXTERNAL SOURCES:
     :path: ../TTBundles/ios_tt_gallery
   TTHTSVideo:
     :path: ../TTBundles/ios_tt_htsvideo
-  TTImagePicker:
-    :path: ../AKPlugins/AKImagePicker
   TTNewsAccountBusiness:
     :path: ../AKPlugins/TTNewsAccountBusiness
   TTPhotoScrollVC:
@@ -1107,7 +1111,7 @@ SPEC CHECKSUMS:
   BDUGSettingsInterface: 5cb90d9373928d36e371c72449061cabe491359f
   BDUGTrackerInterface: c41760f7de16c6f4b84395e71e85875a4cd87611
   BDUGUnionSDK: 837abef87c8d0f8cce87fb945dc18f2317d3d838
-  BDWebImage: cb9435b175d994f7156ffdc736477d794db576dd
+  BDWebImage: 78e38a40cbeaa5d49ec3d9a804826de48b883be6
   Bolts: 1432a62b82e8d832c6fceaa3cce9ddbc18d91893
   boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
   ByteDanceKit: ecd679ebcd80d2937ae10566db6dec1248d7840f
@@ -1144,7 +1148,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 14cd33ca592b3a726b3f86f8c7ef431bcf58d97a
-  ios_house_im: 8614c754475679f7d2463a46d6e5a1957f81bac0
+  ios_house_im: f0e762e870f2d9eaa586747e349395743b658856
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1156,6 +1160,7 @@ SPEC CHECKSUMS:
   MJExtension: da69d633398f365e84e052720b7943206f467935
   MJRefresh: 0163f5b55692ab35b37f1d11c094f98218b93a5e
   MLeaksFinder: d5e2cb40e585e1700365326024bf97a838cbebaf
+  MMKV: 5aa7fa04a9e6e5fb43694e208c9e0c36b5bca983
   OHHTTPStubs: 8fe4a9bac9386d3450c6cdaeca77e5d07d0f6cf4
   OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
@@ -1190,7 +1195,7 @@ SPEC CHECKSUMS:
   TTArticleVideo: 6f1853b56a61152991807c7c07d5474b4667aa80
   TTAudio: e9a692e3b6387c2c5efa5a74b44d7f73712fdc1e
   TTAvatar: 519c351b14df985b10dd9878760f9af4fe828997
-  TTBaseLib: e7b79508c1e559bd44fa073f0a7e3e1d7c237f0e
+  TTBaseLib: 90951f6d790cd0c29288254e39ebc6eca4642e68
   TTBatchItemAction: 6e6ed79565823fe6f3ee77d66d6e3ec5fec4d52f
   TTDebug: b8ba18669b70deaf52dbd0775578e2163cf07c45
   TTDebugAssistant: c1c106b1cef486fb07833e7a9a6316cf2711df5d
@@ -1207,7 +1212,7 @@ SPEC CHECKSUMS:
   TTGallery: 694e0873aa6423012bd0a4f8ffd85747e0a60193
   TTHTSVideo: 84859e259f16d792cd01ab4cecc052dec9af21bc
   TTImage: 8c4ddc40fd78a992571042abdbd7a80642e0bfdc
-  TTImagePicker: 728917a7f6b46e1029ec5fcd755ce7a62f311166
+  TTImagePicker: 8e243e506085e79a61ff3331a673a3f9686bafd6
   TTImagePreviewAnimateManager: 89284791379992856207b5b92662037d07cb08eb
   TTImpression: d2d80c26abef863c5be6dc8b6fe10ebef3331b84
   TTIMSDK: bfe029a0b27e3d30752bdd07ec5a121566fec48d
@@ -1238,7 +1243,7 @@ SPEC CHECKSUMS:
   TTSearch: 812276e1b1c7f1d1fce932fe766e9a75359d18d3
   TTService: 61600ce842ad99be7776dbbf3e614301ef706f7b
   TTServiceKit: 94210c3f54f65e5ba8ddde3e498837fa04649d57
-  TTServiceProtocols: 377db7b58021a7516d2c247372dfa07cc7c45921
+  TTServiceProtocols: ceda78db9ab1e2fac97472b03cf005ef5d8b21ba
   TTSettingsManager: 6c9f2451b51d836979ea8e7e51ac8397a9b74b06
   TTShare: e5faa4ed799189e7dec34372f61794c6a011c2a6
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
@@ -1271,6 +1276,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: af22b990c4e5b3b5d5ff0d153b98075ce8d73c0c
+PODFILE CHECKSUM: 4cc63730d2bfb0505ca9e76484df1d7d9457892e
 
 COCOAPODS: 1.4.0

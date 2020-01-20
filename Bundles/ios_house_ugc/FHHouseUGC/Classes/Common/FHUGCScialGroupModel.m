@@ -36,6 +36,7 @@
     @"followerCount": @"follower_count",
     @"socialGroupId": @"social_group_id",
     @"countText": @"count_text",
+    @"contentText": @"content_text",
     @"socialGroupName": @"social_group_name",
     @"hasFollow": @"has_follow",
     @"operation": @"operation",
