@@ -79,9 +79,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [super viewDidAppear:animated];
     
     [FHEnvContext addTabUGCGuid];
-    
-    [TTSandBoxHelper setAppFirstLaunchForAd];
-    
+        
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     
     //春节活动运营位

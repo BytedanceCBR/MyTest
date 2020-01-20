@@ -432,6 +432,7 @@ static CGFloat const kSectionHeaderHeight = 38;
         }
     }
     
+    [TTSandBoxHelper setAppFirstLaunchForAd];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
     
