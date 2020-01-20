@@ -142,16 +142,6 @@
     self.isViewDidDisapper = NO;
     self.isPhoneCalled = NO;
     
-    if(![SSCommonLogic disableDetailInstantShow] && [TTReachability isNetworkConnected]){
-        //有网且打开秒开的情况下才显示
-        if (self.instantData) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.viewModel handleInstantData:self.instantData];
-            });
-        }
-    }else{
-        self.instantData = nil;
-    }
     
     [self startLoadData];
     
