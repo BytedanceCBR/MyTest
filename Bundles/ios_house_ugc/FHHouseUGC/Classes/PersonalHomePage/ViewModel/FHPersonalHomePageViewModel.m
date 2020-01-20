@@ -200,7 +200,16 @@
                     [wSelf loadFeedListData];
                 }
             } else {
-                wSelf.headerModel = nil;
+                if ([model isKindOfClass:[FHPersonalHomePageModel class]]){
+                    FHPersonalHomePageModel *homePageModel = (FHPersonalHomePageModel *)model;
+                    if(homePageModel.data.desc.length > 0){
+                        wSelf.headerModel = model;
+                    }else{
+                        wSelf.headerModel = nil;
+                    }
+                }else{
+                    wSelf.headerModel = nil;
+                }
                 // 强制endLoading
                 wSelf.loadDataSuccessCount += 1;
             }

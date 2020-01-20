@@ -26,7 +26,9 @@
 
 @interface FHUGCCellUserInfoView()
 
-@property (nonatomic, assign)   FHUGCPostEditState       editState;
+//@property (nonatomic, assign) FHUGCPostEditState editState;
+//desc文案太长了。这时候会隐藏掉 后面的 内容已编辑 部分 by xsm
+@property (nonatomic, assign) BOOL isDescToLong;
 
 @end
 
@@ -35,7 +37,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.editState = FHUGCPostEditStateNone;
+//        self.editState = FHUGCPostEditStateNone;
         [self initViews];
         [self initConstraints];
         [self setupNoti];
@@ -50,7 +52,7 @@
 }
 
 - (void)postEditNoti:(NSNotification *)noti {
-    self.editState = FHUGCPostEditStateNone;
+    self.cellModel.editState = FHUGCPostEditStateNone;
     if (self.cellModel && self.cellModel.cellType == FHUGCFeedListCellTypeUGC) {
         NSString *notiName = noti.name;
         NSDictionary *userInfo = noti.userInfo;
@@ -59,17 +61,17 @@
             if (groupId.length >0 && [groupId isEqualToString:self.cellModel.groupId]) {
                 // 同一个帖子
                 if ([notiName isEqualToString:@"kTTForumBeginPostEditedThreadNotification"]) {
-                    self.editState = FHUGCPostEditStateSending;
+                    self.cellModel.editState = FHUGCPostEditStateSending;
                 } else if ([notiName isEqualToString:@"kTTForumPostEditedThreadSuccessNotification"]) {
-                    self.editState = FHUGCPostEditStateDone;
+                    self.cellModel.editState = FHUGCPostEditStateDone;
                 } else if ([notiName isEqualToString:@"kTTForumPostEditedThreadFailureNotification"]) {
-                    self.editState = FHUGCPostEditStateDone;
+                    self.cellModel.editState = FHUGCPostEditStateDone;
                 }
             }
         }
     }
     // 是否显示
-    self.editingLabel.hidden = !(self.editState == FHUGCPostEditStateSending);
+    [self updateEditState];
 }
 
 - (void)initViews {
@@ -138,16 +140,18 @@
         make.height.mas_equalTo(22);
     }];
     
+    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10;
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.icon);
         make.left.mas_equalTo(self.icon.mas_right).offset(10);
         make.height.mas_equalTo(17);
+        make.width.mas_equalTo(maxWidth);
     }];
     
     [self.editLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.icon).offset(3);
-        make.left.mas_equalTo(self.descLabel.mas_right).offset(10);
-        make.right.mas_lessThanOrEqualTo(self.moreBtn.mas_left).offset(-10);
+        make.left.mas_equalTo(self.descLabel.mas_right).offset(5);
+        make.width.mas_equalTo(60);
         make.height.mas_equalTo(23);
     }];
     
@@ -194,15 +198,41 @@
     if(pageType && [pageType isEqualToString:@"personal_comment_list"]){
         self.moreBtn.hidden = NO;
     }
-    
+}
+
+- (void)updateDescLabel {
+    self.descLabel.attributedText = self.cellModel.desc;
+    CGSize size = [self.descLabel sizeThatFits:CGSizeMake(MAXFLOAT, 17)];
+    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10;
+    if(size.width + 15 + 60 <= maxWidth){
+        self.isDescToLong = NO;
+        [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(size.width);
+        }];
+    }else{
+        self.isDescToLong = YES;
+        [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(maxWidth);
+        }];
+    }
+}
+
+- (void)updateEditState {
     // 编辑按钮
-    self.editLabel.hidden = !cellModel.hasEdit;
-    if (cellModel.hasEdit) {
+    if (self.cellModel.hasEdit) {
         self.editLabel.text = @"内容已编辑";
     } else {
         self.editLabel.text = @"";
     }
     [self.editLabel updateConstraintsIfNeeded];
+    // 是否显示
+    if(self.isDescToLong){
+        self.editLabel.hidden = YES;
+        self.editingLabel.hidden = YES;
+    }else{
+        self.editLabel.hidden = !self.cellModel.hasEdit;
+        self.editingLabel.hidden = !(self.cellModel.editState == FHUGCPostEditStateSending);
+    }
 }
 
 // 编辑按钮点击
@@ -566,7 +596,7 @@
     if(self.cellModel.cellType != FHUGCFeedListCellTypeUGC) {
         return;
     }
-    if (self.editState == FHUGCPostEditStateSending) {
+    if (self.cellModel.editState == FHUGCPostEditStateSending) {
         // 编辑发送中
         [[ToastManager manager] showToast:@"帖子编辑中，请稍后"];
         return;

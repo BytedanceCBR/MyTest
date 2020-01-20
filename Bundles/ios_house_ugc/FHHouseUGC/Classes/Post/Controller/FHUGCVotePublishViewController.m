@@ -14,10 +14,11 @@
 #import "FHUserTracker.h"
 #import <TTAccount.h>
 #import <FHBubbleTipManager.h>
+#import "TTAccountManager.h"
 
 @interface FHUGCVotePublishViewController()
 
-@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIScrollView *scrollView;
 
 @property (nonatomic, strong) FHUGCVoteViewModel *viewModel;
 
@@ -33,6 +34,9 @@
 @property (nonatomic, copy) NSString *selectGroupName;
 @property (nonatomic, assign) BOOL isSelectectGroupFollowed;
 @property (nonatomic, assign) BOOL  lastCanShowMessageTip;
+
+@property (nonatomic, assign) CGRect keyboardEndFrame;
+@property (nonatomic, assign) BOOL keyboardIsShow;
 @end
 
 @implementation FHUGCVotePublishViewController
@@ -57,16 +61,14 @@
     
     // 配置导航条
     [self configNavigation];
-    // 添加tableView
-    [self.view addSubview:self.tableView];
+    // 添加ScrollView
+    [self.view addSubview:self.scrollView];
+    self.viewModel = [[FHUGCVoteViewModel alloc] initWithScrollView:self.scrollView ViewController:self];
     
     // 从圈子详情页带入的圈子信息
     if(self.hasSocialGroup) {
         [self.viewModel configModelForSocialGroupId:self.selectGroupId socialGroupName:self.selectGroupName hasFollowed:self.isSelectectGroupFollowed];
     }
-    
-    // 初始化配置工作
-    [self.viewModel reloadTableView];
     // 注册通知
     [self registerNotification];
 }
@@ -86,25 +88,43 @@
     
     BOOL isShrinking = beginFrame.origin.y < endFrame.origin.y;
     
-    CGRect tableViewFrame = self.tableView.frame;
+    CGRect scrollViewFrame = self.scrollView.frame;
     
     if(isShrinking) {
-        tableViewFrame.size.height = self.view.bounds.size.height - kNavigationBarHeight;
+        scrollViewFrame.size.height = self.view.bounds.size.height - kNavigationBarHeight;
     } else {
-        tableViewFrame.size.height = self.view.bounds.size.height - kNavigationBarHeight - endFrame.size.height;
+        scrollViewFrame.size.height = self.view.bounds.size.height - kNavigationBarHeight - endFrame.size.height;
     }
     
-    self.tableView.frame = tableViewFrame;
+    self.scrollView.frame = scrollViewFrame;
 }
 
 - (void)keyboardDidChangeFrame: (NSNotification *)notification {
-//    CGRect beginFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-//    CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-//    BOOL isShrinking = beginFrame.origin.y < endFrame.origin.y;
-//    if(!isShrinking) {
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:1] - 1 inSection:1];
-//        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-//    }
+    CGRect beginFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    self.keyboardEndFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    self.keyboardIsShow = beginFrame.origin.y >= self.keyboardEndFrame.origin.y;
+    
+    // 键盘弹起时，如果有输入焦点视图，则滚动到其露出
+    [self scrollToVisibleForFirstResponderView];
+
+}
+
+- (void)scrollToVisibleForFirstResponderView {
+    if(self.firstResponderView && self.keyboardIsShow) {
+        UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+        CGRect keyboardRect = [keyWindow convertRect:self.keyboardEndFrame toView:self.scrollView];
+        
+        CGRect rect = [self.firstResponderView convertRect:self.firstResponderView.bounds toView:self.scrollView];
+        
+        CGFloat offsetY = (rect.origin.y + rect.size.height) - keyboardRect.origin.y;
+        
+        if(offsetY > 0) {
+            CGPoint contentOffset = self.scrollView.contentOffset;
+            contentOffset.y += offsetY;
+            [self.scrollView setContentOffset:contentOffset animated:YES];
+        }
+    }
+    self.firstResponderView = nil;
 }
 
 - (void)configNavigation {
@@ -124,7 +144,7 @@
 
 - (void)cancelAction: (UIButton *)cancelBtn {
     
-    [self.tableView endEditing:YES];
+    [self.scrollView endEditing:YES];
     
     NSMutableDictionary *params = @{}.mutableCopy;
     params[UT_PAGE_TYPE] = @"vote_publisher";
@@ -138,7 +158,7 @@
         WeakSelf;
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             StrongSelf;
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self exitPage];
             
             NSMutableDictionary *params = @{}.mutableCopy;
             params[UT_PAGE_TYPE] = @"vote_publisher";
@@ -166,11 +186,26 @@
         TRACK_EVENT(@"publisher_cancel_popup_show", params);
         
     } else {
+        [self exitPage];
+    }
+}
+
+- (void)exitPage {
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    if (viewControllers && viewControllers.count > 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
 - (void)publishAction: (UIButton *)publishBtn {
+    
+    if(self.viewModel.isPublishing) {
+        // 防止连点发布
+        return ;
+    }
     
     NSMutableDictionary *params = @{}.mutableCopy;
     params[UT_PAGE_TYPE] = @"vote_publisher";
@@ -178,22 +213,49 @@
     params[@"click_position"] = @"passport_publisher";
     TRACK_EVENT(@"feed_publish_click", params);
     
-    [self.viewModel publish];
+    if ([TTAccountManager isLogin]) {
+        [self.viewModel publish];
+    } else {
+        // 应该不会走到当前位置，UGC外面限制强制登录
+        [self gotoLogin];
+    }
+    
+    
 }
 
-- (FHUGCVoteViewModel *)viewModel {
-    if(!_viewModel) {
-        _viewModel = [[FHUGCVoteViewModel alloc] initWithTableView:self.tableView ViewController:self];
-    }
-    return _viewModel;
+- (NSString *)pageType {
+    return @"vote_publisher";
 }
 
-- (UITableView *)tableView {
-    if(!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, kNavigationBarHeight, SCREEN_WIDTH, self.view.bounds.size.height - kNavigationBarHeight) style:UITableViewStyleGrouped];
-        _tableView.bounces = NO;
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:[self pageType] forKey:@"enter_from"];
+    [params setObject:@"click" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    
+    WeakSelf;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        StrongSelf;
+        
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.viewModel publish];
+                });
+            }
+        }
+    }];
+}
+
+- (UIScrollView *)scrollView {
+    if(!_scrollView) {
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, kNavigationBarHeight, SCREEN_WIDTH, self.view.bounds.size.height - kNavigationBarHeight)];
+        _scrollView.bounces = NO;
     }
-    return _tableView;
+    return _scrollView;
 }
 
 - (UIButton *)cancelBtn {
@@ -239,7 +301,6 @@
     }
     self.publishBtn.enabled = isEnable;
 }
-
 @end
                       
                       
