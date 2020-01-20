@@ -258,7 +258,7 @@
         return @"group.com.fp1.extension";
     }
     
-    return @"group.com.f100.client.extension";
+    return @"group.com.f100.client.extension.new";
 }
 
 + (void)saveObj:(NSObject<NSCoding> *)obj forKey:(NSString *)key
