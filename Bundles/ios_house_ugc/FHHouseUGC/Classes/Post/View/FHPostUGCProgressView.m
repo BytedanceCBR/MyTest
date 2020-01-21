@@ -18,6 +18,7 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHUserTracker.h"
+#import "Masonry.h"
 
 @interface FHPostUGCProgressView ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -86,7 +87,10 @@
     _tableView.delegate = self;
     _tableView.scrollEnabled = NO;
     [_tableView registerClass:[FHPostUGCProgressCell class] forCellReuseIdentifier:@"FHPostUGCProgressCell"];
-    _tableView.frame = self.frame;
+    
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
 }
 
 - (void)updateStatus {

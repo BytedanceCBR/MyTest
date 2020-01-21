@@ -32,6 +32,7 @@
 // 更新发帖进度视图
 - (void)updateJoinProgressView {
     CGRect frame = self.viewController.headerView.frame;
+    [self.viewController.headerView.progressView updatePostData];
     frame.size.height = self.viewController.headerView.progressView.viewHeight;
     self.viewController.headerView.frame = frame;
     
