@@ -703,7 +703,7 @@
                 weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
                 [weakSelf refreshWithData:weakSelf.voteInfo];
                 NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-                [userInfo setObject:weakSelf.voteInfo forKey:@"vote_info"];
+                userInfo[@"vote_info"] = weakSelf.voteInfo;
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
             } else {
                 // 失败
@@ -756,7 +756,7 @@
             
             [weakSelf refreshWithData:weakSelf.voteInfo];
             NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-            [userInfo setObject:weakSelf.voteInfo forKey:@"vote_info"];
+            userInfo[@"vote_info"] = weakSelf.voteInfo;
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
         } else {
             weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
