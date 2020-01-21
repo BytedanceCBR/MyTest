@@ -35,7 +35,8 @@
     self.backgroundColor = [UIColor whiteColor];
     
     self.arror = [[UIImageView alloc] init];
-    _arror.image = ICON_FONT_IMG(12, @"\U0000e67f", [UIColor whiteColor]);//@"fh_ugc_feed_guide_arror_up"
+//    _arror.image = ICON_FONT_IMG(12, @"\U0000e67f", [UIColor themeGray7]);//@"fh_ugc_feed_guide_arror_up"'
+    _arror.image = [UIImage imageNamed:@"fh_ugc_feed_guide_arror_up"];//@"fh_ugc_feed_guide_arror_up"
     [self addSubview:_arror];
     
     self.contentView = [[UIView alloc] init];

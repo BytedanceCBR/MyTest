@@ -57,7 +57,7 @@
 }
 
 - (void)viewWillDisappear {
-    if([self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
+    if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
         FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
         [cell cellDisappear];
     }
@@ -119,7 +119,7 @@
 }
 
 - (void)initCell:(NSString *)enterType {
-    if([self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
+    if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
         FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
         cell.enterType = enterType;
         
@@ -149,18 +149,20 @@
 }
 
 - (void)refreshCell:(BOOL)isHead {
-    if([self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
+    if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
         FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
         [cell refreshData:isHead];
     }
 }
 
-- (void)changeMyJoinTab {
-    self.currentTabIndex = 0;
-    [self initCell:@"default"];
-
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.currentTabIndex inSection:0];
-    [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+- (void)changeTab:(NSInteger)index {
+    if(index < self.dataArray.count){
+        self.currentTabIndex = index;
+        [self initCell:@"default"];
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.currentTabIndex inSection:0];
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+    }
 }
 
 

@@ -111,46 +111,6 @@
     }];
 }
 
--(void)handleInstantData:(id)data
-{
-    FHDetailNeighborhoodModel *model = [[FHDetailNeighborhoodModel alloc] init];
-    model.isInstantData = YES;
-    FHDetailNeighborhoodDataModel *dataModel = [FHDetailNeighborhoodDataModel new];
-    model.data = dataModel;
-    if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
-        
-        FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
-        dataModel.name = item.title;
-        dataModel.neighborhoodImage = item.houseImage;
-        dataModel.id = item.idx;
-        dataModel.imprId = item.imprId;
-        dataModel.logPb = item.logPb;
-        
-    }else if ([data isKindOfClass:[FHHouseNeighborDataItemsModel class]]){
-        FHHouseNeighborDataItemsModel *item = (FHHouseNeighborDataItemsModel *)data;
-        dataModel.name = item.name;
-        dataModel.neighborhoodImage = item.images;
-        dataModel.id = item.id;
-        
-        if (item.neighborhoodInfo) {
-            dataModel.neighborhoodInfo = [[FHDetailNeighborhoodDataNeighborhoodInfoModel alloc] initWithDictionary:item.neighborhoodInfo error:nil];
-        }
- 
-        dataModel.baseInfo = item.baseInfo;
-    
-        dataModel.imprId = item.imprId;
-        dataModel.logPb = item.logPb;
-        
-    }else{
-        self.detailController.instantData = nil;
-        return;
-    }
-    
-//    dataModel.contact.isInstantData = YES;
-    
-    self.bottomBar.hidden = NO;
-    [self processDetailData:model];
-}
 
 -(NSArray *)instantHouseImages
 {

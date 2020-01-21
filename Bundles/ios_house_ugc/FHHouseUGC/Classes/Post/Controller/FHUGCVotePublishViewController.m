@@ -14,6 +14,7 @@
 #import "FHUserTracker.h"
 #import "TTAccount.h"
 #import "FHBubbleTipManager.h"
+#import "TTAccountManager.h"
 
 @interface FHUGCVotePublishViewController()
 
@@ -157,7 +158,7 @@
         WeakSelf;
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             StrongSelf;
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self exitPage];
             
             NSMutableDictionary *params = @{}.mutableCopy;
             params[UT_PAGE_TYPE] = @"vote_publisher";
@@ -185,6 +186,16 @@
         TRACK_EVENT(@"publisher_cancel_popup_show", params);
         
     } else {
+        [self exitPage];
+    }
+}
+
+- (void)exitPage {
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    if (viewControllers && viewControllers.count > 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
@@ -202,7 +213,41 @@
     params[@"click_position"] = @"passport_publisher";
     TRACK_EVENT(@"feed_publish_click", params);
     
-    [self.viewModel publish];
+    if ([TTAccountManager isLogin]) {
+        [self.viewModel publish];
+    } else {
+        // 应该不会走到当前位置，UGC外面限制强制登录
+        [self gotoLogin];
+    }
+    
+    
+}
+
+- (NSString *)pageType {
+    return @"vote_publisher";
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:[self pageType] forKey:@"enter_from"];
+    [params setObject:@"click" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    
+    WeakSelf;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        StrongSelf;
+        
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.viewModel publish];
+                });
+            }
+        }
+    }];
 }
 
 - (UIScrollView *)scrollView {

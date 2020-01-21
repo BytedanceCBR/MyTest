@@ -17,6 +17,7 @@
 #import "FHSugSubscribeListViewController.h"
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
+#import "FHOldSuggestionItemCell.h"
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -253,6 +254,7 @@
     tableView.dataSource = self.viewModel;
     [tableView registerClass:[FHSuggestionItemCell class] forCellReuseIdentifier:@"suggestItemCell"];
     [tableView registerClass:[FHSuggestionNewHouseItemCell class] forCellReuseIdentifier:@"suggestNewItemCell"];
+        [tableView registerClass:[FHOldSuggestionItemCell class] forCellReuseIdentifier:@"FHOldSuggestionItemCell"];
     [tableView registerClass:[FHSuggestHeaderViewCell class] forCellReuseIdentifier:@"suggestHeaderCell"];
     if (@available(iOS 11.0 , *)) {
         tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

@@ -26,6 +26,9 @@
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <TTReachability/TTReachability.h>
 #import "TTSandBoxHelper.h"
+#import <FHHouseDetail/FHHouseDetailAPI.h>
+#import <FHCommonUI/FHFeedbackView.h>
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -95,7 +98,8 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
 }
 
-- (void)tryGetPhoneNumber:(nonnull NSString *)userId withImprId:(nonnull NSString *)imprId tracer:(nonnull NSDictionary *)tracer withBlock:(nullable PhoneCallback)finishBlock{
+- (void)tryGetPhoneNumber:(NSString *)userId withImprId:(NSString *)imprId tracer:(NSDictionary *)tracer clueParams:(NSDictionary *)clueParams withBlock:(PhoneCallback)finishBlock
+{
     if (isEmptyString(userId)) {
         finishBlock(@"click_call", imprId,true);
         [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_UID extra:@{@"client_type":@"client_c"}];
@@ -212,6 +216,56 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 + (void)addClueCallErrorRateLog:categoryDict extraDict:(NSDictionary *)extraDict
 {
     [[HMDTTMonitor defaultManager]hmdTrackService:@"clue_call_error_rate" metric:nil category:categoryDict extra:extraDict];
+}
+
+- (void)submitRealtorEvaluation:(NSString *)content scoreCount:(NSInteger)scoreCount scoreTags:(NSArray<NSString *> *)scoreTags traceParams:(NSDictionary *)traceParams
+{
+    NSString *realtorId = traceParams[@"realtor_id"];
+    NSString *targetId = traceParams[@"target_id"];
+    NSInteger targetType = [traceParams btd_integerValueForKey:@"target_type"];
+    NSInteger evaluationType = [traceParams btd_integerValueForKey:@"evaluation_type"];
+
+    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:scoreCount tags:scoreTags completion:^(bool succss, NSError *_Nullable error) {
+        if (succss) {
+            [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
+        } else {
+            [[ToastManager manager] showToast:@"提交失败"];
+        }
+    }];
+}
+
+- (id)getRealtorEvaluationModel
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHRealtorEvaluatioinConfigModel *evaluationConfig = dataModel.realtorEvaluationConfig;
+    if (!evaluationConfig) {
+        return nil;
+    }
+    FHRealtorEvaluationModel *evaluationModel = [[FHRealtorEvaluationModel alloc]init];
+    evaluationModel.scoreTags = evaluationConfig.scoreTags;
+    evaluationModel.goodPlaceholder = evaluationConfig.goodPlaceholder;
+    evaluationModel.badPlaceholder = evaluationConfig.badPlaceholder;
+    if (evaluationConfig.goodTags.count > 0) {
+        NSMutableArray *tags = @[].mutableCopy;
+        for (FHRealtorEvaluatioinTagModel *tag in evaluationConfig.goodTags) {
+            FHRealtorEvaluationTagModel *newTag = [[FHRealtorEvaluationTagModel alloc]init];
+            newTag.id = tag.id;
+            newTag.text = tag.text;
+            [tags addObject:newTag];
+        }
+        evaluationModel.goodTags = tags;
+    }
+    if (evaluationConfig.badTags.count > 0) {
+        NSMutableArray *tags = @[].mutableCopy;
+        for (FHRealtorEvaluatioinTagModel *tag in evaluationConfig.badTags) {
+            FHRealtorEvaluationTagModel *newTag = [[FHRealtorEvaluationTagModel alloc]init];
+            newTag.id = tag.id;
+            newTag.text = tag.text;
+            [tags addObject:newTag];
+        }
+        evaluationModel.badTags = tags;
+    }
+    return evaluationModel;
 }
 
 @end

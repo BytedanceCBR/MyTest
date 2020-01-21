@@ -30,6 +30,15 @@
 @implementation FHUGCGuideView
 
 - (void)show:(UIView *)parentView dismissDelayTime:(NSTimeInterval)delayTime completion:(void (^)(void))completion {
+    
+    if(self.type == FHUGCGuideViewTypeSearch){
+        _contentLabel.text = [[FHUGCConfig sharedInstance] searchLeadSuggest] ? [[FHUGCConfig sharedInstance] searchLeadSuggest] : @"点击搜索你感兴趣的圈子";
+    }else if(self.type == FHUGCGuideViewTypeSecondTab){
+        _contentLabel.text = [[FHUGCConfig sharedInstance] secondTabLeadSuggest] ? [[FHUGCConfig sharedInstance] secondTabLeadSuggest] : @"速来围观附近的小区趣事";
+    }else{
+        _contentLabel.text = [[FHUGCConfig sharedInstance] ugcDetailLeadSuggest] ? [[FHUGCConfig sharedInstance] ugcDetailLeadSuggest] : @"关注圈子，不错过小区新鲜事";
+    }
+    
     [parentView addSubview:self];
     
     if(delayTime > 0){

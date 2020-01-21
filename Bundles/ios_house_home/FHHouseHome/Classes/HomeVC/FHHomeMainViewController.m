@@ -61,8 +61,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         //#endif
     }
     
-    //春节活动
-    [[FHMinisdkManager sharedInstance] goSpring];
+    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
+        //春节活动
+        [[FHMinisdkManager sharedInstance] goSpring];
+    }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -76,9 +79,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [super viewDidAppear:animated];
     
     [FHEnvContext addTabUGCGuid];
-    
-    [TTSandBoxHelper setAppFirstLaunchForAd];
-    
+        
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     
     //春节活动运营位

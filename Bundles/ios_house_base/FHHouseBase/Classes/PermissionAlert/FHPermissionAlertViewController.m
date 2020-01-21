@@ -17,6 +17,8 @@
 #import <TTRoute/TTRoute.h>
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
+#import "FHMainApi.h"
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 #define OUT_HOR_MARGIN     38
 #define IN_HOR_MARGIN      20
@@ -41,39 +43,38 @@
 
 @implementation FHPermissionAlertViewController
 
-+(void)show
++(instancetype)showInViewController:(UIViewController *)parentViewController
 {
-    FHPermissionAlertViewController *controller = [[FHPermissionAlertViewController alloc]initWithNibName:nil bundle:nil];
-    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:controller];
     
-    [UIApplication sharedApplication].delegate.window.rootViewController = navigationController;
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    FHPermissionAlertViewController *controller = [[FHPermissionAlertViewController alloc] initWithFrame:window.bounds];
+    [window addSubview:controller];
     
     [[FHEnvContext sharedInstance] pauseForPermissionProtocol];
     
+    return controller;
+    
 }
 
--(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
++ (UIImage *)getImageViewWithView:(UIView *)view
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    UIGraphicsBeginImageContext(view.frame.size);
+    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+
+-(instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
     if (self) {
-        self.ttHideNavigationBar = YES;
-        self.enterDate = [NSDate date];
+        [self initUIs];
+        [self addPopShowLog];
     }
     return self;
-}
-
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    [self initUIs];
-    [self addPopShowLog];
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (UIImage *)getLaunchImage
@@ -95,7 +96,7 @@
 
 -(void)initUIs
 {
-    _bgImgView = [[UIImageView alloc] initWithImage:[self getLaunchImage]];
+    _bgImgView = [[UIImageView alloc] initWithImage:[self getLaunchImage]];//self.snapImage];//
     
     _maskView = [[UIView alloc]init];
     _maskView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
@@ -166,9 +167,9 @@
     [self.containerView addSubview:_contentLabel];
     [self.containerView addSubview:_confirmButton];
     
-    [self.view addSubview:_bgImgView];
-    [self.view addSubview:_maskView];
-    [self.view addSubview:_containerView];
+    [self addSubview:_bgImgView];
+    [self addSubview:_maskView];
+    [self addSubview:_containerView];
     
     [self initConstraints];
 }
@@ -210,15 +211,20 @@
 
 -(void)showProtocolDetail:(NSString *)urlPath title:(NSString *)title
 {
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@%@&title=%@&hide_more=1",[FHURLSettings baseURL],urlPath,title];
-    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    NSString *jumpUrl = [NSString stringWithFormat:@"%@%@",[FHURLSettings baseURL],urlPath];
+    NSURL *openUrl = [NSURL URLWithString:jumpUrl];
+    if ([[UIApplication sharedApplication] canOpenURL:openUrl]) {
+        [[UIApplication sharedApplication] openURL:openUrl];
+    }
 }
 
 -(void)confirmAction:(id)sender
 {
     [self addConfirmLog:YES];
+    
+    [self removeFromSuperview];
     [[FHEnvContext sharedInstance] userConfirmedPermssionProtocol];
+    
 }
 
 -(void)addPopShowLog
@@ -228,6 +234,8 @@
     param[@"popup_name"] = @"privacy";
     
     TRACK_EVENT(@"popup_show", param);
+    
+    [self addPoppReport:YES];
 }
 
 -(void)addConfirmLog:(BOOL)confirm
@@ -242,6 +250,7 @@
     
     TRACK_EVENT(@"popup_click", param);
     
+    [self addPoppReport:NO];
 }
 
 - (BOOL)shouldAutorotate
@@ -255,6 +264,22 @@
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
     return UIInterfaceOrientationPortrait;
+}
+
+-(void)addPoppReport:(BOOL)isShow
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    
+    param[@"channel"] = [TTSandBoxHelper getCurrentChannel];
+    param[@"uuid"] = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    param[@"event"] = isShow? @"popup_show": @"popup_click";
+    param[@"popup_name"] = @"privacy";
+    if (!isShow) {
+        param[@"click_position"] = @"confirm";
+    }
+    
+    [FHMainApi postJsonRequest:@"/f100/api/tool_house/log_event" query:nil params:param completion:^(NSDictionary *_Nullable result, NSError * _Nullable error) {
+    }];
 }
 
 /*

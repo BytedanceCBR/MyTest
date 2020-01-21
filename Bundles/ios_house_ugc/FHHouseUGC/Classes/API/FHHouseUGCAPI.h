@@ -110,6 +110,8 @@ NS_ASSUME_NONNULL_BEGIN
 // Feed编辑帖子发布请求
 + (TTHttpTask *)requestPublishEditedPostWithParam:(NSDictionary *)params  completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+// 发布器热门标签
++ (TTHttpTask *)requestPublishHotTagsWithParam:(NSDictionary *)params completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -3776,6 +3776,7 @@ FRUgcConcernThreadV3ListRequestModel;
 @property (strong, nonatomic) NSNumber<Optional> *flipchat_sync;
 @property (strong, nonatomic) NSString<Optional> *sdk_params;
 @property (nonatomic, copy)     NSString<Optional>       *social_group_id;
+@property (strong, nonatomic) NSNumber<Optional> *bind_type;
 @property (nonatomic, copy)   NSDictionary<Optional> * extraTrack;
 @end
 

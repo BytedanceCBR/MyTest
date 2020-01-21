@@ -527,6 +527,14 @@ extern NSString *const INSTANT_DATA_KEY;
     }else{
         query = [NSString stringWithFormat:@"enter_from=%@",enterFrom];
     }
+    NSString *queryType = self.houseSearchDic[@"query_type"] ? : @"filter";
+    if (queryType.length > 0) {
+        if ([query isKindOfClass:[NSString class]] && query.length > 0) {
+            query = [query stringByAppendingString:[NSString stringWithFormat:@"&query_type=%@",queryType]];
+        }else{
+            query = [NSString stringWithFormat:@"query_type=%@",queryType];
+        }
+    }
     NSInteger offset = 0;
     if (!isHead) {
         offset = _houseList.count;

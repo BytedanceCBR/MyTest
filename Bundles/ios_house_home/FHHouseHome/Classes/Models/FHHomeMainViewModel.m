@@ -91,7 +91,7 @@
 
     FHHomeMainBaseCollectionCell *cell = (FHHomeMainBaseCollectionCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
     NSInteger row = indexPath.row;
-    if (![self.viewController.childViewControllers containsObject:cell.contentVC]) {
+    if (cell.contentVC && ![self.viewController.childViewControllers containsObject:cell.contentVC]) {
         [self.viewController addChildViewController:cell.contentVC];
     }
     

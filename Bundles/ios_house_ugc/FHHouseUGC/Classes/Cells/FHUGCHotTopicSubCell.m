@@ -15,7 +15,7 @@
 @interface FHUGCHotTopicSubCell ()
 
 @property(nonatomic, strong) UIImageView *bgView;
-@property(nonatomic, strong) UIView *bgCoverView;
+@property(nonatomic, strong) UILabel *rankLabel;
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *descLabel;
 
@@ -33,12 +33,18 @@
     return self;
 }
 
-- (void)refreshWithData:(id)data {
+- (void)refreshWithData:(id)data index:(NSInteger)index {
     if([data isKindOfClass:[FHFeedContentRawDataHotTopicListModel class]]){
         FHFeedContentRawDataHotTopicListModel *model = (FHUGCScialGroupDataModel *)data;
         _titleLabel.text = model.forumName;
         _descLabel.text = model.talkCountStr;
-        [self.bgView bd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholder:nil];
+        _rankLabel.text = [NSString stringWithFormat:@"%i",index + 1];
+
+        if(index < 3){
+            _rankLabel.textColor = [UIColor themeOrange1];
+        }else{
+            _rankLabel.textColor = [UIColor themeGray3];
+        }
     }
 }
 
@@ -46,24 +52,18 @@
     self.contentView.backgroundColor = [UIColor whiteColor];
     
     self.bgView = [[UIImageView alloc] init];
-    _bgView.contentMode = UIViewContentModeScaleAspectFill;
-    _bgView.layer.masksToBounds = YES;
-    _bgView.layer.cornerRadius = 4;
-    _bgView.backgroundColor = [UIColor themeGray7];
-    _bgView.layer.borderWidth = 0.5;
-    _bgView.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_bgView];
     
-    self.bgCoverView = [[UIView alloc] init];
-    _bgCoverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
-    [self.bgView addSubview:_bgCoverView];
+    self.rankLabel = [self LabelWithFont:[UIFont themeFontSemibold:15] textColor:[UIColor themeGray3]];
+    _rankLabel.textAlignment = NSTextAlignmentRight;
+    _rankLabel.text = @"5";
+    [self.bgView addSubview:_rankLabel];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor whiteColor]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:15] textColor:[UIColor themeGray1]];
     _titleLabel.textAlignment = NSTextAlignmentLeft;
-    _titleLabel.numberOfLines = 3;
     [self.bgView addSubview:_titleLabel];
     
-    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor whiteColor]];
+    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     _descLabel.textAlignment = NSTextAlignmentLeft;
     [self.bgView addSubview:_descLabel];
 }
@@ -73,22 +73,25 @@
         make.edges.mas_equalTo(self.contentView);
     }];
     
-    [self.bgCoverView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.bgView);
+    [self.rankLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.bgView);
+        make.left.mas_equalTo(self.bgView).offset(16);
+        make.width.mas_equalTo(8);
+        make.height.mas_equalTo(21);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bgView).offset(8);
-        make.left.mas_equalTo(self.bgView).offset(8);
-        make.right.mas_equalTo(self.bgView).offset(-8);
-        make.height.mas_lessThanOrEqualTo(60);
+        make.top.mas_equalTo(self.bgView);
+        make.left.mas_equalTo(self.rankLabel.mas_right).offset(5);
+        make.right.mas_equalTo(self.bgView).offset(-15);
+        make.height.mas_equalTo(21);
     }];
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.bgView).offset(-8);
-        make.left.mas_equalTo(self.bgView).offset(8);
-        make.right.mas_equalTo(self.bgView).offset(-8);
-        make.height.mas_equalTo(14);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom);
+        make.left.mas_equalTo(self.titleLabel);
+        make.right.mas_equalTo(self.titleLabel);
+        make.height.mas_equalTo(17);
     }];
 }
 

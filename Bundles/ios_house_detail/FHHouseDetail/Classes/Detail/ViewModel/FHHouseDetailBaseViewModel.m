@@ -146,10 +146,6 @@
     [self.contactViewModel vc_viewDidDisappear:animated];
 }
 
--(void)handleInstantData:(id)data
-{
-    
-}
 
 -(BOOL)currentIsInstantData
 {

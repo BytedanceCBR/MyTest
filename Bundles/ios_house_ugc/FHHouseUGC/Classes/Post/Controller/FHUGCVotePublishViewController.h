@@ -16,6 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)enablePublish: (BOOL)isEnable;
 - (void)scrollToVisibleForFirstResponderView;
-
+- (void)exitPage;
 @end
 NS_ASSUME_NONNULL_END
