@@ -13,7 +13,7 @@
 #import "TTVideoApiModel.h"
 #import "TTVFeedItem+Extension.h"
 #import "FHLocManager.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 
 @implementation FHFeedUGCCellCommunityModel
 

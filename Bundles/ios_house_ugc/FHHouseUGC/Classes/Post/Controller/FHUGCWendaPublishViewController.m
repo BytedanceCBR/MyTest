@@ -14,7 +14,6 @@
 #import "TTAccountManager.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
-#import <FHPostUGCSelectedGroupHistoryView.h>
 #import "TTUGCTextView.h"
 #import "TTUGCToolbar.h"
 #import <FRAddMultiImagesView.h>
@@ -32,6 +31,7 @@
 #import "TTUGCDefine.h"
 #import "FHUserTracker.h"
 #import "FHUGCPublishTagModel.h"
+#import "FHUGCToolbar.h"
 
 // 选择小区圈子控件的高度
 #define ENTRY_HEIGHT                44
