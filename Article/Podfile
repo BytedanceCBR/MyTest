@@ -42,15 +42,13 @@ def fhPods
 
     pod 'ios_house_filter' , '1.0.2'
     
-    #    pod 'FHCommonUI', :path => '../../library/ios_common_ui'
-    # pod 'FHCommonUI', '0.0.14'
+    pod 'FHCommonUI', '0.0.15'
     #pod 'FHCommonUI',:path => '../../ios_common_ui'
-    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '21f52981452d7e1e319da3a07301184164b72251'
+    #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '21f52981452d7e1e319da3a07301184164b72251'
 
-    # pod 'ios_house_im', '0.1.15-alpha.0-mergebc'
+    pod 'ios_house_im', '0.1.17'
     # pod 'ios_house_im' , :path => '../../ios_house_im'
-    pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9b5149c9c9201bfd45134e01edcc19d89d399fce'
-
+    # pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9b5149c9c9201bfd45134e01edcc19d89d399fce'
 
 end
 
