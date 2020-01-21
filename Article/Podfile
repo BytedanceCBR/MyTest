@@ -438,7 +438,7 @@ def appPods
     # pod_binary 'Fabric','1.10.2'
     pod_binary 'MJExtension', '3.0.12'
     pod_binary 'MJRefresh' , '3.1.15.7'
-    pod_binary 'Crashlytics','3.7.2'
+    pod_binary 'Crashlytics','3.12.0'
     pod_binary 'KVOController', '1.2.0'
     pod_binary 'RSSwizzle', '0.1.1'
     pod_binary 'RNCryptor-objc', '3.0.5'
