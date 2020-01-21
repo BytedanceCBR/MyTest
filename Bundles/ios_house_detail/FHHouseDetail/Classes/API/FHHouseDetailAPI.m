@@ -562,21 +562,26 @@
     }];
 }
 
-+ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)houseId realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nonnull))completion {
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion
+{
     NSString *path = @"/f100/api/associate/realtor_evaluation/assign";
     NSMutableDictionary *param = [NSMutableDictionary new];
-    param[@"device_id"] = @([[[TTInstallIDManager sharedInstance] deviceID] longLongValue]);
-    param[@"house_id"] = @(houseId.longLongValue);
-    param[@"score"] = @(score);
-    param[@"tag_ids"] = tags;
-
     if(!isEmptyString(realtorId)){
         param[@"realtor_id"] = @(realtorId.longLongValue);;
     }
-
+    // evaluationType[int]:反馈类型 0:电话后反馈 1:IM反馈
+    if (evaluationType == 1) {
+        param[@"target_id"] = @(targetId.longLongValue);
+        param[@"target_type"] = @(targetType);
+    }else {
+        param[@"house_id"] = @(targetId.longLongValue);
+    }
+    param[@"type"] = @(evaluationType);
+    param[@"score"] = @(score);
     if(!isEmptyString(content)) {
         param[@"content"] = content;
     }
+    param[@"tag_ids"] = tags;
 
     return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {
         BOOL success = NO;
