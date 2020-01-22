@@ -145,7 +145,11 @@ TTAccountMulticastProtocol
         self.isEnterFollowPageFromPostNotification = NO;
         self.isEnterHomeTabFromPostNotification = NO;
         [self registerNotifications];
-        [self loadStatusModelsWithCompletionBlock:nil];
+        [self loadStatusModelsWithCompletionBlock:^{
+            if([FHPostUGCProgressView sharedInstance].refreshViewBlk) {
+                [FHPostUGCProgressView sharedInstance].refreshViewBlk();
+            }
+        }];
         self.cityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
     }
     return self;
