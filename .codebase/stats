@@ -6,4 +6,5 @@ ignore:
 # 因为 * 在 yml 中有语义，最好用引号 quote
     - "tools/**" # tools 目录
     - "Article/Pods/**"
+    - "Key/**" # Key 目录
     - "*.js"
