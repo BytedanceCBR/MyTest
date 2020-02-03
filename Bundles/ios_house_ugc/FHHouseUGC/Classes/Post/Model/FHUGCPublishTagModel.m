@@ -41,6 +41,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+        @"recentlySocials":@"recently_socials"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
