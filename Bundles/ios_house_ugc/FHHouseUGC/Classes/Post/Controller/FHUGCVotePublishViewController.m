@@ -63,6 +63,7 @@
     [self configNavigation];
     // 添加ScrollView
     [self.view addSubview:self.scrollView];
+    self.view.backgroundColor = [UIColor colorWithHexStr:@"#EBEBF0"];
     self.viewModel = [[FHUGCVoteViewModel alloc] initWithScrollView:self.scrollView ViewController:self];
     
     // 从圈子详情页带入的圈子信息
