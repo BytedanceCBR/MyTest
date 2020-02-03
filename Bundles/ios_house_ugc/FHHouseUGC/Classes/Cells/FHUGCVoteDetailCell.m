@@ -362,6 +362,8 @@
     self.voteView.height = voteInfo.voteHeight;
     // 更新布局
     [self setupUIFrames];
+    
+    [self showGuideView];
 }
 
 + (CGFloat)heightForData:(id)data {
@@ -414,6 +416,11 @@
         } else {
             height += (24 + 25);
         }
+        
+        if(cellModel.isInsertGuideCell){
+            height += guideViewHeight;
+        }
+        
         return height;
     }
     return 44;
@@ -479,6 +486,30 @@
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = text;
     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
+}
+
+- (void)showGuideView {
+    if(_cellModel.isInsertGuideCell){
+        self.bottomView.height = bottomViewHeight + guideViewHeight;
+    }else{
+        self.bottomView.height = bottomViewHeight;
+    }
+}
+
+- (void)closeGuideView {
+    self.cellModel.isInsertGuideCell = NO;
+    [self.cellModel.tableView beginUpdates];
+    
+    [self showGuideView];
+    self.bottomView.cellModel = self.cellModel;
+    
+    [self setNeedsUpdateConstraints];
+    
+    [self.cellModel.tableView endUpdates];
+    
+    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
+        [self.delegate closeFeedGuide:self.cellModel];
+    }
 }
 
 @end
@@ -738,6 +769,23 @@
     }];
 }
 
+- (void)adjustVoteItemPercentPrecision {
+    __block CGFloat totalPercent = 0;
+    [self.voteInfo.items enumerateObjectsUsingBlock:^(FHUGCVoteInfoVoteInfoItemsModel*  _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        item.percent = floor(item.percent * 100) / 100.0f;
+        totalPercent += item.percent;
+    }];
+    
+    CGFloat diff = 1 - totalPercent;
+    
+    [self.voteInfo.items enumerateObjectsUsingBlock:^(FHUGCVoteInfoVoteInfoItemsModel*  _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        if(item.percent != 0) {
+            item.percent += diff;
+            *stop = YES;
+        }
+    }];
+}
+
 - (void)refreshWithData:(id)data {
     if (![data isKindOfClass:[FHUGCVoteInfoVoteInfoModel class]]) {
         return;
@@ -780,6 +828,17 @@
                 NSInteger voteCount = [item.voteCount integerValue];
                 item.percent = (double)voteCount / totalCount;
             }
+        }
+    }];
+    
+    // 调整各选项的精度
+    [self adjustVoteItemPercentPrecision];
+    
+    // 展示百分比
+    [self.optionsViewArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHUGCOptionView *optionV = obj;
+        if (idx < self.voteInfo.items.count) {
+            FHUGCVoteInfoVoteInfoItemsModel *item = self.voteInfo.items[idx];
             [optionV refreshWithData:item];
         }
     }];

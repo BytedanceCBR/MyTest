@@ -9,9 +9,7 @@
 
 
 #import "SSThemed.h"
-
-
-@class TTUGCEmojiInputView;
+#import "TTUGCEmojiInputView.h"
 
 @protocol TTUGCToolbarDelegate <NSObject>
 
@@ -39,7 +37,9 @@
 
 @property (nonatomic, weak) id <TTUGCToolbarDelegate> delegate;
 
-@property (nonatomic, strong, readonly) TTUGCEmojiInputView *emojiInputView;
+@property (nonatomic, strong) TTUGCEmojiInputView *emojiInputView;
+@property (nonatomic, strong) SSThemedButton *keyboardButton;
+@property (nonatomic, strong) SSThemedButton *emojiButton;
 
 @property (nonatomic, assign) BOOL banLongText; // 是否支持长文
 @property (nonatomic, assign) BOOL banAtInput; // 是否支持 at 功能
@@ -51,7 +51,7 @@
 @property (nonatomic, assign) BOOL emojiInputViewVisible; // 表情输入框是否可见
 
 - (void)layoutViewWithFrame:(CGRect)newFrame;
-
+- (void)layoutToolbarViewWithOrigin:(CGPoint)origin;
 /**
  * 强制设置 keyboard 按钮为键盘状态
  */

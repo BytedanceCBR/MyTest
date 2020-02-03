@@ -9,7 +9,7 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHDetailBaseModel.h"
-#import "UIView+Toast.h"
+#import <FHCommonUI/UIView+FHToast.h>
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "TTUIResponderHelper.h"

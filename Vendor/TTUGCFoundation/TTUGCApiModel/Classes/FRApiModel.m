@@ -7953,6 +7953,8 @@
     [params setValue:_flipchat_sync forKey:@"flipchat_sync"];
     [params setValue:_sdk_params forKey:@"sdk_params"];
     [params setValue:_social_group_id forKey:@"social_group_id"];
+    [params setValue:_bind_type forKey:@"bind_type"];
+    
     // 埋点参数
     if (self.extraTrack) {
         NSString *enter_from = self.extraTrack[@"enter_from"];

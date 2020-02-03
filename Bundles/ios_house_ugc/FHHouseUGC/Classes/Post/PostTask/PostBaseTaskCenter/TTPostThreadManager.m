@@ -157,6 +157,7 @@
     publishModel.title = task.title;
     publishModel.content = task.content;
     publishModel.social_group_id = task.social_group_id;
+    publishModel.bind_type = @(task.bindType);
     publishModel.content_rich_span = [TTRichSpans filterValidRichSpanString:task.contentRichSpans];
     publishModel.mention_user = task.mentionUser;
     publishModel.mention_concern = task.mentionConcern;

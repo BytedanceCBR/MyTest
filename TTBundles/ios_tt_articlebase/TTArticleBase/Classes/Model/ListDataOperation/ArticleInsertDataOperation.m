@@ -139,7 +139,9 @@
             
             insertedArray = results;
         } else {
-            insertedArray = [ExploreOrderedData insertObjectsWithDataArray:responseRemotePersistentData save:shouldPersist];
+            if (responseRemotePersistentData.count > 0) {
+                insertedArray = [ExploreOrderedData insertObjectsWithDataArray:responseRemotePersistentData save:shouldPersist];
+            }
         }
         
         NSUInteger newNumber = insertedArray.count;
