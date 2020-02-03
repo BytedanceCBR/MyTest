@@ -49,8 +49,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
-@property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
-@property (atomic ,   assign) BOOL inPasueFOrPermission;
+@property (atomic, strong) NSMutableDictionary *commonRequestParam;
+@property (atomic,   assign) BOOL inPasueFOrPermission;
 @property (nonatomic, strong) FHStashModel *stashModel;
 @property (nonatomic, copy)   NSNumber *hasPermission;
 @end
@@ -529,10 +529,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 - (NSDictionary *)getRequestCommonParams
 {
-    if (!_commonRequestParam) {
+    if (!self.commonRequestParam) {
         [self updateRequestCommonParams];
     }
-    return _commonRequestParam;
+    return self.commonRequestParam;
 }
 
 - (void)onStartApp
