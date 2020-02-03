@@ -303,24 +303,24 @@ PODS:
   - FMDB/standard (2.6.2.1-binary)
   - Gaia (1.0.7-rc.1)
   - Godzippa (1.1.0.1-binary)
-  - Heimdallr (0.7.11-rc.5.1.binary):
-    - Heimdallr/Core (= 0.7.11-rc.5.1.binary)
-    - Heimdallr/CrashDetector (= 0.7.11-rc.5.1.binary)
-    - Heimdallr/Monitors (= 0.7.11-rc.5.1.binary)
-    - Heimdallr/TTMonitor (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/ALog (0.7.11-rc.5.1.binary):
+  - Heimdallr (0.7.11.1-binary):
+    - Heimdallr/Core (= 0.7.11.1-binary)
+    - Heimdallr/CrashDetector (= 0.7.11.1-binary)
+    - Heimdallr/Monitors (= 0.7.11.1-binary)
+    - Heimdallr/TTMonitor (= 0.7.11.1-binary)
+  - Heimdallr/ALog (0.7.11.1-binary):
     - BDALog
     - Heimdallr/Core
     - Heimdallr/CrashDetector
     - Heimdallr/DeviceInfo
     - SSZipArchive
-  - Heimdallr/CloudCommand (0.7.11-rc.5.1.binary):
+  - Heimdallr/CloudCommand (0.7.11.1-binary):
     - AWECloudCommand (>= 1.0.10)
     - BDALog
     - Heimdallr/Core
     - Heimdallr/HMDConfig
     - Heimdallr/Upload
-  - Heimdallr/Core (0.7.11-rc.5.1.binary):
+  - Heimdallr/Core (0.7.11.1-binary):
     - BDAlogProtocol
     - Heimdallr/DeviceInfo
     - Heimdallr/HMDConfig
@@ -331,27 +331,27 @@ PODS:
     - Heimdallr/Utility
     - TTMacroManager
     - TTReachability (>= 0.8.1)
-  - Heimdallr/CrashCapture (0.7.11-rc.5.1.binary):
+  - Heimdallr/CrashCapture (0.7.11.1-binary):
     - Heimdallr/Log
     - Heimdallr/Mach
     - Heimdallr/Network
-  - Heimdallr/CrashDetector (0.7.11-rc.5.1.binary):
+  - Heimdallr/CrashDetector (0.7.11.1-binary):
     - Heimdallr/Core
     - Heimdallr/CrashCapture
-  - Heimdallr/DeviceInfo (0.7.11-rc.5.1.binary):
+  - Heimdallr/DeviceInfo (0.7.11.1-binary):
     - BDAlogProtocol
     - Heimdallr/Utility
-  - Heimdallr/HMDANR (0.7.11-rc.5.1.binary):
+  - Heimdallr/HMDANR (0.7.11.1-binary):
     - Heimdallr/Core
     - Heimdallr/Log
     - Heimdallr/Mach
     - Heimdallr/Runloop
     - Heimdallr/Utility
-  - Heimdallr/HMDConfig (0.7.11-rc.5.1.binary):
+  - Heimdallr/HMDConfig (0.7.11.1-binary):
     - Heimdallr/HMDSession
     - Heimdallr/HMDStore
     - Heimdallr/Network
-  - Heimdallr/HMDOOM (0.7.11-rc.5.1.binary):
+  - Heimdallr/HMDOOM (0.7.11.1-binary):
     - Heimdallr/Core
     - Heimdallr/DeviceInfo
     - Heimdallr/HMDOOMCrash
@@ -359,57 +359,57 @@ PODS:
     - Heimdallr/Mach
     - Heimdallr/Monitors
     - Heimdallr/Utility
-  - Heimdallr/HMDOOMCrash (0.7.11-rc.5.1.binary):
+  - Heimdallr/HMDOOMCrash (0.7.11.1-binary):
     - Heimdallr/Core
     - Heimdallr/Mach
     - Heimdallr/Utility
-  - Heimdallr/HMDSession (0.7.11-rc.5.1.binary):
+  - Heimdallr/HMDSession (0.7.11.1-binary):
     - Heimdallr/DeviceInfo
     - Heimdallr/HMDStore
     - Heimdallr/Network
-  - Heimdallr/HMDStart (0.7.11-rc.5.1.binary):
+  - Heimdallr/HMDStart (0.7.11.1-binary):
     - Heimdallr/Core
-  - Heimdallr/HMDStore (0.7.11-rc.5.1.binary):
+  - Heimdallr/HMDStore (0.7.11.1-binary):
     - BDAlogProtocol
     - FMDB
     - Heimdallr/Utility
-  - Heimdallr/HMDURLProtocolTracker (0.7.11-rc.5.1.binary):
+  - Heimdallr/HMDURLProtocolTracker (0.7.11.1-binary):
     - Heimdallr/Core
     - Heimdallr/HTTPRequestTracker
-  - Heimdallr/HMDWatchDog (0.7.11-rc.5.1.binary):
+  - Heimdallr/HMDWatchDog (0.7.11.1-binary):
     - Heimdallr/Core
     - Heimdallr/Log
     - Heimdallr/Mach
     - Heimdallr/Runloop
     - Heimdallr/Utility
-  - Heimdallr/HTTPRequestTracker (0.7.11-rc.5.1.binary):
+  - Heimdallr/HTTPRequestTracker (0.7.11.1-binary):
     - Heimdallr/Core
-  - Heimdallr/Log (0.7.11-rc.5.1.binary):
+  - Heimdallr/Log (0.7.11.1-binary):
     - BDAlogProtocol
     - Heimdallr/DeviceInfo
     - Heimdallr/Mach
     - Heimdallr/Utility
-  - Heimdallr/Mach (0.7.11-rc.5.1.binary):
+  - Heimdallr/Mach (0.7.11.1-binary):
     - Heimdallr/Utility
-  - Heimdallr/MemorySnapshot (0.7.11-rc.5.1.binary):
+  - Heimdallr/MemorySnapshot (0.7.11.1-binary):
     - Heimdallr/Core
     - Heimdallr/Utility
-  - Heimdallr/Monitors (0.7.11-rc.5.1.binary):
+  - Heimdallr/Monitors (0.7.11.1-binary):
     - Heimdallr/Core
-  - Heimdallr/Network (0.7.11-rc.5.1.binary):
+  - Heimdallr/Network (0.7.11.1-binary):
     - BDAlogProtocol
     - BDDataDecorator
     - Heimdallr/DeviceInfo
     - Heimdallr/Utility
     - TTReachability (>= 0.8.1)
-  - Heimdallr/Protect (0.7.11-rc.5.1.binary):
+  - Heimdallr/Protect (0.7.11.1-binary):
     - Heimdallr/Core
     - Heimdallr/Log
     - Heimdallr/Mach
     - Heimdallr/Utility
-  - Heimdallr/Runloop (0.7.11-rc.5.1.binary):
+  - Heimdallr/Runloop (0.7.11.1-binary):
     - Heimdallr/HMDSession
-  - Heimdallr/TTMonitor (0.7.11-rc.5.1.binary):
+  - Heimdallr/TTMonitor (0.7.11.1-binary):
     - BDAlogProtocol
     - Heimdallr/DeviceInfo
     - Heimdallr/HMDConfig
@@ -417,26 +417,26 @@ PODS:
     - Heimdallr/HMDStore
     - Heimdallr/Upload
     - Heimdallr/Utility
-  - Heimdallr/TTNet (0.7.11-rc.5.1.binary):
+  - Heimdallr/TTNet (0.7.11.1-binary):
     - Heimdallr/Core
     - Heimdallr/HTTPRequestTracker
     - TTNetworkManager
-  - Heimdallr/UITracker (0.7.11-rc.5.1.binary):
+  - Heimdallr/UITracker (0.7.11.1-binary):
     - Heimdallr/Core
     - Heimdallr/Monitors
     - Heimdallr/Utility
-  - Heimdallr/Upload (0.7.11-rc.5.1.binary):
+  - Heimdallr/Upload (0.7.11.1-binary):
     - Heimdallr/HMDConfig
     - Heimdallr/HMDSession
     - Heimdallr/HMDStore
     - Heimdallr/Network
     - TTMacroManager
     - TTReachability (>= 0.8.1)
-  - Heimdallr/UserException (0.7.11-rc.5.1.binary):
+  - Heimdallr/UserException (0.7.11.1-binary):
     - Heimdallr/Core
     - Heimdallr/Log
     - Heimdallr/Mach
-  - Heimdallr/Utility (0.7.11-rc.5.1.binary)
+  - Heimdallr/Utility (0.7.11.1-binary)
   - HTSVideoPlay (0.3.9):
     - AKShareServicePlugin
     - HTSVideoPlay/Yoga (= 0.3.9)
@@ -1645,35 +1645,35 @@ DEPENDENCIES:
   - FMDB/standard (= 2.6.2.1-binary)
   - Gaia (= 1.0.7-rc.1)
   - Godzippa (= 1.1.0.1-binary)
-  - Heimdallr/ALog (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/CloudCommand (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/Core (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/CrashCapture (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/CrashDetector (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/DeviceInfo (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/HMDANR (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/HMDConfig (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/HMDOOM (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/HMDOOMCrash (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/HMDSession (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/HMDStart (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/HMDStore (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/HMDURLProtocolTracker (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/HMDWatchDog (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/HTTPRequestTracker (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/Log (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/Mach (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/MemorySnapshot (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/Monitors (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/Network (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/Protect (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/Runloop (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/TTMonitor (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/TTNet (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/UITracker (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/Upload (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/UserException (= 0.7.11-rc.5.1.binary)
-  - Heimdallr/Utility (= 0.7.11-rc.5.1.binary)
+  - Heimdallr/ALog (= 0.7.11.1-binary)
+  - Heimdallr/CloudCommand (= 0.7.11.1-binary)
+  - Heimdallr/Core (= 0.7.11.1-binary)
+  - Heimdallr/CrashCapture (= 0.7.11.1-binary)
+  - Heimdallr/CrashDetector (= 0.7.11.1-binary)
+  - Heimdallr/DeviceInfo (= 0.7.11.1-binary)
+  - Heimdallr/HMDANR (= 0.7.11.1-binary)
+  - Heimdallr/HMDConfig (= 0.7.11.1-binary)
+  - Heimdallr/HMDOOM (= 0.7.11.1-binary)
+  - Heimdallr/HMDOOMCrash (= 0.7.11.1-binary)
+  - Heimdallr/HMDSession (= 0.7.11.1-binary)
+  - Heimdallr/HMDStart (= 0.7.11.1-binary)
+  - Heimdallr/HMDStore (= 0.7.11.1-binary)
+  - Heimdallr/HMDURLProtocolTracker (= 0.7.11.1-binary)
+  - Heimdallr/HMDWatchDog (= 0.7.11.1-binary)
+  - Heimdallr/HTTPRequestTracker (= 0.7.11.1-binary)
+  - Heimdallr/Log (= 0.7.11.1-binary)
+  - Heimdallr/Mach (= 0.7.11.1-binary)
+  - Heimdallr/MemorySnapshot (= 0.7.11.1-binary)
+  - Heimdallr/Monitors (= 0.7.11.1-binary)
+  - Heimdallr/Network (= 0.7.11.1-binary)
+  - Heimdallr/Protect (= 0.7.11.1-binary)
+  - Heimdallr/Runloop (= 0.7.11.1-binary)
+  - Heimdallr/TTMonitor (= 0.7.11.1-binary)
+  - Heimdallr/TTNet (= 0.7.11.1-binary)
+  - Heimdallr/UITracker (= 0.7.11.1-binary)
+  - Heimdallr/Upload (= 0.7.11.1-binary)
+  - Heimdallr/UserException (= 0.7.11.1-binary)
+  - Heimdallr/Utility (= 0.7.11.1-binary)
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESGeckoKit (= 0.4.0.1-binary)
   - IESVideoPlayer (= 0.1.16)
@@ -2227,7 +2227,7 @@ SPEC CHECKSUMS:
   FMDB: 20748cf597d147c452903c32d101953e46dcb4b5
   Gaia: 8d07f88e57c49364734d1fb5ea331f37c225c619
   Godzippa: 8f1a58014e75d07ad73e1bb9148a9c01ba17c1bf
-  Heimdallr: 75674d681ce236382e069e207d63bbba652757e3
+  Heimdallr: 931510b38d698beebada752d3b58bf57cc045283
   HTSVideoPlay: 2e99623c81bffd003cacdd4d1f99653de67e96a0
   IESGeckoKit: e6cca571ecaf0b5a9af925cd34eda889aa9311de
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
@@ -2363,6 +2363,6 @@ SPEC CHECKSUMS:
   YYText: 0cc6f219c6161b082d03e7b7affe56720169ecfc
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 62ee650b2875a26d1d9713b552f270b2d41e495c
+PODFILE CHECKSUM: 725bea69c233b1c60d6814b8a2257ff3aca840cb
 
 COCOAPODS: 1.7.4

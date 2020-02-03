@@ -306,7 +306,7 @@ def appPods
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
     # pod_binary 'TTMonitor','0.7.9.58-rc.3' #这个版本还是有很多问题
-    pod_binary 'Heimdallr','0.7.11-rc.5', :subspecs => [
+    pod_binary 'Heimdallr','0.7.11', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
