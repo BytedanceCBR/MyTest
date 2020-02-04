@@ -145,6 +145,9 @@
 
 - (void)cancelAction: (UIButton *)cancelBtn {
     
+    CGRect scrollViewFrame = self.scrollView.frame;
+    scrollViewFrame.size.height = self.view.bounds.size.height - kNavigationBarHeight;
+    self.scrollView.frame = scrollViewFrame;
     [self.scrollView endEditing:YES];
     
     NSMutableDictionary *params = @{}.mutableCopy;
