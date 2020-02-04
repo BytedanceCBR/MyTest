@@ -1298,7 +1298,6 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
 				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/Heimdallr.plist",
-				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/heimdallr_conf.json",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React/Resources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
@@ -1348,7 +1347,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/../../../ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -1416,7 +1415,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Heimdallr.plist",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/heimdallr_conf.json",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Resources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
@@ -1633,7 +1631,6 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
 				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/Heimdallr.plist",
-				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/heimdallr_conf.json",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React/Resources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
@@ -1682,7 +1679,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/../../../ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -1749,7 +1746,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Heimdallr.plist",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/heimdallr_conf.json",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Resources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
