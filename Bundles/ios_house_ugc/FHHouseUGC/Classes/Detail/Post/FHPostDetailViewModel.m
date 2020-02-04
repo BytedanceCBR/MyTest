@@ -253,7 +253,7 @@
             cellModel.community = self.detailData.community;
         }
         cellModel.tracerDic = [self.detailController.tracerDict copy];
-        if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
+        if (socialGroupModel && ![socialGroupModel.hasFollow boolValue] && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
             // 未关注
             FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
             headerModel.socialGroupModel = socialGroupModel;
@@ -267,9 +267,9 @@
             [self.items addObject:grayLine];
             cellModel.showCommunity = NO;
         } else {
-            if (cellModel.community && cellModel.community.name.length > 0 && cellModel.community.socialGroupId.length > 0) {
+            if (cellModel.community && cellModel.community.name.length > 0 && cellModel.community.socialGroupId.length > 0 && ![cellModel.community.showStatus isEqualToString:@"1"]) {
                 cellModel.showCommunity = YES;
-            } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0) {
+            } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0 && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
                 // 挽救一下 balabala
                 cellModel.community = [[FHFeedUGCCellCommunityModel alloc] init];
                 cellModel.community.name = socialGroupModel.socialGroupName;
