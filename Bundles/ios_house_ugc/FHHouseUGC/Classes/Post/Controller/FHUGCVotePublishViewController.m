@@ -87,7 +87,7 @@
     CGRect beginFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     
-    BOOL isShrinking = beginFrame.origin.y < endFrame.origin.y;
+    BOOL isShrinking = beginFrame.origin.y <= endFrame.origin.y;
     
     CGRect scrollViewFrame = self.scrollView.frame;
     
@@ -145,9 +145,6 @@
 
 - (void)cancelAction: (UIButton *)cancelBtn {
     
-    CGRect scrollViewFrame = self.scrollView.frame;
-    scrollViewFrame.size.height = self.view.bounds.size.height - kNavigationBarHeight;
-    self.scrollView.frame = scrollViewFrame;
     [self.scrollView endEditing:YES];
     
     NSMutableDictionary *params = @{}.mutableCopy;
