@@ -43,7 +43,7 @@ DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 //    }
     
     [self uploadLocationWithBlock:^(BOOL isSuccess) {
-        NSLog(@"zjing test:isSuccess:%ld",isSuccess);
+//        NSLog(@"zjing test:isSuccess:%ld",isSuccess);
     }];
 }
 
@@ -51,6 +51,7 @@ DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 - (void)uploadLocationWithBlock:(void (^)(BOOL isSuccess))block
 {
     [BDUGAmapGeocoder sharedGeocoder].apiKey = [FHLocManager amapAPIKey];
+    [BDUGLocationNetworkManager sharedManager].allowedPopupAlert = NO;
     [BDUGLocationNetworkManager sharedManager].hostEnvironment = BDUGLocationEnvironmentChina;
     [BDUGLocationNetworkManager sharedManager].baseURLString = [FHMainApi host];
     [BDUGLocationNetworkManager sharedManager].geocoders = @[[BDUGAmapGeocoder sharedGeocoder]];// [BDUGByteDanceGeocoder sharedGeocoder]
