@@ -271,6 +271,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSString *)enterTabLogName;
 
+/*
+ 侧边挂件配置；
+ */
++ (FHConfigDataTabWidgetModel *)tabWidget;
+
 
 /**
  * 权限隐私弹窗
