@@ -14,9 +14,8 @@
 #import <TTAccountManager.h>
 #import <FHEnvContext.h>
 #import <FHUserTracker.h>
-#import <FHPostUGCSelectedGroupHistoryView.h>
 #import <TTUGCTextView.h>
-#import <TTUGCToolbar.h>
+#import <FHUGCToolbar.h>
 #import <FRAddMultiImagesView.h>
 #import <ToastManager.h>
 #import <TTReachability.h>
@@ -31,6 +30,7 @@
 #import <FHFeedUGCCellModel.h>
 #import <TTUGCDefine.h>
 #import <FHUserTracker.h>
+#import "FHUGCPublishTagModel.h"
 
 // 选择小区圈子控件的高度
 #define ENTRY_HEIGHT                44
@@ -64,19 +64,16 @@
 #define VGAP_DESC_ADDIMAGE          10
 
 
-@interface FHUGCWendaPublishViewController () <TTUGCToolbarDelegate, TTUGCTextViewDelegate, FRAddMultiImagesViewDelegate>
+@interface FHUGCWendaPublishViewController () <TTUGCToolbarDelegate, TTUGCTextViewDelegate, FRAddMultiImagesViewDelegate, FHUGCToolbarDelegate>
 
 // 控件区
 @property (nonatomic, strong) UIView *containerView;
-@property (nonatomic, strong) FHPostUGCMainView *socialGroupSelectEntry;
-@property (nonatomic, strong) FHPostUGCSelectedGroupHistoryView *selectedGrouplHistoryView;
 @property (nonatomic, strong) UIScrollView *textContentScrollView;
 @property (nonatomic, strong) TTUGCTextView *titleTextView;
 @property (nonatomic, strong) UIView *horizontalSeparatorLine;
 @property (nonatomic, strong) TTUGCTextView *descriptionTextView;
 @property (nonatomic, strong) FRAddMultiImagesView * addImagesView;
-@property (nonatomic, strong) SSThemedLabel *tipLabel;
-@property (nonatomic, strong) TTUGCToolbar *toolbar;
+@property (nonatomic, strong) FHUGCToolbar *toolbar;
 
 @property (nonatomic, assign) BOOL hasSocialGroup;      // 是否外部带入圈子信息
 
@@ -91,9 +88,37 @@
 @property (nonatomic, weak) UIResponder *lastResponder;
 @property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
 
+@property (nonatomic, strong)   NSMutableArray<FHUGCToolBarTag *> *hotTags;
+@property (nonatomic, assign)   CGRect keyboardFrameForToolbar;
 @end
 
 @implementation FHUGCWendaPublishViewController
+
+- (NSMutableArray<FHUGCToolBarTag *> *)hotTags {
+    if(!_hotTags) {
+        _hotTags = [[NSMutableArray alloc] init];
+        
+        // 不使用本地记录，改使用接口返回数据
+        // 添加标签列表数据
+//        NSMutableArray<FHUGCToolBarTag *> *tags = [[NSMutableArray alloc] init];
+//        FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
+//        NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
+//        NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
+//        FHPostUGCSelectedGroupModel *selectedGroup = nil;
+//        if(selectedGroupHistory && currentCityID.length > 0 && currentUserID.length > 0) {
+//            NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+//            selectedGroup = [selectedGroupHistory.historyInfos objectForKey:saveKey];
+//        }
+//        if(selectedGroup) {
+//            FHUGCToolBarTag *tag = [[FHUGCToolBarTag alloc] init];
+//            tag.groupId = selectedGroup.socialGroupId;
+//            tag.groupName = selectedGroup.socialGroupName;
+//            tag.tagType = FHPostUGCTagType_History;
+//            [_hotTags addObject:tag];
+//        }
+    }
+    return _hotTags;
+}
 
 #pragma mark - 生命周期
 
@@ -111,12 +136,66 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // 必须实现该方法
-    
+
     [self setupUI];
     
     [self registerNotification];
     
     [self addGestures];
+    
+    [self requestHotTags];
+}
+
+- (void)requestHotTags {
+    
+    NSMutableDictionary *param = @{}.mutableCopy;
+    param[@"f_city_id"] = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    
+    @weakify(self);
+    [FHHouseUGCAPI requestPublishHotTagsWithParam:param completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        @strongify(self);
+        
+        if([model isKindOfClass:[FHUGCPublishTagModel class]]) {
+            FHUGCPublishTagModel* tagsModel = (FHUGCPublishTagModel *)model;
+            
+            
+            if(tagsModel.data.recentlySocials.count > 0) {
+                [tagsModel.data.recentlySocials enumerateObjectsUsingBlock:^(FHUGCPublishTagSocialModel * _Nonnull tagModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    FHUGCToolBarTag *tag = [[FHUGCToolBarTag alloc] init];
+                    tag.groupId = @(tagModel.socialGroupId).stringValue;
+                    tag.groupName = tagModel.socialGroupName;
+                    tag.tagType = FHPostUGCTagType_History;
+                    
+                    // 热门圈子标签优先于发布历史
+                    NSUInteger index = [self.hotTags indexOfObject:tag];
+                    if(index == NSNotFound) {
+                        [self.hotTags addObject:tag];
+                    }
+                }];
+            }
+            
+            if(tagsModel.data.socials.count > 0) {
+                [tagsModel.data.socials enumerateObjectsUsingBlock:^(FHUGCPublishTagSocialModel * _Nonnull tagModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    FHUGCToolBarTag *tag = [[FHUGCToolBarTag alloc] init];
+                    tag.groupId = @(tagModel.socialGroupId).stringValue;
+                    tag.groupName = tagModel.socialGroupName;
+                    tag.tagType = FHPostUGCTagType_HotTag;
+                    
+                    // 热门圈子标签优先于发布历史
+                    NSUInteger index = [self.hotTags indexOfObject:tag];
+                    if(index == NSNotFound) {
+                        [self.hotTags addObject:tag];
+                    }
+                }];
+            }
+        }
+        [self.hotTags enumerateObjectsUsingBlock:^(FHUGCToolBarTag * _Nonnull tag, NSUInteger idx, BOOL * _Nonnull stop) {
+            tag.index = idx;
+        }];
+        [self needRelayoutToolbar];
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -136,10 +215,6 @@
     
     [self.view addSubview:self.containerView];
     
-    // 顶部圈子选择和圈子历史区
-    [self.containerView addSubview:self.socialGroupSelectEntry];
-    [self.containerView addSubview:self.selectedGrouplHistoryView];
-    
     //  中间内容编辑区
     [self.containerView addSubview:self.textContentScrollView];
     [self.textContentScrollView addSubview:self.titleTextView];
@@ -149,7 +224,6 @@
     
     // 工具条加在最外层视图
     [self.view addSubview:self.toolbar];
-    [self.toolbar addSubview:self.tipLabel];
 }
 
 - (void)registerNotification {
@@ -171,14 +245,15 @@
 
 - (void)keyboardFrameWillChange:(NSNotification *)notification {
     
-    CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-
-    self.isKeyboardWillHide = endFrame.origin.y >= SCREEN_HEIGHT;
+    CGRect keyboardEndFrame = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    self.isKeyboardWillHide = keyboardEndFrame.origin.y >= SCREEN_HEIGHT;
+    if(!self.isKeyboardWillHide) {
+        self.keyboardFrameForToolbar = keyboardEndFrame;
+    } else {
+        self.keyboardFrameForToolbar = CGRectZero;
+    }
     
-    CGFloat height = SCREEN_HEIGHT - kNavigationBarHeight - self.selectedGrouplHistoryView.bottom -  [self toolbarHeight] - (self.isKeyboardWillHide ? 0 : endFrame.size.height - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom);
-    self.textContentScrollView.height = height;
-    
-    [self updateTextContentScrollViewContentSize];
+    [self needRelayoutToolbar];
 }
 
 -(void)keyboardDidShow:(NSNotification *)notification {
@@ -251,12 +326,6 @@
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    // 检查是否选择了要发布的小区
-    NSString *socialGroupId = self.selectGroupId;
-    if(socialGroupId.length <= 0) {
-        [[ToastManager manager] showToast:@"请选择要发布的圈子！"];
-        return;
-    }
     
     // 收起键盘
     [self.view endEditing:YES];
@@ -273,40 +342,9 @@
     return _containerView;
 }
 
-- (FHPostUGCMainView *)socialGroupSelectEntry {
-    if(!_socialGroupSelectEntry) {
-        BOOL isShow = !(self.hasSocialGroup);
-        _socialGroupSelectEntry = [[FHPostUGCMainView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, isShow ? ENTRY_HEIGHT : 0) type:FHPostUGCMainViewType_Wenda];
-        _socialGroupSelectEntry.clipsToBounds = YES;
-        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(socialGroupSelectEntryAction:)];
-        
-        [_socialGroupSelectEntry addGestureRecognizer:tapGestureRecognizer];
-        
-        if(isShow) {
-            [self traceSocialGroupSelectEntryShow];
-        }
-    }
-    return _socialGroupSelectEntry;
-}
-
-- (FHPostUGCSelectedGroupHistoryView *)selectedGrouplHistoryView {
-    if(!_selectedGrouplHistoryView) {
-        FHPostUGCSelectedGroupModel *selectedGroup = [self loadSelectedGroup];
-        BOOL isShow = (selectedGroup && !self.hasSocialGroup);
-        CGFloat height = isShow ? ENTRY_HEIGHT: 0;
-        _selectedGrouplHistoryView = [[FHPostUGCSelectedGroupHistoryView alloc] initWithFrame:CGRectMake(0, self.socialGroupSelectEntry.bottom, SCREEN_WIDTH, height) delegate:self historyModel:selectedGroup];
-        _selectedGrouplHistoryView.clipsToBounds = YES;
-        
-        if(isShow) {
-            [self traceGroupHistoryViewShow];
-        }
-    }
-    return _selectedGrouplHistoryView;
-}
-
 - (UIScrollView *)textContentScrollView {
     if(!_textContentScrollView) {
-        _textContentScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, self.selectedGrouplHistoryView.bottom, SCREEN_WIDTH, SCREEN_HEIGHT - kNavigationBarHeight - self.selectedGrouplHistoryView.bottom - [self toolbarHeight])];
+        _textContentScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - kNavigationBarHeight - [self toolbarHeight])];
     }
     return _textContentScrollView;
 }
@@ -373,7 +411,7 @@
 - (TTUGCToolbar *)toolbar {
     if(!_toolbar) {
         CGFloat height = [self toolbarHeight];
-        _toolbar = [[TTUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - height, self.view.width, height)];
+        _toolbar = [[FHUGCToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - height, self.view.width, height) type:FHPostUGCMainViewType_Wenda];
         
         self.toolbar.banEmojiInput = YES;
         self.toolbar.banHashtagInput = YES;
@@ -381,7 +419,7 @@
         self.toolbar.banAtInput = YES;
         
         self.toolbar.delegate = self;
-        
+
         WeakSelf;
         self.toolbar.picButtonClkBlk = ^{
             StrongSelf;
@@ -393,25 +431,53 @@
             // 添加图片
             [self.addImagesView showImagePicker];
         };
+        
+        // 添加标签列表数据
+        NSMutableArray<FHUGCToolBarTag *> *tags = [[NSMutableArray alloc] init];
+        FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
+        NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
+        NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
+        FHPostUGCSelectedGroupModel *selectedGroup = nil;
+        if(selectedGroupHistory && currentCityID.length > 0 && currentUserID.length > 0) {
+            NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+            selectedGroup = [selectedGroupHistory.historyInfos objectForKey:saveKey];
+        }
+        if(selectedGroup) {
+            FHUGCToolBarTag *tag = [[FHUGCToolBarTag alloc] init];
+            tag.groupId = selectedGroup.socialGroupId;
+            tag.groupName = selectedGroup.socialGroupName;
+            [tags addObject:tag];
+        }
+        self.toolbar.tagDelegate = self;
+        
+        // 报数参数设置
+        FHUGCToolbarReportModel *reportModel = [FHUGCToolbarReportModel new];
+        reportModel.enterFrom = self.tracerModel.enterFrom;
+        reportModel.originFrom = self.tracerModel.originFrom;
+        reportModel.pageType = @"question_publisher";
+        self.toolbar.reportModel = reportModel;
+        
+        [self.toolbar layoutTagSelectCollectionViewWithTags:tags hasSelected:self.hasSocialGroup];
+        
+        // 圈子选择列表跳转手势
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(socialGroupSelectEntryAction:)];
+        [self.toolbar.socialGroupSelectEntry addGestureRecognizer:tap];
+        [self.view addSubview:self.toolbar];
+        // 外部带入的圈子
+        if(self.hasSocialGroup) {
+            self.toolbar.socialGroupSelectEntry.groupId = self.selectGroupId;
+            self.toolbar.socialGroupSelectEntry.communityName = self.selectGroupName;
+            self.toolbar.socialGroupSelectEntry.followed = self.isSelectectGroupFollowed;
+            self.toolbar.socialGroupSelectEntry.tagType = FHPostUGCTagType_Normal;
+            self.toolbar.socialGroupSelectEntry.tagIndex = INVALID_TAG_INDEX;
+        }
     }
     return _toolbar;
 }
 
 - (CGFloat)toolbarHeight {
-    CGFloat height = 80.f + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    CGFloat height = [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
     return height;
-}
-
-- (SSThemedLabel *)tipLabel {
-    if(!_tipLabel) {
-        _tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(LEFT_PADDING, 11, SCREEN_WIDTH - LEFT_PADDING - RIGHT_PADDING, 25)];
-        _tipLabel.backgroundColor = [UIColor themeWhite];
-        _tipLabel.font = [UIFont themeFontRegular:11];
-        _tipLabel.textAlignment = NSTextAlignmentRight;
-        _tipLabel.verticalAlignment = ArticleVerticalAlignmentMiddle;
-        [_tipLabel setTextColor:[UIColor themeGray4]];
-    }
-    return _tipLabel;
 }
 
 - (FRUploadImageManager *)uploadImageManager {
@@ -419,30 +485,6 @@
         _uploadImageManager = [[FRUploadImageManager alloc] init];
     }
     return _uploadImageManager;
-}
-
-#pragma mark - FHPostUGCSelectedGroupHistoryViewDelegate
-
-// 圈子选择历史选中
--(void)selectedHistoryGroup:(FHPostUGCSelectedGroupModel *)item {
-    
-    [self traceGroupHistoryViewClick];
-    
-    if (item) {
-        self.socialGroupSelectEntry.groupId = item.socialGroupId;
-        self.socialGroupSelectEntry.communityName = item.socialGroupName;
-        FHUGCScialGroupDataModel * model = [[FHUGCConfig sharedInstance] socialGroupData:item.socialGroupId];
-        self.socialGroupSelectEntry.followed = model ? [model.hasFollow boolValue] : NO;
-        
-        self.selectGroupId = self.socialGroupSelectEntry.groupId;
-        self.selectGroupName = self.socialGroupSelectEntry.communityName;
-        self.isSelectectGroupFollowed = self.socialGroupSelectEntry.followed;
-
-        // 如果选中圈子选择历史，更新UI
-        [self updateSelectedGroupHistoryWithItem:item];
-    }
-    
-    [self checkIfEnablePublish];
 }
 
 #pragma mark - TTUGCToolbarDelegate
@@ -574,6 +616,23 @@
 - (void)addMultiImageViewDidFinishDragging:(FRAddMultiImagesView *)addMultiImagesView {
 }
 
+#pragma mark - FHUGCToolbarDelegate
+
+- (void)selectedTag:(FHUGCToolBarTag *)tagInfo {
+    self.toolbar.socialGroupSelectEntry.groupId = tagInfo.groupId;
+    self.toolbar.socialGroupSelectEntry.communityName = tagInfo.groupName;
+    FHUGCScialGroupDataModel * model = [[FHUGCConfig sharedInstance] socialGroupData:tagInfo.groupId];
+    self.toolbar.socialGroupSelectEntry.followed = model ? [model.hasFollow boolValue] : NO;
+    self.toolbar.socialGroupSelectEntry.tagType = tagInfo.tagType;
+    self.toolbar.socialGroupSelectEntry.tagIndex = tagInfo.index;
+
+    [self needRelayoutToolbar];
+    
+    self.selectGroupId = self.toolbar.socialGroupSelectEntry.groupId;
+    self.selectGroupName = self.toolbar.socialGroupSelectEntry.communityName;
+    self.isSelectectGroupFollowed = self.toolbar.socialGroupSelectEntry.followed;
+}
+
 #pragma mark - 保存、读取选择圈子历史
 
 - (FHPostUGCSelectedGroupModel *)loadSelectedGroup {
@@ -604,17 +663,28 @@
             selectedGroupHistory.historyInfos = [NSMutableDictionary dictionary];
         }
         
-        FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
-        selectedGroup.socialGroupId = self.selectGroupId;
-        selectedGroup.socialGroupName = self.selectGroupName;
-        NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
-        [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
-        
-        [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
+        if(self.selectGroupId.length > 0 && self.selectGroupName.length > 0){
+            FHPostUGCSelectedGroupModel *selectedGroup = [FHPostUGCSelectedGroupModel new];
+            selectedGroup.socialGroupId = self.selectGroupId;
+            selectedGroup.socialGroupName = self.selectGroupName;
+            NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+            [selectedGroupHistory.historyInfos setObject:selectedGroup forKey:saveKey];
+            
+            [[FHUGCConfig sharedInstance] savePublisherHistoryDataWithModel:selectedGroupHistory];
+        }
     }
 }
 
 #pragma mark - 选择圈子逻辑
+- (void)endEditing {
+    
+    [self.view endEditing:YES];
+    
+    [self.toolbar endEditing:YES];
+    
+    [self needRelayoutToolbar];
+}
+
 // 点击选择圈子入口，跳转圈子选择列表
 - (void)socialGroupSelectEntryAction:(UITapGestureRecognizer *)sender {
     
@@ -630,6 +700,8 @@
     dict[@"choose_delegate"] = chooseDelegateTable;
     
     [self updateLastResponder];
+    
+    [self endEditing];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ELEMENT_FROM] = @"select_like_publisher_neighborhood";
@@ -653,39 +725,39 @@
 - (void)selectedItem:(FHUGCScialGroupDataModel *)item {
     // 选择 圈子
     if (item) {
-        self.socialGroupSelectEntry.groupId = item.socialGroupId;
-        self.socialGroupSelectEntry.communityName = item.socialGroupName;
-        self.socialGroupSelectEntry.followed = [item.hasFollow boolValue];
         
-        self.selectGroupId = self.socialGroupSelectEntry.groupId;
-        self.selectGroupName = self.socialGroupSelectEntry.communityName;
-        self.isSelectectGroupFollowed = self.socialGroupSelectEntry.followed;
+        if([self.toolbar.socialGroupSelectEntry hasValidData]) {
+            if(![item.socialGroupId isEqualToString:self.toolbar.socialGroupSelectEntry.groupId]) {
+                if(self.toolbar.socialGroupSelectEntry.tagType != FHPostUGCTagType_Normal) {
+                    [self.toolbar tagCloseButtonClicked];
+                }
+            } else {
+                if(self.toolbar.socialGroupSelectEntry.tagType != FHPostUGCTagType_Normal) {
+                    return;
+                }
+            }
+        }
         
-        // 如果选中的圈子和上一次一样就隐藏选择历史模块
-        [self updateSelectedGroupHistoryWithItem:item];
+        self.toolbar.socialGroupSelectEntry.groupId = item.socialGroupId;
+        self.toolbar.socialGroupSelectEntry.communityName = item.socialGroupName;
+        self.toolbar.socialGroupSelectEntry.followed = [item.hasFollow boolValue];
+        self.toolbar.socialGroupSelectEntry.tagType = FHPostUGCTagType_Normal;
+        self.toolbar.socialGroupSelectEntry.tagIndex = INVALID_TAG_INDEX;
+        [self.toolbar stagePushDuplicateTagIfNeedWithGroupId:item.socialGroupId];
+        
+        self.selectGroupId = self.toolbar.socialGroupSelectEntry.groupId;
+        self.selectGroupName = self.toolbar.socialGroupSelectEntry.communityName;
+        self.isSelectectGroupFollowed = self.toolbar.socialGroupSelectEntry.followed;
+        
+        
     }
     
     [self checkIfEnablePublish];
 }
 
-// 更新圈子选择历史UI
-- (void)updateSelectedGroupHistoryWithItem:(FHUGCScialGroupDataModel *)item {
-    
-    BOOL hasHistory = self.selectedGrouplHistoryView.model.socialGroupId.length > 0;
-    BOOL isShow = hasHistory && ![self.selectedGrouplHistoryView.model.socialGroupId isEqualToString:item.socialGroupId];
-    self.selectedGrouplHistoryView.height = isShow ? ENTRY_HEIGHT : 0;
-    
-    [self refreshUI];
-}
-
 // 刷新UI布局
 - (void)refreshUI {
     
-    // 内容滚动视图位置调整
-    CGRect contentScrollViewFrame = self.textContentScrollView.frame;
-    contentScrollViewFrame.origin.y = self.selectedGrouplHistoryView.bottom;
-    self.textContentScrollView.frame = contentScrollViewFrame;
-
     // 水平分割线
     self.horizontalSeparatorLine.top = self.titleTextView.bottom + VGAP_TITLE_SEP;
     
@@ -740,7 +812,7 @@
         NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc] initWithString:textString];
         [attributeText addAttributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName: [UIFont themeFontRegular:11]} range:NSMakeRange(0, range.location)];
         [attributeText addAttributes:@{NSForegroundColorAttributeName:[UIColor themeGray3],NSFontAttributeName:[UIFont themeFontRegular:11]} range:NSMakeRange(range.location, textString.length - range.location)];
-        self.tipLabel.attributedText = attributeText;
+        self.toolbar.tipLabel.attributedText = attributeText;
     }
 }
 
@@ -786,16 +858,22 @@
         [self publishWendaContentAfterFollowedSocialGroup];
     } else {
         // 先关注
-        WeakSelf;
-        [[FHUGCConfig sharedInstance] followUGCBy:self.selectGroupId isFollow:YES enterFrom:[self pageType]  enterType:@"click" completion:^(BOOL isSuccess) {
-            StrongSelf;
-            if (isSuccess) {
-                [self publishWendaContentAfterFollowedSocialGroup];
-            } else {
-                // 关注请求内部已经做了错误提示，不需要再重复提示了
-                //[[ToastManager manager] showToast:@"发布失败"];
-            }
-        }];
+        if(self.selectGroupId.length > 0) {
+            WeakSelf;
+            [[FHUGCConfig sharedInstance] followUGCBy:self.selectGroupId isFollow:YES enterFrom:[self pageType]  enterType:@"click" completion:^(BOOL isSuccess) {
+                StrongSelf;
+                if (isSuccess) {
+                    [self publishWendaContentAfterFollowedSocialGroup];
+                } else {
+                    // 关注请求内部已经做了错误提示，不需要再重复提示了
+                    //[[ToastManager manager] showToast:@"发布失败"];
+                }
+            }];
+        }
+        
+        else {
+            [self publishWendaContentAfterFollowedSocialGroup];
+        }
     }
 }
 
@@ -891,7 +969,7 @@
     // 收集请求参数
     NSString *title = [self validStringFrom:self.titleTextView.text];
     NSString *description = [self validStringFrom:self.descriptionTextView.text];
-    NSString *socialGroupId = self.selectGroupId;
+    NSString *socialGroupId = self.toolbar.socialGroupSelectEntry.groupId;
     
     NSMutableArray<NSString *> *image_urls = [NSMutableArray arrayWithCapacity:finishUpLoadModels.count];
     [finishUpLoadModels enumerateObjectsUsingBlock:^(FRUploadImageModel * _Nonnull model, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -905,6 +983,7 @@
     requestParams[@"title"] = title;
     requestParams[@"desc"] = description;
     requestParams[@"social_group_id"] = socialGroupId;
+    requestParams[@"bind_type"] = @(socialGroupId.length > 0 ? 0 : 1); // 参数表示绑定对象类型： 0 = 圈子, 1 = 城市
     requestParams[@"image_uris"] = image_urls;
     requestParams[@"enter_from"] = @"";
     requestParams[@"page_type"] = @"";
@@ -971,6 +1050,29 @@
     [self publishBtnClickable:YES];
     [self dismissLoadingAlert];
 }
+#pragma mark - Toolbar
+
+- (void)needRelayoutToolbar {
+    
+    CGFloat toolbarHeight = [FHUGCToolbar toolbarHeightWithTags:self.hotTags hasSelected:self.hasSocialGroup];
+    CGRect frame = self.toolbar.frame;
+    frame.origin.y = self.view.height - toolbarHeight - self.keyboardFrameForToolbar.size.height;
+    if(!self.isKeyboardWillHide) {
+        frame.origin.y += [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    }
+    else {
+        if(self.toolbar.emojiInputViewVisible && !self.toolbar.switchToInput) {
+            frame.origin.y -= self.toolbar.emojiInputView.height;
+        }
+    }
+    self.toolbar.frame = frame;
+    
+    [self.toolbar layoutTagSelectCollectionViewWithTags:self.hotTags hasSelected:self.hasSocialGroup];
+    
+    CGFloat height = SCREEN_HEIGHT - kNavigationBarHeight - [self toolbarHeight] - (self.isKeyboardWillHide ? 0 : self.keyboardFrameForToolbar.size.height) - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
+    self.textContentScrollView.height = height;
+    [self updateTextContentScrollViewContentSize];
+}
 
 #pragma mark - 埋点区
 
@@ -995,31 +1097,6 @@
     dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
     dict[UT_CLICK_POSITION] = isConfirm ? @"confirm" : @"cancel";
     TRACK_EVENT(@"publisher_cancel_popup_click", dict);
-}
-
-- (void)traceGroupHistoryViewShow {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[UT_ELEMENT_TYPE] = @"last_published_neighborhood";
-    dict[UT_PAGE_TYPE] = [self pageType];
-    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
-    dict[@"group_id"] = self.selectedGrouplHistoryView.model.socialGroupId;
-    TRACK_EVENT(@"element_show", dict);
-}
-
-- (void)traceGroupHistoryViewClick {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[UT_PAGE_TYPE] = [self pageType];
-    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
-    dict[UT_CLICK_POSITION] = @"last_published_neighborhood";
-    TRACK_EVENT(@"click_last_published_neighborhood", dict);
-}
-
-- (void)traceSocialGroupSelectEntryShow {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[UT_ELEMENT_TYPE] = @"select_like_publisher_neighborhood";
-    dict[UT_PAGE_TYPE] = [self pageType];
-    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
-    TRACK_EVENT(@"element_show", dict);
 }
 
 - (void)traceSocialGroupSelectEntryClick {

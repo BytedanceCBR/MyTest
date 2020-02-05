@@ -6,6 +6,7 @@
     NSDictionary *dict = @{
                            @"socialGroupId": @"social_group_id",
                            @"name": @"social_group_name",
+                           @"showStatus": @"show_status",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

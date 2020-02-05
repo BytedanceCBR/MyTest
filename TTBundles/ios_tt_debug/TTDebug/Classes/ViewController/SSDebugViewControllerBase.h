@@ -45,6 +45,7 @@
 @property(nonatomic, copy) NSString *headerTitle;
 @property(nonatomic, copy) NSString *footerTitle;
 @property(nonatomic, copy) NSArray *items;
+@property(nonatomic, assign) CGFloat headerHeight;
 
 @end
 
@@ -64,6 +65,7 @@
 
 @property(nonatomic, copy)   NSArray <STTableViewSectionItem *>*dataSource;
 @property(nonatomic, strong) SSThemedTableView *tableView;
+@property(nonatomic, assign) BOOL disableKeyboardNotificationHandling;
 
 @end
 

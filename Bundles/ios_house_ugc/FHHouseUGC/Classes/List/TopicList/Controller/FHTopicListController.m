@@ -42,7 +42,7 @@
 }
 
 - (void)initView {
-    [self setTitle:@"小区话题"];
+    [self setTitle:@"热门话题"];
     [self setupDefaultNavBar:YES];
     
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];

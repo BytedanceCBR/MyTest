@@ -56,7 +56,7 @@
 
 - (void)initNotification {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(socialGroupDataChange:) name:@"kFHUGCSicialGroupDataChangeKey" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(socialGroupDataChange:) name:@"kFHUGCSicialGroupDataChangeKey" object:nil];
 }
 
 - (void)dealloc {
@@ -98,7 +98,7 @@
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
     _icon.layer.cornerRadius = 4;
-    _icon.backgroundColor = [UIColor themeGray7];
+    _icon.backgroundColor = [UIColor themeGray6];
     _icon.layer.borderWidth = 0.5;
     _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_icon];

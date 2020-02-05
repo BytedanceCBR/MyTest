@@ -47,6 +47,7 @@
 @property (nonatomic, strong) FHUGCScialGroupModel *socialGroupModel;
 @property (nonatomic, assign) BOOL isViewAppear;
 @property (nonatomic, assign) BOOL isLoginSatusChangeFromGroupChat;
+@property (nonatomic, assign) BOOL isLoginSatusChangeFromPost;
 @property (nonatomic, assign) BOOL isLogin;
 @property (nonatomic, strong) TTHorizontalPagingView *pagingView;
 @property (nonatomic, strong) NSMutableArray *subVCs;
@@ -106,8 +107,8 @@
     [TTAccount addMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onGlobalFollowListLoad:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
     // 加精或取消加精成功
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
 }
@@ -299,15 +300,23 @@
                     }
                     self.isLoginSatusChangeFromGroupChat = NO;
                 }
+                
+                if (self.isLoginSatusChangeFromPost) {
+                    if([self.viewController isCurrentVisible]){
+                        [self gotoPostVC];
+                    }
+                    self.isLoginSatusChangeFromPost = NO;
+                }
 
                 if (refreshFeed) {
                     [self.feedListController startLoadData:YES];
                 }
             }
             self.isLoginSatusChangeFromGroupChat = NO;
-        }
-        else {
+            self.isLoginSatusChangeFromPost = NO;
+        }else{
             self.isLoginSatusChangeFromGroupChat = NO;
+            self.isLoginSatusChangeFromPost = NO;
         }
     }];
 }
@@ -602,27 +611,26 @@
                     [self onLoginIn];
                 }
                 else {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        switch(from) {
-                            case FHUGCLoginFrom_POST:
-                            {
-                                [self goPostDetail];
+                    if(from == FHUGCLoginFrom_POST){
+                        self.isLoginSatusChangeFromPost = YES;
+                    }else{
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            switch(from) {
+                                case FHUGCLoginFrom_VOTE:
+                                {
+                                    [self gotoVoteVC];
+                                }
+                                    break;
+                                case FHUGCLoginFrom_WENDA:
+                                {
+                                    [self gotoWendaVC];
+                                }
+                                    break;
+                                default:
+                                    break;
                             }
-                                break;
-                            case FHUGCLoginFrom_VOTE:
-                            {
-                                [self gotoVoteVC];
-                            }
-                                break;
-                            case FHUGCLoginFrom_WENDA:
-                            {
-                                [self gotoWendaVC];
-                            }
-                                break;
-                            default:
-                                break;
-                        }
-                    });
+                        });
+                    }
                 }
             }
         }
@@ -923,7 +931,7 @@
             param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
             TRACK_EVENT(@"click_community_notice_more", param);
         };
-        hasDetailBtn = [self.viewController.headerView isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow];
+        hasDetailBtn = ([self.viewController.headerView publicationsContentLabelHeightCompareWithTwoLineTextHeight] == NSOrderedDescending);
     }
     
     [self.viewController.headerView updatePublicationsInfo: isShowPublications
@@ -945,7 +953,7 @@
     self.viewController.emptyView.hidden = YES;
     [self.viewController.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];
     self.viewController.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
-    NSString *subtitle = data.countText;
+    NSString *subtitle = data.contentText;
     self.viewController.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     NSInteger followerCount = [data.followerCount integerValue];
     if (followerCount <= 0) {

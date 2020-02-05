@@ -1028,7 +1028,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if(isSpringOperationOpen){
         return [isSpringOperationOpen boolValue];
     }else{
-        return NO;
+        return YES;
     }
 }
 

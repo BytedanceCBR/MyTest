@@ -25,7 +25,6 @@
 #import "FHDetailSameNeighborhoodHouseCell.h"
 #import "FHDetailErshouPriceChartCell.h"
 #import "FHOldDetailDisclaimerCell.h"
-#import "FHDetailPriceRankCell.h"
 #import "FHDetailPriceTrendCellModel.h"
 #import "FHDetailPureTitleCell.h"
 #import "FHDetailNeighborhoodInfoCorrectingCell.h"
@@ -41,9 +40,6 @@
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import "FHDetailNewModel.h"
-#import "FHDetailOldNearbyMapCell.h"
-#import "FHDetailOldEvaluateCell.h"
-#import "FHDetailOldComfortCell.h"
 #import "FHODetailCommunityEntryCorrectingCell.h"
 #import "FHDetailBlankLineCell.h"
 #import "FHDetailDetectiveCell.h"
@@ -82,6 +78,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoModel class])];
      [self.tableView registerClass:[FHDetailPropertyListCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCorrectingModel class])];
     [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryModel class])];
+    //推荐经纪人
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
     //用户房源评价
     [self.tableView registerClass:[FHDetailUserHouseCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailUserHouseCommentModel class])];
@@ -97,30 +94,21 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
     //价格指数
     [self.tableView registerClass:[FHDetailErshouPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceTrendCellModel class])];
-    [self.tableView registerClass:[FHDetailPriceRankCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceRankModel class])];
-    [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
     //小区详情上标题
     [self.tableView registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])];
     //小区详情
     [self.tableView registerClass:[FHDetailNeighborhoodInfoCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCorrectingModel class])];
-
-    [self.tableView registerClass:[FHDetailOldEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldEvaluateModel class])];
     // 房源榜单
     [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceModel class])];
-//    [self.tableView registerClass:[FHDetailHouseSubscribeCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCorrectingModel class])];
     //表单订阅
      [self.tableView registerClass:[FHDetailHouseSubscribeCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCorrectingModel class])];
     //均价对比
     [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonModel class])];
-    [self.tableView registerClass:[FHDetailOldNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldNearbyMapModel class])];
     [self.tableView registerClass:[FHOldDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     //舒适指数
-//    [self.tableView registerClass:[FHDetailOldComfortCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldComfortModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoModel class])];
     //ugc入口
     [self.tableView registerClass:[FHODetailCommunityEntryCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
-    [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
-//    [self.tableView registerClass:[FHDetailDetectiveCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDetectiveModel class])];
     //经纪人带看房评
     [self.tableView registerClass:[FHDetailHouseReviewCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseReviewCommentCellModel class])];
 }
@@ -307,15 +295,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         self.questionBtn.hidden = NO;
         [self.questionBtn updateTitle:model.data.quickQuestion.buttonContent];
     }
-    //    // 添加标题
-    //    if (model.data) {
-    //        FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
-    //        houseName.type = 1;
-    //        houseName.name = model.data.title;
-    //        houseName.aliasName = nil;
-    //        houseName.tags = model.data.tags;
-    //        [self.items addObject:houseName];
-    //    }
     // 添加core info
     if (model.data.coreInfo) {
         FHDetailErshouHouseCoreInfoModel *coreInfoModel = [[FHDetailErshouHouseCoreInfoModel alloc] init];
@@ -503,20 +482,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
         
     }
-    // 小区评测
-//    if (model.data.neighborhoodInfo.evaluationInfo) {
-//        FHDetailOldEvaluateModel *infoModel = [[FHDetailOldEvaluateModel alloc] init];
-//        infoModel.evaluationInfo = model.data.neighborhoodInfo.evaluationInfo;
-//        infoModel.log_pb = model.data.neighborhoodInfo.logPb;
-//        [self.items addObject:infoModel];
-//    }
-    // 舒适指数
-//    if (model.data.comfortInfo) {
-//        FHDetailOldComfortModel *comfortModel = [[FHDetailOldComfortModel alloc]init];
-//        comfortModel.comfortInfo = model.data.comfortInfo;
-//        comfortModel.houseModelType = FHHouseModelTypeLocationPeriphery;
-//        [self.items addObject:comfortModel];
-//    }
 
     //地图
     if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
@@ -547,27 +512,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
         [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
     }
-    //    // 周边地图
-//    if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
-//        FHDetailOldNearbyMapModel *infoModel = [[FHDetailOldNearbyMapModel alloc] init];
-//        infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
-//        infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
-//        infoModel.houseModelType = FHHouseModelTypeLocationPeriphery;
-//        infoModel.title = model.data.neighborEval.title;
-//        infoModel.mapCentertitle = model.data.neighborhoodInfo.name;
-//        infoModel.score = model.data.neighborEval.score;
-//
-//        [self.items addObject:infoModel];
-//
-//        __weak typeof(self) wSelf = self;
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            if ((FHDetailOldNearbyMapCell *)infoModel.cell) {
-//                ((FHDetailOldNearbyMapCell *)infoModel.cell).indexChangeCallBack = ^{
-//                    [wSelf reloadData];
-//                };
-//            }
-//        });
-//    }
     // 均价走势
     if (model.data.priceTrend.count > 0) {
         FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
@@ -818,50 +762,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     } else {
         return nil;
     }
-}
-
-#pragma mark - instant data
--(void)handleInstantData:(id)data
-{
-    
-    FHDetailOldModel *model = [FHDetailOldModel new];
-    model.isInstantData = YES;
-    FHDetailOldDataModel *dataModel = [[FHDetailOldDataModel alloc] init];
-    if ([data isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
-        FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)data;
-        dataModel.title = item.title;
-        dataModel.id = item.hid;
-        dataModel.imprId = item.imprId;
-        dataModel.houseImage = item.houseImage;
-        dataModel.coreInfo = item.coreInfo;
-        dataModel.baseInfo = item.baseInfo;
-        dataModel.tags = item.tags;
-        dataModel.status = 0;
-        dataModel.logPb = item.logPb;
-        
-    }else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]){
-        FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
-        dataModel.title = item.title;
-        dataModel.id = item.idx;
-        dataModel.imprId = item.imprId;
-        dataModel.houseImage = item.houseImage;
-        dataModel.coreInfo = item.coreInfoList;
-        dataModel.baseInfo = item.baseInfo;
-        dataModel.tags = item.tags;
-        dataModel.status = 0;
-        dataModel.logPb = item.logPb;
-        
-    }else{
-        self.detailController.instantData = nil;
-        return;
-    }
-    
-    dataModel.contact = [FHDetailContactModel new];
-    dataModel.contact.isInstantData = YES;
-    model.data = dataModel;
-    self.bottomBar.hidden = NO;
-    [self processDetailData:model];
-    
 }
 
 -(BOOL)currentIsInstantData

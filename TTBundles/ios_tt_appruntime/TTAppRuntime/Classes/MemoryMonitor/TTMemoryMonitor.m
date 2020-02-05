@@ -10,9 +10,6 @@
 #import "SSThemed.h"
 #import "TTDeviceHelper.h"
 #import <TTBaseLib/UIViewAdditions.h>
-//#if INHOUSE
-//#import "TTDebugAssistant.h"
-//#endif
 
 static const CGFloat timerUpdateInterval = .5f;
 static const CGFloat warningIncrease = 10.f;

@@ -165,7 +165,7 @@
 - (void)setTask:(TTUGCImageCompressTask *)task {
     _task = task;
 
-    if ([[TTImagePickerManager manager] isNeedIcloudSync:self.assetModel.asset] && _task.status != iCloudSyncStatusSuccess) {
+    if ([[TTImagePickerManager manager] isNeedIcloudSync:self.assetModel.asset] && _task.status != FHiCloudSyncStatusSuccess) {
         _loadingView.progress = 0;
         _mask.hidden = NO;
         

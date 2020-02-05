@@ -107,6 +107,7 @@
         self.textFieldView.keyboardType = UIKeyboardTypeAlphabet;
         self.textFieldView.returnKeyType = UIReturnKeyDone;
         self.textFieldView.textColorThemeKey = kColorText1;
+        self.textFieldView.font = [UIFont systemFontOfSize:10];
         self.textFieldView.delegate = self;
         [self.switchView addTarget:self action:@selector(_switchActionFired:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -150,13 +151,14 @@
     self.cellItem.checked = uiswitch.on;
 }
 
-- (void)_textFieldActionFired:(SSThemedTextField *)textField{
+- (void)_textFieldActionFired:(SSThemedTextField *)textField {
     if ([self.cellItem.target respondsToSelector:self.cellItem.textFieldAction]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [self.cellItem.target performSelector:_cellItem.textFieldAction withObject:textField];
 #pragma clang diagnostic pop
     }
+    self.cellItem.textFieldContent = textField.text;
 }
 
 @end
@@ -269,6 +271,9 @@
 
 #pragma mark - keyboard show or hide
 - (void)keyboardWillShow:(NSNotification *)notification {
+    if (self.disableKeyboardNotificationHandling) {
+        return;
+    }
     [self.tableView addGestureRecognizer:_tapGestureForResignFirstResponder];
     NSDictionary *userInfo = [notification userInfo];
     NSValue* aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
@@ -289,6 +294,9 @@
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
+    if (self.disableKeyboardNotificationHandling) {
+        return;
+    }
     [self.tableView removeGestureRecognizer:_tapGestureForResignFirstResponder];
     [[NSNotificationCenter defaultCenter] postNotificationName:kClearCacheHeightNotification object:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:kSettingFontSizeChangedAheadNotification object:self];
@@ -318,7 +326,10 @@
     }
     return nil;
 }
-
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    STTableViewSectionItem * sectionItem = [self.dataSource objectAtIndex:section];
+    return sectionItem.headerHeight > 0 ? sectionItem.headerHeight : ([sectionItem.headerTitle length] ? 38.0 : 0);
+}
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     STTableViewSectionItem * sectionItem = [self.dataSource objectAtIndex:section];
     if ([sectionItem isKindOfClass:[STTableViewSectionItem class]]) {

@@ -129,6 +129,8 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
     NSArray *operationList = [self operationList];
     
     BOOL isShowDelete = [TTAccountManager isLogin] && [[TTAccountManager userID] isEqualToString:userId];
+    //useAuth等于2为超级管理员，哪里都显示删除
+    NSString *useAuth = [FHUGCConfig sharedInstance].configData.data.userAuth;
     
     for (NSDictionary *dict in operationList) {
         if ([dict isKindOfClass:[NSDictionary class]]) {
@@ -147,11 +149,11 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
                 [items addObject:word];
             }
             // 删除
-            if((word.type == FHFeedOperationWordTypeDelete) && isShowDelete){
+            if((word.type == FHFeedOperationWordTypeDelete) && (isShowDelete || [useAuth isEqualToString:@"2"])){
                 [items addObject:word];
             }
             //显示删除就不会显示举报
-            if(word.type == FHFeedOperationWordTypeReport && !isShowDelete){
+            if(word.type == FHFeedOperationWordTypeReport && (!isShowDelete || [useAuth isEqualToString:@"2"])){
                 [items addObject:word];
             }
         }

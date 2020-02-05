@@ -15,6 +15,7 @@
 #import "FHSugHasSubscribeView.h"
 #import "FHSugSubscribeModel.h"
 #import "FHSugSubscribeListViewModel.h"
+#import "FHOldSuggestionItemCell.h"
 
 @interface FHSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource, FHSugSubscribeListDelegate>
 
@@ -596,7 +597,19 @@
                 cell.secondarySubLabel.text = model.tips2;
             }
             return cell;
-        } else {
+        } else if(_houseType == FHHouseTypeSecondHandHouse) {
+            
+            // 二手房
+            FHOldSuggestionItemCell *cell = (FHOldSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"FHOldSuggestionItemCell" forIndexPath:indexPath];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            if (indexPath.row < self.sugListData.count) {
+                FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+                cell.highlightedText = self.highlightedText;
+                cell.model = model;
+            }
+            return cell;
+            
+        }else  {
             FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             if (indexPath.row < self.sugListData.count) {
@@ -670,7 +683,10 @@
         if (self.houseType == FHHouseTypeNewHouse) {
             // 新房
             return 67;
-        } else {
+        } else  if (self.houseType == FHHouseTypeSecondHandHouse) {
+            // 二手房
+            return 76;
+        }else {
             if (indexPath.row == self.sugListData.count - 1) {
                 return 61;
             } else {
