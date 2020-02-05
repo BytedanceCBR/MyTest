@@ -185,6 +185,9 @@
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    if (@available(iOS 11.0 , *)) {
+          _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+      }
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.01f)];
     _tableView.tableHeaderView = headerView;
@@ -237,10 +240,10 @@
         }
     }
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(44);
-        if (@available(iOS 11.0, *)) {
+        if (@available(iOS 13.0, *)) {
+            make.top.mas_equalTo(self.view).offset(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+        } else if (@available(iOS 11.0, *)) {
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
-//            make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
         } else {
             make.top.mas_equalTo(64);
         }
