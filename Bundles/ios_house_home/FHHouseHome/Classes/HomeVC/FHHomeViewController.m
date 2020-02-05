@@ -111,26 +111,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
-//- (void)addSpringView {
-//    if(!_springView){
-//        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
-//        [self.view addSubview:_springView];
-//        _springView.hidden = YES;
-//        
-//        CGFloat bottom = 49;
-//        if (@available(iOS 11.0 , *)) {
-//            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-//        }
-//        
-//        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-//            make.width.mas_equalTo(84);
-//            make.height.mas_equalTo(79);
-//            make.right.mas_equalTo(self.view).offset(-11);
-//        }];
-//    }
-//}
-
 - (void)scrollMainTableToTop
 {
     if (self.isShowing) {

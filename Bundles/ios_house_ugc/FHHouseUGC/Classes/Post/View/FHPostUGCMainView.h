@@ -23,7 +23,7 @@ typedef NS_ENUM(NSUInteger, FHPostUGCMainViewType) {
 typedef NS_ENUM(NSUInteger, FHPostUGCTagType) {
     FHPostUGCTagType_Normal, // 正常圈子
     FHPostUGCTagType_HotTag, // 热门圈子标签
-    FHPostUGCTagType_LocalHistory, // 本地历史标签
+    FHPostUGCTagType_History, // 历史标签
 };
 
 #define INVALID_TAG_INDEX   -1
