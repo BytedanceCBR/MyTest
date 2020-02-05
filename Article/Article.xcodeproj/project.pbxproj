@@ -1336,6 +1336,7 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
+				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCRichText/Assets/Emoji.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTBackButtonView.bundle",
@@ -1347,7 +1348,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/../../../ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -1668,6 +1669,7 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
+				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCRichText/Assets/Emoji.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTBackButtonView.bundle",
@@ -1679,7 +1681,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/../../../ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
