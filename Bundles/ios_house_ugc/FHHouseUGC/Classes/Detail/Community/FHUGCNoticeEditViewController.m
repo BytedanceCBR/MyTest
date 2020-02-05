@@ -331,7 +331,7 @@ typedef enum : NSUInteger {
     params[@"announcement"] = self.textView.text;
     params[@"push_type"] = @(actionType);
 
-    [FHHouseUGCAPI requestUpdateUGCNoticeWithParam:params completion:^(FHUGCNoticeModel *model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestUpdateUGCNoticeWithParam:params class:FHUGCNoticeModel.class completion:^(FHUGCNoticeModel *model, NSError * _Nonnull error) {
         
         [[ToastManager manager] dismissCustomLoading];
         

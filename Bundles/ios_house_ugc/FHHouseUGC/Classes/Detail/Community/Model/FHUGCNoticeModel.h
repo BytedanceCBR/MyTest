@@ -7,13 +7,14 @@
 
 #import <Foundation/Foundation.h>
 #import <JSONModel.h>
+#import "FHBaseModelProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @interface FHUGCNoticeModelData: JSONModel
 @property (nonatomic, copy) NSString *announcement;
 @end
 
-@interface FHUGCNoticeModel: JSONModel
+@interface FHUGCNoticeModel: JSONModel<FHBaseModelProtocol>
 @property (nonatomic, strong) FHUGCNoticeModelData *data;
 @property (nonatomic, copy) NSString *status;
 @property (nonatomic, copy) NSString *message;

@@ -1,12 +1,14 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
+#import "FHBaseModelProtocol.h"
+
 NS_ASSUME_NONNULL_BEGIN
 @interface FHUGCVoteResponseDataModel : JSONModel 
 
 @property (nonatomic, strong , nullable) NSArray *optionIds;
 @end
 
-@interface FHUGCVoteResponseModel : JSONModel 
+@interface FHUGCVoteResponseModel : JSONModel<FHBaseModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;

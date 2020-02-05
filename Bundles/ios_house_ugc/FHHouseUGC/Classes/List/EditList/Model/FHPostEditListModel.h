@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *code;
 @end
 
-@interface FHUGCPostHistoryModel : JSONModel
+@interface FHUGCPostHistoryModel : JSONModel<FHBaseModelProtocol>
 
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, copy , nullable) NSString *tail;
