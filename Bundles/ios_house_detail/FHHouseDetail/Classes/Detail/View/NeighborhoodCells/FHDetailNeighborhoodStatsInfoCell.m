@@ -21,6 +21,10 @@
 @interface FHDetailNeighborhoodStatsInfoCell ()
 
 @property (nonatomic, strong)   NSMutableDictionary       *elementShowTraceDic;
+@property (nonatomic, weak) UIImageView *shadowImage;
+@property (nonatomic, weak) UIView *containerView;
+@property (nonatomic, weak) UIView *topLine;
+@property (nonatomic, weak) UIView *bottomLine;
 
 @end
 
@@ -42,23 +46,13 @@
         return;
     }
     self.currentData = data;
-    for (UIView *v in self.contentView.subviews) {
-        [v removeFromSuperview];
-    }
     //
     FHDetailNeighborhoodStatsInfoModel *model = (FHDetailNeighborhoodStatsInfoModel *)data;
+    self.bottomLine.hidden = model.showBottomLine;
+    self.shadowImage.image = model.shadowImage;
     if (model && model.statsInfo.count > 0) {
-        UIView *topLine = [[UIView alloc] init];
-        topLine.backgroundColor = [UIColor themeGray6];
-        [self.contentView addSubview:topLine];
-        [topLine mas_makeConstraints:^(MASConstraintMaker *maker) {
-            maker.height.mas_equalTo(0.5);
-            maker.left.mas_equalTo(20);
-            maker.right.mas_equalTo(-20);
-            maker.top.mas_equalTo(self.contentView);
-        }];
         //
-        CGFloat space = (UIScreen.mainScreen.bounds.size.width - 40 - (70.0 * model.statsInfo.count)) / 2;
+        CGFloat space = (UIScreen.mainScreen.bounds.size.width -30- 40 - (70.0 * model.statsInfo.count)) / 2;
         __block CGFloat leftOffset = 20;
         CGFloat itemWidth = 70;
         [model.statsInfo enumerateObjectsUsingBlock:^(FHDetailNeighborhoodDataStatsInfoModel*  _Nonnull info, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -79,12 +73,12 @@
                 // element_show 埋点
                 [self sendElementShowTrace:idx];
             }
-            [self.contentView addSubview:itemView];
+            [self.containerView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(self.contentView).offset(leftOffset);
+                make.left.mas_equalTo(self.containerView).offset(leftOffset);
                 make.width.mas_equalTo(itemWidth);
-                make.top.mas_equalTo(topLine.mas_bottom);
-                make.bottom.mas_equalTo(self.contentView);
+                make.top.mas_equalTo(self.topLine.mas_bottom);
+                make.bottom.mas_equalTo(self.bottomLine.mas_top);
             }];
             leftOffset += (itemWidth + space);
         }];
@@ -93,13 +87,13 @@
         for (int i = 1; i < model.statsInfo.count; i++) {
             UIView *v = [[UIView alloc] init];
             v.backgroundColor = [UIColor themeGray6];
-            [self.contentView addSubview:v];
+            [self.containerView addSubview:v];
             CGFloat leftOffset = 20.0 + i * 70 + (i - 1 + 0.5) * space;
             [v mas_makeConstraints:^(MASConstraintMaker *maker) {
                 maker.height.mas_equalTo(27);
                 maker.width.mas_equalTo(0.5);
-                maker.centerY.mas_equalTo(self.contentView);
-                maker.left.mas_equalTo(self.contentView).offset(leftOffset);
+                maker.centerY.mas_equalTo(self.containerView);
+                maker.left.mas_equalTo(self.containerView).offset(leftOffset);
             }];
         }
     }
@@ -136,9 +130,72 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        [self createUI];
         _elementShowTraceDic = [NSMutableDictionary new];
     }
     return self;
+}
+
+- (void)createUI {
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
+    }];
+    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.shadowImage).offset(22);
+        make.bottom.equalTo(self.shadowImage).offset(-22);
+        make.left.equalTo(self.contentView).offset(15);
+        make.right.equalTo(self.contentView).offset(-15);
+    }];
+    [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_offset(.5);
+        make.left.equalTo(self.containerView).offset(16);
+        make.right.equalTo(self.containerView).offset(-16);
+        make.top.equalTo(self.containerView);
+    }];
+    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_offset(.5);
+        make.left.equalTo(self.containerView).offset(16);
+        make.right.equalTo(self.containerView).offset(-16);
+        make.bottom.equalTo(self.containerView);
+    }];
+}
+
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
+}
+
+- (UIView *)containerView {
+    if (!_containerView) {
+        UIView *containerView = [[UIView alloc]init];
+        [self.contentView addSubview: containerView];
+        _containerView = containerView;
+    }
+    return _containerView;
+}
+- (UIView *)topLine {
+    if (!_topLine) {
+        UIView *topLine = [[UIView alloc]init];
+        topLine.backgroundColor = [UIColor themeGray6];
+        [self.containerView addSubview: topLine];
+        _topLine = topLine;
+    }
+    return _topLine;
+}
+- (UIView *)bottomLine {
+    if (!_bottomLine) {
+        UIView *bottomLine = [[UIView alloc]init];
+        bottomLine.backgroundColor = [UIColor themeGray6];
+        [self.containerView addSubview: bottomLine];
+        _bottomLine = bottomLine;
+    }
+    return _bottomLine;
 }
 
 - (void)clickButton:(UIControl *)control {
@@ -288,8 +345,8 @@
 }
 
 - (void)setupUI {
-    self.backgroundColor = [UIColor whiteColor];
     _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _keyLabel.font = [UIFont themeFontSemibold:18];
     _keyLabel.textColor = [UIColor themeGray1];
     [self addSubview:_keyLabel];
     
@@ -297,17 +354,17 @@
     _valueDataLabel.userInteractionEnabled = NO;
     [self addSubview:_valueDataLabel];
     
-    [self.valueDataLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self);
-        make.top.mas_equalTo(self).offset(14.5);
+        make.top.mas_equalTo(self).offset(17);
         make.right.mas_equalTo(self);
     }];
     
-    [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.valueDataLabel.mas_left);
-        make.top.mas_equalTo(self.valueDataLabel.mas_bottom).offset(2);
+    [self.valueDataLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.keyLabel.mas_left);
+        make.top.mas_equalTo(self.keyLabel.mas_bottom).offset(2);
         make.height.mas_equalTo(20);
-        make.bottom.mas_equalTo(self).offset(-14);
+        make.bottom.mas_equalTo(self).offset(-17);
         
     }];
     self.isDataEnabled = YES;

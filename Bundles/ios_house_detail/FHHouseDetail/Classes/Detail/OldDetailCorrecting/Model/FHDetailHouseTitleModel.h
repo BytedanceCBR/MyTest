@@ -10,8 +10,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailHouseTitleModel : NSObject
-@property (nonatomic, copy)     NSString       *titleStr;
-@property (nonatomic, strong)   NSArray       *tags;// FHHouseTagsModel item类型
+@property (nonatomic, copy)NSString *titleStr;
+@property (nonatomic, strong)NSArray *tags;// FHHouseTagsModel item类型
+@property (nonatomic, copy)NSString *address;
 @end
 
 NS_ASSUME_NONNULL_END

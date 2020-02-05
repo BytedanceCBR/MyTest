@@ -214,7 +214,7 @@
     [self.colletionView reloadData];
 
     // 二手房头图头显示底部渐变层
-    self.bottomGradientView.hidden = !(self.baseViewModel.houseType == FHHouseTypeSecondHandHouse);
+    self.bottomGradientView.hidden = !(self.baseViewModel.houseType == FHHouseTypeSecondHandHouse || self.baseViewModel.houseType == FHHouseTypeNeighborhood);
     BOOL isShowBottomBannerView = NO;
     if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
         FHDetailOldModel *detailOldModel = self.baseViewModel.detailData;

@@ -82,7 +82,7 @@
 
 - (void)reckoncollectionHeightWithData:(id)data {
     FHDetailHouseTitleModel *titleModel =  ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel;
-    _photoCellHeight = [FHDetailMediaHeaderCell cellHeight];
+    _photoCellHeight = [FHDetailMediaHeaderCorrectingCell cellHeight];
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:24]};
     CGRect rect = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH-70, CGFLOAT_MAX)
                                               options:NSStringDrawingUsesLineFragmentOrigin
@@ -94,6 +94,10 @@
     }else {
         _photoCellHeight = _photoCellHeight + 30 + rect.size.height -67;
     }
+    if (((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
+        _photoCellHeight = _photoCellHeight +22;
+    }
+    
     [self.mediaView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_offset(_photoCellHeight);
     }];
@@ -122,7 +126,7 @@
     return self;
 }
 - (void)createUI {
-    _photoCellHeight = [FHDetailMediaHeaderCell cellHeight];
+    _photoCellHeight = [FHDetailMediaHeaderCorrectingCell cellHeight];
     _pictureShowDict = [NSMutableDictionary dictionary];
     _vedioCount = 0;
     _imageList = [[NSMutableArray alloc] init];

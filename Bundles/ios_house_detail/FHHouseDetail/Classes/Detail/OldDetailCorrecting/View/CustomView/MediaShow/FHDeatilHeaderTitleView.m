@@ -14,8 +14,10 @@
 #import "UIColor+Theme.h"
 @interface FHDeatilHeaderTitleView ()
 @property (nonatomic, weak) UIImageView *shadowImage;
+@property (nonatomic, weak) UIButton *mapBtn;//仅小区展示
 @property (nonatomic, weak) UIView *tagBacView;
 @property (nonatomic, weak) UILabel *nameLabel;
+@property (nonatomic, weak) UILabel *addressLab;
 @end
 @implementation FHDeatilHeaderTitleView
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -35,12 +37,6 @@
         make.right.mas_equalTo(self).offset(-15);
         make.top.mas_equalTo(self).offset(50);
         make.height.mas_offset(20);
-    }];
-    [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(31);
-        make.right.mas_equalTo(self).offset(-35);
-        make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(17);
-        make.bottom.mas_equalTo(self);
     }];
 }
 
@@ -76,6 +72,29 @@
     return _nameLabel;
 }
 
+- (UILabel *)addressLab {
+    if (!_addressLab) {
+        UILabel *addressLab = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+        addressLab.textColor = [UIColor themeGray3];
+        addressLab.font = [UIFont themeFontRegular:14];
+        addressLab.numberOfLines = 2;
+        [self addSubview:addressLab];
+        _addressLab = addressLab;
+    }
+    return _addressLab;
+}
+
+- (UIButton *)mapBtn {
+    if (!_mapBtn) {
+        UIButton *mapBtn = [[UIButton alloc]init];
+        [mapBtn setImage:[UIImage imageNamed:@"plot_mapbtn"] forState:UIControlStateNormal];
+        [mapBtn addTarget:self action:@selector(clickMapAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:mapBtn];
+        _mapBtn = mapBtn;
+    }
+    return _mapBtn;
+}
+
 - (UILabel *)createLabelWithText:(NSString *)text bacColor:(UIColor *)bacColor textColor:(UIColor *)textColor{
     UILabel *label = [[UILabel alloc]init];
     label.textAlignment = NSTextAlignmentCenter;
@@ -98,6 +117,32 @@
 
 - (void)setModel:(FHDetailHouseTitleModel *)model {
     NSArray *tags = model.tags;
+    if (model.address.length>0) {
+        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(31);
+            make.right.mas_equalTo(self).offset(-35);
+            make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(17);
+        }];
+        [self.addressLab mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(31);
+            make.right.mas_equalTo(self).offset(-35);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(4);
+            make.bottom.mas_equalTo(self);
+        }];
+        [self.mapBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.nameLabel).offset(5);
+            make.right.equalTo(self).offset(-32);
+            make.size.mas_equalTo(CGSizeMake(44, 44));
+        }];
+        self.addressLab.text = model.address;
+    }else {
+        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(31);
+            make.right.mas_equalTo(self).offset(-35);
+            make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(17);
+            make.bottom.mas_equalTo(self);
+        }];
+    }
      self.nameLabel.text = model.titleStr;
     __block UIView *lastView = self.tagBacView;
     if (tags.count  == 0) {
