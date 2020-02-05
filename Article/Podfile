@@ -268,7 +268,7 @@ def appPods
     pod_binary 'TTAddressBookService', '0.1.4'
     
     #-----头条基础库-----
-    pod_binary 'TTBaseLib','2.0.10', :subspecs => [
+    pod 'TTBaseLib','2.0.13', :subspecs => [
     'TTBaseTool',
     'TTBusinessManager',
     'TTCategory',
