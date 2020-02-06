@@ -374,7 +374,7 @@
     CGFloat top = 0;
     CGFloat safeTop = 0;
     if (@available(iOS 11.0, *)) {
-        safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+        safeTop = self.view.tt_safeAreaInsets.top;
     }
     if (safeTop > 0) {
         top += safeTop;
