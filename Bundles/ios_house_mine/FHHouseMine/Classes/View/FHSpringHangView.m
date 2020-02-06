@@ -101,14 +101,12 @@
     }
     
     FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
-    if(!model){
-        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSpringViewCloseNotification object:nil];
-        [FHEnvContext sharedInstance].isShowingSpringHang = NO;
-    }else{
+    FHConfigDataTabWidgetImageModel *imageModel = [model.image firstObject];
+    
+    if(model && model.openUrl.length > 0 && imageModel.url.length > 0){
         //显示
         self.hidden = NO;
         //设置图片
-        FHConfigDataTabWidgetImageModel *imageModel = [model.image firstObject];
         if(imageModel && imageModel.url.length > 0){
             [self.bgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
         }
@@ -120,6 +118,10 @@
             [self addPandentShowLog];
         }
         [FHEnvContext sharedInstance].isShowingSpringHang = YES;
+    }else{
+        //隐藏
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSpringViewCloseNotification object:nil];
+        [FHEnvContext sharedInstance].isShowingSpringHang = NO;
     }
 }
 
