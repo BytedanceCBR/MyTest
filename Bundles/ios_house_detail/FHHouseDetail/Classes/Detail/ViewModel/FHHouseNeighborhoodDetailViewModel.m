@@ -281,6 +281,7 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
 
+        staticMapModel.mapCentertitle = model.data.neighborhoodInfo.name;
         staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
         staticMapModel.houseId = model.data.neighborhoodInfo.id;
