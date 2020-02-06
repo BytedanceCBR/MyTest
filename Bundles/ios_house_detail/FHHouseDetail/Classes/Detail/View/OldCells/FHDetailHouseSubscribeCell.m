@@ -107,7 +107,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     _textField.textColor = [UIColor themeGray1];
     _textField.keyboardType = UIKeyboardTypeNumberPad;
     _textField.placeholder = @"填写手机号";
-    [_textField setValue:[UIColor themeGray4] forKeyPath:@"_placeholderLabel.textColor"];
+    _textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"填写手机号" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray4]}];
     _textField.layer.cornerRadius = 4;
     _textField.layer.masksToBounds = YES;
     _textField.delegate = self;
