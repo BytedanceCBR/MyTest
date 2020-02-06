@@ -74,6 +74,9 @@
             [self initViewModel];
         }
         self.segmentControl.sectionTitles = [self getSegmentTitles];
+        if([FHEnvContext isSpringHangOpen] && self.springView){
+            [self.springView show:[FHEnvContext enterTabLogName]];
+        }
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
