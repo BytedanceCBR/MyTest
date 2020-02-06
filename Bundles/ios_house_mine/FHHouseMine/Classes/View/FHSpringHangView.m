@@ -54,7 +54,6 @@
     [_closeBtn setImage:[UIImage imageNamed:@"fh_spring_yunying_close"] forState:UIControlStateHighlighted];
     _closeBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-8, -8, -8, -8);
     [_closeBtn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
-    _closeBtn.hidden = YES;
     [self addSubview:_closeBtn];
 }
 
@@ -114,7 +113,7 @@
             [self.bgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
         }
         
-        self.closeBtn.hidden = model.closeable;
+        self.closeBtn.hidden = !model.closeable;
         
         _pageType = pageType;
         if(![FHEnvContext sharedInstance].isShowingSpringHang){
@@ -144,8 +143,7 @@
     [self addPandentClickLog];
     FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
     if(model && model.openUrl.length > 0){
-        NSString *urlStr = model.openUrl;
-        NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURL* url = [NSURL URLWithString:model.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     }
 }
