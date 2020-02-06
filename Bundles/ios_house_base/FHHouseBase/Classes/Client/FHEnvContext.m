@@ -760,6 +760,18 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return retFlag;
 }
 
++ (FHConfigDataTabWidgetModel *)tabWidget
+{
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (configData) {
+        return configData.tabWidget;
+    }
+  
+    return nil;
+}
+
+
+
 + (BOOL)isUGCAdUser
 {
     NSString *localMark = [FHUtils contentForKey:kFHUGCPromotionUser];
