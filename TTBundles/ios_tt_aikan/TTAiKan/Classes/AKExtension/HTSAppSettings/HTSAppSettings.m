@@ -9,7 +9,7 @@
 #import "HTSAppSettings.h"
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "HTSAppSettingsModel.h"
 #import "HTSNetworkDefaultIMP.h"
 #import "HTSBaseHTTPRequestSerializer.h"

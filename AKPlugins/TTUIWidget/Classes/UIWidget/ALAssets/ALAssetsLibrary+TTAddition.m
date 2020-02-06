@@ -7,7 +7,6 @@
 //
 #import "ALAssetsLibrary+TTAddition.h"
 #import "TTIndicatorView.h"
-#import "TTThemedAlertController.h"
 #import "UIViewAdditions.h"
 #import "TTIndicatorView.h"
 #import "UIImage+TTThemeExtension.h"
@@ -16,6 +15,8 @@
 #import "TTBaseMacro.h"
 #import "UIDevice+TTAdditions.h"
 #import "TTSandBoxHelper.h"
+#import <TTServiceKit/TTModuleBridge.h>
+#import "TTThemedAlertControllerProtocol.h"
 
 @implementation ALAssetsLibrary (TTAddition)
 
@@ -41,19 +42,12 @@
             }
             
             if ([errorTip length] > 0) {
-                if ([[self class] ttAlertControllerEnabled]) {
-                    TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:errorTip message:nil preferredType:TTThemedAlertControllerTypeAlert];
-                    [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:nil];
-                    [alert showFrom:[TTUIResponderHelper topmostViewController] animated:YES];
-                }
-                else {
-                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:errorTip
-                                                                     message:nil
-                                                                    delegate:nil
-                                                           cancelButtonTitle:nil
-                                                           otherButtonTitles:NSLocalizedString(@"确定", nil), nil];
-                    [alert show];
-                }
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:errorTip
+                                                                 message:nil
+                                                                delegate:nil
+                                                       cancelButtonTitle:nil
+                                                       otherButtonTitles:NSLocalizedString(@"确定", nil), nil];
+                [alert show];
             }
         }
         else {
@@ -183,16 +177,6 @@
         }
     }
     return image;
-}
-
-+ (BOOL)ttAlertControllerEnabled {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"SSCommonLogicTTAlertControllerEnabledKey"]) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:@"SSCommonLogicTTAlertControllerEnabledKey"];
-    }
-    else {
-        //默认否
-        return NO;
-    }
 }
 
 @end

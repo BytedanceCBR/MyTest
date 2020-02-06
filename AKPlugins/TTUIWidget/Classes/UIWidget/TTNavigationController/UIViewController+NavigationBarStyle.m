@@ -12,8 +12,8 @@
 #import "SSThemed.h"
 #import "NSObject+FBKVOController.h"
 #import "TTThemeManager.h"
-#import "TTDeviceHelper.h"
 #import "UIImage+TTThemeExtension.h"
+#import <TTBaseLib/TTDeviceHelper.h>
 
 @import ObjectiveC;
 
@@ -47,7 +47,8 @@
 
 - (void)addBottomLine {
     if (!_bottomLine) {
-        _bottomLine = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.bounds) - [TTDeviceHelper ssOnePixel], CGRectGetWidth(self.bounds), [TTDeviceHelper ssOnePixel])];
+        _bottomLine = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.bounds) - [TTDeviceHelper ssOnePixel],
+                                                                     CGRectGetWidth(self.bounds), [TTDeviceHelper ssOnePixel])];
         _bottomLine.backgroundColorThemeKey = kColorLine1;
         _bottomLine.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self addSubview:_bottomLine];
@@ -55,11 +56,15 @@
 }
 
 - (void)reloadTheme {
-    [self tt_configNavBarWithTheme:self.viewController.navigationController.ttNavBarStyle];
+    [self tt_configNavBarWithTheme:self.viewController.ttNavBarStyle]; // 里面逻辑会再次检查navigationController级别的配置
 }
 
 - (void)tt_configNavBarWithTheme:(NSString *)style
 {
+    if ([style isEqualToString:@"custom"]) {
+        return;
+    }
+    
     if (self.viewController.ttNaviTranslucent) {
         self.translucent = YES;
     } else {
@@ -126,27 +131,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    if (@available(iOS 11.0, *)){
-        //消除右移16的问题
-        for(UIView *view in self.subviews){
-            NSString *contentViewClass = [@[@"_UIN", @"avigat", @"ionBarC", @"onten", @"tView"] componentsJoinedByString:@""];
-            if ([view isKindOfClass:NSClassFromString(contentViewClass)]){
-                NSDirectionalEdgeInsets insets = view.directionalLayoutMargins;
-                UIBarButtonItem *leftBarButtonItem = self.viewController.navigationItem.leftBarButtonItem;
-                UIBarButtonItem *rightBarButtonItem = self.viewController.navigationItem.rightBarButtonItem;
-                CGFloat leftViewInset = insets.leading;
-                CGFloat rightViewInset = insets.trailing;
-                if (leftBarButtonItem.customView){
-                    leftViewInset -= leftBarButtonItem.customView.alignmentRectInsets.left;
-                }
-                if (rightBarButtonItem.customView){
-                    rightViewInset -= rightBarButtonItem.customView.alignmentRectInsets.right;
-                }
-                view.directionalLayoutMargins = NSDirectionalEdgeInsetsMake(insets.top, leftViewInset, insets.bottom, rightViewInset);
-            }
-        }
-    }
-    
+
     if (self.bottomLine) {
         [self bringSubviewToFront:self.bottomLine];
     }
@@ -158,9 +143,11 @@
         self.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
     }
     
-    
-    self.bottomLine.hidden = self.viewController.ttNeedHideBottomLine;
+    if (self.viewController.ttNeedHideBottomLine) {
+        self.bottomLine.hidden = YES;
+    }
 }
+
 
 @end
 
@@ -185,6 +172,7 @@
             method_exchangeImplementations(originalMethod, swizzledMethod);
         }
         
+        // todo zjing statusbar
         SEL originalSelector2 = @selector(viewDidAppear:);
         SEL swizzledSelector2 = @selector(tt_viewDidAppear:);
         
@@ -223,30 +211,6 @@
     }
 }
 
-- (void)tt_viewDidAppear:(BOOL)animated
-{
-    [self tt_viewDidAppear:animated];
-    
-    if (![self.parentViewController isKindOfClass:[UINavigationController class]]) {
-        return;
-    }
-    
-    if ([[TTThemeManager sharedInstance_tt] viewControllerBasedStatusBarStyle]) {
-        
-        if ([UIApplication sharedApplication].statusBarStyle != self.ttStatusBarStyle) {
-            
-            [UIApplication sharedApplication].statusBarStyle = self.ttStatusBarStyle;
-            
-        }
-    }
-    else {
-        [UIApplication sharedApplication].statusBarStyle = [[TTThemeManager sharedInstance_tt] statusBarStyle];
-        
-    }
-    
-}
-
-
 - (NSString*)ttNavBarStyle {
     
     return (NSString*)objc_getAssociatedObject(self, @selector(ttNavBarStyle));
@@ -257,12 +221,36 @@
     objc_setAssociatedObject(self, @selector(ttNavBarStyle),ttNavBarStyle, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (NSUInteger)ttStatusBarStyle {
-    
-    return (NSUInteger)[objc_getAssociatedObject(self, @selector(ttStatusBarStyle)) integerValue];
+// todo zjing statusbar
+- (void)tt_viewDidAppear:(BOOL)animated
+{
+    [self tt_viewDidAppear:animated];
+
+    if (![self.parentViewController isKindOfClass:[UINavigationController class]]) {
+        return;
+    }
+
+    if ([[TTThemeManager sharedInstance_tt] viewControllerBasedStatusBarStyle]) {
+
+        if ([UIApplication sharedApplication].statusBarStyle != self.ttStatusBarStyle) {
+
+            [UIApplication sharedApplication].statusBarStyle = self.ttStatusBarStyle;
+
+        }
+    }
+    else {
+        [UIApplication sharedApplication].statusBarStyle = [[TTThemeManager sharedInstance_tt] statusBarStyle];
+
+    }
+
 }
 
-- (void)setTtStatusBarStyle:(NSUInteger)ttStatusBarStyle {
+- (UIStatusBarStyle)ttStatusBarStyle {
+    
+    return (UIStatusBarStyle)[objc_getAssociatedObject(self, @selector(ttStatusBarStyle)) integerValue];
+}
+
+- (void)setTtStatusBarStyle:(UIStatusBarStyle)ttStatusBarStyle {
     
     objc_setAssociatedObject(self, @selector(ttStatusBarStyle),@(ttStatusBarStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -290,6 +278,16 @@
 - (void)setTtDisableDragBack:(BOOL)ttDisableDragBack {
     
     objc_setAssociatedObject(self, @selector(ttDisableDragBack),@(ttDisableDragBack), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSInteger)ttDragBackLeftEdge {
+    
+    return (NSInteger)[objc_getAssociatedObject(self, @selector(ttDragBackLeftEdge)) integerValue];
+}
+
+- (void)setTtDragBackLeftEdge:(NSInteger)leftEdge {
+    
+    objc_setAssociatedObject(self, @selector(ttDragBackLeftEdge), @(leftEdge), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)ttDragToRoot {
@@ -333,11 +331,7 @@
 }
 
 - (void)setTtNeedHideBottomLine:(BOOL)ttNeedHideBottomLine {
-    BOOL originValue = self.ttNeedHideBottomLine;
     objc_setAssociatedObject(self, @selector(ttNeedHideBottomLine),@(ttNeedHideBottomLine), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (originValue != ttNeedHideBottomLine) {
-        [self.ttNavigationBar layoutSubviews];
-    }
 }
 
 - (BOOL)ttNeedTopExpand {

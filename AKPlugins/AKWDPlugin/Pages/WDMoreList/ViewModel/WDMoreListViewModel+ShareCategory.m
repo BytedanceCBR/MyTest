@@ -10,7 +10,7 @@
 #import "WDQuestionEntity.h"
 #import "WDShareUtilsHelper.h"
 
-#import <TTShareActivity.h>
+#import "TTShareActivity.h"
 #import "TTPanelActivity.h"
 #import "SDWebImageManager.h"
 #import "WDDefines.h"

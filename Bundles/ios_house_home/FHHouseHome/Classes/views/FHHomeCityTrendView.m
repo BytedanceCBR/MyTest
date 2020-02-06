@@ -15,7 +15,7 @@
 #import "TTBaseMacro.h"
 #import <BDABTestSDK/BDABTestManager.h>
 #import <TTRoute/TTRoute.h>
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
 

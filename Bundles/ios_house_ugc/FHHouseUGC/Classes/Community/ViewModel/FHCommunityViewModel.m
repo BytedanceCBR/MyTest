@@ -9,7 +9,7 @@
 #import "FHCommunityViewController.h"
 #import "FHCommunityCollectionCell.h"
 #import "FHHouseUGCHeader.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 
 #define kCellId @"cellId"
 #define maxCellCount 2

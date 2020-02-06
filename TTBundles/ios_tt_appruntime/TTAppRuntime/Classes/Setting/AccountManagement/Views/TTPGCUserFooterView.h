@@ -6,7 +6,7 @@
 //
 //
 
-#import <SSThemed.h>
+#import "SSThemed.h"
 
 @interface TTPGCUserFooterView : SSThemedView
 @property (nonatomic, copy) NSString *content;

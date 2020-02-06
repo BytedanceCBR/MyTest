@@ -8,7 +8,7 @@
 
 #import "TTPanelController.h"
 #import "TTPanelControllerItem.h"
-#import "UIImageView+WebCache.h"
+#import <BDWebImage/BDWebImage.h>
 
 #import "UIViewAdditions.h"
 #import "SSThemed.h"
@@ -90,7 +90,7 @@
                 iconImage.layer.masksToBounds = YES;
                 iconImage.layer.borderWidth = [TTDeviceHelper ssOnePixel];
                 iconImage.enableNightCover = YES;
-                [iconImage sd_setImageWithURL:[NSURL URLWithString:item.iconKey] placeholderImage:nil];
+                [iconImage bd_setImageWithURL:[NSURL URLWithString:item.iconKey] placeholder:nil];
                 self.iconImage = iconImage;
                 break;
             }
@@ -100,7 +100,7 @@
                 iconImage.layer.masksToBounds = YES;
                 iconImage.enableNightCover = NO;
                 iconImage.alpha = [[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeNight ? 0.3 : 1.0;
-                [iconImage sd_setImageWithURL:[NSURL URLWithString:item.iconKey] placeholderImage:nil];
+                [iconImage bd_setImageWithURL:[NSURL URLWithString:item.iconKey] placeholder:nil];
                 self.iconImage = iconImage;
                 break;
             }

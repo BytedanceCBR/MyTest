@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCCellUserInfoView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHFeedOperationView.h"
@@ -21,8 +21,8 @@
 #import "TTAccountManager.h"
 #import <FHUGCConfig.h>
 #import "FHFeedOperationResultModel.h"
-#import <TTCommentDataManager.h>
-#import <TTAssetModel.h>
+#import "TTCommentDataManager.h"
+#import "TTAssetModel.h"
 
 @interface FHUGCCellUserInfoView()
 

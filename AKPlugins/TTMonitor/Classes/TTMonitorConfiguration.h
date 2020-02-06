@@ -11,6 +11,9 @@
 #import "TTNetworkMonitorRecorderConfigurationProtocol.h"
 #import "TTMonitor.h"
 #import "TTExtensions.h"
+
+#define kUploadHost @"mon.snssdk.com"
+
 /**
  *  负责管理和获取监控相关的配置
  */
@@ -20,6 +23,7 @@
 @property(nonatomic, copy, readonly) TTMonitorParamsBlock paramsBlock;
 @property(nonatomic, copy, readwrite) NSDictionary * params;
 @property(nonatomic, assign) MNetworkStatus networkStatus;
+@property(nonatomic, strong, readonly) NSArray *remoteSettingsHost;
 
 /**
  *  尝试去获取配置, 只需要在didFinishLaunch:中调用
@@ -56,5 +60,7 @@
 + (double)watchdogMonitorInterval;
 
 + (double)watchdogMonitorThreshold;
+
+- (void)setRemoteSettingHosts:(NSArray *)hosts;
 
 @end

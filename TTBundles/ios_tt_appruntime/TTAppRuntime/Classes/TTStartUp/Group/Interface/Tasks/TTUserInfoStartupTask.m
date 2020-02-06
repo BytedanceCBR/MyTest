@@ -7,7 +7,7 @@
 //
 
 #import "TTUserInfoStartupTask.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTProjectLogicManager.h"
 #import "TTAccountTestSettings.h"
 #import "TTLaunchDefine.h"

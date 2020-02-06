@@ -11,7 +11,7 @@
 #import "TTAlphaThemedButton.h"
 #import "TTVideoShareThemedButton.h"
 #import "TTFollowThemeButton.h"
-#import <TTDiggButton.h>
+#import "TTDiggButton.h"
 typedef void (^recommendViewShowActionTypeBlock) (BOOL clickArrow);
 
 @interface TTVFeedListVideoBottomContainerView : TTVFeedListBaseBottomContainerView

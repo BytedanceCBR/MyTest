@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <FHHouseType.h>
+#import "FHHouseType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class FHMapSearchDataListModel;

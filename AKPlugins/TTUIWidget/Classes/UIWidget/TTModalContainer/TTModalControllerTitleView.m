@@ -39,7 +39,7 @@
 }
 
 - (void)layoutSubviews {
-    self.frame = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, TITLEVIEWHEIGHT);
+    self.frame = CGRectMake(0, 0, self.width, TITLEVIEWHEIGHT);
     UIBezierPath *maskPath = [UIBezierPath
                               bezierPathWithRoundedRect:self.bounds
                               byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight)
@@ -134,6 +134,7 @@
         _closeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -10, -5, -10);
         [_closeButton setImage:[UIImage themedImageNamed:@"close_comment"] forState:UIControlStateNormal];
         _closeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
+        _closeButton.accessibilityLabel = @"关闭";
         [_closeButton sizeToFit];
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             [_closeButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -2)];
@@ -151,6 +152,7 @@
         _backButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         _backButton.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -10, -5, -10);
         [_backButton setImage:[UIImage themedImageNamed:@"lefterbackicon_titlebar"] forState:UIControlStateNormal];
+        _backButton.accessibilityLabel = @"返回";
         [_backButton sizeToFit];
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             [_backButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -2)];

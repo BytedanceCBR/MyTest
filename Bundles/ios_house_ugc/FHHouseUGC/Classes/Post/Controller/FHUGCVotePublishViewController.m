@@ -8,12 +8,12 @@
 #import "FHUGCVotePublishViewController.h"
 #import "FHUGCVoteViewModel.h"
 #import "SSNavigationBar.h"
-#import <WDDefines.h>
-#import <FHCommonDefines.h>
-#import <ReactiveObjC.h>
+#import "WDDefines.h"
+#import "FHCommonDefines.h"
+#import "ReactiveObjC.h"
 #import "FHUserTracker.h"
-#import <TTAccount.h>
-#import <FHBubbleTipManager.h>
+#import "TTAccount.h"
+#import "FHBubbleTipManager.h"
 #import "TTAccountManager.h"
 
 @interface FHUGCVotePublishViewController()
@@ -63,6 +63,7 @@
     [self configNavigation];
     // 添加ScrollView
     [self.view addSubview:self.scrollView];
+    self.view.backgroundColor = [UIColor colorWithHexStr:@"#EBEBF0"];
     self.viewModel = [[FHUGCVoteViewModel alloc] initWithScrollView:self.scrollView ViewController:self];
     
     // 从圈子详情页带入的圈子信息
@@ -86,7 +87,7 @@
     CGRect beginFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     CGRect endFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     
-    BOOL isShrinking = beginFrame.origin.y < endFrame.origin.y;
+    BOOL isShrinking = beginFrame.origin.y <= endFrame.origin.y;
     
     CGRect scrollViewFrame = self.scrollView.frame;
     

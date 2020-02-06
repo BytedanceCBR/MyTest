@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCVoteDetailCell.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
@@ -15,16 +15,16 @@
 #import "FHCommentBaseDetailViewModel.h"
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
-#import <TTBusinessManager+StringUtils.h>
-#import <UIViewAdditions.h>
+#import "TTBusinessManager+StringUtils.h"
+#import "UIViewAdditions.h"
 #import "TTAccountManager.h"
 #import "FHHouseUGCAPI.h"
 #import "ToastManager.h"
 #import "FHUGCVoteResponseModel.h"
 #import "FHUserTracker.h"
-#import <MJRefresh.h>
-#import <FHRefreshCustomFooter.h>
-#import <UIScrollView+Refresh.h>
+#import "MJRefresh.h"
+#import "FHRefreshCustomFooter.h"
+#import "UIScrollView+Refresh.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -703,7 +703,7 @@
                 weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
                 [weakSelf refreshWithData:weakSelf.voteInfo];
                 NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-                [userInfo setObject:weakSelf.voteInfo forKey:@"vote_info"];
+                userInfo[@"vote_info"] = weakSelf.voteInfo;
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
             } else {
                 // 失败
@@ -756,7 +756,7 @@
             
             [weakSelf refreshWithData:weakSelf.voteInfo];
             NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-            [userInfo setObject:weakSelf.voteInfo forKey:@"vote_info"];
+            userInfo[@"vote_info"] = weakSelf.voteInfo;
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
         } else {
             weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;

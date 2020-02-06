@@ -11,7 +11,7 @@
 #import <TTUGCFoundation/FRCommonURLSetting.h>
 #import <TTKitchen/TTKitchen.h>
 #import <TTBaseLib/TTBaseMacro.h>
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/NSObject+TTAdditions.h>
 #import "TTUGCRequestManager.h"

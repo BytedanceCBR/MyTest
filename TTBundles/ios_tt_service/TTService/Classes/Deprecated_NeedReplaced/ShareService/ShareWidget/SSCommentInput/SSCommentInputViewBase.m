@@ -17,7 +17,7 @@
 #import "UIImage+TTThemeExtension.h"
 #import "TTProjectLogicManager.h"
 #import "TTDeviceHelper.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/TTUIResponderHelper.h>

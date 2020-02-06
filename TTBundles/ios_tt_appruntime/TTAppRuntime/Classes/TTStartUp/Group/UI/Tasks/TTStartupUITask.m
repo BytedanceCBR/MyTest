@@ -31,7 +31,8 @@
 #import "NSDictionary+TTAdditions.h"
 #import "TTInstallIDManager.h"
 #import "TTSandBoxHelper.h"
-#import <FHUtils.h>
+#import "FHUtils.h"
+#import <FHHouseBase/FHPermissionAlertViewController.h>
 #import <FHHouseBase/FHIntroduceManager.h>
 
 DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);

@@ -11,216 +11,11 @@
 #import "TTBadgeNumberView.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
+#import "TTCategoryCell.h"
 
 #define kTextFont [UIFont systemFontOfSize:15]
 static const NSTimeInterval animateDuration = 0.3f;
 static const CGFloat transformScale = 1.2f;
-
-#pragma mark - TTCategoryItem
-@implementation TTCategoryItem
-
-- (instancetype)init {
-    if (self = [super init]) {
-        self.badgeNum = 0;
-        self.title = @"";
-    }
-    return self;
-}
-
-@end
-
-#pragma mark - TTCategoryCell
-/** 频道Cell */
-@interface TTCategoryCell : UICollectionViewCell
-
-/** 标题栏 */
-@property (nonatomic, strong) SSThemedLabel * _Nonnull titleLabel;
-/** 高亮标题栏 */
-@property (nonatomic, strong) SSThemedLabel * _Nonnull maskLabel;
-/** 右侧分割线 */
-@property (nonatomic, strong) SSThemedView * _Nonnull rightLine;
-/** 红点 */
-@property (nonatomic, strong) TTBadgeNumberView * _Nonnull badgeView;
-/** 频道项 */
-@property (nonatomic, strong) TTCategoryItem *  _Nonnull cellItem;
-/** 启用高亮显示 */
-@property (nonatomic) BOOL enableHighlightedStatus;
-/** 启用高亮动画 */
-@property (nonatomic) BOOL animatedHighlighted;
-/** 启用高亮变大动画 */
-@property (nonatomic) BOOL animatedBiggerState;
-
-@end
-
-@implementation TTCategoryCell
-
-- (nonnull instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        self.animatedHighlighted = YES;
-        [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.center.equalTo(self.contentView);
-        }];
-        
-        [self.maskLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.titleLabel);
-        }];
-        
-        [self.badgeView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.titleLabel.mas_right).offset(3);
-            make.top.equalTo(self.contentView.mas_top).priorityLow();
-        }];
-        
-        [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(self.contentView.mas_right).offset(12);
-            make.centerY.equalTo(self.contentView.mas_centerY);
-            make.height.mas_equalTo(15);
-            make.width.mas_equalTo([TTDeviceHelper ssOnePixel]);
-        }];
-    }
-    return self;
-}
-
-#pragma mark set/get
-- (SSThemedLabel *)titleLabel {
-    if (_titleLabel == nil) {
-        _titleLabel = [[SSThemedLabel alloc] init];
-        _titleLabel.textAlignment = NSTextAlignmentCenter;
-        _titleLabel.backgroundColor = [UIColor clearColor];
-        _titleLabel.textColor = [UIColor redColor];
-        _titleLabel.font = kTextFont;
-        [self.contentView addSubview:_titleLabel];
-    }
-    return _titleLabel;
-}
-
-- (SSThemedLabel *)maskLabel {
-    if (_maskLabel == nil) {
-        _maskLabel = [[SSThemedLabel alloc] init];
-        _maskLabel.textAlignment = NSTextAlignmentCenter;
-        _maskLabel.backgroundColor = [UIColor clearColor];
-        _maskLabel.textColor = [UIColor redColor];
-        _maskLabel.font = kTextFont;
-        _maskLabel.alpha = 0;
-        [self.contentView addSubview:_maskLabel];
-    }
-    return _maskLabel;
-}
-
-- (SSThemedView *)rightLine {
-    if (_rightLine == nil) {
-        _rightLine = [[SSThemedView alloc] init];
-        _rightLine.backgroundColorThemeKey = kColorLine1;
-        _rightLine.hidden = YES;
-        [self.contentView addSubview:_rightLine];
-    }
-    return _rightLine;
-}
-
-- (TTBadgeNumberView *)badgeView {
-    if (_badgeView == nil) {
-        _badgeView = [[TTBadgeNumberView alloc] init];
-        _badgeView.hidden = YES;
-        [_badgeView setBadgeLabelFontSize:8];
-        [self.contentView addSubview:_badgeView];
-    }
-    return _badgeView;
-}
-
-- (void)setCellItem:(TTCategoryItem *)cellItem {
-    self.titleLabel.text = cellItem.title;
-    self.maskLabel.text = cellItem.title;
-    
-    switch (cellItem.badgeStyle) {
-        case TTCategoryItemBadgeStyleNone:
-            self.badgeView.badgeNumber = TTBadgeNumberHidden;
-            break;
-        case TTCategoryItemBadgeStylePoint:
-            self.badgeView.badgeNumber = TTBadgeNumberPoint;
-            break;
-        case TTCategoryItemBadgeStyleNumber:
-            self.badgeView.badgeNumber = cellItem.badgeNum;
-            break;
-    }
-}
-
-- (void)setSelected:(BOOL)selected {
-    [super setSelected:selected];
-    if (self.enableHighlightedStatus) {
-        [UIView animateWithDuration:(self.animatedHighlighted ? animateDuration : 0) animations:^{
-            if (selected) {
-                self.titleLabel.alpha = 0;
-                self.maskLabel.alpha = 1;
-                if (self.animatedBiggerState) {
-                    self.transform = CGAffineTransformScale(CGAffineTransformIdentity, transformScale, transformScale);
-                }
-            } else {
-                self.titleLabel.alpha = 1;
-                self.maskLabel.alpha = 0;
-                if (self.animatedBiggerState) {
-                    self.transform = CGAffineTransformIdentity;
-                }
-            }
-        }];
-    }
-}
-
-#pragma mark UI setting
-- (void)setTabBarTextColor:(UIColor *)textColor maskColor:(UIColor *)maskColor lineColor:(UIColor *)lineColor {
-    if (textColor) {
-        self.titleLabel.textColor = textColor;
-    }
-    if (maskColor) {
-        self.maskLabel.textColor = maskColor;
-    }
-    if (lineColor) {
-        self.rightLine.backgroundColor = lineColor;
-    }
-}
-
-- (void)setTabBarTextColorThemeKey:(NSString *)textColorKey maskColorThemeKey:(NSString *)maskColorKey lineColorThemeKey:(NSString *)lineColorKey {
-    if (!isEmptyString(textColorKey)) {
-        self.titleLabel.textColorThemeKey = textColorKey;
-    }
-    if (!isEmptyString(maskColorKey)) {
-        self.maskLabel.textColorThemeKey = maskColorKey;
-    }
-    if (!isEmptyString(lineColorKey)) {
-        self.rightLine.backgroundColorThemeKey = lineColorKey;
-    }
-}
-
-- (void)setTabBarTextFont:(UIFont *)font {
-    if (font) {
-        self.titleLabel.font = font;
-        self.maskLabel.font = font;
-        //        [self.rightLine mas_updateConstraints:^(MASConstraintMaker *make) {
-        //            make.height.mas_equalTo(font.pointSize);
-        //        }];
-    }
-}
-
-- (void)setTabBarTextFont:(UIFont *)textFont maskTextFont:(UIFont *)maskFont {
-    if (textFont && maskFont) {
-        self.titleLabel.font = textFont;
-        self.maskLabel.font = maskFont;
-    }
-}
-
-- (void)setBadgeViewOffset:(UIOffset)offset {
-    [self.badgeView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.titleLabel.mas_right).offset(offset.horizontal);
-        make.top.equalTo(self.titleLabel.mas_top).offset(offset.vertical).priorityHigh();
-    }];
-    [self updateConstraintsIfNeeded];
-}
-
-- (void)setTitleLabelOffset:(UIOffset)offset {
-    //    [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-    //        make.left.and.right.equalTo(self).offset(offset.horizontal);
-    //    }];
-}
-
-@end
 
 #pragma mark - TTHorizontalCategoryBar
 @interface TTHorizontalCategoryBar () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
@@ -302,7 +97,12 @@ static const CGFloat transformScale = 1.2f;
     
     self.bottomIndicator = [[SSThemedView alloc] initWithFrame:CGRectZero];
     self.bottomIndicator.backgroundColor = [UIColor redColor];
-    self.bottomIndicator.layer.cornerRadius = 1;
+    if ([self.delegate respondsToSelector:@selector(indicatorRadius)]) {
+        self.bottomIndicator.layer.cornerRadius = [self.delegate indicatorRadius];
+    } else {
+        self.bottomIndicator.layer.cornerRadius = 1;
+    }
+    
     [self.collectionView addSubview:self.bottomIndicator];
     
     //    UIView *view = [[UIView alloc] init];
@@ -321,15 +121,17 @@ static const CGFloat transformScale = 1.2f;
 - (void)setupConstraints {
     // 不能对UIColletionView添加约束，iOS7下会crash
     self.collectionView.frame = self.bounds;
-    
     self.bottomIndicator.top = self.collectionView.height - 2;
-    self.bottomIndicator.height = 2;
-    self.bottomIndicator.layer.cornerRadius = 1;
-    //    [self.bottomIndicator mas_makeConstraints:^(MASConstraintMaker *make) {
-    //        make.bottom.equalTo(self);
-    //        make.height.equalTo(@3);
-    //    }];
-    
+    if ([self.delegate respondsToSelector:@selector(indicatorHeight)]) {
+        self.bottomIndicator.height = [self.delegate indicatorHeight];
+    } else {
+        self.bottomIndicator.height = 2;
+    }
+    if ([self.delegate respondsToSelector:@selector(indicatorRadius)]) {
+        self.bottomIndicator.layer.cornerRadius = [self.delegate indicatorRadius];
+    } else {
+        self.bottomIndicator.layer.cornerRadius = 1;
+    }
     [self.bottomSeperator mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.bottom.and.right.equalTo(self);
         make.height.equalTo(@([TTDeviceHelper ssOnePixel]));
@@ -347,7 +149,7 @@ static const CGFloat transformScale = 1.2f;
     [super layoutSubviews];
     [self.collectionView.collectionViewLayout invalidateLayout];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self updateBottomIndicatorConstraints];
+        [self updateBottomIndicatorConstraints:0];
     });
 }
 
@@ -383,54 +185,73 @@ static const CGFloat transformScale = 1.2f;
     
     TTCategoryCell *cell = (TTCategoryCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:selectedIndex inSection:0]];
     TTCategoryCell *lastSelectedCell = (TTCategoryCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedIndex inSection:0]];
-    
     lastSelectedCell.selected = NO;
     cell.selected = YES;
-    
+    [lastSelectedCell setTabBarTextFont:self.textFont];
+    if ([self.delegate respondsToSelector:@selector(fontForHightlightItem)]) {
+        UIFont *font = [self.delegate fontForHightlightItem];
+        if (font) {
+            [cell setTabBarTextFont:font];
+            if (selectedIndex == _selectedIndex) {
+                [lastSelectedCell setTabBarTextFont:font];
+            }
+        } else {
+            [cell setTabBarTextFont:self.textFont];
+        }
+    } else {
+        [cell setTabBarTextFont:self.textFont];
+    }
     _selectedIndex = selectedIndex;
-    
     UICollectionViewLayoutAttributes *lastAttributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedIndex inSection:0]];
     CGFloat expandSpacing = self.itemExpandSpacing + self.itemInsetSpacing;
-    self.bottomIndicator.width = lastAttributes.frame.size.width - expandSpacing * 2;
-    self.bottomIndicator.left = lastAttributes.frame.origin.x + expandSpacing;
-    //    [self.bottomIndicator mas_updateConstraints:^(MASConstraintMaker *make) {
-    //        make.width.equalTo(@(lastAttributes.frame.size.width - expandSpacing * 2));
-    //        make.left.equalTo(@(lastAttributes.frame.origin.x + expandSpacing));
-    //    }];
-    //    [self updateBottomIndicatorConstraintsWithCell:cell];
+    if ([self.delegate respondsToSelector:@selector(indicatorWidthforIndex:)]) {
+        self.bottomIndicator.width = [self.delegate indicatorWidthforIndex:selectedIndex];
+        self.bottomIndicator.centerX = lastAttributes.center.x;
+    } else {
+        self.bottomIndicator.width = lastAttributes.frame.size.width - expandSpacing * 2;
+        self.bottomIndicator.left = lastAttributes.frame.origin.x + expandSpacing;
+    }
     WeakSelf;
     [UIView animateWithDuration:animateDuration animations:^{
         StrongSelf;
         if (self.bottomIndicatorEnabled) {
             [self.bottomIndicator layoutIfNeeded];
             UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:selectedIndex inSection:0]];
-            self.bottomIndicator.width = attributes.frame.size.width - expandSpacing * 2;
-            self.bottomIndicator.left = attributes.frame.origin.x + expandSpacing;
-            //            [self.bottomIndicator mas_updateConstraints:^(MASConstraintMaker *make) {
-            //                make.width.equalTo(@(attributes.frame.size.width - expandSpacing * 2));
-            //                make.left.equalTo(@(attributes.frame.origin.x + expandSpacing));
-            //            }];
+            if ([self.delegate respondsToSelector:@selector(indicatorWidthforIndex:)]) {
+                self.bottomIndicator.width = [self.delegate indicatorWidthforIndex:selectedIndex];
+                self.bottomIndicator.centerX = lastAttributes.center.x;
+            } else {
+                self.bottomIndicator.width = lastAttributes.frame.size.width - expandSpacing * 2;
+                self.bottomIndicator.left = lastAttributes.frame.origin.x + expandSpacing;
+            }
         }
     }];
-    
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:selectedIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
-    
     if (self.didSelectCategory) {
         self.didSelectCategory(selectedIndex);
     }
 }
 
-- (void)updateBottomIndicatorConstraints {
+- (void)updateBottomIndicatorConstraints:(NSUInteger)index {
     CGFloat expandSpacing = self.itemExpandSpacing + self.itemInsetSpacing;
     UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:self.selectedIndex inSection:0]];
     self.bottomIndicator.width = attributes.frame.size.width - expandSpacing * 2;
-    self.bottomIndicator.left = attributes.frame.origin.x + expandSpacing;
+    if ([self.delegate respondsToSelector:@selector(indicatorHeight)]) {
+        self.bottomIndicator.height = [self.delegate indicatorHeight];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(indicatorWidthforIndex:)]) {
+        self.bottomIndicator.width = [self.delegate indicatorWidthforIndex:index];
+        self.bottomIndicator.centerX = attributes.center.x;
+    } else {
+        self.bottomIndicator.left = attributes.frame.origin.x + expandSpacing;
+    }
 }
 
 - (void)scrollToIndex:(NSUInteger)index
 {
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
-    [self updateBottomIndicatorConstraints];
+    [self updateBottomIndicatorConstraints:index];
 }
 
 - (void)setBottomIndicatorColor:(UIColor *)bottomIndicatorColor
@@ -512,30 +333,37 @@ static const CGFloat transformScale = 1.2f;
         CGFloat targetWidth = CGRectGetWidth(toAttributes.frame) - expandSpacing * 2;
         
         CGPoint proposedOffset = fromAttributes.frame.origin;
-        proposedOffset.x += expandSpacing;
         CGPoint targetOffset = toAttributes.frame.origin;
-        targetOffset.x += expandSpacing;
         
-        //        [self.bottomIndicator mas_updateConstraints:^(MASConstraintMaker *make) {
-        //            make.width.equalTo(@(proposedWidth + (targetWidth - proposedWidth) * fabs(percentComplete)));
-        //            make.left.equalTo(@(proposedOffset.x + (targetOffset.x - proposedOffset.x) * fabs(percentComplete)));
-        //        }];
-        //
-        //            NSLog(@"bottomIndicator Frame = (x:%lf, y:%lf, height:%lf, width:%lf), with Percent = %lf", self.bottomIndicator.frame.origin.x, self.bottomIndicator.frame.origin.y, self.bottomIndicator.frame.size.height, self.bottomIndicator.frame.size.width, percentComplete);
-        //        if (percentComplete == 0) {
-        //            NSLog(@"finished");
-        //        }
+        if ([self.delegate respondsToSelector:@selector(indicatorWidthforIndex:)]) {
+            proposedWidth = CGRectGetWidth(fromAttributes.frame);
+            targetWidth = CGRectGetWidth(toAttributes.frame);
+            CGFloat proposedIndicatorWidth = [self.delegate indicatorWidthforIndex:fromIndex];
+            CGFloat targetIndicatorWidth = [self.delegate indicatorWidthforIndex:toIndex];
+            targetOffset.x += (targetWidth - targetIndicatorWidth) / 2;
+            proposedOffset.x += (proposedWidth - proposedIndicatorWidth) / 2;
+        }else{
+            proposedOffset.x += expandSpacing;
+            targetOffset.x += expandSpacing;
+        }
+        
         // 如果修改约束，会导致View的重布局
         CGRect frame = self.bottomIndicator.frame;
         frame.origin.x = proposedOffset.x + (targetOffset.x - proposedOffset.x) * fabs(percentComplete);
         frame.size.width = proposedWidth + (targetWidth - proposedWidth) * fabs(percentComplete);
+        if ([self.delegate respondsToSelector:@selector(indicatorHeight)]) {
+            frame.size.height = [self.delegate indicatorHeight];
+        }
+        if ([self.delegate respondsToSelector:@selector(indicatorWidthforIndex:)]) {
+            frame.size.width = [self.delegate indicatorWidthforIndex:toIndex];
+            [self.bottomIndicator setNeedsLayout];
+        }
         self.bottomIndicator.frame = frame;
         if (frame.origin.x >= self.frame.size.width) {
             [self.bottomIndicator setNeedsLayout];
         }
-        
     }
-    if (_enableAnimatedHighlighted){
+    if (_enableAnimatedHighlighted) {
         CGFloat transformScaleDelta = (transformScale - 1);
         CGFloat percent = fabs(percentComplete);
         
@@ -544,6 +372,22 @@ static const CGFloat transformScale = 1.2f;
         
         fromCell.titleLabel.alpha = percent;
         fromCell.maskLabel.alpha = 1 - percent;
+        
+        [fromCell setTabBarTextFont:self.textFont];
+        if ([self.delegate respondsToSelector:@selector(fontForHightlightItem)]) {
+            UIFont *font = [self.delegate fontForHightlightItem];
+            if (font) {
+                [toCell setTabBarTextFont:font];
+                if (fromIndex == toIndex) {
+                     [fromCell setTabBarTextFont:font];
+                }
+            } else {
+                [toCell setTabBarTextFont:self.textFont];
+            }
+        } else {
+            [toCell setTabBarTextFont:self.textFont];
+        }
+        
         if (self.animateBiggerState) {
             
             fromCell.transform = CGAffineTransformMakeScale(fromScale, fromScale);
@@ -597,11 +441,21 @@ static const CGFloat transformScale = 1.2f;
 #pragma mark UICollectionViewDataSource
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     TTCategoryCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([TTCategoryCell class]) forIndexPath:indexPath];
-    
     cell.cellItem = self.categories[indexPath.row];
     cell.enableHighlightedStatus = self.enableSelectedHighlight;
     cell.rightLine.hidden = ((indexPath.row == self.categories.count - 1) ? YES : !self.rightLineState);
-    [cell setTabBarTextFont:self.textFont maskTextFont:self.maskFont];
+    UIFont *textFont = self.textFont;
+    UIFont *maskFont = self.maskFont;
+    if (self.selectedIndex == indexPath.row && [self.delegate respondsToSelector:@selector(fontForHightlightItem)]) {
+        UIFont *font = [self.delegate fontForHightlightItem];
+        if (font) {
+            [cell setTabBarTextFont:font maskTextFont:font];
+        } else {
+            [cell setTabBarTextFont:self.textFont maskTextFont:self.maskFont];
+        }
+    } else {
+        [cell setTabBarTextFont:self.textFont maskTextFont:self.maskFont];
+    }
     
     [cell setTitleLabelOffset:UIOffsetMake(10, 0)];
     if (self.setByThemeKey) {
@@ -621,12 +475,7 @@ static const CGFloat transformScale = 1.2f;
         if (self.didSelectCategory) {
             self.didSelectCategory(indexPath.item);
         }
-        
-        [self updateBottomIndicatorConstraints];
-        //        [self.bottomIndicator mas_updateConstraints:^(MASConstraintMaker *make) {
-        //            make.width.equalTo(@(CGRectGetWidth(cell.frame) - self.interitemSpacing * 2));
-        //            make.left.equalTo(@(CGRectGetMinX(cell.frame) + self.interitemSpacing));
-        //        }];
+        [self updateBottomIndicatorConstraints:indexPath.row];
     }
     
     if (self.selectedIndex == indexPath.item) {

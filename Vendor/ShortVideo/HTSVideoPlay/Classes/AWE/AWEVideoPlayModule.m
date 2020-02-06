@@ -8,7 +8,7 @@
 
 #import "AWEVideoPlayModule.h"
 #import "AWEVideoPlayAccountBridge.h"
-#import <TTModuleBridge.h>
+#import "TTModuleBridge.h"
 #import "AWEVideoDiskCache.h"
 
 @implementation AWEVideoPlayModule

@@ -92,8 +92,8 @@ actionButtonClickBlock:(NotifyBarButtonBlock)actionButtonBlock
 @property (nonatomic,strong) IBOutlet UIView * ttErrorToastView;
 
 @property (nonatomic,assign) BOOL ttNeedShowIndicator;
-
 @property (nonatomic,assign) BOOL ttHasLoadCachedData;
+@property (nonatomic,assign) BOOL ttHiddenLoadingView;
 @property (nonatomic,assign) UIEdgeInsets ttContentInset;
 
 @property (nonatomic,assign) TTFullScreenErrorViewType ttViewType;
@@ -102,6 +102,8 @@ actionButtonClickBlock:(NotifyBarButtonBlock)actionButtonBlock
 @property (nonatomic,copy) TTCustomFullScreenErrorViewBlock customFullScreenErrorViewBlock;
 
 @property (nonatomic,strong) UIView * ttTargetView;
+
+@property (nonatomic,strong) UIView * ttLoadingTargetView;
 
 - (void)tt_registerLoadingViewWithNib:(UINib *)nib;
 - (void)tt_registerLoadingViewWithClass:(Class)className;

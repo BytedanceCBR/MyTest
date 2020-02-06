@@ -23,17 +23,17 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import <TTUIWidget/UIView+Refresh_ErrorHandler.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import <KVOController/KVOController.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTMonitor/TTMonitor.h>
 #import "TTArticleDetailViewController.h"
 #import <FHCHousePush/FHPushAuthorizeManager.h>
 #import <FHHouseBase/FHTraceEventUtils.h>
-#import <FHUtils.h>
-#import <FHErrorView.h>
-#import <Masonry.h>
-#import <UIView+House.h>
+#import "FHUtils.h"
+#import "FHErrorView.h"
+#import "Masonry.h"
+#import "UIView+House.h"
 
 @interface TTDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol>
 

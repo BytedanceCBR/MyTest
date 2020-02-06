@@ -7,16 +7,15 @@
 //
 
 #import "TTIndicatorView.h"
-#import "SSThemed.h"
-#import "UIViewAdditions.h"
 #import "TTWaitingView.h"
-#import "TTLabelTextHelper.h"
-#import "TTDeviceHelper.h"
-#import "UIButton+TTAdditions.h"
+#import <TTThemed/SSThemed.h>
+#import <TTBaseLib/UIViewAdditions.h>
+#import <TTBaseLib/TTLabelTextHelper.h>
+#import <TTBaseLib/TTDeviceHelper.h>
+#import <TTBaseLib/UIButton+TTAdditions.h>
 
-#import <TTImage/TTImageView.h>
 
-static NSInteger const indicatorTextLabelMaxLineNumber = 6;
+static NSInteger const indicatorTextLabelMaxLineNumber = 2;
 static CGFloat const topPadding = 20.f;
 static CGFloat const bottomPadding = 20.f;
 static CGFloat const itemSpacing = 10.f;
@@ -25,9 +24,10 @@ static CGFloat const dismissButtonPadding = 10.f;
 
 static CGFloat const indicatorMaxWidth = 160.f;
 
-static CGFloat const displayDuration = 1.f;
+static CGFloat const defaultDisplayDuration = 1.f;
 static CGFloat const showAnimationDuration = 0.5f;
 static CGFloat const hideAnimationDuration = 0.5f;
+static CGFloat const defaultDismissDelay = 0.5f;
 
 static CGFloat const indicatorTextFontSize = 17.f;
 
@@ -78,11 +78,11 @@ static CGFloat const indicatorTextFontSize = 17.f;
 @property(nonatomic, assign) TTIndicatorViewStyle indicatorStyle;
 
 @property(nonatomic, strong) SSThemedLabel *indicatorTextLabel;
-@property(nonatomic, strong) TTImageView *indicatorImageView;
+@property(nonatomic, strong) SSThemedImageView *indicatorImageView;
 @property(nonatomic, strong) TTWaitingView *indicatorWaitingView;
 @property(nonatomic, strong) SSThemedButton *dismissButton;
 @property(nonatomic, strong) TTIndicatorContentView *contentView;
-@property(nonatomic, strong) UIView *parentView;
+@property(nonatomic, weak) UIView *parentView;
 
 @property(nonatomic, copy) NSString *indicatorText;
 @property(nonatomic, copy) UIImage *indicatorImage;
@@ -90,6 +90,8 @@ static CGFloat const indicatorTextFontSize = 17.f;
 @property(nonatomic, copy) DismissHandler dismissHandler;
 @property(nonatomic, assign) BOOL isUserDismiss;
 @property(nonatomic, assign) NSInteger supportMaxLine;
+@property (nonatomic) CGFloat expectedWidth;
+
 
 @end
 
@@ -109,10 +111,24 @@ static CGFloat const indicatorTextFontSize = 17.f;
                          dismissHandler:handler];
 }
 
+- (nonnull instancetype)initWithIndicatorStyle:(TTIndicatorViewStyle)style
+                                 indicatorText:(NSString *)indicatorText
+                                indicatorImage:(UIImage *)indicatorImage
+                                       maxLine:(NSInteger)maxLine
+                                dismissHandler:(DismissHandler)handler {
+    return [self initWithIndicatorStyle:style
+                          indicatorText:indicatorText
+                         indicatorImage:indicatorImage
+                                maxLine:maxLine
+                          expectedWidth:-1
+                         dismissHandler:handler];
+}
+
 - (instancetype)initWithIndicatorStyle:(TTIndicatorViewStyle)style
                          indicatorText:(NSString *)indicatorText
                         indicatorImage:(UIImage *)indicatorImage
                                maxLine:(NSInteger)maxLine
+                         expectedWidth:(CGFloat)expectedWidth
                         dismissHandler:(DismissHandler)handler
 {
     self = [super initWithFrame:CGRectZero];
@@ -124,6 +140,8 @@ static CGFloat const indicatorTextFontSize = 17.f;
         _autoDismiss = YES;
         _dismissHandler = handler;
         _supportMaxLine = maxLine;
+        _dismissDelay = defaultDismissDelay;
+        _expectedWidth = expectedWidth;
         [self initSubViews];
     }
     return self;
@@ -134,13 +152,18 @@ static CGFloat const indicatorTextFontSize = 17.f;
     return [self initWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:nil indicatorImage:nil dismissHandler:nil];
 }
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    return [self initWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:nil indicatorImage:nil dismissHandler:nil];
+}
+
 - (void)initSubViews
 {
     _contentView = [[TTIndicatorContentView alloc] init];
     [self addSubview:_contentView];
     
-    _indicatorImageView = [TTImageView new];
-    _indicatorImageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+    _indicatorImageView = [SSThemedImageView new];
+    _indicatorImageView.contentMode = UIViewContentModeScaleAspectFill;
     if (_indicatorImage) {
         [self _layoutIndicatorImageViewWithImage:_indicatorImage];
     }
@@ -177,7 +200,7 @@ static CGFloat const indicatorTextFontSize = 17.f;
              forControlEvents:UIControlEventTouchUpInside];
     [_contentView addSubview:self.dismissButton];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeStatusBarOrientationChanged) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeStatusBarOrientationChanged:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
 }
 
 - (void)dealloc
@@ -185,9 +208,22 @@ static CGFloat const indicatorTextFontSize = 17.f;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)observeStatusBarOrientationChanged
+- (BOOL)p_needTransform {
+    UIInterfaceOrientation ori = [UIApplication sharedApplication].statusBarOrientation;
+    if ((_parentView.width > _parentView.height && UIInterfaceOrientationIsPortrait(ori)) || (_parentView.width < _parentView.height && UIInterfaceOrientationIsLandscape(ori))) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (void)observeStatusBarOrientationChanged:(NSNotification *)aNotification
 {
     [self setNeedsLayout];
+    
+    NSNumber *orientationNumber = aNotification.userInfo[UIApplicationStatusBarOrientationUserInfoKey];
+    UIInterfaceOrientation orientation = orientationNumber.integerValue;
+    [self rotateContentForInterfaceOrientation:orientation];
 }
 
 #pragma mark - Layout
@@ -201,22 +237,22 @@ static CGFloat const indicatorTextFontSize = 17.f;
     [_contentView sizeToFit];
     _contentView.center = CGPointMake(_parentView.width/2, _parentView.height/2);
     if (Shown(_indicatorImageView)) {
-        _indicatorImageView.centerX = _contentView.width/2;
+        _indicatorImageView.centerX = _contentView.bounds.size.width/2;
         _indicatorImageView.top = topPadding;
         if (Shown(_indicatorTextLabel)) {
-            _indicatorTextLabel.centerX = _contentView.width/2;
+            _indicatorTextLabel.centerX = _contentView.bounds.size.width/2;
             _indicatorTextLabel.top = _indicatorImageView.bottom + itemSpacing;
         }
     }
     else {
         CGFloat contentBaseLine = topPadding;
         if (Shown(_indicatorWaitingView)) {
-            _indicatorWaitingView.centerX = _contentView.width/2;
+            _indicatorWaitingView.centerX = _contentView.bounds.size.width/2;
             _indicatorWaitingView.top = topPadding;
             contentBaseLine = _indicatorWaitingView.bottom + itemSpacing;
         }
         if (Shown(_indicatorTextLabel)) {
-            _indicatorTextLabel.centerX = _contentView.width/2;
+            _indicatorTextLabel.centerX = _contentView.bounds.size.width/2;
             _indicatorTextLabel.top = contentBaseLine;
             contentBaseLine = _indicatorTextLabel.bottom + itemSpacing;
         }
@@ -232,7 +268,7 @@ static CGFloat const indicatorTextFontSize = 17.f;
 
 - (void)makeRotationTransformOnIOS7
 {
-    if ([TTDeviceHelper OSVersionNumber] < 8.f) {
+    if ([TTDeviceHelper OSVersionNumber] < 8.f && [self p_needTransform]) {
         switch ([UIApplication sharedApplication].statusBarOrientation) {
             case UIInterfaceOrientationPortrait:
             case UIInterfaceOrientationPortraitUpsideDown:
@@ -259,9 +295,30 @@ static CGFloat const indicatorTextFontSize = 17.f;
     }
 }
 
+- (void)rotateContentForInterfaceOrientation:(UIInterfaceOrientation)orientation
+{
+    switch (orientation) {
+        case UIInterfaceOrientationPortrait:
+        case UIInterfaceOrientationPortraitUpsideDown:
+            _contentView.transform = CGAffineTransformIdentity;
+            break;
+        case UIInterfaceOrientationLandscapeLeft:
+            _contentView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+            break;
+        case UIInterfaceOrientationLandscapeRight:
+            _contentView.transform = CGAffineTransformMakeRotation(M_PI_2);
+            break;
+    }
+}
+
 #pragma mark - Show
 
 - (void)showFromParentView:(UIView *)parentView
+{
+    [self showFromParentView:parentView offset:UIOffsetMake(0, 0)];
+}
+
+- (void)showFromParentView:(UIView *)parentView offset:(UIOffset)offset
 {
     if (!parentView) {
         parentView = [self.class _defaultParentView];
@@ -271,9 +328,13 @@ static CGFloat const indicatorTextFontSize = 17.f;
     [self _dismissAllCurrentIndicators];
     [_parentView addSubview:self];
     self.size = CGSizeMake(parentView.width, parentView.height);
+    self.center = CGPointMake(parentView.centerX + offset.horizontal, parentView.centerY + offset.vertical);
     self.userInteractionEnabled = _showDismissButton;
     
     self.alpha = 0.f;
+    if ([self p_needTransform]) {
+        [self rotateContentForInterfaceOrientation:UIApplication.sharedApplication.statusBarOrientation];
+    }
     _indicatorImageView.alpha = 0.f;
     _indicatorTextLabel.alpha = 0.f;
     _indicatorImageView.transform = CGAffineTransformMakeScale(0.f, 0.f);
@@ -284,7 +345,7 @@ static CGFloat const indicatorTextFontSize = 17.f;
         self.alpha = 1.f;
     } completion:^(BOOL finished) {
         if (_autoDismiss) {
-            [self performSelector:@selector(dismissFromParentView) withObject:nil afterDelay:displayDuration];
+            [self performSelector:@selector(dismissFromParentView) withObject:nil afterDelay:self.duration > 0? self.duration: defaultDisplayDuration];
         }
     }];
     [UIView animateWithDuration:showAnimationDuration-0.1 delay:0.1f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
@@ -305,6 +366,7 @@ static CGFloat const indicatorTextFontSize = 17.f;
                           indicatorText:indicatorText
                          indicatorImage:indicatorImage
                                 maxLine:indicatorTextLabelMaxLineNumber
+                          expectedWidth:-1
                             autoDismiss:autoDismiss
                          dismissHandler:handler];
 }
@@ -316,7 +378,19 @@ static CGFloat const indicatorTextFontSize = 17.f;
                    autoDismiss:(BOOL)autoDismiss
                 dismissHandler:(nullable DismissHandler)handler
 {
-    TTIndicatorView *indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:style indicatorText:indicatorText indicatorImage:indicatorImage maxLine:maxLine dismissHandler:handler];
+    TTIndicatorView *indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:style indicatorText:indicatorText indicatorImage:indicatorImage maxLine:maxLine expectedWidth:-1 dismissHandler:handler];
+    indicatorView.autoDismiss = autoDismiss;
+    [indicatorView showFromParentView:[self.class _defaultParentView]];
+}
+
++ (void)showWithIndicatorStyle:(TTIndicatorViewStyle)style
+                 indicatorText:(nullable NSString *)indicatorText
+                indicatorImage:(nullable UIImage *)indicatorImage
+                       maxLine:(NSInteger)maxLine
+                 expectedWidth:(CGFloat)expectedWidth
+                   autoDismiss:(BOOL)autoDismiss
+                dismissHandler:(nullable DismissHandler)handler {
+    TTIndicatorView *indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:style indicatorText:indicatorText indicatorImage:indicatorImage maxLine:maxLine expectedWidth:expectedWidth dismissHandler:handler];
     indicatorView.autoDismiss = autoDismiss;
     [indicatorView showFromParentView:[self.class _defaultParentView]];
 }
@@ -351,7 +425,7 @@ static CGFloat const indicatorTextFontSize = 17.f;
         }
     };
     if (animated) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.dismissDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [UIView animateWithDuration:hideAnimationDuration
                              animations:^{
                                  self.alpha = 0.f;
@@ -403,6 +477,13 @@ static CGFloat const indicatorTextFontSize = 17.f;
     [self setNeedsLayout];
 }
 
+- (void)setDismissDelay:(NSTimeInterval)dissmissDelay
+{
+    dissmissDelay = MAX(0, dissmissDelay);
+    
+    _dismissDelay = dissmissDelay;
+}
+
 #pragma mark - Update
 - (void)updateIndicatorWithText:(NSString *)updateIndicatorText
         shouldRemoveWaitingView:(BOOL)shouldRemoveWaitingView
@@ -428,14 +509,13 @@ static CGFloat const indicatorTextFontSize = 17.f;
 
 + (UIView *)_defaultParentView
 {
-    if ([[[UIApplication sharedApplication] delegate] respondsToSelector:@selector(window)]) {
-        return [[[UIApplication sharedApplication] delegate] window];
-    }
-    
     if ([[UIApplication sharedApplication] keyWindow]) {
         return [[UIApplication sharedApplication] keyWindow];
     }
     
+    if ([[[UIApplication sharedApplication] delegate] respondsToSelector:@selector(window)]) {
+        return [[[UIApplication sharedApplication] delegate] window];
+    }    
     return nil;
 }
 
@@ -450,9 +530,9 @@ static CGFloat const indicatorTextFontSize = 17.f;
     _indicatorTextLabel.text = _indicatorText;
     //singleLine size
     CGSize labelSize = [_indicatorText sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:indicatorTextFontSize]}];
-    if (labelSize.width > indicatorMaxWidth) {
-        labelSize.width = indicatorMaxWidth;
-        labelSize.height = [TTLabelTextHelper heightOfText:text fontSize:indicatorTextFontSize forWidth:indicatorMaxWidth forLineHeight:[UIFont systemFontOfSize:indicatorTextFontSize].lineHeight constraintToMaxNumberOfLines:_supportMaxLine firstLineIndent:0 textAlignment:NSTextAlignmentCenter];
+    if (labelSize.width > self.indicatorMaxWidth) {
+        labelSize.width = self.indicatorMaxWidth;
+        labelSize.height = [TTLabelTextHelper heightOfText:text fontSize:indicatorTextFontSize forWidth:self.indicatorMaxWidth forLineHeight:[UIFont systemFontOfSize:indicatorTextFontSize].lineHeight constraintToMaxNumberOfLines:_supportMaxLine firstLineIndent:0 textAlignment:NSTextAlignmentCenter];
     }
     _indicatorTextLabel.size = labelSize;
 }
@@ -462,6 +542,18 @@ static CGFloat const indicatorTextFontSize = 17.f;
     _indicatorImage = image;
     [_indicatorImageView setImage:image];
     _indicatorImageView.size = image.size;
+}
+
++ (void)showIndicatorForFollowMessage:(NSString *)msg {
+    [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:msg indicatorImage:[UIImage imageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:nil];
+}
+
+- (CGFloat)indicatorMaxWidth {
+    if (self.expectedWidth <= 0 || self.expectedWidth >= UIScreen.mainScreen.bounds.size.width) {
+        return indicatorMaxWidth;
+    } else {
+        return self.expectedWidth;
+    }
 }
 
 @end

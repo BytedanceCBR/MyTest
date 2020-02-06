@@ -9,7 +9,7 @@
 #import <Masonry/Masonry.h>
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 
 #define labelFontSize ((CGRectGetWidth([UIScreen mainScreen].bounds) > 320) ? 12 : 10)
 

@@ -10,8 +10,6 @@
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceHelper.h"
 #import <TTBaseLib/UIImageAdditions.h>
-#import <FHCommonUI/UIFont+House.h>
-#import <FHCommonUI/UIColor+Theme.h>
 
 @interface TTFullScreenErrorView ()
 
@@ -26,38 +24,42 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
 
-    [self.refreshButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [self.refreshButton setTitleColor:[UIColor colorWithHexString:@"#ff5869"] forState:UIControlStateNormal];
     [self.refreshButton setTitle:@"刷新" forState:UIControlStateNormal];
     self.refreshButton.layer.cornerRadius  = 15;
-    self.refreshButton.titleLabel.font = [UIFont themeFontRegular:14];
-    self.refreshButton.layer.borderColor = [[UIColor themeRed1]CGColor];
+    UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+    if (!font) {
+        font = [UIFont systemFontOfSize:14];
+    }
+    self.refreshButton.titleLabel.font = font;
+    self.refreshButton.layer.borderColor = [[UIColor colorWithHexString:@"#ff5869"]CGColor];
     self.refreshButton.layer.borderWidth = 1;
     [self.refreshButton setBackgroundImage:[UIImage imageWithUIColor:[UIColor whiteColor]] forState:UIControlStateNormal];
-    [self.refreshButton setBackgroundImage:[UIImage imageWithUIColor:[[UIColor themeRed1] colorWithAlphaComponent:0.1]] forState:UIControlStateHighlighted];
+    [self.refreshButton setBackgroundImage:[UIImage imageWithUIColor:[[UIColor colorWithHexString:@"#ff5869"] colorWithAlphaComponent:0.1]] forState:UIControlStateHighlighted];
     self.refreshButton.layer.masksToBounds = YES;
 }
 //错误提示图片和文本描述根据不同的设备自动适应
 - (void)willMoveToSuperview:(UIView *)newSuperview {
-	[super willMoveToSuperview:newSuperview];
-
-	if (newSuperview) {
-		CGFloat width = 152.0, height = 80.0;
-		CGFloat fontSize = 14.0;
-
-//        if ([TTDeviceHelper is667Screen]) {
-//            width = 226.0;
-//            height = 119.0;
-//            fontSize = 17.0;
-//        } else if ([TTDeviceHelper is736Screen]) {
-//            width = 239.0;
-//            height = 126.0;
-//            fontSize = 18.0;
-//        }
-
-//        self.errorImageWidthConstraint.constant = width;
-//        self.errorImageHeightConstraint.constant = height;
-		self.errorMsg.font = [UIFont systemFontOfSize:fontSize];
-	}
+    [super willMoveToSuperview:newSuperview];
+    
+    if (newSuperview) {
+        CGFloat width = 152.0, height = 80.0;
+        CGFloat fontSize = 14.0;
+        
+        //        if ([TTDeviceHelper is667Screen]) {
+        //            width = 226.0;
+        //            height = 119.0;
+        //            fontSize = 17.0;
+        //        } else if ([TTDeviceHelper is736Screen]) {
+        //            width = 239.0;
+        //            height = 126.0;
+        //            fontSize = 18.0;
+        //        }
+        
+        //        self.errorImageWidthConstraint.constant = width;
+        //        self.errorImageHeightConstraint.constant = height;
+        self.errorMsg.font = [UIFont systemFontOfSize:fontSize];
+    }
 }
 
 - (void)setViewType:(TTFullScreenErrorViewType)viewType {
@@ -190,7 +192,7 @@
 }
 
 //- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-//    
+//
 //    BOOL inside = CGRectContainsPoint(self.actionBtn.frame, point) || CGRectContainsPoint(self.refreshButton.frame, point);
 //    return inside;
 //}

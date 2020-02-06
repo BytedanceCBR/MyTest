@@ -26,7 +26,6 @@
 #import "TTSegmentedControl.h"
 //#import "TTSFActivityManager.h"
 //#import "TTSFResourcesManager.h"
-//#import "Bubble-Swift.h"
 #import "FHMessageViewController.h"
 #import "FHMineViewController.h"
 #import <FHHouseFind/FHHouseFindViewController.h>
@@ -34,8 +33,8 @@
 #import "SSCommonLogic.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <FHHouseUGC/FHCommunityViewController.h>
-#import <FHHomeViewController.h>
-#import <FHHomeMainViewController.h>
+#import "FHHomeViewController.h"
+#import "FHHomeMainViewController.h"
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 

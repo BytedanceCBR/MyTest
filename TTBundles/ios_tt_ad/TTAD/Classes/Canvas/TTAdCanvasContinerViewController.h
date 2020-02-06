@@ -9,7 +9,7 @@
 #import "SSViewControllerBase.h"
 #import "TTAdCanvasContainerViewModel.h"
 #import "TTAdCanvasDefine.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 
 @interface TTAdCanvasContinerViewController : SSViewControllerBase <TTRouteInitializeProtocol>
 

@@ -8,7 +8,7 @@
 
 #import "TTLoginDialogStrategyManager.h"
 #import "NewsBaseDelegate.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTModuleBridge.h"
 #import "SSCommonLogic.h"
 

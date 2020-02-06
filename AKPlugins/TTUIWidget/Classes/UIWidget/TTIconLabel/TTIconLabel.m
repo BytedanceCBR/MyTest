@@ -7,16 +7,13 @@
 //
 
 #import "TTIconLabel.h"
-#import "TTAsyncLabel.h"
-#import <TTVerifyKit/TTVerifyNightMaskView.h>
+#import "TTVerifyNightMaskView.h"
 #import "TTDeviceUIUtils.h"
 #import "UIViewAdditions.h"
 #import "TTThemeManager.h"
 #import "UIImage+TTThemeExtension.h"
-#import "UIImage+TTImage.h"
 #import <objc/runtime.h>
-
-#import <SDWebImage/UIImageView+WebCache.h>
+#import <BDWebImage/BDWebImage.h>
 
 #define IsEqualOrNil(x, y) ((!x && !y) || (x && [y isEqual:x]))
 #define IsEqualStringOrNil(x, y) ((!x && !y) || (x && [y isEqualToString:x]))
@@ -145,9 +142,7 @@
 
 @interface TTIconLabel ()
 
-@property (nonatomic, strong) SSThemedLabel *themedLabel;
-@property (nonatomic, strong) TTAsyncLabel *asyncLabel;
-@property (nonatomic, strong, readwrite) UIView *label;
+@property (nonatomic, strong, readwrite) SSThemedLabel *themedLabel;
 @property (nonatomic, strong) UIView *iconContainerView;
 @property (nonatomic, copy) NSArray<UIImageView *> *imageViews;
 @property (nonatomic, copy) NSArray<TTIconImageModel *> *iconModels;
@@ -161,11 +156,11 @@
     self = [super initWithFrame:frame];
     if (self) {
         _themedLabel = [[SSThemedLabel alloc] init];
-        _asyncLabel = [[TTAsyncLabel alloc] init];
         _labelMaxWidth = 0;
         _iconRightPadding = 0;
         _iconLeftPadding = [TTDeviceUIUtils tt_padding:3];
         _iconSpacing = [TTDeviceUIUtils tt_padding:3];
+        [self addSubview:self.themedLabel];
     }
     return self;
 }
@@ -175,11 +170,11 @@
     self = [super initWithCoder:coder];
     if (self) {
         _themedLabel = [[SSThemedLabel alloc] init];
-        _asyncLabel = [[TTAsyncLabel alloc] init];
         _labelMaxWidth = 0;
         _iconRightPadding = 0;
         _iconLeftPadding = [TTDeviceUIUtils tt_padding:3];
         _iconSpacing = [TTDeviceUIUtils tt_padding:3];
+        [self addSubview:self.themedLabel];
     }
     return self;
 }
@@ -188,7 +183,6 @@
 - (void)setText:(NSString *)text
 {
     _text = text;
-    [self.asyncLabel setText:text];
     [self.themedLabel setText:text];
 }
 
@@ -201,14 +195,12 @@
 - (void)setFont:(UIFont *)font
 {
     _font = font;
-    [self.asyncLabel setFont:font];
     [self.themedLabel setFont:font];
 }
 
 - (void)setTextColor:(UIColor *)textColor
 {
     _textColor = textColor;
-    [self.asyncLabel setTextColor:textColor];
     [self.themedLabel setTextColor:textColor];
 }
 
@@ -227,21 +219,18 @@
 - (void)setNumberOfLines:(NSInteger)numberOfLines
 {
     _numberOfLines = numberOfLines;
-    [self.asyncLabel setNumberOfLines:numberOfLines];
     [self.themedLabel setNumberOfLines:numberOfLines];
 }
 
 - (void)setTextAlignment:(NSTextAlignment)textAlignment
 {
     _textAlignment = textAlignment;
-    [self.asyncLabel setTextAlignment:textAlignment];
     [self.themedLabel setTextAlignment:textAlignment];
 }
 
 - (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode
 {
     _lineBreakMode = lineBreakMode;
-    [self.asyncLabel setLineBreakMode:lineBreakMode];
     [self.themedLabel setLineBreakMode:lineBreakMode];
 }
 
@@ -261,14 +250,6 @@
     [self.themedLabel setVerticalAlignment:verticalAlignment];
 }
 
-#pragma mark - config
-- (void)setEnableAsync:(BOOL)enableAsync
-{
-    if (_enableAsync != enableAsync) {
-        _enableAsync = enableAsync;
-        [self setupLabel];
-    }
-}
 
 #pragma mark - iconView
 - (NSUInteger)indexOfDayIcon:(UIImage *)icon
@@ -320,38 +301,6 @@
 }
 
 #pragma mark - private method
-- (UIView *)label
-{
-    if (!_label) {
-        if (self.enableAsync) {
-            _label = self.asyncLabel;
-        } else {
-            _label = self.themedLabel;
-        }
-        [self setupLabel];
-    }
-    
-    return _label;
-}
-
-- (void)setupLabel
-{
-    if (self.enableAsync) {
-        if (self.asyncLabel && !self.themedLabel) {
-            return;
-        }
-        [self.themedLabel removeFromSuperview];
-        self.themedLabel = nil;
-        [self addSubview:self.label];
-    } else {
-        if (self.themedLabel && !self.asyncLabel) {
-            return;
-        }
-        [self.asyncLabel removeFromSuperview];
-        self.asyncLabel = nil;
-        [self addSubview:self.label];
-    }
-}
 
 - (CGSize)adjustedIconSizeWithSize:(CGSize)size
 {
@@ -381,7 +330,7 @@
 
 - (CGSize)iconContainerSize
 {
-    CGFloat height = MAX(self.height, self.label.height);
+    CGFloat height = MAX(self.height, self.themedLabel.height);
     CGFloat width = self.iconLeftPadding + self.iconRightPadding;
     width += self.iconModels.count > 1 ? (self.iconModels.count - 1) * self.iconSpacing : 0;
     for (TTIconImageModel *model in self.iconModels) {
@@ -401,9 +350,9 @@
 -(CGSize)sizeThatFits:(CGSize)size
 {
     if (self.iconModels.count <= 0) {
-        CGSize labelSize = [self.label sizeThatFits:size];
+        CGSize labelSize = [self.themedLabel sizeThatFits:size];
         if (!self.disableLabelSizeToFit) {
-            [self.label sizeToFit];
+            [self.themedLabel sizeToFit];
             if (self.labelMaxWidth > 0 && labelSize.width > self.labelMaxWidth) {
                 labelSize.width = self.labelMaxWidth;
             }
@@ -414,7 +363,7 @@
     CGSize containerSize = [self iconContainerSize];
     CGFloat restWidth = size.width - containerSize.width;
     restWidth = restWidth > 0 ? restWidth : 0;
-    CGSize labelSize = [self.label sizeThatFits:CGSizeMake(restWidth, size.height)];
+    CGSize labelSize = [self.themedLabel sizeThatFits:CGSizeMake(restWidth, size.height)];
     
     if (self.labelMaxWidth > 0 && labelSize.width > self.labelMaxWidth) {
         labelSize.width = self.labelMaxWidth;
@@ -426,7 +375,7 @@
 
 - (CGSize)intrinsicContentSize
 {
-    CGSize labelSize = [self.label intrinsicContentSize];
+    CGSize labelSize = [self.themedLabel intrinsicContentSize];
     if (self.iconModels.count <= 0) {
         if (self.labelMaxWidth > 0 && labelSize.width > self.labelMaxWidth) {
             labelSize.width = self.labelMaxWidth;
@@ -454,38 +403,38 @@
 {
     [super layoutSubviews];
     if (self.iconModels.count <= 0) {
-        self.label.frame = self.bounds;
+        self.themedLabel.frame = self.bounds;
         return;
     }
     
     if (!self.disableLabelSizeToFit) {
-        [self.label sizeToFit];
-        self.label.left = self.bounds.origin.x;
-        CGFloat height = MAX(self.height, self.label.height);
-        self.label.centerY = height / 2;
+        [self.themedLabel sizeToFit];
+        self.themedLabel.left = self.bounds.origin.x;
+        CGFloat height = MAX(self.height, self.themedLabel.height);
+        self.themedLabel.centerY = height / 2;
     }
     CGSize containerSize = [self iconContainerSize];
     
     // 先检查是否有长度上限
-    if (self.labelMaxWidth > 0 && self.label.width > self.labelMaxWidth) {
-        self.label.width = self.labelMaxWidth;
+    if (self.labelMaxWidth > 0 && self.themedLabel.width > self.labelMaxWidth) {
+        self.themedLabel.width = self.labelMaxWidth;
     }
     // 仍然为长文本
-    if (self.label.width + containerSize.width > self.width) {
+    if (self.themedLabel.width + containerSize.width > self.width) {
         CGFloat width = self.width - containerSize.width;
         width = width > 0 ? width : 0;
-        self.label.width = width;
+        self.themedLabel.width = width;
     }
     // 对齐方式调整
     if (self.textAlignment == NSTextAlignmentCenter) {
-        CGFloat left = (self.width - self.label.width - containerSize.width) / 2;
-        self.label.left = left;
+        CGFloat left = (self.width - self.themedLabel.width - containerSize.width) / 2;
+        self.themedLabel.left = left;
     } else if (self.textAlignment == NSTextAlignmentRight) {
-        CGFloat left = self.width - self.label.width - containerSize.width;
-        self.label.left = left;
+        CGFloat left = self.width - self.themedLabel.width - containerSize.width;
+        self.themedLabel.left = left;
     }
     
-    CGRect iconContainerFrame = CGRectMake(CGRectGetMaxX(self.label.frame), 0, containerSize.width, containerSize.height);
+    CGRect iconContainerFrame = CGRectMake(CGRectGetMaxX(self.themedLabel.frame), 0, containerSize.width, containerSize.height);
     self.iconContainerView.frame = iconContainerFrame;
     
     CGFloat previousX = self.iconLeftPadding;
@@ -558,28 +507,6 @@
     return imageView;
 }
 
-- (void)updateImageView:(UIImageView *)imageView withImage:(UIImage *)image
-{
-    if (!imageView || !image) {
-        return;
-    }
-    
-    if (image.images.count > 0) {
-        imageView.image = image.images.firstObject;
-        imageView.animationRepeatCount = image.tt_imageLoopCount;
-        imageView.animationDuration = image.duration;
-        imageView.animationImages = image.images;
-        [imageView startAnimating];
-    } else {
-        [imageView stopAnimating];
-        imageView.animationImages = nil;
-        imageView.animationDuration = 0;
-        imageView.animationRepeatCount = 0;
-        imageView.image = image;
-    }
-}
-
-
 - (void)updateImageView:(UIImageView *)imageView WithModel:(TTIconImageModel *)model
 {
     if (!imageView || !model) {
@@ -591,23 +518,23 @@
     
     if (model.imageName) {
         UIImage *image = [UIImage themedImageNamed:model.imageName];
-        [self updateImageView:imageView withImage:image];
+        imageView.image = image;
     } else if (model.dayIcon) {
         if (isDayMode || !model.nightIcon) {
-            [self updateImageView:imageView withImage:model.dayIcon];
+            imageView.image = model.dayIcon;
             if (!self.disableNightMode) {
                 imageView.tt_nightMask.hidden = NO;
                 imageView.tt_nightMask.size = imageView.bounds.size;
                 [imageView.tt_nightMask refreshWithMaskImage:imageView.image];
             }
         } else {
-            [self updateImageView:imageView withImage:model.nightIcon];
+            imageView.image = model.nightIcon;
         }
     } else if (model.dayIconURL) {
         if (isDayMode || !model.nightIconURL) {
-            [imageView sd_setImageWithURL:model.dayIconURL placeholderImage:self.placeholderImage options:SDWebImageRetryFailed | SDWebImageAvoidAutoSetImage completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            [imageView bd_setImageWithURL:model.dayIconURL placeholder:self.placeholderImage options:BDImageRequestSetDelaySetImage completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
                 if (image) {
-                    [self updateImageView:imageView withImage:image];
+                    imageView.image = image;
                     if (!self.disableNightMode) {
                         imageView.tt_nightMask.hidden = NO;
                         imageView.tt_nightMask.size = imageView.bounds.size;
@@ -616,9 +543,9 @@
                 }
             }];
         } else {
-            [imageView sd_setImageWithURL:model.nightIconURL placeholderImage:self.placeholderImage options:SDWebImageRetryFailed | SDWebImageAvoidAutoSetImage completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            [imageView bd_setImageWithURL:model.dayIconURL placeholder:self.placeholderImage options:BDImageRequestSetDelaySetImage completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
                 if (image) {
-                    [self updateImageView:imageView withImage:image];
+                    imageView.image = image;
                 }
             }];
         }

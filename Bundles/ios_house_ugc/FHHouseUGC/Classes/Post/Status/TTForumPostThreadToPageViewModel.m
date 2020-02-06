@@ -12,7 +12,7 @@
 #import "TTArticleCategoryManager.h"
 #import <TTKitchen/TTKitchen.h>
 #import "TTTabBarProvider.h"
-#import <TSVShortVideoPostTaskProtocol.h>
+#import "TSVShortVideoPostTaskProtocol.h"
 #import <TTKitchenExtension/TTKitchenExtension.h>
 
 @implementation TTForumPostThreadToPageViewModel

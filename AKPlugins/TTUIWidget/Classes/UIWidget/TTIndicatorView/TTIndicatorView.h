@@ -28,6 +28,9 @@ typedef NS_ENUM(NSInteger, TTIndicatorViewStyle)
  *  @Attention 需要控制指示器更新text或icon时，需要设置为NO
  */
 @property(nonatomic, assign) BOOL autoDismiss;
+@property(nonatomic, assign) NSTimeInterval dismissDelay;
+
+@property(nonatomic, assign) NSTimeInterval duration;
 
 #pragma mark - Instance initializer
 
@@ -45,12 +48,39 @@ typedef NS_ENUM(NSInteger, TTIndicatorViewStyle)
                                  indicatorText:(nullable NSString *)indicatorText
                                 indicatorImage:(nullable UIImage *)indicatorImage
                                 dismissHandler:(nullable DismissHandler)handler;
+
+
+/**
+ *  创建实例指示器，可显示在指定view上，生命周期跟随view
+ *
+ *  @param style              指示器类型，不可同时显示icon和waitingView
+ *  @param indicatorText      tip文字，可为空
+ *  @param indicatorImage     icon图片
+ *  @param maxLine            最大行数
+ *  @param handler            指示器消失后的处理block
+ *
+ *  @return 指示器实例
+ */
+- (nonnull instancetype)initWithIndicatorStyle:(TTIndicatorViewStyle)style
+                                 indicatorText:(NSString *)indicatorText
+                                indicatorImage:(UIImage *)indicatorImage
+                                       maxLine:(NSInteger)maxLine
+                                dismissHandler:(DismissHandler)handler;
 /**
  *  展示指示器
  *
  *  @param parentView 展示指示器的父superView
  */
 - (void)showFromParentView:(nullable UIView *)parentView;
+
+/**
+ *  展示指示器
+ *
+ *  @param parentView 展示指示器的父superView
+ *  @param offset     相对父superView的偏移量
+ */
+- (void)showFromParentView:(nullable UIView *)parentView offset:(UIOffset)offset;
+
 /**
  *  手动销毁指示器，通常在autoDismiss设为NO后使用
  */
@@ -109,6 +139,13 @@ typedef NS_ENUM(NSInteger, TTIndicatorViewStyle)
                    autoDismiss:(BOOL)autoDismiss
                 dismissHandler:(nullable DismissHandler)handler;
 
++ (void)showWithIndicatorStyle:(TTIndicatorViewStyle)style
+                 indicatorText:(nullable NSString *)indicatorText
+                indicatorImage:(nullable UIImage *)indicatorImage
+                       maxLine:(NSInteger)maxLine
+                 expectedWidth:(CGFloat)expectedWidth
+                   autoDismiss:(BOOL)autoDismiss
+                dismissHandler:(nullable DismissHandler)handler;
 /**
  *  强制销毁所有window上的所有指示器
  */

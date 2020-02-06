@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTAccountSDK.h>
+#import "TTAccountSDK.h"
 #import "TTAccountLoginViewController.h"
 #import "TTAccountLoginEditProfileViewController.h"
 #import "TTAccountLoginQuickRetrieveViewController.h"

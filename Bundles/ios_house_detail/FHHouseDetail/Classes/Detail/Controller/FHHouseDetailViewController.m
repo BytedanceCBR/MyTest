@@ -16,7 +16,7 @@
 #import "UIViewController+Track.h"
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import <FHRNHelper.h>
+#import "FHRNHelper.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
@@ -711,21 +711,25 @@
 //    self.feedbackView.realtorId = self.phoneCallRealtorId;
 //    self.feedbackView.requestId = self.phoneCallRequestId;
 //    [self.feedbackView show:self.view];
-    
+    NSString *realtorId = self.phoneCallRealtorId;
+    NSString *requestId = self.phoneCallRequestId;
+
     WeakSelf;
     __block NSMutableDictionary *tracerDic = @{}.mutableCopy;
     if (self.viewModel.detailTracerDic) {
         [tracerDic addEntriesFromDictionary:self.viewModel.detailTracerDic];
     }
-    tracerDic[@"realtor_id"] = self.phoneCallRealtorId ? self.phoneCallRealtorId : @"be_null";
+    tracerDic[@"realtor_id"] = realtorId ? realtorId : @"be_null";
     //    tracerDic[@"click_position"] = position ? position : @"be_null";
-    tracerDic[@"request_id"] = self.phoneCallRequestId ?: UT_BE_NULL;
+    tracerDic[@"request_id"] = requestId ?: UT_BE_NULL;
     //    tracerDic[@"star_num"] = num ? num : @"be_null";
     if (self.viewModel.contactViewModel && self.viewModel.contactViewModel.contactPhone) {
         tracerDic[@"realtor_logpb"] = self.viewModel.contactViewModel.contactPhone.realtorLogpb;
     } else {
         tracerDic[@"realtor_logpb"] = UT_BE_NULL;
     }
+    [self addClickFeedbackLog:tracerDic];
+
     FHRealtorEvaluationModel *evaluationModel = [[FHIMConfigManager shareInstance]getRealtorEvaluationModel];
     if (![evaluationModel isKindOfClass:[FHRealtorEvaluationModel class]]) {
         evaluationModel = nil;
@@ -733,7 +737,7 @@
     FHFeedbackView *feedbackView = [[FHFeedbackView alloc]initWithFrame:[UIScreen mainScreen].bounds evalationModel:evaluationModel submitBlock:^(NSString * _Nonnull content, NSInteger scoreCount, NSArray * _Nonnull scoreTags) {
         StrongSelf;
         NSMutableDictionary *traceParams = @{}.mutableCopy;
-        traceParams[@"realtor_id"] = self.phoneCallRealtorId;
+        traceParams[@"realtor_id"] = realtorId;
         traceParams[@"target_id"] = self.houseId;
         tracerDic[@"star_num"] = @(scoreCount);
         traceParams[@"evaluation_type"] = @(0);
@@ -752,15 +756,15 @@
     [self addRealtorEvaluatePopupShowLog:tracerDic];
 }
 
-- (void)addClickFeedbackLog
+- (void)addClickFeedbackLog:(NSDictionary *)extraDict
 {
     NSMutableDictionary *tracerDic = @{}.mutableCopy;
     if (self.viewModel.detailTracerDic) {
         [tracerDic addEntriesFromDictionary:self.viewModel.detailTracerDic];
     }
+    tracerDic[@"realtor_id"] = extraDict[@"realtor_id"];
+    tracerDic[@"request_id"] = extraDict[@"request_id"];
     tracerDic[@"enter_from"] = @"realtor_evaluate_popup";
-    tracerDic[@"realtor_id"] = self.phoneCallRealtorId ?: UT_BE_NULL;
-    tracerDic[@"request_id"] = self.phoneCallRequestId ?: UT_BE_NULL;
     TRACK_EVENT(@"click_feedback", tracerDic);
 }
 

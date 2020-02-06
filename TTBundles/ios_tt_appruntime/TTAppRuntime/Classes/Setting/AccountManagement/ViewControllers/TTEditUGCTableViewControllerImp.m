@@ -16,7 +16,7 @@
 #import "TTIndicatorView.h"
 
 #import "SSAvatarView.h"
-#import <TTWeChatShare.h>
+#import "TTWeChatShare.h"
 
 #import "TTEditUserProfileCell.h"
 #import "TTEditUserProfileSectionView.h"

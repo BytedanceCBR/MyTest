@@ -6,18 +6,18 @@
 //
 
 #import "FHDetailDisclaimerCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
-#import <YYText.h>
-#import <TTShareManager.h>
-#import <TTPhotoScrollViewController.h>
+#import "YYText.h"
+#import "TTShareManager.h"
+#import "TTPhotoScrollViewController.h"
 #import "UIColor+Theme.h"
 
 @interface FHDetailDisclaimerCell ()

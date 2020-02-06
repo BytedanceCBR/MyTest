@@ -9,7 +9,7 @@
 #import "AWEVideoDetailSecondUsePromptViewController.h"
 #import "TSVSlideUpPromptViewController.h"
 #import "TSVSlideLeftEnterProfilePromptViewController.h"
-#import <ReactiveObjC.h>
+#import "ReactiveObjC.h"
 #import "TTSettingsManager.h"
 #import "AWEVideoDetailScrollConfig.h"
 #import "AWEVideoDetailFirstUsePromptViewController.h"

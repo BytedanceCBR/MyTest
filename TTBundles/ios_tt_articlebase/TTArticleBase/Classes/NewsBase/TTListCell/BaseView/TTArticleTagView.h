@@ -6,7 +6,7 @@
 //
 //
 
-#import <SSThemed.h>
+#import "SSThemed.h"
 #import "ExploreOrderedData+TTBusiness.h"
 
 @interface TTArticleTagView : SSThemedLabel

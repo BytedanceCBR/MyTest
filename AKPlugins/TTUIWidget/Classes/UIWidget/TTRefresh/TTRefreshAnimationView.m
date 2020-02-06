@@ -31,8 +31,8 @@
     CAShapeLayer * contentLayer;
     CAShapeLayer * imageLayer;
     CALayer * imageInnerLayer;
-    
-    
+
+
     CAShapeLayer * borderAnimationLayer;
     CALayer * imageAnimationLayer;
     CAShapeLayer * topContentAnimationLayer;
@@ -42,7 +42,7 @@
 }
 
 @property (nonatomic,assign) BOOL isLoading;
-
+ 
 @end
 
 @implementation TTRefreshAnimationView
@@ -52,9 +52,10 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+       
         borderLayer = [CAShapeLayer layer];
         borderLayer.frame = CGRectMake(0,0,48,48);
-        
+       
         contentLayer = [CAShapeLayer layer];
         contentLayer.frame = CGRectMake(0,0,48,48);
         
@@ -73,8 +74,9 @@
         [self.layer addSublayer:imageLayer];
         
         [self addDrawAni];
-        
 
+
+        
     }
     return self;
 }
@@ -93,7 +95,7 @@
         
         imageLayer = [CAShapeLayer layer];
         imageLayer.frame = CGRectMake(0,0,48,48);
-        
+    
         imageInnerLayer = [CALayer layer];
         imageInnerLayer.frame = CGRectMake(kLeadingMargin,kTopMargin,kImageWidth,kImageHeight);
         
@@ -101,17 +103,26 @@
         [self.layer addSublayer:borderLayer];
         [self.layer addSublayer:contentLayer];
         [self.layer addSublayer:imageInnerLayer];
-        
+
         [self.layer addSublayer:imageLayer];
         
         
         [self addDrawAni];
-        
+
         
         
     }
     return self;
 }
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect
+{
+    // Drawing code
+}
+*/
 
 -(void)addDrawAni
 {
@@ -127,7 +138,7 @@
     
     borderLayer.strokeEnd = .0;
     borderLayer.speed = 0;
-    
+
     // Text is drawn by stroking the path from 0% to 100%
     CABasicAnimation *drawBorder = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
     drawBorder.fromValue = @0;
@@ -135,7 +146,7 @@
     drawBorder.duration = 1;
     [borderLayer addAnimation:drawBorder forKey:@"write"];
     borderLayer.timeOffset = 0;
-    
+
     
     //content part
     [contentLayer removeAllAnimations];
@@ -158,7 +169,7 @@
     
     [contentLayer addAnimation:writeText forKey:@"write"];
     contentLayer.timeOffset = 0;
-    
+
     //content part
     [imageLayer removeAllAnimations];
     path = [self newImageLayer];
@@ -187,7 +198,7 @@
 
 -(void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
 {
-    
+
 }
 
 -(IBAction)loadingAnimation
@@ -209,20 +220,20 @@
     }
     borderAnimationLayer.strokeColor = [UIColor tt_themedColorForKey:kColorLine1Disabled].CGColor;
     borderAnimationLayer.hidden = NO;
-    
+
     
     //移动图片
     if (!imageAnimationLayer) {
         imageAnimationLayer = [CALayer layer];
         imageAnimationLayer.frame = CGRectMake(0,0,48,48);
         imageAnimationLayer.anchorPoint = CGPointMake(0,0);
-        
+
         [borderAnimationLayer addSublayer:imageAnimationLayer];
-        
+
         imageAnimationInnerLayer = [CALayer layer];
         imageAnimationInnerLayer.frame = CGRectMake(0,0,kImageWidth,kImageHeight);
         [imageAnimationLayer addSublayer:imageAnimationInnerLayer];
-        
+
         
         imageAnimationBorderLayer = [CAShapeLayer layer];
         imageAnimationBorderLayer.frame = CGRectMake(0,0,48,48);
@@ -234,28 +245,18 @@
         imageAnimationBorderLayer.lineJoin = kCALineJoinMiter;
         imageAnimationBorderLayer.lineCap = kCALineCapSquare;
         [imageAnimationLayer addSublayer:imageAnimationBorderLayer];
-        
-        
-        
     }
-    
     
     //移动图片的动画
     {
         if ([[TTThemeManager sharedInstance_tt].currentThemeName isEqualToString:@"night"]) {
             imageAnimationInnerLayer.backgroundColor = [UIColor colorWithHexString:@"353535"].CGColor;
             imageAnimationBorderLayer.strokeColor = [UIColor colorWithHexString:@"707070"].CGColor;
-            
-            
-        }
-        else {
-            
+        } else {
             imageAnimationBorderLayer.strokeColor = [UIColor tt_themedColorForKey:kColorLine1Disabled].CGColor;
-            
             imageAnimationInnerLayer.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground1].CGColor;
         }
-        
-        
+
         imageAnimationLayer.hidden = NO;
         imageAnimationLayer.frame = CGRectMake(kLeadingMargin,kTopMargin+0.5, kImageWidth,kImageHeight);
         
@@ -263,7 +264,7 @@
         CABasicAnimation * baseAnimation1 = [CABasicAnimation animationWithKeyPath:@"position"];
         baseAnimation1.fromValue = [NSValue valueWithCGPoint:CGPointMake(kLeadingMargin, kTopMargin+0.5)] ;
         baseAnimation1.toValue = [NSValue valueWithCGPoint:CGPointMake(kLeadingMargin+kLongTextWidth-kImageWidth,kTopMargin+0.5)] ;
-        
+      
         CAAnimationGroup * group1 =[CAAnimationGroup animation];
         group1.animations =[NSArray arrayWithObjects:baseAnimation1, nil];
         group1.duration = animationDuration * 0.05;
@@ -296,23 +297,21 @@
         CABasicAnimation * baseAnimation4 = [CABasicAnimation animationWithKeyPath:@"position"];
         baseAnimation4.fromValue = [NSValue valueWithCGPoint:CGPointMake(kLeadingMargin, kTopMargin+1 + kContentHeight - kImageHeight)] ;
         baseAnimation4.toValue = [NSValue valueWithCGPoint:CGPointMake(kLeadingMargin, kTopMargin+0.5)] ;
-        
+      
         CAAnimationGroup * group4 =[CAAnimationGroup animation];
         group4.animations =[NSArray arrayWithObjects:baseAnimation4, nil];
         group4.duration = animationDuration *0.05;
         group4.beginTime = animationDuration * 0.815;
         group4.fillMode = kCAFillModeForwards;
-        
-        
+
         //final sequance
         CAAnimationGroup * sequance =[CAAnimationGroup animation];
         sequance.animations =[NSArray arrayWithObjects: group1,group2,group3,group4,nil];
         sequance.duration = animationDuration;
         sequance.repeatCount = NSUIntegerMax;
         sequance.fillMode = kCAFillModeForwards;
-        
-        
-        
+        sequance.removedOnCompletion = NO;
+
         [imageAnimationLayer addAnimation:sequance forKey:@"move"];
     }
     //上面的文字
@@ -333,9 +332,9 @@
         }
         topContentAnimationLayer.strokeColor = [UIColor tt_themedColorForKey:kColorBackground6].CGColor;
         topContentAnimationLayer.hidden = NO;
-        
+
         topContentAnimationLayer.frame = CGRectMake(kShortLeadingMargin,kTopMargin, kShortTextWidth,12);
-        
+
         //phase 1
         CABasicAnimation * baseAnimation1 = [CABasicAnimation animationWithKeyPath:@"position"];
         baseAnimation1.fromValue = [NSValue valueWithCGPoint:CGPointMake(kShortLeadingMargin, kTopMargin)] ;
@@ -365,7 +364,7 @@
         group2.duration = animationDuration * 0.07f;
         group2.beginTime = animationDuration * 0.325f;
         group2.fillMode = kCAFillModeForwards;
-        
+
         //phase 3
         CABasicAnimation * baseAnimation3 = [CABasicAnimation animationWithKeyPath:@"position"];
         baseAnimation3.fromValue = [NSValue valueWithCGPoint:CGPointMake(kLeadingMargin, kShortTopMargin-1)] ;
@@ -380,7 +379,7 @@
         group3.duration = animationDuration * 0.12f;
         group3.beginTime = animationDuration *0.575;
         group3.fillMode = kCAFillModeForwards;
-        
+
         //phase 4
         CABasicAnimation * baseAnimation4 = [CABasicAnimation animationWithKeyPath:@"position"];
         baseAnimation4.fromValue = [NSValue valueWithCGPoint:CGPointMake(kLeadingMargin,kTopMargin)] ;
@@ -402,7 +401,8 @@
         sequance.duration = animationDuration;
         sequance.repeatCount = NSUIntegerMax;
         sequance.fillMode = kCAFillModeForwards;
-        
+        sequance.removedOnCompletion = NO;
+
         [topContentAnimationLayer addAnimation:sequance forKey:@"move"];
     }
     
@@ -423,11 +423,11 @@
             [borderAnimationLayer addSublayer:bottomContentAnimationLayer];
         }
         bottomContentAnimationLayer.strokeColor = [UIColor tt_themedColorForKey:kColorBackground6].CGColor;
-        
+
         bottomContentAnimationLayer.hidden = NO;
         bottomContentAnimationLayer.frame = CGRectMake(kLeadingMargin,kShortTopMargin-1, kLongTextWidth,12);
-        
-        
+
+
         //phase 1
         CABasicAnimation * baseAnimation1 = [CABasicAnimation animationWithKeyPath:@"position"];
         baseAnimation1.fromValue = [NSValue valueWithCGPoint:CGPointMake(kLeadingMargin, kShortTopMargin-1)] ;
@@ -442,7 +442,7 @@
         group1.duration = animationDuration * 0.07f;
         group1.beginTime = 0.075 * animationDuration;
         group1.fillMode = kCAFillModeForwards;
-        
+
         //phase 2
         CABasicAnimation * baseAnimation2 = [CABasicAnimation animationWithKeyPath:@"position"];
         baseAnimation2.fromValue = [NSValue valueWithCGPoint:CGPointMake(kLeadingMargin, kTopMargin)] ;
@@ -457,7 +457,7 @@
         group2.duration = animationDuration * 0.12f;
         group2.beginTime = 0.325 * animationDuration;
         group2.fillMode = kCAFillModeForwards;
-        
+
         //phase 3
         CABasicAnimation * baseAnimation3 = [CABasicAnimation animationWithKeyPath:@"position"];
         baseAnimation3.fromValue = [NSValue valueWithCGPoint:CGPointMake(kLeadingMargin, kTopMargin)] ;
@@ -472,7 +472,7 @@
         group3.duration = animationDuration * 0.07f;
         group3.beginTime = 0.575 * animationDuration;
         group3.fillMode = kCAFillModeForwards;
-        
+
         //phase 4
         CABasicAnimation * baseAnimation4 = [CABasicAnimation animationWithKeyPath:@"position"];
         baseAnimation4.fromValue = [NSValue valueWithCGPoint:CGPointMake(kShortLeadingMargin, kShortTopMargin-1)] ;
@@ -487,23 +487,21 @@
         group4.duration = animationDuration * 0.12f;
         group4.beginTime = 0.825 * animationDuration;
         group4.fillMode = kCAFillModeForwards;
-        
-        
-        
+ 
         //final sequance
         CAAnimationGroup * sequance =[CAAnimationGroup animation];
         sequance.animations =[NSArray arrayWithObjects: group1,group2,group3,group4,nil];
         sequance.duration = animationDuration;
         sequance.repeatCount = NSUIntegerMax;
         sequance.fillMode = kCAFillModeForwards;
-        
+        sequance.removedOnCompletion = NO;
+
         [bottomContentAnimationLayer addAnimation:sequance forKey:@"move"];
     }
 }
 
 -(void)setPercent:(CGFloat)precent
 {
-    
     precent = MAX(0, precent);
     precent = MIN(precent, 1);
     if(_percent == precent) return;
@@ -513,9 +511,7 @@
     if (!self.isLoading) {
         if ([imageLayer animationForKey:@"write"] == nil) {
             [self addDrawAni];
-        }
-        else
-        {
+        } else {
             borderLayer.timeOffset = self.percent;
             contentLayer.timeOffset = self.percent;
             imageLayer.timeOffset = self.percent;
@@ -524,38 +520,34 @@
             borderLayer.strokeColor = [UIColor tt_themedColorForKey:kColorLine1Disabled].CGColor;
             contentLayer.strokeColor = [UIColor tt_themedColorForKey:kColorBackground6].CGColor;
             imageLayer.strokeColor = [UIColor tt_themedColorForKey:kColorLine1Disabled].CGColor;
-            
-            
+
             if ([[TTThemeManager sharedInstance_tt].currentThemeName isEqualToString:@"night"]) {
                 imageInnerLayer.backgroundColor = [UIColor colorWithHexString:@"353535"].CGColor;
-                
+
                 borderLayer.strokeColor = [UIColor colorWithHexString:@"707070"].CGColor;
                 contentLayer.strokeColor = [UIColor colorWithHexString:@"707070"].CGColor;
                 imageLayer.strokeColor = [UIColor colorWithHexString:@"707070"].CGColor;
-                
-            }
-            else
-            {
+            } else {
                 imageInnerLayer.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground1].CGColor;
                 borderLayer.strokeColor = [UIColor tt_themedColorForKey:kColorLine1Disabled].CGColor;
                 contentLayer.strokeColor = [UIColor tt_themedColorForKey:kColorBackground6].CGColor;
                 imageLayer.strokeColor = [UIColor tt_themedColorForKey:kColorLine1Disabled].CGColor;
-                
+
             }
-            
         }
     }
 }
 -(void)startLoading
 {
     self.isLoading = YES;
-    
+        
     borderLayer.timeOffset = 0;
     contentLayer.timeOffset = 0;
     imageLayer.timeOffset = 0;
     imageInnerLayer.opacity = 0;
     
     [self loadingAnimation];
+    
 }
 
 -(void)stopLoading
@@ -563,7 +555,7 @@
     self.isLoading = NO;
     
     borderAnimationLayer.hidden = YES;
-    
+
     [imageAnimationLayer removeAllAnimations];
     imageAnimationLayer.hidden = YES;
     
@@ -578,7 +570,7 @@
 - (CGPathRef)newBorderLayer
 {
     CGMutablePathRef path = CGPathCreateMutable();
-    
+
     //// Bezier Drawing
     UIBezierPath* bezierPath = [UIBezierPath bezierPath];
     [bezierPath moveToPoint: CGPointMake(38.13/2.0f, -0/2.0f)];
@@ -593,8 +585,8 @@
     [bezierPath addLineToPoint: CGPointMake(38.13/2.0f, -0/2.0f)];
     [bezierPath closePath];
     CGPathAddPath(path, NULL, bezierPath.CGPath);
-    
-    
+ 
+
     return path;
 }
 
@@ -607,19 +599,19 @@
         UIBezierPath* linePath = [UIBezierPath bezierPath];
         [linePath moveToPoint: CGPointMake(kShortLeadingMargin, kTopMargin)];
         [linePath addLineToPoint: CGPointMake(kShortLeadingMargin+kShortTextWidth, kTopMargin)];
-        
+
         [linePath moveToPoint: CGPointMake(kShortLeadingMargin, kTopMargin+kLineSpace)];
         [linePath addLineToPoint: CGPointMake(kShortLeadingMargin+kShortTextWidth, kTopMargin+kLineSpace)];
-        
+
         [linePath moveToPoint: CGPointMake(kShortLeadingMargin, kTopMargin+kLineSpace*2)];
         [linePath addLineToPoint: CGPointMake(kShortLeadingMargin+kShortTextWidth, kTopMargin+kLineSpace*2)];
-        
+   
         [linePath moveToPoint: CGPointMake(kLeadingMargin, kTopMargin+kLineSpace*3)];
         [linePath addLineToPoint: CGPointMake(kLeadingMargin+kLongTextWidth, kTopMargin+kLineSpace*3)];
-        
+
         [linePath moveToPoint: CGPointMake(kLeadingMargin, kTopMargin+kLineSpace*4)];
         [linePath addLineToPoint: CGPointMake(kLeadingMargin+kLongTextWidth, kTopMargin+kLineSpace*4)];
-        
+
         [linePath moveToPoint: CGPointMake(kLeadingMargin, kTopMargin+kLineSpace*5)];
         [linePath addLineToPoint: CGPointMake(kLeadingMargin+kLongTextWidth, kTopMargin+kLineSpace*5)];
         
@@ -666,10 +658,10 @@
     {
         //// Rectangle Drawing
         UIBezierPath* linePath = [UIBezierPath bezierPath];
-        
+   
         [linePath moveToPoint: CGPointMake(0, 1)];
         [linePath addLineToPoint: CGPointMake(kLongTextWidth, 1)];
-        
+   
         [linePath moveToPoint: CGPointMake(0, 1+2.5)];
         [linePath addLineToPoint: CGPointMake(kLongTextWidth, 1+2.5)];
         
@@ -728,8 +720,8 @@
         _loadingText = loadingText;
         _noMoreText = noMoreText;
         
-//        self.refreshAnimationView = [[TTRefreshAnimationView alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
-//        [self addSubview:self.refreshAnimationView];
+        //        self.refreshAnimationView = [[TTRefreshAnimationView alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+        //        [self addSubview:self.refreshAnimationView];
         
         NSString *filePath = [[NSBundle mainBundle] pathForResource:@"house_refresh" ofType:@"json"];
         _animationView = [LOTAnimationView animationWithFilePath:filePath];
@@ -742,6 +734,7 @@
         self.titleLabel.font = [UIFont systemFontOfSize:9.0f];
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.titleLabel.textColors = @[@"5D5D5D", @"707070"];
+        self.titleLabel.isAccessibilityElement = NO;
         [self addSubview:self.titleLabel];
         
     }
@@ -753,26 +746,26 @@
 
 -(void)startLoading{
     
-//    [self.refreshAnimationView startLoading];
+    //    [self.refreshAnimationView startLoading];
     
     [self.animationView play];
 }
 
 -(void)stopLoading{
     
-//    [self.refreshAnimationView stopLoading];
+    //    [self.refreshAnimationView stopLoading];
     
     [self.animationView stop];
-
+    
     
 }
 
 - (void)updateAnimationWithScrollOffset:(CGFloat)offset{
     
     offset += 30;
-//    CGFloat fractionDragged = MIN(1, -offset / (kTTPullRefreshHeight - 30));
-//    self.refreshAnimationView.percent = fractionDragged;
-//    self.animationView.animationProgress = fractionDragged;
+    //    CGFloat fractionDragged = MIN(1, -offset / (kTTPullRefreshHeight - 30));
+    //    self.refreshAnimationView.percent = fractionDragged;
+    //    self.animationView.animationProgress = fractionDragged;
 }
 
 -(void)updateViewWithPullState:(PullDirectionState)state{
@@ -804,8 +797,8 @@
             break;
         case PULL_REFRESH_STATE_NO_MORE:
             
-//            self.refreshAnimationView.hidden = YES;
-//            self.animationView.hidden = YES;
+            //            self.refreshAnimationView.hidden = YES;
+            //            self.animationView.hidden = YES;
             tmp = _noMoreText;
             break;
         default:
@@ -814,7 +807,7 @@
     
     self.titleLabel.text = tmp;
     [self.titleLabel sizeToFit];
-    
+     
     [self adjustSubviewFrame];
 }
 
@@ -822,17 +815,17 @@
 {
     if (self.titleLabel.text == nil || [self.titleLabel.text isEqualToString:@""]) {
         self.titleLabel.center = CGPointMake(self.frame.size.width/2, self.frame.size.height/2+10);
-//        self.refreshAnimationView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height - _pullRefreshLoadingHeight/2);
+        //        self.refreshAnimationView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height - _pullRefreshLoadingHeight/2);
         
         self.animationView.center = CGPointMake(self.frame.size.width/2, self.frame.size.height - _pullRefreshLoadingHeight/2);
-
+        
     }
     else {
         self.titleLabel.center = CGPointMake(self.frame.size.width/2, self.frame.size.height - self.titleLabel.frame.size.height/2 - 8);
-//        self.refreshAnimationView.center = CGPointMake(self.frame.size.width/2, self.titleLabel.frame.origin.y - 6 - self.refreshAnimationView.frame.size.height/2);
+        //        self.refreshAnimationView.center = CGPointMake(self.frame.size.width/2, self.titleLabel.frame.origin.y - 6 - self.refreshAnimationView.frame.size.height/2);
         
         self.animationView.center = CGPointMake(self.frame.size.width/2, self.titleLabel.frame.origin.y - 10 - self.animationView.frame.size.height/2);
-
+        
     }
 }
 
@@ -844,10 +837,11 @@
 }
 
 - (void)configurePullRefreshLoadingHeight:(CGFloat)pullRefreshLoadingHeight{
-    _pullRefreshLoadingHeight = pullRefreshLoadingHeight;
+   _pullRefreshLoadingHeight = pullRefreshLoadingHeight;
 }
 
-
-
+- (void)setTitleColors:(NSArray<NSString *> *)colors {
+    self.titleLabel.textColors = colors;
+}
 
 @end

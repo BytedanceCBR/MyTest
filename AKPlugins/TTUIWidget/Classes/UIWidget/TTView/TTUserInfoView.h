@@ -9,7 +9,6 @@
 #import "SSViewBase.h"
 #import "SSThemed.h"
 
-@class TTAsyncLabel;
 
 typedef void (^TitleLinkBlock)(NSString *title);
 typedef void (^LogoLinkBlock)(NSString *linkURL);
@@ -23,7 +22,7 @@ typedef NS_ENUM(NSUInteger, TTOwnerType) {
 /**
  *  定制标题字体
  */
-@property(nonatomic, strong) TTAsyncLabel *titleLabel;
+@property(nonatomic, strong) SSThemedLabel *titleLabel;
 /**
  *  认证信息label
  */

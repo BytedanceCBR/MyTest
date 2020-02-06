@@ -11,7 +11,7 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTReachability/TTReachability.h>
 #import <TTUIWidget/ArticleListNotifyBarView.h>
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHOldPriceComparisonListController ()

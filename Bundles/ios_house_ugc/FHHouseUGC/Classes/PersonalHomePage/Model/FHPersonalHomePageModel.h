@@ -1,5 +1,5 @@
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
+#import "JSONModel.h"
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHPersonalHomePageDataFollowersDetailModel<NSObject>
 @end

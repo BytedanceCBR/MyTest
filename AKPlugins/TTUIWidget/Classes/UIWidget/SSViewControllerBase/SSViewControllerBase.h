@@ -18,7 +18,7 @@ typedef NS_ENUM(NSUInteger, SSViewControllerStatsBarStyle)
     SSViewControllerStatsBarNoneStyle,
     SSViewControllerStatsBarDayBlackNightWhiteStyle,
     SSViewControllerStatsBarDayWhiteNightBlackStyle,
-};
+} __deprecated_msg("Deprecated, use UIStatusBarStyle instead");
 
 typedef void (^TTAppPageCompletionBlock)(id);
 
@@ -27,11 +27,11 @@ typedef void (^TTAppPageCompletionBlock)(id);
 @property(nonatomic, assign)BOOL viewBoundsChangedNotifyEnable;
 // default to ModeChangeActionTypeCustom
 @property(nonatomic, assign)ModeChangeActionType modeChangeActionType;
-@property(nonatomic, assign)SSViewControllerStatsBarStyle statusBarStyle;
+@property(nonatomic, assign)SSViewControllerStatsBarStyle statusBarStyle __attribute__((deprecated("use -[UIViewController preferredStatusBarStyle] instead")));
 
 - (void)dismissSelf;
 
-//- (instancetype)initWithBaseCondition:(NSDictionary *)baseCondition;
+- (instancetype)initWithBaseCondition:(NSDictionary *)baseCondition __attribute__((deprecated("Replaced by -initWithRouteParamObj:")));
 
 /*
  根据modeChangeActionType更新theme相关UI，会铺上mask view，或者调用themeChanged

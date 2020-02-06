@@ -110,7 +110,7 @@
         [[ToastManager manager] showCustomLoading:@"加载中"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadError:) name:kFHAllConfigLoadErrorNotice object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
         // 第一次提前请求config数据
         [self checkConfigDataWithNoConfigData];
     }

@@ -7,13 +7,13 @@
 
 #import "FHVideoViewController.h"
 #import "FHVideoView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "FHVideoViewModel.h"
 #import "UIViewAdditions.h"
 #import "FHVideoErrorView.h"
 #import "FHVideoNetFlowTipView.h"
 #import "FHUserTracker.h"
-#import <TTVFullScreenPart.h>
+#import "TTVFullScreenPart.h"
 #import <BDWebImage/BDWebImageManager.h>
 #import "FHHMDTManager.h"
 

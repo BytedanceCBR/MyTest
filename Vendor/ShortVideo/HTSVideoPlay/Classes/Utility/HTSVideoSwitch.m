@@ -6,8 +6,8 @@
 //
 
 #import "HTSVideoSwitch.h"
-#import <TTSettingsManager.h>
-#import <NSDictionary+TTAdditions.h>
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 
 @implementation HTSVideoSwitch
 

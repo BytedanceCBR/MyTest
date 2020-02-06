@@ -62,8 +62,7 @@ Pod::Spec.new do |s|
 
 
   # 全局依赖
-  s.dependency "TTNetworkManager"
-  s.dependency "TTReachability"
+
 
 
   # Frameworks

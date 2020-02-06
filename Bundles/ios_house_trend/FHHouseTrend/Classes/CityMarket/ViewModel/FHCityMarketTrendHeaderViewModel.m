@@ -8,7 +8,7 @@
 #import "FHCityMarketTrendHeaderViewModel.h"
 #import "FHCityMarketDetailResponseModel.h"
 #import "CityMarketDetailAPI.h"
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "ReactiveObjC.h"
 #import "extobjc.h"
 #import "TTReachability.h"

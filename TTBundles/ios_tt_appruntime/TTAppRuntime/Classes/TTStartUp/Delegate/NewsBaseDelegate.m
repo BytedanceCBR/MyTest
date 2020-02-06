@@ -7,8 +7,8 @@
 //
 
 #import "NewsBaseDelegate.h"
-#import <TTWeChatShare.h>
-#import <TTAccountBusiness.h>
+#import "TTWeChatShare.h"
+#import "TTAccountBusiness.h"
 #import "TTRoute.h"
 #import "TTIndicatorView.h"
 #import "SSFeedbackManager.h"
@@ -20,6 +20,7 @@
 #import "ExploreLogicSetting.h"
 
 #import "TTTrackerWrapper.h"
+#import "TTReachability.h"
 
 //#if GREY
 //#import "TTSparkRescue.h"
@@ -76,7 +77,7 @@
 #import "TTViewControllerHierarchyHelper.h"
 #import "TTLocalImageTracker.h"
 #import <TTDialogDirector/TTDialogDirector.h>
-#import <TTMonitor/TTExtensions.h>
+#import "TTNetworkHelper.h"
 #import <Crashlytics/Crashlytics.h>
 #import "TTLaunchManager.h"
 #import "GAIAEngine+TTBase.h"
@@ -162,11 +163,29 @@ static NSTimeInterval lastTime;
     return YES;
 }
 
+- (NetworkStatus)_syncToGetCurrentNetWorkStatus
+{
+    NetworkStatus status = [[TTReachability reachabilityWithHostName:@"www.apple.com"] currentReachabilityStatus];
+    if (status == ReachableViaWiFi) {
+        return ReachableViaWiFi;
+    } else if (status == ReachableViaWWAN) {
+        switch ([TTReachability currentCellularConnectionForService:TTCellularServiceTypePrimary]) {
+            case TTCellularNetworkConnection2G:
+            case TTCellularNetworkConnection3G:
+            case TTCellularNetworkConnection4G:
+            default:
+                return ReachableViaWWAN;
+        }
+    } else {
+        return NotReachable;
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     [GAIAEngine appDidFinishLaunching];
     // add by zjing 这行代码要保留，为了解决启动时addObserver引起的死锁crash问题，我只是代码的搬运工，有问题找谷妈妈
-    [TTExtensions networkStatus];
+    [self _syncToGetCurrentNetWorkStatus];
     
     self.userLaunchTheAppDirectly = SSIsEmptyDictionary(launchOptions);
     if ([TTVersionHelper isFirstLaunchAfterUpdate]) {

@@ -7,7 +7,7 @@
 
 #import "FHUGCBannerCell.h"
 #import "FHArticleCellBottomView.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 
 #define topMargin 20
 

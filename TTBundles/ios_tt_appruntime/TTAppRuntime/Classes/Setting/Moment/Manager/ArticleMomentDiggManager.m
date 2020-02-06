@@ -10,7 +10,7 @@
 #import "TTNetworkManager.h"
 #import "ArticleURLSetting.h"
 #import "SSUserModel.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "NSDictionary+TTAdditions.h"
 #import "TTMomentProfileBaseView.h"
 #import "FRActionDataService.h"

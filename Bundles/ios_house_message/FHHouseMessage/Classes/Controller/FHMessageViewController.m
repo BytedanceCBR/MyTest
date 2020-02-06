@@ -7,7 +7,7 @@
 
 #import "FHMessageViewController.h"
 #import "FHMessageViewModel.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIViewController+NavbarItem.h"
 #import "UIColor+Theme.h"
 #import "TTReachability.h"
@@ -29,7 +29,7 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import <FHMessageNotificationManager.h>
 #import "FHSpringHangView.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 
 @interface FHMessageViewController ()
 
@@ -53,7 +53,7 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:TTReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 //     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
     
@@ -77,8 +77,8 @@
         
         [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(84);
-            make.height.mas_equalTo(79);
+            make.width.mas_equalTo(82);
+            make.height.mas_equalTo(82);
             make.right.mas_equalTo(self.view).offset(-11);
         }];
     }

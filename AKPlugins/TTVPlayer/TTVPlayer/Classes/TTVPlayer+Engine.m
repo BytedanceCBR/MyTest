@@ -9,7 +9,7 @@
 #if __has_include(<TTVideoEngineHeader.h>)
 #import <TTVideoEngineHeader.h>
 #else
-#import <TTVideoEngine.h>
+#import "TTVideoEngine.h"
 #endif
 #import "TTVPlayer+CacheProgress.h"
 #import "TTVPlaybackTime.h"

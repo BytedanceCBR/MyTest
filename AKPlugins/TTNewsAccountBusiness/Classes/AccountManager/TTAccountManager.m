@@ -9,9 +9,9 @@
 #import "TTAccountManager.h"
 #import "TTAccountManager+AccountInterfaceTask.h"
 #import "TTAccountManager+HTSAccountBridge.h"
-#import <NSStringAdditions.h>
-#import <TTIndicatorView.h>
-#import <TTModuleBridge.h>
+#import "NSStringAdditions.h"
+#import "TTIndicatorView.h"
+#import "TTModuleBridge.h"
 #import "SSCookieManager.h"
 #import "AccountManager.h"
 #import "SSMyUserModel.h"

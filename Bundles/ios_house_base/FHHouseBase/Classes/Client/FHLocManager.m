@@ -17,15 +17,15 @@
 #import "FHUtils.h"
 #import "FHHouseEnvContextBridge.h"
 #import "FHHouseBridgeManager.h"
-#import <NSDictionary+TTAdditions.h>
-#import <NSTimer+NoRetain.h>
-#import <TTUIResponderHelper.h>
-#import <HMDTTMonitor.h>
-#import <TTInstallIDManager.h>
-#import <TTArticleCategoryManager.h>
+#import "NSDictionary+TTAdditions.h"
+#import "NSTimer+NoRetain.h"
+#import "TTUIResponderHelper.h"
+#import "HMDTTMonitor.h"
+#import "TTInstallIDManager.h"
+#import "TTArticleCategoryManager.h"
 #import "FHHouseUGCAPI.h"
-#import <FHIntroduceManager.h>
-#import <FHMinisdkManager.h>
+#import "FHIntroduceManager.h"
+#import "FHMinisdkManager.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -109,7 +109,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 {
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"您还没有开启定位权限" message:@"请前往系统设置开启，以便我们更好地为您推荐房源及丰富信息推荐维度" preferredType:TTThemedAlertControllerTypeAlert];
     [alertVC addActionWithGrayTitle:@"手动选择" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-        
+
     }];
     
     [alertVC addActionWithTitle:@"前往设置" actionType:TTThemedAlertActionTypeNormal actionBlock:^{

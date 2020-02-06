@@ -11,7 +11,7 @@
 #import "ExploreFetchListManager.h"
 #import "ListDataHeader.h"
 #import "ExploreFetchListDefines.h"
-#import <Lottie/Lottie.h>
+#import <lottie-ios/Lottie/Lottie.h>
 
 @interface LOTAnimationView (Refresh)
 - (void)startLoadingAnimation;

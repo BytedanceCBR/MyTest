@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCPublishBaseViewController.h"
-#import <FHBubbleTipManager.h>
+#import "FHBubbleTipManager.h"
 
 @interface FHUGCPublishBaseViewController ()
 

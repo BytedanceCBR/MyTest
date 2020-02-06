@@ -5,7 +5,7 @@
 //  Created by chenjiesheng on 2018/3/2.
 //
 
-#import <TTAlphaThemedButton.h>
+#import "TTAlphaThemedButton.h"
 #import <UIKit/UIKit.h>
 
 #define PLATFORM_MORE               @"profile_more_login"

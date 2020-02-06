@@ -22,8 +22,6 @@
 #define kRemoteSettingsHost2 @"mon.toutiaocloud.com"
 #define kRemoteSettingsHost3 @"mon.toutiaocloud.net"
 
-#define kUploadHost @"mon.snssdk.com"
-
 static NSDictionary * allowedServices;
 static NSDictionary * allowedLogTypes;
 static NSDictionary * allowedMetrics;
@@ -134,9 +132,10 @@ static dispatch_queue_t configs_queue;
 @property(nonatomic, strong)NSArray<TTMonitorConfigurationAPIReportItem *> * reportItems;
 @property(nonatomic, assign)BOOL disableReportAPIError;
 @property(nonatomic, assign)BOOL enableNetStats;
-@property(nonatomic, strong)NSArray * remoteSettingsHost;
+@property(nonatomic, strong, readwrite)NSArray * remoteSettingsHost;
 @property(nonatomic, copy, readwrite) NSString * appkey;
 @property(nonatomic, copy, readwrite) TTMonitorParamsBlock paramsBlock;
+@property(nonatomic, strong) NSLock *hostLock;
 
 @end
 
@@ -164,6 +163,12 @@ static TTMonitorConfiguration *s_manager;
 
 -(void)connectionChanged:(NSNotification *)notify{
         self.networkStatus = [TTExtensions networkStatus];
+}
+
+- (void)setRemoteSettingHosts:(NSArray *)hosts {
+    [self.hostLock lock];
+    self.remoteSettingsHost = hosts;
+    [self.hostLock unlock];
 }
 
 + (NSDictionary *)monitorTrackAdditionalParameters
@@ -200,6 +205,7 @@ static TTMonitorConfiguration *s_manager;
         [self refreshReportItems:savedAPIReports];
         self.disableReportAPIError = [TTMonitorConfiguration disableReportError];
         self.enableNetStats = [TTMonitorConfiguration enableNetStat];
+        self.hostLock = [[NSLock alloc] init];
     }
     return self;
 }
@@ -238,15 +244,18 @@ static TTMonitorConfiguration *s_manager;
 #endif
     }
     static NSUInteger tryTimes = 0;
-    if (tryTimes>3) {
-        tryTimes=0;
+    NSUInteger maxTryTimes = 0;
+    [self.hostLock lock];
+    maxTryTimes = self.remoteSettingsHost.count;
+    [self.hostLock unlock];
+    if (tryTimes > maxTryTimes) {
+        tryTimes = 0;
         //超过3次  不在继续请求，更新时间信息
         [TTMonitorConfiguration updateLatelyUpdateTimestamp];
         return;
     }
 
-    NSString * baseUrl = [NSString stringWithFormat:@"http://%@", [self monitorUrlForTryTimes:tryTimes]];
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    NSString * baseUrl = [NSString stringWithFormat:@"https://%@", [self monitorUrlForTryTimes:tryTimes]];
     NSURL * urlOrigin = [NSURL URLWithString:[TTMonitorConfiguration monitorURLForBaseURL:baseUrl]];
     NSURL * urlNew;
     if ([TTMonitor shareManager].urlTransformBlock) {
@@ -286,8 +295,12 @@ static TTMonitorConfiguration *s_manager;
 }
 
 -(NSString *)monitorUrlForTryTimes:(NSUInteger)tryTime{
-    tryTime = tryTime%3;
-    return self.remoteSettingsHost[tryTime];
+    [self.hostLock lock];
+    tryTime = tryTime % self.remoteSettingsHost.count;
+    NSArray *hosts = [self.remoteSettingsHost copy];
+    [self.hostLock unlock];
+    
+    return [hosts objectAtIndex:tryTime];
 }
 
 
@@ -418,7 +431,7 @@ static TTMonitorConfiguration *s_manager;
                             tmpStr = str;
                         }
                         else {
-                            tmpStr = [NSString stringWithFormat:@"http://%@", str];
+                            tmpStr = [NSString stringWithFormat:@"https://%@", str];
                         }
                         [result addObject:tmpStr];
                     }
@@ -483,6 +496,8 @@ static TTMonitorConfiguration *s_manager;
             }
         }
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTTMonitorConfigurationUpdatedNotification object:nil];
 }
 
 + (NSString *)monitorURLForBaseURL:(NSString *)baseUrl{
@@ -582,10 +597,8 @@ static TTMonitorConfiguration *s_manager;
     if (!data) {
         return nil;
     }
+    
     NSArray * ary = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    if (!([ary isKindOfClass:[NSArray class]] && [ary count] > 0)) {
-        return @[@"http://mon.snssdk.com/monitor/collect/"];//默认值
-    }
     return ary;
 }
 
@@ -852,7 +865,8 @@ static TTMonitorConfiguration *s_manager;
     return NO;
 }
 
-- (BOOL)isContainerInWhiteList:(TTNetworkMonitorTransaction *)transaction{
+- (BOOL)isContainerInWhiteList:(TTNetworkMonitorTransaction *)transaction
+{
     NSArray * whiteList = [TTMonitorConfiguration whiteList];
     if (![whiteList isKindOfClass:[NSArray class]]) {
         return NO;
@@ -860,21 +874,42 @@ static TTMonitorConfiguration *s_manager;
     if (!whiteList || whiteList.count<=0) {
         return NO;
     }
-    if (transaction.request.URL && [transaction.request.URL isKindOfClass:[NSURL class]]){
-        NSString * url = [transaction.request.URL.absoluteString copy];
-        if (!url || ![url isKindOfClass:[NSString class]]) {
-            return NO;
-        }
-        for(NSString * whiteUrl in whiteList){
-            if ([whiteUrl isKindOfClass:[NSString class]]) {
-                if ([url rangeOfString:whiteUrl].location!=NSNotFound) {
-                    return YES;
-                }
-            }
-        }
+    NSURL *requestURL = transaction.request.URL;
+    if (!requestURL || ![requestURL isKindOfClass:[NSURL class]]) {
+        return NO;
     }
-    return NO;
+    if (ttIsEmptyString(requestURL.absoluteString)) {
+        return NO;
+    }
+    
+    __block BOOL result = NO;
+    [whiteList enumerateObjectsUsingBlock:^(NSString  *_Nonnull whiteURL, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (ttIsEmptyString(whiteURL)) {
+            return;
+        }
+        
+        // check if containes in whitelist
+        if ([requestURL.absoluteString rangeOfString:whiteURL].location != NSNotFound) {
+            result = YES;
+            *stop  = YES;
+            return;
+        }
+        
+        // check if match with regular expression
+        if (ttIsEmptyString(requestURL.path)) {
+            return;
+        }
+        NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:whiteURL options:0 error:nil];
+        NSArray *matches = [expression matchesInString:requestURL.path options:0 range:NSMakeRange(0, requestURL.path.length)];
+        if (matches.count > 0) {
+            result = YES;
+            *stop  = YES;
+            return;
+        }
+    }];
+    return result;
 }
+
 
 - (BOOL)debugRealItemContainedInBlackList:(TTNetworkMonitorTransaction *)transaction{
     if (![TTDebugRealMonitorManager sharedManager].enabled) {//如果开关关掉，视为所有都在黑名单里
@@ -927,11 +962,11 @@ static TTMonitorConfiguration *s_manager;
 }
 
 - (BOOL)isNeedMonitorAllURL:(TTNetworkMonitorTransaction *)transaction{
-    return _enableNetStats;
-//    if (_enableNetStats) {
-//        return YES;
-//    }
-//    return [self isContainerInWhiteList:transaction];
+//    return _enableNetStats;
+    if (_enableNetStats) {
+        return YES;
+    }
+    return [self isContainerInWhiteList:transaction];
 }
 
 - (BOOL)isImageRequestUrl:(TTNetworkMonitorTransaction *)transaction{
@@ -1002,29 +1037,7 @@ static NSMutableDictionary * s_headerParameter;
         NSString *deviceID = [[(TTMonitorConfiguration *)[TTMonitorConfiguration shareManager] params] valueForKey:@"device_id"];
         [result setValue:deviceID forKey:@"device_id"];
         [result setValue:[TTExtensions bundleIdentifier] forKey:@"package"];
-        
-        // ugly code : 版本号映射关系计算。同TTNetSerializer中逻辑，暂时为了解耦copy代码。后续整体干掉映射关系
-//        [result setValue:[TTExtensions versionName] forKey:@"app_version"];
-        NSString *curVersion = [TTExtensions versionName];
-        NSArray<NSString *> *strArray = [curVersion componentsSeparatedByString:@"."];
-        NSInteger version = 0;
-        for (NSInteger i = 0; i < strArray.count; i += 1) {
-            NSString *tmp = strArray[i];
-            version = version * 10 + tmp.integerValue;
-        }
-        version += 600;
-        NSMutableArray *newStrArray = [NSMutableArray arrayWithCapacity:3];
-        for (NSInteger i = 0; i < 2; i += 1) {
-            NSInteger num = version % 10;
-            version /= 10;
-            NSString *tmp = [NSString stringWithFormat:@"%ld", num];
-            [newStrArray addObject:tmp];
-        }
-        NSString *tmp = [NSString stringWithFormat:@"%ld",version];
-        [newStrArray addObject:tmp];
-        NSString *newVersion = [[newStrArray reverseObjectEnumerator].allObjects componentsJoinedByString:@"."];
-        [result setValue:newVersion forKey:@"app_version"];
-
+        [result setValue:[TTExtensions versionName] forKey:@"app_version"];
         [result setValue:[TTExtensions buildVersion] forKey:@"update_version_code"];
         [result setValue:[NSNumber numberWithBool:[TTExtensions isJailBroken]] forKey:@"is_jailbroken"];
         
@@ -1061,13 +1074,14 @@ static NSMutableDictionary * s_headerParameter;
 + (void)saveAllowedLogTypes:(NSDictionary *)aallowedLogTypes
 {
     dispatch_async(configs_queue, ^{
-        if ([allowedLogTypes isKindOfClass:[NSDictionary class]] &&
-            [allowedLogTypes count] > 0) {
-            NSData * data = [NSKeyedArchiver archivedDataWithRootObject:allowedLogTypes];
+        if ([aallowedLogTypes isKindOfClass:[NSDictionary class]] &&
+            [aallowedLogTypes count] > 0) {
+            NSData * data = [NSKeyedArchiver archivedDataWithRootObject:aallowedLogTypes];
             [[NSUserDefaults standardUserDefaults] setValue:data forKey:kTTMonitorConfigutaionAllowedLogTypesKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            allowedLogTypes = [aallowedLogTypes copy];
         }
-        allowedLogTypes = [aallowedLogTypes copy];
     });
 }
 

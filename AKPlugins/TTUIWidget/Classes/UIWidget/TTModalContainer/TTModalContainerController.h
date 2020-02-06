@@ -33,8 +33,11 @@
 @interface TTModalContainerController : TTNavigationController
 
 @property (nonatomic, weak) id<TTModalContainerDelegate> containerDelegate;
+@property (nonatomic, assign) BOOL timorFix;
 
 - (instancetype)initWithRootViewController:(UIViewController<TTModalWrapControllerProtocol> *)rootViewController;
+- (instancetype)initWithRootViewController:(UIViewController<TTModalWrapControllerProtocol> *)rootViewController disabledGesture:(UIGestureRecognizer *)gestureRecognizer;
+
 
 - (void)setTopPadding:(CGFloat)topPadding;//默认为statusBar的高度
 - (void)setNavVCViewInitAtBottom:(BOOL)flag;//默认在下面，在viewDidLoad之前设置有效

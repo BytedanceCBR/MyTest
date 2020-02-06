@@ -20,6 +20,8 @@
  */
 @interface TTMonitorReporter : NSObject
 
+- (instancetype)initWithConfiguration:(Class<TTMonitorConfigurationProtocol>)configurationClass;
+
 /**
  *  上报监控data，方法为同步方法，且内部不切换线程，调用者需要根据自己的需求在相应线程执行
  *
@@ -30,5 +32,7 @@
 - (TTMonitorReporterResponse *)reportForData:(NSDictionary *)data reportType:(TTReportDataType)dataType;
 
 - (void)setMonitorConfiguration:(Class<TTMonitorConfigurationProtocol>)configurationClass;
+
+- (void)setDefaultHost:(NSString *)defaultHost;
 
 @end

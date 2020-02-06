@@ -10,7 +10,7 @@
 #import "SSViewControllerBase.h"
 #import "TTEditUserProfileView.h"
 #import "TTUserProfileInputView.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTEditableUserAuditInfo.h"
 #import "TTEditUserProfileItemCell.h"
 

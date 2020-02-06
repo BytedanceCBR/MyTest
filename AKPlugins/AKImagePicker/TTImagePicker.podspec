@@ -34,9 +34,6 @@ Pod::Spec.new do |s|
 
   # ARC
   s.requires_arc = true
-  # 全局依赖
-  s.dependency "TTBaseLib"
-  s.dependency "TTUIWidget" 
 
   s.source_files = 'TTImagePicker/Classes/**/*.{m,h,mm}'
   

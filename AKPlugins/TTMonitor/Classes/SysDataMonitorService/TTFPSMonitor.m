@@ -64,8 +64,10 @@ static NSUInteger const TTFPSMonitorMinUploadCount = 60;
     if (![self isEnabled]) {
         return;
     }
+    
+    NSAssert([NSThread isMainThread], @"must start in main thread");
+    
     if (![NSThread isMainThread]) {
-        NSLog(@"must start in main thread");
         return;
     }
     

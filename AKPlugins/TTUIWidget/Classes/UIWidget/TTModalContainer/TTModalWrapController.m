@@ -14,25 +14,33 @@
 #import <TTUIWidget/UIView+CustomTimingFunction.h>
 #import <TTBaseLib/NSObject+MultiDelegates.h>
 
+#import "TTModalInsideNavigationController.h"
+
 #import <objc/runtime.h>
 #define TTEdgeHeight 44.f
 
+
 @interface TTModalWrapController ()<UIGestureRecognizerDelegate, UIScrollViewDelegate>
 
-@property (nonatomic, strong) UIViewController<TTModalWrapControllerProtocol> *nestedController;
+@property (nonatomic, strong, readwrite) UIViewController<TTModalWrapControllerProtocol> *nestedController;
 @property (nonatomic, strong) UIScrollView *nestedContollerScrollView;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic, assign) BOOL allowGesture;
 @property (nonatomic, assign) BOOL isPortraitPanGesture;
 @property (nonatomic, assign) CGFloat beginDragContentOffsetY;
 @property (nonatomic, assign) CGFloat origNaiVCTopPadding;
-@property (nonatomic, assign)    UIStatusBarStyle      lastStatusBarStyle;
+@property (nonatomic, strong, readwrite) UIView<TTModalWrapControllerTitleViewProtocol> *titleView;
+@property (nonatomic, strong) UIView <TTModalWrapControllerTitleViewProtocol>*configureTitleView;
+@property (nonatomic, strong) UIGestureRecognizer *disabledGesture;//自己的panGesture生效的时候，把这个禁用掉。
 
 @end
 
 @implementation TTModalWrapController
 
 - (instancetype)initWithController:(UIViewController<TTModalWrapControllerProtocol> *)controller {
+    return [self initWithController:controller disabledGesture:nil];
+}
+- (instancetype)initWithController:(UIViewController<TTModalWrapControllerProtocol> *)controller disabledGesture:(UIGestureRecognizer *)disabledGesture {
     self = [self init];
     if (self) {
         if ([controller conformsToProtocol:@protocol(TTModalWrapControllerProtocol)]) {
@@ -40,11 +48,15 @@
         } else {
             NSAssert(NO, @"controller need conforms TTModalWrapControllerProtocol");
         }
-        
+        _disabledGesture = disabledGesture;
         if ([controller respondsToSelector:@selector(tt_modalWrapperTitleViewHidden)]) {
             _titleViewHidden = [controller tt_modalWrapperTitleViewHidden];
         } else {
             _titleViewHidden = NO;
+        }
+        
+        if ([_nestedController respondsToSelector:@selector(setModalWrapContainer:)]) {
+            [_nestedController setModalWrapContainer:self];
         }
     }
     return self;
@@ -53,28 +65,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    self.lastStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-    self.ttStatusBarStyle = UIStatusBarStyleLightContent;
     self.ttHideNavigationBar = YES;
     self.ttNeedIgnoreZoomAnimation = YES;
     
     if ([self.nestedController respondsToSelector:@selector(setHasNestedInModalContainer:)]) {
         [self.nestedController setHasNestedInModalContainer:YES];
     }
-    
-    __weak __typeof(self)weakSelf = self;
-    [self.KVOController observe:self.nestedController keyPath:@"title" options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        NSString *title = [change tt_stringValueForKey:NSKeyValueChangeNewKey];
-        [weakSelf.titleView setTitle:title];
-    }];
+
     
     [self.view addSubview:self.titleView];
+    self.titleView.width = self.view.width;
     self.titleView.hidden = self.titleViewHidden;
     
     [self.nestedController willMoveToParentViewController:self];
     [self addChildViewController:self.nestedController];
     self.nestedController.view.height = self.view.height - (self.titleViewHidden ? 0 : self.titleView.height);
     self.nestedController.view.top = (self.titleViewHidden ? 0 : self.titleView.bottom);
+    self.nestedController.view.left = 0;
+    self.nestedController.view.width = self.view.width;
     self.nestedController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.nestedController.ttStatusBarStyle = UIStatusBarStyleLightContent;
     [self.view addSubview:self.nestedController.view];
@@ -88,10 +96,30 @@
     [self _setupGesture];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    self.titleView.frame = CGRectMake(self.titleView.origin.x, self.titleView.origin.y, self.view.width, self.titleView.height);
+    self.nestedController.view.height = self.view.height - (self.titleViewHidden ? 0 : self.titleView.height);
+    self.nestedController.view.top = (self.titleViewHidden ? 0 : self.titleView.bottom);
+    self.nestedController.view.left = 0;
+    self.nestedController.view.width = self.view.width;
+}
+
 - (void)_setupGesture {
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(doHandlerPanGesture:)];
     self.panGestureRecognizer.delegate = self;
     [self.view addGestureRecognizer:self.panGestureRecognizer];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
+
+#pragma mark - TTModalWrappedViewProtocol
+- (void)refreshModalContainerTitleView {
+    if ([self.nestedController respondsToSelector:@selector(leftBarItemStyle)]) {
+        self.titleView.type = [self.nestedController leftBarItemStyle];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -152,7 +180,7 @@
                 }
                 self.nestedContollerScrollView.scrollEnabled = NO;
                 self.navigationController.view.top = self.origNaiVCTopPadding + diff;
-                [self panAtPercent:self.navigationController.view.top / self.navigationController.view.height];
+                [self panAtPercent:diff / self.navigationController.view.height];
             }
         }
         else {
@@ -160,16 +188,18 @@
             if (diff < 0) {
                 diff = 0;
             }
-            self.view.frame = CGRectMake(diff, 0, self.view.width, self.view.height);
-            self.navigationController.view.layer.mask = nil;
-            [self panAtPercent:self.view.left / self.view.width];
+            self.view.left = diff;
+//            self.navigationController.view.layer.mask = nil;
+            [self panAtPercent:diff / self.navigationController.view.height];
         }
+        //这个下面神奇的代码，慎改，作用是，如果是内嵌的nav里面的view，则通过讲enabled设为no的方式干掉gesture，之后也不会走ended和canceled的状态了。
         //如果触动TTNavigationController右滑动画，取消当前gesture
         //这种判断方法也是 神奇
         if ([self innerTransitionView].left != 0) {
             recognizer.view.top = 0;
             self.panGestureRecognizer.enabled = NO;
             self.panGestureRecognizer.enabled = YES;
+            self.nestedContollerScrollView.scrollEnabled = YES;
         }
     } else if ([recognizer state] == UIGestureRecognizerStateEnded || [recognizer state] == UIGestureRecognizerStateCancelled) {
         if (self.isPortraitPanGesture) {
@@ -185,6 +215,7 @@
             } else {
                 [UIView animateWithDuration:0.15f animations:^{
                     self.navigationController.view.top = self.origNaiVCTopPadding;
+                    [self panAtPercent:0];
                 } completion:^(BOOL finished) {
                     if (self.nestedContollerScrollView) {
                         self.allowGesture = NO;
@@ -192,7 +223,6 @@
                         self.allowGesture = YES;
                     }
                     self.nestedContollerScrollView.scrollEnabled = YES;
-                    [self panAtPercent:0];
                 }];
             }
         }
@@ -205,17 +235,32 @@
                     [self panAtPercent:100];
                 } completion:^(BOOL finished) {
                     [self dismissModalController:nil];
+                    WeakSelf;
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        StrongSelf;
+                        if (self.view) {
+                            self.view.frame = CGRectMake(0, 0, self.view.width, self.view.height);
+                        }
+                    });
+
                 }];
             } else {
                 [UIView animateWithDuration:0.15f animations:^{
                     self.view.left = 0;
-                } completion:^(BOOL finished) {
                     [self panAtPercent:0];
+                } completion:^(BOOL finished) {
                     self.nestedContollerScrollView.scrollEnabled = YES;
                 }];
             }
         }
     }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if ([otherGestureRecognizer isEqual:self.disabledGesture]) {
+        return YES;
+    }
+    return NO;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
@@ -255,12 +300,6 @@
     if ([self.delegate respondsToSelector:@selector(modalWrapController:closeButtonOnClick:)]) {
         [self.delegate modalWrapController:self closeButtonOnClick:sender];
     }
-    [UIApplication sharedApplication].statusBarStyle = self.lastStatusBarStyle;
-}
-
-- (void)dealloc
-{
-     [UIApplication sharedApplication].statusBarStyle = self.lastStatusBarStyle;
 }
 
 - (void)popToLastModalController {
@@ -285,23 +324,57 @@
     return nil;
 }
 
-- (TTModalControllerTitleView *)titleView {
+- (UIView<TTModalWrapControllerTitleViewProtocol> *)titleView {
     if (!_titleView) {
-        //自定义标题栏
-        _titleView = [[TTModalControllerTitleView alloc] init];
-        _titleView.type = TTModalControllerTitleTypeOnlyClose;
-        WeakSelf;
-        _titleView.closeComplete = ^(UIButton *sender) {
-            StrongSelf;
-            [self dismissModalController:sender];
-        };
-        _titleView.backComplete = ^{
-            StrongSelf;
-            [self popToLastModalController];
-        };
-    }
-    return _titleView;
+        // 判断是否实现了tt_modalWrapTitleView，自定义titleView，否则初始化一个默认的值
+        if ([self.nestedController respondsToSelector:@selector(tt_modalWrapTitleView)]) {
+            UIView<TTModalWrapControllerTitleViewProtocol> *nestTitleView = [self.nestedController tt_modalWrapTitleView];
+            // 保底一下类型，虽然感觉没啥必要
+            if ([nestTitleView isKindOfClass:[UIView class]] && [nestTitleView conformsToProtocol:@protocol(TTModalWrapControllerTitleViewProtocol)]) {
+                _titleView = nestTitleView;
+                if ([self.nestedController respondsToSelector:@selector(tt_modalWrapTitleViewHeight)]) {
+                    CGFloat height = [self.nestedController tt_modalWrapTitleViewHeight];
+                    if (height < 0) {
+                        height = 0;
+                    }
+                    _titleView.frame = CGRectMake(0, 0, 0, height);
+                    WeakSelf;
+                    _titleView.closeComplete = ^(UIButton *sender) {
+                        StrongSelf;
+                        [self dismissModalController:sender];
+                    };
+                    _titleView.backComplete = ^{
+                        StrongSelf;
+                        [self popToLastModalController];
+                    };
+                }
+            }
+         }
+         if (!_titleView) {
+             // 如果没有自定义，走默认值
+             //自定义标题栏
+             _titleView = [[TTModalControllerTitleView alloc] init];
+             _titleView.type = TTModalControllerTitleTypeOnlyClose;
+             WeakSelf;
+
+             [self.KVOController observe:self.nestedController keyPath:@"title" options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
+                 StrongSelf;
+                 NSString *title = [change tt_stringValueForKey:NSKeyValueChangeNewKey];
+                 [(TTModalControllerTitleView *)self.titleView setTitle:title];
+             }];
+             _titleView.closeComplete = ^(UIButton *sender) {
+                 StrongSelf;
+                 [self dismissModalController:sender];
+             };
+             _titleView.backComplete = ^{
+                 StrongSelf;
+                 [self popToLastModalController];
+             };
+         }
+     }
+     return _titleView;
 }
+
 @end
 
 
@@ -320,6 +393,25 @@
         return [hiddenNumber boolValue];
     }
     return NO;
+}
+
+- (void)setTt_modalWrapTitleView:(UIView *)tt_modalWrapTitleView {
+    objc_setAssociatedObject(self, @selector(tt_modalWrapTitleView), tt_modalWrapTitleView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIView *)tt_modalWrapTitleView {
+    UIView *result = objc_getAssociatedObject(self, @selector(tt_modalWrapTitleView));
+    return result;
+}
+
+- (void)setTt_modalWrapTitleViewHeight:(CGFloat)tt_modalWrapTitleViewHeight {
+    objc_setAssociatedObject(self, @selector(tt_modalWrapTitleViewHeight), @(tt_modalWrapTitleViewHeight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGFloat)tt_modalWrapTitleViewHeight {
+    NSNumber *result = objc_getAssociatedObject(self, @selector(tt_modalWrapTitleViewHeight));
+    CGFloat height = result.floatValue;
+    return height;
 }
 
 @end

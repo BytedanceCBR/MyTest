@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <TTUIWidget/TTNavigationController.h>
-//#import "TTArticleMomentAnimationDelegate.h"
 
 @class TTModalInsideNavigationController;
 
@@ -24,5 +23,9 @@
 @interface TTModalInsideNavigationController : TTNavigationController
 
 @property (nonatomic, weak) id<TTModalInsideNavigationDelegate> modalNavigationDelegate;
+
+- (instancetype)initWithRootViewController:(UIViewController *)rootViewController disabledGesture:(UIGestureRecognizer *)gestureRecognizer;
+
+@property (nonatomic, assign) BOOL disableRoundCorner;
 
 @end

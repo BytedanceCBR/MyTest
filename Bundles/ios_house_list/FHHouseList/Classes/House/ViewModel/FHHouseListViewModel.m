@@ -6,7 +6,7 @@
 //
 
 #import "FHHouseListViewModel.h"
-#import <MJRefresh.h>
+#import "MJRefresh.h"
 #import "FHRefreshCustomFooter.h"
 #import "TTHttpTask.h"
 #import "FHHouseListAPI.h"
@@ -17,7 +17,7 @@
 #import "FHPlaceHolderCell.h"
 #import "TTReachability.h"
 #import "FHMainManager+Toast.h"
-#import <UIScrollView+Refresh.h>
+#import "UIScrollView+Refresh.h"
 #import "FHSearchFilterOpenUrlModel.h"
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "FHMapSearchOpenUrlDelegate.h"
@@ -55,7 +55,7 @@
 #import "FHHouseListRecommendTipCell.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import <FHHouseBaseNewHouseCell.h>
+#import "FHHouseBaseNewHouseCell.h"
 #import "FHMainOldTopTagsView.h"
 #import "FHHouseListRedirectTipCell.h"
 

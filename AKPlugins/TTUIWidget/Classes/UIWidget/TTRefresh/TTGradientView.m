@@ -48,15 +48,15 @@
     if (bundlePath) {
         NSBundle *bunle = [NSBundle bundleWithPath:bundlePath];
         LOTAnimationView *loadingView = [LOTAnimationView animationNamed:@"loading.json" inBundle:bunle];
+
         loadingView.frame = self.bounds;
         loadingView.contentMode = UIViewContentModeScaleAspectFit;
         loadingView.loopAnimation = YES;
         [self addSubview:loadingView];
         self.loadingView = loadingView;
+        
     }
-
     [self startAnimation];
-
 }
 
 - (void)startAnimation {

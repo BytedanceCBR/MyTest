@@ -1,5 +1,5 @@
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "TTCommentDetailReplyCommentModel.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHFeedUGCContentModel.h"

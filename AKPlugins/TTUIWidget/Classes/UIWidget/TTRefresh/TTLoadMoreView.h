@@ -9,8 +9,31 @@
 #import <UIKit/UIKit.h>
 #import "TTRefreshView.h"
 
+@protocol TTLoadMoreView <NSObject>
 
-@interface TTLoadMoreView : UIView
+- (void)startObserve;
+
+- (void)removeObserve:(UIScrollView *)scrollView;
+
+- (void)triggerRefresh;
+
+- (void)stopAnimation:(BOOL)success;
+
+@property (nonatomic, assign, readwrite) PullDirectionState state;
+@property (nonatomic, copy, readwrite) pullActionHandler actionHandler;
+@property (nonatomic, weak, readwrite) UIScrollView *scrollView;
+@property (nonatomic, assign, readonly) PullDirectionType direction;
+@property (nonatomic, assign, readwrite) BOOL isObserving;
+@property (nonatomic, assign, readwrite) BOOL isObservingContentInset;
+@property (nonatomic, assign, readwrite) BOOL isPullUp;
+@property (nonatomic, assign) BOOL   enabled;
+@property (nonatomic, assign, readwrite) BOOL isUserPullAndRefresh;
+@property (nonatomic, assign, readwrite) BOOL hasMore;
+
+@end
+
+
+@interface TTLoadMoreView : UIView <TTLoadMoreView>
 
 - (id)initWithFrame:(CGRect)frame
       pullDirection:(PullDirectionType)direction
@@ -48,7 +71,8 @@
 @property (nonatomic, assign, readwrite) BOOL isObservingContentInset;
 @property (nonatomic, assign, readwrite) BOOL displayTips;
 @property (nonatomic, assign, readwrite) BOOL isPullUp;
-@property(nonatomic) BOOL   enabled;
+@property (nonatomic) BOOL   enabled;
 @property (nonatomic, assign, readwrite) BOOL isUserPullAndRefresh;
 @property (nonatomic, assign, readwrite) BOOL hasMore;
+
 @end

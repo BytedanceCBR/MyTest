@@ -13,7 +13,7 @@
 #import "UIColor+TTThemeExtension.h"
 #import "TTThemeConst.h"
 #import <TTBaseLib/TTBaseMacro.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 
 #define kColorBackground4Array                  @[ [UIColor colorWithHexString:@"ffffff"],[UIColor colorWithHexString:@"252525"] ]
 #define kColorBackground4HighlightedArray       @[ [UIColor colorWithHexString:@"e0e0e0"],[UIColor colorWithHexString:@"1b1b1b"] ]

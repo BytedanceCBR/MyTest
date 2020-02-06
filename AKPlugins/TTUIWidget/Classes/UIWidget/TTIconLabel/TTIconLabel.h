@@ -13,7 +13,7 @@
 /** 获取保存图标组的ContainerView */
 @property (nonatomic, strong, readonly) UIView *iconContainerView;
 /** 获取真实的Label，需要使用者判断是否AsyncLabel */
-@property (nonatomic, strong, readonly) UIView *label;
+@property (nonatomic, strong, readonly) SSThemedLabel *themedLabel;
 /** 获取当前计算得到的图标组的宽度 */
 @property (nonatomic, assign, readonly) CGFloat iconContainerWidth;
 
@@ -34,8 +34,6 @@
 @property (nonatomic, assign) BOOL disableNightMode;
 /** 是否禁用在refresh时对Label进行sizeToFit */
 @property (nonatomic, assign) BOOL disableLabelSizeToFit;
-/** 使用TTAsyncLabel而不是SSThemedLabel，默认NO，使用SSThemedLabel */
-@property (nonatomic, assign) BOOL enableAsync;
 
 // UILabel的属性
 @property (nonatomic, copy) NSString *text;

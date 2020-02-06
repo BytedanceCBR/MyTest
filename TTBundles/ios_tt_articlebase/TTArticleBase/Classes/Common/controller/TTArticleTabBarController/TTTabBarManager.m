@@ -16,7 +16,7 @@
 #import "NSDataAdditions.h"
 #import "NSStringAdditions.h"
 #import "SSZipArchive.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "NetworkUtilities.h"
 #import "TTReachability.h"
 #import "TTTabbar.h"
@@ -31,11 +31,11 @@
 #import "TTArticleTabBarController.h"
 #import "UITabBarController+TabbarConfig.h"
 #import "TTSettingsManager.h"
-#import <Lottie/Lottie.h>
+#import <lottie-ios/Lottie/Lottie.h>
 #import "TTTabBarCustomMiddleModel.h"
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 
 NSString *kTTTabBarZipDownloadSuccess = @"kTTTabBarZipDownloadSuccess";
 
@@ -181,7 +181,7 @@ SINGLETON_GCD(TTTabBarManager);
                            kTTTabHTSTabKey:@"小视频",
 //                           kTTTabFollowTabKey:@"关注",
                            kFHouseMessageTabKey: @"消息",
-                           kFHouseMineTabKey:@"我的",
+                           kFHouseMineTabKey:[TTAccount sharedAccount].isLogin ? @"我的" : @"未登录",
                            kFHouseFindTabKey:@"找房",
 
 //                           kTTTabWeitoutiaoTabKey:[KitchenMgr getString:kTTKUGCFeedNamesTab],
@@ -860,7 +860,7 @@ SINGLETON_GCD(TTTabBarManager);
 - (void)connectionChanged:(NSNotification *)notification {
     TTPersistence *persistence = [TTPersistence persistenceWithName:kTTTabConfigurationPath];
     if (((NSNumber *)[persistence valueForKey:kTTTabBarImagesDownloadKey]).boolValue == YES) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:TTReachabilityChangedNotification object:nil];
         return;
     }
     [self retryDonwloadZipFileIfNeed];
@@ -994,7 +994,7 @@ SINGLETON_GCD(TTTabBarManager);
             } else {
                 static dispatch_once_t onceToken;
                 dispatch_once(&onceToken, ^{
-                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
                 });
             }
             
@@ -1049,7 +1049,7 @@ SINGLETON_GCD(TTTabBarManager);
             LOGD(@"TTTabBar 资源包md5不匹配!!!");
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^{
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
             });
         }
     });

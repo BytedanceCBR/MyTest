@@ -6,7 +6,7 @@
 //
 
 #import "FHMapSearchTipView.h"
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+TTThemeExtension.h"
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <TTBaseLib/UIViewAdditions.h>

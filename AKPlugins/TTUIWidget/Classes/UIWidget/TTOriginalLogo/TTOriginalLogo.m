@@ -191,6 +191,13 @@
         }
     }
     
+    if (frame)
+        CFRelease(frame);
+    if (frameSetter)
+        CFRelease(frameSetter);
+    if (path)
+        CGPathRelease(path);
+    
     return (NSArray *)linesArray;
 }
 

@@ -7,7 +7,7 @@
 
 #import "FHBaseTableViewCell.h"
 #import "FHHouseType.h"
-#import <FHSearchHouseModel.h>
+#import "FHSearchHouseModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 //当图图片cell

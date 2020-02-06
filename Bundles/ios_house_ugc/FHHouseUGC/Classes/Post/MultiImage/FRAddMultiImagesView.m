@@ -27,7 +27,7 @@
 #import <TTBaseLib/UIImageAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "SDImageCache.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import <FHHouseBase/UIImage+FIconFont.h>

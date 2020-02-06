@@ -8,7 +8,7 @@
 
 #import "PGCAccount.h"
 #import "PGCAccountManager.h"
-#import <NSDictionary+TTAdditions.h>
+#import "NSDictionary+TTAdditions.h"
 
 
 

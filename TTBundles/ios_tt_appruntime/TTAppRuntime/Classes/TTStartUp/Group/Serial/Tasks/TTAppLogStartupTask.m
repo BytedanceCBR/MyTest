@@ -14,7 +14,7 @@
 #import "ExploreExtenstionDataHelper.h"
 #import "NewsBaseDelegate.h"
 #import "TTInstallIDManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "SSImpressionManager.h"
 #import "SSLogDataManager.h"
 #import "TTModuleBridge.h"

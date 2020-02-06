@@ -14,7 +14,8 @@ typedef NS_ENUM(NSInteger, TTBadgeNumberViewStyle)
     TTBadgeNumberViewStyleDefault,
     TTBadgeNumberViewStyleWhite,
     TTBadgeNumberViewStyleDefaultWithBorder,
-    TTBadgeNumberViewStyleProfile
+    TTBadgeNumberViewStyleProfile,
+    TTBadgeNumberViewStyleProfileWithBorder
 };
 
 @interface TTBadgeNumberView : UIView

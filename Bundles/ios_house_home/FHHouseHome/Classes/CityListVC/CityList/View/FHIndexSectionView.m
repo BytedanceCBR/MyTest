@@ -6,9 +6,9 @@
 //
 
 #import "FHIndexSectionView.h"
-#import <Masonry.h>
-#import <UIFont+House.h>
-#import <UIColor+Theme.h>
+#import "Masonry.h"
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 
 #define kFHIndexViewBgWidth  40.0

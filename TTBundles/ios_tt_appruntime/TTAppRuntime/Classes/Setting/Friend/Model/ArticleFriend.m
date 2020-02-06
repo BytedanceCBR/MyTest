@@ -7,7 +7,7 @@
 //
 
 #import "ArticleFriend.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 @implementation ArticleFriend
 

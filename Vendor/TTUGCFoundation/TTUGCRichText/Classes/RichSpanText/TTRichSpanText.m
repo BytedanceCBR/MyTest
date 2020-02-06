@@ -10,7 +10,7 @@
 #import "TTBaseMacro.h"
 #import <objc/runtime.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <Base64.h>
+#import "Base64.h"
 
 @implementation TTRichTextImageURLInfoModel
 

@@ -7,7 +7,7 @@
 //
 
 #import "TTIconLabel.h"
-#import <TTVerifyKit/TTVerifyIconHelper.h>
+#import "TTVerifyIconHelper.h"
 
 @interface TTIconLabel (VerifyIcon)
 

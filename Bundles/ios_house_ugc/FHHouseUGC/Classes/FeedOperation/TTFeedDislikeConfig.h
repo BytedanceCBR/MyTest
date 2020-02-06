@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHFeedOperationWord.h"
-#import <FHUGCConfigModel.h>
+#import "FHUGCConfigModel.h"
 #import <FHFeedOperationView.h>
 
 @class FHFeedOperationViewModel;

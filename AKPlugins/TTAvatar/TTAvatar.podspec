@@ -21,19 +21,6 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Classes/**/*'
   
-  s.dependency 'TTAccountSDK/Account'
-  s.dependency 'TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore'
-  s.dependency 'TTAccountSDK/WeChatAccount'
-  s.dependency 'TTAccountLogin'
-  s.dependency 'TTNewsAccountBusiness'
-  s.dependency 'TTImage'
-  s.dependency 'TTThemed'
-  s.dependency 'TTBaseLib'
-  s.dependency 'TTUserSettings'
-  s.dependency 'TTVerifyKit'
-  s.dependency 'SDWebImage/Core'
-  s.dependency 'TTKitchen'
-  s.dependency 'TTUGCFoundation/TTUGCApiModel'
-  s.dependency 'YYWebImage'
+
 
 end

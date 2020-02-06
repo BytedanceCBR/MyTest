@@ -98,17 +98,21 @@ static TTVideoCategoryManager *s_manager;
     if ([validDicts count] > 0)
     {
         __block bool hasVideo = NO;
-        
-        [TTVideoCategoryManager removeAllLocalCategories];
+        __block bool hasFollow = NO;
+
+        [TTVideoCategory removeAllEntities];
         NSArray *insertedCategories = [TTVideoCategory insertObjectsWithDataArray:validDicts];
 
         [insertedCategories enumerateObjectsUsingBlock:^(TTVideoCategory *obj, NSUInteger idx, BOOL *stop) {
             obj.topCategoryType = TTCategoryModelTopTypeVideo;
-            obj.orderIndex = idx+1;
+            obj.orderIndex = idx;
             [obj save];
 
             if ([obj.categoryID isEqualToString:kTTVideoCategoryID]) {
                 hasVideo = YES;
+            }
+            if ([obj.categoryID isEqualToString:kTTFollowCategoryID]) {
+                hasFollow = YES;
             }
         }];
 
@@ -117,9 +121,21 @@ static TTVideoCategoryManager *s_manager;
         //推荐频道固定插入第一位
         if (!hasVideo) {
             TTVideoCategory *mainCategory = [self videoMainCategory];
+            if (!mainCategory) {
+                mainCategory = [TTVideoCategoryManager insertMainCategory];
+            }
             if (mainCategory) {
-                mainCategory.displayName = @"推荐";//特殊需求
-                [videoCategories insertObject:mainCategory atIndex:0];
+                if (hasFollow) {
+                    [videoCategories insertObject:mainCategory atIndex:1];
+                } else {
+                    [videoCategories insertObject:mainCategory atIndex:0];
+                }
+
+                // 更新orderIndex
+                [videoCategories enumerateObjectsUsingBlock:^(TTVideoCategory *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    obj.orderIndex = idx;
+                    [obj save];
+                }];
             }
         }
         
@@ -140,16 +156,14 @@ static TTVideoCategoryManager *s_manager;
     return result;
 }
 
-+ (void)removeAllLocalCategories{
-    [TTVideoCategory removeAllEntities];
-    [self insertCategoryWithDictionary:@{@"category":@"video",
-                                             @"name":NSLocalizedString(@"推荐",nil),
-                                             @"type":@(TTFeedListDataTypeArticle),
-                                             @"concern_id":@"",
-                                             @"subscribed":@(NO),
++ (TTVideoCategory *)insertMainCategory {
+    return [self insertCategoryWithDictionary:@{@"category":@"video",
+                                                    @"name":NSLocalizedString(@"推荐",nil),
+                                                    @"type":@(TTFeedListDataTypeArticle),
+                                              @"concern_id":@"",
+                                              @"subscribed":@(NO),
                                              @"order_index":@(0),
-                                             @"topCategoryType":@(TTCategoryModelTopTypeVideo),
-                                               }];
+                                         @"topCategoryType":@(TTCategoryModelTopTypeVideo)}];
 }
 
 
@@ -182,6 +196,10 @@ static NSString *s_currentSelectedCategoryID;
 
 + (void)insertDefaultData
 {
+    TTVideoCategory *result = [TTVideoCategory objectForPrimaryKey:kTTVideoCategoryID];
+    if (result) { // 有数据，就不需要插入了
+        return;
+    }
 
     NSUInteger categoryOrderIndex = 0;
     

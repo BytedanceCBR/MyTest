@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailAgentListCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -19,7 +19,7 @@
 #import "UILabel+House.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
-#import <BTDMacros.h>
+#import "BTDMacros.h"
 
 @interface FHDetailAgentListCell ()
 

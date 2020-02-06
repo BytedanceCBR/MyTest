@@ -18,9 +18,11 @@
 @property (nonatomic, strong) TTModalInsideNavigationController *navVC;
 @property (nonatomic, strong) SSThemedView *maskView;
 @property (nonatomic, assign) BOOL hasEntered;
-@property (nonatomic, assign) UIStatusBarStyle origStatusBarStyle;//保存之前的StatusBar样式, dismiss后恢复
 @property (nonatomic, assign) CGFloat topPadding;//支持设置，需要再viewDidLoad之前设置
 @property (nonatomic, assign) BOOL navVCViewInitAtBottom;
+@property (nonatomic, strong) UIGestureRecognizer *disabledGesture;//外界传入一个Gesture，需要将其禁止掉。
+@property (nonatomic, assign) BOOL timorFix;
+
 @end
 
 @implementation TTModalContainerRootController
@@ -30,7 +32,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (instancetype)initWithController:(UIViewController<TTModalWrapControllerProtocol> *)controller {
+- (instancetype)initWithController:(UIViewController<TTModalWrapControllerProtocol> *)controller disabledGesture:(UIGestureRecognizer *)disabledGesture {
     self = [super init];
     if (self) {
         _detailVC = controller;
@@ -45,6 +47,7 @@
         }
         _topPadding = topPadding;
         _navVCViewInitAtBottom = YES;
+        _disabledGesture = disabledGesture;
     }
     return self;
 }
@@ -55,7 +58,7 @@
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.ttNeedIgnoreZoomAnimation = YES;
     self.ttHideNavigationBar = YES;
-    self.navVC = [[TTModalInsideNavigationController alloc] initWithRootViewController:self.detailVC];
+    self.navVC = [[TTModalInsideNavigationController alloc] initWithRootViewController:self.detailVC disabledGesture:self.disabledGesture];
     self.navVC.modalNavigationDelegate = self;
     [self.navVC willMoveToParentViewController:self];
     [self addChildViewController:self.navVC];
@@ -72,8 +75,7 @@
         self.navVC.view.top = self.view.bottom;
     }
 
-    self.origStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-    self.ttStatusBarStyle = UIStatusBarStyleLightContent;
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -81,11 +83,18 @@
     [self _showEnterAnimationIfNeed];
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
+
 - (void)_showEnterAnimationIfNeed {
     if (self.hasEntered) {
         return;
     }
     if (self.navVC.view.top == self.topPadding) {
+        if (self.timorFix) {
+            self.maskView.alpha = 1.f;
+        }
         return;
     }
     self.hasEntered = YES;
@@ -101,6 +110,11 @@
     self.maskView.alpha = 1 - progress;
 }
 
+- (void)setTimorFix:(BOOL)timorFix
+{
+    _timorFix = timorFix;
+}
+
 - (void)dismissViewController {
     TTModalContainerController *container = [self.navigationController isKindOfClass:[TTModalContainerController class]]? (TTModalContainerController *)self.navigationController: nil;
     //偷懒了...没有再开一层delegate出去.
@@ -109,12 +123,21 @@
         [container.containerDelegate willDismissModalContainerController:container];
     }
     void (^completion)(BOOL) = ^void(BOOL finished) {
-        [self.navigationController dismissViewControllerAnimated:NO completion:^{
-            [[UIApplication sharedApplication] setStatusBarStyle:self.origStatusBarStyle];
+        // 有些业务方不是通过present的方式 打开的 ModalContainer, 有可能是通过addChildVC的方式打开的。
+        // 如果当前的presentingVC 和 parent 的 presentingVC 是用一个VC , 就是通过addChildVC的方式打开。
+        if (self.timorFix && self.presentingViewController && self.presentingViewController == self.navigationController.parentViewController.presentingViewController) {
+            [self.navigationController removeFromParentViewController];
+            [self.navigationController.view removeFromSuperview];
             if ([container.containerDelegate respondsToSelector:@selector(didDismissModalContainerController:)]) {
                 [container.containerDelegate didDismissModalContainerController:container];
             }
-        }];
+        } else {
+            [self.navigationController dismissViewControllerAnimated:NO completion:^{
+                if ([container.containerDelegate respondsToSelector:@selector(didDismissModalContainerController:)]) {
+                    [container.containerDelegate didDismissModalContainerController:container];
+                }
+            }];
+        }
         
         if ([container.containerDelegate respondsToSelector:@selector(dismissAnimationDidComplete:)]) {
             [container.containerDelegate dismissAnimationDidComplete:container];
@@ -161,7 +184,15 @@
 {
     _topPadding = topPadding;
     
-    self.navVC.view.frame = CGRectMake(0, _topPadding, [[UIScreen mainScreen] bounds].size.width, self.view.height - _topPadding);
+    // 如果初始的时候不是在bottom 才需要设置topPadding
+    if (self.timorFix) {
+        if (!self.navVCViewInitAtBottom) {
+            self.navVC.view.frame = CGRectMake(0, _topPadding, [[UIScreen mainScreen] bounds].size.width, self.view.height - _topPadding);
+        }
+    } else {
+        self.navVC.view.frame = CGRectMake(0, _topPadding, [[UIScreen mainScreen] bounds].size.width, self.view.height - _topPadding);
+    }
+    
 }
 
 - (void)insideNavigationControllerPopToRootViewControllerAnimated:(BOOL)animated
@@ -180,24 +211,28 @@
 @implementation TTModalContainerController
 
 - (instancetype)initWithRootViewController:(UIViewController<TTModalWrapControllerProtocol> *)rootViewController {
-    TTModalContainerRootController *rootController = [self wrapModalController:rootViewController];
+    return [self initWithRootViewController:rootViewController disabledGesture:nil];
+}
+
+- (instancetype)initWithRootViewController:(UIViewController<TTModalWrapControllerProtocol> *)rootViewController disabledGesture:(UIGestureRecognizer *)gestureRecognizer {
+    TTModalContainerRootController *rootController = [[TTModalContainerRootController alloc] initWithController:rootViewController disabledGesture:gestureRecognizer];
     self = [super initWithRootViewController:rootController];
     if (self) {
         _rootController = rootController;
-        if (@available(iOS 8.0, *)) {
-            self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-        }
+        self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     }
     return self;
-}
-
-- (TTModalContainerRootController *)wrapModalController:(UIViewController<TTModalWrapControllerProtocol> *)rootViewController {
-    return [[TTModalContainerRootController alloc] initWithController:rootViewController];
 }
 
 - (void)setTopPadding:(CGFloat)topPadding
 {
     self.rootController.topPadding = topPadding;
+}
+
+- (void)setTimorFix:(BOOL)timorFix
+{
+    _timorFix = timorFix;
+    self.rootController.timorFix = timorFix;
 }
 
 - (void)setNavVCViewInitAtBottom:(BOOL)flag
@@ -213,6 +248,15 @@
 - (void)insideNavigationControllerPopToRootViewControllerAnimated:(BOOL)animated
 {
     [self.rootController insideNavigationControllerPopToRootViewControllerAnimated:animated];
+}
+
+- (void)dismissViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+    if (self.timorFix && animated) {
+        [self.rootController dismissViewController];
+    } else {
+        [super dismissViewControllerAnimated:animated completion:completion];
+    }
 }
 
 @end

@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "FHBaseModelProtocol.h"
 #import "FHHouseListModel.h"
 #import "FHHouseBaseInfoModel.h"

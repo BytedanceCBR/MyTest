@@ -21,11 +21,11 @@
 #import "TTWebImageManager.h"
 #import "TTShareConstants.h"
 
-#import <TTActivityContentItemProtocol.h>
-#import <TTWechatTimelineContentItem.h>
-#import <TTWechatContentItem.h>
-#import <TTQQFriendContentItem.h>
-#import <TTQQZoneContentItem.h>
+#import "TTActivityContentItemProtocol.h"
+#import "TTWechatTimelineContentItem.h"
+#import "TTWechatContentItem.h"
+#import "TTQQFriendContentItem.h"
+#import "TTQQZoneContentItem.h"
 //#import <TTDingTalkContentItem.h>
 //#import "TTRepostViewController.h"
 //#import <TTRepostServiceProtocol.h>
@@ -36,8 +36,8 @@
 //#import "TTCopyContentItem.h"
 //#import <TTSystemContentItem.h>
 #import "TTShareMethodUtil.h"
-#import <TTForwardWeitoutiaoActivity.h>
-#import <TTDirectForwardWeitoutiaoActivity.h>
+#import "TTForwardWeitoutiaoActivity.h"
+#import "TTDirectForwardWeitoutiaoActivity.h"
 #import "AKAwardCoinManager.h"
 #import "FHTraceEventUtils.h"
 #import <Crashlytics/Answers.h>

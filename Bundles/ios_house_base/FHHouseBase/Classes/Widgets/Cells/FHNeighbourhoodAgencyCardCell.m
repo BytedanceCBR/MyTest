@@ -7,7 +7,7 @@
 #import "FHNeighbourhoodAgencyCardCell.h"
 #import "FHSearchHouseModel.h"
 #import "FHDetailBaseModel.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "FHDetailAgentListCell.h"
 #import "FHExtendHotAreaButton.h"
 #import "FHShadowView.h"

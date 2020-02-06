@@ -43,7 +43,7 @@
 #import "FHEnvContext.h"
 #import <FHHouseUGCAPI.h>
 #import <FHUGCEditedPostModel.h>
-#import <FRUploadImageManager.h>
+#import "FRUploadImageManager.h"
 
 NSString * const TTPostTaskBeginNotification = kTTForumPostingThreadNotification;
 NSString * const TTPostTaskResumeNotification = kTTForumResumeThreadNotification;

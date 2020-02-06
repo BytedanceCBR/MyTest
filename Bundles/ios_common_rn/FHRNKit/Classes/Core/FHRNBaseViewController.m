@@ -11,27 +11,27 @@
 #import "TTRNKitHelper.h"
 #import "TTRNKit.h"
 #import "TTRNKitMacro.h"
-#import <FHEnvContext.h>
-#import <FHIESGeckoManager.h>
-#import <TTInstallIDManager.h>
+#import "FHEnvContext.h"
+#import "FHIESGeckoManager.h"
+#import "TTInstallIDManager.h"
 #import "FHRNDebugViewController.h"
 #import "FHRNKitMacro.h"
 #import <TTRNKitViewWrapper.h>
 #import <TTRNKitViewWrapper+Private.h>
-#import <UIViewAdditions.h>
-#import <TTUIResponderHelper.h>
-#import <UIViewController+Refresh_ErrorHandler.h>
+#import "UIViewAdditions.h"
+#import "TTUIResponderHelper.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
 #import "RCTRootView.h"
 #import <RCTDevLoadingView.h>
 #import <UIView+BridgeModule.h>
 #import <TTRNBridgeEngine.h>
 #import "FHRNHelper.h"
 #import "RCTDevLoadingView.h"
-#import <HMDTTMonitor.h>
-#import <TTReachability.h>
-#import <FHEnvContext.h>
+#import "HMDTTMonitor.h"
+#import "TTReachability.h"
+#import "FHEnvContext.h"
 #import <TTCommonBridgeManager.h>
-#import <FHUtils.h>
+#import "FHUtils.h"
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -118,7 +118,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
         
         self.isAppeared = NO;
         _traceCache = [NSMutableArray new];

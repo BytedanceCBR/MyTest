@@ -90,7 +90,8 @@ const NSInteger TTBadgeNumberHeightInset = 4;
 - (void)setBadgeViewStyle:(NSUInteger)badgeViewStyle {
     self.lastBadgeViewStyle = _badgeViewStyle;
     _badgeViewStyle = badgeViewStyle;
-    if(_badgeViewStyle == TTBadgeNumberViewStyleProfile){
+    if(_badgeViewStyle == TTBadgeNumberViewStyleProfile ||
+       _badgeViewStyle == TTBadgeNumberViewStyleProfileWithBorder) {
         self.label.font = [UIFont systemFontOfSize:12];
     }
     [self sizeToFit];
@@ -140,7 +141,7 @@ const NSInteger TTBadgeNumberHeightInset = 4;
     self.label = label;
     self.userInteractionEnabled = NO;
     
-    self.backgroundColorThemeKey = kColorBackground7;
+    self.backgroundColorThemeKey = @"orange1";
     self.badgeTextColorThemeKey = kColorText12;
     self.badgeBorderColorThemeKey = kColorBackground20;
     self.badgeNumberPointSize = 0;
@@ -173,7 +174,8 @@ const NSInteger TTBadgeNumberHeightInset = 4;
         fixedWidth = 2.f;
         fixedHeight = 2.f;
     }
-    else if(self.badgeViewStyle == TTBadgeNumberViewStyleProfile){
+    else if(self.badgeViewStyle == TTBadgeNumberViewStyleProfile ||
+            self.badgeViewStyle == TTBadgeNumberViewStyleProfileWithBorder) {
         fixedWidth = 4.f;
         fixedHeight = 4.f;
     }
@@ -258,7 +260,8 @@ const NSInteger TTBadgeNumberHeightInset = 4;
         
     }
     
-    if (((self.badgeViewStyle == TTBadgeNumberViewStyleWhite && self.badgeNumber == TTBadgeNumberPoint) || self.badgeViewStyle == TTBadgeNumberViewStyleDefaultWithBorder)) {
+    if (((self.badgeViewStyle == TTBadgeNumberViewStyleWhite && self.badgeNumber == TTBadgeNumberPoint) || self.badgeViewStyle == TTBadgeNumberViewStyleDefaultWithBorder ||
+        self.badgeViewStyle == TTBadgeNumberViewStyleProfileWithBorder)) {
         self.layer.borderColor = SSGetThemedColorUsingArrayOrKey(nil, self.badgeBorderColorThemeKey).CGColor;
         
         CGFloat padding = 1.f / ([UIScreen mainScreen].scale);

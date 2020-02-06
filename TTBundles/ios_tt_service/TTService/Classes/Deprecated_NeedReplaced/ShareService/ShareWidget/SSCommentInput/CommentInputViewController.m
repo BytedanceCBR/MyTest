@@ -9,7 +9,7 @@
 #import "CommentInputViewController.h"
 #import "TTDeviceHelper.h"
 
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 
 

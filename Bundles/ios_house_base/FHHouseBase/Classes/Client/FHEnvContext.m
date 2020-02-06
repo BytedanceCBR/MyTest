@@ -21,21 +21,21 @@
 #import "FHMessageManager.h"
 #import "FHHouseBridgeManager.h"
 #import "FHMessageManager.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import "FHIESGeckoManager.h"
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import <BDALog/BDAgileLog.h>
 #import "FHUGCConfigModel.h"
-#import <TTTabBarManager.h>
-#import <TTTabBarItem.h>
+#import "TTTabBarManager.h"
+#import "TTTabBarItem.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
-#import <TTArticleTabBarController.h>
-#import <TTCategoryBadgeNumberManager.h>
+#import "TTArticleTabBarController.h"
+#import "TTCategoryBadgeNumberManager.h"
 #import "FHMainApi.h"
-#import <FHMinisdkManager.h>
-#import <FHIntroduceManager.h>
-#import <TTSettingsManager.h>
-#import <NSDictionary+TTAdditions.h>
+#import "FHMinisdkManager.h"
+#import "FHIntroduceManager.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 #import <TTLocationManager/TTLocationManager.h>
 #import "FHStashModel.h"
 #import <UserNotifications/UserNotifications.h>
@@ -1028,7 +1028,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if(isSpringOperationOpen){
         return [isSpringOperationOpen boolValue];
     }else{
-        return NO;
+        return YES;
     }
 }
 

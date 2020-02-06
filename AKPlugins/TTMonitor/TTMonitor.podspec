@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'TTMonitor'
-  s.version          = '0.7.9.44'
+  s.version          = '0.7.11.0'
   s.summary          = '爱看监控库'
   s.description      = '爱看监控库'
 
@@ -17,11 +17,8 @@ Pod::Spec.new do |s|
   s.author           = { 'suruiqiang' => 'suruiqiang@bytedance.com' }
   s.source           = { :git => 'git@code.byted.org:TTIOS/tt_pods_monitor.git', :tag => s.version.to_s }
 
-  s.platform     = :ios, '7.0'
+  s.platform     = :ios, '9.0'
   s.requires_arc = true
   s.source_files = 'Classes/**/*'
 
-  s.dependency 'TTNetworkManager'
-  s.dependency 'FMDB', '2.6.2'
-  s.dependency 'TTReachability'
 end

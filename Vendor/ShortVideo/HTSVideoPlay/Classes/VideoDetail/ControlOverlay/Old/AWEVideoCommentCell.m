@@ -16,19 +16,19 @@
 #import "UIViewAdditions.h"
 #import <TTThemeConst.h>
 #import <Masonry/Masonry.h>
-#import <UIImage+TTThemeExtension.h>
+#import "UIImage+TTThemeExtension.h"
 #import "TTAsyncCornerImageView+VerifyIcon.h"
 #import "NSDictionary+TTAdditions.h"
 #import "NSStringAdditions.h"
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
-#import <TTUGCAttributedLabel.h>
-#import <FHUGCCellHelper.h>
-#import <TTUniversalCommentLayout.h>
-#import <TTRichSpanText+Comment.h>
-#import <UIColor+Theme.h>
-#import <UIFont+House.h>
-#import <UIImage+FIconFont.h>
+#import "TTUGCAttributedLabel.h"
+#import "FHUGCCellHelper.h"
+#import "TTUniversalCommentLayout.h"
+#import "TTRichSpanText+Comment.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
+#import "UIImage+FIconFont.h"
 
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
 

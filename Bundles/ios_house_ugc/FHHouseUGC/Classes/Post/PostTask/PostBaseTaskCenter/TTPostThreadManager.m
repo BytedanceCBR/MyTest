@@ -12,7 +12,7 @@
 #import <TTUGCFoundation/FRApiModel.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/NSObject+TTAdditions.h>
-#import <TTRichSpanText.h>
+#import "TTRichSpanText.h"
 #import <TTPostBase/TTPostTask.h>
 #import <TTUGCFoundation/TTUGCRequestManager.h>
 #import <Heimdallr/HMDTTMonitor.h>

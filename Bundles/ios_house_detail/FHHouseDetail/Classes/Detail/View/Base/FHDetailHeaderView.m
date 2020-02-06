@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailHeaderView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"

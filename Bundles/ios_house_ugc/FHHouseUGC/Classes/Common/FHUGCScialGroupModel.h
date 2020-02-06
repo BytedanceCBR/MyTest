@@ -1,6 +1,6 @@
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
-#import <FHUGCConfigModel.h>
+#import "JSONModel.h"
+#import "FHUGCConfigModel.h"
 #import "FHUGCShareManager.h"
 NS_ASSUME_NONNULL_BEGIN
 
@@ -68,6 +68,7 @@ typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
 @property (nonatomic, copy , nullable) NSString *contentText;
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, copy , nullable) NSString *hasFollow;
+@property (nonatomic, copy , nullable) NSString *showStatus;
 @property (nonatomic, strong, nullable) FHUGCSocialGroupOperationModel *operation;
 @property (nonatomic, assign) UserAuthType userAuth;
 @property (nonatomic, strong, nullable) NSArray <FHUGCConfigDataPermissionModel> *permission;

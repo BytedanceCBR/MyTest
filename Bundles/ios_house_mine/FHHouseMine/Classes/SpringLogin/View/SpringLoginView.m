@@ -7,7 +7,7 @@
 
 #import "SpringLoginView.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "YYLabel.h"
@@ -15,7 +15,7 @@
 #import "ToastManager.h"
 #import "FHNavBarView.h"
 #import <TTBaseLib/UIViewAdditions.h>
-#import <Lottie/LOTAnimationView.h>
+#import <lottie-ios/Lottie/LOTAnimationView.h>
 
 @implementation SpringLoginAcceptButton : UIButton
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {

@@ -6,23 +6,29 @@
 //
 //
 
+#import "TTNavigationController.h"
 #import "TTSwipePageViewController.h"
 #import <Masonry/Masonry.h>
 @import ObjectiveC;
 
 @interface _TTInternalPanAvailableScrollView : UIScrollView
+@property (nonatomic, assign) BOOL forbidFullScreenPanGesture;
 @end
 
 @interface TTSwipePageViewController () <UIScrollViewDelegate>
 
 @property (nonatomic, strong) _TTInternalPanAvailableScrollView *scrollView;
-@property (nonatomic)         NSUInteger selectedIndex;
+
 @property (nonatomic, strong) NSMutableArray <__kindof UIViewController *> *backedViewControllers;
-//@property (nonatomic, strong) NSMutableArray <__kindof UIScrollView *> *backedScrollViews;
+@property (nonatomic, assign) CGFloat lastOffset; // 保留上次的状态，判断滚动方向
 
 @end
 
 @implementation TTSwipePageViewController
+
+- (void)dealloc {
+    _scrollView.delegate = nil;
+}
 
 #pragma mark - Life Cycle
 
@@ -90,21 +96,27 @@
         to.tt_ControllerIsVisiable = YES;
         
         _selectedIndex = selectedIndex;
-        
         [UIView animateWithDuration:(animated ? .25f : 0) animations:^{
-            
             CGRect rectToVisible = CGRectMake(CGRectGetWidth(self.view.frame) * selectedIndex, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
             self.scrollView.delegate = nil;
             [self.scrollView scrollRectToVisible:rectToVisible animated:NO];
-            
         } completion:^(BOOL finished) {
-            
             self.scrollView.delegate = self;
             if (!self.shouldAutoForwordAppearances) {
                 [from endAppearanceTransition];
                 [to endAppearanceTransition];
             }
         }];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(enableEdgeSwipStrategy)]) {
+        if ([self.delegate enableEdgeSwipStrategy]) {
+            if (_selectedIndex == 0) {
+                self.scrollView.forbidFullScreenPanGesture = NO;
+            } else {
+                self.scrollView.forbidFullScreenPanGesture = YES;
+            }
+        }
     }
 }
 
@@ -168,32 +180,29 @@
     if ([self.delegate respondsToSelector:@selector(pageViewController:pagingFromIndex:toIndex:completePercent:)]) {
         [self.delegate pageViewController:self pagingFromIndex:fromIndex toIndex:toIndex completePercent:percent];
     }
-//    CGPoint contentOffset = scrollView.contentOffset;
-//    double rate = contentOffset.x / scrollView.frame.size.width;
-//    
-//    //左边页面
-//    NSInteger leftPage;
-//    //右边页面
-//    NSInteger rightPage;
-//    if (scrollView.contentOffset.x <= 0) {
-//        leftPage = 0;
-//        rightPage = 0;
-//    }else if (scrollView.contentOffset.x >= (scrollView.frame.size.width * (_pages.count -1))) {
-//        leftPage = _pages.count -1;
-//        rightPage = _pages.count -1;
-//    }else {
-//        leftPage = (NSInteger)rate;
-//        rightPage = leftPage + 1;
-//    }
-//    
-//    NSLog(@"leftPage:%ld",leftPage);
-//    NSLog(@"percent:%f",fabs(rate - (NSInteger)rate));
-//    
-//    
-//    if ([self.delegate respondsToSelector:@selector(pageViewController:pagingFromIndex:toIndex:completePercent:)]) {
-//        [self.delegate pageViewController:self pagingFromIndex:leftPage toIndex:rightPage completePercent:fabs(rate - (NSInteger)rate)];
-//    }
-
+    
+    NSUInteger index = (NSUInteger)(offsetX / viewWidth);
+    NSUInteger nextIndex = 0;
+    CGFloat offset = offsetX / viewWidth;
+    CGFloat scrollPercent = offsetX / viewWidth - index;
+    if (scrollPercent < 0 || scrollPercent > 1) {
+        scrollPercent = 0;
+    }
+    BOOL isLeftDirection = YES;
+    if (self.lastOffset < offset) {
+        isLeftDirection = NO;
+    }
+    self.lastOffset = offset;
+    if (isLeftDirection) {
+        index++;
+        nextIndex = (index != 0) ? index - 1 : 0;
+        scrollPercent = 1 - scrollPercent;
+    } else {
+        nextIndex = (index + 1 < self.pages.count) ? index + 1 : index;
+    }
+    if ([self.delegate respondsToSelector:@selector(pageViewController:scrollFromIndex:toIndex:percent:)]) {
+        [self.delegate pageViewController:self scrollFromIndex:index toIndex:nextIndex percent:scrollPercent];
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -226,7 +235,6 @@
 {
     if (!_scrollView) {
         _scrollView = [[_TTInternalPanAvailableScrollView alloc] initWithFrame:self.view.bounds];
-        
         _scrollView.pagingEnabled = YES;
         _scrollView.bounces  = NO;
         _scrollView.scrollsToTop = NO;
@@ -311,7 +319,16 @@
 
 - (void)didEndPagingForScrollView:(UIScrollView *)scrollView {
     self.selectedIndex = scrollView.contentOffset.x / CGRectGetWidth(self.view.frame);
-    
+    if ([self.delegate respondsToSelector:@selector(enableEdgeSwipStrategy)]) {
+        if ([self.delegate enableEdgeSwipStrategy]) {
+            if (self.selectedIndex == 0) {
+                self.scrollView.forbidFullScreenPanGesture = NO;
+            } else {
+                self.scrollView.forbidFullScreenPanGesture = YES;
+            }
+        }
+    }
+
     if ([self.delegate respondsToSelector:@selector(pageViewController:didPagingToIndex:)]) {
         [self.delegate pageViewController:self didPagingToIndex:self.selectedIndex];
     }
@@ -322,14 +339,31 @@
 #pragma mark - Private Class
 
 @implementation _TTInternalPanAvailableScrollView
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
-{
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    UIGestureRecognizerState state = gestureRecognizer.state;
+    
+    if (gestureRecognizer == self.panGestureRecognizer && self.forbidFullScreenPanGesture) {
+        UIPanGestureRecognizer *pan = (UIPanGestureRecognizer *)gestureRecognizer;
+        CGPoint location = [gestureRecognizer locationInView:self];
+        CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+        CGFloat diviation = location.x - (int)(location.x / screenWidth) * screenWidth;
+        if (UIGestureRecognizerStateBegan == state || UIGestureRecognizerStatePossible == state) {
+            if (diviation <= TTNavigationControllerDefaultSwapLeftEdge) {
+                return NO;
+            }
+        }
+    }
+    
     if (gestureRecognizer == self.panGestureRecognizer) {
         CGPoint velocity = [self.panGestureRecognizer velocityInView:self];
         CGFloat threshold = self.bounds.size.width;
         if (velocity.x > 0 && self.contentOffset.x <= 0 &&
             [gestureRecognizer locationInView:self].x < threshold) {
+            return NO;
+        }
+        
+        UIView *hitTestView =[self hitTest:[gestureRecognizer locationInView:self] withEvent:nil];
+        if ([hitTestView isKindOfClass:[UISlider class]]) {
             return NO;
         }
     }

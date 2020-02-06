@@ -24,4 +24,5 @@
 -(id)initWithFrame:(CGRect)frame WithLoadingHeight:(CGFloat)loadingHeight WithinitText:(NSString *)initText WithpullText:(NSString *)pullText
    WithloadingText:(NSString *)loadingText WithnoMoreText:(NSString *)noMoreText;
 
+- (void)setTitleColors:(NSArray<NSString *> *)colors;
 @end

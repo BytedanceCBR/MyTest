@@ -8,7 +8,7 @@
 #import "FHIntroduceManager.h"
 #import <FHIntroduceView.h>
 #import "FHIntroduceModel.h"
-#import <FHUserTracker.h>
+#import "FHUserTracker.h"
 
 #define kFHIntroduceAlreadyShow @"kFHIntroduceAlreadyShow"
 

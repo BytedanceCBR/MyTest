@@ -6,12 +6,12 @@
 //
 
 #import "FHSpringHangView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIButton+TTAdditions.h"
-#import <TTRoute.h>
-#import <FHUtils.h>
-#import <FHUserTracker.h>
-#import <FHEnvContext.h>
+#import "TTRoute.h"
+#import "FHUtils.h"
+#import "FHUserTracker.h"
+#import "FHEnvContext.h"
 
 #define kFHSpringViewCloseNotification @"kFHSpringViewCloseNotification"
 #define kFHSpringViewCloseDate @"kFHSpringViewCloseDate"
@@ -59,16 +59,16 @@
 
 - (void)initConstaints {
     [_bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(69);
-        make.height.mas_equalTo(58);
+        make.width.mas_equalTo(72);
+        make.height.mas_equalTo(72);
         make.left.bottom.mas_equalTo(self);
     }];
     
     [_closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bgView).offset(-15);
-        make.right.mas_equalTo(self.bgView).offset(7);
-        make.width.mas_equalTo(14);
-        make.height.mas_equalTo(15);
+        make.top.mas_equalTo(self.bgView);
+        make.right.mas_equalTo(self.bgView);
+        make.width.mas_equalTo(12);
+        make.height.mas_equalTo(12);
     }];
 }
 
@@ -108,7 +108,7 @@
 }
 
 - (void)goToSpring:(UITapGestureRecognizer *)sender {
-    NSString *urlStr = @"sslocal://webview?url=https://m.haoduofangs.com/magic/page/ejs/5e02dc7854c8b002583c0773?appType=manyhouse";
+    NSString *urlStr = @"sslocal://webview?url=https://m.xflapp.com/magic/page/ejs/5e396e4309985f029cbb988d?appType=manyhouse";
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     [self addPandentClickLog];

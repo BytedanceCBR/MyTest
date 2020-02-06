@@ -7,18 +7,18 @@
 
 #import "FHHomeMainViewController.h"
 #import "FHHomeMainViewModel.h"
-#import <TTDeviceHelper.h>
-#import <FHEnvContext.h>
-#import <FHMainApi.h>
-#import <TTThemedAlertController.h>
-#import <TTUIResponderHelper.h>
-#import <FHUtils.h>
-#import <TTSandBoxHelper.h>
+#import "TTDeviceHelper.h"
+#import "FHEnvContext.h"
+#import "FHMainApi.h"
+#import "TTThemedAlertController.h"
+#import "TTUIResponderHelper.h"
+#import "FHUtils.h"
+#import "TTSandBoxHelper.h"
 #import "TTSandBoxHelper+House.h"
-#import <TTAppUpdateHelper.h>
-#import <TTInstallIDManager.h>
-#import <CommonURLSetting.h>
-#import <FHMinisdkManager.h>
+#import "TTAppUpdateHelper.h"
+#import "TTInstallIDManager.h"
+#import "CommonURLSetting.h"
+#import "FHMinisdkManager.h"
 #import "FHSpringHangView.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
@@ -102,8 +102,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         
         [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(84);
-            make.height.mas_equalTo(79);
+            make.width.mas_equalTo(82);
+            make.height.mas_equalTo(82);
             make.right.mas_equalTo(self.view).offset(-11);
         }];
     }

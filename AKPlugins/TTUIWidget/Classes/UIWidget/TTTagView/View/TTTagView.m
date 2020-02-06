@@ -52,6 +52,8 @@ static NSString *cellIdentifier = @"cellIdentifier";
 }
 
 - (void)dealloc {
+    _tagCollectionView.dataSource = nil;
+    _tagCollectionView.delegate = nil;
     if ([self isHeightRestricted]) {
         [self removeKVO];
     }

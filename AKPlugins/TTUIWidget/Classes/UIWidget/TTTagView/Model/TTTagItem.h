@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)           UIEdgeInsets padding;
 //interval
 @property (nonatomic, assign)           CGFloat textImageInterval;
+@property (nonatomic, copy) NSDictionary *trackParams;
 
 //TTTagJumpedButtonStyle only
 @property(nonatomic, copy)    void(^ _Nullable action)(void);

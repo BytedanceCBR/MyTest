@@ -10,7 +10,7 @@
 #import "FHTopicListModel.h"
 #import "FHHouseUGCAPI.h"
 #import "FHFeedListModel.h"
-#import <UIScrollView+Refresh.h>
+#import "UIScrollView+Refresh.h"
 #import "FHFeedUGCCellModel.h"
 #import "Article.h"
 #import "TTBaseMacro.h"
@@ -18,17 +18,17 @@
 #import "TTUGCDefine.h"
 #import "FHUGCConfig.h"
 #import "ToastManager.h"
-#import <FHEnvContext.h>
-#import <TTAccountManager.h>
-#import <TTURLUtils.h>
-#import <HMDTTMonitor.h>
+#import "FHEnvContext.h"
+#import "TTAccountManager.h"
+#import "TTURLUtils.h"
+#import "HMDTTMonitor.h"
 #import "TSVShortVideoDetailExitManager.h"
 #import "HTSVideoPageParamHeader.h"
 #import "FHUGCVideoCell.h"
-#import <TTVFeedPlayMovie.h>
-#import <TTVPlayVideo.h>
-#import <TTVFeedCellWillDisplayContext.h>
-#import <TTVFeedCellAction.h>
+#import "TTVFeedPlayMovie.h"
+#import "TTVPlayVideo.h"
+#import "TTVFeedCellWillDisplayContext.h"
+#import "TTVFeedCellAction.h"
 
 @interface FHCommunityFeedListMyJoinViewModel () <UITableViewDelegate, UITableViewDataSource>
 

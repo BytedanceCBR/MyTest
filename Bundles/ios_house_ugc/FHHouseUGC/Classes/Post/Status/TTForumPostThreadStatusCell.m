@@ -13,7 +13,7 @@
 #import "TTPostThreadCenter.h"
 #import "TTTrackerWrapper.h"
 #import "TTUGCAttributedLabel.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTRichSpanText.h"
 #import "TTRichSpanText+Link.h"
 #import "TTRichSpanText+Emoji.h"
@@ -223,7 +223,7 @@ static const CGFloat kCellButtonHeight = 30.0;
         [self setupSubviews];
         
         WeakSelf;
-        [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:kReachabilityChangedNotification object:nil] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(NSNotification * _Nullable x) {
+        [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:TTReachabilityChangedNotification object:nil] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(NSNotification * _Nullable x) {
             StrongSelf;
             [self retryIfWifiAvailabe:x];
         }];

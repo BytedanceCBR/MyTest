@@ -12,7 +12,6 @@
 #import "TTTrackerProxy.h"
 #import "TTNetworkHelper.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
-#import "TTExtensions.h"
 #import "UIDevice+TTAdditions.h"
 #import "NSDictionary+TTAdditions.h"
 #import <TTABManager/TTABHelper.h>
@@ -98,7 +97,7 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
         
         [dict setValue:[TTDeviceHelper openUDID] forKey:TT_OPEN_UDID];
         [dict setValue:displayDensity forKey:TT_DIS_DENSITY];
-        [dict setValue:[TTExtensions carrierName] forKey:TT_CARRIER];
+        [dict setValue:[TTNetworkHelper carrierName] forKey:TT_CARRIER];
         [dict setValue:[TTNetworkHelper carrierMNC] forKey:TT_MCC_MNC];
         [dict setValue:[TTSandBoxHelper getCurrentChannel] forKey:TT_CHANNEL];
         [dict setValue:[TTSandBoxHelper ssAppID] forKey:TT_APP_ID];

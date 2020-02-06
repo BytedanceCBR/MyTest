@@ -6,7 +6,7 @@
 //
 
 #import "TSVDataFetchManager.h"
-#import <TTCategoryDefine.h>
+#import "TTCategoryDefine.h"
 
 @class TTShortVideoModel;
 

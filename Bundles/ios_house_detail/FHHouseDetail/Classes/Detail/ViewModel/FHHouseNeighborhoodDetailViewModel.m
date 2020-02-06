@@ -30,7 +30,7 @@
 #import "FHDetailBlankLineCell.h"
 #import "FHDetailAgentListCell.h"
 #import "FHDetailStaticMapCell.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import <FHHouseBase/FHHouseNeighborModel.h>
 #import <FHHouseBase/FHHomeHouseModel.h>
 #import <FHDetailMediaHeaderCell.h>

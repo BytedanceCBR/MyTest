@@ -27,6 +27,7 @@
                   lastTimeKey:(NSString *)timeKey
                ActioinHandler:(pullActionHandler)actionHandler;
 - (void)triggerPullDown;
+- (void)triggerPullDownWithDefaultRefreshView:(BOOL)useDefaultRefreshView;
 - (void)triggerPullUp;
 - (void)finishPullDownWithSuccess:(BOOL)success;
 - (void)finishPullUpWithSuccess:(BOOL)success;
@@ -36,7 +37,7 @@
 - (void)triggerPullDownAndHideAnimationView;
 
 @property (nonatomic, strong, readwrite) TTRefreshView *pullDownView;
-@property (nonatomic, strong, readwrite) TTLoadMoreView *pullUpView;
+@property (nonatomic, strong, readwrite) UIView<TTLoadMoreView> *pullUpView;
 @property (nonatomic, assign, readwrite) BOOL isMutex;
 @property (nonatomic, assign, readwrite) BOOL hasMore;
 @property (nonatomic ,assign, readwrite) BOOL disableWhenLoad;
@@ -56,6 +57,9 @@
 @property (nonatomic, assign) BOOL ttHasIntegratedMessageBar;
 @property (nonatomic, weak, readwrite) UIView * ttIntegratedMessageBar;
 
+@property (nonatomic, assign) BOOL autoTriggerPullUpWhenHasError;
+@property (nonatomic, assign) CGFloat autoTriggerPullUpOffset;
+
 @end
 
 /// @brief 默认的接口太难创建了
@@ -66,4 +70,5 @@
 - (void)tt_addDefaultPullUpLoadMoreWithHandler:(pullActionHandler)hander;
 - (void)tt_addPullUpLoadMoreWithNoMoreText:(NSString *)noMoreText withHandler:(pullActionHandler)hander;
 
+- (void)tt_addStatePullUpLoadMoreWithHandler:(pullActionHandler)hander withInset:(UIEdgeInsets)insets;
 @end

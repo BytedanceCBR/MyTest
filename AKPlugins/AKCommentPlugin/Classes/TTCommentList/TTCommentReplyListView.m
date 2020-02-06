@@ -12,7 +12,7 @@
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import "NetworkUtilities.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 
 
 #define kTopPadding [TTDeviceUIUtils tt_newPadding:12.f]
