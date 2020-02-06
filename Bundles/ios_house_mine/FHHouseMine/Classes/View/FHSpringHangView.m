@@ -114,14 +114,16 @@
         self.closeBtn.hidden = !model.closeable;
         
         _pageType = pageType;
-        if(![FHEnvContext sharedInstance].isShowingSpringHang){
+        if(![FHEnvContext sharedInstance].isShowingSpringHang || ![model.id isEqualToString:[FHEnvContext sharedInstance].currentShowHangId]){
+            [FHEnvContext sharedInstance].currentShowHangId = model.id;
+            [FHEnvContext sharedInstance].isShowingSpringHang = YES;
             [self addPandentShowLog];
         }
-        [FHEnvContext sharedInstance].isShowingSpringHang = YES;
     }else{
         //隐藏
         [[NSNotificationCenter defaultCenter] postNotificationName:kFHSpringViewCloseNotification object:nil];
         [FHEnvContext sharedInstance].isShowingSpringHang = NO;
+        [FHEnvContext sharedInstance].currentShowHangId = nil;
     }
 }
 
@@ -134,6 +136,7 @@
     }
     //隐藏
     [FHEnvContext sharedInstance].isShowingSpringHang = NO;
+    [FHEnvContext sharedInstance].currentShowHangId = nil;
     [self addPandentCloseLog];
 }
 

@@ -71,6 +71,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL isShowDots;
 //春节运营位是否正在显示
 @property(nonatomic, assign) BOOL isShowingSpringHang;
+//正在显示的画运营位ID
+@property(nonatomic, copy) NSString *currentShowHangId;
 
 
 + (instancetype)sharedInstance;
