@@ -20,6 +20,8 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHSpringHangView.h"
 #import "UIViewController+Track.h"
+#import "TTTabBarItem.h"
+#import "TTTabBarManager.h"
 
 @interface FHMineViewController ()<UIViewControllerErrorHandler>
 
@@ -38,6 +40,38 @@
 @end
 
 @implementation FHMineViewController
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [TTAccount addMulticastDelegate:self];
+
+    }
+
+    return self;
+}
+
+- (void)dealloc {
+    [TTAccount removeMulticastDelegate:self];
+}
+
+#pragma mark - TTAccountMulticastProtocol
+
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    [self checkMineTabName];
+}
+
+- (void)checkMineTabName {
+    //登录或未登录切换tab的名称
+    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseMineTabKey];
+    if([TTAccount sharedAccount].isLogin){
+        [tabItem setTitle:@"我的"];
+    } else {
+        [tabItem setTitle:@"未登录"];
+    }
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
