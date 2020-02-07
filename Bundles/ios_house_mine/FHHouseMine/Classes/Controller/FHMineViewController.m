@@ -208,6 +208,9 @@
 - (void)initSignal {
     //config改变后需要重新刷新数据
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        if([FHEnvContext isSpringHangOpen] && self.springView){
+            [self.springView show:[FHEnvContext enterTabLogName]];
+        }
         [self startLoadData];
     }];
 }

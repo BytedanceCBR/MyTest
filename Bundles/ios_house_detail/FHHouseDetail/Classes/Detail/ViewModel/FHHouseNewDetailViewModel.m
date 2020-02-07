@@ -538,6 +538,7 @@
         [self.items addObject:grayLine];
 
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
+        staticMapModel.mapCentertitle = model.data.coreInfo.name;
         staticMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
         staticMapModel.houseId = model.data.coreInfo.id;
