@@ -194,6 +194,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
         [FHEnvContext changeFindTabTitle];
         [FHEnvContext showRedPointForNoUgc];
+        if([FHEnvContext isSpringHangOpen] && self.springView){
+            [self.springView show:[FHEnvContext enterTabLogName]];
+        }
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
     }];
 }

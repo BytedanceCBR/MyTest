@@ -376,6 +376,7 @@
              @"ugcCategoryConfig": @"ugc_category_config",
              @"realtorEvaluationConfig": @"realtor_evaluation",
              @"jumpPageOnStartup":@"jump_page_on_startup",
+             @"tabWidget": @"tab_widget",
              };
 }
 
@@ -1225,5 +1226,41 @@ DICT_PROP_GET(FHConfigDataRentBannerModel,rentBanner,@"rent_banner")
 }
 
 
+@end
+
+@implementation FHConfigDataTabWidgetModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"logPb": @"log_pb",
+                           @"openUrl": @"open_url",
+                           @"backgroundColor": @"background_color",
+                           @"textColor": @"text_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHConfigDataTabWidgetImageModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"imageType": @"image_type",
+                           @"urlList": @"url_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
 @end
 

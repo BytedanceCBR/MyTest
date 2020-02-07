@@ -59,6 +59,12 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
     
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        if([FHEnvContext isSpringHangOpen] && self.springView){
+            [self.springView show:[FHEnvContext enterTabLogName]];
+        }
+    }];
+    
     if([FHEnvContext isSpringHangOpen]){
         [self addSpringView];
     }
