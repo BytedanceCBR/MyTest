@@ -369,15 +369,16 @@
     }
     
     // 小区问答
-    if (model.data.priceTrend.count > 0) {
+//    if (model.data.priceTrend.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
+        [qaModel fakeData];
         qaModel.priceTrends = model.data.priceTrend;
         qaModel.tableView = self.tableView;
         [self.items addObject:qaModel];
-    }
+//    }
     
     // 小区成交历史
     if (model.data.totalSales.list.count > 0) {

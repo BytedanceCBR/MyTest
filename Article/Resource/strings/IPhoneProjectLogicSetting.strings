@@ -211,3 +211,5 @@
 "quick_ask" = "FHFastQAViewController";
 
 "spring_login" = "SpringLoginViewController";
+//小区问答
+"ugc_wenda_list" = "FHNeighbourhoodQuestionController";

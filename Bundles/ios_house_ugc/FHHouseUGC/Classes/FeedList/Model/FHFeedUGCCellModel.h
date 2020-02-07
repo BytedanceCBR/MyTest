@@ -173,6 +173,15 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *hotCommunityCellType;
 //帖子编辑状态。默认是none
 @property (nonatomic, assign) FHUGCPostEditState editState;
+//小区问答模块
+@property (nonatomic, copy , nullable) NSString *questionStr;
+@property (nonatomic, copy , nullable) NSString *answerStr;
+@property (nonatomic, strong , nullable) NSAttributedString *questionAStr;
+@property (nonatomic, assign) CGFloat questionHeight;
+@property (nonatomic, strong , nullable) NSAttributedString *answerAStr;
+@property (nonatomic, assign) CGFloat answerHeight;
+//是否在列表页
+@property (nonatomic, assign) BOOL isList;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

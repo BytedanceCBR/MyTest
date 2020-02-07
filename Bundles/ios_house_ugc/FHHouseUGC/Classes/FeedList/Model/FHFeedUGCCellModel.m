@@ -760,6 +760,11 @@
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.groupId = @"1000051";
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotCommunity;
+    cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑与协同工具， 让每个企业轻松拥有文档";
+    cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
+    [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:0];
+    [FHUGCCellHelper setAnswerRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:1];
+    
     
     return cellModel;
 }

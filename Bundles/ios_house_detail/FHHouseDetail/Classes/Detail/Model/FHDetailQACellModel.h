@@ -7,6 +7,7 @@
 
 #import "FHDetailBaseModel.h"
 #import "FHDetailOldModel.h"
+#import "FHNeighbourhoodQuestionCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,8 +19,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailOldDataPriceAnalyzeModel *priceAnalyze ;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqmV;
 @property (nonatomic, assign)   BOOL       isFold; // 折叠
-@property (nonatomic, assign)   CGFloat       bottomHeight;
+@property (nonatomic, assign) CGFloat viewHeight;
 @property (nonatomic, weak)     UITableView       *tableView;
+@property(nonatomic , strong) NSMutableArray *dataList;
+@property (nonatomic, assign) CGFloat headerViewHeight;
+@property (nonatomic, assign) CGFloat footerViewHeight;
+@property (nonatomic, assign) NSInteger totalCount;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *askTitle;
+@property (nonatomic, copy) NSString *desc;
+
+- (void)fakeData;
 
 @end
 
