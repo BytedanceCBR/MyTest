@@ -25,6 +25,7 @@
 #import "NSDictionary+TTAdditions.h"
 #import "FHIESGeckoManager.h"
 #import "FHRNHelper.h"
+#import <TTSettingsManager/TTSettingsManager.h>
 
 #define IM_OPEN_URL @"im_open_url"
 
@@ -105,9 +106,36 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (!isEmptyString(source)) {
         userInfoDict[@"source"] = source;
     }
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    BOOL isLogin = [TTAccount sharedAccount].isLogin;
+    NSString *realtorPosition = extra[@"realtor_position"];
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL isSettingsAllowed = [archSettings tta_boolForKey:@"f_im_bring_login_in_front"];
+    BOOL isLoginFront = [extra tta_boolForKey:@"is_login_front"];
     
+    if (isLogin || !isLoginFront || !isSettingsAllowed) {
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }else {
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        NSMutableDictionary *loginDict = [NSMutableDictionary dictionary];
+        [loginDict setValue:@"customer_avatar" forKey:@"enter_type"]; // todo zjing test
+        [loginDict setValue:@"session_detail" forKey:@"enter_from"];
+        TTRouteUserInfo *loginUserInfo = [[TTRouteUserInfo alloc]initWithInfo:loginDict];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://flogin"] userInfo:loginUserInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+            [nav pushViewController:routeObj.instance animated:YES];
+        }];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+            if ([routeObj.instance isKindOfClass:[UIViewController class]]) {
+                UIViewController *vc = routeObj.instance;
+                if (nav.viewControllers.count > 1) {
+                    
+                    NSMutableArray *navArray = [[NSMutableArray alloc] initWithArray:nav.viewControllers];
+                    [navArray insertObject:vc atIndex:[navArray count] - 1];
+                    [nav setViewControllers:navArray animated:NO];
+                }
+            }
+        }];
+    }
     [self silentFollow:extra];
 }
 
