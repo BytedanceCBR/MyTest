@@ -38,6 +38,8 @@
 #import <FHHouseBase/FHHomeHouseModel.h>
 #import <FHDetailMediaHeaderCell.h>
 #import "FHNeighborhoodDetailModuleHelper.h"
+#import "FHDetailNeighborhoodQACell.h"
+#import "FHDetailQACellModel.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -72,6 +74,7 @@
     [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
     [self.tableView registerClass:[FHDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodQACell class] forCellReuseIdentifier:NSStringFromClass([FHDetailQACellModel class])];
 
 }
 
@@ -363,6 +366,17 @@
         priceTrendModel.priceTrends = model.data.priceTrend;
         priceTrendModel.tableView = self.tableView;
         [self.items addObject:priceTrendModel];
+    }
+    
+    // 小区问答
+    if (model.data.priceTrend.count > 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
+        qaModel.priceTrends = model.data.priceTrend;
+        qaModel.tableView = self.tableView;
+        [self.items addObject:qaModel];
     }
     
     // 小区成交历史
