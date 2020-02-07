@@ -36,7 +36,9 @@
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "UIColor+Theme.h"
-
+#import "FHConfigModel.h"
+#import "BDWebImage.h"
+#import "FHEnvContext.h"
 NSString *kTTTabBarZipDownloadSuccess = @"kTTTabBarZipDownloadSuccess";
 
 //服务端下发的tab标题key 且是 服务端下发的tab图片名
@@ -54,6 +56,7 @@ NSString *kAKTabActivityTabKey = @"tab_ak_activity";//爱看活动tab 标题key&
 NSString *kFHouseFindTabKey = @"tab_f_find";//发现key
 NSString *kFHouseMessageTabKey = @"tab_message";
 NSString *kFHouseMineTabKey = @"tab_mine"; //房产首页key
+NSString *kFHouseHouseEpidemicSituationTabKey = @"tab_EpidemicSituation"; //房产首页key
 //Path
 static NSString *kTTTabConfigurationPath = @"tabbar/configuration"; //tab配置信息存储路径
 static NSString *kTTTabImagesPath = @"tabbar/images"; //tab图片资源路径
@@ -174,6 +177,7 @@ SINGLETON_GCD(TTTabBarManager);
                   kFHouseMineTabKey,
                   kFHouseMessageTabKey,
                   kFHouseFindTabKey,
+                  kFHouseHouseEpidemicSituationTabKey,
                   nil];
     _defaultItemTitles = @{kTTTabHomeTabKey:@"首页",
                            kTTTabVideoTabKey:@"视频",
@@ -182,6 +186,7 @@ SINGLETON_GCD(TTTabBarManager);
 //                           kTTTabFollowTabKey:@"关注",
                            kFHouseMessageTabKey: @"消息",
                            kFHouseMineTabKey:@"我的",
+                           kFHouseHouseEpidemicSituationTabKey:@"",
                            kFHouseFindTabKey:@"找房",
 
 //                           kTTTabWeitoutiaoTabKey:[KitchenMgr getString:kTTKUGCFeedNamesTab],
@@ -195,6 +200,7 @@ SINGLETON_GCD(TTTabBarManager);
 //                           kAKTabActivityTabKey:@"ak_activity_tab",
                            kFHouseMessageTabKey: @"tab-message",
                            kFHouseMineTabKey: @"tab-mine",
+                           kFHouseHouseEpidemicSituationTabKey:@"tab_es",
                            kFHouseFindTabKey: @"tab-search",
 
 //                           kTTTabHTSTabKey:@"huoshan_tabbar",
@@ -230,19 +236,20 @@ SINGLETON_GCD(TTTabBarManager);
 
     NSString *identifier = [TTTabBarProvider priorMiddleTabIdentifier];
     _middleModel.originalIdentifier = identifier;
-    _middleModel.text = [[self.dict tt_dictionaryValueForKey:@"text"] tt_stringValueForKey:identifier];
-    if (!isEmptyString(identifier)) {
-        _middleModel.identifier = !isEmptyString(_middleModel.text) ? identifier : [identifier stringByAppendingString:@"_big"];
-    } else {
-        _middleModel.identifier = nil;
-    }
+    _middleModel.text = [TTTabBarProvider priorMiddleTabIdentifier].length>0?@"疫情":@"";
+    _middleModel.identifier = identifier;
+//    if (!isEmptyString(identifier)) {
+//        _middleModel.identifier = !isEmptyString(_middleModel.text) ? identifier : [identifier stringByAppendingString:@"_big"];
+//    } else {
+//        _middleModel.identifier = nil;
+//    }
     _middleModel.schema = [TTTabBarProvider priorMiddleTabSchema];
     
-    NSDictionary *tabListConfig = [[TTSettingsManager sharedManager] settingForKey:@"tt_tab_list_config" defaultValue:@{@"middle_tab":@{}} freeze:NO];
-    NSDictionary *middleTabConfig = [tabListConfig tt_dictionaryValueForKey:@"middle_tab"];
+//    NSDictionary *tabListConfig = [[TTSettingsManager sharedManager] settingForKey:@"tt_tab_list_config" defaultValue:@{@"middle_tab":@{}} freeze:NO];
+//    NSDictionary *middleTabConfig = [tabListConfig tt_dictionaryValueForKey:@"middle_tab"];
 
-    _middleModel.isExpand = NO;
-    _middleModel.useLottieFirst = [middleTabConfig tt_boolValueForKey:@"use_lottie_first"];
+    _middleModel.isExpand = YES;
+    _middleModel.useLottieFirst =NO;
 }
 
 - (void)dealloc {
@@ -648,7 +655,7 @@ SINGLETON_GCD(TTTabBarManager);
         middleButtonImageModel.name = self.middleModel.identifier;
         middleButtonImageModel.isDefaultImage = NO;
     } else {
-        middleButtonImageModel.name = @"tab_activity_big";
+        middleButtonImageModel.name = @"tab_es_normal";
         middleButtonImageModel.isDefaultImage = YES;
     }
     imageList.middleButtonItem = middleButtonImageModel;
@@ -692,17 +699,17 @@ SINGLETON_GCD(TTTabBarManager);
 //        }
 //    }
 
-    if (!item.isRegular) {
-        NSString *normalImageName = self.middleModel.originalIdentifier;
-        NSString *bigImageName = [normalImageName stringByAppendingString:@"_big"];
-        BOOL normalIconValid = [self.imageFileNames containsObject:normalImageName] && [self.imageFileNames containsObject:[normalImageName stringByAppendingString:kTTTabNightSuffix]];
-        BOOL bigIconValid = [self.imageFileNames containsObject:bigImageName] && [self.imageFileNames containsObject:[bigImageName stringByAppendingString:kTTTabNightSuffix]];
-        //中间tab只有在<资源生效且没有大图>的时候有文案（因为默认是大图，不需要文案）
-        if (!self.isSingleConfigValid || bigIconValid || !normalIconValid) {
-            title = nil;
-        }
-    }
-    
+//    if (!item.isRegular) {
+//        NSString *normalImageName = self.middleModel.originalIdentifier;
+//        NSString *bigImageName = [normalImageName stringByAppendingString:@"_big"];
+//        BOOL normalIconValid = [self.imageFileNames containsObject:normalImageName] && [self.imageFileNames containsObject:[normalImageName stringByAppendingString:kTTTabNightSuffix]];
+//        BOOL bigIconValid = [self.imageFileNames containsObject:bigImageName] && [self.imageFileNames containsObject:[bigImageName stringByAppendingString:kTTTabNightSuffix]];
+//        //中间tab只有在<资源生效且没有大图>的时候有文案（因为默认是大图，不需要文案）
+//        if (!self.isSingleConfigValid || bigIconValid || !normalIconValid) {
+//            title = nil;
+//        }
+//    }
+//
     //设置标题
     [item setTitle:title];
 }
@@ -743,7 +750,17 @@ SINGLETON_GCD(TTTabBarManager);
         highlightedImage = [self getImageForItem:names.unloginItem isHighlighted:YES];
     }
     
-    [item setNormalImage:normalImage highlightedImage:highlightedImage loadingImage:refreshImage];
+     FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
+    if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
+        if (centerTabConfig.staticImage.url&&centerTabConfig.activationimage.url) {
+//            normalImage = [self requestEsituationImageWithImageUrl:centerTabConfig.staticImage.url];
+//            highlightedImage = [self requestEsituationImageWithImageUrl:centerTabConfig.activationimage.url];
+        }
+    }
+    
+      [item setNormalImage:normalImage highlightedImage:highlightedImage loadingImage:refreshImage];
+    
+    
 }
 
 - (void)setLottieViewForItem:(TTTabBarItem *)item {
@@ -780,6 +797,16 @@ SINGLETON_GCD(TTTabBarManager);
                 self.middleModel.isExpand = YES;
             } else {
                 self.middleModel.isExpand = NO;
+            }
+        }
+        if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
+            UIImage *normalImage = [UIImage imageNamed:@"tab_es_normal"];
+            
+            //只有大图才可以拉伸，是否凸起与图片尺寸绑定
+            if (ABS(normalImage.size.height - 64.f) < 4.f) {
+                self.middleModel.isExpand = YES;
+            } else {
+                self.middleModel.isExpand = YES;
             }
         }
     }
@@ -934,6 +961,7 @@ SINGLETON_GCD(TTTabBarManager);
     
     if (!_customMiddleButton) {
         _customMiddleButton = [[SSThemedButton alloc] init];
+        _customMiddleButton.backgroundColor = [UIColor yellowColor];
         _customMiddleButton.adjustsImageWhenHighlighted = NO;
     
         [self updateMiddleButton];
@@ -945,6 +973,9 @@ SINGLETON_GCD(TTTabBarManager);
     
     return _customMiddleButton;
 }
+
+
+
 
 - (LOTAnimationView *)middleTabAnimatingViewInPath:(NSString *)path {
     LOTAnimationView *middleTabAnimatingView;
@@ -1294,4 +1325,13 @@ SINGLETON_GCD(TTTabBarManager);
     }
 }
 
+- (UIImage *)requestEsituationImageWithImageUrl:(NSString *)url {
+    __block UIImage *showImage = nil;
+    [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:url] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+        if (!error && image) {
+            showImage = image;
+        }
+        }];
+    return showImage;
+}
 @end

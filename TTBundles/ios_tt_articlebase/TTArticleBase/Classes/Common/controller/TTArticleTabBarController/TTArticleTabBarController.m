@@ -232,7 +232,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [self setupEssentialInitialization];
     [self constructTabItems];
     
-    [UITabBar appearance].clipsToBounds = YES;
+//    [UITabBar appearance].clipsToBounds = YES;
     //添加自定义线
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0.5)];
     lineView.backgroundColor = [UIColor clearColor];
