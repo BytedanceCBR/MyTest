@@ -710,6 +710,14 @@ SINGLETON_GCD(TTTabBarManager);
 //        }
 //    }
 //
+    if (!item.isRegular && [item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
+         FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
+        if (centerTabConfig.title) {
+            title = centerTabConfig.title;
+        }
+    }
+    
+    
     //设置标题
     [item setTitle:title];
 }
@@ -800,16 +808,13 @@ SINGLETON_GCD(TTTabBarManager);
             }
         }
         if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
-            UIImage *normalImage = [UIImage imageNamed:@"tab_es_normal"];
-            
-            //只有大图才可以拉伸，是否凸起与图片尺寸绑定
-            if (ABS(normalImage.size.height - 64.f) < 4.f) {
-                self.middleModel.isExpand = YES;
-            } else {
-                self.middleModel.isExpand = YES;
+            if (item.isRegular) {
+                self.middleModel.isExpand = NO;
+            }else {
+              self.middleModel.isExpand = YES;
+            }
             }
         }
-    }
 }
 
 #pragma mark - Validation

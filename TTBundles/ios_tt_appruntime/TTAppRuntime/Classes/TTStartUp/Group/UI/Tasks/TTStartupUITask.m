@@ -188,7 +188,7 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 - (void)constructDefaultTabs {
     FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
     NSMutableArray *tabRegisterArr = [[NSMutableArray alloc]initWithObjects:kTTTabHomeTabKey,kFHouseFindTabKey,kFHouseMessageTabKey,kFHouseMineTabKey, nil];
-    if (centerTabConfig.enable) {
+    if (centerTabConfig.enable && centerTabConfig.openUrl) {
         [tabRegisterArr insertObject:kFHouseHouseEpidemicSituationTabKey atIndex:2];
     }
     [tabRegisterArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
