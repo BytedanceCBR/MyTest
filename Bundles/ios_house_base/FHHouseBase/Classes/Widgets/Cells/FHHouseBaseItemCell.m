@@ -333,7 +333,8 @@
 
 -(CGFloat)contentSmallImageMaxWidth
 {
-    return  SCREEN_WIDTH - (_isHomePage ? 20 : 15) - YOGA_RIGHT_PRICE_WIDITH - 90; //根据UI图 直接计算出来
+    // (_isHomePage ? 20 : 15)
+    return  SCREEN_WIDTH - (_isHomePage ? 20 : 5) - YOGA_RIGHT_PRICE_WIDITH - 90; //根据UI图 直接计算出来
 }
 
 -(CGFloat)contentSmallImageTagMaxWidth
@@ -658,7 +659,7 @@
         layout.marginTop = YGPointValue(8);
         layout.marginLeft = YGPointValue(0);
         layout.height = YGPointValue(16);
-        layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth]);
+        layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth] - 36);
     }];
     
     
@@ -812,7 +813,7 @@
     [_rightInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.left = YGPointValue((isHomePage ? 117 : 102) + INFO_TO_ICON_MARGIN);
+        layout.left = YGPointValue((isHomePage ? 113 : 102) + INFO_TO_ICON_MARGIN);
         layout.flexDirection = YGFlexDirectionColumn;
         //        layout.flexGrow = 1;
         layout.top = YGPointValue(0);
@@ -880,7 +881,7 @@
         layout.marginTop = YGPointValue(8);
         layout.marginLeft = YGPointValue(0);
         layout.height = YGPointValue(16);
-        layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth] - 10);
+        layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth] - 36);
     }];
     self.distanceLabel.hidden = YES;
     [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -1130,7 +1131,14 @@
         self.mainTitleLabel.text = commonModel.title;
         self.subTitleLabel.text = commonModel.subtitle;
         self.priceLabel.text = commonModel.pricing;
-        
+        if (commonModel.addrData.length > 0) {
+            _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            UIColor *textColor = [UIColor themeGray2];
+            UIColor *backgroundColor = [UIColor whiteColor];
+            _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            attributeString = [FHSingleImageInfoCellModel createSmallTagAttrString:commonModel.addrData isFirst:YES textColor:textColor backgroundColor:backgroundColor];
+            self.tagLabel.attributedText =  attributeString;
+        }
         [self.mainTitleLabel.yoga markDirty];
         [self.subTitleLabel.yoga markDirty];
         [self.rightInfoView.yoga markDirty];
@@ -1154,18 +1162,6 @@
         
         self.priceLabel.text = commonModel.pricePerSqmNum;
         self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
-        
-        
-        //        if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
-        //
-        //            self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
-        //            self.imageTagLabel.text = commonModel.houseImageTag.text;
-        //            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
-        //            self.imageTagLabelBgView.hidden = NO;
-        //        }else {
-        //
-        //            self.imageTagLabelBgView.hidden = YES;
-        //        }
     }
     
     [self hideRecommendReason];
@@ -1335,8 +1331,19 @@
         self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
         self.mainTitleLabel.text = commonModel.displayTitle;
         self.subTitleLabel.text = commonModel.displayDescription;
-        NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
-
+        NSAttributedString * attributeString = nil;
+        if (commonModel.reasonTags.count > 0) {
+            FHHouseTagsModel *element = commonModel.reasonTags.firstObject;
+            if (element.content && element.textColor && element.backgroundColor) {
+                UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor themeRed4];
+                UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor whiteColor];
+                attributeString = [FHSingleImageInfoCellModel createSmallTagAttrString:element.content isFirst:YES textColor:textColor backgroundColor:backgroundColor];
+                _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            }
+        }else {
+            attributeString = [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
+            _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        }
         self.priceLabel.text = commonModel.displayPricePerSqm;
         //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
         FHImageModel *imageModel = commonModel.images.firstObject;
@@ -1444,9 +1451,14 @@
             self.priceLabel.text = commonModel.pricing;
             self.pricePerSqmLabel.text = nil;
             self.pricePerSqmLabel.hidden = YES;
-            [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth] - 10);
-            }];
+//            [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+//                layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth] - 10);
+//            }];
+            if (commonModel.addrData.length > 0) {
+                _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+                attributeString = [FHSingleImageInfoCellModel createSmallTagAttrString:commonModel.addrData isFirst:YES textColor:[UIColor themeGray2] backgroundColor:[UIColor whiteColor]];
+                self.tagLabel.attributedText =  attributeString;
+            }
             _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
             [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                 if (self.priceLabel.yoga.marginTop.value != 28.5) {
