@@ -168,7 +168,12 @@
     CGFloat topInset = _emptyEdgeInsets.top;
     CGFloat bottomInset = _emptyEdgeInsets.bottom;
     [_emptyView mas_updateConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0 , *)) {
+        if (@available(iOS 13.0 , *)) {
+            CGFloat appTopInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+            make.left.right.mas_equalTo(self.view);
+            make.bottom.mas_equalTo(self.view).offset(-bottomInset);
+            make.top.mas_equalTo(self.view).offset(44.f + appTopInset + topInset);
+        } else if (@available(iOS 11.0 , *)) {
             make.left.right.mas_equalTo(self.view);
             make.bottom.mas_equalTo(self.view).offset(-bottomInset);
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top + topInset);
