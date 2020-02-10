@@ -59,6 +59,12 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
     
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        if([FHEnvContext isSpringHangOpen] && self.springView){
+            [self.springView show:[FHEnvContext enterTabLogName]];
+        }
+    }];
+    
     if([FHEnvContext isSpringHangOpen]){
         [self addSpringView];
     }
@@ -77,8 +83,8 @@
         
         [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(84);
-            make.height.mas_equalTo(79);
+            make.width.mas_equalTo(82);
+            make.height.mas_equalTo(82);
             make.right.mas_equalTo(self.view).offset(-11);
         }];
     }
@@ -185,6 +191,9 @@
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    if (@available(iOS 11.0 , *)) {
+          _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+      }
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.01f)];
     _tableView.tableHeaderView = headerView;
@@ -237,10 +246,10 @@
         }
     }
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(44);
-        if (@available(iOS 11.0, *)) {
+        if (@available(iOS 13.0, *)) {
+            make.top.mas_equalTo(self.view).offset(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+        } else if (@available(iOS 11.0, *)) {
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
-//            make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
         } else {
             make.top.mas_equalTo(64);
         }
