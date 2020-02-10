@@ -55,6 +55,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         installed = YES;
     }
     
+    UIAlertView * authAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"无访问权限", nil)
+                              message:[NSString stringWithFormat:@"是否安装：%ld",installed]
+                                                        delegate:self
+                                               cancelButtonTitle:@"确定"
+                                               otherButtonTitles:nil];
+    [authAlert show];
+
     callback(TTRJSBMsgSuccess, @{@"installed":@(installed)});
 }
 
