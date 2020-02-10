@@ -149,13 +149,13 @@
         make.right.equalTo(self.contentView).offset(-15);
     }];
     [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_offset(.5);
+        make.height.mas_offset(.6);
         make.left.equalTo(self.containerView).offset(16);
         make.right.equalTo(self.containerView).offset(-16);
         make.top.equalTo(self.containerView);
     }];
     [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_offset(.5);
+        make.height.mas_offset(.6);
         make.left.equalTo(self.containerView).offset(16);
         make.right.equalTo(self.containerView).offset(-16);
         make.bottom.equalTo(self.containerView);
@@ -182,7 +182,7 @@
 - (UIView *)topLine {
     if (!_topLine) {
         UIView *topLine = [[UIView alloc]init];
-        topLine.backgroundColor = [UIColor themeGray6];
+        topLine.backgroundColor = [[UIColor themeGray6]colorWithAlphaComponent:.5];
         [self.containerView addSubview: topLine];
         _topLine = topLine;
     }
@@ -191,7 +191,7 @@
 - (UIView *)bottomLine {
     if (!_bottomLine) {
         UIView *bottomLine = [[UIView alloc]init];
-        bottomLine.backgroundColor = [UIColor themeGray6];
+        bottomLine.backgroundColor = [[UIColor themeGray6]colorWithAlphaComponent:.5];
         [self.containerView addSubview: bottomLine];
         _bottomLine = bottomLine;
     }

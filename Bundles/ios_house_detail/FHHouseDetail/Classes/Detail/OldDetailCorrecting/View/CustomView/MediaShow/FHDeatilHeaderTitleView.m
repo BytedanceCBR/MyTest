@@ -116,6 +116,7 @@
 }
 
 - (void)setModel:(FHDetailHouseTitleModel *)model {
+    _model = model;
     NSArray *tags = model.tags;
     if (model.address.length>0) {
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -174,5 +175,39 @@
         }];
         lastView = label;
     }];
+}
+
+- (void)clickMapAction:(UIButton *)btn {
+    
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:@"银行" forKey:@"category"];
+    FHDetailNeighborhoodSubMessageModel *infoModels =self.model.neighborhoodInfoModel;
+    if (infoModels) {
+        double lng = [infoModels.neighborhoodInfo.gaodeLng doubleValue];
+        double lat = [infoModels.neighborhoodInfo.gaodeLat doubleValue];
+        [infoDict setValue:@(lat) forKey:@"latitude"];
+        [infoDict setValue:@(lng) forKey:@"longitude"];
+        [infoDict setValue:infoModels.neighborhoodInfo.name forKey:@"title"];
+
+        if (!lng || !lat) {
+            NSMutableDictionary *params = [NSMutableDictionary new];
+            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+            [params setValue:@"经纬度缺失" forKey:@"reason"];
+            [params setValue:infoModels.neighborhoodInfo.id forKey:@"house_id"];
+            [params setValue:@(4) forKey:@"house_type"];
+            [params setValue:infoModels.name forKey:@"name"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+        }
+
+        NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
+        [tracer setValue:@"address" forKey:@"click_type"];
+        [tracer setValue:@"house_info" forKey:@"element_from"];
+        [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+        [infoDict setValue:tracer forKey:@"tracer"];
+
+        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+    }
+
 }
 @end

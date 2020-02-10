@@ -40,9 +40,13 @@
         if (model.neighborhoodInfo.monthUp.length > 0) {
             CGFloat value = [model.neighborhoodInfo.monthUp floatValue] * 100;
             if (fabs(value) < 0.0001) {
-                // 持平
                 self.monthUpLabel.text = @"持平";
+                self.per.hidden = YES;
                 self.monthUpTrend.hidden = YES;
+                [self.monthUpLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.right.equalTo(self.containerView).offset(-16);
+                    make.centerY.equalTo(self.priceLabel);
+                }];
             } else {
                 self.monthUpLabel.text = [NSString stringWithFormat:@"%.2f",fabs(value)];
                 self.monthUpTrend.hidden = NO;
@@ -87,7 +91,7 @@
         make.centerY.equalTo(self.priceLabel);
     }];
     [self.monthUp mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.monthUpLabel.mas_left).offset(-2);
+        make.right.equalTo(self.monthUpLabel.mas_left).offset(-4);
         make.centerY.equalTo(self.priceLabel);
     }];
 }

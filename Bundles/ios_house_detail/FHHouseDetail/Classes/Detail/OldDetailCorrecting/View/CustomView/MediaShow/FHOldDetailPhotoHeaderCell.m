@@ -75,6 +75,7 @@
     self.currentData = data;
     id images = ((FHDetailPhotoHeaderModel *)data).houseImage;
     self.titleView.model = ((FHDetailPhotoHeaderModel *)data).titleDataModel;
+    self.titleView.baseViewModel  = self.baseViewModel;
     [self updateWithImages:images];
 }
 
