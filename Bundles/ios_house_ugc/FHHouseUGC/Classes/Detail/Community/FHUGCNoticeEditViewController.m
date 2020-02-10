@@ -128,7 +128,9 @@ typedef enum : NSUInteger {
 
 - (CGFloat)navbarHeight {
     CGFloat navbarHeight = 65;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0 , *)) {
+           navbarHeight =  44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0 , *)) {
         navbarHeight =  44.f + self.view.tt_safeAreaInsets.top;
     }
     return navbarHeight;
