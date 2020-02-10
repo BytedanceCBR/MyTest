@@ -50,6 +50,6 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 - (void)updatePublicationsInfo:(BOOL)isShow hasDetailBtn:(BOOL)hasDetailBtn;
 
 // 非管理员状态，判断如果没有查看详情按钮时公告内容标签的布局是否超过两行
--(BOOL)isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow;
+-(NSComparisonResult)publicationsContentLabelHeightCompareWithTwoLineTextHeight;
 
 @end

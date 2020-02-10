@@ -931,7 +931,7 @@
             param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
             TRACK_EVENT(@"click_community_notice_more", param);
         };
-        hasDetailBtn = [self.viewController.headerView isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow];
+        hasDetailBtn = ([self.viewController.headerView publicationsContentLabelHeightCompareWithTwoLineTextHeight] == NSOrderedDescending);
     }
     
     [self.viewController.headerView updatePublicationsInfo: isShowPublications

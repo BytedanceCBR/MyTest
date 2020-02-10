@@ -122,7 +122,7 @@
     if(!_textField){
         _textField = [[UITextField alloc] init];
         _textField.font = [UIFont themeFontRegular:16];
-        [_textField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
+        _textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3]}];
         [_textField setTintColor:[UIColor themeRed3]];
     }
     return _textField;

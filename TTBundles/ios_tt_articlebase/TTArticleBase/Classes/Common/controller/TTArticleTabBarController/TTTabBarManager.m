@@ -181,7 +181,7 @@ SINGLETON_GCD(TTTabBarManager);
                            kTTTabHTSTabKey:@"小视频",
 //                           kTTTabFollowTabKey:@"关注",
                            kFHouseMessageTabKey: @"消息",
-                           kFHouseMineTabKey:@"我的",
+                           kFHouseMineTabKey:[TTAccount sharedAccount].isLogin ? @"我的" : @"未登录",
                            kFHouseFindTabKey:@"找房",
 
 //                           kTTTabWeitoutiaoTabKey:[KitchenMgr getString:kTTKUGCFeedNamesTab],

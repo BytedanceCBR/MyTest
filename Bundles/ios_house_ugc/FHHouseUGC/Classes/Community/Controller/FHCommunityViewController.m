@@ -74,6 +74,9 @@
             [self initViewModel];
         }
         self.segmentControl.sectionTitles = [self getSegmentTitles];
+        if([FHEnvContext isSpringHangOpen] && self.springView){
+            [self.springView show:[FHEnvContext enterTabLogName]];
+        }
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
@@ -100,8 +103,8 @@
         
         [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(84);
-            make.height.mas_equalTo(79);
+            make.width.mas_equalTo(82);
+            make.height.mas_equalTo(82);
             make.right.mas_equalTo(self.view).offset(-11);
         }];
     }
@@ -374,7 +377,7 @@
     CGFloat top = 0;
     CGFloat safeTop = 0;
     if (@available(iOS 11.0, *)) {
-        safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+        safeTop = self.view.tt_safeAreaInsets.top;
     }
     if (safeTop > 0) {
         top += safeTop;
