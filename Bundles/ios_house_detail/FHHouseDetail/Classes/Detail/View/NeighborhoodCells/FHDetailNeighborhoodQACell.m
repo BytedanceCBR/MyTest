@@ -77,8 +77,6 @@
     
     [self.contentView addSubview:_tableView];
     
-//    [_tableView registerClass:[FHNeighbourhoodQuestionCell class] forCellReuseIdentifier:cellId];
-    
     self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, 65)];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
@@ -192,13 +190,16 @@
 }
 
 - (void)gotoWendaVC {
-    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-//    tracerDict[UT_ENTER_FROM] = [self pageType];
-    dict[TRACER_KEY] = tracerDict;
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+    FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
+    if(!isEmptyString(cellModel.askSchema)){
+        NSURLComponents *components = [[NSURLComponents alloc] initWithString:cellModel.askSchema];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        //    tracerDict[UT_ENTER_FROM] = [self pageType];
+        dict[TRACER_KEY] = tracerDict;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+    }
 }
 
 - (void)gotoLogin {
@@ -228,13 +229,16 @@
 }
 
 - (void)gotoMore {
-    NSURL *url = [NSURL URLWithString:@"sslocal://ugc_wenda_list"];
-    NSMutableDictionary *dict = @{}.mutableCopy;
-//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    //    tracerDict[UT_ENTER_FROM] = [self pageType];
-//    dict[TRACER_KEY] = tracerDict;
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
+    if(!isEmptyString(cellModel.questionListSchema)){
+        NSURL *url = [NSURL URLWithString:cellModel.questionListSchema];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        //    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        //    tracerDict[UT_ENTER_FROM] = [self pageType];
+        //    dict[TRACER_KEY] = tracerDict;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -290,10 +294,11 @@
 }
 
 - (UIButton *)writeAnswerBtn {
+    FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(16, 10, [UIScreen mainScreen].bounds.size.width - 62, 40)];
     button.backgroundColor = [UIColor themeGray7];
     button.imageView.contentMode = UIViewContentModeCenter;
-    [button setTitle:@"问问小区业主" forState:UIControlStateNormal];
+    [button setTitle:cellModel.contentEmptyTitle forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:@"detail_questiom_ask"] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
     button.titleLabel.font = [UIFont themeFontRegular:14];
