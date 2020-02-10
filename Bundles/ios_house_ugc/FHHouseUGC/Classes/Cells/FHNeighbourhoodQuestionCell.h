@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighbourhoodQuestionCell : FHUGCBaseCell
 
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier isList:(BOOL)isList;
+
 @end
 
 NS_ASSUME_NONNULL_END

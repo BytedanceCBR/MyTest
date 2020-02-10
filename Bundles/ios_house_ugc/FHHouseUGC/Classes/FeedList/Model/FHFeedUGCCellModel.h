@@ -180,8 +180,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, assign) CGFloat questionHeight;
 @property (nonatomic, strong , nullable) NSAttributedString *answerAStr;
 @property (nonatomic, assign) CGFloat answerHeight;
-//是否在列表页
-@property (nonatomic, assign) BOOL isList;
+//是否在小区问答列表页
+@property (nonatomic, assign) BOOL isInNeighbourhoodQAList;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 
@@ -192,6 +192,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 + (FHFeedUGCCellModel *)modelFromFake;
 
 + (FHFeedUGCCellModel *)modelFromFake2;
+
++ (FHFeedUGCCellModel *)modelFromFake3:(BOOL)isList;
 
 @end
 

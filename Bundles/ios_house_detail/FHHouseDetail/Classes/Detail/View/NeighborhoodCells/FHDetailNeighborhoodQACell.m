@@ -77,7 +77,7 @@
     
     [self.contentView addSubview:_tableView];
     
-    [_tableView registerClass:[FHNeighbourhoodQuestionCell class] forCellReuseIdentifier:cellId];
+//    [_tableView registerClass:[FHNeighbourhoodQuestionCell class] forCellReuseIdentifier:cellId];
     
     self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, 65)];
     
@@ -139,9 +139,14 @@
     [_questionBtn setTitle:cellModel.askTitle forState:UIControlStateNormal];
     
     self.dataList = [[NSMutableArray alloc] init];
-    [_dataList addObject:[FHFeedUGCCellModel modelFromFake]];
-    [_dataList addObject:[FHFeedUGCCellModel modelFromFake]];
+    [_dataList addObjectsFromArray:cellModel.dataList];
     [self.tableView reloadData];
+    
+    if(self.dataList.count > 0){
+        self.questionBtn.hidden = NO;
+    }else{
+        self.questionBtn.hidden = YES;
+    }
 }
 
 #pragma mark delegate
@@ -250,7 +255,7 @@
         FHNeighbourhoodQuestionCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
         
         if (cell == nil) {
-            cell = [[FHNeighbourhoodQuestionCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId];
+            cell = [[FHNeighbourhoodQuestionCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId isList:NO];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
@@ -265,25 +270,49 @@
     return [[FHUGCBaseCell alloc] init];
 }
 
+- (UIButton *)lookAllBtn {
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(16, 10, [UIScreen mainScreen].bounds.size.width - 62, 40)];
+    button.backgroundColor = [UIColor themeGray7];
+    button.imageView.contentMode = UIViewContentModeCenter;
+    [button setTitle:@"查看全部" forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"detail_question_right_arror"] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont themeFontRegular:14];
+    [button setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+    [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+    button.layer.masksToBounds = YES;
+    button.layer.cornerRadius = 20;
+    [button setTitleEdgeInsets:UIEdgeInsetsMake(0, -
+                                                    button.imageView.frame.size.width, 0, button.imageView.frame.size.width)];
+    [button setImageEdgeInsets:UIEdgeInsetsMake(0, button.titleLabel.bounds.size.width, 0, - button.titleLabel.bounds.size.width)];
+    [button addTarget:self action:@selector(gotoMore) forControlEvents:UIControlEventTouchUpInside];
+    return button;
+}
+
+- (UIButton *)writeAnswerBtn {
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(16, 10, [UIScreen mainScreen].bounds.size.width - 62, 40)];
+    button.backgroundColor = [UIColor themeGray7];
+    button.imageView.contentMode = UIViewContentModeCenter;
+    [button setTitle:@"问问小区业主" forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"detail_questiom_ask"] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont themeFontRegular:14];
+    [button setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+    [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+    button.layer.masksToBounds = YES;
+    button.layer.cornerRadius = 20;
+    [button addTarget:self action:@selector(gotoWendaPublish) forControlEvents:UIControlEventTouchUpInside];
+    return button;
+}
+
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
     UIView *footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, cellModel.footerViewHeight)];
-    UIButton *lookAllBtn = [[UIButton alloc] initWithFrame:CGRectMake(16, 10, footView.bounds.size.width - 32, 40)];
-    lookAllBtn.backgroundColor = [UIColor themeGray7];
-    lookAllBtn.imageView.contentMode = UIViewContentModeCenter;
-    [lookAllBtn setTitle:@"查看全部" forState:UIControlStateNormal];
-    [lookAllBtn setImage:[UIImage imageNamed:@"detail_question_right_arror"] forState:UIControlStateNormal];
-    [lookAllBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    lookAllBtn.titleLabel.font = [UIFont themeFontRegular:14];
-    [lookAllBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
-    [lookAllBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
-    lookAllBtn.layer.masksToBounds = YES;
-    lookAllBtn.layer.cornerRadius = 20;
-    [lookAllBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, -
-                                                    lookAllBtn.imageView.frame.size.width, 0, lookAllBtn.imageView.frame.size.width)];
-    [lookAllBtn setImageEdgeInsets:UIEdgeInsetsMake(0, lookAllBtn.titleLabel.bounds.size.width, 0, - lookAllBtn.titleLabel.bounds.size.width)];
-    [lookAllBtn addTarget:self action:@selector(gotoMore) forControlEvents:UIControlEventTouchUpInside];
-    [footView addSubview:lookAllBtn];
+    if(cellModel.totalCount > 2 && self.dataList.count > 0){
+        [footView addSubview:[self lookAllBtn]];
+    }else if(cellModel.dataList.count <= 0){
+        [footView addSubview:[self writeAnswerBtn]];
+    }
     return footView;
 }
 

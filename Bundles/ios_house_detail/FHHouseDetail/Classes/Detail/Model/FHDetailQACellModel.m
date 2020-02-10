@@ -23,23 +23,27 @@
     self.title = @"小区问答（20）";
     self.askTitle = @"我要提问";
     self.dataList = [[NSMutableArray alloc] init];
-    [_dataList addObject:[FHFeedUGCCellModel modelFromFake]];
-    [_dataList addObject:[FHFeedUGCCellModel modelFromFake]];
+    [_dataList addObject:[FHFeedUGCCellModel modelFromFake3:NO]];
+    [_dataList addObject:[FHFeedUGCCellModel modelFromFake3:NO]];
     
+    //总数
     self.totalCount = 20;
-    
-    if(self.totalCount > 2){
+    if(self.totalCount > 2 || self.dataList.count <= 0){
         self.footerViewHeight = 80;
     }else{
         self.footerViewHeight = 10;
     }
     
     self.headerViewHeight = 65;
-    self.viewHeight = self.headerViewHeight + self.footerViewHeight;
     
-    for (FHFeedUGCCellModel *cellModel in self.dataList) {
-        CGFloat cellHeight = [FHNeighbourhoodQuestionCell heightForData:cellModel];
-        self.viewHeight += cellHeight;
+    if(self.dataList.count > 0){
+        self.viewHeight = self.headerViewHeight + self.footerViewHeight;
+        for (FHFeedUGCCellModel *cellModel in self.dataList) {
+            CGFloat cellHeight = [FHNeighbourhoodQuestionCell heightForData:cellModel];
+            self.viewHeight += cellHeight;
+        }
+    }else{
+        self.viewHeight = self.headerViewHeight + self.footerViewHeight;
     }
 }
 

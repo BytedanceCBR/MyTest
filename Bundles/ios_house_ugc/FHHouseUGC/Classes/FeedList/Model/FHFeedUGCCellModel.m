@@ -759,7 +759,7 @@
 + (FHFeedUGCCellModel *)modelFromFake {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.groupId = @"1000051";
-    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotCommunity;
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
     cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑与协同工具， 让每个企业轻松拥有文档";
     cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
     [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:0];
@@ -774,6 +774,19 @@
     cellModel.groupId = @"1000061";
     cellModel.cellType = FHUGCFeedListCellTypeUGCSmallVideo;
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
+    
+    return cellModel;
+}
+
++ (FHFeedUGCCellModel *)modelFromFake3:(BOOL)isList {
+    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.isInNeighbourhoodQAList = isList;
+    cellModel.groupId = @"1000051";
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
+    cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑";
+    cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
+    [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:0];
+    [FHUGCCellHelper setAnswerRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:(cellModel.isInNeighbourhoodQAList ? 3 : 1)];
     
     return cellModel;
 }

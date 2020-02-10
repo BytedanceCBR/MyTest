@@ -541,7 +541,7 @@
 + (void)setQuestionRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
     if (!isEmptyString(model.questionStr)) {
         NSInteger parseEmojiCount = -1;
-        if (model.numberOfLines > 0) {
+        if (numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
         NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:model.questionStr fontSize:15 needParseCount:parseEmojiCount];
@@ -554,8 +554,8 @@
             
             NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             
-            paragraphStyle.minimumLineHeight = 21;
-            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.minimumLineHeight = 22;
+            paragraphStyle.maximumLineHeight = 22;
             paragraphStyle.lineSpacing = 2;
             
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -579,7 +579,7 @@
 + (void)setAnswerRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
     if (!isEmptyString(model.answerStr)) {
         NSInteger parseEmojiCount = -1;
-        if (model.numberOfLines > 0) {
+        if (numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
         NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:model.answerStr fontSize:13 needParseCount:parseEmojiCount];
