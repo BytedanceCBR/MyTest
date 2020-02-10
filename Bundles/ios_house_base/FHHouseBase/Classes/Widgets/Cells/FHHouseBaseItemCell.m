@@ -579,17 +579,6 @@
         layout.height = YGPointValue(16.0f);
     }];
     
-    [self.leftInfoView addSubview:self.vrLoadingView];
-    self.vrLoadingView.hidden = YES;
-    //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
-    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 10);
-        layout.left = YGPointValue(12);
-        layout.width = YGPointValue(16);
-        layout.height = YGPointValue(16);
-    }];
     
     _rightInfoView = [[UIView alloc] init];
     [self.contentView addSubview:_rightInfoView];
@@ -815,18 +804,6 @@
         layout.left = YGPointValue(12);
         layout.width = YGPointValue(16);
         layout.height = YGPointValue(16.0f);
-    }];
-    
-    [self.leftInfoView addSubview:self.vrLoadingView];
-    self.vrLoadingView.hidden = YES;
-    //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
-    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 10);
-        layout.left = YGPointValue(12);
-        layout.width = YGPointValue(16);
-        layout.height = YGPointValue(16);
     }];
     
     _rightInfoView = [[UIView alloc] init];
@@ -1099,7 +1076,21 @@
             self.maskVRImageView = nil;
         }
         
-        if (_vrLoadingView && commonModel.vrInfo.hasVr) {
+        if (commonModel.vrInfo.hasVr) {
+            if (![self.leftInfoView.subviews containsObject:self.vrLoadingView]) {
+                [self.leftInfoView addSubview:self.vrLoadingView];
+                self.vrLoadingView.hidden = YES;
+                //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
+                [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                    layout.isEnabled = YES;
+                    layout.position = YGPositionTypeAbsolute;
+                    layout.top = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 10);
+                    layout.left = YGPointValue(12);
+                    layout.width = YGPointValue(16);
+                    layout.height = YGPointValue(16);
+                }];
+            }
+            
             _vrLoadingView.hidden = NO;
             [_vrLoadingView play];
             self.houseVideoImageView.hidden = YES;
@@ -1110,7 +1101,9 @@
             [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, MAIN_IMG_WIDTH, MAIN_IMG_HEIGHT)];
         }else
         {
-            _vrLoadingView.hidden = YES;
+            if (_vrLoadingView) {
+                _vrLoadingView.hidden = YES;
+            }
         }
         
         //处理标签
@@ -1382,7 +1375,21 @@
                 self.maskVRImageView = nil;
             }
             
-            if (_vrLoadingView && commonModel.vrInfo.hasVr) {
+            if (commonModel.vrInfo.hasVr) {
+                if (![self.leftInfoView.subviews containsObject:self.vrLoadingView]) {
+                    [self.leftInfoView addSubview:self.vrLoadingView];
+                    self.vrLoadingView.hidden = YES;
+                    //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
+                    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                        layout.isEnabled = YES;
+                        layout.position = YGPositionTypeAbsolute;
+                        layout.top = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 10);
+                        layout.left = YGPointValue(12);
+                        layout.width = YGPointValue(16);
+                        layout.height = YGPointValue(16);
+                    }];
+                }
+                
                 _vrLoadingView.hidden = NO;
                 [_vrLoadingView play];
                 self.houseVideoImageView.hidden = YES;
@@ -1393,7 +1400,9 @@
                 [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, MAIN_IMG_WIDTH, MAIN_IMG_HEIGHT)];
             }else
             {
-                _vrLoadingView.hidden = YES;
+                if (_vrLoadingView) {
+                    _vrLoadingView.hidden = YES;
+                }
             }
             //处理标签
             BOOL imageTagHidden = self.imageTagLabelBgView.hidden;

@@ -54,6 +54,7 @@
 @property (nonatomic, strong) TTHttpTask * requestRefreshTask;
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
 @property (nonatomic, assign) BOOL isFirstChange;
+@property (nonatomic, assign) BOOL isShowTopTabbar;
 @property (nonatomic, assign) BOOL isRequestFromSwitch; //左右切换房源类型
 @property(nonatomic, weak)   NSTimer *timer;
 
@@ -733,10 +734,16 @@
         
         if (offSetY < self.headerHeight + 80) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"headerViewToTop" object:nil];
-            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
+            if (self.isShowTopTabbar) {
+                [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
+                self.isShowTopTabbar = NO;
+            }
         }else
         {
-            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
+            if (!self.isShowTopTabbar) {
+                [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
+                self.isShowTopTabbar = YES;
+            }
         }
     } else if (scrollView == self.homeViewController.scrollView) {
         

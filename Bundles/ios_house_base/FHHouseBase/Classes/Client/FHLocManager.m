@@ -36,7 +36,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 @property (nonatomic, strong) YYCache       *locationCache;
 @property (nonatomic, assign) BOOL isHasSendPermissionTrace;
 @property(nonatomic , strong) NSTimer *messageTimer;
-
+@property (nonatomic, assign) CLAuthorizationStatus currentStatus;
 @end
 
 @implementation FHLocManager
@@ -71,6 +71,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)loadCurrentLocationData {
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+
     if (self.isHaveLocationAuthorization) {
         self.currentReGeocode = [self.locationCache objectForKey:@"fh_currentReGeocode"];
         self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
@@ -84,6 +86,13 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     self.isShowSwitch = YES;
     self.isShowSplashAdView = NO;
     self.isShowHomeViewController = YES;
+}
+
+#pragma mark -- notification
+
+- (void)_willEnterForeground:(NSNotification *)notification
+{
+    self.currentStatus = CLLocationManager.authorizationStatus;
 }
 
 - (void)saveCurrentLocationData {
@@ -210,8 +219,10 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (BOOL)isHaveLocationAuthorization
 {
-    CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
-    switch (status) {
+    if (!self.currentStatus) {
+        self.currentStatus = CLLocationManager.authorizationStatus;
+    }
+    switch (self.currentStatus) {
         case kCLAuthorizationStatusDenied:
         {
             return NO;
