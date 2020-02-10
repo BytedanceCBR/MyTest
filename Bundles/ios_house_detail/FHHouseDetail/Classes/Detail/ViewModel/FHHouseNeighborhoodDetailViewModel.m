@@ -180,7 +180,9 @@
     if (model.data.neighborhoodVideo && model.data.neighborhoodVideo.videoInfos.count > 0) {
         hasVideo = YES;
     }
-    
+    FHDetailNeighborhoodSubMessageModel *neighborhoodInfoModel = [[FHDetailNeighborhoodSubMessageModel alloc] init];
+    neighborhoodInfoModel.name = model.data.name;
+    neighborhoodInfoModel.neighborhoodInfo = model.data.neighborhoodInfo;
     
     if (hasVideo) {
         
@@ -195,6 +197,7 @@
         itemModel.infoTitle = model.data.neighborhoodVideo.infoTitle;
         itemModel.infoSubTitle = model.data.neighborhoodVideo.infoSubTitle;
         itemModel.groupType = @"视频";
+        
         
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
         FHDetailOldDataHouseImageDictListModel *houseImageDictList = [[FHDetailOldDataHouseImageDictListModel alloc] init];
@@ -218,6 +221,7 @@
         headerCellModel.titleDataModel = houseTitleModel;
         headerCellModel.contactViewModel = self.contactViewModel;
         headerCellModel.isInstantData = model.isInstantData;
+        houseTitleModel.neighborhoodInfoModel = neighborhoodInfoModel;
         [self.items addObject:headerCellModel];
     }else {
         // 添加头滑动图片
@@ -230,6 +234,7 @@
             FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
             houseTitleModel.titleStr = model.data.name;
             houseTitleModel.address = model.data.neighborhoodInfo.address;
+            houseTitleModel.neighborhoodInfoModel = neighborhoodInfoModel;
 //            houseTitleModel.tags = model.data.tags;
             headerCellModel.titleDataModel = houseTitleModel;
             headerCellModel.isInstantData = model.isInstantData;
@@ -295,6 +300,7 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
 
+        staticMapModel.mapCentertitle = model.data.neighborhoodInfo.name;
         staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
         staticMapModel.houseId = model.data.neighborhoodInfo.id;

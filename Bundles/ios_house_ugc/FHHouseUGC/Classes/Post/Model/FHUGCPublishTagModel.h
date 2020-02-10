@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCPublishTagModelData: JSONModel
 @property (nonatomic, strong) NSArray<FHUGCPublishTagSocialModel> *socials;
+@property (nonatomic, strong) NSArray<FHUGCPublishTagSocialModel> *recentlySocials;
 @end
 
 @interface FHUGCPublishTagModel : JSONModel<FHBaseModelProtocol>

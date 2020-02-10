@@ -339,6 +339,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     //地图
     if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
+        staticMapModel.mapCentertitle = model.data.neighborhoodInfo.name;
         staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
         staticMapModel.houseId = model.data.id;
