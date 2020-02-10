@@ -668,6 +668,8 @@
                            @"displayStatsInfo": @"display_stats_info",
                            @"dealStatus": @"deal_status",
                            @"dealOpenUrl": @"deal_open_url",
+                           @"reasonTags": @"reason_tags",
+                           @"addrData": @"addr_data",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
