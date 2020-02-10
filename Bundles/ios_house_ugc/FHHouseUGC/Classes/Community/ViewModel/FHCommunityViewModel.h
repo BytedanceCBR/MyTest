@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshCell:(BOOL)isHead;
 
-- (void)changeMyJoinTab;
+- (void)changeTab:(NSInteger)index;
 
 @end
 

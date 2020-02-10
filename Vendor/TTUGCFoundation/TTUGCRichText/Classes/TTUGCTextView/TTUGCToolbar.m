@@ -7,12 +7,12 @@
 //
 
 #import "TTUGCToolbar.h"
-#import "TTUGCEmojiInputView.h"
 #import "TTUGCEmojiParser.h"
 #import <KVOController.h>
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
 #import <TTRoute/TTRoute.h>
+#import "TTUIResponderHelper.h"
 
 #define kTTUGCToolbarHeight 80
 #define kTTUGCToolbarButtonSize 44
@@ -25,14 +25,11 @@
 
 @property (nonatomic, strong) SSThemedView *containerView;
 @property (nonatomic, strong) SSThemedView *toolbarView;
-@property (nonatomic, strong) SSThemedButton *keyboardButton;
 @property (nonatomic, strong) SSThemedButton *longTextButton;
 @property (nonatomic, strong) SSThemedButton *atButton;
 @property (nonatomic, strong) SSThemedButton *shoppingButton;
 @property (nonatomic, strong) SSThemedButton *hashtagButton;
-@property (nonatomic, strong) SSThemedButton *emojiButton;
 @property (nonatomic, strong) SSThemedButton *picButton;
-@property (nonatomic, strong) TTUGCEmojiInputView *emojiInputView;
 
 @property (nonatomic, assign) CGPoint toolbarViewOrigin;
 
@@ -104,6 +101,16 @@
     self.frame = newFrame;
     self.toolbarView.width = self.width;
     self.toolbarViewOrigin = self.origin;
+    [self refreshButtonsUI];
+}
+
+- (void)layoutToolbarViewWithOrigin:(CGPoint)origin {
+    
+    CGRect frame = self.containerView.frame;
+    frame.origin = origin;
+    self.containerView.frame = frame;
+    
+    self.emojiInputView.top = self.toolbarView.bottom;
     [self refreshButtonsUI];
 }
 

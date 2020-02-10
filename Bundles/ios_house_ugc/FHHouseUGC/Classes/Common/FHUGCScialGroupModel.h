@@ -65,8 +65,10 @@ typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
 @property (nonatomic, copy , nullable) NSString *followerCount;
 @property (nonatomic, copy , nullable) NSString *avatar;
 @property (nonatomic, copy , nullable) NSString *countText;
+@property (nonatomic, copy , nullable) NSString *contentText;
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, copy , nullable) NSString *hasFollow;
+@property (nonatomic, copy , nullable) NSString *showStatus;
 @property (nonatomic, strong, nullable) FHUGCSocialGroupOperationModel *operation;
 @property (nonatomic, assign) UserAuthType userAuth;
 @property (nonatomic, strong, nullable) NSArray <FHUGCConfigDataPermissionModel> *permission;

@@ -378,97 +378,6 @@
     }];
 }
 
--(void)handleInstantData:(id)data
-{
-    FHDetailNewModel *model = [[FHDetailNewModel alloc]init];
-    model.isInstantData = YES;
-    FHDetailNewDataModel *dataModel = [[FHDetailNewDataModel alloc]init];
-    model.data = dataModel;
-    if ([data isKindOfClass:[FHNewHouseItemModel class ]]) {
-        
-        FHNewHouseItemModel *item = (FHNewHouseItemModel *)data;
-        if (item.images) {
-            FHDetailNewDataImageGroupModel *imgGroup = [FHDetailNewDataImageGroupModel new];
-            imgGroup.images = item.images;
-            imgGroup.type = @"7";
-            
-            dataModel.imageGroup = @[imgGroup];
-        }
-        
-        dataModel.tags = item.tags;
-        if (item.coreInfo) {
-            dataModel.coreInfo = [[FHDetailNewDataCoreInfoModel alloc] initWithDictionary:item.coreInfo.toDictionary error:nil];
-        }
-        dataModel.imprId = item.imprId;
-        if (item.floorpanList && item.floorpanList.count > 0){
-            dataModel.floorpanList = [[FHDetailNewDataFloorpanListModel alloc] initWithDictionary:item.floorpanList error:nil];
-        }
-        if (item.contact) {
-            dataModel.contact = [[FHDetailContactModel alloc] initWithDictionary:item.contact error:nil];
-            dataModel.contact.isInstantData = YES;
-        }
-        if (item.timeline) {
-            dataModel.timeline = [[FHDetailNewDataTimelineModel alloc]initWithDictionary:item.timeline error:nil];
-        }
-        
-        if (item.globalPricing) {
-            dataModel.globalPricing = [[FHDetailNewDataGlobalPricingModel alloc] initWithDictionary:item.globalPricing error:nil];
-        }
-        
-        if (item.userStatus) {
-            dataModel.userStatus = [[FHDetailNewDataUserStatusModel alloc] initWithDictionary:item.userStatus error:nil];
-        }
-        
-        dataModel.logPb = item.logPb;
-        
-    }else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]){
-        FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
-        
-        if (item.images) {
-            FHDetailNewDataImageGroupModel *imgGroup = [FHDetailNewDataImageGroupModel new];
-            imgGroup.images = item.images;
-            imgGroup.type = @"7";
-            
-            dataModel.imageGroup = @[imgGroup];
-        }
-        if (item.coreInfo) {
-            dataModel.coreInfo = [[FHDetailNewDataCoreInfoModel alloc] initWithDictionary:item.coreInfo.toDictionary error:nil];
-        }
-        dataModel.tags = item.tags;
-        if (item.floorpanList && item.floorpanList.list.count > 0){
-            dataModel.floorpanList = [[FHDetailNewDataFloorpanListModel alloc] initWithDictionary:item.floorpanList.toDictionary error:nil];
-        }
-        
-        if (item.contact) {
-            dataModel.contact = [[FHDetailContactModel alloc] initWithDictionary:item.contact.toDictionary error:nil];
-        }
-        
-        if (item.timeline) {
-            dataModel.timeline = [[FHDetailNewDataTimelineModel alloc]initWithDictionary:item.timeline.toDictionary error:nil];
-        }
-        
-        dataModel.imprId = item.imprId;
-        
-        dataModel.logPb = item.logPb;
-    }
-    else{
-        self.detailController.instantData = nil;
-        return;
-    }
-    if (!dataModel.contact) {
-        dataModel.contact = [FHDetailContactModel new];
-    }
-    
-    if (IS_EMPTY_STRING(dataModel.coreInfo.constructionOpendate)) {
-        dataModel.coreInfo.constructionOpendate = @"暂无";
-    }
-    if ([dataModel.coreInfo.aliasName isEqualToString:@"[]"]) {
-        dataModel.coreInfo.aliasName = nil;
-    }
-    
-    self.bottomBar.hidden = NO;
-    [self processDetailData:model];
-}
 
 -(BOOL)currentIsInstantData
 {
@@ -629,6 +538,7 @@
         [self.items addObject:grayLine];
 
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
+        staticMapModel.mapCentertitle = model.data.coreInfo.name;
         staticMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
         staticMapModel.houseId = model.data.coreInfo.id;

@@ -50,6 +50,7 @@
 #import "FHUserTracker.h"
 #import "FHBubbleTipManager.h"
 #import "HMDTTMonitor.h"
+#import "SSAPNsAlertManager.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;

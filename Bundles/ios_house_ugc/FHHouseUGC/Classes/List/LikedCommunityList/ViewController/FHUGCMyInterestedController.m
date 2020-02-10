@@ -113,7 +113,7 @@
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, [UIScreen mainScreen].bounds.size.width, 21)];
     label.font = [UIFont themeFontRegular:15];
     label.textColor = [UIColor themeGray1];
-    label.text = @"你可能感兴趣的圈子";
+    label.text = @"猜你喜欢";
     [headerView addSubview:label];
     
     return headerView;

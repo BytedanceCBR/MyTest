@@ -10,7 +10,7 @@
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "TTLaunchDefine.h"
 
-DEC_TASK("TTSetUseBDWebImageTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+15);
+DEC_TASK("TTSetUseBDWebImageTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+9);
 
 @implementation TTSetUseBDWebImageTask
 

@@ -22,6 +22,7 @@
 #import "HMDTTMonitor.h"
 #import "FHPostEditListModel.h"
 #import <FHUGCEditedPostModel.h>
+#import "FHUGCPublishTagModel.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -928,6 +929,39 @@
         }
         if (completion) {
             completion(editedPostModel,error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestPublishHotTagsWithParam:(NSDictionary *)params completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    
+    NSString *queryPath = @"/f100/ugc/get_hot_socials";
+    NSString *url = QURL(queryPath);
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        
+        BOOL success = NO;
+        FHUGCPublishTagModel *pubTagModel = nil;
+        if (!error) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                NSInteger statusCode = [json[@"status"] integerValue];
+                success = (statusCode == 0);
+                if (!success) {
+                    NSString *msg = json[@"message"];
+                    error = [NSError errorWithDomain:msg?:DEFULT_ERROR code:statusCode userInfo:nil];
+                }
+                else
+                {
+                    pubTagModel = [[FHUGCPublishTagModel alloc] initWithDictionary:json error:&error];
+                }
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
+        }
+        if (completion) {
+            completion(pubTagModel,error);
         }
     }];
 }

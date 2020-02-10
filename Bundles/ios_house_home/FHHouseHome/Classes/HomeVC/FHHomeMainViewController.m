@@ -102,8 +102,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         
         [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(84);
-            make.height.mas_equalTo(79);
+            make.width.mas_equalTo(82);
+            make.height.mas_equalTo(82);
             make.right.mas_equalTo(self.view).offset(-11);
         }];
     }
@@ -194,6 +194,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
         [FHEnvContext changeFindTabTitle];
         [FHEnvContext showRedPointForNoUgc];
+        if([FHEnvContext isSpringHangOpen] && self.springView){
+            [self.springView show:[FHEnvContext enterTabLogName]];
+        }
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
     }];
 }

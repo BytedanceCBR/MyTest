@@ -12,13 +12,14 @@
 #import <FHUtils.h>
 #import <FHUserTracker.h>
 #import <FHEnvContext.h>
+#import <UIImageView+BDWebImage.h>
 
 #define kFHSpringViewCloseNotification @"kFHSpringViewCloseNotification"
 #define kFHSpringViewCloseDate @"kFHSpringViewCloseDate"
 
 @interface FHSpringHangView ()
 
-@property(nonatomic , strong) UIView *bgView;
+@property(nonatomic , strong) UIImageView *bgView;
 @property(nonatomic , strong) UIButton *closeBtn;
 @property(nonatomic , copy) NSString *pageType;
 
@@ -41,8 +42,7 @@
 - (void)initView {
     self.backgroundColor = [UIColor clearColor];
     
-    self.bgView = [[UIView alloc] init];
-    self.bgView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_spring_yunying"]];
+    self.bgView = [[UIImageView alloc] init];
     self.bgView.userInteractionEnabled = YES;
     [self addSubview:_bgView];
     
@@ -59,17 +59,34 @@
 
 - (void)initConstaints {
     [_bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(69);
-        make.height.mas_equalTo(58);
+        make.width.mas_equalTo(72);
+        make.height.mas_equalTo(72);
         make.left.bottom.mas_equalTo(self);
     }];
     
     [_closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bgView).offset(-15);
-        make.right.mas_equalTo(self.bgView).offset(7);
-        make.width.mas_equalTo(14);
-        make.height.mas_equalTo(15);
+        make.top.mas_equalTo(self.bgView);
+        make.right.mas_equalTo(self.bgView);
+        make.width.mas_equalTo(12);
+        make.height.mas_equalTo(12);
     }];
+}
+
+- (void)updateUI {
+    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
+    if(model){
+        self.hidden = NO;
+        //设置图片
+        FHConfigDataTabWidgetImageModel *imageModel = [model.image firstObject];
+        if(imageModel && imageModel.url.length > 0){
+            [self.bgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+        }
+        
+        self.closeBtn.hidden = model.closeable;
+
+    }else{
+        self.hidden = YES;
+    }
 }
 
 - (void)show:(NSString *)pageType {
@@ -82,13 +99,32 @@
             return;
         }
     }
-    //显示
-    _pageType = pageType;
-    if(![FHEnvContext sharedInstance].isShowingSpringHang){
-        [self addPandentShowLog];
+    
+    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
+    FHConfigDataTabWidgetImageModel *imageModel = [model.image firstObject];
+    
+    if(model && model.openUrl.length > 0 && imageModel.url.length > 0){
+        //显示
+        self.hidden = NO;
+        //设置图片
+        if(imageModel && imageModel.url.length > 0){
+            [self.bgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+        }
+        
+        self.closeBtn.hidden = !model.closeable;
+        
+        _pageType = pageType;
+        if(![FHEnvContext sharedInstance].isShowingSpringHang || ![model.id isEqualToString:[FHEnvContext sharedInstance].currentShowHangId]){
+            [FHEnvContext sharedInstance].currentShowHangId = model.id;
+            [FHEnvContext sharedInstance].isShowingSpringHang = YES;
+            [self addPandentShowLog];
+        }
+    }else{
+        //隐藏
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSpringViewCloseNotification object:nil];
+        [FHEnvContext sharedInstance].isShowingSpringHang = NO;
+        [FHEnvContext sharedInstance].currentShowHangId = nil;
     }
-    [FHEnvContext sharedInstance].isShowingSpringHang = YES;
-    self.hidden = NO;
 }
 
 - (void)close {
@@ -100,6 +136,7 @@
     }
     //隐藏
     [FHEnvContext sharedInstance].isShowingSpringHang = NO;
+    [FHEnvContext sharedInstance].currentShowHangId = nil;
     [self addPandentCloseLog];
 }
 
@@ -108,10 +145,12 @@
 }
 
 - (void)goToSpring:(UITapGestureRecognizer *)sender {
-    NSString *urlStr = @"sslocal://webview?url=https://m.haoduofangs.com/magic/page/ejs/5e02dc7854c8b002583c0773?appType=manyhouse";
-    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     [self addPandentClickLog];
+    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
+    if(model && model.openUrl.length > 0){
+        NSURL* url = [NSURL URLWithString:model.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    }
 }
 
 - (NSTimeInterval)getMidnightInterval {
@@ -125,8 +164,9 @@
 #pragma mark - 埋点
 
 - (void)addPandentShowLog {
+    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-    tracerDict[@"value"] = @"be_null";
+    tracerDict[@"log_pd"] = model.logPb ?: @"be_null";
     if(_pageType){
         tracerDict[@"page_type"] = _pageType;
     }
@@ -134,8 +174,9 @@
 }
 
 - (void)addPandentCloseLog {
+    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-    tracerDict[@"value"] = @"be_null";
+    tracerDict[@"log_pd"] = model.logPb ?: @"be_null";
     if(_pageType){
         tracerDict[@"page_type"] = _pageType;
     }
@@ -143,8 +184,9 @@
 }
 
 - (void)addPandentClickLog {
+    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-    tracerDict[@"value"] = @"be_null";
+    tracerDict[@"log_pd"] = model.logPb ?: @"be_null";
     if(_pageType){
         tracerDict[@"page_type"] = _pageType;
     }

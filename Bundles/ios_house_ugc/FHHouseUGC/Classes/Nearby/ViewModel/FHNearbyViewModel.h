@@ -6,10 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHNearbyViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNearbyViewModel : NSObject
+
+- (instancetype)initWithController:(FHNearbyViewController *)viewController;
 
 @end
 

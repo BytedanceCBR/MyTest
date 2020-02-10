@@ -203,72 +203,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
--(void)handleInstantData:(id)data
-{
-    FHRentDetailResponseModel *model = [[FHRentDetailResponseModel alloc] init];
-    model.isInstantData = YES;
-    FHRentDetailResponseDataModel *dataModel = [FHRentDetailResponseDataModel new];
-    model.data = dataModel;
-    if ([data isKindOfClass:[FHHouseRentDataItemsModel class]]) {
-        
-        FHHouseRentDataItemsModel *item = (FHHouseRentDataItemsModel *)data;
-        dataModel.title = item.title;
-        dataModel.subtitle = item.subtitle;
-        dataModel.tags = item.tags;
-        dataModel.houseImage = item.houseImage;
-        dataModel.id = item.id;
-        dataModel.logPb = item.logPb;
-        dataModel.baseInfo = item.baseInfo;
-        dataModel.coreInfo = item.coreInfo;
-        dataModel.facilities = item.facilities;
-        
-        if (item.houseImageTag) {
-            NSMutableArray *tags = [NSMutableArray new];
-            FHHouseTagsModel *tag = [[FHHouseTagsModel alloc] initWithDictionary:item.houseImageTag.toDictionary error:nil];
-            tag.content = item.houseImageTag.text;
-            [tags addObject:tag];
-            if (item.tags) {
-                [tags addObjectsFromArray:item.tags];
-            }
-            dataModel.tags = tags;
-        }
-        
-                        
-    }else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]){
-        FHHomeHouseDataItemsModel *item = (FHHomeHouseDataItemsModel *)data;
-        dataModel.title = item.title;
-        dataModel.subtitle = item.subtitle;
-        dataModel.tags = item.tags;
-        dataModel.houseImage = item.houseImage;
-        dataModel.id = item.idx;
-        dataModel.baseInfo = item.baseInfo;
-        dataModel.coreInfo = item.coreInfoList;
-        dataModel.logPb = item.logPb;
-        dataModel.facilities = item.facilities;
-        if (item.houseImageTag) {
-            NSMutableArray *tags = [NSMutableArray new];
-            FHHouseTagsModel *tag = [[FHHouseTagsModel alloc] initWithDictionary:item.houseImageTag.toDictionary error:nil];
-            tag.content = item.houseImageTag.text;
-            [tags addObject:tag];
-            if (item.tags) {
-                [tags addObjectsFromArray:item.tags];
-            }
-            dataModel.tags = tags;
-        }
-        
-    }else{
-        self.detailController.instantData = nil;
-        return;
-    }
-    
-    
-    
-    dataModel.contact = [FHDetailContactModel new];
-    dataModel.contact.isInstantData = YES;
-    model.data = dataModel;
-    self.bottomBar.hidden = NO;
-    [self processDetailData:model];
-}
 
 -(NSArray *)instantHouseImages
 {
@@ -405,6 +339,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     //地图
     if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
+        staticMapModel.mapCentertitle = model.data.neighborhoodInfo.name;
         staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
         staticMapModel.houseId = model.data.id;
