@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(NSAttributedString *)tagsStringSmallImageWithTagList:(NSArray<FHHouseTagsModel *> *)tagList;
 
++(NSAttributedString *)createSmallTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor;
+
 #pragma mark log
 -(NSString *)imprId;
 -(NSString *)groupId;

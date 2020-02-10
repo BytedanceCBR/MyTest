@@ -1058,7 +1058,21 @@
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
-    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
+    NSAttributedString *attributeString = nil;
+    if (commonModel.reasonTags.count > 0) {
+        FHHouseTagsModel *element = commonModel.reasonTags.firstObject;
+        if (element.content && element.textColor && element.backgroundColor) {
+            UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor themeRed4];
+            UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor whiteColor];
+            attributeString = [FHSingleImageInfoCellModel createSmallTagAttrString:element.content isFirst:YES textColor:textColor backgroundColor:backgroundColor];
+            _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+
+        }
+    }else {
+        attributeString = [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
+        _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
+
+    }
     self.tagLabel.attributedText =  attributeString;
     self.priceLabel.text = commonModel.displayPricePerSqm;
     //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
