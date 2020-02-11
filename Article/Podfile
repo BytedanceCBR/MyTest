@@ -43,11 +43,11 @@ def fhPods
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
     pod 'ios_house_filter' , '1.0.2'
     
-    pod 'FHCommonUI', '0.0.15'
+    pod 'FHCommonUI', '0.0.16'
     #pod 'FHCommonUI',:path => '../../ios_common_ui'
     #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '21f52981452d7e1e319da3a07301184164b72251'
 
-    pod 'ios_house_im', '0.1.18-rc.1'
+    pod 'ios_house_im', '0.1.18'
     # pod 'ios_house_im' , :path => '../../ios_house_im'
     # pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9b5149c9c9201bfd45134e01edcc19d89d399fce'
 
@@ -268,7 +268,7 @@ def appPods
     pod_binary 'TTAddressBookService', '0.1.4'
     
     #-----头条基础库-----
-    pod_binary 'TTBaseLib','2.0.10', :subspecs => [
+    pod 'TTBaseLib','2.0.13', :subspecs => [
     'TTBaseTool',
     'TTBusinessManager',
     'TTCategory',
