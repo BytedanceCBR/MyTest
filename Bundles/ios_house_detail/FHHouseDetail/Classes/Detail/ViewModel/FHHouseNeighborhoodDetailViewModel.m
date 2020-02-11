@@ -40,6 +40,7 @@
 #import "FHNeighborhoodDetailModuleHelper.h"
 #import "FHDetailNeighborhoodQACell.h"
 #import "FHDetailQACellModel.h"
+#import "TTDeviceHelper.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -215,6 +216,10 @@
         }
         FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
         houseTitleModel.titleStr = model.data.name;
+        __weak typeof(self)weakself = self;
+        houseTitleModel.mapImageClick = ^{
+            [weakself mapImageClick];
+        };
         houseTitleModel.address = model.data.neighborhoodInfo.address;
 //        houseTitleModel.tags = model.data.tags;
         headerCellModel.vedioModel = itemModel;// 添加视频模型数据
@@ -235,6 +240,10 @@
             houseTitleModel.titleStr = model.data.name;
             houseTitleModel.address = model.data.neighborhoodInfo.address;
             houseTitleModel.neighborhoodInfoModel = neighborhoodInfoModel;
+            __weak typeof(self)weakself = self;
+            houseTitleModel.mapImageClick = ^{
+                [weakself mapImageClick];
+            };
 //            houseTitleModel.tags = model.data.tags;
             headerCellModel.titleDataModel = houseTitleModel;
             headerCellModel.isInstantData = model.isInstantData;
@@ -444,7 +453,19 @@
     
     [self.detailController updateLayout:model.isInstantData];
 }
-
+//小区顶部i地图按钮点击事件
+- (void)mapImageClick {
+    [self.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[FHDetailStaticMapCellModel class]]) {
+           CGRect indexRect =  [self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
+            CGPoint scrollPoint = CGPointMake(0, indexRect.origin.y-([TTDeviceHelper isIPhoneXSeries]?84:64));
+            [self.tableView setContentOffset:scrollPoint animated:YES];
+//            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        }
+    }];
+    
+    
+}
 // 周边数据请求，当网络请求都返回后刷新数据
 - (void)requestRelatedData:(NSString *)neighborhoodId {
     self.requestRelatedCount = 0;
