@@ -76,11 +76,11 @@
 - (void)setIsFold:(BOOL)isFold {
     _isFold = isFold;
     if (isFold) {
-        _keyLabel.text = self.downText;
-        _iconView.image = _foldImage;
-    } else {
         _keyLabel.text = self.upText;
         _iconView.image = _openImage;
+    } else {
+        _keyLabel.text = self.downText;
+        _iconView.image = _foldImage;
     }
 }
 
