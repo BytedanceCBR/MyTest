@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)NSString *titleStr;
 @property (nonatomic, strong)NSArray *tags;// FHHouseTagsModel item类型
 @property (nonatomic, copy)NSString *address;
+@property (nonatomic, copy) void(^mapImageClick)(void);
 @property (nonatomic, strong) FHDetailNeighborhoodSubMessageModel *neighborhoodInfoModel;
 @end
 
