@@ -118,7 +118,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }else {
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         NSMutableDictionary *loginDict = [NSMutableDictionary dictionary];
-        [loginDict setValue:@"customer_avatar" forKey:@"enter_type"]; // todo zjing test
+        [loginDict setValue:@"auto_login" forKey:@"enter_type"]; 
         [loginDict setValue:@"session_detail" forKey:@"enter_from"];
         TTRouteUserInfo *loginUserInfo = [[TTRouteUserInfo alloc]initWithInfo:loginDict];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://flogin"] userInfo:loginUserInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
