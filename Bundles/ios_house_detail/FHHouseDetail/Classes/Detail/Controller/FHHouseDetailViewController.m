@@ -130,7 +130,7 @@
         }
         
         
-        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
+//        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
     }
     return self;
 }
@@ -216,9 +216,9 @@
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        if (!self.instantData) {
+//        if (!self.instantData) {
             [self startLoading];
-        }
+//        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
