@@ -1250,11 +1250,17 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             self.autoEnterTab = NO;
             if ([selectedTabName isEqualToString:@"find"]) {
                 [logv3Dic setValue:@"discover_tab" forKey:@"tab_name"];
+                
                 if([FHEnvContext isUGCOpen]){
                     [logv3Dic setValue:@"neighborhood_tab" forKey:@"tab_name"];
                 }else{
                     [logv3Dic setValue:@"discover_tab" forKey:@"tab_name"];
                 }
+            }
+            if ([selectedTabName isEqualToString:@"epidemicsituation"]) {
+                 FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
+                 [logv3Dic setValue:@"operation_tab" forKey:@"tab_name"];
+                [logv3Dic setValue:centerTabConfig.logPb forKey:@"log_pb"];
             }
             [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
         }
@@ -1749,7 +1755,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
              kTTTabFollowTabKey:@"follow",
              kTTTabHTSTabKey:kTTUGCVideoCategoryID,
              kTTTabWeitoutiaoTabKey:@"weitoutiao",
-             kTTTabMineTabKey:@"mine"
+             kTTTabMineTabKey:@"mine",
+             kFHouseHouseEpidemicSituationTabKey:@"epidemicsituation"
 //             kAKTabActivityTabKey:@"tab_task"
              };
 }

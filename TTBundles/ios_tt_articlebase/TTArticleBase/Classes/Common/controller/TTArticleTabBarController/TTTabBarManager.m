@@ -761,8 +761,8 @@ SINGLETON_GCD(TTTabBarManager);
      FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
     if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
         if (centerTabConfig.staticImage.url&&centerTabConfig.activationimage.url) {
-//            normalImage = [self requestEsituationImageWithImageUrl:centerTabConfig.staticImage.url];
-//            highlightedImage = [self requestEsituationImageWithImageUrl:centerTabConfig.activationimage.url];
+            normalImage = [self requestEsituationImageWithImageUrl:centerTabConfig.staticImage.url];
+            highlightedImage = [self requestEsituationImageWithImageUrl:centerTabConfig.activationimage.url];
         }
     }
     

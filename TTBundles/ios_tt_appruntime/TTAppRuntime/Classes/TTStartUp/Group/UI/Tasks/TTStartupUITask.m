@@ -197,8 +197,6 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
         }
     }];
     //HomeTab
-    
-    
     //VideoTab
 //    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseFindTabKey atIndex:1 isRegular:YES];s
 
