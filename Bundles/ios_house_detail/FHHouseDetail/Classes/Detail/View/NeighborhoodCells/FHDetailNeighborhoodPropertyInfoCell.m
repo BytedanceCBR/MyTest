@@ -55,7 +55,7 @@
             FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
             [self.containerView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(itemsCount * vHeight+36);//这里是加上小区概况的高度
+                make.top.mas_equalTo(itemsCount * vHeight);
                 make.left.right.mas_equalTo(self.containerView);
                 make.height.mas_equalTo(vHeight);
             }];
@@ -110,21 +110,21 @@
         make.left.equalTo(self.contentView).offset(15);
         make.right.equalTo(self.contentView).offset(-15);
     }];
-    _headerView = [[FHDetailHeaderViewNoMargin alloc] init];
-    _headerView.label.text = @"小区概况";
-    [self.containerView addSubview:_headerView];
-    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.containerView);
-        make.top.equalTo(self.containerView);
-        make.right.equalTo(self.containerView).offset(-15);
-        make.height.mas_offset(26);
-    }];
+//    _headerView = [[FHDetailHeaderViewNoMargin alloc] init];
+//    _headerView.label.text = @"小区概况";
+//    [self.containerView addSubview:_headerView];
+//    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(self.containerView);
+//        make.top.equalTo(self.containerView);
+//        make.right.equalTo(self.containerView).offset(-15);
+//        make.height.mas_offset(26);
+//    }];
 }
 
 - (void)updateItems:(BOOL)animated {
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(30 * model.baseInfo.count+36);
+            make.height.mas_equalTo(30 * model.baseInfo.count);
         }];
 }
 
