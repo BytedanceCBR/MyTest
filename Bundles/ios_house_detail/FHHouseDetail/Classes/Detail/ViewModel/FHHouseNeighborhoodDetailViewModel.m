@@ -380,8 +380,14 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
-//        [qaModel fakeData];
+        qaModel.neighborhoodId = self.houseId;
         qaModel.question = model.data.question;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        qaModel.tracerDict = paramsDict;
         [self.items addObject:qaModel];
     }
     

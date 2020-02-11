@@ -16,6 +16,7 @@
 #import "FHFeedUGCCellModel.h"
 #import "FHNeighbourhoodQuestionCell.h"
 #import "TTAccountManager.h"
+#import "TTStringHelper.h"
 
 #define cellId @"cellId"
 
@@ -195,22 +196,19 @@
         NSURLComponents *components = [[NSURLComponents alloc] initWithString:cellModel.askSchema];
         NSMutableDictionary *dict = @{}.mutableCopy;
         NSMutableDictionary *tracerDict = @{}.mutableCopy;
-        //    tracerDict[UT_ENTER_FROM] = [self pageType];
+        tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"page_type"];
         dict[TRACER_KEY] = tracerDict;
+        dict[@"neighborhood_id"] = cellModel.neighborhoodId;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
     }
 }
 
 - (void)gotoLogin {
+    FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//    NSString *page_type = @"nearby_list";
-//    if (self.listType == FHCommunityFeedListTypeMyJoin) {
-//        page_type = @"my_join_list";
-//    } else  if (self.listType == FHCommunityFeedListTypeNearby) {
-//        page_type = @"nearby_list";
-//    }
-//    [params setObject:page_type forKey:@"enter_from"];
+    NSString *page_type = cellModel.tracerDict[@"page_type"] ?: @"be_null";
+    [params setObject:page_type forKey:@"enter_from"];
     [params setObject:@"click_publisher" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
@@ -233,12 +231,18 @@
     if(!isEmptyString(cellModel.questionListSchema)){
         NSURL *url = [NSURL URLWithString:cellModel.questionListSchema];
         NSMutableDictionary *dict = @{}.mutableCopy;
-        //    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-        //    tracerDict[UT_ENTER_FROM] = [self pageType];
-        //    dict[TRACER_KEY] = tracerDict;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[UT_ORIGIN_FROM] = cellModel.tracerDict[@"origin_from"] ?: @"be_null";
+        tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"page_type"] ?: @"be_null";
+        tracerDict[UT_ELEMENT_FROM] = [self elementTypeString:FHHouseTypeNeighborhood];
+        dict[TRACER_KEY] = tracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
+}
+
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"neigborhood_question";
 }
 
 #pragma mark - UITableViewDataSource
@@ -337,10 +341,23 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-//    self.currentCellModel = cellModel;
-//    self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-//    [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+    BOOL canOpenURL = NO;
+    if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
+        NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            canOpenURL = YES;
+            [[UIApplication sharedApplication] openURL:url];
+        }
+        else if([[TTRoute sharedRoute] canOpenURL:url]){
+            canOpenURL = YES;
+            //优先跳转openurl
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+        }
+    }else{
+        NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }
 }
 
 @end

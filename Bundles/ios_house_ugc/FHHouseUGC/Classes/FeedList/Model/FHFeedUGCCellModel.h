@@ -174,6 +174,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 //帖子编辑状态。默认是none
 @property (nonatomic, assign) FHUGCPostEditState editState;
 //小区问答模块
+@property (nonatomic, copy , nullable) NSString *writeAnswerSchema;
 @property (nonatomic, copy , nullable) NSString *questionStr;
 @property (nonatomic, copy , nullable) NSString *answerStr;
 @property (nonatomic, strong , nullable) NSAttributedString *questionAStr;

@@ -79,6 +79,7 @@
 @property (nonatomic, assign) BOOL hasSocialGroup;      // 是否外部带入圈子信息
 
 // 数据区
+@property (nonatomic, copy) NSString *neighborhoodId;
 @property (nonatomic, copy) NSString *selectGroupId;
 @property (nonatomic, copy) NSString *selectGroupName;
 @property (nonatomic, assign) BOOL isSelectectGroupFollowed;
@@ -129,7 +130,8 @@
         self.selectGroupId = [paramObj.allParams tt_stringValueForKey:@"select_group_id"];
         self.selectGroupName = [paramObj.allParams tt_stringValueForKey:@"select_group_name"];
         self.isSelectectGroupFollowed = [paramObj.allParams tta_boolForKey:@"select_group_followed"];
-        self.hasSocialGroup = self.selectGroupId.length > 0 && self.selectGroupName.length > 0;
+        self.neighborhoodId = [paramObj.allParams tt_stringValueForKey:@"neighborhood_id"];
+        self.hasSocialGroup = (self.selectGroupId.length > 0 && self.selectGroupName.length > 0) || self.neighborhoodId.length > 0;
     }
     return self;
 }
@@ -983,13 +985,19 @@
     NSMutableDictionary *requestParams = @{}.mutableCopy;
     requestParams[@"title"] = title;
     requestParams[@"desc"] = description;
-    requestParams[@"social_group_id"] = socialGroupId;
     requestParams[@"bind_type"] = @(socialGroupId.length > 0 ? 0 : 1); // 参数表示绑定对象类型： 0 = 圈子, 1 = 城市
     requestParams[@"image_uris"] = image_urls;
     requestParams[@"enter_from"] = @"";
     requestParams[@"page_type"] = @"";
     requestParams[@"element_from"] = @"";
     
+    if(!isEmptyString(self.neighborhoodId)){
+        requestParams[@"source"] = @"neighborhood";
+        requestParams[@"neighborhood_id"] = self.neighborhoodId;
+    }else{
+        requestParams[@"source"] = @"social_group";
+        requestParams[@"social_group_id"] = socialGroupId;
+    }
     
     // 开始发送提问发布请求
     WeakSelf;

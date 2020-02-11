@@ -16,9 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionModel *question;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoModel *neighborhoodInfo;
-
+@property (nonatomic , strong) NSDictionary *tracerDict;
+@property (nonatomic, copy) NSString *neighborhoodId;
 @property (nonatomic, assign) CGFloat viewHeight;
-@property(nonatomic , strong) NSMutableArray *dataList;
+@property (nonatomic , strong) NSMutableArray *dataList;
 @property (nonatomic, assign) CGFloat headerViewHeight;
 @property (nonatomic, assign) CGFloat footerViewHeight;
 @property (nonatomic, assign) NSInteger totalCount;

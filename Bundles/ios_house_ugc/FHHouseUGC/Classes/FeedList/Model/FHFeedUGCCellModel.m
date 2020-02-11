@@ -281,6 +281,7 @@
         
         cellModel.title = model.rawData.content.question.title;
         cellModel.openUrl = model.rawData.content.question.questionListSchema;
+        cellModel.writeAnswerSchema = model.rawData.content.question.writeAnswerSchema;
         
         //  优先使用qid，使用groudId 兜底
         NSString *qid = model.rawData.content.question.qid;
@@ -312,6 +313,12 @@
         }else{
             cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
         }
+        
+        //小区问答数据处理
+//        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
+//        cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑";
+//        cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
+        [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:0];
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         cellModel.groupId = model.rawData.groupId;
@@ -744,6 +751,11 @@
     }
     
     return desc;
+}
+
+- (void)setIsInNeighbourhoodQAList:(BOOL)isInNeighbourhoodQAList {
+    _isInNeighbourhoodQAList = isInNeighbourhoodQAList;
+    [FHUGCCellHelper setAnswerRichContentWithModel:self width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:(isInNeighbourhoodQAList ? 3 : 1)];
 }
 
 - (void)setCategoryId:(NSString *)categoryId {

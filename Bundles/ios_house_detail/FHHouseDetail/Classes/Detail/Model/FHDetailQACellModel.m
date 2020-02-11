@@ -35,9 +35,9 @@
     self.dataList = [[NSMutableArray alloc] init];
     
     for (NSString *content in question.content.data) {
-//        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:content];
-//        cellModel.isInNeighbourhoodQAList = NO;
-        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFake3:NO];
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:content];
+        cellModel.isInNeighbourhoodQAList = NO;
+//        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFake3:NO];
         [_dataList addObject:cellModel];
     }
     

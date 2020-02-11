@@ -9,6 +9,8 @@
 #import "FHArticleCellBottomView.h"
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
+#import "TTStringHelper.h"
+#import "TTAccountManager.h"
 
 #define topMargin 10
 #define bottomMargin 10
@@ -228,6 +230,15 @@
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     self.cellModel = cellModel;
+    //隐藏掉通用的精华图标
+    self.decorationImageView.hidden = YES;
+    
+    if(cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleGood || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood) && cellModel.isInNeighbourhoodQAList){
+        self.essenceIcon.hidden = NO;
+    }else{
+        self.essenceIcon.hidden = YES;
+    }
+    
     //问题
     [self.questionLabel setText:cellModel.questionAStr];
     //回答
@@ -282,7 +293,60 @@
 
 //写回答
 - (void)gotoWriteAnswer {
+    if(!isEmptyString(self.cellModel.writeAnswerSchema)){
+        NSURL *url = [TTStringHelper URLWithURLString:self.cellModel.writeAnswerSchema];
+        [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+    }
     
+    if ([TTAccountManager isLogin]) {
+        [self gotoPostWDAnswer];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoPostWDAnswer {
+    NSString *routeUrl = @"sslocal://ugc_post_wd_answer";
+    NSURL *openUrl = [NSURL URLWithString:routeUrl];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    if (self.cellModel.groupId.length > 0) {
+        dict[@"qid"] = self.cellModel.groupId;
+    }
+
+//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+//    tracerDict[@"origin_from"] = self.goDetailDict[@"enter_from"];
+//    tracerDict[@"enter_from"] = @"question";
+//    tracerDict[@"enter_type"] = @"click";
+//    tracerDict[@"log_pb"] = self.goDetailDict[@"log_pb"];
+//    dict[@"tracer"] = tracerDict;
+    dict[@"title"] = @"写回答";
+//    if (self.viewModel.post_gdExtJson && [self.viewModel.post_gdExtJson isKindOfClass:[NSDictionary class]]) {
+//        dict[@"gd_ext_json"] = self.viewModel.post_gdExtJson;
+//    }
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//    NSString *page_type = cellModel.tracerDict[@"page_type"] ?: @"be_null";
+//    [params setObject:page_type forKey:@"enter_from"];
+    [params setObject:@"click_publisher" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf gotoPostWDAnswer];
+                });
+            }
+        }
+    }];
 }
 
 @end
