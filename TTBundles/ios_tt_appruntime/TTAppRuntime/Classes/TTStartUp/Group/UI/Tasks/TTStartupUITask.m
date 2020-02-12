@@ -193,7 +193,8 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
     }
     [tabRegisterArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj) {
-            [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:obj atIndex:idx isRegular:![obj isEqualToString:kFHouseHouseEpidemicSituationTabKey]];
+            BOOL isRegular = ![obj isEqualToString:kFHouseHouseEpidemicSituationTabKey] || centerTabConfig.title.length>0;
+            [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:obj atIndex:idx isRegular:isRegular];
         }
     }];
     //HomeTab

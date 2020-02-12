@@ -761,14 +761,17 @@ SINGLETON_GCD(TTTabBarManager);
      FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
     if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
         if (centerTabConfig.staticImage.url&&centerTabConfig.activationimage.url) {
-            normalImage = [self requestEsituationImageWithImageUrl:centerTabConfig.staticImage.url];
-            highlightedImage = [self requestEsituationImageWithImageUrl:centerTabConfig.activationimage.url];
+              YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+            if ([epidemicSituationCache objectForKey:@"esituationNormalImage"]) {
+                normalImage = [epidemicSituationCache objectForKey:@"esituationNormalImage"];
+            }
+            if ([epidemicSituationCache objectForKey:@"esituationHighlightImage"]) {
+                highlightedImage = [epidemicSituationCache objectForKey:@"esituationHighlightImage"];
+            }
+
         }
     }
-    
-      [item setNormalImage:normalImage highlightedImage:highlightedImage loadingImage:refreshImage];
-    
-    
+        [item setNormalImage:normalImage highlightedImage:highlightedImage loadingImage:refreshImage];
 }
 
 - (void)setLottieViewForItem:(TTTabBarItem *)item {
@@ -1328,15 +1331,5 @@ SINGLETON_GCD(TTTabBarManager);
             item.animationView = nil;
         }
     }
-}
-
-- (UIImage *)requestEsituationImageWithImageUrl:(NSString *)url {
-    __block UIImage *showImage = nil;
-    [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:url] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
-        if (!error && image) {
-            showImage = image;
-        }
-        }];
-    return showImage;
 }
 @end

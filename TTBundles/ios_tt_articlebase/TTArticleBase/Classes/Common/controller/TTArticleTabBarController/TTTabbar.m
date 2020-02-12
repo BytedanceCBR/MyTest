@@ -102,7 +102,7 @@
                     CGFloat expandHeight = 64.f;
                     yOffset = kTTTabBarHeight - expandHeight;
 
-                    [item setFrame:CGRectMake(index * self.tabItemWidth, -10, self.tabItemWidth, expandHeight)];
+                    [item setFrame:CGRectMake(index * self.tabItemWidth, -13, self.tabItemWidth, expandHeight)];
                 } else {
                     [item setFrame:CGRectMake(index * self.tabItemWidth, 0, self.tabItemWidth, itemHeight)];
                 }

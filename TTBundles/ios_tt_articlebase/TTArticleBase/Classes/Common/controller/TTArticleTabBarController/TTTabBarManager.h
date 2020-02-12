@@ -69,4 +69,5 @@ extern NSString *kFHouseHouseEpidemicSituationTabKey; //疫情首页key
 
 - (void)updateTabTags:(NSArray *)tabTags;
 
+
 @end
