@@ -122,7 +122,9 @@
 - (void)setupUI {
     self.navOffset = 65;
     CGFloat navOffset = 65;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0, *)) {
+        navOffset = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0 , *)) {
         navOffset = 44.f + self.view.tt_safeAreaInsets.top;
     } else {
         navOffset = 65;

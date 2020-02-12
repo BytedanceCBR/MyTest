@@ -117,7 +117,7 @@
     _phoneInput.textColor = [UIColor colorWithHexString:@"a05700"];
     _phoneInput.placeholder = @"请输入手机号";
     _phoneInput.tintColor = [UIColor colorWithHexString:@"a05700"];
-    [_phoneInput setValue:[UIColor colorWithHexString:@"e1b067"] forKeyPath:@"_placeholderLabel.textColor"];
+    _phoneInput.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入手机号"attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexString:@"e1b067"]}];
     _phoneInput.keyboardType = UIKeyboardTypePhonePad;
     _phoneInput.returnKeyType = UIReturnKeyDone;
     [self.phoneBgView addSubview:_phoneInput];
@@ -131,7 +131,7 @@
     _varifyCodeInput.textColor = [UIColor colorWithHexString:@"a05700"];
     _varifyCodeInput.placeholder = @"请输入验证码";
     _varifyCodeInput.tintColor = [UIColor colorWithHexString:@"a05700"];
-    [_varifyCodeInput setValue:[UIColor colorWithHexString:@"e1b067"] forKeyPath:@"_placeholderLabel.textColor"];
+    _varifyCodeInput.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入验证码" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexString:@"e1b067"]}];
     _varifyCodeInput.keyboardType = UIKeyboardTypePhonePad;
     _varifyCodeInput.returnKeyType = UIReturnKeyGo;
     [self.varifyCodeBgView addSubview:_varifyCodeInput];

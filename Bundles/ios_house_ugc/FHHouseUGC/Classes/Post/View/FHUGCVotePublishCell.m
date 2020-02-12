@@ -476,7 +476,7 @@
     if(!_optionTextField) {
         _optionTextField = [UITextField new];
         _optionTextField.placeholder = @"选项";
-        [_optionTextField setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
+        _optionTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"选项" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3]}];
         _optionTextField.font = [UIFont themeFontRegular:16];
         _optionTextField.textColor = [UIColor themeGray1];
         _optionTextField.clipsToBounds = YES;
