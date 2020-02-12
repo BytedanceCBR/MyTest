@@ -80,7 +80,6 @@ def appDevelopPods
     #-----头条图片滑动浏览器----
     pod 'TTPhotoScrollVC', :path => '../AKPlugins/TTPhotoScrollVC', :inhibit_warnings => false
     #-----UI库----
-    # pod 'TTUIWidget',:path => '../../tt_pods_ui', :inhibit_warnings => false
     #-----账号登录UI库-----
     pod 'TTAccountLogin', :path => '../AKPlugins/AKAccountLogin', :inhibit_warnings => false
     #-----账号的业务库----

@@ -1,7 +1,0 @@
-use_frameworks!
-source 'https://github.com/CocoaPods/Specs.git'
-source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
-
-target 'TTThemed_Example' do
-  pod 'TTThemed', :path => '../'
-end
