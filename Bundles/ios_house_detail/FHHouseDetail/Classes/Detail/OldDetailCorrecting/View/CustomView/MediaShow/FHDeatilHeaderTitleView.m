@@ -118,6 +118,8 @@
 - (void)setModel:(FHDetailHouseTitleModel *)model {
     _model = model;
     NSArray *tags = model.tags;
+    self.mapBtn.hidden = !model.showMapBtn;
+
     if (model.address.length>0) {
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(31);
@@ -142,6 +144,12 @@
             make.right.mas_equalTo(self).offset(-35);
             make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(17);
             make.bottom.mas_equalTo(self);
+        }];
+    }
+    if (model.housetype == FHHouseTypeNeighborhood) {
+        self.nameLabel.numberOfLines = 1;
+        [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self).offset(-100);
         }];
     }
      self.nameLabel.text = model.titleStr;

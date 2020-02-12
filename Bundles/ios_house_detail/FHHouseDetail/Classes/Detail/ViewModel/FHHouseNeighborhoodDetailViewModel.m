@@ -178,15 +178,19 @@
     
     BOOL hasVideo = NO;
     BOOL isInstant = model.isInstantData;
+    BOOL showTitleMapBtn = NO;
     if (model.data.neighborhoodVideo && model.data.neighborhoodVideo.videoInfos.count > 0) {
         hasVideo = YES;
     }
     FHDetailNeighborhoodSubMessageModel *neighborhoodInfoModel = [[FHDetailNeighborhoodSubMessageModel alloc] init];
     neighborhoodInfoModel.name = model.data.name;
     neighborhoodInfoModel.neighborhoodInfo = model.data.neighborhoodInfo;
-    
+    if (neighborhoodInfoModel.neighborhoodInfo.gaodeLat.length>0 && neighborhoodInfoModel.neighborhoodInfo.gaodeLng.length>0) {
+        showTitleMapBtn = YES;
+    }else {
+        showTitleMapBtn = NO;
+    }
     if (hasVideo) {
-        
         FHVideoHouseVideoVideoInfosModel *info = model.data.neighborhoodVideo.videoInfos[0];
         FHMultiMediaItemModel * itemModel = [[FHMultiMediaItemModel alloc] init];
         itemModel.cellHouseType = FHMultiMediaCellHouseNeiborhood;
@@ -202,6 +206,7 @@
         
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
         FHDetailOldDataHouseImageDictListModel *houseImageDictList = [[FHDetailOldDataHouseImageDictListModel alloc] init];
+        
         
         if ([model.data.neighborhoodImage isKindOfClass:[NSArray class]] && model.data.neighborhoodImage.count > 0) {
             houseImageDictList.houseImageList = model.data.neighborhoodImage;
@@ -227,6 +232,8 @@
         headerCellModel.contactViewModel = self.contactViewModel;
         headerCellModel.isInstantData = model.isInstantData;
         houseTitleModel.neighborhoodInfoModel = neighborhoodInfoModel;
+        houseTitleModel.showMapBtn = showTitleMapBtn;
+        houseTitleModel.housetype = self.houseType;
         [self.items addObject:headerCellModel];
     }else {
         // 添加头滑动图片
@@ -239,6 +246,8 @@
             FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
             houseTitleModel.titleStr = model.data.name;
             houseTitleModel.address = model.data.neighborhoodInfo.address;
+            houseTitleModel.showMapBtn = showTitleMapBtn;
+            houseTitleModel.housetype = self.houseType;
             houseTitleModel.neighborhoodInfoModel = neighborhoodInfoModel;
             __weak typeof(self)weakself = self;
             houseTitleModel.mapImageClick = ^{
