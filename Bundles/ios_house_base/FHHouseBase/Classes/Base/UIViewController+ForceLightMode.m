@@ -23,7 +23,22 @@
     static dispatch_once_t onceToken;
        dispatch_once(&onceToken, ^{
            [self btd_swizzleInstanceMethod:@selector(setStatusBarStyle:) with:@selector(setStatusBarStyle_forceLightMode:)];
+           [self btd_swizzleInstanceMethod:@selector(setStatusBarStyle:animated:) with:@selector(setStatusBarStyle_forceLightMode:animated:)];
        });
+}
+
+- (void)setStatusBarStyle_forceLightMode:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated {
+    if (@available(iOS 13.0 , *)) {
+        // 13 系统 暗黑模式 修改UIStatusBarStyleDefault为UIStatusBarStyleDarkContent
+        if (statusBarStyle == UIStatusBarStyleDefault) {
+            [self setStatusBarStyle_forceLightMode:UIStatusBarStyleDarkContent animated:animated];
+        } else {
+            [self setStatusBarStyle_forceLightMode:statusBarStyle animated:animated];
+        }
+    } else {
+        // 非13系统 不变
+         [self setStatusBarStyle_forceLightMode:statusBarStyle animated:animated];
+    }
 }
 
 - (void)setStatusBarStyle_forceLightMode:(UIStatusBarStyle)statusBarStyle {
