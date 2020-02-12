@@ -378,6 +378,7 @@
     NSDictionary *dict = @{
                            @"baseTitle": @"base_title",
                            @"baseContent":@"base_content",
+                           @"extraContent":@"extra_content",
                            @"openUrl":@"open_url",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

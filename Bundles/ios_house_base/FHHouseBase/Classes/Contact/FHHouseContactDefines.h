@@ -46,6 +46,7 @@ typedef enum : NSUInteger {
     
     FHClueIMPageTypeCOldSchool = 23, // app_oldhouse_school 1.23小端二手房详情页的咨询学区
     FHClueIMPageTypeCOldFloor = 24, // app_oldhouse_floor：1.24小端二手房详情页的咨询楼层
+    FHClueIMPageTypeCOldBudget = 28, // app_oldhouse_mortgage：1.28小端二手房详情页的咨询房贷
     FHClueIMPageTypeCQuickQuestion = 25, // app_oldhouse_question：1.25小端二手房详情页的快速提问
     FHClueIMPageTypeCExpertDetail = 26, // app_oldhouse_expert_detail 26小端二手房详情页专家展位进经纪人主页后的在线联系
 
