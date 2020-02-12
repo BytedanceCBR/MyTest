@@ -200,7 +200,7 @@ SINGLETON_GCD(TTTabBarManager);
 //                           kAKTabActivityTabKey:@"ak_activity_tab",
                            kFHouseMessageTabKey: @"tab-message",
                            kFHouseMineTabKey: @"tab-mine",
-                           kFHouseHouseEpidemicSituationTabKey:@"tab_es",
+                           kFHouseHouseEpidemicSituationTabKey:@"",
                            kFHouseFindTabKey: @"tab-search",
 
 //                           kTTTabHTSTabKey:@"huoshan_tabbar",
@@ -236,20 +236,19 @@ SINGLETON_GCD(TTTabBarManager);
 
     NSString *identifier = [TTTabBarProvider priorMiddleTabIdentifier];
     _middleModel.originalIdentifier = identifier;
-    _middleModel.text = [TTTabBarProvider priorMiddleTabIdentifier].length>0?@"疫情":@"";
-    _middleModel.identifier = identifier;
-//    if (!isEmptyString(identifier)) {
-//        _middleModel.identifier = !isEmptyString(_middleModel.text) ? identifier : [identifier stringByAppendingString:@"_big"];
-//    } else {
-//        _middleModel.identifier = nil;
-//    }
+    _middleModel.text = [[self.dict tt_dictionaryValueForKey:@"text"] tt_stringValueForKey:identifier];
+    if (!isEmptyString(identifier)) {
+        _middleModel.identifier = !isEmptyString(_middleModel.text) ? identifier : [identifier stringByAppendingString:@"_big"];
+    } else {
+        _middleModel.identifier = nil;
+    }
     _middleModel.schema = [TTTabBarProvider priorMiddleTabSchema];
     
-//    NSDictionary *tabListConfig = [[TTSettingsManager sharedManager] settingForKey:@"tt_tab_list_config" defaultValue:@{@"middle_tab":@{}} freeze:NO];
-//    NSDictionary *middleTabConfig = [tabListConfig tt_dictionaryValueForKey:@"middle_tab"];
+    NSDictionary *tabListConfig = [[TTSettingsManager sharedManager] settingForKey:@"tt_tab_list_config" defaultValue:@{@"middle_tab":@{}} freeze:NO];
+    NSDictionary *middleTabConfig = [tabListConfig tt_dictionaryValueForKey:@"middle_tab"];
 
-    _middleModel.isExpand = YES;
-    _middleModel.useLottieFirst =NO;
+    _middleModel.isExpand = NO;
+    _middleModel.useLottieFirst = [middleTabConfig tt_boolValueForKey:@"use_lottie_first"];
 }
 
 - (void)dealloc {
@@ -710,7 +709,7 @@ SINGLETON_GCD(TTTabBarManager);
 //        }
 //    }
 //
-    if (!item.isRegular && [item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
+    if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
          FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
         if (centerTabConfig.title) {
             title = centerTabConfig.title;
@@ -811,13 +810,9 @@ SINGLETON_GCD(TTTabBarManager);
             }
         }
         if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
-            if (item.isRegular) {
-                self.middleModel.isExpand = NO;
-            }else {
               self.middleModel.isExpand = YES;
             }
             }
-        }
 }
 
 #pragma mark - Validation

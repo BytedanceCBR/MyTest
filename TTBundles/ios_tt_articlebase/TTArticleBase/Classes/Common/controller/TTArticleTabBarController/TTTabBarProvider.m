@@ -151,28 +151,24 @@ static NSString *lastTabIdentifier;
 }
 
 + (NSString *)priorMiddleTabIdentifier {
-    
     //默认中间的tab是百万英雄活动页
 //    NSDictionary *tabListConfig = [[TTSettingsManager sharedManager] settingForKey:@"tt_tab_list_config" defaultValue:@{@"middle_tab":@{@"tab_name":kTTTabActivityTabKey,@"url":@"sslocal://fantasy?enter_from=click_bottom"}} freeze:NO];
-//    NSDictionary *tabListConfig = [[TTSettingsManager sharedManager] settingForKey:@"tt_tab_list_config" defaultValue:@{} freeze:NO];
-//
-//    NSDictionary *middleTabConfig = [tabListConfig tt_dictionaryValueForKey:@"middle_tab"];
-//
-//    NSString *identifier = [middleTabConfig tt_stringValueForKey:@"tab_name"];
-    FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
-    NSString *identifier = centerTabConfig.enable?kFHouseHouseEpidemicSituationTabKey:@"";
+    NSDictionary *tabListConfig = [[TTSettingsManager sharedManager] settingForKey:@"tt_tab_list_config" defaultValue:@{} freeze:NO];
+    
+    NSDictionary *middleTabConfig = [tabListConfig tt_dictionaryValueForKey:@"middle_tab"];
+    
+    NSString *identifier = [middleTabConfig tt_stringValueForKey:@"tab_name"];
     
     return identifier;
 }
 
 + (NSString *)priorMiddleTabSchema {
     //默认中间的tab是百万英雄活动页
-//    NSDictionary *tabListConfig = [[TTSettingsManager sharedManager] settingForKey:@"tt_tab_list_config" defaultValue:@{@"middle_tab":@{@"tab_name":kTTTabActivityTabKey,@"url":@"sslocal://fantasy?enter_from=click_bottom"}} freeze:NO];
-//
-//    NSDictionary *middleTabConfig = [tabListConfig tt_dictionaryValueForKey:@"middle_tab"];
-    FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
+    NSDictionary *tabListConfig = [[TTSettingsManager sharedManager] settingForKey:@"tt_tab_list_config" defaultValue:@{@"middle_tab":@{@"tab_name":kTTTabActivityTabKey,@"url":@"sslocal://fantasy?enter_from=click_bottom"}} freeze:NO];
     
-    NSString *schema = centerTabConfig.openUrl;
+    NSDictionary *middleTabConfig = [tabListConfig tt_dictionaryValueForKey:@"middle_tab"];
+    
+    NSString *schema = [middleTabConfig tt_stringValueForKey:@"url"];
     
     return schema;
 }
@@ -188,12 +184,9 @@ static NSString *lastTabIdentifier;
 
 + (BOOL)hasCustomMiddleButton {
     
-//    NSString *identifier = [self priorMiddleTabIdentifier];
-//    NSString *schema = [self priorMiddleTabSchema];
-//    return !isEmptyString(identifier) && !isEmptyString(schema) && [[TTRoute sharedRoute] canOpenURL:[NSURL URLWithString:schema]];
-    FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
-
-    return centerTabConfig.enable;
+    NSString *identifier = [self priorMiddleTabIdentifier];
+    NSString *schema = [self priorMiddleTabSchema];
+    return !isEmptyString(identifier) && !isEmptyString(schema) && [[TTRoute sharedRoute] canOpenURL:[NSURL URLWithString:schema]];
 }
 
 + (NSArray<NSString *> *)confTabList {
