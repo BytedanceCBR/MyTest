@@ -382,7 +382,7 @@
             cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
             cellModel.questionStr = model.rawData.content.question.title;
             cellModel.answerStr = model.rawData.content.answer.abstractText;
-            cellModel.answerCountText = model.rawData.content.question.answerCountDescription;
+            cellModel.answerCountText = model.rawData.content.extra.answerCount;
             cellModel.answerCount = [model.rawData.content.question.niceAnsCount integerValue] + [model.rawData.content.question.normalAnsCount integerValue];
         }
     }
