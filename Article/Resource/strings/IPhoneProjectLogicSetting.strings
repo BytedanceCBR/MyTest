@@ -190,7 +190,7 @@
 "ugc_post_at_list" = "TTUGCSearchUserViewController";
 "ugc_community_detail" = "FHCommunityDetailViewController";
 "ugc_my_interest" = "FHUGCMyInterestedController";
-"ugc_post_wd_answer" = "FHWDAnswerPictureTextViewController";
+"wenda_post" = "FHWDAnswerPictureTextViewController";
 "ugc_message_list" = "FHMessageListController";
 "ugc_search_list" = "FHUGCSearchListController";
 "ugc_community_list" = "FHUGCCommunityListViewController";

@@ -315,10 +315,17 @@
         }
         
         //小区问答数据处理
+        if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
+            cellModel.questionStr = model.rawData.content.question.title;
+            cellModel.answerCountText = model.rawData.content.extra.answerCount;
+            cellModel.answerCount = [model.rawData.content.question.niceAnsCount integerValue] + [model.rawData.content.question.normalAnsCount integerValue];
+        }
+        
+        //小区问答数据处理
 //        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
 //        cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑";
 //        cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
-        [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:0];
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         cellModel.groupId = model.rawData.groupId;
@@ -369,6 +376,15 @@
         }
         
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        
+        //小区问答数据处理
+        if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
+            cellModel.questionStr = model.rawData.content.question.title;
+            cellModel.answerStr = model.rawData.content.answer.abstractText;
+            cellModel.answerCountText = model.rawData.content.question.answerCountDescription;
+            cellModel.answerCount = [model.rawData.content.question.niceAnsCount integerValue] + [model.rawData.content.question.normalAnsCount integerValue];
+        }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         cellModel.groupId = model.rawData.commentBase.id;
@@ -755,7 +771,12 @@
 
 - (void)setIsInNeighbourhoodQAList:(BOOL)isInNeighbourhoodQAList {
     _isInNeighbourhoodQAList = isInNeighbourhoodQAList;
-    [FHUGCCellHelper setAnswerRichContentWithModel:self width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:(isInNeighbourhoodQAList ? 3 : 1)];
+    CGFloat width = [UIScreen mainScreen].bounds.size.width - 60;
+    if(isInNeighbourhoodQAList){
+        width = [UIScreen mainScreen].bounds.size.width - 90;
+    }
+    [FHUGCCellHelper setQuestionRichContentWithModel:self width:width numberOfLines:0];
+    [FHUGCCellHelper setAnswerRichContentWithModel:self width:width numberOfLines:(isInNeighbourhoodQAList ? 3 : 1)];
 }
 
 - (void)setCategoryId:(NSString *)categoryId {

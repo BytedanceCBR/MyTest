@@ -23,7 +23,8 @@
     
     self.title = question.title ?: @"小区问答";
     if(!isEmptyString(question.content.count)){
-        self.totalCount = [question.content.count integerValue];
+//        self.totalCount = [question.content.count integerValue];
+        self.totalCount = 20;
         self.title = [NSString stringWithFormat:@"%@（%li）",self.title,(long)self.totalCount];
     }
     
@@ -37,7 +38,6 @@
     for (NSString *content in question.content.data) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:content];
         cellModel.isInNeighbourhoodQAList = NO;
-//        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFake3:NO];
         [_dataList addObject:cellModel];
     }
     

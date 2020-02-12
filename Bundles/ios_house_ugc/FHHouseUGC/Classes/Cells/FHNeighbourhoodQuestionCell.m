@@ -29,7 +29,7 @@
 @property(nonatomic ,strong) UIButton *answerBtn;
 @property(nonatomic ,strong) UILabel *descLabel;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
-@property(nonatomic ,assign) BOOL isList;
+//@property(nonatomic ,assign) BOOL isList;
 
 @end
 
@@ -38,7 +38,6 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
-    self.isList = YES;
     [self initUIs];
 }
 
@@ -46,18 +45,6 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.isList = YES;
-        [self initUIs];
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    return self;
-}
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier isList:(BOOL)isList {
-    self = [super initWithStyle:style
-                reuseIdentifier:reuseIdentifier];
-    if (self) {
-        self.isList = isList;
         [self initUIs];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -75,7 +62,7 @@
     [self.contentView addSubview:_bgView];
     
     self.essenceIcon = [[UIImageView alloc] init];
-    _essenceIcon.image = [UIImage imageNamed:@"fh_ugc_wenda_essence"];
+    _essenceIcon.image = [UIImage imageNamed:@"fh_ugc_wenda_essence_small"];
     _essenceIcon.hidden = YES;
     [self.bgView addSubview:_essenceIcon];
     
@@ -99,18 +86,18 @@
     [self.bgView addSubview:_answerLabel];
     
     self.answerBtn = [[UIButton alloc] init];
-    if(self.isList){
-        _answerBtn.imageView.contentMode = UIViewContentModeCenter;
-        [_answerBtn setImage:[UIImage imageNamed:@"detail_questiom_ask"] forState:UIControlStateNormal];
-        [_answerBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
-        [_answerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
-        [_answerBtn setTitle:@"去回答" forState:UIControlStateNormal];
-        _answerBtn.backgroundColor = [UIColor themeGray7];
-        _answerBtn.layer.masksToBounds = YES;
-        _answerBtn.layer.cornerRadius = 20;
-    }else{
+//    if(self.isList){
+//        _answerBtn.imageView.contentMode = UIViewContentModeCenter;
+//        [_answerBtn setImage:[UIImage imageNamed:@"detail_questiom_ask"] forState:UIControlStateNormal];
+//        [_answerBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+//        [_answerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+//        [_answerBtn setTitle:@"去回答" forState:UIControlStateNormal];
+//        _answerBtn.backgroundColor = [UIColor themeGray7];
+//        _answerBtn.layer.masksToBounds = YES;
+//        _answerBtn.layer.cornerRadius = 20;
+//    }else{
         [_answerBtn setTitle:@"暂无回答，快去回答吧" forState:UIControlStateNormal];
-    }
+//    }
     [_answerBtn addTarget:self action:@selector(gotoWriteAnswer) forControlEvents:UIControlEventTouchUpInside];
     [_answerBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
     _answerBtn.titleLabel.font = [UIFont themeFontRegular:14];
@@ -122,48 +109,48 @@
     [_descLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.bgView addSubview:_descLabel];
     
-    if(self.isList){
+//    if(self.isList){
         self.contentView.backgroundColor = [UIColor themeGray7];
         self.bgView.layer.masksToBounds = YES;
         self.bgView.layer.cornerRadius = 10;
         self.answerLabel.numberOfLines = 3;
-    }
+//    }
 }
 
 - (void)initConstraints {
-    if(self.isList){
-        [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentView).offset(7.5);
-            make.bottom.mas_equalTo(self.contentView).offset(-7.5);
-            make.left.mas_equalTo(self.contentView).offset(15);
-            make.right.mas_equalTo(self.contentView).offset(-15);
-        }];
-        
-        [self.questionIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.bgView).offset(17);
-            make.left.mas_equalTo(self.bgView).offset(16);
-            make.width.height.mas_equalTo(18);
-        }];
-        
-        [self.answerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.answerIcon.mas_top).offset(-1);
-            make.left.mas_equalTo(self.answerIcon.mas_right).offset(10);
-            make.right.mas_equalTo(self.bgView).offset(-16);
-        }];
-        
-        [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.answerLabel.mas_bottom).offset(10);
-            make.right.mas_equalTo(self.bgView).offset(-16);
-            make.height.mas_equalTo(20);
-        }];
-        
-        [self.answerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.questionLabel.mas_bottom).offset(30);
-            make.left.mas_equalTo(self.bgView).offset(16);
-            make.right.mas_equalTo(self.bgView).offset(-16);
-            make.height.mas_equalTo(40);
-        }];
-    }else{
+//    if(self.isList){
+//        [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(self.contentView).offset(7.5);
+//            make.bottom.mas_equalTo(self.contentView).offset(-7.5);
+//            make.left.mas_equalTo(self.contentView).offset(15);
+//            make.right.mas_equalTo(self.contentView).offset(-15);
+//        }];
+//
+//        [self.questionIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(self.bgView).offset(17);
+//            make.left.mas_equalTo(self.bgView).offset(16);
+//            make.width.height.mas_equalTo(18);
+//        }];
+//
+//        [self.answerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(self.answerIcon.mas_top).offset(-1);
+//            make.left.mas_equalTo(self.answerIcon.mas_right).offset(10);
+//            make.right.mas_equalTo(self.bgView).offset(-16);
+//        }];
+//
+//        [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(self.answerLabel.mas_bottom).offset(10);
+//            make.right.mas_equalTo(self.bgView).offset(-16);
+//            make.height.mas_equalTo(20);
+//        }];
+//
+//        [self.answerBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(self.questionLabel.mas_bottom).offset(30);
+//            make.left.mas_equalTo(self.bgView).offset(16);
+//            make.right.mas_equalTo(self.bgView).offset(-16);
+//            make.height.mas_equalTo(40);
+//        }];
+//    }else{
         [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.contentView).offset(0);
             make.bottom.mas_equalTo(self.contentView).offset(0);
@@ -195,12 +182,13 @@
             make.left.mas_equalTo(self.answerIcon.mas_right).offset(10);
             make.height.mas_equalTo(20);
         }];
-    }
+//    }
     
     [self.questionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.questionIcon.mas_top).offset(-2);
         make.left.mas_equalTo(self.questionIcon.mas_right).offset(10);
         make.right.mas_equalTo(self.bgView).offset(-16);
+        make.height.mas_equalTo(22);
     }];
     
     [self.answerIcon mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -210,8 +198,9 @@
     }];
     
     [self.essenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.right.mas_equalTo(self.bgView);
-        make.width.height.mas_equalTo(66);
+        make.top.mas_equalTo(self.bgView);
+        make.right.mas_equalTo(self.bgView).offset(0);
+        make.width.height.mas_equalTo(42);
     }];
 }
 
@@ -229,11 +218,14 @@
     self.currentData = data;
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    //更新样式
+    [self updateUI:cellModel.isInNeighbourhoodQAList];
+
     self.cellModel = cellModel;
     //隐藏掉通用的精华图标
     self.decorationImageView.hidden = YES;
     
-    if(cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleGood || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood) && cellModel.isInNeighbourhoodQAList){
+    if(cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleGood || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood)){
         self.essenceIcon.hidden = NO;
     }else{
         self.essenceIcon.hidden = YES;
@@ -246,7 +238,7 @@
         self.answerLabel.hidden = YES;
         self.descLabel.hidden = YES;
         self.answerBtn.hidden = NO;
-        if(self.isList){
+        if(cellModel.isInNeighbourhoodQAList){
             self.answerIcon.hidden = YES;
         }else{
             self.answerIcon.hidden = NO;
@@ -259,7 +251,78 @@
     }
     
     [self.answerLabel setText:cellModel.answerAStr];
-    self.descLabel.text = @"32个回答";
+    self.descLabel.attributedText = [self convertDescToAttributeString:cellModel.answerCountText count:cellModel.answerCount];
+    
+    [self.questionLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(cellModel.questionHeight);
+    }];
+    
+    if(cellModel.isInNeighbourhoodQAList){
+        [self.essenceIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.bgView).offset(0);
+        }];
+    }else{
+        [self.essenceIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.bgView).offset(-20);
+        }];
+    }
+}
+
+- (void)updateUI:(BOOL)isList {
+    if(isList){
+        _answerBtn.imageView.contentMode = UIViewContentModeCenter;
+        [_answerBtn setImage:[UIImage imageNamed:@"detail_questiom_ask"] forState:UIControlStateNormal];
+        [_answerBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+        [_answerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+        [_answerBtn setTitle:@"去回答" forState:UIControlStateNormal];
+        _answerBtn.backgroundColor = [UIColor themeGray7];
+        _answerBtn.layer.masksToBounds = YES;
+        _answerBtn.layer.cornerRadius = 20;
+        
+        self.contentView.backgroundColor = [UIColor themeGray7];
+        self.bgView.layer.masksToBounds = YES;
+        self.bgView.layer.cornerRadius = 10;
+        self.answerLabel.numberOfLines = 3;
+        self.essenceIcon.image = [UIImage imageNamed:@"fh_ugc_wenda_essence"];
+        
+        [self.bgView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.contentView).offset(7.5);
+            make.bottom.mas_equalTo(self.contentView).offset(-7.5);
+            make.left.mas_equalTo(self.contentView).offset(15);
+            make.right.mas_equalTo(self.contentView).offset(-15);
+        }];
+        
+        [self.questionIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.bgView).offset(17);
+            make.left.mas_equalTo(self.bgView).offset(16);
+            make.width.height.mas_equalTo(18);
+        }];
+        
+        [self.answerLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.answerIcon.mas_top).offset(-1);
+            make.left.mas_equalTo(self.answerIcon.mas_right).offset(10);
+            make.right.mas_equalTo(self.bgView).offset(-16);
+        }];
+        
+        [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.answerLabel.mas_bottom).offset(10);
+            make.right.mas_equalTo(self.bgView).offset(-16);
+            make.height.mas_equalTo(20);
+        }];
+        
+        [self.answerBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.questionLabel.mas_bottom).offset(30);
+            make.left.mas_equalTo(self.bgView).offset(16);
+            make.right.mas_equalTo(self.bgView).offset(-16);
+            make.height.mas_equalTo(40);
+        }];
+        
+        [self.essenceIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.bgView);
+            make.right.mas_equalTo(self.bgView).offset(0);
+            make.width.height.mas_equalTo(66);
+        }];
+    }
 }
 
 + (CGFloat)heightForData:(id)data {
@@ -293,11 +356,6 @@
 
 //写回答
 - (void)gotoWriteAnswer {
-    if(!isEmptyString(self.cellModel.writeAnswerSchema)){
-        NSURL *url = [TTStringHelper URLWithURLString:self.cellModel.writeAnswerSchema];
-        [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
-    }
-    
     if ([TTAccountManager isLogin]) {
         [self gotoPostWDAnswer];
     } else {
@@ -306,32 +364,16 @@
 }
 
 - (void)gotoPostWDAnswer {
-    NSString *routeUrl = @"sslocal://ugc_post_wd_answer";
-    NSURL *openUrl = [NSURL URLWithString:routeUrl];
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    if (self.cellModel.groupId.length > 0) {
-        dict[@"qid"] = self.cellModel.groupId;
+    if(!isEmptyString(self.cellModel.writeAnswerSchema)){
+        NSURL *url = [TTStringHelper URLWithURLString:self.cellModel.writeAnswerSchema];
+        [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:nil];
     }
-
-//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-//    tracerDict[@"origin_from"] = self.goDetailDict[@"enter_from"];
-//    tracerDict[@"enter_from"] = @"question";
-//    tracerDict[@"enter_type"] = @"click";
-//    tracerDict[@"log_pb"] = self.goDetailDict[@"log_pb"];
-//    dict[@"tracer"] = tracerDict;
-    dict[@"title"] = @"写回答";
-//    if (self.viewModel.post_gdExtJson && [self.viewModel.post_gdExtJson isKindOfClass:[NSDictionary class]]) {
-//        dict[@"gd_ext_json"] = self.viewModel.post_gdExtJson;
-//    }
-    
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//    NSString *page_type = cellModel.tracerDict[@"page_type"] ?: @"be_null";
-//    [params setObject:page_type forKey:@"enter_from"];
+    NSString *page_type = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+    [params setObject:page_type forKey:@"enter_from"];
     [params setObject:@"click_publisher" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
@@ -347,6 +389,22 @@
             }
         }
     }];
+}
+
+- (NSAttributedString *)convertDescToAttributeString:(NSString *)desc count:(NSInteger)count {
+    if (!isEmptyString(desc)) {
+        NSString *countText = [NSString stringWithFormat:@"%i",count];
+        NSRange range = [desc rangeOfString:countText];
+        if (range.location >= 0 && range.length > 0) {
+            NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] initWithString:desc];
+            NSMutableDictionary *attributes = @{}.mutableCopy;
+            [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
+            [attributes setValue:[UIFont themeFontMedium:14] forKey:NSFontAttributeName];
+            [mutableAttributedString addAttributes:attributes range:range];
+            return mutableAttributedString;
+        }
+    }
+    return nil;
 }
 
 @end

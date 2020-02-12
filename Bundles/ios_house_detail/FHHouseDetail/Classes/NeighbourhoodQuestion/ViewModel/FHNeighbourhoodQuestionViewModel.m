@@ -118,6 +118,10 @@
     if(fCityId){
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
+    FHNeighbourhoodQuestionController *vc = (FHNeighbourhoodQuestionController *)self.viewController;
+    if(vc.neighborhoodId){
+        [extraDic setObject:vc.neighborhoodId forKey:@"neighborhood_id"];
+    }
     
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
@@ -212,33 +216,34 @@
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     //fake
-    if(isHead){
-        [resultArray addObject:[FHFeedUGCCellModel modelFromFake3:YES]];
-        [resultArray addObject:[FHFeedUGCCellModel modelFromFake3:YES]];
-        [resultArray addObject:[FHFeedUGCCellModel modelFromFake3:YES]];
-        [resultArray addObject:[FHFeedUGCCellModel modelFromFake3:YES]];
-//        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake].groupId];
-    }
-
-//    for (FHFeedListDataModel *itemModel in feedList) {
-//        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
-//        cellModel.categoryId = self.categoryId;
-//        cellModel.feedVC = self.viewController;
-//        cellModel.tableView = self.tableView;
-//        cellModel.enterFrom = [self.viewController categoryName];
-//        if(cellModel){
-//            if(isHead){
-//                [resultArray addObject:cellModel];
-//                //去重逻辑
-//                [self removeDuplicaionModel:cellModel.groupId];
-//            }else{
-//                NSInteger index = [self getCellIndex:cellModel];
-//                if(index < 0){
-//                    [resultArray addObject:cellModel];
-//                }
-//            }
-//        }
+//    if(isHead){
+//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake3:YES]];
+//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake3:YES]];
+//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake3:YES]];
+//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake3:YES]];
+////        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake].groupId];
 //    }
+
+    for (FHFeedListDataModel *itemModel in feedList) {
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
+        cellModel.isInNeighbourhoodQAList = YES;
+        cellModel.categoryId = self.categoryId;
+        cellModel.feedVC = self.viewController;
+        cellModel.tableView = self.tableView;
+        cellModel.enterFrom = [self.viewController categoryName];
+        if(cellModel){
+            if(isHead){
+                [resultArray addObject:cellModel];
+                //去重逻辑
+                [self removeDuplicaionModel:cellModel.groupId];
+            }else{
+                NSInteger index = [self getCellIndex:cellModel];
+                if(index < 0){
+                    [resultArray addObject:cellModel];
+                }
+            }
+        }
+    }
     return resultArray;
 }
 
@@ -739,16 +744,17 @@
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"enter_from"] = @"nearby_list";
+    dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"];
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
+    dict[@"question_id"] = cellModel.groupId;
     
     return dict;
 }
 
 - (NSString *)pageType {
-    return @"hot_discuss_feed";
+    return @"neigborhood_question_list";
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {

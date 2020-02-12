@@ -407,7 +407,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 }
 
 - (void)gotoPostWDAnswer {
-    NSString *routeUrl = @"sslocal://ugc_post_wd_answer";
+    NSString *routeUrl = @"sslocal://wenda_post";
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     NSMutableDictionary *dict = @{}.mutableCopy;
     if (self.qid.length > 0) {

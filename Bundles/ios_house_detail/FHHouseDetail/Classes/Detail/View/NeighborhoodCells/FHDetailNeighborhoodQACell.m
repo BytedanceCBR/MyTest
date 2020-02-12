@@ -17,6 +17,7 @@
 #import "FHNeighbourhoodQuestionCell.h"
 #import "TTAccountManager.h"
 #import "TTStringHelper.h"
+#import "FHUGCCellManager.h"
 
 #define cellId @"cellId"
 
@@ -27,6 +28,7 @@
 @property(nonatomic , strong) UIView *titleView;
 @property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) UIButton *questionBtn;
+@property(nonatomic , strong) FHUGCCellManager *cellManager;
 
 @end
 
@@ -57,7 +59,6 @@
     self.tableView = [[UITableView alloc] init];
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.layer.masksToBounds = YES;
-    _tableView.layer.cornerRadius = 10;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     
@@ -77,6 +78,9 @@
     }
     
     [self.contentView addSubview:_tableView];
+    
+    self.cellManager = [[FHUGCCellManager alloc] init];
+    [self.cellManager registerAllCell:_tableView];
     
     self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, 65)];
     
@@ -103,8 +107,8 @@
 - (void)initConstaints {
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.contentView).offset(15);
-        make.right.mas_equalTo(self.contentView).offset(-15);
+        make.left.mas_equalTo(self.contentView);
+        make.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(300);
         make.bottom.mas_equalTo(self.contentView);
     }];
@@ -231,10 +235,12 @@
     if(!isEmptyString(cellModel.questionListSchema)){
         NSURL *url = [NSURL URLWithString:cellModel.questionListSchema];
         NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"neighborhood_id"] = cellModel.neighborhoodId;
         NSMutableDictionary *tracerDict = @{}.mutableCopy;
         tracerDict[UT_ORIGIN_FROM] = cellModel.tracerDict[@"origin_from"] ?: @"be_null";
         tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"page_type"] ?: @"be_null";
         tracerDict[UT_ELEMENT_FROM] = [self elementTypeString:FHHouseTypeNeighborhood];
+        tracerDict[UT_LOG_PB] = cellModel.tracerDict[@"log_pb"] ?: @"be_null";
         dict[TRACER_KEY] = tracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
@@ -260,16 +266,15 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        FHNeighbourhoodQuestionCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
+        NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
+        FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         
         if (cell == nil) {
-            cell = [[FHNeighbourhoodQuestionCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId isList:NO];
+            Class cellClass = NSClassFromString(cellIdentifier);
+            cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
-        
-//        cell.delegate = self;
-//        cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
-        
+
         if(indexPath.row < self.dataList.count){
             [cell refreshWithData:cellModel];
         }
@@ -279,7 +284,7 @@
 }
 
 - (UIButton *)lookAllBtn {
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(16, 10, [UIScreen mainScreen].bounds.size.width - 62, 40)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(15, 10, [UIScreen mainScreen].bounds.size.width - 30, 40)];
     button.backgroundColor = [UIColor themeGray7];
     button.imageView.contentMode = UIViewContentModeCenter;
     [button setTitle:@"查看全部" forState:UIControlStateNormal];
@@ -335,7 +340,10 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        return [FHNeighbourhoodQuestionCell heightForData:cellModel];
+        Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
+        if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
+            return [cellClass heightForData:cellModel];
+        }
     }
     return 100;
 }

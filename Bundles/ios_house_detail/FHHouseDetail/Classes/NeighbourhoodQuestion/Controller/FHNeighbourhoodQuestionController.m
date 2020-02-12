@@ -49,14 +49,27 @@
         self.title = [params objectForKey:@"title"];
         
         // 埋点
-        self.tracerDict[@"page_type"] = @"personal_comment_list";
+        self.tracerDict[@"page_type"] = @"neigborhood_question_list";
         // 取链接中的埋点数据
-        NSString *enterFrom = params[@"enter_from"];
+        NSString *enterFrom = params[@"tracer"][@"enter_from"];
         if (enterFrom.length > 0) {
             self.tracerDict[@"enter_from"] = enterFrom;
         }
+        NSString *elementFrom = params[@"tracer"][@"element_from"];
+        if (elementFrom.length > 0) {
+            self.tracerDict[@"element_from"] = elementFrom;
+        }
+        NSString *originFrom = params[@"tracer"][@"origin_from"];
+        if (originFrom.length > 0) {
+            self.tracerDict[@"origin_from"] = originFrom;
+        }
         
-        self.tracerDict[@"enter_type"] = @"click";
+        NSDictionary *logPb = params[@"tracer"][@"log_pb"];
+        if (logPb) {
+            self.tracerDict[@"log_pb"] = logPb;
+        }
+        
+        self.neighborhoodId = params[@"neighborhood_id"];
         
         self.ttTrackStayEnable = YES;
     }
@@ -150,7 +163,7 @@
 - (void)initViewModel {
     self.viewModel = [[FHNeighbourhoodQuestionViewModel alloc] initWithTableView:_tableView controller:self];
     self.needReloadData = YES;
-    _viewModel.categoryId = @"f_ugc_neighbor";
+    _viewModel.categoryId = @"f_neigh_question";
 }
 
 - (void)startLoadData {
@@ -250,6 +263,7 @@
 
 - (void)addGoDetailLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"group_id"] = self.neighborhoodId;
     TRACK_EVENT(@"go_detail", tracerDict);
 }
 
@@ -259,6 +273,7 @@
         return;
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"group_id"] = self.neighborhoodId;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
     TRACK_EVENT(@"stay_page", tracerDict);
     

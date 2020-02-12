@@ -42,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSArray *operations;
 //当接口返回空数据的时候是否显示空态页，默认为YES
 @property(nonatomic, assign) BOOL showErrorView;
+//小区id
+@property(nonatomic, copy) NSString *neighborhoodId;
 
 //圈子详情页使用
 //空态页具体顶部offset

@@ -539,12 +539,12 @@
 }
 
 + (void)setQuestionRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
-    if (!isEmptyString(model.title)) {
+    if (!isEmptyString(model.questionStr)) {
         NSInteger parseEmojiCount = -1;
         if (numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:model.title fontSize:15 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:model.questionStr fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
@@ -572,7 +572,7 @@
             model.questionHeight = size.height;
         }
     }else{
-        model.questionHeight = 0;
+        model.questionHeight = 22;
     }
 }
 
