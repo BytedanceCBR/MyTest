@@ -190,7 +190,7 @@ def appPods
     #-----UGC Other-----
     pod 'TTSettingsManager','0.4.16'
     pod 'TTLocationManager','1.2.4'
-    pod 'BDUGLocationKit', '1.4.1',:subspecs => [ # , '1.1.0'
+    pod 'BDUGLocationKit', '1.4.3',:subspecs => [ # , '1.1.0'
     'Core',
     'DataCollection',
     'ByteDancePlacemark',
