@@ -38,11 +38,6 @@
     
 }
 
-- (void)event:(NSString *)event params:(NSDictionary *)params
-{
-    [FHUserTracker writeEvent:event params:params];
-}
-
 @end
 //#define UT_EVENT_TYPE  @"event_type"
 NSString *const UT_EVENT_TYPE = @"event_type";

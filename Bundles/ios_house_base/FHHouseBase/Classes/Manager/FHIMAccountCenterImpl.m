@@ -9,6 +9,8 @@
 #import "TTAccount.h"
 #import "TTAccount+Multicast.h"
 #import "TIMMulticastDelegate.h"
+#import "TTAccountLoginManager.h"
+
 @interface FHIMAccountCenterImpl ()<TTAccountMulticastProtocol>
 {
     __weak id<AccountStatusListener> _litener;
@@ -34,6 +36,16 @@
 
 -(BOOL)isUserLogin {
     return [[TTAccount sharedAccount] isLogin];
+}
+
+-(void)showAlertFLoginVCWithParams:(NSDictionary *)params completeBlock:(FHIMAccountAlertCompletionBlock)complete {
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        
+        if(complete) {
+            FHIMAccountAlertCompletionEventType imType = (FHIMAccountAlertCompletionEventType)type;
+            complete(imType, phoneNum);
+        }
+    }];
 }
 
 -(void)registerAccountStatusListener:(id<AccountStatusListener>)listener {

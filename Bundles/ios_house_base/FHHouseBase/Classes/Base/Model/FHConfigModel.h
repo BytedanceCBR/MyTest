@@ -11,17 +11,39 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHConfigDataTabWidgetImageModel<NSObject>
+@end
+
+@interface FHConfigDataTabWidgetImageModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, strong , nullable) NSArray *urlList;
+@property (nonatomic, copy , nullable) NSString *uri;
+@property (nonatomic, copy , nullable) NSString *height;
+@property (nonatomic, copy , nullable) NSString *width;
+@property (nonatomic, copy , nullable) NSString *imageType;
+@end
+
+@interface FHConfigDataTabWidgetModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, assign) BOOL closeable;
+@property (nonatomic, copy , nullable) NSString *description;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong , nullable) NSArray<FHConfigDataTabWidgetImageModel> *image;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *id;
+@end
+
 @protocol FHConfigDataOpData2ItemsModel<NSObject>
 
 @end
 
-
-
-
 @protocol FHConfigDataOpData2ItemsImageModel<NSObject>
 
 @end
-
 
 @interface  FHConfigDataOpData2ItemsImageModel  : JSONModel
 
@@ -447,6 +469,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHConfigDataUgcCategoryConfigModel *ugcCategoryConfig ;
 @property (nonatomic, strong , nullable) FHRealtorEvaluatioinConfigModel *realtorEvaluationConfig ;
 @property (nonatomic, copy , nullable) NSString *jumpPageOnStartup;
+@property (nonatomic, strong , nullable) FHConfigDataTabWidgetModel *tabWidget ;  
 
 @property (nonatomic, strong , nullable) NSDictionary *originDict;
 

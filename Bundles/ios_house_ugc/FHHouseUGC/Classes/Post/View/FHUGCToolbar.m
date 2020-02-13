@@ -606,7 +606,7 @@
         
         if(tagInfo.tagType == FHPostUGCTagType_HotTag) {
             labelType = @"hot";
-        } else if(tagInfo.tagType == FHPostUGCTagType_LocalHistory) {
+        } else if(tagInfo.tagType == FHPostUGCTagType_History) {
             labelType = @"history";
         }
         param[@"label_type"] = labelType;

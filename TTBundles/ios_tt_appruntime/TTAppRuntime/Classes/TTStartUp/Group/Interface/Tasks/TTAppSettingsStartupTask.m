@@ -11,7 +11,7 @@
 #import "TTSettingsManager.h"
 #import "SDImageCache.h"
 #import "TTDeviceHelper.h"
-#if __has_include("BDImageCache.h")
+#if __has_include(<BDWebImage/BDImageCache.h>)
 #import "BDImageCache.h"
 #endif
 #import <BDABTestSDK/BDABTestManager.h>
@@ -44,7 +44,7 @@ static const NSInteger kSDOptimizeCacheMaxSize = 100 * 1024 * 1024; // 100M
                 [SDImageCache sharedImageCache].config.maxCacheSize = kSDOptimizeCacheMaxSize;//缓存设置
                 [SDImageCache sharedImageCache].config.maxCacheAge = kSDOptimizeCacheMaxCacheAge;
                 //TTUGC 中 SD 暂未替换，故存在两种缓存并存的情况
-#if __has_include("BDImageCache.h")
+#if __has_include(<BDWebImage/BDImageCache.h>)
                 [BDImageCache sharedImageCache].config.memoryAgeLimit = kSDOptimizeCacheMaxCacheAge;
                 [BDImageCache sharedImageCache].config.memorySizeLimit = kSDOptimizeCacheMaxSize;
 #endif
