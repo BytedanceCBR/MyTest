@@ -19,6 +19,7 @@
 
 @interface FHHouseESituationViewController ()<YSWebViewDelegate>
 @property(nonatomic, retain)SSWebViewContainer * webContainer;
+@property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @end
 
 @implementation FHHouseESituationViewController
@@ -69,6 +70,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self startTrack];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 
@@ -86,9 +88,8 @@
 }
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
-    [self addStayCategoryLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
+    [self endTrack];
+    [self addStayCategoryLog:self.stayTime];
 }
 
 - (void)webView:(YSWebView *)webView didFailLoadWithError:(NSError *)error {
@@ -122,5 +123,15 @@
     tracerDict[@"with_tips"] = @"0";
     tracerDict[@"log_pb"] = centerTabConfig.logPb;
     return tracerDict;
+}
+
+- (void)startTrack
+{
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
+}
+
+- (void)endTrack
+{
+    self.stayTime = [[NSDate date] timeIntervalSince1970] - self.stayTime;
 }
 @end
