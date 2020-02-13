@@ -255,17 +255,18 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     }
 }
 
-- (void)setUpLocManagerLocalInfo
++ (NSString *)amapAPIKey
 {
-    NSString *apiKeyString = nil;
     if ([[TTSandBoxHelper bundleIdentifier] isEqualToString:@"com.bytedance.fp1"]) {
-        apiKeyString = @"003c8c31d052f8882bfb2a1d712dea84";
-    }else
-    {
-        apiKeyString = @"69c1887b8d0d2d252395c58e3da184dc";
+        return @"003c8c31d052f8882bfb2a1d712dea84";
+    } else {
+        return @"69c1887b8d0d2d252395c58e3da184dc";
     }
-    
-    [AMapServices sharedServices].apiKey = apiKeyString;
+}
+
+- (void)setUpLocManagerLocalInfo
+{    
+    [AMapServices sharedServices].apiKey = [FHLocManager amapAPIKey];
     [AMapServices sharedServices].enableHTTPS = YES;
     [AMapServices sharedServices].crashReportEnabled = false;
 }
@@ -298,7 +299,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
         
         NSInteger statusNum = 1;
-        if (![self isHaveLocationAuthorization]) {
+        if (![wSelf isHaveLocationAuthorization]) {
             statusNum = 2;
         }else if (![FHEnvContext isNetworkConnected])
         {

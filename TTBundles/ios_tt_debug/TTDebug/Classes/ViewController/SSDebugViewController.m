@@ -164,6 +164,10 @@ extern NSString *const BOE_OPEN_KEY ;
         
         NSMutableArray *itemArray = [NSMutableArray array];
 
+        STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Schema（H5）页面跳转" target:self action:@selector(_openHtmlBridge)];
+        htmlBridgeDebugItem.switchStyle = NO;
+        [itemArray addObject:htmlBridgeDebugItem];
+        
         STTableViewCellItem *logViewItem = [[STTableViewCellItem alloc] initWithTitle:@"埋点验证" target:self action:@selector(_openLogViewSetting)];
         logViewItem.switchStyle = NO;
         [itemArray addObject:logViewItem];
@@ -171,10 +175,6 @@ extern NSString *const BOE_OPEN_KEY ;
         STTableViewCellItem *clientABDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"😘F项目客户端AB实验调试选项点这里😘" target:self action:@selector(_openABTestSDKClientABTestVC)];
         clientABDebugItem.switchStyle = NO;
         [itemArray addObject:clientABDebugItem];
-
-        STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"H5与原生交互测试" target:self action:@selector(_openHtmlBridge)];
-        htmlBridgeDebugItem.switchStyle = NO;
-        [itemArray addObject:htmlBridgeDebugItem];
         
         STTableViewCellItem *rnBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"RN_Debug" target:self action:@selector(_openRNBridge)];
         rnBridgeDebugItem.switchStyle = NO;
@@ -906,8 +906,32 @@ extern NSString *const BOE_OPEN_KEY ;
 #endif
 }
 
+- (void)_gotoHtmlBridge:(NSString *)urlStrInput {
+    NSString *stringToSave = [NSString stringWithString:urlStrInput];
+    
+    NSString *unencodedString = urlStrInput;
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                    (CFStringRef)unencodedString,
+                                                                                                    NULL,
+                                                                                                    (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                    kCFStringEncodingUTF8));
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+    
+    [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
+    
+    NSURL *url = [TTURLUtils URLWithString:urlStr];
+    [[TTRoute sharedRoute] openURLByPushViewController:url];
+}
+
 - (void)_openHtmlBridge
 {
+    NSString *tempUrl = [UIPasteboard generalPasteboard].string;
+    if (tempUrl.length > 0 && [tempUrl hasPrefix:@"http"]) {
+        [self _gotoHtmlBridge:tempUrl];
+        [UIPasteboard generalPasteboard].string = @"";
+        return;
+    }
+    
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"请输入调试地址" message:nil preferredType:TTThemedAlertControllerTypeAlert];
     
 //    [alertVC addTextFieldWithConfigurationHandler:^(UITextField *textField) {

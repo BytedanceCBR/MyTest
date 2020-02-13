@@ -2,18 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>compileBitcode</key>
-	<true/>
 	<key>destination</key>
 	<string>export</string>
 	<key>method</key>
-	<string>enterprise</string>
+	<string>app-store</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>com.bytedance.fp1</key>
-		<string>com.bytedance.fp1_InHouse</string>
-		<key>com.bytedance.fp1.serviceNofExtension</key>
-		<string>fp1ServiceNofExtension</string>
+		<key>com.f100.client</key>
+		<string>f100.dist</string>
+		<key>com.f100.client.FHNotificationServiceExtension</key>
+		<string>f100ServiceNofExtension.dist</string>
 	</dict>
 	<key>signingCertificate</key>
 	<string>iPhone Distribution</string>
@@ -22,8 +20,10 @@
 	<key>stripSwiftSymbols</key>
 	<true/>
 	<key>teamID</key>
-	<string>X46375UBYG</string>
-	<key>thinning</key>
-	<string>&lt;none&gt;</string>
+	<string>7HSS6X2323</string>
+	<key>uploadBitcode</key>
+	<false/>
+	<key>uploadSymbols</key>
+	<true/>
 </dict>
 </plist>
