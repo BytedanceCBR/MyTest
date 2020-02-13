@@ -710,9 +710,10 @@ SINGLETON_GCD(TTTabBarManager);
 //    }
 //
     if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
-         FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
-        if (centerTabConfig.title) {
-            title = centerTabConfig.title;
+         YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+        FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
+        if (cacheTab.title) {
+            title = cacheTab.title;
         }
     }
     
@@ -756,10 +757,10 @@ SINGLETON_GCD(TTTabBarManager);
         normalImage =  [self getImageForItem:names.unloginItem isHighlighted:NO];
         highlightedImage = [self getImageForItem:names.unloginItem isHighlighted:YES];
     }
-    
-     FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
+     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
     if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
-        if (centerTabConfig.staticImage.url&&centerTabConfig.activationimage.url) {
+        if (cacheTab.staticImage.url&&cacheTab.activationimage.url) {
               YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
             if ([epidemicSituationCache objectForKey:@"esituationNormalImage"]) {
                 normalImage = [epidemicSituationCache objectForKey:@"esituationNormalImage"];

@@ -44,6 +44,9 @@
                       [rootVC updateTabBarControllerWithAutoJump:YES];
               });
         }];
+        if (opTab.title.length>4) {
+            opTab.title = [opTab.title substringToIndex:4];
+        }
         [epidemicSituationCache setObject:opTab forKey:@"tab_cache"];
         if (opTab.enable &&opTab.staticImage.url&&opTab.activationimage.url) {
                [self downloadEpidemicSituationToCacheWithNormalUrl:opTab.staticImage.url highlighthUrl:opTab.activationimage.url];
