@@ -52,7 +52,7 @@ def fhPods
     
 #    pod 'FHPopupViewCenter', :path => '../../FHPopupViewCenter'
 #    pod 'FHPopupViewCenter', '0.0.2-alpha.1'
-    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '438dfbd3e5c37c60dd90c011c203b51d6dcc76b4'
+    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => 'dff82e924c6e81f46f54455b50f90ca2d2cbdebc'
 end
 
 def appDevelopPods
