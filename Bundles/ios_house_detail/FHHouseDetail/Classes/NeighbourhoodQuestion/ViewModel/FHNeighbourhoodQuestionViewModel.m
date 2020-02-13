@@ -98,14 +98,17 @@
     }
     
     double behotTime = 0;
+    NSString *lastGroupId = nil;
+    
     if(!isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
         behotTime = [cellModel.behotTime doubleValue];
+        lastGroupId = cellModel.groupId;
     }
-    
     if(isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
         behotTime = [cellModel.behotTime doubleValue];
+        lastGroupId = cellModel.groupId;
     }
     
     //下拉刷新关闭视频播放
@@ -117,6 +120,9 @@
     NSString *fCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
     if(fCityId){
         [extraDic setObject:fCityId forKey:@"f_city_id"];
+    }
+    if(lastGroupId){
+        [extraDic setObject:lastGroupId forKey:@"last_group_id"];
     }
     FHNeighbourhoodQuestionController *vc = (FHNeighbourhoodQuestionController *)self.viewController;
     if(vc.neighborhoodId){
