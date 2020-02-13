@@ -470,6 +470,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict].mutableCopy;
     if (self.fromOneKeyLogin) {
         tracerDict[@"login_type"] = @"quick_login";
+    }else {
+        tracerDict[@"login_type"] = @"other_login";
     }
     if (self.fromOtherLogin) {
         tracerDict[@"enter_from"] = @"quick_login";
@@ -483,6 +485,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     if (self.fromOneKeyLogin) {
         tracerDict[@"click_position"] = @"quick_login";
+    }else {
+        tracerDict[@"login_type"] = @"other_login";
     }
     if (self.fromOtherLogin) {
         tracerDict[@"enter_from"] = @"quick_login";
@@ -496,6 +500,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     if (self.fromOneKeyLogin) {
         tracerDict[@"login_type"] = @"quick_login";
+    }else {
+        tracerDict[@"login_type"] = @"other_login";
     }
     if (self.fromOtherLogin) {
         tracerDict[@"enter_from"] = @"quick_login";
@@ -576,6 +582,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)traceVerifyCode {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     tracerDict[@"is_resent"] = @(self.isVerifyCodeRetry);
+    tracerDict[@"login_type"] = tracerDict[@"login_type"] ? : @"other_login";
     TRACK_EVENT(@"click_verifycode", tracerDict);
 }
 
