@@ -324,12 +324,10 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         } else {
             [freezedItems addObject:item];
         }
-        
         if ([item.identifier isEqualToString:self.lastSelectedTabTag]) {
             lastSelectItem = item;
         }
     }
-    
     // 如果当前tab没有被freeze，则不自动跳转
     BOOL shouldJump = NO;
     for (TTTabBarItem * freezedItem in freezedItems) {
@@ -1258,7 +1256,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                 }
             }
             if ([selectedTabName isEqualToString:@"epidemicsituation"]) {
-                 FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
+                YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+                 FHConfigCenterTabModel *centerTabConfig = [epidemicSituationCache objectForKey:@"tab_cache"];
                  [logv3Dic setValue:@"operation_tab" forKey:@"tab_name"];
                 [logv3Dic setValue:centerTabConfig.logPb forKey:@"log_pb"];
             }

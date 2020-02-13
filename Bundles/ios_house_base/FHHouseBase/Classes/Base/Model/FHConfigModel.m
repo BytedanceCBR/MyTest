@@ -261,7 +261,8 @@
                            @"openUrl": @"open_url",
                            @"staticImage": @"static_image",
                            @"activationimage": @"activation_image",
-                           @"logPb":@"log_pb"
+                           @"logPb":@"log_pb",
+                           @"tabId":@"tab_id"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

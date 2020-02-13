@@ -127,9 +127,7 @@
             }
             [self addRequestLog:@"config" startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
             if (completion) {
-                if (model.data.opTab.enable &&model.data.opTab.staticImage.url&&model.data.opTab.activationimage.url) {
-                    [TTTabbarLoadEpidemicSituatioHelper downloadEpidemicSituationToCacheWithNormalUrl:model.data.opTab.staticImage.url highlighthUrl:model.data.opTab.activationimage.url];
-                }
+                [TTTabbarLoadEpidemicSituatioHelper  checkConfigEpidemicSituatiData:model.data.opTab];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
                 });

@@ -186,14 +186,15 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 }
 
 - (void)constructDefaultTabs {
-    FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
+     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
     NSMutableArray *tabRegisterArr = [[NSMutableArray alloc]initWithObjects:kTTTabHomeTabKey,kFHouseFindTabKey,kFHouseMessageTabKey,kFHouseMineTabKey, nil];
-    if (centerTabConfig.enable && centerTabConfig.openUrl.length>0) {
+    if (cacheTab.enable && cacheTab.openUrl.length>0) {
         [tabRegisterArr insertObject:kFHouseHouseEpidemicSituationTabKey atIndex:2];
     }
     [tabRegisterArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj) {
-            BOOL isRegular = ![obj isEqualToString:kFHouseHouseEpidemicSituationTabKey] || centerTabConfig.title.length>0;
+            BOOL isRegular = ![obj isEqualToString:kFHouseHouseEpidemicSituationTabKey] || cacheTab.title.length>0;
             [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:obj atIndex:idx isRegular:isRegular];
         }
     }];

@@ -403,11 +403,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHConfigCenterTabModel : JSONModel
-
 @property (nonatomic, assign) BOOL enable;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSDictionary *logPb;
+@property (nonatomic, copy , nullable) NSString *tabId;
 @property (nonatomic, strong , nullable) FHConfigCenterTabImageModel *staticImage ;
 @property (nonatomic, strong , nullable) FHConfigCenterTabImageModel *activationimage ;
 @end

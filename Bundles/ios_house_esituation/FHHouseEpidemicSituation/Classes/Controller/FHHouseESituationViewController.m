@@ -14,6 +14,8 @@
 #import "FHEnvContext.h"
 #import "FHErrorView.h"
 #import "masonry.h"
+#import "UIViewController+Track.h"
+#import "FHUserTracker.h"
 
 @interface FHHouseESituationViewController ()<YSWebViewDelegate>
 @property(nonatomic, retain)SSWebViewContainer * webContainer;
@@ -82,15 +84,13 @@
     //        [self.delegate listViewStopLoading:self];
     //    }
 }
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [self addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
 - (void)webView:(YSWebView *)webView didFailLoadWithError:(NSError *)error {
     [_webContainer tt_endUpdataData];
     //    [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
@@ -100,4 +100,27 @@
 {
     [_webContainer tt_endUpdataData];
     
-}@end
+}
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    TRACK_EVENT(@"stay_tab", tracerDict);
+}
+
+-(NSDictionary *)categoryLogDict {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    
+     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+    FHConfigCenterTabModel *centerTabConfig = [epidemicSituationCache objectForKey:@"tab_cache"];
+    tracerDict[@"enter_type"] = @"click_tab";
+    tracerDict[@"tab_name"] = @"operation_tab";
+    tracerDict[@"with_tips"] = @"0";
+    tracerDict[@"log_pb"] = centerTabConfig.logPb;
+    return tracerDict;
+}
+@end

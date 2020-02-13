@@ -8,6 +8,9 @@
 #import "TTTabbarLoadEpidemicSituatioHelper.h"
 #import "BDWebImageManager.h"
 #import "FHEnvContext.h"
+#import "TTTabBarManager.h"
+#import "TTTabBarItem.h"
+#import "TTArticleTabBarController.h"
 
 @implementation TTTabbarLoadEpidemicSituatioHelper
 + (void)requestEsituationImageWithImageUrl:(NSString *)url isNormal:(BOOL)isNormal{
@@ -22,5 +25,42 @@
 + (void)downloadEpidemicSituationToCacheWithNormalUrl:(NSString *)normalStr highlighthUrl:(NSString *)highlightStr {
     [self requestEsituationImageWithImageUrl:normalStr isNormal:YES];
     [self requestEsituationImageWithImageUrl:highlightStr isNormal:NO];
+}
+
++ (void)checkConfigEpidemicSituatiData:(FHConfigCenterTabModel *)opTab {
+     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
+    opTab = [self placeholderModel:opTab];
+    cacheTab = [self placeholderModel:cacheTab];
+    if (![opTab.tabId isEqualToString:cacheTab.tabId]) {
+        NSMutableArray *items = [[TTTabBarManager sharedTTTabBarManager].tabItems mutableCopy];
+        [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            TTTabBarItem *item = obj;
+            if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
+                item.freezed = YES;
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                          TTArticleTabBarController *rootVC = (TTArticleTabBarController *)[UIApplication sharedApplication].delegate.window.rootViewController;
+                      [rootVC updateTabBarControllerWithAutoJump:YES];
+              });
+        }];
+        [epidemicSituationCache setObject:opTab forKey:@"tab_cache"];
+        if (opTab.enable &&opTab.staticImage.url&&opTab.activationimage.url) {
+               [self downloadEpidemicSituationToCacheWithNormalUrl:opTab.staticImage.url highlighthUrl:opTab.activationimage.url];
+           }
+    }
+}
+
++ (FHConfigCenterTabModel *)placeholderModel:(FHConfigCenterTabModel *)currentModel {
+    if (currentModel == nil) {
+        currentModel = [[FHConfigCenterTabModel alloc]init];
+        currentModel.tabId = @"";
+        currentModel.enable = false;
+        currentModel.openUrl = @"";
+        currentModel.logPb = @"";
+        currentModel.staticImage = @{};
+        currentModel.activationimage = @{};
+    }
+    return currentModel;
 }
 @end
