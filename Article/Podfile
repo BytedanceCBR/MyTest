@@ -51,8 +51,8 @@ def fhPods
     # pod 'ios_house_im', :git => 'git@code.byted.org:fproject/ios_house_im.git', :commit => '9b5149c9c9201bfd45134e01edcc19d89d399fce'
     
 #    pod 'FHPopupViewCenter', :path => '../../FHPopupViewCenter'
-    pod 'FHPopupViewCenter', '0.0.2-alpha.1'
-
+#    pod 'FHPopupViewCenter', '0.0.2-alpha.1'
+    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '438dfbd3e5c37c60dd90c011c203b51d6dcc76b4'
 end
 
 def appDevelopPods
