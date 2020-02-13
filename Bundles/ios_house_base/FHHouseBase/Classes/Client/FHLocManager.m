@@ -26,6 +26,7 @@
 #import "FHHouseUGCAPI.h"
 #import "FHIntroduceManager.h"
 #import "FHMinisdkManager.h"
+#import "FHPopupViewManager.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -385,9 +386,13 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 BOOL isShowIntoduceView = [FHIntroduceManager sharedInstance].isShowing;
                 BOOL isShowSpringLoginView = [FHMinisdkManager sharedInstance].isShowing;
                 
+                // 城市切换弹窗
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity && !isShowIntoduceView && !isShowSpringLoginView) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
                 }
+                
+                // 拉取小端运营窗口弹窗配置信息
+                [[FHPopupViewManager shared] fetchData];
                 
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 [wSelf updateAllConfig:model isNeedDiff:NO];

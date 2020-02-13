@@ -20,6 +20,7 @@
 #import "CommonURLSetting.h"
 #import "FHMinisdkManager.h"
 #import "FHSpringHangView.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -349,6 +350,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [TTAppUpdateHelper sharedInstance].delegate = self;
     [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
         [self.view addSubview:view];
+        [[FHPopupViewManager shared] outerPopupViewShow];
     } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
         //        if (!downloadUrl) {
         //            return;
@@ -356,7 +358,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         //        NSURL *url = [NSURL URLWithString:downloadUrl];
         //        [[UIApplication sharedApplication] openURL:url];
     } closeBlock:^{
-        
+        [[FHPopupViewManager shared] outerPopupViewHide];
     }];
 }
 

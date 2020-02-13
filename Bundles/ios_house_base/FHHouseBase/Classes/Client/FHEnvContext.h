@@ -292,6 +292,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler ;
 
++ (NSString *)getCurrentTabIdentifier;
+
 @end
 
 

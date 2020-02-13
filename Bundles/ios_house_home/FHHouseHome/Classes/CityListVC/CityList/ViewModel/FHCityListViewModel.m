@@ -15,6 +15,7 @@
 #import "FHIndexSectionView.h"
 #import "FHUserTracker.h"
 #import "FHHouseSwitchCityDelegate.h"
+#import "FHPopupViewManager.h"
 
 #define kCityListItemCellId @"city_list_item_cell_id"
 #define kCityListHotItemCellId @"city_list_hot_item_cell_id"
@@ -365,6 +366,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
             // 进历史
             if (switchCompletion) {
                 switchCompletion(isSuccess);
+            [[FHPopupViewManager shared].dataFetcher fetchData];
             }
         }];
     }

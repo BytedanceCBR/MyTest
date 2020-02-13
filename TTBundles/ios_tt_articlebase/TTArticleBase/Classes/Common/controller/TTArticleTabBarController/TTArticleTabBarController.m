@@ -98,6 +98,7 @@
 #import "FHUnreadMsgModel.h"
 #import "UIViewController+TTMovieUtil.h"
 #import <TTLaunchTracer.h>
+#import "FHPopupViewManager.h"
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -443,6 +444,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             }
 
             [self tabBarController:self didSelectViewController:self.viewControllers[index]];
+            
+            // 触发弹窗显示
+            [[FHPopupViewManager shared] triggerPopupView];
             
         };
         
