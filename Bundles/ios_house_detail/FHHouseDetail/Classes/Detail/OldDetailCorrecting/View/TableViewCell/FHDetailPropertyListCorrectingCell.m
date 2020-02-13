@@ -390,6 +390,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         FHDetailDataBaseExtraBudgetModel *budgetModel = (FHDetailDataBaseExtraBudgetModel *)view.data;
         if ([budgetModel.openUrl containsString:@"open_single_chat"]) {
             [self imAction:budgetModel.openUrl isFloorAction:NO];
+            positionStr = @"loan";
         }else {
             NSDictionary *userInfoDict = @{@"tracer":@{}};
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
@@ -398,8 +399,9 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
                 NSURL *url = [NSURL URLWithString:openUrl];
                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
+            positionStr = @"debit_calculator";
         }
-        positionStr = @"debit_calculator";
+        
     }else if ([view.data isKindOfClass:[FHDetailDataBaseExtraFloorInfoModel class]]) {
         FHDetailDataBaseExtraFloorInfoModel *floorInfo = (FHDetailDataBaseExtraFloorInfoModel *)view.data;
         [self imAction:floorInfo.openUrl isFloorAction:YES];
