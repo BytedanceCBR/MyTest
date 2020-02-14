@@ -24,7 +24,9 @@
     self.title = question.title ?: @"小区问答";
     if(!isEmptyString(question.content.count)){
         self.totalCount = [question.content.count integerValue];
-        self.title = [NSString stringWithFormat:@"%@（%li）",self.title,(long)self.totalCount];
+        if(self.totalCount > 0){
+            self.title = [NSString stringWithFormat:@"%@（%li）",self.title,(long)self.totalCount];
+        }
     }
     
     self.askTitle = question.questionWrite.title ?: @"我要提问";
