@@ -188,8 +188,9 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 - (void)constructDefaultTabs {
      YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
     FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
+
     NSMutableArray *tabRegisterArr = [[NSMutableArray alloc]initWithObjects:kTTTabHomeTabKey,kFHouseFindTabKey,kFHouseMessageTabKey,kFHouseMineTabKey, nil];
-    if (cacheTab.enable && cacheTab.openUrl.length>0) {
+    if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"]) {
         [tabRegisterArr insertObject:kFHouseHouseEpidemicSituationTabKey atIndex:2];
     }
     [tabRegisterArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
