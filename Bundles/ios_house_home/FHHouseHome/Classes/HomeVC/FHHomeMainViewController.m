@@ -88,6 +88,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self addSpringView];
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
+    
+    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 - (void)addSpringView {

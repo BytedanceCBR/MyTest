@@ -30,6 +30,7 @@
 #import <FHMessageNotificationManager.h>
 #import "FHSpringHangView.h"
 #import "FHEnvContext.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHMessageViewController ()
 
@@ -122,6 +123,8 @@
     if([FHEnvContext isSpringHangOpen]){
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
+    
+    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
