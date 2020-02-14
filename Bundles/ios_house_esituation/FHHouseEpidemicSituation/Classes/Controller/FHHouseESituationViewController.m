@@ -38,8 +38,9 @@
     _webContainer.disableEndRefresh = YES;
     _webContainer.disableConnectCheck = YES;
     [self.view addSubview:_webContainer];
-    FHConfigCenterTabModel *centerTabConfig = [[FHEnvContext sharedInstance] getConfigFromCache].opTab;
-    NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[TTStringHelper URLWithURLString:centerTabConfig.openUrl]];
+     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
+    NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[TTStringHelper URLWithURLString:cacheTab.openUrl]];
     [self.webContainer.ssWebView loadRequest:request];
     
     if (![FHEnvContext isNetworkConnected]) {

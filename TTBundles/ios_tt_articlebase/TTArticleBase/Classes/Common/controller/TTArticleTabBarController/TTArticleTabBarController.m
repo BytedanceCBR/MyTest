@@ -233,13 +233,27 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [self constructTabItems];
     
 //    [UITabBar appearance].clipsToBounds = YES;
+//    [[UITabBar appearance] setShadowImage:[UIImage new]];
     //添加自定义线
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0.5)];
-    lineView.backgroundColor = [UIColor clearColor];
-    [[UITabBar appearance] addSubview:lineView];
+//    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0.5)];
+//    lineView.backgroundColor = [UIColor clearColor];
+//    [[UITabBar appearance] addSubview:lineView];
 
 //    [self addKVO];
     [[TSVTabTipManager sharedManager] setupShortVideoTabRedDotWhenStartupIfNeeded];
+    [[UITabBar appearance] setShadowImage:[UIImage new]];
+    [[UITabBar appearance] setBackgroundImage:[[UIImage alloc]init]];
+    if (@available(iOS 13, *)) {
+    UITabBarAppearance *appearance = [self.tabBar.standardAppearance copy];
+    appearance.backgroundImage = [[UIImage alloc]init];
+    appearance.shadowImage = [[UIImage alloc]init];;
+    // 官方文档写的是 重置背景和阴影为透明
+    [appearance configureWithTransparentBackground];
+    self.tabBar.standardAppearance = appearance;
+    } else {
+    self.tabBar.backgroundImage = [UIImage new];
+    self.tabBar.shadowImage = [UIImage new];
+    }
 }
 
 - (void)addUgcGuide {

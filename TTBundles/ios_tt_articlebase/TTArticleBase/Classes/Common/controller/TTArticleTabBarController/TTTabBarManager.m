@@ -757,19 +757,14 @@ SINGLETON_GCD(TTTabBarManager);
         normalImage =  [self getImageForItem:names.unloginItem isHighlighted:NO];
         highlightedImage = [self getImageForItem:names.unloginItem isHighlighted:YES];
     }
-     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
-    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
+        YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
     if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
-        if (cacheTab.staticImage.url&&cacheTab.activationimage.url) {
-              YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
             if ([epidemicSituationCache objectForKey:@"esituationNormalImage"]) {
                 normalImage = [epidemicSituationCache objectForKey:@"esituationNormalImage"];
             }
             if ([epidemicSituationCache objectForKey:@"esituationHighlightImage"]) {
                 highlightedImage = [epidemicSituationCache objectForKey:@"esituationHighlightImage"];
             }
-
-        }
     }
         [item setNormalImage:normalImage highlightedImage:highlightedImage loadingImage:refreshImage];
 }
