@@ -1274,7 +1274,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                 if([FHEnvContext isUGCOpen]){
                     [logv3Dic setValue:@"neighborhood_tab" forKey:@"tab_name"];
                 }else{
-                    [logv3Dic setValue:@"discover_tab" forKey:@"tab_name"];
+                    [logv3Dic setValue:@"find_tab" forKey:@"tab_name"];
                 }
             }
             if ([selectedTabName isEqualToString:@"epidemicsituation"]) {
