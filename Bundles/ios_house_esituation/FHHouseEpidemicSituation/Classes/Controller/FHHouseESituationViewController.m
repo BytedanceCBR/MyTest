@@ -79,7 +79,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
 }
 
 - (void)finishLoadingWeb
@@ -91,6 +91,7 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self endTrack];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent]; 
     [self addStayCategoryLog:self.stayTime];
 }
 
