@@ -201,6 +201,8 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         NSMutableDictionary *tracerDict = @{}.mutableCopy;
         tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"page_type"];
+        tracerDict[UT_LOG_PB] = cellModel.tracerDict[@"log_pb"] ?: @"be_null";
+        tracerDict[UT_ELEMENT_FROM] = [self elementTypeString:FHHouseTypeNeighborhood] ?: @"be_null";
         dict[TRACER_KEY] = tracerDict;
         dict[@"neighborhood_id"] = cellModel.neighborhoodId;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

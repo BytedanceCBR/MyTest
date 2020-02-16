@@ -147,6 +147,8 @@
     [self addGestures];
     
     [self requestHotTags];
+    
+    [self traceGoDetail];
 }
 
 - (void)requestHotTags {
@@ -1123,6 +1125,17 @@
     dict[UT_CLICK_POSITION] = @"passport_publisher";
     TRACK_EVENT(@"feed_publish_click", dict);
 }
+
+- (void)traceGoDetail {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[UT_PAGE_TYPE] = [self pageType];
+    dict[UT_ENTER_FROM] = self.tracerModel.enterFrom?:UT_BE_NULL;
+    dict[UT_LOG_PB] = self.tracerModel.logPb?:UT_BE_NULL;
+    dict[UT_ELEMENT_FROM] = self.tracerModel.elementFrom?:UT_BE_NULL;
+    dict[@"group_id"] = self.neighborhoodId ?: @"be_null";
+    TRACK_EVENT(@"go_detail", dict);
+}
+
 
 # pragma mark - 埋点辅助函数
 
