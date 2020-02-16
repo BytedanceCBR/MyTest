@@ -266,9 +266,16 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 - (FHUGCGuideView *)guideView {
     CGFloat width = 163.0f;
     CGFloat height = 40.0f;
-    CGFloat x = self.view.frame.size.width * 9/24 - width/2;
+    CGFloat x ;
+     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
     if(!_guideView){
-        _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(x, self.view.frame.size.height - self.tabbarHeight - height + 3, width, height) andType:FHUGCGuideViewTypeSecondTab];
+        if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"]) {
+                x = self.view.frame.size.width * 3/10 - width/2;
+        }else {
+            x = self.view.frame.size.width * 9/24 - width/2;
+        }
+            _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(x, self.view.frame.size.height - self.tabbarHeight - height + 3, width, height) andType:FHUGCGuideViewTypeSecondTab];
     }
     return _guideView;
 }

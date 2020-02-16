@@ -15,9 +15,11 @@
 @implementation TTTabbarLoadEpidemicSituatioHelper
 + (void)requestEsituationImageWithImageUrl:(NSString *)url isNormal:(BOOL)isNormal{
     [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:url] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+        YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
         if (!error && image) {
-            YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
             [epidemicSituationCache setObject:image forKey:isNormal?@"esituationNormalImage":@"esituationHighlightImage"];
+        }else {
+            [epidemicSituationCache setObject:nil forKey:isNormal?@"esituationNormalImage":@"esituationHighlightImage"];
         }
     }];
 }
@@ -48,9 +50,7 @@
             opTab.title = [opTab.title substringToIndex:4];
         }
         [epidemicSituationCache setObject:opTab forKey:@"tab_cache"];
-        if (opTab.enable &&opTab.staticImage.url&&opTab.activationimage.url) {
-               [self downloadEpidemicSituationToCacheWithNormalUrl:opTab.staticImage.url highlighthUrl:opTab.activationimage.url];
-           }
+        [self downloadEpidemicSituationToCacheWithNormalUrl:opTab.staticImage.url highlighthUrl:opTab.activationimage.url];
     }
 }
 

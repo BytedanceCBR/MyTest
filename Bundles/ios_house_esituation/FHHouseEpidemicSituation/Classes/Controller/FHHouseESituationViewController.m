@@ -29,6 +29,7 @@
     self.webContainer = [[SSWebViewContainer alloc] initWithFrame:self.view.bounds baseCondition:@{@"use_wk":@(YES)}];
     if (@available(iOS 11.0 , *)) {
         _webContainer.ssWebView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        self.automaticallyAdjustsScrollViewInsets = NO;
     }
     _webContainer.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     _webContainer.ssWebView.opaque = NO;

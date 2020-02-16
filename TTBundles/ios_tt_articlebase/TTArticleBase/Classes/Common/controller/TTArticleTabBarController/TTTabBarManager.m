@@ -759,12 +759,8 @@ SINGLETON_GCD(TTTabBarManager);
     }
         YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
     if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
-            if ([epidemicSituationCache objectForKey:@"esituationNormalImage"]) {
                 normalImage = [epidemicSituationCache objectForKey:@"esituationNormalImage"];
-            }
-            if ([epidemicSituationCache objectForKey:@"esituationHighlightImage"]) {
                 highlightedImage = [epidemicSituationCache objectForKey:@"esituationHighlightImage"];
-            }
     }
         [item setNormalImage:normalImage highlightedImage:highlightedImage loadingImage:refreshImage];
 }
