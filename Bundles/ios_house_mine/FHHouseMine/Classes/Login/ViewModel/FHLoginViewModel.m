@@ -591,6 +591,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
     tracerDict[@"is_resent"] = @(self.isVerifyCodeRetry);
     tracerDict[@"login_type"] = tracerDict[@"login_type"] ? : @"other_login";
+    if (self.fromOtherLogin) {
+        tracerDict[@"enter_from"] = @"quick_login";
+        tracerDict[@"enter_type"] = @"other_login";
+    }
     TRACK_EVENT(@"click_verifycode", tracerDict);
 }
 
