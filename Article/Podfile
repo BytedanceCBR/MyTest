@@ -51,7 +51,7 @@ def fhPods
 #    'Core',
 #    'DelegateForC'
 #    ]
-    pod 'FHPopupViewCenter', '0.0.2-alpha.19', :subspecs => [
+    pod 'FHPopupViewCenter', '0.0.2-alpha.20', :subspecs => [
     'Core',
     'DelegateForC'
     ]
