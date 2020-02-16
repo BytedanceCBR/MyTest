@@ -775,8 +775,9 @@
     if(isInNeighbourhoodQAList){
         width = [UIScreen mainScreen].bounds.size.width - 90;
     }
+    self.numberOfLines = isInNeighbourhoodQAList ? 3 : 1;
     [FHUGCCellHelper setQuestionRichContentWithModel:self width:width numberOfLines:0];
-    [FHUGCCellHelper setAnswerRichContentWithModel:self width:width numberOfLines:(isInNeighbourhoodQAList ? 3 : 1)];
+    [FHUGCCellHelper setAnswerRichContentWithModel:self width:width numberOfLines:self.numberOfLines];
 }
 
 - (void)setCategoryId:(NSString *)categoryId {

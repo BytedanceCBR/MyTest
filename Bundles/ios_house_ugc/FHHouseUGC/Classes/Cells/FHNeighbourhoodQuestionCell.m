@@ -250,6 +250,7 @@
         self.answerBtn.hidden = YES;
     }
     
+    self.answerLabel.numberOfLines = cellModel.numberOfLines;
     [self.answerLabel setText:cellModel.answerAStr];
     self.descLabel.attributedText = [self convertDescToAttributeString:cellModel.answerCountText count:cellModel.answerCount];
     

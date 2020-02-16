@@ -61,7 +61,7 @@
     _tableView.layer.masksToBounds = YES;
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    
+    _tableView.bounces = NO;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
