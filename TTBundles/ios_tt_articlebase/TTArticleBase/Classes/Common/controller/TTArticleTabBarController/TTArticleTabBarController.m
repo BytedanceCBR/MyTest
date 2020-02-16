@@ -606,15 +606,16 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     
     [self openShortVideoTabWhenStartupIfNeeded];
     
-    
-    NSMutableDictionary *logv3Dic = [NSMutableDictionary dictionaryWithCapacity:1];
-    NSString *selectedTabName = [[self class] tabStayStringForIndex:self.selectedIndex];
-    [logv3Dic setValue:selectedTabName forKey:@"tab_name"];
-    [logv3Dic setValue:@0 forKey:@"with_tips"];
-    [logv3Dic setValue:self.autoEnterTab?@1:@0 forKey:@"is_auto"];
-    [logv3Dic setValue:@"default" forKey:@"enter_type"];
-    [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
-    
+    //后续自动跳转的tab逻辑会引发第二次上报
+    if (self.selectedIndex == 0) {
+        NSMutableDictionary *logv3Dic = [NSMutableDictionary dictionaryWithCapacity:1];
+        NSString *selectedTabName = [[self class] tabStayStringForIndex:self.selectedIndex];
+        [logv3Dic setValue:selectedTabName forKey:@"tab_name"];
+        [logv3Dic setValue:@0 forKey:@"with_tips"];
+        [logv3Dic setValue:self.autoEnterTab?@1:@0 forKey:@"is_auto"];
+        [logv3Dic setValue:@"default" forKey:@"enter_type"];
+        [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
+    }
     
     [[TTLaunchTracer shareInstance] writeEvent];
 //    if (!self.hasShowDots && ![FHEnvContext isUGCOpen]) {
@@ -1760,10 +1761,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     return @{
 //             kTTTabHomeTabKey:@"stream",
              kTTTabHomeTabKey:@"main",
-             kFHouseFindTabKey:@"find",
+             kFHouseFindTabKey:[FHEnvContext isUGCOpen] ? @"neighborhood" : @"find",
              kFHouseMineTabKey:@"mine",
              kFHouseMessageTabKey:@"message",
-
              kTTTabVideoTabKey:@"video",
              kTTTabFollowTabKey:@"follow",
              kTTTabHTSTabKey:kTTUGCVideoCategoryID,

@@ -9,6 +9,7 @@
 #import "HMSegmentedControl.h"
 #import "FHBaseCollectionView.h"
 #import "FHHomeMainTopView.h"
+#import "UIViewController+Track.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
