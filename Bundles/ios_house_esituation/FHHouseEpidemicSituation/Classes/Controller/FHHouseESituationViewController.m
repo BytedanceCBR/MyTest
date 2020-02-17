@@ -16,6 +16,7 @@
 #import "masonry.h"
 #import "UIViewController+Track.h"
 #import "FHUserTracker.h"
+#import "TTDeviceHelper.h"
 
 @interface FHHouseESituationViewController ()<YSWebViewDelegate>
 @property(nonatomic, retain)SSWebViewContainer * webContainer;
@@ -26,7 +27,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.webContainer = [[SSWebViewContainer alloc] initWithFrame:self.view.bounds baseCondition:@{@"use_wk":@(YES)}];
+    self.webContainer = [[SSWebViewContainer alloc] initWithFrame:CGRectMake(0, [TTDeviceHelper isIPhoneXDevice]?44:20, self.view.bounds.size.width, self.view.bounds.size.height-([TTDeviceHelper isIPhoneXDevice]?44+83:20+49)) baseCondition:@{@"use_wk":@(YES)}];
     if (@available(iOS 11.0 , *)) {
         _webContainer.ssWebView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         self.automaticallyAdjustsScrollViewInsets = NO;
