@@ -24,7 +24,7 @@
     self.title = question.title ?: @"小区问答";
     if(!isEmptyString(question.content.count)){
         self.totalCount = [question.content.count integerValue];
-        if(self.totalCount > 0){
+        if(self.totalCount > 0 && self.dataList.count > 0){
             self.title = [NSString stringWithFormat:@"%@（%li）",self.title,(long)self.totalCount];
         }
     }
