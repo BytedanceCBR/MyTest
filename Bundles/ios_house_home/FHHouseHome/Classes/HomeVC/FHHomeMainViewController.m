@@ -81,14 +81,16 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-    NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
-    [tracerDict setValue:@"main" forKey:@"tab_name"];
-    [tracerDict setValue:@(0) forKey:@"with_tips"];
-    [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
-    tracerDict[@"stay_time"] = @((int)duration);
-    
-    if (((int)duration) > 0) {
-        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+    if (self.stayTime>0) {
+        NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
+          [tracerDict setValue:@"main" forKey:@"tab_name"];
+          [tracerDict setValue:@(0) forKey:@"with_tips"];
+          [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
+          tracerDict[@"stay_time"] = @((int)duration);
+          
+          if (((int)duration) > 0) {
+              [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+          }
     }
 }
 
