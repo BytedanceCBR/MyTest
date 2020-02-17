@@ -47,6 +47,7 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic, copy) void (^requestNetworkUnAvalableRetryCallBack)(void);
 @property (nonatomic, copy) void (^scrollDidEnd)(void);
 @property (nonatomic, copy) void (^scrollDidBegin)(void);
+@property (nonatomic, copy) void (^scrollDidScrollCallBack)(UIScrollView *currentTable);
 
 
 - (instancetype)initItemWith:(FHHomeListViewModel *)listModel;
