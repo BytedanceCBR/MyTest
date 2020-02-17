@@ -84,7 +84,9 @@
     
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        if (@available(iOS 11.0 , *)) {
+        if (@available(iOS 13.0 , *)) {
+            make.top.mas_equalTo(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+        } else if (@available(iOS 11.0 , *)) {
             make.top.mas_equalTo(44.f + self.view.tt_safeAreaInsets.top);
         } else {
             make.top.mas_equalTo(65);
