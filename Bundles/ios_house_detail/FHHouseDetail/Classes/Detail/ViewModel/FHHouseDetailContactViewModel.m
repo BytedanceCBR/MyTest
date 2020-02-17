@@ -521,6 +521,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"question_id"]) {
             imExtra[@"question_id"] = extraDict[@"question_id"];
         }
+        if (extraDict[@"is_login_front"]) {
+            imExtra[@"is_login_front"] = extraDict[@"is_login_front"];
+        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
@@ -696,6 +699,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
     }
+    extraDic[@"is_login_front"] = @(1);
     [self onlineActionWithExtraDict:extraDic];
 }
 
