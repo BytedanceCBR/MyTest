@@ -354,7 +354,7 @@ def appPods
     pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod_binary 'TTImage', '0.8.4'
-    pod 'BDWebImage', '1.0.15',:subspecs => [
+    pod_binary 'BDWebImage', '1.0.16-rc.17',:subspecs => [
     'Core',
     'Decoder',
     'Download',
