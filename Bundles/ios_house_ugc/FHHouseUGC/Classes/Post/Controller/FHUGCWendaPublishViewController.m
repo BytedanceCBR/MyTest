@@ -153,7 +153,7 @@
     param[@"f_city_id"] = [FHEnvContext getCurrentSelectCityIdFromLocal];
     
     @weakify(self);
-    [FHHouseUGCAPI requestPublishHotTagsWithParam:param completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestPublishHotTagsWithParam:param class:FHUGCPublishTagModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         @strongify(self);
         
         if([model isKindOfClass:[FHUGCPublishTagModel class]]) {
@@ -993,7 +993,7 @@
     
     // 开始发送提问发布请求
     WeakSelf;
-    [FHHouseUGCAPI requestPublishWendaWithParam: requestParams completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestPublishWendaWithParam: requestParams class:FHUGCWendaModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         [self endLoading];
         // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2

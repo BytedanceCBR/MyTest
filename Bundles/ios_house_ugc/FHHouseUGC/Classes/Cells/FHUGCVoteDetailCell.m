@@ -670,7 +670,7 @@
     [self.voteButton startLoading];
     self.voteInfo.voteState = FHUGCVoteStateVoting;
     __weak typeof(self) weakSelf = self;
-    [FHHouseUGCAPI requestVoteSubmit:self.voteInfo.voteId optionIDs:options optionNum:optionNum completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestVoteSubmit:self.voteInfo.voteId optionIDs:options optionNum:optionNum class:FHUGCVoteResponseModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [weakSelf.voteButton stopLoading];
         if (error) {
             [[ToastManager manager] showToast:error.domain];

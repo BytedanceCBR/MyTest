@@ -698,7 +698,7 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
     NSMutableDictionary *userInfo = @{}.mutableCopy;
     userInfo[@"group_id"] = post_id;
     WeakSelf;
-    [FHHouseUGCAPI requestPublishEditedPostWithParam:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestPublishEditedPostWithParam:params class:FHUGCEditedPostModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         
         if(error) {
