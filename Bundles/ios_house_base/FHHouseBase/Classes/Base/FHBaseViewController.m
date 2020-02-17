@@ -132,7 +132,10 @@
     _emptyView.hidden = YES;
     [self.view addSubview:_emptyView];
     [_emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0 , *)) {
+        if (@available(iOS 13.0, *)) {
+            make.left.right.bottom.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.view).offset(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+        } else if (@available(iOS 11.0 , *)) {
             make.left.right.bottom.mas_equalTo(self.view);
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
         } else {
