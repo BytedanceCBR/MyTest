@@ -376,7 +376,9 @@
 
     CGFloat top = 0;
     CGFloat safeTop = 0;
-    if (@available(iOS 11.0, *)) {
+    if (@available(iOS 13.0 , *)) {
+        safeTop = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0, *)) {
         safeTop = self.view.tt_safeAreaInsets.top;
     }
     if (safeTop > 0) {

@@ -87,7 +87,11 @@
 - (CGRect)frameForListView
 {
     CGFloat topTipheight = _isShowTopTip ? 30 : 0 ;
-    if (@available(iOS 11.0 , *)) {
+    CGFloat topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    if (@available(iOS 13.0 , *)) {
+        CGRect rect = CGRectMake(0.0f, 44.f + topInset + topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - (44.f + topInset) - topTipheight);
+        return rect;
+    } else if (@available(iOS 11.0 , *)) {
         CGRect rect = CGRectMake(0.0f, 44.f + self.view.tt_safeAreaInsets.top + topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - (44.f + self.view.tt_safeAreaInsets.top) - topTipheight);
         return rect;
     } else {
