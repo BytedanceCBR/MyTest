@@ -1768,7 +1768,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     return @{
 //             kTTTabHomeTabKey:@"stream",
              kTTTabHomeTabKey:@"main",
-             kFHouseFindTabKey:[FHEnvContext isUGCOpen] ? @"neighborhood" : @"find",
+             kFHouseFindTabKey:[FHEnvContext isUGCOpen] ? @"neighborhood_tab" : @"find",
              kFHouseMineTabKey:@"mine",
              kFHouseMessageTabKey:@"message",
              kTTTabVideoTabKey:@"video",
