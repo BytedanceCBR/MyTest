@@ -368,7 +368,9 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [self.view addSubview:self.answerListView];
     }
     CGFloat bottomSafeHeight = 0;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0 , *)) {
+        bottomSafeHeight = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    } else if (@available(iOS 11.0 , *)) {
         bottomSafeHeight = self.view.tt_safeAreaInsets.bottom;
     }
     self.bottomButtonHeight = 48 + bottomSafeHeight;
