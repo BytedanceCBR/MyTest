@@ -140,14 +140,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
     if (self.houseType == FHHouseTypeSecondHandHouse) {
-        NSArray *tableCells = [self.tableView visibleCells];
-        if (tableCells) {
-            [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
-                    [obj performSelector:@selector(resumeVRIcon)];
-                }
-            }];
-        }
+        [self resumeVRIcon];
     }
 }
 
@@ -214,6 +207,21 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if (self.traceEnterCategoryCache.allKeys.count > 0 && self.isOriginShowSelf) {
             [self.traceEnterCategoryCache setValue:@"click" forKey:@"enter_type"];
             [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+        }
+    }
+    
+    [self resumeVRIcon];
+}
+
+- (void)resumeVRIcon{
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        NSArray *tableCells = [self.tableView visibleCells];
+        if (tableCells) {
+            [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
+                    [obj performSelector:@selector(resumeVRIcon)];
+                }
+            }];
         }
     }
 }
