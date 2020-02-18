@@ -354,8 +354,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     [TTAppUpdateHelper sharedInstance].delegate = self;
     [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
-        [self.view addSubview:view];
-        [[FHPopupViewManager shared] outerPopupViewShow];
+        if(![FHPopupViewManager shared].presenter.isPresenting){
+            [self.view addSubview:view];
+            [[FHPopupViewManager shared] outerPopupViewShow];
+        }
     } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
         //        if (!downloadUrl) {
         //            return;
