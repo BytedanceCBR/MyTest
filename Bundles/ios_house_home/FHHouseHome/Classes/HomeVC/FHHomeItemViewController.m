@@ -141,11 +141,13 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
     if (self.houseType == FHHouseTypeSecondHandHouse) {
         NSArray *tableCells = [self.tableView visibleCells];
-        [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
-                [obj performSelector:@selector(resumeVRIcon)];
-            }
-        }];
+        if (tableCells) {
+            [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
+                    [obj performSelector:@selector(resumeVRIcon)];
+                }
+            }];
+        }
     }
 }
 
