@@ -167,6 +167,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:titleStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
     [alertVC addActionWithGrayTitle:@"暂不" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+        [[FHPopupViewManager shared] outerPopupViewHide];
         NSDictionary *params = @{@"click_type":@"cancel",
                                  @"enter_from":@"default"};
         [FHEnvContext recordEvent:params andEventKey:@"city_click"];
@@ -174,6 +175,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+        [[FHPopupViewManager shared] outerPopupViewHide];
         if (openUrl) {
             [FHEnvContext sharedInstance].refreshConfigRequestType = @"switch_alert";
             
@@ -193,6 +195,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     UIViewController *topVC = [TTUIResponderHelper topmostViewController];
     if (topVC) {
         [alertVC showFrom:topVC animated:YES];
+        [[FHPopupViewManager shared] outerPopupViewShow];
     }
     
     NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
