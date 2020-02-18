@@ -265,12 +265,15 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (void)splashViewDidDisappear
 {
-    [[FHPopupViewManager shared] outerPopupViewHide];
     FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
     if ([FHLocManager sharedInstance].isShowSwitch) {
         if ([model.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.citySwitch.enable boolValue]) {
             [[FHLocManager sharedInstance] showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.citySwitch.cityName] openUrl:model.citySwitch.openUrl];
+        } else {
+            [[FHPopupViewManager shared] outerPopupViewHide];
         }
+    } else {
+        [[FHPopupViewManager shared] outerPopupViewHide];
     }
     
 //    if (self.adShowCompletion) {
