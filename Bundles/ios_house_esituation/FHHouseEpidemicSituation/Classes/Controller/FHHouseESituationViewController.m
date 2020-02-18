@@ -19,7 +19,7 @@
 #import "TTDeviceHelper.h"
 
 @interface FHHouseESituationViewController ()<YSWebViewDelegate>
-@property(nonatomic, retain)SSWebViewContainer * webContainer;
+@property(nonatomic, strong)SSWebViewContainer * webContainer;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @end
 
