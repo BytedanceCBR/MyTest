@@ -33,7 +33,6 @@
 {
     self = [super initWithCoder:coder];
     if (self) {
-        
         UIVisualEffectView *frost = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
         CGRect rect = self.bounds;
         frost.frame = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, kTTTabBarHeight);
@@ -87,9 +86,8 @@
             } else {
                 self.middleCustomItemView.centerY = itemHeight/2;
             }
-            
             self.middleCustomItemView.centerX = CGRectGetWidth(self.bounds)/2;
-
+            self.middleCustomItemView.centerY = 0;
             [self bringSubviewToFront:self.middleCustomItemView];
         }else {
             //Layout items
@@ -103,8 +101,8 @@
                 if (!item.isRegular && [TTTabBarManager sharedTTTabBarManager].middleModel.isExpand) {
                     CGFloat expandHeight = 64.f;
                     yOffset = kTTTabBarHeight - expandHeight;
-                    
-                    [item setFrame:CGRectMake(index * self.tabItemWidth, yOffset, self.tabItemWidth, expandHeight)];
+
+                    [item setFrame:CGRectMake(index * self.tabItemWidth, -13, self.tabItemWidth, expandHeight)];
                 } else {
                     [item setFrame:CGRectMake(index * self.tabItemWidth, 0, self.tabItemWidth, itemHeight)];
                 }

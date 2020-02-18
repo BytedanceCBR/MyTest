@@ -15,6 +15,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
 
+
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
 static NSString *const kUGCConfigKey = @"ugcConfig";
@@ -24,6 +25,7 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 NSString *const kFHPLoginhoneNumberCacheKey = @"loginPhoneNumber";
 static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
+static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
 
 
 @interface FHGeneralBizConfig ()
@@ -35,6 +37,7 @@ static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
 @property(nonatomic , strong) YYCache *sendPhoneNumberCache;
 @property(nonatomic , strong) YYCache *subscribeHouseCache;
 @property(nonatomic , strong) YYCache *detailFeedbackCache;
+@property(nonatomic , strong) YYCache *epidemicSituationCache;
 
 @end
 
@@ -247,4 +250,10 @@ static NSString *const kFHDetailFeedbackCacheKey = @"detailFeedback";
     return _detailFeedbackCache;
 }
 
+- (YYCache *)epidemicSituationCache {
+    if (!_epidemicSituationCache) {
+        _epidemicSituationCache = [YYCache cacheWithName:kFHEpidemicSituationCacheKey];
+    }
+    return _epidemicSituationCache;
+}
 @end
