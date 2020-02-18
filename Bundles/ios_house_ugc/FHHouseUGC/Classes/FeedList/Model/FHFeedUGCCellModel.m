@@ -316,6 +316,7 @@
         
         //小区问答数据处理
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+            cellModel.qid = groupId;
             cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
             cellModel.questionStr = model.rawData.content.question.title;
             cellModel.answerCountText = model.rawData.content.extra.answerCount;
@@ -379,6 +380,7 @@
         
         //小区问答数据处理
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+            cellModel.qid = model.rawData.content.question.qid;
             cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
             cellModel.questionStr = model.rawData.content.question.title;
             cellModel.answerStr = model.rawData.content.answer.abstractText;

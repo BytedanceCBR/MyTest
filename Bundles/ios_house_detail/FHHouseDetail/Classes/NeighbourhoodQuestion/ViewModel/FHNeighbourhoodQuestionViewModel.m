@@ -103,12 +103,12 @@
     if(!isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
         behotTime = [cellModel.behotTime doubleValue];
-        lastGroupId = cellModel.groupId;
+        lastGroupId = cellModel.qid;
     }
     if(isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
         behotTime = [cellModel.behotTime doubleValue];
-        lastGroupId = cellModel.groupId;
+        lastGroupId = cellModel.qid;
     }
     
     //下拉刷新关闭视频播放
