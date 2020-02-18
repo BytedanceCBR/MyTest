@@ -194,8 +194,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     UIViewController *topVC = [TTUIResponderHelper topmostViewController];
     if (topVC) {
-        [alertVC showFrom:topVC animated:YES];
         [[FHPopupViewManager shared] outerPopupViewShow];
+        [alertVC showFrom:topVC animated:YES];
     }
     
     NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
