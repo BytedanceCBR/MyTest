@@ -602,7 +602,7 @@
     
     WeakSelf;
     self.isPublishing = YES;
-    [FHHouseUGCAPI requestVotePublishWithParam:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestVotePublishWithParam:params class:FHUGCVoteModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
         if(error) {

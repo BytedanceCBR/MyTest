@@ -597,11 +597,13 @@
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
                     if (status.integerValue != 0 || error != nil) {
-                        extraDict = @{}.mutableCopy;
-                        extraDict[@"request_url"] = response.URL.absoluteString;
-                        extraDict[@"response_headers"] = response.allHeaderFields;
-                        extraDict[@"error"] = error.domain;
-                        extraDict[@"status"] = status;
+                        if(uploadLog) {
+                            extraDict = @{}.mutableCopy;
+                            extraDict[@"request_url"] = response.URL.absoluteString;
+                            extraDict[@"response_headers"] = response.allHeaderFields;
+                            extraDict[@"error"] = error.domain;
+                            extraDict[@"status"] = status;
+                        }
                         code = [status integerValue];
                         errMsg = error.domain;
                         resultType = status.integerValue;
