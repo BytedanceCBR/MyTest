@@ -150,7 +150,6 @@
 		FEFA59CD205FB1A8001F50D8 /* NewsInHouseTodayExtenstion.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694391CF2E5A5009997F0 /* NewsInHouseTodayExtenstion.debug.xcconfig */; };
 		FEFA59CE205FB1A8001F50D8 /* yw_1222.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE700DC91B8D98F8004A435E /* yw_1222.jpg */; };
 		FEFA59CF205FB1A8001F50D8 /* tt_video_doubleClickApprove.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */; };
-		FEFA59D1205FB1A8001F50D8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */; };
 		FEFA59D2205FB1A8001F50D8 /* Settings.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 438724811BE32BB500854877 /* Settings.xcassets */; };
 		FEFA59D6205FB1A8001F50D8 /* sound4.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEA1FE007C10093E05D /* sound4.caf */; };
 		FEFA59DB205FB1A8001F50D8 /* sound1.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE61FE007BD0093E05D /* sound1.caf */; };
@@ -1084,7 +1083,6 @@
 				FEFA59CE205FB1A8001F50D8 /* yw_1222.jpg in Resources */,
 				FEFA59CF205FB1A8001F50D8 /* tt_video_doubleClickApprove.bundle in Resources */,
 				3D7D2F4922704CAB00A95FAF /* Icon@2x.png in Resources */,
-				FEFA59D1205FB1A8001F50D8 /* Images.xcassets in Resources */,
 				FBA5893F23AB64E20053EC79 /* images in Resources */,
 				FEFA59D2205FB1A8001F50D8 /* Settings.xcassets in Resources */,
 				FEFA59D6205FB1A8001F50D8 /* sound4.caf in Resources */,
@@ -1270,6 +1268,8 @@
 				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_ugc/FHHouseUGC/Assets/FHHouseUGC.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
+				"${PODS_ROOT}/../../../FHPopupViewCenter/Assets/images.xcassets",
+				"${PODS_ROOT}/../../../FHPopupViewCenter/Assets/mock.json",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
@@ -1375,6 +1375,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FHHouseBase.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fast_qa_banner.jpg",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/commute_banner.jpg",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/mock.json",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Heimdallr.plist",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
@@ -1565,6 +1566,8 @@
 				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_ugc/FHHouseUGC/Assets/FHHouseUGC.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
+				"${PODS_ROOT}/../../../FHPopupViewCenter/Assets/images.xcassets",
+				"${PODS_ROOT}/../../../FHPopupViewCenter/Assets/mock.json",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
@@ -1668,6 +1671,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FHHouseBase.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fast_qa_banner.jpg",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/commute_banner.jpg",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/mock.json",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Heimdallr.plist",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",

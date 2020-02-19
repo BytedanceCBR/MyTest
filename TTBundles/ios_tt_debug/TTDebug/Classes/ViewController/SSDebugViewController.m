@@ -98,6 +98,7 @@
 #import "UIAlertController+TTAdditions.h"
 #import "HMDSRWTESTEnvironment.h"
 #import "BDTFPSBar.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
@@ -721,6 +722,12 @@ extern NSString *const BOE_OPEN_KEY ;
     //
     //        [dataSource addObject:sectionVideoAD];
     //    }
+    {
+        // 弹窗屏蔽策略清空
+        STTableViewCellItem *popupDeleteConfigItem = [[STTableViewCellItem alloc] initWithTitle:@"清空当前设备的弹窗屏蔽配置策略" target:self action:@selector(clearPopupViewAckConfig)];
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"运营位弹窗" items:@[popupDeleteConfigItem]];
+        [dataSource addObject:section];
+    }
     
     return dataSource;
 }
@@ -759,6 +766,24 @@ extern NSString *const BOE_OPEN_KEY ;
     [searchDictionary setObject:@"kTTFirstLaunchAccount" forKey:(id)kSecAttrAccount];
     [searchDictionary setObject:@"kTTFirstLaunchService" forKey:(id)kSecAttrService];
     SecItemDelete((CFDictionaryRef)searchDictionary);
+}
+
+- (void)clearPopupViewAckConfig {
+    [[FHPopupViewManager shared].dataFetcher requestDeleteAckPopupConfigCompletion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        
+        NSString *content = @"本设备的弹窗屏蔽策略已重置";
+        if(error) {
+            content = @"本设备的弹窗屏蔽策略重置失败";
+        }
+        
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"运营位弹窗" message:content preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+        
+        [alertVC addAction:confirmAction];
+        
+        [self presentViewController:alertVC animated:YES completion:nil];
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

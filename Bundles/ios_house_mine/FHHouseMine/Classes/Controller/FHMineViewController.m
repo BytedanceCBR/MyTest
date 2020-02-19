@@ -22,6 +22,7 @@
 #import "UIViewController+Track.h"
 #import "TTTabBarItem.h"
 #import "TTTabBarManager.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHMineViewController ()<UIViewControllerErrorHandler>
 
@@ -124,6 +125,8 @@
     if([FHEnvContext isSpringHangOpen]){
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
+    
+    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

@@ -30,6 +30,7 @@
 #import "UIViewController+Track.h"
 #import "FHSpringHangView.h"
 #import <FHHouseBase/FHPermissionAlertViewController.h>
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHCommunityViewController ()
 
@@ -241,6 +242,8 @@
     if([FHEnvContext isSpringHangOpen]){
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
+    
+    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 -(BOOL)shouldAutorotate
