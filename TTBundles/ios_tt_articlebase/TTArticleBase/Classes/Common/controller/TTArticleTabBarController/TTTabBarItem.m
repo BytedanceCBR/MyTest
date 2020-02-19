@@ -131,7 +131,7 @@ static TTPersistence *tabBarItemPersistence;
         self.titleLabel.hidden = NO;
     }
     
-    [self.imageView sizeToFit];
+//    [self.imageView sizeToFit];
     self.imageView.top = 3;
     self.imageView.centerX = CGRectGetWidth(self.bounds) / 2;
     if (isEmptyString(self.title)) {
@@ -198,6 +198,12 @@ static TTPersistence *tabBarItemPersistence;
     
     if (loadingImage && loadingImage != self.loadingImage) {
         self.loadingImage = loadingImage;
+    }
+    
+    if (self.isRegular) {
+        self.imageView.size = CGSizeMake(32, 32);
+    }else {
+        self.imageView.size = CGSizeMake(54, 54);
     }
     
     if(self.state == TTTabBarItemStateNone) {

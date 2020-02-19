@@ -35,6 +35,9 @@
 #import <FHHouseUGC/FHCommunityViewController.h>
 #import "FHHomeViewController.h"
 #import "FHHomeMainViewController.h"
+#import "FHConfigModel.h"
+#import "FHEnvContext.h"
+#import "FHHouseESituationViewController.h"
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 
@@ -125,6 +128,10 @@ static NSString *lastTabIdentifier;
         FHMineViewController* vc = [[FHMineViewController alloc] init];
 //        MineVC* vc = [[MineVC alloc] init];
         return vc;
+    } else if ([identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
+        FHHouseESituationViewController* vc = [[FHHouseESituationViewController alloc] init];
+        //        MineVC* vc = [[MineVC alloc] init];
+        return vc;
     }
     
     return nil;
@@ -176,6 +183,7 @@ static NSString *lastTabIdentifier;
 }
 
 + (BOOL)hasCustomMiddleButton {
+    
     NSString *identifier = [self priorMiddleTabIdentifier];
     NSString *schema = [self priorMiddleTabSchema];
     return !isEmptyString(identifier) && !isEmptyString(schema) && [[TTRoute sharedRoute] canOpenURL:[NSURL URLWithString:schema]];
