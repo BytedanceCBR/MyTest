@@ -54,6 +54,8 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 
 - (BOOL)isHaveLocationAuthorization;
 
++ (NSString *)amapAPIKey;
+
 @end
 
 

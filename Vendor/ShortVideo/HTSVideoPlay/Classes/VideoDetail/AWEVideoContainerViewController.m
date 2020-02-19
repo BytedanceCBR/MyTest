@@ -18,7 +18,7 @@
 #import "EXTScope.h"
 #import "AWEVideoDetailFirstUsePromptViewController.h"
 #import "AWEVideoDetailTracker.h"
-#import <extobjc.h>
+#import "extobjc.h"
 #import "AWEVideoPlayTrackerBridge.h"
 #import <SSImpressionManager.h>
 #import "AWEVideoDetailScrollConfig.h"

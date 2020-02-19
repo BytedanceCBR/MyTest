@@ -9,7 +9,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIView+House.h>
-#import <Masonry.h>
+#import "Masonry.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHPushAuthorizeAlertView ()

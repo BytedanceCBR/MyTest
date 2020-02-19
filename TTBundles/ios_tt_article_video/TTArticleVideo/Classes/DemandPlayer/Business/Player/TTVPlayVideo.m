@@ -12,7 +12,7 @@
 #import "TTVDemandPlayer.h"
 #import "TTVDemanderTrackerManager.h"
 #import "TTVPlayerUrlTracker.h"
-#import <TTImageView.h>
+#import "TTImageView.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import <TTSettingsManager/TTSettingsManager.h>
 //#import "SSADManager.h"

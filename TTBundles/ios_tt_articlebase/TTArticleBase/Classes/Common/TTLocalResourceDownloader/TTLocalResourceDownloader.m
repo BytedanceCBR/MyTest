@@ -10,8 +10,8 @@
 #import "SSZipArchive.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <TTReachability/TTReachability.h>
-#import <NetworkUtilities.h>
-#import <TTImageDownloader.h>
+#import "NetworkUtilities.h"
+#import "TTImageDownloader.h"
 #import <TTVersionHelper/TTVersionHelper.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTBaseMacro.h>
@@ -336,7 +336,7 @@ static NSURLSessionDownloadTask *downloadTask = nil;
 + (void)registerNotificationsToDownloadLater {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:TTReachabilityChangedNotification object:nil];
 }
 
 + (void)applicationDidBecomeActive:(NSNotificationCenter *)notification {

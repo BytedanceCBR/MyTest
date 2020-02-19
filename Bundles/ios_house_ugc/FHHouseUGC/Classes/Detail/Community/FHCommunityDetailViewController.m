@@ -12,13 +12,13 @@
 #import "FHUGCShareManager.h"
 #import "TTBaseMacro.h"
 #import "FHUGCFollowButton.h"
-#import <UILabel+House.h>
-#import <TTDeviceHelper.h>
+#import "UILabel+House.h"
+#import "TTDeviceHelper.h"
 #import "FHUGCPostMenuView.h"
 #import "FHCommonDefines.h"
 #import "FHUserTracker.h"
-#import <UIViewController+NavigationBarStyle.h>
-#import <UIImage+FIconFont.h>
+#import "UIViewController+NavigationBarStyle.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol, FHUGCPostMenuViewDelegate>
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;

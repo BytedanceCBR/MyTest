@@ -16,7 +16,7 @@
 #import "NSDataAdditions.h"
 #import "NSStringAdditions.h"
 #import "SSZipArchive.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "NetworkUtilities.h"
 #import "TTReachability.h"
 #import "TTTabbar.h"
@@ -31,12 +31,14 @@
 #import "TTArticleTabBarController.h"
 #import "UITabBarController+TabbarConfig.h"
 #import "TTSettingsManager.h"
-#import <Lottie/Lottie.h>
+#import <lottie-ios/Lottie/Lottie.h>
 #import "TTTabBarCustomMiddleModel.h"
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
-#import <UIColor+Theme.h>
-
+#import "UIColor+Theme.h"
+#import "FHConfigModel.h"
+#import "BDWebImage.h"
+#import "FHEnvContext.h"
 NSString *kTTTabBarZipDownloadSuccess = @"kTTTabBarZipDownloadSuccess";
 
 //服务端下发的tab标题key 且是 服务端下发的tab图片名
@@ -54,6 +56,7 @@ NSString *kAKTabActivityTabKey = @"tab_ak_activity";//爱看活动tab 标题key&
 NSString *kFHouseFindTabKey = @"tab_f_find";//发现key
 NSString *kFHouseMessageTabKey = @"tab_message";
 NSString *kFHouseMineTabKey = @"tab_mine"; //房产首页key
+NSString *kFHouseHouseEpidemicSituationTabKey = @"tab_EpidemicSituation"; //房产首页key
 //Path
 static NSString *kTTTabConfigurationPath = @"tabbar/configuration"; //tab配置信息存储路径
 static NSString *kTTTabImagesPath = @"tabbar/images"; //tab图片资源路径
@@ -174,6 +177,7 @@ SINGLETON_GCD(TTTabBarManager);
                   kFHouseMineTabKey,
                   kFHouseMessageTabKey,
                   kFHouseFindTabKey,
+                  kFHouseHouseEpidemicSituationTabKey,
                   nil];
     _defaultItemTitles = @{kTTTabHomeTabKey:@"首页",
                            kTTTabVideoTabKey:@"视频",
@@ -181,7 +185,8 @@ SINGLETON_GCD(TTTabBarManager);
                            kTTTabHTSTabKey:@"小视频",
 //                           kTTTabFollowTabKey:@"关注",
                            kFHouseMessageTabKey: @"消息",
-                           kFHouseMineTabKey:@"我的",
+                           kFHouseHouseEpidemicSituationTabKey:@"",
+                           kFHouseMineTabKey:[TTAccount sharedAccount].isLogin ? @"我的" : @"未登录",
                            kFHouseFindTabKey:@"找房",
 
 //                           kTTTabWeitoutiaoTabKey:[KitchenMgr getString:kTTKUGCFeedNamesTab],
@@ -195,6 +200,7 @@ SINGLETON_GCD(TTTabBarManager);
 //                           kAKTabActivityTabKey:@"ak_activity_tab",
                            kFHouseMessageTabKey: @"tab-message",
                            kFHouseMineTabKey: @"tab-mine",
+                           kFHouseHouseEpidemicSituationTabKey:@"",
                            kFHouseFindTabKey: @"tab-search",
 
 //                           kTTTabHTSTabKey:@"huoshan_tabbar",
@@ -648,7 +654,7 @@ SINGLETON_GCD(TTTabBarManager);
         middleButtonImageModel.name = self.middleModel.identifier;
         middleButtonImageModel.isDefaultImage = NO;
     } else {
-        middleButtonImageModel.name = @"tab_activity_big";
+        middleButtonImageModel.name = @"tab_es_normal";
         middleButtonImageModel.isDefaultImage = YES;
     }
     imageList.middleButtonItem = middleButtonImageModel;
@@ -692,16 +698,25 @@ SINGLETON_GCD(TTTabBarManager);
 //        }
 //    }
 
-    if (!item.isRegular) {
-        NSString *normalImageName = self.middleModel.originalIdentifier;
-        NSString *bigImageName = [normalImageName stringByAppendingString:@"_big"];
-        BOOL normalIconValid = [self.imageFileNames containsObject:normalImageName] && [self.imageFileNames containsObject:[normalImageName stringByAppendingString:kTTTabNightSuffix]];
-        BOOL bigIconValid = [self.imageFileNames containsObject:bigImageName] && [self.imageFileNames containsObject:[bigImageName stringByAppendingString:kTTTabNightSuffix]];
-        //中间tab只有在<资源生效且没有大图>的时候有文案（因为默认是大图，不需要文案）
-        if (!self.isSingleConfigValid || bigIconValid || !normalIconValid) {
-            title = nil;
+//    if (!item.isRegular) {
+//        NSString *normalImageName = self.middleModel.originalIdentifier;
+//        NSString *bigImageName = [normalImageName stringByAppendingString:@"_big"];
+//        BOOL normalIconValid = [self.imageFileNames containsObject:normalImageName] && [self.imageFileNames containsObject:[normalImageName stringByAppendingString:kTTTabNightSuffix]];
+//        BOOL bigIconValid = [self.imageFileNames containsObject:bigImageName] && [self.imageFileNames containsObject:[bigImageName stringByAppendingString:kTTTabNightSuffix]];
+//        //中间tab只有在<资源生效且没有大图>的时候有文案（因为默认是大图，不需要文案）
+//        if (!self.isSingleConfigValid || bigIconValid || !normalIconValid) {
+//            title = nil;
+//        }
+//    }
+//
+    if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
+         YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+        FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
+        if (cacheTab.title) {
+            title = cacheTab.title;
         }
     }
+    
     
     //设置标题
     [item setTitle:title];
@@ -742,8 +757,12 @@ SINGLETON_GCD(TTTabBarManager);
         normalImage =  [self getImageForItem:names.unloginItem isHighlighted:NO];
         highlightedImage = [self getImageForItem:names.unloginItem isHighlighted:YES];
     }
-    
-    [item setNormalImage:normalImage highlightedImage:highlightedImage loadingImage:refreshImage];
+        YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+    if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
+                normalImage = [epidemicSituationCache objectForKey:@"esituationNormalImage"];
+                highlightedImage = [epidemicSituationCache objectForKey:@"esituationHighlightImage"];
+    }
+        [item setNormalImage:normalImage highlightedImage:highlightedImage loadingImage:refreshImage];
 }
 
 - (void)setLottieViewForItem:(TTTabBarItem *)item {
@@ -782,7 +801,10 @@ SINGLETON_GCD(TTTabBarManager);
                 self.middleModel.isExpand = NO;
             }
         }
-    }
+        if ([item.identifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]) {
+              self.middleModel.isExpand = YES;
+            }
+            }
 }
 
 #pragma mark - Validation
@@ -860,7 +882,7 @@ SINGLETON_GCD(TTTabBarManager);
 - (void)connectionChanged:(NSNotification *)notification {
     TTPersistence *persistence = [TTPersistence persistenceWithName:kTTTabConfigurationPath];
     if (((NSNumber *)[persistence valueForKey:kTTTabBarImagesDownloadKey]).boolValue == YES) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:TTReachabilityChangedNotification object:nil];
         return;
     }
     [self retryDonwloadZipFileIfNeed];
@@ -934,6 +956,7 @@ SINGLETON_GCD(TTTabBarManager);
     
     if (!_customMiddleButton) {
         _customMiddleButton = [[SSThemedButton alloc] init];
+        _customMiddleButton.backgroundColor = [UIColor yellowColor];
         _customMiddleButton.adjustsImageWhenHighlighted = NO;
     
         [self updateMiddleButton];
@@ -945,6 +968,9 @@ SINGLETON_GCD(TTTabBarManager);
     
     return _customMiddleButton;
 }
+
+
+
 
 - (LOTAnimationView *)middleTabAnimatingViewInPath:(NSString *)path {
     LOTAnimationView *middleTabAnimatingView;
@@ -994,7 +1020,7 @@ SINGLETON_GCD(TTTabBarManager);
             } else {
                 static dispatch_once_t onceToken;
                 dispatch_once(&onceToken, ^{
-                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
                 });
             }
             
@@ -1049,7 +1075,7 @@ SINGLETON_GCD(TTTabBarManager);
             LOGD(@"TTTabBar 资源包md5不匹配!!!");
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^{
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
             });
         }
     });
@@ -1293,5 +1319,4 @@ SINGLETON_GCD(TTTabBarManager);
         }
     }
 }
-
 @end

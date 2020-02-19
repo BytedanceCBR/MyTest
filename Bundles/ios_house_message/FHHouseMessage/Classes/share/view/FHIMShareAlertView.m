@@ -6,7 +6,7 @@
 //
 
 #import "FHIMShareAlertView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "TTUIResponderHelper.h"

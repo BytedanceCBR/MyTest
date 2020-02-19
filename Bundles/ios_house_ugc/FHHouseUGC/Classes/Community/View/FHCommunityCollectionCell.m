@@ -10,7 +10,7 @@
 #import "FHCommunityFeedListController.h"
 #import "FHNearbyViewController.h"
 #import "FHMyJoinViewController.h"
-#import <FHHouseFindViewController.h>
+#import "FHHouseFindViewController.h"
 
 @interface FHCommunityCollectionCell ()
 

@@ -7,7 +7,7 @@
 //
 
 #import "TTDeleteActivity.h"
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 
 NSString * const TTActivityTypeDelete = @"com.toutiao.UIKit.activity.Delete";
 @interface TTDeleteActivity ()

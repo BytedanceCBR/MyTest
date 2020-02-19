@@ -7,7 +7,7 @@
 //
 
 #import "TTAccountLoginConfLogic.h"
-#import <TTAccountSDK.h>
+#import "TTAccountSDK.h"
 #import <TTAccountSDK/TTAccountAuthWeChat.h>
 
 

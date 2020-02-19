@@ -7,7 +7,7 @@
 //
 
 #import "BDTAccountNavigationController.h"
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+TTThemeExtension.h"
 #import <TTThemed/TTThemeConst.h>
 
 @interface BDTAccountNavigationController ()

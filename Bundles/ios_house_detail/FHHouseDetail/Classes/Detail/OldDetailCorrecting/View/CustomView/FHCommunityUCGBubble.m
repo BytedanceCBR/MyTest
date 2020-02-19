@@ -6,7 +6,7 @@
 #import <Masonry/View+MASAdditions.h>
 #import "FHCommunityUCGBubble.h"
 #import "WDDefines.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 
 
 @interface FHCommunityUCGBubble ()

@@ -9,7 +9,7 @@
 #import "FHDetailNeighborhoodModel.h"
 #import "TTDeviceHelper.h"
 #import "FHDetailFoldViewButton.h"
-#import <PNChart.h>
+#import "PNChart.h"
 #import "FHDetailPriceMarkerView.h"
 #import "UIView+House.h"
 #import <FHHouseBase/FHUserTracker.h>

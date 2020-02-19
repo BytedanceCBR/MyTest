@@ -19,7 +19,7 @@
 #import <TTKitchen/TTKitchen.h>
 #import "TTAccountAlertView.h"
 
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTArticleTabBarController.h"//这个不OK
 #import "TTForumPostThreadToPageViewModel.h"
 #import "TTTabBarProvider.h"
@@ -145,7 +145,11 @@ TTAccountMulticastProtocol
         self.isEnterFollowPageFromPostNotification = NO;
         self.isEnterHomeTabFromPostNotification = NO;
         [self registerNotifications];
-        [self loadStatusModelsWithCompletionBlock:nil];
+        [self loadStatusModelsWithCompletionBlock:^{
+            if([FHPostUGCProgressView sharedInstance].refreshViewBlk) {
+                [FHPostUGCProgressView sharedInstance].refreshViewBlk();
+            }
+        }];
         self.cityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
     }
     return self;

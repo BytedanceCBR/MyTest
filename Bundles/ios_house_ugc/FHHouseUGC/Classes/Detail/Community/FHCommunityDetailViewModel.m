@@ -25,17 +25,17 @@
 #import "MJRefresh.h"
 #import "FHCommonDefines.h"
 #import "TTUIResponderHelper.h"
-#import <TTUGCEmojiParser.h>
+#import "TTUGCEmojiParser.h"
 #import "TTAccount.h"
 #import "TTAccount+Multicast.h"
 #import "TTAccountManager.h"
 #import "TTHorizontalPagingView.h"
 #import "IMManager.h"
-#import <TTThemedAlertController.h>
+#import "TTThemedAlertController.h"
 #import "FHFeedUGCCellModel.h"
-#import <TTUGCDefine.h>
+#import "TTUGCDefine.h"
 #import <FHUGCCategoryHelper.h>
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 #define kSegmentViewHeight 52
 
@@ -931,7 +931,7 @@
             param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
             TRACK_EVENT(@"click_community_notice_more", param);
         };
-        hasDetailBtn = [self.viewController.headerView isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow];
+        hasDetailBtn = ([self.viewController.headerView publicationsContentLabelHeightCompareWithTwoLineTextHeight] == NSOrderedDescending);
     }
     
     [self.viewController.headerView updatePublicationsInfo: isShowPublications

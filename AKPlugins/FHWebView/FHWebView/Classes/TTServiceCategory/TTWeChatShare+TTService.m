@@ -9,8 +9,8 @@
 #import "SSCommonLogic.h"
 #import "TTWeChatShare+TTService.h"
 #import "TTWeChatShare.h"
-#import <WXApi.h>
-#import <WXApiObject.h>
+#import "WXApi.h"
+#import "WXApiObject.h"
 #import <objc/runtime.h>
 
 #define TTServiceDelegateKey @"TTServiceDelegateKey"

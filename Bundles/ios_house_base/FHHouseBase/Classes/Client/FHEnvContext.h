@@ -71,6 +71,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL isShowDots;
 //春节运营位是否正在显示
 @property(nonatomic, assign) BOOL isShowingSpringHang;
+//正在显示的画运营位ID
+@property(nonatomic, copy) NSString *currentShowHangId;
 
 
 + (instancetype)sharedInstance;
@@ -271,6 +273,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSString *)enterTabLogName;
 
+/*
+ 侧边挂件配置；
+ */
++ (FHConfigDataTabWidgetModel *)tabWidget;
+
 
 /**
  * 权限隐私弹窗
@@ -291,6 +298,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)addRemoteNotification:(UIApplication *)application userInfo:(NSDictionary *)userInfo;
 
 -(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler ;
+
++ (NSString *)getCurrentTabIdentifier;
 
 @end
 

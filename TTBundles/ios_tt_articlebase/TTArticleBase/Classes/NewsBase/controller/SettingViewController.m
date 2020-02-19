@@ -111,7 +111,7 @@
     UIViewController *debugViewController = [[clazz alloc] init];
     TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:debugViewController];
     navigationController.ttDefaultNavBarStyle = @"White";
-    
+    navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:navigationController animated:YES completion:NULL];
 }
 //#endif

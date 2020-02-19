@@ -308,6 +308,17 @@
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        NSArray *tableCells = [self.tableView visibleCells];
+        if (tableCells) {
+            [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
+                        [obj performSelector:@selector(resumeVRIcon)];
+                    }
+            }];
+        }
+    }
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {

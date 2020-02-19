@@ -5,7 +5,7 @@
 //  Created by chenjiesheng on 2018/3/8.
 //
 
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "AKProfileHeaderViewDefine.h"
 
 @interface AKProfileBenefitReddotInfo : JSONModel

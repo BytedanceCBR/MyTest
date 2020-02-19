@@ -7,7 +7,7 @@
 //
 
 #import "HTSVideoPlayToast.h"
-#import <TTIndicatorView.h>
+#import "TTIndicatorView.h"
 
 @implementation HTSVideoPlayToast
 

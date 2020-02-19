@@ -8,7 +8,11 @@
 
 #import "UIViewController+Monitor.h"
 #import "TTDebugRealMonitorManager.h"
+#import "TTSystemMonitorManager.h"
 #import <objc/runtime.h>
+
+NSString * const TTMonitorViewWillAppearNotification = @"TTMonitorViewWillAppearNotification";
+NSString * const TTMonitorViewWillDisappearNotification = @"TTMonitorViewWillDisappearNotification";
 
 @implementation UIViewController (Monitor)
 + (void)load
@@ -54,6 +58,7 @@
         [willShowViewControllerItem setValue:@([[NSDate date] timeIntervalSince1970]*1000) forKey:@"timestamp"];
         [TTDebugRealMonitorManager logEnterEvent:willShowViewControllerItem];
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:TTMonitorViewWillAppearNotification object:self];
     [self tt_monitor_viewWillAppear:animated];
 }
 
@@ -66,6 +71,7 @@
         [willHideViewControllerItem setValue:@([[NSDate date] timeIntervalSince1970]*1000) forKey:@"timestamp"];
         [TTDebugRealMonitorManager logLeaveEvent:willHideViewControllerItem];
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:TTMonitorViewWillDisappearNotification object:self];
     [self tt_monitor_viewWillDisappear:animated];
 }
 @end

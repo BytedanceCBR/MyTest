@@ -16,13 +16,8 @@
 #include <sys/xattr.h>
 #import <zlib.h>
 #import <stdlib.h>
-#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
 #import <AdSupport/AdSupport.h>
-#import "TTReachability.h"
-
-static NSString *currentWWANName = nil;
-static CTTelephonyNetworkInfo *sharedNetworkInfo = nil;
 
 @implementation TTExtensions
 
@@ -31,13 +26,11 @@ static CTTelephonyNetworkInfo *sharedNetworkInfo = nil;
 }
 
 + (NSString*)versionName{
-    return [[NSBundle  mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 }
 
 + (NSString*)buildVersion{
-    //    NSString * buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-    NSString * buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
-
+    NSString * buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     if (buildVersion) {
         return [buildVersion stringByReplacingOccurrencesOfString:@"." withString:@""];
     }
@@ -61,25 +54,16 @@ static CTTelephonyNetworkInfo *sharedNetworkInfo = nil;
 
 + (NSString*)carrierName
 {
-    CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
-    CTCarrier *carrier = [netinfo subscriberCellularProvider];
-    NSString *name = [carrier carrierName];
-    return name;
+    return [TTReachability currentCellularProviderForService:TTCellularServiceTypePrimary].carrierName;
 }
 
 + (NSString*)carrierMCC
 {
-    CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
-    CTCarrier *carrier = [netInfo subscriberCellularProvider];
-    NSString *mcc = [carrier mobileCountryCode];
-    return mcc;
+    return [TTReachability currentCellularProviderForService:TTCellularServiceTypePrimary].mobileCountryCode;
 }
 
 + (NSString*)carrierMNC{
-    CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
-    CTCarrier *carrier = [netInfo subscriberCellularProvider];
-    NSString *mnc = [carrier mobileNetworkCode];
-    return mnc;
+    return [TTReachability currentCellularProviderForService:TTCellularServiceTypePrimary].mobileNetworkCode;
 }
 
 + (NSString*)connectMethodName
@@ -249,7 +233,7 @@ static float currentOsVersionNumber = 0;
     OSName = [device systemName];
     OSVersion = [device systemVersion];
     
-    NSString * userAgentStr = [NSString stringWithFormat:@"%@ %@ (%@ %@ %@ %@)", appName, appVersion, deviceName, OSName, OSVersion, locale];
+    NSString * userAgentStr = [NSString stringWithFormat:@"%@ %@ (%@; %@ %@; %@)", appName, appVersion, deviceName, OSName, OSVersion, locale];
     return userAgentStr;
 }
 
@@ -277,49 +261,25 @@ static float currentOsVersionNumber = 0;
     return newURL;
 }
 
-
-+ (CTTelephonyNetworkInfo *)_getGlobalTelephonyNetworkInfo
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedNetworkInfo = [CTTelephonyNetworkInfo new];
-        if ([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0) {
-            currentWWANName = sharedNetworkInfo.currentRadioAccessTechnology;
-            [NSNotificationCenter.defaultCenter addObserverForName:CTRadioAccessTechnologyDidChangeNotification
-                                                            object:nil
-                                                             queue:nil
-                                                        usingBlock:^(NSNotification *note)
-             {
-                 currentWWANName = sharedNetworkInfo.currentRadioAccessTechnology;
-             }];
-        }
-    });
-    
-    return sharedNetworkInfo;
-}
-
 + (MNetworkStatus)_syncToGetCurrentNetWorkStatus
 {
-    [TTExtensions _getGlobalTelephonyNetworkInfo];
     NetworkStatus status = [[TTReachability reachabilityWithHostName:@"www.apple.com"] currentReachabilityStatus];
-    if (status==ReachableViaWiFi) {
+    if (status == ReachableViaWiFi) {
         return MNReachableViaWiFi;
-    }else
-    if (status == ReachableViaWWAN) {
-        if (currentWWANName.length > 0) {
-            if ([currentWWANName isEqualToString:CTRadioAccessTechnologyGPRS] ||
-                [currentWWANName isEqualToString:CTRadioAccessTechnologyEdge] ||
-                [currentWWANName isEqualToString:CTRadioAccessTechnologyCDMA1x]) {
+    } else if (status == ReachableViaWWAN) {
+        switch ([TTReachability currentCellularConnectionForService:TTCellularServiceTypePrimary]) {
+            case TTCellularNetworkConnection2G:
                 return MNReachableVia2G;
-            } else if ([currentWWANName isEqualToString:CTRadioAccessTechnologyLTE]) {
-                return MNReachableVia4G;
-            } else{
+            case TTCellularNetworkConnection3G:
                 return MNReachableVia3G;
-            }
+            case TTCellularNetworkConnection4G:
+                return MNReachableVia4G;
+            default:
+                return MNReachableViaWWAN;
         }
+    } else {
+        return MNNotReachable;
     }
-    
-    return status;
 }
 
 + (NSString *)_stringFromNetworkStatus:(MNetworkStatus)netStatus

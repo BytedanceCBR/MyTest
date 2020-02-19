@@ -26,14 +26,14 @@
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
-#import <UIScrollView+Refresh.h>
+#import "UIScrollView+Refresh.h"
 #import "FHFeedOperationView.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "SSImpressionManager.h"
 #import "FHUserTracker.h"
 #import "UIViewController+Track.h"
 #import "TTAccountManager.h"
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol>
 
@@ -164,7 +164,9 @@
 - (void)setupUI {
     self.navOffset = 64;
     CGFloat navOffset = 64;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0, *)) {
+        navOffset = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0 , *)) {
         navOffset = 44.f + self.view.tt_safeAreaInsets.top;
     } else {
         navOffset = 64;

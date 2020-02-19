@@ -12,7 +12,7 @@
 #import "AWEVideoPlayTransitionBridge.h"
 #import "AWEVideoDetailTracker.h"
 #import "TTModuleBridge.h"
-#import <extobjc.h>
+#import "extobjc.h"
 #import "TSVVideoDetailPromptManager.h"
 #import "TTSettingsManager.h"
 #import "TSVLogoAction.h"

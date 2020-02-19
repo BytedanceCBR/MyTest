@@ -39,7 +39,7 @@
 #import "TTDeviceHelper.h"
 //#import "TTFantasy.h"
 #import "TTRNCommonABTest.h"
-#import "TTCookieManager.h"
+#import "FHCookieManager.h"
 #import "NewsBaseDelegate.h"
 #import "TTDebugRealMonitorManager.h"
 #import "TTCanvasBundleManager.h"

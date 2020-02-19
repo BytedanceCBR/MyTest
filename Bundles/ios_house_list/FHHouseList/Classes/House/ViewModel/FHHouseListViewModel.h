@@ -6,7 +6,7 @@
 //
 
 #import "FHBaseHouseListViewModel.h"
-#import <FHHouseSuggestionDelegate.h>
+#import "FHHouseSuggestionDelegate.h"
 
 typedef enum : NSUInteger {
     FHHouseListSearchTypeDefault = 0,

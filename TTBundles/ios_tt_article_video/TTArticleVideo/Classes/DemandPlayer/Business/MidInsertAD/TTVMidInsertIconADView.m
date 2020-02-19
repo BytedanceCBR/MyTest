@@ -9,7 +9,7 @@
 #import "TTVMidInsertIconADView.h"
 #import "TTShowImageView.h"
 #import "TTImageInfosModel.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <TTBaseLib/TTDeviceUIUtils.h>
 
 @interface TTVMidInsertIconADView() <TTShowImageViewDelegate>

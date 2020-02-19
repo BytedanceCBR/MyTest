@@ -25,17 +25,17 @@
 #import "TTTrackerWrapper.h"
 #import "ExploreMomentDefine.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTNavigationController.h"
 
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import "TTInteractExitHelper.h"
 //#import "TTRedPacketManager.h"
 //#import "TTCertificationConst.h"
-#import <UIView+CustomTimingFunction.h>
+#import "UIView+CustomTimingFunction.h"
 #import "TTPersonalHomeSinglePlatformFollowersInfoModel.h"
 #import <TTVerifyKit/TTVerifyIconHelper.h>
-#import <ExploreMomentDefine_Enums.h>
+#import "ExploreMomentDefine_Enums.h"
 #import "FriendModel.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTThemed/TTThemeManager.h>

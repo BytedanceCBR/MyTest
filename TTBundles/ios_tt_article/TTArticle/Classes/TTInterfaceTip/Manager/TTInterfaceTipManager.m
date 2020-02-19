@@ -8,12 +8,12 @@
 #import "TTInterfaceTipManager.h"
 #import "TTInterfaceTipBaseView.h"
 #import "TTInterfaceTipBaseModel.h"
-#import <UIView+CustomTimingFunction.h>
+#import "UIView+CustomTimingFunction.h"
 #import <TTDialogDirector/TTDialogDirector.h>
-#import <UIViewAdditions.h>
-#import <NSDictionary+TTAdditions.h>
-#import <TTUIResponderHelper.h>
-#import <TTDeviceHelper.h>
+#import "UIViewAdditions.h"
+#import "NSDictionary+TTAdditions.h"
+#import "TTUIResponderHelper.h"
+#import "TTDeviceHelper.h"
 
 #define kTTInterfaceTipViewScaleSize 0.96
 #define kTTInterfaceTipViewDismissDuration 0.2f

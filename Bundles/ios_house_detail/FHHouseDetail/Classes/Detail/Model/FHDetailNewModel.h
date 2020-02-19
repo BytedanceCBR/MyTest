@@ -6,7 +6,7 @@
 //
 
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "FHDetailBaseModel.h"
 #import "FHHouseNewsSocialModel.h"
 

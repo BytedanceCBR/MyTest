@@ -9,7 +9,7 @@
 #import "TTVMidInsertADService.h"
 #import "TTVMidInsertADModel.h"
 #import <TTNetworkManager/TTNetworkManager.h>
-#import <YYMemoryCache.h>
+#import "YYMemoryCache.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTArticleBase/CommonURLSetting.h>
 #import <TTBaseLib/TTBaseMacro.h>

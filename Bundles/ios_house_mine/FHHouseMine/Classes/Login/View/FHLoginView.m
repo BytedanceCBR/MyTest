@@ -7,7 +7,7 @@
 
 #import "FHLoginView.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "YYLabel.h"
@@ -84,7 +84,7 @@
     self.phoneInput = [[UITextField alloc] init];
     _phoneInput.font = [UIFont themeFontRegular:14];
     _phoneInput.placeholder = @"请输入手机号";
-    [_phoneInput setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
+    _phoneInput.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入手机号" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3]}];
     _phoneInput.keyboardType = UIKeyboardTypePhonePad;
     _phoneInput.returnKeyType = UIReturnKeyDone;
     [self.scrollView addSubview:_phoneInput];
@@ -96,7 +96,7 @@
     self.varifyCodeInput = [[UITextField alloc] init];
     _varifyCodeInput.font = [UIFont themeFontRegular:14];
     _varifyCodeInput.placeholder = @"请输入验证码";
-    [_varifyCodeInput setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
+    _varifyCodeInput.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入验证码" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3]}];
     _varifyCodeInput.keyboardType = UIKeyboardTypePhonePad;
     _varifyCodeInput.returnKeyType = UIReturnKeyGo;
     [self.scrollView addSubview:_varifyCodeInput];

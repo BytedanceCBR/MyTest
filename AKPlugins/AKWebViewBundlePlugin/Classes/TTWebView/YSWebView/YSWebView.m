@@ -13,7 +13,7 @@
 #import <TTRexxar/TTRWKWebView.h>
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import <Masonry/Masonry.h>
-#import <NSDictionary+TTAdditions.h>
+#import "NSDictionary+TTAdditions.h"
 
 
 #define DESTROY_UIWEBVIEW_ARC(__WEBVIEW)   { __WEBVIEW.delegate = nil; [__WEBVIEW stopLoading]; __WEBVIEW = nil; }

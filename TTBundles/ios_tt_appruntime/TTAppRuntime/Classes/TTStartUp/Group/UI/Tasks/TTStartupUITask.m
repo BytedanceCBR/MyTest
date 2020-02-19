@@ -31,8 +31,10 @@
 #import "NSDictionary+TTAdditions.h"
 #import "TTInstallIDManager.h"
 #import "TTSandBoxHelper.h"
-#import <FHUtils.h>
+#import "FHUtils.h"
+#import <FHHouseBase/FHPermissionAlertViewController.h>
 #import <FHHouseBase/FHIntroduceManager.h>
+
 
 DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
@@ -184,22 +186,35 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 }
 
 - (void)constructDefaultTabs {
+     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
+
+    NSMutableArray *tabRegisterArr = [[NSMutableArray alloc]initWithObjects:kTTTabHomeTabKey,kFHouseFindTabKey,kFHouseMessageTabKey,kFHouseMineTabKey, nil];
+    if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"]) {
+        [tabRegisterArr insertObject:kFHouseHouseEpidemicSituationTabKey atIndex:2];
+        cacheTab.isShow = true;
+    }
+    [tabRegisterArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj) {
+            BOOL isRegular = ![obj isEqualToString:kFHouseHouseEpidemicSituationTabKey] || cacheTab.title.length>0;
+            [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:obj atIndex:idx isRegular:isRegular];
+        }
+    }];
     //HomeTab
-    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kTTTabHomeTabKey atIndex:0 isRegular:YES];
-    
     //VideoTab
-    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseFindTabKey atIndex:1 isRegular:YES];
+//    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseFindTabKey atIndex:1 isRegular:YES];s
 
 //    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kTTTabVideoTabKey atIndex:1 isRegular:YES];
 
     //pm@李响说所有用户默认第三和第四个tab分别是微头条和火山小视频
 //    NSString *thirdTag = [self thirdTabBarIdentifier];
 //    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:thirdTag atIndex:2 isRegular:YES];
-    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseMessageTabKey atIndex:2 isRegular:YES];
+//    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseMessageTabKey atIndex:2 isRegular:YES];
 
 //    NSString *forthTag = [self forthTabBarIdentifier];
 //    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:forthTag atIndex:3 isRegular:YES];
-    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseMineTabKey atIndex:3 isRegular:YES];
+//    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseMineTabKey atIndex:3 isRegular:YES];
+//     [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseHouseEpidemicSituationTabKey atIndex:4 isRegular:YES];
 
 }
 

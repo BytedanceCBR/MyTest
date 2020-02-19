@@ -31,8 +31,8 @@
 #import "TTPushAlertManager.h"
 //#import <TTDialogDirector/CLLocationManager+MutexDialogAdapter.h>
 #import "TTCategory+ConfigDisplayName.h"
-#import <FHLocManager.h>
-#import <UIFont+House.h>
+#import "FHLocManager.h"
+#import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "SSCommonLogic.h"
 #import <Masonry/Masonry.h>
@@ -41,7 +41,7 @@
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTArticleBase/Log.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 
 #define kFirstLeftMargin    15
 #define kLastRightMargin    68

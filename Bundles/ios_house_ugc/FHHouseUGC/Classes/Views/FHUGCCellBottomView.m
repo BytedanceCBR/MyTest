@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCCellBottomView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHCommonApi.h"
@@ -16,7 +16,7 @@
 #import "UIButton+TTAdditions.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import "TTMessageCenter.h"
 #import "TTVideoArticleService+Action.h"
 #import "TTVideoArticleServiceMessage.h"

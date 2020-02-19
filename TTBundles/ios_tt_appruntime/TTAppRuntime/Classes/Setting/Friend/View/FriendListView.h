@@ -7,7 +7,7 @@
 //
 
 #import "SSViewBase.h"
-#import <TTWeChatShare.h>
+#import "TTWeChatShare.h"
 
 @interface FriendListView : SSViewBase <TTWeChatShareDelegate>
 @property(nonatomic, retain)NSString * umengEventName;//FriendDataListTypeSuggestUser type default is add_friends, other is friends

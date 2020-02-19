@@ -20,7 +20,7 @@
 #import <TTTracker/TTTrackerSessionHandler.h>
 #import <TTTracker/TTTrackerProxy.h>
 #import <TTSettingsManager/TTSettingsManager.h>
-#import <BDAgileLog.h>
+#import "BDAgileLog.h"
 #import "HMDLogUploader.h"
 #import "BSBacktraceLogger.h"
 #import "TTWatchdogMonitorRecorder.h"

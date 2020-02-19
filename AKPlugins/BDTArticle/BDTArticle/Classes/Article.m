@@ -14,7 +14,7 @@
 #import "TTFollowManager.h"
 #import "TTBlockManager.h"
 #import "TTAdConstant.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <Crashlytics/Answers.h>
 #import <TTNetworkManager/TTNetworkDefine.h>
 #import <TTSettingsManager/TTSettingsManager.h>

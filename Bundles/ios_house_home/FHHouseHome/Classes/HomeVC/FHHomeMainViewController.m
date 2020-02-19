@@ -7,19 +7,21 @@
 
 #import "FHHomeMainViewController.h"
 #import "FHHomeMainViewModel.h"
-#import <TTDeviceHelper.h>
-#import <FHEnvContext.h>
-#import <FHMainApi.h>
-#import <TTThemedAlertController.h>
-#import <TTUIResponderHelper.h>
-#import <FHUtils.h>
-#import <TTSandBoxHelper.h>
+#import "TTDeviceHelper.h"
+#import "FHEnvContext.h"
+#import "FHMainApi.h"
+#import "TTThemedAlertController.h"
+#import "TTUIResponderHelper.h"
+#import "FHUtils.h"
+#import "TTSandBoxHelper.h"
 #import "TTSandBoxHelper+House.h"
-#import <TTAppUpdateHelper.h>
-#import <TTInstallIDManager.h>
-#import <CommonURLSetting.h>
-#import <FHMinisdkManager.h>
+#import "TTAppUpdateHelper.h"
+#import "TTInstallIDManager.h"
+#import "CommonURLSetting.h"
+#import "FHMinisdkManager.h"
 #import "FHSpringHangView.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "UIViewController+Track.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -29,6 +31,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) BOOL isHaveCheckUpgrage;
 //春节活动运营位
 @property (nonatomic, strong) FHSpringHangView *springView;
+@property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 
 @end
 
@@ -49,6 +52,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.isShowing = YES;
+    self.ttTrackStayEnable = YES;
 
     //UGC地推包检查粘贴板
     [self checkPasteboard:NO];
@@ -66,12 +70,29 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [[FHMinisdkManager sharedInstance] goSpring];
     }
     
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.isShowing = NO;
     
+    [self addStayCategoryLog:self.ttTrackStayTime];
+}
+
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    if (self.stayTime>0) {
+        NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
+          [tracerDict setValue:@"main" forKey:@"tab_name"];
+          [tracerDict setValue:@(0) forKey:@"with_tips"];
+          [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
+          tracerDict[@"stay_time"] = @((int)duration);
+          
+          if (((int)duration) > 0) {
+              [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+          }
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -87,6 +108,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self addSpringView];
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
+    
+    [[FHPopupViewManager shared] triggerPopupView];
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)addSpringView {
@@ -102,8 +126,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         
         [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(84);
-            make.height.mas_equalTo(79);
+            make.width.mas_equalTo(82);
+            make.height.mas_equalTo(82);
             make.right.mas_equalTo(self.view).offset(-11);
         }];
     }
@@ -194,6 +218,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
         [FHEnvContext changeFindTabTitle];
         [FHEnvContext showRedPointForNoUgc];
+        if([FHEnvContext isSpringHangOpen] && self.springView){
+            [self.springView show:[FHEnvContext enterTabLogName]];
+        }
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
     }];
 }
@@ -349,6 +376,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [TTAppUpdateHelper sharedInstance].delegate = self;
     [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
         [self.view addSubview:view];
+        [[FHPopupViewManager shared] outerPopupViewShow];
     } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
         //        if (!downloadUrl) {
         //            return;
@@ -356,7 +384,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         //        NSURL *url = [NSURL URLWithString:downloadUrl];
         //        [[UIApplication sharedApplication] openURL:url];
     } closeBlock:^{
-        
+        [[FHPopupViewManager shared] outerPopupViewHide];
     }];
 }
 

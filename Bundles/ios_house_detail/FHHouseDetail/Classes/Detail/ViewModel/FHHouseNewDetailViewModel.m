@@ -25,14 +25,14 @@
 #import "FHDetailDisclaimerCell.h"
 #import "FHDetailNewListSingleImageCell.h"
 #import "FHDetailStaticMapCell.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import <FHHouseBase/FHCommonDefines.h>
 #import "FHDetailNewUGCSocialCell.h"
 #import "FHDetailSocialEntranceView.h"
 #import "FHHouseFillFormHelper.h"
 #import "FHHouseContactConfigModel.h"
 #import "FHDetailNoticeAlertView.h"
-#import <TTDeviceHelper+FHHouse.h>
+#import "TTDeviceHelper+FHHouse.h"
 #import "TTUIResponderHelper.h"
 
 @interface FHHouseNewDetailViewModel ()
@@ -538,6 +538,7 @@
         [self.items addObject:grayLine];
 
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
+        staticMapModel.mapCentertitle = model.data.coreInfo.name;
         staticMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
         staticMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
         staticMapModel.houseId = model.data.coreInfo.id;

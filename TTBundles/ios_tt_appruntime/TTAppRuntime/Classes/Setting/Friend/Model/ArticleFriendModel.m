@@ -8,7 +8,7 @@
 
 #import "ArticleFriendModel.h"
 #import "PGCAccount.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <objc/runtime.h>
 
 

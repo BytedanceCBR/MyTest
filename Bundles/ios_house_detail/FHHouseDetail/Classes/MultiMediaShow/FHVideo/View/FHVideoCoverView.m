@@ -6,7 +6,7 @@
 //
 
 #import "FHVideoCoverView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIImageView+BDWebImage.h"
 
 @interface FHVideoCoverView ()

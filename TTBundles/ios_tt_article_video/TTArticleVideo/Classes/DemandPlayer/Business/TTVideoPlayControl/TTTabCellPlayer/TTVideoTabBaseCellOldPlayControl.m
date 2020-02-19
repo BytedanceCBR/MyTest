@@ -21,7 +21,7 @@
 #import "NSDictionary+TTGeneratedContent.h"
 #import "TTUIResponderHelper.h"
 #import "Article.h"
-#import <TTImageView.h>
+#import "TTImageView.h"
 
 extern NSInteger ttvs_isVideoShowOptimizeShare(void);
 extern BOOL ttvs_isVideoFeedURLEnabled(void);

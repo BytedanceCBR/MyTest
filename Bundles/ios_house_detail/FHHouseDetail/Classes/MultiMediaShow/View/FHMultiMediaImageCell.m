@@ -6,7 +6,7 @@
 //
 
 #import "FHMultiMediaImageCell.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import <BDWebImage/BDWebImageManager.h>
 
 @interface FHMultiMediaImageCell ()

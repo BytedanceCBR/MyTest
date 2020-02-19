@@ -7,7 +7,7 @@
 
 #import "FHMultiMediaVRImageCell.h"
 #import "FHMotionImageView.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import <BDWebImage/BDWebImageManager.h>
 
 @interface FHMultiMediaVRImageCell()

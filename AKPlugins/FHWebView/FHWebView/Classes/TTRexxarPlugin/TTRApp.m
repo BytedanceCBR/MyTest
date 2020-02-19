@@ -54,7 +54,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (URL && [[UIApplication sharedApplication] canOpenURL:URL]) {
         installed = YES;
     }
-    
     callback(TTRJSBMsgSuccess, @{@"installed":@(installed)});
 }
 

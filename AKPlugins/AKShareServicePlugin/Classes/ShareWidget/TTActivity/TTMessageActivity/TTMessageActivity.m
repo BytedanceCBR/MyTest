@@ -8,7 +8,7 @@
 
 #import "TTMessageActivity.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 
 NSString * const TTActivityTypeMessage = @"com.toutiao.UIKit.activity.Message";
 

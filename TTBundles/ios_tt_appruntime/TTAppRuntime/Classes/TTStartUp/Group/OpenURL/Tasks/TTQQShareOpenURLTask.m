@@ -7,7 +7,7 @@
 //
 
 #import "TTQQShareOpenURLTask.h"
-#import <TTQQShare.h>
+#import "TTQQShare.h"
 //#import <TTAccountAuthTencent.h>
 #import "TTLaunchDefine.h"
 

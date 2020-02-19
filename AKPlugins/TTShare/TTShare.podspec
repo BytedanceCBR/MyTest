@@ -116,37 +116,37 @@ Pod::Spec.new do |s|
     #QQ分享
     ss.subspec "TTQQShare" do |sss|
         sss.source_files = 'TTShareBasic/QQShare/**/*.{h,m}'
-        sss.dependency 'TTThirdPartySDKs/QQSDK'
+        #sss.dependency 'TTThirdPartySDKs/QQSDK'
     end
     #微信分享
     ss.subspec "TTWeChatShare" do |sss|
         sss.source_files = 'TTShareBasic/WeChatShare/**/*.{h,m}'
-        sss.dependency 'TTThirdPartySDKs/WeChatSDK'
+        #sss.dependency 'TTThirdPartySDKs/WeChatSDK'
     end
     #微博分享
     ss.subspec "TTWeiboShare" do |sss|
         sss.source_files = 'TTShareBasic/WeiboShare/**/*.{h,m}'
-        sss.dependency 'TTThirdPartySDKs/WeiboSDK'
+        #sss.dependency 'TTThirdPartySDKs/WeiboSDK'
     end
     #支付宝分享
     ss.subspec "TTAliShare" do |sss|
         sss.source_files = 'TTShareBasic/AliShare/**/*.{h,m}'
-        sss.dependency 'TTThirdPartySDKs/AliShareSDK'
+        #sss.dependency 'TTThirdPartySDKs/AliShareSDK'
     end
     #钉钉分享
     ss.subspec "TTDingTalkShare" do |sss|
         sss.source_files = 'TTShareBasic/DingTalkShare/**/*.{h,m}'
-        sss.dependency 'TTThirdPartySDKs/DingDingSDK'
+        #sss.dependency 'TTThirdPartySDKs/DingDingSDK'
     end
     #邮件分享
     ss.subspec "TTMailShare" do |sss|
         sss.source_files = 'TTShareBasic/MailShare/**/*.{h,m}'
-        sss.frameworks = 'MessageUI'
+        #sss.frameworks = 'MessageUI'
     end
     #短信分享
     ss.subspec "TTMessageShare" do |sss|
         sss.source_files = 'TTShareBasic/MessageShare/**/*.{h,m}'
-        sss.frameworks = 'MessageUI'
+        #sss.frameworks = 'MessageUI'
     end
   end
 

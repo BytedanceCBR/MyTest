@@ -8,8 +8,8 @@
 #import "AKPhotoCarouselCellModel.h"
 #import "AKPhotoCarouselCellView.h"
 
-#import <UIImageView+BDWebImage.h>
-#import <TTAnimatedImageView.h>
+#import "UIImageView+BDWebImage.h"
+#import "TTAnimatedImageView.h"
 @interface AKPhotoCarouselCellView ()
 
 @property (nonatomic, strong)TTAnimatedImageView    *imageView;

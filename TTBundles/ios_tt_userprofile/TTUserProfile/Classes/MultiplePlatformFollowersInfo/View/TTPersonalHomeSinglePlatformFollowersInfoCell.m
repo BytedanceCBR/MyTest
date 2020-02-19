@@ -8,8 +8,8 @@
 #import "TTPersonalHomeSinglePlatformFollowersInfoCell.h"
 #import "TTPersonalHomeSinglePlatformFollowersInfoViewModel.h"
 #import "TTImageView.h"
-#import <SSThemed.h>
-#import <ReactiveObjC.h>
+#import "SSThemed.h"
+#import "ReactiveObjC.h"
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/TTThemeManager.h>

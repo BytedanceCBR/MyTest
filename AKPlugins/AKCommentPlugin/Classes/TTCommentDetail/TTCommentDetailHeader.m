@@ -12,7 +12,7 @@
 #import <TTThemed/TTThemeManager.h>
 #import <TTAvatar/ExploreAvatarView+VerifyIcon.h>
 #import <TTAvatar/TTAsyncCornerImageView+VerifyIcon.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTBaseLib/TTBusinessManager.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTPlatformBaseLib/TTIconFontDefine.h>
@@ -29,7 +29,7 @@
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
 #import <TTUGCFoundation/TTRichSpanText+Emoji.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import "TTRichSpanText+Link.h"
 
 @interface TTCommentDetailHeaderUIHelper : NSObject

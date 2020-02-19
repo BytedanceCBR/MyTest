@@ -12,7 +12,7 @@
 #import "UIViewController+TTMovieUtil.h"
 #import "UIViewController+Tree.h"
 #import "FHEnvContext.h"
-#import <TTArticleCategoryManager.h>
+#import "TTArticleCategoryManager.h"
 
 @interface FHHomePageRoute() <TTRouteInitializeProtocol>
 

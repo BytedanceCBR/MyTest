@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHHomeBaseTableCell.h"
-#import <FHHomeBannerView.h>
+#import "FHHomeBannerView.h"
 #import "FHConfigModel.h"
 
 NS_ASSUME_NONNULL_BEGIN

@@ -9,7 +9,7 @@
 #import "TTAccountLoginAlertViewGuide.h"
 #import "NewsBaseDelegate.h"
 #import "SSCommonLogic.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <objc/runtime.h>
 
 

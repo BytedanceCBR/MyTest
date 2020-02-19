@@ -8,7 +8,7 @@
 #import "FHCommunityFeedListBaseViewModel.h"
 #import "FHUGCSmallVideoCell.h"
 #import <FHUGCVideoCell.h>
-#import <TTVFeedPlayMovie.h>
+#import "TTVFeedPlayMovie.h"
 
 
 @implementation FHCommunityFeedListBaseViewModel

@@ -17,7 +17,7 @@
 #import "WDCommonLogic.h"
 
 #import "ArticleJSManager.h"
-#import <TTUserSettingsManager+FontSettings.h>
+#import "TTUserSettingsManager+FontSettings.h"
 #import "YSWebView.h"
 #import "TTDeviceHelper.h"
 #import "ArticleJSManager.h"
@@ -25,9 +25,9 @@
 #import "TTThemeManager.h"
 #import "TTStringHelper.h"
 #import "TTUserSettings/TTUserSettingsManager+NetworkTraffic.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTBaseLib/JSONAdditions.h>
-#import <TTDetailWebviewGIFManager.h>
+#import "TTDetailWebviewGIFManager.h"
 
 #define kJsMetaImageOriginKey       @"origin"
 #define kJsMetaImageThumbKey        @"thumb"

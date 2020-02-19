@@ -5,7 +5,7 @@
 //  Created by 春晖 on 2019/2/12.
 //
 #import "FHHouseFindViewController.h"
-#import <HMSegmentedControl.h>
+#import "HMSegmentedControl.h"
 #import "FHHouseFindFakeSearchBar.h"
 #import <FHCommonUI/FHErrorView.h>
 #import <FHCommonUI/UIFont+House.h>

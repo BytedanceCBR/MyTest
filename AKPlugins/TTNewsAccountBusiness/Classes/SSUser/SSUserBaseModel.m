@@ -7,7 +7,7 @@
 //
 
 #import "SSUserBaseModel.h"
-#import <NSDictionary+TTAdditions.h>
+#import "NSDictionary+TTAdditions.h"
 #import "TTAccountManager.h"
 
 

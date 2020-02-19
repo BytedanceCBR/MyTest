@@ -32,8 +32,8 @@
 #import "TTIndicatorView.h"
 #import "TTImageView.h"
 #import "UIImageView+WebCache.h"
-#import <TTShareManager.h>
-#import <TTShareActivity.h>
+#import "TTShareManager.h"
+#import "TTShareActivity.h"
 #import <TTFriendRelation/TTFollowThemeButton.h>
 #import <TTFriendRelation/TTFollowManager.h>
 #import <TTUIWidget/SSMotionRender.h>

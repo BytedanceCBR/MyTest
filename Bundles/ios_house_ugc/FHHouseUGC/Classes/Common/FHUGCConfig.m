@@ -15,8 +15,8 @@
 #import "TTAccountManager.h"
 #import "TTForumPostThreadStatusViewModel.h"
 #import "FHEnvContext.h"
-#import <TTBusinessManager+StringUtils.h>
-#import <FHUtils.h>
+#import "TTBusinessManager+StringUtils.h"
+#import "FHUtils.h"
 #import "HMDTTMonitor.h"
 
 //默认轮训间隔时间5分钟

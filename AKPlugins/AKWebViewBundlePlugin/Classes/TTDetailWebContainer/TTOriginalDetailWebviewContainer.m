@@ -24,7 +24,7 @@
 #import <TTTracker/TTTracker.h>
 #import <TTTracker/TTTrackerSessionHandler.h>
 #import <TTBaseLib/UIViewAdditions.h>
-//#import <TTAccountBusiness.h>
+//#import "TTAccountBusiness.h"
 
 #define kFooterDivKey @"toutiao_ios_footer_div"
 

@@ -15,7 +15,7 @@
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/NetworkUtilities.h>
-#import <TTUGCEmojiParser.h>
+#import "TTUGCEmojiParser.h"
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>

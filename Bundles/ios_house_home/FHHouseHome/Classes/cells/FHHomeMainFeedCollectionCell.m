@@ -6,7 +6,7 @@
 //
 
 #import "FHHomeMainFeedCollectionCell.h"
-#import <ArticleTabbarStyleNewsListViewController.h>
+#import "ArticleTabbarStyleNewsListViewController.h"
 
 @implementation FHHomeMainFeedCollectionCell
 - (id)initWithFrame:(CGRect)frame {

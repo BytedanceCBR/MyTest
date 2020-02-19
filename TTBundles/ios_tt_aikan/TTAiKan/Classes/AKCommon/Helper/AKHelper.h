@@ -6,8 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTUIResponderHelper.h>
-#import <TTIndicatorView.h>
+#import "TTUIResponderHelper.h"
+#import "TTIndicatorView.h"
 #import <TTAccountSDK/TTAccount.h>
 #import <TTAccountSDK/TTAccountUserEntity.h>
 #import <TTBaseLib/TTBaseMacro.h>

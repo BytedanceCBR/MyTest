@@ -30,4 +30,13 @@
 - (NSString *)networkResponseContentForStoreId:(NSString *)storeId;
 
 - (void)handleException:(NSString *)execeptionInfo;
+
+- (void)autoClearDBWithCompletion:(void (^)(NSError *error))completion;
+
+- (void)clearDBWithCompletion:(void (^)(NSError *error))completion;
+
+- (NSString *)debugRealPath;
+
+- (void)calculateDiskSizeWithCompletion:(void (^)(NSInteger fileCount, long long size))completion;
+
 @end

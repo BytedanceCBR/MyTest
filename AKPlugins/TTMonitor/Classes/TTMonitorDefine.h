@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, TTReportDataType){
 /**
  *  客户端内置的上报URL的默认值
  */
-#define kDefaultTTMonitorURL @"http://mon.snssdk.com/monitor/collect/"
+#define kDefaultTTMonitorURL @"https://mon.snssdk.com/monitor/collect/"
 
 typedef NS_ENUM(NSInteger, TTMonitorTrackerType)
 {

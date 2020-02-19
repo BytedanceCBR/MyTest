@@ -20,15 +20,15 @@
 #import "TTInteractExitHelper.h"
 #import <TTServiceKit/TTServiceCenter.h>
 #import "TTAdManagerProtocol.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import "TTInterfaceTipHeader.h"
 #import "TTTopBar.h"
 #import "TTCustomAnimationDelegate.h"
 #import "TTAdSplashMediator.h"
 #import <Masonry/Masonry.h>
 #import "Log.h"
-#import <FHEnvContext.h>
-#import <FHIntroduceManager.h>
+#import "FHEnvContext.h"
+#import "FHIntroduceManager.h"
 
 @interface ArticleTabBarStyleNewsListViewController ()<TTInteractExitProtocol>
 

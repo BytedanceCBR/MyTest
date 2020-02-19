@@ -11,7 +11,7 @@
 #import "SSCommonLogic.h"
 #import "TTShareConstants.h"
 #import "TTIndicatorView.h"
-#import <TTShareAdapterSetting.h>
+#import "TTShareAdapterSetting.h"
 #import "TTShareMethodUtil.h"
 #import "TTUIResponderHelper.h"
 #import "UIView+SupportFullScreen.h"

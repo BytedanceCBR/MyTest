@@ -15,7 +15,7 @@
 #import "TTRoute.h"
 #import "FHHouseBridgeManager.h"
 #import "FHUserTracker.h"
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHHomeSearchPanelView()
 {

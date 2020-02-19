@@ -8,7 +8,7 @@
 
 #import "TTSettingMineTabEntry.h"
 #import "ArticleBadgeManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "SSCommonLogic.h"
 #import "ArticleFetchSettingsManager.h"
 #import "SSWebViewController.h"

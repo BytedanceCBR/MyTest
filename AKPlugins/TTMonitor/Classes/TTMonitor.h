@@ -18,12 +18,20 @@
 typedef NSDictionary *(^TTMonitorParamsBlock)(void);
 typedef NSURL *(^TTURLTransformBlock)(NSURL *url);
 
+__attribute__((deprecated("Please use HMDTTMonitor")))
 @interface TTMonitor : NSObject
 
 @property (nonatomic, assign)BOOL stopMonitor;
 @property (nonatomic, copy)TTURLTransformBlock urlTransformBlock;
 
 + (TTMonitor *)shareManager;
+
+/**
+ *  设置打包的类的class
+ *
+ *  @param packClass 设置打包的类的class
+ */
+- (void)setPackagerClass:(Class<TTMonitorLogPackagerProtocol>)packClass;
 
 - (void)setMonitorConfiguration:(Class<TTMonitorConfigurationProtocol>)configurationClass;
 
@@ -113,6 +121,10 @@ typedef NSURL *(^TTURLTransformBlock)(NSURL *url);
 #pragma mark -- oom monitor
 // For OOM Detection
 + (void)setAppCrashFlagForLastTimeLaunch;
+
+#pragma mark -- Config
+
+- (void)setReportDefaultHost:(NSString *)defaultHost;
 
 
 @end

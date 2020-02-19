@@ -22,8 +22,8 @@
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTUIWidget/SSMotionRender.h>
 #import <KVOController/NSObject+FBKVOController.h>
-#import <UIImage+FIconFont.h>
-#import <UIColor+Theme.h>
+#import "UIImage+FIconFont.h"
+#import "UIColor+Theme.h"
 
 //#import "TTUGCEmojiTextAttachment.h"
 

@@ -11,6 +11,9 @@
 #import "TTBaseMacro.h"
 #import "MAMapKit.h"
 
+// 兼容之前的版本
+NSNotificationName kReachabilityChangedNotification = @"TTReachabilityChangedNotification";
+
 @interface FHStaticMapAnnotation ()
 @property(nonatomic, weak) FHStaticMapAnnotationView *annotationView;
 @end

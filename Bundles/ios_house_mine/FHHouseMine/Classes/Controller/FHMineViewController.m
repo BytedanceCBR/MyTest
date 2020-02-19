@@ -20,6 +20,9 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHSpringHangView.h"
 #import "UIViewController+Track.h"
+#import "TTTabBarItem.h"
+#import "TTTabBarManager.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHMineViewController ()<UIViewControllerErrorHandler>
 
@@ -38,6 +41,38 @@
 @end
 
 @implementation FHMineViewController
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [TTAccount addMulticastDelegate:self];
+
+    }
+
+    return self;
+}
+
+- (void)dealloc {
+    [TTAccount removeMulticastDelegate:self];
+}
+
+#pragma mark - TTAccountMulticastProtocol
+
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    [self checkMineTabName];
+}
+
+- (void)checkMineTabName {
+    //登录或未登录切换tab的名称
+    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseMineTabKey];
+    if([TTAccount sharedAccount].isLogin){
+        [tabItem setTitle:@"我的"];
+    } else {
+        [tabItem setTitle:@"未登录"];
+    }
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -70,8 +105,8 @@
         
         [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(84);
-            make.height.mas_equalTo(79);
+            make.width.mas_equalTo(82);
+            make.height.mas_equalTo(82);
             make.right.mas_equalTo(self.view).offset(-11);
         }];
     }
@@ -90,6 +125,8 @@
     if([FHEnvContext isSpringHangOpen]){
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
+    
+    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -174,6 +211,9 @@
 - (void)initSignal {
     //config改变后需要重新刷新数据
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        if([FHEnvContext isSpringHangOpen] && self.springView){
+            [self.springView show:[FHEnvContext enterTabLogName]];
+        }
         [self startLoadData];
     }];
 }

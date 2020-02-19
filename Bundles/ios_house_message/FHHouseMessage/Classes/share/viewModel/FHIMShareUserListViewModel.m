@@ -12,7 +12,7 @@
 #import "FHChatUserInfoManager.h"
 #import "FHChatUserInfo.h"
 #import "RXCollection.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "FHUserTracker.h"
 #import "TTAccountManager.h"
 @interface FHIMShareUserListViewModel ()

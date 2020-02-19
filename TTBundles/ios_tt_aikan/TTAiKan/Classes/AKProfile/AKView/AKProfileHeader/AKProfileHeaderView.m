@@ -9,8 +9,8 @@
 #import "AKProfileHeaderViewLogined.h"
 #import "AKProfileHeaderViewUnLogin.h"
 
-#import <UIColor+TTThemeExtension.h>
-#import <TTAccountManager.h>
+#import "UIColor+TTThemeExtension.h"
+#import "TTAccountManager.h"
 @interface AKProfileHeaderView () <AKProfileHeaderViewUnLoginDelegate,AKProfileHeaderViewLoginedDelegate>
 
 @property (nonatomic, strong)AKProfileHeaderViewUnLogin         *unloginView;

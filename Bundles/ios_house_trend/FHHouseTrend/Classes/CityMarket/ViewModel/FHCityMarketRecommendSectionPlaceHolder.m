@@ -15,7 +15,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHSearchHouseModel.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "TTRoute.h"
 #import "FHCityMarketRecommendFooterView.h"
 #import "FHUserTracker.h"

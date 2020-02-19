@@ -8,7 +8,8 @@
 #import "FHIntroduceManager.h"
 #import <FHIntroduceView.h>
 #import "FHIntroduceModel.h"
-#import <FHUserTracker.h>
+#import "FHUserTracker.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 #define kFHIntroduceAlreadyShow @"kFHIntroduceAlreadyShow"
 
@@ -50,6 +51,7 @@
     [keyWindow addSubview:_view];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [self addGoDetailLog];
+    [[FHPopupViewManager shared] outerPopupViewShow];
 }
 
 - (void)hideIntroduceView {
@@ -59,6 +61,7 @@
     self.isShowing = NO;
     [self.view removeFromSuperview];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [[FHPopupViewManager shared] outerPopupViewHide];
 }
 
 - (void)generateModel {

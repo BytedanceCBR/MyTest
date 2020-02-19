@@ -131,23 +131,24 @@ static NSInteger const kMaxPostImageCount = 9;
     if(!_hotTags) {
         _hotTags = [[NSMutableArray alloc] init];
         
-        // 添加标签列表数据
-        NSMutableArray<FHUGCToolBarTag *> *tags = [[NSMutableArray alloc] init];
-        FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
-        NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
-        NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
-        FHPostUGCSelectedGroupModel *selectedGroup = nil;
-        if(selectedGroupHistory && currentCityID.length > 0 && currentUserID.length > 0) {
-            NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
-            selectedGroup = [selectedGroupHistory.historyInfos objectForKey:saveKey];
-        }
-        if(selectedGroup) {
-            FHUGCToolBarTag *tag = [[FHUGCToolBarTag alloc] init];
-            tag.groupId = selectedGroup.socialGroupId;
-            tag.groupName = selectedGroup.socialGroupName;
-            tag.tagType = FHPostUGCTagType_LocalHistory;
-            [_hotTags addObject:tag];
-        }
+        // 不使用本地记录，改使用接口返回数据
+        // 本地发布历史添加标签列表数据
+//        NSMutableArray<FHUGCToolBarTag *> *tags = [[NSMutableArray alloc] init];
+//        FHPostUGCSelectedGroupHistory *selectedGroupHistory = [[FHUGCConfig sharedInstance] loadPublisherHistoryData];
+//        NSString* currentUserID = [TTAccountManager currentUser].userID.stringValue;
+//        NSString *currentCityID = [FHEnvContext getCurrentSelectCityIdFromLocal];
+//        FHPostUGCSelectedGroupModel *selectedGroup = nil;
+//        if(selectedGroupHistory && currentCityID.length > 0 && currentUserID.length > 0) {
+//            NSString *saveKey = [currentUserID stringByAppendingString:currentCityID];
+//            selectedGroup = [selectedGroupHistory.historyInfos objectForKey:saveKey];
+//        }
+//        if(selectedGroup) {
+//            FHUGCToolBarTag *tag = [[FHUGCToolBarTag alloc] init];
+//            tag.groupId = selectedGroup.socialGroupId;
+//            tag.groupName = selectedGroup.socialGroupName;
+//            tag.tagType = FHPostUGCTagType_History;
+//            [_hotTags addObject:tag];
+//        }
     }
     return _hotTags;
 }
@@ -278,11 +279,28 @@ static NSInteger const kMaxPostImageCount = 9;
     param[@"f_city_id"] = [FHEnvContext getCurrentSelectCityIdFromLocal];
 
     @weakify(self);
-    [FHHouseUGCAPI requestPublishHotTagsWithParam:param completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestPublishHotTagsWithParam:param class:FHUGCPublishTagModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         @strongify(self);
         
         if([model isKindOfClass:[FHUGCPublishTagModel class]]) {
             FHUGCPublishTagModel* tagsModel = (FHUGCPublishTagModel *)model;
+            
+            
+            if(tagsModel.data.recentlySocials.count > 0) {
+                [tagsModel.data.recentlySocials enumerateObjectsUsingBlock:^(FHUGCPublishTagSocialModel * _Nonnull tagModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    FHUGCToolBarTag *tag = [[FHUGCToolBarTag alloc] init];
+                    tag.groupId = @(tagModel.socialGroupId).stringValue;
+                    tag.groupName = tagModel.socialGroupName;
+                    tag.tagType = FHPostUGCTagType_History;
+                    
+                    // 热门圈子标签优先于发布历史
+                    NSUInteger index = [self.hotTags indexOfObject:tag];
+                    if(index == NSNotFound) {
+                        [self.hotTags addObject:tag];
+                    }
+                }];
+            }
             
             if(tagsModel.data.socials.count > 0) {
                 [tagsModel.data.socials enumerateObjectsUsingBlock:^(FHUGCPublishTagSocialModel * _Nonnull tagModel, NSUInteger idx, BOOL * _Nonnull stop) {

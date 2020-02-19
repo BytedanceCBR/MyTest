@@ -20,8 +20,8 @@
 #import "TTProfileShareService.h"
 #import "TTDeviceHelper.h"
 
-#import <TTAccountBusiness.h>
-#import <TTInteractExitHelper.h>
+#import "TTAccountBusiness.h"
+#import "TTInteractExitHelper.h"
 
 #import <TTRoute/TTRoute.h>
 #import <TTBaseLib/TTUIResponderHelper.h>

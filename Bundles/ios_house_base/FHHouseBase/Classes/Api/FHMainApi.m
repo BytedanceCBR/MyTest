@@ -6,11 +6,11 @@
 //
 
 #import "FHMainApi.h"
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "FHURLSettings.h"
 #import "FHHouseType.h"
 #import "FHCommonDefines.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import "FHJSONHTTPRequestSerializer.h"
 #import "FHEnvContext.h"
@@ -19,6 +19,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTReachability/TTReachability.h>
 #import <Heimdallr/HMDUserExceptionTracker.h>
+#import "TTTabbarLoadEpidemicSituatioHelper.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -126,6 +127,7 @@
             }
             [self addRequestLog:@"config" startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
             if (completion) {
+                [TTTabbarLoadEpidemicSituatioHelper  checkConfigEpidemicSituatiData:model.data.opTab];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
                 });
@@ -595,11 +597,13 @@
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
                     if (status.integerValue != 0 || error != nil) {
-                        extraDict = @{}.mutableCopy;
-                        extraDict[@"request_url"] = response.URL.absoluteString;
-                        extraDict[@"response_headers"] = response.allHeaderFields;
-                        extraDict[@"error"] = error.domain;
-                        extraDict[@"status"] = status;
+                        if(uploadLog) {
+                            extraDict = @{}.mutableCopy;
+                            extraDict[@"request_url"] = response.URL.absoluteString;
+                            extraDict[@"response_headers"] = response.allHeaderFields;
+                            extraDict[@"error"] = error.domain;
+                            extraDict[@"status"] = status;
+                        }
                         code = [status integerValue];
                         errMsg = error.domain;
                         resultType = status.integerValue;

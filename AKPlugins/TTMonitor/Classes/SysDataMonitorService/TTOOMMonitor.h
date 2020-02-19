@@ -33,5 +33,7 @@ typedef NS_ENUM(NSInteger, TTTerminationType) {
 - (void)logApplicationEnterBackground;
 - (void)logApplicationForcelyTermination;
 
++ (NSString *)oomMonitorStateDirectory;
+
 
 @end

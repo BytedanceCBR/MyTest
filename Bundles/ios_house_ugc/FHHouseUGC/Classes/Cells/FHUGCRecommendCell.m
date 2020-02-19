@@ -8,7 +8,7 @@
 #import "FHUGCRecommendCell.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCRecommendSubCell.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "FHUserTracker.h"
 #import "FHCommunityList.h"
 
@@ -336,6 +336,10 @@
 }
 
 #pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.dataList count];

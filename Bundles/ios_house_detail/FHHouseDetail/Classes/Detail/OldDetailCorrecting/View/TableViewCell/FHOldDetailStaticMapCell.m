@@ -3,7 +3,7 @@
 //
 
 #import "FHOldDetailStaticMapCell.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import <FHHouseDetail/FHDetailHeaderView.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHDetailStaticMapCell.h"

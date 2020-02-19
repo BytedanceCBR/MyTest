@@ -11,10 +11,10 @@
 #import "FHUGCFollowButton.h"
 #import "SSViewBase.h"
 #import "TTDeviceHelper.h"
-#import <UIFont+House.h>
+#import "UIFont+House.h"
 #import "TTRoute.h"
 #import "FHUGCScialGroupModel.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 
 @interface FHCommunityDetailHeaderView ()
 
@@ -387,7 +387,7 @@
 
 - (void)updatePublicationsInfo:(BOOL)isShow hasDetailBtn:(BOOL)hasDetailBtn {
     if(isShow) {
-        if([self isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow]){
+        if([self publicationsContentLabelHeightCompareWithTwoLineTextHeight] != NSOrderedAscending){
             [self.publicationsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(60);
             }];
@@ -434,15 +434,22 @@
     }
 }
 
--(BOOL)isPublicationsContentLabelLargerThanTwoLineWithoutDetailButtonShow {
-    BOOL ret = NO;
+-(NSComparisonResult)publicationsContentLabelHeightCompareWithTwoLineTextHeight {
     CGFloat leftPadding = 20;
     CGFloat rightPadding = 15;
-//    CGRect rect = [self.publicationsContentLabel textRectForBounds:CGRectMake(0, 0, SCREEN_WIDTH - leftPadding - rightPadding, CGFLOAT_MAX) limitedToNumberOfLines:0];
-    CGSize size = [self.publicationsContentLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - leftPadding - rightPadding, CGFLOAT_MAX)];
-    ret = size.height >= (PublicationsContentLabel_numberOfLines * PublicationsContentLabel_lineHeight);
-    return ret;
+    CGRect rect = [self.publicationsContentLabel textRectForBounds:CGRectMake(0, 0, SCREEN_WIDTH - leftPadding - rightPadding, CGFLOAT_MAX) limitedToNumberOfLines:0];
+    CGFloat labelTextHeight = rect.size.height;
+    CGFloat twoLineTextHeight = PublicationsContentLabel_numberOfLines * PublicationsContentLabel_lineHeight;
+    if(labelTextHeight < twoLineTextHeight) {
+        return NSOrderedAscending;
+    } else if(labelTextHeight == twoLineTextHeight) {
+        return NSOrderedSame;
+    } else {
+        return NSOrderedDescending;
+    }
 }
+
+
 
 - (CGFloat)viewHeight {
     CGFloat headerBackNormalHeight = 144;

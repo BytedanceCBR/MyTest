@@ -13,7 +13,7 @@
 #import "TTFollowedViewController.h"
 #import "TTVisitorViewController.h"
 #import "FriendDataManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 /**
  * 社交关系类型

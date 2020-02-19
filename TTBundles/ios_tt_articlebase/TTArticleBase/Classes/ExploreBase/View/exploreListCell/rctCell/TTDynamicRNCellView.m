@@ -17,7 +17,7 @@
 #import "ExploreMixListDefine.h"
 #import "ExploreArticleWebCellView.h"
 #import "RNData.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 //#import "TTRNBridge+Cell.h"
 #import "NewsUserSettingManager.h"
 #import "TTDeviceHelper.h"

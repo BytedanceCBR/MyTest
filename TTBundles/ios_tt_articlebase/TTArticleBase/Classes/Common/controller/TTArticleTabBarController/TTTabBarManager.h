@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTThemeManager.h>
+#import "TTThemeManager.h"
 
 @class TTTabBarItem;
 @class TTTabBarImageModel;
@@ -32,6 +32,7 @@ extern NSString *kTTTabFeedPublishName; //feed发布器图片
 extern NSString *kFHouseFindTabKey; //房产找房key
 extern NSString *kFHouseMessageTabKey; //房产首页key
 extern NSString *kFHouseMineTabKey; //房产首页key
+extern NSString *kFHouseHouseEpidemicSituationTabKey; //疫情首页key
 
 @interface TTTabBarManager : NSObject
 
@@ -67,5 +68,6 @@ extern NSString *kFHouseMineTabKey; //房产首页key
 - (void)updateItemState:(BOOL)freeze withIdentifier:(NSString *)identifier;
 
 - (void)updateTabTags:(NSArray *)tabTags;
+
 
 @end

@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "TTPostThreadTask.h"
 //#import "TTRepostThreadModel.h"
-#import <TTRichSpanText.h>
+#import "TTRichSpanText.h"
 #import <TTImagePicker/TTImagePickerTrackManager.h>
 #import <TTImagePicker/TTAssetModel.h>
 

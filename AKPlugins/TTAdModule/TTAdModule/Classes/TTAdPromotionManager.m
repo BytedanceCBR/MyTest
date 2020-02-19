@@ -13,7 +13,7 @@
 #import "TTURLUtils.h"
 #import <UIKit/UIKit.h>
 #import "TTAdTrackManager.h"
-#import <TTTrackerProxy.h>
+#import "TTTrackerProxy.h"
 
 
 @implementation TTActivityModel

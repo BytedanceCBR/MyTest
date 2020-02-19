@@ -7,7 +7,7 @@
 //
 
 #import "TTNotePermissonGuideView.h"
-#import <TTUIResponderHelper.h>
+#import "TTUIResponderHelper.h"
 #import <BDWebImage/SDWebImageAdapter.h>
 #import <FHCommonUI/UIView+House.h>
 

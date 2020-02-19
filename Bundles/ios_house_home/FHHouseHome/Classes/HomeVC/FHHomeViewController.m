@@ -17,28 +17,28 @@
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
 #import "FHLocManager.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import "TTSandBoxHelper.h"
 #import "TTArticleCategoryManager.h"
 #import "FHHomeScrollBannerCell.h"
-#import <TTDeviceHelper.h>
-#import <TTAppUpdateHelper.h>
-#import <TTInstallIDManager.h>
-#import <CommonURLSetting.h>
-#import <FHCommuteManager.h>
-#import <TTUIResponderHelper.h>
+#import "TTDeviceHelper.h"
+#import "TTAppUpdateHelper.h"
+#import "TTInstallIDManager.h"
+#import "CommonURLSetting.h"
+#import "FHCommuteManager.h"
+#import "TTUIResponderHelper.h"
 #import "TTTabBarController.h"
 #import <FHHomeSearchPanelViewModel.h>
-#import <ExploreLogicSetting.h>
+#import "ExploreLogicSetting.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
-#import <TTArticleTabBarController.h>
+#import "TTArticleTabBarController.h"
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
-#import <TTThemedAlertController.h>
-#import <FHUtils.h>
+#import "TTThemedAlertController.h"
+#import "FHUtils.h"
 #import "FHHomeBaseScrollView.h"
-#import <FHHomeMainViewController.h>
+#import "FHHomeMainViewController.h"
 #import <FHHouseBase/FHHomeScrollBannerView.h>
-//#import <FHMinisdkManager.h>
+//#import "FHMinisdkManager.h"
 //#import "FHSpringHangView.h"
 
 static CGFloat const kShowTipViewHeight = 32;
@@ -110,26 +110,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
-
-//- (void)addSpringView {
-//    if(!_springView){
-//        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
-//        [self.view addSubview:_springView];
-//        _springView.hidden = YES;
-//        
-//        CGFloat bottom = 49;
-//        if (@available(iOS 11.0 , *)) {
-//            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-//        }
-//        
-//        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-//            make.width.mas_equalTo(84);
-//            make.height.mas_equalTo(79);
-//            make.right.mas_equalTo(self.view).offset(-11);
-//        }];
-//    }
-//}
 
 - (void)scrollMainTableToTop
 {
@@ -261,7 +241,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     UIEdgeInsets inset = self.mainTableView.contentInset;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
-        
+    WeakSelf;
     [self.notifyBar showMessage:message
               actionButtonTitle:@""
                       delayHide:YES
@@ -269,7 +249,7 @@ static CGFloat const kSectionHeaderHeight = 38;
             bgButtonClickAction:nil
          actionButtonClickBlock:nil
                    didHideBlock:nil
-                  willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {                      
+                  willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
                       [UIView animateWithDuration:0.3 animations:^{
                           UIEdgeInsets inset = self.mainTableView.contentInset;
                           inset.top = 0;
@@ -281,14 +261,16 @@ static CGFloat const kSectionHeaderHeight = 38;
                               self.isShowRefreshTip = NO;
                           }
                       }];
-                      
+
     }];
 }
 
 - (void)hideImmediately
 {
-    [self.notifyBar hideImmediately];
-    self.isShowRefreshTip = NO;
+    if(!self.notifyBar.hidden){
+        [self.notifyBar hideImmediately];
+        self.isShowRefreshTip = NO;
+    }
 }
 
 - (void)retryLoadData
@@ -397,7 +379,7 @@ static CGFloat const kSectionHeaderHeight = 38;
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
     }
     
-    [self addStayCategoryLog:self.ttTrackStayTime];
+//    [self addStayCategoryLog:self.ttTrackStayTime];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -443,16 +425,16 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
-    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-    NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
-    [tracerDict setValue:@"main" forKey:@"tab_name"];
-    [tracerDict setValue:@(0) forKey:@"with_tips"];
-    [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
-    tracerDict[@"stay_time"] = @((int)duration);
-    
-    if (((int)duration) > 0) {
-        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
-    }
+//    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+//    NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
+//    [tracerDict setValue:@"main" forKey:@"tab_name"];
+//    [tracerDict setValue:@(0) forKey:@"with_tips"];
+//    [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
+//    tracerDict[@"stay_time"] = @((int)duration);
+//
+//    if (((int)duration) > 0) {
+//        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+//    }
 }
 
 - (void)traceJump2AdEvent:(NSString *)urlString

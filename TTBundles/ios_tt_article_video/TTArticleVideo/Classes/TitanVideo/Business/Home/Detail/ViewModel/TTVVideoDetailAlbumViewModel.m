@@ -7,7 +7,7 @@
 //
 
 #import "TTVVideoDetailAlbumViewModel.h"
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "CommonURLSetting.h"
 
 //#import "Article.h"

@@ -146,7 +146,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         textField.layer.borderWidth  = 0.5;
         textField.keyboardType = UIKeyboardTypeNumberPad;
         textField.placeholder = @"填写手机号";
-        [textField setValue:[UIColor colorWithHexStr:@"#d9d9d9"] forKeyPath:@"_placeholderLabel.textColor"];
+        textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"填写手机号" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexStr:@"#d9d9d9"]}];
         textField.layer.cornerRadius = 16;
         textField.layer.masksToBounds = YES;
         textField.delegate = self;
