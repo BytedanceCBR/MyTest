@@ -313,6 +313,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsTitleTagModel *titleTag ;
 //埋点使用
 @property (nonatomic, strong , nullable) NSDictionary *tracerDict;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *reasonTags;
+@property (nonatomic, copy , nullable) NSString *addrData;
 
 @end
 

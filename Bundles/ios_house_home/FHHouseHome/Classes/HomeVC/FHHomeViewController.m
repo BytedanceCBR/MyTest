@@ -267,8 +267,10 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)hideImmediately
 {
-    [self.notifyBar hideImmediately];
-    self.isShowRefreshTip = NO;
+    if(!self.notifyBar.hidden){
+        [self.notifyBar hideImmediately];
+        self.isShowRefreshTip = NO;
+    }
 }
 
 - (void)retryLoadData
