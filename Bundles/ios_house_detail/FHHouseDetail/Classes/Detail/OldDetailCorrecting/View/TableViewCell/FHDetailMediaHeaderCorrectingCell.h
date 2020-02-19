@@ -10,7 +10,6 @@
 #import "FHMultiMediaModel.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "FHDetailHouseTitleModel.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailMediaHeaderCorrectingCell : FHDetailBaseCell
