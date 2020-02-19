@@ -111,6 +111,9 @@
     if (!_enable) {
         return;
     }
+    if (self.switchDelegate && [self.switchDelegate respondsToSelector:@selector(shouldIgnoreNetworkForTTMonitor)] && [self.switchDelegate shouldIgnoreNetworkForTTMonitor]) {
+        return;
+    }
     NSDate * startDate = [NSDate date];
     __weak typeof(self) weakSelf = self;
     [self performBlock:^{
@@ -125,6 +128,9 @@
 - (void)receiveNetworkFinishNotification:(NSNotification *)notification
 {
     if (!_enable) {
+        return;
+    }
+    if (self.switchDelegate && [self.switchDelegate respondsToSelector:@selector(shouldIgnoreNetworkForTTMonitor)] && [self.switchDelegate shouldIgnoreNetworkForTTMonitor]) {
         return;
     }
     NSDate * finishedDate = [NSDate date];

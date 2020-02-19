@@ -1,5 +1,5 @@
 //已做修改，重新生成时需要注意
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "FHHouseNeighborModel.h"
 #import "FHHouseRentModel.h"
 #import "FHSearchHouseModel.h"

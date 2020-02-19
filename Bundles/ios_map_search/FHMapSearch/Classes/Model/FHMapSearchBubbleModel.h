@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <FHHouseType.h>
+#import "FHHouseType.h"
 #import "FHMapSearchShowMode.h"
 NS_ASSUME_NONNULL_BEGIN
 

@@ -12,8 +12,8 @@
 #import "TTUGCEmojiParser.h"
 #import "FHFeedUGCContentModel.h"
 #import "FHFeedUGCCellModel.h"
-#import <TTVFeedListItem.h>
-#import <AWECommentModel.h>
+#import "TTVFeedListItem.h"
+#import "AWECommentModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -55,6 +55,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTVFeedListItem *)configureVideoItem:(FHFeedUGCCellModel *)cellModel;
 
 + (TTImageInfosModel *)convertTTImageInfosModel:(FHFeedContentImageListModel *)imageModel;
+
+//小区问答
++ (void)setQuestionRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
+
++ (void)setAnswerRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 
 @end
 

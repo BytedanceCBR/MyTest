@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 @class FHCityMarketDetailResponseModel;
 NS_ASSUME_NONNULL_BEGIN
 

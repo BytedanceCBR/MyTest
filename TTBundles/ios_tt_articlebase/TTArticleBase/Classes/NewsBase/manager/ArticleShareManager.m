@@ -22,7 +22,7 @@
 #import "TTModuleBridge.h"
 #import "TTImageInfosModel+Extention.h"
 #import "TTVFeedItem+Extension.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTShareMethodUtil.h"
 #import "TTWebImageManager.h"
 #import <TTKitchen/TTKitchen.h> 

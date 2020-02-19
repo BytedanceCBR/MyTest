@@ -7,7 +7,7 @@
 //
 
 #import "ExploreMixedListBaseView.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "Article.h"
 #import "WapData.h"
 #import "HuoShan.h"
@@ -166,16 +166,16 @@
 #import "FHHomeConfigManager.h"
 #import "FHFeedHouseCellHelper.h"
 #import "FHFeedHouseItemCell.h"
-//#import "Bubble-Swift.h"
-#import <FHEnvContext.h>
-#import <FHLocManager.h>
-#import <FHHomeCellHelper.h>
+#import "FHEnvContext.h"
+#import "FHLocManager.h"
+#import "FHHomeCellHelper.h"
 #import "SSCommonLogic.h"
 #import "TTSandBoxHelper.h"
-#import <FHUtils.h>
-#import <TTTabBarItem.h>
-#import <HMDTTMonitor.h>
-#import <UIColor+Theme.h>
+#import "FHUtils.h"
+#import "TTTabBarItem.h"
+#import "HMDTTMonitor.h"
+#import "UIColor+Theme.h"
+#import <TTUIWidget/TTRefreshAnimationView.h>
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -747,7 +747,9 @@ TTRefreshViewDelegate
         sself.refreshFromType = ListDataOperationReloadFromTypeLoadMore;
         [wself loadMoreWithUmengLabel:[wself modifyEventLabelForRefreshEvent:@"load_more"]];
     }];
-    [_listView.pullDownView setUpRefreshBackColor:[UIColor themeHomeColor]];
+    _listView.pullDownView.backgroundColor = [UIColor themeHomeColor];
+    _listView.pullDownView.bgView.backgroundColor = [UIColor themeHomeColor];
+    _listView.pullDownView.defaultRefreshAnimateView.backgroundColor = [UIColor themeHomeColor];
 }
 
 - (void)didFinishLoadTable
@@ -947,7 +949,7 @@ TTRefreshViewDelegate
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBeComeactive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
 }
 
 - (void)didAppear

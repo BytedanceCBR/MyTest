@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTActivityContentItemProtocol.h>
+#import "TTActivityContentItemProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

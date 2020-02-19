@@ -23,14 +23,14 @@
 //#import "TTIMManager.h"
 //#import "TTSettingMineTabManager.h"
 
-#import <TTAccountBusiness.h>
-#import <TTAccountMulticastDispatcher.h>
+#import "TTAccountBusiness.h"
+#import "TTAccountMulticastDispatcher.h"
 #import "TTAccountTestSettings.h"
 #import "TTJSBAuthManager.h"
 
 #import "SSInHouseFeatureManager.h"
 #import "TTVSettingsConfiguration.h"
-#import <TTSettingsManager.h>
+#import "TTSettingsManager.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 
 

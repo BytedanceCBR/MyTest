@@ -22,7 +22,7 @@
 #import "FHDetailFloorPanDetailInfoModel.h"
 #import "FHTransactionHistoryModel.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import <BDAgileLog.h>
+#import "BDAgileLog.h"
 #import <FHHouseBase/FHMainApi.h>
 #import <TTInstallService/TTInstallIDManager.h>
 #import "TTBaseMacro.h"

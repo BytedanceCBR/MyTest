@@ -29,8 +29,8 @@
 #import <TTSettingsManager/TTSettingsManager.h>
 
 //新分享库
-#import <TTShareActivity.h>
-#import <TTShareManager.h>
+#import "TTShareActivity.h"
+#import "TTShareManager.h"
 #import "TTPanelActivity.h"
 #import "TTAdPromotionContentItem.h"
 #import "NSDictionary+TTGeneratedContent.h"

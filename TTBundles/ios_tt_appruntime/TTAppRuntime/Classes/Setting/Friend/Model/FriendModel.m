@@ -7,7 +7,7 @@
 //
 
 #import "FriendModel.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "SSABPerson.h"
 #import "ArticleAddressManager.h"
 #import "TTBlockManager.h"

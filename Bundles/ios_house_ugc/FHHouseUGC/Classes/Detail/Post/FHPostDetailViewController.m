@@ -18,10 +18,10 @@
 #import "UIViewController+Track.h"
 #import "FHFeedOperationView.h"
 #import "FHUGCConfig.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHUGCShareManager.h"
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHPostDetailViewController ()
 

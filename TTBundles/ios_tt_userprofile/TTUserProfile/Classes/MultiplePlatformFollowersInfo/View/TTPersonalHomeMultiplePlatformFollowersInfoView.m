@@ -9,9 +9,9 @@
 #import "TTPersonalHomeMultiplePlatformFollowersInfoViewModel.h"
 #import "TTPersonalHomeSinglePlatformFollowersInfoCell.h"
 #import "TTPersonalHomeSinglePlatformFollowersInfoViewModel.h"
-#import <ReactiveObjC.h>
-#import <UIView+CustomTimingFunction.h>
-#import <TTRoute.h>
+#import "ReactiveObjC.h"
+#import "UIView+CustomTimingFunction.h"
+#import "TTRoute.h"
 #import "TTThemedAlertController.h"
 #import "SSActionManager.h"
 #import <TTBaseLib/TTDeviceUIUtils.h>

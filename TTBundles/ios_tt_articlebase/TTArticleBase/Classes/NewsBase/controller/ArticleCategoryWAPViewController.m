@@ -9,7 +9,7 @@
 #import "ArticleCategoryWAPViewController.h"
 #import "SSWebViewControllerView.h"
 #import "ExploreSearchViewController.h"
-#import <TTUserSettingsManager+FontSettings.h>
+#import "TTUserSettingsManager+FontSettings.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTStringHelper.h"
 #import <TTRoute/TTRoute.h>

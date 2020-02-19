@@ -7,15 +7,15 @@
 
 #import "FHHomeSchemaObject.h"
 #import "TTRoute.h"
-#import <TTTabBarProvider.h>
-#import <TTTabBarManager.h>
-#import <TTTabBarItem.h>
+#import "TTTabBarProvider.h"
+#import "TTTabBarManager.h"
+#import "TTTabBarItem.h"
 #import "UIViewController+TTMovieUtil.h"
 #import "FHHomeConfigManager.h"
-#import <JSONAdditions.h>
-#import <TTArticleTabBarController.h>
-#import <FHEnvContext.h>
-#import <FHMinisdkManager.h>
+#import "JSONAdditions.h"
+#import "TTArticleTabBarController.h"
+#import "FHEnvContext.h"
+#import "FHMinisdkManager.h"
 
 @interface FHHomeSchemaObject()<TTRouteInitializeProtocol>
 

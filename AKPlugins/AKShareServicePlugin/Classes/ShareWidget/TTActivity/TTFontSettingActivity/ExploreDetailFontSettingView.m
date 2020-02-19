@@ -12,7 +12,7 @@
 #import <TTTracker/TTTracker.h>
 //#import "TTTrackerWrapper.h"
 
-#import <TTUserSettingsManager+FontSettings.h>
+#import "TTUserSettingsManager+FontSettings.h"
 //#import "TTLogManager.h"
 //#import "SSCommon+UIApplication.h"
 #import "UIImage+TTThemeExtension.h"

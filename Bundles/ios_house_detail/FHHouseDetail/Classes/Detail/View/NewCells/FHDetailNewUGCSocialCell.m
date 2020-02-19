@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailNewUGCSocialCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -18,7 +18,7 @@
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import "FHHouseNewsSocialModel.h"
 #import "TTUGCEmojiParser.h"
 

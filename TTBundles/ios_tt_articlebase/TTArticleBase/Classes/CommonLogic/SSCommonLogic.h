@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <SSCommonDefines.h>
+#import "SSCommonDefines.h"
 
 extern NSString * const kIntroductionViewControllerRemovedNotification;
 extern NSString * const kFeedRefreshButtonSettingEnabledNotification;

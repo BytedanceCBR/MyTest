@@ -16,9 +16,9 @@
 #import "ExploreOrderedData+TTBusiness.h"
 #import "WenDaBaseData.h"
 #import "TTUserData.h"
-#import <TTAccountSDK.h>
+#import "TTAccountSDK.h"
 #import "TTStartupTasksTracker.h"
-#import <TTFriendRelationEntity.h>
+#import "TTFriendRelationEntity.h"
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTBaseMacro.h>
 #import <Crashlytics/Answers.h>

@@ -7,7 +7,7 @@
 
 #import "AKImageAlertView.h"
 #import "AKImageAlertModel.h"
-#import <TTAlphaThemedButton.h>
+#import "TTAlphaThemedButton.h"
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTUIResponderHelper.h>

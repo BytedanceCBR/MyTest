@@ -8,7 +8,7 @@
 #import "FHDetailListEntranceCell.h"
 #import "FHDetailOldModel.h"
 #import <TTRoute/TTRoute.h>
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 
 

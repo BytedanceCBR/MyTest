@@ -7,7 +7,7 @@
 //
 
 #import "TTAccountNavigationBar.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 
 
 #define DEVICE_SYS_FLOAT_VERSION ([[[UIDevice currentDevice] systemVersion] floatValue])

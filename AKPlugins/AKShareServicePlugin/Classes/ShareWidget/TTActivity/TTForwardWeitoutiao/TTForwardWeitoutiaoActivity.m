@@ -6,7 +6,7 @@
 //
 //
 #import "TTForwardWeitoutiaoActivity.h"
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 #import <TTThemed/TTThemeManager.h>
 
 NSString * const TTActivityTypeForwardWeitoutiao = @"com.toutiao.UIKit.activity.ForwardWeitoutiao";

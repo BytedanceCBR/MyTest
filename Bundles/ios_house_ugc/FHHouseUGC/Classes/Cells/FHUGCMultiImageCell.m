@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCMultiImageCell.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
@@ -15,8 +15,8 @@
 #import "TTBaseMacro.h"
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
-#import <TTBusinessManager+StringUtils.h>
-#import <UIViewAdditions.h>
+#import "TTBusinessManager+StringUtils.h"
+#import "UIViewAdditions.h"
 
 #define leftMargin 20
 #define rightMargin 20

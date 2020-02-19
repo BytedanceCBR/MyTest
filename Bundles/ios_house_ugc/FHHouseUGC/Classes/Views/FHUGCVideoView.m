@@ -18,7 +18,7 @@
 #import <KVOController/KVOController.h>
 #import "TTVFeedItem+Extension.h"
 #import "TTVVideoArticle+Extension.h"
-#import <TTVCellPlayMovie.h>
+#import "TTVCellPlayMovie.h"
 #import "TTMovieStore.h"
 #import "TTUserSettingsManager+FontSettings.h"
 #import "ExploreCellHelper.h"
@@ -32,7 +32,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTArticleBase/SSCommonLogic.h>
-#import <UIFont+House.h>
+#import "UIFont+House.h"
 
 extern CGFloat ttvs_listVideoMaxHeight(void);
 extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);

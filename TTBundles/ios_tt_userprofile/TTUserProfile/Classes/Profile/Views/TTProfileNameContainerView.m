@@ -19,7 +19,7 @@
 #import "TTPersonalHomeUserInfoResponseModel.h"
 #import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "SSCommonLogic.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 
 

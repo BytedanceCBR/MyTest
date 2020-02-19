@@ -12,7 +12,7 @@
 #import "TTUIResponderHelper.h"
 #import "UIViewAdditions.h"
 #import <FHHouseBase/FHBaseTableView.h>
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHUGCCommunityListViewController ()
 @property(nonatomic, strong) UIView *loadingView;

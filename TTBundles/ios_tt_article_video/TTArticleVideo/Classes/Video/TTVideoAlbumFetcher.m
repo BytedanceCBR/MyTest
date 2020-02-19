@@ -7,7 +7,7 @@
 //
 
 #import "TTVideoAlbumFetcher.h"
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "Article.h"
 
 #import "CommonURLSetting.h"

@@ -7,7 +7,7 @@
 
 #import "FHMapSearchViewModel.h"
 #import <AMapFoundationKit/AMapFoundationKit.h>
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "FHHouseType.h"
 #import "TTNetworkManager.h"
 #import "FHMapSearchTypes.h"
@@ -19,7 +19,7 @@
 #import "FHMapSearchHouseListViewController.h"
 #import "FHHouseSearcher.h"
 #import <TTRoute/TTRoute.h>
-#import <TTReachability.h>
+#import "TTReachability.h"
 #import "FHMainManager+Toast.h"
 #import "FHUserTracker.h"
 #import "FHMapSearchBubbleModel.h"
@@ -151,7 +151,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             _lastBubble.resizeLevel = 10;
         }
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
         
         self.configModel.searchId = nil;
         
@@ -193,7 +193,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)dealloc
 {
     [_requestHouseTask cancel];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TTReachabilityChangedNotification object:nil];
     if (self->drawLinePoints) {
         free(self->drawLinePoints);
     }

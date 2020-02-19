@@ -14,7 +14,7 @@
 #import "TTIndicatorView.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceHelper.h"
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+TTThemeExtension.h"
 #import <TTBaseLib/UIImageAdditions.h>
 #import <TTThemed/TTThemeConst.h>
 

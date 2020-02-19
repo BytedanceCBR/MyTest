@@ -8,7 +8,7 @@
 
 #import "TTPersonalHomeSegmentView.h"
 #import "TTIndicatorView.h"
-#import <NetworkUtilities.h>
+#import "NetworkUtilities.h"
 
 @implementation TTPersonalHomeSegmentView
 

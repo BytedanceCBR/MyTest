@@ -35,7 +35,7 @@
 
 #import "UIViewController+RefreshEvent.h"
 
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import <Masonry/Masonry.h>
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import "SSCommonLogic.h"

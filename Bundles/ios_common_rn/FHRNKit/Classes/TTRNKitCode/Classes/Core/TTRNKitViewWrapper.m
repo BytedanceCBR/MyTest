@@ -21,7 +21,7 @@
 #import <TTRexxar/TTRWKWebView.h>
 #endif
 #import <React/RCTRootView.h>
-#import <FHIESGeckoManager.h>
+#import "FHIESGeckoManager.h"
 
 #define BasicHost @[@"appInfo",@"bundleInfo",@"open",@"close"]
 

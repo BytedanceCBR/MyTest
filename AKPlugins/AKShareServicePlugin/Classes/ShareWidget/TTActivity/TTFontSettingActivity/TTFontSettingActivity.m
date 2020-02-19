@@ -8,7 +8,7 @@
 
 #import "TTFontSettingActivity.h"
 #import <TTTracker/TTTracker.h>
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 #import "TTFontSettingController.h"
 #import "SSThemed.h"
 

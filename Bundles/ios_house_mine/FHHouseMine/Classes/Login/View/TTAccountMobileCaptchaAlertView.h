@@ -5,7 +5,7 @@
 //  Created by bytedance on 2018/5/21.
 //
 
-#import <SSViewBase.h>
+#import "SSViewBase.h"
 #import <TTAccountSDK/TTAccountSMSCodeDef.h>
 
 /// 0 代表取消

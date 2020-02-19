@@ -758,10 +758,14 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     [self tt_startUpdate];
     
     [self.view addSubview:self.topView];
-    
-    self.statusBarBackgrView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.ttv_statusBarHidden ? 0 : self.view.tt_safeAreaInsets.top)];
-    self.statusBarBackgrView.backgroundColor = [UIColor blackColor];
     self.initInsets = self.view.tt_safeAreaInsets;
+    if (@available(iOS 13.0, *)) {
+        self.initInsets =  [UIApplication sharedApplication].keyWindow.safeAreaInsets;
+    } else {
+        self.initInsets = self.view.tt_safeAreaInsets;
+    }
+    self.statusBarBackgrView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.ttv_statusBarHidden ? 0 : self.initInsets.top)];
+    self.statusBarBackgrView.backgroundColor = [UIColor blackColor];
     [self.view addSubview:self.statusBarBackgrView];
 }
 

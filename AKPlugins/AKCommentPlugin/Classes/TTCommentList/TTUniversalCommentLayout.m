@@ -10,7 +10,7 @@
 #import "TTCommentReplyListView.h"
 #import "TTCommentUIHelper.h"
 #import <TTThemed/SSThemed.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTBaseLib/TTLAbelTextHelper.h>
 #import <FHCommonUI/TTUGCEmojiParser.h>
 #import <TTUGCFoundation/TTRichSpanText.h>

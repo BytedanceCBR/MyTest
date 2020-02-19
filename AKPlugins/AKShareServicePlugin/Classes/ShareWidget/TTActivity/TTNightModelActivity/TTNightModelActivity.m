@@ -9,7 +9,7 @@
 #import "TTNightModelActivity.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 
 NSString * const TTActivityTypeChangeNightMode = @"com.toutiao.UIKit.activity.ChangeNightMode";
 

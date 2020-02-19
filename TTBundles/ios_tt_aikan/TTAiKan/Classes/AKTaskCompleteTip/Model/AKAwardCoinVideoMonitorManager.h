@@ -7,7 +7,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import <TTVPlayerControllerProtocol.h>
+#import "TTVPlayerControllerProtocol.h"
 @class TTVPlayVideo;
 @class TTDetailModel;
 @interface AKAwardCoinVideoMonitorManager : NSObject <TTVPlayerContext>

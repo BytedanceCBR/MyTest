@@ -10,4 +10,7 @@
 
 @interface UIViewController (Monitor)
 
+extern NSString * const TTMonitorViewWillAppearNotification;
+extern NSString * const TTMonitorViewWillDisappearNotification;
+
 @end

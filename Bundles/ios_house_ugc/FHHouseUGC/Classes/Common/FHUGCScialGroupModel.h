@@ -1,6 +1,6 @@
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
-#import <FHUGCConfigModel.h>
+#import "JSONModel.h"
+#import "FHUGCConfigModel.h"
 #import "FHUGCShareManager.h"
 NS_ASSUME_NONNULL_BEGIN
 

@@ -16,7 +16,7 @@
 #import "UIViewController+Track.h"
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import <FHRNHelper.h>
+#import "FHRNHelper.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
@@ -130,7 +130,7 @@
         }
         
         
-        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
+//        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
     }
     return self;
 }
@@ -216,9 +216,9 @@
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        if (!self.instantData) {
+//        if (!self.instantData) {
             [self startLoading];
-        }
+//        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {

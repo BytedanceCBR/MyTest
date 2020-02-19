@@ -8,7 +8,7 @@
 
 #import "TTBlockContentItem.h"
 #import "TTBlockActivity.h"
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 
 NSString * const TTActivityContentItemTypeBlock = @"com.toutiao.ActivityContentItem.Block";
 

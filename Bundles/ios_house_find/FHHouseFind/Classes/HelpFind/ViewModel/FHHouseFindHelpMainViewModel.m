@@ -8,7 +8,7 @@
 #import "FHHouseFindHelpMainViewModel.h"
 #import "FHMainApi+HouseFind.h"
 #import "FHHouseFindMainViewController.h"
-#import <FHHouseType.h>
+#import "FHHouseType.h"
 
 @interface FHHouseFindHelpMainViewModel ()
 

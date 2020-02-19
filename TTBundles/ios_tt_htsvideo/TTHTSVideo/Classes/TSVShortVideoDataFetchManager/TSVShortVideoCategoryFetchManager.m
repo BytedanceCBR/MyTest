@@ -9,7 +9,7 @@
 #import "TSVShortVideoCategoryFetchManager.h"
 #import "ExploreFetchListManager.h"
 #import "NSObject+FBKVOController.h"
-#import <extobjc.h>
+#import "extobjc.h"
 #import "ExploreListHelper.h"
 #import "TSVChannelDecoupledConfig.h"
 #import "TTShortVideoModel.h"

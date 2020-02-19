@@ -33,6 +33,16 @@
                       enterType:(NSString *)enterType;
 
 /**
+ *  开始统计列表
+ *
+ *  @param extraParams 由各业务方自行传入的参数
+ */
+- (void)startTrackForCategoryID:(NSString *)categoryID
+                      concernID:(NSString *)concernID
+                      enterType:(NSString *)enterType
+                    extraParams:(NSDictionary *)extraParams;
+
+/**
  *  结束本次列表统计
  */
 - (void)endTrackCategory:(NSString *)categoryID;

@@ -7,7 +7,7 @@
 //
 
 #import "FriendListCell.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTThirdPartyAccountsHeader.h"
 #import "NetworkUtilities.h"
 #import "TTIndicatorView.h"

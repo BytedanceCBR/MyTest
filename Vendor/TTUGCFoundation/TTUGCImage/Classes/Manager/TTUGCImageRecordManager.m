@@ -7,11 +7,11 @@
 
 #import "TTUGCImageRecordManager.h"
 #import <pthread/pthread.h>
-#import <TTMonitor.h>
+#import "TTMonitor.h"
 #import <TTKitchenExtension/TTKitchenExtension.h>
 #import <TTKitchen.h>
 #import <FRImageInfoModel.h>
-#import <BDWebImageManager.h>
+#import "BDWebImageManager.h"
 #import "TTUGCImageView.h"
 #import "TTUGCImageHelper.h"
 

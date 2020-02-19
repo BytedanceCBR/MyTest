@@ -6,6 +6,8 @@
 //  Copyright © 2016年 ZhangLeonardo. All rights reserved.
 //
 
+#import <objc/runtime.h>
+
 #import "TTNetworkMonitorRecorder.h"
 #import "TTNetworkMonitorTransaction.h"
 #import "TTMonitor.h"
@@ -13,7 +15,7 @@
 #import "TTNetworkManager.h"
 #import "TTDebugRealStorgeService.h"
 #import "TTHttpResponseChromium.h"
-//#import "TTHttpResponseAFNetworking.h"
+#import "TTHttpResponseAFNetworking.h"
 #import "TTNetworkDefine.h"
 #import "TTImageMonitorManager.h"
 #import "TTMonitorConfiguration.h"
@@ -249,7 +251,15 @@
             [chromiumInfo setValue:@(timingInfo.isFromProxy) forKey:@"timing_isFromProxy"];
             [chromiumInfo setValue:timingInfo.remoteIP forKey:@"timing_remoteIP"];
             [chromiumInfo setValue:@(timingInfo.remotePort) forKey:@"timing_remotePort"];
+            if (class_getProperty([TTHttpResponseChromium class], "requestLog")) {
+                Ivar ivar = class_getInstanceVariable([TTHttpResponseChromium class], "_requestLog");
+                [chromiumInfo setValue:object_getIvar(targetResponse, ivar) forKey:@"request_log"];
+            }
             [debugRealStoreItem setValue:chromiumInfo forKey:@"chromium_info"];
+            [debugRealStoreItem setValue:@"cronet" forKey:@"client_type"];
+        }
+        else {
+            [debugRealStoreItem setValue:@"afn" forKey:@"client_type"];
         }
         if (fail) {
             NSURL * url = [NSURL URLWithString:transaction.requestUrl];
@@ -288,13 +298,11 @@
             if ([transaction.response isKindOfClass:[NSHTTPURLResponse class]]) {
                 NSHTTPURLResponse * r = (NSHTTPURLResponse *)transaction.response;
                 [self applyTraceCodeToTrack:track sourceDict:r.allHeaderFields];
-            }
-//            else if ([transaction.response isKindOfClass:[TTHttpResponseAFNetworking class]]){
-//                TTHttpResponseAFNetworking * afResponse = (TTHttpResponseAFNetworking *)transaction.response;
-//                NSHTTPURLResponse * r = (NSHTTPURLResponse *)afResponse.response;
-//                [self applyTraceCodeToTrack:track sourceDict:r.allHeaderFields];
-//            }
-            else if ([transaction.response isKindOfClass:[TTHttpResponseChromium class]]){
+            }else if ([transaction.response isKindOfClass:[TTHttpResponseAFNetworking class]]){
+                TTHttpResponseAFNetworking * afResponse = (TTHttpResponseAFNetworking *)transaction.response;
+                NSHTTPURLResponse * r = (NSHTTPURLResponse *)afResponse.response;
+                [self applyTraceCodeToTrack:track sourceDict:r.allHeaderFields];
+            }else if ([transaction.response isKindOfClass:[TTHttpResponseChromium class]]){
                 TTHttpResponseChromium *targetResponse = (TTHttpResponseChromium *)transaction.response;
                 NSDictionary * responseDict = [targetResponse allHeaderFields];
                 [self applyTraceCodeToTrack:track sourceDict:responseDict];
@@ -337,9 +345,17 @@
             [track setValue:@(timingInfo.isFromProxy) forKey:@"timing_isFromProxy"];
             [track setValue:timingInfo.remoteIP forKey:@"timing_remoteIP"];
             [track setValue:@(timingInfo.remotePort) forKey:@"timing_remotePort"];
-            
+            [track setValue:@"cronet" forKey:@"client_type"];
             TTCaseInsenstiveDictionary *allHeaders = targetResponse.allHeaderFields;
             [track setValue:[allHeaders objectForKey:@"TT-Request-Traceid"] forKey:@"ttnet_trace_id"];
+            
+            if (class_getProperty([TTHttpResponseChromium class], "requestLog")) {
+                Ivar ivar = class_getInstanceVariable([TTHttpResponseChromium class], "_requestLog");
+                [track setValue:object_getIvar(targetResponse, ivar) forKey:@"request_log"];
+            }
+        }
+        else {
+            [track setValue:@"afn" forKey:@"client_type"];
         }
         
         if (needRecorderFail) {
@@ -354,7 +370,12 @@
     }
 }
 
-- (void)applyTraceCodeToTrack:(NSMutableDictionary *)dstDict sourceDict:(NSDictionary *)r{
+- (void)applyTraceCodeToTrack:(NSMutableDictionary *)dstDict sourceDict:(NSDictionary *)dict{
+    NSDictionary *r = dict;
+    if([r isKindOfClass:[NSMutableDictionary class]]) {
+        r = [r copy];
+    }
+    
     if (r && [[r allKeys] containsObject:kTraceCodeKey]) {
         NSString * tc = [r objectForKey:kTraceCodeKey];
         if ([tc isKindOfClass:[NSString class]] && [tc length] > 0) {

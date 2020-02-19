@@ -10,9 +10,9 @@
 #import "NewsBaseDelegate.h"
 #import "SSADManager.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import "TTLaunchDefine.h"
-#import <FHMinisdkManager.h>
+#import "FHMinisdkManager.h"
 
 DEC_TASK("TTOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_MEDIUM);
 

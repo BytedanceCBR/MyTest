@@ -7,7 +7,7 @@
 
 #import "AKTaskSettingDefine.h"
 #import "AKTaskSettingHelper.h"
-#import <TTSettingsManager.h>
+#import "TTSettingsManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 
 @implementation AKTaskSettingHelper

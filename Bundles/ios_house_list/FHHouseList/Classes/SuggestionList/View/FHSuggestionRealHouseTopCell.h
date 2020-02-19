@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import <FHHouseBase/FHListBaseCell.h>
 
 NS_ASSUME_NONNULL_BEGIN

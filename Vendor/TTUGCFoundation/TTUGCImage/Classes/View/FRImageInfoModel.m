@@ -8,7 +8,7 @@
 
 #import "FRImageInfoModel.h"
 #import "TTImageInfosModel.h"
-#import <NSDictionary+TTAdditions.h>
+#import "NSDictionary+TTAdditions.h"
 #import "TTBaseMacro.h"
 
 #define kCommentImageSizeMaxRate 1.f/3.f

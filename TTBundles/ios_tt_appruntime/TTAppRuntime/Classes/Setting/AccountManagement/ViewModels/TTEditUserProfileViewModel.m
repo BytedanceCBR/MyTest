@@ -7,12 +7,12 @@
 //
 
 #import "TTEditUserProfileViewModel.h"
-#import <NSStringAdditions.h>
-#import <NSObject+FBKVOController.h>
-#import <TTUIResponderHelper.h>
+#import "NSStringAdditions.h"
+#import "NSObject+FBKVOController.h"
+#import "TTUIResponderHelper.h"
 
 #import "SSMyUserModel.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 #import "TTUserProfileInputView.h"
 #import "ArticleMobilePasswordViewController.h"

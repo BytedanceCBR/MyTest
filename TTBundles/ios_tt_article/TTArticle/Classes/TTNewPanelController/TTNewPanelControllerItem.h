@@ -8,7 +8,7 @@
 
 // TODO: ugly code
 
-#import <TTPanelControllerItem.h>
+#import "TTPanelControllerItem.h"
 
 typedef void(^TTNewPanelButtonClick)(UIButton *);
 

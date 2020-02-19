@@ -13,6 +13,7 @@
 #define kIphoneJsFilePath    @"js/iphone.js"  // 约定的文件存在路径，用于合法性检查
 #define kV55Folder           @"v55"           // 5.5改版增加的目录，用于AB测试
 #define kV60Folder           @"v60"           // 6.0新增目录, 用于存放全局共享页面的资源
+#define kV60ArticleHtmlFileName           @"articlev60.html" // wk适配新增下发v60html
 
 typedef void (^ArticleJSManagerLoadResourcesCallback)(NSString *path, NSError *error);
 @interface ArticleJSManager : NSObject
@@ -57,5 +58,10 @@ typedef void (^ArticleJSManagerLoadResourcesCallback)(NSString *path, NSError *e
  * @bried 下载包的资源目录
  */
 - (NSString *)packageFolderPath;
+
+/**
+ * @bried html path
+ */
+- (NSString *)articleV60HtmlPath;
 
 @end

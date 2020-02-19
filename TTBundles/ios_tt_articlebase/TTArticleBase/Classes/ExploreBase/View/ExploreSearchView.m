@@ -18,7 +18,7 @@
 
 #import "TTRoute.h"
 #import "ArticleSearchBar.h"
-#import <TTUserSettingsManager+FontSettings.h>
+#import "TTUserSettingsManager+FontSettings.h"
 
 #import "TTLocationManager.h"
 #import "TTIndicatorView.h"
@@ -33,7 +33,7 @@
 #import "TTURLUtils.h"
 #import "TTNavigationController.h"
 #import "TTNetworkHelper.h"
-#import <TTTracker.h>
+#import "TTTracker.h"
 #import "TTCustomAnimationDelegate.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TTTopBar.h"

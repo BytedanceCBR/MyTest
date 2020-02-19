@@ -12,7 +12,7 @@
 #import "ExploreOrderedData+TTBusiness.h"
 #import "ExploreMixListDefine.h"
 #import "TTUGCDefine.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 //#import "Thread.h"
 
 extern NSString *const kTTEditUserInfoDidFinishNotificationName;

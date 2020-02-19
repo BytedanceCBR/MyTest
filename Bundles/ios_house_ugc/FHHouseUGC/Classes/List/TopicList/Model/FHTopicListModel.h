@@ -1,6 +1,6 @@
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
-#import <FHBaseModelProtocol.h>
+#import "JSONModel.h"
+#import "FHBaseModelProtocol.h"
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHTopicListResponseDataListModel<NSObject>
 @end

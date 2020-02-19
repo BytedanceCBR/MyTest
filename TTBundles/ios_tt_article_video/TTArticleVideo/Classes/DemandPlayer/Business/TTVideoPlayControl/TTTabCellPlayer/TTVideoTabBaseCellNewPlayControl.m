@@ -25,7 +25,7 @@
 #import "TTVDemanderTrackerManager.h"
 #import "TTVPlayerUrlTracker.h"
 #import "ExploreMovieView.h"
-#import <TTImageView.h>
+#import "TTImageView.h"
 #import "TTUIResponderHelper.h"
 #import "TTVPlayerTipShareCreater.h"
 #import "TTVCommodityView.h"

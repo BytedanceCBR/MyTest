@@ -30,7 +30,7 @@
 #import "DetailActionRequestManager.h"
 #import <TTBaseLib/JSONAdditions.h>
 
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 #define CASE(str)                       if ([__s__ isEqualToString:(str)])
 #define SWITCH(s)                       for (NSString *__s__ = (s); ; )

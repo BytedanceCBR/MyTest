@@ -13,7 +13,7 @@
 #import "FHCommunityDetailViewController.h"
 #import "FHPostDetailViewController.h"
 #import "FHWDAnswerPictureTextViewController.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import "FHUGCGuideHelper.h"
 #import "FHUGCGuideView.h"
 #import "TTForumPostThreadStatusViewModel.h"
@@ -26,10 +26,11 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
-#import <FHMinisdkManager.h>
+#import "FHMinisdkManager.h"
 #import "UIViewController+Track.h"
 #import "FHSpringHangView.h"
 #import <FHHouseBase/FHPermissionAlertViewController.h>
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHCommunityViewController ()
 
@@ -241,6 +242,8 @@
     if([FHEnvContext isSpringHangOpen]){
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
+    
+    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 -(BOOL)shouldAutorotate
@@ -376,13 +379,23 @@
 
     CGFloat top = 0;
     CGFloat safeTop = 0;
-    if (@available(iOS 11.0, *)) {
+    if (@available(iOS 13.0 , *)) {
+        safeTop = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0, *)) {
         safeTop = self.view.tt_safeAreaInsets.top;
     }
     if (safeTop > 0) {
         top += safeTop;
     } else {
-        top += [[UIApplication sharedApplication] statusBarFrame].size.height;
+        if([[UIApplication sharedApplication] statusBarFrame].size.height > 0){
+            top += [[UIApplication sharedApplication] statusBarFrame].size.height;
+        }else{
+            if([TTDeviceHelper isIPhoneXSeries]){
+                top += 44;
+            }else{
+                top += 20;
+            }
+        }
     }
 
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {

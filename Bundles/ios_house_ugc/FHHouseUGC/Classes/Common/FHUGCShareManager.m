@@ -10,18 +10,18 @@
 #import "TTShareManager.h"
 #import "WXApi.h"
 #import <TencentOpenAPI/QQApiInterface.h>
-#import <TTActivityContentItemProtocol.h>
-#import <TTWechatTimelineContentItem.h>
-#import <TTWechatContentItem.h>
-#import <TTQQFriendContentItem.h>
-#import <TTQQZoneContentItem.h>
-#import <TTWechatTimelineActivity.h>
-#import <TTWechatActivity.h>
-#import <TTQQFriendActivity.h>
-#import <TTQQZoneActivity.h>
-#import <TTCopyActivity.h>
+#import "TTActivityContentItemProtocol.h"
+#import "TTWechatTimelineContentItem.h"
+#import "TTWechatContentItem.h"
+#import "TTQQFriendContentItem.h"
+#import "TTQQZoneContentItem.h"
+#import "TTWechatTimelineActivity.h"
+#import "TTWechatActivity.h"
+#import "TTQQFriendActivity.h"
+#import "TTQQZoneActivity.h"
+#import "TTCopyActivity.h"
 #import "FHUserTracker.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "TTAccountManager.h"
 
 @interface FHUGCShareManager ()<TTShareManagerDelegate>

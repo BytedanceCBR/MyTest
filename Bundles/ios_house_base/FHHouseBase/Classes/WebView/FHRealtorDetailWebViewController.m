@@ -6,8 +6,8 @@
 //
 
 #import "FHRealtorDetailWebViewController.h"
-#import <TTRJSBForwarding.h>
-#import <TTRStaticPlugin.h>
+#import "TTRJSBForwarding.h"
+#import "TTRStaticPlugin.h"
 #import <FHHouseDetail/FHHouseDetailPhoneCallViewModel.h>
 #import "TTRoute.h"
 #import <TTTracker/TTTracker.h>

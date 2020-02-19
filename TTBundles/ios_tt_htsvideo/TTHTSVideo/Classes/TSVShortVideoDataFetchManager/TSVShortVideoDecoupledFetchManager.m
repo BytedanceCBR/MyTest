@@ -12,7 +12,7 @@
 #import "ExploreListHelper.h"
 #import "ExploreOrderedData+TTBusiness.h"
 #import "TSVChannelDecoupledConfig.h"
-#import <ReactiveObjC.h>
+#import "ReactiveObjC.h"
 #import "TTShortVideoModel+TTAdFactory.h"
 #import "TTAdShortVideoModel.h"
 #import "TSVMonitorManager.h"

@@ -1,8 +1,0 @@
-source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
-
-#use_frameworks!
-
-target 'TTPay_Example' do
-  pod 'TTPay', :path => '../'
-
-end

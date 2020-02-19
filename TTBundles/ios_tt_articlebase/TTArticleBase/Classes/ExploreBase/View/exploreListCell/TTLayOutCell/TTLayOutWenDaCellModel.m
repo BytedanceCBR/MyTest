@@ -75,8 +75,9 @@
     NSString *titleStr = self.orderedData.article.title;
     NSAttributedString *titleAttributedStr = [TTLabelTextHelper attributedStringWithString:titleStr fontSize:kUFDongtaiTitleFontSize() lineHeight:kUFDongtaiTitleLineHeight() lineBreakMode:NSLineBreakByTruncatingTail isBoldFontStyle:YES];
     self.newsTitleAttributedStr = titleAttributedStr;
-    CGFloat titleHeight = [TTLabelTextHelper heightOfText:titleStr fontSize:kUFDongtaiTitleFontSize() forWidth:titleContainWidth forLineHeight:kUFDongtaiTitleLineHeight() constraintToMaxNumberOfLines:kUFDongtaiTitleLineNumber()
-                                                   isBold:YES];
+    // add by zyk 有改动 注意变化
+    CGFloat titleHeight = [TTLabelTextHelper heightOfText:titleStr fontSize:kUFDongtaiTitleFontSize() forWidth:titleContainWidth forLineHeight:kUFDongtaiTitleLineHeight() constraintToMaxNumberOfLines:kUFDongtaiTitleLineNumber()];
+//    CGFloat titleHeight = [TTLabelTextHelper heightOfText:titleStr fontSize:kUFDongtaiTitleFontSize() forWidth:titleContainWidth forLineHeight:kUFDongtaiTitleLineHeight() constraintToMaxNumberOfLines:kUFDongtaiTitleLineNumber() isBold:YES];
     CGFloat titleY = top + (kUFBackgroundViewHeight() - titleHeight) / 2;
     CGRect titleLabelFrame = CGRectMake(titleX, titleY, titleContainWidth, titleHeight);
     self.newsTitleLabelFrame = titleLabelFrame;

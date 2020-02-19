@@ -10,7 +10,7 @@
 #import "TTSettingsManager+SaveSettings.h"
 #import <BDABTestSDK/BDABTestManager.h>
 #import <BDABTestSDK/BDABKeychainStorage.h>
-#import <TTThemedAlertController.h>
+#import "TTThemedAlertController.h"
 #import <FHCommonUI/ToastManager.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTBaseMacro.h>

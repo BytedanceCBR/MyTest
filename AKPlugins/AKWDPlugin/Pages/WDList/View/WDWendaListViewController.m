@@ -38,13 +38,13 @@
 #import "TTDeviceHelper.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTRoute.h"
-#import <TTShareManager.h>
-#import <TTShareActivity.h>
+#import "TTShareManager.h"
+#import "TTShareActivity.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
 #import "TTIndicatorView.h"
 #import "SSNavigationBar.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import <TTRoute/TTRoute.h>
 #import "WDListCellLayoutModel.h"
 #import "WDListCellViewModel.h"
@@ -368,7 +368,9 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [self.view addSubview:self.answerListView];
     }
     CGFloat bottomSafeHeight = 0;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0 , *)) {
+        bottomSafeHeight = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    } else if (@available(iOS 11.0 , *)) {
         bottomSafeHeight = self.view.tt_safeAreaInsets.bottom;
     }
     self.bottomButtonHeight = 48 + bottomSafeHeight;
@@ -407,7 +409,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 }
 
 - (void)gotoPostWDAnswer {
-    NSString *routeUrl = @"sslocal://ugc_post_wd_answer";
+    NSString *routeUrl = @"sslocal://wenda_post";
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     NSMutableDictionary *dict = @{}.mutableCopy;
     if (self.qid.length > 0) {

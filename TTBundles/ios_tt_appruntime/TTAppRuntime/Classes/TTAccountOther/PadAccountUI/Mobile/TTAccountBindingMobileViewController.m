@@ -7,11 +7,11 @@
 //
 
 #import "TTAccountBindingMobileViewController.h"
-#import <TTUserPrivacyView.h>
-#import <TTAccountBusiness.h>
+#import "TTUserPrivacyView.h"
+#import "TTAccountBusiness.h"
 #import "SSWebViewController.h"
 #import "ArticleMobileCaptchaAlertView.h"
-#import <NSTimer+TTNoRetainRef.h>
+#import "NSTimer+TTNoRetainRef.h"
 #import "NSString+TextValidation.h"
 #import "UITextField+TTTouchAreaAddition.h"
 #import "TTTracker.h"

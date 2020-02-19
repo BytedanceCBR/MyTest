@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "FHBaseModelProtocol.h"
 #import "FHHouseListModel.h"
 #import "FHSugSubscribeModel.h"
@@ -446,6 +446,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isRecommendCell;
 @property (nonatomic, assign) BOOL isLastCell;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *reasonTags;
+@property (nonatomic, copy , nullable) NSString *addrData;
 
 + (NSString *)cellIdentifierByHouseType:(FHHouseType)houseType;
 

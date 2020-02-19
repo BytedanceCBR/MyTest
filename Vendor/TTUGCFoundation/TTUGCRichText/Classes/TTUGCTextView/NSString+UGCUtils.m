@@ -12,7 +12,7 @@
 #import "SSThemed.h"
 #import <BDTFactoryConfigurator/BDTFactoryConfigurator.h>
 #import "TTModuleBridge.h"
-#import <NSDictionary+TTAdditions.h>
+#import "NSDictionary+TTAdditions.h"
 #import <TTLabelTextHelper.h>
 
 @implementation NSString (UGCUtils)

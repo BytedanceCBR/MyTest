@@ -11,13 +11,12 @@
 #import "TTTabBarItem.h"
 #import "TTLocationManager.h"
 #import "CommonURLSetting.h"
-//#import "Bubble-Swift.h"
 #import "TTTabBarManager.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "TTTabBarProvider.h"
 #import "FHUtils.h"
-#import <TTRoute.h>
-#import <FHLocManager.h>
+#import "TTRoute.h"
+#import "FHLocManager.h"
 #import "ArticleURLSetting.h"
 #import <TTArticleBase/SSCommonLogic.h>
 

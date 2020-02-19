@@ -30,8 +30,6 @@
 + (TTVideoCategory *)insertCategoryWithDictionary:(NSDictionary *)dict;
 + (NSString*)currentSelectedCategoryID;
 + (void)setCurrentSelectedCategoryID:(NSString*)categoryID;
-// 删除推荐以外的本地缓存频道
-+ (void)removeAllLocalCategories;
 
 /**
  *  通过jsonDict构建video频道TTVideoCategory

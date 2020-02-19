@@ -8,14 +8,14 @@
 #import "FHMessageCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "TTDeviceHelper.h"
 #import "UIImageView+BDWebImage.h"
 #import "TTAccount.h"
 #import "FHChatUserInfoManager.h"
-#import <TTRichSpanText.h>
-#import <TIMOMessage.h>
-#import <TIMMessageStoreBridge.h>
+#import "TTRichSpanText.h"
+#import "TIMOMessage.h"
+#import "TIMMessageStoreBridge.h"
 
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
@@ -76,7 +76,8 @@
     [self.contentView addSubview:_timeLabel];
     
     self.unreadView = [[TTBadgeNumberView alloc] init];
-    self.unreadView.badgeNumberPointSize = 12;
+    //self.unreadView.badgeNumberPointSize = 12;
+    [self.unreadView setBadgeLabelFontSize:12];
     _unreadView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
     [self.contentView addSubview:_unreadView];
 }

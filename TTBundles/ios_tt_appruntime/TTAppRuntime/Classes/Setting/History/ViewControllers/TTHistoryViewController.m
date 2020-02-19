@@ -10,7 +10,7 @@
 #import "TTFeedBaseDelegate.h"
 #import "TTFeedHistoryViewModel.h"
 #import "ArticleTitleImageView.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTAuthorizeManager.h"
 #import "TTNavigationController.h"
 #import "ExploreOrderedData+TTBusiness.h"

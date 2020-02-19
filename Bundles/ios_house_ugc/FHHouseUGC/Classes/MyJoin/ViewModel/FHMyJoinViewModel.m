@@ -6,7 +6,7 @@
 //
 
 #import "FHMyJoinViewModel.h"
-#import <TTHttpTask.h>
+#import "TTHttpTask.h"
 #import "FHMyJoinNeighbourhoodCell.h"
 #import "FHUGCConfig.h"
 #import "FHMessageNotificationTipsManager.h"
@@ -14,7 +14,7 @@
 #import "FHUserTracker.h"
 #import "FHCommunityList.h"
 #import "FHMyJoinAllNeighbourhoodCell.h"
-#import <TTUGCDefine.h>
+#import "TTUGCDefine.h"
 
 #define cellId @"cellId"
 #define allCellId @"allCellId"

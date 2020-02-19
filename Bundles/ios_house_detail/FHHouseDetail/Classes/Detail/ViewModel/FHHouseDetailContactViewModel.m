@@ -10,17 +10,17 @@
 #import "TTShareManager.h"
 #import "WXApi.h"
 #import <TencentOpenAPI/QQApiInterface.h>
-#import <TTActivityContentItemProtocol.h>
-#import <TTWechatTimelineContentItem.h>
-#import <TTWechatContentItem.h>
-#import <TTQQFriendContentItem.h>
-#import <TTQQZoneContentItem.h>
-#import "BDWebImage.h"
+#import "TTActivityContentItemProtocol.h"
+#import "TTWechatTimelineContentItem.h"
+#import "TTWechatContentItem.h"
+#import "TTQQFriendContentItem.h"
+#import "TTQQZoneContentItem.h"
+#import <BDWebImage/BDWebImage.h>
 #import "FHURLSettings.h"
-#import <TTWechatTimelineActivity.h>
-#import <TTWechatActivity.h>
-#import <TTQQFriendActivity.h>
-#import <TTQQZoneActivity.h>
+#import "TTWechatTimelineActivity.h"
+#import "TTWechatActivity.h"
+#import "TTQQFriendActivity.h"
+#import "TTQQZoneActivity.h"
 #import "FHHouseDetailAPI.h"
 #import "TTReachability.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
@@ -41,8 +41,8 @@
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
 #import <FHHouseBase/FHHouseFillFormHelper.h>
-#import <HMDTTMonitor.h>
-#import <FHIESGeckoManager.h>
+#import "HMDTTMonitor.h"
+#import "FHIESGeckoManager.h"
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import "FHHouseDetailViewController.h"
 #import <FHHouseBase/FHHouseContactDefines.h>
@@ -521,6 +521,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"question_id"]) {
             imExtra[@"question_id"] = extraDict[@"question_id"];
         }
+        if (extraDict[@"is_login_front"]) {
+            imExtra[@"is_login_front"] = extraDict[@"is_login_front"];
+        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
@@ -696,6 +699,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
     }
+    extraDic[@"is_login_front"] = @(1);
     [self onlineActionWithExtraDict:extraDic];
 }
 

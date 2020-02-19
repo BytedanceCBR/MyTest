@@ -47,7 +47,7 @@ extern NSString *const TTMovieDidExitFullscreenNotification;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(p_clearCacheNotification:) name:@"SettingViewClearCachdNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(p_readModeChangedNotification:) name:kReadModeChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(p_connectionChangedNotification:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(p_connectionChangedNotification:) name:TTReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(p_fontChangedNotification:) name:kSettingFontSizeChangedNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(p_receiveShowRemoteReloadTipNotification:) name:kNewsListFetchedRemoteReloadTipNotification object:nil];

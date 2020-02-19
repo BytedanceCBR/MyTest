@@ -7,10 +7,10 @@
 
 #import "FHArticleMultiImageCell.h"
 #import "FHArticleCellBottomView.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
-#import <TTImageView+TrafficSave.h>
+#import "TTImageView+TrafficSave.h"
 
 #define maxLines 3
 #define bottomViewHeight 39

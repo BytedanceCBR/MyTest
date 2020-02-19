@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <TTVPlayerTipFinished.h>
+#import "TTVPlayerTipFinished.h"
 
 @class TTVVideoPlayerStateStore;
 @interface TTVPlayerTipRelatedFinished : UIView<TTVPlayerTipFinished>

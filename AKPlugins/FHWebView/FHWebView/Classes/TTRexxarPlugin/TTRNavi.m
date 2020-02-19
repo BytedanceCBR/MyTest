@@ -11,7 +11,7 @@
 #import <TTRoute/TTRoute.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
-#import <TTAccountSDK.h>
+#import "TTAccountSDK.h"
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TTDeviceHelper.h"

@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "FHFeedContentModel.h"
 #import "FHFeedUGCContentModel.h"

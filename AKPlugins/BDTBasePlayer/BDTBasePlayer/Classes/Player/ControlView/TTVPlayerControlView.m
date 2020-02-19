@@ -12,7 +12,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <CoreMotion/CoreMotion.h>
 #import "TTVPlayerStateStore.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIButton+TTAdditions.h"
 #import "TTMovieAdjustView.h"
 #import "TTMovieBrightnessView.h"
@@ -675,7 +675,12 @@ static const CGFloat kBottomBarHeight = 80;
         if (![self shouldHiddenTtitle]) {
             _titleView.alpha = alpha;
             if ([self isFullScreen]) {
-                [[UIApplication sharedApplication] setStatusBarHidden:(hidden ? 1 : !_titleView.showFullscreenStatusBar) withAnimation:UIStatusBarAnimationFade];
+                // iOS13 视频 全屏 隐藏 状态栏
+                if (@available(iOS 13.0, *)) {
+                    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+                } else {
+                    [[UIApplication sharedApplication] setStatusBarHidden:(hidden ? 1 : !_titleView.showFullscreenStatusBar) withAnimation:UIStatusBarAnimationFade];
+                }
             }
         }
         self.playerStateStore.state.toolBarState = hidden ? TTVPlayerControlViewToolBarStateWillHidden : TTVPlayerControlViewToolBarStateWillShow;

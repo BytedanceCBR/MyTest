@@ -11,7 +11,7 @@
 #import "TTSystemPermClientAB.h"
 #import <BDABTestSDK/BDABTestBaseExperiment.h>
 #import <BDABTestSDK/BDABTestManager.h>
-#import <TTTracker.h>
+#import "TTTracker.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TTLaunchDefine.h"
 

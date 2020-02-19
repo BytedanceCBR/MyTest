@@ -66,7 +66,11 @@
 }
 
 - (NSInteger)maxCacheAge{
-    return [[NSUserDefaults standardUserDefaults] integerForKey:kMaxCacheAge];
+    NSInteger maxCacheAge = [[NSUserDefaults standardUserDefaults] integerForKey:kMaxCacheAge];
+    if (maxCacheAge <= 0) {
+        maxCacheAge = 4;
+    }
+    return maxCacheAge;
 }
 
 - (void)setMaxCacheSize:(NSInteger)maxCacheSize{
@@ -82,7 +86,11 @@
 }
 
 - (NSInteger)maxCacheDBSize{
-    return [[NSUserDefaults standardUserDefaults] integerForKey:kMaxDBCacheSize];
+    NSInteger maxCacheDBSize = [[NSUserDefaults standardUserDefaults] integerForKey:kMaxDBCacheSize];
+    if (maxCacheDBSize <= 0) {
+        maxCacheDBSize = 5;
+    }
+    return maxCacheDBSize;
 }
 
 @end

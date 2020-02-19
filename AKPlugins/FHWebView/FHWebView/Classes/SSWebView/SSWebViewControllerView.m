@@ -19,7 +19,7 @@
 #import "TTAdManagerProtocol.h"
 //#import "TTToolService.h"
 //#import "ArticleShareManager.h"
-#import <TTUserSettingsManager+FontSettings.h>
+#import "TTUserSettingsManager+FontSettings.h"
 
 #import <TTRoute/TTRoute.h>
 #import <TTThemed/SSThemed.h>

@@ -126,7 +126,7 @@ extern BOOL ttsettings_showRefreshButton(void);
     _isFirstShow = YES;
     self.ttTrackStayEnable = YES;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveVideoTabbarClickedNotification:) name:kVideoTabbarKeepClickedNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPGCStatusChanged:) name:kVideoPGCStatusChangedNotification object:nil];

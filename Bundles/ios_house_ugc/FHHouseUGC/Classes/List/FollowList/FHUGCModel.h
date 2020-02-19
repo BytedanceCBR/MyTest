@@ -1,5 +1,5 @@
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "FHUGCScialGroupModel.h"
 NS_ASSUME_NONNULL_BEGIN
 

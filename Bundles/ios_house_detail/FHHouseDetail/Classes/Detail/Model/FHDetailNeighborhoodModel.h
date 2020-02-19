@@ -6,11 +6,32 @@
 //
 
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "FHDetailBaseModel.h"
 #import <FHHouseBase/FHHouseBaseInfoModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+@interface FHDetailNeighborhoodDataQuestionContentModel : JSONModel
+    
+    @property (nonatomic, copy , nullable) NSString *count;
+    @property (nonatomic, strong , nullable) NSArray *data;
+    @property (nonatomic, copy , nullable) NSString *questionListSchema;
+    @end
+
+@interface FHDetailNeighborhoodDataQuestionQuestionWriteModel : JSONModel
+    
+    @property (nonatomic, copy , nullable) NSString *schema;
+    @property (nonatomic, copy , nullable) NSString *contentEmptyTitle;
+    @property (nonatomic, copy , nullable) NSString *title;
+    @end
+
+@interface FHDetailNeighborhoodDataQuestionModel : JSONModel
+    
+    @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionContentModel *content ;
+    @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionQuestionWriteModel *questionWrite ;
+    @property (nonatomic, copy , nullable) NSString *title;
+    @end
 
 @protocol FHDetailNeighborhoodDataStatsInfoModel<NSObject>
 @end
@@ -166,6 +187,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionModel *question ;
 
 
 @end

@@ -12,8 +12,12 @@
 #import "TTCookieManager.h"
 #import "SSCommonLogic.h"
 #import "TTLaunchDefine.h"
+#import <BDUGLocationKit/BDUGLocationNetworkManager.h>
+#import <BDUGLocationKit/BDUGAmapGeocoder.h>
+#import <FHHouseBase/FHMainApi.h>
+#import <FHHouseBase/FHLocManager.h>
 
-DEC_TASK("TTLocationStartupTask",FHTaskTypeService,TASK_PRIORITY_HIGH+5);
+DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 
 @implementation TTLocationStartupTask
 
@@ -37,6 +41,25 @@ DEC_TASK("TTLocationStartupTask",FHTaskTypeService,TASK_PRIORITY_HIGH+5);
 //        [ExploreExtenstionDataHelper saveSharedUserCity:[TTLocationManager sharedManager].city];
 //        [[TTCookieManager sharedManager] updateLocationCookie];
 //    }
+    
+    [self uploadLocationWithBlock:^(BOOL isSuccess) {
+//        NSLog(@"zjing test:isSuccess:%ld",isSuccess);
+    }];
+}
+
+
+- (void)uploadLocationWithBlock:(void (^)(BOOL isSuccess))block
+{
+    [BDUGAmapGeocoder sharedGeocoder].apiKey = [FHLocManager amapAPIKey];
+    [BDUGLocationNetworkManager sharedManager].allowedPopupAlert = NO;
+    [BDUGLocationNetworkManager sharedManager].hostEnvironment = BDUGLocationEnvironmentChina;
+    [BDUGLocationNetworkManager sharedManager].baseURLString = [FHMainApi host];
+    [BDUGLocationNetworkManager sharedManager].geocoders = @[[BDUGAmapGeocoder sharedGeocoder]];// [BDUGByteDanceGeocoder sharedGeocoder]
+    [[BDUGLocationNetworkManager sharedManager]startPollingReportLocationInfoWithCompletion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
+        if (block) {
+            block(error?NO:YES);
+        }
+    }];
 }
 
 @end

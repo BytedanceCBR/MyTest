@@ -23,7 +23,7 @@
 #import "TTDeviceHelper.h"
 #import "TTNetworkManager.h"
 #import "TTURLDomainHelper.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 //用于存储category的version值
 #define kArticleCategoryManagerVersionKey @"kArticleCategoryManagerVersionKey"
