@@ -49,6 +49,7 @@
         if (opTab.title.length>4) {
             opTab.title = [opTab.title substringToIndex:4];
         }
+        opTab.isShow = false;
         [epidemicSituationCache setObject:opTab forKey:@"tab_cache"];
         [self downloadEpidemicSituationToCacheWithNormalUrl:opTab.staticImage.url highlighthUrl:opTab.activationimage.url];
     }
@@ -59,6 +60,7 @@
         currentModel = [[FHConfigCenterTabModel alloc]init];
         currentModel.tabId = @"";
         currentModel.enable = false;
+        currentModel.isShow = false;
         currentModel.openUrl = @"";
         currentModel.logPb = @"";
         currentModel.staticImage = @{};
