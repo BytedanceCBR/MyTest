@@ -462,6 +462,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     [FHEnvContext sharedInstance].generalBizConfig.configCache = model.data;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [[FHEnvContext sharedInstance] saveGeneralConfig:model];
+        
     });
     [FHEnvContext saveCurrentUserCityId:model.data.currentCityId];
     

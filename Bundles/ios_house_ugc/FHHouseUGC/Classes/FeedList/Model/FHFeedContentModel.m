@@ -128,6 +128,7 @@
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
+    @"cellCtrls": @"cell_ctrls",
     @"logPb": @"log_pb",
     @"contentDecoration": @"content_decoration",
     @"mediaName": @"media_name",
@@ -1063,6 +1064,25 @@
 @end
 
 @implementation FHFeedContentRawDataHotCellListTipsModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentCellCtrlsModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"cellFlag": @"cell_flag",
+                           @"cellHeight": @"cell_height",
+                           @"cellLayoutStyle": @"cell_layout_style",
+                           @"needClientImprRecycle": @"need_client_impr_recycle",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

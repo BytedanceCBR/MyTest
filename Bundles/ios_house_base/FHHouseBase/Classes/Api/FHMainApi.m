@@ -19,6 +19,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTReachability/TTReachability.h>
 #import <Heimdallr/HMDUserExceptionTracker.h>
+#import "TTTabbarLoadEpidemicSituatioHelper.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -126,6 +127,7 @@
             }
             [self addRequestLog:@"config" startDate:startDate backDate:backDate serializeDate:serializeDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
             if (completion) {
+                [TTTabbarLoadEpidemicSituatioHelper  checkConfigEpidemicSituatiData:model.data.opTab];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
                 });

@@ -40,6 +40,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (YYCache *)subscribeHouseCache;
 //保存已经显示的房源详情反馈弹窗
 - (YYCache *)detailFeedbackCache;
+//疫情反馈专题底部tabimage
+- (YYCache *)epidemicSituationCache;
 
 @end
 

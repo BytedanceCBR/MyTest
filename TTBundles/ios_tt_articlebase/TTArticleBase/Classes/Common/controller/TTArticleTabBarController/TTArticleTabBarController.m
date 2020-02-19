@@ -233,14 +233,28 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [self setupEssentialInitialization];
     [self constructTabItems];
     
-    [UITabBar appearance].clipsToBounds = YES;
+//    [UITabBar appearance].clipsToBounds = YES;
+//    [[UITabBar appearance] setShadowImage:[UIImage new]];
     //添加自定义线
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0.5)];
-    lineView.backgroundColor = [UIColor clearColor];
-    [[UITabBar appearance] addSubview:lineView];
+//    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0.5)];
+//    lineView.backgroundColor = [UIColor clearColor];
+//    [[UITabBar appearance] addSubview:lineView];
 
 //    [self addKVO];
     [[TSVTabTipManager sharedManager] setupShortVideoTabRedDotWhenStartupIfNeeded];
+    [[UITabBar appearance] setShadowImage:[UIImage new]];
+    [[UITabBar appearance] setBackgroundImage:[[UIImage alloc]init]];
+    if (@available(iOS 13, *)) {
+    UITabBarAppearance *appearance = [self.tabBar.standardAppearance copy];
+    appearance.backgroundImage = [[UIImage alloc]init];
+    appearance.shadowImage = [[UIImage alloc]init];;
+    // 官方文档写的是 重置背景和阴影为透明
+    [appearance configureWithTransparentBackground];
+    self.tabBar.standardAppearance = appearance;
+    } else {
+    self.tabBar.backgroundImage = [UIImage new];
+    self.tabBar.shadowImage = [UIImage new];
+    }
 }
 
 - (void)addUgcGuide {
@@ -253,9 +267,16 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 - (FHUGCGuideView *)guideView {
     CGFloat width = 163.0f;
     CGFloat height = 40.0f;
-    CGFloat x = self.view.frame.size.width * 9/24 - width/2;
+    CGFloat x ;
+     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
     if(!_guideView){
-        _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(x, self.view.frame.size.height - self.tabbarHeight - height + 3, width, height) andType:FHUGCGuideViewTypeSecondTab];
+        if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"]) {
+                x = self.view.frame.size.width * 3/10 - width/2;
+        }else {
+            x = self.view.frame.size.width * 9/24 - width/2;
+        }
+            _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(x, self.view.frame.size.height - self.tabbarHeight - height + 3, width, height) andType:FHUGCGuideViewTypeSecondTab];
     }
     return _guideView;
 }
@@ -325,12 +346,10 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         } else {
             [freezedItems addObject:item];
         }
-        
         if ([item.identifier isEqualToString:self.lastSelectedTabTag]) {
             lastSelectItem = item;
         }
     }
-    
     // 如果当前tab没有被freeze，则不自动跳转
     BOOL shouldJump = NO;
     for (TTTabBarItem * freezedItem in freezedItems) {
@@ -598,15 +617,16 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     
     [self openShortVideoTabWhenStartupIfNeeded];
     
-    
-    NSMutableDictionary *logv3Dic = [NSMutableDictionary dictionaryWithCapacity:1];
-    NSString *selectedTabName = [[self class] tabStayStringForIndex:self.selectedIndex];
-    [logv3Dic setValue:selectedTabName forKey:@"tab_name"];
-    [logv3Dic setValue:@0 forKey:@"with_tips"];
-    [logv3Dic setValue:self.autoEnterTab?@1:@0 forKey:@"is_auto"];
-    [logv3Dic setValue:@"default" forKey:@"enter_type"];
-    [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
-    
+    //后续自动跳转的tab逻辑会引发第二次上报
+    if (self.selectedIndex == 0) {
+        NSMutableDictionary *logv3Dic = [NSMutableDictionary dictionaryWithCapacity:1];
+        NSString *selectedTabName = [[self class] tabStayStringForIndex:self.selectedIndex];
+        [logv3Dic setValue:selectedTabName forKey:@"tab_name"];
+        [logv3Dic setValue:@0 forKey:@"with_tips"];
+        [logv3Dic setValue:self.autoEnterTab?@1:@0 forKey:@"is_auto"];
+        [logv3Dic setValue:@"default" forKey:@"enter_type"];
+        [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
+    }
     
     [[TTLaunchTracer shareInstance] writeEvent];
 //    if (!self.hasShowDots && ![FHEnvContext isUGCOpen]) {
@@ -1254,11 +1274,18 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             self.autoEnterTab = NO;
             if ([selectedTabName isEqualToString:@"find"]) {
                 [logv3Dic setValue:@"discover_tab" forKey:@"tab_name"];
+                
                 if([FHEnvContext isUGCOpen]){
                     [logv3Dic setValue:@"neighborhood_tab" forKey:@"tab_name"];
                 }else{
-                    [logv3Dic setValue:@"discover_tab" forKey:@"tab_name"];
+                    [logv3Dic setValue:@"find_tab" forKey:@"tab_name"];
                 }
+            }
+            if ([selectedTabName isEqualToString:@"epidemicsituation"]) {
+                YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
+                 FHConfigCenterTabModel *centerTabConfig = [epidemicSituationCache objectForKey:@"tab_cache"];
+                 [logv3Dic setValue:@"operation_tab" forKey:@"tab_name"];
+                [logv3Dic setValue:centerTabConfig.logPb forKey:@"log_pb"];
             }
             [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
         }
@@ -1745,15 +1772,15 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     return @{
 //             kTTTabHomeTabKey:@"stream",
              kTTTabHomeTabKey:@"main",
-             kFHouseFindTabKey:@"find",
+             kFHouseFindTabKey:[FHEnvContext isUGCOpen] ? @"neighborhood_tab" : @"find",
              kFHouseMineTabKey:@"mine",
              kFHouseMessageTabKey:@"message",
-
              kTTTabVideoTabKey:@"video",
              kTTTabFollowTabKey:@"follow",
              kTTTabHTSTabKey:kTTUGCVideoCategoryID,
              kTTTabWeitoutiaoTabKey:@"weitoutiao",
-             kTTTabMineTabKey:@"mine"
+             kTTTabMineTabKey:@"mine",
+             kFHouseHouseEpidemicSituationTabKey:@"epidemicsituation"
 //             kAKTabActivityTabKey:@"tab_task"
              };
 }
