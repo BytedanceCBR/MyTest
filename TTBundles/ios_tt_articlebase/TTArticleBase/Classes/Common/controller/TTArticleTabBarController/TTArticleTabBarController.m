@@ -270,7 +270,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
      YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
     FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
     if(!_guideView){
-        if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"]) {
+        if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"] &&cacheTab.isShow == YES) {
                 x = self.view.frame.size.width * 3/10 - width/2;
         }else {
             x = self.view.frame.size.width * 9/24 - width/2;

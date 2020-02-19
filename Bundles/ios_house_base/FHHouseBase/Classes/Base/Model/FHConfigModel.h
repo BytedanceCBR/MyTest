@@ -408,6 +408,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *tabId;
+@property (nonatomic, assign) BOOL isShow;
 @property (nonatomic, strong , nullable) FHConfigCenterTabImageModel *staticImage ;
 @property (nonatomic, strong , nullable) FHConfigCenterTabImageModel *activationimage ;
 @end
