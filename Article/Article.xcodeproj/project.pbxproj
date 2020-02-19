@@ -856,7 +856,6 @@
 				B373CE872174587A008F9905 /* Resources */,
 				B373CED22174587A008F9905 /* Frameworks */,
 				B373CF062174587A008F9905 /* Embed App Extensions */,
-				B373CF072174587A008F9905 /* ShellScript */,
 				B373CF082174587A008F9905 /* Run Script - Fix Copy Pods Resources Script  */,
 				B373CF092174587A008F9905 /* Embed Watch Content */,
 				3D396439219ACED0002E9010 /* ShellScript */,
@@ -884,7 +883,6 @@
 				FEFA59C1205FB1A8001F50D8 /* Resources */,
 				FEFA5A25205FB1A8001F50D8 /* Frameworks */,
 				FEFA5A54205FB1A8001F50D8 /* Embed App Extensions */,
-				FEFA5A55205FB1A8001F50D8 /* ShellScript */,
 				FEFA5A56205FB1A8001F50D8 /* Run Script - Fix Copy Pods Resources Script  */,
 				FEFA5A57205FB1A8001F50D8 /* Embed Watch Content */,
 				3D39643A219ACF07002E9010 /* ShellScript */,
@@ -1323,7 +1321,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/../../../ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
@@ -1470,20 +1468,6 @@
 			shellPath = /bin/sh;
 			shellScript = "rm -f Config/revision.h\n";
 		};
-		B373CF072174587A008F9905 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" 9326896ae10cccb4663d7148a33d58b63a5d0f0e b17763bdc39076d93599893c6f93b80ec7bf1a91f6012c68e3ef3b4a4e3577f6\n";
-		};
 		B373CF082174587A008F9905 /* Run Script - Fix Copy Pods Resources Script  */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1617,7 +1601,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/../../../ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
@@ -1744,20 +1728,6 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "rm -f Config/revision.h\n";
-		};
-		FEFA5A55205FB1A8001F50D8 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" 9326896ae10cccb4663d7148a33d58b63a5d0f0e b17763bdc39076d93599893c6f93b80ec7bf1a91f6012c68e3ef3b4a4e3577f6\n";
 		};
 		FEFA5A56205FB1A8001F50D8 /* Run Script - Fix Copy Pods Resources Script  */ = {
 			isa = PBXShellScriptBuildPhase;

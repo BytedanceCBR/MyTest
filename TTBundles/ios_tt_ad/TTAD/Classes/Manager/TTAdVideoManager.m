@@ -17,7 +17,6 @@
 #import "TTRoute.h"
 #import "TTURLTracker.h"
 #import "TTURLUtils.h"
-#import <Crashlytics/Crashlytics.h>
 #import <TTTracker/TTTrackerProxy.h>
 #import "TTAdVideoRelateAdModel.h"
 #import "TTAdAppointAlertView.h"

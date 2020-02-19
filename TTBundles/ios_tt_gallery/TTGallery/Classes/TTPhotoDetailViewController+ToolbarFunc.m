@@ -48,7 +48,6 @@
 #import "ExploreMomentDefine.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <Crashlytics/Answers.h>
 #import <TTTracker/TTTracker.h>
 #import <TTBaseLib/UIImageAdditions.h>
 #import <TTMonitor/TTMonitor.h>
@@ -464,7 +463,6 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
 - (void)activityView:(SSActivityView *)view didCompleteByItemType:(TTActivityType)itemType {
     //分享数量统计
     if (itemType > TTActivityTypeNone && itemType <= TTActivityTypeShareButton){
-        [Answers logCustomEventWithName:@"share" customAttributes:@{@"photo" : [NSString stringWithFormat:@"%d",itemType]}];
         [[TTMonitor shareManager] trackService:@"shareboard_success" status:itemType extra:@{@"source": @"photo"}];
     }
     Article *currentArticle = self.detailModel.article;

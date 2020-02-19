@@ -9,8 +9,8 @@
 #import <objc/runtime.h>
 #import "JSONModel+Monitor.h"
 #import "SSCommonLogic.h"
-#import <TTArticleBase/Log.h>
 #import <TTMonitor/TTMonitor.h>
+#import <TTArticleBase/Log.h>
 
 @implementation JSONModel (Monitor)
 
@@ -384,10 +384,8 @@ static NSString* stringOfJSONModelErrorType(kJSONModelErrorTypes errorType)
 {
     if (!errDict) return;
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionaryWithDictionary:errDict];
-    
     extraDic[@"init_class"] = class;
     extraDic[@"init_cmd"] = cmd;
-
 #if DEBUG
     TLS_LOG(@"Debug - JSONModel Error:\n%@", extraDic);
 #else

@@ -7,8 +7,7 @@
 //
 
 #import "TTStartupTask.h"
-#import <Crashlytics/Crashlytics.h>
 
-@interface TTFabricSDKRegister : TTStartupTask<CrashlyticsDelegate,UIApplicationDelegate>
+@interface TTFabricSDKRegister : TTStartupTask<UIApplicationDelegate>
 
 @end

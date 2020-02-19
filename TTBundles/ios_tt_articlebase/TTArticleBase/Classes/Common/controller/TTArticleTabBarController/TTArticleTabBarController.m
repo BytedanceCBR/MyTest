@@ -45,7 +45,6 @@
 //#import "TTWeitoutiaoViewController.h"
 #import "TTProfileViewController.h"
 #import "TTAccountBindingMobileViewController.h"
-#import <Crashlytics/Crashlytics.h>
 
 //#import "TTUGCPermissionService.h"
 //#import "TTPostUGCEntrance.h"

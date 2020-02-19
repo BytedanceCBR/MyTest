@@ -36,7 +36,6 @@
 #import "UIViewController+Track.h"
 
 #import "UIViewController+RefreshEvent.h"
-#import <Crashlytics/Crashlytics.h>
 #import "TTCustomAnimationNavigationController.h"
 
 #import "TTTopBar.h"
