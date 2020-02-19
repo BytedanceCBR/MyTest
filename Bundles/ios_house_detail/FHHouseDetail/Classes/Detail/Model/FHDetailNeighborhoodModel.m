@@ -263,4 +263,52 @@
 }
 @end
 
+@implementation FHDetailNeighborhoodDataQuestionModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"questionWrite": @"question_write",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end
+
+@implementation FHDetailNeighborhoodDataQuestionQuestionWriteModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"contentEmptyTitle": @"content_empty_title",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end
+
+@implementation FHDetailNeighborhoodDataQuestionContentModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"questionListSchema": @"question_list_schema",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end
+
 

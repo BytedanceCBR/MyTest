@@ -454,6 +454,11 @@
     }
 }
 
+- (void)setBaseViewModel:(FHHouseDetailBaseViewModel *)baseViewModel {
+    _baseViewModel = baseViewModel;
+    self.titleView.baseViewModel = baseViewModel;
+}
+
 - (void)updateModel:(FHMultiMediaModel *)model withTitleModel:(FHDetailHouseTitleModel *)titleModel{
     self.medias = model.medias;
     [self.colletionView reloadData];

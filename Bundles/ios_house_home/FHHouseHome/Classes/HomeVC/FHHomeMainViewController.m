@@ -21,6 +21,7 @@
 #import "FHMinisdkManager.h"
 #import "FHSpringHangView.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "UIViewController+Track.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -30,6 +31,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) BOOL isHaveCheckUpgrage;
 //春节活动运营位
 @property (nonatomic, strong) FHSpringHangView *springView;
+@property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 
 @end
 
@@ -50,6 +52,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.isShowing = YES;
+    self.ttTrackStayEnable = YES;
 
     //UGC地推包检查粘贴板
     [self checkPasteboard:NO];
@@ -67,12 +70,29 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [[FHMinisdkManager sharedInstance] goSpring];
     }
     
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.isShowing = NO;
     
+    [self addStayCategoryLog:self.ttTrackStayTime];
+}
+
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    if (self.stayTime>0) {
+        NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
+          [tracerDict setValue:@"main" forKey:@"tab_name"];
+          [tracerDict setValue:@(0) forKey:@"with_tips"];
+          [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
+          tracerDict[@"stay_time"] = @((int)duration);
+          
+          if (((int)duration) > 0) {
+              [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+          }
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -90,6 +110,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     }
     
     [[FHPopupViewManager shared] triggerPopupView];
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)addSpringView {

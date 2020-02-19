@@ -281,6 +281,7 @@
         
         cellModel.title = model.rawData.content.question.title;
         cellModel.openUrl = model.rawData.content.question.questionListSchema;
+        cellModel.writeAnswerSchema = model.rawData.content.question.writeAnswerSchema;
         
         //  优先使用qid，使用groudId 兜底
         NSString *qid = model.rawData.content.question.qid;
@@ -312,6 +313,20 @@
         }else{
             cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
         }
+        
+        //小区问答数据处理
+        if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+            cellModel.qid = groupId;
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
+            cellModel.questionStr = model.rawData.content.question.title;
+            cellModel.answerCountText = model.rawData.content.extra.answerCount;
+            cellModel.answerCount = [model.rawData.content.question.niceAnsCount integerValue] + [model.rawData.content.question.normalAnsCount integerValue];
+        }
+        
+        //小区问答数据处理
+//        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
+//        cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑";
+//        cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         cellModel.groupId = model.rawData.groupId;
@@ -362,6 +377,16 @@
         }
         
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        
+        //小区问答数据处理
+        if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+            cellModel.qid = model.rawData.content.question.qid;
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
+            cellModel.questionStr = model.rawData.content.question.title;
+            cellModel.answerStr = model.rawData.content.answer.abstractText;
+            cellModel.answerCountText = model.rawData.content.extra.answerCount;
+            cellModel.answerCount = [model.rawData.content.question.niceAnsCount integerValue] + [model.rawData.content.question.normalAnsCount integerValue];
+        }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         cellModel.groupId = model.rawData.commentBase.id;
@@ -746,6 +771,17 @@
     return desc;
 }
 
+- (void)setIsInNeighbourhoodQAList:(BOOL)isInNeighbourhoodQAList {
+    _isInNeighbourhoodQAList = isInNeighbourhoodQAList;
+    CGFloat width = [UIScreen mainScreen].bounds.size.width - 60;
+    if(isInNeighbourhoodQAList){
+        width = [UIScreen mainScreen].bounds.size.width - 90;
+    }
+    self.numberOfLines = isInNeighbourhoodQAList ? 3 : 1;
+    [FHUGCCellHelper setQuestionRichContentWithModel:self width:width numberOfLines:0];
+    [FHUGCCellHelper setAnswerRichContentWithModel:self width:width numberOfLines:self.numberOfLines];
+}
+
 - (void)setCategoryId:(NSString *)categoryId {
     _categoryId = categoryId;
     _videoItem.categoryId = categoryId;
@@ -759,7 +795,12 @@
 + (FHFeedUGCCellModel *)modelFromFake {
     FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
     cellModel.groupId = @"1000051";
-    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotCommunity;
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
+    cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑与协同工具， 让每个企业轻松拥有文档";
+    cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
+    [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:0];
+    [FHUGCCellHelper setAnswerRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:1];
+    
     
     return cellModel;
 }
@@ -769,6 +810,19 @@
     cellModel.groupId = @"1000061";
     cellModel.cellType = FHUGCFeedListCellTypeUGCSmallVideo;
     cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
+    
+    return cellModel;
+}
+
++ (FHFeedUGCCellModel *)modelFromFake3:(BOOL)isList {
+    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
+    cellModel.isInNeighbourhoodQAList = isList;
+    cellModel.groupId = @"1000051";
+    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
+    cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑";
+    cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
+    [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:0];
+    [FHUGCCellHelper setAnswerRichContentWithModel:cellModel width:[UIScreen mainScreen].bounds.size.width - 100 numberOfLines:(cellModel.isInNeighbourhoodQAList ? 3 : 1)];
     
     return cellModel;
 }

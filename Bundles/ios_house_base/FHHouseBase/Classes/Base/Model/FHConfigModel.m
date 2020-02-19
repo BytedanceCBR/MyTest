@@ -247,6 +247,34 @@
 }
 @end
 
+@implementation FHConfigCenterTabImageModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHConfigCenterTabModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
+                           @"staticImage": @"static_image",
+                           @"activationimage": @"activation_image",
+                           @"logPb":@"log_pb",
+                           @"tabId":@"tab_id"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
 @implementation FHRealtorEvaluatioinConfigModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -373,6 +401,7 @@
              @"jump2AdRecommend":@"jump_2_ad_recommend",
              @"ugcCitySwitch":@"ugc_city_switch",
              @"tabConfig": @"tab_config",
+             @"opTab":@"op_tab",
              @"ugcCategoryConfig": @"ugc_category_config",
              @"realtorEvaluationConfig": @"realtor_evaluation",
              @"jumpPageOnStartup":@"jump_page_on_startup",
