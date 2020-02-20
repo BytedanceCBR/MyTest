@@ -698,9 +698,28 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.houseType == FHHouseTypeNeighborhood) {
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
+    }else if (self.houseType == FHIMHouseTypeNewHouse) {
+        extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+        extraDic[kFHCluePage] = @(FHClueIMPageTypeCourt);
+        if (_fromStr.length > 0) {
+            extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
+        }
     }
     extraDic[@"is_login_front"] = @(1);
     [self onlineActionWithExtraDict:extraDic];
+}
+
++ (FHClueIMPageTypeC)imCluePageTypeByFromString:(NSString *)fromStr
+{
+    FHClueIMPageTypeC cluePageType = FHClueIMPageTypeCourt;
+    if ([fromStr isEqualToString:@"app_floorplan"]) {
+        cluePageType = FHClueIMPageTypeFloorplan;
+    }else if ([fromStr isEqualToString:@"app_newhouse_detail"]) {
+        cluePageType = FHClueIMPageTypeNewHouseDetail;
+    }else if ([fromStr isEqualToString:@"app_newhouse_apartmentlist"]) {
+        cluePageType = FHClueIMPageTypeApartmentlist;
+    }
+    return cluePageType;
 }
 
 // 新房群聊按钮点击
