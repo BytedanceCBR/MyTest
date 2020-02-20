@@ -11,6 +11,7 @@
 #import "FHCommunityFeedListNearbyViewModel.h"
 #import "FHCommunityFeedListMyJoinViewModel.h"
 #import "FHCommunityFeedListPostDetailViewModel.h"
+#import "FHCommunityFeedListSpecialTopicViewModel.h"
 #import "TTReachability.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
@@ -187,6 +188,12 @@
         viewModel.categoryId = @"f_ugc_follow";
     }else if(self.listType == FHCommunityFeedListTypePostDetail) {
         FHCommunityFeedListPostDetailViewModel *postDetailViewModel = [[FHCommunityFeedListPostDetailViewModel alloc] initWithTableView:_tableView controller:self];
+        postDetailViewModel.socialGroupId = self.forumId;
+        postDetailViewModel.tabName = self.tabName;
+        postDetailViewModel.categoryId = @"f_project_social";
+        viewModel = postDetailViewModel;
+    }else if(self.listType == FHCommunityFeedListTypeSpecialTopic) {
+        FHCommunityFeedListSpecialTopicViewModel *postDetailViewModel = [[FHCommunityFeedListSpecialTopicViewModel alloc] initWithTableView:_tableView controller:self];
         postDetailViewModel.socialGroupId = self.forumId;
         postDetailViewModel.tabName = self.tabName;
         postDetailViewModel.categoryId = @"f_project_social";
@@ -479,7 +486,7 @@
 
 // 帐号切换
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
-    if(self.listType != FHCommunityFeedListTypePostDetail) {
+    if(self.listType == FHCommunityFeedListTypeNearby || self.listType == FHCommunityFeedListTypeMyJoin) {
         self.needReloadData = YES;
     }
 }
