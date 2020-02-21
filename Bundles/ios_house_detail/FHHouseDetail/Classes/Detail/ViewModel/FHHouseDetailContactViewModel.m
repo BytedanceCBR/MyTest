@@ -670,8 +670,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
             extraDic[@"from"] = _fromStr;
         }
+    }else if (self.houseType == FHIMHouseTypeSecondHandHouse) {
+        extraDic[@"is_login_front"] = @(1);
     }
-    extraDic[@"is_login_front"] = @(1);
     [self onlineActionWithExtraDict:extraDic];
 }
 
