@@ -23,7 +23,7 @@
 #import "FHDetailRelatedNeighborhoodCell.h"
 #import "FHDetailNeighborhoodHouseCell.h"
 #import "FHDetailNeighborhoodTransationHistoryCell.h"
-#import "FHODetailCommunityEntryCorrectingCell.h"
+//#import "FHODetailCommunityEntryCorrectingCell.h"
 #import "FHDetailNeighborhoodEvaluateCell.h"
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailNewModel.h"
@@ -67,7 +67,7 @@
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodStatsInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodStatsInfoModel class])];
     
-    [self.tableView registerClass:[FHODetailCommunityEntryCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
+//    [self.tableView registerClass:[FHODetailCommunityEntryCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodPropertyInfoCell class]
            forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodPropertyInfoModel class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodModel class])];
@@ -284,7 +284,7 @@
         [self.items addObject:infoModel];
     }
 
-//    //ugc 圈子入口
+    //ugc 圈子入口
 //    BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
 //    if(showUgcEntry){
 //        model.data.ugcSocialGroup.houseType = FHHouseTypeNeighborhood;
