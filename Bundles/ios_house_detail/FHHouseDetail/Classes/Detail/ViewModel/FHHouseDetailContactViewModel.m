@@ -664,6 +664,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
     }else if (self.houseType == FHIMHouseTypeNewHouse) {
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+        extraDic[kFHCluePage] = @(FHClueIMPageTypeCourt);
         extraDic[@"from"] = @"app_court";
         if (_fromStr.length > 0) {
             extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
