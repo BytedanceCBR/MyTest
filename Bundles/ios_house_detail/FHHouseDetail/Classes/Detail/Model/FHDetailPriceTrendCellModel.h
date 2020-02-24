@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   BOOL       isFold; // 折叠
 @property (nonatomic, assign)   CGFloat       bottomHeight;  
 @property (nonatomic, weak)     UITableView       *tableView;
+@property (nonatomic, assign) FHHouseType housetype;
 
 @end
 

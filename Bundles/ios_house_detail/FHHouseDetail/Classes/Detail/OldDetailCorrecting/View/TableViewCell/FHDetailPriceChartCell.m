@@ -1,11 +1,11 @@
 //
-//  FHDetailErshouPriceChartCell.m
+//  FHDetailPriceChartCell.m
 //  Pods
 //
 //  Created by 张静 on 2019/2/18.
 //
 
-#import "FHDetailErshouPriceChartCell.h"
+#import "FHDetailPriceChartCell.h"
 #import "FHDetailOldModel.h"
 #import "TTDeviceHelper.h"
 #import "FHDetailFoldViewButton.h"
@@ -15,7 +15,7 @@
 #import "FHDetailHeaderStarTitleView.h"
 #import <FHHouseBase/FHUtils.h>
 
-@interface FHDetailErshouPriceChartCell () <PNChartDelegate>
+@interface FHDetailPriceChartCell () <PNChartDelegate>
 
 @property(nonatomic , weak) FHDetailHeaderStarTitleView *headerView;
 @property (nonatomic, weak) UIImageView *shadowImage;
@@ -47,7 +47,7 @@
 
 @end
 
-@implementation FHDetailErshouPriceChartCell
+@implementation FHDetailPriceChartCell
 
 - (void)setUnitPerSquare:(double)unitPerSquare
 {
@@ -352,28 +352,38 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
-    [self.headerView updateTitle:cellModel.priceAnalyze.title ? : @"价格指数"];
-    [self.headerView updateStarsCount:cellModel.priceAnalyze.score.integerValue];
-    
-    NSArray *priceTrends = cellModel.priceTrends; 
-    self.priceValueLabel.text = cellModel.neighborhoodInfo.pricingPerSqm;
-    self.priceView.hidden = NO;
-    if (cellModel.neighborhoodInfo.monthUp.length > 0) {
-        float monthUp = cellModel.neighborhoodInfo.monthUp.floatValue;
-        float absValue = fabs(monthUp) * 100;
-        if (absValue == 0) {
-            self.monthUpValueLabel.text = @"持平";
-            self.monthUpTrend.hidden = YES;
-        } else {
-            self.monthUpValueLabel.text = [NSString stringWithFormat:@"%.2f%%",fabs(absValue)];
-            self.monthUpTrend.hidden = NO;
-            if (monthUp > 0) {
-                self.monthUpTrend.image = [UIImage imageNamed:@"detail_trend_red"];
+
+    if (cellModel.housetype != FHHouseTypeNeighborhood) {
+        [self.headerView updateTitle:cellModel.priceAnalyze.title ? : @"价格指数"];
+        [self.headerView updateStarsCount:cellModel.priceAnalyze.score.integerValue];
+        self.priceValueLabel.text = cellModel.neighborhoodInfo.pricingPerSqm;
+        self.priceView.hidden = NO;
+        if (cellModel.neighborhoodInfo.monthUp.length > 0) {
+            float monthUp = cellModel.neighborhoodInfo.monthUp.floatValue;
+            float absValue = fabs(monthUp) * 100;
+            if (absValue == 0) {
+                self.monthUpValueLabel.text = @"持平";
+                self.monthUpTrend.hidden = YES;
             } else {
-                self.monthUpTrend.image = [UIImage imageNamed:@"detail_trend_green"];
+                self.monthUpValueLabel.text = [NSString stringWithFormat:@"%.2f%%",fabs(absValue)];
+                self.monthUpTrend.hidden = NO;
+                if (monthUp > 0) {
+                    self.monthUpTrend.image = [UIImage imageNamed:@"detail_trend_red"];
+                } else {
+                    self.monthUpTrend.image = [UIImage imageNamed:@"detail_trend_green"];
+                }
             }
         }
+    }else {
+        [self.priceView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.headerView.mas_bottom);
+            make.height.mas_offset(0.01);
+        }];
+        [self.headerView updateTitle:@"均价走势"];
+        [self.headerView updateStarsCount:cellModel.priceAnalyze.score.integerValue];
+        self.priceView.hidden = YES;
     }
+    NSArray *priceTrends = cellModel.priceTrends;
     self.priceTrends = priceTrends;
     if (priceTrends.count < 1) {
         [self.chartBgView mas_updateConstraints:^(MASConstraintMaker *make) {

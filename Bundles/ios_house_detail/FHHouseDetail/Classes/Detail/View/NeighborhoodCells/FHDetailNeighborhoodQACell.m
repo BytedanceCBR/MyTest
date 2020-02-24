@@ -25,6 +25,8 @@
 
 @property(nonatomic , strong) NSMutableArray *dataList;
 @property(nonatomic , strong) UITableView *tableView;
+@property (nonatomic, strong) UIView *containerView;
+@property (nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic , strong) UIView *titleView;
 @property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) UIButton *questionBtn;
@@ -55,9 +57,17 @@
 }
 
 - (void)setupUI {
-    self.contentView.backgroundColor = [UIColor themeGray7];
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
+    }];
+    _containerView = [[UIView alloc] init];
+    _containerView.clipsToBounds = YES;
+    [self.contentView addSubview:_containerView];
+//    self.contentView.backgroundColor = [UIColor themeGray7];
     self.tableView = [[UITableView alloc] init];
-    _tableView.backgroundColor = [UIColor whiteColor];
+    _tableView.backgroundColor = [UIColor clearColor];
     _tableView.layer.masksToBounds = YES;
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -77,12 +87,12 @@
         _tableView.estimatedSectionHeaderHeight = 0;
     }
     
-    [self.contentView addSubview:_tableView];
+    [self.containerView addSubview:_tableView];
     
     self.cellManager = [[FHUGCCellManager alloc] init];
     [self.cellManager registerAllCell:_tableView];
     
-    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, 65)];
+    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 65)];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"小区问答";
@@ -104,13 +114,30 @@
     _tableView.tableHeaderView = self.titleView;
 }
 
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+//        shadowImage.backgroundColor = [UIColor redColor];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
+}
+
 - (void)initConstaints {
+
+    [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.shadowImage).offset(20);
+        make.left.right.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+    }];
+    
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.containerView);
+        make.left.mas_equalTo(self.containerView).offset(15);
+        make.right.mas_equalTo(self.containerView).offset(-15);
         make.height.mas_equalTo(300);
-        make.bottom.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.containerView);
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -133,7 +160,7 @@
     }
     self.currentData = data;
     FHDetailQACellModel *cellModel = (FHDetailQACellModel *)data;
-    
+    self.shadowImage.image = cellModel.shadowImage;
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(cellModel.viewHeight);
     }];
@@ -287,7 +314,7 @@
 }
 
 - (UIButton *)lookAllBtn {
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(15, 10, [UIScreen mainScreen].bounds.size.width - 30, 40)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(15, 10, [UIScreen mainScreen].bounds.size.width - 60, 40)];
     button.backgroundColor = [UIColor themeGray7];
     button.imageView.contentMode = UIViewContentModeCenter;
     [button setTitle:@"查看全部" forState:UIControlStateNormal];

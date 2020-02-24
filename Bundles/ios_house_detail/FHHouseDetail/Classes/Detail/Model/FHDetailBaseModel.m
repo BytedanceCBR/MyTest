@@ -5,7 +5,7 @@
 //  Created by 张静 on 2019/1/31.
 //
 
-#import "FHDetailBaseModel.h"
+#import "FHDetailBaseModel.h"shadowImage
 
 @implementation FHDetailBaseModel
 - (void)setShadowImageType:(FHHouseShdowImageType)shadowImageType {

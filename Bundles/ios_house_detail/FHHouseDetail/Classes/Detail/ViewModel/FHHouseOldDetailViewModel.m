@@ -23,7 +23,7 @@
 #import "FHDetailSurroundingAreaCell.h"
 #import "FHDetailRelatedHouseCell.h"
 #import "FHDetailSameNeighborhoodHouseCell.h"
-#import "FHDetailErshouPriceChartCell.h"
+#import "FHDetailPriceChartCell.h"
 #import "FHOldDetailDisclaimerCell.h"
 #import "FHDetailPriceTrendCellModel.h"
 #import "FHDetailPureTitleCell.h"
@@ -94,7 +94,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSameNeighborhoodHouseModel class])];
     [self.tableView registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
     //价格指数
-    [self.tableView registerClass:[FHDetailErshouPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceTrendCellModel class])];
+    [self.tableView registerClass:[FHDetailPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceTrendCellModel class])];
     //小区详情上标题
     [self.tableView registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])];
     //小区详情
@@ -516,6 +516,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     // 均价走势
     if (model.data.priceTrend.count > 0) {
         FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
+        priceTrendModel.housetype = self.houseType;
         priceTrendModel.priceTrends = model.data.priceTrend;
         priceTrendModel.neighborhoodInfo = model.data.neighborhoodInfo;
         priceTrendModel.pricingPerSqmV = model.data.pricingPerSqmV;
