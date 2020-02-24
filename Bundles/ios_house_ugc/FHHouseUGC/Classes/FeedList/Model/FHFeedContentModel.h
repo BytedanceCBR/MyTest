@@ -10,6 +10,21 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
     FHFeedContentStickStyleTopAndGood = 3,    //置顶和加精
 };
 
+@interface FHFeedContentRawDataCardFooterModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *footerLayoutStyle;
+@property (nonatomic, copy , nullable) NSString *nightIcon;
+@property (nonatomic, copy , nullable) NSString *offset;
+@property (nonatomic, copy , nullable) NSString *icon;
+@end
+
+@interface FHFeedContentRawDataCardHeaderModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *headerLayoutStyle;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
 @interface FHFeedContentCellCtrlsModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *cellFlag;
@@ -654,6 +669,9 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy)     NSString       *status;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRawDataHotCellListModel> *hotCellList;
 @property (nonatomic, copy , nullable) NSString *subCellType;
+//专题页
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCardFooterModel *cardFooter ;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCardHeaderModel *cardHeader ;
 
 @end
 
@@ -764,6 +782,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *danmakuCount;
 @property (nonatomic, assign)   BOOL       isStick;      // 是否置顶
 @property (nonatomic, assign)   FHFeedContentStickStyle  stickStyle; // 置顶类型：精华或其它
+@property (nonatomic, strong , nullable) NSArray *subRawDatas;
 @end
 
 

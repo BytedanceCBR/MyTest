@@ -39,15 +39,19 @@
 #import "TTUGCDefine.h"
 #import <FHUGCCategoryHelper.h>
 #import "UIImage+FIconFont.h"
+#import "FHSpecialTopicHeaderModel.h"
+#import "FHSpecialTopicContentModel.h"
+#import "UIImageView+BDWebImage.h"
 
 #define kSegmentViewHeight 52
 
-@interface FHSpecialTopicViewModel () <FHUGCFollowObserver, TTHorizontalPagingViewDelegate>
+@interface FHSpecialTopicViewModel () <FHUGCFollowObserver, TTHorizontalPagingViewDelegate,TTHorizontalPagingSegmentViewDelegate>
 
 @property (nonatomic, weak) FHSpecialTopicViewController *viewController;
 @property (nonatomic, strong) FHCommunityFeedListController *feedListController; //当前显示的feedVC
-@property (nonatomic, strong) FHUGCScialGroupDataModel *data;
-@property (nonatomic, strong) FHUGCScialGroupModel *socialGroupModel;
+//@property (nonatomic, strong) FHUGCScialGroupDataModel *data;
+@property (nonatomic, strong) FHSpecialTopicHeaderModel *specialTopicHeaderModel;
+@property (nonatomic, strong) NSArray *tabContent;
 @property (nonatomic, assign) BOOL isViewAppear;
 @property (nonatomic, assign) BOOL isLoginSatusChangeFromPost;
 @property (nonatomic, assign) BOOL isLogin;
@@ -148,10 +152,9 @@
         return;
     }
     WeakSelf;
-    [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId tabName:self.viewController.tabName class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
+    [FHHouseUGCAPI requestSpecialTopicHeaderWithTabId:@"" behotTime:0 loadMore:NO listCount:0 extraDic:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
-        
-        [_viewController tt_endUpdataData];
+        [self.viewController tt_endUpdataData];
         if(userPull){
             [self endRefreshing];
         }
@@ -161,22 +164,24 @@
         }
         
         if (model) {
-            FHUGCScialGroupModel *responseModel = (FHUGCScialGroupModel *)model;
-            self.socialGroupModel = responseModel;
+            FHSpecialTopicHeaderModel *responseModel = (FHSpecialTopicHeaderModel *)model;
+            self.specialTopicHeaderModel = responseModel;
 
-            [wself updateUIWithData:responseModel.data];
-            if (responseModel.data) {
-                // 更新圈子数据
-                [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:responseModel.data];
+            [self updateUIWithData:responseModel];
+            if (responseModel) {
                 if(self.isFirstEnter){
                     //初始化segment
                     [self initSegment];
                     //初始化vc
                     [self initSubVC];
+                    
+                    [self initPagingView];
+                    //放到最下面
+                    [self.viewController.view insertSubview:self.pagingView atIndex:0];
                 }
 
                 if (refreshFeed) {
-                    [self.feedListController startLoadData:YES];
+                    [self.feedListController startLoadData:self.isFirstEnter];
                 }
             }
         }
@@ -201,70 +206,60 @@
     }
 }
 
-- (void)gotoVotePublish {
-    if ([TTAccountManager isLogin]) {
-        [self gotoVoteVC];
-    } else {
-        [self gotoLogin:FHUGCLoginFrom_VOTE];
-    }
-}
+//- (void)gotoVotePublish {
+//    if ([TTAccountManager isLogin]) {
+//        [self gotoVoteVC];
+//    } else {
+//        [self gotoLogin:FHUGCLoginFrom_VOTE];
+//    }
+//}
 
-- (void)gotoWendaPublish {
-    if ([TTAccountManager isLogin]) {
-        [self gotoWendaVC];
-    } else {
-        [self gotoLogin:FHUGCLoginFrom_WENDA];
-    }
-}
+//- (void)gotoWendaPublish {
+//    if ([TTAccountManager isLogin]) {
+//        [self gotoWendaVC];
+//    } else {
+//        [self gotoLogin:FHUGCLoginFrom_WENDA];
+//    }
+//}
 
-// 跳转到投票发布器
-- (void)gotoVoteVC {
-    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
-    dict[TRACER_KEY] = tracerDict;
-    dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
-    dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
-    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
-}
+//// 跳转到投票发布器
+//- (void)gotoVoteVC {
+//    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
+//    NSMutableDictionary *dict = @{}.mutableCopy;
+//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+//    tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+//    dict[TRACER_KEY] = tracerDict;
+//    dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
+//    dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
+//    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
+//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+//    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+//}
 
-- (void)gotoWendaVC {
-    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
-    dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
-    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
-    dict[TRACER_KEY] = tracerDict;
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
-}
+//- (void)gotoWendaVC {
+//    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
+//    NSMutableDictionary *dict = @{}.mutableCopy;
+//    dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
+//    dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
+//    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
+//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+//    tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+//    dict[TRACER_KEY] = tracerDict;
+//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+//    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+//}
 
 - (void)initSegment {
     NSMutableArray *titles = [NSMutableArray array];
-    NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
-
     NSInteger selectedIndex = 0;
-    if(tabArray && tabArray.count > 1) {
-        for(NSInteger i = 0;i < tabArray.count;i++) {
-            FHUGCScialGroupDataTabInfoModel *item = tabArray[i];
-            if(!isEmptyString(item.showName)) {
-                [titles addObject:item.showName];
-            }
-            //这里记录一下精华tab的index,为了后面加精和取消加精时候，可以标记vc刷新
-            if([item.tabName isEqualToString:tabEssence]){
-                self.essenceIndex = i;
-            }
-            if(item.isDefault) {
-                selectedIndex = i;
-                self.currentSegmentType = item.tabName;
-                self.defaultType = item.tabName;
+    if(self.tabContent && self.tabContent.count > 1) {
+        for(NSInteger i = 0;i < self.tabContent.count;i++) {
+            FHFeedContentModel *item = self.tabContent[i];
+            if(!isEmptyString(item.rawData.cardHeader.title)) {
+                [titles addObject:item.rawData.cardHeader.title];
             }
         }
+        self.viewController.segmentView.hidden = NO;
     }else{
         [titles addObject:@"全部"];
         self.viewController.segmentView.hidden = YES;
@@ -277,18 +272,7 @@
 
 - (void)initSubVC {
     [self.subVCs removeAllObjects];
-    NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
-    
-    if(tabArray && tabArray.count > 1) {
-        FHUGCScialGroupDataTabInfoModel *item = [tabArray firstObject];
-        if(!isEmptyString(item.showName) && !isEmptyString(item.tabName)) {
-            [self createFeedListController:item.tabName];
-        }
-    }
-    
-    self.pagingView.delegate = self;
-    //放到最下面
-    [self.viewController.view insertSubview:self.pagingView atIndex:0];
+    [self createFeedListController:nil];
 }
 
 - (void)createFeedListController:(NSString *)tabName {
@@ -301,14 +285,32 @@
     feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
     feedListController.isResetStatusBar = NO;
-    //错误页高度
-    if(self.socialGroupModel.data.tabInfo && self.socialGroupModel.data.tabInfo.count > 1){
-        CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height;
-        errorViewHeight -= kSegmentViewHeight;
-        feedListController.errorViewHeight = errorViewHeight;
-    }
     feedListController.notLoadDataWhenEmpty = YES;
+    WeakSelf;
+    feedListController.requestSuccess = ^(id<FHBaseModelProtocol>  _Nonnull model) {
+        [wself handleFeedRequestSuccess:model];
+    };
+    
+    self.feedListController = feedListController;
+    
     [self.subVCs addObject:feedListController];
+}
+
+- (void)handleFeedRequestSuccess:(id<FHBaseModelProtocol>  _Nonnull)model {
+    FHSpecialTopicContentModel *contentModel = (FHSpecialTopicContentModel *)model;
+    self.tabContent = contentModel.dataContent;
+    
+    _pagingView.delegate = nil;
+    self.viewController.segmentView.delegate = nil;
+    [_pagingView removeFromSuperview];
+    _pagingView = nil;
+    
+    self.isFirstEnter = YES;
+    [self initSegment];
+    self.viewController.segmentView.delegate = self;
+    [self initPagingView];
+    //放到最下面
+    [self.viewController.view insertSubview:self.pagingView atIndex:0];
 }
 
 - (void)gotoLogin:(FHUGCLoginFrom)from {
@@ -335,12 +337,12 @@
                             switch(from) {
                                 case FHUGCLoginFrom_VOTE:
                                 {
-                                    [self gotoVoteVC];
+//                                    [self gotoVoteVC];
                                 }
                                     break;
                                 case FHUGCLoginFrom_WENDA:
                                 {
-                                    [self gotoWendaVC];
+//                                    [self gotoWendaVC];
                                 }
                                     break;
                                 default:
@@ -384,8 +386,8 @@
     traceParam[@"enter_from"] = @"community_group_detail";
     
     NSMutableDictionary *dic = [NSMutableDictionary new];
-    dic[@"select_group_id"] = self.data.socialGroupId;
-    dic[@"select_group_name"] = self.data.socialGroupName;
+//    dic[@"select_group_id"] = self.data.socialGroupId;
+//    dic[@"select_group_name"] = self.data.socialGroupName;
     dic[TRACER_KEY] = traceParam;
     dic[VCTITLE_KEY] = @"发帖";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
@@ -432,50 +434,43 @@
     }
     [self.viewController.customNavBarView refreshAlpha:alpha];
 
-    NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
-    if(tabArray && tabArray.count > 1) {
-        self.viewController.customNavBarView.seperatorLine.hidden = YES;
-    }
+//    NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
+//    if(tabArray && tabArray.count > 1) {
+//        self.viewController.customNavBarView.seperatorLine.hidden = YES;
+//    }
 }
 
-- (void)updateUIWithData:(FHUGCScialGroupDataModel *)data {
-    if (!data) {
+- (void)updateUIWithData:(FHSpecialTopicHeaderModel *)headerModel {
+    if (!headerModel) {
         self.pagingView.hidden = YES;
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         return;
     }
-    self.data = data;
+
     // 第一次服务端返回数据
-    if (data.shareInfo && self.shareInfo == nil) {
-        self.shareInfo = data.shareInfo;
+    if (headerModel.shareInfo && self.shareInfo == nil) {
+        FHUGCShareInfoModel *shareInfo = [[FHUGCShareInfoModel alloc] init];
+        shareInfo.title = headerModel.shareInfo.shareTitle;
+        shareInfo.isVideo = @"0";
+        shareInfo.desc = headerModel.shareInfo.shareDesc;
+        shareInfo.shareUrl = headerModel.shareInfo.shareUrl;
+        shareInfo.coverImage = headerModel.shareInfo.shareCover;
+        self.shareInfo = shareInfo;
     }
     self.pagingView.hidden = NO;
     self.viewController.emptyView.hidden = YES;
-    [self.viewController.headerView.avatar bd_setImageWithURL:[NSURL URLWithString:isEmptyString(data.avatar) ? @"" : data.avatar]];
-    self.viewController.headerView.nameLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
-    NSString *subtitle = data.contentText;
+    
+    if(headerModel.forum.bannerUrl.length > 0){
+        NSURL *url = [NSURL URLWithString:headerModel.forum.bannerUrl];
+        [self.viewController.headerView.topBack bd_setImageWithURL:url placeholder:nil];
+    }
+    
+    self.viewController.headerView.nameLabel.text = isEmptyString(headerModel.forum.forumName) ? @"" : headerModel.forum.forumName;
+    NSString *subtitle = headerModel.forum.desc;
     self.viewController.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
-    NSInteger followerCount = [data.followerCount integerValue];
-    if (followerCount <= 0) {
-       self.viewController.headerView.userCountShowen = NO;
-    } else {
-        self.viewController.headerView.userCountShowen = YES;
-        self.viewController.headerView.userCountLabel.text = [NSString stringWithFormat:@"%ld个成员",followerCount];
-    }
     
-    [self updateJoinUI:[data.hasFollow boolValue]];
-    if (followerCount > 0) {
-        if (subtitle.length > 0) {
-            subtitle = [NSString stringWithFormat:@"%@ | %@",subtitle, [NSString stringWithFormat:@"%ld个成员",followerCount]];
-        } else {
-            subtitle = [NSString stringWithFormat:@"%ld个成员",followerCount];
-        }
-    }
-    self.viewController.titleLabel.text = isEmptyString(data.socialGroupName) ? @"" : data.socialGroupName;
+    self.viewController.titleLabel.text = isEmptyString(headerModel.forum.forumName) ? @"" : headerModel.forum.forumName;
     self.viewController.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
-    
-    [self.viewController.headerView setNeedsLayout];
-    [self.viewController.headerView layoutIfNeeded];
     
     [self.pagingView reloadHeaderViewHeight:self.viewController.headerView.height];
 }
@@ -578,7 +573,20 @@
 
 #pragma mark - lazy load
 
-- (TTHorizontalPagingView *)pagingView {
+//- (TTHorizontalPagingView *)pagingView {
+//    if(!_pagingView) {
+//        _pagingView = [[TTHorizontalPagingView alloc] init];
+//        _pagingView.delegate = self;
+//        _pagingView.frame = self.viewController.view.bounds;
+//        _pagingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//        _pagingView.segmentTopSpace = CGRectGetMaxY(self.viewController.customNavBarView.frame);
+//        _pagingView.horizontalCollectionView.scrollEnabled = NO;
+//        _pagingView.clipsToBounds = YES;
+//    }
+//    return _pagingView;
+//}
+
+- (void)initPagingView {
     if(!_pagingView) {
         _pagingView = [[TTHorizontalPagingView alloc] init];
         _pagingView.delegate = self;
@@ -588,7 +596,6 @@
         _pagingView.horizontalCollectionView.scrollEnabled = NO;
         _pagingView.clipsToBounds = YES;
     }
-    return _pagingView;
 }
 
 #pragma mark - pagingView 代理
@@ -634,8 +641,7 @@
 }
 
 - (CGFloat)heightForSegmentInPagingView {
-    NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
-    if(tabArray && tabArray.count > 1) {
+    if(self.tabContent && self.tabContent.count > 1) {
         return kSegmentViewHeight;
     }else{
         return 0;
@@ -665,9 +671,6 @@
 
     if(toIndex < self.subVCs.count){
         self.selectedIndex = toIndex;
-        self.feedListController = self.subVCs[toIndex];
-//        self.pagingView.headerView = self.viewController.headerView;
-//        self.pagingView.segmentView = self.viewController.segmentView;
     }
 
     if(self.isFirstEnter) {
@@ -676,14 +679,14 @@
     } else {
         //上报埋点
         NSString *position = @"be_null";
-        if(toIndex < self.socialGroupModel.data.tabInfo.count){
-            FHUGCScialGroupDataTabInfoModel *tabModel = self.socialGroupModel.data.tabInfo[toIndex];
-            if(tabModel.tabName){
-                position = [NSString stringWithFormat:@"%@_list",tabModel.tabName];
-            }
-        }
-        [self addClickOptionsLog:position];
-        [self.pagingView scrollToIndex:toIndex withAnimation:YES];
+//        if(toIndex < self.socialGroupModel.data.tabInfo.count){
+//            FHUGCScialGroupDataTabInfoModel *tabModel = self.socialGroupModel.data.tabInfo[toIndex];
+//            if(tabModel.tabName){
+//                position = [NSString stringWithFormat:@"%@_list",tabModel.tabName];
+//            }
+//        }
+//        [self addClickOptionsLog:position];
+//        [self.pagingView scrollToIndex:toIndex withAnimation:NO];
     }
 }
 

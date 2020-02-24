@@ -131,32 +131,15 @@
 - (void)initNavBar {
     [self setupDefaultNavBar:NO];
     
-    self.rightBtn = [[FHUGCFollowButton alloc] initWithFrame:CGRectZero];
-    self.rightBtn.backgroundColor = [UIColor themeWhite];
-    self.rightBtn.groupId = self.communityId;
-    self.rightBtn.hidden = YES;
-    self.rightBtn.tracerDic = [self followButtonTraceDict];
-    WeakSelf;
-    self.rightBtn.followedSuccess = ^(BOOL isSuccess, BOOL isFollow) {
-        StrongSelf;
-        if(isSuccess) {
-            [self.viewModel refreshBasicInfo];
-        }
-    };
-    
     self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.textColor = [UIColor themeGray1];
     
-    self.subTitleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:10];
-    self.subTitleLabel.textAlignment = NSTextAlignmentCenter;
-    self.subTitleLabel.textColor = [UIColor themeGray3];
-    
     self.titleContainer = [[UIView alloc] init];
     [self.titleContainer addSubview:self.titleLabel];
-    [self.titleContainer addSubview:self.subTitleLabel];
+//    [self.titleContainer addSubview:self.subTitleLabel];
     [self.customNavBarView addSubview:self.titleContainer];
-    [self.customNavBarView addSubview:self.rightBtn];
+//    [self.customNavBarView addSubview:self.rightBtn];
     // 分享按钮
     self.shareButton = [[UIButton alloc] init];
     [self.shareButton setBackgroundImage:self.shareWhiteImage forState:UIControlStateNormal];
@@ -165,6 +148,8 @@
     [self.customNavBarView addSubview:_shareButton];
     //设置导航条透明
     [self setNavBar:NO];
+    
+    [self.customNavBarView layoutIfNeeded];
 }
 
 - (void)initView {
@@ -174,22 +159,15 @@
 }
 
 - (void)initHeaderView {
-    CGFloat height = [FHSpecialTopicHeaderView viewHeight];
-    
+    CGFloat height = [UIScreen mainScreen].bounds.size.width - CGRectGetMaxY(self.customNavBarView.frame);
     self.headerView = [[FHSpecialTopicHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
-    
-    //随机一张背景图
-    NSInteger randomImageIndex = [self.communityId integerValue] % 4;
-    randomImageIndex = randomImageIndex < 0 ? 0 : randomImageIndex;
-    NSString *imageName = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back%ld", (long)randomImageIndex];
-    self.headerView.topBack.image = [UIImage imageNamed:imageName];
 }
 
 - (void)initSegmentView {
     self.segmentView = [[FHCommunityDetailSegmentView alloc] init];
     [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
-        *norColorKey = @"grey3"; //grey3
-        *selColorKey = @"grey1";//grey1
+        *norColorKey = @"grey1"; //grey3
+        *selColorKey = @"orange1";//orange1
         *titleFont = [UIFont themeFontRegular:16];
         *selectedTitleFont = [UIFont themeFontSemibold:16];
     }];
@@ -204,12 +182,12 @@
 }
 
 - (void)initConstrains {
-    [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
-        make.right.mas_equalTo(self.customNavBarView).offset(-18.0f);
-        make.width.mas_equalTo(58);
-        make.height.mas_equalTo(24);
-    }];
+//    [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
+//        make.right.mas_equalTo(self.customNavBarView).offset(-18.0f);
+//        make.width.mas_equalTo(58);
+//        make.height.mas_equalTo(24);
+//    }];
     
     [self.titleContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
@@ -219,15 +197,9 @@
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleContainer);
+        make.centerY.mas_equalTo(self.titleContainer);
         make.centerX.mas_equalTo(self.customNavBarView);
         make.height.mas_equalTo(20);
-    }];
-    
-    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.titleContainer);
-        make.centerX.mas_equalTo(self.titleLabel);
-        make.height.mas_equalTo(14);
     }];
     
     [self.shareButton mas_makeConstraints:^(MASConstraintMaker *make) {

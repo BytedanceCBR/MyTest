@@ -1334,6 +1334,212 @@
     }];
 }
 
++ (TTHttpTask *)requestSpecialTopicContentWithTabId:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+
+    NSString *queryPath = @"/api/feed/forum_flow/v1/";
+    NSString *url = QURL(queryPath);
+
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"category"] = category;
+    paramDic[@"count"] = @(20);
+    paramDic[@"city"] = [TTLocationManager sharedManager].city;
+    paramDic[@"loc_mode"] = @([TTLocationManager isLocationServiceEnabled]);
+
+    TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
+    if (placemarkItem.coordinate.longitude > 0) {
+        paramDic[@"latitude"] = @(placemarkItem.coordinate.latitude);
+        paramDic[@"longitude"] = @(placemarkItem.coordinate.longitude);
+        paramDic[@"loc_time"] = @((long long) placemarkItem.timestamp);
+    }
+
+    paramDic[@"language"] = [TTDeviceHelper currentLanguage];
+    paramDic[@"refer"] = @(1);
+    if (behotTime) {
+        paramDic[@"refer"] = @(1);
+    }
+
+    if (loadMore && behotTime) {
+        NSNumber *maxBehotTimeNumber = @(behotTime);
+        if (!maxBehotTimeNumber) maxBehotTimeNumber = [NSNumber numberWithInt:0];
+        paramDic[@"max_behot_time"] = maxBehotTimeNumber;
+    } else {
+        NSNumber *minBeHotTimeNumber = [NSNumber numberWithInt:0];
+        if (behotTime) {
+            minBeHotTimeNumber = @(behotTime);
+        }
+        paramDic[@"min_behot_time"] = minBeHotTimeNumber;
+    }
+
+    paramDic[@"strict"] = @(0);
+    paramDic[@"list_count"] = @(listCount);
+    paramDic[@"concern_id"] = @"";
+
+    if (!loadMore) {
+        paramDic[@"refresh_reason"] = @(0);
+    }
+    
+    if(extraDic){
+        paramDic[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
+    }
+
+    Class cls = NSClassFromString(@"FHSpecialTopicContentModel");
+
+    NSDate *startDate = [NSDate date];
+    NSString *requestLogPath = @"";
+    if (queryPath.length > 0) {
+        NSURL *url = [NSURL URLWithString:queryPath];
+        if (url && url.path.length > 0) {
+            requestLogPath = [NSString stringWithFormat:@"%@_%@",url.path,category];
+        }
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        __block NSError *backError = error;
+        NSDate *backDate = [NSDate date];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            id <FHBaseModelProtocol> model = nil;
+            if (backError && !obj) {
+                code = backError.code;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            } else {
+                model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
+                serDate = [NSDate date];
+                if (!model) {
+                    // model 为nil
+                    code = 1;
+                    resultType = FHNetworkMonitorTypeBizFailed + 1;
+                } else {
+                    // model 不为nil
+                    if ([model respondsToSelector:@selector(status)]) {
+                        NSString *status = [model performSelector:@selector(status)];
+                        if (status.integerValue != 0 || backError != nil) {
+                            code = [status integerValue];
+                            errMsg = backError.domain;
+                            resultType = FHNetworkMonitorTypeBizFailed+code;
+                        }
+                    }
+                }
+            }
+            [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            if (completion) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model, backError);
+//                });
+            }
+        });
+
+    }];
+}
+
++ (TTHttpTask *)requestSpecialTopicHeaderWithTabId:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+
+    NSString *queryPath = @"/forum/home/v1/info/";
+    NSString *url = QURL(queryPath);
+
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"category"] = category;
+    paramDic[@"count"] = @(20);
+    paramDic[@"city"] = [TTLocationManager sharedManager].city;
+    paramDic[@"loc_mode"] = @([TTLocationManager isLocationServiceEnabled]);
+
+    TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
+    if (placemarkItem.coordinate.longitude > 0) {
+        paramDic[@"latitude"] = @(placemarkItem.coordinate.latitude);
+        paramDic[@"longitude"] = @(placemarkItem.coordinate.longitude);
+        paramDic[@"loc_time"] = @((long long) placemarkItem.timestamp);
+    }
+
+    paramDic[@"language"] = [TTDeviceHelper currentLanguage];
+    paramDic[@"refer"] = @(1);
+    if (behotTime) {
+        paramDic[@"refer"] = @(1);
+    }
+
+    if (loadMore && behotTime) {
+        NSNumber *maxBehotTimeNumber = @(behotTime);
+        if (!maxBehotTimeNumber) maxBehotTimeNumber = [NSNumber numberWithInt:0];
+        paramDic[@"max_behot_time"] = maxBehotTimeNumber;
+    } else {
+        NSNumber *minBeHotTimeNumber = [NSNumber numberWithInt:0];
+        if (behotTime) {
+            minBeHotTimeNumber = @(behotTime);
+        }
+        paramDic[@"min_behot_time"] = minBeHotTimeNumber;
+    }
+
+    paramDic[@"strict"] = @(0);
+    paramDic[@"list_count"] = @(listCount);
+    paramDic[@"concern_id"] = @"";
+
+    if (!loadMore) {
+        paramDic[@"refresh_reason"] = @(0);
+    }
+    
+    if(extraDic){
+        paramDic[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
+    }
+
+    Class cls = NSClassFromString(@"FHSpecialTopicHeaderModel");
+
+    NSDate *startDate = [NSDate date];
+    NSString *requestLogPath = @"";
+    if (queryPath.length > 0) {
+        NSURL *url = [NSURL URLWithString:queryPath];
+        if (url && url.path.length > 0) {
+            requestLogPath = [NSString stringWithFormat:@"%@_%@",url.path,category];
+        }
+    }
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        __block NSError *backError = error;
+        NSDate *backDate = [NSDate date];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            NSDate *serDate = [NSDate date];
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = nil;
+            NSDictionary *exceptionDict = nil;
+            id <FHBaseModelProtocol> model = nil;
+            if (backError && !obj) {
+                code = backError.code;
+                resultType = FHNetworkMonitorTypeNetFailed;
+            } else {
+                model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
+                serDate = [NSDate date];
+                if (!model) {
+                    // model 为nil
+                    code = 1;
+                    resultType = FHNetworkMonitorTypeBizFailed + 1;
+                } else {
+                    // model 不为nil
+                    if ([model respondsToSelector:@selector(status)]) {
+                        NSString *status = [model performSelector:@selector(status)];
+                        if (status.integerValue != 0 || backError != nil) {
+                            code = [status integerValue];
+                            errMsg = backError.domain;
+                            resultType = FHNetworkMonitorTypeBizFailed+code;
+                        }
+                    }
+                }
+            }
+            [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model, backError);
+                });
+            }
+        });
+
+    }];
+}
+
 @end
 
 @implementation FHVoteHTTPRequestSerializer

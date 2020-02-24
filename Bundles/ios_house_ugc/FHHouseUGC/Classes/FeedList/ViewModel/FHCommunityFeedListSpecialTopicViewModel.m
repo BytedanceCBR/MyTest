@@ -31,12 +31,18 @@
 #import "TTVPlayVideo.h"
 #import "TTVFeedCellWillDisplayContext.h"
 #import "TTVFeedCellAction.h"
+#import "FHSpecialTopicContentModel.h"
+#import "FHSpecialTopicSectionHeaderView.h"
+
+#define sectionHeaderViewHeight 37
 
 @interface FHCommunityFeedListSpecialTopicViewModel () <UITableViewDelegate, UITableViewDataSource>
 
 @property(nonatomic, strong) FHErrorView *errorView;
 //当第一刷数据不足5个，同时feed还有新内容时，会继续刷下一刷的数据，这个值用来记录请求的次数
 @property(nonatomic, assign) NSInteger retryCount;
+@property(nonatomic, strong) NSArray *tabContentModel;
+@property(nonatomic, strong) NSMutableArray *dataArray;
 
 @end
 
@@ -45,135 +51,16 @@
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHCommunityFeedListController *)viewController {
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
+        self.dataArray = [[NSMutableArray alloc] init];
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
-        // 删帖成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
-        // 举报成功
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
-        // 发帖成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
-        // 置顶或取消置顶成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postTopSuccess:) name:kFHUGCTopPostNotification object:nil];
-        // 加精或取消加精成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postGoodSuccess:) name:kFHUGCGoodPostNotification object:nil];
-        
-        // 编辑成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
     }
     
     return self;
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
 
-- (BOOL)isNotInAllTab {
-    return self.tabName && ![self.tabName isEqualToString:tabAll];
-}
-
-// 编辑发送成功 - 更新数据
-- (void)postEditNoti:(NSNotification *)noti {
-    //多个tab时候，仅仅更新全部页面数据
-    if([self isNotInAllTab]){
-        return;
-    }
-    if (noti && noti.userInfo) {
-        NSDictionary *userInfo = noti.userInfo;
-        NSString *groupId = userInfo[@"group_id"];
-        if (groupId.length > 0) {
-            __block NSUInteger index = -1;
-            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([cellModel.groupId isEqualToString:groupId]) {
-                    index = idx;
-                }
-            }];
-            // 找到 要更新的数据
-            if (index >= 0 && index < self.dataList.count) {
-                NSString *thread_cell = userInfo[@"thread_cell"];
-                if (thread_cell && [thread_cell isKindOfClass:[NSString class]]) {
-                    FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:thread_cell];
-                    FHFeedUGCCellModel *lastCellModel = self.dataList[index];
-                    cellModel.categoryId = self.categoryId;
-                    cellModel.feedVC = self.viewController;
-                    cellModel.tableView = self.tableView;
-                    cellModel.showCommunity = NO;
-                    cellModel.isFromDetail = NO;
-                    cellModel.isStick = lastCellModel.isStick;
-                    cellModel.stickStyle = lastCellModel.stickStyle;
-                    cellModel.contentDecoration = lastCellModel.contentDecoration;
-                    if (cellModel) {
-                        self.dataList[index] = cellModel;
-                    }
-                    // 异步一下
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.tableView reloadData];
-                    });
-                }
-            }
-        }
-    }
-}
-
-// 发帖成功，插入数据
-- (void)postThreadSuccess:(NSNotification *)noti {
-    //多个tab时候，仅仅强插在全部页面
-    if([self isNotInAllTab]){
-        return;
-    }
-    
-    if (noti && noti.userInfo) {
-        NSDictionary *userInfo = noti.userInfo;
-        FHFeedUGCCellModel *cellModel = userInfo[@"cell_model"];
-        if(cellModel) {
-            cellModel.tableView = self.tableView;
-            cellModel.isFromDetail = NO;
-            [self insertPostData:cellModel socialGroupIds:nil];
-        }
-    }
-}
-// 发帖和发投票后插入逻辑 social_group_ids 为空直接用cellModel.community.socialGroupId
-- (void)insertPostData:(FHFeedUGCCellModel *)cellModel socialGroupIds:(NSString *)social_group_ids {
-    if (cellModel == nil) {
-        return;
-    }
-    dispatch_async(dispatch_get_main_queue(), ^{
-        cellModel.showCommunity = NO;
-        cellModel.feedVC = self.viewController;
-        // 判断是否是需要插入的圈子,关注直接插入 不需要判断逻辑
-        NSString *socialGroups = social_group_ids;
-        if (socialGroups.length <= 0) {
-            socialGroups = cellModel.community.socialGroupId;
-        }
-        if (cellModel && self.viewController.forumId.length > 0 && [socialGroups containsString:self.viewController.forumId]) {
-            //去重逻辑
-            [self removeDuplicaionModel:cellModel.groupId];
-            // JOKER: 找到第一个非置顶贴的下标
-            __block NSUInteger index = self.dataList.count;
-            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
-                
-                if(!isStickTop) {
-                    index = idx;
-                    *stop = YES;
-                }
-            }];
-            
-            if(self.viewController.beforeInsertPostBlock){
-                self.viewController.beforeInsertPostBlock();
-            }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                // 插入在置顶贴的下方
-                [self.dataList insertObject:cellModel atIndex:index];
-                [self reloadTableViewData];
-                [self.tableView layoutIfNeeded];
-                self.needRefreshCell = NO;
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-            });
-        }
-    });
 }
 
 - (void)configTableView {
@@ -181,19 +68,10 @@
     self.tableView.dataSource = self;
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-        [wself requestData:NO first:NO];
+//        [wself requestData:NO first:NO];
     }];
     self.tableView.mj_footer = self.refreshFooter;
     self.refreshFooter.hidden = YES;
-    
-    if(self.viewController.tableViewNeedPullDown){
-        // 下拉刷新
-        [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
-            wself.isRefreshingTip = NO;
-            [wself.viewController hideImmediately];
-            [wself requestData:YES first:NO];
-        }];
-    }
 }
 
 - (FHErrorView *)errorView {
@@ -264,89 +142,81 @@
         [extraDic setObject:self.tabName forKey:@"tab_name"];
     }
     
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHHouseUGCAPI requestSpecialTopicContentWithTabId:@"" behotTime:0 loadMore:NO listCount:0 extraDic:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+
         wself.viewController.isLoadingData = NO;
-        if(isFirst){
-            [wself.viewController endLoading];
-            wself.tableView.scrollEnabled = YES;
-        }
-        
-        [wself.tableView finishPullDownWithSuccess:YES];
-        
-        FHFeedListModel *feedListModel = (FHFeedListModel *)model;
-        wself.feedListModel = feedListModel;
-        
-        if (!wself) {
-            return;
-        }
-        
+
         if (error) {
             //TODO: show handle error
-            if(isFirst){
-                if(error.code != -999){
-                    [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-                    wself.viewController.showenRetryButton = YES;
-                    wself.refreshFooter.hidden = YES;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(isFirst){
+                    if(error.code != -999){
+                        [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+                        wself.viewController.showenRetryButton = YES;
+                        wself.refreshFooter.hidden = YES;
+                        
+                        [wself.viewController endLoading];
+                        wself.tableView.scrollEnabled = YES;
+                    }
+                }else{
+                    [[ToastManager manager] showToast:@"网络异常"];
+                    [wself updateTableViewWithMoreData:YES];
                 }
-            }else{
-                [[ToastManager manager] showToast:@"网络异常"];
-                [wself updateTableViewWithMoreData:YES];
-            }
-            return;
+                return;
+            });
         }
         
+        FHSpecialTopicContentModel *specialTopicContentModel = (FHSpecialTopicContentModel *)model;
+
         if(model){
-//            if(isHead){
-//                if(feedListModel.hasMore){
-//                    [wself.dataList removeAllObjects];
-//                }
-//                wself.tableView.hasMore = YES;
-//            }else{
-//                wself.tableView.hasMore = feedListModel.hasMore;
-//            }
+            NSMutableArray *resultArray = [NSMutableArray array];
+            NSMutableArray *dataContentModel = [NSMutableArray array];
+            for (FHSpecialTopicContentDataModel *dataModel in specialTopicContentModel.data) {
+                FHFeedContentModel *contentModel = [FHFeedUGCCellModel contentModelFromFeedContent:dataModel.content];
+                if(contentModel){
+                    [dataContentModel addObject:contentModel];
+                }
+                
+                wself.tabContentModel = dataContentModel;
+                
+                for (NSDictionary *dic in contentModel.subRawDatas) {
+                    FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:dic];
+                    if(cellModel){
+                        [resultArray addObject:cellModel];
+                    }
+                }
+            }
+            specialTopicContentModel.dataContent = [dataContentModel copy];
+            
             if(isHead){
+                [wself.dataArray removeAllObjects];
                 [wself.dataList removeAllObjects];
             }
-            
-            wself.tableView.hasMore = feedListModel.hasMore;
-            
-            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
-            
+
+            wself.tableView.hasMore = NO;
+
             if(isFirst){
                 [wself.clientShowDict removeAllObjects];
+                [wself.dataArray removeAllObjects];
                 [wself.dataList removeAllObjects];
             }
-            if(isHead){
-                // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-                [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                    cellModel.isStick = NO;
-                }];
-                // 头部插入新数据
-                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
-            }else{
-                [wself.dataList addObjectsFromArray:result];
-            }
             
-            wself.viewController.hasValidateData = wself.dataList.count > 0;
+            wself.dataArray = [wself convertModel:dataContentModel];
             
-            //第一次拉取数据过少时，在多拉一次loadmore
-            if(self.dataList.count > 0 && self.dataList.count < 5 && self.tableView.hasMore && self.retryCount < 1){
-                self.retryCount += 1;
-                [self requestData:NO first:NO];
-                return;
-            }
-        
-            [wself reloadTableViewData];
-            
-            NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-                wself.isRefreshingTip = YES;
-                [wself.viewController showNotify:refreshTip completion:^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        wself.isRefreshingTip = NO;
-                    });
-                }];
-                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                wself.viewController.hasValidateData = wself.dataList.count > 0;
+                wself.tableView.scrollEnabled = YES;
+                [wself reloadTableViewData];
+                if(wself.viewController.requestSuccess){
+                    wself.viewController.requestSuccess(model);
+                }
+            });
+        }else{
+            if(isFirst){
+                  dispatch_async(dispatch_get_main_queue(), ^{
+                      [wself.viewController endLoading];
+                      wself.tableView.scrollEnabled = YES;
+                  });
             }
         }
     }];
@@ -376,11 +246,7 @@
             [self.tableView reloadData];
         }
     }else{
-        if([self isNotInAllTab]){
-            [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-        }else{
-            [self.errorView showEmptyWithTip:@"该圈子还没有内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-        }
+        [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
         
         UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight)];
         tableFooterView.backgroundColor = [UIColor whiteColor];
@@ -429,141 +295,162 @@
     return height;
 }
 
-- (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
-    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    for (FHFeedListDataModel *itemModel in feedList) {
-        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
-        cellModel.categoryId = self.categoryId;
-        cellModel.feedVC = self.viewController;
-        cellModel.tableView = self.tableView;
-        cellModel.showCommunity = NO;
-        if(cellModel){
-            if(isHead){
-                [resultArray addObject:cellModel];
-                //去重逻辑
-                [self removeDuplicaionModel:cellModel.groupId];
+- (NSMutableArray *)convertModel:(NSArray *)content {
+    NSMutableArray *dataArray = [[NSMutableArray alloc] init];
+    for (FHFeedContentModel *itemModel in content) {
+        NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+        for (NSInteger i = 0; i < itemModel.subRawDatas.count; i++) {
+            NSDictionary *dic = itemModel.subRawDatas[i];
+            FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:dic];
+            cellModel.categoryId = self.categoryId;
+            cellModel.feedVC = self.viewController;
+            cellModel.tableView = self.tableView;
+            cellModel.showCommunity = NO;
+            cellModel.hiddenMore = YES;
+            if(i == itemModel.subRawDatas.count - 1){
+                cellModel.bottomLineHeight = 5;
+                cellModel.bottomLineLeftMargin = 0;
+                cellModel.bottomLineRightMargin = 0;
             }else{
-                NSInteger index = [self getCellIndex:cellModel];
-                if(index < 0){
-                    [resultArray addObject:cellModel];
-                }
+                cellModel.bottomLineHeight = 1;
+                cellModel.bottomLineLeftMargin = 15;
+                cellModel.bottomLineRightMargin = 15;
+            }
+            
+            if(cellModel){
+                [resultArray addObject:cellModel];
             }
         }
+        [dataArray addObject:resultArray];
     }
-    return resultArray;
+    return dataArray;
 }
 
-- (void)removeDuplicaionModel:(NSString *)groupId {
-    for (FHFeedUGCCellModel *itemModel in self.dataList) {
-        if([groupId isEqualToString:itemModel.groupId]){
-            [self.dataList removeObject:itemModel];
-            break;
-        }
-    }
-}
+//- (void)removeDuplicaionModel:(NSString *)groupId {
+//    for (FHFeedUGCCellModel *itemModel in self.dataList) {
+//        if([groupId isEqualToString:itemModel.groupId]){
+//            [self.dataList removeObject:itemModel];
+//            break;
+//        }
+//    }
+//}
 
-- (void)postDeleteSuccess:(NSNotification *)noti {
-    if (noti && noti.userInfo && self.dataList) {
-        NSDictionary *userInfo = noti.userInfo;
-        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
-        [self deleteCell:cellModel];
-    }
-}
+//- (void)postDeleteSuccess:(NSNotification *)noti {
+//    if (noti && noti.userInfo && self.dataList) {
+//        NSDictionary *userInfo = noti.userInfo;
+//        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+//        [self deleteCell:cellModel];
+//    }
+//}
 
-- (void)postTopSuccess:(NSNotification *)noti {
-    if (noti && noti.userInfo && self.dataList) {
-        NSDictionary *userInfo = noti.userInfo;
-        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
-        cellModel.showCommunity = NO;
-        BOOL isTop = [userInfo[@"isTop"] boolValue];
-        [self topCell:cellModel isTop:isTop];
-    }
-}
-
-- (void)postGoodSuccess:(NSNotification *)noti {
-    if (noti && noti.userInfo && self.dataList) {
-        NSDictionary *userInfo = noti.userInfo;
-        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
-        NSInteger row = [self getCellIndex:cellModel];
-        
-        if(row < self.dataList.count && row >= 0){
-            FHFeedUGCCellModel *originCellModel = self.dataList[row];
-            originCellModel.isStick = cellModel.isStick;
-            originCellModel.stickStyle = cellModel.stickStyle;
-            originCellModel.contentDecoration = cellModel.contentDecoration;
-            originCellModel.ischanged = YES;
-            
-            [self refreshCell:originCellModel];
-        }
-    }
-}
+//- (void)postTopSuccess:(NSNotification *)noti {
+//    if (noti && noti.userInfo && self.dataList) {
+//        NSDictionary *userInfo = noti.userInfo;
+//        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+//        cellModel.showCommunity = NO;
+//        BOOL isTop = [userInfo[@"isTop"] boolValue];
+//        [self topCell:cellModel isTop:isTop];
+//    }
+//}
+//
+//- (void)postGoodSuccess:(NSNotification *)noti {
+//    if (noti && noti.userInfo && self.dataList) {
+//        NSDictionary *userInfo = noti.userInfo;
+//        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+//        NSInteger row = [self getCellIndex:cellModel];
+//
+//        if(row < self.dataList.count && row >= 0){
+//            FHFeedUGCCellModel *originCellModel = self.dataList[row];
+//            originCellModel.isStick = cellModel.isStick;
+//            originCellModel.stickStyle = cellModel.stickStyle;
+//            originCellModel.contentDecoration = cellModel.contentDecoration;
+//            originCellModel.ischanged = YES;
+//
+//            [self refreshCell:originCellModel];
+//        }
+//    }
+//}
 
 #pragma mark - UITableViewDataSource
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return self.dataArray.count;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.dataList count];
+    if(section < self.dataArray.count){
+        NSArray *resultArray = self.dataArray[section];
+        return [resultArray count];
+    }
+    return 0;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row < self.dataList.count){
-        [self traceClientShowAtIndexPath:indexPath];
-        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        /*impression统计相关*/
-        SSImpressionStatus impressionStatus = self.isShowing ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
-        [self recordGroupWithCellModel:cellModel status:impressionStatus];
-        
-        if (![cell isKindOfClass:[FHUGCVideoCell class]]) {
-            return;
-        }
-        //视频
-        if(cellModel.hasVideo){
-            FHUGCVideoCell *cellBase = (FHUGCVideoCell *)cell;
-            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
-            [self willFinishLoadTable];
+    if(indexPath.section < self.dataArray.count){
+        NSArray *resultArray = self.dataArray[indexPath.section];
+        if(indexPath.row < resultArray.count){
+            [self traceClientShowAtIndexPath:indexPath];
+            FHFeedUGCCellModel *cellModel = resultArray[indexPath.row];
+            /*impression统计相关*/
+            SSImpressionStatus impressionStatus = self.isShowing ? SSImpressionStatusRecording : SSImpressionStatusSuspend;
+            [self recordGroupWithCellModel:cellModel status:impressionStatus];
             
-            [cellBase willDisplay];
+            if (![cell isKindOfClass:[FHUGCVideoCell class]]) {
+                return;
+            }
+            //视频
+            if(cellModel.hasVideo){
+                FHUGCVideoCell *cellBase = (FHUGCVideoCell *)cell;
+                [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
+                [self willFinishLoadTable];
+                
+                [cellBase willDisplay];
+            }
         }
     }
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    // impression统计
-    if(indexPath.row < self.dataList.count){
-        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        [self recordGroupWithCellModel:cellModel status:SSImpressionStatusEnd];
-        
-        if(cellModel.hasVideo){
-            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
-            [self willFinishLoadTable];
+    if(indexPath.section < self.dataArray.count){
+        NSArray *resultArray = self.dataArray[indexPath.section];
+        // impression统计
+        if(indexPath.row < resultArray.count){
+            FHFeedUGCCellModel *cellModel = resultArray[indexPath.row];
+            [self recordGroupWithCellModel:cellModel status:SSImpressionStatusEnd];
             
-            if([cell isKindOfClass:[FHUGCVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
-                FHUGCVideoCell<TTVFeedPlayMovie> *cellBase = (FHUGCVideoCell<TTVFeedPlayMovie> *)cell;
-                BOOL hasMovie = NO;
-                NSArray *indexPaths = [tableView indexPathsForVisibleRows];
-                for (NSIndexPath *path in indexPaths) {
-                    if (path.row < self.dataList.count) {
-                        
-                        BOOL hasMovieView = NO;
-                        if ([cellBase respondsToSelector:@selector(cell_hasMovieView)]) {
-                            hasMovieView = [cellBase cell_hasMovieView];
-                        }
-                        
-                        if ([cellBase respondsToSelector:@selector(cell_movieView)]) {
-                            UIView *view = [cellBase cell_movieView];
-                            if (view && ![self.movieViews containsObject:view]) {
-                                [self.movieViews addObject:view];
+            if(cellModel.hasVideo){
+                [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(willFinishLoadTable) object:nil];
+                [self willFinishLoadTable];
+                
+                if([cell isKindOfClass:[FHUGCVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]) {
+                    FHUGCVideoCell<TTVFeedPlayMovie> *cellBase = (FHUGCVideoCell<TTVFeedPlayMovie> *)cell;
+                    BOOL hasMovie = NO;
+                    NSArray *indexPaths = [tableView indexPathsForVisibleRows];
+                    for (NSIndexPath *path in indexPaths) {
+                        if (path.row < self.dataList.count) {
+                            
+                            BOOL hasMovieView = NO;
+                            if ([cellBase respondsToSelector:@selector(cell_hasMovieView)]) {
+                                hasMovieView = [cellBase cell_hasMovieView];
+                            }
+                            
+                            if ([cellBase respondsToSelector:@selector(cell_movieView)]) {
+                                UIView *view = [cellBase cell_movieView];
+                                if (view && ![self.movieViews containsObject:view]) {
+                                    [self.movieViews addObject:view];
+                                }
+                            }
+                            if (cellModel == self.movieViewCellData) {
+                                hasMovie = YES;
+                                break;
                             }
                         }
-                        if (cellModel == self.movieViewCellData) {
-                            hasMovie = YES;
-                            break;
-                        }
                     }
-                }
-                
-                if (self.isShowing) {
-                    if (!hasMovie) {
-                        [cellBase endDisplay];
+                    
+                    if (self.isShowing) {
+                        if (!hasMovie) {
+                            [cellBase endDisplay];
+                        }
                     }
                 }
             }
@@ -572,24 +459,27 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row < self.dataList.count){
-        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
-        FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        
-        if (cell == nil) {
-            Class cellClass = NSClassFromString(cellIdentifier);
-            cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if(indexPath.section < self.dataArray.count){
+        NSArray *resultArray = self.dataArray[indexPath.section];
+        if(indexPath.row < resultArray.count){
+            FHFeedUGCCellModel *cellModel = resultArray[indexPath.row];
+            NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
+            FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            
+            if (cell == nil) {
+                Class cellClass = NSClassFromString(cellIdentifier);
+                cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            }
+            
+            cell.delegate = self;
+            cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
+            
+            if(indexPath.row < resultArray.count){
+                [cell refreshWithData:cellModel];
+            }
+            return cell;
         }
-        
-        cell.delegate = self;
-        cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
-        
-        if(indexPath.row < self.dataList.count){
-            [cell refreshWithData:cellModel];
-        }
-        return cell;
     }
     return [[FHUGCBaseCell alloc] init];
 }
@@ -597,23 +487,50 @@
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row < self.dataList.count){
-        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
-        if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
-            return [cellClass heightForData:cellModel];
+    if(indexPath.section < self.dataArray.count){
+        NSArray *resultArray = self.dataArray[indexPath.section];
+        if(indexPath.row < resultArray.count){
+            FHFeedUGCCellModel *cellModel = resultArray[indexPath.row];
+            Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
+            if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
+                return [cellClass heightForData:cellModel];
+            }
         }
     }
     return 100;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row < self.dataList.count){
-        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        self.currentCellModel = cellModel;
-        self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-        [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    if(indexPath.section < self.dataArray.count){
+        NSArray *resultArray = self.dataArray[indexPath.section];
+        if(indexPath.row < resultArray.count){
+            FHFeedUGCCellModel *cellModel = resultArray[indexPath.row];
+            self.currentCellModel = cellModel;
+            self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+            [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+        }
     }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    CGFloat height = 0.001f;
+    if(section < self.dataArray.count && section < self.tabContentModel.count && section != 0){
+        height = sectionHeaderViewHeight;
+    }
+    FHSpecialTopicSectionHeaderView *headerView = [[FHSpecialTopicSectionHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
+    if(section < self.dataArray.count && section < self.tabContentModel.count && section != 0){
+        FHFeedContentModel *model = self.tabContentModel[section];
+        headerView.titleLabel.text =  model.rawData.cardHeader.title;
+    }
+    return headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    CGFloat height = 0.001f;
+    if(section < self.dataArray.count && section < self.tabContentModel.count && section != 0){
+        height = sectionHeaderViewHeight;
+    }
+    return height;
 }
 
 #pragma UISCrollViewDelegate

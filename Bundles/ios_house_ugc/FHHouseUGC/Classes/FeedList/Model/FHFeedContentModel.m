@@ -205,6 +205,7 @@
     @"isStick": @"is_stick",
     @"stickStyle": @"stick_style",
     @"originType": @"origin_type",
+    @"subRawDatas": @"sub_raw_datas",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -481,6 +482,8 @@
                            @"distanceInfo":@"distance_info",
                            @"subCellType": @"sub_cell_type",
                            @"hotCellList": @"hot_cell_list",
+                           @"cardFooter": @"card_footer",
+                           @"cardHeader": @"card_header",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -1082,6 +1085,39 @@
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCardFooterModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"footerLayoutStyle": @"footer_layout_style",
+    @"nightIcon": @"night_icon",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCardHeaderModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"headerLayoutStyle": @"header_layout_style",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
 }
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
