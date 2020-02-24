@@ -315,9 +315,20 @@
     return NO;
 }
 
+
+- (void)sendGoDetail
+{
+    NSMutableDictionary *goDetailParams = [NSMutableDictionary new];
+    [goDetailParams setValue:@"city_selection" forKey:@"page_type"];
+    [goDetailParams setValue:@"main" forKey:@"enter_from"];
+    [goDetailParams setValue:@"main" forKey:@"origin_from"];
+    [FHUserTracker writeEvent:@"go_detail" params:goDetailParams];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self checkLocAuthorization];
+    [self sendGoDetail];
     
     if (self.disablePanGesture) {
         // 禁止滑动手势
