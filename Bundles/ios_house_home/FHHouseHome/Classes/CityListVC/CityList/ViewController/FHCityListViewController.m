@@ -319,9 +319,18 @@
 - (void)sendGoDetail
 {
     NSMutableDictionary *goDetailParams = [NSMutableDictionary new];
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+
+    if (hasSelectedCity) {
+        [goDetailParams setValue:@"maintab" forKey:@"enter_from"];
+        [goDetailParams setValue:@"maintab" forKey:@"origin_from"];
+    }else
+    {
+        [goDetailParams setValue:@"be_null" forKey:@"enter_from"];
+        [goDetailParams setValue:@"be_null" forKey:@"origin_from"];
+    }
     [goDetailParams setValue:@"city_selection" forKey:@"page_type"];
-    [goDetailParams setValue:@"be_null" forKey:@"enter_from"];
-    [goDetailParams setValue:@"be_null" forKey:@"origin_from"];
+
     [FHUserTracker writeEvent:@"go_detail" params:goDetailParams];
 }
 
