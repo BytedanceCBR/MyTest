@@ -320,8 +320,8 @@
 {
     NSMutableDictionary *goDetailParams = [NSMutableDictionary new];
     [goDetailParams setValue:@"city_selection" forKey:@"page_type"];
-    [goDetailParams setValue:@"main" forKey:@"enter_from"];
-    [goDetailParams setValue:@"main" forKey:@"origin_from"];
+    [goDetailParams setValue:@"be_null" forKey:@"enter_from"];
+    [goDetailParams setValue:@"be_null" forKey:@"origin_from"];
     [FHUserTracker writeEvent:@"go_detail" params:goDetailParams];
 }
 
