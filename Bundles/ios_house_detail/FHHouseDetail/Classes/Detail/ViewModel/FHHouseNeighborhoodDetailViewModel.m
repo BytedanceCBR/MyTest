@@ -46,6 +46,7 @@
 #import "FHDetailNeighborhoodHouseSaleCell.h"
 #import "FHDetailNeighborhoodHouseRentCell.h"
 #import "FHDetailNeighborhoodHouseStatusModel.h"
+#import "FHDetailSurroundingAreaCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -87,9 +88,14 @@
     [self.tableView registerClass:[FHDetailNeighborhoodHouseSaleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseSaleModel class])];
     //在租房源
     [self.tableView registerClass:[FHDetailNeighborhoodHouseRentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseRentModel class])];
-   
-    [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodModel class])];
-    [self.tableView registerClass:[FHDetailNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseModel class])];
+//        [self.tableView registerClass:[FHDetailNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseModel class])];
+   //周边小区
+    [self.tableView registerClass:[FHDetailSurroundingAreaCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSurroundingAreaModel class])];
+//    [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodModel class])];
+    
+    
+    
+
     [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateModel class])];
     [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
@@ -489,27 +495,27 @@
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 3) {
         self.detailController.isLoadingData = NO;
-        // 周边小区
-        if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
-            // 添加分割线--当存在某个数据的时候在顶部添加分割线
-            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
-            FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
-            infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
-            infoModel.neighborhoodId = self.neighborhoodId;
-            [self.items addObject:infoModel];
-        }
+//        // 周边小区
+//        if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
+//            // 添加分割线--当存在某个数据的时候在顶部添加分割线
+//            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+//            [self.items addObject:grayLine];
+//            FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
+//            infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
+//            infoModel.neighborhoodId = self.neighborhoodId;
+//            [self.items addObject:infoModel];
+//        }
         // 小区房源(二手房)
         if (self.sameNeighborhoodErshouHouseData.items.count>0){
             FHDetailNeighborhoodHouseSaleModel *infoModel = [[FHDetailNeighborhoodHouseSaleModel alloc] init];
-            infoModel.houseModelType = FHHouseModelTypePlotSold;
+            infoModel.houseModelType = FHPlotHouseModelTypeSold;
             infoModel.neighborhoodSoldHouseData = self.sameNeighborhoodErshouHouseData;
             [self.items addObject:infoModel];
         }
         //小区房源租房
         if (self.sameNeighborhoodRentHouseData.items.count > 0) {
             FHDetailNeighborhoodHouseRentModel *infoModel = [[FHDetailNeighborhoodHouseRentModel alloc] init];
-            infoModel.houseModelType = FHHouseModelTypePlotSold;
+            infoModel.houseModelType = FHPlotHouseModelTypeSold;
             infoModel.sameNeighborhoodRentHouseData = self.sameNeighborhoodRentHouseData;
             [self.items addObject:infoModel];
         }
@@ -528,6 +534,14 @@
             paramsDict[@"page_type"] = [self pageTypeString];
             qaModel.tracerDict = paramsDict;
             [self.items addObject:qaModel];
+        }
+        // 周边小区
+        if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
+            FHDetailSurroundingAreaModel *infoModel = [[FHDetailSurroundingAreaModel alloc] init];
+            infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
+            infoModel.houseModelType = FHPlotHouseModelTypePeriphery;
+            infoModel.neighborhoodId = self.neighborhoodId;
+            [self.items addObject:infoModel];
         }
         //        if (self.sameNeighborhoodErshouHouseData.items.count > 0 || self.sameNeighborhoodRentHouseData.items.count > 0) {
 //            // 添加分割线--当存在某个数据的时候在顶部添加分割线

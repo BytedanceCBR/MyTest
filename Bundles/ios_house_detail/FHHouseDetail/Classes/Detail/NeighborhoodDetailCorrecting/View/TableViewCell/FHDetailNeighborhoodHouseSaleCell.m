@@ -47,6 +47,11 @@
             make.bottom.mas_equalTo(self.shadowImage).offset(-25);
         }];
     }
+    if (model.shadowImageType == FHHouseShdowImageTypeLBR) {
+        [self.headerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.shadowImage).offset(-5);
+        }];
+    }
     if (model.neighborhoodSoldHouseData) {
         self.headerView.label.text = [NSString stringWithFormat:@"在售套数 (%@)",model.neighborhoodSoldHouseData.total];
         self.headerView.isShowLoadMore = model.neighborhoodSoldHouseData.hasMore;

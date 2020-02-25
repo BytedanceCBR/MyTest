@@ -22,34 +22,17 @@
     }
     
     NSMutableArray *coreInfos = [[NSMutableArray alloc]init];
-//    NSMutableArray *subscribes = [[NSMutableArray alloc]init];
-//    NSMutableArray *outlineInfo = [[NSMutableArray alloc]init];
-//    NSMutableArray *billBoard = [[NSMutableArray alloc]init];
-//    NSMutableArray *housingEvaluation = [[NSMutableArray alloc]init];
     NSMutableArray *agentlist = [[NSMutableArray alloc]init];
     NSMutableArray *locationPeripherys = [[NSMutableArray alloc]init];
     NSMutableArray *qas = [[NSMutableArray alloc]init];
     NSMutableArray *plotsSlods = [[NSMutableArray alloc]init];
-//    NSMutableArray *peripherys = [[NSMutableArray alloc]init];
-//    NSMutableArray *disclaimers = [[NSMutableArray alloc]init];
+    NSMutableArray *peripherys = [[NSMutableArray alloc]init];
     [moduleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
         switch (model.houseModelType) {
             case FHPlotHouseModelTypeCoreInfo:
                 [coreInfos addObject:obj];
                 break;
-//            case FHHouseModelTypeSubscribe:
-//                [subscribes addObject:obj];
-//                break;
-//            case FHHouseModelTypeOutlineInfo:
-//                [outlineInfo addObject:obj];
-//                break;
-//            case FHHouseModelTypeBillBoard:
-//                [billBoard addObject:obj];
-//                break;
-//            case FHHouseModelTypeHousingEvaluation:
-//                [housingEvaluation addObject:obj];
-//                break;
             case FHPlotHouseModelTypeAgentlist:
                 [agentlist addObject:obj];
                 break;
@@ -59,15 +42,12 @@
             case FHPlotHouseModelTypeNeighborhoodQA:
                 [qas addObject:obj];
                 break;
-            case FHHouseModelTypePlotSold:
+            case FHPlotHouseModelTypeSold:
                 [plotsSlods addObject:obj];
                 break;
-//            case FHHouseModelTypePeriphery:
-//                [peripherys addObject:obj];
-//                break;
-//            case FHHouseModelTypeDisclaimer:
-//                [disclaimers addObject:obj];
-//                break;
+            case FHPlotHouseModelTypePeriphery:
+                [peripherys addObject:obj];
+                break;
             default:
                 break;
         }
@@ -79,40 +59,22 @@
     if (qas.count > 0) {
         [moduleItems addObject:@{@"qas":qas}];
     }
-//    if (subscribes.count > 0) {
-//        [moduleItems addObject:@{@"subscribes":subscribes}];
-//    }
-//    if (outlineInfo.count > 0) {
-//        [moduleItems addObject:@{@"outlineInfo":outlineInfo}];
-//    }
-//    if (billBoard.count > 0) {
-//        [moduleItems addObject:@{@"billBoard":billBoard}];
-//    }
     if (agentlist.count > 0) {
         [moduleItems addObject:@{@"agentlist":agentlist}];
     }
-//    if (housingEvaluation.count > 0) {
-//        [moduleItems addObject:@{@"housingEvaluation":housingEvaluation}];
-//    }
     if (locationPeripherys.count > 0) {
         [moduleItems addObject:@{@"locationPeripherys":locationPeripherys}];
     }
-//    if (tips.count > 0) {
-//        [moduleItems addObject:@{@"tips":tips}];
-//    }
     if (plotsSlods.count > 0) {
         [moduleItems addObject:@{@"plotsSlods":plotsSlods}];
     }
-//    if (peripherys.count > 0) {
-//        [moduleItems addObject:@{@"peripherys":peripherys}];
-//    }
-//    if (disclaimers.count > 0) {
-//        [moduleItems addObject:@{@"disclaimers":disclaimers}];
-//    }
+    if (peripherys.count > 0) {
+        [moduleItems addObject:@{@"peripherys":peripherys}];
+    }
     [moduleItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *currentItemArr = obj[[obj allKeys][0]];
 //        单个cell模块
-        if([[obj allKeys] containsObject:@"qas"] || [[obj allKeys] containsObject:@"agentlist"]) {
+        if([[obj allKeys] containsObject:@"qas"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"peripherys"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 model.shadowImageType = FHHouseShdowImageTypeRound;;

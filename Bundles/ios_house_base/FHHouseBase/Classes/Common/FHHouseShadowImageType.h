@@ -49,7 +49,9 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     ///小区详情页推荐经纪人
      FHPlotHouseModelTypeAgentlist,
     ///小区详情页已售房源
-    FHHouseModelTypePlotSold,
+    FHPlotHouseModelTypeSold,
+    ///小区详情页周边小区
+     FHPlotHouseModelTypePeriphery,
 };
 
 //展示范围。是否进行裁剪

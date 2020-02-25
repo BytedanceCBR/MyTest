@@ -71,6 +71,11 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
+    if (model.shadowImageType == FHHouseShdowImageTypeLTR) {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.shadowImage).offset(-25);
+        }];
+    }
     if (model.sameNeighborhoodHouseData) {
         self.headerView.label.text = [NSString stringWithFormat:@"同小区房源 (%@)",model.sameNeighborhoodHouseData.total];
         self.headerView.isShowLoadMore = model.sameNeighborhoodHouseData.hasMore;
