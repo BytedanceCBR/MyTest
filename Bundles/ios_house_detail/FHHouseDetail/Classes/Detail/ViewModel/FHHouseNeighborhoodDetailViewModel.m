@@ -83,10 +83,8 @@
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
 //    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
-    
     //在售房源
     [self.tableView registerClass:[FHDetailNeighborhoodHouseSaleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseSaleModel class])];
-    
     //在租房源
     [self.tableView registerClass:[FHDetailNeighborhoodHouseRentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseRentModel class])];
    
@@ -407,21 +405,7 @@
         [self.items addObject:priceTrendModel];
     }
     
-    // 小区问答
-    if (model.data.question) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
-        qaModel.neighborhoodId = self.houseId;
-        qaModel.question = model.data.question;
-        qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
-        NSMutableDictionary *paramsDict = @{}.mutableCopy;
-        if (self.detailTracerDic) {
-            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
-        }
-        paramsDict[@"page_type"] = [self pageTypeString];
-        qaModel.tracerDict = paramsDict;
-        [self.items addObject:qaModel];
-    }
+
     
     // 小区成交历史
 //    if (model.data.totalSales.list.count > 0) {
@@ -529,24 +513,39 @@
             infoModel.sameNeighborhoodRentHouseData = self.sameNeighborhoodRentHouseData;
             [self.items addObject:infoModel];
         }
-
-        if (self.sameNeighborhoodErshouHouseData.items.count > 0 || self.sameNeighborhoodRentHouseData.items.count > 0) {
+        FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
+        // 小区问答
+        if (model.data.question) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
-            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
-            FHDetailNeighborhoodHouseModel *infoModel = [[FHDetailNeighborhoodHouseModel alloc] init];
-            infoModel.tableView = self.tableView;
-//            infoModel.sameNeighborhoodErshouHouseData = self.sameNeighborhoodErshouHouseData;
-            infoModel.sameNeighborhoodRentHouseData = self.sameNeighborhoodRentHouseData;
-            // 租房详情页，或者地图租房半屏列表，进入小区详情
-            if ([self.source isEqualToString:@"rent_detail"]) {
-                if (self.sameNeighborhoodErshouHouseData.items.count > 0 && self.sameNeighborhoodRentHouseData.items.count > 0) {
-                    // 既有二手房，同时有租房数据
-                    infoModel.firstSelIndex = 1;
-                }
+            FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
+            qaModel.neighborhoodId = self.houseId;
+            qaModel.question = model.data.question;
+            qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
+            NSMutableDictionary *paramsDict = @{}.mutableCopy;
+            if (self.detailTracerDic) {
+                [paramsDict addEntriesFromDictionary:self.detailTracerDic];
             }
-            [self.items addObject:infoModel];
+            paramsDict[@"page_type"] = [self pageTypeString];
+            qaModel.tracerDict = paramsDict;
+            [self.items addObject:qaModel];
         }
+        //        if (self.sameNeighborhoodErshouHouseData.items.count > 0 || self.sameNeighborhoodRentHouseData.items.count > 0) {
+//            // 添加分割线--当存在某个数据的时候在顶部添加分割线
+//            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+//            [self.items addObject:grayLine];
+//            FHDetailNeighborhoodHouseModel *infoModel = [[FHDetailNeighborhoodHouseModel alloc] init];
+//            infoModel.tableView = self.tableView;
+////            infoModel.sameNeighborhoodErshouHouseData = self.sameNeighborhoodErshouHouseData;
+//            infoModel.sameNeighborhoodRentHouseData = self.sameNeighborhoodRentHouseData;
+//            // 租房详情页，或者地图租房半屏列表，进入小区详情
+//            if ([self.source isEqualToString:@"rent_detail"]) {
+//                if (self.sameNeighborhoodErshouHouseData.items.count > 0 && self.sameNeighborhoodRentHouseData.items.count > 0) {
+//                    // 既有二手房，同时有租房数据
+//                    infoModel.firstSelIndex = 1;
+//                }
+//            }
+//            [self.items addObject:infoModel];
+//        }
         self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
         [self reloadData];
     }
