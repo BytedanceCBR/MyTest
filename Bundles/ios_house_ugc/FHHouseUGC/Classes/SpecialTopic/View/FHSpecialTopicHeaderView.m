@@ -53,10 +53,8 @@
     self.topBack.contentMode = UIViewContentModeScaleAspectFill;
     [self addSubview:self.topBack];
     
-    self.topBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 70)];
-    _topBgView.clipsToBounds = YES;
-    _topBgView.contentMode = UIViewContentModeScaleAspectFill;
-    _topBgView.image = [UIImage imageNamed:@"fh_ugc_black_bg"];
+    self.topBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight)];
+    _topBgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
     [self addSubview:_topBgView];
     
 //    fh_ugc_black_bg
@@ -127,7 +125,7 @@
     [self.refreshHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(20);
         make.right.mas_equalTo(self).offset(-20);
-        make.top.mas_equalTo(self).offset(100);
+        make.top.mas_equalTo(self).offset(50);
         make.height.mas_equalTo(20);
     }];
 
@@ -160,10 +158,10 @@
     if (offset < 0) {
         CGFloat height = self.headerBackHeight - offset;
         self.topBack.frame = CGRectMake(0, offset, SCREEN_WIDTH, height);
-        self.topBgView.frame = CGRectMake(0, offset, SCREEN_WIDTH, 70);
+        self.topBgView.frame = CGRectMake(0, offset, SCREEN_WIDTH, height);
     } else {
         self.topBack.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight);
-        self.topBgView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 70);
+        self.topBgView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight);
     }
     //控制刷新状态
     if(offset <= 0 && self.refreshHeader.state != MJRefreshStateRefreshing){
