@@ -99,7 +99,7 @@
 
 //    [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateModel class])];
-    [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
+//    [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
 //    [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
 }
 
@@ -323,16 +323,16 @@
     }
     
 
-    // 小区评测
-    if (model.data.evaluationInfo) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
-        infoModel.log_pb = self.listLogPB; // listLogPB也是当前小区的logPb
-        infoModel.evaluationInfo = model.data.evaluationInfo;
-        [self.items addObject:infoModel];
-    }
+//    // 小区评测
+//    if (model.data.evaluationInfo) {
+//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+//        [self.items addObject:grayLine];
+//        FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
+//        infoModel.log_pb = self.listLogPB; // listLogPB也是当前小区的logPb
+//        infoModel.evaluationInfo = model.data.evaluationInfo;
+//        [self.items addObject:infoModel];
+//    }
 
     //地图
     if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
