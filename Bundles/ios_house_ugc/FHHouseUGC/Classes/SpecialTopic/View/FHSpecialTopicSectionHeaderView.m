@@ -28,6 +28,8 @@
 }
 
 - (void)initViews {
+    self.backgroundColor = [UIColor whiteColor];
+    
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     _titleLabel.backgroundColor = [UIColor whiteColor];
     _titleLabel.layer.masksToBounds = YES;

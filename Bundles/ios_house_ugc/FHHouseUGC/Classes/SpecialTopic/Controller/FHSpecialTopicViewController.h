@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *communityId;
 @property (nonatomic, copy) NSString *tabName;
 @property (nonatomic, strong) FHSpecialTopicHeaderView *headerView;
+@property (nonatomic, strong) UIView *tableHeaderView;
 @property (nonatomic, strong) FHCommunityDetailSegmentView *segmentView;
 @property (nonatomic, strong) FHUGCFollowButton *rightBtn;
 @property (nonatomic, strong) UILabel *titleLabel;

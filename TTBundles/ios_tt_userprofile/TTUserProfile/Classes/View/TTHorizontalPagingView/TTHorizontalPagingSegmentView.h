@@ -46,5 +46,6 @@ typedef enum {
 - (void)scrollToOffsetX:(CGFloat)offsetX;
 - (void)scrollToIndex:(NSInteger)toIndex;
 - (void)titleClick:(UITapGestureRecognizer *)tap;
+- (void)setSelectedIndexNoEvent:(NSInteger)selectedIndex;
 
 @end

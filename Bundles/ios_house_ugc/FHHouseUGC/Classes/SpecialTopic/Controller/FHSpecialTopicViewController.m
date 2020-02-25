@@ -18,6 +18,7 @@
 #import "FHUserTracker.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "UIImage+FIconFont.h"
+#import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHSpecialTopicViewController ()<TTUIViewControllerTrackProtocol>
 @property (nonatomic, strong) FHSpecialTopicViewModel *viewModel;
@@ -155,6 +156,7 @@
 - (void)initView {
     [self initHeaderView];
     [self initSegmentView];
+    [self initTableView];
     [self addDefaultEmptyViewFullScreen];
 }
 
@@ -181,13 +183,42 @@
     _segmentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 }
 
+- (void)initTableView {
+    if(!_tableView){
+        self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+        _tableView.backgroundColor = [UIColor themeGray7];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        
+        self.tableHeaderView = [[UIView alloc] initWithFrame:self.headerView.bounds];
+        [_tableHeaderView addSubview:_headerView];
+        _tableView.tableHeaderView = self.tableHeaderView;
+        
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+        _tableView.tableFooterView = footerView;
+        
+        _tableView.sectionFooterHeight = 0.0;
+        
+        _tableView.estimatedRowHeight = 0;
+        
+        if (@available(iOS 11.0 , *)) {
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            _tableView.estimatedRowHeight = 0;
+            _tableView.estimatedSectionFooterHeight = 0;
+            _tableView.estimatedSectionHeaderHeight = 0;
+        }
+        
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+        }
+        
+        [self.view addSubview:_tableView];
+    }
+}
+
 - (void)initConstrains {
-//    [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
-//        make.right.mas_equalTo(self.customNavBarView).offset(-18.0f);
-//        make.width.mas_equalTo(58);
-//        make.height.mas_equalTo(24);
-//    }];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
     
     [self.titleContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
@@ -228,12 +259,12 @@
 }
 
 - (void)initViewModel {
-    self.viewModel = [[FHSpecialTopicViewModel alloc] initWithController:self tracerDict:self.tracerDict];
+    self.viewModel = [[FHSpecialTopicViewModel alloc] initWithTableView:self.tableView controller:self];
     self.viewModel.shareButton = self.shareButton;
     [self.viewModel addGoDetailLog];
     [self.viewModel addPublicationsShowLog];
     [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
-    [self.viewModel requestData:NO refreshFeed:NO showEmptyIfFailed:YES showToast:NO];
+    [self.viewModel requestData:NO refreshFeed:YES showEmptyIfFailed:YES showToast:NO];
 }
 
 - (void)retryLoadData {
