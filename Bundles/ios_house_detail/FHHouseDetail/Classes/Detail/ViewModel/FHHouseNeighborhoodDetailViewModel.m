@@ -39,7 +39,9 @@
 #import <FHDetailMediaHeaderCell.h>
 #import "FHNeighborhoodDetailModuleHelper.h"
 #import "FHDetailNeighborhoodQACell.h"
+#import "FHDetailNeighborhoodCommentsCell.h"
 #import "FHDetailQACellModel.h"
+#import "FHDetailCommentsCellModel.h"
 #import "TTDeviceHelper.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
@@ -76,6 +78,7 @@
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
     [self.tableView registerClass:[FHDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodQACell class] forCellReuseIdentifier:NSStringFromClass([FHDetailQACellModel class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodCommentsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommentsCellModel class])];
 
 }
 
@@ -407,6 +410,25 @@
         paramsDict[@"page_type"] = [self pageTypeString];
         qaModel.tracerDict = paramsDict;
         [self.items addObject:qaModel];
+    }
+    
+    // 小区点评
+    if(model.data.comments) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        
+        FHDetailCommentsCellModel *commentsModel = [[FHDetailCommentsCellModel alloc] init];
+        commentsModel.neighborhoodId = self.houseId;
+        commentsModel.comments = model.data.comments;
+        
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        commentsModel.tracerDict = paramsDict;
+        [self.items addObject:commentsModel];
     }
     
     // 小区成交历史

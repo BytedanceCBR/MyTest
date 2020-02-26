@@ -622,23 +622,27 @@
     cellModel.cellType = [model.cellType integerValue];
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
-    cellModel.isStick = model.isStick;
-    cellModel.stickStyle = model.stickStyle;
-    cellModel.contentDecoration = [self contentDecorationFromString:model.contentDecoration];
-    cellModel.content = model.content;
-    cellModel.contentRichSpan = model.contentRichSpan;
+    
+    cellModel.isStick = (model.isStick || model.rawData.isStick);
+    cellModel.stickStyle = ((model.stickStyle != FHFeedContentStickStyleUnknown) ? model.stickStyle : model.rawData.stickStyle);
+    cellModel.contentDecoration = [self contentDecorationFromString:(model.contentDecoration.length > 0 ? model.contentDecoration : model.rawData.contentDecoration)];
+    cellModel.content = model.content.length > 0 ? model.content : model.rawData.content;
+    cellModel.contentRichSpan = model.contentRichSpan.length > 0 ? model.contentRichSpan : model.rawData.contentRichSpan;
+    
     cellModel.diggCount = model.diggCount;
     cellModel.readCount = model.readCount;
     cellModel.commentCount = model.commentCount;
     cellModel.userDigg = model.userDigg;
     cellModel.desc = [self generateUGCDesc:model];
-    cellModel.groupId = model.threadId;
+    cellModel.groupId = model.threadId.length > 0 ? model.threadId: model.rawData.threadId;
     cellModel.logPb = model.logPb;
     cellModel.showLookMore = YES;
     cellModel.needLinkSpan = YES;
     cellModel.numberOfLines = 3;
     cellModel.hasEdit = [model.hasEdit boolValue];
     cellModel.groupSource = model.groupSource;
+    cellModel.detailScheme = model.schema.length > 0 ? model.schema : model.rawData.schema;
+    
     //目前仅支持话题类型
     cellModel.supportedLinkType = @[@(TTRichSpanLinkTypeHashtag),@(TTRichSpanLinkTypeAt), @(TTRichSpanLinkTypeLink)];
     
@@ -649,6 +653,12 @@
         community.url = model.community.url;
         community.socialGroupId = model.community.socialGroupId;
         community.showStatus = model.community.showStatus;
+    } else if(model.rawData.community) {
+        community = [[FHFeedUGCCellCommunityModel alloc] init];
+        community.name = model.rawData.community.name;
+        community.url = model.rawData.community.url;
+        community.socialGroupId = model.rawData.community.socialGroupId;
+        community.showStatus = model.rawData.community.showStatus;
     }
     cellModel.community = community;
     if(cellModel.community && ![cellModel.community.showStatus isEqualToString:@"1"]){
@@ -658,10 +668,19 @@
     }
     
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
-    user.name = model.user.name;
-    user.avatarUrl = model.user.avatarUrl;
-    user.userId = model.user.userId;
-    user.schema = model.user.schema;
+    if(model.user) {
+        user.name = model.user.name;
+        user.avatarUrl = model.user.avatarUrl;
+        user.userId = model.user.userId;
+        user.schema = model.user.schema;
+        user.userAuthInfo = model.user.userAuthInfo;
+    } else if(model.rawData.user) {
+        user.name = model.rawData.user.name;
+        user.avatarUrl = model.rawData.user.avatarUrl;
+        user.userId = model.rawData.user.userId;
+        user.schema = model.rawData.user.schema;
+        user.userAuthInfo = model.rawData.user.userAuthInfo;
+    }
     cellModel.user = user;
     
     NSMutableArray *cellImageList = [NSMutableArray array];
@@ -699,7 +718,8 @@
 }
 
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
-    return [self generateUGCDescWithCreateTime:model.createTime readCount:model.readCount distanceInfo:model.distanceInfo];
+    NSString *createTime = model.createTime.length > 0 ? model.createTime : model.rawData.createTime;
+    return [self generateUGCDescWithCreateTime:createTime readCount:model.readCount distanceInfo:model.distanceInfo];
 }
 
 + (NSAttributedString *)generateUGCDescWithCreateTime:(NSString *)createTime readCount:(NSString *)readCount distanceInfo:(NSString *)distanceInfo {
@@ -780,6 +800,15 @@
     self.numberOfLines = isInNeighbourhoodQAList ? 3 : 1;
     [FHUGCCellHelper setQuestionRichContentWithModel:self width:width numberOfLines:0];
     [FHUGCCellHelper setAnswerRichContentWithModel:self width:width numberOfLines:self.numberOfLines];
+}
+
+- (void)setIsInNeighbourhoodCommentsList:(BOOL)isInNeighbourhoodCommentsList {
+    _isInNeighbourhoodCommentsList = isInNeighbourhoodCommentsList;
+    CGFloat width = [UIScreen mainScreen].bounds.size.width - 60;
+    if(isInNeighbourhoodCommentsList){
+        width = [UIScreen mainScreen].bounds.size.width - 90;
+    }
+    self.numberOfLines = 3;
 }
 
 - (void)setCategoryId:(NSString *)categoryId {

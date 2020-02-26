@@ -162,6 +162,25 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *infoTitle;
 @end
 
+// 小区点评
+@interface FHDetailNeighborhoodDataCommentsContentModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *count;
+@property (nonatomic, strong , nullable) NSArray *data;
+@property (nonatomic, copy , nullable) NSString *commentsListSchema;
+@end
+
+@interface FHDetailNeighborhoodDataCommentsCommentsWriteModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *contentEmptyTitle;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
+@interface FHDetailNeighborhoodDataCommentsModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataCommentsCommentsWriteModel *commentsWrite;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataCommentsContentModel *content;
+@end
+
 @interface FHDetailNeighborhoodDataModel : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel> *priceTrend;
@@ -187,9 +206,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
-@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionModel *question ;
-
-
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionModel *question;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataCommentsModel *comments;
 @end
 
 @interface FHDetailNeighborhoodModel : JSONModel

@@ -1334,6 +1334,12 @@
     }];
 }
 
++ (TTHttpTask *)requestNeighborhoodRemarkWithParam:(NSDictionary *)params class:(Class)cls completion:(void (^)(id<FHBaseModelProtocol> _Nonnull, NSError * _Nonnull))completion {
+    
+    NSString *queryPath = @"/f100/ugc/neighborhood_remark";
+    return [FHMainApi queryData:queryPath uploadLog:YES params:params class:cls completion:completion];
+}
+
 @end
 
 @implementation FHVoteHTTPRequestSerializer

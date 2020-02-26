@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
 @property (nonatomic, copy , nullable) NSString *userId;
 @property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *userAuthInfo;
 
 @end
 
@@ -186,6 +187,10 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, assign) CGFloat answerHeight;
 //是否在小区问答列表页
 @property (nonatomic, assign) BOOL isInNeighbourhoodQAList;
+//小区点评模块
+
+//是否在小区点评列表页
+@property (nonatomic, assign) BOOL isInNeighbourhoodCommentsList;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
 

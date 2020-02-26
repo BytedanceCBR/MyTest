@@ -213,3 +213,4 @@
 "spring_login" = "SpringLoginViewController";
 //小区问答
 "ugc_wenda_list" = "FHNeighbourhoodQuestionController";
+"ugc_community_reviews_list" = "FHNeighbourhoodCommentsController";

@@ -112,6 +112,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 发布器热门标签
 + (TTHttpTask *)requestPublishHotTagsWithParam:(NSDictionary *)params class:(Class)cls completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
+// 小区点评发布器tag请求
++ (TTHttpTask *)requestNeighborhoodRemarkWithParam:(NSDictionary *)params class:(Class)cls completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 @end
 
 NS_ASSUME_NONNULL_END

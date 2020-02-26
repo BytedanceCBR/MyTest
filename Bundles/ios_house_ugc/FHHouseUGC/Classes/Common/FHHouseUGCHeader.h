@@ -43,6 +43,7 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
     FHUGCFeedListCellSubTypeUGCVoteDetail,                         //新投票类型
     FHUGCFeedListCellSubTypeUGCHotCommunity,                       //UGC附近顶部 主推圈子
     FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion,              //小区问答
+    FHUGCFeedListCellSubTypeUGCNeighbourhoodComments,              //小区点评
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
