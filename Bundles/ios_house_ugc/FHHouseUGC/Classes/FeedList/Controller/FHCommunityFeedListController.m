@@ -102,7 +102,7 @@
 
 - (void)initTableView {
     if(!_tableView){
-        self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+        self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.backgroundColor = [UIColor themeGray7];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         

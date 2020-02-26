@@ -142,84 +142,84 @@
         [extraDic setObject:self.tabName forKey:@"tab_name"];
     }
     
-    self.requestTask = [FHHouseUGCAPI requestSpecialTopicContentWithTabId:@"" behotTime:0 loadMore:NO listCount:0 extraDic:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-
-        wself.viewController.isLoadingData = NO;
-
-        if (error) {
-            //TODO: show handle error
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if(isFirst){
-                    if(error.code != -999){
-                        [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-                        wself.viewController.showenRetryButton = YES;
-                        wself.refreshFooter.hidden = YES;
-                        
-                        [wself.viewController endLoading];
-                        wself.tableView.scrollEnabled = YES;
-                    }
-                }else{
-                    [[ToastManager manager] showToast:@"网络异常"];
-                    [wself updateTableViewWithMoreData:YES];
-                }
-                return;
-            });
-        }
-        
-        FHSpecialTopicContentModel *specialTopicContentModel = (FHSpecialTopicContentModel *)model;
-
-        if(model){
-            NSMutableArray *resultArray = [NSMutableArray array];
-            NSMutableArray *dataContentModel = [NSMutableArray array];
-            for (FHSpecialTopicContentDataModel *dataModel in specialTopicContentModel.data) {
-                FHFeedContentModel *contentModel = [FHFeedUGCCellModel contentModelFromFeedContent:dataModel.content];
-                if(contentModel){
-                    [dataContentModel addObject:contentModel];
-                }
-                
-                wself.tabContentModel = dataContentModel;
-                
-                for (NSDictionary *dic in contentModel.subRawDatas) {
-                    FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:dic];
-                    if(cellModel){
-                        [resultArray addObject:cellModel];
-                    }
-                }
-            }
-            specialTopicContentModel.dataContent = [dataContentModel copy];
-            
-            if(isHead){
-                [wself.dataArray removeAllObjects];
-                [wself.dataList removeAllObjects];
-            }
-
-            wself.tableView.hasMore = NO;
-
-            if(isFirst){
-                [wself.clientShowDict removeAllObjects];
-                [wself.dataArray removeAllObjects];
-                [wself.dataList removeAllObjects];
-            }
-            
-            wself.dataArray = [wself convertModel:dataContentModel];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                wself.viewController.hasValidateData = wself.dataList.count > 0;
-                wself.tableView.scrollEnabled = YES;
-                [wself reloadTableViewData];
-                if(wself.viewController.requestSuccess){
-                    wself.viewController.requestSuccess(model);
-                }
-            });
-        }else{
-            if(isFirst){
-                  dispatch_async(dispatch_get_main_queue(), ^{
-                      [wself.viewController endLoading];
-                      wself.tableView.scrollEnabled = YES;
-                  });
-            }
-        }
-    }];
+//    self.requestTask = [FHHouseUGCAPI requestSpecialTopicContentWithTabId:@"" behotTime:0 loadMore:NO listCount:0 extraDic:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+//
+//        wself.viewController.isLoadingData = NO;
+//
+//        if (error) {
+//            //TODO: show handle error
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                if(isFirst){
+//                    if(error.code != -999){
+//                        [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+//                        wself.viewController.showenRetryButton = YES;
+//                        wself.refreshFooter.hidden = YES;
+//
+//                        [wself.viewController endLoading];
+//                        wself.tableView.scrollEnabled = YES;
+//                    }
+//                }else{
+//                    [[ToastManager manager] showToast:@"网络异常"];
+//                    [wself updateTableViewWithMoreData:YES];
+//                }
+//                return;
+//            });
+//        }
+//
+//        FHSpecialTopicContentModel *specialTopicContentModel = (FHSpecialTopicContentModel *)model;
+//
+//        if(model){
+//            NSMutableArray *resultArray = [NSMutableArray array];
+//            NSMutableArray *dataContentModel = [NSMutableArray array];
+//            for (FHSpecialTopicContentDataModel *dataModel in specialTopicContentModel.data) {
+//                FHFeedContentModel *contentModel = [FHFeedUGCCellModel contentModelFromFeedContent:dataModel.content];
+//                if(contentModel){
+//                    [dataContentModel addObject:contentModel];
+//                }
+//
+//                wself.tabContentModel = dataContentModel;
+//
+//                for (NSDictionary *dic in contentModel.subRawDatas) {
+//                    FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:dic];
+//                    if(cellModel){
+//                        [resultArray addObject:cellModel];
+//                    }
+//                }
+//            }
+//            specialTopicContentModel.dataContent = [dataContentModel copy];
+//
+//            if(isHead){
+//                [wself.dataArray removeAllObjects];
+//                [wself.dataList removeAllObjects];
+//            }
+//
+//            wself.tableView.hasMore = NO;
+//
+//            if(isFirst){
+//                [wself.clientShowDict removeAllObjects];
+//                [wself.dataArray removeAllObjects];
+//                [wself.dataList removeAllObjects];
+//            }
+//
+//            wself.dataArray = [wself convertModel:dataContentModel];
+//
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                wself.viewController.hasValidateData = wself.dataList.count > 0;
+//                wself.tableView.scrollEnabled = YES;
+//                [wself reloadTableViewData];
+//                if(wself.viewController.requestSuccess){
+//                    wself.viewController.requestSuccess(model);
+//                }
+//            });
+//        }else{
+//            if(isFirst){
+//                  dispatch_async(dispatch_get_main_queue(), ^{
+//                      [wself.viewController endLoading];
+//                      wself.tableView.scrollEnabled = YES;
+//                  });
+//            }
+//        }
+//    }];
 }
 
 - (void)reloadTableViewData {

@@ -41,12 +41,6 @@
 
 - (void)gotoPostThreadVC;
 
-- (void)gotoVotePublish;
-
-- (void)gotoGroupChat;
-
-- (void)gotoWendaPublish;
-
 - (void)updateNavBarWithAlpha:(CGFloat)alpha;
 
 @end

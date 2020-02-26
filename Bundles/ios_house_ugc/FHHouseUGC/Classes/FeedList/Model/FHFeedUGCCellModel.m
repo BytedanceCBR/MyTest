@@ -296,7 +296,13 @@
             }
             
             //处理图片
-            cellModel.imageList = model.imageList;
+            if(model.imageList){
+                cellModel.imageList = model.imageList;
+            }else if(model.middleImage){
+                NSMutableArray *imageList = [NSMutableArray array];
+                [imageList addObject:model.middleImage];
+                cellModel.imageList = imageList;
+            }
             //处理大图
             cellModel.largeImageList = model.largeImageList;
             

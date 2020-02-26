@@ -1334,49 +1334,16 @@
     }];
 }
 
-+ (TTHttpTask *)requestSpecialTopicContentWithTabId:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
-
-    NSString *queryPath = @"/api/feed/forum_flow/v1/";
++ (TTHttpTask *)requestSpecialTopicContentWithTabId:(NSString *)tabId queryPath:(NSString *)queryPath categoryName:(NSString *)categoryName queryId:(NSString *)queryId extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
+    
     NSString *url = QURL(queryPath);
 
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
-    paramDic[@"category"] = category;
+    paramDic[@"category"] = categoryName;
     paramDic[@"count"] = @(20);
-    paramDic[@"city"] = [TTLocationManager sharedManager].city;
-    paramDic[@"loc_mode"] = @([TTLocationManager isLocationServiceEnabled]);
-
-    TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
-    if (placemarkItem.coordinate.longitude > 0) {
-        paramDic[@"latitude"] = @(placemarkItem.coordinate.latitude);
-        paramDic[@"longitude"] = @(placemarkItem.coordinate.longitude);
-        paramDic[@"loc_time"] = @((long long) placemarkItem.timestamp);
-    }
-
-    paramDic[@"language"] = [TTDeviceHelper currentLanguage];
-    paramDic[@"refer"] = @(1);
-    if (behotTime) {
-        paramDic[@"refer"] = @(1);
-    }
-
-    if (loadMore && behotTime) {
-        NSNumber *maxBehotTimeNumber = @(behotTime);
-        if (!maxBehotTimeNumber) maxBehotTimeNumber = [NSNumber numberWithInt:0];
-        paramDic[@"max_behot_time"] = maxBehotTimeNumber;
-    } else {
-        NSNumber *minBeHotTimeNumber = [NSNumber numberWithInt:0];
-        if (behotTime) {
-            minBeHotTimeNumber = @(behotTime);
-        }
-        paramDic[@"min_behot_time"] = minBeHotTimeNumber;
-    }
-
-    paramDic[@"strict"] = @(0);
-    paramDic[@"list_count"] = @(listCount);
-    paramDic[@"concern_id"] = @"";
-
-    if (!loadMore) {
-        paramDic[@"refresh_reason"] = @(0);
-    }
+    paramDic[@"offset"] = @(0);
+    paramDic[@"tab_id"] = tabId;
+    paramDic[@"query_id"] = queryId;
     
     if(extraDic){
         paramDic[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
@@ -1389,7 +1356,7 @@
     if (queryPath.length > 0) {
         NSURL *url = [NSURL URLWithString:queryPath];
         if (url && url.path.length > 0) {
-            requestLogPath = [NSString stringWithFormat:@"%@_%@",url.path,category];
+            requestLogPath = [NSString stringWithFormat:@"%@_%@",url.path,categoryName];
         }
     }
     
@@ -1437,53 +1404,14 @@
     }];
 }
 
-+ (TTHttpTask *)requestSpecialTopicHeaderWithTabId:(NSString *)category behotTime:(double)behotTime loadMore:(BOOL)loadMore listCount:(NSInteger)listCount extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
++ (TTHttpTask *)requestSpecialTopicHeaderWithforumId:(NSString *)forumId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
 
     NSString *queryPath = @"/forum/home/v1/info/";
     NSString *url = QURL(queryPath);
 
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
-    paramDic[@"category"] = category;
-    paramDic[@"count"] = @(20);
-    paramDic[@"city"] = [TTLocationManager sharedManager].city;
-    paramDic[@"loc_mode"] = @([TTLocationManager isLocationServiceEnabled]);
-
-    TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
-    if (placemarkItem.coordinate.longitude > 0) {
-        paramDic[@"latitude"] = @(placemarkItem.coordinate.latitude);
-        paramDic[@"longitude"] = @(placemarkItem.coordinate.longitude);
-        paramDic[@"loc_time"] = @((long long) placemarkItem.timestamp);
-    }
-
-    paramDic[@"language"] = [TTDeviceHelper currentLanguage];
-    paramDic[@"refer"] = @(1);
-    if (behotTime) {
-        paramDic[@"refer"] = @(1);
-    }
-
-    if (loadMore && behotTime) {
-        NSNumber *maxBehotTimeNumber = @(behotTime);
-        if (!maxBehotTimeNumber) maxBehotTimeNumber = [NSNumber numberWithInt:0];
-        paramDic[@"max_behot_time"] = maxBehotTimeNumber;
-    } else {
-        NSNumber *minBeHotTimeNumber = [NSNumber numberWithInt:0];
-        if (behotTime) {
-            minBeHotTimeNumber = @(behotTime);
-        }
-        paramDic[@"min_behot_time"] = minBeHotTimeNumber;
-    }
-
-    paramDic[@"strict"] = @(0);
-    paramDic[@"list_count"] = @(listCount);
-    paramDic[@"concern_id"] = @"";
-
-    if (!loadMore) {
-        paramDic[@"refresh_reason"] = @(0);
-    }
-    
-    if(extraDic){
-        paramDic[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
-    }
+    paramDic[@"forum_id"] = forumId;
+    paramDic[@"is_preview"] = @(0);
 
     Class cls = NSClassFromString(@"FHSpecialTopicHeaderModel");
 
@@ -1492,7 +1420,7 @@
     if (queryPath.length > 0) {
         NSURL *url = [NSURL URLWithString:queryPath];
         if (url && url.path.length > 0) {
-            requestLogPath = [NSString stringWithFormat:@"%@_%@",url.path,category];
+            requestLogPath = [NSString stringWithFormat:@"%@_%@",url.path,forumId];
         }
     }
     

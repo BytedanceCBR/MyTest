@@ -74,18 +74,14 @@
 #define kSegmentViewHeight 52
 #define sectionHeaderViewHeight 37
 
-@interface FHSpecialTopicViewModel () <FHUGCFollowObserver, TTHorizontalPagingViewDelegate,TTHorizontalPagingSegmentViewDelegate,UITableViewDelegate, UITableViewDataSource>
+@interface FHSpecialTopicViewModel () <TTHorizontalPagingSegmentViewDelegate,UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, weak) FHSpecialTopicViewController *viewController;
-@property (nonatomic, strong) FHCommunityFeedListController *feedListController; //当前显示的feedVC
-//@property (nonatomic, strong) FHUGCScialGroupDataModel *data;
 @property (nonatomic, strong) FHSpecialTopicHeaderModel *specialTopicHeaderModel;
 @property (nonatomic, strong) NSArray *tabContentModel;
 @property (nonatomic, assign) BOOL isViewAppear;
 @property (nonatomic, assign) BOOL isLoginSatusChangeFromPost;
 @property (nonatomic, assign) BOOL isLogin;
-@property (nonatomic, strong) TTHorizontalPagingView *pagingView;
-@property (nonatomic, strong) NSMutableArray *subVCs;
 @property (nonatomic, strong) NSMutableArray *segmentTitles;
 @property (nonatomic, copy) NSString *currentSegmentType;
 @property (nonatomic, copy) NSString *defaultType;
@@ -102,31 +98,6 @@
 
 @implementation FHSpecialTopicViewModel
 
-- (instancetype)initWithController:(FHSpecialTopicViewController *)viewController tracerDict:(NSDictionary*)tracerDict {
-    self = [super init];
-    if (self) {
-        self.tracerDict = tracerDict;
-        self.viewController = viewController;
-        [self initView];
-        self.isViewAppear = YES;
-        self.isLogin = TTAccountManager.isLogin;
-        self.isFirstEnter = YES;
-        self.viewController.segmentView.delegate = self;
-        
-        // 分享埋点
-        NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-        params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
-        params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
-        params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
-        params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-        self.shareTracerDict = [params copy];
-        
-        self.subVCs = [NSMutableArray array];
-    }
-    return self;
-}
-
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHSpecialTopicViewController *)viewController {
     self = [super initWithTableView:tableView controller:viewController];
     if (self) {
@@ -137,11 +108,12 @@
         
         // 分享埋点
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-        params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
-        params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
-        params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
-        params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
+        params[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+        params[@"enter_type"] = self.viewController.tracerDict[@"enter_type"] ?: @"be_null";
+        params[@"log_pb"] = self.viewController.tracerDict[@"log_pb"] ?: @"be_null";
+        params[@"rank"] = self.viewController.tracerDict[@"rank"] ?: @"be_null";
+        params[@"page_type"] = self.viewController.tracerDict[@"page_type"] ?: @"be_null";
+        self.shareTracerDict = [params copy];
         
         self.isViewAppear = YES;
         self.isFirstEnter = YES;
@@ -187,7 +159,7 @@
 }
 
 - (void)viewWillAppear {
-    [self.feedListController viewWillAppear];
+    
 }
 
 - (void)viewDidAppear {
@@ -196,7 +168,6 @@
 }
 
 - (void)viewWillDisappear {
-    [self.feedListController viewWillDisappear];
     self.isViewAppear = NO;
 }
 
@@ -204,7 +175,7 @@
     [self.viewController.headerView.refreshHeader endRefreshing];
 }
 
-- (void)requestData:(BOOL) userPull refreshFeed:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed showToast:(BOOL) showToast{
+- (void)requestData:(BOOL)userPull refreshFeed:(BOOL)refreshFeed showEmptyIfFailed:(BOOL)showEmptyIfFailed showToast:(BOOL) showToast{
     if(self.isFirstEnter){
         [self.viewController tt_startUpdate];
     }
@@ -218,7 +189,7 @@
         return;
     }
     
-    if(self.viewController.communityId.length <= 0) {
+    if(self.viewController.forumId.length <= 0) {
         [self.viewController tt_endUpdataData];
         if(userPull){
             [self endRefreshing];
@@ -226,7 +197,7 @@
         return;
     }
     WeakSelf;
-    [FHHouseUGCAPI requestSpecialTopicHeaderWithTabId:@"" behotTime:0 loadMore:NO listCount:0 extraDic:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestSpecialTopicHeaderWithforumId:self.viewController.forumId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         [self.viewController tt_endUpdataData];
         if(userPull){
@@ -235,29 +206,16 @@
         
         if(error){
             [self onNetworError:showEmptyIfFailed showToast:showToast];
+            return;
         }
         
         if (model) {
             FHSpecialTopicHeaderModel *responseModel = (FHSpecialTopicHeaderModel *)model;
             self.specialTopicHeaderModel = responseModel;
-
             [self updateUIWithData:responseModel];
-            if (responseModel) {
-                if(self.isFirstEnter){
-                    //初始化segment
-//                    [self initSegment];
-                    //初始化vc
-//                    [self initSubVC];
-                    
-//                    [self initPagingView];
-                    //放到最下面
-//                    [self.viewController.view insertSubview:self.pagingView atIndex:0];
-                }
 
-                if (refreshFeed) {
-//                    [self.feedListController startLoadData:self.isFirstEnter];
-                    [self requestData:YES first:self.isFirstEnter];
-                }
+            if (refreshFeed) {
+                [self requestData:YES first:self.isFirstEnter];
             }
         }
     }];
@@ -265,7 +223,7 @@
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
     if(showEmpty){
-        self.feedListController.view.hidden = YES;
+        self.tableView.hidden = YES;
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
     if(showToast){
@@ -354,53 +312,6 @@
     self.viewController.segmentView.frame = CGRectMake(0, CGRectGetMaxY(self.viewController.headerView.frame), SCREEN_WIDTH, kSegmentViewHeight);
     [self.viewController.tableHeaderView addSubview:self.viewController.segmentView];
     self.tableView.tableHeaderView = self.viewController.tableHeaderView;
-}
-
-- (void)removeSegmentView {
-    
-}
-
-- (void)initSubVC {
-    [self.subVCs removeAllObjects];
-    [self createFeedListController:nil];
-}
-
-- (void)createFeedListController:(NSString *)tabName {
-    FHCommunityFeedListController *feedListController = [[FHCommunityFeedListController alloc] init];
-    feedListController.tableViewNeedPullDown = NO;
-    feedListController.showErrorView = NO;
-    feedListController.scrollViewDelegate = self;
-    feedListController.listType = FHCommunityFeedListTypeSpecialTopic;
-    feedListController.forumId = self.viewController.communityId;
-    feedListController.hidePublishBtn = YES;
-    feedListController.tabName = tabName;
-    feedListController.isResetStatusBar = NO;
-    feedListController.notLoadDataWhenEmpty = YES;
-    WeakSelf;
-    feedListController.requestSuccess = ^(id<FHBaseModelProtocol>  _Nonnull model) {
-        [wself handleFeedRequestSuccess:model];
-    };
-    
-    self.feedListController = feedListController;
-    
-    [self.subVCs addObject:feedListController];
-}
-
-- (void)handleFeedRequestSuccess:(id<FHBaseModelProtocol>  _Nonnull)model {
-    FHSpecialTopicContentModel *contentModel = (FHSpecialTopicContentModel *)model;
-//    self.tabContent = contentModel.dataContent;
-    
-    _pagingView.delegate = nil;
-    self.viewController.segmentView.delegate = nil;
-    [_pagingView removeFromSuperview];
-    _pagingView = nil;
-    
-    self.isFirstEnter = YES;
-    [self initSegment];
-    self.viewController.segmentView.delegate = self;
-    [self initPagingView];
-    //放到最下面
-    [self.viewController.view insertSubview:self.pagingView atIndex:0];
 }
 
 - (void)gotoLogin:(FHUGCLoginFrom)from {
@@ -532,7 +443,7 @@
 
 - (void)updateUIWithData:(FHSpecialTopicHeaderModel *)headerModel {
     if (!headerModel) {
-        self.pagingView.hidden = YES;
+        self.tableView.hidden = YES;
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         return;
     }
@@ -547,7 +458,7 @@
         shareInfo.coverImage = headerModel.shareInfo.shareCover;
         self.shareInfo = shareInfo;
     }
-    self.pagingView.hidden = NO;
+    self.tableView.hidden = NO;
     self.viewController.emptyView.hidden = YES;
     
     if(headerModel.forum.bannerUrl.length > 0){
@@ -561,8 +472,6 @@
     
     self.viewController.titleLabel.text = isEmptyString(headerModel.forum.forumName) ? @"" : headerModel.forum.forumName;
     self.viewController.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
-    
-    [self.pagingView reloadHeaderViewHeight:self.viewController.headerView.height];
 }
 
 - (void)updateJoinUI:(BOOL)followed {
@@ -599,7 +508,7 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if(decelerate){
-        CGFloat delta = self.pagingView.currentContentViewTopInset + scrollView.contentOffset.y;
+        CGFloat delta = scrollView.contentOffset.y;
         if(delta <= -50){
             [self.viewController.headerView.refreshHeader beginRefreshing];
         }
@@ -680,105 +589,12 @@
     [self requestData:NO refreshFeed:NO showEmptyIfFailed:NO showToast:NO];
 }
 
-#pragma mark - lazy load
-
-//- (TTHorizontalPagingView *)pagingView {
-//    if(!_pagingView) {
-//        _pagingView = [[TTHorizontalPagingView alloc] init];
-//        _pagingView.delegate = self;
-//        _pagingView.frame = self.viewController.view.bounds;
-//        _pagingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//        _pagingView.segmentTopSpace = CGRectGetMaxY(self.viewController.customNavBarView.frame);
-//        _pagingView.horizontalCollectionView.scrollEnabled = NO;
-//        _pagingView.clipsToBounds = YES;
-//    }
-//    return _pagingView;
-//}
-
-- (void)initPagingView {
-    if(!_pagingView) {
-        _pagingView = [[TTHorizontalPagingView alloc] init];
-        _pagingView.delegate = self;
-        _pagingView.frame = self.viewController.view.bounds;
-        _pagingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _pagingView.segmentTopSpace = CGRectGetMaxY(self.viewController.customNavBarView.frame);
-        _pagingView.horizontalCollectionView.scrollEnabled = NO;
-        _pagingView.clipsToBounds = YES;
-    }
-}
-
-#pragma mark - pagingView 代理
-
-- (NSInteger)numberOfSectionsInPagingView:(TTHorizontalPagingView *)pagingView {
-    return self.subVCs.count;
-}
-
-- (UIScrollView *)pagingView:(TTHorizontalPagingView *)pagingView viewAtIndex:(NSInteger)index {
-    index = MIN(self.subVCs.count - 1, index);
-    FHCommunityFeedListController *feedVC = self.subVCs[index];
-    if(!feedVC.tableView){
-        [feedVC viewDidLoad];
-    }
-    return feedVC.tableView;
-}
-
-- (void)pagingView:(TTHorizontalPagingView *)pagingView didSwitchIndex:(NSInteger)aIndex to:(NSInteger)toIndex {
-    //前面的消失
-    if(aIndex < self.subVCs.count && !self.isFirstEnter){
-        FHCommunityFeedListController *feedVC = self.subVCs[aIndex];
-        [feedVC viewWillDisappear];
-    }
-    //新的展现
-    if(toIndex < self.subVCs.count){
-        FHCommunityFeedListController *feedVC = self.subVCs[toIndex];
-        [self.viewController addChildViewController:feedVC];
-        [feedVC didMoveToParentViewController:self.viewController];
-        [feedVC viewWillAppear];
-    }
-}
-
-- (UIView *)viewForHeaderInPagingView {
-    return self.viewController.headerView;
-}
-
-- (CGFloat)heightForHeaderInPagingView {
-    return self.viewController.headerView.height;
-}
-
-- (UIView *)viewForSegmentInPagingView {
-    return self.viewController.segmentView;
-}
-
-- (CGFloat)heightForSegmentInPagingView {
-    if(self.tabContentModel && self.tabContentModel.count > 1) {
-        return kSegmentViewHeight;
-    }else{
-        return 0;
-    }
-}
-
-- (void)pagingView:(TTHorizontalPagingView *)pagingView scrollTopOffset:(CGFloat)offset {
-    CGFloat delta = self.pagingView.currentContentViewTopInset + offset;
-    [self refreshContentOffset:delta];
-    [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:pagingView.currentContentView];
-    
-    [self.viewController.segmentView setSelectedIndex:1];
-}
-
-- (void)pagingView:(TTHorizontalPagingView *)pagingView scrollViewDidEndDraggingOffset:(CGFloat)offset {
-    CGFloat delta = self.pagingView.currentContentViewTopInset + offset;
-    if(delta <= -50){
-        [self.viewController.headerView.refreshHeader beginRefreshing];
-    }
-}
-
 #pragma mark - segmentView 代理
 - (void)segmentView:(TTHorizontalPagingSegmentView *)segmentView didSelectedItemAtIndex:(NSInteger)index toIndex:(NSInteger)toIndex {
     
 //    CGFloat height = -(kSegmentViewHeight + self.viewController.customNavBarView.size.height);
 //    CGPoint offset = self.feedListController.tableView.contentOffset;
-    //点击同一个不做处理
-    if(index == toIndex && !self.isFirstEnter){
+    if(!self.isSegmentSelectedFinished){
         return;
     }
 
@@ -800,8 +616,11 @@
 //        [self.pagingView scrollToIndex:toIndex withAnimation:NO];
         if(toIndex < self.sectionHeightList.count){
             CGFloat height = [self.sectionHeightList[toIndex] integerValue];
-            self.isSegmentSelectedFinished = NO;
-            [self.tableView setContentOffset:CGPointMake(0, height) animated:YES];
+            CGFloat offsetY = (NSInteger)self.tableView.contentOffset.y;
+            if(height != offsetY){
+                self.isSegmentSelectedFinished = NO;
+                [self.tableView setContentOffset:CGPointMake(0, height) animated:YES];
+            }
         }
     }
 }
@@ -843,6 +662,7 @@
     return section;
 }
 
+//获取feed
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     if(self.viewController.isLoadingData){
         return;
@@ -862,26 +682,6 @@
     
     __weak typeof(self) wself = self;
     
-    NSInteger listCount = self.dataList.count;
-    
-    if(isFirst){
-        listCount = 0;
-    }
-    
-    double behotTime = 0;
-    NSString *lastGroupId = nil;
-    
-    if(!isHead && listCount > 0){
-        FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
-        behotTime = [cellModel.behotTime doubleValue];
-        lastGroupId = cellModel.groupId;
-    }
-    if(isHead && listCount > 0){
-        FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
-        behotTime = [cellModel.behotTime doubleValue];
-        lastGroupId = cellModel.groupId;
-    }
-    
     //下拉刷新关闭视频播放
     if(isHead){
         [self endDisplay];
@@ -892,17 +692,9 @@
     if(fCityId){
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
-//    if(self.socialGroupId){
-//        [extraDic setObject:self.socialGroupId forKey:@"social_group_id"];
-//    }
-//    if(lastGroupId){
-//        [extraDic setObject:lastGroupId forKey:@"last_group_id"];
-//    }
-//    if(self.tabName){
-//        [extraDic setObject:self.tabName forKey:@"tab_name"];
-//    }
-    
-    self.requestTask = [FHHouseUGCAPI requestSpecialTopicContentWithTabId:@"" behotTime:0 loadMore:NO listCount:0 extraDic:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    FHSpecialTopicHeaderTabsModel *tabModel = [self.specialTopicHeaderModel.tabs firstObject];
+ 
+    self.requestTask = [FHHouseUGCAPI requestSpecialTopicContentWithTabId:tabModel.tabId queryPath:tabModel.url categoryName:tabModel.categoryName queryId:self.viewController.forumId  extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
 
         wself.viewController.isLoadingData = NO;
 
@@ -1063,7 +855,6 @@
             NSDictionary *dic = itemModel.subRawDatas[i];
             FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:dic];
             cellModel.categoryId = self.categoryId;
-            cellModel.feedVC = self.viewController;
             cellModel.tableView = self.tableView;
             cellModel.showCommunity = NO;
             cellModel.hiddenMore = YES;
@@ -1091,42 +882,6 @@
 //        if([groupId isEqualToString:itemModel.groupId]){
 //            [self.dataList removeObject:itemModel];
 //            break;
-//        }
-//    }
-//}
-
-//- (void)postDeleteSuccess:(NSNotification *)noti {
-//    if (noti && noti.userInfo && self.dataList) {
-//        NSDictionary *userInfo = noti.userInfo;
-//        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
-//        [self deleteCell:cellModel];
-//    }
-//}
-
-//- (void)postTopSuccess:(NSNotification *)noti {
-//    if (noti && noti.userInfo && self.dataList) {
-//        NSDictionary *userInfo = noti.userInfo;
-//        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
-//        cellModel.showCommunity = NO;
-//        BOOL isTop = [userInfo[@"isTop"] boolValue];
-//        [self topCell:cellModel isTop:isTop];
-//    }
-//}
-//
-//- (void)postGoodSuccess:(NSNotification *)noti {
-//    if (noti && noti.userInfo && self.dataList) {
-//        NSDictionary *userInfo = noti.userInfo;
-//        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
-//        NSInteger row = [self getCellIndex:cellModel];
-//
-//        if(row < self.dataList.count && row >= 0){
-//            FHFeedUGCCellModel *originCellModel = self.dataList[row];
-//            originCellModel.isStick = cellModel.isStick;
-//            originCellModel.stickStyle = cellModel.stickStyle;
-//            originCellModel.contentDecoration = cellModel.contentDecoration;
-//            originCellModel.ischanged = YES;
-//
-//            [self refreshCell:originCellModel];
 //        }
 //    }
 //}

@@ -16,10 +16,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 圈子详情页
+// 专题页
 @interface FHSpecialTopicViewController : FHBaseViewController
 
-@property (nonatomic, copy) NSString *communityId;
+@property (nonatomic, copy) NSString *forumId;
 @property (nonatomic, copy) NSString *tabName;
 @property (nonatomic, strong) FHSpecialTopicHeaderView *headerView;
 @property (nonatomic, strong) UIView *tableHeaderView;

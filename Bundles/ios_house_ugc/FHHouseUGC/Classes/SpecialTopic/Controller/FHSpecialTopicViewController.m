@@ -33,7 +33,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.ttTrackStayEnable = YES;
-        self.communityId = paramObj.allParams[@"community_id"];
+        self.forumId = paramObj.allParams[@"forum_id"];
         self.tabName = paramObj.allParams[@"tab_name"];
         // 取链接中的埋点数据
         NSDictionary *params = paramObj.allParams;
@@ -73,38 +73,20 @@
                 self.tracerDict[@"log_pb"] = dic;
             }
         }
-        //logPb 增加social_group_id
-        NSDictionary *temp_log_pb = self.tracerDict[@"log_pb"];
-        if (self.communityId.length > 0) {
-            NSMutableDictionary *mutLogPb = [NSMutableDictionary new];
-            if ([temp_log_pb isKindOfClass:[NSDictionary class]]) {
-                [mutLogPb addEntriesFromDictionary:temp_log_pb];
-            }
-            mutLogPb[@"social_group_id"] = self.communityId;
-            self.tracerDict[@"log_pb"] = mutLogPb;
-        }
     }
     return self;
 }
 
 // 重载方法
 - (BOOL)isOpenUrlParamsSame:(NSDictionary *)queryParams {
-    /*
-    if (queryParams.count > 0) {
-        NSString *queryId = queryParams[@"community_id"];
-        NSString *queryIdStr = [NSString stringWithFormat:@"%@",queryId];
-        NSString *currentIdStr = [NSString stringWithFormat:@"%@",self.communityId];
-        if (queryIdStr.length > 0 && [queryIdStr isEqualToString:currentIdStr]) {
-            return YES;
-        }
-    }
-     */
     return NO;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    self.forumId = @"1658309324344343";
     
     [self initNavBar];
     [self initView];
@@ -138,7 +120,6 @@
     
     self.titleContainer = [[UIView alloc] init];
     [self.titleContainer addSubview:self.titleLabel];
-//    [self.titleContainer addSubview:self.subTitleLabel];
     [self.customNavBarView addSubview:self.titleContainer];
 //    [self.customNavBarView addSubview:self.rightBtn];
     // 分享按钮
@@ -199,6 +180,7 @@
         _tableView.sectionFooterHeight = 0.0;
         
         _tableView.estimatedRowHeight = 0;
+        _tableView.showsVerticalScrollIndicator = NO;
         
         if (@available(iOS 11.0 , *)) {
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -289,19 +271,6 @@
 
 - (NSString *)pageType {
     return @"community_group_detail";
-}
-
-#pragma mark - 埋点
-
-- (NSDictionary *)followButtonTraceDict {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"community_id"] = self.communityId;
-    params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
-    params[@"click_position"] = @"join_like";
-    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
-    return [params copy];
 }
 
 @end
