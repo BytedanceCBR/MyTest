@@ -85,6 +85,7 @@
 {
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    _tableView.backgroundColor = [UIColor themeGray7];
     [self registerCellClasses];
 }
 

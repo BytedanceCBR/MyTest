@@ -112,7 +112,6 @@
 //    if(self.isList){
         self.contentView.backgroundColor = [UIColor themeGray7];
         self.bgView.layer.masksToBounds = YES;
-        self.bgView.layer.cornerRadius = 10;
         self.answerLabel.numberOfLines = 3;
 //    }
 }
@@ -282,7 +281,6 @@
         
         self.contentView.backgroundColor = [UIColor themeGray7];
         self.bgView.layer.masksToBounds = YES;
-        self.bgView.layer.cornerRadius = 10;
         self.answerLabel.numberOfLines = 3;
         self.essenceIcon.image = [UIImage imageNamed:@"fh_ugc_wenda_essence"];
         
