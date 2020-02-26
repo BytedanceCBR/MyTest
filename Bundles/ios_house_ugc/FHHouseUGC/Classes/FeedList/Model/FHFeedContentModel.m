@@ -1114,6 +1114,7 @@
 {
   NSDictionary *dict = @{
     @"headerLayoutStyle": @"header_layout_style",
+    @"publisherText": @"publisher_text",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

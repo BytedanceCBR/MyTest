@@ -1413,7 +1413,7 @@
     paramDic[@"forum_id"] = forumId;
     paramDic[@"is_preview"] = @(0);
 
-    Class cls = NSClassFromString(@"FHSpecialTopicHeaderModel");
+    Class cls = NSClassFromString(@"FHTopicHeaderModel");
 
     NSDate *startDate = [NSDate date];
     NSString *requestLogPath = @"";

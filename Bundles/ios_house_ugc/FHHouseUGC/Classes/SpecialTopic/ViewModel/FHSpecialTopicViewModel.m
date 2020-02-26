@@ -39,13 +39,12 @@
 #import "TTUGCDefine.h"
 #import <FHUGCCategoryHelper.h>
 #import "UIImage+FIconFont.h"
-#import "FHSpecialTopicHeaderModel.h"
+#import "FHTopicHeaderModel.h"
 #import "FHSpecialTopicContentModel.h"
 #import "UIImageView+BDWebImage.h"
-
 #import "FHUGCBaseCell.h"
+
 #import "FHTopicListModel.h"
-#import "FHHouseUGCAPI.h"
 #import "FHFeedListModel.h"
 #import "UIScrollView+Refresh.h"
 #import "FHFeedUGCCellModel.h"
@@ -53,11 +52,8 @@
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
 #import "TTRoute.h"
-#import "TTUGCDefine.h"
 #import "FHUGCModel.h"
 #import "FHFeedUGCContentModel.h"
-#import "FHFeedListModel.h"
-#import "ToastManager.h"
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
 #import "TTURLUtils.h"
@@ -74,10 +70,10 @@
 #define kSegmentViewHeight 52
 #define sectionHeaderViewHeight 37
 
-@interface FHSpecialTopicViewModel () <TTHorizontalPagingSegmentViewDelegate,UITableViewDelegate, UITableViewDataSource>
+@interface FHSpecialTopicViewModel () <TTHorizontalPagingSegmentViewDelegate,UITableViewDelegate, UITableViewDataSource,FHUGCBaseCellDelegate>
 
 @property (nonatomic, weak) FHSpecialTopicViewController *viewController;
-@property (nonatomic, strong) FHSpecialTopicHeaderModel *specialTopicHeaderModel;
+@property (nonatomic, strong) FHTopicHeaderModel *specialTopicHeaderModel;
 @property (nonatomic, strong) NSArray *tabContentModel;
 @property (nonatomic, assign) BOOL isViewAppear;
 @property (nonatomic, assign) BOOL isLoginSatusChangeFromPost;
@@ -210,7 +206,7 @@
         }
         
         if (model) {
-            FHSpecialTopicHeaderModel *responseModel = (FHSpecialTopicHeaderModel *)model;
+            FHTopicHeaderModel *responseModel = (FHTopicHeaderModel *)model;
             self.specialTopicHeaderModel = responseModel;
             [self updateUIWithData:responseModel];
 
@@ -286,9 +282,9 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
-    WeakSelf;
+
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-        StrongSelf;
+       
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
@@ -297,7 +293,7 @@
                 }
                 else {
                     if(from == FHUGCLoginFrom_POST){
-                        self.isLoginSatusChangeFromPost = YES;
+//                        self.isLoginSatusChangeFromPost = YES;
                     }else{
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             switch(from) {
@@ -326,19 +322,6 @@
     [self gotoPostVC];
 }
 
-- (void)followCommunity:(NSString *)groupId {
-    if (groupId) {
-        WeakSelf;
-        NSString *enter_from = @"community_group_detail";
-        [[FHUGCConfig sharedInstance] followUGCBy:groupId isFollow:YES enterFrom:enter_from enterType:@"click" completion:^(BOOL isSuccess) {
-            StrongSelf;
-            if (isSuccess) {
-                [self gotoPostVC];
-            }
-        }];
-    }
-}
-
 - (void)gotoPostVC {
     // 跳转发布器
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
@@ -347,7 +330,6 @@
     [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    NSMutableDictionary *dict = @{}.mutableCopy;
     traceParam[@"page_type"] = @"feed_publisher";
     traceParam[@"enter_from"] = @"community_group_detail";
     
@@ -356,6 +338,9 @@
 //    dic[@"select_group_name"] = self.data.socialGroupName;
     dic[TRACER_KEY] = traceParam;
     dic[VCTITLE_KEY] = @"发帖";
+    if (self.specialTopicHeaderModel) {
+        dic[@"topic_model"] = self.specialTopicHeaderModel;
+    }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
     NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
@@ -401,7 +386,7 @@
     [self.viewController.customNavBarView refreshAlpha:alpha];
 }
 
-- (void)updateUIWithData:(FHSpecialTopicHeaderModel *)headerModel {
+- (void)updateUIWithData:(FHTopicHeaderModel *)headerModel {
     if (!headerModel) {
         self.tableView.hidden = YES;
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -414,7 +399,9 @@
         shareInfo.title = headerModel.shareInfo.shareTitle;
         shareInfo.isVideo = @"0";
         shareInfo.desc = headerModel.shareInfo.shareDesc;
-        shareInfo.shareUrl = headerModel.shareInfo.shareUrl;
+        if(headerModel.shareInfo.shareUrl.length > 0){
+            shareInfo.shareUrl = [NSString stringWithFormat:@"%@?origin_from=share",headerModel.shareInfo.shareUrl];
+        }
         shareInfo.coverImage = headerModel.shareInfo.shareCover;
         self.shareInfo = shareInfo;
     }
@@ -935,6 +922,17 @@
     if(section < self.dataArray.count && section < self.tabContentModel.count && section != 0){
         FHFeedContentModel *model = self.tabContentModel[section];
         headerView.titleLabel.text =  model.rawData.cardHeader.title;
+        if(model.rawData.cardHeader.publisherText.length > 0){
+            headerView.postBtn.hidden = NO;
+            [headerView.postBtn setTitle:model.rawData.cardHeader.publisherText forState:UIControlStateNormal];
+            WeakSelf;
+            headerView.gotoPublishBlock = ^{
+                StrongSelf;
+                [self gotoPostThreadVC];
+            };
+        }else{
+            headerView.postBtn.hidden = YES;
+        }
     }
     return headerView;
 }
@@ -1082,8 +1080,6 @@
 }
 
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    
     if(self.currentCell && [self.currentCell isKindOfClass:[FHUGCVideoCell class]]){
         FHUGCVideoCell *cell = (FHUGCVideoCell *)self.currentCell;
         
@@ -1222,7 +1218,7 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
-    __weak typeof(self) wSelf = self;
+//    __weak typeof(self) wSelf = self;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
@@ -1298,7 +1294,7 @@
         self.clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+//    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
     NSString *groupId = cellModel.groupId;
     if(groupId){
         if (self.clientShowDict[groupId]) {

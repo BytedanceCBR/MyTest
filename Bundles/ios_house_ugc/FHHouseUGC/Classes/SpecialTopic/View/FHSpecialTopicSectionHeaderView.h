@@ -12,11 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSpecialTopicSectionHeaderView : UIView
 
 @property(nonatomic, strong) UILabel *titleLabel;
-@property(nonatomic, strong) UIButton *moreBtn;
 @property(nonatomic, strong) UIView *bottomLine;
-@property(nonatomic, strong) UIButton *refreshBtn;
+@property(nonatomic, strong) UIButton *postBtn;
 
-- (void)setMoreBtnLayout;
+@property(nonatomic, copy) void(^gotoPublishBlock)(void);
 
 @end
 

@@ -34,47 +34,29 @@
     _titleLabel.backgroundColor = [UIColor whiteColor];
     _titleLabel.layer.masksToBounds = YES;
     [self addSubview:_titleLabel];
-    
-    self.moreBtn = [[UIButton alloc] init];
-    [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_arrow_right"] forState:UIControlStateNormal];
-    [_moreBtn setTitle:@"更多" forState:UIControlStateNormal];
-    [_moreBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
-    _moreBtn.titleLabel.font = [UIFont themeFontRegular:14];
-    _moreBtn.hidden = YES;
-    //文字的size
-    [self setMoreBtnLayout];
-    [self addSubview:_moreBtn];
-    
-    self.refreshBtn = [[UIButton alloc] init];
-    _refreshBtn.hidden = YES;
-    _refreshBtn.layer.masksToBounds = YES;
-    _refreshBtn.layer.cornerRadius = 4;
-    _refreshBtn.backgroundColor = [[UIColor themeRed3] colorWithAlphaComponent:0.1];
-    [_refreshBtn setImage:[UIImage imageNamed:@"fh_ugc_refresh"] forState:UIControlStateNormal];
-    [_refreshBtn setTitle:@"换一批" forState:UIControlStateNormal];
-    [_refreshBtn setTitleColor:[UIColor themeRed3] forState:UIControlStateNormal];
-    _refreshBtn.titleLabel.font = [UIFont themeFontRegular:12];
-    CGFloat marginGay = 4;
-    _refreshBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -marginGay/2, 0, marginGay/2);
-    _refreshBtn.titleEdgeInsets = UIEdgeInsetsMake(0, marginGay/2, 0, -marginGay/2);
-    [self addSubview:_refreshBtn];
+
+    self.postBtn = [self sendPostBtn];
+    [self addSubview:_postBtn];
     
     self.bottomLine = [[UIView alloc] init];
     _bottomLine.hidden = YES;
     _bottomLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:_bottomLine];
-    
 }
 
-- (void)setMoreBtnLayout {
-    //文字的size
-    CGSize textSize = [_moreBtn.titleLabel.text sizeWithFont:_moreBtn.titleLabel.font];
-    CGSize imageSize = _moreBtn.currentImage.size;
-    CGFloat marginGay = 4;//图片跟文字之间的间距
-    _moreBtn.imageEdgeInsets = UIEdgeInsetsMake(0, textSize.width + marginGay - imageSize.width, 0, - textSize.width - marginGay + imageSize.width);
-    _moreBtn.titleEdgeInsets = UIEdgeInsetsMake(0, - imageSize.width - marginGay, 0, imageSize.width + marginGay);
-    //设置按钮内容靠右
-    _moreBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+- (UIButton *)sendPostBtn {
+    UIButton *button = [[UIButton alloc] init];
+    button.backgroundColor = [UIColor whiteColor];
+    button.imageView.contentMode = UIViewContentModeCenter;
+    [button setTitle:@"发表观点" forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"detail_questiom_ask"] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont themeFontRegular:14];
+    [button setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+    [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+    [button addTarget:self action:@selector(gotoPublish) forControlEvents:UIControlEventTouchUpInside];
+    button.hidden = YES;
+    return button;
 }
 
 - (void)initConstraints {
@@ -84,17 +66,9 @@
         make.height.mas_equalTo(22);
     }];
     
-    [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
-        make.right.mas_equalTo(self).offset(-19);
-        make.width.mas_equalTo(38);
-        make.height.mas_equalTo(20);
-    }];
-    
-    [self.refreshBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
-        make.right.mas_equalTo(self.moreBtn.mas_left).offset(-8);
-        make.width.mas_equalTo(60);
+    [self.postBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.titleLabel);
+        make.right.mas_equalTo(self).offset(-15);
         make.height.mas_equalTo(20);
     }];
     
@@ -109,6 +83,12 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+- (void)gotoPublish {
+    if(self.gotoPublishBlock){
+        self.gotoPublishBlock();
+    }
 }
 
 @end

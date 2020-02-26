@@ -86,7 +86,7 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    self.forumId = @"1658309324344343";
+    self.forumId = @"1658680870945822";
     
     [self initNavBar];
     [self initView];

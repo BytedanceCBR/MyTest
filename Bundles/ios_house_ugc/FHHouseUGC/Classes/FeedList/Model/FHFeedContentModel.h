@@ -23,6 +23,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 
 @property (nonatomic, copy , nullable) NSString *headerLayoutStyle;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *publisherText;
 @end
 
 @interface FHFeedContentCellCtrlsModel : JSONModel
