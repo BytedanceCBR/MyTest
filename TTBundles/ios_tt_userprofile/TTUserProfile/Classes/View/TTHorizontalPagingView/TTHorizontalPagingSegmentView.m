@@ -43,6 +43,7 @@
 {
     if(self = [super initWithFrame:frame]) {
         self.backgroundColorThemeKey = kColorBackground4;
+        self.intervalPadding = 30;
         [self setupSubview];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(themeChanged:) name:TTThemeManagerThemeModeChangedNotification object:nil];
     }
@@ -346,7 +347,7 @@
         label.tag = i;
         if(self.type == TTPagingSegmentViewContentHorizontalAlignmentLeft) {
             CGSize textSize = [label.text boundingRectWithSize:CGSizeMake(MAXFLOAT, 0) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:self.titleFont} context:nil].size;
-            labelW = textSize.width + [TTDeviceUIUtils tt_newPadding:30];
+            labelW = textSize.width + [TTDeviceUIUtils tt_newPadding:self.intervalPadding];
         } else {
             labelW = self.width / count;
         }

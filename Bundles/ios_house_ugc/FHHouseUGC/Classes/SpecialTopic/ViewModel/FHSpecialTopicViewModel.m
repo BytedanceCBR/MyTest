@@ -137,7 +137,7 @@
 
 - (FHErrorView *)errorView {
     if(!_errorView){
-        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 400)];
+        _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 350)];
     }
     return _errorView;
 }
@@ -239,49 +239,6 @@
     }
 }
 
-//- (void)gotoVotePublish {
-//    if ([TTAccountManager isLogin]) {
-//        [self gotoVoteVC];
-//    } else {
-//        [self gotoLogin:FHUGCLoginFrom_VOTE];
-//    }
-//}
-
-//- (void)gotoWendaPublish {
-//    if ([TTAccountManager isLogin]) {
-//        [self gotoWendaVC];
-//    } else {
-//        [self gotoLogin:FHUGCLoginFrom_WENDA];
-//    }
-//}
-
-//// 跳转到投票发布器
-//- (void)gotoVoteVC {
-//    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
-//    NSMutableDictionary *dict = @{}.mutableCopy;
-//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-//    tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
-//    dict[TRACER_KEY] = tracerDict;
-//    dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
-//    dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
-//    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
-//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
-//}
-
-//- (void)gotoWendaVC {
-//    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
-//    NSMutableDictionary *dict = @{}.mutableCopy;
-//    dict[@"select_group_id"] = self.socialGroupModel.data.socialGroupId;
-//    dict[@"select_group_name"] = self.socialGroupModel.data.socialGroupName;
-//    dict[@"select_group_followed"] = @(self.socialGroupModel.data.hasFollow.boolValue);
-//    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-//    tracerDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
-//    dict[TRACER_KEY] = tracerDict;
-//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
-//}
-
 - (void)initSegment {
     NSMutableArray *titles = [NSMutableArray array];
     NSInteger selectedIndex = 0;
@@ -302,15 +259,23 @@
     self.viewController.segmentView.titles = titles;
     self.segmentTitles = titles;
     
-    if(titles.count > 0){
+    if(titles.count > 1){
         [self addSegmentView];
+    }else{
+        [self removeSegmentView];
     }
 }
 
 - (void)addSegmentView {
-    self.viewController.tableHeaderView.height += kSegmentViewHeight;
+    self.viewController.tableHeaderView.height = self.viewController.headerView.height + kSegmentViewHeight;
     self.viewController.segmentView.frame = CGRectMake(0, CGRectGetMaxY(self.viewController.headerView.frame), SCREEN_WIDTH, kSegmentViewHeight);
     [self.viewController.tableHeaderView addSubview:self.viewController.segmentView];
+    self.tableView.tableHeaderView = self.viewController.tableHeaderView;
+}
+
+- (void)removeSegmentView {
+    self.viewController.tableHeaderView.height = self.viewController.headerView.height;
+    [self.viewController.segmentView removeFromSuperview];
     self.tableView.tableHeaderView = self.viewController.tableHeaderView;
 }
 
@@ -434,11 +399,6 @@
         self.shareButton.hidden = YES;
     }
     [self.viewController.customNavBarView refreshAlpha:alpha];
-
-//    NSMutableArray *tabArray = [self.socialGroupModel.data.tabInfo mutableCopy];
-//    if(tabArray && tabArray.count > 1) {
-//        self.viewController.customNavBarView.seperatorLine.hidden = YES;
-//    }
 }
 
 - (void)updateUIWithData:(FHSpecialTopicHeaderModel *)headerModel {
@@ -482,7 +442,6 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat delta = scrollView.contentOffset.y;
-    NSLog(@"____offset___%f",delta);
     [self refreshContentOffset:delta];
     [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:self.tableView];
     
@@ -584,16 +543,9 @@
     [FHUserTracker writeEvent:@"click_options" params:params];
 }
 
-// MARK: FHCommunityFeedListControllerDelegate
--(void)refreshBasicInfo {
-    [self requestData:NO refreshFeed:NO showEmptyIfFailed:NO showToast:NO];
-}
-
 #pragma mark - segmentView 代理
 - (void)segmentView:(TTHorizontalPagingSegmentView *)segmentView didSelectedItemAtIndex:(NSInteger)index toIndex:(NSInteger)toIndex {
     
-//    CGFloat height = -(kSegmentViewHeight + self.viewController.customNavBarView.size.height);
-//    CGPoint offset = self.feedListController.tableView.contentOffset;
     if(!self.isSegmentSelectedFinished){
         return;
     }
@@ -605,7 +557,7 @@
         self.isFirstEnter = NO;
     } else {
         //上报埋点
-        NSString *position = @"be_null";
+//        NSString *position = @"be_null";
 //        if(toIndex < self.socialGroupModel.data.tabInfo.count){
 //            FHUGCScialGroupDataTabInfoModel *tabModel = self.socialGroupModel.data.tabInfo[toIndex];
 //            if(tabModel.tabName){
@@ -613,7 +565,6 @@
 //            }
 //        }
 //        [self addClickOptionsLog:position];
-//        [self.pagingView scrollToIndex:toIndex withAnimation:NO];
         if(toIndex < self.sectionHeightList.count){
             CGFloat height = [self.sectionHeightList[toIndex] integerValue];
             CGFloat offsetY = (NSInteger)self.tableView.contentOffset.y;
@@ -627,7 +578,7 @@
 
 - (void)caculateSectionHeight {
     [self.sectionHeightList removeAllObjects];
-    for (NSInteger i = 0; i < self.tabContentModel.count; i++) {
+    for (NSInteger i = 0; i < self.dataArray.count; i++) {
         CGFloat height = self.viewController.headerView.height - self.viewController.customNavBarView.height;
         for (NSInteger j = 0; j < i; j++) {
             CGRect rect = [self.tableView rectForSection:j];
@@ -637,22 +588,10 @@
     }
 }
 
-- (CGFloat)getScrollHeight:(NSInteger)index {
-    CGFloat height = self.viewController.headerView.height - self.viewController.customNavBarView.height;
-    if(index < self.tabContentModel.count){
-        for (NSInteger i = 0; i < index; i++) {
-            CGRect rect = [self.tableView rectForSection:i];
-            height += rect.size.height;
-        }
-    }
-    return height;
-}
-
 - (NSInteger)getSectionIndex:(CGFloat)offsetY {
     NSInteger section = 0;
     
     for (NSInteger i = self.sectionHeightList.count - 1; i > 0; i--) {
-//        CGFloat heightPre = [self.sectionHeightList[i-1] doubleValue];
         NSInteger height = [self.sectionHeightList[i] integerValue];
         if(offsetY >= height){
             section = i;
@@ -776,51 +715,24 @@
 }
 
 - (void)reloadTableViewData {
-    if(self.dataList.count > 0){
+    if(self.dataArray.count > 0){
         [self updateTableViewWithMoreData:self.tableView.hasMore];
         self.tableView.backgroundColor = [UIColor themeGray7];
-        
-//        CGFloat height = [self getVisibleHeight:5];
-//        if(height < self.viewController.errorViewHeight && height > 0 && self.viewController.errorViewHeight > 0){
-//            [self.tableView reloadData];
-//            CGFloat refreshFooterBottomHeight = self.tableView.mj_footer.height;
-//            if ([TTDeviceHelper isIPhoneXSeries]) {
-//                refreshFooterBottomHeight += 34;
-//            }
-//            //设置footer来占位
-//            UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight - height - refreshFooterBottomHeight)];
-//            tableFooterView.backgroundColor = [UIColor clearColor];
-//            self.tableView.tableFooterView = tableFooterView;
-////            //修改footer的位置回到cell下方，不修改会在tableFooterView的下方
-////            self.tableView.mj_footer.mj_y -= tableFooterView.height;
-////            self.tableView.mj_footer.hidden = NO;
-//        }else{
-//            self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
-            [self.tableView reloadData];
-//        }
+        self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,0.001)];
+        [self.tableView reloadData];
     }else{
         [self.errorView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
         
-//        UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight)];
-//        tableFooterView.backgroundColor = [UIColor whiteColor];
-//        [tableFooterView addSubview:self.errorView];
-//        self.tableView.tableFooterView = tableFooterView;
-//        self.refreshFooter.hidden = YES;
-//        self.tableView.backgroundColor = [UIColor whiteColor];
+        CGFloat errorViewHeight = [UIScreen mainScreen].bounds.size.height - self.viewController.customNavBarView.height - self.viewController.headerView.height;
+        
+        UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, errorViewHeight)];
+        
+        tableFooterView.backgroundColor = [UIColor whiteColor];
+        [tableFooterView addSubview:self.errorView];
+        self.tableView.tableFooterView = tableFooterView;
+        self.refreshFooter.hidden = YES;
+        self.tableView.backgroundColor = [UIColor whiteColor];
         [self.tableView reloadData];
-    }
-}
-
-- (void)showCustomErrorView:(FHEmptyMaskViewType)type {
-    if(self.dataList.count <= 0){
-//        [self.errorView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-//        UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.viewController.errorViewHeight)];
-//        tableFooterView.backgroundColor = [UIColor whiteColor];
-//        [tableFooterView addSubview:self.errorView];
-//        self.tableView.tableFooterView = tableFooterView;
-//        self.refreshFooter.hidden = YES;
-//        self.tableView.backgroundColor = [UIColor whiteColor];
-//        [self.tableView reloadData];
     }
 }
 
@@ -832,19 +744,6 @@
         [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
-}
-
-- (CGFloat)getVisibleHeight:(NSInteger)maxCount {
-    CGFloat height = 0;
-    if(self.dataList.count <= maxCount){
-        for (FHFeedUGCCellModel *cellModel in self.dataList) {
-            Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
-            if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
-                height += [cellClass heightForData:cellModel];
-            }
-        }
-    }
-    return height;
 }
 
 - (NSMutableArray *)convertModel:(NSArray *)content {

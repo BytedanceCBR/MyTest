@@ -29,6 +29,8 @@ typedef enum {
 @property (nonatomic, strong) NSArray<NSString *> *titles;
 @property (nonatomic, weak) id <TTHorizontalPagingSegmentViewDelegate> delegate;
 @property (nonatomic, assign) BOOL isSwitching;
+//item间隔距离
+@property (nonatomic, assign) CGFloat intervalPadding;
 /**
  一次性设置素有字体属性
 

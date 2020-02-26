@@ -148,6 +148,7 @@
 
 - (void)initSegmentView {
     self.segmentView = [[FHCommunityDetailSegmentView alloc] init];
+    _segmentView.intervalPadding = 16.0f;
     [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
         *norColorKey = @"grey1"; //grey3
         *selColorKey = @"orange1";//orange1

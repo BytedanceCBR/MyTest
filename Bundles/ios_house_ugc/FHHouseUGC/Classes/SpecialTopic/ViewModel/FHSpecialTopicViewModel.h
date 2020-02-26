@@ -37,8 +37,6 @@
 
 - (void)addPublicationsShowLog;
 
-- (void)refreshBasicInfo;
-
 - (void)gotoPostThreadVC;
 
 - (void)updateNavBarWithAlpha:(CGFloat)alpha;
