@@ -451,10 +451,9 @@
         agentListModel.houseType = self.houseType;
 
         [self.items addObject:agentListModel];
-        self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
 //        self.agentListModel = agentListModel;
     }
-
+        self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
     if (model.isInstantData) {
         [self.tableView reloadData];
     }else{
