@@ -147,6 +147,10 @@
         if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {
             neighborhood_id = detailModel.data.neighborhoodInfo.id;
         }
+        NSString *house_id = @"";
+        if (self.baseViewModel.houseId.length > 0) {
+            house_id = self.baseViewModel.houseId;
+        }
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
         tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
@@ -157,7 +161,7 @@
         
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
-        userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+        userInfo[@"house_type"] = @(FHHouseTypeRentHouse);
         if (detailModel.data.neighborhoodInfo.name.length > 0) {
             if (model.sameNeighborhoodRentHouseData.total.length > 0) {
                 userInfo[@"title"] = [NSString stringWithFormat:@"小区房源(%@)",model.sameNeighborhoodRentHouseData.total];
@@ -170,13 +174,10 @@
         if (neighborhood_id.length > 0) {
             userInfo[@"neighborhood_id"] = neighborhood_id;
         }
-        if (self.baseViewModel.houseId.length > 0) {
-            userInfo[@"house_id"] = self.baseViewModel.houseId;
-        }
         if (model.sameNeighborhoodRentHouseData.searchId.length > 0) {
             userInfo[@"search_id"] = model.sameNeighborhoodRentHouseData.searchId;
         }
-        userInfo[@"list_vc_type"] = @(5);
+        userInfo[@"list_vc_type"] = @(6);
         
         TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
         NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
