@@ -80,7 +80,7 @@
         __block CGFloat vHeight = 76.0;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.realtorScoreDescription.length >0&&obj.realtorScoreDisplay.length >0) {
-                vHeight = 96;
+                vHeight = 100;
             }
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj];
             // 添加事件
@@ -348,7 +348,7 @@
             for (int i = 0; i<3; i++) {
                 FHDetailContactModel *showModel = (FHDetailContactModel*) model.recommendedRealtors[i];
                 if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
-                    showHeight = showHeight +96;
+                    showHeight = showHeight +100;
                 }else {
                     showHeight = showHeight + 76;
                 };
@@ -362,7 +362,7 @@
             [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailContactModel *showModel = obj;
             if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
-                     showHeight = showHeight +96;
+                     showHeight = showHeight +100;
                  }else {
                      showHeight = showHeight + 76;
                  };
@@ -639,14 +639,14 @@
 
 - (void)layoutForStyle1 {
     [self setupUI];
-    [self modifiedLayoutNameNeedShowCenter:self.model.realtorTags.count >0&&self.model.realtorScoreDisplay.length>0&&self.model.realtorScoreDescription.length>0];
+    [self modifiedLayoutNameNeedShowCenter:self.model.realtorTags.count >0||(self.model.realtorScoreDisplay.length>0&&self.model.realtorScoreDescription.length>0)];
     [self addSubview:self.tagsView];
     if (self.model.realtorScoreDisplay.length>0 && self.model.realtorScoreDescription.length>0) {
          [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
                make.height.mas_equalTo(15);
                make.left.equalTo(self.name);
                make.right.equalTo(self.imBtn.mas_left).offset(-10);
-               make.top.equalTo(self.score.mas_bottom).offset(4);
+             make.top.equalTo(self.score.mas_bottom).offset(self.model.realtorTags.count>0?6:8);
            }];
     }else {
         self.score.hidden = YES;
@@ -655,21 +655,21 @@
               make.height.mas_equalTo(15);
               make.left.equalTo(self.name);
               make.right.equalTo(self.imBtn.mas_left).offset(-10);
-              make.top.equalTo(self.name.mas_bottom).offset(4);
+              make.top.equalTo(self.name.mas_bottom).offset(8);
           }];
     }
 }
 
 - (void)layoutForStyle2 {
     [self setupUI];
-    [self modifiedLayoutNameNeedShowCenter:self.model.realtorEvaluate.length>0&&self.model.realtorScoreDisplay.length>0&&self.model.realtorScoreDescription.length>0];
+    [self modifiedLayoutNameNeedShowCenter:self.model.realtorEvaluate.length>0||(self.model.realtorScoreDisplay.length>0&&self.model.realtorScoreDescription.length>0)];
     [self addSubview:self.realtorEvaluate];
     if (self.model.realtorScoreDisplay.length>0 && self.model.realtorScoreDescription.length>0) {
          [self.realtorEvaluate mas_makeConstraints:^(MASConstraintMaker *make) {
              make.height.mas_equalTo(17);
              make.left.equalTo(self.name);
              make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
-             make.top.equalTo(self.score.mas_bottom).offset(4);
+             make.top.equalTo(self.score.mas_bottom).offset(self.model.realtorTags.count>0?6:8);
          }];
     }else {
         self.score.hidden = YES;
@@ -678,7 +678,7 @@
               make.height.mas_equalTo(17);
               make.left.equalTo(self.name);
               make.right.equalTo(self.imBtn.mas_left).offset(-10);
-              make.top.equalTo(self.name.mas_bottom).offset(4);
+              make.top.equalTo(self.name.mas_bottom).offset(8);
           }];
     }
 
@@ -838,12 +838,11 @@
     
     [self.score mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.name);
-        make.top.equalTo(self.name.mas_bottom).offset(4);
+        make.top.equalTo(self.name.mas_bottom).offset(6);
     }];
     [self.scoreDescription mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.name.mas_right).offset(2);
         make.centerY.equalTo(self.score);
-        make.right.equalTo(self.imBtn.mas_left).offset(-10);
     }];
 }
 
