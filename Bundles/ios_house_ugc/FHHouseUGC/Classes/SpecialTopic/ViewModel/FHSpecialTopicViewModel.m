@@ -447,7 +447,7 @@
     }
     
     NSInteger section = [self getSectionIndex:delta];
-    if(section < self.segmentTitles.count && self.isSegmentSelectedFinished){
+    if(section < self.segmentTitles.count && self.isSegmentSelectedFinished && section != self.viewController.segmentView.selectedIndex){
         [self.viewController.segmentView setSelectedIndexNoEvent:section];
     }
 }
