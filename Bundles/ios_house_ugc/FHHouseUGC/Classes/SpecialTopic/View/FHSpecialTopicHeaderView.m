@@ -44,7 +44,7 @@
 }
 
 - (void)initView {
-    self.backgroundColor = [UIColor themeGray7];
+    self.backgroundColor = [UIColor whiteColor];
 
     /** 头部背景图 **/
     self.headerBackHeight = self.frame.size.height;
@@ -56,19 +56,6 @@
     self.topBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight)];
     _topBgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
     [self addSubview:_topBgView];
-    
-//    fh_ugc_black_bg
-    
-    /** 头部信息区 **/
-//    self.infoContainer = [[UIView alloc] init];
-    /* 左边头像 */
-//    self.avatar = [UIImageView new];
-//    self.avatar.backgroundColor = [UIColor themeGray7];
-//    self.avatar.clipsToBounds = YES;
-//    self.avatar.layer.cornerRadius = 4;
-
-    /* 中间标签区 */
-//    self.labelContainer = [[UIView alloc] init];
     // 主标题标签
     self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(24, self.frame.size.height - 73, self.frame.size.width - 48, 29)];
     self.nameLabel.font = [UIFont themeFontSemibold:21];
@@ -80,39 +67,9 @@
     self.subtitleLabel.textColor = [UIColor themeWhite];
     self.subtitleLabel.numberOfLines = 1;
     
-    // 用户关注count相关
-//    UIView *sepLine = [[UIView alloc] initWithFrame:CGRectMake(0, 3.5, 0.5, 10)];
-//    sepLine.backgroundColor = [UIColor whiteColor];
-//    self.userCountSepLine = sepLine;
-    
-//    self.userCountLabel = [UILabel new];
-//    self.userCountLabel.font = [UIFont themeFontRegular:12];
-//    self.userCountLabel.textColor = [UIColor themeWhite];
-//    self.userCountLabel.numberOfLines = 1;
-//    self.userCountLabel.text = @"0个成员";
-    
-//    self.userCountRightArrow = [UIImageView new];
-//    self.userCountRightArrow.image = [UIImage imageNamed:@"fh_ugc_community_right_2"];
-    
-//    [self.labelContainer addSubview:self.nameLabel];
-//    [self.labelContainer addSubview:self.subtitleLabel];
-//
-//    [self.labelContainer addSubview:self.userCountLabel];
-//    [self.labelContainer addSubview:self.userCountSepLine];
-//    [self.labelContainer addSubview:self.userCountRightArrow];
-//
-//    self.userCountTapView = [[UIView alloc] init];
-//    self.userCountTapView.backgroundColor = [UIColor clearColor];
-//    [self.labelContainer addSubview:self.userCountTapView];
-    
-//    [self.infoContainer addSubview:self.avatar];
-//    [self.infoContainer addSubview:self.labelContainer];
-    
     self.refreshHeader = [[FHCommunityDetailRefreshHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 40, 20)];
     _refreshHeader.alpha = 0;
     [self.viewController.view addSubview:_refreshHeader];
-    /** 信息区 **/
-//    [self addSubview:self.infoContainer];
     
     [self addSubview:self.refreshHeader];
     
@@ -125,33 +82,9 @@
     [self.refreshHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(20);
         make.right.mas_equalTo(self).offset(-20);
-        make.top.mas_equalTo(self).offset(50);
+        make.top.mas_equalTo(self).offset(70);
         make.height.mas_equalTo(20);
     }];
-
-//    [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self).offset(24);
-//        make.right.mas_equalTo(self).offset(-24);
-//        make.bottom.mas_equalTo(self.subtitleLabel.mas_top).offset(-8);
-//        make.height.mas_equalTo(29);
-//    }];
-//
-//    self.subtitleLabel.bottom = self.bottom - 15;
-//    self.subtitleLabel.left = self.left + 15;
-//    self.subtitleLabel.right = self.right - 15;
-//    self.subtitleLabel.height = 21;
-    
-
-//    [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self).offset(15);
-//        make.right.mas_equalTo(self).offset(-15);
-//        make.bottom.mas_equalTo(self.topBack.mas_bottom).offset(-15);
-//        make.height.mas_equalTo(self).offset(21);
-//    }];
-    
-    
-    
-    
 }
 
 - (void)updateWhenScrolledWithContentOffset:(CGFloat)offset isScrollTop:(BOOL)isScrollTop scrollView:(UIScrollView *)scrollView {

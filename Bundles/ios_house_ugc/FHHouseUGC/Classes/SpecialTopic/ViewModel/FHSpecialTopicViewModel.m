@@ -141,7 +141,7 @@
 - (void)initView {
     MJWeakSelf;
     self.viewController.headerView.refreshHeader.refreshingBlock = ^{
-        [weakSelf requestData:YES refreshFeed:YES showEmptyIfFailed:NO showToast:YES];
+        [weakSelf requestData:YES first:NO];
         weakSelf.tableView.userInteractionEnabled = NO;
     };
     
@@ -622,6 +622,7 @@
  
     self.requestTask = [FHHouseUGCAPI requestSpecialTopicContentWithTabId:tabModel.tabId queryPath:tabModel.url categoryName:tabModel.categoryName queryId:self.viewController.forumId  extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
 
+        [self endRefreshing];
         wself.viewController.isLoadingData = NO;
 
         if (error) {

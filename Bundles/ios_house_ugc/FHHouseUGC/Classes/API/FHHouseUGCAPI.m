@@ -1336,7 +1336,10 @@
 
 + (TTHttpTask *)requestSpecialTopicContentWithTabId:(NSString *)tabId queryPath:(NSString *)queryPath categoryName:(NSString *)categoryName queryId:(NSString *)queryId extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion {
     
-    NSString *url = QURL(queryPath);
+    NSString *url = nil;
+    if(queryPath.length > 0){
+        url = QURL(queryPath);
+    }
 
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"category"] = categoryName;
