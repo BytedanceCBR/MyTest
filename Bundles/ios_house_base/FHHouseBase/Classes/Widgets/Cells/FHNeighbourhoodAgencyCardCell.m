@@ -289,8 +289,8 @@
                 [self.avator bd_setImageWithURL:[NSURL URLWithString:model.contactModel.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
             }
             self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:model.id];
-            BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
-            [self.licenceIcon setHidden:isLicenceIconHidden];
+//            BOOL isLicenceIconHidden = ![self shouldShowContact:model.contactModel];
+            [self.licenceIcon setHidden:YES];
 
             NSMutableDictionary *tracerDict = @{}.mutableCopy;
             if (self.traceParams) {
