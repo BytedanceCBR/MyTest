@@ -32,7 +32,7 @@
 #import "TTFollowThemeButton.h"
 #import "TTDeviceHelper.h"
 #import "AWEVideoPlayTransitionBridge.h"
-#import <UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "TTSettingsManager.h"
 #import "AWEVideoUserInfoManager.h"
 #import "AWEUserModel.h"
@@ -45,8 +45,8 @@
 #import "UIViewAdditions.h"
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import "TTModuleBridge.h"
-#import <Lottie/Lottie.h>
-#import <UIView+CustomTimingFunction.h>
+#import <lottie-ios/Lottie/Lottie.h>
+#import "UIView+CustomTimingFunction.h"
 #import "TSVWriteCommentButton.h"
 #import "UIView+Yoga.h"
 #import "SSMotionRender.h"
@@ -66,9 +66,9 @@
 #import <TTRoute/TTRoute.h>
 #import "TSVTitleLabelConfigurator.h"
 #import "TSVDebugInfoConfig.h"
-#import <TTNavigationController.h>
+#import "TTNavigationController.h"
 #import "TSVDetailRouteHelper.h"
-#import <NSDictionary+TTAdditions.h>
+#import "NSDictionary+TTAdditions.h"
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TSVAvatarImageView.h"
 #import "HTSVideoSwitch.h"
@@ -78,8 +78,8 @@
 #import "TSVRecommendCardModel.h"
 #import "TSVRecommendCardViewModel.h"
 #import "FHCommonApi.h"
-#import <UIColor+Theme.h>
-#import <UIImage+FIconFont.h>
+#import "UIColor+Theme.h"
+#import "UIImage+FIconFont.h"
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
 static const CGFloat kCheckChallengeButtonHeight = 28;

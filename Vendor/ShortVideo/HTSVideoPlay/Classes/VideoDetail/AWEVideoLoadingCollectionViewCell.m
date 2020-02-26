@@ -10,7 +10,7 @@
 #import "NSObject+FBKVOController.h"
 #import "EXTKeyPathCoding.h"
 #import "UIViewAdditions.h"
-#import <extobjc.h>
+#import "extobjc.h"
 
 @interface AWEVideoLoadingCollectionViewCell ()
 

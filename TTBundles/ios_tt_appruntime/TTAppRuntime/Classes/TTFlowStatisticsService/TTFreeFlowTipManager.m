@@ -11,7 +11,7 @@
 #import "NewsBaseDelegate.h"
 #import "TTRouteService.h"
 #import "TTFlowStatisticsManager.h"
-#import <NetworkUtilities.h>
+#import "NetworkUtilities.h"
 #import "TTModuleBridge.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 

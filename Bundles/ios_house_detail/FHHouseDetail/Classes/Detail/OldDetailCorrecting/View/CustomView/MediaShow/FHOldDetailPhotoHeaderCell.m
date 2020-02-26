@@ -6,12 +6,12 @@
 //
 
 #import "FHOldDetailPhotoHeaderCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
-#import <TTShareManager.h>
-#import <TTPhotoScrollViewController.h>
+#import "TTShareManager.h"
+#import "TTPhotoScrollViewController.h"
 #import "FHUserTracker.h"
 #import "FHFloorPanPicShowViewController.h"
 #import "FHDetailPictureViewController.h"
@@ -75,6 +75,7 @@
     self.currentData = data;
     id images = ((FHDetailPhotoHeaderModel *)data).houseImage;
     self.titleView.model = ((FHDetailPhotoHeaderModel *)data).titleDataModel;
+    self.titleView.baseViewModel  = self.baseViewModel;
     [self updateWithImages:images];
 }
 
@@ -214,7 +215,7 @@
     [self.colletionView reloadData];
 
     // 二手房头图头显示底部渐变层
-    self.bottomGradientView.hidden = !(self.baseViewModel.houseType == FHHouseTypeSecondHandHouse);
+    self.bottomGradientView.hidden = !(self.baseViewModel.houseType == FHHouseTypeSecondHandHouse || self.baseViewModel.houseType == FHHouseTypeNeighborhood);
     BOOL isShowBottomBannerView = NO;
     if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
         FHDetailOldModel *detailOldModel = self.baseViewModel.detailData;

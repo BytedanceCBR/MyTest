@@ -31,8 +31,8 @@
 #import "TTIndicatorView.h"
 #import "TTPhotoScrollViewController.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
-#import <TTAccountBusiness.h>
-#import <TTInteractExitHelper.h>
+#import "TTAccountBusiness.h"
+#import "TTInteractExitHelper.h"
 #import "WDDefines.h"
 #import <TTBaseLib/TTURLUtils.h>
 #import <Heimdallr/HMDTTMonitor.h>

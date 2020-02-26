@@ -8,7 +8,7 @@
 
 #import "TTRImpression.h"
 #import "SSImpressionManager.h"
-#import <Aspects.h>
+#import "Aspects.h"
 #import <objc/runtime.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>

@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <WXApi.h>
-#import <WXApiObject.h>
+#import "WXApi.h"
+#import "WXApiObject.h"
 
 typedef NS_ENUM(int, kTTWeChatShareErrorType) {
     kTTWeChatShareErrorTypeNotInstalled = 0,

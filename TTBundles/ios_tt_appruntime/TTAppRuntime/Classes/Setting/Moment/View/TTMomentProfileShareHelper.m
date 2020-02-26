@@ -8,7 +8,7 @@
 
 #import "TTMomentProfileShareHelper.h"
 #import "TTProfileShareService.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTActivityShareManager.h"
 #import "ArticleShareManager.h"
 #import "SSActivityView.h"

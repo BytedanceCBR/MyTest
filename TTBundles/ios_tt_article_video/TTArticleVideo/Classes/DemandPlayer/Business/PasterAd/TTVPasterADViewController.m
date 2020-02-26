@@ -20,7 +20,7 @@
 #import <TTUIWidget/UIView+CustomTimingFunction.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTVPlayerCacheProgressController.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "SSAppStore.h"
 
 #import "TTVPlayVideo.h"

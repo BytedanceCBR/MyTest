@@ -526,7 +526,7 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
 //        if(movieViewModel.videoPlayType != TTVideoPlayTypePasterAD) {
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(connectionChanged:)
-                                                         name:kReachabilityChangedNotification
+                                                         name:TTReachabilityChangedNotification
                                                        object:nil];
 //        }
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -3184,7 +3184,7 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
     return kAlwaysCloseAlert;
 }
 
-#pragma mark - kReachabilityChangedNotification
+#pragma mark - TTReachabilityChangedNotification
 
 - (void)connectionChanged:(NSNotification *)notification
 {

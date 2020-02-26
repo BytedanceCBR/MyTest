@@ -5,7 +5,7 @@
 
 #import "FHTopicCell.h"
 #import "FHTopicListModel.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 
 
 @interface FHTopicCell ()

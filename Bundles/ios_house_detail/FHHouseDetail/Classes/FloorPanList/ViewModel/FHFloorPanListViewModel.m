@@ -8,7 +8,7 @@
 #import "FHFloorPanListViewModel.h"
 #import "FHHouseDetailAPI.h"
 #import "FHFloorPanListCell.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import "FHHouseDetailSubPageViewController.h"
 #import <FHDetailNewModel.h>
 
@@ -70,7 +70,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         UIView *labelContentView = [[UIView alloc] init];
         [self.leftFilterView addSubview:labelContentView];
         
-        if ([self.leftFilterView.subviews containsObject:labelContentView]) {
+        if (self.leftFilterView && [self.leftFilterView.subviews containsObject:labelContentView] && labelContentView.superview) {
             [labelContentView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (i==0) {
                     make.top.equalTo(self.leftFilterView);

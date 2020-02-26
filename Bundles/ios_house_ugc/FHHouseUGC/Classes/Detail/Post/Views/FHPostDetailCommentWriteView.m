@@ -18,7 +18,7 @@
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/UITextView+TTAdditions.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTCommentFunctionView.h"
 #import "TTCommentTransparentView.h"
 #import "TTCommentDetailReplyWriteManager.h"

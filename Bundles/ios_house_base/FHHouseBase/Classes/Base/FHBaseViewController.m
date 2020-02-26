@@ -16,6 +16,7 @@
 #import "FHErrorView.h"
 #import "UIViewAdditions.h"
 #import "TTProjectLogicManager.h"
+#import "FHIntroduceManager.h"
 #import <FHIntroduceManager.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 
@@ -131,7 +132,10 @@
     _emptyView.hidden = YES;
     [self.view addSubview:_emptyView];
     [_emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0 , *)) {
+        if (@available(iOS 13.0, *)) {
+            make.left.right.bottom.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.view).offset(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+        } else if (@available(iOS 11.0 , *)) {
             make.left.right.bottom.mas_equalTo(self.view);
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
         } else {
@@ -167,7 +171,12 @@
     CGFloat topInset = _emptyEdgeInsets.top;
     CGFloat bottomInset = _emptyEdgeInsets.bottom;
     [_emptyView mas_updateConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0 , *)) {
+        if (@available(iOS 13.0 , *)) {
+            CGFloat appTopInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+            make.left.right.mas_equalTo(self.view);
+            make.bottom.mas_equalTo(self.view).offset(-bottomInset);
+            make.top.mas_equalTo(self.view).offset(44.f + appTopInset + topInset);
+        } else if (@available(iOS 11.0 , *)) {
             make.left.right.mas_equalTo(self.view);
             make.bottom.mas_equalTo(self.view).offset(-bottomInset);
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top + topInset);
@@ -198,12 +207,11 @@
         [self.view addSubview:_customNavBarView];
         _customNavBarView.title.text = self.titleName;
         [_customNavBarView mas_makeConstraints:^(MASConstraintMaker *maker) {
-//            if (@available(iOS 13.0 , *)) { // todo zjing 临时兼容方案
-//                maker.left.right.top.mas_equalTo(self.view);
-//                CGFloat topMargin = [TTDeviceHelper isIPhoneXSeries] ? 44 : 20;
-//                maker.height.mas_equalTo(44.f + topMargin);
-//            }else
-            if (@available(iOS 11.0 , *)) {
+            if (@available(iOS 13.0 , *)) {
+                CGFloat topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+                maker.left.right.top.mas_equalTo(self.view);
+                maker.height.mas_equalTo(44.f + topInset);
+            } else if (@available(iOS 11.0 , *)) {
                 maker.left.right.top.mas_equalTo(self.view);
                 maker.height.mas_equalTo(44.f + self.view.tt_safeAreaInsets.top);
             } else {

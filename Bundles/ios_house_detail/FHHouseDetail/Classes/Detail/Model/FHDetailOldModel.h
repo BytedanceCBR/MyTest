@@ -6,7 +6,7 @@
 //
 
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "FHDetailBaseModel.h"
 #import "FHDetailNeighborhoodModel.h"
 #import <FHHouseBase/FHImageModel.h>
@@ -349,6 +349,7 @@ typedef enum : NSInteger {
 @interface FHDetailDataBaseExtraBudgetModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *extraContent;
 @property (nonatomic, copy , nullable) NSString *baseContent;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 

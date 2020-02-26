@@ -10,7 +10,7 @@
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "Masonry.h"
-#import <BDWebImage.h>
+#import "BDWebImage.h"
 #import "UILabel+House.h"
 
 @implementation FHDetailStarsCountView

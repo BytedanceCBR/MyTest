@@ -104,12 +104,4 @@ end
 
 # s.public_header_files = 'TTPlatformUIModel/Classes/**/*.h'
 # s.frameworks      = 'Crashlytics', 'Fabric'
-    s.dependency 'TTBaseLib'
-    s.dependency 'TTUIWidget'
-    s.dependency 'TTImage'
-    s.dependency 'MJExtension'
-    s.dependency 'TTRoute'
-    s.dependency 'TTEntityBase'
-    s.dependency 'JSONModel'
-    s.dependency 'TTDialogDirector/Core'
 end

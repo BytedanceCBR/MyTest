@@ -8,7 +8,7 @@
 #import "TTStartupAKLaunchTask.h"
 #import "AKHelper.h"
 #import <SecGuard/SGMSafeGuardManager.h>
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "CommonURLSetting.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTInstallService/TTInstallIDManager.h>

@@ -9,22 +9,22 @@
 #import "FHUGCVotePublishViewController.h"
 #import "FHUGCVotePublishModel.h"
 #import "FHUGCVotePublishCell.h"
-#import <FHCommonDefines.h>
+#import "FHCommonDefines.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHCommunityList.h"
 #import "FHHouseUGCAPI.h"
-#import <ToastManager.h>
+#import "ToastManager.h"
 #import <FHUGCVotePublishTypeSelectViewController.h>
 #import "FHUGCVoteBottomPopView.h"
-#import <WDDefines.h>
+#import "WDDefines.h"
 #import "FHUGCVoteModel.h"
 #import "HMDTTMonitor.h"
-#import <TTReachability.h>
+#import "TTReachability.h"
 #import "FHUserTracker.h"
 #import "BTDJSONHelper.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHPostUGCViewController.h"
-#import <TTUGCDefine.h>
+#import "TTUGCDefine.h"
 #import <FHUGCVoteDatePickerView.h>
 
 #define DATEPICKER_HEIGHT   200
@@ -602,7 +602,7 @@
     
     WeakSelf;
     self.isPublishing = YES;
-    [FHHouseUGCAPI requestVotePublishWithParam:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestVotePublishWithParam:params class:FHUGCVoteModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         // 成功 status = 0 请求失败 status = 1 数据解析失败 status = 2
         if(error) {

@@ -431,6 +431,8 @@
                            @"pricePerSqmUnit":@"price_per_sqm_unit",
                            @"dislikeInfo": @"dislike_info",
                            @"titleTag": @"title_tag",
+                           @"reasonTags": @"reason_tags",
+                           @"addrData": @"addr_data",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

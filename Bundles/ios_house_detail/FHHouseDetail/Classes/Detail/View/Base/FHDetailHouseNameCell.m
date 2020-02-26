@@ -6,14 +6,14 @@
 //
 
 #import "FHDetailHouseNameCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHDetailNewModel.h"
 #import "YYLabel.h"
-#import <YYText.h>
+#import "YYText.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 

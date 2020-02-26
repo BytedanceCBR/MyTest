@@ -6,7 +6,7 @@
 //
 
 #import "AKTableView.h"
-#import <KVOController.h>
+#import "KVOController.h"
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTNetworkManager/TTNetworkDefine.h>
 

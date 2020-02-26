@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHMultiMediaVideoCell *currentMediaCell;
 @property(nonatomic , weak) id<FHMultiMediaCorrectingScrollViewDelegate> delegate;
 @property(nonatomic, strong) NSDictionary *tracerDic;
+@property (nonatomic, weak) FHHouseDetailBaseViewModel *baseViewModel;
 
 - (void)updateModel:(FHMultiMediaModel *)model withTitleModel:(FHDetailHouseTitleModel *)titleModel;
 

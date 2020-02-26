@@ -8,7 +8,7 @@
 #import "TTFeedPopupView.h"
 #import "TTFeedDislikeConfig.h"
 #import "FHFeedOperationOption.h"
-#import <FHUGCConfigModel.h>
+#import "FHUGCConfigModel.h"
 #import "FHHouseUGCHeader.h"
 
 //NS_ASSUME_NONNULL_BEGIN

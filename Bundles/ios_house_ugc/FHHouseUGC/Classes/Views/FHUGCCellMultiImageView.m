@@ -8,14 +8,14 @@
 #import "FHUGCCellMultiImageView.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
-#import <UIImageView+BDWebImage.h>
+#import "Masonry.h"
+#import "UIImageView+BDWebImage.h"
 #import "FHFeedUGCCellModel.h"
 #import "TTPhotoScrollViewController.h"
 #import "TTBaseMacro.h"
 #import "TTInteractExitHelper.h"
-#import <TTImageView+TrafficSave.h>
-#import <FHUGCCellHelper.h>
+#import "TTImageView+TrafficSave.h"
+#import "FHUGCCellHelper.h"
 
 #define itemPadding 4
 #define kMaxCount 9

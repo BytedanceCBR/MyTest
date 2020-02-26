@@ -7,17 +7,17 @@
 
 #import "FHUGCNoticeEditViewController.h"
 #import "UIViewController+Track.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <FHHouseUGCAPI.h>
-#import <ToastManager.h>
+#import "ToastManager.h"
 #import "FHUserTracker.h"
 #import "TTUGCToolbar.h"
 #import "TTUGCTextViewMediator.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "NSObject+MultiDelegates.h"
-#import <TTUGCEmojiParser.h>
+#import "TTUGCEmojiParser.h"
 #import "FHUGCNoticeModel.h"
-#import <TTNavigationController.h>
+#import "TTNavigationController.h"
 
 typedef enum : NSUInteger {
     ActionTypeSaveOnly = 0,
@@ -128,7 +128,9 @@ typedef enum : NSUInteger {
 
 - (CGFloat)navbarHeight {
     CGFloat navbarHeight = 65;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0 , *)) {
+           navbarHeight =  44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0 , *)) {
         navbarHeight =  44.f + self.view.tt_safeAreaInsets.top;
     }
     return navbarHeight;
@@ -331,7 +333,7 @@ typedef enum : NSUInteger {
     params[@"announcement"] = self.textView.text;
     params[@"push_type"] = @(actionType);
 
-    [FHHouseUGCAPI requestUpdateUGCNoticeWithParam:params completion:^(FHUGCNoticeModel *model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestUpdateUGCNoticeWithParam:params class:FHUGCNoticeModel.class completion:^(FHUGCNoticeModel *model, NSError * _Nonnull error) {
         
         [[ToastManager manager] dismissCustomLoading];
         

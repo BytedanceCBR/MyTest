@@ -16,7 +16,7 @@
 #import "TTDeviceHelper.h"
 #import "TTStringHelper.h"
 #import "SSCommonLogic.h"
-#import <TTURLUtils.h>
+#import "TTURLUtils.h"
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTAdPromotionManager.h"
 #import <TTKitchen/TTKitchen.h> 

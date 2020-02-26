@@ -7,7 +7,7 @@
 //
 
 #import "TTImageMonitorManager.h"
-//#import "TTHttpResponseAFNetworking.h"
+#import "TTHttpResponseAFNetworking.h"
 #import "TTNetworkDefine.h"
 #import "TTNetworkMonitorRecorder.h"
 #import "TTNetworkMonitorRecorder.h"

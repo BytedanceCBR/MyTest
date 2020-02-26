@@ -7,8 +7,8 @@
 //
 
 #import "TTWeixinOpenURLTask.h"
-#import <TTWeChatShare.h>
-#import <TTAccountAuthWeChat.h>
+#import "TTWeChatShare.h"
+#import "TTAccountAuthWeChat.h"
 #import "TTLaunchDefine.h"
 
 DEC_TASK("TTWeixinOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH+4);

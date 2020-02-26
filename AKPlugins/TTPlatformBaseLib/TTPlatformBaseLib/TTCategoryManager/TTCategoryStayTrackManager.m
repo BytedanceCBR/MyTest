@@ -25,6 +25,8 @@
 @property(nonatomic, copy)NSString * lastTrackingCategoryID;      //上一个频道的category ID
 @property(nonatomic, copy)NSString * enterFromCategoryID;
 
+@property (nonatomic, strong) NSDictionary *extraParams;
+
 @end
 
 @implementation TTCategoryStayTrackManager
@@ -57,7 +59,7 @@ static TTCategoryStayTrackManager * manager;
 - (void)receiveWillEnterForgroundNotification:(NSNotification *)notification
 {
     if (!isEmptyString(_suspendCategoryID)) {
-        [self startTrackForCategoryID:_suspendCategoryID concernID:_suspendConcernID enterType:nil];
+        [self startTrackForCategoryID:_suspendCategoryID concernID:_suspendConcernID enterType:nil extraParams:self.extraParams];
     }
 }
 
@@ -67,7 +69,7 @@ static TTCategoryStayTrackManager * manager;
         self.suspendCategoryID = _trackingCategoryID;
         self.suspendConcernID = _trackingConcernID;
     }
-    [self endTrackCategory:_trackingCategoryID];
+    [self endTrackCategory:_trackingCategoryID cleanExtraParmas:NO];
 }
 
 
@@ -93,21 +95,6 @@ static TTCategoryStayTrackManager * manager;
 
 - (void)trackStayEventStayTime:(NSTimeInterval)stayTime
 {
-    //频道切换埋点
-    NSString *categoryID = _trackingCategoryID;
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
-    [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
-    [dict setValue:@(((long long) (stayTime * 1000))) forKey:@"stay_time"];
-    if (!isEmptyString(_trackingCategoryID)) {
-        [dict setValue:_trackingCategoryID forKey:@"category_name"];
-    }
-    if (!isEmptyString(_enterType)) {
-        [dict setValue:_enterType forKey:@"enter_type"];
-    }
-    [TTTracker eventV3:@"stay_category" params:dict isDoubleSending:NO];
-
-    self.lastTrackingCategoryID = _trackingCategoryID;
-    /* //lite 频道切换埋点代码
     if (stayTime >= [self ignoreMinTime]) {
         NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
         if ([_trackingCategoryID isEqualToString:kMomentListFakeCategoryID]) {//统计动态
@@ -138,7 +125,9 @@ static TTCategoryStayTrackManager * manager;
             [dict setValue:_trackingCategoryID forKey:@"category_id"];
             [dict setValue:_trackingConcernID forKey:@"concern_id"];
         }
-    
+        if (self.extraParams) {
+            [dict addEntriesFromDictionary:self.extraParams];
+        }
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
             [TTTracker eventData:dict];
         }
@@ -158,23 +147,31 @@ static TTCategoryStayTrackManager * manager;
             NSString *enterFrom = [NSString stringWithFormat:@"%@_%@", _enterType, self.enterFromCategoryID];
             [dict setValue:enterFrom forKey:@"enter_from"];
         }
+        if (self.extraParams) {
+            [dict addEntriesFromDictionary:self.extraParams];
+        }
         [TTTrackerWrapper eventV3:@"stay_category" params:dict isDoubleSending:YES];
         
         self.lastTrackingCategoryID = _trackingCategoryID;
     }
-     */
 }
 
 #pragma mark -- list
 
 - (void)startTrackForCategoryID:(NSString *)categoryID concernID:(NSString *)concernID enterType:(NSString *)enterType
 {
+    [self startTrackForCategoryID:categoryID concernID:concernID enterType:enterType extraParams:nil];
+}
+
+- (void)startTrackForCategoryID:(NSString *)categoryID concernID:(NSString *)concernID enterType:(NSString *)enterType extraParams:(NSDictionary *)extraParams
+{
     NSString * tmpCategoryID = categoryID;
     if (![tmpCategoryID isEqualToString:_trackingCategoryID]) {
         [self endTrackCategory:_trackingCategoryID];
         [self clearIncludeSuspendInfo:YES];
     }
-    
+
+    self.extraParams = extraParams;
     self.categoryStartInterval = [[NSDate date] timeIntervalSince1970];
     self.trackingCategoryID = tmpCategoryID;
     self.trackingConcernID = concernID;
@@ -187,6 +184,11 @@ static TTCategoryStayTrackManager * manager;
 }
 
 - (void)endTrackCategory:(NSString *)categoryID
+{
+    [self endTrackCategory:categoryID cleanExtraParmas:YES];
+}
+
+- (void)endTrackCategory:(NSString *)categoryID cleanExtraParmas:(BOOL)cleanExtraParmas
 {
     if (isEmptyString(_trackingCategoryID) || _categoryStartInterval <= 0) {
         [self clearIncludeSuspendInfo:NO];
@@ -201,6 +203,10 @@ static TTCategoryStayTrackManager * manager;
         [self trackStayEventStayTime:stayTime];
         
         [self clearIncludeSuspendInfo:NO];
+    }
+
+    if (cleanExtraParmas) {
+        self.extraParams = nil;
     }
 }
 

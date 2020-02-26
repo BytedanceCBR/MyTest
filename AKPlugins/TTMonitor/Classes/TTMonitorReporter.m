@@ -16,48 +16,91 @@
 #import "TTMonitorReporterResponse.h"
 
 #define kMonitorReportURLPath @"/monitor/collect/"
-#define kWatchDogReportURLPath @"http://abn.snssdk.com/collect/"
+#define kWatchDogReportURLPath @"https://abn.snssdk.com/collect/"
 
 static NSTimeInterval nextAviaibleTimeInterval = -1;//-1 就不设限 未来的永久
 static NSTimeInterval currentSleepValueForException = -1;//-1 就不设限 未来的永久
 
+static Class<TTMonitorConfigurationProtocol> tt_configurationClass;
+static NSString * tt_recommendHost;
+static NSArray * tt_allHosts;
+static NSLock *tt_Lock;
+@interface TTMonitorReporter()
+@end
+
 @interface TTMonitorReporter()
 
-@property(nonatomic, strong)NSString * recommendHost;
-@property(nonatomic, strong)NSArray * allHosts;
-@property (nonatomic, strong)Class<TTMonitorConfigurationProtocol> configurationClass;
+@property (atomic, copy) NSString *defaultHost;
 
 @end
 
 @implementation TTMonitorReporter
+
++ (void)initialize
+{
+    if (self == [TTMonitorReporter class]) {
+        if (!tt_Lock) {
+            tt_Lock = [NSLock new];
+        }
+    }
+}
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (id)init
+- (instancetype)initWithConfiguration:(Class<TTMonitorConfigurationProtocol>)configurationClass
 {
     self = [super init];
     if (self) {
+        tt_configurationClass = configurationClass;
 
-        [self refreshConfig];
+        if (tt_configurationClass) {
+            [self refreshConfig];
+        }
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveConfigUpdatdNotification:) name:kTTMonitorConfigurationUpdatedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(receiveConfigUpdatdNotification:)
+                                                     name:kTTMonitorConfigurationUpdatedNotification
+                                                   object:nil];
     }
     return self;
 }
 
+- (id)init
+{
+    return [self initWithConfiguration:[TTMonitorConfiguration class]];
+}
+
 - (void)refreshConfig
 {
-    self.allHosts = [self.configurationClass reportHosts];
+    [tt_Lock lock];
+    tt_allHosts = [tt_configurationClass reportHosts];
+    [tt_Lock unlock];
+    
+    [self refreshRecommendHostConfig];
 }
 
-- (void)setMonitorConfiguration:(Class<TTMonitorConfigurationProtocol>)configurationClass{
-    self.configurationClass = configurationClass;
+- (void)setMonitorConfiguration:(Class<TTMonitorConfigurationProtocol>)configurationClass
+{
+    if (![tt_configurationClass isEqual:configurationClass]) {
+        tt_configurationClass = configurationClass;
+        [self refreshConfig];
+    }
 }
+
 #pragma mark -- URL 相关
+- (void)refreshRecommendHostConfig {
+    [tt_Lock lock];
 
+    if ([tt_allHosts count] > 0) {
+        tt_recommendHost = tt_allHosts[0];
+    } else {
+        tt_recommendHost = [self localURLPath];//下发Host列表出现问题或者第一次启动的默认值
+    }
+    [tt_Lock unlock];
+}
 /**
  *  根据参数和是否需要，刷新当前发送的Host。
  *
@@ -67,6 +110,8 @@ static NSTimeInterval currentSleepValueForException = -1;//-1 就不设限 未�
  */
 - (BOOL)refreshRecommendHostForce:(BOOL)force
 {
+    [tt_Lock lock];
+
     BOOL result = NO;
     BOOL recommendHostIsEmpty = [self isRecommendHostEmpty];
     if (!recommendHostIsEmpty && !force) {
@@ -74,51 +119,58 @@ static NSTimeInterval currentSleepValueForException = -1;//-1 就不设限 未�
     }
     else {
         if (recommendHostIsEmpty) {//为空的时候的赋值
-            if ([self.allHosts count] > 0) {
-                self.recommendHost = self.allHosts[0];
+            if ([tt_allHosts count] > 0) {
+                tt_recommendHost = tt_allHosts[0];
             }
         }
         else {//尝试更换Host
-            if ([self.allHosts count] <= 1) {
+            if ([tt_allHosts count] <= 1) {
                 result = NO;
             }
             else {
-                NSString * originHost = _recommendHost;
-                NSUInteger index = [_allHosts indexOfObject:originHost];
+                NSString * originHost = tt_recommendHost;
+                NSUInteger index = [tt_allHosts indexOfObject:originHost];
                 if (index == NSNotFound) {
                     index = 0;
                 }
                 else {
-                    if (index >= ([_allHosts count] - 1)) {
+                    if (index >= ([tt_allHosts count] - 1)) {
                         index = 0;
                     }
                     else {
                         index ++;
                     }
                 }
-                self.recommendHost = _allHosts[index];
-                if (![_recommendHost isEqualToString:originHost]) {
+                tt_recommendHost = tt_allHosts[index];
+                if (![tt_recommendHost isEqualToString:originHost]) {
                     result = YES;
                 }
             }
         }
         
         if ([self isRecommendHostEmpty]) {
-            self.recommendHost = kDefaultTTMonitorURL;//下发Host列表出现问题或者第一次启动的默认值
+            tt_recommendHost = [self localURLPath];//下发Host列表出现问题或者第一次启动的默认值
         }
     }
+    [tt_Lock unlock];
+
     return result;
 }
 
 - (BOOL)isRecommendHostEmpty
 {
-    return !([self.recommendHost isKindOfClass:[NSString class]] && [self.recommendHost length] > 0);
+    [tt_Lock lock];
+    BOOL result = !([tt_recommendHost isKindOfClass:[NSString class]] && [tt_recommendHost length] > 0);
+    [tt_Lock unlock];
+    
+    return result;
 }
 
 - (NSString *)reportURLStrForReportType:(TTReportDataType)dataType
 {
-    [self refreshRecommendHostForce:NO];
-    NSString * originUrl = self.recommendHost;
+    [tt_Lock lock];
+    NSString * originUrl = tt_recommendHost;
+    [tt_Lock unlock];
     if (dataType==TTReportDataTypeWatchDog) {
         originUrl = kWatchDogReportURLPath;
     }
@@ -242,5 +294,15 @@ static NSTimeInterval currentSleepValueForException = -1;//-1 就不设限 未�
     [self refreshConfig];
 }
 
+- (NSString *)localURLPath {
+    NSString *localPath = nil;
+    if (self.defaultHost) {
+        localPath = [NSString stringWithFormat:@"https://%@%@",self.defaultHost,kMonitorReportURLPath];
+    } else {
+        localPath = kDefaultTTMonitorURL;
+    }
+    
+    return localPath;
+}
 
 @end

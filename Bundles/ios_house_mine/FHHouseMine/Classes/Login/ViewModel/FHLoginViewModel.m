@@ -15,11 +15,11 @@
 #import "UIColor+Theme.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHEnvContext.h>
-#import <YYLabel.h>
+#import "YYLabel.h"
 #import <YYText/NSAttributedString+YYText.h>
 #import "TTAccountMobileCaptchaAlertView.h"
 #import "TTThemedAlertController.h"
-#import <FHMinisdkManager.h>
+#import "FHMinisdkManager.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -468,8 +468,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)traceAnnounceAgreement {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict].mutableCopy;
+    tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
+    tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
     if (self.fromOneKeyLogin) {
         tracerDict[@"login_type"] = @"quick_login";
+    }else {
+        tracerDict[@"login_type"] = @"other_login";
     }
     if (self.fromOtherLogin) {
         tracerDict[@"enter_from"] = @"quick_login";
@@ -481,8 +485,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)traceLogin {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
+    tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
     if (self.fromOneKeyLogin) {
         tracerDict[@"click_position"] = @"quick_login";
+    }else {
+        tracerDict[@"login_type"] = @"other_login";
     }
     if (self.fromOtherLogin) {
         tracerDict[@"enter_from"] = @"quick_login";
@@ -494,8 +502,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
+    tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
     if (self.fromOneKeyLogin) {
         tracerDict[@"login_type"] = @"quick_login";
+    }else {
+        tracerDict[@"login_type"] = @"other_login";
     }
     if (self.fromOtherLogin) {
         tracerDict[@"enter_from"] = @"quick_login";
@@ -575,7 +587,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)traceVerifyCode {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
+    tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
     tracerDict[@"is_resent"] = @(self.isVerifyCodeRetry);
+    tracerDict[@"login_type"] = tracerDict[@"login_type"] ? : @"other_login";
+    if (self.fromOtherLogin) {
+        tracerDict[@"enter_from"] = @"quick_login";
+        tracerDict[@"enter_type"] = @"other_login";
+    }
     TRACK_EVENT(@"click_verifycode", tracerDict);
 }
 

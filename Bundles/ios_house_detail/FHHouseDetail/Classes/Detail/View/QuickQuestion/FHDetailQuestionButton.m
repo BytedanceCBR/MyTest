@@ -11,7 +11,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/FHRoundShadowView.h>
 #import <FHCommonUI/UIFont+House.h>
-#import <Masonry.h>
+#import "Masonry.h"
 
 
 @implementation FHDetailQuestionInternalButton

@@ -9,7 +9,7 @@
 #import "TTPersonalHomeIconView.h"
 #import "UIImageView+WebCache.h"
 #import "TTThemeManager.h"
-#import <TTAvatarDecoratorView.h>
+#import "TTAvatarDecoratorView.h"
 #import <BDWebImage/SDWebImageAdapter.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>

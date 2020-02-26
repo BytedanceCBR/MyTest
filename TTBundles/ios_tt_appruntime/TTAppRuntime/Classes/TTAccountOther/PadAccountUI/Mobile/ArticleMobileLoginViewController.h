@@ -6,7 +6,7 @@
 //
 //
 
-#import <SSViewControllerBase.h>
+#import "SSViewControllerBase.h"
 #import "ArticleMobileViewController.h"
 
 

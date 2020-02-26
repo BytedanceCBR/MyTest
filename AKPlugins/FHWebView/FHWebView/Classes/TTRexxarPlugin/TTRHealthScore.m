@@ -10,7 +10,7 @@
 #import "TTRHealthScore.h"
 #import <TTRexxar/TTRJSBForwarding.h>
 #import <HealthKit/HealthKit.h>
-#import <TTSettingsManager.h>
+#import "TTSettingsManager.h"
 
 typedef NS_ENUM(NSInteger,TTHealthScoreCode)
 {

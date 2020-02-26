@@ -13,7 +13,7 @@
 #import "TTAdPromotionManager.h"
 
 #import "SDWebImageManager.h"
-#import <TTShareActivity.h>
+#import "TTShareActivity.h"
 #import "TTPanelActivity.h"
 #import "TTAdPromotionContentItem.h"
 #import <TTRoute/TTRoute.h>

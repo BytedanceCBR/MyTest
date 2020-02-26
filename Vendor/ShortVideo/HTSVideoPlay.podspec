@@ -42,7 +42,7 @@ Pod::Spec.new do |s|
   s.dependency 'TTReachability'
   s.dependency 'ReactiveObjC'
   s.dependency 'TTRoute'
-  s.dependency 'YYCache'
+  #s.dependency 'YYCache'
   s.dependency 'TTImpression'
   s.dependency 'TTVideoService'
   s.dependency 'MBProgressHUD'

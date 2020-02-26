@@ -12,13 +12,12 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "TTStringHelper.h"
 #import "TTBaseMacro.h"
-#import <TTBaseLib/TTSandBoxHelper.h>
 
 #define kArticleJSManagerJSVersionKey @"kArticleLocalJSVersionKey" // 本地存放的前端资源版本号
 #define kArticleJSManagerUseJSInBundleKey @"kArticleJSManagerUseJSInBundleKey" // 内测版本控制是否使用下发setting的开关，防止较长项目开发过程中上线的影响
 
 // @"13" 问答详情页新版内容升级
-static NSString *const kJSVersionInBundle = @"283";  // 客户端内置资源版本号
+static NSString *const kJSVersionInBundle = @"646";  // 客户端内置资源版本号
 
 @interface ArticleJSManager ()
 @property(nonatomic, strong)NSURLSessionDownloadTask *downloadTask;
@@ -90,15 +89,15 @@ static ArticleJSManager * shareManager;
 
 - (BOOL)shouldUseJSFromWebWithSubRootPath:(NSString *)jsSubRootPath
 {
-    if ([TTSandBoxHelper isInHouseApp]) {
-        if ([[NSUserDefaults standardUserDefaults] objectForKey:kArticleJSManagerUseJSInBundleKey]) {
-            BOOL useJSInBundle = [[NSUserDefaults standardUserDefaults] boolForKey:kArticleJSManagerUseJSInBundleKey];
-            if (useJSInBundle) return NO;
-        } else {
-            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kArticleJSManagerUseJSInBundleKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
+#if INHOUSE
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:kArticleJSManagerUseJSInBundleKey]) {
+        BOOL useJSInBundle = [[NSUserDefaults standardUserDefaults] boolForKey:kArticleJSManagerUseJSInBundleKey];
+        if (useJSInBundle) return NO;
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kArticleJSManagerUseJSInBundleKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
+#endif
     
     /*
      * 条件1：已下载版本比打包版本大
@@ -249,6 +248,11 @@ static ArticleJSManager * shareManager;
 - (NSString *)packageFolderPath
 {
     return [kIOSAssetFolderName stringCachePath];
+}
+
+- (NSString *)articleV60HtmlPath
+{
+    return [NSString stringWithFormat:@"%@/%@", [kIOSAssetFolderName stringCachePath], kV60ArticleHtmlFileName];
 }
 
 // 验证已下载js文件的md5值

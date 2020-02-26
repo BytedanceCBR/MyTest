@@ -11,7 +11,7 @@
 #import "ExploreOrderedData+TTBusiness.h"
 #import "ExploreFetchListManager.h"
 #import "NSObject+FBKVOController.h"
-#import <extobjc.h>
+#import "extobjc.h"
 #import "TTAdShortVideoModel.h"
 #import "TTShortVideoModel+TTAdFactory.h"
 

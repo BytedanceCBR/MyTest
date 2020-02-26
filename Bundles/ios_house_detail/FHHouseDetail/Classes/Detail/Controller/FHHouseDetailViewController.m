@@ -16,7 +16,7 @@
 #import "UIViewController+Track.h"
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import <FHRNHelper.h>
+#import "FHRNHelper.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
@@ -28,6 +28,7 @@
 #import "TTNavigationController.h"
 #import <FHCommonUI/FHFeedbackView.h>
 #import <ios_house_im/FHIMConfigManager.h>
+#import <TTSettingsManager/TTSettingsManager.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -130,7 +131,7 @@
         }
         
         
-        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
+//        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
     }
     return self;
 }
@@ -216,9 +217,9 @@
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        if (!self.instantData) {
+//        if (!self.instantData) {
             [self startLoading];
-        }
+//        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
@@ -752,6 +753,15 @@
         tracerDic[@"click_position"] = @"cancel";
         [self addRealtorEvaluatePopupClickLog:tracerDic];
     }];
+    BOOL isForceEnableConfirm = NO;
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] != nil) {
+        NSInteger info = [[fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] integerValue];
+        if (info == 1) {
+            isForceEnableConfirm = YES;
+        }
+    }
+    feedbackView.isForceEnableConfirm = isForceEnableConfirm;
     [feedbackView showFrom:nil];
     [self addRealtorEvaluatePopupShowLog:tracerDic];
 }

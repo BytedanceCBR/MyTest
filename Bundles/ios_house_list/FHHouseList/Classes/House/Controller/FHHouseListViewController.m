@@ -6,12 +6,12 @@
 //
 
 #import "FHHouseListViewController.h"
-#import <TTRoute.h>
-#import <Masonry.h>
+#import "TTRoute.h"
+#import "Masonry.h"
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHFakeInputNavbar.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHTracerModel.h"
 #import "FHErrorMaskView.h"
@@ -28,7 +28,7 @@
 #import "FHCommuteManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHMainOldTopTagsView.h"
-#import <TTNavigationController.h>
+#import "TTNavigationController.h"
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
@@ -708,6 +708,17 @@
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        NSArray *tableCells = [self.tableView visibleCells];
+        if (tableCells) {
+            [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
+                        [obj performSelector:@selector(resumeVRIcon)];
+                    }
+            }];
+        }
+    }
 }
 
 #pragma mark - lazy load

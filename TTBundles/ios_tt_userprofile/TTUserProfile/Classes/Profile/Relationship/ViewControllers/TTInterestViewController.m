@@ -11,7 +11,7 @@
 #import "SSNavigationBar.h"
 
 #import "TTProfileThemeConstants.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTInterestNetwork.h"
 #import "TTInterestCell.h"
 #import "FriendDataManager.h"

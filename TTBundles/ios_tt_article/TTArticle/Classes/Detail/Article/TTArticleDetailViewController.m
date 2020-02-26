@@ -26,7 +26,7 @@
 #import "NewsDetailLogicManager.h"
 #import "NewsListLogicManager.h"
 #import "TTAuthorizeManager.h" //Account&Login系列
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 #import "FriendDataManager.h"
 #import <TTFriendRelation/TTBlockManager.h>
@@ -86,14 +86,14 @@
 #import "SSWebViewBackTipsButtonView.h"
 #import "ArticleTabBarStyleNewsListViewController.h"
 
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import "TTInteractExitHelper.h"
 //#import "TTRedPacketManager.h"
 #import "TTAuthorizeManager.h"
 
 #import "TTMemoryMonitor.h"
 #import "TTArticleDetailMemoryMonitor.h"
-#import <TTNetworkUtil.h>
+#import "TTNetworkUtil.h"
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
 
@@ -104,13 +104,12 @@
 #import "SSCommentInputHeader.h"
 #import "TTCommentViewControllerProtocol.h"
 #import "TTUGCTrackerHelper.h"
-#import <ExploreMomentDefine_Enums.h>
+#import "ExploreMomentDefine_Enums.h"
 #import "FHTraceEventUtils.h"
 #import <TTArticleBase/Log.h>
 
 //爱看
 #import "AKHelper.h"
-//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 
 #define CASE(str)                       if ([__s__ isEqualToString:(str)])

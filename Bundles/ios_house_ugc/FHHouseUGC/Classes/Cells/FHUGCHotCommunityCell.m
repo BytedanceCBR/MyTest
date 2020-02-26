@@ -9,7 +9,7 @@
 #import "FHUGCCellHeaderView.h"
 #import "FHBaseCollectionView.h"
 #import "FHUGCHotCommunitySubCell.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "FHUserTracker.h"
 #import "FHUGCHotCommunityLayout.h"
 #import "FHCommunityList.h"

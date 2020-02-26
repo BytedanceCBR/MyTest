@@ -38,12 +38,5 @@ TODO: Add long description of the pod here.
   s.resources = 'TTAdModule/Assets/Images.xcassets'
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'OpenGLES', 'GLkit'
-  s.dependency 'TTBaseLib'
-  s.dependency 'TTUIWidget'
-  s.dependency 'TTMonitor'
-  s.dependency 'JSONModel'
-  s.dependency 'TTImage'
-  s.dependency 'TTInstallService'
-  s.dependency 'MJRefresh'
   
 end

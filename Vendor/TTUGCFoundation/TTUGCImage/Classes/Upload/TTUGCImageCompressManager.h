@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTAssetModel.h>
+#import "TTAssetModel.h"
 #import <ios_house_im/FHUGCImageCompressManager.h>
 
 @interface TTUGCImageCompressTask : NSObject

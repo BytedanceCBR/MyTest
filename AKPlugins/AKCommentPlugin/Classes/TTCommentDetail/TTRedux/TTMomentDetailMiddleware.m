@@ -22,7 +22,7 @@
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
-#import <TTUGCAttributedLabel.h>
+#import "TTUGCAttributedLabel.h"
 #import <TTShare/TTShareManager.h>
 #import <TTShare/TTWechatTimelineContentItem.h>
 #import <TTShare/TTWechatContentItem.h>

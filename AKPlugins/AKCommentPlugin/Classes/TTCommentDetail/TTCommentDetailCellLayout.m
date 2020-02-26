@@ -8,7 +8,7 @@
 
 #import "TTCommentDetailCellLayout.h"
 #import "TTCommentUIHelper.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTBaseLib/TTLAbelTextHelper.h>
 #import <TTBaseLib/TTBusinessManager.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>

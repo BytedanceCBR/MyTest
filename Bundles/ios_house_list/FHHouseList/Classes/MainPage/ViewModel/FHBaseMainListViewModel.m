@@ -57,7 +57,7 @@
 #import "FHEnvContext.h"
 #import "FHMessageManager.h"
 #import "FHMainOldTopTagsView.h"
-#import <SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import "FHListBaseCell.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHHouseListRecommendTipCell.h"

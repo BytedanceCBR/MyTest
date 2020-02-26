@@ -7,7 +7,7 @@
 
 #import "FHCHandleAPNSTask.h"
 #import "ArticleAPNsManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 //#import "TTDetailContainerViewController.h"
 #import "SSAPNsAlertManager.h"
 //#import "SSADManager.h"
@@ -26,14 +26,14 @@
 #import <TTAppRuntime/NewsBaseDelegate.h>
 #import <TTService/TTDetailContainerViewController.h>
 #import <TTAppRuntime/TTBackgroundModeTask.h>
-#import <TTAdSplashMediator.h>
+#import "TTAdSplashMediator.h"
 #import <TTAppRuntime/SSUserSettingManager.h>
 //#import <TTAppRuntime/TTIntroduceViewTask.h>
 #import <TTAppRuntime/TTStartupTasksTracker.h>
 #import <TTAppRuntime/TTProjectLogicManager.h>
 #import "TTLaunchDefine.h"
-#import <HMDTTMonitor.h>
-#import <FHIntroduceManager.h>
+#import "HMDTTMonitor.h"
+#import "FHIntroduceManager.h"
 #import <FHHouseBase/FHEnvContext.h>
 
 DEC_TASK_N(FHCHandleAPNSTask,FHTaskTypeSerial,TASK_PRIORITY_HIGH+12);

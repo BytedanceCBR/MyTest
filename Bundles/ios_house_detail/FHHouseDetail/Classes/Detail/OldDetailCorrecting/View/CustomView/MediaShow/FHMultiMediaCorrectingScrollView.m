@@ -6,9 +6,9 @@
 //
 
 #import "FHMultiMediaCorrectingScrollView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHMultiMediaImageCell.h"
 #import "FHMultiMediaVideoCell.h"
@@ -452,6 +452,11 @@
             self.lastCell = currentCell;
         }
     }
+}
+
+- (void)setBaseViewModel:(FHHouseDetailBaseViewModel *)baseViewModel {
+    _baseViewModel = baseViewModel;
+    self.titleView.baseViewModel = baseViewModel;
 }
 
 - (void)updateModel:(FHMultiMediaModel *)model withTitleModel:(FHDetailHouseTitleModel *)titleModel{

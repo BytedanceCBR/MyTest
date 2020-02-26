@@ -7,7 +7,7 @@
 //
 
 #import "TTFriendModel.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <objc/runtime.h>
 
 

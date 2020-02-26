@@ -50,6 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateThirdPartHouseSourceStr:(NSString *)sourceStr;
 
+- (void)resumeVRIcon;
+
 @end
 
 NS_ASSUME_NONNULL_END

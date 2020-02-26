@@ -6,18 +6,18 @@
 //
 
 #import "FHMineHeaderView.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import <Masonry/Masonry.h>
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUtils.h"
 #import "UIButton+TTAdditions.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
-#import <TTRoute.h>
-#import <FHEnvContext.h>
+#import "TTRoute.h"
+#import "FHEnvContext.h"
 #import "TTAccountManager.h"
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 
 @interface FHMineHeaderView ()
 

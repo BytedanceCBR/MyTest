@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TTCategory.h"
 #import "TTCategoryDefine.h"
+#import <TTBaseLib/TTThreadSafeArray.h>
 
 #define kAritlceCategoryGotFinishedNotification @"kAritlceCategoryGotFinishedNotification"
 #define kArticleCategoryHasChangeNotification   @"kArticleCategoryHasChangeNotification"
@@ -27,41 +28,45 @@ typedef BOOL(^TTArticleCategoryManagerIARBlock)(void);
 typedef NSString *(^TTArticleCategoryManagerSysLocationBlock)(void);
 typedef NSString *(^TTArticleCategoryManagerCityBlock)(void);
 
+typedef NS_ENUM(NSInteger, TTArticleCategoryGuideStyle) {
+    TTArticleCategoryGuideStyleNone = 0,
+    TTArticleCategoryGuideStyleLargeToSmall,// 大图 - 小图
+    TTArticleCategoryGuideStyleLargeToText,// 大图 - 文字
+    TTArticleCategoryGuideStyleSmallToSmall,// 小图 - 小图
+    TTArticleCategoryGuideStyleSmallToText,// 小图 - 文字
+};
+
 @interface TTArticleCategoryManager : NSObject
 
 /**
  *  数据库中所有有效频道, 不包括已删除和不支持的类型
  *  左侧固定频道 + 订阅频道 + 未订阅频道
  */
-@property(nonatomic, readonly)NSMutableArray *allCategories;
+@property(nonatomic, readonly)TTThreadSafeArray *allCategories;
 
+//v4接口去掉推荐左侧固定频道字段。只有订阅和未订阅
 /**
- *  推荐频道左边的固定频道
+ *  已订阅的有效频道
  */
-@property(nonatomic, strong, readonly)NSMutableArray *preFixedCategories;
-
-/**
- *  已订阅的有效频道（不包含左侧固定的频道）
- */
-@property(nonatomic, readonly)NSMutableArray *subScribedCategories;
+@property(nonatomic, readonly)TTThreadSafeArray *subScribedCategories;
 /**
  *  4.3新增，为entry频道， 目前只有一个订阅号
  */
 @property(nonatomic, readonly)NSMutableArray *subscribeEntryCategories;
 /**
- *  所有有效的文章频道,包括订阅和未订阅的以及左侧固定的频道
+ *  所有有效的文章频道,包括订阅和未订阅的
  */
 @property(nonatomic, readonly)NSMutableArray *articleCategories;
 /**
- *  所有有效的段子频道,包括订阅和未订阅的以及左侧固定的频道
+ *  所有有效的段子频道,包括订阅和未订阅的
  */
 @property(nonatomic, readonly)NSMutableArray *essayCatgegories;
 /**
- *  所有有效的图片频道,包括订阅和未订阅的以及左侧固定的频道
+ *  所有有效的图片频道,包括订阅和未订阅的
  */
 @property(nonatomic, readonly)NSMutableArray *imageCategories;
 /**
- *  所有有效的web频道,包括订阅和未订阅的以及左侧固定的频道
+ *  所有有效的web频道,包括订阅和未订阅的
  */
 @property(nonatomic, readonly)NSMutableArray *webCategories;
 /**
@@ -72,11 +77,10 @@ typedef NSString *(^TTArticleCategoryManagerCityBlock)(void);
  *  最近一次添加的频道的model， 可能返回nil
  */
 @property(nonatomic, strong)TTCategory *lastAddedCategory;
-
 /**
- *  请求频道回调
+ *  图片化样式的组合
  */
-@property(nonatomic, copy) void (^completionRequest)(BOOL isSuccess);
+@property(nonatomic, assign, readonly) TTArticleCategoryGuideStyle guideStyle;
 
 /**
  *  频道管理的单例
@@ -102,7 +106,6 @@ typedef NSString *(^TTArticleCategoryManagerCityBlock)(void);
  */
 - (void)startGetCategory;
 - (void)startGetCategory:(BOOL)userChanged;
-- (void)startGetCategoryWithCompleticon:(void(^)(BOOL isSuccess))completion;
 
 /**
  *  更新推荐频道
@@ -129,8 +132,8 @@ typedef NSString *(^TTArticleCategoryManagerCityBlock)(void);
  */
 - (void)unSubscribe:(TTCategory *)category;
 
-//增加左侧固定频道
-- (void)insertCategoryToPreFixed:(TTCategory *)category toOrderIndex:(NSInteger)toOrderIndex;
+////增加左侧固定频道
+//- (void)insertCategoryToPreFixed:(TTCategory *)category toOrderIndex:(NSInteger)toOrderIndex;
 
 /**
  *  调整频道次序
@@ -180,11 +183,6 @@ typedef NSString *(^TTArticleCategoryManagerCityBlock)(void);
 - (void)saveWithNotify:(BOOL)notify;
 
 /**
- *  左侧固定频道以及订阅频道
- */
-- (NSArray *)preFixedAndSubscribeCategories;
-
-/**
  *  未订阅列表
  *
  *  @return 未订阅列表
@@ -227,6 +225,27 @@ typedef NSString *(^TTArticleCategoryManagerCityBlock)(void);
 - (void)setIARBlock:(TTArticleCategoryManagerIARBlock)block;
 - (void)setCityBlock:(TTArticleCategoryManagerCityBlock)block;
 
+//GR二期
+/**
+ *  返回mainArticleCategory在订阅频道数组的位置。如果没找到，返回NSNotFind
+ */
+- (NSInteger)indexOfMainArticleCategoryInSubScribedCategories;
+
+/**
+ *  返回category在订阅频道数组的位置。如果没找到，返回NSNotFind
+ */
+- (NSInteger)indexOfCategoryInSubScribedCategories:(NSString *)categoryID;
+
+/**
+ *  将频道插入到订阅频道数组里
+ */
+- (void)insertCategoryToSubScribedCategories:(TTCategory *)category toOrderIndex:(NSInteger)toOrderIndex;
+
+/**
+ *  频道是否在主频道前面。主频道肯定在订阅频道里
+ */
+- (BOOL)isCategoryInFrontOfMainArticleCategoryInSubScribedCategories:(NSString *)categoryID;
+
 @end
 
 ////////////////////////////////////////////////////////////////////////
@@ -242,5 +261,25 @@ typedef NSString *(^TTArticleCategoryManagerCityBlock)(void);
  *  数据库为空时使用默认数据
  */
 + (void)insertDefaultDataIfNeeded;
+
+@end
+
+////////////////////////////////////////////////////////////////////////
+
+@interface TTArticleCategoryManager(CategoryConfig)
+/**
+ *  控制启动后默认进入的频道
+ */
++ (NSString *)startCategoryID;
+
+/**
+ *  是否处在特殊策略状态下,默认是0。0-不在特殊策略，1-在特殊策略
+ */
++ (NSInteger)isInSepecialStrategy;
+
+/**
+ *  控制启动默认频道设置类型,默认是0
+ */
++ (NSInteger)firstCategoryStyle;
 
 @end

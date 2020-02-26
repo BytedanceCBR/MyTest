@@ -9,7 +9,7 @@
 #import <TTPlatformBaseLib/TTProfileFillManager.h>
 #import <TTNetworkManager/TTNetworkUtil.h>
 #import <FHCommonUI/TTUGCEmojiParser.h>
-#import <TTUGCAttributedLabel.h>
+#import "TTUGCAttributedLabel.h"
 #import <TTPlatformUIModel/TTGroupModel.h>
 #import <TTUGCFoundation/TTUGCTextViewMediator.h>
 //#import <TTUGCFoundation/TTUGCDefine.h>
@@ -20,7 +20,7 @@
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTEntry/SSPGCActionManager.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTCommentDataManager.h"
 #import "TTCommentDefines.h"
 #import "TTCommentWriteView.h"

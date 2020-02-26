@@ -31,9 +31,9 @@
 #import "ExploreDetailNavigationBar.h"
 #import "ExploreSearchViewController.h"
 #import "ExploreMomentDefine_Enums.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "UIImage+TTThemeExtension.h"
 #import "SSCommentInputHeader.h"
 #import "TTCommentWriteManager.h"
@@ -194,7 +194,10 @@
     _mainScrollView = [[UIScrollView alloc] init];
     [self.view addSubview:_mainScrollView];
     CGFloat navOffset = 65;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0 , *)) {
+        _mainScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        navOffset = 44.f +  [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0 , *)) {
         _mainScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         navOffset = 44.f + self.view.tt_safeAreaInsets.top;
     } else {

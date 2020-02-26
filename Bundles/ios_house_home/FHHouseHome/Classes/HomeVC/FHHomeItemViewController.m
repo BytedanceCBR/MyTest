@@ -6,19 +6,19 @@
 //
 
 #import "FHHomeItemViewController.h"
-#import <FHRefreshCustomFooter.h>
-#import <TTBaseMacro.h>
-#import <FHEnvContext.h>
-#import <ToastManager.h>
-#import <UIScrollView+Refresh.h>
-#import <TTHttpTask.h>
+#import "FHRefreshCustomFooter.h"
+#import "TTBaseMacro.h"
+#import "FHEnvContext.h"
+#import "ToastManager.h"
+#import "UIScrollView+Refresh.h"
+#import "TTHttpTask.h"
 #import "FHHomeRequestAPI.h"
-#import <FHHomePlaceHolderCell.h>
+#import "FHHomePlaceHolderCell.h"
 #import "FHhomeHouseTypeBannerCell.h"
 #import "TTDeviceHelper.h"
-#import <FHHouseBaseItemCell.h>
-#import <FHHomeCellHelper.h>
-#import <FHPlaceHolderCell.h>
+#import "FHHouseBaseItemCell.h"
+#import "FHHomeCellHelper.h"
+#import "FHPlaceHolderCell.h"
 #import "FHHomeListViewModel.h"
 #import "TTSandBoxHelper.h"
 #import <FHHomeSearchPanelViewModel.h>
@@ -26,10 +26,10 @@
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
-#import <FHHouseBaseNewHouseCell.h>
-#import <FHPlaceHolderCell.h>
-#import <UIColor+Theme.h>
-#import <FHHomeMainViewModel.h>
+#import "FHHouseBaseNewHouseCell.h"
+#import "FHPlaceHolderCell.h"
+#import "UIColor+Theme.h"
+#import "FHHomeMainViewModel.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -125,6 +125,23 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterCategoryWithEnterType:) name:@"FHHomeItemVCEnterCategory" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stayCategoryWithEnterType:) name:@"FHHomeItemVCStayCategory" object:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+#pragma mark  埋点
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+      
+    }
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        [self resumeVRIcon];
+    }
 }
 
 - (void)removeNotifications
@@ -190,6 +207,21 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if (self.traceEnterCategoryCache.allKeys.count > 0 && self.isOriginShowSelf) {
             [self.traceEnterCategoryCache setValue:@"click" forKey:@"enter_type"];
             [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
+        }
+    }
+    
+    [self resumeVRIcon];
+}
+
+- (void)resumeVRIcon{
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        NSArray *tableCells = [self.tableView visibleCells];
+        if (tableCells) {
+            [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
+                    [obj performSelector:@selector(resumeVRIcon)];
+                }
+            }];
         }
     }
 }
@@ -580,7 +612,10 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // 滚动时发出通知
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
+    if (self.scrollDidScrollCallBack) {
+        self.scrollDidScrollCallBack(scrollView);
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate

@@ -25,12 +25,12 @@
 #import "HTSVideoPageParamHeader.h"
 #import "FHUGCSmallVideoCell.h"
 #import "AWEVideoConstants.h"
-#import <TTURLUtils.h>
+#import "TTURLUtils.h"
 #import "FHUGCVideoCell.h"
-#import <TTVFeedPlayMovie.h>
-#import <TTVPlayVideo.h>
-#import <TTVFeedCellWillDisplayContext.h>
-#import <TTVFeedCellAction.h>
+#import "TTVFeedPlayMovie.h"
+#import "TTVPlayVideo.h"
+#import "TTVFeedCellWillDisplayContext.h"
+#import "TTVFeedCellAction.h"
 #import "FHFeedListModel.h"
 #import "ToastManager.h"
 #import "TTAccountManager.h"

@@ -7,7 +7,7 @@
 //
 
 #import "TTWeixinSDKRegister.h"
-#import <TTShareApiConfig.h>
+#import "TTShareApiConfig.h"
 #import "NewsBaseDelegate.h"
 //#import "TTDingTalkSDKRegister.h"
 #import "TTWeChatShare.h"

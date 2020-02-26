@@ -6,12 +6,17 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "FHNeighborhoodDetailSubMessageCell.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHDetailHouseTitleModel : NSObject
-@property (nonatomic, copy)     NSString       *titleStr;
-@property (nonatomic, strong)   NSArray       *tags;// FHHouseTagsModel item类型
+@interface FHDetailHouseTitleModel : FHDetailBaseModel
+@property (nonatomic, copy) NSString *titleStr;
+@property (nonatomic, strong) NSArray *tags;// FHHouseTagsModel item类型
+@property (nonatomic, copy) NSString *address;
+@property (nonatomic, copy) void(^mapImageClick)(void);
+@property (nonatomic, assign) BOOL showMapBtn;
+@property (nonatomic, strong) FHDetailNeighborhoodSubMessageModel *neighborhoodInfoModel;
+@property (nonatomic, assign) FHHouseType housetype;
 @end
 
 NS_ASSUME_NONNULL_END

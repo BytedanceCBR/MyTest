@@ -279,7 +279,7 @@ static NSInteger const kMaxPostImageCount = 9;
     param[@"f_city_id"] = [FHEnvContext getCurrentSelectCityIdFromLocal];
 
     @weakify(self);
-    [FHHouseUGCAPI requestPublishHotTagsWithParam:param completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestPublishHotTagsWithParam:param class:FHUGCPublishTagModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         @strongify(self);
         
         if([model isKindOfClass:[FHUGCPublishTagModel class]]) {

@@ -7,7 +7,7 @@
 //
 
 #import "TTFollowManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTModuleBridge.h"
 #import "ExploreEntryManager.h"
 #import "TTURLDomainHelper.h"

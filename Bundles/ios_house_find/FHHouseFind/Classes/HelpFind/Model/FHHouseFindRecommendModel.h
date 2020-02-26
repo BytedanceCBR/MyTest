@@ -5,7 +5,7 @@
 //  Created by 张静 on 2019/4/1.
 //
 
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import <FHHouseBase/FHBaseModelProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN

@@ -19,7 +19,7 @@
 #import "TTStringHelper.h"
 #import "UIButton+TTAdditions.h"
 #import "TTRoute.h"
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 
 #import <TTUserSettings/TTUserSettingsManager+FontSettings.h>
 #import "UIViewController+Refresh_ErrorHandler.h"

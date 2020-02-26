@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailFoldViewButton.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -77,10 +77,10 @@
     _isFold = isFold;
     if (isFold) {
         _keyLabel.text = self.downText;
-        _iconView.image = _foldImage;
+        _iconView.image = _openImage;
     } else {
         _keyLabel.text = self.upText;
-        _iconView.image = _openImage;
+        _iconView.image = _foldImage;
     }
 }
 

@@ -6,7 +6,7 @@
 //
 
 #import "FHHomePlaceHolderCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import <FHHouseBase/FHCommonDefines.h>
 #import <TTBaseLib/UIViewAdditions.h>

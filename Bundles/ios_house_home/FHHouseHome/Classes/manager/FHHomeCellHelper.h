@@ -10,7 +10,7 @@
 #import "FHHomeTableViewDelegate.h"
 #import "FHHomeConfigManager.h"
 #import "FHHomeScrollBannerCell.h"
-#import <FHHouseType.h>
+#import "FHHouseType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

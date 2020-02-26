@@ -8,7 +8,7 @@
 #import "TTUGCBDGIFLoadManager.h"
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTImage/TTWebImageManager.h>
-#import <TTMonitor.h>
+#import "TTMonitor.h"
 #import <TTBaseLib/TTBaseMacro.h>
 
 #import "FRImageInfoModel.h"

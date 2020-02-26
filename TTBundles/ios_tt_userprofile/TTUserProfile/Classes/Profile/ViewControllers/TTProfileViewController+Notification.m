@@ -11,7 +11,7 @@
 #import "TTNavigationController.h"
 #import "TTProfileFunctionCell.h"
 
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTThirdPartyAccountsHeader.h"
 #import "ArticleBadgeManager.h"
 #import "TTSettingMineTabGroup.h"

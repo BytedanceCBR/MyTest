@@ -8,7 +8,7 @@
 #import "TTUGCImageView.h"
 #import <objc/runtime.h>
 #import <TTBaseLib/UIImageAdditions.h>
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+TTThemeExtension.h"
 #import <TTImage/TTWebImageManager.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTUserSettings/TTUserSettingsManager+NetworkTraffic.h>
@@ -17,10 +17,10 @@
 #import "TTUGCBDGIFLoadManager.h"
 #import "NSData+ImageContentType.h"
 #import "TTMonitor.h"
-#import <TTThemeManager.h>
+#import "TTThemeManager.h"
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <NetworkUtilities.h>
+#import "NetworkUtilities.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 
 #import "TTUGCImageMonitor.h"

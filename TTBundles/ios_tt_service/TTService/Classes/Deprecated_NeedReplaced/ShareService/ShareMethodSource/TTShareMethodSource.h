@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTShareAdapterSetting.h>
+#import "TTShareAdapterSetting.h"
 
 @interface TTShareMethodSource : NSObject <TTShareAppMethodSource>
 

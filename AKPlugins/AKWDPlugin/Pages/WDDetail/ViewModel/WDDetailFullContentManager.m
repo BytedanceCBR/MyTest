@@ -12,7 +12,7 @@
 #import "WDCommonURLSetting.h"
 #import "WDSettingHelper.h"
 
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "TTBaseMacro.h"
 #import "NSDictionary+TTAdditions.h"
 

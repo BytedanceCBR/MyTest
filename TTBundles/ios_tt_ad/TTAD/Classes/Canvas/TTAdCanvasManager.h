@@ -12,7 +12,7 @@
 #import "TTAdSingletonManager.h"
 //#import "TTRNView.h"
 #import <Foundation/Foundation.h>
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

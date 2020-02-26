@@ -1,5 +1,5 @@
 //GENERATED CODE , DON'T EDIT
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import "FHUGCVoteInfoModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
@@ -9,6 +9,14 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
     FHFeedContentStickStyleGood = 2,            //加精
     FHFeedContentStickStyleTopAndGood = 3,    //置顶和加精
 };
+
+@interface FHFeedContentCellCtrlsModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *cellFlag;
+@property (nonatomic, copy , nullable) NSString *cellHeight;
+@property (nonatomic, copy , nullable) NSString *cellLayoutStyle;
+@property (nonatomic, copy , nullable) NSString *needClientImprRecycle;
+@end
 
 @protocol FHFeedContentRawDataHotCellListModel<NSObject>
 @end
@@ -664,6 +672,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 
 @interface FHFeedContentModel : JSONModel 
 
+@property (nonatomic, strong , nullable) FHFeedContentCellCtrlsModel *cellCtrls ;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *contentDecoration;
 @property (nonatomic, copy , nullable) NSString *mediaName;

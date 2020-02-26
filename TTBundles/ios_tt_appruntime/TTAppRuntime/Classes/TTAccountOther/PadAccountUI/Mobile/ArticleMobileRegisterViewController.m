@@ -7,9 +7,9 @@
 //
 
 #import "ArticleMobileRegisterViewController.h"
-#import <TTThemedAlertController.h>
-#import <TTDeviceHelper.h>
-#import <TTAccountBusiness.h>
+#import "TTThemedAlertController.h"
+#import "TTDeviceHelper.h"
+#import "TTAccountBusiness.h"
 
 #import "ArticleMobileLoginViewController.h"
 #import "ArticleMobileSettingViewController.h"

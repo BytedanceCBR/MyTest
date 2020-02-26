@@ -40,9 +40,9 @@
 #import "TTRichSpanText+Emoji.h"
 #import "TTUGCEmojiParser.h"
 #import <TTRoute/TTRoute.h>
-#import <TSVDebugInfoView.h>
-#import <TSVDebugInfoConfig.h>
-#import <HTSVideoSwitch.h>
+#import "TSVDebugInfoView.h"
+#import "TSVDebugInfoConfig.h"
+#import "HTSVideoSwitch.h"
 #import "HuoShan.h"
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTThemed/TTThemeManager.h>

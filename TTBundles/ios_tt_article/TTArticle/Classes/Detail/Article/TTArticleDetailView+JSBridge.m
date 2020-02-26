@@ -7,7 +7,7 @@
 //
 
 #import "TTArticleDetailView+JSBridge.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "FriendDataManager.h"
 
 #import <TTBaseLib/TTUIResponderHelper.h>

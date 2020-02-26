@@ -10,15 +10,15 @@
 #import "FHMessageNotificationBaseCell.h"
 #import "FHMessageNotificationManager.h"
 
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "UIScrollView+Refresh.h"
 #import "FHMessageNotificationCellHelper.h"
 #import "FHMessageNotificationTipsManager.h"
-#import <WDNetWorkPluginManager.h>
+#import "WDNetWorkPluginManager.h"
 #import "FHMessageListViewModel.h"
 #import "FHRefreshCustomFooter.h"
 #import "UIViewController+Track.h"
-#import <WDApiModel.h>
+#import "WDApiModel.h"
 #import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHMessageListController ()<TTUIViewControllerTrackProtocol>
@@ -97,7 +97,9 @@
 
 - (void)initConstraints {
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0, *)) {
+        if (@available(iOS 13.0, *)) {
+            make.top.mas_equalTo(self.view).offset(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+        } else if (@available(iOS 11.0, *)) {
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
         } else {
             make.top.mas_equalTo(64);

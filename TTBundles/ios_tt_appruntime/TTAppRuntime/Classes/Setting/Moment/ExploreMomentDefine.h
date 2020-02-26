@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "SSTTTAttributedLabel.h"
-#import <ExploreMomentDefine_Enums.h>
+#import "ExploreMomentDefine_Enums.h"
 static NSString *const ArticleMomentDetailViewAddMomentNoti = @"ArticleMomentDetailViewAddMomentNoti";
 // 文章详情页右上角「…」
 static NSString * const kPGCProfileEnterSourceArticleMore = @"article_more";

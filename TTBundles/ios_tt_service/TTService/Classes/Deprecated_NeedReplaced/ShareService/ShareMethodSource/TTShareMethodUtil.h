@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "DetailActionRequestManager.h"
-#import <TTShareActivity.h>
+#import "TTShareActivity.h"
 #import "TTIndicatorView.h"
 
 @class Article;

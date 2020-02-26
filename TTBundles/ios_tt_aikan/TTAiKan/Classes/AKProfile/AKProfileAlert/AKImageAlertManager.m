@@ -9,9 +9,9 @@
 #import "AKImageAlertManager.h"
 #import "AKTaskSettingHelper.h"
 #import "TTInterfaceTipManager.h"
-#import <TTRoute.h>
-#import <TTNetworkManager.h>
-#import <BDWebImageManager.h>
+#import "TTRoute.h"
+#import "TTNetworkManager.h"
+#import "BDWebImageManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
 

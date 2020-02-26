@@ -8,7 +8,7 @@
 #import "AKProfileBenefitModel.h"
 #import "AKProfileBenefitReddotView.h"
 #import "AKProfileHeaderBeneficialButton.h"
-#import <UIColor+TTThemeExtension.h>
+#import "UIColor+TTThemeExtension.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/TTBaseMacro.h>

@@ -9,7 +9,7 @@
 #define FHBaseMainListViewModel_Internal_h
 
 #import <TTNetworkManager/TTHttpTask.h>
-#import <FHConditionFilterViewModel.h>
+#import "FHConditionFilterViewModel.h"
 #import <FHHouseBase/FHSearchFilterOpenUrlModel.h>
 #import <FHHouseBase/FHHouseFilterBridge.h>
 #import <FHHouseBase/FHUserTracker.h>

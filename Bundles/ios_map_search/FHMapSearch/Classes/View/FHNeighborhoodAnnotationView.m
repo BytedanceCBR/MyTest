@@ -8,7 +8,7 @@
 #import "FHNeighborhoodAnnotationView.h"
 #import "UIColor+Theme.h"
 #import "FHHouseAnnotation.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 
 
 @interface FHNeighborhoodAnnotationView ()

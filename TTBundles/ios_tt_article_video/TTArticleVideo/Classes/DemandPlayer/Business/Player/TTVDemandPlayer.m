@@ -24,7 +24,7 @@
 #import "TTVPasterADViewController.h"
 #import "TTVVideoPlayerViewShareCointainerView.h"
 #import <TTSettingsManager/TTSettingsManager.h>
-#import <Lottie/Lottie.h>
+#import <lottie-ios/Lottie/Lottie.h>
 #import "TTVCommodityButtonView.h"
 #import "TTVVideoPlayerModel.h"
 #import "TTVADGuideCountdownViewProtocol.h"
