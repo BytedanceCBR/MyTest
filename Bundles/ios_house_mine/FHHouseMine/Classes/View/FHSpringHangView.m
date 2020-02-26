@@ -148,7 +148,8 @@
     [self addPandentClickLog];
     FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
     if(model && model.openUrl.length > 0){
-        NSURL* url = [NSURL URLWithString:model.openUrl];
+//        NSURL* url = [NSURL URLWithString:model.openUrl];
+        NSURL *url = [NSURL URLWithString:@"sslocal://forum_topic"];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     }
 }
