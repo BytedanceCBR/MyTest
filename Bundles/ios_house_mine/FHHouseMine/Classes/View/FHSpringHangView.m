@@ -149,7 +149,9 @@
     FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
     if(model && model.openUrl.length > 0){
 //        NSURL* url = [NSURL URLWithString:model.openUrl];
-        NSURL *url = [NSURL URLWithString:@"sslocal://forum_topic"];
+        
+        NSString *str = [NSString stringWithFormat:@"sslocal://forum_topic?forum_id=1658680870945822&origin_from=%@&enter_from=%@",_pageType,_pageType];
+        NSURL *url = [NSURL URLWithString:str];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     }
 }

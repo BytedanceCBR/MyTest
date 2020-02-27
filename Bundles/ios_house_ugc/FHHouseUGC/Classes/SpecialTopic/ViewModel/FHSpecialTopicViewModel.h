@@ -14,7 +14,6 @@
 
 
 @interface FHSpecialTopicViewModel : FHCommunityFeedListBaseViewModel <UIScrollViewDelegate>
-@property (nonatomic , strong) NSMutableDictionary *tracerDict;
 @property (nonatomic, weak)     UIButton       *shareButton;
 @property (nonatomic, strong)   FHUGCShareInfoModel *shareInfo;// 分享信息，服务端返回
 @property (nonatomic, copy)     NSDictionary       *shareTracerDict;// 分享埋点数据

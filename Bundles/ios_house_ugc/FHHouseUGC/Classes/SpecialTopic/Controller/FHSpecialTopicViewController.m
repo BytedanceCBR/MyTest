@@ -37,6 +37,10 @@
         self.tabName = paramObj.allParams[@"tab_name"];
         // 取链接中的埋点数据
         NSDictionary *params = paramObj.allParams;
+        NSString *origin_from = params[@"origin_from"];
+        if (origin_from.length > 0) {
+            self.tracerDict[@"origin_from"] = origin_from;
+        }
         NSString *enter_from = params[@"enter_from"];
         if (enter_from.length > 0) {
             self.tracerDict[@"enter_from"] = enter_from;
@@ -49,10 +53,7 @@
         if (element_from.length > 0) {
             self.tracerDict[@"element_from"] = element_from;
         }
-        NSString *group_id = params[@"group_id"];
-        if (group_id.length > 0) {
-            self.tracerDict[@"group_id"] = group_id;
-        }
+
         self.tracerDict[@"page_type"] = [self pageType];
         
         NSString *log_pb_str = params[@"log_pb"];
@@ -85,9 +86,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
-    self.forumId = @"1658680870945822";
-    
+
     [self initNavBar];
     [self initView];
     [self initConstrains];
@@ -107,8 +106,8 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear];
-    [self.viewModel addStayPageLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
+//    [self.viewModel addStayPageLog:self.ttTrackStayTime];
+//    [self tt_resetStayTime];
 }
 
 - (void)initNavBar {
@@ -142,7 +141,7 @@
 }
 
 - (void)initHeaderView {
-    CGFloat height = [UIScreen mainScreen].bounds.size.width - CGRectGetMaxY(self.customNavBarView.frame);
+    CGFloat height = (NSInteger)([UIScreen mainScreen].bounds.size.width * 0.8) - CGRectGetMaxY(self.customNavBarView.frame);
     self.headerView = [[FHSpecialTopicHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
 }
 
@@ -245,7 +244,6 @@
     self.viewModel = [[FHSpecialTopicViewModel alloc] initWithTableView:self.tableView controller:self];
     self.viewModel.shareButton = self.shareButton;
     [self.viewModel addGoDetailLog];
-    [self.viewModel addPublicationsShowLog];
     [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
     [self.viewModel requestData:NO refreshFeed:YES showEmptyIfFailed:YES showToast:NO];
 }
@@ -271,7 +269,7 @@
 }
 
 - (NSString *)pageType {
-    return @"community_group_detail";
+    return @"special_subject";
 }
 
 @end

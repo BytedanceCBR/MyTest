@@ -66,6 +66,7 @@
 #import "TTVFeedCellAction.h"
 #import "FHSpecialTopicContentModel.h"
 #import "FHSpecialTopicSectionHeaderView.h"
+#import "JSONAdditions.h"
 
 #define kSegmentViewHeight 52
 #define sectionHeaderViewHeight 37
@@ -277,8 +278,8 @@
 
 - (void)gotoLogin:(FHUGCLoginFrom)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setObject:@"community_group_detail" forKey:@"enter_from"];
-    [params setObject:@"feed_like" forKey:@"enter_type"];
+    [params setObject:[self pageType] forKey:@"enter_from"];
+    [params setObject:@"click" forKey:@"enter_type"];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
@@ -326,12 +327,12 @@
     // 跳转发布器
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_type"] = @"feed_publisher";
-    tracerDict[@"page_type"] = @"community_group_detail";
+    tracerDict[@"page_type"] = [self pageType];
     [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
     
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"page_type"] = @"feed_publisher";
-    traceParam[@"enter_from"] = @"community_group_detail";
+    traceParam[@"enter_from"] = [self pageType];
     
     NSMutableDictionary *dic = [NSMutableDictionary new];
 //    dic[@"select_group_id"] = self.data.socialGroupId;
@@ -467,14 +468,11 @@
 
 - (void)addGoDetailLog {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
-    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
-    params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
-    params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
-    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
-    [FHUserTracker writeEvent:@"go_detail_community" params:params];
+    params[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = self.viewController.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"subject_id"] = self.viewController.forumId;
+    [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 
 - (void)addStayPageLog:(NSTimeInterval)stayTime {
@@ -483,51 +481,32 @@
         return;
     }
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
-    params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
-    params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
-    params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
-    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
+    params[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = self.viewController.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"subject_id"] = self.viewController.forumId;
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    [FHUserTracker writeEvent:@"stay_page_community" params:params];
+    [FHUserTracker writeEvent:@"stay_page" params:params];
 }
 
-- (void)addPublicationsShowLog {
+- (void)addClickOptionLog:(NSString *)position {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"element_type"] = @"community_group_notice";
-    params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
-    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
-    [FHUserTracker writeEvent:@"element_show" params:params];
-}
-
-- (void)addPublisherPopupShowLog {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"page_type"] = @"community_publisher_popup";
-    params[@"enter_from"] = @"community_group_detail";
-    [FHUserTracker writeEvent:@"community_publisher_popup_show" params:params];
-}
-
-- (void)addPublisherPopupClickLog:(BOOL)positive {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"page_type"] = @"community_publisher_popup";
-    params[@"enter_from"] = @"community_group_detail";
-    params[@"click_position"] = positive ? @"confirm" : @"cancel";
-    [FHUserTracker writeEvent:@"community_publisher_popup_click" params:params];
-}
-
-- (void)addClickOptionsLog:(NSString *)position {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"group_id"] = self.tracerDict[@"group_id"] ?: @"be_null";
-    params[@"element_from"] = self.tracerDict[@"element_from"] ?: @"be_null";
-    params[@"enter_type"] =  @"click";
+    params[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = self.viewController.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"subject_id"] = self.viewController.forumId;
     params[@"click_position"] = position;
-    [FHUserTracker writeEvent:@"click_options" params:params];
+    [FHUserTracker writeEvent:@"click_option" params:params];
+}
+
+- (void)addClickTabLog:(NSString *)tabName {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = self.viewController.tracerDict[@"page_type"] ?: @"be_null";
+    params[@"subject_id"] = self.viewController.forumId;
+    params[@"tab_name"] = tabName;
+    [FHUserTracker writeEvent:@"click_tab" params:params];
 }
 
 #pragma mark - segmentView 代理
@@ -540,18 +519,17 @@
     self.selectedIndex = toIndex;
 
     if(self.isFirstEnter) {
-//        [self.pagingView scrollToIndex:toIndex withAnimation:NO];
         self.isFirstEnter = NO;
     } else {
         //上报埋点
-//        NSString *position = @"be_null";
-//        if(toIndex < self.socialGroupModel.data.tabInfo.count){
-//            FHUGCScialGroupDataTabInfoModel *tabModel = self.socialGroupModel.data.tabInfo[toIndex];
-//            if(tabModel.tabName){
-//                position = [NSString stringWithFormat:@"%@_list",tabModel.tabName];
-//            }
-//        }
-//        [self addClickOptionsLog:position];
+        NSString *tabName = @"be_null";
+        if(toIndex < self.tabContentModel.count){
+            FHFeedContentModel *tabModel = self.tabContentModel[toIndex];
+            if(tabModel.rawData.cardHeader.title){
+                tabName = tabModel.rawData.cardHeader.title;
+            }
+        }
+        [self addClickTabLog:tabName];
         if(toIndex < self.sectionHeightList.count){
             CGFloat height = [self.sectionHeightList[toIndex] integerValue];
             CGFloat offsetY = (NSInteger)self.tableView.contentOffset.y;
@@ -929,6 +907,7 @@
             WeakSelf;
             headerView.gotoPublishBlock = ^{
                 StrongSelf;
+                [self addClickOptionLog:@"publish_idea"];
                 [self gotoPostThreadVC];
             };
         }else{
@@ -954,7 +933,10 @@
         }else{
             BOOL canOpenURL = NO;
             if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
-                NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
+                NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+                reportParams[@"enter_from"] = [self pageType];
+                NSString *urlStr = [NSString stringWithFormat:@"%@&report_params=%@",cellModel.openUrl,[reportParams tt_JSONRepresentation] ];
+                NSURL *url = [TTStringHelper URLWithURLString:urlStr];
                 if ([[UIApplication sharedApplication] canOpenURL:url]) {
                     canOpenURL = YES;
                     [[UIApplication sharedApplication] openURL:url];
@@ -975,7 +957,7 @@
         // 评论
         NSMutableDictionary *dict = [NSMutableDictionary new];
         NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = @"community_group_detail";
+        traceParam[@"enter_from"] = [self pageType];
         traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
         traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
         traceParam[@"log_pb"] = cellModel.logPb;
@@ -1041,7 +1023,7 @@
         dict[@"data"] = cellModel;
         dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
         NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = @"community_group_detail";
+        traceParam[@"enter_from"] = [self pageType];
         traceParam[@"enter_type"] = enterType;
         traceParam[@"rank"] = cellModel.tracerDic[@"rank"] ?: @"be_null";
         traceParam[@"log_pb"] = cellModel.logPb;
@@ -1057,7 +1039,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = @"community_group_detail";
+    traceParam[@"enter_from"] = [self pageType];
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
@@ -1285,25 +1267,29 @@
 #pragma mark - 埋点
 
 - (void)traceClientShowAtIndexPath:(NSIndexPath*)indexPath {
-    if (indexPath.row >= self.dataList.count) {
+    if (indexPath.section >= self.dataArray.count) {
         return;
     }
     
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    
-    if (!self.clientShowDict) {
-        self.clientShowDict = [NSMutableDictionary new];
-    }
-    
-//    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
-    NSString *groupId = cellModel.groupId;
-    if(groupId){
-        if (self.clientShowDict[groupId]) {
-            return;
+    FHFeedUGCCellModel *cellModel = self.dataArray[indexPath.section];
+
+    NSArray *resultArray = self.dataArray[indexPath.section];
+    if(indexPath.row < resultArray.count){
+        FHFeedUGCCellModel *cellModel = resultArray[indexPath.row];
+        
+        if (!self.clientShowDict) {
+            self.clientShowDict = [NSMutableDictionary new];
         }
         
-        self.clientShowDict[groupId] = @(indexPath.row);
-        [self trackClientShow:cellModel rank:indexPath.row];
+        NSString *groupId = cellModel.groupId;
+        if(groupId){
+            if (self.clientShowDict[groupId]) {
+                return;
+            }
+            
+            self.clientShowDict[groupId] = @(indexPath.row);
+            [self trackClientShow:cellModel rank:indexPath.row];
+        }
     }
 }
 
@@ -1315,16 +1301,17 @@
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
-    dict[@"enter_from"] = @"community_group";
+    dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
-    dict[@"rank"] = @(rank);
+    dict[@"subject_id"] = self.viewController.forumId;
+    dict[@"group_id"] = cellModel.groupId;
     
     return dict;
 }
 
 - (NSString *)pageType {
-    return @"community_group_detail";
+    return @"special_subject";
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
