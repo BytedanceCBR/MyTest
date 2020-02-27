@@ -208,12 +208,12 @@
     _valueLabel.font = [UIFont themeFontMedium:14];
     [self addSubview:_valueLabel];
     _valueLabel.textAlignment = NSTextAlignmentLeft;
-    
     // 布局
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.top.mas_equalTo(10);
         make.height.mas_equalTo(20);
+        make.width.mas_offset(56);
         make.bottom.mas_equalTo(self);
     }];
     
@@ -221,7 +221,7 @@
         make.left.mas_equalTo(self.keyLabel.mas_right).offset(10);
         make.top.mas_equalTo(10);
         make.height.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
+        make.right.mas_equalTo(-5);
         make.bottom.mas_equalTo(self.keyLabel);
     }];
 }

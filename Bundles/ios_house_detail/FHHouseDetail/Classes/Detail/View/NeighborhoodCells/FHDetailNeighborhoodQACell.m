@@ -164,7 +164,11 @@
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(cellModel.viewHeight);
     }];
-
+    if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll) {
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
     _titleLabel.text = cellModel.title;
     [_questionBtn setTitle:cellModel.askTitle forState:UIControlStateNormal];
     

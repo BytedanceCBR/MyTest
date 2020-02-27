@@ -80,6 +80,13 @@
                 model.shadowImageType = FHHouseShdowImageTypeRound;;
             }];
         }
+        if([[obj allKeys] containsObject:@"qas"]) {
+            [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
+                model.shdowImageScopeType = FHHouseShdowImageScopeTypeBottomAll;
+                 model.shadowImageType = FHHouseShdowImageTypeRound;
+            }];
+        }
 //        多个cell模块
         if ([[obj allKeys] containsObject:@"locationPeripherys"] || [[obj allKeys] containsObject:@"plots"]|| [[obj allKeys] containsObject:@"housingEvaluation"]|| [[obj allKeys] containsObject:@"plotsSlods"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
