@@ -341,6 +341,8 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)requestNeightborhoodRemark {
     
+    [self needRelayoutToolbar];
+    
     if(self.neighborhoodId.length <= 0) {
         return;
     }
