@@ -45,12 +45,7 @@
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
     }
-    
     return self;
-}
-
-- (void)dealloc {
-    
 }
 
 - (void)configTableView {
@@ -773,5 +768,4 @@
     }
     TRACK_EVENT(@"click_options", dict);
 }
-
 @end

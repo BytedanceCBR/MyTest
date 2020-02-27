@@ -197,7 +197,7 @@
     [self.userInfoView updateDescLabel];
     [self.userInfoView updateEditState];
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
-    self.userInfoView.moreBtn.hidden = !self.cellModel.isInNeighbourhoodCommentsList;
+    self.userInfoView.moreBtn.hidden = YES;
     
     // 文本内容标签
     self.contentLabel.frame = CGRectMake(leftPadding, self.userInfoView.bottom + vGap, self.contentContainer.width - leftPadding - rightPadding, 0);
@@ -256,8 +256,8 @@
         // 置顶加精移动位置
         CGFloat decorationHeight = topPadding + userInfoViewHeight;
         CGFloat decorationWidth = decorationHeight;
-        CGFloat decorationRightOffset = self.cellModel.isInNeighbourhoodCommentsList ? 30 : 10;
-        self.decorationImageView.frame = CGRectMake(self.contentContainer.width - decorationRightOffset - decorationWidth, topMargin, decorationWidth, decorationHeight);
+        CGFloat decorationRightOffset = 10;
+        self.decorationImageView.frame = CGRectMake(leftMargin + self.contentContainer.width - decorationRightOffset - decorationWidth, topMargin, decorationWidth, decorationHeight);
         [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence"]];
     }
 }
