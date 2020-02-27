@@ -349,6 +349,7 @@ typedef enum : NSInteger {
 @interface FHDetailDataBaseExtraBudgetModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *extraContent;
 @property (nonatomic, copy , nullable) NSString *baseContent;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 
