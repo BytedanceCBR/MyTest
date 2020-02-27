@@ -21,6 +21,7 @@ typedef void(^GotoPublicationsDetailBlock)(void);
 
 @interface FHSpecialTopicHeaderView : UIView
 @property(nonatomic, strong) UIImageView *topBack;
+@property(nonatomic, strong) UIImageView *topBgView;
 //@property(nonatomic, strong) UIImageView *avatar;
 //@property(nonatomic, strong) UIView *labelContainer;
 @property(nonatomic, strong) UILabel *nameLabel;

@@ -24,7 +24,6 @@
 @property (nonatomic, strong) UIView *infoContainer;
 @property (nonatomic, strong) UIView *userCountTapView;
 @property (nonatomic, assign) CGFloat preOffset;
-@property (nonatomic, strong) UIImageView *topBgView;
 
 @end
 
@@ -55,6 +54,7 @@
     
     self.topBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight)];
     _topBgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+    _topBgView.hidden = YES;
     [self addSubview:_topBgView];
     // 主标题标签
     self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(24, self.frame.size.height - 73, self.frame.size.width - 48, 29)];

@@ -208,11 +208,17 @@
         
         if (model) {
             FHTopicHeaderModel *responseModel = (FHTopicHeaderModel *)model;
-            self.specialTopicHeaderModel = responseModel;
-            [self updateUIWithData:responseModel];
-
-            if (refreshFeed) {
-                [self requestData:YES first:self.isFirstEnter];
+            if([responseModel.forum.status integerValue] >= 1){
+                self.specialTopicHeaderModel = responseModel;
+                [self updateUIWithData:responseModel];
+                [self updateNavBarWithAlpha:0];
+                if (refreshFeed) {
+                    [self requestData:YES first:self.isFirstEnter];
+                }
+            }else{
+                self.tableView.hidden = YES;
+                [self.viewController.emptyView showEmptyWithTip:@"该专题已下线" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+                [self updateNavBarWithAlpha:1];
             }
         }
     }];
@@ -222,6 +228,7 @@
     if(showEmpty){
         self.tableView.hidden = YES;
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        [self updateNavBarWithAlpha:1];
     }
     if(showToast){
         [[ToastManager manager] showToast:@"网络异常"];
@@ -412,6 +419,7 @@
     if(headerModel.forum.bannerUrl.length > 0){
         NSURL *url = [NSURL URLWithString:headerModel.forum.bannerUrl];
         [self.viewController.headerView.topBack bd_setImageWithURL:url placeholder:nil];
+        self.viewController.headerView.topBgView.hidden = NO;
     }
     
     self.viewController.headerView.nameLabel.text = isEmptyString(headerModel.forum.forumName) ? @"" : headerModel.forum.forumName;
