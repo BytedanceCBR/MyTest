@@ -23,6 +23,7 @@
 #import "FHDetailRelatedNeighborhoodCell.h"
 #import "FHDetailNeighborhoodHouseCell.h"
 #import "FHDetailNeighborhoodTransationHistoryCell.h"
+//#import "FHODetailCommunityEntryCorrectingCell.h"
 #import "FHDetailNeighborhoodEvaluateCell.h"
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailNewModel.h"
@@ -67,13 +68,15 @@
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodStatsInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodStatsInfoModel class])];
-    [self.tableView registerClass:[FHDetailNeighborhoodPropertyInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodPropertyInfoModel class])];
+    
+//    [self.tableView registerClass:[FHODetailCommunityEntryCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodPropertyInfoCell class]
+           forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodPropertyInfoModel class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateModel class])];
     [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
-    [self.tableView registerClass:[FHDetailCommunityEntryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
     [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
     [self.tableView registerClass:[FHDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
@@ -284,7 +287,13 @@
         [self.items addObject:infoModel];
     }
 
-
+    //ugc 圈子入口
+//    BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
+//    if(showUgcEntry){
+//        model.data.ugcSocialGroup.houseType = FHHouseTypeNeighborhood;
+//        model.data.ugcSocialGroup.houseModelType= FHPlotHouseModelTypeCoreInfo;
+//        [self.items addObject:model.data.ugcSocialGroup];
+//    }
 
     // 属性列表
     if (model.data.baseInfo.count > 0) {
@@ -295,14 +304,7 @@
         [self.items addObject:infoModel];
     }
     
-    //ugc 圈子入口
-    BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
-    if(showUgcEntry){
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        model.data.ugcSocialGroup.houseType = FHHouseTypeNeighborhood;
-        [self.items addObject:model.data.ugcSocialGroup];
-    }
+
     // 小区评测
     if (model.data.evaluationInfo) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线

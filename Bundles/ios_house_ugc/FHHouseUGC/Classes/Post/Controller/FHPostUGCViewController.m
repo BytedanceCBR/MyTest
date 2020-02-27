@@ -520,7 +520,7 @@ static NSInteger const kMaxPostImageCount = 9;
     self.addImagesView.delegate = self;
     self.addImagesView.ssTrackDict = self.trackDict;
     self.addImagesView.hideAddImagesButtonWhenEmpty = YES;
-    self.addImagesView.selectionLimit = self.neighborhoodId.length > 0 ? 3 : 9;
+    self.addImagesView.selectionLimit = 9;
     [self.addImagesView startTrackImagepicker];
     
     [self.inputContainerView addSubview:self.addImagesView];
@@ -532,7 +532,6 @@ static NSInteger const kMaxPostImageCount = 9;
     // 小区点评标签选择视图
     if(self.neighborhoodId.length > 0) {
         self.tagsView = [[FHUGCTagsView alloc] initWithFrame:CGRectMake(0, inputContainerViewHeight, self.inputContainerView.width, 100)];
-        self.tagsView.backgroundColor = [UIColor redColor];
         [self.inputContainerView addSubview:self.tagsView];
         
         inputContainerViewHeight = self.tagsView.bottom + kAddImagesViewTopPadding;
@@ -608,7 +607,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)configTopicBtnOnToolBar {
     
-    BOOL isShowHashTagBtn = YES;
+    BOOL isShowHashTagBtn = !(self.neighborhoodId.length > 0);
     self.toolbar.banHashtagInput = !isShowHashTagBtn;
     self.inputTextView.isBanHashtag = self.toolbar.banHashtagInput;
     if(isShowHashTagBtn) {
@@ -650,7 +649,7 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)configAtBtnOnToolBar {
-    BOOL isShowAtBtn = YES;
+    BOOL isShowAtBtn = !(self.neighborhoodId.length > 0);
     self.toolbar.banAtInput = !isShowAtBtn;
     self.inputTextView.isBanAt = self.toolbar.banAtInput;
     if(isShowAtBtn) {

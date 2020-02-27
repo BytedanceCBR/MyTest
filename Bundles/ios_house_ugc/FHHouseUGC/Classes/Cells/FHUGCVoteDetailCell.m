@@ -260,7 +260,7 @@
     self.cellModel = data;
     //设置userInfo
     self.userInfoView.cellModel = self.cellModel;
-    self.userInfoView.userName.text = self.cellModel.user.name;
+    self.userInfoView.userName.text = !isEmptyString(self.cellModel.user.name) ? self.cellModel.user.name : @"用户";
     self.userInfoView.descLabel.attributedText = self.cellModel.desc;
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     __weak typeof(self) weakSelf = self;

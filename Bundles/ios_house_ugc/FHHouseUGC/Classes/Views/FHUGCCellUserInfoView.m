@@ -607,7 +607,7 @@
 }
 
 - (void)goToPersonalHomePage {
-    if(self.cellModel.user.schema){
+    if(!isEmptyString(self.cellModel.user.schema)){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

@@ -11,6 +11,9 @@
 #import "BTDMacros.h"
 #import "Masonry.h"
 
+#define SELECT_TAGS_VIEW_CONTAINER_HEIGHT 44
+#define SELECT_TAGS_LABEL_DEFAULT_TEXT @"丰富内容标签，上精选点评(可多选)"
+
 #pragma mark - UI辅助类
 
 @interface FHUGCTagsViewFlowLayout : UICollectionViewFlowLayout
@@ -135,6 +138,14 @@
 
 @interface FHUGCTagsView() <UICollectionViewDelegate, UICollectionViewDataSource>
 
+@property (nonatomic, strong) UIView *selectedViewContainer;
+
+@property (nonatomic, strong) UIView *topSepLine;
+
+@property (nonatomic, strong) UILabel *descLabel;
+
+@property (nonatomic, strong) UILabel *selectedTagsLabel;
+
 @property (nonatomic, strong) UICollectionView *collectionView;
 
 @property (nonatomic, strong) NSArray<FHUGCTagModel*> *tagsInfo;
@@ -145,27 +156,99 @@
 
 @implementation FHUGCTagsView
 
+-(UIView *)selectedViewContainer {
+    if(!_selectedViewContainer) {
+        _selectedViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, SELECT_TAGS_VIEW_CONTAINER_HEIGHT)];
+    
+        [_selectedViewContainer addSubview:self.topSepLine];
+        [_selectedViewContainer addSubview:self.descLabel];
+        [_selectedViewContainer addSubview:self.selectedTagsLabel];
+        
+        [self setSelectedTagsLabelText:SELECT_TAGS_LABEL_DEFAULT_TEXT isDefaultStyle:YES];
+        
+        [self.topSepLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.top.right.equalTo(self.selectedViewContainer);
+            make.height.mas_equalTo(1);
+        }];
+        
+        [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.topSepLine.mas_bottom);
+            make.bottom.equalTo(self.selectedViewContainer);
+            make.left.equalTo(self.selectedViewContainer).offset(20);
+        }];
+        
+        [self.selectedTagsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.topSepLine.mas_bottom);
+            make.bottom.equalTo(self.selectedViewContainer);
+            make.right.equalTo(self.selectedViewContainer).offset(-20);
+            make.left.equalTo(self.descLabel.mas_right);
+        }];
+    }
+    return _selectedViewContainer;
+}
+
+- (UIView *)topSepLine {
+    if(!_topSepLine) {
+        _topSepLine = [UIView new];
+        _topSepLine.backgroundColor = [UIColor themeGray6];
+    }
+    return _topSepLine;
+}
+
+- (UILabel *)descLabel {
+    if(!_descLabel) {
+        _descLabel = [UILabel new];
+        _descLabel.font = [UIFont themeFontRegular:16];
+        _descLabel.textColor = [UIColor themeGray1];
+        _descLabel.text = @"选择标签：";
+    }
+    return _descLabel;
+}
+
+- (UILabel *)selectedTagsLabel {
+    if(!_selectedTagsLabel) {
+        _selectedTagsLabel = [UILabel new];
+        _selectedTagsLabel.font = [UIFont themeFontRegular:14];
+    }
+    return _selectedTagsLabel;
+}
+
+- (void)setSelectedTagsLabelText:(NSString *)text isDefaultStyle:(BOOL)isDefault {
+    if(isDefault) {
+        self.selectedTagsLabel.textColor = [UIColor themeGray3];
+    } else {
+        self.selectedTagsLabel.textColor = [UIColor themeGray1];
+    }
+    self.selectedTagsLabel.text = text;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     if(self = [super initWithFrame:frame]) {
+        self.hidden = YES;
+        
+        [self addSubview:self.selectedViewContainer];
             
         [self addSubview:self.collectionView];
         
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self);
+            make.top.equalTo(self.selectedViewContainer.mas_bottom);
+            make.left.right.bottom.equalTo(self);
         }];
     }
     return self;
 }
 
 - (void)refreshWithTags:(NSArray<FHUGCTagModel*> *)tags {
+    
     self.tagsInfo = tags;
+    
     [self.collectionView reloadData];
-    
-    
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         CGRect frame = self.frame;
-        frame.size.height =  self.collectionView.contentSize.height;
+        frame.size.height =  self.collectionView.contentSize.height + SELECT_TAGS_VIEW_CONTAINER_HEIGHT;
         self.frame = frame;
+        self.hidden = NO;
     });
 }
 
@@ -221,11 +304,12 @@
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if([[collectionView indexPathsForSelectedItems] containsObject:indexPath]) {
+    NSArray<NSIndexPath *> *indexPathsForSelectedItems = collectionView.indexPathsForSelectedItems;
+
+    if([indexPathsForSelectedItems containsObject:indexPath]) {
         [collectionView deselectItemAtIndexPath:indexPath animated:YES];
         return NO;
     }
     return YES;
 }
-
 @end

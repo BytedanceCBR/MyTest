@@ -123,7 +123,9 @@
     if(vc.neighborhoodId){
         [extraDic setObject:vc.neighborhoodId forKey:@"neighborhood_id"];
     }
+    @weakify(self);
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        @strongify(self);
         wself.viewController.isLoadingData = NO;
         if(isFirst){
             [wself.viewController endLoading];
@@ -133,6 +135,12 @@
         
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         wself.feedListModel = feedListModel;
+        
+        if(wself.viewController.title.length > 0) {
+            NSRegularExpression *regExp = [[NSRegularExpression alloc] initWithPattern:@"[0-9]+" options:NSRegularExpressionCaseInsensitive error:nil];
+            NSMutableString *title = [regExp stringByReplacingMatchesInString:self.viewController.title options:NSMatchingReportProgress range:NSMakeRange(0, self.viewController.title.length) withTemplate:wself.feedListModel.totalNumber];
+            self.viewController.customNavBarView.title.text = title;
+        }
         
         if (!wself) {
             return;

@@ -192,8 +192,16 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 
 //是否在小区点评列表页
 @property (nonatomic, assign) BOOL isInNeighbourhoodCommentsList;
+//底部分割线高度
+@property (nonatomic, assign) CGFloat bottomLineHeight;
+@property (nonatomic, assign) CGFloat bottomLineLeftMargin;
+@property (nonatomic, assign) CGFloat bottomLineRightMargin;
 
-+ (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
++ (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
+
++ (FHFeedUGCCellModel *)modelFromFeed:(id)content;
+
++ (FHFeedUGCCellModel *)modelFromFeedWithDict:(NSDictionary *)content;
 
 + (FHFeedUGCCellModel *)modelFromFeedUGCContent:(FHFeedUGCContentModel *)model;
 

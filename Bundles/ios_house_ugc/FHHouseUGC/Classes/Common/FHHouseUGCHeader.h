@@ -13,6 +13,7 @@ typedef NS_ENUM(NSInteger, FHCommunityFeedListType)
     FHCommunityFeedListTypeNearby = 0,
     FHCommunityFeedListTypeMyJoin,
     FHCommunityFeedListTypePostDetail,
+    FHCommunityFeedListTypeSpecialTopic,
 };
 
 typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
