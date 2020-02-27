@@ -518,7 +518,7 @@ static NSInteger const kMaxPostImageCount = 9;
     self.addImagesView.delegate = self;
     self.addImagesView.ssTrackDict = self.trackDict;
     self.addImagesView.hideAddImagesButtonWhenEmpty = YES;
-    self.addImagesView.selectionLimit = 9;
+    self.addImagesView.selectionLimit = self.neighborhoodId.length > 0 ? 3 : 9;
     [self.addImagesView startTrackImagepicker];
     
     [self.inputContainerView addSubview:self.addImagesView];

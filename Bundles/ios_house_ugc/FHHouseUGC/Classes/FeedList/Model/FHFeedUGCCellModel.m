@@ -719,7 +719,9 @@
 
 + (NSAttributedString *)generateUGCDesc:(FHFeedUGCContentModel *)model {
     NSString *createTime = model.createTime.length > 0 ? model.createTime : model.rawData.createTime;
-    return [self generateUGCDescWithCreateTime:createTime readCount:model.readCount distanceInfo:model.distanceInfo];
+    NSString *readCount = model.readCount.length > 0 ? model.readCount : model.rawData.readCount;
+    NSString *distanceInfo = model.distanceInfo.length > 0 ? model.distanceInfo : model.rawData.distanceInfo;
+    return [self generateUGCDescWithCreateTime:createTime readCount:readCount distanceInfo:distanceInfo];
 }
 
 + (NSAttributedString *)generateUGCDescWithCreateTime:(NSString *)createTime readCount:(NSString *)readCount distanceInfo:(NSString *)distanceInfo {
@@ -804,11 +806,12 @@
 
 - (void)setIsInNeighbourhoodCommentsList:(BOOL)isInNeighbourhoodCommentsList {
     _isInNeighbourhoodCommentsList = isInNeighbourhoodCommentsList;
-    CGFloat width = [UIScreen mainScreen].bounds.size.width - 60;
+    CGFloat width = [UIScreen mainScreen].bounds.size.width - 32;
     if(isInNeighbourhoodCommentsList){
-        width = [UIScreen mainScreen].bounds.size.width - 90;
+        width = [UIScreen mainScreen].bounds.size.width - 70;
     }
     self.numberOfLines = 3;
+    [FHUGCCellHelper setRichContentWithModel:self width:width numberOfLines:self.numberOfLines];
 }
 
 - (void)setCategoryId:(NSString *)categoryId {

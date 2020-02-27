@@ -82,7 +82,7 @@
     // 图片区
     self.multiImageView = [FHUGCCellMultiImageView new];
     [self.contentContainer addSubview:self.multiImageView];
-    
+
 //    // 底部圈子、点赞、评论区
 //    self.bottomView = [FHUGCCellBottomView new];
 //    [self.bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
@@ -110,9 +110,9 @@
     if(self.currentData == data && !cellModel.ischanged){
         return;
     }
-    
-    self.currentData = data;
     self.cellModel = cellModel;
+    self.cellModel.isCustomDecorateImageView = YES; // 本地定制装饰图片
+    self.currentData = data;
 
     [self layoutViews];
 }
@@ -252,12 +252,14 @@
 //        make.height.mas_equalTo(0);
 //    }];
     
-    // 置顶加精移动位置
-    CGFloat decorationHeight = topPadding + userInfoViewHeight;
-    CGFloat decorationWidth = decorationHeight;
-    CGFloat decorationRightOffset = self.cellModel.isInNeighbourhoodCommentsList ? 30 : 10;
-    self.decorationImageView.frame = CGRectMake(self.contentContainer.width - decorationRightOffset - decorationWidth, topMargin, decorationWidth, decorationHeight);
-    [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence"]];
+    if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
+        // 置顶加精移动位置
+        CGFloat decorationHeight = topPadding + userInfoViewHeight;
+        CGFloat decorationWidth = decorationHeight;
+        CGFloat decorationRightOffset = self.cellModel.isInNeighbourhoodCommentsList ? 30 : 10;
+        self.decorationImageView.frame = CGRectMake(self.contentContainer.width - decorationRightOffset - decorationWidth, topMargin, decorationWidth, decorationHeight);
+        [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence"]];
+    }
 }
 
 - (void)deleteCell {
