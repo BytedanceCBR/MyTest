@@ -112,6 +112,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 发布器热门标签
 + (TTHttpTask *)requestPublishHotTagsWithParam:(NSDictionary *)params class:(Class)cls completion:(void (^_Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
++ (TTHttpTask *)requestSpecialTopicContentWithTabId:(NSString *)tabId queryPath:(NSString *)queryPath categoryName:(NSString *)categoryName queryId:(NSString *)queryId extraDic:(NSDictionary *)extraDic completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
++ (TTHttpTask *)requestSpecialTopicHeaderWithforumId:(NSString *)forumId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

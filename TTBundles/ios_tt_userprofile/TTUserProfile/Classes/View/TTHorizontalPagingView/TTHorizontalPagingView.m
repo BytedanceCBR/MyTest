@@ -146,6 +146,8 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
     if(section <= 0) return;
     [self.horizontalCollectionView reloadData];
     
+    self.isSwitching = NO;
+    self.segmentView.isSwitching = NO;
 }
 
 - (void)reloadHeaderShowHeight {
@@ -371,7 +373,11 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
         BOOL inset = [objc_getAssociatedObject(scrollView, TTHorizontalPagingViewSettingInset) boolValue];
         
         if(!inset) {
-            CGFloat initHeader = self.headerShowHeight <= self.segmentTopSpace ? self.segmentTopSpace : self.headerShowHeight;
+            CGFloat height = self.headerShowHeight;
+            if(!indexPath.row){
+                height = self.headerViewHeight;
+            }
+            CGFloat initHeader = height <= self.segmentTopSpace ? self.segmentTopSpace : height;
             CGFloat distance = initHeader + self.segmentViewHeight;
             
             scrollView.contentInset = UIEdgeInsetsMake(distance, 0, scrollView.contentInset.bottom, 0);

@@ -11,6 +11,7 @@
 #import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "SSImpressionManager.h"
 #import "ArticleImpressionHelper.h"
+#import "FHHouseUGCAPI.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSArray *operations;
 //当接口返回空数据的时候是否显示空态页，默认为YES
 @property(nonatomic, assign) BOOL showErrorView;
+//网络请求成功回调
+@property(nonatomic, copy) void (^requestSuccess)(id <FHBaseModelProtocol> model);
 
 //圈子详情页使用
 //空态页具体顶部offset

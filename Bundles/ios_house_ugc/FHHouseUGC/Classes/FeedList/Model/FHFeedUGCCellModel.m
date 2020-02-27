@@ -14,6 +14,7 @@
 #import "TTVFeedItem+Extension.h"
 #import "FHLocManager.h"
 #import "TTBusinessManager+StringUtils.h"
+#import "JSONAdditions.h"
 
 @implementation FHFeedUGCCellCommunityModel
 
@@ -44,13 +45,12 @@
     self = [super init];
     if (self) {
         _showCommunity = YES;
+        _bottomLineHeight = 5;
     }
     return self;
 }
 
-+ (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content {
-    FHFeedUGCCellModel *cellModel = nil;
-    
++ (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content {
     NSData *jsonData = [content dataUsingEncoding:NSUTF8StringEncoding];
     
     NSError *err;
@@ -63,6 +63,45 @@
         
     } @finally {
         
+    }
+    
+    if(!err){
+        Class cls = [FHFeedContentModel class];
+        __block NSError *backError = nil;
+        id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:cls error:&backError];
+        if(!backError){
+            return model;
+        }
+    }
+    
+    return nil;
+}
+
++ (FHFeedUGCCellModel *)modelFromFeed:(id)content {
+    FHFeedUGCCellModel *cellModel = nil;
+    NSError *err = nil;
+    NSDictionary *dic = nil;
+    NSString *jsonStr = nil;
+    NSData *jsonData = nil;
+    
+    if([content isKindOfClass:[NSString class]]){
+        jsonStr = content;
+        jsonData = [jsonStr dataUsingEncoding:NSUTF8StringEncoding];
+        @try {
+            dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                  options:NSJSONReadingMutableContainers
+                                                    error:&err];
+        } @catch (NSException *exception) {
+            
+        } @finally {
+            
+        }
+    }else if([content isKindOfClass:[NSDictionary class]]){
+        dic = content;
+        jsonStr = [dic tt_JSONRepresentation];
+        jsonData = [jsonStr dataUsingEncoding:NSUTF8StringEncoding];
+    }else{
+        return cellModel;
     }
     
     if(!err){
@@ -257,7 +296,13 @@
             }
             
             //处理图片
-            cellModel.imageList = model.imageList;
+            if(model.imageList){
+                cellModel.imageList = model.imageList;
+            }else if(model.middleImage){
+                NSMutableArray *imageList = [NSMutableArray array];
+                [imageList addObject:model.middleImage];
+                cellModel.imageList = imageList;
+            }
             //处理大图
             cellModel.largeImageList = model.largeImageList;
             
