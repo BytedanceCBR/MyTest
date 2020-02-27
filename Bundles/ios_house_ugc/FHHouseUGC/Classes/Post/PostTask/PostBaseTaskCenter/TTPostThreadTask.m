@@ -118,6 +118,10 @@ const CGFloat TTForumPostVideoThreadTaskBeforePostThreadProgress = 0.95f;
         self.social_group_id = [aDecoder decodeObjectForKey:@"social_group_id"];
         self.bindType = [aDecoder decodeObjectForKey:@"bind_type"];
         self.uploadProgress = [aDecoder decodeFloatForKey:@"uploadProgress"];
+        self.neighborhoodTags = [aDecoder decodeObjectForKey:@"neighborhoodTags"];
+        self.neighborhoodId = [aDecoder decodeObjectForKey:@"neighborhoodId"];
+        self.scores = [aDecoder decodeObjectForKey:@"scores"];
+        self.pubSource = [aDecoder decodeObjectForKey:@"pubSource"];
         
         @try {
             NSArray * datas = [aDecoder decodeObjectForKey:@"images"];
@@ -207,6 +211,11 @@ const CGFloat TTForumPostVideoThreadTaskBeforePostThreadProgress = 0.95f;
     [aCoder encodeObject:_communityID forKey:@"communityID"];
     [aCoder encodeObject:_businessPayload forKey:@"businessPayload"];
     [aCoder encodeObject:_promotionID forKey:@"promotionID"];
+    [aCoder encodeObject:_neighborhoodId forKey:@"neighborhoodId"];
+    [aCoder encodeObject:_pubSource forKey:@"pubSource"];
+    [aCoder encodeObject:_neighborhoodTags forKey:@"neighborhoodTags"];
+    [aCoder encodeObject:_scores forKey:@"scores"];
+    
 
     if (_finishError) {
         id obj = [NSKeyedArchiver archivedDataWithRootObject:_finishError];

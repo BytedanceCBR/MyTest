@@ -183,9 +183,13 @@
     
     if (self.selectedImageViews.count >= 9) {
         self.addImagesButton.hidden = YES;
-        [self changeHeight:(assetViewColumn.bottom) notiy:YES];
     }else{
-        [self changeHeight:(_addImagesButton.bottom) notiy:YES];
+        UIView *lastImageView = self.selectedImageViews.lastObject;
+        if(self.selectedImageViews.count >= self.selectionLimit && lastImageView) {
+            [self changeHeight:(lastImageView.bottom) notiy:YES];
+        } else {
+            [self changeHeight:(_addImagesButton.bottom) notiy:YES];
+        }
     }
 }
 

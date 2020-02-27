@@ -171,6 +171,53 @@
 }
 @end
 
+@implementation FHFeedUGCContentRawDataModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"itemId": @"item_id",
+                           @"groupId": @"group_id",
+                           @"commentBase": @"comment_base",
+                           @"originGroup": @"origin_group",
+                           @"originCommonContent": @"origin_common_content",
+                           @"recommendSocialGroupList": @"recommend_social_group_list",
+                           @"articleSchema": @"article_schema",
+                           @"hotTopicList": @"hot_topic_list",
+                           @"firstFrameImageList": @"first_frame_image_list",
+                           @"detailSchema": @"detail_schema",
+                           @"titleRichSpan": @"title_rich_span",
+                           @"createTime": @"create_time",
+                           @"videoContent": @"video_content",
+                           @"isStick": @"is_stick",
+                           @"stickStyle": @"stick_style",
+                           @"contentDecoration": @"content_decoration",
+                           @"originThread": @"origin_thread",
+                           @"originUgcVideo": @"origin_ugc_video",
+                           @"originType": @"origin_type",
+                           @"voteInfo": @"vote_info",
+                           @"logPb":@"log_pb",
+                           @"commentCount":@"comment_count",
+                           @"diggCount":@"digg_count",
+                           @"readCount":@"read_count",
+                           @"userDigg":@"is_digg",
+                           @"distanceInfo":@"distance_info",
+                           @"subCellType": @"sub_cell_type",
+                           @"hotCellList": @"hot_cell_list",
+                           @"contentRichSpan": @"content_rich_span",
+                           @"ugcU13CutImageList":@"ugc_u13_cut_image_list",
+                           @"thumbImageList":@"thumb_image_list",
+                           @"largeImageList":@"large_image_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHFeedUGCContentActionListModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
@@ -265,6 +312,8 @@
     @"ugcStatus": @"status",
     @"isStick": @"is_stick",
     @"stickStyle": @"stick_style",
+    @"rawData": @"raw_data",
+    @"threadId": @"thread_id_str",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
