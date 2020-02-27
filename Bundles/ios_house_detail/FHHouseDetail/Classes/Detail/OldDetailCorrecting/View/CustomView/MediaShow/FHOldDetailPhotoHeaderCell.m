@@ -94,7 +94,8 @@
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
         
-        _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 276/375) collectionViewLayout:layout];
+//        _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 276/375) collectionViewLayout:layout];
+        _colletionView = [[FHBaseCollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
         _colletionView.backgroundColor = [UIColor whiteColor];
         _colletionView.pagingEnabled = YES;
         _colletionView.showsHorizontalScrollIndicator = NO;
@@ -105,6 +106,11 @@
         _colletionView.dataSource = self;
         
         [self.contentView addSubview:_colletionView];
+        [_colletionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.equalTo(self.contentView);
+            make.top.equalTo(self.contentView);
+            make.height.mas_offset(SCREEN_WIDTH * 276/375);
+        }];
         
         // 底部渐变蒙层
         [self.contentView addSubview:self.bottomGradientView];

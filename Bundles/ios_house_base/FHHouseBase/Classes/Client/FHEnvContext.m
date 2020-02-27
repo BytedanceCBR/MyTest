@@ -1071,6 +1071,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
             tabName = @"discover_tab";
         }
     }
+        if([currentTabIdentifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]){
+                tabName = @"operation_tab";
+        }
     return tabName;
 }
 
