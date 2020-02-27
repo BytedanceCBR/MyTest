@@ -204,7 +204,9 @@
                            @"subCellType": @"sub_cell_type",
                            @"hotCellList": @"hot_cell_list",
                            @"contentRichSpan": @"content_rich_span",
-                           
+                           @"ugcU13CutImageList":@"ugc_u13_cut_image_list",
+                           @"thumbImageList":@"thumb_image_list",
+                           @"largeImageList":@"large_image_list",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

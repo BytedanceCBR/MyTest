@@ -684,14 +684,25 @@
     cellModel.user = user;
     
     NSMutableArray *cellImageList = [NSMutableArray array];
-    if(model.ugcU13CutImageList.count > 0){
-        //单图
+
+    //单图
+    if(model.ugcU13CutImageList.count > 0) {
         [cellImageList addObject:[model.ugcU13CutImageList firstObject]];
-    }else{
+    }
+    //单图
+    else if(model.rawData.ugcU13CutImageList.count > 0) {
+        [cellImageList addObject:[model.rawData.ugcU13CutImageList firstObject]];
+    }
+    else{
+        //多图
         if(model.thumbImageList.count > 0){
-            //多图
             [cellImageList addObjectsFromArray:model.thumbImageList];
-        }else{
+        }
+        //多图
+        else if(model.rawData.thumbImageList.count > 0) {
+            [cellImageList addObjectsFromArray:model.rawData.thumbImageList];
+        }
+        else{
             //纯文本
             cellModel.numberOfLines = 5;
         }
@@ -702,7 +713,11 @@
     }
     
     cellModel.imageList = cellImageList;
-    cellModel.largeImageList = model.largeImageList;
+    if(model.largeImageList.count > 0) {
+        cellModel.largeImageList = model.largeImageList;
+    } else if(model.rawData.largeImageList.count > 0) {
+        cellModel.largeImageList = model.rawData.largeImageList;
+    }
     
     [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
     

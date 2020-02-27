@@ -1243,11 +1243,8 @@ static NSInteger const kMaxPostImageCount = 9;
         ret = !([currentContent isEqualToString:outerContent] &&  [currentImageUris isEqualToString:outerImageUris]);
     }
     else {
-        
-        NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
         NSInteger validContentLength = (self.neighborhoodId.length > 0) ? 10 : 0;
-        ret = inputText.length > validContentLength || self.addImagesView.selectedImageCacheTasks.count != 0;
+        ret = self.inputTextView.trimmedLength > validContentLength || self.addImagesView.selectedImageCacheTasks.count != 0;
     }
     
     return ret;
@@ -1645,6 +1642,7 @@ static NSInteger const kMaxPostImageCount = 9;
         self.firstAppear = NO;
         if(self.neighborhoodId.length > 0) {
             // 小区点评发布器，进入不弹键盘
+            [self.tagsView becomeFirstResponder];
         } else {
             [self.inputTextView becomeFirstResponder];
         }

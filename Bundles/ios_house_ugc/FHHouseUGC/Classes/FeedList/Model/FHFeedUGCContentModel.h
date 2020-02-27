@@ -298,6 +298,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *content;
 @property (nonatomic, copy , nullable) NSString *threadId;
 @property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *ugcU13CutImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *thumbImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *largeImageList;
 @end
 
 @interface FHFeedUGCContentModel : JSONModel 
