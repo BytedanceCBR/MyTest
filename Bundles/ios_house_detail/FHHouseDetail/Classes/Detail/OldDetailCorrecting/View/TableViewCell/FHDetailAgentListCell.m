@@ -71,6 +71,13 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
+    
+    if (model.houseType == FHHouseTypeNewHouse) {
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.contentView).mas_offset(-15);
+            make.right.equalTo(self.contentView).mas_offset(15);
+        }];
+    }
     // 设置下发标题
     if(model.recommendedRealtorsTitle.length > 0) {
         self.headerView.label.text = model.recommendedRealtorsTitle;
@@ -307,8 +314,8 @@
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.shadowImage).offset(30);
-        make.right.mas_equalTo(self.contentView).offset(-15);
-        make.left.mas_equalTo(self.contentView).offset(15);;
+        make.right.mas_equalTo(self.shadowImage).offset(-15);
+        make.left.mas_equalTo(self.shadowImage).offset(15);
         make.height.mas_equalTo(46);
     }];
     _containerView = [[UIView alloc] init];
@@ -316,8 +323,8 @@
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
-        make.left.mas_equalTo(self.contentView).mas_offset(15);
-        make.right.mas_equalTo(self.contentView).mas_offset(-15);
+        make.left.mas_equalTo(self.shadowImage).mas_offset(15);
+        make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.height.mas_equalTo(0);
         make.bottom.mas_equalTo(self.shadowImage).offset(-35);
     }];
@@ -388,7 +395,9 @@
         case FHHouseTypeSecondHandHouse:
             return @"old_detail_related";
             break;
-            
+        case FHHouseTypeNewHouse:
+            return @"new_detail_related";
+            break;
         default:
             break;
     }
@@ -442,6 +451,8 @@
             break;
          case FHHouseTypeNeighborhood:
             return @"neighborhood_detail_related";
+            case FHHouseTypeNewHouse:
+               return @"new_detail_related";
         default:
             break;
     }
