@@ -746,13 +746,13 @@
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
-    dict[@"question_id"] = cellModel.groupId;
+    dict[@"comment_id"] = cellModel.groupId;
     
     return dict;
 }
 
 - (NSString *)pageType {
-    return @"neigborhood_question_list";
+    return @"neiborhood_comment_list";
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {

@@ -1778,6 +1778,16 @@ static NSInteger const kMaxPostImageCount = 9;
         param[UT_ENTER_TYPE] = self.tracerModel.enterType;
         TRACK_EVENT(UT_GO_DETAIL, param);
     }
+    
+    if(self.neighborhoodId.length > 0) {
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_PAGE_TYPE] = @"feed_publisher";
+        param[UT_LOG_PB] = self.tracerModel.logPb;
+        param[@"group_id"] = self.neighborhoodId;
+        param[UT_ELEMENT_FROM] = self.tracerModel.elementFrom;
+        param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
+        TRACK_EVENT(UT_GO_DETAIL, param);
+    }
 }
 
 #pragma mark - FHUGCToolbarDelegate
