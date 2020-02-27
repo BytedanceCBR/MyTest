@@ -220,6 +220,8 @@
         contactConfig.realtorType = contact.realtorType;
         if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
             contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhoodMulrealtor);
+        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
+            contactConfig.cluePage = @(FHClueCallPageTypeCNewHouseMulrealtor);
         }else {
             contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
         }
@@ -253,6 +255,9 @@
         if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
             imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
             imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodMulrealtor];
+        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
+            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNewHouseMulrealtor];
         }else {
             imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
         }
