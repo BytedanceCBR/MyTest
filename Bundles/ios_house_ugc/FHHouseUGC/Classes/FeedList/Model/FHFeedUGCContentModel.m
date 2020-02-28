@@ -207,6 +207,7 @@
                            @"ugcU13CutImageList":@"ugc_u13_cut_image_list",
                            @"thumbImageList":@"thumb_image_list",
                            @"largeImageList":@"large_image_list",
+                           @"threadId":@"thread_id",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
