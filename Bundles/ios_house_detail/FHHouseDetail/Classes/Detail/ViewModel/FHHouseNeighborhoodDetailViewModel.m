@@ -343,7 +343,7 @@
          staticMapModel.houseModelType = FHPlotHouseModelTypeLocationPeriphery;
         staticMapModel.houseId = model.data.neighborhoodInfo.id;
         staticMapModel.houseType = [NSString stringWithFormat:@"%d",FHHouseTypeNeighborhood];
-        staticMapModel.title = @"位置周边";
+        staticMapModel.title = @"周边配套";
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
         staticMapModel.mapOnly = NO;

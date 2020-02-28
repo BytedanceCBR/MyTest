@@ -151,6 +151,10 @@
         [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(self).offset(-100);
         }];
+        self.addressLab.numberOfLines = 1;
+        [self.addressLab mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self).offset(-100);
+        }];
     }
      self.nameLabel.text = model.titleStr;
     __block UIView *lastView = self.tagBacView;

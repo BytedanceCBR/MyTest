@@ -146,7 +146,7 @@
 // 查看更多
 - (void)moreButtonClick {
      FHDetailNeighborhoodHouseSaleModel *model = (FHDetailNeighborhoodHouseSaleModel *)self.currentData;
-    if (model.neighborhoodSoldHouseData) {
+    if (model.neighborhoodSoldHouseData  && model.neighborhoodSoldHouseData.hasMore) {
         FHDetailNeighborhoodModel *detailModel = (FHDetailNeighborhoodModel*)self.baseViewModel.detailData;
         NSString *neighborhood_id = @"be_null";
         if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {
