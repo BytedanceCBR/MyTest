@@ -76,6 +76,7 @@
         self.houseType = houseType;
         self.detailController = viewController;
         self.tableView = tableView;
+        self.tableView.backgroundColor = [UIColor themeGray7];
         [self configTableView];
     }
     return self;
@@ -85,7 +86,7 @@
 {
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    _tableView.backgroundColor = [UIColor colorWithRed:252 green:252 blue:252 alpha:1];
+//    _tableView.backgroundColor = [UIColor colorWithRed:252 green:252 blue:252 alpha:1];
 //    self.detailController.view.backgroundColor = [UIColor redColor];
     [self registerCellClasses];
 }
@@ -257,6 +258,9 @@
         NSString *identifier = NSStringFromClass([data class]);//[self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNeighborhood) {
+                cell.backgroundColor = [UIColor clearColor];
+            }
             if (cell) {
                 cell.baseViewModel = self;
                 [cell refreshWithData:data];
