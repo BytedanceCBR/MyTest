@@ -607,7 +607,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)configTopicBtnOnToolBar {
     
-    BOOL isShowHashTagBtn = !(self.neighborhoodId.length > 0);
+    BOOL isShowHashTagBtn = YES;
     self.toolbar.banHashtagInput = !isShowHashTagBtn;
     self.inputTextView.isBanHashtag = self.toolbar.banHashtagInput;
     if(isShowHashTagBtn) {
@@ -649,7 +649,7 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)configAtBtnOnToolBar {
-    BOOL isShowAtBtn = !(self.neighborhoodId.length > 0);
+    BOOL isShowAtBtn = YES;
     self.toolbar.banAtInput = !isShowAtBtn;
     self.inputTextView.isBanAt = self.toolbar.banAtInput;
     if(isShowAtBtn) {

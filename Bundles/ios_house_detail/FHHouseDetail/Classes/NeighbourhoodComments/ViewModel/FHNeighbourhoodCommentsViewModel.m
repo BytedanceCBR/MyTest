@@ -135,13 +135,7 @@
         
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         wself.feedListModel = feedListModel;
-        
-        if(wself.viewController.title.length > 0) {
-            NSRegularExpression *regExp = [[NSRegularExpression alloc] initWithPattern:@"[0-9]+" options:NSRegularExpressionCaseInsensitive error:nil];
-            NSMutableString *title = [regExp stringByReplacingMatchesInString:self.viewController.title options:NSMatchingReportProgress range:NSMakeRange(0, self.viewController.title.length) withTemplate:wself.feedListModel.totalNumber];
-            self.viewController.customNavBarView.title.text = title;
-        }
-        
+                
         if (!wself) {
             return;
         }
