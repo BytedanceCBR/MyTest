@@ -141,7 +141,7 @@
 // 查看更多
 - (void)moreButtonClick {
      FHDetailNeighborhoodHouseRentModel *model = (FHDetailNeighborhoodHouseRentModel *)self.currentData;
-    if (model.sameNeighborhoodRentHouseData) {
+    if (model.sameNeighborhoodRentHouseData && model.sameNeighborhoodRentHouseData.hasMore) {
         FHDetailNeighborhoodModel *detailModel = (FHDetailNeighborhoodModel*)self.baseViewModel.detailData;
         NSString *neighborhood_id = @"be_null";
         if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {
@@ -219,7 +219,7 @@
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"left_pic";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
-        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
+        tracerDic[@"house_type"] = @"rent";
         tracerDic[@"element_type"] = @"rent_same_neighborhood";
         tracerDic[@"search_id"] = dataItem.searchId.length > 0 ? dataItem.searchId : @"be_null";
         tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.id ? dataItem.id : @"be_null");
