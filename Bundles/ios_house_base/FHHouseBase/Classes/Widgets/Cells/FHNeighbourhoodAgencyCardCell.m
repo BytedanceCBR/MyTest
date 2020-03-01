@@ -31,6 +31,7 @@
 @property(nonatomic, strong) UIImageView *rightArrow;
 
 @property(nonatomic, strong) UIView *bottomInfoView;
+@property(nonatomic, strong) UIView *lineView;
 @property(nonatomic, strong) UIImageView *avator;
 @property(nonatomic, strong) UIButton *licenceIcon;
 @property(nonatomic, strong) UIButton *callBtn;
@@ -103,8 +104,12 @@
     [self.topInfoView addSubview:_rightArrow];
 
     _bottomInfoView = [[UIView alloc] init];
-    _bottomInfoView.backgroundColor = [UIColor themeGray8];
     [self.containerView addSubview:_bottomInfoView];
+    
+    
+    _lineView = [[UIView alloc]init];
+    _lineView.backgroundColor = [UIColor themeGray8];
+     [self.bottomInfoView addSubview:_lineView];
 
     _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
     _avator.layer.cornerRadius = 23;
@@ -208,6 +213,12 @@
         make.right.mas_equalTo(self.containerView.mas_right);
         make.height.mas_equalTo(76);
         make.left.right.mas_equalTo(self.containerView);
+    }];
+    [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.bottomInfoView).offset(15);
+        make.right.equalTo(self.bottomInfoView).offset(-15);
+        make.top.equalTo(self.bottomInfoView);
+        make.height.mas_offset(1);
     }];
 
     [self.avator mas_makeConstraints:^(MASConstraintMaker *make) {

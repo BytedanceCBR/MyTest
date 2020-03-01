@@ -382,7 +382,7 @@
          [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
              FHDetailContactModel *showModel = obj;
          if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
-                  showHeight = showHeight +96;
+                  showHeight = showHeight +100;
               }else {
                   showHeight = showHeight + 76;
               };
@@ -841,7 +841,7 @@
         make.top.equalTo(self.name.mas_bottom).offset(6);
     }];
     [self.scoreDescription mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.name.mas_right).offset(2);
+        make.left.equalTo(self.score.mas_right).offset(2);
         make.centerY.equalTo(self.score);
     }];
 }
