@@ -197,10 +197,10 @@
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"left_pic";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
-        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeRentHouse];
         tracerDic[@"element_from"] = @"rent_same_neighborhood";
         tracerDic[@"enter_from"] = @"neighborhood_detail";
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeSecondHandHouse)}];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeRentHouse)}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",dataItem.id];
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
