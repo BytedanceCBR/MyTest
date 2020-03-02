@@ -1115,6 +1115,23 @@
   NSDictionary *dict = @{
     @"headerLayoutStyle": @"header_layout_style",
     @"publisherText": @"publisher_text",
+    @"relatedForum": @"related_forum",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedContentRawDataCardHeaderRelatedForumModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"concernId": @"concern_id",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

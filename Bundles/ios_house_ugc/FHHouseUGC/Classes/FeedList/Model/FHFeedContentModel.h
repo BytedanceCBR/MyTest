@@ -10,6 +10,13 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
     FHFeedContentStickStyleTopAndGood = 3,    //置顶和加精
 };
 
+@interface FHFeedContentRawDataCardHeaderRelatedForumModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *concernId;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *schema;
+@end
+
 @interface FHFeedContentRawDataCardFooterModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *title;
@@ -24,6 +31,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *headerLayoutStyle;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *publisherText;
+@property (nonatomic, strong , nullable) FHFeedContentRawDataCardHeaderRelatedForumModel *relatedForum ;  
 @end
 
 @interface FHFeedContentCellCtrlsModel : JSONModel

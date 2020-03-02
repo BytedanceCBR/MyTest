@@ -91,6 +91,8 @@
 @property(nonatomic, strong) FHErrorView *errorView;
 @property(nonatomic, assign) BOOL isSegmentSelectedFinished;
 
+@property(nonatomic, strong) FHFeedContentRawDataCardHeaderRelatedForumModel *relatedForm;
+
 @end
 
 @implementation FHSpecialTopicViewModel
@@ -346,9 +348,21 @@
 //    dic[@"select_group_name"] = self.data.socialGroupName;
     dic[TRACER_KEY] = traceParam;
     dic[VCTITLE_KEY] = @"发帖";
-    if (self.specialTopicHeaderModel) {
-        dic[@"topic_model"] = self.specialTopicHeaderModel;
+    
+    if(self.relatedForm){
+        //带入话题
+        FHTopicHeaderModel *specialTopicHeaderModel = [[FHTopicHeaderModel alloc] init];
+        FHTopicHeaderForumModel *forum = [[FHTopicHeaderForumModel alloc] init];
+        forum.forumId = self.relatedForm.concernId;
+        forum.forumName = self.relatedForm.title;
+        if(forum.forumName.length > 0){
+            forum.forumName = [forum.forumName stringByReplacingOccurrencesOfString:@"#" withString:@""];
+        }
+        forum.schema = self.relatedForm.schema;
+        specialTopicHeaderModel.forum = forum;
+        dic[@"topic_model"] = specialTopicHeaderModel;
     }
+    
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dic];
     NSURL *url = [NSURL URLWithString:@"sslocal://ugc_post"];
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
@@ -916,6 +930,7 @@
             headerView.gotoPublishBlock = ^{
                 StrongSelf;
                 [self addClickOptionLog:@"publish_idea"];
+                self.relatedForm = model.rawData.cardHeader.relatedForum;
                 [self gotoPostThreadVC];
             };
         }else{
