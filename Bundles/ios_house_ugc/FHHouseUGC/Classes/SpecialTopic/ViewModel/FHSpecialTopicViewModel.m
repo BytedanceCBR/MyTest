@@ -861,7 +861,7 @@
             }
             
             cell.delegate = self;
-            cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
+            cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row section:indexPath.section];
             
             if(indexPath.row < resultArray.count){
                 [cell refreshWithData:cellModel];
@@ -943,6 +943,8 @@
             if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
                 NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
                 reportParams[@"enter_from"] = [self pageType];
+                reportParams[@"subject_id"] = self.viewController.forumId;
+                
                 NSString *urlStr = [NSString stringWithFormat:@"%@&report_params=%@",cellModel.openUrl,[reportParams tt_JSONRepresentation] ];
                 NSURL *url = [TTStringHelper URLWithURLString:urlStr];
                 if ([[UIApplication sharedApplication] canOpenURL:url]) {
@@ -1296,17 +1298,17 @@
             }
             
             self.clientShowDict[groupId] = @(indexPath.row);
-            [self trackClientShow:cellModel rank:indexPath.row];
+            [self trackClientShow:cellModel rank:indexPath.row section:indexPath.section];
         }
     }
 }
 
-- (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
-    NSMutableDictionary *dict =  [self trackDict:cellModel rank:rank];
+- (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank section:(NSInteger)section{
+    NSMutableDictionary *dict =  [self trackDict:cellModel rank:rank section:section];
     TRACK_EVENT(@"feed_client_show", dict);
 }
 
-- (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+- (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank section:(NSInteger)section {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
     dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
@@ -1314,6 +1316,11 @@
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"subject_id"] = self.viewController.forumId;
     dict[@"group_id"] = cellModel.groupId;
+    
+    if(section < self.dataArray.count && section < self.tabContentModel.count){
+        FHFeedContentModel *model = self.tabContentModel[section];
+        dict[@"category_name"] = model.rawData.cardHeader.title;
+    }
     
     return dict;
 }
