@@ -21,7 +21,7 @@
 
 #define cellId @"cellId"
 
-@interface FHDetailNeighborhoodCommentsCell () <UITableViewDelegate,UITableViewDataSource>
+@interface FHDetailNeighborhoodCommentsCell () <UITableViewDelegate,UITableViewDataSource, FHUGCBaseCellDelegate>
 
 @property(nonatomic , strong) NSMutableArray *dataList;
 @property(nonatomic , strong) UITableView *tableView;
@@ -58,6 +58,7 @@
     
     _tableView.sectionFooterHeight = 0.0;
     _tableView.estimatedRowHeight = 0;
+    _tableView.scrollEnabled = NO;
     
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -245,6 +246,7 @@
             cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
+        cell.delegate = self;
 
         if(indexPath.row < self.dataList.count){
             [cell refreshWithData:cellModel];
@@ -275,7 +277,7 @@
 
 - (UIButton *)writeCommentBtn {
     FHDetailCommentsCellModel *cellModel = (FHDetailCommentsCellModel *)self.currentData;
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(16, 10, [UIScreen mainScreen].bounds.size.width - 62, 40)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(16, 10, [UIScreen mainScreen].bounds.size.width - 32, 40)];
     button.backgroundColor = [UIColor themeGray7];
     button.imageView.contentMode = UIViewContentModeCenter;
     [button setTitle:cellModel.contentEmptyTitle forState:UIControlStateNormal];
@@ -339,4 +341,73 @@
     }
 }
 
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    // 埋点
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    dict[TRACER_KEY] = traceParam;
+    
+    if (url) {
+        BOOL isOpen = YES;
+        if ([url.absoluteString containsString:@"concern"]) {
+            // 话题
+            traceParam[@"enter_from"] = cellModel.tracerDic[UT_PAGE_TYPE];
+            traceParam[@"element_from"] = @"feed_topic";
+            traceParam[@"enter_type"] = @"click";
+            traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+            traceParam[@"log_pb"] = cellModel.logPb;
+        }
+        else if([url.absoluteString containsString:@"profile"]) {
+            // JOKER:
+        }
+        else if([url.absoluteString containsString:@"webview"]) {
+            
+        }
+        else {
+            isOpen = NO;
+        }
+        
+        if(isOpen) {
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+    }
+}
+
+- (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
+    [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+}
+
+- (void)jumpToDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
+    if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
+        [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
+    }
+}
+- (void)jumpToPostDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType {
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    // 埋点
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"enter_from"] = cellModel.tracerDic[UT_PAGE_TYPE];
+    traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+    traceParam[@"log_pb"] = cellModel.logPb;
+    dict[TRACER_KEY] = traceParam;
+    
+    dict[@"data"] = cellModel;
+    dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
+    dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
+    dict[@"tid"] = cellModel.groupId;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    FHFeedUGCContentModel *contentModel = cellModel.originData;
+    NSString *routeUrl = @"sslocal://thread_detail";
+    if (contentModel && [contentModel isKindOfClass:[FHFeedUGCContentModel class]]) {
+        NSString *schema = contentModel.schema;
+        if (schema.length > 0) {
+            routeUrl = schema;
+        }
+    }
+    
+    NSURL *openUrl = [NSURL URLWithString:routeUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
 @end
