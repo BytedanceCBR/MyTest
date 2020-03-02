@@ -476,6 +476,11 @@ static NSInteger const kMaxPostImageCount = 9;
     self.inputTextView.isBanAt = YES;
     self.inputTextView.isBanHashtag = YES;
     self.inputTextView.source = @"post";
+    self.inputTextView.typingAttributes = @{
+        NSFontAttributeName: [UIFont themeFontRegular:self.inputTextView.textViewFontSize],
+        NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText1),
+    };
+    
     y = self.inputTextView.bottom;
     
     HPGrowingTextView *internalTextView = self.inputTextView.internalGrowingTextView;
@@ -497,20 +502,18 @@ static NSInteger const kMaxPostImageCount = 9;
         maxNumberOfLines -= 2;
     }
     internalTextView.maxNumberOfLines = maxNumberOfLines;
-    
+    internalTextView.backgroundColor = [UIColor clearColor];
+    internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
+    internalTextView.tintColor = [UIColor themeRed1];
+    internalTextView.placeholderColor =  SSGetThemedColorWithKey(kColorText3);
+    internalTextView.internalTextView.placeHolderFont = [UIFont themeFontRegular:self.inputTextView.textViewFontSize];
+    internalTextView.font = [UIFont themeFontRegular:self.inputTextView.textViewFontSize];
+    internalTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     if (!isEmptyString(self.postContentHint)) {
         internalTextView.placeholder = self.postContentHint;
     } else {
         internalTextView.placeholder = [NSString stringWithFormat:@"新鲜事"];
     }
-    
-    internalTextView.backgroundColor = [UIColor clearColor];
-    internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
-    internalTextView.tintColor = [UIColor themeRed1];
-    internalTextView.placeholderColor =  SSGetThemedColorWithKey(kColorText3);
-    internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
-    internalTextView.font = [UIFont systemFontOfSize:self.inputTextView.textViewFontSize];
-    internalTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     [self.inputContainerView addSubview:self.inputTextView];
     
     // add image view
