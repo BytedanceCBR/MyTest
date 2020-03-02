@@ -1327,10 +1327,12 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
     dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"subject_id"] = self.viewController.forumId;
     dict[@"group_id"] = cellModel.groupId;
+    dict[@"rank"] = @(rank);
     
     if(section < self.dataArray.count && section < self.tabContentModel.count){
         FHFeedContentModel *model = self.tabContentModel[section];
