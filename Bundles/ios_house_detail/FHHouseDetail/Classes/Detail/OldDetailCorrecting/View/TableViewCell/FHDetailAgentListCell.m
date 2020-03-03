@@ -842,6 +842,7 @@
     }];
     [self.scoreDescription mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.score.mas_right).offset(2);
+        make.right.equalTo(self).offset(-20);
         make.centerY.equalTo(self.score);
     }];
 }
