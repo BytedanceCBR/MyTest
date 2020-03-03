@@ -26,7 +26,6 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
-#import "FHMinisdkManager.h"
 #import "UIViewController+Track.h"
 #import "FHSpringHangView.h"
 #import <FHHouseBase/FHPermissionAlertViewController.h>
@@ -235,11 +234,6 @@
             [FHEnvContext hideFindTabRedDotsLimitCount];
             self.hasShowDots = YES;
         }
-    }
-    
-    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
-        //春节活动
-        [[FHMinisdkManager sharedInstance] goSpring];
     }
 }
 

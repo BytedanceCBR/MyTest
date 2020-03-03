@@ -359,9 +359,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     self.stayTime = [[NSDate date] timeIntervalSince1970];
-
-    //春节活动
-//    [[FHMinisdkManager sharedInstance] goSpring];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
