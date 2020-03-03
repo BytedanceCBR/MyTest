@@ -182,6 +182,9 @@
 - (void)cellClick:(UIControl *)control {
     NSInteger index = control.tag;
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (model.houseType == FHHouseTypeNewHouse) {
+        return;
+    }
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         model.phoneCallViewModel.belongsVC = model.belongsVC;
