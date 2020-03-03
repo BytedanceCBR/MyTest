@@ -52,14 +52,14 @@ def fhPods
 #     'Core',
 #     'DelegateForC'
 #     ]
-#   pod 'FHPopupViewCenter', '0.0.2-alpha.34', :subspecs => [
-#   'Core',
-#   'DelegateForC'
-#   ]
-    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
-    'Core',
-    'DelegateForC'
-    ]
+   pod 'FHPopupViewCenter', '0.0.2-alpha.35', :subspecs => [
+   'Core',
+   'DelegateForC'
+   ]
+#    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
+#    'Core',
+#    'DelegateForC'
+#    ]
 
 
     pod 'ios_house_im' , '0.1.19-rc.7'
