@@ -75,9 +75,9 @@
             [self initViewModel];
         }
         self.segmentControl.sectionTitles = [self getSegmentTitles];
-        if([FHEnvContext isSpringHangOpen] && self.springView){
-            [self.springView show:[FHEnvContext enterTabLogName]];
-        }
+//        if([FHEnvContext isSpringHangOpen] && self.springView){
+//            [self.springView show:[FHEnvContext enterTabLogName]];
+//        }
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
@@ -88,7 +88,14 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
+}
+
+- (void)popupViewDataFetchSuccess {
+    if([FHEnvContext isSpringHangOpen] && self.springView){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
 }
 
 - (void)addSpringView {

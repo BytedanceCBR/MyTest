@@ -207,6 +207,14 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollEnd) name:@"FHHomeMainDidScrollEnd" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
+}
+
+- (void)popupViewDataFetchSuccess {
+    if([FHEnvContext isSpringHangOpen] && self.springView){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
 }
 
 - (void)initCityChangeSubscribe
@@ -218,9 +226,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
         [FHEnvContext changeFindTabTitle];
         [FHEnvContext showRedPointForNoUgc];
-        if([FHEnvContext isSpringHangOpen] && self.springView){
-            [self.springView show:[FHEnvContext enterTabLogName]];
-        }
+//        if([FHEnvContext isSpringHangOpen] && self.springView){
+//            [self.springView show:[FHEnvContext enterTabLogName]];
+//        }
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
     }];
 }
