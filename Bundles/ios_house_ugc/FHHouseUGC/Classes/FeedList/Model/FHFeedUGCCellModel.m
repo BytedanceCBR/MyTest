@@ -870,7 +870,7 @@
     if(isInNeighbourhoodCommentsList){
         width = [UIScreen mainScreen].bounds.size.width - 70;
     }
-    self.numberOfLines = 3;
+    self.numberOfLines = self.imageList.count > 0 ? 3 : 5;
     [FHUGCCellHelper setRichContentWithModel:self width:width numberOfLines:self.numberOfLines];
 }
 
