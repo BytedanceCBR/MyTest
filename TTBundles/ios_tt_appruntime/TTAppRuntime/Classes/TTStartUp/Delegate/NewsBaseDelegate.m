@@ -85,6 +85,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import <FHHouseBase/FHEnvContext.h>
 
+#import "TTPushServiceDelegate.h"
 
 #if INHOUSE
 #import "TTStartupDebugGroup.h"
@@ -307,56 +308,41 @@ static NSTimeInterval lastTime;
     [self startRegisterRemoteNotificationAfterDelay:.5];
 }
 
-+ (void)startRegisterRemoteNotificationAfterDelay:(float)secs
++ (void)startRegisterRemoteNotificationAfterDelay:(int)secs
 {
     if (![[FHEnvContext sharedInstance ] hasConfirmPermssionProtocol]) {
         return;
     }
     
     [[TTAuthorizeManager sharedManager].pushObj filterAuthorizeStrategyWithCompletionHandler:^{
-        [self startRegisterRemoteNotificationAfterAuthorizeWithDelay:secs];
+        [self registerPush:secs];
     } sysAuthFlag:0]; //显示系统弹窗前显示自有弹窗的逻辑下掉，0代表直接显示系统弹窗，1代表先自有弹窗，再系统弹窗
 }
-
-+ (void)startRegisterRemoteNotificationAfterAuthorizeWithDelay:(float)secs{
-    if(secs > 0)
-    {
-        int64_t delayInSeconds = secs;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
++ (void)registerPush:(int)secs {
+    if (![TTPushServiceDelegate enable]) {
+        dispatch_block_t registerBlock = ^{
             if ([TTDeviceHelper OSVersionNumber] >= 10.0) {
                 [[TTNotificationCenterDelegate sharedNotificationCenterDelegate] registerNotificationCenter];
-            }
-            else if ([TTDeviceHelper OSVersionNumber] >= 8.0) {
+            } else {
                 UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge
                                                                                                      |UIRemoteNotificationTypeSound
                                                                                                      |UIRemoteNotificationTypeAlert) categories:nil];
                 [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-                
             }
-            else {
-                [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                                                       UIRemoteNotificationTypeAlert |
-                                                                                       UIRemoteNotificationTypeSound)];
-            }
-        });
-    }
-    else
-    {
-        if ([TTDeviceHelper OSVersionNumber] >= 10.0) {
-            [[TTNotificationCenterDelegate sharedNotificationCenterDelegate] registerNotificationCenter];
+        };
+        
+        if(secs > 0) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(secs * NSEC_PER_SEC)), dispatch_get_main_queue(), registerBlock);
+        } else if (registerBlock) {
+            registerBlock();
         }
-        else if ([TTDeviceHelper OSVersionNumber] >= 8.0) {
-            UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge
-                                                                                                 |UIRemoteNotificationTypeSound
-                                                                                                 |UIRemoteNotificationTypeAlert) categories:nil];
-            [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-            
-        }
-        else {
-            [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                                                   UIRemoteNotificationTypeAlert |
-                                                                                   UIRemoteNotificationTypeSound)];
+    } else {
+        if (secs > 0) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(secs * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [[TTPushServiceDelegate sharedInstance] registerNotification];
+            });
+        } else {
+            [[TTPushServiceDelegate sharedInstance] registerNotification];
         }
     }
 }

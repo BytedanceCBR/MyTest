@@ -35,6 +35,7 @@
 #import "HMDTTMonitor.h"
 #import "FHIntroduceManager.h"
 #import <FHHouseBase/FHEnvContext.h>
+#import <BDALog/BDAgileLog.h>
 
 DEC_TASK_N(FHCHandleAPNSTask,FHTaskTypeSerial,TASK_PRIORITY_HIGH+12);
 
@@ -197,9 +198,9 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
     [[HMDTTMonitor defaultManager] hmdTrackService:@"push_register_token_result" metric:nil category:@{@"status":@(status)} extra:nil];
 
     [TTBackgroundModeTask reportDeviceTokenByAppLogout];
-#if DEBUG
-    NSLog(@"push_device_token = %@", deviceTokenString);
-#endif
+    
+    BDALOG_INFO(@"push_device_token = %@", deviceTokenString);
+
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error

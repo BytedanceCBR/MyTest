@@ -37,6 +37,7 @@
 #import "TTUIResponderHelper.h"
 #import "UIViewController+TTMovieUtil.h"
 #import "FHIntroduceManager.h"
+#import <FHCHousePush/TTPushServiceDelegate.h>
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
@@ -118,8 +119,10 @@ static APNsManager *_sharedManager = nil;
         wrapperTrackEventWithCustomKeys(@"apn", @"news_notification_view", rid, nil, nil);
     }
     
-
-//    [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"notify" postBack:postBack];
+    //V3埋点 使用BDUGPushSDK时通过sdk内置上报
+     if (![TTPushServiceDelegate enable]) {
+         [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"notify" postBack:postBack];
+     }
 
     [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:TTTrackerLaunchFromRemotePush];
     
@@ -292,11 +295,13 @@ static APNsManager *_sharedManager = nil;
 //
 //        [[TTNetworkManager shareInstance] requestForJSONWithURL:tURL params:nil method:@"GET" needCommonParams:YES callback:NULL];
 //
-//    } else {
+    if ([TTPushServiceDelegate enable]) {
+        [BDUGPushService uploadNotificationStatus:[NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]]];
+    } else {
         TTUploadSwitchRequestParam *param = [TTUploadSwitchRequestParam requestParam];
         param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
         [TouTiaoPushSDK sendRequestWithParam:param completionHandler:nil];
-//    }
+    }
     // 注意：根据 collect_setting api 的定义，close 发送 0，open 发送 1，和 app_notice_status 相反
     NSNumber *apnNotifyValue = @1;
     if ([TTUserSettingsManager apnsNewAlertClosed]) apnNotifyValue = @0;

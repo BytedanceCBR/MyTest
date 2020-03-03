@@ -28,6 +28,7 @@
 #import <TTAppRuntime/TTProjectLogicManager.h>
 #import "FHBaseViewController.h"
 #import "UIViewController+TTMovieUtil.h"
+#import <FHCHousePush/TTPushServiceDelegate.h>
 
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 
@@ -189,8 +190,11 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
                             wrapperTrackEventWithCustomKeys(@"apn", @"news_alert_view", rid, nil, nil);
                         }
-                        //pushsdk 新增v3埋点
-                        [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"alert" postBack:postBack];
+                        // todo zjing test
+                        if (![TTPushServiceDelegate enable]) {
+                            //pushsdk 新增v3埋点
+                            [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"alert" postBack:postBack];
+                        }
                     }
                 } willHideBlock:nil didHideBlock:nil];
                 
@@ -319,7 +323,10 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                 // [params setValue:rid forKey:@"rule_id"];
                 // [params setValue:@"alert" forKey:@"click_position"];
                 // [TTTrackerWrapper eventV3:@"push_click" params:[params copy] isDoubleSending:YES];
-                [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"alert" postBack:postBack];
+                // todo zjing test
+                if (![TTPushServiceDelegate enable]) {
+                    [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"alert" postBack:postBack];
+                }
             }];
             [alert showFrom:[TTUIResponderHelper topmostViewController] animated:YES];
             wrapperTrackEvent(@"apn", @"news_alert_show");
