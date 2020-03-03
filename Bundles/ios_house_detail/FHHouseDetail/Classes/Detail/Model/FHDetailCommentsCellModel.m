@@ -23,7 +23,8 @@
     self.dataList = [[NSMutableArray alloc] init];
     
     for (NSString *content in comments.content.data) {
-         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:content];        cellModel.isInNeighbourhoodCommentsList = NO;
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:content];
+        cellModel.isInNeighbourhoodCommentsList = NO;
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodComments;
         [_dataList addObject:cellModel];
     }
