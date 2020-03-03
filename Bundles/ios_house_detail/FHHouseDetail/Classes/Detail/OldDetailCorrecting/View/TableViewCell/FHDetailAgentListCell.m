@@ -788,11 +788,14 @@
     _score.textColor = [UIColor themeGray1];
     _score.font = [UIFont themeFontMedium:14];
     _score.textAlignment = NSTextAlignmentLeft;
+    [_score setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [_score setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self addSubview:_score];
     
     self.scoreDescription = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _scoreDescription.textColor = [UIColor themeGray2];
     _scoreDescription.textAlignment = NSTextAlignmentLeft;
+
     [self addSubview:_scoreDescription];
     
     [self.avator mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -842,7 +845,7 @@
     }];
     [self.scoreDescription mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.score.mas_right).offset(2);
-        make.right.equalTo(self).offset(-20);
+        make.right.mas_lessThanOrEqualTo(self).offset(-20);
         make.centerY.equalTo(self.score);
     }];
 }
