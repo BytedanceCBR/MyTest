@@ -402,8 +402,9 @@ def appPods
     'TTNet'
     ]
     #-----头条推送SDK----
-    pod_binary 'TTPushSDK', '0.1.1'
-    
+    pod 'TTPushSDK', '0.1.1'
+    pod 'BDUGPushSDK', '2.2.1'
+
     #-----路由-----
     pod 'TTRoute','1.1.3-rc.0-f100' # git:'git@code.byted.org:TTIOS/tt_pods_route.git', :branch => 'f100'
 
@@ -579,16 +580,30 @@ target 'f100' do
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
 end
 
+target 'serviceNofExtension' do
+  pod 'BDUGPushSDK','2.2.1',:subspecs => [
+  'Extension'
+  ]
+end
+
+target 'com.f100.client.FHNotificationServiceExtension' do
+  pod 'BDUGPushSDK','2.2.1',:subspecs => [
+  'Extension'
+  ]
+end
+
 # POD POST_INSTALL
 post_install do |installer|
-    installer.aggregate_targets.each do |target|
-        copy_pods_resources_path = "Pods/Target Support Files/#{target.name}/#{target.name}-resources.sh"
-        string_to_replace = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"'
-        assets_compile_with_app_icon_arguments = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}" --app-icon "${ASSETCATALOG_COMPILER_APPICON_NAME}" --output-partial-info-plist "${BUILD_DIR}/assetcatalog_generated_info.plist"'
-        text = File.read(copy_pods_resources_path)
-        new_contents = text.gsub(string_to_replace, assets_compile_with_app_icon_arguments)
-        File.open(copy_pods_resources_path, "w") {|file| file.puts new_contents }
-    end
+  
+  # todo zjing test
+#    installer.aggregate_targets.each do |target|
+#        copy_pods_resources_path = "Pods/Target Support Files/#{target.name}/#{target.name}-resources.sh"
+#        string_to_replace = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"'
+#        assets_compile_with_app_icon_arguments = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}" --app-icon "${ASSETCATALOG_COMPILER_APPICON_NAME}" --output-partial-info-plist "${BUILD_DIR}/assetcatalog_generated_info.plist"'
+#        text = File.read(copy_pods_resources_path)
+#        new_contents = text.gsub(string_to_replace, assets_compile_with_app_icon_arguments)
+#        File.open(copy_pods_resources_path, "w") {|file| file.puts new_contents }
+#    end
 
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|

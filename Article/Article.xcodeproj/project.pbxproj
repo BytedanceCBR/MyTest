@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1463BBA9E3DCC925B4FEE0F2 /* libPods-com.f100.client.FHNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 463126C447392DFA6D0E387F /* libPods-com.f100.client.FHNotificationServiceExtension.a */; };
 		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
 		3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398E2270545700AE567D /* TargetLogicSetting.strings */; };
 		3D2F399A2270545700AE567D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39912270545700AE567D /* main.m */; };
@@ -131,6 +132,7 @@
 		D37495E323965409006D44D2 /* gaode_house_detail_style.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DF23965409006D44D2 /* gaode_house_detail_style.data */; };
 		D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
+		D55B84DD2CCDEBDD13DAD9FD /* libPods-serviceNofExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CFA1F540F85DFB96DD4FB618 /* libPods-serviceNofExtension.a */; };
 		EB988F3EBE29F7D165C85289 /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A95054107C5636D5192DC02 /* libPods-NewsLiteInHouse.a */; };
 		FB6C55CF23ACD41800651456 /* firework.json in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55CA23ACD41700651456 /* firework.json */; };
 		FB6C55D023ACD41800651456 /* firework.json in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55CA23ACD41700651456 /* firework.json */; };
@@ -282,6 +284,7 @@
 		2E14CCE91FE007C00093E05D /* sound2.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound2.caf; sourceTree = "<group>"; };
 		2E14CCEA1FE007C10093E05D /* sound4.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound4.caf; sourceTree = "<group>"; };
 		2E14CCEB1FE007C20093E05D /* sound6.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound6.caf; sourceTree = "<group>"; };
+		32B83BC7CF938C9C252945E0 /* Pods-serviceNofExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-serviceNofExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-serviceNofExtension/Pods-serviceNofExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		3AA10B47158835A8009876FE /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		3AA5028415876A1F00EB27FA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3AA5028615876A1F00EB27FA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -325,6 +328,7 @@
 		3F4555FA168C4375001B7373 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		4175CE3C1D16850900F2CFC2 /* AuthorizeHintResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AuthorizeHintResource.xcassets; sourceTree = "<group>"; };
 		438724811BE32BB500854877 /* Settings.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Settings.xcassets; sourceTree = "<group>"; };
+		463126C447392DFA6D0E387F /* libPods-com.f100.client.FHNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-com.f100.client.FHNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		481C453D195AA8C0009959C3 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		483C7438165F8DDE0020A3DD /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		4842A8A51847800D00A75DBD /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -335,6 +339,7 @@
 		48C000AF16F7426D00FC365B /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		48EC02941855A4BB0010847F /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		48F7DC0816E9C9140052F809 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		4BEF9CFAD5CACB4F56082A04 /* Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-com.f100.client.FHNotificationServiceExtension/Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		4EB6EE50212A823B00EC2148 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6114B09C21B3E78C00331D12 /* house_refresh.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = house_refresh.json; sourceTree = "<group>"; };
 		619867792223E8EE0056B2EF /* serviceNofExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = serviceNofExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -372,6 +377,7 @@
 		A83064511BAAEB4E0030D9E9 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/../build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		A8350A021BB501AC008D8D92 /* CoreSpotlight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreSpotlight.framework; path = System/Library/Frameworks/CoreSpotlight.framework; sourceTree = SDKROOT; };
 		A89B0DC91C60C3DA00ECC955 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		A9762ED0FEF26033D7AD1FF5 /* Pods-com.f100.client.FHNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.f100.client.FHNotificationServiceExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-com.f100.client.FHNotificationServiceExtension/Pods-com.f100.client.FHNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		B119472C1CF7FF4700561B49 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		B1E15E061D77117900B551D9 /* NewsResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = NewsResource.xcassets; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
@@ -379,9 +385,11 @@
 		B388C9E32142652800653188 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B388C9E42142652800653188 /* Bubble-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bubble-Bridging-Header.h"; sourceTree = "<group>"; };
 		B388C9E62142652800653188 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		BABBC50951FAFEF890ADA65C /* Pods-serviceNofExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-serviceNofExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-serviceNofExtension/Pods-serviceNofExtension.release.xcconfig"; sourceTree = "<group>"; };
 		BFF8D6E57A4E39A98F0D633D /* Pods-NewsLiteInHouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLiteInHouse.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse.release.xcconfig"; sourceTree = "<group>"; };
 		C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "synchronize_banner_add_friends_press-667h@2x.jpg"; sourceTree = "<group>"; };
 		C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "synchronize_banner_add_friends_press-736h@3x.jpg"; sourceTree = "<group>"; };
+		CFA1F540F85DFB96DD4FB618 /* libPods-serviceNofExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-serviceNofExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D013795E1DFE8BEF0020C6BD /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = FrameworkResource.xcassets; sourceTree = "<group>"; };
 		D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -420,6 +428,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D55B84DD2CCDEBDD13DAD9FD /* libPods-serviceNofExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,6 +436,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1463BBA9E3DCC925B4FEE0F2 /* libPods-com.f100.client.FHNotificationServiceExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,6 +533,10 @@
 				BFF8D6E57A4E39A98F0D633D /* Pods-NewsLiteInHouse.release.xcconfig */,
 				8996A87C8A3F9BCFC1FB0431 /* Pods-f100.debug.xcconfig */,
 				2217C766FCBF2A4BB412EB2B /* Pods-f100.release.xcconfig */,
+				A9762ED0FEF26033D7AD1FF5 /* Pods-com.f100.client.FHNotificationServiceExtension.debug.xcconfig */,
+				4BEF9CFAD5CACB4F56082A04 /* Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig */,
+				32B83BC7CF938C9C252945E0 /* Pods-serviceNofExtension.debug.xcconfig */,
+				BABBC50951FAFEF890ADA65C /* Pods-serviceNofExtension.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -607,6 +621,8 @@
 				FE524F681DC9BE4F00CDED36 /* IntentsUI.framework */,
 				6A95054107C5636D5192DC02 /* libPods-NewsLiteInHouse.a */,
 				70FA0E6B1FECAC5D4D4F1932 /* libPods-f100.a */,
+				463126C447392DFA6D0E387F /* libPods-com.f100.client.FHNotificationServiceExtension.a */,
+				CFA1F540F85DFB96DD4FB618 /* libPods-serviceNofExtension.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -813,6 +829,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 619867822223E8EF0056B2EF /* Build configuration list for PBXNativeTarget "serviceNofExtension" */;
 			buildPhases = (
+				E9B903099F9BF085A8A0440E /* [CP] Check Pods Manifest.lock */,
 				619867752223E8EE0056B2EF /* Sources */,
 				619867762223E8EE0056B2EF /* Frameworks */,
 				619867772223E8EE0056B2EF /* Resources */,
@@ -830,6 +847,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 619867942223E9A70056B2EF /* Build configuration list for PBXNativeTarget "com.f100.client.FHNotificationServiceExtension" */;
 			buildPhases = (
+				BBFCE98BF0EC13BEF73A6E83 /* [CP] Check Pods Manifest.lock */,
 				619867872223E9A70056B2EF /* Sources */,
 				619867882223E9A70056B2EF /* Frameworks */,
 				619867892223E9A70056B2EF /* Resources */,
@@ -1312,7 +1330,6 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
-				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCRichText/Assets/Emoji.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTBackButtonView.bundle",
@@ -1500,6 +1517,50 @@
 			shellScript = "#change Pods-NewsInHouse-resources.sh source code\nsed -i '' 's/OTHER_XCASSETS=\\$(find \\\"\\$PWD\\\" -iname \\\"\\*.xcassets\\\" -type d)/OTHER_XCASSETS=\\$(ruby get_all_xcassets.rb \\${SRCROOT} \\${TARGETNAME})/g' \"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		BBFCE98BF0EC13BEF73A6E83 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-com.f100.client.FHNotificationServiceExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E9B903099F9BF085A8A0440E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-serviceNofExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		FCC852F64C0273F226C6A461 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1514,6 +1575,7 @@
 				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/vconsole.js",
 				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccountSessionSDK/SessionCheck.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/BDSSOAuthSDK/BDSSOAuthSDK.bundle",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/BottomShadow@2x.png",
@@ -1598,6 +1660,7 @@
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/NetworkStubFiles/Stub_Article_Information.txt",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_article_video/TTArticleVideo/Assets/TTVTab.storyboard",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_article_video/TTArticleVideo/Assets/Video.storyboard",
+				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTImagePicker/TTImagePickerResources.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/../../AKPlugins/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
@@ -1609,7 +1672,6 @@
 				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
 				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
-				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCRichText/Assets/Emoji.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTBackButtonView.bundle",
@@ -1632,6 +1694,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/vconsole.js",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SessionCheck.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDSSOAuthSDK.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BottomShadow@2x.png",
@@ -1960,6 +2023,7 @@
 		};
 		619867832223E8EF0056B2EF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 32B83BC7CF938C9C252945E0 /* Pods-serviceNofExtension.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2007,6 +2071,7 @@
 		};
 		619867842223E8EF0056B2EF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BABBC50951FAFEF890ADA65C /* Pods-serviceNofExtension.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2055,6 +2120,7 @@
 		};
 		619867952223E9A70056B2EF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9762ED0FEF26033D7AD1FF5 /* Pods-com.f100.client.FHNotificationServiceExtension.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2102,6 +2168,7 @@
 		};
 		619867962223E9A70056B2EF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4BEF9CFAD5CACB4F56082A04 /* Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
