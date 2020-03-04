@@ -78,7 +78,6 @@
 #import "TTLocalImageTracker.h"
 #import <TTDialogDirector/TTDialogDirector.h>
 #import "TTNetworkHelper.h"
-#import <Crashlytics/Crashlytics.h>
 #import "TTLaunchManager.h"
 #import "GAIAEngine+TTBase.h"
 #import "BDUGDeepLinkManager.h"
@@ -99,7 +98,7 @@ static NSTimeInterval lastTime;
 
 //static NSString *const kTTUseWebViewLaunch = @"kTTUseWebViewLaunch";
 
-@interface NewsBaseDelegate()<CrashlyticsDelegate, TTWeChatSharePayDelegate, TTWeChatShareRequestDelegate, BDUGDeepLinkDelegate>{
+@interface NewsBaseDelegate()< TTWeChatSharePayDelegate, TTWeChatShareRequestDelegate, BDUGDeepLinkDelegate>{
     NSUInteger _reportTryCount;
     NSMutableDictionary * _remotoNotificationDict;
 }

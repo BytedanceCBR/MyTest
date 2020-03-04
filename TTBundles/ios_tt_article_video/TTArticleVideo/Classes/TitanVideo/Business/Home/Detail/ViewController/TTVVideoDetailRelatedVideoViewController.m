@@ -376,7 +376,7 @@
             else {
                 wrapperTrackEvent(@"detail", label);
             }
-            CLS_LOG(@"didReceiveMemoryWarning");
+            // CLS_LOG(@"didReceiveMemoryWarning");
             
             if (!article.hasVideoItem) {
                 return;

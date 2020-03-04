@@ -570,5 +570,10 @@
 
     return attributes;
 }
-
+-(NSInteger)trimmedLength {
+    NSString *trimmedText = [self.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    TTRichSpanText *richSpanText = [[TTRichSpanText alloc] initWithText:trimmedText richSpanLinks:nil imageInfoModelDictionary:nil];
+    NSAttributedString *attributedString = [self attributedStringFromRichSpanText:richSpanText];
+    return attributedString.length;
+}
 @end

@@ -150,7 +150,7 @@
 
 - (void)setupUI {
     _lineHeight = 0;
-    self.contentView.backgroundColor = [UIColor colorWithHexStr:@"#FFFEFE"];
+//    self.contentView.backgroundColor = [UIColor colorWithHexStr:@"#FFFEFE"];
     
     _ownerLabel = [UILabel createLabel:@"" textColor:@"" fontSize:10];
     _ownerLabel.textColor = [UIColor themeGray1];

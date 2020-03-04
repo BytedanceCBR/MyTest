@@ -31,7 +31,6 @@
 #import "UIViewController+Track.h"
 
 #import "UIViewController+RefreshEvent.h"
-#import <Crashlytics/Crashlytics.h>
 #import "TTCustomAnimationNavigationController.h"
 #import "TTCollectionListPageCell.h"
 #import "TTTopBar.h"
@@ -336,7 +335,7 @@ extern BOOL ttsettings_showRefreshButton(void);
 
 - (void)connectionChanged:(NSNotification *)noti
 {
-    CLS_LOG(@"connectionChanged");
+    // CLS_LOG(@"connectionChanged");
     if ([self.categories count] == 0) {
         TTReachability *reachability = noti.object;
         if (reachability.currentReachabilityStatus == ReachableViaWiFi) {

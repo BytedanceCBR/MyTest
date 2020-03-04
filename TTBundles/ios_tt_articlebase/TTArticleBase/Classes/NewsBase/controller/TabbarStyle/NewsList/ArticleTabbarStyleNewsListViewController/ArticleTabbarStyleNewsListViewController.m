@@ -16,7 +16,6 @@
 #import "SSCommonLogic.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "UIViewController+Track.h"
-#import <Crashlytics/Crashlytics.h>
 #import "TTInteractExitHelper.h"
 #import <TTServiceKit/TTServiceCenter.h>
 #import "TTAdManagerProtocol.h"

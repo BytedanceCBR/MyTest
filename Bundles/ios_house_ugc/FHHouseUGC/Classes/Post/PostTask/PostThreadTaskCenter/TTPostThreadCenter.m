@@ -219,7 +219,12 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
             }
         }
         
-        [[ToastManager manager] showToast:@"发帖成功"];
+        
+        NSString *hintString = @"发帖成功";
+        if(task.neighborhoodId > 0){
+            hintString = @"发布成功，审核通过后可查看";
+        }
+        [[ToastManager manager] showToast:hintString];
         
         // 数据解析
         NSString *social_group_id = userInfo[@"social_group_id"];
@@ -407,6 +412,10 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         task.insertMixCardID = postThreadModel.insertMixCardID;
         task.relatedForumSubjectID = postThreadModel.relatedForumSubjectID;
         task.sdkParams = postThreadModel.sdkParams;
+        task.neighborhoodId = postThreadModel.neighborhoodId;
+        task.pubSource = postThreadModel.source;
+        task.scores = postThreadModel.scores;
+        task.neighborhoodTags = postThreadModel.neighborhoodTags;
         if (!task) {
             return;
         }
@@ -680,6 +689,11 @@ NSString * const TTPostTaskNotificationUserInfoKeyChallengeGroupID = kTTForumPos
         publishParams[@"mention_concern"] = postThreadModel.mentionConcerns;
         publishParams[@"mention_user"] = postThreadModel.mentionUsers;
         publishParams[@"bind_type"] = @(postThreadModel.bindType);
+        // 小区点评相关
+        publishParams[@"neighborhood_id"] = @(postThreadModel.neighborhoodId.longLongValue);
+        publishParams[@"source"] = postThreadModel.source;
+        publishParams[@"scores"] = postThreadModel.scores;
+        publishParams[@"neighborhood_tags"] = postThreadModel.neighborhoodTags;
     
         // 报数相关
         publishParams[@"enter_from"] = postThreadModel.enterFrom;

@@ -545,7 +545,6 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         make.centerY.mas_equalTo(self);
         make.width.mas_equalTo(0);
     }];
-    
 }
 
 -(void)updateWithOfficalData:(FHDetailDataBaseExtraOfficialModel *)officialModel

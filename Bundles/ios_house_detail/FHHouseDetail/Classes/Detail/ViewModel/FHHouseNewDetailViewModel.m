@@ -34,6 +34,7 @@
 #import "FHDetailNoticeAlertView.h"
 #import "TTDeviceHelper+FHHouse.h"
 #import "TTUIResponderHelper.h"
+#import "FHDetailAgentListCell.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -74,7 +75,8 @@
     [self.tableView registerClass:[FHDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     
     [self.tableView registerClass:[FHDetailNewUGCSocialCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseNewsSocialModel class])];
-    
+    //推荐经纪人
+    [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
 }
 //// cell class
 //- (Class)cellClassForEntity:(id)model {
@@ -496,7 +498,34 @@
         model.data.floorpanList.courtId = model.data.coreInfo.id;
         [self.items addObject:model.data.floorpanList];
     }
-    
+    // 推荐经纪人
+    if (model.data.recommendedRealtors.count > 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        agentListModel.tableView = self.tableView;
+        agentListModel.belongsVC = self.detailController;
+        agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
+        agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+        
+        /******* 这里的 逻辑   ********/
+        agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:self.houseId];
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        agentListModel.phoneCallViewModel.tracerDict = paramsDict;
+        agentListModel.searchId = searchId;
+        agentListModel.imprId = imprId;
+        agentListModel.houseId = self.houseId;
+        agentListModel.houseType = self.houseType;
+        
+        [self.items addObject:agentListModel];
+    }
     // UGC社区入口
     if (model.data.socialInfo && model.data.socialInfo.socialGroupInfo && model.data.socialInfo.socialGroupInfo.socialGroupId.length > 0) {
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
