@@ -21,7 +21,6 @@
 #import "TTDeviceHelper.h"
 
 #import "UIImage+TTThemeExtension.h"
-#import <Crashlytics/Crashlytics.h>
 
 #import "TTCategoryBadgeNumberManager.h"
 #import "TTInfiniteLoopFetchNewsListRefreshTipManager.h"

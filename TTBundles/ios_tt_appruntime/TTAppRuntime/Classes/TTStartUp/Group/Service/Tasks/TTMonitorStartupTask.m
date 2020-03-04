@@ -27,7 +27,6 @@
 #import "TTMonitorConfiguration.h"
 #import <Heimdallr/Heimdallr.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <Crashlytics/Crashlytics.h>
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import <TTAccountSDK/TTAccount.h>
@@ -89,16 +88,10 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
                         unsigned long long result = 0;
                         NSScanner *scanner = [NSScanner scannerWithString:partStr];
                         [scanner scanHexLongLong:&result];
-                        CLSStackFrame *frame = [CLSStackFrame stackFrameWithAddress:result];
-                        [framePointers addObject:frame];
                         *stop = YES;
                     }
                 }];
             }];
-            CLSStackFrame *separator = [CLSStackFrame stackFrameWithAddress:0];
-            //加两个0地址分割
-            [framePointers addObject:separator];
-            [framePointers addObject:separator];
         }];
     }else{
         NSArray *stacks = [threadsStr componentsSeparatedByString:@"\n"];
@@ -109,14 +102,11 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
                     unsigned long long result = 0;
                     NSScanner *scanner = [NSScanner scannerWithString:partStr];
                     [scanner scanHexLongLong:&result];
-                    CLSStackFrame *frame = [CLSStackFrame stackFrameWithAddress:result];
-                    [framePointers addObject:frame];
                     *stop = YES;
                 }
             }];
         }];
     }
-    [[Crashlytics sharedInstance] recordCustomExceptionName:@"watch_dog" reason:@"caton" frameArray:[framePointers copy]];
     [[TTMonitor shareManager] trackService:@"tt_caton_monitor" status:0 extra:nil];
 }
 

@@ -24,7 +24,6 @@
 #import "TTProfileShareService.h"
 #import "KVOController.h"
 #import "SSCommonLogic.h"
-#import <CrashLytics/Answers.h>
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
 #import "TTPersonalHomeViewController.h"
 #import "FriendDataManager.h"

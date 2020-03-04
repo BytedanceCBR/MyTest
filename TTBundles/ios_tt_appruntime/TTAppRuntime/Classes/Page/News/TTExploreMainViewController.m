@@ -28,7 +28,6 @@
 #import "UIImage+TTThemeExtension.h"
 #import "UIViewController+RefreshEvent.h"
 #import "ExploreMixedListView.h"
-#import <Crashlytics/Crashlytics.h>
 #import "TTCustomAnimationNavigationController.h"
 #import "TTProfileViewController.h"
 #import "TTAccountBindingMobileViewController.h"

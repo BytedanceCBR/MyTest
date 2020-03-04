@@ -56,7 +56,6 @@
 #import <TTShare/TTShareManager.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTUIWidget/TTViewWrapper.h>
-#import <Crashlytics/Crashlytics.h>
 #import <TTNewsAccountBusiness/TTAccountBusiness.h>
 #import <TTImagePreviewAnimateManager/TTInteractExitHelper.h>
 #import <TTBaseLib/UITextView+TTAdditions.h>

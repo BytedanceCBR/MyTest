@@ -6,7 +6,6 @@
 //  Copyright © 2016 bytedance. All rights reserved.
 //
 #import "TTDebugRealMonitorManager.h"
-#import <Crashlytics/CLSLogging.h>
 
 #ifndef Log_h
 #define Log_h
@@ -63,12 +62,10 @@
 #ifdef __OBJC__
 #ifdef DEBUG
 #define TLS_LOG(__FORMAT__, ...) \
-CLS_LOG(__FORMAT__,##__VA_ARGS__); \
 [TTDebugRealMonitorManager cacheDevLogWithEventName:([NSString stringWithFormat:(__FORMAT__), ##__VA_ARGS__]) params:nil];
 
 #else
 #define TLS_LOG(__FORMAT__, ...) \
-CLS_LOG(__FORMAT__,##__VA_ARGS__); \
 [TTDebugRealMonitorManager cacheDevLogWithEventName:([NSString stringWithFormat:(__FORMAT__), ##__VA_ARGS__]) params:nil];
 #endif
 #endif

@@ -105,7 +105,6 @@
 //#import "TTRNView.h"
 #import "NSObject+FBKVOController.h"
 #import "TTLayOutCellViewBase.h"
-#import <Crashlytics/Crashlytics.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "ArticleURLSetting.h"
 //#import "TTForumCellHelper.h"
@@ -4821,8 +4820,6 @@ TTRefreshViewDelegate
         }
         
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:tipKey];
-        
-        [Answers logCustomEventWithName:@"TTFeedGuideView" customAttributes:@{@"type":@"dislike"}];
         
         TTFeedGuideView<TTGuideProtocol> *feedGuideItem = [[TTFeedGuideView alloc] initWithFrame:self.window.bounds];
         
