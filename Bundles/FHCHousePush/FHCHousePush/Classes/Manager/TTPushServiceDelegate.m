@@ -27,7 +27,7 @@
 #import <TTServiceProtocols/NewsBaseDelegateProtocol.h>
 #import "FHCHousePushUtils.h"
 
-
+#import <FHHouseBase/FHUserTracker.h>
 
 static NSString *const kNotificationCategoryIdentifierArticleDetail = @"article_detail";
 static NSString *const kNotificationCategoryIdentifierArticleDetailNoDislike = @"article_detail_no_dislike";
