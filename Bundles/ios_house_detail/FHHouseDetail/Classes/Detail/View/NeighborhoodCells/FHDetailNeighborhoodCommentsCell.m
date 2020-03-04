@@ -30,6 +30,8 @@
 @property(nonatomic , strong) UIButton *commentBtn;
 @property(nonatomic , strong) FHUGCCellManager *cellManager;
 
+@property(nonatomic , strong) NSMutableDictionary *clientShowDict;
+
 @end
 
 @implementation FHDetailNeighborhoodCommentsCell
@@ -229,12 +231,43 @@
     return [self.dataList count];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)traceFeedClientShowWithIndexPath: (NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
-//        [self traceClientShowAtIndexPath:indexPath];
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        
+        if (!self.clientShowDict) {
+            self.clientShowDict = [NSMutableDictionary new];
+        }
+        
+        NSString *groupId = cellModel.groupId;
+        if(groupId){
+            if (self.clientShowDict[groupId]) {
+                return;
+            }
+            
+            self.clientShowDict[groupId] = @(indexPath.row);
+            
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            dict[UT_ENTER_FROM] = self.baseViewModel.detailTracerDic[UT_ENTER_FROM]?: UT_BE_NULL;
+            dict[UT_ORIGIN_FROM] = self.baseViewModel.detailTracerDic[UT_ORIGIN_FROM]?:UT_BE_NULL;
+            dict[UT_PAGE_TYPE] = [self.baseViewModel pageTypeString];
+            dict[UT_LOG_PB] = cellModel.logPb;
+            dict[@"rank"] = @(indexPath.row);
+            dict[@"comment_id"] = cellModel.groupId;
+            TRACK_EVENT(@"feed_client_show", dict);
+        }
     }
 }
-
+- (void)fh_willDisplayCell  {
+    [super fh_willDisplayCell];
+    
+    if(self.dataList.count > 0) {
+        for(int i = 0; i < self.dataList.count; i++) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            [self traceFeedClientShowWithIndexPath:indexPath];
+        }
+    }
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
@@ -323,22 +356,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    BOOL canOpenURL = NO;
-    if (!canOpenURL && !isEmptyString(cellModel.openUrl)) {
-        NSURL *url = [TTStringHelper URLWithURLString:cellModel.openUrl];
-        if ([[UIApplication sharedApplication] canOpenURL:url]) {
-            canOpenURL = YES;
-            [[UIApplication sharedApplication] openURL:url];
-        }
-        else if([[TTRoute sharedRoute] canOpenURL:url]){
-            canOpenURL = YES;
-            //优先跳转openurl
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-        }
-    }else{
-        NSURL *openUrl = [NSURL URLWithString:cellModel.detailScheme];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
-    }
+    [self lookAllLinkClicked:cellModel cell:nil];
 }
 
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
