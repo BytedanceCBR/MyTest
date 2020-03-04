@@ -13,8 +13,7 @@
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 #import <FHHouseBase/FHImageModel.h>
 #import <FHHouseBase/FHHouseCoreInfoModel.h>
-#import "FHDetailHouseTitleModel.h"
-
+@class FHDetailHouseTitleModel;
 @class FHDetailNewDataSmallImageGroupModel;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -53,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel *> *smallImageGroup;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel *> *houseImage;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel *> *instantHouseImages;//列表页小图
-@property (strong, nonatomic) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型
+@property (strong, nonatomic, nullable) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型
 @property (nonatomic, assign) BOOL isInstantData;
 @end
 
@@ -112,6 +111,8 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *imOpenUrl;
 @property (nonatomic, copy , nullable) NSString *imLabel;
 @property (nonatomic, copy , nullable) NSString *realtorDetailUrl;
+@property (nonatomic, copy , nullable) NSString *realtorScoreDisplay;
+@property (nonatomic, copy , nullable) NSString *realtorScoreDescription;
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 @property (nonatomic, copy , nullable) NSString *callButtonText;
 @property (nonatomic, copy , nullable) NSString *reportButtonText;

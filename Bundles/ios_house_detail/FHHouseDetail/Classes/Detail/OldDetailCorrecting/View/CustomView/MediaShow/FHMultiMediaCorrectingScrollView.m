@@ -151,7 +151,7 @@
         gradientLayer.frame = frame;
         gradientLayer.colors = @[
                                  (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
-                                 (__bridge id)[UIColor colorWithWhite:1 alpha:1].CGColor
+                                 (__bridge id)[UIColor themeGray7].CGColor
                                  ];
         gradientLayer.startPoint = CGPointMake(0.5, 0);
         gradientLayer.endPoint = CGPointMake(0.5, 0.9);
@@ -452,6 +452,11 @@
             self.lastCell = currentCell;
         }
     }
+}
+
+- (void)setBaseViewModel:(FHHouseDetailBaseViewModel *)baseViewModel {
+    _baseViewModel = baseViewModel;
+    self.titleView.baseViewModel = baseViewModel;
 }
 
 - (void)updateModel:(FHMultiMediaModel *)model withTitleModel:(FHDetailHouseTitleModel *)titleModel{

@@ -25,7 +25,7 @@
 #import "TTArticleCategoryManager.h"
 #import "FHHouseUGCAPI.h"
 #import "FHIntroduceManager.h"
-#import "FHMinisdkManager.h"
+#import "FHPopupViewManager.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -36,7 +36,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 @property (nonatomic, strong) YYCache       *locationCache;
 @property (nonatomic, assign) BOOL isHasSendPermissionTrace;
 @property(nonatomic , strong) NSTimer *messageTimer;
-
+@property (nonatomic, assign) CLAuthorizationStatus currentStatus;
 @end
 
 @implementation FHLocManager
@@ -71,6 +71,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)loadCurrentLocationData {
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+
     if (self.isHaveLocationAuthorization) {
         self.currentReGeocode = [self.locationCache objectForKey:@"fh_currentReGeocode"];
         self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
@@ -84,6 +86,13 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     self.isShowSwitch = YES;
     self.isShowSplashAdView = NO;
     self.isShowHomeViewController = YES;
+}
+
+#pragma mark -- notification
+
+- (void)_willEnterForeground:(NSNotification *)notification
+{
+    self.currentStatus = CLLocationManager.authorizationStatus;
 }
 
 - (void)saveCurrentLocationData {
@@ -166,6 +175,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:titleStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
     [alertVC addActionWithGrayTitle:@"暂不" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+        [[FHPopupViewManager shared] outerPopupViewHide];
         NSDictionary *params = @{@"click_type":@"cancel",
                                  @"enter_from":@"default"};
         [FHEnvContext recordEvent:params andEventKey:@"city_click"];
@@ -173,6 +183,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+        [[FHPopupViewManager shared] outerPopupViewHide];
         if (openUrl) {
             [FHEnvContext sharedInstance].refreshConfigRequestType = @"switch_alert";
             
@@ -191,6 +202,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     UIViewController *topVC = [TTUIResponderHelper topmostViewController];
     if (topVC) {
+        [[FHPopupViewManager shared] outerPopupViewShow];
         [alertVC showFrom:topVC animated:YES];
     }
     
@@ -210,8 +222,10 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (BOOL)isHaveLocationAuthorization
 {
-    CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
-    switch (status) {
+    if (!self.currentStatus) {
+        self.currentStatus = CLLocationManager.authorizationStatus;
+    }
+    switch (self.currentStatus) {
         case kCLAuthorizationStatusDenied:
         {
             return NO;
@@ -384,11 +398,14 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 
                 BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
                 BOOL isShowIntoduceView = [FHIntroduceManager sharedInstance].isShowing;
-                BOOL isShowSpringLoginView = [FHMinisdkManager sharedInstance].isShowing;
                 
-                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity && !isShowIntoduceView && !isShowSpringLoginView) {
+                // 城市切换弹窗
+                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity && !isShowIntoduceView) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
                 }
+                
+                // 拉取小端运营窗口弹窗配置信息
+                [[FHPopupViewManager shared] fetchData];
                 
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 [wSelf updateAllConfig:model isNeedDiff:NO];
@@ -426,6 +443,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         
         if (model.data && completion) {
             completion(YES, model);
+            [[FHPopupViewManager shared] fetchData];
         }else
         {
             completion(NO, model);

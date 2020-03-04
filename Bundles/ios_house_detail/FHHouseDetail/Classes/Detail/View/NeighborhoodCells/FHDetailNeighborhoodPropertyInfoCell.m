@@ -22,6 +22,7 @@
 @interface FHDetailNeighborhoodPropertyInfoCell ()
 
 @property (nonatomic, strong)   FHDetailHeaderViewNoMargin       *headerView;
+@property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong)   FHDetailFoldViewButton       *foldButton;
 
@@ -45,58 +46,77 @@
         return;
     }
     self.currentData = data;
-    //
-    for (UIView *v in self.containerView.subviews) {
-        [v removeFromSuperview];
-    }
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)data;
+    self.shadowImage.image = model.shadowImage;
+    __block UIView *lastView = nil; // 最后一个视图
+    __block NSInteger doubleCount = 0;// 两列计数
+    NSMutableArray *singles = [NSMutableArray new];
+    CGFloat vHeight = 30.0;
     if (model.baseInfo.count > 0) {
-        __block NSInteger itemsCount = 0;
-        CGFloat vHeight = 30.0;
+        CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
         [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
-            [self.containerView addSubview:itemView];
-            [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(itemsCount * vHeight);
-                make.left.right.mas_equalTo(self.containerView);
-                make.height.mas_equalTo(vHeight);
-            }];
-            itemView.keyLabel.text = obj.attr;
-            itemView.valueLabel.text = obj.value;
-            itemsCount += 1;
+            if (obj.isSingle) {
+                      [singles addObject:obj];
+            } else {
+                // 两列
+                if (doubleCount % 2 == 0) {
+                    FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
+                     [self.containerView addSubview:itemView];
+                     [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                         make.top.mas_equalTo((doubleCount/2) * vHeight);
+                         make.left.mas_equalTo(self.containerView);
+                         make.width.mas_equalTo(viewWidth);
+                         make.height.mas_equalTo(vHeight);
+                     }];
+                     itemView.keyLabel.text = obj.attr;
+                     itemView.valueLabel.text = obj.value;
+                    lastView = itemView;
+//                     itemsCount += 1;
+                }else {
+                    FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
+                              [self.containerView addSubview:itemView];
+                              [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                                  make.top.mas_equalTo((doubleCount/2) * vHeight);
+                                  make.left.equalTo(self.containerView).offset(viewWidth);
+                                  make.width.mas_equalTo(viewWidth);
+                                  make.height.mas_equalTo(vHeight);
+                              }];
+                              itemView.keyLabel.text = obj.attr;
+                              itemView.valueLabel.text = obj.value;
+                    lastView = itemView;
+                }
+                doubleCount += 1;
+            }
         }];
         
     }
-    // > 4 添加折叠展开
-    if (model.baseInfo.count > 4) {
-        if (_foldButton) {
-            [_foldButton removeFromSuperview];
-            _foldButton = nil;
-        }
-        _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部信息" upText:@"收起" isFold:YES];
-        [self.contentView addSubview:_foldButton];
-        [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.containerView.mas_bottom);
-            make.height.mas_equalTo(58);
-            make.left.right.mas_equalTo(self.contentView);
-        }];
+    if (singles.count > 0) {
+           [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+               FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
+                         [self.containerView addSubview:itemView];
+                         [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                             make.top.mas_equalTo((idx+(doubleCount/2)+doubleCount % 2)* vHeight);
+                             make.left.right.mas_equalTo(self.containerView);
+                             make.height.mas_equalTo(vHeight);
+                         }];
+                         itemView.keyLabel.text = obj.attr;
+                         itemView.valueLabel.text = obj.value;
+               lastView = itemView;
+           }];
+       }
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.contentView).offset(-58);
+            make.height.mas_equalTo(((doubleCount/2 + doubleCount % 2)+singles.count) * 30);
         }];
-        [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-    } else {
-        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.contentView).offset(-20);
-        }];
-    }
-    [self updateItems:NO];
 }
 
-- (void)foldButtonClick:(UIButton *)button {
-    FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
-    model.isFold = !model.isFold;
-    self.foldButton.isFold = model.isFold;
-    [self updateItems:YES];
+
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -110,53 +130,37 @@
 }
 
 - (void)setupUI {
-    _headerView = [[FHDetailHeaderViewNoMargin alloc] init];
-    _headerView.label.text = @"小区概况";
-    [self.contentView addSubview:_headerView];
-    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(26);
+
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
-    _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
-    [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.contentView);
+    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.shadowImage).offset(22);
+        make.bottom.equalTo(self.shadowImage).offset(-42);
+        make.left.equalTo(self.contentView).offset(15);
+        make.right.equalTo(self.contentView).offset(-15);
     }];
+//    _headerView = [[FHDetailHeaderViewNoMargin alloc] init];
+//    _headerView.label.text = @"小区概况";
+//    [self.containerView addSubview:_headerView];
+//    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(self.containerView);
+//        make.top.equalTo(self.containerView);
+//        make.right.equalTo(self.containerView).offset(-15);
+//        make.height.mas_offset(26);
+//    }];
 }
 
 - (void)updateItems:(BOOL)animated {
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
-    if (model.baseInfo.count > 4) {
-        if (animated) {
-            [model.tableView beginUpdates];
-        }
-        if (model.isFold) {
-            [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(30 * 4);
-            }];
-        } else {
-            [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(30 * model.baseInfo.count);
-            }];
-        }
-        [self setNeedsUpdateConstraints];
-        if (animated) {
-            [model.tableView endUpdates];
-        }
-    } else if (model.baseInfo.count > 0) {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30 * model.baseInfo.count);
         }];
-    } else {
-        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
-    }
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
@@ -193,7 +197,6 @@
 }
 
 - (void)setupUI {
-    self.backgroundColor = UIColor.whiteColor;
     _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _keyLabel.textColor = [UIColor themeGray3];
     [self addSubview:_keyLabel];
@@ -201,23 +204,24 @@
     [_keyLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _valueLabel.textColor = [UIColor themeGray1];
+    _valueLabel.textColor = [UIColor themeGray2];
+    _valueLabel.font = [UIFont themeFontMedium:14];
     [self addSubview:_valueLabel];
     _valueLabel.textAlignment = NSTextAlignmentLeft;
-    
     // 布局
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.top.mas_equalTo(10);
         make.height.mas_equalTo(20);
+        make.width.mas_offset(56);
         make.bottom.mas_equalTo(self);
     }];
     
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(96);
+        make.left.mas_equalTo(self.keyLabel.mas_right).offset(10);
         make.top.mas_equalTo(10);
         make.height.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
+        make.right.mas_equalTo(-5);
         make.bottom.mas_equalTo(self.keyLabel);
     }];
 }

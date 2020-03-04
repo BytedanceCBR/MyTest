@@ -538,5 +538,81 @@
     return [mutableAttributedString copy];
 }
 
++ (void)setQuestionRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    if (!isEmptyString(model.questionStr)) {
+        NSInteger parseEmojiCount = -1;
+        if (numberOfLines > 0) {
+            parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
+        }
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:model.questionStr fontSize:15 needParseCount:parseEmojiCount];
+        if (attrStr) {
+            UIFont *font = [UIFont themeFontRegular:16];
+            NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
+            NSMutableDictionary *attributes = @{}.mutableCopy;
+            [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
+            [attributes setValue:font forKey:NSFontAttributeName];
+            
+            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            
+            paragraphStyle.minimumLineHeight = 22;
+            paragraphStyle.maximumLineHeight = 22;
+            paragraphStyle.lineSpacing = 2;
+            
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+            
+            [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
+            
+            model.questionAStr = mutableAttributedString;
+            
+            CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
+                                             withConstraints:CGSizeMake(width, FLT_MAX)
+                                            maxNumberOfLines:numberOfLines
+                                      limitedToNumberOfLines:&numberOfLines];
+            model.questionHeight = size.height;
+        }
+    }else{
+        model.questionHeight = 22;
+    }
+}
+
++ (void)setAnswerRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines {
+    if (!isEmptyString(model.answerStr)) {
+        NSInteger parseEmojiCount = -1;
+        if (numberOfLines > 0) {
+            parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
+        }
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:model.answerStr fontSize:13 needParseCount:parseEmojiCount];
+        if (attrStr) {
+            UIFont *font = [UIFont themeFontRegular:14];
+            NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
+            NSMutableDictionary *attributes = @{}.mutableCopy;
+            [attributes setValue:[UIColor themeGray3] forKey:NSForegroundColorAttributeName];
+            [attributes setValue:font forKey:NSFontAttributeName];
+            
+            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            
+            paragraphStyle.minimumLineHeight = 20;
+            paragraphStyle.maximumLineHeight = 20;
+            paragraphStyle.lineSpacing = 2;
+            
+            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+            
+            [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
+            
+            model.answerAStr = mutableAttributedString;
+            
+            CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
+                                             withConstraints:CGSizeMake(width, FLT_MAX)
+                                            maxNumberOfLines:numberOfLines
+                                      limitedToNumberOfLines:&numberOfLines];
+            model.answerHeight = size.height;
+        }
+    }else{
+        model.answerHeight = 0;
+    }
+}
+
 
 @end

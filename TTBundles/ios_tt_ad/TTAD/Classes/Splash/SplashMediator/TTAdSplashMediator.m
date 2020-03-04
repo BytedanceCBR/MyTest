@@ -41,6 +41,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回最长忍耐时间 30 000ms
 
@@ -257,12 +258,14 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (void)splashViewWillAppear
 {
+    [[FHPopupViewManager shared] outerPopupViewShow];
     [FHLocManager sharedInstance].isShowSplashAdView = YES;
     self.isNotClicked = NO;
 }
 
 - (void)splashViewDidDisappear
 {
+    [[FHPopupViewManager shared] outerPopupViewHide];
     FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
     if ([FHLocManager sharedInstance].isShowSwitch) {
         if ([model.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.citySwitch.enable boolValue]) {

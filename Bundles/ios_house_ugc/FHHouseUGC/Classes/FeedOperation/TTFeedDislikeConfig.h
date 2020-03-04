@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHFeedOperationWord.h"
 #import "FHUGCConfigModel.h"
-#import <FHFeedOperationView.h>
+#import "FHFeedOperationView.h"
 
 @class FHFeedOperationViewModel;
 /// 新版 disklie 的远程配置项。参见：http://settings.byted.org/static/main/index.html#/app_settings/item_detail?id=725

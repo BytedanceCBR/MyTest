@@ -388,17 +388,23 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         positionStr = @"neighborhood_type";
     } else if ([view.data isKindOfClass:[FHDetailDataBaseExtraBudgetModel class]]) {
         FHDetailDataBaseExtraBudgetModel *budgetModel = (FHDetailDataBaseExtraBudgetModel *)view.data;
-        NSDictionary *userInfoDict = @{@"tracer":@{}};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-        NSString *openUrl = budgetModel.openUrl;
-        if (openUrl.length > 0) {
-            NSURL *url = [NSURL URLWithString:openUrl];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        if ([budgetModel.openUrl containsString:@"open_single_chat"]) {
+            [self imAction:budgetModel.openUrl isFloorAction:NO];
+            positionStr = @"loan";
+        }else {
+            NSDictionary *userInfoDict = @{@"tracer":@{}};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+            NSString *openUrl = budgetModel.openUrl;
+            if (openUrl.length > 0) {
+                NSURL *url = [NSURL URLWithString:openUrl];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+            }
+            positionStr = @"debit_calculator";
         }
-        positionStr = @"debit_calculator";
+        
     }else if ([view.data isKindOfClass:[FHDetailDataBaseExtraFloorInfoModel class]]) {
         FHDetailDataBaseExtraFloorInfoModel *floorInfo = (FHDetailDataBaseExtraFloorInfoModel *)view.data;
-        [self imAction:floorInfo.openUrl];
+        [self imAction:floorInfo.openUrl isFloorAction:YES];
         positionStr = @"floor_type";
     }
     if (self.baseViewModel) {
@@ -406,19 +412,19 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }
 }
 
-- (void)imAction:(NSString *)openUrl
+- (void)imAction:(NSString *)openUrl isFloorAction:(BOOL)isFloorAction
 {
     if (openUrl.length < 1) {
         return;
     }
     FHDetailPropertyListCorrectingModel *propertyModel = (FHDetailPropertyListCorrectingModel *)self.currentData;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
-    imExtra[@"from"] = @"app_oldhouse_floor";
-    imExtra[@"source"] = @"app_oldhouse_floor";
-    imExtra[@"source_from"] = @"floor_type";
+    imExtra[@"from"] = isFloorAction?@"app_oldhouse_floor":@"app_oldhouse_mortgage";
+    imExtra[@"source"] = isFloorAction?@"app_oldhouse_floor":@"app_oldhouse_mortgage";
+    imExtra[@"source_from"] = isFloorAction?@"floor_type":@"loan";
     imExtra[@"im_open_url"] = openUrl;
     imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldFloor];
+    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",isFloorAction?FHClueIMPageTypeCOldFloor:FHClueIMPageTypeCOldBudget];
     [propertyModel.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 
@@ -539,7 +545,6 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         make.centerY.mas_equalTo(self);
         make.width.mas_equalTo(0);
     }];
-    
 }
 
 -(void)updateWithOfficalData:(FHDetailDataBaseExtraOfficialModel *)officialModel
@@ -669,7 +674,22 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     _infoLabel.attributedText = minfoAttrStr;
     
     _logoImageView.hidden = YES;
-    _indicatorLabel.hidden = YES;
+    
+    _indicatorLabel.text = budgetmodel.extraContent;
+    
+    [_indicatorLabel sizeToFit];
+    
+    CGSize size = _indicatorLabel.bounds.size;
+    _indicatorLabel.hidden = NO;
+    
+    [_indicatorLabel  mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(size.width);
+    }];
+    
+    [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-(26+size.width));
+        make.size.mas_equalTo(CGSizeZero);
+    }];
 }
 
 -(void)updateWithFloorInfo:(FHDetailDataBaseExtraFloorInfoModel *)floorInfo

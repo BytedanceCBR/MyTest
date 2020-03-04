@@ -18,8 +18,8 @@
 #import "TTAppUpdateHelper.h"
 #import "TTInstallIDManager.h"
 #import "CommonURLSetting.h"
-#import "FHMinisdkManager.h"
 #import "FHSpringHangView.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "UIViewController+Track.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
@@ -64,11 +64,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         //#endif
     }
     
-    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
-        //春节活动
-        [[FHMinisdkManager sharedInstance] goSpring];
-    }
-    
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
@@ -105,9 +100,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     //春节活动运营位
     if([FHEnvContext isSpringHangOpen]){
         [self addSpringView];
-        [self.springView show:[FHEnvContext enterTabLogName]];
+        [self showSpringHangView];
     }
     
+    [[FHPopupViewManager shared] triggerPopupView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
@@ -116,6 +112,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
         [self.view addSubview:_springView];
         _springView.hidden = YES;
+        
+        
         
         CGFloat bottom = 49;
         if (@available(iOS 11.0 , *)) {
@@ -205,6 +203,32 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollEnd) name:@"FHHomeMainDidScrollEnd" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
+}
+
+- (void)popupViewDataFetchSuccess {
+    if([FHEnvContext isSpringHangOpen] && self.springView){
+        [self showSpringHangView];
+    }
+}
+
+- (void)popupViewStartFetchData {
+    self.springView.hidden = YES;
+}
+
+- (void)showSpringHangView {
+    [self.springView show:[FHEnvContext enterTabLogName]];
+    //升级弹窗覆盖问题
+    if ([TTSandBoxHelper isInHouseApp]) {
+        for (UIView *view in self.view.subviews) {
+            if([view isKindOfClass:NSClassFromString(@"TTAppUpdateTipView")]){
+                [self.view bringSubviewToFront:view];
+            }
+        }
+    }
 }
 
 - (void)initCityChangeSubscribe
@@ -216,9 +240,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
         [FHEnvContext changeFindTabTitle];
         [FHEnvContext showRedPointForNoUgc];
-        if([FHEnvContext isSpringHangOpen] && self.springView){
-            [self.springView show:[FHEnvContext enterTabLogName]];
-        }
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
     }];
 }
@@ -231,7 +252,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     //春节活动运营位
     if([FHEnvContext isSpringHangOpen]){
         [self addSpringView];
-        [self.springView show:[FHEnvContext enterTabLogName]];
+        [self showSpringHangView];
     }
 }
 
@@ -374,6 +395,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [TTAppUpdateHelper sharedInstance].delegate = self;
     [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
         [self.view addSubview:view];
+        [[FHPopupViewManager shared] outerPopupViewShow];
     } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
         //        if (!downloadUrl) {
         //            return;
@@ -381,7 +403,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         //        NSURL *url = [NSURL URLWithString:downloadUrl];
         //        [[UIApplication sharedApplication] openURL:url];
     } closeBlock:^{
-        
+        [[FHPopupViewManager shared] outerPopupViewHide];
     }];
 }
 

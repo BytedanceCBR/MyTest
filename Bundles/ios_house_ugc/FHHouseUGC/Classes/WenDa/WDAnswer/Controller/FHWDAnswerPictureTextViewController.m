@@ -610,8 +610,16 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         if (wSelf.isPosting) {
             return;
         }
+        
+        NSString *gdExtJson = nil;
+        if([self.gdExtJson isKindOfClass:[NSString class]]){
+            gdExtJson = wSelf.gdExtJson;
+        }else if([self.gdExtJson isKindOfClass:[NSDictionary class]]){
+            gdExtJson = [wSelf.gdExtJson tt_JSONRepresentation];
+        }
+        
         wSelf.isPosting = YES;
-        [WDAnswerService postAnswerWithQid:wSelf.qid answerType:WDAnswerTypePictureText content:content richSpanText:richSpanTetxt imageUris:imageUris videoID:nil videoCoverURI:nil videoDuration:nil isBanComment:wSelf.isForbidComment apiParameter:apiParam source:source listEntrance:listEntrance gdExtJson:[wSelf.gdExtJson tt_JSONRepresentation] finishBlock:^(WDWendaCommitPostanswerResponseModel * _Nullable responseModel, NSError * _Nullable error) {
+        [WDAnswerService postAnswerWithQid:wSelf.qid answerType:WDAnswerTypePictureText content:content richSpanText:richSpanTetxt imageUris:imageUris videoID:nil videoCoverURI:nil videoDuration:nil isBanComment:wSelf.isForbidComment apiParameter:apiParam source:source listEntrance:listEntrance gdExtJson:gdExtJson finishBlock:^(WDWendaCommitPostanswerResponseModel * _Nullable responseModel, NSError * _Nullable error) {
             NSString *tips;
             NSError *postError;
             

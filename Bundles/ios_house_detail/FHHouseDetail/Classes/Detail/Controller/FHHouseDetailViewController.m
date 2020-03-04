@@ -28,6 +28,7 @@
 #import "TTNavigationController.h"
 #import <FHCommonUI/FHFeedbackView.h>
 #import <ios_house_im/FHIMConfigManager.h>
+#import <TTSettingsManager/TTSettingsManager.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -130,7 +131,7 @@
         }
         
         
-        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
+//        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
     }
     return self;
 }
@@ -216,9 +217,9 @@
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        if (!self.instantData) {
+//        if (!self.instantData) {
             [self startLoading];
-        }
+//        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
@@ -268,10 +269,10 @@
     _bottomMaskView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_bottomMaskView];
     
-    if (_houseType == FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeNewHouse) {
-        _bottomBar = [[FHOldDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    if  (_houseType == FHHouseTypeRentHouse ) {
+        _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
     }else {
-         _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+         _bottomBar = [[FHOldDetailBottomBarView alloc]initWithFrame:CGRectZero];
     }
     
     [self.view addSubview:_bottomBar];
@@ -320,7 +321,7 @@
     }];
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(_houseType ==FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeNewHouse? 80:64);
+        make.height.mas_equalTo(_houseType ==FHHouseTypeRentHouse? 64:80);
         if (@available(iOS 11.0, *)) {
             make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
         }else {
@@ -752,6 +753,15 @@
         tracerDic[@"click_position"] = @"cancel";
         [self addRealtorEvaluatePopupClickLog:tracerDic];
     }];
+    BOOL isForceEnableConfirm = NO;
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] != nil) {
+        NSInteger info = [[fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] integerValue];
+        if (info == 1) {
+            isForceEnableConfirm = YES;
+        }
+    }
+    feedbackView.isForceEnableConfirm = isForceEnableConfirm;
     [feedbackView showFrom:nil];
     [self addRealtorEvaluatePopupShowLog:tracerDic];
 }

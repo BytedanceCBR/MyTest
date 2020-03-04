@@ -14,8 +14,10 @@
 #import "UIColor+Theme.h"
 @interface FHDeatilHeaderTitleView ()
 @property (nonatomic, weak) UIImageView *shadowImage;
+@property (nonatomic, weak) UIButton *mapBtn;//仅小区展示
 @property (nonatomic, weak) UIView *tagBacView;
 @property (nonatomic, weak) UILabel *nameLabel;
+@property (nonatomic, weak) UILabel *addressLab;
 @end
 @implementation FHDeatilHeaderTitleView
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -35,12 +37,6 @@
         make.right.mas_equalTo(self).offset(-15);
         make.top.mas_equalTo(self).offset(50);
         make.height.mas_offset(20);
-    }];
-    [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(31);
-        make.right.mas_equalTo(self).offset(-35);
-        make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(17);
-        make.bottom.mas_equalTo(self);
     }];
 }
 
@@ -76,6 +72,29 @@
     return _nameLabel;
 }
 
+- (UILabel *)addressLab {
+    if (!_addressLab) {
+        UILabel *addressLab = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+        addressLab.textColor = [UIColor themeGray3];
+        addressLab.font = [UIFont themeFontRegular:14];
+        addressLab.numberOfLines = 2;
+        [self addSubview:addressLab];
+        _addressLab = addressLab;
+    }
+    return _addressLab;
+}
+
+- (UIButton *)mapBtn {
+    if (!_mapBtn) {
+        UIButton *mapBtn = [[UIButton alloc]init];
+        [mapBtn setImage:[UIImage imageNamed:@"plot_mapbtn"] forState:UIControlStateNormal];
+        [mapBtn addTarget:self action:@selector(clickMapAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:mapBtn];
+        _mapBtn = mapBtn;
+    }
+    return _mapBtn;
+}
+
 - (UILabel *)createLabelWithText:(NSString *)text bacColor:(UIColor *)bacColor textColor:(UIColor *)textColor{
     UILabel *label = [[UILabel alloc]init];
     label.textAlignment = NSTextAlignmentCenter;
@@ -97,7 +116,46 @@
 }
 
 - (void)setModel:(FHDetailHouseTitleModel *)model {
+    _model = model;
     NSArray *tags = model.tags;
+    self.mapBtn.hidden = !model.showMapBtn;
+
+    if (model.address.length>0) {
+        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(31);
+            make.right.mas_equalTo(self).offset(-35);
+            make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(17);
+        }];
+        [self.addressLab mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(31);
+            make.right.mas_equalTo(self).offset(-35);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(4);
+            make.bottom.mas_equalTo(self);
+        }];
+        [self.mapBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.nameLabel).offset(5);
+            make.right.equalTo(self).offset(-32);
+            make.size.mas_equalTo(CGSizeMake(44, 44));
+        }];
+        self.addressLab.text = model.address;
+    }else {
+        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(31);
+            make.right.mas_equalTo(self).offset(-35);
+            make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(17);
+            make.bottom.mas_equalTo(self);
+        }];
+    }
+    if (model.housetype == FHHouseTypeNeighborhood) {
+        self.nameLabel.numberOfLines = 1;
+        [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self).offset(-100);
+        }];
+        self.addressLab.numberOfLines = 1;
+        [self.addressLab mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self).offset(-100);
+        }];
+    }
      self.nameLabel.text = model.titleStr;
     __block UIView *lastView = self.tagBacView;
     if (tags.count  == 0) {
@@ -129,5 +187,42 @@
         }];
         lastView = label;
     }];
+}
+
+- (void)clickMapAction:(UIButton *)btn {
+    if (self.model.mapImageClick) {
+        self.model.mapImageClick();
+    }
+    
+//    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+//    [infoDict setValue:@"银行" forKey:@"category"];
+//    FHDetailNeighborhoodSubMessageModel *infoModels =self.model.neighborhoodInfoModel;
+//    if (infoModels) {
+//        double lng = [infoModels.neighborhoodInfo.gaodeLng doubleValue];
+//        double lat = [infoModels.neighborhoodInfo.gaodeLat doubleValue];
+//        [infoDict setValue:@(lat) forKey:@"latitude"];
+//        [infoDict setValue:@(lng) forKey:@"longitude"];
+//        [infoDict setValue:infoModels.neighborhoodInfo.name forKey:@"title"];
+//
+//        if (!lng || !lat) {
+//            NSMutableDictionary *params = [NSMutableDictionary new];
+//            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+//            [params setValue:@"经纬度缺失" forKey:@"reason"];
+//            [params setValue:infoModels.neighborhoodInfo.id forKey:@"house_id"];
+//            [params setValue:@(4) forKey:@"house_type"];
+//            [params setValue:infoModels.name forKey:@"name"];
+//            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+//        }
+//
+//        NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
+//        [tracer setValue:@"address" forKey:@"click_type"];
+//        [tracer setValue:@"house_info" forKey:@"element_from"];
+//        [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+//        [infoDict setValue:tracer forKey:@"tracer"];
+//
+//        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+//    }
+
 }
 @end

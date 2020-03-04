@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
 @property (nonatomic, copy , nullable) NSString *userId;
 @property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, copy , nullable) NSString *userAuthInfo;
 
 @end
 
@@ -159,6 +160,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, assign) BOOL hiddenMore;
 // 数据内容是否有变化，如果有则刷新数据时候会刷新，没有则不会刷新，在对cellModel改动需要刷新页面时候，需要设置成YES
 @property (nonatomic, assign) BOOL ischanged;
+@property (nonatomic, assign) BOOL isCustomDecorateImageView;
 // 来自详情页
 @property (nonatomic, assign)   BOOL       isFromDetail;
 // 区分是否是头条的帖子 （113）
@@ -173,8 +175,33 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *hotCommunityCellType;
 //帖子编辑状态。默认是none
 @property (nonatomic, assign) FHUGCPostEditState editState;
+//小区问答模块
+@property (nonatomic, copy , nullable) NSString *qid;
+@property (nonatomic, assign) NSInteger answerCount;
+@property (nonatomic, copy , nullable) NSString *answerCountText;
+@property (nonatomic, copy , nullable) NSString *writeAnswerSchema;
+@property (nonatomic, copy , nullable) NSString *questionStr;
+@property (nonatomic, copy , nullable) NSString *answerStr;
+@property (nonatomic, strong , nullable) NSAttributedString *questionAStr;
+@property (nonatomic, assign) CGFloat questionHeight;
+@property (nonatomic, strong , nullable) NSAttributedString *answerAStr;
+@property (nonatomic, assign) CGFloat answerHeight;
+//是否在小区问答列表页
+@property (nonatomic, assign) BOOL isInNeighbourhoodQAList;
+//小区点评模块
 
-+ (FHFeedUGCCellModel *)modelFromFeed:(NSString *)content;
+//是否在小区点评列表页
+@property (nonatomic, assign) BOOL isInNeighbourhoodCommentsList;
+//底部分割线高度
+@property (nonatomic, assign) CGFloat bottomLineHeight;
+@property (nonatomic, assign) CGFloat bottomLineLeftMargin;
+@property (nonatomic, assign) CGFloat bottomLineRightMargin;
+
++ (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
+
++ (FHFeedUGCCellModel *)modelFromFeed:(id)content;
+
++ (FHFeedUGCCellModel *)modelFromFeedWithDict:(NSDictionary *)content;
 
 + (FHFeedUGCCellModel *)modelFromFeedUGCContent:(FHFeedUGCContentModel *)model;
 
@@ -183,6 +210,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 + (FHFeedUGCCellModel *)modelFromFake;
 
 + (FHFeedUGCCellModel *)modelFromFake2;
+
++ (FHFeedUGCCellModel *)modelFromFake3:(BOOL)isList;
 
 @end
 

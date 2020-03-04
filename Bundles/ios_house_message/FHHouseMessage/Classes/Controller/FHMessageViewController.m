@@ -30,6 +30,7 @@
 #import <FHMessageNotificationManager.h>
 #import "FHSpringHangView.h"
 #import "FHEnvContext.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHMessageViewController ()
 
@@ -59,15 +60,29 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
     
-    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-        if([FHEnvContext isSpringHangOpen] && self.springView){
-            [self.springView show:[FHEnvContext enterTabLogName]];
-        }
-    }];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
+    
+//    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+//        if([FHEnvContext isSpringHangOpen] && self.springView){
+//            [self.springView show:[FHEnvContext enterTabLogName]];
+//        }
+//    }];
     
     if([FHEnvContext isSpringHangOpen]){
         [self addSpringView];
     }
+}
+
+- (void)popupViewDataFetchSuccess {
+    if([FHEnvContext isSpringHangOpen] && self.springView){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
+}
+
+- (void)popupViewStartFetchData {
+    self.springView.hidden = YES;
 }
 
 - (void)addSpringView {
@@ -122,6 +137,8 @@
     if([FHEnvContext isSpringHangOpen]){
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
+    
+    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

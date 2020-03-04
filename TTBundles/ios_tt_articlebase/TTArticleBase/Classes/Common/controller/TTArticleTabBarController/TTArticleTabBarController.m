@@ -97,6 +97,7 @@
 #import "FHUnreadMsgModel.h"
 #import "UIViewController+TTMovieUtil.h"
 #import <TTLaunchTracer.h>
+#import "FHPopupViewManager.h"
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -269,7 +270,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
      YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
     FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
     if(!_guideView){
-        if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"]) {
+        if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"] &&cacheTab.isShow == YES) {
                 x = self.view.frame.size.width * 3/10 - width/2;
         }else {
             x = self.view.frame.size.width * 9/24 - width/2;
@@ -461,6 +462,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             }
 
             [self tabBarController:self didSelectViewController:self.viewControllers[index]];
+            
+            // 触发弹窗显示
+            [[FHPopupViewManager shared] triggerPopupView];
             
         };
         

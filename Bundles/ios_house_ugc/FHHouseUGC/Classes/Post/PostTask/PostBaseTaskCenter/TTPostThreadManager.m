@@ -181,6 +181,10 @@
     publishModel._response = NSStringFromClass([FRPublishPostResponseModel class]);
     publishModel.sdk_params = task.sdkParams;
     publishModel.extraTrack = task.extraTrack;
+    publishModel.neighborhoodTags = task.neighborhoodTags;
+    publishModel.scores = task.scores;
+    publishModel.source = task.pubSource;
+    publishModel.neighborhoodId = task.neighborhoodId;
     
     uint64_t startTime = [NSObject currentUnixTime];
 

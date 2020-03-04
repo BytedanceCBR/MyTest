@@ -56,7 +56,7 @@ NSString *kAKTabActivityTabKey = @"tab_ak_activity";//爱看活动tab 标题key&
 NSString *kFHouseFindTabKey = @"tab_f_find";//发现key
 NSString *kFHouseMessageTabKey = @"tab_message";
 NSString *kFHouseMineTabKey = @"tab_mine"; //房产首页key
-NSString *kFHouseHouseEpidemicSituationTabKey = @"tab_EpidemicSituation"; //房产首页key
+NSString *kFHouseHouseEpidemicSituationTabKey = @"tab_EpidemicSituation"; //疫情
 //Path
 static NSString *kTTTabConfigurationPath = @"tabbar/configuration"; //tab配置信息存储路径
 static NSString *kTTTabImagesPath = @"tabbar/images"; //tab图片资源路径

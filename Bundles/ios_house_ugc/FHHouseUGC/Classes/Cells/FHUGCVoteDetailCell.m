@@ -260,7 +260,7 @@
     self.cellModel = data;
     //设置userInfo
     self.userInfoView.cellModel = self.cellModel;
-    self.userInfoView.userName.text = self.cellModel.user.name;
+    self.userInfoView.userName.text = !isEmptyString(self.cellModel.user.name) ? self.cellModel.user.name : @"用户";
     self.userInfoView.descLabel.attributedText = self.cellModel.desc;
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     __weak typeof(self) weakSelf = self;
@@ -670,7 +670,7 @@
     [self.voteButton startLoading];
     self.voteInfo.voteState = FHUGCVoteStateVoting;
     __weak typeof(self) weakSelf = self;
-    [FHHouseUGCAPI requestVoteSubmit:self.voteInfo.voteId optionIDs:options optionNum:optionNum completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestVoteSubmit:self.voteInfo.voteId optionIDs:options optionNum:optionNum class:FHUGCVoteResponseModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [weakSelf.voteButton stopLoading];
         if (error) {
             [[ToastManager manager] showToast:error.domain];

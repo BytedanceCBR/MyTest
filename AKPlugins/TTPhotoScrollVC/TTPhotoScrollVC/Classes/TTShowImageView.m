@@ -30,6 +30,8 @@
 #import <TTImage/TTWebImageManager.h>
 #import <BDWebImage/BDWebImageDownloader.h>
 #import <BDWebImage/BDWebImageManager.h>
+#import <BDWebImage/BDImage.h>
+#import <BDWebImage/BDImageDecoderInternal.h>
 #define MinZoomScale 1.f
 #define MaxZoomScale 2.5f
 
@@ -577,12 +579,16 @@
         self.largeImageView.center = CGPointMake(self.width / 2.f, self.height / 2.f);
     }
 
-    UIImage *image  = [[BDWebImageManager sharedManager].imageCache imageForKey:url];
+    BDImage *image  = [[BDWebImageManager sharedManager].imageCache imageForKey:url];
     if (image) {
         dispatch_async(dispatch_get_main_queue(), ^{
             _isDownloading = NO;
             _imageloadingProgressView.hidden = YES;
-            [self loadFinishedWithImage:image];
+            if(image.decoder.data){
+                [self loadImageFromData:image.decoder.data];
+            }else{
+                [self loadFinishedWithImage:image];
+            }
         });
         return;
     }
@@ -617,9 +623,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.imageloadingProgressView.hidden = YES;
 
-                if (image) {
-                    [self loadFinishedWithImage:image];
-                }else if (data) {
+                if (data) {
                     [self loadImageFromData:data];
                 } else {
                     [self loadFailed];
