@@ -71,15 +71,24 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
+    
+    if (model.houseType == FHHouseTypeNewHouse) {
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.contentView).mas_offset(-15);
+            make.right.equalTo(self.contentView).mas_offset(15);
+        }];
+    }
     // 设置下发标题
     if(model.recommendedRealtorsTitle.length > 0) {
         self.headerView.label.text = model.recommendedRealtorsTitle;
+    }else {
+        self.headerView.label.text = (model.houseType == FHHouseTypeNewHouse) ? @"优选顾问" : @"推荐经纪人";
     }
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         __block CGFloat vHeight = 76.0;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (obj.realtorScoreDescription.length >0&&obj.realtorScoreDisplay.length >0) {
+            if (obj.realtorScoreDescription.length >0&&obj.realtorScoreDisplay.length >0&&obj.realtorTags.count >0) {
                 vHeight = 100;
             }
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj];
@@ -184,6 +193,9 @@
 - (void)cellClick:(UIControl *)control {
     NSInteger index = control.tag;
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (model.houseType == FHHouseTypeNewHouse) {
+        return;
+    }
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         model.phoneCallViewModel.belongsVC = model.belongsVC;
@@ -229,6 +241,8 @@
         contactConfig.realtorType = contact.realtorType;
         if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
             contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhoodMulrealtor);
+        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
+            contactConfig.cluePage = @(FHClueCallPageTypeCNewHouseMulrealtor);
         }else {
             contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
         }
@@ -262,6 +276,9 @@
         if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
             imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
             imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodMulrealtor];
+        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
+            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNewHouseMulrealtor];
         }else {
             imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
         }
@@ -311,8 +328,8 @@
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.shadowImage).offset(30);
-        make.right.mas_equalTo(self.contentView).offset(-15);
-        make.left.mas_equalTo(self.contentView).offset(15);;
+        make.right.mas_equalTo(self.shadowImage).offset(-15);
+        make.left.mas_equalTo(self.shadowImage).offset(15);
         make.height.mas_equalTo(46);
     }];
     _containerView = [[UIView alloc] init];
@@ -320,8 +337,8 @@
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
-        make.left.mas_equalTo(self.contentView).mas_offset(15);
-        make.right.mas_equalTo(self.contentView).mas_offset(-15);
+        make.left.mas_equalTo(self.shadowImage).mas_offset(15);
+        make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.height.mas_equalTo(0);
         make.bottom.mas_equalTo(self.shadowImage).offset(-35);
     }];
@@ -347,7 +364,7 @@
             CGFloat showHeight = 0;
             for (int i = 0; i<3; i++) {
                 FHDetailContactModel *showModel = (FHDetailContactModel*) model.recommendedRealtors[i];
-                if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
+                if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
                     showHeight = showHeight +100;
                 }else {
                     showHeight = showHeight + 76;
@@ -361,7 +378,7 @@
            __block CGFloat showHeight = 0;
             [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailContactModel *showModel = obj;
-            if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
+            if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
                      showHeight = showHeight +100;
                  }else {
                      showHeight = showHeight + 76;
@@ -381,7 +398,7 @@
         __block CGFloat showHeight = 0;
          [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
              FHDetailContactModel *showModel = obj;
-         if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
+         if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
                   showHeight = showHeight +100;
               }else {
                   showHeight = showHeight + 76;
@@ -400,8 +417,29 @@
 //    [self tracerRealtorShowToIndex:realtorShowCount];
 }
 
-- (void)fh_willDisplayCell;{
-    [self addRealtorShowLog];
+//- (void)fh_willDisplayCell;{
+//    [self addRealtorShowLog];
+//}
+
+#pragma mark - FHDetailScrollViewDidScrollProtocol
+
+// 滑动house_show埋点
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
+    CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
+    __block CGFloat showHeight = 0;
+    for (int m = 0; m <model.recommendedRealtors.count; m++) {
+        FHDetailContactModel *showModel = model.recommendedRealtors[m];
+        if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
+            showHeight = showHeight +100;
+        }else {
+            showHeight = showHeight + 76;
+        };
+        if (UIScreen.mainScreen.bounds.size.height - point.y>showHeight) {
+            NSInteger showCount = model.isFold ? MIN(m, 3):MIN(model.recommendedRealtors.count, m);
+            [self tracerRealtorShowToIndex:showCount];
+        };
+    }
 }
 
 -(void)addRealtorShowLog{
@@ -419,7 +457,9 @@
         case FHHouseTypeSecondHandHouse:
             return @"old_detail_related";
             break;
-            
+        case FHHouseTypeNewHouse:
+            return @"new_detail_related";
+            break;
         default:
             break;
     }
@@ -473,6 +513,8 @@
             break;
          case FHHouseTypeNeighborhood:
             return @"neighborhood_detail_related";
+            case FHHouseTypeNewHouse:
+               return @"new_detail_related";
         default:
             break;
     }

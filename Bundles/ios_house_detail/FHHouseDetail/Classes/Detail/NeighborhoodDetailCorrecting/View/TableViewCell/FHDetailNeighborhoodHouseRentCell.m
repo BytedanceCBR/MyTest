@@ -1,34 +1,25 @@
 //
-//  FHDetailSameNeighborhoodHouseCell.m
+//  FHDetailNeighborhoodHouseRentCell.m
 //  FHHouseDetail
 //
-//  Created by 张元科 on 2019/2/17.
+//  Created by liuyu on 2020/2/24.
 //
 
-#import "FHDetailSameNeighborhoodHouseCell.h"
-#import "Masonry.h"
-#import "UIFont+House.h"
-#import "UIImageView+BDWebImage.h"
-#import "FHCommonDefines.h"
-#import "FHDetailOldModel.h"
-#import "FHURLSettings.h"
-#import "TTRoute.h"
-#import "UILabel+House.h"
+#import "FHDetailNeighborhoodHouseRentCell.h"
 #import "FHDetailHeaderView.h"
-#import "FHDetailMultitemCollectionView.h"
+#import "UIImageView+BDWebImage.h"
 #import "FHSameHouseTagView.h"
-#import "FHOldDetailMultitemCollectionView.h"
+#import "UILabel+House.h"
 #import "FHDetailSurroundingAreaCell.h"
-@interface FHDetailSameNeighborhoodHouseCell ()
+#import "FHOldDetailMultitemCollectionView.h"
+#import "FHDetailNeighborhoodModel.h"
+#import "FHDetailNeighborhoodHouseStatusModel.h"
+@interface FHDetailNeighborhoodHouseRentCell()
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, strong)   UIView       *containerView;
-
 @end
-
-@implementation FHDetailSameNeighborhoodHouseCell
-
-
+@implementation FHDetailNeighborhoodHouseRentCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -41,7 +32,7 @@
     // Configure the view for the selected state
 }
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailSameNeighborhoodHouseModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailNeighborhoodHouseRentModel class]]) {
         return;
     }
     self.currentData = data;
@@ -49,56 +40,36 @@
         [v removeFromSuperview];
     }
     //
-    FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)data;
+    FHDetailNeighborhoodHouseRentModel *model = (FHDetailNeighborhoodHouseRentModel *)data;
     self.shadowImage.image = model.shadowImage;
-//    if (model.shadowImageType == FHHouseShdowImageTypeLTR) {
-//        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.bottom.mas_equalTo(self.contentView);
-//        }];
-//    }
-    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
+    if (model.shadowImageType == FHHouseShdowImageTypeLBR) {
+        [self.headerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.shadowImage).offset(-5);
         }];
     }
-    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView);
-        }];
-    }
-    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.equalTo(self.contentView);
-        }];
-    }
-    if (model.shadowImageType == FHHouseShdowImageTypeLTR) {
-        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.shadowImage).offset(-25);
-        }];
-    }
-    if (model.sameNeighborhoodHouseData) {
-        self.headerView.label.text = [NSString stringWithFormat:@"同小区房源 (%@)",model.sameNeighborhoodHouseData.total];
-        self.headerView.isShowLoadMore = model.sameNeighborhoodHouseData.hasMore;
+    if (model.sameNeighborhoodRentHouseData) {
+        self.headerView.label.text = [NSString stringWithFormat:@"在租套数 (%@)",model.sameNeighborhoodRentHouseData.total];
+        self.headerView.isShowLoadMore = model.sameNeighborhoodRentHouseData.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-        NSMutableArray *dataArr = [[NSMutableArray alloc]initWithArray:model.sameNeighborhoodHouseData.items];
-        if (model.sameNeighborhoodHouseData.hasMore && dataArr.count>3) {
+        NSMutableArray *dataArr = [[NSMutableArray alloc]initWithArray:model.sameNeighborhoodRentHouseData.items];
+        if (model.sameNeighborhoodRentHouseData.hasMore && dataArr.count>3) {
             FHDetailMoreItemModel *moreItem = [[FHDetailMoreItemModel alloc]init];
             [dataArr addObject:moreItem];
         }
         flowLayout.minimumLineSpacing = 0;
         flowLayout.minimumInteritemSpacing = 0;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        NSString *identifier = NSStringFromClass([FHSearchHouseDataItemsModel class]);
+        NSString *identifier = NSStringFromClass([FHHouseRentDataItemsModel class]);
         NSString *moreIdentifier = NSStringFromClass([FHDetailMoreItemModel class]);
 //        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 cellIdentifier:identifier cellCls:[FHDetailSameNeighborhoodHouseCollectionCell class] datas:model.sameNeighborhoodHouseData.items];
         FHOldDetailMultitemCollectionView *colView = [[FHOldDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 datas:dataArr];
-        [colView registerCell:[FHDetailSameNeighborhoodHouseCollectionCell class] forIdentifier:identifier];
+        [colView registerCell:[FHDetailNeighborhoodHouseRentCollectionCell class] forIdentifier:identifier];
         [colView registerCell:[FHDetailMoreItemCollectionCell class] forIdentifier:moreIdentifier];
         [self.containerView addSubview:colView];
         __weak typeof(self) wSelf = self;
         colView.clickBlk = ^(NSInteger index) {
-            if (index == model.sameNeighborhoodHouseData.items.count) {
+            if (index == model.sameNeighborhoodRentHouseData.items.count) {
                 [wSelf moreButtonClick];
             }else {
                 [wSelf collectionCellClick:index];
@@ -119,7 +90,7 @@
     [self layoutIfNeeded];
 }
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
@@ -169,44 +140,44 @@
 
 // 查看更多
 - (void)moreButtonClick {
-    FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)self.currentData;
-    if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.hasMore) {
-        // click_loadmore 埋点不再需要
-        FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
-        // 同小区房源
-        NSString *group_id = @"be_null";
-        if (oldDetail && oldDetail.data.neighborhoodInfo.id.length > 0) {
-            group_id = oldDetail.data.neighborhoodInfo.id;
+     FHDetailNeighborhoodHouseRentModel *model = (FHDetailNeighborhoodHouseRentModel *)self.currentData;
+    if (model.sameNeighborhoodRentHouseData && model.sameNeighborhoodRentHouseData.hasMore) {
+        FHDetailNeighborhoodModel *detailModel = (FHDetailNeighborhoodModel*)self.baseViewModel.detailData;
+        NSString *neighborhood_id = @"be_null";
+        if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {
+            neighborhood_id = detailModel.data.neighborhoodInfo.id;
+        }
+        NSString *house_id = @"";
+        if (self.baseViewModel.houseId.length > 0) {
+            house_id = self.baseViewModel.houseId;
         }
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
         tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
         tracerDic[@"category_name"] = @"same_neighborhood_list";
-        tracerDic[@"element_from"] = @"same_neighborhood";
-        tracerDic[@"enter_from"] = @"old_detail";
+        tracerDic[@"element_from"] = @"rent_same_neighborhood";
+        tracerDic[@"enter_from"] = @"neighborhood_detail";
         [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
+        
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
-        userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
-        if (oldDetail.data.neighborhoodInfo.name.length > 0) {
-            if (model.sameNeighborhoodHouseData.total.length > 0) {
-                userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",oldDetail.data.neighborhoodInfo.name,model.sameNeighborhoodHouseData.total];
+        userInfo[@"house_type"] = @(FHHouseTypeRentHouse);
+        if (detailModel.data.neighborhoodInfo.name.length > 0) {
+            if (model.sameNeighborhoodRentHouseData.total.length > 0) {
+                userInfo[@"title"] = [NSString stringWithFormat:@"小区房源(%@)",model.sameNeighborhoodRentHouseData.total];
             } else {
-                userInfo[@"title"] = [NSString stringWithFormat:@"%@",oldDetail.data.neighborhoodInfo.name];
+                userInfo[@"title"] = @"小区房源";
             }
         } else {
-            userInfo[@"title"] = @"同小区房源";// 默认值
+            userInfo[@"title"] = @"小区房源";// 默认值
         }
-        if (oldDetail.data.neighborhoodInfo.id.length > 0) {
-            userInfo[@"neighborhood_id"] = oldDetail.data.neighborhoodInfo.id;
+        if (neighborhood_id.length > 0) {
+            userInfo[@"neighborhood_id"] = neighborhood_id;
         }
-        if (self.baseViewModel.houseId.length > 0) {
-            userInfo[@"house_id"] = self.baseViewModel.houseId;
+        if (model.sameNeighborhoodRentHouseData.searchId.length > 0) {
+            userInfo[@"search_id"] = model.sameNeighborhoodRentHouseData.searchId;
         }
-        if (model.sameNeighborhoodHouseData.searchId.length > 0) {
-            userInfo[@"search_id"] = model.sameNeighborhoodHouseData.searchId;
-        }
-        userInfo[@"list_vc_type"] = @(1);
+        userInfo[@"list_vc_type"] = @(6);
         
         TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
         NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
@@ -218,58 +189,51 @@
 }
 // cell 点击
 - (void)collectionCellClick:(NSInteger)index {
-    FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)self.currentData;
-    if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.items.count > 0 && index >= 0 && index < model.sameNeighborhoodHouseData.items.count) {
+    FHDetailNeighborhoodHouseRentModel *model = (FHDetailNeighborhoodHouseRentModel *)self.currentData;
+    if (model.sameNeighborhoodRentHouseData && model.sameNeighborhoodRentHouseData.items.count > 0 && index >= 0 && index < model.sameNeighborhoodRentHouseData.items.count) {
         // 点击cell处理
-        FHSearchHouseDataItemsModel *dataItem = model.sameNeighborhoodHouseData.items[index];
+        FHHouseRentDataItemsModel *dataItem = model.sameNeighborhoodRentHouseData.items[index];
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);
-        tracerDic[@"card_type"] = @"slide";
+        tracerDic[@"card_type"] = @"left_pic";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
-        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
-        tracerDic[@"element_from"] = @"same_neighborhood";
-        tracerDic[@"enter_from"] = @"old_detail";
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeSecondHandHouse)}];
-        NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",dataItem.hid];
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeRentHouse];
+        tracerDic[@"element_from"] = @"rent_same_neighborhood";
+        tracerDic[@"enter_from"] = @"neighborhood_detail";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeRentHouse)}];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",dataItem.id];
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
     }
 }
-
 // 不重复调用
-- (void)collectionDisplayCell:(NSInteger)index
-{
-    FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)self.currentData;
-    if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.items.count > 0 && index >= 0 && index < model.sameNeighborhoodHouseData.items.count) {
+- (void)collectionDisplayCell:(NSInteger)index {
+    FHDetailNeighborhoodHouseRentModel *model = (FHDetailNeighborhoodHouseRentModel *)self.currentData;
+    if (model.sameNeighborhoodRentHouseData && model.sameNeighborhoodRentHouseData.items.count > 0 && index >= 0 && index < model.sameNeighborhoodRentHouseData.items.count) {
         // cell 显示 处理
-        FHSearchHouseDataItemsModel *dataItem = model.sameNeighborhoodHouseData.items[index];
+        FHHouseRentDataItemsModel *dataItem = model.sameNeighborhoodRentHouseData.items[index];
         // house_show
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);
-        tracerDic[@"card_type"] = @"slide";
+        tracerDic[@"card_type"] = @"left_pic";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
-        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
-        tracerDic[@"element_type"] = @"same_neighborhood";
+        tracerDic[@"house_type"] = @"rent";
+        tracerDic[@"element_type"] = @"rent_same_neighborhood";
         tracerDic[@"search_id"] = dataItem.searchId.length > 0 ? dataItem.searchId : @"be_null";
-        tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.hid ? dataItem.hid : @"be_null");
+        tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.id ? dataItem.id : @"be_null");
         tracerDic[@"impr_id"] = dataItem.imprId.length > 0 ? dataItem.imprId : @"be_null";
-        [tracerDic removeObjectsForKeys:@[@"element_from"]];
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"same_neighborhood";// 同小区房源
+    return @"rent_same_neighborhood";
 }
-
-
 @end
-
-
 // FHDetailNeighborhoodItemCollectionCell
-@interface FHDetailSameNeighborhoodHouseCollectionCell ()
+@interface FHDetailNeighborhoodHouseRentCollectionCell ()
 
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHSameHouseTagView *imageTagLabelBgView;
@@ -277,7 +241,7 @@
 @property (nonatomic, strong) UIImageView *imageBacView;
 @end
 
-@implementation FHDetailSameNeighborhoodHouseCollectionCell
+@implementation FHDetailNeighborhoodHouseRentCollectionCell
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -290,11 +254,11 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHHouseRentDataItemsModel class]]) {
         return;
     }
     self.currentData = data;
-    FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)data;
+    FHHouseRentDataItemsModel *model = (FHHouseRentDataItemsModel *)data;
     if (model) {
         if (model.houseImage.count > 0) {
             FHImageModel *imageModel = model.houseImage[0];
@@ -317,9 +281,9 @@
             self.imageTagLabelBgView.hidden = YES;
         }
         
-        self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
+        self.houseVideoImageView.hidden = YES;
         
-        NSString *str = model.displaySameNeighborhoodTitle;
+        NSString *str = model.title;
         if (str == nil) {
             str = @"";
         }
@@ -327,8 +291,8 @@
         attributeText.yy_font = [UIFont themeFontMedium:16];
         attributeText.yy_color = [UIColor themeGray1];
         self.descLabel.attributedText = attributeText;
-        self.priceLabel.text = model.displayPrice;
-        self.spaceLabel.text = model.displayPricePerSqm;
+        self.priceLabel.text = model.pricing;
+        self.spaceLabel.text = model.subtitle;
     }
     [self layoutIfNeeded];
 }
@@ -447,13 +411,4 @@
     }
     return _imageTagLabelBgView;
 }
-
-@end
-
-
-// FHDetailSameNeighborhoodHouseModel
-
-@implementation FHDetailSameNeighborhoodHouseModel
-
-
 @end

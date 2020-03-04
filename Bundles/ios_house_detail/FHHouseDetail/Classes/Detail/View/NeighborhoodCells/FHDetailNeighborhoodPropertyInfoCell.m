@@ -48,32 +48,67 @@
     self.currentData = data;
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)data;
     self.shadowImage.image = model.shadowImage;
+    __block UIView *lastView = nil; // 最后一个视图
+    __block NSInteger doubleCount = 0;// 两列计数
+    NSMutableArray *singles = [NSMutableArray new];
+    CGFloat vHeight = 30.0;
     if (model.baseInfo.count > 0) {
-        __block NSInteger itemsCount = 0;
-        CGFloat vHeight = 30.0;
+        CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
         [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
-            [self.containerView addSubview:itemView];
-            [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(itemsCount * vHeight);
-                make.left.right.mas_equalTo(self.containerView);
-                make.height.mas_equalTo(vHeight);
-            }];
-            itemView.keyLabel.text = obj.attr;
-            itemView.valueLabel.text = obj.value;
-            itemsCount += 1;
+            if (obj.isSingle) {
+                      [singles addObject:obj];
+            } else {
+                // 两列
+                if (doubleCount % 2 == 0) {
+                    FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
+                     [self.containerView addSubview:itemView];
+                     [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                         make.top.mas_equalTo((doubleCount/2) * vHeight);
+                         make.left.mas_equalTo(self.containerView);
+                         make.width.mas_equalTo(viewWidth);
+                         make.height.mas_equalTo(vHeight);
+                     }];
+                     itemView.keyLabel.text = obj.attr;
+                     itemView.valueLabel.text = obj.value;
+                    lastView = itemView;
+//                     itemsCount += 1;
+                }else {
+                    FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
+                              [self.containerView addSubview:itemView];
+                              [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                                  make.top.mas_equalTo((doubleCount/2) * vHeight);
+                                  make.left.equalTo(self.containerView).offset(viewWidth);
+                                  make.width.mas_equalTo(viewWidth);
+                                  make.height.mas_equalTo(vHeight);
+                              }];
+                              itemView.keyLabel.text = obj.attr;
+                              itemView.valueLabel.text = obj.value;
+                    lastView = itemView;
+                }
+                doubleCount += 1;
+            }
         }];
         
     }
-    [self updateItems:NO];
+    if (singles.count > 0) {
+           [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+               FHDetailNeighborhoodPropertyItemView *itemView = [[FHDetailNeighborhoodPropertyItemView alloc] init];
+                         [self.containerView addSubview:itemView];
+                         [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                             make.top.mas_equalTo((idx+(doubleCount/2)+doubleCount % 2)* vHeight);
+                             make.left.right.mas_equalTo(self.containerView);
+                             make.height.mas_equalTo(vHeight);
+                         }];
+                         itemView.keyLabel.text = obj.attr;
+                         itemView.valueLabel.text = obj.value;
+               lastView = itemView;
+           }];
+       }
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(((doubleCount/2 + doubleCount % 2)+singles.count) * 30);
+        }];
 }
 
-- (void)foldButtonClick:(UIButton *)button {
-    FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
-    model.isFold = !model.isFold;
-    self.foldButton.isFold = model.isFold;
-    [self updateItems:YES];
-}
 
 - (UIImageView *)shadowImage {
     if (!_shadowImage) {
@@ -169,24 +204,24 @@
     [_keyLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _valueLabel.textColor = [UIColor themeGray1];
+    _valueLabel.textColor = [UIColor themeGray2];
     _valueLabel.font = [UIFont themeFontMedium:14];
     [self addSubview:_valueLabel];
     _valueLabel.textAlignment = NSTextAlignmentLeft;
-    
     // 布局
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.top.mas_equalTo(10);
         make.height.mas_equalTo(20);
+        make.width.mas_offset(56);
         make.bottom.mas_equalTo(self);
     }];
     
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(96);
+        make.left.mas_equalTo(self.keyLabel.mas_right).offset(10);
         make.top.mas_equalTo(10);
         make.height.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
+        make.right.mas_equalTo(-5);
         make.bottom.mas_equalTo(self.keyLabel);
     }];
 }
