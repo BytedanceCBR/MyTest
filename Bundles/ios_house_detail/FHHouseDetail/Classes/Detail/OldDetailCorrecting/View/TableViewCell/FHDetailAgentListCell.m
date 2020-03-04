@@ -84,8 +84,11 @@
     }
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
-        CGFloat vHeight = 76.0;
+        __block CGFloat vHeight = 76.0;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.realtorScoreDescription.length >0&&obj.realtorScoreDisplay.length >0) {
+                vHeight = 100;
+            }
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj];
             // 添加事件
             itemView.tag = idx;
@@ -121,6 +124,12 @@
             if(obj.realtorEvaluate.length > 0) {
                 itemView.realtorEvaluate.text = obj.realtorEvaluate;
             }
+            if(obj.realtorScoreDisplay.length > 0) {
+                  itemView.score.text = obj.realtorScoreDisplay;
+              }
+            if(obj.realtorScoreDescription.length > 0) {
+                  itemView.scoreDescription.text = obj.realtorScoreDescription;
+              }
             itemsCount += 1;
         }];
 
@@ -350,13 +359,31 @@
             [model.tableView beginUpdates];
         }
         if (model.isFold) {
+            CGFloat showHeight = 0;
+            for (int i = 0; i<3; i++) {
+                FHDetailContactModel *showModel = (FHDetailContactModel*) model.recommendedRealtors[i];
+                if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
+                    showHeight = showHeight +100;
+                }else {
+                    showHeight = showHeight + 76;
+                };
+            }
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(76 * 3);
+                make.height.mas_equalTo(showHeight);
             }];
             realtorShowCount = 3;
         } else {
+           __block CGFloat showHeight = 0;
+            [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                FHDetailContactModel *showModel = obj;
+            if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
+                     showHeight = showHeight +100;
+                 }else {
+                     showHeight = showHeight + 76;
+                 };
+            }];
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(76 * model.recommendedRealtors.count);
+                make.height.mas_equalTo(showHeight);
             }];
             realtorShowCount = model.recommendedRealtors.count;
             [self addRealtorClickMore];
@@ -366,10 +393,19 @@
             [model.tableView endUpdates];
         }
     } else if (model.recommendedRealtors.count > 0) {
-        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(76 * model.recommendedRealtors.count);
-        }];
-        realtorShowCount = model.recommendedRealtors.count;
+        __block CGFloat showHeight = 0;
+         [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+             FHDetailContactModel *showModel = obj;
+         if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
+                  showHeight = showHeight +100;
+              }else {
+                  showHeight = showHeight + 76;
+              };
+         }];
+         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+             make.height.mas_equalTo(showHeight);
+         }];
+         realtorShowCount = model.recommendedRealtors.count;
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
@@ -627,31 +663,57 @@
 
 - (void)layoutForStyle0 {
     [self setupUI];
+    if (self.model.realtorScoreDisplay.length <= 0 || self.model.realtorScoreDescription.length <=0) {
+           self.score.hidden = YES;
+           self.scoreDescription.hidden = YES;
+       }
 }
 
 - (void)layoutForStyle1 {
     [self setupUI];
-    [self modifiedLayoutNameNeedShowCenter:self.model.realtorTags.count >0];
+    [self modifiedLayoutNameNeedShowCenter:self.model.realtorTags.count >0||(self.model.realtorScoreDisplay.length>0&&self.model.realtorScoreDescription.length>0)];
     [self addSubview:self.tagsView];
-    [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(15);
-        make.left.equalTo(self.name);
-        make.right.equalTo(self.imBtn.mas_left).offset(-10);
-        make.top.equalTo(self.name.mas_bottom).offset(8);
-    }];
-
+    if (self.model.realtorScoreDisplay.length>0 && self.model.realtorScoreDescription.length>0) {
+         [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
+               make.height.mas_equalTo(15);
+               make.left.equalTo(self.name);
+               make.right.equalTo(self.imBtn.mas_left).offset(-10);
+             make.top.equalTo(self.score.mas_bottom).offset(self.model.realtorTags.count>0?6:8);
+           }];
+    }else {
+        self.score.hidden = YES;
+        self.scoreDescription.hidden = YES;
+        [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
+              make.height.mas_equalTo(15);
+              make.left.equalTo(self.name);
+              make.right.equalTo(self.imBtn.mas_left).offset(-10);
+              make.top.equalTo(self.name.mas_bottom).offset(8);
+          }];
+    }
 }
 
 - (void)layoutForStyle2 {
     [self setupUI];
-    [self modifiedLayoutNameNeedShowCenter:self.model.realtorEvaluate.length>0];
+    [self modifiedLayoutNameNeedShowCenter:self.model.realtorEvaluate.length>0||(self.model.realtorScoreDisplay.length>0&&self.model.realtorScoreDescription.length>0)];
     [self addSubview:self.realtorEvaluate];
-    [self.realtorEvaluate mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(17);
-        make.left.equalTo(self.name);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
-        make.top.equalTo(self.name.mas_bottom).offset(4);
-    }];
+    if (self.model.realtorScoreDisplay.length>0 && self.model.realtorScoreDescription.length>0) {
+         [self.realtorEvaluate mas_makeConstraints:^(MASConstraintMaker *make) {
+             make.height.mas_equalTo(17);
+             make.left.equalTo(self.name);
+             make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+             make.top.equalTo(self.score.mas_bottom).offset(self.model.realtorTags.count>0?6:8);
+         }];
+    }else {
+        self.score.hidden = YES;
+        self.scoreDescription.hidden = YES;
+        [self.realtorEvaluate mas_makeConstraints:^(MASConstraintMaker *make) {
+              make.height.mas_equalTo(17);
+              make.left.equalTo(self.name);
+              make.right.equalTo(self.imBtn.mas_left).offset(-10);
+              make.top.equalTo(self.name.mas_bottom).offset(8);
+          }];
+    }
+
 }
 
 -(void)modifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
@@ -754,6 +816,20 @@
     _agency.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_agency];
     
+    self.score = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _score.textColor = [UIColor themeGray1];
+    _score.font = [UIFont themeFontMedium:14];
+    _score.textAlignment = NSTextAlignmentLeft;
+    [_score setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [_score setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self addSubview:_score];
+    
+    self.scoreDescription = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _scoreDescription.textColor = [UIColor themeGray2];
+    _scoreDescription.textAlignment = NSTextAlignmentLeft;
+
+    [self addSubview:_scoreDescription];
+    
     [self.avator mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(46);
         make.left.mas_equalTo(16);
@@ -783,6 +859,7 @@
         make.centerY.mas_equalTo(self.name);
         make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
+    
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(-20);
@@ -792,6 +869,16 @@
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
         make.top.mas_equalTo(self.name).offset(-5);
+    }];
+    
+    [self.score mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.name);
+        make.top.equalTo(self.name.mas_bottom).offset(6);
+    }];
+    [self.scoreDescription mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.score.mas_right).offset(2);
+        make.right.mas_lessThanOrEqualTo(self).offset(-20);
+        make.centerY.equalTo(self.score);
     }];
 }
 
