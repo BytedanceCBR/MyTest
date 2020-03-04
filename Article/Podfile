@@ -1,5 +1,5 @@
-#gem 'bd_pod_extentions','6.3.0'
-#require 'bd_pod_extentions'
+gem 'bd_pod_extentions','6.3.0'
+require 'bd_pod_extentions'
 
 require File.dirname(__FILE__)+'/pod_binary.rb'
 install! 'cocoapods', :warn_for_multiple_pod_sources => false,:deterministic_uuids => false
