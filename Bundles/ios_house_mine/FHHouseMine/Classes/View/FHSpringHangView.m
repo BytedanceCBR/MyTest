@@ -136,7 +136,7 @@
     FHPopupViewInfoItemModel *model = [[FHPopupViewManager shared] hangData];
     if(model && model.openUrl.length > 0){
 //        NSString *str = [NSString stringWithFormat:@"sslocal://forum_topic?forum_id=1658680870945822&origin_from=%@&enter_from=%@",_pageType,_pageType];
-        model.openUrl = @"sslocal://webview?url=https%3a%2f%2fm.xflapp.com%2ff100%2finner%2fforum%3forigin_from%3dxfl_pendant%26device_id%3d56721989188&share_enable=true";
+//        model.openUrl = @"sslocal://webview?url=https%3a%2f%2fm.xflapp.com%2ff100%2finner%2fforum%3forigin_from%3dxfl_pendant%26device_id%3d56721989188&share_enable=true";
         NSURL *url = [NSURL URLWithString:model.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     }
