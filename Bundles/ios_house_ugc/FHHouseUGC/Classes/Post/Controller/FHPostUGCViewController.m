@@ -1247,8 +1247,15 @@ static NSInteger const kMaxPostImageCount = 9;
         ret = !([currentContent isEqualToString:outerContent] &&  [currentImageUris isEqualToString:outerImageUris]);
     }
     else {
-        NSInteger validContentLength = (self.neighborhoodId.length > 0) ? 10 : 0;
-        ret = self.inputTextView.trimmedLength > validContentLength || self.addImagesView.selectedImageCacheTasks.count != 0;
+        NSInteger validContentLength = 0;
+        if(self.neighborhoodId.length > 0) {
+            validContentLength = 10;
+            ret = self.inputTextView.trimmedLength > validContentLength;
+        }
+        else {
+            validContentLength = 0;
+            ret = self.inputTextView.trimmedLength > validContentLength || self.addImagesView.selectedImageCacheTasks.count != 0;
+        }
     }
     
     return ret;
