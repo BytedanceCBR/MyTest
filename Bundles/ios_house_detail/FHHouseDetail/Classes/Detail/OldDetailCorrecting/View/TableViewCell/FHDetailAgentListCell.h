@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 // 推荐经纪人-列表
-@interface FHDetailAgentListCell : FHDetailBaseCell
+@interface FHDetailAgentListCell : FHDetailBaseCell <FHDetailScrollViewDidScrollProtocol>
 
 @end
 

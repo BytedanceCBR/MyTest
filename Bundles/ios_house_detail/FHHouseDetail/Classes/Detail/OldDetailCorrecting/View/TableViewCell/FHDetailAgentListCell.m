@@ -379,8 +379,21 @@
 //    [self tracerRealtorShowToIndex:realtorShowCount];
 }
 
-- (void)fh_willDisplayCell;{
-    [self addRealtorShowLog];
+//- (void)fh_willDisplayCell;{
+//    [self addRealtorShowLog];
+//}
+
+#pragma mark - FHDetailScrollViewDidScrollProtocol
+
+// 滑动house_show埋点
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
+    if (vcParentView) {
+        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+        NSInteger index = (UIScreen.mainScreen.bounds.size.height - point.y - 76 - 30) / 76;
+        FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
+        NSInteger showCount = model.isFold ? MIN(index, 3):MIN(model.recommendedRealtors.count, index);
+        [self tracerRealtorShowToIndex:showCount];
+    }
 }
 
 -(void)addRealtorShowLog{
