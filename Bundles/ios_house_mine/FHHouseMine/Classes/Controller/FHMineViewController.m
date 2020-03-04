@@ -54,6 +54,7 @@
 
 - (void)dealloc {
     [TTAccount removeMulticastDelegate:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - TTAccountMulticastProtocol
@@ -79,6 +80,10 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.ttTrackStayEnable = YES;
     self.ttStatusBarStyle = UIStatusBarStyleLightContent;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
     
     [self initNavbar];
     [self initView];
@@ -138,6 +143,16 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+}
+
+- (void)popupViewDataFetchSuccess {
+    if([FHEnvContext isSpringHangOpen] && self.springView){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
+}
+
+- (void)popupViewStartFetchData {
+    self.springView.hidden = YES;
 }
 
 - (void)initNavbar {
@@ -211,9 +226,9 @@
 - (void)initSignal {
     //config改变后需要重新刷新数据
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-        if([FHEnvContext isSpringHangOpen] && self.springView){
-            [self.springView show:[FHEnvContext enterTabLogName]];
-        }
+//        if([FHEnvContext isSpringHangOpen] && self.springView){
+//            [self.springView show:[FHEnvContext enterTabLogName]];
+//        }
         [self startLoadData];
     }];
 }

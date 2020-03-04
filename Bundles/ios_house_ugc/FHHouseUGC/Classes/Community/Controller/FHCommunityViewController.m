@@ -26,7 +26,6 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
-#import "FHMinisdkManager.h"
 #import "UIViewController+Track.h"
 #import "FHSpringHangView.h"
 #import <FHHouseBase/FHPermissionAlertViewController.h>
@@ -75,9 +74,9 @@
             [self initViewModel];
         }
         self.segmentControl.sectionTitles = [self getSegmentTitles];
-        if([FHEnvContext isSpringHangOpen] && self.springView){
-            [self.springView show:[FHEnvContext enterTabLogName]];
-        }
+//        if([FHEnvContext isSpringHangOpen] && self.springView){
+//            [self.springView show:[FHEnvContext enterTabLogName]];
+//        }
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
@@ -88,7 +87,20 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
+}
+
+- (void)popupViewDataFetchSuccess {
+    if([FHEnvContext isSpringHangOpen] && self.springView){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
+}
+
+- (void)popupViewStartFetchData {
+    self.springView.hidden = YES;
 }
 
 - (void)addSpringView {
@@ -228,11 +240,6 @@
             [FHEnvContext hideFindTabRedDotsLimitCount];
             self.hasShowDots = YES;
         }
-    }
-    
-    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
-        //春节活动
-        [[FHMinisdkManager sharedInstance] goSpring];
     }
 }
 

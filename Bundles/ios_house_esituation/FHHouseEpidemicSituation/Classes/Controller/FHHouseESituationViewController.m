@@ -18,6 +18,7 @@
 #import "FHSpringHangView.h"
 #import "FHUserTracker.h"
 #import "TTDeviceHelper.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHHouseESituationViewController ()<YSWebViewDelegate>
 @property(nonatomic, strong)SSWebViewContainer * webContainer;
@@ -72,7 +73,21 @@
         }];
     }
     
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
+}
+
+- (void)popupViewDataFetchSuccess {
+    if([FHEnvContext isSpringHangOpen] && self.springView){
+        [self.springView show:[FHEnvContext enterTabLogName]];
+    }
+}
+
+- (void)popupViewStartFetchData {
+    self.springView.hidden = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated

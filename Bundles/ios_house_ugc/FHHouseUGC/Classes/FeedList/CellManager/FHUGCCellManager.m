@@ -22,6 +22,7 @@
 #import "FHUGCVoteDetailCell.h"
 #import "FHUGCHotCommunityCell.h"
 #import "FHNeighbourhoodQuestionCell.h"
+#import "FHNeighbourhoodCommentCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -56,6 +57,7 @@
                                 @"FHUGCVoteDetailCell",
                                 @"FHUGCHotCommunityCell",
                                 @"FHNeighbourhoodQuestionCell",
+                                @"FHNeighbourhoodCommentCell",
                                 //可扩展
                                  ];
 }
@@ -114,7 +116,8 @@
             
         case FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion:
             return [FHNeighbourhoodQuestionCell class];
-
+        case FHUGCFeedListCellSubTypeUGCNeighbourhoodComments:
+            return [FHNeighbourhoodCommentCell class];
         default:
             break;
     }

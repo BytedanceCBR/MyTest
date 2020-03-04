@@ -7954,6 +7954,10 @@
     [params setValue:_sdk_params forKey:@"sdk_params"];
     [params setValue:_social_group_id forKey:@"social_group_id"];
     [params setValue:_bind_type forKey:@"bind_type"];
+    [params setValue:_neighborhoodTags forKey:@"neighborhood_tags"];
+    [params setValue:@(_neighborhoodId.longLongValue) forKey:@"neighborhood_id"];
+    [params setValue:_source forKey:@"source"];
+    [params setValue:_scores forKey:@"scores"];
     
     // 埋点参数
     if (self.extraTrack) {

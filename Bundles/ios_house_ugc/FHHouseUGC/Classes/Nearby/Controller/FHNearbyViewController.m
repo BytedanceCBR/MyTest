@@ -200,7 +200,7 @@
 
 - (FHNearbyHeaderView *)headerView {
     if(!_headerView){
-        _headerView = [[FHNearbyHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 0)];
+        _headerView = [[FHNearbyHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 0.001f)];
     }
     return _headerView;
 }

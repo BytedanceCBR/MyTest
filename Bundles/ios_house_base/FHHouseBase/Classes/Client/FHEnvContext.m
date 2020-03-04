@@ -32,7 +32,6 @@
 #import "TTArticleTabBarController.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "FHMainApi.h"
-#import "FHMinisdkManager.h"
 #import "FHIntroduceManager.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
@@ -566,11 +565,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //更新公共参数
     [self updateRequestCommonParams];
-    
-    //初始化拉新拉活sdk
-    if([FHEnvContext isSpringOpen]){
-        [[FHMinisdkManager sharedInstance] initTask];
-    }
     
     NSString *startFeedCatgegory = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getFeedStartCategoryName];
     
@@ -1174,8 +1168,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     
     self.stashModel = nil;
-    
-    [[FHMinisdkManager sharedInstance] goSpring];
     
     [self startLocation];
     [self check2CityList];
