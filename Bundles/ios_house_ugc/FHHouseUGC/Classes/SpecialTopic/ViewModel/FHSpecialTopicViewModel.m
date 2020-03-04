@@ -437,11 +437,24 @@
     }
     
     self.viewController.headerView.nameLabel.text = isEmptyString(headerModel.forum.forumName) ? @"" : headerModel.forum.forumName;
-    NSString *subtitle = headerModel.forum.desc;
+    NSString *subtitle = headerModel.forum.desc.length > 0 ? headerModel.forum.desc : headerModel.forum.subDesc;
+    
     self.viewController.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     
     self.viewController.titleLabel.text = isEmptyString(headerModel.forum.forumName) ? @"" : headerModel.forum.forumName;
     self.viewController.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
+    
+    CGFloat subTitleHeight = [self.viewController.headerView.subtitleLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)].height;
+    
+    CGFloat titleHeight = [self.viewController.headerView.nameLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)].height;
+    
+    self.viewController.headerView.subtitleLabel.frame = CGRectMake(15, self.viewController.headerView.height - subTitleHeight - 15, SCREEN_WIDTH - 30, subTitleHeight);
+    
+    if(isEmptyString(subtitle)){
+        self.viewController.headerView.nameLabel.frame = CGRectMake(24, self.viewController.headerView.height - 22 - titleHeight, SCREEN_WIDTH - 48, titleHeight);
+    }else{
+        self.viewController.headerView.nameLabel.frame = CGRectMake(24, self.viewController.headerView.height - 12 - subTitleHeight - 15 - titleHeight, SCREEN_WIDTH - 48, titleHeight);
+    }
 }
 
 - (void)updateJoinUI:(BOOL)followed {

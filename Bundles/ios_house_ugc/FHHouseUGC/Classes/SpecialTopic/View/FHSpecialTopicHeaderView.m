@@ -60,12 +60,12 @@
     self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(24, self.frame.size.height - 73, self.frame.size.width - 48, 29)];
     self.nameLabel.font = [UIFont themeFontSemibold:21];
     self.nameLabel.textColor = [UIColor themeWhite];
-    self.nameLabel.numberOfLines = 1;
+    self.nameLabel.numberOfLines = 3;
     // 副标题标签
     self.subtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, self.frame.size.height - 36, self.frame.size.width - 30, 21)];
     self.subtitleLabel.font = [UIFont themeFontRegular:15];
     self.subtitleLabel.textColor = [UIColor themeWhite];
-    self.subtitleLabel.numberOfLines = 1;
+    self.subtitleLabel.numberOfLines = 2;
     
     self.refreshHeader = [[FHCommunityDetailRefreshHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 40, 20)];
     _refreshHeader.alpha = 0;
