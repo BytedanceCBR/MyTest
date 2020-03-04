@@ -88,7 +88,7 @@
         __block NSInteger itemsCount = 0;
         __block CGFloat vHeight = 76.0;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (obj.realtorScoreDescription.length >0&&obj.realtorScoreDisplay.length >0) {
+            if (obj.realtorScoreDescription.length >0&&obj.realtorScoreDisplay.length >0&&obj.realtorTags.count >0) {
                 vHeight = 100;
             }
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj];
@@ -364,7 +364,7 @@
             CGFloat showHeight = 0;
             for (int i = 0; i<3; i++) {
                 FHDetailContactModel *showModel = (FHDetailContactModel*) model.recommendedRealtors[i];
-                if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
+                if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
                     showHeight = showHeight +100;
                 }else {
                     showHeight = showHeight + 76;
@@ -378,7 +378,7 @@
            __block CGFloat showHeight = 0;
             [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailContactModel *showModel = obj;
-            if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
+            if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
                      showHeight = showHeight +100;
                  }else {
                      showHeight = showHeight + 76;
@@ -398,7 +398,7 @@
         __block CGFloat showHeight = 0;
          [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
              FHDetailContactModel *showModel = obj;
-         if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0) {
+         if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
                   showHeight = showHeight +100;
               }else {
                   showHeight = showHeight + 76;
@@ -425,12 +425,20 @@
 
 // 滑动house_show埋点
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
-    if (vcParentView) {
-        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
-        NSInteger index = (UIScreen.mainScreen.bounds.size.height - point.y - 76 - 30) / 76;
-        FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
-        NSInteger showCount = model.isFold ? MIN(index, 3):MIN(model.recommendedRealtors.count, index);
-        [self tracerRealtorShowToIndex:showCount];
+    CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
+    __block CGFloat showHeight = 0;
+    for (int m = 0; m <model.recommendedRealtors.count; m++) {
+        FHDetailContactModel *showModel = model.recommendedRealtors[m];
+        if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
+            showHeight = showHeight +100;
+        }else {
+            showHeight = showHeight + 76;
+        };
+        if (UIScreen.mainScreen.bounds.size.height - point.y>showHeight) {
+            NSInteger showCount = model.isFold ? MIN(m, 3):MIN(model.recommendedRealtors.count, m);
+            [self tracerRealtorShowToIndex:showCount];
+        };
     }
 }
 
