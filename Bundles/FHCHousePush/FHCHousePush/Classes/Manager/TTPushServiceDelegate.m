@@ -56,7 +56,9 @@ typedef void(^NotificationActionCompletionBlock) (void);
 {
     TTRegisterKitchenMethod
     TTKitchenRegisterBlock(^{
-        TTKConfigFreezedDictionary(kFSettings, @"使用BDUGPushSDK", @{kUseUGPushSDKKey:@0});
+        
+        // todo zjing test
+        TTKConfigFreezedDictionary(kFSettings, @"使用BDUGPushSDK", @{kUseUGPushSDKKey:@1});
     });
 }
 
@@ -79,6 +81,10 @@ typedef void(^NotificationActionCompletionBlock) (void);
 - (void)registerNotification
 {
     [[TTInstallIDManager sharedInstance] observeDeviceDidRegistered:^(NSString *deviceID, NSString *installID) {
+        
+        // todo zjing test
+        [FHUserTracker writeEvent:@"zjing_push_test" params:@{@"use_ug_push_sdk":@(1)}];
+        
         BDUGRequestParam *param = [BDUGRequestParam requestParam];
         param.deviceId = deviceID;
         param.installId = installID;
