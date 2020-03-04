@@ -81,6 +81,8 @@
     // 设置下发标题
     if(model.recommendedRealtorsTitle.length > 0) {
         self.headerView.label.text = model.recommendedRealtorsTitle;
+    }else {
+        self.headerView.label.text = (model.houseType == FHHouseTypeNewHouse) ? @"优选顾问" : @"推荐经纪人";
     }
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
