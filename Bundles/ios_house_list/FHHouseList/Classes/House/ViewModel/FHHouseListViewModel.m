@@ -1477,7 +1477,7 @@ extern NSString *const INSTANT_DATA_KEY;
     NSString *identifier = @"";
     id data = nil;
     if (indexPath.section == 0) {
-        data = self.self.houseList[indexPath.row];
+        data = self.houseList[indexPath.row];
     } else {
         isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
         if (indexPath.row < self.sugesstHouseList.count) {
