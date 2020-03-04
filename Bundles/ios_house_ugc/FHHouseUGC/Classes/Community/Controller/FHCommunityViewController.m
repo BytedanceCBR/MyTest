@@ -89,7 +89,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData:) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
 }
 

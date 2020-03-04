@@ -206,7 +206,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData:) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
 }
 
 - (void)popupViewDataFetchSuccess {

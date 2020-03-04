@@ -62,7 +62,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData:) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
     
 //    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
 //        if([FHEnvContext isSpringHangOpen] && self.springView){
