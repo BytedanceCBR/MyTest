@@ -443,6 +443,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         
         if (model.data && completion) {
             completion(YES, model);
+            [[FHPopupViewManager shared] fetchData];
         }else
         {
             completion(NO, model);

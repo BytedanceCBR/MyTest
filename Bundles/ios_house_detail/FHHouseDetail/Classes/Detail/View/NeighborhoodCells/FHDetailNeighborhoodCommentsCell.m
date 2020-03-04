@@ -377,10 +377,15 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = cellModel.tracerDic[UT_PAGE_TYPE];
-    traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
-    traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+    traceParam[@"enter_from"] = [self.baseViewModel pageTypeString];
+    traceParam[@"enter_type"] = enterType ? enterType : UT_BE_NULL;
+    
+    NSInteger loc =  [self.dataList indexOfObject:cellModel];
+    if(loc != NSNotFound) {
+        traceParam[@"rank"] = @(loc).stringValue;
+    }
     traceParam[@"log_pb"] = cellModel.logPb;
+    traceParam[@"community_id"] = cellModel.groupId;
     dict[TRACER_KEY] = traceParam;
     
     dict[@"data"] = cellModel;
