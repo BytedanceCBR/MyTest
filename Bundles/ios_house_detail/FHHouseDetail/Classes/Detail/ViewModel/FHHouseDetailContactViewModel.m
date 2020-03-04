@@ -452,42 +452,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [params addEntriesFromDictionary:extraDict];
     }
  
-    if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
-        
-        params[@"is_login"] = [TTAccount sharedAccount].isLogin?@"1":@"0";
-        params[@"realtor_id"] = _contactPhone.realtorId?:@"be_null";
-        params[@"realtor_rank"] = @(0);
-        [self addFakeImClickLog:params];
-        NSString *fromStr = nil;
-        if (self.houseType == FHHouseTypeSecondHandHouse) {
-            fromStr = @"app_oldhouse_chat";
-        }else if (self.houseType == FHHouseTypeRentHouse) {
-            fromStr = @"app_renthouse_chat";
-        }
-        self.contactPhone.searchId = self.searchId;
-        self.contactPhone.imprId = self.imprId;
-        FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
-        fillFormConfig.houseType = self.houseType;
-        fillFormConfig.houseId = self.houseId;
-        fillFormConfig.topViewController = self.belongsVC;
-        fillFormConfig.title = @"预约看房";
-        fillFormConfig.subtitle = @"很抱歉，该经纪人暂未开通该服务，请留下您的联系方式，我们会立即短信告知对方，方便与您联系";
-        if (self.contactPhone.phone.length > 0) {
-            fillFormConfig.btnTitle = @"电话咨询";
-            fillFormConfig.leftBtnTitle = @"立即预约";
-        }else {
-            fillFormConfig.btnTitle = @"立即预约";
-        }
-        fillFormConfig.from = fromStr;
-        fillFormConfig.realtorId = self.contactPhone.realtorId;
-        fillFormConfig.phone = self.contactPhone.phone;
-        [fillFormConfig setTraceParams:params];
-        fillFormConfig.searchId = self.searchId;
-        fillFormConfig.imprId = self.imprId;
-        fillFormConfig.chooseAgencyList = self.chooseAgencyList;
-        [FHHouseFillFormHelper fillOnlineFormActionWithConfigModel:fillFormConfig];
-        return;
-    }
     NSString *realtor_pos = @"detail_button";
     if (params && [params isKindOfClass:[NSDictionary class]]) {
         realtor_pos = params[@"realtor_position"] ? : @"detail_button";
@@ -698,9 +662,31 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.houseType == FHHouseTypeNeighborhood) {
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
+    }else if (self.houseType == FHIMHouseTypeNewHouse) {
+        extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+        extraDic[kFHCluePage] = @(FHClueIMPageTypeCourt);
+        extraDic[@"from"] = @"app_court";
+        if (_fromStr.length > 0) {
+            extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
+            extraDic[@"from"] = _fromStr;
+        }
+    }else if (self.houseType == FHIMHouseTypeSecondHandHouse) {
+        extraDic[@"is_login_front"] = @(1);
     }
-    extraDic[@"is_login_front"] = @(1);
     [self onlineActionWithExtraDict:extraDic];
+}
+
++ (FHClueIMPageTypeC)imCluePageTypeByFromString:(NSString *)fromStr
+{
+    FHClueIMPageTypeC cluePageType = FHClueIMPageTypeCourt;
+    if ([fromStr isEqualToString:@"app_floorplan"]) {
+        cluePageType = FHClueIMPageTypeFloorplan;
+    }else if ([fromStr isEqualToString:@"app_newhouse_detail"]) {
+        cluePageType = FHClueIMPageTypeNewHouseDetail;
+    }else if ([fromStr isEqualToString:@"app_newhouse_apartmentlist"]) {
+        cluePageType = FHClueIMPageTypeApartmentlist;
+    }
+    return cluePageType;
 }
 
 // 新房群聊按钮点击

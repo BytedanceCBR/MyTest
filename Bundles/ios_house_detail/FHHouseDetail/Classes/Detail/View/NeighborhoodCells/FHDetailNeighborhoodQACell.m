@@ -339,7 +339,7 @@
 
 - (UIButton *)writeAnswerBtn {
     FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(16, 10, [UIScreen mainScreen].bounds.size.width - 62, 40)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(16, 10, [UIScreen mainScreen].bounds.size.width - 32, 40)];
     button.backgroundColor = [UIColor themeGray7];
     button.imageView.contentMode = UIViewContentModeCenter;
     [button setTitle:cellModel.contentEmptyTitle forState:UIControlStateNormal];
