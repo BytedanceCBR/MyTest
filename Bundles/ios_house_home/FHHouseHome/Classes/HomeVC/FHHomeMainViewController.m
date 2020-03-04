@@ -205,12 +205,18 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData:) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
 }
 
 - (void)popupViewDataFetchSuccess {
     if([FHEnvContext isSpringHangOpen] && self.springView){
         [self showSpringHangView];
     }
+}
+
+- (void)popupViewStartFetchData {
+    self.springView.hidden = YES;
 }
 
 - (void)showSpringHangView {
