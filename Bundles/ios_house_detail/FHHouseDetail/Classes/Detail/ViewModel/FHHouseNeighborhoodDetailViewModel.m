@@ -98,7 +98,6 @@
     
     
 //    [self.tableView registerClass:[FHODetailCommunityEntryCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
-<<<<<<< HEAD
     [self.tableView registerClass:[FHDetailNeighborhoodPropertyInfoCell class]
            forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodPropertyInfoModel class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodModel class])];
@@ -111,8 +110,6 @@
     [self.tableView registerClass:[FHDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodQACell class] forCellReuseIdentifier:NSStringFromClass([FHDetailQACellModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodCommentsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommentsCellModel class])];
-=======
->>>>>>> f_alpha
 
 //    [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateModel class])];
