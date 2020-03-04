@@ -167,7 +167,7 @@
     else {
         wrapperTrackEvent(@"detail", label);
     }
-    CLS_LOG(@"didReceiveMemoryWarning");
+    // CLS_LOG(@"didReceiveMemoryWarning");
 
     if ([self.article relatedVideoType] == ArticleRelatedVideoTypeAd) {
         NSString *logExtra = [self.article relatedLogExtra];
