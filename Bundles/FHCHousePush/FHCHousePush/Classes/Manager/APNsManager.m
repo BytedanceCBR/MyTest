@@ -104,6 +104,8 @@ static APNsManager *_sharedManager = nil;
 
 - (void)handleRemoteNotification:(NSDictionary *)userInfo
 {
+    [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:TTTrackerLaunchFromRemotePush];
+
     if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
         //正在展示隐私弹窗        
         return;
@@ -124,7 +126,6 @@ static APNsManager *_sharedManager = nil;
          [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"notify" postBack:postBack];
      }
 
-    [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:TTTrackerLaunchFromRemotePush];
     
     if ([self tryForOldAPNsLogical:userInfo]) {
         return;

@@ -26,6 +26,7 @@
 #import "TTNotificationActionSyncManager.h"
 #import <TTServiceProtocols/NewsBaseDelegateProtocol.h>
 #import "FHCHousePushUtils.h"
+#import <TTAppRuntime/NewsBaseDelegate.h>
 
 #import <FHHouseBase/FHUserTracker.h>
 
@@ -156,7 +157,8 @@ typedef void(^NotificationActionCompletionBlock) (void);
             forKey:kSSAPNsAlertManagerImportanceKey];
     [dict setValue:[userInfo btd_stringValueForKey:@"attachment"]
             forKey:kSSAPNsAlertManagerAttachmentKey];
-    
+    dict[@"post_back"] = userInfo[@"post_back"];
+
     //如果有开屏广告正在显示 就滞后显示推送弹窗
     if (![[TTAdSplashManager shareInstance] isAdShowing]) {
         [[SSAPNsAlertManager sharedManager] showRemoteNotificationAlert:dict];
@@ -180,7 +182,6 @@ typedef void(^NotificationActionCompletionBlock) (void);
 
 - (void)splashViewDisappearAnimationDidFinished:(NSNotification *)notification
 {
-    // todo zjing test
     [[self class] showRemoteNotificationAlertIfNeeded];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kSplashViewDisappearAnimationDidFinished" object:nil];
 }
@@ -232,6 +233,8 @@ API_AVAILABLE(ios(10.0))
 {
     // todo zjing test
     // None：不展示横幅，Alert：展示系统横幅
+    [FHUserTracker writeEvent:@"zjing_push_test" params:content.userInfo];
+
     NSString *importanceString = [content.userInfo btd_stringValueForKey:@"importance"];
     if (importanceString && [importanceString isEqualToString:@"important"]) {
         [self showRemoteNotificationAlert:content.userInfo];
@@ -246,6 +249,10 @@ API_AVAILABLE(ios(10.0))
     if (content.userInfo != nil) {
         [TTAdSplashManager shareInstance].splashADShowType = TTAdSplashShowTypeHide;
     }
+    // todo zjing badge & coldLaunch
+    [SharedAppDelegate setIsColdLaunch:NO];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = [[content.userInfo objectForKey:@"badge"] integerValue];
+
     if (@available(iOS 10.0, *)) {
         if ([content.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
             wrapperTrackEvent(@"apn", @"click_notification");

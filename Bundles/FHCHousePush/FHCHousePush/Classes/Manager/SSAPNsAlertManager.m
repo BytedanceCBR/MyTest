@@ -30,6 +30,9 @@
 #import "UIViewController+TTMovieUtil.h"
 #import <FHCHousePush/TTPushServiceDelegate.h>
 
+// todo zjing test
+#import <FHHouseBase/FHUserTracker.h>
+
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 
 #define kCouldShowActivePushAlertKey @"kCouldShowActivityPushAlertKey"
@@ -190,7 +193,6 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
                             wrapperTrackEventWithCustomKeys(@"apn", @"news_alert_view", rid, nil, nil);
                         }
-                        // todo zjing test
                         if (![TTPushServiceDelegate enable]) {
                             //pushsdk 新增v3埋点
                             [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"alert" postBack:postBack];
@@ -323,7 +325,6 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                 // [params setValue:rid forKey:@"rule_id"];
                 // [params setValue:@"alert" forKey:@"click_position"];
                 // [TTTrackerWrapper eventV3:@"push_click" params:[params copy] isDoubleSending:YES];
-                // todo zjing test
                 if (![TTPushServiceDelegate enable]) {
                     [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"alert" postBack:postBack];
                 }
@@ -389,8 +390,17 @@ static NSString * const kTTAPNsImportanceKey = @"important";
 
 + (void)showF100PushNotificationInAppAlert:(NSDictionary *)dict {
     NSString* title = @"幸福里";
+    
     NSString* content = [dict tt_stringValueForKey:kSSAPNsAlertManagerTitleKey];
     NSString *schemaString = [dict tt_stringValueForKey:kSSAPNsAlertManagerSchemaKey];
+    
+    // todo zjing test
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"contentDict"] = dict;
+    params[@"content"] = content ?: @"be_null";
+    params[@"schemaString"] = schemaString ?: @"be_null";
+
+    [FHUserTracker writeEvent:@"zjing_push_test" params:params];
 
     TTPushAlertModel *alertModel = [TTPushAlertModel modelWithTitle:title detail:content images:nil];
     alertModel.images = nil;
