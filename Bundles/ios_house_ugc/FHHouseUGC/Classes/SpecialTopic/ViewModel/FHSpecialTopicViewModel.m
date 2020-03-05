@@ -446,7 +446,7 @@
     
     CGFloat subTitleHeight = [self.viewController.headerView.subtitleLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)].height;
     
-    CGFloat titleHeight = [self.viewController.headerView.nameLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)].height;
+    CGFloat titleHeight = [self.viewController.headerView.nameLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 48, MAXFLOAT)].height;
     
     self.viewController.headerView.subtitleLabel.frame = CGRectMake(15, self.viewController.headerView.height - subTitleHeight - 15, SCREEN_WIDTH - 30, subTitleHeight);
     
