@@ -283,18 +283,7 @@ static APNsManager *_sharedManager = nil;
 {
     // 注意：根据 app_notice_status api 的定义，close 发送 1，open 发送 0
     // 这个是早期的api，根据server数据库的定义，0为有效值
-    
-    //         add by zjing 写死了是YES
-//    if(![SSCommonLogic pushSDKEnable]) {
-//        NSMutableString *tURL = [NSMutableString stringWithFormat:@"%@?notice=%d", [[FHHouseBridgeManager sharedInstance].pushBridge appNoticeStatusURLString], [TTUserSettingsManager apnsNewAlertClosed]];
-//
-////        NSMutableString *tURL = [NSMutableString stringWithFormat:@"%@?notice=%d", [CommonURLSetting appNoticeStatusURLString], [TTUserSettingsManager apnsNewAlertClosed]];
-//        if(!isEmptyString([[TTInstallIDManager sharedInstance] deviceID])) {
-//            [tURL appendFormat:@"&device_id=%@", [[TTInstallIDManager sharedInstance] deviceID]];
-//        }
-//
-//        [[TTNetworkManager shareInstance] requestForJSONWithURL:tURL params:nil method:@"GET" needCommonParams:YES callback:NULL];
-//
+
     if ([TTPushServiceDelegate enable]) {
         [BDUGPushService uploadNotificationStatus:[NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]]];
     } else {

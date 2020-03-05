@@ -180,6 +180,7 @@ typedef void(^NotificationActionCompletionBlock) (void);
 
 - (void)splashViewDisappearAnimationDidFinished:(NSNotification *)notification
 {
+    // todo zjing test
     [[self class] showRemoteNotificationAlertIfNeeded];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kSplashViewDisappearAnimationDidFinished" object:nil];
 }
@@ -188,6 +189,9 @@ typedef void(^NotificationActionCompletionBlock) (void);
 
 - (void)bdug_pushDidGrantedNotification:(BDUGBaseResponse *)response
 {
+    // 保证权限获取到再上报下
+    [BDUGPushService uploadNotificationStatus:[NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]]];
+
     if ([TTAuthorizeManager sharedManager].pushObj.authorizeModel.isPushAuthorizeDetermined == NO) {
         wrapperTrackEvent(@"pop", @"push_permission_show");
         if (!response.success) {
@@ -226,6 +230,8 @@ typedef void(^NotificationActionCompletionBlock) (void);
 - (void)bdug_willPresentNotification:(BDUGNotificationContent *)content completionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 API_AVAILABLE(ios(10.0))
 {
+    // todo zjing test
+    // None：不展示横幅，Alert：展示系统横幅
     NSString *importanceString = [content.userInfo btd_stringValueForKey:@"importance"];
     if (importanceString && [importanceString isEqualToString:@"important"]) {
         [self showRemoteNotificationAlert:content.userInfo];
