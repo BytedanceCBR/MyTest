@@ -141,7 +141,7 @@
 }
 
 - (void)initHeaderView {
-    CGFloat height = 300;
+    CGFloat height = 300 + self.customNavBarView.height;
     self.headerView = [[FHSpecialTopicHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
 }
 
