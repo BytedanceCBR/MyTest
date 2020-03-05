@@ -24,11 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHSpecialTopicHeaderView *headerView;
 @property (nonatomic, strong) UIView *tableHeaderView;
 @property (nonatomic, strong) FHCommunityDetailSegmentView *segmentView;
-@property (nonatomic, strong) FHUGCFollowButton *rightBtn;
 @property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) UILabel *subTitleLabel;
 @property (nonatomic, strong) UIView *titleContainer;
-
+@property (nonatomic, strong) UIButton *shareButton;// 分享
 @property(nonatomic, strong) UITableView *tableView;
 
 @end

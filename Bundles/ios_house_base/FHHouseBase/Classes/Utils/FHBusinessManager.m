@@ -291,7 +291,12 @@ static NSTimeInterval midnightYYInterval;//今年1月1号0点0分0秒
             retString = [NSString stringWithFormat:NSLocalizedString(@"昨天%@", nil),[TTBusinessManager formateDateStringSince:timeInterval formaterType:TTTimeFormatterNoDate]];
         }
         else{
-            retString = [TTBusinessManager formateDateStringSince:timeInterval formaterType:TTTimeFormatterSimple];
+//            retString = [TTBusinessManager formateDateStringSince:timeInterval formaterType:TTTimeFormatterSimple];
+            if([type isEqualToString:@"onlyDate"]){
+                retString = [TTBusinessManager onlyDateStringSince:timeInterval];
+            }else{
+                retString = [FHBusinessManager noSecondStringSince:timeInterval];
+            }
         }
     }
     else{
