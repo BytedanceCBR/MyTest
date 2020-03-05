@@ -58,8 +58,7 @@ typedef void(^NotificationActionCompletionBlock) (void);
     TTRegisterKitchenMethod
     TTKitchenRegisterBlock(^{
         
-        // todo zjing test
-        TTKConfigFreezedDictionary(kFSettings, @"使用BDUGPushSDK", @{kUseUGPushSDKKey:@1});
+        TTKConfigFreezedDictionary(kFSettings, @"使用BDUGPushSDK", @{kUseUGPushSDKKey:@0});
     });
 }
 
@@ -82,10 +81,7 @@ typedef void(^NotificationActionCompletionBlock) (void);
 - (void)registerNotification
 {
     [[TTInstallIDManager sharedInstance] observeDeviceDidRegistered:^(NSString *deviceID, NSString *installID) {
-        
-        // todo zjing test
-        [FHUserTracker writeEvent:@"zjing_push_test" params:@{@"use_ug_push_sdk":@(1)}];
-        
+
         BDUGRequestParam *param = [BDUGRequestParam requestParam];
         param.deviceId = deviceID;
         param.installId = installID;
@@ -147,8 +143,10 @@ typedef void(^NotificationActionCompletionBlock) (void);
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
     [dict setValue:[userInfo btd_stringValueForKey:@"o_url"]
             forKey:kSSAPNsAlertManagerSchemaKey];
-    [dict setValue:[[userInfo btd_dictionaryValueForKey:@"aps"]
-                    btd_stringValueForKey:@"alert"] forKey:kSSAPNsAlertManagerTitleKey];
+    [dict setValue:[[[userInfo tt_dictionaryValueForKey:@"aps"]
+                      tt_dictionaryValueForKey:@"alert"] tt_stringValueForKey:@"title"] forKey:kSSAPNsAlertManagerTitleKey];
+    [dict setValue:[[[userInfo tt_dictionaryValueForKey:@"aps"]
+                      tt_dictionaryValueForKey:@"alert"] tt_stringValueForKey:@"body"] forKey:kSSAPNsAlertManagerContentKey];
     [dict setValue:@([userInfo btd_longlongValueForKey:@"id"])
             forKey:kSSAPNsAlertManagerOldApnsTypeIDKey];
     [dict setValue:[userInfo btd_stringValueForKey:@"rid"]
@@ -231,9 +229,7 @@ typedef void(^NotificationActionCompletionBlock) (void);
 - (void)bdug_willPresentNotification:(BDUGNotificationContent *)content completionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 API_AVAILABLE(ios(10.0))
 {
-    // todo zjing test
     // None：不展示横幅，Alert：展示系统横幅
-    [FHUserTracker writeEvent:@"zjing_push_test" params:content.userInfo];
 
     NSString *importanceString = [content.userInfo btd_stringValueForKey:@"importance"];
     if (importanceString && [importanceString isEqualToString:@"important"]) {

@@ -30,9 +30,6 @@
 #import "UIViewController+TTMovieUtil.h"
 #import <FHCHousePush/TTPushServiceDelegate.h>
 
-// todo zjing test
-#import <FHHouseBase/FHUserTracker.h>
-
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 
 #define kCouldShowActivePushAlertKey @"kCouldShowActivityPushAlertKey"
@@ -389,18 +386,10 @@ static NSString * const kTTAPNsImportanceKey = @"important";
 }
 
 + (void)showF100PushNotificationInAppAlert:(NSDictionary *)dict {
-    NSString* title = @"幸福里";
     
-    NSString* content = [dict tt_stringValueForKey:kSSAPNsAlertManagerTitleKey];
+    NSString* title = [dict tt_stringValueForKey:kSSAPNsAlertManagerTitleKey];
+    NSString* content = [dict tt_stringValueForKey:kSSAPNsAlertManagerContentKey];
     NSString *schemaString = [dict tt_stringValueForKey:kSSAPNsAlertManagerSchemaKey];
-    
-    // todo zjing test
-    NSMutableDictionary *params = @{}.mutableCopy;
-    params[@"contentDict"] = dict;
-    params[@"content"] = content ?: @"be_null";
-    params[@"schemaString"] = schemaString ?: @"be_null";
-
-    [FHUserTracker writeEvent:@"zjing_push_test" params:params];
 
     TTPushAlertModel *alertModel = [TTPushAlertModel modelWithTitle:title detail:content images:nil];
     alertModel.images = nil;
@@ -585,6 +574,18 @@ static NSString * const kTTAPNsImportanceKey = @"important";
         }
     }
     return hasRead;
+}
+
+#pragma mark - test
++ (void)showTestPushAlert:(BOOL)isStrong {
+    NSDictionary *params = @{kSSAPNsAlertManagerTitleKey : @"标题",
+                             kSSAPNsAlertManagerContentKey : @"内容",
+                             kSSAPNsAlertManagerOldApnsTypeIDKey : @(6627525283362636302),
+                             kSSAPNsAlertManagerRidKey : @"1765233895",
+                             kSSAPNsAlertManagerSchemaKey : @"sslocal://detail?groupid=6627525283362636302&gd_label=click_news_alert",
+                             kSSAPNsAlertManagerImportanceKey : isStrong ? kTTAPNsImportanceKey : @""
+                             };
+    [[SSAPNsAlertManager sharedManager] showRemoteNotificationAlert:params];
 }
 
 @end

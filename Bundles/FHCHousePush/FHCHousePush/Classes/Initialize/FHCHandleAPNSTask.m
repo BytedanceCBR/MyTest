@@ -257,7 +257,9 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
         [dict setValue:[userInfo tt_stringValueForKey:@"o_url"]
                 forKey:kSSAPNsAlertManagerSchemaKey];
         [dict setValue:[[[userInfo tt_dictionaryValueForKey:@"aps"]
-                         tt_dictionaryValueForKey:@"alert"] tt_stringValueForKey:@"body"] forKey:kSSAPNsAlertManagerTitleKey];
+                         tt_dictionaryValueForKey:@"alert"] tt_stringValueForKey:@"title"] forKey:kSSAPNsAlertManagerTitleKey];
+        [dict setValue:[[[userInfo tt_dictionaryValueForKey:@"aps"]
+                         tt_dictionaryValueForKey:@"alert"] tt_stringValueForKey:@"body"] forKey:kSSAPNsAlertManagerContentKey];
         [dict setValue:@([userInfo tt_longlongValueForKey:@"id"])
                 forKey:kSSAPNsAlertManagerOldApnsTypeIDKey];
         [dict setValue:[userInfo tt_stringValueForKey:@"rid"]
