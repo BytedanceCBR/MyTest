@@ -63,10 +63,8 @@
 {
     if (scoreValue > 0) {
         self.starNumLabel.text = [NSString stringWithFormat:@"%.1f",(float)scoreValue/10];
-        self.starImageView.hidden = NO;
     }else {
         self.starNumLabel.text  = @"";
-        self.starImageView.hidden = YES;
     }
 }
 
