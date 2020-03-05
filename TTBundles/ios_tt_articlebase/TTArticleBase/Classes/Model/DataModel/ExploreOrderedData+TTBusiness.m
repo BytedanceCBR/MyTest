@@ -70,7 +70,6 @@
 #import "TTExploreLoadMoreTipData.h"
 #import "ExploreOrderedData+TTAd.h"
 #import "FHExploreHouseItemData.h"
-#import <Crashlytics/Crashlytics.h>
 #import <TTMonitor/TTMonitor.h>
 #import <BDTSharedHeaders/SSCommonDefines.h>
 #import "SSCommonLogic.h"
@@ -260,12 +259,6 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
             
             NSTimeInterval t2 = CFAbsoluteTimeGetCurrent();
             
-            [Answers logCustomEventWithName:@"cleanOrderedData" customAttributes:@{@"threshold":@(threshold),
-                                                                                   @"count1":countBeforeClean,
-                                                                                   @"count2":countAfterClean,
-                                                                                   @"cost":@(t2 - t1),
-                                                                                   @"dbSize":@(dbSize)
-                                                                                   }];
         }
         
 #if DEBUG
@@ -314,8 +307,6 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
         [dict setValue:userDataCount forKey:@"user_data_count"];
         [dict setValue:@((t2 - t1)*1000) forKey:@"cost"];
         [dict setValue:@(dbSize) forKey:@"db_size"];
-        
-        [Answers logCustomEventWithName:@"news_db" customAttributes:dict];
         
         [[TTMonitor shareManager] trackService:@"news_db_size" value:@(dbSize) extra:nil];
     });

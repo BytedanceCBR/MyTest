@@ -27,7 +27,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.9.2</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -84,7 +84,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6.8.6.0</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CHANNEL_NAME</key>
 	<string>local_test</string>
 	<key>Fabric</key>
@@ -243,6 +243,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UPDATE_VERSION_CODE</key>
-	<string>69201</string>
+	<string>69401</string>
 </dict>
 </plist>

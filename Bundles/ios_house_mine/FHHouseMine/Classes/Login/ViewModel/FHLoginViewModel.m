@@ -19,7 +19,6 @@
 #import <YYText/NSAttributedString+YYText.h>
 #import "TTAccountMobileCaptchaAlertView.h"
 #import "TTThemedAlertController.h"
-#import "FHMinisdkManager.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -414,11 +413,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [self popViewController];
         }
         [self loginSuccessedWithPhoneNum:phoneNumber];
-        
-        //登录成功后春节活动逻辑
-        if([FHEnvContext isSpringOpen] && [FHMinisdkManager sharedInstance].url){
-            [[FHMinisdkManager sharedInstance] taskFinished];
-        }
         
         if (self.isNeedCheckUGCAdUser) {
             [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:YES];

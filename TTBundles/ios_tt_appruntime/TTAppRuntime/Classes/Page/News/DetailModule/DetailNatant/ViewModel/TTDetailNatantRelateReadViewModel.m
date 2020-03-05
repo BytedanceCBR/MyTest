@@ -19,7 +19,6 @@
 #import "TTStringHelper.h"
  
 #import "TTLabelTextHelper.h"
-#import <Crashlytics/Crashlytics.h>
 #import "SSURLTracker.h"
 #import "TTURLTracker.h"
 #import "TTAdVideoRelateAdModel.h"
@@ -168,7 +167,7 @@
     else {
         wrapperTrackEvent(@"detail", label);
     }
-    CLS_LOG(@"didReceiveMemoryWarning");
+    // CLS_LOG(@"didReceiveMemoryWarning");
 
     if ([self.article relatedVideoType] == ArticleRelatedVideoTypeAd) {
         NSString *logExtra = [self.article relatedLogExtra];

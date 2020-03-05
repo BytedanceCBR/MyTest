@@ -479,7 +479,7 @@
 
 // 帐号切换
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName {
-    if(self.listType != FHCommunityFeedListTypePostDetail) {
+    if(self.listType == FHCommunityFeedListTypeNearby || self.listType == FHCommunityFeedListTypeMyJoin) {
         self.needReloadData = YES;
     }
 }

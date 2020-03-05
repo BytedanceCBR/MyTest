@@ -16,7 +16,6 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTUGCFoundation/FRApiModel.h>
 #import <TTUGCFoundation/FRRequestManager.h>
-#import <Crashlytics/Answers.h>
 #import <TTUGCFoundation/FRActionDataService.h>
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import "FHCommonApi.h"
@@ -324,10 +323,7 @@ static TTCommentDataManager *sharedManager;
                 NSString *fwId = repostFwID;
                 if (isEmptyString(optId) || [optId isEqualToString:@"0"]) {
                     optId = groupID;
-                    [Answers logCustomEventWithName:@"ugc_post" customAttributes:@{@"sence" : @"CommentRepost一级"}];
-                } else {
-                    [Answers logCustomEventWithName:@"ugc_post" customAttributes:@{@"sence" : @"CommentRepost二级"}];
-                }
+                } else {                }
                 if (isEmptyString(repostFwID)) {
                     fwId = optId;
                 }

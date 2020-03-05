@@ -165,7 +165,7 @@
     [events setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"timestamp"];
     [[TTMonitor shareManager] trackService:@"feed_load" status:(success ? 0 : 1) extra:events];
     
-    CLSLog(@"%@", trackLabel);
+    //CLSLog(@"%@", trackLabel);
 }
 
 @end
