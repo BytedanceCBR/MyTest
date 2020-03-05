@@ -38,6 +38,7 @@
 #import "UIViewController+TTMovieUtil.h"
 #import "FHIntroduceManager.h"
 #import <FHCHousePush/TTPushServiceDelegate.h>
+#import <BDALog/BDAgileLog.h>
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
@@ -247,8 +248,19 @@ static APNsManager *_sharedManager = nil;
             }
         }
         else {
-            if ([[UIApplication sharedApplication] canOpenURL:[TTStringHelper URLWithURLString:openURL]]) {
-                [[UIApplication sharedApplication] openURL:[TTStringHelper URLWithURLString:openURL]];
+            NSURL *pushURL = [TTStringHelper URLWithURLString:openURL];
+            if (pushURL) {
+                if (@available(iOS 11.0, *)) {
+                    [[UIApplication sharedApplication] openURL:pushURL options:@{} completionHandler:^(BOOL success) {
+                        if (!success) {
+                            BDALOG_INFO(@"can't open %@, 第三方APP没有注册URL Scheme", openURL);
+                        }
+                    }];
+                }else {
+                    if ([[UIApplication sharedApplication] canOpenURL:pushURL]) {
+                        [[UIApplication sharedApplication] openURL:pushURL];
+                    }
+                }
             }
         }
     }
