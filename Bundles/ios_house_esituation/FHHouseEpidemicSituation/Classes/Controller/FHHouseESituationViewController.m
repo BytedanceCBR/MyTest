@@ -106,6 +106,8 @@
         [self addSpringView];
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
+    
+    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 - (void)_willEnterForeground:(NSNotification *)notification
