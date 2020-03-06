@@ -40,8 +40,10 @@
 #import <FHDetailMediaHeaderCell.h>
 #import "FHNeighborhoodDetailModuleHelper.h"
 #import "FHDetailNeighborhoodQACell.h"
+#import "FHDetailNeighborhoodAssessCell.h"
 #import "FHDetailNeighborhoodCommentsCell.h"
 #import "FHDetailQACellModel.h"
+#import "FHDetailAccessCellModel.h"
 #import "FHDetailCommentsCellModel.h"
 #import "TTDeviceHelper.h"
 #import "FHOldDetailStaticMapCell.h""
@@ -113,6 +115,8 @@
 
 //    [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateModel class])];
+    
+    [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
 //    [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
 //    [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
 }
@@ -337,15 +341,15 @@
     }
     
 
-//    // 小区评测
+    // 小区评测
 //    if (model.data.evaluationInfo) {
-//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//        [self.items addObject:grayLine];
-//        FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailAccessCellModel *infoModel = [[FHDetailAccessCellModel alloc] init];
 //        infoModel.log_pb = self.listLogPB; // listLogPB也是当前小区的logPb
 //        infoModel.evaluationInfo = model.data.evaluationInfo;
-//        [self.items addObject:infoModel];
+        [self.items addObject:infoModel];
 //    }
 
     //地图
