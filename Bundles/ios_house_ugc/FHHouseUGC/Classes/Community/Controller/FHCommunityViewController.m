@@ -249,8 +249,6 @@
     if([FHEnvContext isSpringHangOpen]){
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
-    
-    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 -(BOOL)shouldAutorotate

@@ -130,8 +130,6 @@
     if([FHEnvContext isSpringHangOpen]){
         [self.springView show:[FHEnvContext enterTabLogName]];
     }
-    
-    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

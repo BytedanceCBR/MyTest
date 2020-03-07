@@ -102,8 +102,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [self addSpringView];
         [self showSpringHangView];
     }
-    
-    [[FHPopupViewManager shared] triggerPopupView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
