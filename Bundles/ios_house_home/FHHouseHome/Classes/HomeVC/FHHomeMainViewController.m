@@ -18,7 +18,6 @@
 #import "TTAppUpdateHelper.h"
 #import "TTInstallIDManager.h"
 #import "CommonURLSetting.h"
-#import "FHSpringHangView.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "UIViewController+Track.h"
 
@@ -28,8 +27,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic,strong)FHHomeMainViewModel *viewModel;
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL isHaveCheckUpgrage;
-//春节活动运营位
-@property (nonatomic, strong) FHSpringHangView *springView;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 
 @end
@@ -97,36 +94,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-        [self showSpringHangView];
-    }
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
-
-- (void)addSpringView {
-    if(!_springView){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
-        [self.view addSubview:_springView];
-        _springView.hidden = YES;
-        
-        
-        
-        CGFloat bottom = 49;
-        if (@available(iOS 11.0 , *)) {
-            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-        }
-        
-        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(82);
-            make.height.mas_equalTo(82);
-            make.right.mas_equalTo(self.view).offset(-11);
-        }];
-    }
-}
-
 - (void)initView {
     self.view.backgroundColor = [UIColor themeHomeColor];
     self.isHaveCheckUpgrage = NO;
@@ -201,34 +170,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollEnd) name:@"FHHomeMainDidScrollEnd" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
 }
-
-- (void)popupViewDataFetchSuccess {
-    if([FHEnvContext isSpringHangOpen] && self.springView){
-        [self showSpringHangView];
-    }
-}
-
-- (void)popupViewStartFetchData {
-    self.springView.hidden = YES;
-}
-
-- (void)showSpringHangView {
-    [self.springView show:[FHEnvContext enterTabLogName]];
-    //升级弹窗覆盖问题
-    if ([TTSandBoxHelper isInHouseApp]) {
-        for (UIView *view in self.view.subviews) {
-            if([view isKindOfClass:NSClassFromString(@"TTAppUpdateTipView")]){
-                [self.view bringSubviewToFront:view];
-            }
-        }
-    }
-}
-
 - (void)initCityChangeSubscribe
 {
     BOOL isOpen = [FHEnvContext isCurrentCityNormalOpen];
@@ -246,11 +188,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 {
     if (self.isShowing) {
         [self checkPasteboard:NO];
-    }
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-        [self showSpringHangView];
     }
 }
 
