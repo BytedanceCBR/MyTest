@@ -8,16 +8,10 @@
 #import "FHDetailNeighborhoodAssessCell.h"
 #import "FHDetailNeighborhoodModel.h"
 #import "TTDeviceHelper.h"
-#import "FHDetailFoldViewButton.h"
-#import "PNChart.h"
-#import "FHDetailPriceMarkerView.h"
 #import "UIView+House.h"
 #import <FHHouseBase/FHUserTracker.h>
-#import "FHFeedUGCCellModel.h"
-#import "FHNeighbourhoodQuestionCell.h"
 #import "TTAccountManager.h"
 #import "TTStringHelper.h"
-#import "FHUGCCellManager.h"
 #import "FHCardSliderView.h"
 
 #define cellId @"cellId"
@@ -28,7 +22,7 @@
 @property(nonatomic, strong) UIView *containerView;
 @property(nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic , strong) FHCardSliderView *cardSliderView;
-@property(nonatomic , strong) FHUGCCellManager *cellManager;
+@property(nonatomic , strong) UILabel *titleLabel;
 
 @end
 
@@ -63,6 +57,10 @@
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
+    
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
+    _titleLabel.text = @"小区攻略";
+    [self.containerView addSubview:_titleLabel];
 
     NSArray *dataSource = @[@"01",@"02",@"03",@"04",@"05"];
     
@@ -82,20 +80,33 @@
 }
 
 - (void)initConstaints {
-
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.shadowImage).offset(20);
         make.left.right.mas_equalTo(self.contentView);
         make.bottom.mas_equalTo(self.shadowImage).offset(-20);
     }];
     
+    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.containerView).offset(30);
+        make.left.mas_equalTo(self.containerView).offset(16);
+        make.right.mas_equalTo(self.containerView).offset(-16);
+        make.height.mas_equalTo(25);
+    }];
+    
     [_cardSliderView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.containerView);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(20);
         make.left.mas_equalTo(self.containerView).offset(15);
         make.right.mas_equalTo(self.containerView).offset(-15);
-        make.height.mas_equalTo(300);
-        make.bottom.mas_equalTo(self.containerView);
+        make.height.mas_equalTo([_cardSliderView getViewHeight]);
+        make.bottom.mas_equalTo(self.containerView).offset(-30);
     }];
+}
+
+- (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
+    UILabel *label = [[UILabel alloc] init];
+    label.font = font;
+    label.textColor = textColor;
+    return label;
 }
 
 - (void)refreshWithData:(id)data {
@@ -125,13 +136,6 @@
 //    }else{
 //        self.questionBtn.hidden = YES;
 //    }
-}
-
-- (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
-    UILabel *label = [[UILabel alloc] init];
-    label.font = font;
-    label.textColor = textColor;
-    return label;
 }
 
 - (void)gotoMore {

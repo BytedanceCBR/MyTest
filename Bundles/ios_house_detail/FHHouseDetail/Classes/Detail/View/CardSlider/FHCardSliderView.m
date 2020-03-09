@@ -15,7 +15,7 @@ static const float timerInterval = 3.0f;
 @interface FHCardSliderView()<UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate>
 
 @property(nonatomic , assign) FHCardSliderViewType type;
-@property (nonatomic, strong) UILabel *titleLabel;
+//@property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray *dataSource;
 @property (nonatomic, strong) NSTimer *timer;
@@ -47,18 +47,12 @@ static const float timerInterval = 3.0f;
 
 - (void)configUI
 {
-    [self addSubview:self.titleLabel];
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self).offset(15);
-        make.top.equalTo(self).offset(15);
-    }];
-    
     [self addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.titleLabel.mas_bottom).offset(15);
-        make.left.equalTo(self).offset(15);
-        make.right.equalTo(self).offset(-15);
-        make.bottom.equalTo(self).offset(-40);
+        make.top.equalTo(self);
+        make.left.equalTo(self);
+        make.right.equalTo(self);
+        make.bottom.equalTo(self);
     }];
 }
 
@@ -224,16 +218,6 @@ static const float timerInterval = 3.0f;
     return _collectionView;
 }
 
-- (UILabel *)titleLabel
-{
-    if (!_titleLabel) {
-        _titleLabel = [[UILabel alloc] init];
-        _titleLabel.font = [UIFont boldSystemFontOfSize:17];
-        _titleLabel.textColor = [UIColor blackColor];
-    }
-    return _titleLabel;
-}
-
 - (void)setCardListData:(NSArray *)cardList{
     if (cardList && cardList.count > 0) {
         self.dataSource = cardList;
@@ -251,7 +235,7 @@ static const float timerInterval = 3.0f;
 
 - (CGFloat)getViewHeight {
     if (self.dataSource && self.dataSource.count > 0) {
-        return (100+150*[[UIScreen mainScreen] bounds].size.width/375+40);
+        return (162*[[UIScreen mainScreen] bounds].size.width/375);
     }
     return 0;
 }

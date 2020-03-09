@@ -9,7 +9,7 @@
 #import "FHCardSliderView.h"
 
 static const float minScale = 0.8;
-static const float spacing = 11;
+static const float spacing = 14;
 @interface FHCardSliderFlowLayout()
 @property (nonatomic) CGSize topItemSize;
 @property (nonatomic) NSInteger itemsCount;
