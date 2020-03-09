@@ -136,8 +136,10 @@
     //初始化poi信息列表
     [self setUpLocationListTableView];
 
-    self.headerView.frame = CGRectMake(15, [dataModel.houseType isEqualToString:@"4"]?30:0, self.cellWidth, 38);
-    
+    CGFloat headerTop = (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 30 : 0;
+    CGFloat headerHeight = (dataModel.houseType.integerValue == FHHouseTypeSecondHandHouse || dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 38 : 0;
+
+    self.headerView.frame = CGRectMake(15, headerTop, self.cellWidth, headerHeight);
     self.segmentedControl.frame = CGRectMake(15 + 16, self.headerView.bottom + 17, self.cellWidth - 32, 33);
 
     CGFloat mapHeight = self.cellWidth * 7.0f / 16.0f;

@@ -650,23 +650,6 @@
 }
 @end
 
-@implementation FHDetailOldDataHouseImageDictListModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"houseImageTypeName": @"house_image_type_name",
-                           @"houseImageType": @"house_image_type",
-                           @"houseImageList": @"house_image_list",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailOldDataHousePricingRankBuySuggestionModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
@@ -674,6 +657,7 @@
     return YES;
 }
 @end
+
 
 //@implementation FHDetailDataBaseInfoModel
 //

@@ -161,7 +161,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *areaName;
 @property (nonatomic, copy , nullable) NSString *shareInfo;
 @property (nonatomic, copy , nullable) NSString *districtName;
-@property (nonatomic, copy , nullable) NSString *aliasName;
+@property (nonatomic, copy , nullable) NSString *aliasName; // todo zjing 废弃
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *dataSourceId;
 @end
@@ -201,6 +201,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHouseNewsSocialModel *socialInfo ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle; // 推荐经纪人标题文案
+@property (nonatomic, strong , nullable) FHVideoHouseVideoModel *houseVideo ;
+@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataHouseImageDictListModel> *houseImageDictList;
 
 @end
 

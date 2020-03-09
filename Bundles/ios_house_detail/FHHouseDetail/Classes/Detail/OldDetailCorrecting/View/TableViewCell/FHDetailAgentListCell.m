@@ -71,13 +71,7 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
-    
-    if (model.houseType == FHHouseTypeNewHouse) {
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.contentView).mas_offset(-15);
-            make.right.equalTo(self.contentView).mas_offset(15);
-        }];
-    }
+
     // 设置下发标题
     if(model.recommendedRealtorsTitle.length > 0) {
         self.headerView.label.text = model.recommendedRealtorsTitle;
