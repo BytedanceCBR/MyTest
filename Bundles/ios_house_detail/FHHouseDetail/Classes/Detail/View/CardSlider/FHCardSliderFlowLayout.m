@@ -7,8 +7,10 @@
 
 #import "FHCardSliderFlowLayout.h"
 #import "FHCardSliderView.h"
+#import "FHCardSliderCell.h"
 
-static const float minScale = 0.8;
+static const float minScale = 0.68;
+static const float minAlpha = 0.2;
 static const float spacing = 14;
 @interface FHCardSliderFlowLayout()
 @property (nonatomic) CGSize topItemSize;
@@ -93,8 +95,11 @@ static const float spacing = 14;
     CGFloat scale = [self parallaxProgressForVisibleIndex:visibleIndex offsetProgress:offsetProgress minScale:minScale];
     attributes.transform = CGAffineTransformMakeScale(scale, scale);
     
-    attributes.alpha = scale;
-//    WHCardSliderCell *cell = (WHCardSliderCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+    CGFloat alpha = [self alphaProgressForVisibleIndex:visibleIndex offsetProgress:offsetProgress minAlpha:minAlpha];
+    attributes.alpha = alpha;
+//    FHCardSliderCell *cell = (FHCardSliderCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+//    [cell refreshBgColor:scale];
+    
     switch (visibleIndex) {
         case 1:
             if(self.type == FHCardSliderViewTypeHorizontal){
@@ -134,6 +139,14 @@ static const float spacing = 14;
                                minScale:(CGFloat)minScale
 {
     CGFloat step = (1.0 - minScale) / (visibleItemsCount-1)*1.0;
+    return (1.0 - (visibleIndex - 1) * step + step * offsetProgress);
+}
+
+- (CGFloat)alphaProgressForVisibleIndex:(NSInteger)visibleIndex
+                         offsetProgress:(CGFloat)offsetProgress
+                               minAlpha:(CGFloat)minAlpha
+{
+    CGFloat step = (1.0 - minAlpha) / (visibleItemsCount-1)*1.0;
     return (1.0 - (visibleIndex - 1) * step + step * offsetProgress);
 }
 

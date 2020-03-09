@@ -24,7 +24,7 @@ typedef NS_ENUM(NSUInteger, FHCardSliderViewType) {
 - (instancetype)initWithFrame:(CGRect)frame type:(FHCardSliderViewType)type;
 - (void)setCardListData:(NSArray *)cardList;
 - (void)addTimer;
-- (CGFloat)getViewHeight;
++ (CGFloat)getViewHeight;
 @end
 
 NS_ASSUME_NONNULL_END

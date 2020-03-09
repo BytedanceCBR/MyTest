@@ -13,6 +13,7 @@
 #import "TTAccountManager.h"
 #import "TTStringHelper.h"
 #import "FHCardSliderView.h"
+#import "FHDetailAccessCellModel.h"
 
 #define cellId @"cellId"
 
@@ -49,25 +50,24 @@
 }
 
 - (void)setupUI {
+    self.clipsToBounds = NO;
+    
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
         make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
+        make.bottom.equalTo(self.contentView);
     }];
+    
     _containerView = [[UIView alloc] init];
-    _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"小区攻略";
     [self.containerView addSubview:_titleLabel];
 
-    NSArray *dataSource = @[@"01",@"02",@"03",@"04",@"05"];
-    
     self.cardSliderView = [[FHCardSliderView alloc] initWithFrame:CGRectZero type:FHCardSliderViewTypeHorizontal];
     _cardSliderView.backgroundColor = [UIColor whiteColor];
-    [_cardSliderView setCardListData:dataSource];
-    [self.containerView addSubview:_cardSliderView];
+    [self.contentView addSubview:_cardSliderView];
 }
 
 - (UIImageView *)shadowImage {
@@ -82,8 +82,9 @@
 - (void)initConstaints {
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.shadowImage).offset(20);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+        make.left.mas_equalTo(self.contentView).offset(16);
+        make.right.mas_equalTo(self.contentView).offset(-16);
+        make.bottom.mas_equalTo(self.shadowImage);
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -95,10 +96,10 @@
     
     [_cardSliderView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(20);
-        make.left.mas_equalTo(self.containerView).offset(15);
-        make.right.mas_equalTo(self.containerView).offset(-15);
-        make.height.mas_equalTo([_cardSliderView getViewHeight]);
-        make.bottom.mas_equalTo(self.containerView).offset(-30);
+        make.left.mas_equalTo(self.containerView).offset(16);
+        make.right.mas_equalTo(self.containerView).offset(-16);
+        make.height.mas_equalTo([FHCardSliderView getViewHeight]);
+        make.bottom.mas_equalTo(self.containerView);
     }];
 }
 
@@ -110,12 +111,15 @@
 }
 
 - (void)refreshWithData:(id)data {
-//    if (self.currentData == data || ![data isKindOfClass:[FHDetailQACellModel class]]) {
-//        return;
-//    }
-//    self.currentData = data;
-//    FHDetailQACellModel *cellModel = (FHDetailQACellModel *)data;
-//    self.shadowImage.image = cellModel.shadowImage;
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailAccessCellModel class]]) {
+        return;
+    }
+    self.currentData = data;
+    FHDetailAccessCellModel *cellModel = (FHDetailAccessCellModel *)data;
+    self.shadowImage.image = cellModel.shadowImage;
+    
+    NSArray *dataSource = @[@"01",@"02",@"03",@"04",@"05"];
+    [_cardSliderView setCardListData:dataSource];
 //    [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
 //        make.height.mas_equalTo(cellModel.viewHeight);
 //    }];

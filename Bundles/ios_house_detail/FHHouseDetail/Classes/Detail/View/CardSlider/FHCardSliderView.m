@@ -49,10 +49,7 @@ static const float timerInterval = 3.0f;
 {
     [self addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self);
-        make.left.equalTo(self);
-        make.right.equalTo(self);
-        make.bottom.equalTo(self);
+        make.edges.mas_equalTo(self);
     }];
 }
 
@@ -209,6 +206,7 @@ static const float timerInterval = 3.0f;
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         _collectionView.clipsToBounds = NO;
+        _collectionView.bounces = NO;
         _collectionView.backgroundColor = [UIColor clearColor];
         _collectionView.showsHorizontalScrollIndicator = NO;
         _collectionView.showsVerticalScrollIndicator = NO;
@@ -233,11 +231,8 @@ static const float timerInterval = 3.0f;
     }
 }
 
-- (CGFloat)getViewHeight {
-    if (self.dataSource && self.dataSource.count > 0) {
-        return (162*[[UIScreen mainScreen] bounds].size.width/375);
-    }
-    return 0;
++ (CGFloat)getViewHeight {
+    return (160*[[UIScreen mainScreen] bounds].size.width/375);
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow {

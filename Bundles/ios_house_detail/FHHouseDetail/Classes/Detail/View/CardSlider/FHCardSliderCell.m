@@ -7,95 +7,144 @@
 
 #import "FHCardSliderCell.h"
 #import <Masonry/Masonry.h>
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
+#import "TTBaseMacro.h"
 
 @interface FHCardSliderCell()
+
 @property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, strong) UILabel *tagLabel;
-@property (nonatomic, strong) UIImageView *iconView;
+@property (nonatomic, strong) UIView *blackCoverView;
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UILabel *subTitleLabel;
+@property (nonatomic ,strong) UILabel *position;
+@property (nonatomic ,strong) UIView *positionView;
+@property (nonatomic ,strong) CAGradientLayer *gradientLayer;
+
 @end
 
 @implementation FHCardSliderCell
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.contentView.layer.shadowOffset = CGSizeMake(0, 3);
-        self.contentView.layer.shadowRadius = 5;
-        self.contentView.layer.shadowOpacity = 0.2;
+        self.contentView.backgroundColor = [UIColor clearColor];
         [self setupUI];
         [self layout];
     }
     return self;
 }
 
-- (void)setCellData:(id)data
-{
-    self.backgroundColor = [UIColor greenColor];
-//    self.imageView.image = data;//用SDWebImage
+- (void)setCellData:(id)data {
+    self.imageView.image = [UIImage imageNamed:data];;//用SDWebImage
+    self.titleLabel.text = @"市政旁置业好去处，高铁很便利";
+    self.subTitleLabel.text = @"233人阅读";
+    
+    NSString *tagText = @"幸福里评测";
+    if(isEmptyString(tagText)){
+        self.positionView.hidden = YES;
+        self.position.text = @"";
+    }else{
+        self.positionView.hidden = NO;
+        self.position.text = @"幸福里评测";
+    }
+    [self updateTagView];
 }
 
-- (void)setupUI
-{
+- (void)setupUI {
     [self.contentView addSubview:self.imageView];
-    [self.contentView addSubview:self.iconView];
-    [self.iconView addSubview:self.tagLabel];
+    
+    self.blackCoverView = [[UIView alloc] init];
+    [self.imageView addSubview:_blackCoverView];
+    
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontSemibold:18] textColor:[UIColor whiteColor]];
+    [self.imageView addSubview:_titleLabel];
+    
+    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor whiteColor]];
+    [self.imageView addSubview:_subTitleLabel];
+    
+    self.positionView = [[UIView alloc] init];
+    _positionView.backgroundColor = [UIColor themeGray1];
+    _positionView.hidden = YES;
+    [self.imageView addSubview:_positionView];
+    
+    self.position = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor whiteColor]];
+    [_position sizeToFit];
+    [_position setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [_position setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.positionView addSubview:_position];
+    
 }
 
-- (void)layout
-{
+- (void)layout {
     [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(2, 0, 0, 0));
+        make.edges.mas_equalTo(self.contentView);
     }];
-
-    [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.imageView.mas_left).offset(10);
-        make.top.equalTo(self.imageView.mas_top).offset(-2);
-        make.height.equalTo(@(42));
-        make.width.equalTo(@(34));
+    
+    [self.blackCoverView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.imageView);
     }];
-
-    [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.iconView);
-        make.bottom.equalTo(self.iconView).offset(-2);
+    
+    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.imageView).offset(-10);
+        make.left.mas_equalTo(self.imageView).offset(10);
+        make.right.mas_equalTo(self.imageView).offset(-10);
+        make.height.mas_equalTo(20);
     }];
+    
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.subTitleLabel.mas_top).offset(-2);
+        make.left.mas_equalTo(self.imageView).offset(10);
+        make.right.mas_equalTo(self.imageView).offset(-10);
+        make.height.mas_equalTo(25);
+    }];
+    
+    [self.positionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.imageView).offset(10);
+        make.bottom.mas_equalTo(self.titleLabel.mas_top).offset(-6);
+        make.height.mas_equalTo(24);
+    }];
+    
+    [self.position mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.positionView).offset(4);
+        make.right.mas_equalTo(self.positionView).offset(-4);
+        make.centerY.mas_equalTo(self.positionView);
+        make.height.mas_equalTo(17);
+    }];
+    
+    [self.contentView layoutIfNeeded];
+    //背景渐变
+    self.gradientLayer = [CAGradientLayer layer];
+    _gradientLayer.frame = self.blackCoverView.bounds;
+    _gradientLayer.colors = @[(id)[[UIColor blackColor] colorWithAlphaComponent:0].CGColor,
+                             (id)[[UIColor blackColor] colorWithAlphaComponent:0.5].CGColor];
+    [self.blackCoverView.layer addSublayer:_gradientLayer];
 }
 
-- (UIImageView *)imageView
-{
+- (void)updateTagView {
+    [self.contentView layoutIfNeeded];
+    //标签指定圆角
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.positionView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomRight cornerRadii:CGSizeMake(6, 6)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.positionView.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.positionView.layer.mask = maskLayer;
+}
+
+- (UIImageView *)imageView {
     if (!_imageView) {
         _imageView = [[UIImageView alloc] init];
         _imageView.contentMode = UIViewContentModeScaleAspectFill;
-        _imageView.layer.cornerRadius = 5;
+        _imageView.layer.cornerRadius = 10;
         _imageView.layer.masksToBounds = YES;
     }
     return _imageView;
 }
 
-- (UIImageView *)iconView
-{
-    if (!_iconView) {
-        _iconView = [[UIImageView alloc] init];
-        _iconView.image = [UIImage imageNamed:@"icon_taglabel"];
-    }
-    return _iconView;
+- (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
+    UILabel *label = [[UILabel alloc] init];
+    label.font = font;
+    label.textColor = textColor;
+    return label;
 }
 
-- (UILabel *)tagLabel
-{
-    if (!_tagLabel) {
-        _tagLabel = [[UILabel alloc] init];
-        _tagLabel.numberOfLines = 0;
-        _tagLabel.font = [UIFont boldSystemFontOfSize:9];
-        _tagLabel.textColor = [UIColor orangeColor];
-        _tagLabel.textAlignment = NSTextAlignmentCenter;
-    }
-    return _tagLabel;
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    /* 尽量不要在此约束，卡片轮播此会不停调用，若没限制会不停增加约束就会不停增长内存*/
-    //[self layout];
-}
 @end
