@@ -23,7 +23,6 @@
 @interface FHSpecialTopicViewController ()<TTUIViewControllerTrackProtocol>
 @property (nonatomic, strong) FHSpecialTopicViewModel *viewModel;
 @property (nonatomic, strong) UIImage *shareWhiteImage;
-@property (nonatomic, strong) UIButton *shareButton;// 分享
 
 @end
 
@@ -113,9 +112,10 @@
 - (void)initNavBar {
     [self setupDefaultNavBar:NO];
     
-    self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    self.titleLabel = [[UILabel alloc] init];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.textColor = [UIColor themeGray1];
+    self.titleLabel.font = [UIFont themeFontMedium:18];
     
     self.titleContainer = [[UIView alloc] init];
     [self.titleContainer addSubview:self.titleLabel];
@@ -141,7 +141,7 @@
 }
 
 - (void)initHeaderView {
-    CGFloat height = 300;
+    CGFloat height = 300 + self.customNavBarView.height;
     self.headerView = [[FHSpecialTopicHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
 }
 
@@ -205,13 +205,14 @@
     [self.titleContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.customNavBarView.leftBtn.mas_centerY);
         make.left.mas_equalTo(self.customNavBarView.leftBtn.mas_right).offset(10.0f);
-        make.right.mas_equalTo(self.rightBtn.mas_left).offset(-10);
+        make.right.mas_equalTo(self.shareButton.mas_left).offset(-10);
         make.height.mas_equalTo(34);
     }];
-    
+
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.titleContainer);
         make.centerX.mas_equalTo(self.customNavBarView);
+        make.left.right.mas_equalTo(self.titleContainer);
         make.height.mas_equalTo(20);
     }];
     
