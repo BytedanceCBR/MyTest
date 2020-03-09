@@ -11,7 +11,6 @@
 
 #import "TTVideoCategoryManager.h"
 #import "TTBaseMacro.h"
-#import "Crashlytics.h"
 
 @implementation TTVideoCategoryManager
 
@@ -87,10 +86,8 @@ static TTVideoCategoryManager *s_manager;
                 if ([[obj objectForKey:@"category"] isKindOfClass:[NSString class]]) {
                     [validDicts addObject:obj];
                 } else {
-                    [Answers logCustomEventWithName:@"InvalidVideoCategory" customAttributes:obj];
                 }
             } else {
-                [Answers logCustomEventWithName:@"InvalidVideoCategory" customAttributes:@{@"reason" : @"notDict"}];
             }
         }];
     }

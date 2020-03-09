@@ -25,7 +25,6 @@
 
 #import <TTRoute/TTRoute.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
-#import <Crashlytics/Answers.h>
 
 @interface ArticleMomentProfileWapView () <TTMomentProfileProtocol>
 @property(nonatomic, strong)NSDictionary *userDict;
@@ -227,7 +226,6 @@
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         NSNumber *loadTime = @((CACurrentMediaTime() - self.startLoadTime) * 1000); //ms
         [dict setValue:loadTime forKey:@"loadTime"];
-        [Answers logCustomEventWithName:@"wap_profile_load" customAttributes:dict];
         [[TTMonitor shareManager] trackService:@"wap_profile_load" value:loadTime extra:nil];
         self.startLoadTime = 0;
     }

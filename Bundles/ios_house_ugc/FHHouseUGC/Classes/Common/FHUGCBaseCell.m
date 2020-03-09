@@ -34,7 +34,7 @@
     NSString *decorationImageUrlStr = cellModel.contentDecoration.url;
     BOOL isShowDecoration = cellModel.isStick && (decorationImageUrlStr.length > 0);
     self.decorationImageView.hidden = !(isShowDecoration);
-    if(decorationImageUrlStr.length > 0) {
+    if(!cellModel.isCustomDecorateImageView && decorationImageUrlStr.length > 0) {
         [self.decorationImageView sd_setImageWithURL:[NSURL URLWithString:decorationImageUrlStr]];
     }
 }

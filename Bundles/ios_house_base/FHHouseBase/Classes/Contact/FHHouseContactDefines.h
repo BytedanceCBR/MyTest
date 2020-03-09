@@ -38,7 +38,9 @@ typedef enum : NSUInteger {
 typedef enum : NSUInteger {
     FHClueCallPageTypeCNeighborhood = 5, // app_neighborhood: 1.5小区详情页底通电话
     FHClueCallPageTypeCNeighborhoodMulrealtor = 51,// app_neighborhood_mulrealtor: 1.51小区详情页经纪人多展位电话
-    FHClueCallPageTypeCNeighborhoodAladdin = 52//  app_neighborhood_aladdin: 1.52小区阿拉丁电话
+    FHClueCallPageTypeCNeighborhoodAladdin = 52,//  app_neighborhood_aladdin: 1.52小区阿拉丁电话
+    FHClueCallPageTypeCNewHouseMulrealtor = 38//  app_newhouse_realtor: 1.38 新房经纪人多展位
+
 } FHClueCallPageTypeC;
 
 // IM线索
@@ -54,6 +56,8 @@ typedef enum : NSUInteger {
     FHClueIMPageTypeCNeighborhoodMulrealtor = 41,// app_neighborhood_mulrealtor: 1.41小区详情页经纪人多展位
     FHClueIMPageTypeCNeighborhoodAladdin = 42,// app_neighborhood_aladdin: 1.42小区阿拉丁微聊
     FHClueIMPageTypePresentation = 27,//二手房详情页购房小建议
+    FHClueIMPageTypeCNewHouseMulrealtor = 38,//  app_newhouse_realtor: 1.38 新房经纪人多展位
+
     
     FHClueIMPageTypeCourt = 3, // app_court: 1.3 新房详情页
     FHClueIMPageTypeFloorplan = 35, // app_floorplan: 1.35 户型详情页

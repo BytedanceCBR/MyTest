@@ -38,8 +38,6 @@
 #import "FHHomeBaseScrollView.h"
 #import "FHHomeMainViewController.h"
 #import <FHHouseBase/FHHomeScrollBannerView.h>
-//#import "FHMinisdkManager.h"
-//#import "FHSpringHangView.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -59,8 +57,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
-//春节活动运营位
-//@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -363,9 +359,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     self.stayTime = [[NSDate date] timeIntervalSince1970];
-
-    //春节活动
-//    [[FHMinisdkManager sharedInstance] goSpring];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

@@ -1,5 +1,5 @@
 //
-//  FHDetailErshouPriceChartCell.h
+//  FHDetailPriceChartCell.h
 //  Pods
 //
 //  Created by 张静 on 2019/2/18.
@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 
-@interface FHDetailErshouPriceChartCell : FHDetailBaseCell
+@interface FHDetailPriceChartCell : FHDetailBaseCell
 
 @end
 

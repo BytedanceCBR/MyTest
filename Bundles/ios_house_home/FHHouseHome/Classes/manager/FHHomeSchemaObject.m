@@ -15,7 +15,6 @@
 #import "JSONAdditions.h"
 #import "TTArticleTabBarController.h"
 #import "FHEnvContext.h"
-#import "FHMinisdkManager.h"
 
 @interface FHHomeSchemaObject()<TTRouteInitializeProtocol>
 
@@ -44,17 +43,6 @@
         if([paramObj.allParams.allKeys containsObject:@"jumpList"]){
             [self handleMultiPush:paramObj.allParams];
         }
-        //处理春节活动过来的 ack_token
-        if([FHEnvContext isSpringOpen] && [paramObj.host isEqualToString:@"spring"]){
-            NSString *ackToken = paramObj.allParams[@"ack_token"];
-            NSString *vid = paramObj.allParams[@"vid"];
-            if(ackToken){
-                [[FHMinisdkManager sharedInstance] appBecomeActive:ackToken];
-            }
-            //执行任务
-            [[FHMinisdkManager sharedInstance] excuteTask];
-        }
-
     }
     return self;
 }

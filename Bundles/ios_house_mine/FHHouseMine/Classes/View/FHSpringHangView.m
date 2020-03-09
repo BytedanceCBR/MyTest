@@ -13,6 +13,8 @@
 #import "FHUserTracker.h"
 #import "FHEnvContext.h"
 #import "UIImageView+BDWebImage.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "FHEnvContext.h"
 
 #define kFHSpringViewCloseNotification @"kFHSpringViewCloseNotification"
 #define kFHSpringViewCloseDate @"kFHSpringViewCloseDate"
@@ -72,23 +74,6 @@
     }];
 }
 
-- (void)updateUI {
-    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
-    if(model){
-        self.hidden = NO;
-        //设置图片
-        FHConfigDataTabWidgetImageModel *imageModel = [model.image firstObject];
-        if(imageModel && imageModel.url.length > 0){
-            [self.bgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
-        }
-        
-        self.closeBtn.hidden = model.closeable;
-
-    }else{
-        self.hidden = YES;
-    }
-}
-
 - (void)show:(NSString *)pageType {
     NSString *midNightIntervalStr = [FHUtils contentForKey:kFHSpringViewCloseDate];
     if (midNightIntervalStr) {
@@ -100,8 +85,10 @@
         }
     }
     
-    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
-    FHConfigDataTabWidgetImageModel *imageModel = [model.image firstObject];
+//    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
+//    FHConfigDataTabWidgetImageModel *imageModel = [model.image firstObject];
+    FHPopupViewInfoItemModel *model = [[FHPopupViewManager shared] hangData];
+    FHPopupViewImageInfoUrlListModel *imageModel = [model.imageInfo.urlList firstObject];
     
     if(model && model.openUrl.length > 0 && imageModel.url.length > 0){
         //显示
@@ -111,11 +98,11 @@
             [self.bgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
         }
         
-        self.closeBtn.hidden = !model.closeable;
+        self.closeBtn.hidden = !model.deleteButton;
         
         _pageType = pageType;
-        if(![FHEnvContext sharedInstance].isShowingSpringHang || ![model.id isEqualToString:[FHEnvContext sharedInstance].currentShowHangId]){
-            [FHEnvContext sharedInstance].currentShowHangId = model.id;
+        if(![FHEnvContext sharedInstance].isShowingSpringHang || ![model.itemId isEqualToString:[FHEnvContext sharedInstance].currentShowHangId]){
+            [FHEnvContext sharedInstance].currentShowHangId = model.itemId;
             [FHEnvContext sharedInstance].isShowingSpringHang = YES;
             [self addPandentShowLog];
         }
@@ -146,9 +133,9 @@
 
 - (void)goToSpring:(UITapGestureRecognizer *)sender {
     [self addPandentClickLog];
-    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
+    FHPopupViewInfoItemModel *model = [[FHPopupViewManager shared] hangData];
     if(model && model.openUrl.length > 0){
-        NSURL* url = [NSURL URLWithString:model.openUrl];
+        NSURL *url = [NSURL URLWithString:model.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     }
 }
@@ -164,7 +151,7 @@
 #pragma mark - 埋点
 
 - (void)addPandentShowLog {
-    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
+    FHPopupViewInfoItemModel *model = [[FHPopupViewManager shared] hangData];
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"log_pd"] = model.logPb ?: @"be_null";
     if(_pageType){
@@ -174,7 +161,7 @@
 }
 
 - (void)addPandentCloseLog {
-    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
+    FHPopupViewInfoItemModel *model = [[FHPopupViewManager shared] hangData];
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"log_pd"] = model.logPb ?: @"be_null";
     if(_pageType){
@@ -184,7 +171,7 @@
 }
 
 - (void)addPandentClickLog {
-    FHConfigDataTabWidgetModel *model = [FHEnvContext tabWidget];
+    FHPopupViewInfoItemModel *model = [[FHPopupViewManager shared] hangData];
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"log_pd"] = model.logPb ?: @"be_null";
     if(_pageType){

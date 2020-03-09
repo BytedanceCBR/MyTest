@@ -17,6 +17,7 @@
 @interface FHUGCHotCommunitySubCell ()
 
 @property(nonatomic, strong) UIImageView *bgView;
+@property(nonatomic, strong) UIView *blackCoverView;
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *descLabel;
 
@@ -58,12 +59,14 @@
         
         if([model.hotCellType isEqualToString:youwenbida]){
             _bgView.backgroundColor = [UIColor themeGray7];
+            _blackCoverView.hidden = YES;
             _titleLabel.hidden = YES;
             _descLabel.hidden = YES;
             _lookAllLabel.hidden = YES;
             _lookAllImageView.hidden = YES;
         }else if([model.hotCellType isEqualToString:more]){
             _bgView.backgroundColor = [UIColor themeOrange2];
+            _blackCoverView.hidden = YES;
             _titleLabel.hidden = YES;
             _descLabel.hidden = YES;
             _lookAllLabel.hidden = NO;
@@ -71,6 +74,7 @@
             _lookAllLabel.text = model.title;
         }else{
             _bgView.backgroundColor = [UIColor themeGray7];
+            _blackCoverView.hidden = NO;
             _titleLabel.hidden = NO;
             _descLabel.hidden = NO;
             _lookAllLabel.hidden = YES;
@@ -90,6 +94,11 @@
     _bgView.layer.borderWidth = 0.5;
     _bgView.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_bgView];
+    
+    self.blackCoverView = [[UIView alloc] init];
+    _blackCoverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
+    _blackCoverView.hidden = YES;
+    [self.bgView addSubview:_blackCoverView];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor whiteColor]];
     _titleLabel.textAlignment = NSTextAlignmentLeft;
@@ -126,6 +135,10 @@
 
 - (void)initConstains {
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contentView);
+    }];
+    
+    [self.blackCoverView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.contentView);
     }];
     

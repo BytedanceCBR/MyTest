@@ -569,7 +569,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
         [TTVVideoAlbumHolder holder].albumView.frame = CGRectMake(0, self.headerPosterVC.interactModel.minMovieH, self.view.width, self.view.height-self.headerPosterVC.interactModel.minMovieH);
     }
     
-    CLS_LOG(@"TTVideoDetailViewController viewDidLoad with groupID %@",[self.detailModel uniqueID]);
+    // CLS_LOG(@"TTVideoDetailViewController viewDidLoad with groupID %@",[self.detailModel uniqueID]);
     [self.detailStateStore sendAction:TTVDetailEventTypeViewDidLoad payload:nil];
     [AKAwardCoinVideoMonitorManager shareInstance].videoDetailModel = self.detailModel;
 }

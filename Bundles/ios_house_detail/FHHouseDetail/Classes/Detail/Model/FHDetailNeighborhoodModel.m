@@ -312,3 +312,51 @@
     @end
 
 
+@implementation FHDetailNeighborhoodDataCommentsModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"commentsWrite": @"comments_write",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end
+
+
+@implementation FHDetailNeighborhoodDataCommentsCommentsWriteModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"contentEmptyTitle": @"content_empty_title",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end
+
+@implementation FHDetailNeighborhoodDataCommentsContentModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"commentsListSchema": @"comments_list_schema",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end

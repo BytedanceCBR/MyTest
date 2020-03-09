@@ -112,7 +112,6 @@
 //    if(self.isList){
         self.contentView.backgroundColor = [UIColor themeGray7];
         self.bgView.layer.masksToBounds = YES;
-        self.bgView.layer.cornerRadius = 10;
         self.answerLabel.numberOfLines = 3;
 //    }
 }

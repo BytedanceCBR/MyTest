@@ -130,4 +130,7 @@
  */
 - (void)replaceRichSpanText:(TTRichSpanText *)richSpanText inRange:(NSRange)range;
 
+
+/// 获取控件去掉首尾空白符之后富文本的长度
+- (NSInteger)trimmedLength;
 @end

@@ -71,14 +71,26 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
+    
+    if (model.houseType == FHHouseTypeNewHouse) {
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.contentView).mas_offset(-15);
+            make.right.equalTo(self.contentView).mas_offset(15);
+        }];
+    }
     // 设置下发标题
     if(model.recommendedRealtorsTitle.length > 0) {
         self.headerView.label.text = model.recommendedRealtorsTitle;
+    }else {
+        self.headerView.label.text = (model.houseType == FHHouseTypeNewHouse) ? @"优选顾问" : @"推荐经纪人";
     }
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
-        CGFloat vHeight = 76.0;
+        __block CGFloat vHeight = 76.0;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.realtorScoreDescription.length >0&&obj.realtorScoreDisplay.length >0&&obj.realtorTags.count >0) {
+                vHeight = 100;
+            }
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj];
             // 添加事件
             itemView.tag = idx;
@@ -114,6 +126,12 @@
             if(obj.realtorEvaluate.length > 0) {
                 itemView.realtorEvaluate.text = obj.realtorEvaluate;
             }
+            if(obj.realtorScoreDisplay.length > 0) {
+                  itemView.score.text = obj.realtorScoreDisplay;
+              }
+            if(obj.realtorScoreDescription.length > 0) {
+                  itemView.scoreDescription.text = obj.realtorScoreDescription;
+              }
             itemsCount += 1;
         }];
 
@@ -175,6 +193,9 @@
 - (void)cellClick:(UIControl *)control {
     NSInteger index = control.tag;
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (model.houseType == FHHouseTypeNewHouse) {
+        return;
+    }
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         model.phoneCallViewModel.belongsVC = model.belongsVC;
@@ -220,6 +241,8 @@
         contactConfig.realtorType = contact.realtorType;
         if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
             contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhoodMulrealtor);
+        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
+            contactConfig.cluePage = @(FHClueCallPageTypeCNewHouseMulrealtor);
         }else {
             contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
         }
@@ -253,6 +276,9 @@
         if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
             imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
             imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodMulrealtor];
+        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
+            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNewHouseMulrealtor];
         }else {
             imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
         }
@@ -302,8 +328,8 @@
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.shadowImage).offset(30);
-        make.right.mas_equalTo(self.contentView).offset(-15);
-        make.left.mas_equalTo(self.contentView).offset(15);;
+        make.right.mas_equalTo(self.shadowImage).offset(-15);
+        make.left.mas_equalTo(self.shadowImage).offset(15);
         make.height.mas_equalTo(46);
     }];
     _containerView = [[UIView alloc] init];
@@ -311,8 +337,8 @@
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
-        make.left.mas_equalTo(self.contentView).mas_offset(15);
-        make.right.mas_equalTo(self.contentView).mas_offset(-15);
+        make.left.mas_equalTo(self.shadowImage).mas_offset(15);
+        make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.height.mas_equalTo(0);
         make.bottom.mas_equalTo(self.shadowImage).offset(-35);
     }];
@@ -335,13 +361,31 @@
             [model.tableView beginUpdates];
         }
         if (model.isFold) {
+            CGFloat showHeight = 0;
+            for (int i = 0; i<3; i++) {
+                FHDetailContactModel *showModel = (FHDetailContactModel*) model.recommendedRealtors[i];
+                if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
+                    showHeight = showHeight +100;
+                }else {
+                    showHeight = showHeight + 76;
+                };
+            }
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(76 * 3);
+                make.height.mas_equalTo(showHeight);
             }];
             realtorShowCount = 3;
         } else {
+           __block CGFloat showHeight = 0;
+            [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                FHDetailContactModel *showModel = obj;
+            if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
+                     showHeight = showHeight +100;
+                 }else {
+                     showHeight = showHeight + 76;
+                 };
+            }];
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(76 * model.recommendedRealtors.count);
+                make.height.mas_equalTo(showHeight);
             }];
             realtorShowCount = model.recommendedRealtors.count;
             [self addRealtorClickMore];
@@ -351,10 +395,19 @@
             [model.tableView endUpdates];
         }
     } else if (model.recommendedRealtors.count > 0) {
-        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(76 * model.recommendedRealtors.count);
-        }];
-        realtorShowCount = model.recommendedRealtors.count;
+        __block CGFloat showHeight = 0;
+         [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+             FHDetailContactModel *showModel = obj;
+         if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
+                  showHeight = showHeight +100;
+              }else {
+                  showHeight = showHeight + 76;
+              };
+         }];
+         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+             make.height.mas_equalTo(showHeight);
+         }];
+         realtorShowCount = model.recommendedRealtors.count;
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
@@ -364,8 +417,29 @@
 //    [self tracerRealtorShowToIndex:realtorShowCount];
 }
 
-- (void)fh_willDisplayCell;{
-    [self addRealtorShowLog];
+//- (void)fh_willDisplayCell;{
+//    [self addRealtorShowLog];
+//}
+
+#pragma mark - FHDetailScrollViewDidScrollProtocol
+
+// 滑动house_show埋点
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
+    CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
+    __block CGFloat showHeight = 0;
+    for (int m = 0; m <model.recommendedRealtors.count; m++) {
+        FHDetailContactModel *showModel = model.recommendedRealtors[m];
+        if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
+            showHeight = showHeight +100;
+        }else {
+            showHeight = showHeight + 76;
+        };
+        if (UIScreen.mainScreen.bounds.size.height - point.y>showHeight) {
+            NSInteger showCount = model.isFold ? MIN(m, 3):MIN(model.recommendedRealtors.count, m);
+            [self tracerRealtorShowToIndex:showCount];
+        };
+    }
 }
 
 -(void)addRealtorShowLog{
@@ -383,7 +457,9 @@
         case FHHouseTypeSecondHandHouse:
             return @"old_detail_related";
             break;
-            
+        case FHHouseTypeNewHouse:
+            return @"new_detail_related";
+            break;
         default:
             break;
     }
@@ -437,6 +513,8 @@
             break;
          case FHHouseTypeNeighborhood:
             return @"neighborhood_detail_related";
+            case FHHouseTypeNewHouse:
+               return @"new_detail_related";
         default:
             break;
     }
@@ -595,31 +673,57 @@
 
 - (void)layoutForStyle0 {
     [self setupUI];
+    if (self.model.realtorScoreDisplay.length <= 0 || self.model.realtorScoreDescription.length <=0) {
+           self.score.hidden = YES;
+           self.scoreDescription.hidden = YES;
+       }
 }
 
 - (void)layoutForStyle1 {
     [self setupUI];
-    [self modifiedLayoutNameNeedShowCenter:self.model.realtorTags.count >0];
+    [self modifiedLayoutNameNeedShowCenter:self.model.realtorTags.count >0||(self.model.realtorScoreDisplay.length>0&&self.model.realtorScoreDescription.length>0)];
     [self addSubview:self.tagsView];
-    [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(15);
-        make.left.equalTo(self.name);
-        make.right.equalTo(self.imBtn.mas_left).offset(-10);
-        make.top.equalTo(self.name.mas_bottom).offset(8);
-    }];
-
+    if (self.model.realtorScoreDisplay.length>0 && self.model.realtorScoreDescription.length>0) {
+         [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
+               make.height.mas_equalTo(15);
+               make.left.equalTo(self.name);
+               make.right.equalTo(self.imBtn.mas_left).offset(-10);
+             make.top.equalTo(self.score.mas_bottom).offset(self.model.realtorTags.count>0?6:8);
+           }];
+    }else {
+        self.score.hidden = YES;
+        self.scoreDescription.hidden = YES;
+        [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
+              make.height.mas_equalTo(15);
+              make.left.equalTo(self.name);
+              make.right.equalTo(self.imBtn.mas_left).offset(-10);
+              make.top.equalTo(self.name.mas_bottom).offset(8);
+          }];
+    }
 }
 
 - (void)layoutForStyle2 {
     [self setupUI];
-    [self modifiedLayoutNameNeedShowCenter:self.model.realtorEvaluate.length>0];
+    [self modifiedLayoutNameNeedShowCenter:self.model.realtorEvaluate.length>0||(self.model.realtorScoreDisplay.length>0&&self.model.realtorScoreDescription.length>0)];
     [self addSubview:self.realtorEvaluate];
-    [self.realtorEvaluate mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(17);
-        make.left.equalTo(self.name);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
-        make.top.equalTo(self.name.mas_bottom).offset(4);
-    }];
+    if (self.model.realtorScoreDisplay.length>0 && self.model.realtorScoreDescription.length>0) {
+         [self.realtorEvaluate mas_makeConstraints:^(MASConstraintMaker *make) {
+             make.height.mas_equalTo(17);
+             make.left.equalTo(self.name);
+             make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+             make.top.equalTo(self.score.mas_bottom).offset(self.model.realtorTags.count>0?6:8);
+         }];
+    }else {
+        self.score.hidden = YES;
+        self.scoreDescription.hidden = YES;
+        [self.realtorEvaluate mas_makeConstraints:^(MASConstraintMaker *make) {
+              make.height.mas_equalTo(17);
+              make.left.equalTo(self.name);
+              make.right.equalTo(self.imBtn.mas_left).offset(-10);
+              make.top.equalTo(self.name.mas_bottom).offset(8);
+          }];
+    }
+
 }
 
 -(void)modifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
@@ -722,6 +826,20 @@
     _agency.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_agency];
     
+    self.score = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _score.textColor = [UIColor themeGray1];
+    _score.font = [UIFont themeFontMedium:14];
+    _score.textAlignment = NSTextAlignmentLeft;
+    [_score setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [_score setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self addSubview:_score];
+    
+    self.scoreDescription = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _scoreDescription.textColor = [UIColor themeGray2];
+    _scoreDescription.textAlignment = NSTextAlignmentLeft;
+
+    [self addSubview:_scoreDescription];
+    
     [self.avator mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(46);
         make.left.mas_equalTo(16);
@@ -751,6 +869,7 @@
         make.centerY.mas_equalTo(self.name);
         make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
+    
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(-20);
@@ -760,6 +879,16 @@
         make.width.height.mas_equalTo(36);
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
         make.top.mas_equalTo(self.name).offset(-5);
+    }];
+    
+    [self.score mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.name);
+        make.top.equalTo(self.name.mas_bottom).offset(6);
+    }];
+    [self.scoreDescription mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.score.mas_right).offset(2);
+        make.right.mas_lessThanOrEqualTo(self).offset(-20);
+        make.centerY.equalTo(self.score);
     }];
 }
 

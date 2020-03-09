@@ -15,7 +15,6 @@
 #import "TTBlockManager.h"
 #import "TTAdConstant.h"
 #import "TTAccountBusiness.h"
-#import <Crashlytics/Answers.h>
 #import <TTNetworkManager/TTNetworkDefine.h>
 #import <TTSettingsManager/TTSettingsManager.h>
 
@@ -55,7 +54,6 @@
     if (countBeforeClean) {
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            [Answers logCustomEventWithName:@"news_db" customAttributes:@{@"article_detail_count":countBeforeClean}];
         });
     }
     
@@ -77,11 +75,6 @@
                 
                 NSTimeInterval t2 = CFAbsoluteTimeGetCurrent();
                 
-                [Answers logCustomEventWithName:@"cleanArticleDetail" customAttributes:@{@"threshold":@(threshold),
-                                                                                         @"count1":countBeforeClean,
-                                                                                         @"count2":countAfterClean,
-                                                                                         @"cost":@(t2 - t1),
-                                                                                         @"dbSize":@(dbSize)}];
             }
         }
     }

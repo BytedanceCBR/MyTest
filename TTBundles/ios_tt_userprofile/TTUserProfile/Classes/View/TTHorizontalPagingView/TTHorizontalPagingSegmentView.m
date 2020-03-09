@@ -33,6 +33,7 @@
 @property (nonatomic, assign) CGFloat lastOffsetX;
 @property (nonatomic, assign) NSInteger lastSelectedIndex;
 @property (nonatomic, assign) BOOL isTitleClick;
+@property (nonatomic, assign) BOOL isNoSelectEvent;
 
 @end
 
@@ -42,6 +43,7 @@
 {
     if(self = [super initWithFrame:frame]) {
         self.backgroundColorThemeKey = kColorBackground4;
+        self.intervalPadding = 30;
         [self setupSubview];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(themeChanged:) name:TTThemeManagerThemeModeChangedNotification object:nil];
     }
@@ -157,6 +159,17 @@
     UILabel *selectedLabel = self.titleLabels[selectedIndex];
     [self titleClick:selectedLabel.gestureRecognizers.firstObject];
     self.lastOffsetX = selectedIndex;
+}
+
+- (void)setSelectedIndexNoEvent:(NSInteger)selectedIndex
+{
+    _isNoSelectEvent = YES;
+    _selectedIndex = selectedIndex;
+    if(selectedIndex < 0 || selectedIndex >= self.titleLabels.count) return;
+    UILabel *selectedLabel = self.titleLabels[selectedIndex];
+    [self titleClick:selectedLabel.gestureRecognizers.firstObject];
+    self.lastOffsetX = selectedIndex;
+    _isNoSelectEvent = NO;
 }
 
 - (void)setupAllTitles
@@ -278,7 +291,7 @@
     [self setupLabelSelected:label];
     CGFloat offsetX = label.tag * self.width;
     self.lastOffsetX = offsetX;
-    if([self.delegate respondsToSelector:@selector(segmentView:didSelectedItemAtIndex:toIndex:)]) {
+    if([self.delegate respondsToSelector:@selector(segmentView:didSelectedItemAtIndex:toIndex:)] && !self.isNoSelectEvent) {
         [self.delegate segmentView:self didSelectedItemAtIndex:self.lastSelectedIndex toIndex:label.tag];
     }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -334,7 +347,7 @@
         label.tag = i;
         if(self.type == TTPagingSegmentViewContentHorizontalAlignmentLeft) {
             CGSize textSize = [label.text boundingRectWithSize:CGSizeMake(MAXFLOAT, 0) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:self.titleFont} context:nil].size;
-            labelW = textSize.width + [TTDeviceUIUtils tt_newPadding:30];
+            labelW = textSize.width + [TTDeviceUIUtils tt_newPadding:self.intervalPadding];
         } else {
             labelW = self.width / count;
         }
