@@ -25,6 +25,7 @@
     NSMutableArray *agentlist = [[NSMutableArray alloc]init];
     NSMutableArray *locationPeripherys = [[NSMutableArray alloc]init];
     NSMutableArray *qas = [[NSMutableArray alloc]init];
+    NSMutableArray *comments = [[NSMutableArray alloc]init];
     NSMutableArray *plotsSlods = [[NSMutableArray alloc]init];
     NSMutableArray *peripherys = [[NSMutableArray alloc]init];
     [moduleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -42,6 +43,9 @@
             case FHPlotHouseModelTypeNeighborhoodQA:
                 [qas addObject:obj];
                 break;
+            case FHPlotHouseModelTypeNeighborhoodComment:
+                              [comments addObject:obj];
+                              break;
             case FHPlotHouseModelTypeSold:
                 [plotsSlods addObject:obj];
                 break;
@@ -59,6 +63,9 @@
     if (qas.count > 0) {
         [moduleItems addObject:@{@"qas":qas}];
     }
+    if (comments.count > 0) {
+        [moduleItems addObject:@{@"comments":comments}];
+    }
     if (agentlist.count > 0) {
         [moduleItems addObject:@{@"agentlist":agentlist}];
     }
@@ -74,7 +81,7 @@
     [moduleItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *currentItemArr = obj[[obj allKeys][0]];
 //        单个cell模块
-        if([[obj allKeys] containsObject:@"qas"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"peripherys"]) {
+        if([[obj allKeys] containsObject:@"qas"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"peripherys"]|| [[obj allKeys] containsObject:@"comments"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 model.shadowImageType = FHHouseShdowImageTypeRound;;

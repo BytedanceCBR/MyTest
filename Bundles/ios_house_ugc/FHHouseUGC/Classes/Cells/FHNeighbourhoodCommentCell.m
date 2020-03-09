@@ -137,7 +137,7 @@
             rightMargin = 15;
             
             leftPadding = 20;
-            rightPadding = 5;
+            rightPadding = 20;
         }
         
         BOOL isContentEmpty = isEmptyString(cellModel.content);
@@ -169,16 +169,18 @@
     CGFloat rightPadding = 16;
     CGFloat topPadding = 20;
     
+    CGFloat cellWidth = [UIScreen mainScreen].bounds.size.width - 30;
     if(self.cellModel.isInNeighbourhoodCommentsList) {
         topMargin = 15;
         leftMargin = 15;
         rightMargin = 15;
         
         leftPadding = 20;
-        rightPadding = 5;
+        rightPadding = 20;
+        
+        cellWidth = [UIScreen mainScreen].bounds.size.width;
     }
 
-    CGFloat cellWidth = [UIScreen mainScreen].bounds.size.width;
     CGFloat cellHeight = [self.class heightForData:self.cellModel];
     
     self.contentContainer.frame = CGRectMake(leftMargin, topMargin, cellWidth - leftMargin - rightMargin, cellHeight - topMargin);
