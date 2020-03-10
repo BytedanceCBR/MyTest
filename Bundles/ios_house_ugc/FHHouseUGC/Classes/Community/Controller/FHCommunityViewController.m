@@ -205,6 +205,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 -(BOOL)shouldAutorotate

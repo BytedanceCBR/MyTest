@@ -82,6 +82,8 @@
 {
     [super viewDidAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    
+    [[FHPopupViewManager shared] triggerPopupView];
 }
 
 - (void)finishLoadingWeb

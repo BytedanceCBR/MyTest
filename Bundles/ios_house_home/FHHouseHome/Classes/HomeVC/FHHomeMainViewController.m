@@ -95,6 +95,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     
     self.stayTime = [[NSDate date] timeIntervalSince1970];
+    
+    [[FHPopupViewManager shared] triggerPopupView];
 }
 - (void)initView {
     self.view.backgroundColor = [UIColor themeHomeColor];
