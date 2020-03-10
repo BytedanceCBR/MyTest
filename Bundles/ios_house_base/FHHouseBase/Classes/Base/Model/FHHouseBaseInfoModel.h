@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isSingle;
 @property (nonatomic, copy , nullable) NSString *attr;
 @property (nonatomic, copy , nullable) NSString *value;
+@property (nonatomic, copy , nullable) NSString *color;
 
 @end
 

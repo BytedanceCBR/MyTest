@@ -281,7 +281,7 @@
                            @"recommendedRealtorsTitle": @"recommended_realtors_title",
                            @"socialInfo":@"ugc_social_group",
                            @"houseVideo": @"house_video",
-
+                           @"baseInfo": @"base_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

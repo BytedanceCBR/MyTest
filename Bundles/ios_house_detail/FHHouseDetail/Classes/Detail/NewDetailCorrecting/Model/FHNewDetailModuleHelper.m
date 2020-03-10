@@ -25,6 +25,8 @@
     NSMutableArray *floorPlans = [[NSMutableArray alloc]init];
     NSMutableArray *agentlist = [[NSMutableArray alloc]init];
     NSMutableArray *locations = [[NSMutableArray alloc]init];
+    NSMutableArray *disclaimers = [[NSMutableArray alloc]init];
+
     [moduleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
         switch (model.houseModelType) {
@@ -42,6 +44,9 @@
                 break;
             case FHHouseModelTypeNewLocation:
                 [locations addObject:obj];
+                break;
+            case FHHouseModelTypeDisclaimer:
+                [disclaimers addObject:obj];
                 break;
             default:
                 break;
@@ -62,6 +67,9 @@
     }
     if (locations.count > 0) {
         [moduleItems addObject:@{@"locations":locations}];
+    }
+    if (disclaimers.count > 0) {
+        [moduleItems addObject:@{@"disclaimers":disclaimers}];
     }
     [moduleItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *currentItemArr = obj[[obj allKeys][0]];

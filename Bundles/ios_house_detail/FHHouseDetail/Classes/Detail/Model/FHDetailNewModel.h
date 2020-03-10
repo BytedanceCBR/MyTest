@@ -9,6 +9,7 @@
 #import "JSONModel.h"
 #import "FHDetailBaseModel.h"
 #import "FHHouseNewsSocialModel.h"
+#import "FHHouseBaseInfoModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -203,6 +204,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle; // 推荐经纪人标题文案
 @property (nonatomic, strong , nullable) FHVideoHouseVideoModel *houseVideo ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataHouseImageDictListModel> *houseImageDictList;
+@property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
 
 @end
 

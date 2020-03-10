@@ -30,6 +30,7 @@
 #import <FHHouseBase/FHHouseContactDefines.h>
 #import "FHUtils.h"
 #import "FHUIAdaptation.h"
+#import "FHDetailCommonDefine.h"
 
 @interface FHDetailNewConsultView : UIView
 @property (nonatomic, strong) UILabel *nameLabel;
@@ -150,22 +151,8 @@
     self.consultView.hidden = YES;
     FHDetailCourtInfoCellModel *model = (FHDetailCourtInfoCellModel *)data;
     // 二手房
-    self.shadowImage.image = model.shadowImage;
-    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
-        }];
-    }
-    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView);
-        }];
-    }
-    if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.equalTo(self.contentView);
-        }];
-    }
+    adjustImageScopeType(model)
+    
     if (model.courtInfo) {
         [self updateErshouCellData];
     }
@@ -249,12 +236,12 @@
 #pragma mark - FHDetailScrollViewDidScrollProtocol
 
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
-    if (vcParentView) {
-        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
-        if (UIScreen.mainScreen.bounds.size.height - point.y > 150) {
-            [self addHouseShowLog];
-        }
-    }
+//    if (vcParentView) {
+//        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+//        if (UIScreen.mainScreen.bounds.size.height - point.y > 150) {
+//            [self addHouseShowLog];
+//        }
+//    }
 }
 
 // 添加house_show 埋点

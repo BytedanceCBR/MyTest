@@ -40,6 +40,11 @@
 #import "FHDetailCourtInfoCell.h"
 #import "FHDetailListSectionTitleCell.h"
 #import "FHOldDetailStaticMapCell.h""
+#import "FHDetailSalesCell.h"
+#import "FHDetailNewAddressInfoCell.h"
+#import "FHDetailNewPriceNotifyCell.h"
+#import "FHDetailNewPropertyListCell.h"
+#import "FHOldDetailDisclaimerCell.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -70,8 +75,8 @@
     
     [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCellModel class])];
     
-    [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerModel class])];
-    
+    [self.tableView registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
+
     [self.tableView registerClass:[FHDetailNewTimeLineItemCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemModel class])];
     
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
@@ -86,6 +91,11 @@
     
     [self.tableView registerClass:[FHDetailCourtInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCourtInfoCellModel class])];
     [self.tableView registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])];
+    [self.tableView registerClass:[FHDetailSalesCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSalesCellModel class])];
+    
+    [self.tableView registerClass:[FHDetailNewAddressInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewAddressInfoCellModel class])];
+    [self.tableView registerClass:[FHDetailNewPriceNotifyCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewPriceNotifyCellModel class])];
+    [self.tableView registerClass:[FHDetailNewPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewPropertyListCellModel class])];
 
 }
 
@@ -558,12 +568,37 @@
         houseCore.courtId = model.data.coreInfo.id;
         houseCore.houseName = houseName;
         houseCore.contactModel = self.contactViewModel;
-        houseCore.houseModelType = FHHouseModelTypeNewCoreInfo;
+//        houseCore.houseModelType = FHHouseModelTypeNewCoreInfo;
         FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc] init];
         disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
         houseCore.disclaimerModel = disclaimerModel;
         
         [self.items addObject:houseCore];
+    }
+    
+    // 基础信息
+    if (model.data.coreInfo) {
+        FHDetailNewPropertyListCellModel *houseCore = [[FHDetailNewPropertyListCellModel alloc] init];
+        houseCore.houseModelType = FHHouseModelTypeNewCoreInfo;
+        houseCore.baseInfo = model.data.baseInfo;
+        [self.items addObject:houseCore];
+    }
+    
+    // 地址信息
+    FHDetailNewAddressInfoCellModel *addressInfo = [[FHDetailNewAddressInfoCellModel alloc] init];
+    addressInfo.houseModelType = FHHouseModelTypeNewCoreInfo;
+    [self.items addObject:addressInfo];
+    // 变价通知
+    FHDetailNewPriceNotifyCellModel *priceInfo = [[FHDetailNewPriceNotifyCellModel alloc] init];
+    priceInfo.houseModelType = FHHouseModelTypeNewCoreInfo;
+    priceInfo.contactModel = self.contactViewModel;
+    [self.items addObject:priceInfo];
+    
+    // 优惠信息
+    if (1) {
+        FHDetailSalesCellModel *salesModel = [[FHDetailSalesCellModel alloc] init];
+        salesModel.houseModelType = FHHouseModelTypeNewSales;
+        [self.items addObject:salesModel];
     }
     
     //楼盘户型
@@ -747,13 +782,27 @@
             [self.items addObject:itemModel];
         }
     }
-    
-    //楼盘版权信息
-    if ([self.dataModel.data.disclaimer isKindOfClass:[FHDetailNewDataDisclaimerModel class]]){
-        FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc] init];
-        disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
-        [self.items addObject:disclaimerModel];
+    // 免责声明
+    FHDetailNewModel * model = (FHDetailNewModel *)self.detailData;
+    if (model.data.contact || model.data.disclaimer) {
+        FHOldDetailDisclaimerModel *infoModel = [[FHOldDetailDisclaimerModel alloc] init];
+        infoModel.disclaimer = model.data.disclaimer;
+        infoModel.houseModelType = FHHouseModelTypeDisclaimer;
+        if (!model.data.highlightedRealtor) {
+            // 当且仅当没有合作经纪人时，才在disclaimer中显示 经纪人 信息
+            infoModel.contact = model.data.contact;
+        } else {
+            infoModel.contact = nil;
+        }
+        [self.items addObject:infoModel];
     }
+    
+//    //楼盘版权信息
+//    if ([self.dataModel.data.disclaimer isKindOfClass:[FHDetailNewDataDisclaimerModel class]]){
+//        FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc] init];
+//        disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
+//        [self.items addObject:disclaimerModel];
+//    }
     
     [self reloadData];
 }

@@ -16,6 +16,8 @@
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHHouseDetailContactViewModel.h"
 #import <FHHouseBase/FHHouseContactDefines.h>
+#import "FHPropertyListCorrectingRowView.h"
+
 extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 @interface FHDetailPropertyListCorrectingCell()
 @property (nonatomic, weak) UIImageView *shadowImage;
@@ -431,49 +433,6 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 @end
 
 
-@implementation FHPropertyListCorrectingRowView
-
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setupUI];
-    }
-    return self;
-}
-
-- (void)setupUI {
-    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _keyLabel.textColor = [UIColor colorWithHexStr:@"aeadad"];
-    [self addSubview:_keyLabel];
-    [_keyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [_keyLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    
-    _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _valueLabel.textColor = [UIColor themeGray1];
-    [self addSubview:_valueLabel];
-    _valueLabel.textAlignment = NSTextAlignmentLeft;
-    
-    // 布局
-    [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(0);
-        make.top.mas_equalTo(10);
-        make.height.mas_equalTo(20);
-        make.bottom.mas_equalTo(self);
-    }];
-    
-    [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.keyLabel.mas_right).offset(10);
-        make.top.mas_equalTo(10);
-        make.height.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.bottom.mas_equalTo(self.keyLabel);
-    }];
-}
-
-
-@end
 
 @implementation FHDetailExtarInfoCorrectingRowView
 
