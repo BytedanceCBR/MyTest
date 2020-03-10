@@ -16,6 +16,7 @@ typedef NS_ENUM(NSUInteger, FHCardSliderViewType) {
 
 @interface FHCardSliderView : UIView
 
+@property (nonatomic, strong) NSArray *dataSource;
 //是否循环滚动
 @property(nonatomic ,assign) BOOL isLoop;
 //是否自动播放

@@ -10,6 +10,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "TTBaseMacro.h"
+#import "FHDetailNeighborhoodModel.h"
 
 @interface FHCardSliderCell()
 
@@ -35,19 +36,23 @@
 }
 
 - (void)setCellData:(id)data {
-    self.imageView.image = [UIImage imageNamed:data];;//用SDWebImage
-    self.titleLabel.text = @"市政旁置业好去处，高铁很便利";
-    self.subTitleLabel.text = @"233人阅读";
-    
-    NSString *tagText = @"幸福里评测";
-    if(isEmptyString(tagText)){
-        self.positionView.hidden = YES;
-        self.position.text = @"";
-    }else{
-        self.positionView.hidden = NO;
-        self.position.text = @"幸福里评测";
+    if ([data isKindOfClass:[FHDetailNeighborhoodDataStrategyArticleListModel class]]) {
+        FHDetailNeighborhoodDataStrategyArticleListModel *model = (FHDetailNeighborhoodDataStrategyArticleListModel *)data;
+        self.imageView.image = [UIImage imageNamed:model.picture
+                                ];;//用SDWebImage
+        self.titleLabel.text = model.title;
+        self.subTitleLabel.text = model.readCount;
+        
+        NSString *tagText = model.articleType;
+        if(isEmptyString(tagText)){
+            self.positionView.hidden = YES;
+            self.position.text = @"";
+        }else{
+            self.positionView.hidden = NO;
+            self.position.text = tagText;
+        }
+        [self updateTagView];
     }
-    [self updateTagView];
 }
 
 - (void)setupUI {

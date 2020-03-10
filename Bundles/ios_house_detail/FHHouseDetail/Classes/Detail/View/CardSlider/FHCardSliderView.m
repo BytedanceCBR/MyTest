@@ -17,7 +17,6 @@ static const float timerInterval = 3.0f;
 @property(nonatomic , assign) FHCardSliderViewType type;
 //@property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSArray *dataSource;
 @property (nonatomic, strong) NSTimer *timer;
     
 @end

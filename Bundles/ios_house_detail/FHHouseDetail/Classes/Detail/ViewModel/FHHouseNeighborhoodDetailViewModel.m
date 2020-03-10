@@ -331,16 +331,17 @@
     
 
     // 小区评测
-//    if (model.data.evaluationInfo) {
+    if (model.data.strategy && model.data.strategy.articleList.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
-        FHDetailAccessCellModel *infoModel = [[FHDetailAccessCellModel alloc] init];
-        infoModel.houseModelType = FHPlotHouseModelTypeLocationPeriphery;
+        
+        FHDetailAccessCellModel *cellModel = [[FHDetailAccessCellModel alloc] init];
+        cellModel.houseModelType = FHPlotHouseModelTypeLocationPeriphery;
+        cellModel.strategy = model.data.strategy;
 //        infoModel.log_pb = self.listLogPB; // listLogPB也是当前小区的logPb
-//        infoModel.evaluationInfo = model.data.evaluationInfo;
-        [self.items addObject:infoModel];
-//    }
+        [self.items addObject:cellModel];
+    }
 
     //地图
     if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){

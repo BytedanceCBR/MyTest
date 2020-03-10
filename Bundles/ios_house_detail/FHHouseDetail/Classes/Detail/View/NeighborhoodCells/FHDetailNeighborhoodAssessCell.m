@@ -118,28 +118,11 @@
     FHDetailAccessCellModel *cellModel = (FHDetailAccessCellModel *)data;
     self.shadowImage.image = cellModel.shadowImage;
     
-    NSArray *dataSource = @[@"01",@"02",@"03",@"04",@"05"];
-    [_cardSliderView setCardListData:dataSource];
-//    [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.height.mas_equalTo(cellModel.viewHeight);
-//    }];
-//    if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll) {
-//        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.bottom.equalTo(self.contentView);
-//        }];
-//    }
-//    _titleLabel.text = cellModel.title;
-//    [_questionBtn setTitle:cellModel.askTitle forState:UIControlStateNormal];
-//
-//    self.dataList = [[NSMutableArray alloc] init];
-//    [_dataList addObjectsFromArray:cellModel.dataList];
-//    [self.tableView reloadData];
-//
-//    if(self.dataList.count > 0){
-//        self.questionBtn.hidden = NO;
-//    }else{
-//        self.questionBtn.hidden = YES;
-//    }
+    FHDetailNeighborhoodDataStrategyModel *strategy = cellModel.strategy;
+    
+    _titleLabel.text = strategy.title.length > 0 ? strategy.title : @"小区攻略";
+    
+    [_cardSliderView setCardListData:strategy.articleList];
 }
 
 - (void)gotoMore {

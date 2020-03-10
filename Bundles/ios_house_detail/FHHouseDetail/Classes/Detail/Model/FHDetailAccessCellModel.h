@@ -6,10 +6,13 @@
 //
 
 #import "FHDetailBaseModel.h"
+#import "FHDetailNeighborhoodModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailAccessCellModel : FHDetailBaseModel
+
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
 
 @end
 

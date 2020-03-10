@@ -19,6 +19,7 @@ static const float spacing = 14;
 @property (nonatomic) CGPoint contentOffset;
 @property (nonatomic) NSInteger currentPage;
 @property (nonatomic) CGSize collectionViewContentSize;
+@property (nonatomic , assign) NSInteger actuallyVisibleItemsCount;
 
 @property (nonatomic , assign) CGFloat contentOffsetXY;
 @property (nonatomic , assign) CGFloat collectionBoundsWH;
@@ -33,18 +34,22 @@ static const float spacing = 14;
 {
     [super prepareLayout];
     
-    CGFloat width = (self.type == FHCardSliderViewTypeHorizontal)  ? (self.collectionBounds.width - (visibleItemsCount - 1)*spacing) : self.collectionBounds.width;
-    CGFloat height = (self.type == FHCardSliderViewTypeHorizontal)  ? self.collectionBounds.height : (self.collectionBounds.height - (visibleItemsCount - 1)*spacing);
-    self.topItemSize = CGSizeMake(width, height);
+    FHCardSliderView *view = (FHCardSliderView *)self.collectionView.superview;
+    
+    self.actuallyVisibleItemsCount = MIN(view.dataSource.count, visibleItemsCount);
+    
+    if(self.actuallyVisibleItemsCount > 0){
+        CGFloat width = (self.type == FHCardSliderViewTypeHorizontal)  ? (self.collectionBounds.width - (self.actuallyVisibleItemsCount - 1)*spacing) : self.collectionBounds.width;
+        CGFloat height = (self.type == FHCardSliderViewTypeHorizontal)  ? self.collectionBounds.height : (self.collectionBounds.height - (self.actuallyVisibleItemsCount - 1)*spacing);
+        self.topItemSize = CGSizeMake(width, height);
+    }
     
     if (didInitialSetup) {
         return;
     }
     didInitialSetup = YES;
     
-/* 当首页上拉滑动到轮播器在可见区时再添加定时器，也就是到可见时prepareLayout才执行（在JJCardSliderView布局约束不要立刻[self.collectionView layoutIfNeeded]，否则prepareLayout会立刻被调用）
-*/
-    FHCardSliderView *view = (FHCardSliderView *)self.collectionView.superview;
+    //添加定时器
     if (view && view.isAuto) {
         [view addTimer];
     }
@@ -138,7 +143,8 @@ static const float spacing = 14;
                          offsetProgress:(CGFloat)offsetProgress
                                minScale:(CGFloat)minScale
 {
-    CGFloat step = (1.0 - minScale) / (visibleItemsCount-1)*1.0;
+//    NSInteger index = MAX(self.actuallyVisibleItemsCount, 2);
+    CGFloat step = (1.0 - minScale) / (visibleItemsCount - 1)*1.0;
     return (1.0 - (visibleIndex - 1) * step + step * offsetProgress);
 }
 
@@ -146,7 +152,8 @@ static const float spacing = 14;
                          offsetProgress:(CGFloat)offsetProgress
                                minAlpha:(CGFloat)minAlpha
 {
-    CGFloat step = (1.0 - minAlpha) / (visibleItemsCount-1)*1.0;
+//    NSInteger index = MAX(self.actuallyVisibleItemsCount, 2);
+    CGFloat step = (1.0 - minAlpha) / (visibleItemsCount - 1)*1.0;
     return (1.0 - (visibleIndex - 1) * step + step * offsetProgress);
 }
 
