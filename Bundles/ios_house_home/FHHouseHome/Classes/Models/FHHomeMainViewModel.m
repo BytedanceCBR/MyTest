@@ -169,7 +169,26 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeItemVCEnterCategory" object:@(enterType)];
     }else
     {
-        [self.articleListVC viewAppearForEnterType:enterType];
+        //切换城市补报
+        if (!self.articleListVC) {
+              NSMutableDictionary *traceDict = [NSMutableDictionary new];
+             if (enterType == FHHomeMainTraceEnterTypeClick) {
+                 [traceDict setValue:@"click" forKey:@"enter_type"];
+             }else
+             {
+                 [traceDict setValue:@"flip" forKey:@"enter_type"];
+             }
+                          
+             [traceDict setValue:@"maintab" forKey:@"enter_from"];
+             [traceDict setValue:@"discover_stream" forKey:@"category_name"];
+             [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
+            
+             [traceDict setValue:@"f_house_news"
+                                 forKey:@"category_name"];
+             [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
+        }else{
+           [self.articleListVC viewAppearForEnterType:enterType];
+        }
     }
 }
 

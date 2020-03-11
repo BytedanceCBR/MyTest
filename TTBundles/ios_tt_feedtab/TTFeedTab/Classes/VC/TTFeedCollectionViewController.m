@@ -171,7 +171,14 @@ TTFeedCollectionCellDelegate>
             [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
         }else
         {
-            [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            //切换城市之后埋点变化
+            if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+                [dict setValue:@"f_find_house" forKey:@"category_name"];
+                [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            }else
+            {
+                [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            }
         }
         
     }
