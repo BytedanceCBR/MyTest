@@ -123,9 +123,9 @@ static APNsManager *_sharedManager = nil;
     }
     
     //V3埋点 使用BDUGPushSDK时通过sdk内置上报
-     if (![TTPushServiceDelegate enable]) {
-         [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"notify" postBack:postBack];
-     }
+//     if (![TTPushServiceDelegate enable]) {
+//         [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"notify" postBack:postBack];
+//     }
 
     
     if ([self tryForOldAPNsLogical:userInfo]) {
