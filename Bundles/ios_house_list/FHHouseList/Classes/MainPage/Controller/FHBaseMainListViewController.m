@@ -185,7 +185,7 @@
     [self.viewModel refreshMessageDot];
     [self refreshContentOffset:self.tableView.contentOffset];
     self.isViewDidDisapper = NO;
-
+    [self.viewModel viewDidAppear:animated];
 }
 
 -(void)initConstraints
