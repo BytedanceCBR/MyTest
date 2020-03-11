@@ -349,9 +349,7 @@ static NSMutableArray  * _Nullable identifierArr;
         
         //首页工具箱里面的icon追加上报
         NSString *enterFrom = dictTrace[@"enter_from"];
-        if(enterFrom && [enterFrom isEqualToString:@"tools_box"]){
-            [self addCLickIconLog:itemModel];
-        }
+        [self addCLickIconLog:itemModel];
         
         [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
         [dictTrace setValue:@"click" forKey:@"enter_type"];
