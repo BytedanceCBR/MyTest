@@ -7,12 +7,15 @@
 
 #import "FHDetailBaseModel.h"
 #import "FHDetailNeighborhoodModel.h"
+#import "FHCardSliderCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailAccessCellModel : FHDetailBaseModel
 
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
+@property (nonatomic, strong , nullable) NSArray<FHCardSliderCellModel *> *cards;
+@property (nonatomic, strong , nullable) NSDictionary *tracerDic;
 
 @end
 

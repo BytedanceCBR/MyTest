@@ -10,7 +10,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "TTBaseMacro.h"
-#import "FHDetailNeighborhoodModel.h"
+#import "FHCardSliderCellModel.h"
 
 @interface FHCardSliderCell()
 
@@ -36,14 +36,14 @@
 }
 
 - (void)setCellData:(id)data {
-    if ([data isKindOfClass:[FHDetailNeighborhoodDataStrategyArticleListModel class]]) {
-        FHDetailNeighborhoodDataStrategyArticleListModel *model = (FHDetailNeighborhoodDataStrategyArticleListModel *)data;
-        self.imageView.image = [UIImage imageNamed:model.picture
+    if ([data isKindOfClass:[FHCardSliderCellModel class]]) {
+        FHCardSliderCellModel *model = (FHCardSliderCellModel *)data;
+        self.imageView.image = [UIImage imageNamed:model.imageUrl
                                 ];;//用SDWebImage
         self.titleLabel.text = model.title;
-        self.subTitleLabel.text = model.readCount;
+        self.subTitleLabel.text = model.desc;
         
-        NSString *tagText = model.articleType;
+        NSString *tagText = model.type;
         if(isEmptyString(tagText)){
             self.positionView.hidden = YES;
             self.position.text = @"";

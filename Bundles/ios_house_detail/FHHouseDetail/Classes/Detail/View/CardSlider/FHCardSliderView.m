@@ -9,6 +9,8 @@
 #import "FHCardSliderFlowLayout.h"
 #import "FHCardSliderCell.h"
 #import <Masonry/Masonry.h>
+#import "FHCardSliderCellModel.h"
+#import "FHUserTracker.h"
 
 static const int groupCount = 51;//最好奇数（定位到中间）  如：3，5，11~51，101
 static const float timerInterval = 3.0f;
@@ -18,6 +20,7 @@ static const float timerInterval = 3.0f;
 //@property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) NSMutableDictionary *clientShowDict;
     
 @end
 
@@ -174,6 +177,7 @@ static const float timerInterval = 3.0f;
             _selectedIndex = centerIndex;
         }
     }
+    [self trackCardShow];
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
@@ -193,6 +197,7 @@ static const float timerInterval = 3.0f;
             _selectedIndex = centerIndex;
         }
     }
+    [self trackCardShow];
 }
 
 #pragma mark - Get & Set
@@ -244,6 +249,34 @@ static const float timerInterval = 3.0f;
         }
     }
 }
+
+- (void)trackCardShow {
+
+    FHCardSliderCellModel *cellModel = self.dataSource[_selectedIndex%self.dataSource.count];
+
+    if (!self.clientShowDict) {
+        self.clientShowDict = [NSMutableDictionary new];
+    }
+
+    NSString *groupId = cellModel.groupId;
+    if(groupId){
+        if (self.clientShowDict[groupId]) {
+            return;
+        }
+
+        self.clientShowDict[groupId] = @(_selectedIndex);
+    }
+
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    if(self.tracerDic){
+        [dict addEntriesFromDictionary:self.tracerDic];
+    }
+    [dict removeObjectsForKeys:@[@"card_type"]];
+    dict[@"rank"] = @(_selectedIndex);
+    dict[@"group_id"] = cellModel.groupId;
+    TRACK_EVENT(@"card_show", dict);
+}
+
 @end
 
 

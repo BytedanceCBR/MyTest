@@ -122,7 +122,8 @@
     
     _titleLabel.text = strategy.title.length > 0 ? strategy.title : @"小区攻略";
     
-    [_cardSliderView setCardListData:strategy.articleList];
+    _cardSliderView.tracerDic = cellModel.tracerDic;
+    [_cardSliderView setCardListData:cellModel.cards];
 }
 
 - (void)gotoMore {
@@ -144,7 +145,8 @@
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"neigborhood_question";
+    [self.cardSliderView trackCardShow];
+    return @"guide";
 }
 
 @end

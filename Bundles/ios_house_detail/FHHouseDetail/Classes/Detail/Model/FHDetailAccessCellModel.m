@@ -17,4 +17,25 @@
     return self;
 }
 
+- (void)setStrategy:(FHDetailNeighborhoodDataStrategyModel *)strategy {
+    _strategy = strategy;
+
+    NSMutableArray *cards = [NSMutableArray array];
+    for (FHDetailNeighborhoodDataStrategyArticleListModel *model in strategy.articleList) {
+        FHCardSliderCellModel *cellModel = [[FHCardSliderCellModel alloc] init];
+        cellModel.title = model.title;
+        cellModel.desc = model.readCount;
+        cellModel.imageUrl = model.picture;
+        cellModel.schema = model.schema;
+        cellModel.type = model.articleType;
+        cellModel.groupId = model.groupId;
+        [cards addObject:cellModel];
+    }
+    _cards = cards;
+}
+
+- (void)setTracerDic:(NSDictionary *)tracerDic {
+    _tracerDic = tracerDic;
+}
+
 @end
