@@ -166,7 +166,9 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                         NSString *titleId = [NSString stringWithFormat:@"%@",paramObj.allParams[@"title_id"]];
                         params[@"title_id"] = @([titleId longLongValue]);
                         params[@"event_type"] = @"house_app2c_v2";
-                        [TTTracker eventV3:@"push_click" params:params];
+                        if (![TTPushServiceDelegate enable]) {
+                            [TTTracker eventV3:@"push_click" params:params];
+                        }
 
                         [[TTRoute sharedRoute] openURLByPushViewController:openURL];
                     });
@@ -438,8 +440,9 @@ static NSString * const kTTAPNsImportanceKey = @"important";
             param[@"post_back"] = @"be_null";
             NSString *titleId = [NSString stringWithFormat:@"%@",paramObj.allParams[@"title_id"]];
             param[@"title_id"] = @([titleId longLongValue]);
-
-            [TTTracker eventV3:@"push_click" params:param];
+            if (![TTPushServiceDelegate enable]) {
+                [TTTracker eventV3:@"push_click" params:param];
+            }
             
             UIViewController *topVC = [UIViewController ttmu_currentViewController];
             if ([topVC isKindOfClass:[UIViewController class]]) {

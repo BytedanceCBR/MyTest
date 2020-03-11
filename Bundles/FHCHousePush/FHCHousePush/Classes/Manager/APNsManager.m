@@ -181,7 +181,9 @@ static APNsManager *_sharedManager = nil;
         param[@"title_id"] = @([titleId longLongValue]);
         param[@"event_type"] = @"house_app2c_v2";
 
-        [TTTracker eventV3:@"push_click" params:param];
+        if (![TTPushServiceDelegate enable]) {
+            [TTTracker eventV3:@"push_click" params:param];
+        }
 
         [FHLocManager sharedInstance].isShowHomeViewController = NO;
         

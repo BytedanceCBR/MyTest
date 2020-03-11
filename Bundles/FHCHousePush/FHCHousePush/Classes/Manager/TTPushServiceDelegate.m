@@ -29,6 +29,7 @@
 #import <TTAppRuntime/NewsBaseDelegate.h>
 
 #import <FHHouseBase/FHUserTracker.h>
+#import <TTBaseLib/TTStringHelper.h>
 
 static NSString *const kNotificationCategoryIdentifierArticleDetail = @"article_detail";
 static NSString *const kNotificationCategoryIdentifierArticleDetailNoDislike = @"article_detail_no_dislike";
@@ -225,6 +226,30 @@ typedef void(^NotificationActionCompletionBlock) (void);
 }
 
 #pragma mark - BDUGPushNotificationDelegate
+
+- (NSDictionary<NSString *,id> *)bdug_trackParamsForPayload:(NSDictionary *)payload
+{
+    NSMutableDictionary *customDict = @{}.mutableCopy;
+    customDict[@"event_type"] = @"house_app2c_v2";
+    if ([payload.allKeys containsObject:@"o_url"]) {
+        NSString* openURL = [payload objectForKey:@"o_url"];
+        NSURL *theUrl = [NSURL URLWithString:openURL];
+        if (theUrl == nil) {
+            theUrl = [TTStringHelper URLWithURLString:openURL];
+        }
+        TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:theUrl];
+        customDict[@"title_id"] = @([paramObj.allParams btd_longlongValueForKey:@"title_id"]);
+        NSArray* allKeys = [paramObj.allParams allKeys];
+        if ([allKeys containsObject:@"neighborhood_id"]) {
+            customDict[@"group_id"] = paramObj.allParams[@"neighborhood_id"];
+        } else if ([allKeys containsObject:@"court_id"]) {
+            customDict[@"group_id"] = paramObj.allParams[@"court_id"];
+        } else if ([allKeys containsObject:@"house_id"]) {
+            customDict[@"group_id"] = paramObj.allParams[@"neighborhood_id"];
+        }
+    }
+    return customDict;
+}
 
 - (void)bdug_willPresentNotification:(BDUGNotificationContent *)content completionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 API_AVAILABLE(ios(10.0))
