@@ -392,6 +392,9 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     NSString* title = [dict tt_stringValueForKey:kSSAPNsAlertManagerTitleKey];
     NSString* content = [dict tt_stringValueForKey:kSSAPNsAlertManagerContentKey];
     NSString *schemaString = [dict tt_stringValueForKey:kSSAPNsAlertManagerSchemaKey];
+    NSString *ruleId = [dict tt_stringValueForKey:kSSAPNsAlertManagerRidKey];
+    NSString *postBack = [dict tt_stringValueForKey:@"post_back"];
+
 
     TTPushAlertModel *alertModel = [TTPushAlertModel modelWithTitle:title detail:content images:nil];
     alertModel.images = nil;
@@ -414,9 +417,9 @@ static NSString * const kTTAPNsImportanceKey = @"important";
             TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
             //V3埋点
             NSMutableDictionary *param = [NSMutableDictionary dictionary];
-            [param setValue:@"be_null" forKey:@"rule_id"];
+            [param setValue:ruleId.length > 0 ? ruleId: @"be_null" forKey:@"rule_id"];
             [param setValue:@"alert" forKey:@"click_position"];
-            [param setValue:@"be_null" forKey:@"post_back"];
+            [param setValue:postBack.length > 0 ? postBack:@"be_null" forKey:@"post_back"];
             if ([paramObj.queryParams.allKeys containsObject:@"groupid"]) {
                 NSString* value = [paramObj.queryParams objectForKey:@"groupid"];
                 if (value != nil) {
@@ -437,7 +440,6 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                 [param setValue:[[self class] f100ContentGroupId:paramObj.allParams] forKey:@"group_id"];
             }
             param[@"event_type"] = @"house_app2c_v2";
-            param[@"post_back"] = @"be_null";
             NSString *titleId = [NSString stringWithFormat:@"%@",paramObj.allParams[@"title_id"]];
             param[@"title_id"] = @([titleId longLongValue]);
             if (![TTPushServiceDelegate enable]) {
