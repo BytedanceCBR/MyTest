@@ -136,7 +136,8 @@
     //初始化poi信息列表
     [self setUpLocationListTableView];
 
-    self.headerView.frame = CGRectMake(15, [dataModel.houseType isEqualToString:@"4"]?30:0, self.cellWidth, 38);
+    CGFloat topMargin = dataModel.topMargin > 0 ? dataModel.topMargin : 30;
+    self.headerView.frame = CGRectMake(15, [dataModel.houseType isEqualToString:@"4"] ? topMargin : 0, self.cellWidth, 38);
     
     self.segmentedControl.frame = CGRectMake(15 + 16, self.headerView.bottom + 17, self.cellWidth - 32, 33);
 

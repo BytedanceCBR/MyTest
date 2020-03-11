@@ -99,7 +99,7 @@
         make.left.mas_equalTo(self.containerView).offset(16);
         make.right.mas_equalTo(self.containerView).offset(-16);
         make.height.mas_equalTo([FHCardSliderView getViewHeight]);
-        make.bottom.mas_equalTo(self.containerView);
+        make.bottom.mas_equalTo(self.containerView).offset(-10);
     }];
 }
 
@@ -124,24 +124,6 @@
     
     _cardSliderView.tracerDic = cellModel.tracerDic;
     [_cardSliderView setCardListData:cellModel.cards];
-}
-
-- (void)gotoMore {
-//    FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
-//    if(!isEmptyString(cellModel.questionListSchema)){
-//        NSURL *url = [NSURL URLWithString:cellModel.questionListSchema];
-//        NSMutableDictionary *dict = @{}.mutableCopy;
-//        dict[@"neighborhood_id"] = cellModel.neighborhoodId;
-//        dict[@"title"] = cellModel.title;
-//        NSMutableDictionary *tracerDict = @{}.mutableCopy;
-//        tracerDict[UT_ORIGIN_FROM] = cellModel.tracerDict[@"origin_from"] ?: @"be_null";
-//        tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"page_type"] ?: @"be_null";
-//        tracerDict[UT_ELEMENT_FROM] = [self elementTypeString:FHHouseTypeNeighborhood];
-//        tracerDict[UT_LOG_PB] = cellModel.tracerDict[@"log_pb"] ?: @"be_null";
-//        dict[TRACER_KEY] = tracerDict;
-//        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-//    }
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {

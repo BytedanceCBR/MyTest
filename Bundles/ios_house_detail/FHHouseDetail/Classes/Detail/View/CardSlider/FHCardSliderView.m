@@ -11,6 +11,7 @@
 #import <Masonry/Masonry.h>
 #import "FHCardSliderCellModel.h"
 #import "FHUserTracker.h"
+#import "TTRoute.h"
 
 static const int groupCount = 51;//最好奇数（定位到中间）  如：3，5，11~51，101
 static const float timerInterval = 3.0f;
@@ -140,8 +141,12 @@ static const float timerInterval = 3.0f;
     if (indexPath.row >= totalCount) {
         return;
     }
-//    NSLog(@"----------%d",indexPath.row);
-//    NSLog(@"----------%d",(indexPath.row%self.dataSource.count));//选中数组下标
+    
+    FHCardSliderCellModel *cellModel = self.dataSource[indexPath.row%self.dataSource.count];
+    if(cellModel.schema.length > 0){
+        NSURL *url = [NSURL URLWithString:cellModel.schema];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    }
 }
 
 

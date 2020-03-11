@@ -24,7 +24,7 @@
     for (FHDetailNeighborhoodDataStrategyArticleListModel *model in strategy.articleList) {
         FHCardSliderCellModel *cellModel = [[FHCardSliderCellModel alloc] init];
         cellModel.title = model.title;
-        cellModel.desc = model.readCount;
+        cellModel.desc = model.desc;
         cellModel.imageUrl = model.picture;
         cellModel.schema = model.schema;
         cellModel.type = model.articleType;

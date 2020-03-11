@@ -366,7 +366,7 @@
 {
   NSDictionary *dict = @{
     @"articleType": @"article_type",
-    @"readCount": @"read_count",
+    @"desc": @"copy_writing",
     @"groupId": @"group_id",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

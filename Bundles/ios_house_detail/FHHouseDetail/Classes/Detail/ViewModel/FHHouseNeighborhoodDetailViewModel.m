@@ -332,10 +332,7 @@
 
     // 小区评测
     if (model.data.strategy && model.data.strategy.articleList.count > 0) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        
+    
         FHDetailAccessCellModel *cellModel = [[FHDetailAccessCellModel alloc] init];
         cellModel.houseModelType = FHPlotHouseModelTypeLocationPeriphery;
         cellModel.strategy = model.data.strategy;
@@ -368,6 +365,12 @@
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
         staticMapModel.mapOnly = NO;
+        //小区攻略底部有10px的留白，防止滑动时，放大的卡片底部被下面的cell挡住，所以这里的高度根据留白距离减10
+        if([[self.items lastObject] isKindOfClass:[FHDetailAccessCellModel class]]){
+            staticMapModel.topMargin = 20;
+        }else{
+            staticMapModel.topMargin = 30;
+        }
         [self.items addObject:staticMapModel];
     } else{
         NSString *eventName = @"detail_map_location_failed";

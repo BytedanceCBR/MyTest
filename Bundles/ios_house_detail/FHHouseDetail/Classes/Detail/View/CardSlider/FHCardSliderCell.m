@@ -11,6 +11,7 @@
 #import "UIFont+House.h"
 #import "TTBaseMacro.h"
 #import "FHCardSliderCellModel.h"
+#import "UIImageView+BDWebImage.h"
 
 @interface FHCardSliderCell()
 
@@ -38,8 +39,9 @@
 - (void)setCellData:(id)data {
     if ([data isKindOfClass:[FHCardSliderCellModel class]]) {
         FHCardSliderCellModel *model = (FHCardSliderCellModel *)data;
-        self.imageView.image = [UIImage imageNamed:model.imageUrl
-                                ];;//用SDWebImage
+        if(model.imageUrl.length > 0){
+            [self.imageView bd_setImageWithURL:[NSURL URLWithString:model.imageUrl] placeholder:nil];
+        }
         self.titleLabel.text = model.title;
         self.subTitleLabel.text = model.desc;
         

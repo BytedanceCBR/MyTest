@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNeighborhoodDataStrategyArticleListModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *picture;
-@property (nonatomic, copy , nullable) NSString *readCount;
+@property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *articleType;
 @property (nonatomic, copy , nullable) NSString *groupId;
