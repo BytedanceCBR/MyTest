@@ -19,6 +19,9 @@
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <FHHouseBase/FHSingleImageInfoCellModel.h>
 #import "FHSuggestionRealHouseTopCell.h"
+#import "FHHouseListBaseItemCell.h"
+#import "FHHouseListBaseItemModel.h"
+#import "FHHomePlaceHolderCell.h"
 
 
 #define kPlaceholderCellId @"placeholder_cell_id"
@@ -57,8 +60,10 @@
     _tableView.dataSource = self;
     
     [_tableView registerClass:[FHSuggestionRealHouseTopCell class] forCellReuseIdentifier:NSStringFromClass([FHSuggestionRealHouseTopCell class])];
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
-    [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
+//    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
+//    [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
+    [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
+    [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -96,7 +101,7 @@
     if (indexPath.row >= self.houseList.count) {
         return;
     }
-    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+    FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
     if (cellModel) {
         NSString *origin_from = self.listController.tracerDict[@"origin_from"];
         NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
@@ -105,22 +110,23 @@
         NSString *urlStr = NULL;
         if (self.listController.houseType == FHHouseTypeSecondHandHouse) {
             // 二手房
-            FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+//            FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
             
-            if (theModel) {
-                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
-            }
+//            if (theModel) {
+                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",cellModel.houseid];
+//            }
         } else if (self.listController.houseType == FHHouseTypeRentHouse) {
             // 租房
-            FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
-            if (theModel) {
-                urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];
-            }
+//            FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
+//            if (theModel) {
+                urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",cellModel.houseid];
+//            }
         } else {
             urlStr = @"";
         }
         if (urlStr.length > 0) {
-            FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+//            FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+//            FHSearchHouseDataItemsModel *theModel = cellModel;
             NSMutableDictionary *traceParam = @{}.mutableCopy;
             traceParam[@"card_type"] = @"left_pic";
             traceParam[@"enter_from"] = page_type ? : @"be_null";
@@ -131,21 +137,21 @@
             traceParam[@"search_id"] = self.searchId;
             traceParam[@"rank"] = @(indexPath.row);
             
-            if (cellModel.secondModel.externalInfo.externalUrl && cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
+            if (cellModel.externalInfo.externalUrl && cellModel.externalInfo.isExternalSite.boolValue) {
                 NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
                 [dictRealWeb setValue:house_type forKey:@"house_type"];
                 
-                if ([cellModel.secondModel.groupId isKindOfClass:[NSString class]] && cellModel.secondModel.groupId.length > 0) {
-                    [traceParam setValue:cellModel.secondModel.groupId forKey:@"group_id"];
+                if ([cellModel.groupId isKindOfClass:[NSString class]] && cellModel.groupId.length > 0) {
+                    [traceParam setValue:cellModel.groupId forKey:@"group_id"];
                 }else
                 {
-                    [traceParam setValue:cellModel.secondModel.hid forKey:@"group_id"];
+                    [traceParam setValue:cellModel.houseid forKey:@"group_id"];
                 }
-                [traceParam setValue:cellModel.secondModel.imprId forKey:@"impr_id"];
+                [traceParam setValue:cellModel.imprId forKey:@"impr_id"];
                 
                 [dictRealWeb setValue:traceParam forKey:@"tracer"];
-                [dictRealWeb setValue:cellModel.secondModel.externalInfo.externalUrl forKey:@"url"];
-                [dictRealWeb setValue:cellModel.secondModel.externalInfo.backUrl forKey:@"backUrl"];
+                [dictRealWeb setValue:cellModel.externalInfo.externalUrl forKey:@"url"];
+                [dictRealWeb setValue:cellModel.externalInfo.backUrl forKey:@"backUrl"];
                 
 
                 
@@ -187,48 +193,54 @@
 {
     if (self.listController.hasValidateData == YES) {
         if (self.houseList.count > indexPath.row) {
-            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+//            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+             FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
             
-            if (cellModel.isRealHouseTopCell) {
-                if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-                    FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.realHouseTopModel;
-                    FHSuggestionRealHouseTopCell *topRealCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHSuggestionRealHouseTopCell class])];
-                    if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
-                        [topRealCell refreshUI:realHouseInfo];
-                    }
-                    
-                    NSString *origin_from = self.listController.tracerDict[@"origin_from"];
-                    NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
+//            if (cellModel.isRealHouseTopCell) {
+//                if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+//                    FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.realHouseTopModel;
+//                    FHSuggestionRealHouseTopCell *topRealCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHSuggestionRealHouseTopCell class])];
+//                    if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
+//                        [topRealCell refreshUI:realHouseInfo];
+//                    }
+//
+//                    NSString *origin_from = self.listController.tracerDict[@"origin_from"];
+//                    NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
+//
+//                    NSMutableDictionary *traceParam = @{}.mutableCopy;
+//                    traceParam[@"category_name"] = @"same_neighborhood_list";
+//                    traceParam[@"element_from"] = @"be_null";
+//                    traceParam[@"origin_from"] = origin_from ? : @"be_null";
+//                    traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
+//                    traceParam[@"search_id"] = self.searchId;
+////                     topRealCell.tracerDict = traceParam;
+//
+//                    __weak typeof(self) weakSelf = self;
+//                    NSString *stringQuery = [NSString stringWithFormat:@"neighborhood_id=%@",self.neiborHoorId];
+//                    if (self.condition) {
+//                        stringQuery = [stringQuery stringByAppendingString:self.condition];
+//                    }
+////                    topRealCell.searchQuery = stringQuery;
+//
+//                    return topRealCell;
+//                }
+//            }
+                        FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
+                        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
+//                        FHHouseListBaseItemModel model = _houseList[indexPath.row];
+                        [cell refreshWithData:cellModel];
 
-                    NSMutableDictionary *traceParam = @{}.mutableCopy;
-                    traceParam[@"category_name"] = @"same_neighborhood_list";
-                    traceParam[@"element_from"] = @"be_null";
-                    traceParam[@"origin_from"] = origin_from ? : @"be_null";
-                    traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
-                    traceParam[@"search_id"] = self.searchId;
-//                     topRealCell.tracerDict = traceParam;
-                    
-                    __weak typeof(self) weakSelf = self;
-                    NSString *stringQuery = [NSString stringWithFormat:@"neighborhood_id=%@",self.neiborHoorId];
-                    if (self.condition) {
-                        stringQuery = [stringQuery stringByAppendingString:self.condition];
-                    }
-//                    topRealCell.searchQuery = stringQuery;
-                    
-                    return topRealCell;
-                }
-            }
             
-            FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
-            BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-            id model = _houseList[indexPath.row];
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-            [cell updateWithHouseCellModel:cellModel];
-            [cell refreshTopMargin: 20];
-            
-            if (cellModel.secondModel.externalInfo && cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
-                [cell updateThirdPartHouseSourceStr:cellModel.secondModel.externalInfo.externalName];
-            }
+//            FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
+//            BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
+//            id model = _houseList[indexPath.row];
+//            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+//            [cell updateWithHouseCellModel:cellModel];
+//            [cell refreshTopMargin: 20];
+//
+//            if (cellModel.secondModel.externalInfo && cellModel.secondModel.externalInfo.isExternalSite.boolValue) {
+//                [cell updateThirdPartHouseSourceStr:cellModel.secondModel.externalInfo.externalName];
+//            }
             return cell;
         }
     } else {
@@ -258,21 +270,21 @@
         
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         if (indexPath.row < self.houseList.count) {
-            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
             
-            if (cellModel.isRealHouseTopCell) {
-                if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-                    return 71;
-                }
-            }
-            
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-            BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-            return (isLastCell ? 125 : 106)+reasonHeight;
+//            if (cellModel.isRealHouseTopCell) {
+//                if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+//                    return 71;
+//                }
+//            }
+//            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+//            BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
+//            return (isLastCell ? 125 : 106)+reasonHeight;
+            return 88;
         }
     }
     
-    return 105;
+    return 88;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -290,23 +302,23 @@
     [self jump2DetailPage:indexPath];
 }
 
--(FHSingleImageInfoCellModel *)houseItemByModel:(id)obj {
-    
-    FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc] init];
-    
-    if ([obj isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
-        FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)obj;
-        cellModel.secondModel = obj;
-    } else if ([obj isKindOfClass:[FHHouseRentDataItemsModel class]]) {
-        FHHouseRentDataItemsModel *item = (FHHouseRentDataItemsModel *)obj;
-        cellModel.rentModel = obj;
-    }else if ([obj isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-        
-        FHSugListRealHouseTopInfoModel *item = (FHSugListRealHouseTopInfoModel *)obj;
-        cellModel.realHouseTopModel = obj;
-    }
-    return cellModel;
-}
+//-(FHSingleImageInfoCellModel *)houseItemByModel:(id)obj {
+//
+//    FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc] init];
+//
+//    if ([obj isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+//        FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)obj;
+//        cellModel.secondModel = obj;
+//    } else if ([obj isKindOfClass:[FHHouseRentDataItemsModel class]]) {
+//        FHHouseRentDataItemsModel *item = (FHHouseRentDataItemsModel *)obj;
+//        cellModel.rentModel = obj;
+//    }else if ([obj isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+//
+//        FHSugListRealHouseTopInfoModel *item = (FHSugListRealHouseTopInfoModel *)obj;
+//        cellModel.realHouseTopModel = obj;
+//    }
+//    return cellModel;
+//}
 
 // 统一处理网络数据返回
 - (void)processQueryData:(id<FHBaseModelProtocol>)model error:(NSError *)error {
@@ -314,21 +326,21 @@
         BOOL hasMore = NO;
         NSString *searchId = @"";
         NSArray *items = NULL;
-        if ([model isKindOfClass:[FHSameNeighborhoodHouseResponse class]]) {
-            searchId = ((FHSameNeighborhoodHouseResponse *)model).data.searchId;
-            hasMore = ((FHSameNeighborhoodHouseResponse *)model).data.hasMore;
-            items = ((FHSameNeighborhoodHouseResponse *)model).data.items;
-            self.currentOffset = ((FHSameNeighborhoodHouseResponse *)model).data.offset;
+        if ([model isKindOfClass:[FHListResultHouseModel class]]) {
+            searchId = ((FHListResultHouseModel *)model).data.searchId;
+            hasMore = ((FHListResultHouseModel *)model).data.hasMore;
+            items = ((FHListResultHouseModel *)model).data.items;
+            self.currentOffset = ((FHListResultHouseModel *)model).data.offset;
         } else if ([model isKindOfClass:[FHHouseRentModel class]]) {
             searchId = ((FHHouseRentModel *)model).data.searchId;
             hasMore = ((FHHouseRentModel *)model).data.hasMore;
             items = ((FHHouseRentModel *)model).data.items;
             self.currentOffset = ((FHHouseRentModel *)model).data.offset;
         } else if ([model isKindOfClass:[FHRelatedHouseResponse class]]) {
-            searchId = ((FHRelatedHouseResponse *)model).data.searchId;
-            hasMore = ((FHRelatedHouseResponse *)model).data.hasMore;
-            items = ((FHRelatedHouseResponse *)model).data.items;
-            self.currentOffset = ((FHRelatedHouseResponse *)model).data.offset;
+//            searchId = ((FHRelatedHouseResponse *)model).data.searchId;
+//            hasMore = ((FHRelatedHouseResponse *)model).data.hasMore;
+//            items = ((FHRelatedHouseResponse *)model).data.items;
+//            self.currentOffset = ((FHRelatedHouseResponse *)model).data.offset;
         }
         if (searchId.length > 0) {
             self.searchId = searchId;
@@ -336,9 +348,9 @@
         
         if (items.count > 0) {
             
-            FHSameNeighborhoodHouseDataModel *houseModel = (FHSameNeighborhoodHouseDataModel *)((FHSameNeighborhoodHouseResponse *)model).data;
+            FHHouseListDataModel *houseModel = (FHHouseListDataModel *)((FHListResultHouseModel *)model).data;
             self.isShowRealHouseInfo = NO;
-            if ([model isKindOfClass:[FHSameNeighborhoodHouseResponse class]] &&  houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue ) {
+            if ([model isKindOfClass:[FHListResultHouseModel class]] &&  houseModel.externalSite && houseModel.externalSite.enableFakeHouse && houseModel.externalSite.enableFakeHouse.boolValue ) {
 
                 FHSugListRealHouseTopInfoModel *topInfoModel = [[FHSugListRealHouseTopInfoModel alloc] init];
                 
@@ -367,15 +379,15 @@
             [self.listController.emptyView hideEmptyView];
             // 转换模型类型
             [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
+//                FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
+                 FHHouseListBaseItemModel *cellModel = (FHHouseListBaseItemModel *)obj;
                 if (cellModel) {
-                    
-                    if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-                        cellModel.isRealHouseTopCell = YES;
-                    }else
-                    {
+//                    if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+//                        cellModel.isRealHouseTopCell = YES;
+//                    }else
+//                    {
                         cellModel.isRealHouseTopCell = NO;
-                    }
+//                    }
                     
                     [self.houseList addObject:cellModel];
                 }
@@ -415,7 +427,7 @@
     }
     __weak typeof(self) wself = self;
     self.neiborHoorId = neighborhoodId;
-    self.httpTask = [FHHouseListAPI requestHouseInSameNeighborhoodQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHSameNeighborhoodHouseResponse class] completion:^(FHSameNeighborhoodHouseResponse * _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHouseListAPI requestHouseInSameNeighborhoodQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel * _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];
 }
@@ -425,7 +437,7 @@
         [self.httpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.httpTask = [FHHouseListAPI requestRentInSameNeighborhoodQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHHouseRentModel class] completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHouseListAPI requestRentInSameNeighborhoodQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel * _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];
 }
@@ -436,7 +448,7 @@
     }
     __weak typeof(self) wself = self;
     // condition添加请求参数到url后面
-    self.httpTask = [FHHouseListAPI requestRelatedHouseSearchWithQuery:self.condition houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHRelatedHouseResponse class] completion:^(FHRelatedHouseResponse * _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHouseListAPI requestRelatedHouseSearchWithQuery:self.condition houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel * _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];
 }
@@ -446,7 +458,7 @@
         [self.httpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.httpTask = [FHHouseListAPI requestRentHouseSearchWithQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHHouseRentModel class] completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHouseListAPI requestRentHouseSearchWithQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel * _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];
 }
@@ -461,7 +473,7 @@
     if (!self.listController.hasValidateData) {
         return;
     }
-    FHSingleImageInfoCellModel * cellModel = self.houseList[indexPath.row];
+    FHHouseListBaseItemModel * cellModel = self.houseList[indexPath.row];
     
     if (!cellModel) {
         return;

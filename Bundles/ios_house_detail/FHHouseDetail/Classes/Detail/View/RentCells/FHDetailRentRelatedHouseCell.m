@@ -19,6 +19,7 @@
 #import "FHSingleImageInfoCellModel.h"
 #import "FHDetailBottomOpenAllView.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
+#import "FHHouseListBaseItemCell.h"
 
 @interface FHDetailRentRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -28,7 +29,7 @@
 @property (nonatomic, strong)   FHDetailBottomOpenAllView       *openAllView;// 查看更多
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowCache; // 埋点缓存
 
-@property (nonatomic, strong , nullable) NSArray<FHHouseRentDataItemsModel> *items;
+@property (nonatomic, strong , nullable) NSArray<FHHouseListBaseItemModel> *items;
 
 @end
 
@@ -55,7 +56,7 @@
     }
     // 添加tableView和查看更多
     FHDetailRentRelatedHouseModel *model = (FHDetailRentRelatedHouseModel *)data;
-    CGFloat cellHeight = 108;
+    CGFloat cellHeight = 88;
     BOOL hasMore = model.relatedHouseData.hasMore;
     CGFloat bottomOffset = 0;
     if (hasMore) {
@@ -64,7 +65,7 @@
     self.items = model.relatedHouseData.items;
     if (model.relatedHouseData.items.count > 0) {
         UITableView *tv = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        tv.estimatedRowHeight = 108;
+        tv.estimatedRowHeight = 88;
         tv.estimatedSectionHeaderHeight = 0;
         tv.estimatedSectionFooterHeight = 0;
         if (@available(iOS 11.0, *)) {
@@ -73,7 +74,8 @@
         tv.separatorStyle = UITableViewCellSeparatorStyleNone;
         tv.showsVerticalScrollIndicator = NO;
         tv.scrollEnabled = NO;
-        [tv registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
+//        [tv registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
+        [tv registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
@@ -199,7 +201,7 @@
 // 单个cell点击
 - (void)cellDidSeleccted:(NSInteger)index {
     if (index >= 0 && index < self.items.count) {
-        FHHouseRentDataItemsModel *dataItem = self.items[index];
+        FHHouseListBaseItemModel *dataItem = self.items[index];
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"left_pic";
@@ -208,7 +210,7 @@
         tracerDic[@"element_from"] = @"related";
         tracerDic[@"enter_from"] = @"rent_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeRentHouse)}];
-        NSString * urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",dataItem.id];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",dataItem.houseid];
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
@@ -230,14 +232,23 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row >= 0 && indexPath.row < self.items.count) {
-        FHHouseRentDataItemsModel *item = self.items[indexPath.row];
-        FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
-        if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
-            FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
-            [imageInfoCell refreshTopMargin:0];
-            [imageInfoCell updateWithHouseCellModel:cellModel];
-        }
+        
+//        FHHouseRentDataItemsModel *item = self.items[indexPath.row];
+//        FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
+//        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
+//        if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
+//            FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
+//            [imageInfoCell refreshTopMargin:0];
+//            [imageInfoCell updateWithHouseCellModel:cellModel];
+//        }
+                FHHouseListBaseItemModel *item = self.items[indexPath.row];
+//                FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
+                UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
+                if ([cell isKindOfClass:[FHHouseListBaseItemCell class]]) {
+                    FHHouseListBaseItemCell *imageInfoCell = (FHHouseListBaseItemCell *)cell;
+//                    [imageInfoCell refreshTopMargin:0];
+                    [imageInfoCell refreshWithData:item];
+                }
         return cell;
     }
     
@@ -246,7 +257,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 108;
+    return 88;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -284,7 +295,7 @@
             return;
         }
         [self.houseShowCache setValue:@(YES) forKey:tempKey];
-        FHHouseRentDataItemsModel *dataItem = self.items[index];
+        FHHouseListBaseItemModel *dataItem = self.items[index];
         // house_show
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);
@@ -293,7 +304,7 @@
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
         tracerDic[@"element_type"] = @"related";
         tracerDic[@"search_id"] = dataItem.searchId.length > 0 ? dataItem.searchId : @"be_null";
-        tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.id ? dataItem.id : @"be_null");
+        tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.houseid ? dataItem.houseid : @"be_null");
         tracerDic[@"impr_id"] = dataItem.imprId.length > 0 ? dataItem.imprId : @"be_null";
         [tracerDic removeObjectsForKeys:@[@"element_from"]];
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];

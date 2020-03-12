@@ -125,8 +125,8 @@
 }
 
 // 租房-周边房源
-+ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId
-                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion {
++ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId class:(Class)cls
+                            completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/related_rent"];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -137,8 +137,9 @@
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_RENT;
 
     __weak typeof(self)wself = self;
-    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHHouseRentRelatedResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
-        FHHouseRentRelatedResponseModel* model = (FHHouseRentRelatedResponseModel*)m;
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:cls completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
+//        FHHouseRentRelatedResponseModel* model = (FHHouseRentRelatedResponseModel*)m;
+        id<FHBaseModelProtocol> model = m;
         if (!error && model) {
             if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
                 error = nil;

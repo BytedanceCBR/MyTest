@@ -35,6 +35,8 @@
 #import "TTDeviceHelper+FHHouse.h"
 #import "TTUIResponderHelper.h"
 #import "FHDetailAgentListCell.h"
+#import "FHHouseListBaseItemCell.h"
+#import "FHHouseListBaseItemModel.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -70,7 +72,8 @@
     
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     
-    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
+//    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
+    [self.tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListBaseItemModel class])];
 
     [self.tableView registerClass:[FHDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     
@@ -655,7 +658,11 @@
         
         for(NSInteger i = 0;i < _relatedHouseData.data.items.count; i++)
         {
-            FHNewHouseItemModel *itemModel = [[FHNewHouseItemModel alloc] initWithData:[(_relatedHouseData.data.items[i]) toJSONData] error:nil];
+            NSString *data = [(_relatedHouseData.data.items[i]) toJSONString];
+            NSError *error = nil;
+            FHHouseListBaseItemModel *itemModel = [[FHHouseListBaseItemModel alloc] initWithString:data error:&error];
+//            FHNewHouseItemModel *itemModels = [[FHNewHouseItemModel alloc] initWithString:data error:nil];
+//            FHNewHouseItemModel *itemModels = [[FHNewHouseItemModel alloc] initWithData:data error:nil];
             itemModel.index = i;
             if (i == _relatedHouseData.data.items.count - 1) {
                 itemModel.isLast = YES;

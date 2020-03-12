@@ -17,6 +17,8 @@
 #import "TTRoute.h"
 #import "FHHouseType.h"
 #import <FHHouseBase/FHHouseTypeManager.h>
+#import "FHHouseListBaseItemCell.h"
+#import "FHHouseListBaseItemModel.h"
 
 #define kCellId @"FHHouseMsgCell_id"
 
@@ -38,7 +40,9 @@
     if (self) {
         self.listId = listId;
         self.dataList = [[NSMutableArray alloc] init];
-        [tableView registerClass:[FHHouseMsgCell class] forCellReuseIdentifier:kCellId];
+//        [tableView registerClass:[FHHouseMsgCell class] forCellReuseIdentifier:kCellId];
+         [tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kCellId];
+        
         tableView.delegate = self;
         tableView.dataSource = self;
     }
@@ -86,8 +90,8 @@
     self.requestTask = [FHMessageAPI requestHouseMessageWithListId:self.listId maxCoursor:self.maxCursor searchId:self.searchId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         [wself.tableView.mj_footer endRefreshing];
-        FHHouseMsgModel *msgModel = (FHHouseMsgModel *)model;
-        
+//        FHHouseMsgModel *msgModel = (FHHouseMsgModel *)model;
+        FHListResultHouseModel *msgModel = (FHListResultHouseModel *)model;
         if (!wself) {
             return;
         }
@@ -109,10 +113,21 @@
                 wself.originSearchId = wself.searchId;
                 [wself.dataList removeAllObjects];
             }
-            for (FHHouseMsgDataItemsModel *item in msgModel.data.items) {
+//            for (FHHouseMsgDataItemsModel *item in msgModel.data.items) {
+//                BOOL isSoldout = YES;
+//                for (FHHouseMsgDataItemsItemsModel *houseItem in item.items) {
+//                    if (houseItem.status == 0) {
+//                        isSoldout = NO;
+//                        break;
+//                    }
+//                }
+//                item.isSoldout = isSoldout;
+//                [wself.dataList addObject:item];
+//            }
+            for (FHHouseListBaseItemModel *item in msgModel.data.items) {
                 BOOL isSoldout = YES;
-                for (FHHouseMsgDataItemsItemsModel *houseItem in item.items) {
-                    if (houseItem.status == 0) {
+                for (FHHouseListBaseItemModel *houseItem in item.items) {
+                    if ([houseItem.status integerValue] == 0) {
                         isSoldout = NO;
                         break;
                     }
@@ -152,14 +167,14 @@
     TRACK_EVENT(@"category_refresh", tracerDict);
 }
 
-- (void)viewMoreDetail:(NSString *)moreDetail model:(FHHouseMsgDataItemsModel *)model {
+- (void)viewMoreDetail:(NSString *)moreDetail model:(FHHouseListBaseItemModel *)model {
     NSMutableDictionary *tracerDict = [self categoryLogDict];
     tracerDict[@"element_from"] = @"messagetab";
     tracerDict[@"enter_from"] = @"messagetab";
     tracerDict[@"category_name"] = @"be_null";
-    FHHouseMsgDataItemsItemsModel *itemModel = [model.items firstObject];
+    FHHouseListBaseItemModel *itemModel = [model.items firstObject];
     if(itemModel){
-        NSInteger houseType = [itemModel.houseType integerValue];
+        NSInteger houseType =itemModel.houseType;
         switch (houseType) {
             case FHHouseTypeNewHouse:
                 tracerDict[@"category_name"] = @"new_list";
@@ -195,12 +210,12 @@
 }
 
 //埋点
-- (void)trackOperationWithModel:(FHHouseMsgDataItemsItemsModel *)model index:(NSInteger)index trackName:(NSString *)trackName {
+- (void)trackOperationWithModel:(FHHouseListBaseItemModel *)model index:(NSInteger)index trackName:(NSString *)trackName {
     NSMutableDictionary *tracerDict = [self categoryLogDict];
     tracerDict[@"card_type"] = @"left_pic";
     tracerDict[@"element_type"] = @"be_null";
-    tracerDict[@"group_id"] = model.id;
-    NSString *house_type = [[FHHouseTypeManager sharedInstance] traceValueForType:model.houseType.integerValue];
+    tracerDict[@"group_id"] = model.houseid;
+    NSString *house_type = [[FHHouseTypeManager sharedInstance] traceValueForType:model.houseType];
     tracerDict[@"house_type"] = house_type;
     tracerDict[@"impr_id"] = model.imprId;
     tracerDict[@"log_pb"] = model.logPb ? model.logPb : @"be_null";
@@ -219,20 +234,28 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    FHHouseMsgDataItemsModel *model = self.dataList[section];
+//    FHHouseMsgDataItemsModel *model = self.dataList[section];
+//    NSArray *houses = model.items;
+//    return [houses count];
+    FHHouseListBaseItemModel *model = self.dataList[section];
     NSArray *houses = model.items;
     return [houses count];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FHHouseMsgCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    FHHouseMsgCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    FHHouseMsgDataItemsModel *model = self.dataList[indexPath.section];
-    FHHouseMsgDataItemsItemsModel *itemsModel = model.items[indexPath.row];
+//    FHHouseMsgDataItemsModel *model = self.dataList[indexPath.section];
+//    FHHouseMsgDataItemsItemsModel *itemsModel = model.items[indexPath.row];
     
-    [cell updateWithModel:itemsModel];
+    FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
+     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    FHHouseListBaseItemModel *model = self.dataList[indexPath.section];
+    FHHouseListBaseItemModel *itemsModel = model.items[indexPath.row];
+    itemsModel.isMsgCell = YES;
+    [cell refreshWithData:itemsModel];
     
     if (!_clientShowDict) {
         _clientShowDict = [NSMutableDictionary new];
@@ -266,7 +289,8 @@
 {
     FHHouseHeaderView *headerView = [[FHHouseHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 90)];
     
-    FHHouseMsgDataItemsModel *model = self.dataList[section];
+//    FHHouseMsgDataItemsModel *model = self.dataList[section];
+    FHHouseListBaseItemModel *model = self.dataList[section];
     headerView.dateLabel.text = model.dateStr;
     headerView.contentLabel.text = model.title;
     if (model.isSoldout) {
@@ -280,7 +304,8 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     if(section < self.dataList.count){
-        FHHouseMsgDataItemsModel *model = self.dataList[section];
+            FHHouseListBaseItemModel *model = self.dataList[section];
+//        FHHouseMsgDataItemsModel *model = self.dataList[section];
         if(model.moreLabel.length > 0){
             return 40.0f;
         }
@@ -294,7 +319,8 @@
     UIView *footerView = [[UIView alloc] init];
     __weak typeof(self) wself = self;
     if(section < self.dataList.count){
-        FHHouseMsgDataItemsModel *model = self.dataList[section];
+//        FHHouseMsgDataItemsModel *model = self.dataList[section];
+            FHHouseListBaseItemModel *model = self.dataList[section];
         if(model.moreLabel.length > 0){
             FHHouseMsgFooterView *footerView = [[FHHouseMsgFooterView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 40)];
             footerView.contentLabel.text = model.moreLabel;
@@ -312,21 +338,24 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.section < self.dataList.count){
-        FHHouseMsgDataItemsModel *model = self.dataList[indexPath.section];
+//        FHHouseMsgDataItemsModel *model = self.dataList[indexPath.section];
+            FHHouseListBaseItemModel *model = self.dataList[indexPath.section];
         if(indexPath.row == model.items.count - 1){
-            return 125;
+            return 88;
         }
     }
-    return 105;
+    return 88;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FHHouseMsgDataItemsModel *model = self.dataList[indexPath.section];
-    FHHouseMsgDataItemsItemsModel *itemsModel = model.items[indexPath.row];
+//    FHHouseMsgDataItemsModel *model = self.dataList[indexPath.section];
+//    FHHouseMsgDataItemsItemsModel *itemsModel = model.items[indexPath.row];
+    FHHouseListBaseItemModel *model = self.dataList[indexPath.section];
+    FHHouseListBaseItemModel *itemsModel = model.items[indexPath.row];
     
-    NSInteger houseType = [itemsModel.houseType integerValue];
-    NSString *houseId = itemsModel.id;
+    NSInteger houseType = itemsModel.houseType;
+    NSString *houseId = itemsModel.houseid;
     NSString *urlStr = @"";
     switch (houseType) {
         case FHHouseTypeNewHouse:
