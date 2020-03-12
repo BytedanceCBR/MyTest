@@ -8,6 +8,7 @@
 #import "FHHouseListBaseItemModel.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "YYText.h"
 
 @implementation FHHouseListBaseItemModel
 + (JSONKeyMapper*)keyMapper
@@ -103,56 +104,99 @@
 - (void)setTags:(NSArray<FHHouseTagsModel> *)tags {
     _tags = tags;
     if (tags.count >0) {
-        FHHouseTagsModel *element = tags[0];
-        if (element.content && element.textColor && element.backgroundColor) {
-            CGSize textSize = [element.content sizeWithFont: [UIFont themeFontRegular:12] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
-            if (textSize.width > [self tagShowMaxWidth]) {
-                NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
-                NSString *resultString ;
-                for (int i = 0; i < paramsArrary.count; i ++) {
-                    NSString *tagStr = paramsArrary[i];
-                    CGSize tagSize = [resultString sizeWithFont: [UIFont themeFontRegular:12] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
-                    if (tagSize.width < [self tagShowMaxWidth]) {
-                        if (resultString.length >0) {
-                            resultString = [NSString stringWithFormat:@"%@ · %@",resultString,tagStr];
-                        }else {
-                            resultString = tagStr;
-                        }
-                    }else {
-                        NSMutableArray *resultArrary = [[resultString componentsSeparatedByString:@" · "] mutableCopy];
-                        [resultArrary removeObjectAtIndex: resultArrary.count -1];
-                        resultString = @"";
-                        for (NSString *string  in resultArrary) {
+        //当数组对象只有一个时，表示非新房标签，需要合并
+        if (tags.count == 1) {
+            FHHouseTagsModel *element = tags[0];
+            if (element.content && element.textColor && element.backgroundColor) {
+                CGSize textSize = [element.content sizeWithFont: [UIFont themeFontRegular:12] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
+                if (textSize.width > [self tagShowMaxWidth]) {
+                    NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
+                    NSString *resultString ;
+                    for (int i = 0; i < paramsArrary.count; i ++) {
+                        NSString *tagStr = paramsArrary[i];
+                        CGSize tagSize = [resultString sizeWithFont: [UIFont themeFontRegular:12] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
+                        if (tagSize.width < [self tagShowMaxWidth]) {
                             if (resultString.length >0) {
-                                resultString = [NSString stringWithFormat:@"%@ · %@",resultString,string];
+                                resultString = [NSString stringWithFormat:@"%@ · %@",resultString,tagStr];
                             }else {
-                                resultString = string;
+                                resultString = tagStr;
                             }
+                        }else {
+                            NSMutableArray *resultArrary = [[resultString componentsSeparatedByString:@" · "] mutableCopy];
+                            [resultArrary removeObjectAtIndex: resultArrary.count -1];
+                            resultString = @"";
+                            for (NSString *string  in resultArrary) {
+                                if (resultString.length >0) {
+                                    resultString = [NSString stringWithFormat:@"%@ · %@",resultString,string];
+                                }else {
+                                    resultString = string;
+                                }
+                            }
+                            break;
                         }
-                        break;
                     }
+                    _tagString = [[NSAttributedString alloc]initWithString:resultString attributes:@{ NSFontAttributeName:[UIFont themeFontRegular:12] ,
+                                                                                                      NSForegroundColorAttributeName:element.textColor?[UIColor colorWithHexStr:element.textColor]:[UIColor themeOrange1]}];
+                }else {
+                    _tagString = [[NSAttributedString alloc]initWithString:element.content attributes:@{ NSFontAttributeName:[UIFont themeFontRegular:12] ,
+                                                                                                         NSForegroundColorAttributeName:element.textColor?[UIColor colorWithHexStr:element.textColor]:[UIColor themeOrange1]}];
                 }
-                _tagString = [[NSAttributedString alloc]initWithString:resultString attributes:@{ NSFontAttributeName:[UIFont themeFontRegular:12] ,
-                                                                                                  NSForegroundColorAttributeName:element.textColor?[UIColor colorWithHexStr:element.textColor]:[UIColor themeOrange1]}];
             }else {
                 _tagString = [[NSAttributedString alloc]initWithString:element.content attributes:@{ NSFontAttributeName:[UIFont themeFontRegular:12] ,
-                NSForegroundColorAttributeName:element.textColor?[UIColor colorWithHexStr:element.textColor]:[UIColor themeOrange1]}];
+                                                                                                     NSForegroundColorAttributeName:element.textColor?[UIColor colorWithHexStr:element.textColor]:[UIColor themeOrange1]}];
             }
+            ///针对于新房tag计算
         }else {
-            _tagString = [[NSAttributedString alloc]initWithString:element.content attributes:@{ NSFontAttributeName:[UIFont themeFontRegular:12] ,
-            NSForegroundColorAttributeName:element.textColor?[UIColor colorWithHexStr:element.textColor]:[UIColor themeOrange1]}];
+            _tagString = [[NSMutableAttributedString alloc]init];
+            for (int m = 0; m<tags.count; m ++) {
+                FHHouseTagsModel *element = (FHHouseTagsModel*)tags[m];
+                NSDictionary * attDic = @{ NSFontAttributeName:[UIFont themeFontRegular:12] ,NSForegroundColorAttributeName:element.textColor?[UIColor colorWithHexStr:element.textColor]:[UIColor themeOrange1]
+                };
+                if (_tagString.length >0) {
+                    CGSize size1 = [self getStringRect:_tagString size:CGSizeMake( [self tagShowMaxWidth], 14)];
+                    CGSize size2 =   [self getStringRect:[[NSAttributedString alloc]initWithString:element.content attributes:attDic] size:CGSizeMake( [self tagShowMaxWidth], 14)];
+                    if (size1.width +size2.width > [self tagShowMaxWidth]) {
+                        break;
+                    }else {
+                        [_tagString appendAttributedString: [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@"  "]  attributes:nil]];
+                        [_tagString appendAttributedString: [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@ ",element.content]  attributes:attDic]];
+                        NSRange substringRange = [_tagString.string rangeOfString:element.content];
+                        YYTextBorder *border = [YYTextBorder borderWithFillColor:[UIColor colorWithHexStr:element.backgroundColor] cornerRadius:2];
+                        [border setInsets:UIEdgeInsetsMake(0, -4, 0, -4)];
+                        [_tagString yy_setTextBackgroundBorder:border range:substringRange];
+                    }
+                    
+                }else {
+                    _tagString =  [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@ ",element.content]  attributes:attDic];
+                    YYTextBorder *border = [YYTextBorder borderWithFillColor:[UIColor colorWithHexStr:element.backgroundColor] cornerRadius:2];
+                    [border setInsets:UIEdgeInsetsMake(0, -4, 0, -4)];
+                    NSRange substringRange = [_tagString.string rangeOfString:element.content];
+                    [_tagString yy_setTextBackgroundBorder:border range:substringRange];
+                    CGSize size = [self getStringRect:_tagString size:CGSizeMake( [self tagShowMaxWidth], 14)];
+                    if (size.width > [self tagShowMaxWidth]) {
+                        _tagString = @"";
+                    }
+                }
+            }
         }
     }
 }
+
+- (CGSize)getStringRect:(NSAttributedString *)aString size:(CGSize )sizes
+{
+    CGRect strSize = [aString boundingRectWithSize:CGSizeMake(sizes.width, sizes.height) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+    return  CGSizeMake(strSize.size.width, strSize.size.height);
+}
+
 - (void)setReasonTags:(NSArray<FHHouseTagsModel> *)reasonTags {
     _reasonTags = reasonTags;
     if (reasonTags.count>0) {
-         FHHouseTagsModel *element = reasonTags.firstObject;
+        FHHouseTagsModel *element = reasonTags.firstObject;
         if (element.content && element.textColor && element.backgroundColor) {
             UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor themeOrange1];
             UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor whiteColor];
             _recommendReasonStr = [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@",element.content ]attributes:@{ NSFontAttributeName:[UIFont themeFontRegular:12] ,
-                NSForegroundColorAttributeName:element.textColor?[UIColor colorWithHexStr:element.textColor]:[UIColor themeOrange1]}];
+                                                                                                                                            NSForegroundColorAttributeName:element.textColor?[UIColor colorWithHexStr:element.textColor]:[UIColor themeOrange1]}];
         }
     }
 }
@@ -164,6 +208,8 @@
 - (NSString *)displayPrice {
     if (_houseType == FHHouseTypeRentHouse) {
         return _pricing.length>0?_pricing:_price;
+    }else if (_houseType == FHHouseTypeNeighborhood){
+        return _pricePerSqm;
     }else {
         return _displayPrice.length>0?_displayPrice:_price;
     }

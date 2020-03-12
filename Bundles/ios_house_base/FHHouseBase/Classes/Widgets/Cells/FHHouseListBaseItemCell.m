@@ -8,6 +8,7 @@
 #import "FHHouseListBaseItemCell.h"
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
+#import <YYText/YYLabel.h>
 #import "Masonry.h"
 #import "FHImageModel.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
@@ -20,7 +21,7 @@
 @property (nonatomic, weak) UILabel *positionInformation;
 @property (nonatomic, weak) UILabel *unitPrice;
 @property (nonatomic, weak) UILabel *totalPrice;
-@property (nonatomic, weak) UILabel *tagInformation;
+@property (nonatomic, weak) YYLabel *tagInformation;
 @property (nonatomic, weak) UIView *houseMainImageBackView;
 @property(nonatomic, weak) UIImageView *houseVideoImageView;
 @property (nonatomic, weak) LOTAnimationView *vrLoadingView;
@@ -47,7 +48,7 @@
     }];
     [self.mainIma mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.contentView);
-         make.top.equalTo(self.contentView).offset(10);
+        make.top.equalTo(self.contentView).offset(10);
         make.left.equalTo(self.contentView).offset(15);
         make.size.mas_equalTo(CGSizeMake(85, 64));
     }];
@@ -69,16 +70,16 @@
     [self.positionInformation mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.maintitle);
         make.top.equalTo(self.maintitle.mas_bottom).offset(2);
-//         make.right.lessThanOrEqualTo(self.unitPrice.mas_left).offset(-10);
+        //         make.right.lessThanOrEqualTo(self.unitPrice.mas_left).offset(-10);
     }];
-
+    
     [self.unitPrice mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_greaterThanOrEqualTo(self.positionInformation.mas_right).offset(10);
         make.top.equalTo(self.positionInformation);
         make.right.equalTo(self.contentView).offset(-15);
     }];
-//    [self.unitPrice setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
-//    [self.positionInformation setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+    //    [self.unitPrice setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
+    //    [self.positionInformation setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     [self.unitPrice setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.unitPrice setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.tagInformation mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -90,8 +91,8 @@
         make.top.equalTo(self.unitPrice.mas_bottom).offset(5);
     }];
     if ([self.reuseIdentifier isEqualToString:@"FHNewHouseCell"] || [self.reuseIdentifier isEqualToString:@"FHHouseListBaseItemModel"]) {
-            [self updateConstraintsWithNewHouse];
-    }    
+        [self updateConstraintsWithNewHouse];
+    }
 }
 #pragma mark ---------------------- UIInit:初始化控件
 
@@ -146,17 +147,17 @@
         UILabel *totalPrice = [[UILabel alloc]init];
         totalPrice.font = [UIFont themeFontMedium:16];
         totalPrice.textColor = [UIColor themeOrange1];
-//        totalPrice.backgroundColor = [UIColor redColor];
+        //        totalPrice.backgroundColor = [UIColor redColor];
         [self.contentView addSubview:totalPrice];
         _totalPrice = totalPrice;
     }
     return _totalPrice;
 }
 
--(UILabel *)tagInformation
+-(YYLabel *)tagInformation
 {
     if (!_tagInformation) {
-        UILabel *tagInformation = [[UILabel alloc]init];
+        YYLabel *tagInformation = [[YYLabel alloc]init];
         tagInformation.font = [UIFont themeFontRegular:12];
         tagInformation.textColor = [UIColor themeOrange1];
         [self.contentView addSubview:tagInformation];
@@ -204,7 +205,7 @@
 -(UIImageView *)houseVideoImageView
 {
     if (!_houseVideoImageView) {
-       UIImageView *houseVideoImageView = [[UIImageView alloc]init];
+        UIImageView *houseVideoImageView = [[UIImageView alloc]init];
         houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video"];
         houseVideoImageView.backgroundColor = [UIColor clearColor];
         houseVideoImageView.hidden = YES;
@@ -244,19 +245,24 @@
     [self.unitPrice mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.maintitle);
         make.right.equalTo(self.contentView).offset(-15);
-        make.top.equalTo(self.maintitle.mas_bottom).offset(1);
+        make.top.equalTo(self.maintitle.mas_bottom).offset(-3);
     }];
     [self.positionInformation mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.maintitle);
-            make.top.equalTo(self.unitPrice.mas_bottom).offset(1);
-            make.right.equalTo(self.contentView).offset(-15);
-        }];
+        make.left.equalTo(self.maintitle);
+        make.top.equalTo(self.unitPrice.mas_bottom).offset(-1);
+        make.right.equalTo(self.contentView).offset(-15);
+    }];
+    [self.tagInformation mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.maintitle);
+        make.top.equalTo(self.positionInformation.mas_bottom).offset(3);
+        make.right.equalTo(self.contentView).offset(-15);
+    }];
 }
 #pragma mark ---------------------- dataPross:数据加载
 - (void)refreshWithData:(id)data {
     self.currentData = data;
-//    if ([data isKindOfClass:[FHSingleImageInfoCellModel class]] ) {
-//        [self updateWithHouseCellModel:data];
+    //    if ([data isKindOfClass:[FHSingleImageInfoCellModel class]] ) {
+    //        [self updateWithHouseCellModel:data];
     if([data isKindOfClass:[FHHouseListBaseItemModel class]]){
         FHHouseListBaseItemModel *model = (FHHouseListBaseItemModel *)data;
         FHImageModel *imageModel = model.houseImage.firstObject;
@@ -267,60 +273,25 @@
         self.totalPrice.text = model.displayPrice;
         self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
         if (model.reasonTags.count>0) {
-            [self.tagInformation setAttributedText:model.recommendReasons];
+            self.tagInformation.attributedText = model.recommendReasons;
         }else {
-           [self.tagInformation setAttributedText:model.tagString];
+            self.tagInformation.attributedText = model.tagString;
         }
         if (model.houseType == FHHouseTypeRentHouse) {
-             [self.tagInformation setText:model.addrData];
+            self.tagInformation.text = model.addrData;
+            self.tagInformation.font = [UIFont themeFontRegular:12];
+            [self.tagInformation setTextColor:[UIColor themeGray2]];
+        }else if (model.houseType == FHHouseTypeNeighborhood){
+            self.tagInformation.text = model.salesInfo;
+            self.tagInformation.font = [UIFont themeFontRegular:12];
             [self.tagInformation setTextColor:[UIColor themeGray2]];
         }
-         
+        
         if (model.vrInfo.hasVr) {
             self.houseVideoImageView.hidden = YES;
-             [self.vrLoadingView play];
+            [self.vrLoadingView play];
         }
-//        self.tagInformation.attributedText = [[NSAttributedString alloc]initWithString:@"11111" attributes:@{ NSFontAttributeName:[UIFont themeFontRegular:12] ,
-//        NSForegroundColorAttributeName:self.totalPrice.textColor?self.totalPrice:[UIColor themeOrange1]}];;
-//        [self.vrLoadingView play];
-//        if ([model.status integerValue] == 1 && model.isMsgCell) {
-//            self.maintitle.textColor = [UIColor themeGray3];
-//            self.totalPrice.textColor = [UIColor themeGray3];
-//        }else {
-//            self.maintitle.textColor = [UIColor themeGray1];
-//            self.totalPrice.textColor = [UIColor themeRed1];
-//        }
     };
 }
 
--(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel
-{
-    switch (cellModel.houseType) {
-        case FHHouseTypeNewHouse:
-            break;
-        case FHHouseTypeSecondHandHouse:
-            [self updateWithSecondHouseModel:cellModel.secondModel];
-            break;
-        case FHHouseTypeRentHouse:
-            break;
-        case FHHouseTypeNeighborhood:
-          
-            break;
-        default:
-            break;
-    }
-}
--(void)updateWithSecondHouseModel:(id)data
-{
-if([data isKindOfClass:[FHHouseListBaseItemModel class]]){
-    FHHouseListBaseItemModel *model = (FHHouseListBaseItemModel *)data;
-    FHImageModel *imageModel = model.houseImage.firstObject;
-    [self.mainIma bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseListBaseItemCell placeholderImage]];
-    self.maintitle.text = model.title;
-    self.positionInformation.text = model.displaySubtitle;
-    self.unitPrice.text = model.displayPricePerSqm;
-    self.totalPrice.text = model.displayPrice;
-
-};
-}
 @end

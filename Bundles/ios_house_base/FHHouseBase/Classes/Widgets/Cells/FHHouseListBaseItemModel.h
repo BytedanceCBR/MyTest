@@ -57,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isAgencyInfoCell;
 @property (nonatomic, assign) BOOL isNoHousePlaceHoderCell;
 
-@property (nonatomic, strong, nullable) NSAttributedString *tagString;
+@property (nonatomic, strong, nullable) NSMutableAttributedString *tagString;
 @property (nonatomic, strong , nullable) NSAttributedString *recommendReasonStr;
 ///针对于我关注的
 @property (nonatomic, copy , nullable) NSString *followId;
