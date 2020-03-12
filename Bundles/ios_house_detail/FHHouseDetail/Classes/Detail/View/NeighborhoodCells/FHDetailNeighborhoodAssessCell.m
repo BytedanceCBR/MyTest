@@ -50,8 +50,6 @@
 }
 
 - (void)setupUI {
-    self.clipsToBounds = NO;
-    
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
         make.top.equalTo(self.contentView).offset(-12);
@@ -59,6 +57,7 @@
     }];
     
     _containerView = [[UIView alloc] init];
+    _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
@@ -67,7 +66,7 @@
 
     self.cardSliderView = [[FHCardSliderView alloc] initWithFrame:CGRectZero type:FHCardSliderViewTypeHorizontal];
     _cardSliderView.backgroundColor = [UIColor whiteColor];
-    [self.contentView addSubview:_cardSliderView];
+    [self.containerView addSubview:_cardSliderView];
 }
 
 - (UIImageView *)shadowImage {

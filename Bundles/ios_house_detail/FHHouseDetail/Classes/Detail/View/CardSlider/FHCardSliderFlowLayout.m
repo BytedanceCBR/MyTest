@@ -143,7 +143,6 @@ static const float spacing = 14;
                          offsetProgress:(CGFloat)offsetProgress
                                minScale:(CGFloat)minScale
 {
-//    NSInteger index = MAX(self.actuallyVisibleItemsCount, 2);
     CGFloat step = (1.0 - minScale) / (visibleItemsCount - 1)*1.0;
     return (1.0 - (visibleIndex - 1) * step + step * offsetProgress);
 }
@@ -152,8 +151,12 @@ static const float spacing = 14;
                          offsetProgress:(CGFloat)offsetProgress
                                minAlpha:(CGFloat)minAlpha
 {
-//    NSInteger index = MAX(self.actuallyVisibleItemsCount, 2);
+    //只要一移动卡片，下方的卡片透明度立马变成1
+    if(visibleIndex == 2 && offsetProgress > 0){
+        return 1;
+    }
     CGFloat step = (1.0 - minAlpha) / (visibleItemsCount - 1)*1.0;
+//    NSLog(@"alpha_____%i___%f___%f",visibleIndex,(1.0 - (visibleIndex - 1) * step + step * offsetProgress),offsetProgress);
     return (1.0 - (visibleIndex - 1) * step + step * offsetProgress);
 }
 

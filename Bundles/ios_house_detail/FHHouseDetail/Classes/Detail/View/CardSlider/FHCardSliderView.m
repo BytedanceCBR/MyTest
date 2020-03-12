@@ -138,7 +138,7 @@ static const float timerInterval = 3.0f;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger totalCount = self.isLoop ? (self.dataSource.count * groupCount) : self.dataSource.count;
-    if (indexPath.row >= totalCount) {
+    if (indexPath.row >= totalCount || indexPath.row != _selectedIndex) {
         return;
     }
     
