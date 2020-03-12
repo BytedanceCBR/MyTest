@@ -71,7 +71,7 @@
     
     [self.tableView registerClass:[FHDetailNewHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseCoreInfoModel class])];
     
-    [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewDataFloorpanListModel class])];
+    [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewMutiFloorPanCellModel class])];
     
     [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCellModel class])];
     
@@ -602,14 +602,14 @@
     }
     
     //楼盘户型
-//    if ([model.data.floorpanList.list isKindOfClass:[NSArray class]] && model.data.floorpanList.list.count > 0) {
-//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//        [self.items addObject:grayLine];
-//        model.data.floorpanList.courtId = model.data.coreInfo.id;
-//        houseCore.houseModelType = FHHouseModelTypeNewCoreInfo;
-//        [self.items addObject:model.data.floorpanList];
-//    }
+    if ([model.data.floorpanList.list isKindOfClass:[NSArray class]] && model.data.floorpanList.list.count > 0) {
+
+        FHDetailNewMutiFloorPanCellModel *floorPan = [[FHDetailNewMutiFloorPanCellModel alloc]init];
+        floorPan.floorPanList.courtId = model.data.coreInfo.id;
+        floorPan.floorPanList = model.data.floorpanList;
+        floorPan.houseModelType = FHHouseModelTypeNewFloorPlan;
+        [self.items addObject:floorPan];
+    }
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线

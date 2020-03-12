@@ -18,8 +18,10 @@
 
 @interface FHDetailNewMutiFloorPanCell ()
 
-@property (nonatomic, strong)   FHDetailHeaderView       *headerView;
+@property (nonatomic, strong) FHDetailHeaderView *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
+@property (nonatomic, strong) UIImageView *shadowImage;
+@property (nonatomic, strong) UIView *segmentControl;
 
 @end
 
@@ -47,15 +49,17 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailNewMutiFloorPanCellModel class]]) {
         return;
     }
     self.currentData = data;
-    for (UIView *v in self.containerView.subviews) {
-        [v removeFromSuperview];
-    }
-    //
-    FHDetailNewDataFloorpanListModel *model = (FHDetailNewDataFloorpanListModel *)data;
+    UIView *collectionView = [self.containerView viewWithTag:100];
+    [collectionView removeFromSuperview];
+    
+    FHDetailNewMutiFloorPanCellModel *currentModel = (FHDetailNewMutiFloorPanCellModel *)data;
+    adjustImageScopeType(currentModel)
+
+    FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
     if (model.list) {
         
         for (NSInteger i = 0; i < model.list.count; i++) {
@@ -67,11 +71,12 @@
         self.headerView.isShowLoadMore = model.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-        flowLayout.itemSize = CGSizeMake(156, 170);
+        flowLayout.itemSize = CGSizeMake(184, 242);
         flowLayout.minimumLineSpacing = 10;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         NSString *identifier = NSStringFromClass([FHDetailNewMutiFloorPanCollectionCell class]);
-        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:170 cellIdentifier:identifier cellCls:[FHDetailNewMutiFloorPanCollectionCell class] datas:model.list];
+        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:242 cellIdentifier:identifier cellCls:[FHDetailNewMutiFloorPanCollectionCell class] datas:model.list];
+        colView.tag = 100;
         [self.containerView addSubview:colView];
         __weak typeof(self) wSelf = self;
         colView.clickBlk = ^(NSInteger index) {
@@ -81,8 +86,9 @@
             [wSelf collectionDisplayCell:index];
         };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(20);
+            make.top.mas_equalTo(self.segmentControl.mas_bottom).mas_offset(20);
             make.left.right.mas_equalTo(self.containerView);
+//            make.height.mas_equalTo(242);
             make.bottom.mas_equalTo(self.containerView);
         }];
         [colView reloadData];
@@ -94,7 +100,8 @@
 // 不重复调用
 - (void)collectionDisplayCell:(NSInteger)index
 {
-    FHDetailNewDataFloorpanListModel *model = (FHDetailNewDataFloorpanListModel *)self.currentData;
+    FHDetailNewMutiFloorPanCellModel *currentModel = (FHDetailNewMutiFloorPanCellModel *)self.currentData;
+    FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
     if (model.list && model.list.count > 0 && index >= 0 && index < model.list.count) {
         // 点击cell处理
         FHDetailNewDataFloorpanListListModel *itemModel = model.list[index];
@@ -133,23 +140,45 @@
 }
 
 - (void)setupUI {
+    
+    [self.contentView addSubview:self.shadowImage];
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
+    }];
+    
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"楼盘户型";
+    [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.shadowImage).offset(15);
+        make.right.mas_equalTo(self.shadowImage).offset(-15);
+        make.top.mas_equalTo(self.shadowImage).offset(30);
         make.height.mas_equalTo(46);
     }];
-    [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
+    _containerView.layer.cornerRadius = 10;
     _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView).offset(-20);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
+        make.left.mas_equalTo(self.contentView).mas_offset(15);
+        make.right.mas_equalTo(self.contentView).mas_offset(-15);
+        make.bottom.mas_equalTo(self.contentView).offset(-30);
     }];
+
+    [self.containerView addSubview:self.segmentControl];
+    [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.containerView);
+        make.top.mas_equalTo(15);
+        make.height.mas_equalTo(30);
+    }];
+    self.segmentControl.backgroundColor = [UIColor redColor];
+
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType
@@ -159,7 +188,8 @@
 
 // 查看更多
 - (void)moreButtonClick:(UIButton *)button {
-    FHDetailNewDataFloorpanListModel *model = (FHDetailNewDataFloorpanListModel *)self.currentData;
+    FHDetailNewMutiFloorPanCellModel *currentModel = (FHDetailNewMutiFloorPanCellModel *)self.currentData;
+    FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
 
     if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]] && model.hasMore) {
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
@@ -173,7 +203,8 @@
 }
 // cell 点击
 - (void)collectionCellClick:(NSInteger)index {
-    FHDetailNewDataFloorpanListModel *model = (FHDetailNewDataFloorpanListModel *)self.currentData;
+    FHDetailNewMutiFloorPanCellModel *currentModel = (FHDetailNewMutiFloorPanCellModel *)self.currentData;
+    FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
     if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
         if (model.list.count > index) {
             FHDetailNewDataFloorpanListListModel *floorPanInfoModel = model.list[index];
@@ -204,6 +235,22 @@
         }
     }
 
+}
+
+- (UIImageView *)shadowImage
+{
+    if (!_shadowImage) {
+        _shadowImage = [[UIImageView alloc]init];
+    }
+    return _shadowImage;
+}
+
+- (UIView *)segmentControl
+{
+    if (!_segmentControl) {
+        _segmentControl = [[UIView alloc]init];
+    }
+    return _segmentControl;
 }
 
 @end
@@ -252,6 +299,7 @@
         
         [textAttrStr appendAttributedString:titleAttrStr];
         
+        // todo zjing test
         if (model.saleStatus) {
             //@(-1),NSBaselineOffsetAttributeName
             NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
@@ -267,7 +315,8 @@
             
         }
         self.descLabel.attributedText = textAttrStr;
-        self.priceLabel.text = model.pricingPerSqm;
+//        self.priceLabel.text = model.pricingPerSqm;
+        // todo zjing test 朝向
         self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@",model.squaremeter];;
     }
     [self layoutIfNeeded];
@@ -275,10 +324,11 @@
 
 - (void)setupUI {
     _icon = [[UIImageView alloc] init];
-    _icon.layer.cornerRadius = 4.0;
+    _icon.contentMode = UIViewContentModeScaleAspectFit;
+    _icon.layer.cornerRadius = 10.0;
     _icon.layer.masksToBounds = YES;
     _icon.layer.borderWidth = 0.5;
-    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
+    _icon.layer.borderColor = [[UIColor colorWithHexString:@"#ededed"] CGColor];
     [self addSubview:_icon];
     
     _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
@@ -286,16 +336,16 @@
     [self addSubview:_descLabel];
     
     
-    _statusLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _statusLabel.textColor = [UIColor themeGray1];
-    _statusLabel.layer.masksToBounds = YES;
-    _statusLabel.layer.cornerRadius = 2;
-    [self addSubview:_statusLabel];
-    
-    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _priceLabel.textColor = [UIColor themeRed1];
-    _priceLabel.font = [UIFont themeFontMedium:16];
-    [self addSubview:_priceLabel];
+//    _statusLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+//    _statusLabel.textColor = [UIColor themeGray1];
+//    _statusLabel.layer.masksToBounds = YES;
+//    _statusLabel.layer.cornerRadius = 2;
+//    [self addSubview:_statusLabel];
+//
+//    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+//    _priceLabel.textColor = [UIColor themeRed1];
+//    _priceLabel.font = [UIFont themeFontMedium:16];
+//    [self addSubview:_priceLabel];
     
     _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _spaceLabel.textColor = [UIColor themeGray3];
@@ -303,8 +353,8 @@
     
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
-        make.width.mas_equalTo(156);
-        make.height.mas_equalTo(116);
+        make.width.mas_equalTo(184);
+        make.height.mas_equalTo(184);
         make.top.mas_equalTo(self);
     }];
     
@@ -320,34 +370,40 @@
 //    [self.icon.layer addSublayer:gradientlayer];
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self);
-        make.width.mas_greaterThanOrEqualTo(80);
-        make.height.mas_equalTo(22);
-        make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
+        make.left.right.mas_equalTo(self);
+        make.height.mas_equalTo(20);
+        make.top.mas_equalTo(self.icon.mas_bottom).mas_offset(10);
     }];
     
-    [self.statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.descLabel.mas_right);
-        make.centerY.equalTo(self.descLabel);
-    }];
+//    [self.statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(self.descLabel.mas_right);
+//        make.centerY.equalTo(self.descLabel);
+//    }];
     
-    [self.priceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [self.priceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self);
-        make.height.mas_equalTo(22);
-        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(3);
-        make.bottom.mas_equalTo(self);
-    }];
+//    [self.priceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+//    [self.priceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+//    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self);
+//        make.height.mas_equalTo(22);
+//        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(3);
+//        make.bottom.mas_equalTo(self);
+//    }];
     
     [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.priceLabel.mas_right).offset(6);
+        make.left.mas_equalTo(self.descLabel);
         make.right.mas_equalTo(self);
-        make.height.mas_equalTo(22);
-        make.centerY.equalTo(self.priceLabel.mas_centerY);
+        make.height.mas_equalTo(15);
+        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(6);
         make.bottom.equalTo(self);
     }];
 }
+
+
+@end
+
+@implementation FHDetailNewMutiFloorPanCellModel
+
+
 
 @end
 
