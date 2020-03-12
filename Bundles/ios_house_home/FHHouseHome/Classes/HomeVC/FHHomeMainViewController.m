@@ -283,7 +283,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 }
 
 - (void)changeTopSearchBtn:(BOOL)isShow {
-    self.topView.searchBtn.hidden = !isShow;
+    [self.topView changeSearchBtnAndMapBtnStatus:isShow];
 }
 
 #pragma mark notifications

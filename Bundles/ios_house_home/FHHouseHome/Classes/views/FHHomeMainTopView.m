@@ -24,6 +24,7 @@
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
 static const float kSegementedMainPadingBottom = 10;
+static const float kMapSearchBtnRightPading = 70;
 
 @interface FHHomeMainTopView()
 
@@ -32,6 +33,7 @@ static const float kSegementedMainPadingBottom = 10;
 @property (nonatomic, strong) UIButton * changeCountryBtn;
 @property (nonatomic, strong) UILabel * countryLabel;
 @property (nonatomic, strong) UIImageView * cityImageButtonLeftIcon;
+@property (nonatomic, assign) BOOL isShowSearchBtn;
 
 @end
 
@@ -81,6 +83,20 @@ static const float kSegementedMainPadingBottom = 10;
         StrongSelf;
         [self showUnValibleCity];
     }];
+    
+    
+    _mapSearchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_mapSearchBtn setImage:ICON_FONT_IMG(24,@"\U0000e6bd",[UIColor themeGray1]) forState:UIControlStateNormal];
+    [_mapSearchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_mapSearchBtn];
+    
+    _mapSearchLabel = [UILabel new];
+    _mapSearchLabel.text = @"地图找房";
+    _mapSearchLabel.textColor = [UIColor themeGray1];
+    _mapSearchLabel.font = [UIFont themeFontMedium:14];
+    [self addSubview:_mapSearchLabel];
+
+    
 }
 
 - (void)setupSetmentedControl {
@@ -142,6 +158,21 @@ static const float kSegementedMainPadingBottom = 10;
         }
         make.width.height.mas_equalTo(24);
     }];
+    
+    [_mapSearchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
+        make.centerY.equalTo(self.searchBtn).offset(2);
+        make.width.height.mas_equalTo(20);
+    }];
+    
+    [_mapSearchLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+          make.left.equalTo(self.mapSearchBtn.mas_right).offset(5);
+          make.centerY.equalTo(self.searchBtn).offset(2);
+          make.width.mas_equalTo(60);
+          make.height.mas_equalTo(30);
+    }];
+    
+    
 }
 
 - (void)setUpHouseSegmentedControl
@@ -381,6 +412,45 @@ static const float kSegementedMainPadingBottom = 10;
         [self setUpHouseSegmentedControl];
     }
     
+}
+
+- (void)changeSearchBtnAndMapBtnStatus:(BOOL)isShowSearchBtn
+{
+    if (self.isShowSearchBtn == isShowSearchBtn) {
+        return;
+    }
+    
+    if(isShowSearchBtn){
+        self.searchBtn.hidden = NO;
+        self.mapSearchLabel.hidden = YES;
+        [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self).offset(-45);
+            if (self.segmentControl) {
+                make.centerY.equalTo(self.segmentControl).offset(2);
+            }else
+            {
+                make.bottom.mas_equalTo(8);
+            }
+            make.width.height.mas_equalTo(20);
+        }];
+    }else
+    {
+        self.searchBtn.hidden = YES;
+        self.mapSearchLabel.hidden = NO;
+
+        [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
+            if (self.segmentControl) {
+                make.centerY.equalTo(self.segmentControl).offset(2);
+            }else
+            {
+                make.bottom.mas_equalTo(8);
+            }
+            make.width.height.mas_equalTo(20);
+        }];
+    }
+    
+    self.isShowSearchBtn = isShowSearchBtn;
 }
 
 - (NSArray *)getSegmentTitles {
