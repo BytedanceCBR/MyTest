@@ -672,7 +672,7 @@
     
     _priceBgView = [[UIView alloc] init];
     
-    //    [_rightInfoView addSubview:_priceBgView];
+    //    [_rightInfoView addSubview:_priceBgView];r
     _rightInfoView = [[UIView alloc] init];
     [self.contentView addSubview:_priceBgView];
     

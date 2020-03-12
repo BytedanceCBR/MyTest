@@ -24,6 +24,8 @@
 
 @interface FHDetailNewUGCSocialCell()
 
+@property (nonatomic, strong) UIView *containerView;
+@property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, strong)   UIControl       *bgControl; // 底部按钮
 @property (nonatomic, strong)   UILabel       *titleLabel;
 @property (nonatomic, strong)   UILabel       *descLabel;
@@ -56,12 +58,13 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (![data isKindOfClass:[FHHouseNewsSocialModel class]]) {
+    if (![data isKindOfClass:[FHDetailNewUGCSocialCellModel class]]) {
         return;
     }
     self.currentData = data;
     
-    FHHouseNewsSocialModel *socialInfo = (FHHouseNewsSocialModel *)data;
+    FHDetailNewUGCSocialCellModel *cellModel = (FHDetailNewUGCSocialCellModel *)data;
+    FHHouseNewsSocialModel *socialInfo = cellModel.socialInfo;
     if (socialInfo) {
         self.titleLabel.text = socialInfo.socialGroupInfo.socialGroupName;
         NSString *descStr = socialInfo.socialGroupInfo.countText;// 帖子数
@@ -112,7 +115,8 @@
     if (noti) {
         NSString *social_group_id = noti.userInfo[@"social_group_id"];
         if (self.currentData && social_group_id && [social_group_id isKindOfClass:[NSString class]]) {
-            FHHouseNewsSocialModel *socialInfo = (FHHouseNewsSocialModel *)self.currentData;
+            FHDetailNewUGCSocialCellModel *cellModel = (FHDetailNewUGCSocialCellModel *)self.currentData;
+            FHHouseNewsSocialModel *socialInfo = cellModel.socialInfo;
             if ([socialInfo.socialGroupInfo.socialGroupId isEqualToString:social_group_id]) {
                 [self refreshWithData:self.currentData];
             }
@@ -127,12 +131,30 @@
 
 
 - (void)setupUI {
+    
     self.backgroundColor = [UIColor themeWhite];
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView);
+        make.right.mas_equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
+    }];
+    _containerView = [[UIView alloc] init];
+    _containerView.layer.cornerRadius = 10;
+    _containerView.clipsToBounds = YES;
+    [self.contentView addSubview:_containerView];
+    self.containerView.backgroundColor = [UIColor whiteColor];
+    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView).mas_offset(15);
+        make.right.mas_equalTo(self.contentView).mas_offset(-15);
+        make.top.mas_equalTo(0);
+        make.bottom.mas_equalTo(0);
+    }];
     self.bgControl = [[UIControl alloc] initWithFrame:CGRectZero];
     self.bgControl.backgroundColor = [UIColor themeWhite];
-    [self.contentView addSubview:self.bgControl];
+    [self.containerView addSubview:self.bgControl];
     [self.bgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.bottom.mas_equalTo(self.contentView);
+        make.edges.mas_equalTo(self.containerView);
         make.height.mas_equalTo(119);
     }];
     
@@ -143,10 +165,10 @@
     _titleLabel.font = [UIFont themeFontMedium:18];
     _titleLabel.textAlignment = NSTextAlignmentLeft;
     _titleLabel.numberOfLines = 1;
-    [self.contentView addSubview:_titleLabel];
+    [self.containerView addSubview:_titleLabel];
     [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.left.mas_equalTo(self.contentView).offset(20);
-        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.top.left.mas_equalTo(self.containerView).offset(15);
+        make.right.mas_equalTo(self.containerView).offset(-15);
         make.height.mas_equalTo(26);
     }];
     
@@ -154,20 +176,20 @@
     _descLabel.textColor = [UIColor themeGray3];
     _descLabel.textAlignment = NSTextAlignmentLeft;
     _descLabel.numberOfLines = 1;
-    [self.contentView addSubview:_descLabel];
+    [self.containerView addSubview:_descLabel];
     [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).offset(20);
+        make.left.mas_equalTo(self.containerView).offset(15);
         make.top.mas_equalTo(self.titleLabel.mas_bottom);
-        make.right.mas_equalTo(self.contentView).offset(-45);
+        make.right.mas_equalTo(self.containerView).offset(-45);
         make.height.mas_equalTo(17);
     }];
     
     _iconImageView = [[UIImageView alloc] init];
     _iconImageView.layer.cornerRadius = 14;
     _iconImageView.clipsToBounds = YES;
-    [self.contentView addSubview:_iconImageView];
+    [self.containerView addSubview:_iconImageView];
     [self.iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).offset(20);
+        make.left.mas_equalTo(self.containerView).offset(15);
         make.width.height.mas_equalTo(28);
         make.top.mas_equalTo(self.descLabel.mas_bottom).offset(8);
     }];
@@ -177,19 +199,19 @@
     _contentLabel.textColor = [UIColor themeGray1];
     _contentLabel.textAlignment = NSTextAlignmentLeft;
     _contentLabel.numberOfLines = 1;
-    [self.contentView addSubview:_contentLabel];
+    [self.containerView addSubview:_contentLabel];
     [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.iconImageView.mas_right).offset(8);
         make.centerY.mas_equalTo(self.iconImageView);
-        make.right.mas_equalTo(self.contentView).offset(-45);
+        make.right.mas_equalTo(self.containerView).offset(-45);
         make.height.mas_equalTo(22);
     }];
     
     _rightArrowIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
-    [self.contentView addSubview:self.rightArrowIcon];
+    [self.containerView addSubview:self.rightArrowIcon];
     [self.rightArrowIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.centerY.mas_equalTo(self.containerView);
+        make.right.mas_equalTo(self.containerView).offset(-15);
         make.width.height.mas_equalTo(20);
     }];
 }
@@ -198,7 +220,8 @@
 - (void)cellClicked:(UIControl *)controll {
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
     if (self.currentData) {
-        FHHouseNewsSocialModel *socialInfo = (FHHouseNewsSocialModel *)self.currentData;
+        FHDetailNewUGCSocialCellModel *cellModel = (FHDetailNewUGCSocialCellModel *)self.currentData;
+        FHHouseNewsSocialModel *socialInfo = cellModel.socialInfo;
         if (socialInfo.socialGroupInfo && socialInfo.socialGroupInfo.socialGroupId.length > 0) {
             self.baseViewModel.contactViewModel.needRefetchSocialGroupData = YES;
             NSDictionary *log_pb = tracerDic[@"log_pb"];
@@ -226,5 +249,21 @@
 - (NSString *)elementTypeString:(FHHouseType)houseType {
     return @"community_group";
 }
+
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
+}
+
+
+@end
+
+@implementation FHDetailNewUGCSocialCellModel
+
+
 
 @end

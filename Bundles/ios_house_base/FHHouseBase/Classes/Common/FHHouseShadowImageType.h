@@ -46,6 +46,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHPlotHouseModelTypeLocationPeriphery,
     ///小区详情页小区问答
     FHPlotHouseModelTypeNeighborhoodQA,
+    ///小区详情页小区点评
+    FHPlotHouseModelTypeNeighborhoodComment,
     ///小区详情页推荐经纪人
      FHPlotHouseModelTypeAgentlist,
     ///小区详情页已售房源
@@ -65,7 +67,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeNewLocation,
     // UGC社区入口
     FHHouseModelTypeNewSocialInfo,
-    
+    // 周边新盘
+    FHHouseModelTypeNewRelated,
     
 };
 

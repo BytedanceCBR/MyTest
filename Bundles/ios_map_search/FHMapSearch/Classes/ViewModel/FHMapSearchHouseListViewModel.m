@@ -28,7 +28,8 @@
 #import "FHSingleImageInfoCellModel.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import <FHHouseBase/FHSearchChannelTypes.h>
-
+#import "FHHouseListBaseItemCell.h"
+#import "FHHouseListBaseItemModel.h"
 
 #define kCellId @"singleCellId"
 
@@ -49,7 +50,7 @@
 @property(nonatomic , assign) CGPoint panStartLocation;
 @property(nonatomic , assign) CGFloat panStartDockLocation;
 @property(nonatomic , strong) NSMutableDictionary *houseLogs;
-@property(nonatomic , strong) FHSearchHouseDataModel *currentHouseDataModel;
+@property(nonatomic , strong) FHHouseListDataModel *currentHouseDataModel;
 @property(nonatomic , strong) FHSearchHouseDataModel *currentRentDataModel;
 //for rent house list
 
@@ -84,7 +85,9 @@
     [_refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
     self.tableView.mj_footer = _refreshFooter;
     
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
+//    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
+     [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kCellId];
+    
 }
 
 -(void)setHeaderView:(FHHouseAreaHeaderView *)headerView
@@ -177,24 +180,30 @@
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
     BOOL isLastCell = (indexPath.row == _houseList.count - 1);
-    id model = _houseList[indexPath.row];
-    if([model isKindOfClass:[FHHouseRentDataItemsModel class]]){
-        FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
-        FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:rentModel];
-        if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
-            FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
-            [imageInfoCell refreshTopMargin:20];
-            [imageInfoCell updateWithHouseCellModel:cellModel];            
-        }
+//    id model = _houseList[indexPath.row];
+    FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
+    if([cellModel isKindOfClass:[FHHouseListBaseItemModel class]]){
+//        FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
+//        FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:rentModel];
+//        if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
+//            FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
+//            [imageInfoCell refreshTopMargin:20];
+//            [imageInfoCell updateWithHouseCellModel:cellModel];
+//        }
+                      FHHouseListBaseItemCell *imageInfoCell = (FHHouseListBaseItemCell *)cell;
+        //                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+        //                [imageInfoCell refreshTopMargin:20];
+                        [imageInfoCell refreshWithData:cellModel];
+                        
     }else{
-        if([model isKindOfClass:[FHSearchHouseDataItemsModel class]]){
-            FHSearchHouseDataItemsModel *oldModel = (FHSearchHouseDataItemsModel *)model;
-            FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:oldModel];
-            if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
-                FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
-                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-                [imageInfoCell refreshTopMargin:20];
-                [imageInfoCell updateWithHouseCellModel:cellModel];
+        if([cellModel isKindOfClass:[FHSearchHouseDataItemsModel class]]){
+//            FHSearchHouseDataItemsModel *oldModel = (FHSearchHouseDataItemsModel *)model;
+//            FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:oldModel];
+            if ([cell isKindOfClass:[FHHouseListBaseItemCell class]]) {
+                FHHouseListBaseItemCell *imageInfoCell = (FHHouseListBaseItemCell *)cell;
+//                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+//                [imageInfoCell refreshTopMargin:20];
+                [imageInfoCell refreshWithData:cellModel];
                 
             }
         }
@@ -212,11 +221,12 @@
     id model = _houseList[indexPath.row];
     if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
         FHSearchHouseDataItemsModel *oldModel = (FHSearchHouseDataItemsModel *)model;
-        if ([oldModel showRecommendReason]) {
-            return 105+[FHHouseBaseItemCell recommendReasonHeight];
-        }
+//        if ([oldModel showRecommendReason]) {
+//            return 105+[FHHouseBaseItemCell recommendReasonHeight];
+//        }
+        return 88;
     }
-    return 105;
+    return 88;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -230,18 +240,28 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    id model = _houseList[indexPath.row];
-    if([model isKindOfClass:[FHHouseRentDataItemsModel class]]){
-        FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
-        if (self.listController.showRentHouseDetailBlock) {
-            self.listController.showRentHouseDetailBlock(rentModel, indexPath.row,self.currentBubble);
-        }
-    }else if([model isKindOfClass:[FHSearchHouseDataItemsModel class]]){
-        FHSearchHouseDataItemsModel *houseModel = (FHSearchHouseDataItemsModel *)model;
-        if (self.listController.showHouseDetailBlock) {
-            self.listController.showHouseDetailBlock(model,indexPath.row,self.currentBubble);
-        }
-    }
+//    id model = _houseList[indexPath.row];
+//    if([model isKindOfClass:[FHHouseRentDataItemsModel class]]){
+//        FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
+//        if (self.listController.showRentHouseDetailBlock) {
+//            self.listController.showRentHouseDetailBlock(rentModel, indexPath.row,self.currentBubble);
+//        }
+//    }else if([model isKindOfClass:[FHSearchHouseDataItemsModel class]]){
+//        FHSearchHouseDataItemsModel *houseModel = (FHSearchHouseDataItemsModel *)model;
+//        if (self.listController.showHouseDetailBlock) {
+//            self.listController.showHouseDetailBlock(model,indexPath.row,self.currentBubble);
+//        }
+//    }
+    FHHouseListBaseItemModel *model = _houseList[indexPath.row];
+       if(model.houseType == FHHouseTypeRentHouse){
+           if (self.listController.showRentHouseDetailBlock) {
+               self.listController.showRentHouseDetailBlock(model, indexPath.row,self.currentBubble);
+           }
+       }else if(model.houseType == FHHouseTypeSecondHandHouse){
+           if (self.listController.showHouseDetailBlock) {
+               self.listController.showHouseDetailBlock(model,indexPath.row,self.currentBubble);
+           }
+       }
 }
 
 -(void)dismiss
@@ -450,7 +470,7 @@
     }
     
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.currentHouseDataModel.offset needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
+    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:self.currentHouseDataModel.offset class:[FHListResultHouseModel class] needCommonParams:YES callback:^(NSError * _Nullable error, FHListResultHouseModel * _Nullable modelData) {
         
         if (!wself) {
             return ;
@@ -459,7 +479,8 @@
             [wself.listController dismissLoadingAlert];
         }
                 
-        if (!error && houseModel) {
+        if (!error && modelData) {
+            FHHouseListDataModel *houseModel = (FHHouseListDataModel*) modelData.data;
             wself.searchId = houseModel.searchId;
             wself.currentHouseDataModel = houseModel;
             [wself addEnterListPageLog];
@@ -574,7 +595,7 @@
     /*
      +(TTHttpTask *)searchRent:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam completion:(void(^_Nullable)(FHHouseRentModel *model , NSError *error))completion
      */
-    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:self.houseList.count searchId:self.searchId sugParam:nil class:[FHHouseRentModel class] completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
+    TTHttpTask *task = [FHMainApi searchRent:query params:param offset:self.houseList.count searchId:self.searchId sugParam:nil class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel * _Nonnull model, NSError * _Nonnull error) {
         
         if (!wself) {
             return ;
@@ -583,7 +604,7 @@
             [wself.listController dismissLoadingAlert];
         }
         
-        FHHouseRentDataModel *houseModel = model.data;
+        FHHouseListDataModel *houseModel = model.data;
         
         if (!error && houseModel) {
             wself.searchId = houseModel.searchId;
@@ -807,19 +828,22 @@
 
 -(void)addHouseShowLog:(NSIndexPath *)indexPath
 {
-    id model = _houseList[indexPath.row];
-    NSDictionary *logPb;
-    NSString *imprId;
-    if([model isKindOfClass:[FHHouseRentDataItemsModel class]]){
-        FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
-        logPb = rentModel.logPb;
-        imprId = rentModel.imprId;
-    }else{
-        FHSearchHouseDataItemsModel *item = _houseList[indexPath.row];
-        logPb = item.logPb;
-        imprId = item.imprId;
-    }
-    
+//    id model = _houseList[indexPath.row];
+//    NSDictionary *logPb;
+//    NSString *imprId;
+//    if([model isKindOfClass:[FHHouseRentDataItemsModel class]]){
+//        FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
+//        logPb = rentModel.logPb;
+//        imprId = rentModel.imprId;
+//    }else{
+//        FHSearchHouseDataItemsModel *item = _houseList[indexPath.row];
+//        logPb = item.logPb;
+//        imprId = item.imprId;
+//    }
+//
+    FHHouseListBaseItemModel *model = _houseList[indexPath.row];
+    NSDictionary *logPb = model.logPb;
+    NSString *imprId = model.imprId;;
     if (_houseLogs[@(indexPath.row)]) {
         return;
     }

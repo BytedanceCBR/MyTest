@@ -16,9 +16,9 @@
     NSArray *filterArr = [moduleArr copy];
     for (FHDetailBaseModel *model in filterArr) {
         model.shdowImageScopeType = FHHouseShdowImageScopeTypeDefault;
-//        if ([model isKindOfClass:[FHDetailListSectionTitleModel class]]) {
-//            [moduleArr removeObject:model];
-//        }
+        if ([model isKindOfClass:[FHDetailListSectionTitleModel class]]) {
+            [moduleArr removeObject:model];
+        }
     }
     NSMutableArray *coreInfos = [[NSMutableArray alloc]init];
     NSMutableArray *sales = [[NSMutableArray alloc]init];
@@ -26,6 +26,8 @@
     NSMutableArray *agentlist = [[NSMutableArray alloc]init];
     NSMutableArray *locations = [[NSMutableArray alloc]init];
     NSMutableArray *disclaimers = [[NSMutableArray alloc]init];
+    NSMutableArray *related = [[NSMutableArray alloc]init];
+    NSMutableArray *socialInfo = [[NSMutableArray alloc]init];
 
     [moduleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
@@ -47,6 +49,12 @@
                 break;
             case FHHouseModelTypeDisclaimer:
                 [disclaimers addObject:obj];
+                break;
+            case FHHouseModelTypeNewRelated:
+                [related addObject:obj];
+                break;
+            case FHHouseModelTypeNewSocialInfo:
+                [socialInfo addObject:obj];
                 break;
             default:
                 break;
@@ -71,16 +79,23 @@
     if (disclaimers.count > 0) {
         [moduleItems addObject:@{@"disclaimers":disclaimers}];
     }
+    if (related.count > 0) {
+        [moduleItems addObject:@{@"related":related}];
+    }
+    if (socialInfo.count > 0) {
+        [moduleItems addObject:@{@"socialInfo":socialInfo}];
+    }
     [moduleItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *currentItemArr = obj[[obj allKeys][0]];
 //        单个cell模块
-        if([[obj allKeys] containsObject:@"sales"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"floorPlans"]) {
+        if([[obj allKeys] containsObject:@"sales"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"floorPlans"] || [[obj allKeys] containsObject:@"socialInfo"] || [[obj allKeys] containsObject:@"related"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-                model.shadowImageType = FHHouseShdowImageTypeRound;;
+                model.shadowImageType = FHHouseShdowImageTypeRound;
+                model.shdowImageScopeType = FHHouseShdowImageScopeTypeBottomAll;
             }];
         }
-//        if([[obj allKeys] containsObject:@"locations"]) {
+//        if([[obj allKeys] containsObject:@"socialInfo"]) {
 //            [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 //                FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
 //                model.shdowImageScopeType = FHHouseShdowImageScopeTypeBottomAll;
@@ -112,8 +127,35 @@
                 }
             }];
         }
+        //加载周边时
+        if ([[obj allKeys] containsObject:@"related"]) {
+            //如果包含大标题的模块存在，则当前模块第一个元素和上一个模块最后一个元素的阴影不裁剪,同时在当前模块插入标题
+            if (idx > 0) {
+                FHDetailBaseModel *currentModel = currentItemArr[0];
+                currentModel.shdowImageScopeType = FHHouseShdowImageScopeTypeTopAll;
+                NSDictionary *previousItem = moduleItems[idx-1];
+                NSArray *previousArr = previousItem[[previousItem allKeys][0]];
+                FHDetailBaseModel *previousModel = previousArr[previousArr.count -1];
+                previousModel.shdowImageScopeType = FHHouseShdowImageScopeTypeBottomAll;
+                [FHNewDetailModuleHelper moduleInsertSectionTitle:moduleArr beforeModel:currentModel];
+            }
+        }
     }];
     return moduleArr;
+}
+
++ (void)moduleInsertSectionTitle:(NSMutableArray *)returnArr beforeModel:(FHDetailBaseModel *) model{
+    __block NSInteger insterIndex = 0 ;
+    FHDetailListSectionTitleModel *titleMolde = [[FHDetailListSectionTitleModel alloc]init];
+    if (model.houseModelType == FHHouseModelTypeNewRelated) {
+        titleMolde.title = @"周边新盘";
+    }
+    [returnArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isEqual:model]) {
+            insterIndex = idx;
+        }
+    }];
+    [returnArr insertObject:titleMolde atIndex:insterIndex];
 }
 
 @end

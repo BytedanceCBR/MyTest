@@ -45,6 +45,8 @@
 #import "FHDetailNewPriceNotifyCell.h"
 #import "FHDetailNewPropertyListCell.h"
 #import "FHOldDetailDisclaimerCell.h"
+#import "FHHouseListBaseItemCell.h"
+#import "FHHouseListBaseItemModel.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -81,11 +83,12 @@
     
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     
-    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
+//    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
+    [self.tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListBaseItemModel class])];
 
     [self.tableView registerClass:[FHOldDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     
-    [self.tableView registerClass:[FHDetailNewUGCSocialCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseNewsSocialModel class])];
+    [self.tableView registerClass:[FHDetailNewUGCSocialCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewUGCSocialCellModel class])];
     //推荐经纪人
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
     
@@ -613,8 +616,6 @@
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
         FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
@@ -639,12 +640,14 @@
         
         [self.items addObject:agentListModel];
     }
-    // UGC社区入口 todo zjing????
-//    if (model.data.socialInfo && model.data.socialInfo.socialGroupInfo && model.data.socialInfo.socialGroupInfo.socialGroupId.length > 0) {
-//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//        [self.items addObject:grayLine];
-//        [self.items addObject:model.data.socialInfo];
-//    }
+    // UGC社区入口
+    if (model.data.socialInfo && model.data.socialInfo.socialGroupInfo && model.data.socialInfo.socialGroupInfo.socialGroupId.length > 0) {
+
+        FHDetailNewUGCSocialCellModel *socialInfoCM = [[FHDetailNewUGCSocialCellModel alloc]init];
+        socialInfoCM.houseModelType = FHHouseModelTypeNewSocialInfo;
+        socialInfoCM.socialInfo = model.data.socialInfo;
+        [self.items addObject:socialInfoCM];
+    }
     
     //楼盘动态
 //    if (model.data.timeline.list.count != 0) {
@@ -761,20 +764,13 @@
     self.detailController.isLoadingData = NO;
     if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
     {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        
-        FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
-        newsCellModel.hasMore = NO;
-        newsCellModel.titleText = @"周边新盘";
-        newsCellModel.clickEnable = NO;
-        
-        [self.items addObject:newsCellModel];
-        
         for(NSInteger i = 0;i < _relatedHouseData.data.items.count; i++)
         {
-            FHNewHouseItemModel *itemModel = [[FHNewHouseItemModel alloc] initWithData:[(_relatedHouseData.data.items[i]) toJSONData] error:nil];
+            NSString *data = [(_relatedHouseData.data.items[i]) toJSONString];
+            NSError *error = nil;
+            FHHouseListBaseItemModel *itemModel = [[FHHouseListBaseItemModel alloc] initWithString:data error:&error];
+//            FHNewHouseItemModel *itemModels = [[FHNewHouseItemModel alloc] initWithString:data error:nil];
+//            FHNewHouseItemModel *itemModels = [[FHNewHouseItemModel alloc] initWithData:data error:nil];
             itemModel.index = i;
             if (i == _relatedHouseData.data.items.count - 1) {
                 itemModel.isLast = YES;

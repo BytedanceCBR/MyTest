@@ -45,8 +45,11 @@ NS_ASSUME_NONNULL_BEGIN
                      completion:(void(^)(FHRentDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 租房-周边房源
-+ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId
-                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion;
+//+ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId
+//                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion;
+
++ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId class:(Class)cls
+completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))completion;
 
 // 租房-同小区房源
 + (TTHttpTask*)requestHouseRentSameNeighborhood:(NSString*)rentId
