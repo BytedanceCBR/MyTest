@@ -259,6 +259,23 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             }];
             lastView = rowView;
         }
+        if (model.extraInfo.houseCertificationInfo) {
+            rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
+            [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
+            [self.contentView addSubview:rowView];
+            [rowView updateWithHouseCertificationInfo:model.extraInfo.houseCertificationInfo];
+            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (lastView) {
+                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+                }else{
+                    make.top.mas_equalTo(10);
+                }
+                make.left.mas_equalTo(31);
+                make.right.mas_equalTo(-31);
+                make.height.mas_equalTo(20);
+            }];
+            lastView = rowView;
+        }
     }
     
     if (model.rentExtraInfo.securityInformation) {
@@ -402,6 +419,16 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             positionStr = @"debit_calculator";
         }
         
+    }else if ([view.data isKindOfClass:[FHDetailDataBaseExtraHouseCertificationModel class]]) {
+        FHDetailDataBaseExtraHouseCertificationModel *houseCertificationModel = (FHDetailDataBaseExtraHouseCertificationModel *)view.data;
+            NSDictionary *userInfoDict = @{@"tracer":@{}};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+            NSString *openUrl = houseCertificationModel.openUrl;
+            if (openUrl.length > 0) {
+                NSURL *url = [NSURL URLWithString:openUrl];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+            }
+            positionStr = @"house_license";
     }else if ([view.data isKindOfClass:[FHDetailDataBaseExtraFloorInfoModel class]]) {
         FHDetailDataBaseExtraFloorInfoModel *floorInfo = (FHDetailDataBaseExtraFloorInfoModel *)view.data;
         [self imAction:floorInfo.openUrl isFloorAction:YES];
@@ -723,6 +750,35 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
 }
 
+- (void)updateWithHouseCertificationInfo:(FHDetailDataBaseExtraHouseCertificationModel *)houseCertificationInfo {
+    self.data = houseCertificationInfo;
+      _nameLabel.text = houseCertificationInfo.baseTitle;
+     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
+     if (!IS_EMPTY_STRING(houseCertificationInfo.subName)) {
+         NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:houseCertificationInfo.subName attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
+         [minfoAttrStr appendAttributedString:infoStr];
+     }
+     _infoLabel.attributedText = minfoAttrStr;
+     
+     _logoImageView.hidden = YES;
+
+//     _indicatorLabel.text = floorInfo.extraContent;
+     
+     [_indicatorLabel sizeToFit];
+     
+     CGSize size = _indicatorLabel.bounds.size;
+     _indicatorLabel.hidden = NO;
+     
+     [_indicatorLabel  mas_updateConstraints:^(MASConstraintMaker *make) {
+         make.width.mas_equalTo(size.width);
+     }];
+     
+     [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+         make.right.mas_equalTo(-(26+size.width));
+         make.size.mas_equalTo(CGSizeZero);
+     }];
+    
+}
 @end
 
 @implementation FHDetailPropertyListCorrectingModel
