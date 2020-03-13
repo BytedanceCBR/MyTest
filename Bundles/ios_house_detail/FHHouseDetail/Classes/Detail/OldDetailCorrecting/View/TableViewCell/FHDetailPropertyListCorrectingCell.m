@@ -421,6 +421,9 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         
     }else if ([view.data isKindOfClass:[FHDetailDataBaseExtraHouseCertificationModel class]]) {
         FHDetailDataBaseExtraHouseCertificationModel *houseCertificationModel = (FHDetailDataBaseExtraHouseCertificationModel *)view.data;
+            NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+               // tracerDic[@"card_type"] = @"no_pic";
+            tracerDic[@"enter_from"] = @"old_detail";
             NSDictionary *userInfoDict = @{@"tracer":@{}};
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
             NSString *openUrl = houseCertificationModel.openUrl;
@@ -428,7 +431,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
                 NSURL *url = [NSURL URLWithString:openUrl];
                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             }
-            positionStr = @"house_license";
+            positionStr = @"certification_type";
     }else if ([view.data isKindOfClass:[FHDetailDataBaseExtraFloorInfoModel class]]) {
         FHDetailDataBaseExtraFloorInfoModel *floorInfo = (FHDetailDataBaseExtraFloorInfoModel *)view.data;
         [self imAction:floorInfo.openUrl isFloorAction:YES];
