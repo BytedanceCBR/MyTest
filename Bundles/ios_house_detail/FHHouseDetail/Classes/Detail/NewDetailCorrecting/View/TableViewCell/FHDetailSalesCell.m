@@ -200,14 +200,13 @@
         make.height.mas_equalTo(46);
     }];
     _containerView = [[UIView alloc] init];
-    _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.height.mas_equalTo(0);
-        make.bottom.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.shadowImage).offset(-20);
     }];
 }
 

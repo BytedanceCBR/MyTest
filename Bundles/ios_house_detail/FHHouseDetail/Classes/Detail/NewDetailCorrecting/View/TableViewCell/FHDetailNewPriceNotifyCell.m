@@ -53,12 +53,11 @@
         make.top.equalTo(self.contentView).offset(-12);
         make.bottom.equalTo(self.contentView).offset(12);
     }];
-    self.containerView.backgroundColor = [UIColor whiteColor];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(15);
         make.right.mas_equalTo(self.contentView).mas_offset(-15);
-        make.top.mas_equalTo(0);
-        make.bottom.mas_equalTo(0);
+        make.top.equalTo(self.shadowImage).offset(20);
+        make.bottom.equalTo(self.shadowImage).offset(-20);
     }];
     [self.priceBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
@@ -150,8 +149,6 @@
 - (UIView *)containerView {
     if (!_containerView) {
         UIView *containerView = [[UIView alloc]init];
-        containerView.clipsToBounds = YES;
-        containerView.layer.cornerRadius = 10;
         [self.contentView addSubview:containerView];
         _containerView = containerView;
     }

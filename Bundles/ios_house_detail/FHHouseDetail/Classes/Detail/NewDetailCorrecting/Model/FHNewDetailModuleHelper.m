@@ -92,7 +92,7 @@
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 model.shadowImageType = FHHouseShdowImageTypeRound;
-                model.shdowImageScopeType = FHHouseShdowImageScopeTypeBottomAll;
+//                model.shdowImageScopeType = FHHouseShdowImageScopeTypeBottomAll;
             }];
         }
 //        if([[obj allKeys] containsObject:@"socialInfo"]) {

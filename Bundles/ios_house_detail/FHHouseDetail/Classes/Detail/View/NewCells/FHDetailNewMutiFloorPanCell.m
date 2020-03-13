@@ -160,15 +160,12 @@
     }];
     
     _containerView = [[UIView alloc] init];
-    _containerView.clipsToBounds = YES;
-    _containerView.layer.cornerRadius = 10;
-    _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
-        make.left.mas_equalTo(self.contentView).mas_offset(15);
-        make.right.mas_equalTo(self.contentView).mas_offset(-15);
-        make.bottom.mas_equalTo(self.contentView).offset(-30);
+        make.left.mas_equalTo(self.shadowImage).mas_offset(15);
+        make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
     }];
 
     [self.containerView addSubview:self.segmentControl];
