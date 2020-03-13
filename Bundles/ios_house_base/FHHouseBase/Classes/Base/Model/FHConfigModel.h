@@ -79,6 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
 @protocol FHConfigDataOpData2ListModel<NSObject>
 
 @end
@@ -450,6 +451,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHConfigDataOpData2Model *opData2 ;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataOpData2ListModel> *opData2list;
 @property (nonatomic, strong , nullable) FHConfigDataOpData2Model *toolboxData;
+@property (nonatomic, strong , nullable) FHConfigDataOpData2Model *mainPageTopOpData;
 
 //@property (nonatomic, strong , nullable) FHSearchConfigModel *filter ;
 @property (nonatomic, strong , nullable) FHConfigDataOpDataModel *opData ;
