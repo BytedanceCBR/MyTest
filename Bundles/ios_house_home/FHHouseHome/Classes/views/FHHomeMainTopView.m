@@ -24,7 +24,7 @@
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
 static const float kSegementedMainPadingBottom = 10;
-static const float kMapSearchBtnRightPading = 70;
+static const float kMapSearchBtnRightPading = 50;
 
 @interface FHHomeMainTopView()
 
@@ -34,7 +34,7 @@ static const float kMapSearchBtnRightPading = 70;
 @property (nonatomic, strong) UILabel * countryLabel;
 @property (nonatomic, strong) UIImageView * cityImageButtonLeftIcon;
 @property (nonatomic, assign) BOOL isShowSearchBtn;
-
+@property (nonatomic, strong) FHConfigDataOpData2ItemsModel *mapItemModel;
 @end
 
 @implementation FHHomeMainTopView
@@ -76,6 +76,7 @@ static const float kMapSearchBtnRightPading = 70;
     [_searchBtn setImage:ICON_FONT_IMG(24,@"\U0000e675",[UIColor themeGray1]) forState:UIControlStateNormal];
     [_searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
     _searchBtn.hidden = YES;
+    _searchBtn.hitTestEdgeInsets =  UIEdgeInsetsMake(-5, -5, -5, -5);
     [self addSubview:_searchBtn];
     
     WeakSelf;
@@ -83,19 +84,86 @@ static const float kMapSearchBtnRightPading = 70;
         StrongSelf;
         [self showUnValibleCity];
     }];
-    
-    
-    _mapSearchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_mapSearchBtn setImage:ICON_FONT_IMG(24,@"\U0000e6bd",[UIColor themeGray1]) forState:UIControlStateNormal];
-    [_mapSearchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_mapSearchBtn];
-    
-    _mapSearchLabel = [UILabel new];
-    _mapSearchLabel.text = @"地图找房";
-    _mapSearchLabel.textColor = [UIColor themeGray1];
-    _mapSearchLabel.font = [UIFont themeFontMedium:14];
-    [self addSubview:_mapSearchLabel];
+        
+}
 
+- (void)updateMapSearchBtn
+{
+    
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+
+    if (configData.mainPageTopOpData && configData.mainPageTopOpData.items.count >= 1 && configData.cityAvailability.enable.boolValue) {
+        
+        __block FHConfigDataOpData2ItemsModel *mapItemModel = nil;
+         [configData.mainPageTopOpData.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+             if ([obj isKindOfClass:[FHConfigDataOpData2ItemsModel class]]) {
+                 if ([((FHConfigDataOpData2ItemsModel *)obj).id isEqualToString:@"map_search"]) {
+                     mapItemModel = (FHConfigDataOpData2ItemsModel *)obj;
+                 }
+             }
+         }];
+        
+        _mapItemModel = mapItemModel;
+        
+        if (!mapItemModel) {
+            return;
+        }
+        
+        if ([self.subviews containsObject:_mapSearchLabel]  || [self.subviews containsObject:_mapSearchLabel] ) {
+            return;
+        }
+        
+        _mapSearchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_mapSearchBtn setImage:[UIImage imageNamed:@"home_map_icon"] forState:UIControlStateNormal];
+        [_mapSearchBtn addTarget:self action:@selector(clickMapSearch) forControlEvents:UIControlEventTouchUpInside];
+        _mapSearchBtn.hitTestEdgeInsets =  UIEdgeInsetsMake(-10, -10, -10, -30);
+
+        [self addSubview:_mapSearchBtn];
+        
+        _mapSearchLabel = [UILabel new];
+        _mapSearchLabel.text = @"地图";
+        _mapSearchLabel.textColor = [UIColor themeGray1];
+        _mapSearchLabel.font = [UIFont themeFontMedium:14];
+        [self addSubview:_mapSearchLabel];
+
+        
+        [_mapSearchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
+            make.centerY.equalTo(self.searchBtn).offset(0);
+            make.width.height.mas_equalTo(20);
+        }];
+        
+        [_mapSearchLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+              make.left.equalTo(self.mapSearchBtn.mas_right).offset(5);
+              make.centerY.equalTo(self.mapSearchBtn).offset(0);
+              make.width.mas_equalTo(40);
+    //          make.height.mas_equalTo(24);
+        }];
+            
+    }else
+    {
+        [_mapSearchBtn removeFromSuperview];
+        _mapSearchBtn = nil;
+        [_mapSearchLabel removeFromSuperview];
+        _mapSearchLabel = nil;
+    }
+}
+
+- (void)clickMapSearch
+{
+    if (_mapItemModel) {
+        NSString *openUrlStr =_mapItemModel.openUrl;
+        if (openUrlStr) {
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrlStr] userInfo:nil];
+        }
+    }
+    
+    NSMutableDictionary *clickParams = [NSMutableDictionary new];
+    if ([_mapItemModel.logPb isKindOfClass:[NSDictionary class]]) {
+        [clickParams addEntriesFromDictionary:_mapItemModel.logPb];
+    }
+    
+    [FHEnvContext recordEvent:clickParams andEventKey:@""];
     
 }
 
@@ -139,7 +207,7 @@ static const float kMapSearchBtnRightPading = 70;
         make.centerX.equalTo(self.topBackCityContainer);
         make.height.mas_equalTo(kSegementedMainTopHeight);
         if (self.changeCountryBtn) {
-            make.centerY.equalTo(self.changeCountryBtn).offset(-2);
+            make.centerY.equalTo(self.changeCountryBtn).offset(2);
         }else
         {
             make.bottom.mas_equalTo(8);
@@ -151,28 +219,13 @@ static const float kMapSearchBtnRightPading = 70;
     [_searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self).offset(-15);
         if (self.segmentControl) {
-            make.centerY.equalTo(self.segmentControl).offset(2);
+            make.centerY.equalTo(self.segmentControl).offset(0);
         }else
         {
             make.bottom.mas_equalTo(8);
         }
         make.width.height.mas_equalTo(24);
     }];
-    
-    [_mapSearchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
-        make.centerY.equalTo(self.searchBtn).offset(2);
-        make.width.height.mas_equalTo(20);
-    }];
-    
-    [_mapSearchLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-          make.left.equalTo(self.mapSearchBtn.mas_right).offset(5);
-          make.centerY.equalTo(self.searchBtn).offset(2);
-          make.width.mas_equalTo(60);
-          make.height.mas_equalTo(30);
-    }];
-    
-    
 }
 
 - (void)setUpHouseSegmentedControl
@@ -410,6 +463,7 @@ static const float kMapSearchBtnRightPading = 70;
     {
         [self setupSetmentedControl];
         [self setUpHouseSegmentedControl];
+        [self updateMapSearchBtn];
     }
     
 }
@@ -421,32 +475,33 @@ static const float kMapSearchBtnRightPading = 70;
     }
     
     if(isShowSearchBtn){
-        self.searchBtn.hidden = NO;
-        self.mapSearchLabel.hidden = YES;
-        [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(self).offset(-45);
-            if (self.segmentControl) {
-                make.centerY.equalTo(self.segmentControl).offset(2);
-            }else
-            {
-                make.bottom.mas_equalTo(8);
-            }
-            make.width.height.mas_equalTo(20);
+//        self.searchBtn.hidden = NO;
+//        self.mapSearchLabel.hidden = YES;
+        self.mapSearchLabel.alpha = 0;
+        self.searchBtn.alpha = 0;
+
+        [UIView animateWithDuration:1 animations:^{
+            self.searchBtn.alpha = 1;
+            self.searchBtn.hidden = NO;
+            [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.equalTo(self).offset(-kMapSearchBtnRightPading - 10);
+                make.centerY.equalTo(self.searchBtn).offset(0);
+                make.width.height.mas_equalTo(20);
+            }];
         }];
     }else
     {
         self.searchBtn.hidden = YES;
-        self.mapSearchLabel.hidden = NO;
-
-        [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+//        self.mapSearchLabel.hidden = NO;
+ 
+        [UIView animateWithDuration:1 animations:^{
+            self.mapSearchLabel.alpha = 1;
+//            self.searchBtn.alpha = 0;
+             [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
-            if (self.segmentControl) {
-                make.centerY.equalTo(self.segmentControl).offset(2);
-            }else
-            {
-                make.bottom.mas_equalTo(8);
-            }
+            make.centerY.equalTo(self.searchBtn).offset(0);
             make.width.height.mas_equalTo(20);
+           }];
         }];
     }
     

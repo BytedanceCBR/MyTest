@@ -240,6 +240,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
         [FHEnvContext changeFindTabTitle];
         [FHEnvContext showRedPointForNoUgc];
+        [self.topView  updateMapSearchBtn];
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
     }];
 }
