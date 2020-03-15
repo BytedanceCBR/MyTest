@@ -14,6 +14,7 @@
 #import "UIColor+Theme.h"
 #import "FHDetailTopBannerView.h"
 
+
 @interface FHDeatilHeaderTitleView ()
 @property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, weak) UIButton *mapBtn;//仅小区展示
@@ -213,6 +214,7 @@
 
     __block UIView *lastView = self.tagBacView;
 
+    __block CGFloat maxWidth = 0;
     [tags enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHHouseTagsModel *tagModel = obj;
         CGSize itemSize = [tagModel.content sizeWithAttributes:@{
@@ -221,18 +223,29 @@
         UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#FFEAD3"]:[UIColor colorWithHexString:@"#F2F1EF"];
         UIColor *tagTextColor = idx == 0 ?[UIColor colorWithHexString:@"#ff9300"]:[UIColor colorWithHexString:@"#a49a92"];
         UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
-        [self.tagBacView addSubview:label];
-        [label mas_makeConstraints:^(MASConstraintMaker *make) {
-            if (idx == 0) {
-                make.left.equalTo(lastView).offset(16);
-            }else {
-                make.left.equalTo(lastView.mas_right).offset(10);
-            }
-            make.top.equalTo(self.tagBacView);
-            make.width.mas_offset(itemSize.width+18);
-            make.height.equalTo(self.tagBacView);
-        }];
-        lastView = label;
+                
+        CGFloat inset = 10;
+        if (self.model.housetype == FHHouseTypeNewHouse) {
+            inset = 4;
+        }
+        CGFloat itemWidth = itemSize.width + 18;
+        maxWidth = 30 + itemWidth * (idx + 1) + inset * idx;
+        if (maxWidth >= [UIScreen mainScreen].bounds.size.width - 30) {
+            *stop = YES;
+        }else {
+            [self.tagBacView addSubview:label];
+            [label mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (idx == 0) {
+                    make.left.equalTo(lastView).offset(16);
+                }else {
+                    make.left.equalTo(lastView.mas_right).offset(inset);
+                }
+                make.top.equalTo(self.tagBacView);
+                make.width.mas_offset(itemWidth);
+                make.height.equalTo(self.tagBacView);
+            }];
+            lastView = label;
+        }
     }];
 }
 

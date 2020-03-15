@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHPropertyListCorrectingRowView : UIView
+@interface FHPropertyListCorrectingRowView : UIControl
 
 @property (nonatomic, strong)   UILabel       *keyLabel;
 @property (nonatomic, strong)   UILabel       *valueLabel;

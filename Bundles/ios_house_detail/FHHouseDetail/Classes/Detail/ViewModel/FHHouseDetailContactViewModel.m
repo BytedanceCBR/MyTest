@@ -499,7 +499,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSString *btnTitle = @"提交";
     NSString *fromStr = self.fromStr;
     NSNumber *cluePage = nil;
-    
+    NSString *toast = nil;
+
     if (extraDict[@"title"]) {
         title = extraDict[@"title"];
     }
@@ -515,6 +516,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (extraDict[kFHCluePage]) {
         cluePage = extraDict[kFHCluePage];
     }
+    if (extraDict[@"toast"]) {
+        toast = extraDict[@"toast"];
+    }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
     fillFormConfig.houseType = self.houseType;
     fillFormConfig.houseId = self.houseId;
@@ -522,6 +526,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     fillFormConfig.from = fromStr;
     fillFormConfig.realtorId = self.contactPhone.realtorId;
     fillFormConfig.customHouseId = self.customHouseId;
+    if (self.toast && self.toast.length > 0) {
+        fillFormConfig.toast = self.toast;
+    }
     if (self.houseType == FHHouseTypeNeighborhood) {
         fillFormConfig.title = @"咨询经纪人";
         fillFormConfig.btnTitle = @"提交";
@@ -536,8 +543,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (cluePage) {
         fillFormConfig.cluePage = cluePage;
     }
-    if (self.toast && self.toast.length > 0) {
-        fillFormConfig.toast = self.toast;
+    if (toast.length > 0) {
+        fillFormConfig.toast = toast;
     }
     NSMutableDictionary *params = [self baseParams].mutableCopy;
     if (extraDict.count > 0) {

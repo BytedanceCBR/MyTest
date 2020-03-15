@@ -185,23 +185,26 @@
 
 - (void)submitBtnDidClick:(UIButton *)btn
 {
-    // todo zjing test
-    NSString *title = @"领取优惠";
-    NSString *subtitle = @"领取优惠的范德萨范德萨范德萨";
-    NSString *btnTitle = @"获取底价";
-    FHClueFormPageTypeC cluePage = FHClueFormPageTypeCNewSales;
     NSInteger index = btn.tag - 100;
-    
+
     FHDetailSalesCellModel *model = (FHDetailSalesCellModel *)self.currentData;
-    
+    if (index <0 || index >= model.discountInfo.count) {
+        return;
+    }
+    FHDetailNewDiscountInfoItemModel *itemInfo = model.discountInfo[index];
+    NSString *title = itemInfo.discountReportTitle;
+    NSString *subtitle = itemInfo.discountReportSubTitle;
+    NSString *toast = itemInfo.discountReportDoneTitle;
+    NSString *btnTitle = itemInfo.discountButtonText;
     NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
                                       @"position":@"report_button",
                                       @"element_from":@"be_null"
                                       }.mutableCopy;
-    extraDic[kFHCluePage] = @(cluePage);
+    extraDic[kFHCluePage] = itemInfo.page;
     extraDic[@"title"] = title;
     extraDic[@"subtitle"] = subtitle;
     extraDic[@"btn_title"] = btnTitle;
+    extraDic[@"toast"] = toast;
 
     [model.contactViewModel fillFormActionWithExtraDict:extraDic];
 }

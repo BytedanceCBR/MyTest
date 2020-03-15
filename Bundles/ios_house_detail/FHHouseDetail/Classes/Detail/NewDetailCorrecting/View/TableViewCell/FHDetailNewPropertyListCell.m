@@ -57,12 +57,15 @@
             
             StrongSelf;
             if (obj.isSingle) {
+                obj.realIndex = idx;
                 [singles addObject:obj];
             } else {
                 // 两列
                 if (doubleCount % 2 == 0) {
                     // 第1列
                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
+                    v.tag = 100+idx;
+                    [v addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
                     [self.contentView addSubview:v];
                     [self.itemArray addObject:v];
                     [v mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -82,6 +85,8 @@
                 } else {
                     // 第2列
                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
+                    v.tag = 100+idx;
+                    [v addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
                     [self.contentView addSubview:v];
                     [self.itemArray addObject:v];
                     [v mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -111,6 +116,8 @@
             topOffset = 6 + (doubleCount / 2 + doubleCount % 2) * listRowHeight;
             [singles enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
+                v.tag = 100+obj.realIndex;
+                [v addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
                 [self.contentView addSubview:v];
                 [self.itemArray addObject:v];
                 [v mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -140,6 +147,22 @@
 //        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-42);
 //    }];
 
+}
+
+- (void)openUrlDidClick:(UIControl *)btn
+{
+    NSInteger index = btn.tag - 100;
+    FHDetailNewPropertyListCellModel *model = (FHDetailNewPropertyListCellModel *)self.currentData;
+
+    if (index < 0 || index >= model.baseInfo.count) {
+        return;
+    }
+    FHHouseBaseInfoModel *obj = model.baseInfo[index];
+    if (obj.openUrl.length > 0) {
+       // todo zjing test
+        NSURL *url = [NSURL URLWithString:obj.openUrl];
+        [[TTRoute sharedRoute]openURLByPushViewController:url];
+    }
 }
 
 - (void)setupUI

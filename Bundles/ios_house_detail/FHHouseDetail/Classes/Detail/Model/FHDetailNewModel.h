@@ -201,6 +201,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *discountContent;
 @property (nonatomic, copy , nullable) NSString *discountSubContent;
 
+@property (nonatomic, copy , nullable) NSString *discountReportTitle;
+@property (nonatomic, copy , nullable) NSString *discountReportSubTitle;
+@property (nonatomic, copy , nullable) NSString *discountButtonText;
+@property (nonatomic, copy , nullable) NSString *discountReportDoneTitle;
+@property (nonatomic, strong) NSNumber *page;
+
 @end
 
 @interface FHDetailNewSurroundingInfoSurrounding : JSONModel

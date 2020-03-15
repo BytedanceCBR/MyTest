@@ -280,24 +280,8 @@
         [titleAttrStr addAttributes:attributeSelect range:NSMakeRange(0, titleAttrStr.length)];
         
         [textAttrStr appendAttributedString:titleAttrStr];
-        
-        // todo zjing test
-//        if (model.saleStatus) {
-//            //@(-1),NSBaselineOffsetAttributeName
-//            NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
-//                NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                                 [UIFont themeFontRegular:10],NSFontAttributeName,
-//                                                 model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray3],NSBackgroundColorAttributeName,nil];
-//
-//            [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
-//
-////            [textAttrStr appendAttributedString:tagStr];
-//
-//            self.statusLabel.attributedText = tagStr;
-//
-//        }
+
         self.descLabel.attributedText = textAttrStr;
-//        self.priceLabel.text = model.pricingPerSqm;
         self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@ 朝向 %@",model.squaremeter,model.facingDirection];
     }
     [self layoutIfNeeded];

@@ -46,6 +46,9 @@
 
 + (BOOL)fh_isInHouseApp
 {
+    // todo zjing test
+    return YES;
+    
     NSRange isRange = [[TTSandBoxHelper bundleIdentifier] rangeOfString:@"fp1" options:NSCaseInsensitiveSearch];
     if (isRange.location != NSNotFound) {
         return YES;

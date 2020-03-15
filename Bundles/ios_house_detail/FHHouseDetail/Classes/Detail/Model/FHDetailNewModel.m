@@ -243,6 +243,10 @@
         @"actionDesc": @"action_desc",
         @"discountContent": @"discount_content",
         @"discountSubContent": @"discount_sub_content",
+        @"discountReportTitle": @"discount_report_title",
+        @"discountReportSubTitle": @"discount_report_sub_title",
+        @"discountButtonText": @"discount_button_text",
+        @"discountReportDoneTitle": @"discount_report_done_title",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

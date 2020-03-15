@@ -7,6 +7,7 @@
 
 #import "FHDetailNewPriceNotifyCell.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <ByteDanceKit/UIDevice+BTDAdditions.h>
 
 @interface FHDetailNewPriceNotifyCell ()
 
@@ -95,7 +96,7 @@
         make.top.equalTo(self.priceChangedNotify);
         make.bottom.equalTo(self.priceChangedNotify);
         make.left.equalTo(self.priceChangedNotify.mas_right);
-        make.width.mas_equalTo(1);
+        make.width.mas_equalTo([UIDevice btd_onePixel]);
     }];
     
     _openNotify = [UIButton buttonWithType:UIButtonTypeCustom];

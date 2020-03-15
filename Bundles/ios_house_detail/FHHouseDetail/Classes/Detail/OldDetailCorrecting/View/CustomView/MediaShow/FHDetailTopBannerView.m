@@ -10,6 +10,7 @@
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UILabel+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
+#import "FHUIAdaptation.h"
 
 @interface FHDetailTopBannerView ()
 @property (nonatomic, strong) UIImageView *shadowImage;
@@ -20,6 +21,7 @@
 @property (nonatomic, strong) UILabel *leftLabel;
 @property (nonatomic, strong) UILabel *rightLabel;
 @property (nonatomic, strong) CAShapeLayer *maskLayer;
+@property (nonatomic, strong) CAGradientLayer *gradientLayer;
 @end
 
 @implementation FHDetailTopBannerView
@@ -57,7 +59,7 @@
     }];
     [self.leftView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.bottom.mas_equalTo(0);
-        make.width.mas_equalTo(114);
+        make.width.mas_equalTo(AdaptOffset(114));
     }];
     [self.leftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(12);
@@ -96,6 +98,23 @@
         self.containerView.layer.mask = maskLayer;
         _maskLayer = maskLayer;
     }
+    
+    if (!_gradientLayer) {
+        
+        UIColor *leftColor = [UIColor colorWithHexString:@"#ff8e00"];
+        UIColor *rightColor = [UIColor themeOrange1];
+        NSArray *gradientColors = [NSArray arrayWithObjects:(id)(leftColor.CGColor), (id)(rightColor.CGColor), nil];
+        CAGradientLayer *gradientLayer = [[CAGradientLayer alloc] init];
+        gradientLayer.colors = gradientColors;
+        gradientLayer.startPoint = CGPointMake(0, 0);
+        gradientLayer.endPoint = CGPointMake(1, 1);
+        
+        gradientLayer.frame = CGRectMake(0, 0, (AdaptOffset(114)), 40);
+//        gradientlayer.cornerRadius = 4.0;
+        [self.leftView.layer insertSublayer:gradientLayer atIndex:0];
+        _gradientLayer = gradientLayer;
+    }
+    
 }
 
 - (UIImageView *)shadowImage {
