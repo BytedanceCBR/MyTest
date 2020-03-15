@@ -8,6 +8,7 @@
 #import "JSONModel.h"
 #import "FHSearchHouseModel.h"
 #import <FHHouseBase/FHHouseType.h>
+#import "FHHouseShadowImageType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHHouseListBaseItemModel<NSObject>
@@ -95,6 +96,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary *userStatus;
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, assign) BOOL isLast;
+@property (nonatomic, assign) BOOL isFirst;
+
+@property (nonatomic, assign) FHHouseShdowImageType shadowImageType;
+//是否裁剪阴影图
+@property (nonatomic, assign) FHHouseShdowImageScopeType shdowImageScopeType;
+//根据houseModelType将多个cell分为一个模块
+@property (nonatomic, assign)FHHouseModelType houseModelType;
 @end
 
 @interface  FHHouseListDataModel  : JSONModel

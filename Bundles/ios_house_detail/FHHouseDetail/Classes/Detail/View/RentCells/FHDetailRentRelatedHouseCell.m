@@ -79,7 +79,8 @@
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
-            make.height.mas_equalTo(cellHeight * model.relatedHouseData.items.count);
+            //最后一个元素高
+            make.height.mas_equalTo(cellHeight * (model.relatedHouseData.items.count-1)+100);
             make.left.right.mas_equalTo(self.containerView);
             make.bottom.mas_equalTo(self.containerView).offset(-bottomOffset);
         }];
@@ -257,7 +258,11 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 88;
+    if (indexPath.row == self.items.count-1) {
+        return 100;
+    }else {
+        return 88;
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
