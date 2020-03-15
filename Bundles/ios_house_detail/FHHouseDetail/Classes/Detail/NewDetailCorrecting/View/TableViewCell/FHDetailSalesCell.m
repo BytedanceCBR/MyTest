@@ -11,6 +11,7 @@
 #import "FHDetailNewModel.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import "FHHouseFillFormHelper.h"
+#import "FHUIAdaptation.h"
 
 @interface FHDetailSalesItemView: UIView
 
@@ -71,7 +72,7 @@
         _tagView.layer.cornerRadius = 2;
         _tagView.layer.borderColor = [UIColor colorWithHexString:@"#ff6a6a"].CGColor;
         _tagView.backgroundColor = [UIColor colorWithHexString:@"#ffefec"];
-        _tagView.titleLabel.font = [UIFont themeFontMedium:10];
+        _tagView.titleLabel.font = [UIFont themeFontMedium:AdaptFont(10)];
     }
     return _tagView;
 }
@@ -82,7 +83,7 @@
         _titleLabel = [[UILabel alloc]init];
         _titleLabel.font = [UIFont themeFontMedium:16];
         _titleLabel.textColor = [UIColor colorWithHexString:@"#4a4a4a"];
-        _titleLabel.numberOfLines = 1;
+        _titleLabel.numberOfLines = 2;
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     }
     return _titleLabel;
@@ -108,7 +109,7 @@
         [_submitBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateHighlighted];
         _submitBtn.layer.cornerRadius = 15;
         _submitBtn.layer.masksToBounds = YES;
-        _submitBtn.titleLabel.font = [UIFont themeFontMedium:16];
+        _submitBtn.titleLabel.font = [UIFont themeFontMedium:AdaptFont(16)];
     }
     return _submitBtn;
 }
@@ -143,6 +144,8 @@
     if (model.discountInfo.count > 0) {
         NSInteger itemsCount = model.discountInfo.count;
         CGFloat vHeight = 71;
+        CGFloat totalHeight = 0;
+        UIView *lastView = nil;
         for (NSInteger idx = 0; idx < itemsCount; idx++) {
             FHDetailNewDiscountInfoItemModel *item = model.discountInfo[idx];
             FHDetailSalesItemView *itemView = [[FHDetailSalesItemView alloc]initWithFrame:CGRectZero];
@@ -170,15 +173,33 @@
             [itemView.submitBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(btnWidth);
             }];
+            itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
+            [itemView.titleLabel sizeToFit];
+            CGFloat titleHeight  = floor(itemView.titleLabel.height);
+            CGFloat topOffset = 0;
+            if (titleHeight >= 44) {
+                vHeight = 71 + titleHeight - 19;
+                topOffset = -2;
+            }
+            totalHeight += vHeight;
+            [itemView.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(topOffset);
+                make.height.mas_equalTo(titleHeight);
+            }];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(idx * vHeight);
+                if (lastView) {
+                    make.top.mas_equalTo(lastView.mas_bottom);
+                }else {
+                    make.top.mas_equalTo(-1);
+                }
                 make.left.mas_equalTo(15);
                 make.right.mas_equalTo(-15);
                 make.height.mas_equalTo(vHeight);
             }];
+            lastView = itemView;
         }
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(vHeight * itemsCount);
+            make.height.mas_equalTo(totalHeight);
         }];
     }
 }

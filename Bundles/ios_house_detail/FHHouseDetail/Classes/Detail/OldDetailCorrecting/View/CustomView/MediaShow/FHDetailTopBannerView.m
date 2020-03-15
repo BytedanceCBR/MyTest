@@ -59,7 +59,7 @@
     }];
     [self.leftView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.bottom.mas_equalTo(0);
-        make.width.mas_equalTo(AdaptOffset(114));
+        make.width.mas_equalTo(114);
     }];
     [self.leftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(12);
@@ -109,7 +109,7 @@
         gradientLayer.startPoint = CGPointMake(0, 0);
         gradientLayer.endPoint = CGPointMake(1, 1);
         
-        gradientLayer.frame = CGRectMake(0, 0, (AdaptOffset(114)), 40);
+        gradientLayer.frame = CGRectMake(0, 0, 114, 40);
 //        gradientlayer.cornerRadius = 4.0;
         [self.leftView.layer insertSublayer:gradientLayer atIndex:0];
         _gradientLayer = gradientLayer;
