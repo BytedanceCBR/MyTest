@@ -320,4 +320,13 @@ typedef enum : NSInteger {
 
 
 
+
+@interface FHDetailNewTopBanner : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *businessTag;
+@property (nonatomic, copy , nullable) NSString *advantage;
+
+@end
+
+
 NS_ASSUME_NONNULL_END

@@ -145,17 +145,16 @@
     [self.contentView addSubview:_containerView];
     self.containerView.backgroundColor = [UIColor whiteColor];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).mas_offset(15);
-        make.right.mas_equalTo(self.contentView).mas_offset(-15);
-        make.top.mas_equalTo(0);
-        make.bottom.mas_equalTo(0);
+        make.top.mas_equalTo(self.shadowImage).offset(20);
+        make.right.mas_equalTo(self.shadowImage).offset(-15);
+        make.left.mas_equalTo(self.shadowImage).offset(15);
+        make.bottom.equalTo(self.shadowImage).offset(-20);
     }];
     self.bgControl = [[UIControl alloc] initWithFrame:CGRectZero];
     self.bgControl.backgroundColor = [UIColor themeWhite];
     [self.containerView addSubview:self.bgControl];
     [self.bgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.containerView);
-        make.height.mas_equalTo(119);
     }];
     
     [self.bgControl addTarget:self action:@selector(cellClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -167,7 +166,8 @@
     _titleLabel.numberOfLines = 1;
     [self.containerView addSubview:_titleLabel];
     [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.left.mas_equalTo(self.containerView).offset(15);
+        make.left.mas_equalTo(self.containerView).offset(15);
+        make.top.mas_equalTo(self.containerView).offset(30);
         make.right.mas_equalTo(self.containerView).offset(-15);
         make.height.mas_equalTo(26);
     }];
@@ -179,19 +179,20 @@
     [self.containerView addSubview:_descLabel];
     [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.containerView).offset(15);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(3);
         make.right.mas_equalTo(self.containerView).offset(-45);
         make.height.mas_equalTo(17);
     }];
     
     _iconImageView = [[UIImageView alloc] init];
-    _iconImageView.layer.cornerRadius = 14;
+    _iconImageView.layer.cornerRadius = 21;
     _iconImageView.clipsToBounds = YES;
     [self.containerView addSubview:_iconImageView];
     [self.iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.containerView).offset(15);
-        make.width.height.mas_equalTo(28);
-        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(8);
+        make.width.height.mas_equalTo(42);
+        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(10);
+        make.bottom.mas_equalTo(-30);
     }];
     
     _contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];

@@ -13,13 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FHHouseDetailContactViewModel;
 // 新房 周边配套里面地理位置信息
-@interface FHDetailCourtInfoCell : FHDetailBaseCell<FHDetailScrollViewDidScrollProtocol>
+@interface FHDetailCourtInfoCell : FHDetailBaseCell
 
 @end
 
 @interface FHDetailCourtInfoCellModel : FHDetailBaseModel
 
-@property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoModel *courtInfo;
+@property (nonatomic, strong , nullable) FHDetailNewSurroundingInfo *surroundingInfo;
 @property (nonatomic, weak)     UITableView       *tableView;
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 

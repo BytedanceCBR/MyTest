@@ -83,7 +83,6 @@
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self);
         make.top.bottom.mas_equalTo(self);
-        make.height.mas_equalTo(20);
     }];
     
     [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -150,12 +149,27 @@
     }
     self.consultView.hidden = YES;
     FHDetailCourtInfoCellModel *model = (FHDetailCourtInfoCellModel *)data;
-    // 二手房
+
     adjustImageScopeType(model)
     
-    if (model.courtInfo) {
-        [self updateErshouCellData];
+    if (model.surroundingInfo.location.length > 0) {
+        [self showLabelWithKey:@"位置:" value:[NSString stringWithFormat:@"%@",model.surroundingInfo.location] parentView:self.topView];
     }
+    CGFloat height = 0;
+    CGFloat topOffset = AdaptOffset(15);
+    if (model.surroundingInfo.surrounding) {
+        self.consultView.hidden = NO;
+        self.consultView.nameLabel.text = @"配套:";
+        self.consultView.infoLabel.text = model.surroundingInfo.surrounding.text;
+        height = 20;
+    }else {
+        self.consultView.hidden = YES;
+        topOffset = 0;
+    }
+    [self.consultView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(height);
+        make.top.equalTo(self.topView.mas_bottom).mas_offset(topOffset);
+    }];
 }
 
 - (UIImageView *)shadowImage {
@@ -208,81 +222,26 @@
     return @"neighborhood_detail";
 }
 
-// 二手房
-- (void)updateErshouCellData
-{
-    FHDetailCourtInfoCellModel *model = (FHDetailCourtInfoCellModel *)self.currentData;
-    if (model) {
-        NSString *areaName = model.courtInfo.areaName;
-        NSString *districtName = model.courtInfo.districtName;
-        if (areaName.length > 0 && districtName.length > 0) {
-            [self showLabelWithKey:@"位置:" value:[NSString stringWithFormat:@"%@-%@",districtName,areaName] parentView:self.topView];
-
-        } else if (districtName.length > 0) {
-            [self showLabelWithKey:@"位置:" value:districtName parentView:self.topView];
-        }
-//        if (model.courtInfo.useSchoolIm) {
-            self.consultView.hidden = NO;
-            self.consultView.nameLabel.text = @"配套:";
-        self.consultView.infoLabel.text = @"咨询地址及周边配套情况";
-//            self.consultView.infoLabel.text = model.courtInfo.schoolConsult.text;
-//        }else {
-//            self.consultView.hidden = YES;
-//            [self updateSchoolView:model.courtInfo.schoolDictList];
-//        }
-    }
-}
 
 #pragma mark - FHDetailScrollViewDidScrollProtocol
 
-- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
-//    if (vcParentView) {
-//        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
-//        if (UIScreen.mainScreen.bounds.size.height - point.y > 150) {
-//            [self addHouseShowLog];
-//        }
-//    }
-}
-
-// 添加house_show 埋点
-- (void)addHouseShowLog
-{
-//    FHDetailCourtInfoCellModel *model = (FHDetailCourtInfoCellModel *)self.currentData;
-//    NSString *tempKey = [NSString stringWithFormat:@"%ld", model.neighborhoodInfo.id];
-//    if ([self.houseShowCache valueForKey:tempKey]) {
-//        return;
-//    }
-//    [self.houseShowCache setValue:@(YES) forKey:tempKey];
-//    // house_show
-//    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-//    tracerDic[@"rank"] = @(0);
-//    tracerDic[@"card_type"] = @"left_pic";
-//    tracerDic[@"log_pb"] = model.courtInfo.logPb ? model.neighborhoodInfo.logPb : @"be_null";
-//    tracerDic[@"house_type"] = @"neighborhood";
-//    tracerDic[@"element_type"] = @"neighborhood_detail";
-//    tracerDic[@"search_id"] = model.neighborhoodInfo.searchId.length > 0 ? model.neighborhoodInfo.searchId : @"be_null";
-//    tracerDic[@"group_id"] = model.neighborhoodInfo.groupId.length > 0 ? model.neighborhoodInfo.groupId : (model.neighborhoodInfo.id ? model.neighborhoodInfo.id : @"be_null");
-//    tracerDic[@"impr_id"] = model.neighborhoodInfo.imprId.length > 0 ? model.neighborhoodInfo.imprId : @"be_null";
-//    [tracerDic removeObjectsForKeys:@[@"element_from"]];
-//    [FHUserTracker writeEvent:@"house_show" params:tracerDic];
-}
-
 - (void)imAction
 {
-//    FHDetailCourtInfoCellModel *model = (FHDetailCourtInfoCellModel *)self.currentData;
-//    if (model.neighborhoodInfo.useSchoolIm && model.neighborhoodInfo.schoolConsult.openUrl.length > 0) {
-//
-//        NSMutableDictionary *imExtra = @{}.mutableCopy;
-//        imExtra[@"from"] = @"app_oldhouse_school";
-//        imExtra[@"source_from"] = @"education_type";
-//        imExtra[@"im_open_url"] = model.neighborhoodInfo.schoolConsult.openUrl;
-//        imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-//        imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldSchool];
-//        [model.contactViewModel onlineActionWithExtraDict:imExtra];
-//        if (self.baseViewModel) {
-//            [self.baseViewModel addClickOptionLog:@"education_type"];
-//        }
-//    }
+    FHDetailCourtInfoCellModel *model = (FHDetailCourtInfoCellModel *)self.currentData;
+    if (model.surroundingInfo.surrounding.chatOpenurl.length > 0) {
+
+        // todo zjing test
+        NSMutableDictionary *imExtra = @{}.mutableCopy;
+        imExtra[@"from"] = @"app_oldhouse_school";
+        imExtra[@"source_from"] = @"education_type";
+        imExtra[@"im_open_url"] = model.surroundingInfo.surrounding.chatOpenurl;
+        imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
+        imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldSchool];
+        [model.contactViewModel onlineActionWithExtraDict:imExtra];
+        if ([self.baseViewModel respondsToSelector:@selector(addClickOptionLog:)]) {
+            [self.baseViewModel addClickOptionLog:@"education_type"];
+        }
+    }
 }
 
 - (void)showLabelWithKey:(NSString *)key value:(NSString *)value parentView:(UIView *)parentView
@@ -335,8 +294,8 @@
         make.height.mas_equalTo(46);
     }];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).mas_offset(AdaptOffset(15));
-        make.right.mas_equalTo(self.contentView).mas_offset(AdaptOffset(-15));
+        make.left.mas_equalTo(self.shadowImage).offset(15);
+        make.right.mas_equalTo(self.shadowImage).offset(-15);
         make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
         make.bottom.equalTo(self.contentView).offset(-12);
     }];
@@ -349,6 +308,7 @@
         make.left.mas_equalTo(self.containerView).mas_offset(AdaptOffset(15));
         make.right.mas_equalTo(self.containerView).mas_offset(AdaptOffset(-15));
         make.top.equalTo(self.topView.mas_bottom).mas_offset(AdaptOffset(15));
+        make.height.mas_equalTo(0);
         make.bottom.mas_equalTo(self.containerView);
     }];
 }

@@ -8,6 +8,8 @@
 #import "FHDetailNewAddressInfoCell.h"
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import "FHDetailNewModel.h"
+#import <BDWebImage/BDWebImage.h>
 
 @interface FHDetailNewAddressInfoCell ()
 
@@ -18,6 +20,7 @@
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UIButton *mapBtn;
 @property (nonatomic, strong) UIImageView *rightArrow;
+@property (nonatomic, strong) UIControl *actionBtn;
 
 @end
 
@@ -42,7 +45,8 @@
     FHDetailNewAddressInfoCellModel *model = (FHDetailNewAddressInfoCellModel *)data;
     adjustImageScopeType(model)
 
-    self.titleLabel.text = @"zjing江宁-秣陵南京市江宁区云台河路地铁站向北约500米江宁-秣陵南京市江宁区云台河路地铁站向北约500米";
+    self.titleLabel.text = model.courtAddress;
+    [self.mapBtn bd_setImageWithURL:[NSURL URLWithString:model.courtAddressIcon] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"plot_mapbtn"]];
 }
 
 - (void)setupUI
@@ -53,6 +57,7 @@
     [self.containerView addSubview:self.mapBtn];
     [self.containerView addSubview:self.titleLabel];
     [self.containerView addSubview:self.rightArrow];
+    [self.containerView addSubview:self.actionBtn];
 
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
@@ -89,13 +94,50 @@
         make.width.height.mas_equalTo(18);
         make.centerY.equalTo(self.containerView);
     }];
+    [self.actionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.rightArrow);
+        make.left.mas_equalTo(self.mapBtn);
+        make.top.bottom.equalTo(self.titleLabel);
+    }];
     
-    [self.mapBtn addTarget:self action:@selector(clickMapAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.actionBtn addTarget:self action:@selector(clickMapAction:) forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)clickMapAction:(UIButton *)btn {
-//if (self.model.mapImageClick) {
-//    self.model.mapImageClick();
+- (void)clickMapAction:(UIButton *)btn
+{
+    //地图页调用示例
+    FHDetailNewAddressInfoCellModel *model = (FHDetailNewAddressInfoCellModel *)self.currentData;
+    double longitude = [model.gaodeLng doubleValue] ? [model.gaodeLng doubleValue] : 0;
+    double latitude = [model.gaodeLat doubleValue] ? [model.gaodeLat doubleValue] : 0;
+    NSNumber *latitudeNum = @(latitude);
+    NSNumber *longitudeNum = @(longitude);
+    
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:@"公交" forKey:@"category"];
+    [infoDict setValue:latitudeNum forKey:@"latitude"];
+    [infoDict setValue:longitudeNum forKey:@"longitude"];
+    if (model.name) {
+        [infoDict setValue:model.name forKey:@"title"];
+    }
+
+    if (!longitude || !latitude) {
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+        [params setValue:@"经纬度缺失" forKey:@"reason"];
+        [params setValue:model.courtId forKey:@"house_id"];
+        [params setValue:@(1) forKey:@"house_type"];
+        [params setValue:infoDict[@"title"] forKey:@"name"];
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+    }
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
+    [tracer setValue:@"address" forKey:@"click_type"];
+    [tracer setValue:@"house_info" forKey:@"element_from"];
+    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+    [infoDict setValue:tracer forKey:@"tracer"];
+    
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType
@@ -159,6 +201,14 @@
         _rightArrow = [[UIImageView alloc]initWithImage:img];
     }
     return _rightArrow;
+}
+
+- (UIControl *)actionBtn
+{
+    if (!_actionBtn) {
+        _actionBtn = [[UIControl alloc]init];
+    }
+    return _actionBtn;
 }
 
 - (void)awakeFromNib {

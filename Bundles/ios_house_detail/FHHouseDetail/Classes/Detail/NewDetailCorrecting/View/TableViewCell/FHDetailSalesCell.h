@@ -9,11 +9,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHDetailSalesCell : FHDetailBaseCell <FHDetailScrollViewDidScrollProtocol>
+@class FHDetailNewDiscountInfoItemModel;
+
+@interface FHDetailSalesCell : FHDetailBaseCell
 
 @end
 
 @interface FHDetailSalesCellModel : FHDetailBaseModel
+
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewDiscountInfoItemModel *> *discountInfo;
+@property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 
 @end
 

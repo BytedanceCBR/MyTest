@@ -494,23 +494,50 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict
 {
+    NSString *title = nil;
+    NSString *subtitle = self.subTitle;
+    NSString *btnTitle = @"提交";
+    NSString *fromStr = self.fromStr;
+    NSNumber *cluePage = nil;
+    
+    if (extraDict[@"title"]) {
+        title = extraDict[@"title"];
+    }
+    if (extraDict[@"subtitle"]) {
+        subtitle = extraDict[@"subtitle"];
+    }
+    if (extraDict[@"btn_title"]) {
+        btnTitle = extraDict[@"btn_title"];
+    }
+    if (extraDict[@"from"]) {
+        fromStr = extraDict[@"from"];
+    }
+    if (extraDict[kFHCluePage]) {
+        cluePage = extraDict[kFHCluePage];
+    }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
     fillFormConfig.houseType = self.houseType;
     fillFormConfig.houseId = self.houseId;
     fillFormConfig.topViewController = self.belongsVC;
-    fillFormConfig.from = self.fromStr;
+    fillFormConfig.from = fromStr;
     fillFormConfig.realtorId = self.contactPhone.realtorId;
     fillFormConfig.customHouseId = self.customHouseId;
-    if (self.subTitle && self.subTitle.length > 0) {
-        fillFormConfig.subtitle = self.subTitle;
-    }
-    if (self.toast && self.toast.length > 0) {
-        fillFormConfig.toast = self.toast;
-    }
     if (self.houseType == FHHouseTypeNeighborhood) {
         fillFormConfig.title = @"咨询经纪人";
         fillFormConfig.btnTitle = @"提交";
         fillFormConfig.cluePage = @(FHClueFormPageTypeCNeighborhood);
+    }
+    if (title.length > 0) {
+        fillFormConfig.title = title;
+    }
+    if (subtitle.length > 0) {
+        fillFormConfig.subtitle = subtitle;
+    }
+    if (cluePage) {
+        fillFormConfig.cluePage = cluePage;
+    }
+    if (self.toast && self.toast.length > 0) {
+        fillFormConfig.toast = self.toast;
     }
     NSMutableDictionary *params = [self baseParams].mutableCopy;
     if (extraDict.count > 0) {

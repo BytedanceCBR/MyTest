@@ -406,3 +406,24 @@
     return YES;
 }
 @end
+
+
+
+
+@implementation FHDetailNewTopBanner
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"businessTag": @"business_tag",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end

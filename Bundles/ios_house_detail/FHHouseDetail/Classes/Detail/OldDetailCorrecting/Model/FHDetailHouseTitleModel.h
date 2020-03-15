@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL showMapBtn;
 @property (nonatomic, strong) FHDetailNeighborhoodSubMessageModel *neighborhoodInfoModel;
 @property (nonatomic, assign) FHHouseType housetype;
+@property (nonatomic, copy , nullable) NSString *businessTag;
+@property (nonatomic, copy , nullable) NSString *advantage;
+
 @end
 
 NS_ASSUME_NONNULL_END

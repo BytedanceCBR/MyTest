@@ -17,8 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-// FHDetailDisclaimerModel
-@interface FHDetailDisclaimerModel : FHDetailBaseModel
+@interface FHDetailDisclaimerModel : JSONModel
 
 @property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer ;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;

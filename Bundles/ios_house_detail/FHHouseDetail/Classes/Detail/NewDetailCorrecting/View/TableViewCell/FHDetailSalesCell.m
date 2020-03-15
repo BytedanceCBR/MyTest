@@ -8,10 +8,13 @@
 #import "FHDetailSalesCell.h"
 #import "FHDetailHeaderView.h"
 #import <ByteDanceKit/UIImage+BTDAdditions.h>
+#import "FHDetailNewModel.h"
+#import <TTBaseLib/UIViewAdditions.h>
+#import "FHHouseFillFormHelper.h"
 
 @interface FHDetailSalesItemView: UIView
 
-@property (nonatomic, strong) UIControl *tagView;
+@property (nonatomic, strong) UIButton *tagView;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *subtitleLabel;
 @property (nonatomic, strong) UIButton *submitBtn;
@@ -43,7 +46,7 @@
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(0);
-        make.height.mas_equalTo(20);
+        make.height.mas_equalTo(19);
         make.left.mas_equalTo(self.tagView.mas_right).mas_offset(12);
         make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-5);
     }];
@@ -60,11 +63,15 @@
     }];
 }
 
-- (UIControl *)tagView
+- (UIButton *)tagView
 {
     if (!_tagView) {
-        _tagView = [[UIControl alloc]init];
-        _tagView.backgroundColor = [UIColor redColor];
+        _tagView = [[UIButton alloc]init];
+        [_tagView setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+        _tagView.layer.cornerRadius = 2;
+        _tagView.layer.borderColor = [UIColor colorWithHexString:@"#ff6a6a"].CGColor;
+        _tagView.backgroundColor = [UIColor colorWithHexString:@"#ffefec"];
+        _tagView.titleLabel.font = [UIFont themeFontMedium:10];
     }
     return _tagView;
 }
@@ -86,7 +93,7 @@
     if (!_subtitleLabel) {
         _subtitleLabel = [[UILabel alloc]init];
         _subtitleLabel.font = [UIFont themeFontRegular:14];
-        _subtitleLabel.textColor = [UIColor colorWithHexString:@"#aeadad"]; // todo zjing test
+        _subtitleLabel.textColor = [UIColor colorWithHexString:@"#aeadad"]; 
         _subtitleLabel.numberOfLines = 1;
         _subtitleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     }
@@ -132,27 +139,37 @@
     FHDetailSalesCellModel *model = (FHDetailSalesCellModel *)data;
     
     adjustImageScopeType(model)
-
-    
-    // todo zjing test
-    NSArray *arr = @[@1,@2];
-    if (arr.count > 0) {
-        NSInteger itemsCount = arr.count;
+ 
+    if (model.discountInfo.count > 0) {
+        NSInteger itemsCount = model.discountInfo.count;
         CGFloat vHeight = 71;
-        for (NSInteger idx = 0; idx < arr.count; idx++) {
-            NSObject *item = [[NSObject alloc]init];
+        for (NSInteger idx = 0; idx < itemsCount; idx++) {
+            FHDetailNewDiscountInfoItemModel *item = model.discountInfo[idx];
             FHDetailSalesItemView *itemView = [[FHDetailSalesItemView alloc]initWithFrame:CGRectZero];
             // 添加事件
             itemView.tag = idx;
             itemView.submitBtn.tag = 100 + idx;
-            itemView.titleLabel.text = @"成功成交可返现5000元";
-            itemView.subtitleLabel.text = @"仅限本楼盘使用";
+            [itemView.tagView setTitle:item.itemDesc forState:UIControlStateNormal];
+            [itemView.tagView setTitle:item.itemDesc forState:UIControlStateHighlighted];
+            itemView.titleLabel.text = item.discountContent;
+            itemView.subtitleLabel.text = item.discountSubContent;
             [itemView.submitBtn setBackgroundImage:[UIImage btd_imageWithColor:[UIColor colorWithHexString:@"#ffefec"]] forState:UIControlStateNormal];
             [itemView.submitBtn setBackgroundImage:[UIImage btd_imageWithColor:[UIColor colorWithHexString:@"#ffefec"]] forState:UIControlStateHighlighted];
-            [itemView.submitBtn setTitle:@"开启" forState:UIControlStateNormal];
-            [itemView.submitBtn setTitle:@"开启" forState:UIControlStateHighlighted];
+            [itemView.submitBtn setTitle:item.actionDesc forState:UIControlStateNormal];
+            [itemView.submitBtn setTitle:item.actionDesc forState:UIControlStateHighlighted];
             [itemView.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
             [self.containerView addSubview:itemView];
+            [itemView.tagView sizeToFit];
+            [itemView.submitBtn sizeToFit];
+
+            CGFloat btnWidth = itemView.submitBtn.width + 34;
+            CGFloat iconWidth = itemView.tagView.width + 10;
+            [itemView.tagView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(iconWidth);
+            }];
+            [itemView.submitBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(btnWidth);
+            }];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(idx * vHeight);
                 make.left.mas_equalTo(15);
@@ -168,8 +185,25 @@
 
 - (void)submitBtnDidClick:(UIButton *)btn
 {
+    // todo zjing test
+    NSString *title = @"领取优惠";
+    NSString *subtitle = @"领取优惠的范德萨范德萨范德萨";
+    NSString *btnTitle = @"获取底价";
+    FHClueFormPageTypeC cluePage = FHClueFormPageTypeCNewSales;
     NSInteger index = btn.tag - 100;
     
+    FHDetailSalesCellModel *model = (FHDetailSalesCellModel *)self.currentData;
+    
+    NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
+                                      @"position":@"report_button",
+                                      @"element_from":@"be_null"
+                                      }.mutableCopy;
+    extraDic[kFHCluePage] = @(cluePage);
+    extraDic[@"title"] = title;
+    extraDic[@"subtitle"] = subtitle;
+    extraDic[@"btn_title"] = btnTitle;
+
+    [model.contactViewModel fillFormActionWithExtraDict:extraDic];
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -202,7 +236,7 @@
     _containerView = [[UIView alloc] init];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(30);
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.height.mas_equalTo(0);

@@ -30,6 +30,7 @@
 @property(nonatomic, strong) UIImage *placeHolder;
 @property(nonatomic, strong) NSArray *medias;
 @property(nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;
+
 @property(nonatomic, strong) FHDeatilHeaderTitleView *titleView;
 @property(nonatomic, strong) NSMutableArray *itemIndexArray;
 @property(nonatomic, strong) NSMutableArray *itemArray;
@@ -81,13 +82,10 @@
     // 底部banner按钮
     [self addSubview:self.bottomBannerView];
     
-
-    
-
     _noDataImageView = [[UIImageView alloc] init];
     [self addSubview:_noDataImageView];
     _noDataImageView.hidden = YES;
-    
+        
     _titleView = [[FHDeatilHeaderTitleView alloc]init];
     [self addSubview:_titleView];
     
@@ -140,6 +138,7 @@
     return _bottomBannerView;
 }
 
+
 -(UIView *)bottomGradientView {
     if(!_bottomGradientView){
         
@@ -185,6 +184,7 @@
         make.bottom.equalTo(self.colletionView);
         make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
     }];
+    // todo zjing test
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
         make.top.equalTo(self.colletionView.mas_bottom).offset(-82);
@@ -468,6 +468,14 @@
     if(isShowBottomBannerView && [self.delegate respondsToSelector:@selector(bottomBannerViewDidShow)]) {
         [self.delegate bottomBannerViewDidShow];
     }
+    CGFloat topOffset = 82;
+    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
+        topOffset -= 40;
+    }
+    [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.equalTo(self);
+        make.top.equalTo(self.colletionView.mas_bottom).offset(-topOffset);
+    }];
     self.titleView.model = titleModel;
     if (_medias.count > 0) {
         self.infoLabel.text = [NSString stringWithFormat:@"%d/%ld",1,_medias.count];

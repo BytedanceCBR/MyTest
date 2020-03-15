@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHHouseCoreInfoModel;
+@class FHHouseCoreInfoModel,FHDetailDisclaimerModel,FHDetailHouseNameModel;
 
 @interface FHDetailNewPropertyListCell : FHDetailBaseCell
 
@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNewPropertyListCellModel : FHDetailBaseModel
 
 @property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *baseInfo;
+@property (nonatomic, copy, nullable) NSString *courtId;
+@property (nonatomic, strong)   FHDetailHouseNameModel *houseName;
+@property (nonatomic, strong, nullable) FHDetailDisclaimerModel *disclaimerModel;
 
 @end
 

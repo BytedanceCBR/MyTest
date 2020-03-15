@@ -141,7 +141,7 @@
 
     self.headerView.frame = CGRectMake(15, headerTop, self.cellWidth, headerHeight);
     self.segmentedControl.frame = CGRectMake(15 + 16, self.headerView.bottom + 17, self.cellWidth - 32, 33);
-
+    self.headerView.hidden = (headerHeight == 0);
     CGFloat mapHeight = self.cellWidth * 7.0f / 16.0f;
     CGRect mapFrame = CGRectMake(15, self.segmentedControl.bottom, self.cellWidth, mapHeight);
     self.mapView.frame = mapFrame;

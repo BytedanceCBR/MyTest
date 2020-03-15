@@ -21,7 +21,6 @@
 @property (nonatomic, strong) FHDetailHeaderView *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong) UIImageView *shadowImage;
-@property (nonatomic, strong) UIView *segmentControl;
 
 @end
 
@@ -67,7 +66,7 @@
             listItemModel.index = i;
         }
         
-        self.headerView.label.text = @"楼盘户型";
+        self.headerView.label.text = [NSString stringWithFormat:@"户型介绍（%@）",model.totalNumber];
         self.headerView.isShowLoadMore = model.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
@@ -86,10 +85,10 @@
             [wSelf collectionDisplayCell:index];
         };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.segmentControl.mas_bottom).mas_offset(20);
+            make.top.mas_equalTo(0);
             make.left.right.mas_equalTo(self.containerView);
 //            make.height.mas_equalTo(242);
-            make.bottom.mas_equalTo(self.containerView);
+            make.bottom.mas_equalTo(self.containerView).mas_offset(-30);
         }];
         [colView reloadData];
     }
@@ -162,20 +161,11 @@
     _containerView = [[UIView alloc] init];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(15);
+        make.top.mas_equalTo(self.headerView.mas_bottom).mas_offset(30);
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.bottom.mas_equalTo(self.shadowImage).offset(-20);
     }];
-
-    [self.containerView addSubview:self.segmentControl];
-    [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(15);
-        make.height.mas_equalTo(30);
-    }];
-    self.segmentControl.backgroundColor = [UIColor redColor];
-
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType
@@ -190,7 +180,7 @@
 
     if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]] && model.hasMore) {
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
-        [infoDict setValue:((FHDetailNewDataFloorpanListModel *)self.currentData).list forKey:@"court_id"];
+        [infoDict setValue:model.list forKey:@"court_id"];
         [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
         infoDict[@"house_type"] = @(1);
         TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
@@ -242,14 +232,6 @@
     return _shadowImage;
 }
 
-- (UIView *)segmentControl
-{
-    if (!_segmentControl) {
-        _segmentControl = [[UIView alloc]init];
-    }
-    return _segmentControl;
-}
-
 @end
 
 @interface FHDetailNewMutiFloorPanCollectionCell ()
@@ -297,24 +279,23 @@
         [textAttrStr appendAttributedString:titleAttrStr];
         
         // todo zjing test
-        if (model.saleStatus) {
-            //@(-1),NSBaselineOffsetAttributeName
-            NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
-                NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                 [UIFont themeFontRegular:10],NSFontAttributeName,
-                                                 model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray3],NSBackgroundColorAttributeName,nil];
-       
-            [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
-          
-//            [textAttrStr appendAttributedString:tagStr];
-            
-            self.statusLabel.attributedText = tagStr;
-            
-        }
+//        if (model.saleStatus) {
+//            //@(-1),NSBaselineOffsetAttributeName
+//            NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
+//                NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
+//                                                 [UIFont themeFontRegular:10],NSFontAttributeName,
+//                                                 model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray3],NSBackgroundColorAttributeName,nil];
+//
+//            [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
+//
+////            [textAttrStr appendAttributedString:tagStr];
+//
+//            self.statusLabel.attributedText = tagStr;
+//
+//        }
         self.descLabel.attributedText = textAttrStr;
 //        self.priceLabel.text = model.pricingPerSqm;
-        // todo zjing test 朝向
-        self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@",model.squaremeter];;
+        self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@ 朝向 %@",model.squaremeter,model.facingDirection];
     }
     [self layoutIfNeeded];
 }

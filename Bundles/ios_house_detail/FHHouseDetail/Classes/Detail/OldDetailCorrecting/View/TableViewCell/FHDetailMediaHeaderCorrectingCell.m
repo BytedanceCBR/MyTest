@@ -89,12 +89,16 @@
                                               options:NSStringDrawingUsesLineFragmentOrigin
                                            attributes:attributes
                                               context:nil];
+    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
+        _photoCellHeight += 40;
+    }
+    _photoCellHeight += 30 + rect.size.height -67;
+
     if (titleModel.tags.count>0) {
         //这里分别加上标签高度20，标签间隔20，标题间隔20,再减去重叠部分67,得到当前模块高度
-        _photoCellHeight = _photoCellHeight + 20 + 30 + rect.size.height + 20 -67;
-    }else {
-        _photoCellHeight = _photoCellHeight + 30 + rect.size.height -67;
+        _photoCellHeight += 20 + 20;
     }
+    
     if (((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
         _photoCellHeight = _photoCellHeight +22;
     }
