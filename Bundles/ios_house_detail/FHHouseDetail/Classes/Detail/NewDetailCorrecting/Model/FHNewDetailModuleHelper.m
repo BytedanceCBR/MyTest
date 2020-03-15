@@ -76,11 +76,11 @@
     if (locations.count > 0) {
         [moduleItems addObject:@{@"locations":locations}];
     }
-    if (disclaimers.count > 0) {
-        [moduleItems addObject:@{@"disclaimers":disclaimers}];
-    }
     if (related.count > 0) {
         [moduleItems addObject:@{@"related":related}];
+    }
+    if (disclaimers.count > 0) {
+        [moduleItems addObject:@{@"disclaimers":disclaimers}];
     }
     if (socialInfo.count > 0) {
         [moduleItems addObject:@{@"socialInfo":socialInfo}];
@@ -88,7 +88,7 @@
     [moduleItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *currentItemArr = obj[[obj allKeys][0]];
 //        单个cell模块
-        if([[obj allKeys] containsObject:@"sales"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"floorPlans"] || [[obj allKeys] containsObject:@"socialInfo"] || [[obj allKeys] containsObject:@"related"]) {
+        if([[obj allKeys] containsObject:@"sales"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"floorPlans"] || [[obj allKeys] containsObject:@"socialInfo"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 model.shadowImageType = FHHouseShdowImageTypeRound;
@@ -103,7 +103,7 @@
 //            }];
 //        }
 //        多个cell模块
-        if ([[obj allKeys] containsObject:@"locations"]) {
+        if ([[obj allKeys] containsObject:@"locations"] || [[obj allKeys] containsObject:@"related"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 if (idx == currentItemArr.count-1 && currentItemArr.count != 1) {

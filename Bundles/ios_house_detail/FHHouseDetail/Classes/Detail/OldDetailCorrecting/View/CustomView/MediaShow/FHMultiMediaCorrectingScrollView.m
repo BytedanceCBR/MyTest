@@ -468,14 +468,14 @@
     if(isShowBottomBannerView && [self.delegate respondsToSelector:@selector(bottomBannerViewDidShow)]) {
         [self.delegate bottomBannerViewDidShow];
     }
-    CGFloat topOffset = 82;
-    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
-        topOffset -= 40;
-    }
-    [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self);
-        make.top.equalTo(self.colletionView.mas_bottom).offset(-topOffset);
-    }];
+//    CGFloat topOffset = 82;
+//    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
+//        topOffset -= 40;
+//    }
+//    [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.bottom.equalTo(self);
+//        make.top.equalTo(self.colletionView.mas_bottom).offset(-topOffset);
+//    }];
     self.titleView.model = titleModel;
     if (_medias.count > 0) {
         self.infoLabel.text = [NSString stringWithFormat:@"%d/%ld",1,_medias.count];
