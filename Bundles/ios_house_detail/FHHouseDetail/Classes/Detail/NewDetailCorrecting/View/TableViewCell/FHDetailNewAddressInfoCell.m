@@ -46,7 +46,6 @@
     adjustImageScopeType(model)
 
     self.titleLabel.text = model.courtAddress;
-    [self.mapBtn bd_setImageWithURL:[NSURL URLWithString:model.courtAddressIcon] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"plot_mapbtn"]];
 }
 
 - (void)setupUI
