@@ -57,7 +57,7 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(15);
         make.right.mas_equalTo(self.contentView).mas_offset(-15);
-        make.top.equalTo(self.shadowImage).offset(20);
+        make.top.equalTo(self.shadowImage).offset(12);
         make.bottom.equalTo(self.shadowImage).offset(-20);
     }];
     [self.priceBgView mas_makeConstraints:^(MASConstraintMaker *make) {
