@@ -217,9 +217,9 @@
     NSString *subtitle = itemInfo.discountReportSubTitle;
     NSString *toast = itemInfo.discountReportDoneTitle;
     NSString *btnTitle = itemInfo.discountButtonText;
-    NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
-                                      @"position":@"report_button",
-                                      @"element_from":@"be_null"
+    NSMutableDictionary *extraDic = @{@"realtor_position":@"be_null",
+                                      @"position":@"be_null",
+                                      @"element_from":@"coupon"
                                       }.mutableCopy;
     extraDic[kFHCluePage] = itemInfo.page;
     extraDic[@"title"] = title;
@@ -270,28 +270,9 @@
 
 #pragma mark - FHDetailScrollViewDidScrollProtocol
 
-// 滑动house_show埋点
-- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
-//    CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
-//    FHDetailAgentListModel *model = (FHDetailAgentListModel *) self.currentData;
-//    __block CGFloat showHeight = 0;
-//    for (int m = 0; m <model.recommendedRealtors.count; m++) {
-//        FHDetailContactModel *showModel = model.recommendedRealtors[m];
-//        if (showModel.realtorScoreDisplay.length>0 && showModel.realtorScoreDescription.length>0&&showModel.realtorTags.count >0) {
-//            showHeight = showHeight +100;
-//        }else {
-//            showHeight = showHeight + 76;
-//        };
-//        if (UIScreen.mainScreen.bounds.size.height - point.y>showHeight) {
-//            NSInteger showCount = model.isFold ? MIN(m, 3):MIN(model.recommendedRealtors.count, m);
-//            [self tracerRealtorShowToIndex:showCount];
-//        };
-//    }
-}
-
 - (NSString *)elementTypeString:(FHHouseType)houseType
 {
-    return @"be_null";
+    return @"coupon";
 }
 
 - (UIImageView *)shadowImage {

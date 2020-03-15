@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** 详情页数据 */
 @property (nonatomic, copy)     NSString       *houseId;
+@property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, copy)     NSString       *priceStr;
 @property (nonatomic, copy)     NSString       *infoStr;
 @property (nonatomic, assign)   NSInteger       followStatus;// 收藏状态

@@ -273,7 +273,8 @@
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
-    
+    vc.houseType = self.baseViewModel.houseType;
+
     vc.topVC = self.baseViewModel.detailController;
     
 //    if (FHVideoModel.cellhou == FHCellt) {

@@ -446,14 +446,23 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 在线联系点击
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
+        NSString *fromStr = @"app_oldhouse_picview";
+        NSNumber *cluePage = nil;
+        if (_houseType == FHHouseTypeNewHouse) {
+            fromStr = @"app_newhouse_picview";
+            cluePage = @(FHClueIMPageTypeCNewHousePicview);
+        }
         NSMutableDictionary *extraDic = @{@"realtor_position":@"online",
                                           @"position":@"online",
                                           @"element_from":[self elementFrom],
-                                          @"from":@"app_oldhouse_picview"
+                                          @"from":fromStr
                                           }.mutableCopy;
         NSString *vid = [self videoId];
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
+        }
+        if (cluePage) {
+            extraDic[kFHCluePage] = cluePage;
         }
         [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }
@@ -462,6 +471,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 电话咨询点击
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
+        NSString *fromStr = @"app_oldhouse_picview";
+        NSNumber *cluePage = nil;
+        if (_houseType == FHHouseTypeNewHouse) {
+            fromStr = @"app_newhouse_picview";
+            cluePage = @(FHClueIMPageTypeCNewHousePicview);
+        }
         NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
                                           @"position":@"report_button",
                                           @"element_from":[self elementFrom]
@@ -470,7 +485,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
         }
-        extraDic[@"from"] = @"app_oldhouse_picview";
+        extraDic[@"from"] = fromStr;
+        if (cluePage) {
+            extraDic[kFHCluePage] = cluePage;
+        }
+        // todo zjing form clue_page
+
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }

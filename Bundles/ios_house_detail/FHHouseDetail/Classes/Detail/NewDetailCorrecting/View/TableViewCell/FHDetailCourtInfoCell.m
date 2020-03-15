@@ -219,7 +219,7 @@
 - (NSString *)elementTypeString:(FHHouseType)houseType
 {
     // todo zjing test
-    return @"neighborhood_detail";
+    return @"new_detail";
 }
 
 
@@ -230,13 +230,12 @@
     FHDetailCourtInfoCellModel *model = (FHDetailCourtInfoCellModel *)self.currentData;
     if (model.surroundingInfo.surrounding.chatOpenurl.length > 0) {
 
-        // todo zjing test
+        // todo zjing  source_from
         NSMutableDictionary *imExtra = @{}.mutableCopy;
-        imExtra[@"from"] = @"app_oldhouse_school";
         imExtra[@"source_from"] = @"education_type";
         imExtra[@"im_open_url"] = model.surroundingInfo.surrounding.chatOpenurl;
         imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-        imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldSchool];
+        imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNewHouseLocation];
         [model.contactViewModel onlineActionWithExtraDict:imExtra];
         if ([self.baseViewModel respondsToSelector:@selector(addClickOptionLog:)]) {
             [self.baseViewModel addClickOptionLog:@"education_type"];
