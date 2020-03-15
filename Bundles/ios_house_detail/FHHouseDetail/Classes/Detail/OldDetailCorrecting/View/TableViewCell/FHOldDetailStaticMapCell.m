@@ -60,9 +60,8 @@
         
         [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.shadowImage).offset(20);
-            make.left.right.top.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(self.contentView).offset(-30);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+            make.left.right.mas_equalTo(self.contentView);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-30);
             make.height.mas_equalTo(0);
         }];
         
@@ -329,17 +328,8 @@
     
     [self cleanSubViews];
     [self setupViews:dataModel.useNativeMap];
-    self.shadowImage.image = dataModel.shadowImage;
-    if(dataModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
-        }];
-    }
-    if(dataModel.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView);
-        }];
-    }
+    adjustImageScopeType(dataModel)
+
     [self refreshWithDataPoiDetail];
 }
 

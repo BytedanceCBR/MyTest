@@ -128,7 +128,7 @@
             }];
         }
         //加载周边时
-        if ([[obj allKeys] containsObject:@"related"]) {
+        if ([[obj allKeys] containsObject:@"related"] || [[obj allKeys] containsObject:@"disclaimers"]) {
             //如果包含大标题的模块存在，则当前模块第一个元素和上一个模块最后一个元素的阴影不裁剪,同时在当前模块插入标题
             if (idx > 0) {
                 FHDetailBaseModel *currentModel = currentItemArr[0];

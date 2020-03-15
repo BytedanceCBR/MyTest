@@ -136,9 +136,9 @@
             make.top.mas_equalTo(btnTop + 14);
         }];
     }
-    [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-42);
-    }];
+//    [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-42);
+//    }];
 
 }
 
@@ -158,6 +158,7 @@
         make.top.mas_equalTo(0);
         make.height.mas_equalTo(67);
         make.width.mas_equalTo(21);
+        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-42);
     }];
     [self.detailBtn addTarget:self action:@selector(detailBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 }
