@@ -10,6 +10,7 @@
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHDetailNewModel.h"
 #import <BDWebImage/BDWebImage.h>
+#import <TTBaseLib/UIViewAdditions.h>
 
 @interface FHDetailNewAddressInfoCell ()
 
@@ -46,7 +47,20 @@
     adjustImageScopeType(model)
 
     self.titleLabel.text = model.courtAddress;
-    [self.mapBtn bd_setImageWithURL:[NSURL URLWithString:model.courtAddressIcon] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"plot_mapbtn"]];
+    self.titleLabel.width = [UIScreen mainScreen].bounds.size.width - 127 - 30;
+    [self.titleLabel sizeToFit];
+    CGFloat titleHeight  = floor(self.titleLabel.height);
+    CGFloat bottomOffset = 28;
+    CGFloat topOffset = 0;
+    if (titleHeight < 44) {
+        topOffset = (44 - titleHeight) / 2;
+        bottomOffset += topOffset;
+    }
+    [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.mapBtn).mas_offset(topOffset);
+        make.height.mas_equalTo(titleHeight);
+        make.bottom.mas_equalTo(-bottomOffset);
+    }];
 }
 
 - (void)setupUI
@@ -79,15 +93,16 @@
         make.top.mas_equalTo(0);
     }];
     [self.mapBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.topLine.mas_bottom).mas_offset(28);
         make.left.mas_equalTo(15);
         make.width.height.mas_equalTo(44);
-        make.top.equalTo(self.titleLabel);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.topLine.mas_bottom).mas_offset(25);
+        make.top.equalTo(self.mapBtn);
         make.left.mas_equalTo(self.mapBtn.mas_right).mas_offset(15);
         make.right.mas_equalTo(self.rightArrow.mas_left).mas_offset(-15);
-        make.bottom.mas_equalTo(-30);
+        make.bottom.mas_equalTo(-28);
+        make.height.mas_equalTo(0);
     }];
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.containerView).mas_offset(-15);

@@ -68,7 +68,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     
     _pricingPerSqmLabel = [UILabel new];
     _pricingPerSqmLabel.font = [UIFont themeFontMedium:16];
-    _pricingPerSqmLabel.textColor = [UIColor themeRed1];
+    _pricingPerSqmLabel.textColor = [UIColor themeOrange1];
     _pricingPerSqmLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_pricingPerSqmLabel];
     [_pricingPerSqmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -182,8 +182,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
 
 
     _priceChangedNotify = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_priceChangedNotify setImage:[UIImage imageNamed:@"ic-new-house-price-change-notice"] forState:UIControlStateNormal];
-    [_priceChangedNotify setImage:[UIImage imageNamed:@"ic-new-house-price-change-notice"] forState:UIControlStateHighlighted];
+
     [_priceChangedNotify setTitle:@"变价通知" forState:UIControlStateNormal];
     NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray1]}];
     [_priceChangedNotify setAttributedTitle:stringAttriChange forState:UIControlStateNormal];
