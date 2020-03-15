@@ -65,8 +65,11 @@
             FHDetailNewDataFloorpanListListModel *listItemModel = model.list[i];
             listItemModel.index = i;
         }
-        
-        self.headerView.label.text = [NSString stringWithFormat:@"户型介绍（%@）",model.totalNumber];
+        if (model.totalNumber.length > 0) {
+            self.headerView.label.text = [NSString stringWithFormat:@"户型介绍（%@）",model.totalNumber];
+        }else {
+            self.headerView.label.text = @"户型介绍";
+        }
         self.headerView.isShowLoadMore = model.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
@@ -261,12 +264,12 @@
             FHDetailNewDataFloorpanListListImagesModel *imageModel = model.images.firstObject;
             NSString *urlStr = imageModel.url;
             if ([urlStr length] > 0) {
-                [self.icon bd_setImageWithURL:[NSURL URLWithString:urlStr] placeholder:[UIImage imageNamed:@"default_image"]];
+                [self.icon bd_setImageWithURL:[NSURL URLWithString:urlStr] placeholder:[UIImage imageNamed:@"detail_new_floorpan_default"]];
             } else {
-                self.icon.image = [UIImage imageNamed:@"default_image"];
+                self.icon.image = [UIImage imageNamed:@"detail_new_floorpan_default"];
             }
         } else {
-            self.icon.image = [UIImage imageNamed:@"default_image"];
+            self.icon.image = [UIImage imageNamed:@"detail_new_floorpan_default"];
         }
         
         NSMutableAttributedString *textAttrStr = [NSMutableAttributedString new];
@@ -331,8 +334,7 @@
     
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
-        make.width.mas_equalTo(184);
-        make.height.mas_equalTo(184);
+        make.width.height.mas_equalTo(184);
         make.top.mas_equalTo(self);
     }];
     

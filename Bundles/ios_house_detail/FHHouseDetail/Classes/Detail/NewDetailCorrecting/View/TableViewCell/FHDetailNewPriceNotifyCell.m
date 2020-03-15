@@ -6,6 +6,7 @@
 //
 
 #import "FHDetailNewPriceNotifyCell.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHDetailNewPriceNotifyCell ()
 
@@ -67,8 +68,14 @@
         make.bottom.mas_equalTo(-30);
     }];
     _priceChangedNotify = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_priceChangedNotify setImage:[UIImage imageNamed:@"ic-new-house-price-change-notice"] forState:UIControlStateNormal];
-    [_priceChangedNotify setImage:[UIImage imageNamed:@"ic-new-house-price-change-notice"] forState:UIControlStateHighlighted];
+    _priceChangedNotify.titleLabel.font = [UIFont themeFontRegular:16];
+    
+    UIImage *priceImg = ICON_FONT_IMG(16, @"\U0000e67e", [UIColor colorWithHexString:@"#9c6d43"]);
+    UIImage *openImage = ICON_FONT_IMG(16, @"\U0000e68e", [UIColor colorWithHexString:@"#9c6d43"]);
+
+    [_priceChangedNotify setImage:priceImg forState:UIControlStateNormal];
+    [_priceChangedNotify setImage:priceImg forState:UIControlStateHighlighted];
+    
     [_priceChangedNotify setTitle:@"变价通知" forState:UIControlStateNormal];
     [_priceChangedNotify setTitleColor:[UIColor colorWithHexString:@"#9c6d43"] forState:UIControlStateNormal];
     _priceChangedNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
@@ -92,8 +99,10 @@
     }];
     
     _openNotify = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_openNotify setImage:[UIImage imageNamed:@"ic-new-house-opening-notice"] forState:UIControlStateNormal];
-    [_openNotify setImage:[UIImage imageNamed:@"ic-new-house-opening-notice"] forState:UIControlStateHighlighted];
+    _openNotify.titleLabel.font = [UIFont themeFontRegular:16];
+    [_openNotify setImage:openImage forState:UIControlStateNormal];
+    [_openNotify setImage:openImage forState:UIControlStateHighlighted];
+                                                
     [_openNotify setTitle:@"开盘通知" forState:UIControlStateNormal];
     [_openNotify setTitleColor:[UIColor colorWithHexString:@"#9c6d43"] forState:UIControlStateNormal];
     _openNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
