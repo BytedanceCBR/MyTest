@@ -72,7 +72,7 @@
         }
         self.headerView.isShowLoadMore = model.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
+        flowLayout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 15);
         flowLayout.itemSize = CGSizeMake(184, 242);
         flowLayout.minimumLineSpacing = 10;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -275,7 +275,7 @@
         NSMutableAttributedString *textAttrStr = [NSMutableAttributedString new];
         NSMutableAttributedString *titleAttrStr = [[NSMutableAttributedString alloc] initWithString:model.title ? [NSString stringWithFormat:@"%@ ",model.title] : @""];
         NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         [UIFont themeFontRegular:16],NSFontAttributeName,
+                                         [UIFont themeFontMedium:16],NSFontAttributeName,
                                          [UIColor themeGray1],NSForegroundColorAttributeName,nil];
         [titleAttrStr addAttributes:attributeSelect range:NSMakeRange(0, titleAttrStr.length)];
         

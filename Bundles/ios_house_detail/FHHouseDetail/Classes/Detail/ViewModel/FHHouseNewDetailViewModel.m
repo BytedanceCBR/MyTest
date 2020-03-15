@@ -420,8 +420,8 @@
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
         FHDetailOldDataHouseImageDictListModel *houseImageDictList = [[FHDetailOldDataHouseImageDictListModel alloc] init];
         
-        
         if ([model.data.topImages isKindOfClass:[NSArray class]] && model.data.topImages.count > 0) {
+            headerCellModel.topImages = model.data.topImages;
             FHDetailNewTopImage *topImage = model.data.topImages.firstObject;
             NSMutableArray *houseImages = [NSMutableArray new];
             for (NSInteger i = 0; i < topImage.imageGroup.count; i++) {
@@ -440,11 +440,6 @@
         FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
         houseTitleModel.advantage = model.data.topBanner.advantage;
         houseTitleModel.businessTag = model.data.topBanner.businessTag;
-        
-        // todo zjing test
-        houseTitleModel.advantage = @"品质新房";
-        houseTitleModel.businessTag = @"哈哈哈发送到fdsfdsfjjfdsjf";
-
         houseTitleModel.titleStr = model.data.coreInfo.name;
         houseTitleModel.tags = model.data.tags;
         houseTitleModel.housetype = self.houseType;

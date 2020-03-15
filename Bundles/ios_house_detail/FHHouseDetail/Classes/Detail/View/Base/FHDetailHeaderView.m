@@ -31,9 +31,9 @@
 
 - (void)setupUI {
     _isShowLoadMore = NO;
-    _label = [UILabel createLabel:@"" textColor:@"" fontSize:18];
+    _label = [UILabel createLabel:@"" textColor:@"" fontSize:20];
     _label.textColor = [UIColor themeGray1];
-    _label.font = [UIFont themeFontMedium:18];
+    _label.font = [UIFont themeFontMedium:20];
     [self addSubview:_label];
     
     _loadMore = [UILabel createLabel:@"查看更多" textColor:@"" fontSize:14];
@@ -47,15 +47,15 @@
     [self addSubview:_arrowsImg];
     
     [self.label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
+        make.left.mas_equalTo(15);
         make.right.mas_equalTo(self.loadMore.mas_left).offset(-10);
         make.top.mas_equalTo(20);
         make.height.mas_equalTo(26);
     }];
     
     [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self).offset(-17);
-        make.height.width.mas_equalTo(18);
+        make.right.mas_equalTo(self).offset(-12);
+        make.height.width.mas_equalTo(20);
         make.centerY.mas_equalTo(self.label.mas_centerY);
     }];
     [self.loadMore mas_makeConstraints:^(MASConstraintMaker *make) {

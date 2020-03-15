@@ -93,7 +93,7 @@
                     v.keyLabel.text = obj.attr;
                     v.valueLabel.text = obj.value;
                     v.keyLabel.font = [UIFont themeFontRegular:12];
-                    v.valueLabel.font = [UIFont themeFontSemibold:12];
+                    v.valueLabel.font = [UIFont themeFontMedium:12];
                     v.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
                     lastView = v;
                     lastViewLeftOffset = 20 + viewWidth;
@@ -109,7 +109,7 @@
             // 重新计算topOffset
             StrongSelf;
             topOffset = 6 + (doubleCount / 2 + doubleCount % 2) * listRowHeight;
-            [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [singles enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                 [self.contentView addSubview:v];
                 [self.itemArray addObject:v];
@@ -121,6 +121,9 @@
                 }];
                 v.keyLabel.text = obj.attr;
                 v.valueLabel.text = obj.value;
+                v.keyLabel.font = [UIFont themeFontRegular:12];
+                v.valueLabel.font = [UIFont themeFontMedium:12];
+                v.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
                 lastView = v;
                 lastViewLeftOffset = 20;
                 lastTopOffset = topOffset;
@@ -130,7 +133,7 @@
         }
         CGFloat btnTop = model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll?18:6;
         [self.detailBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(btnTop + 10);
+            make.top.mas_equalTo(btnTop + 14);
         }];
     }
     [lastView mas_updateConstraints:^(MASConstraintMaker *make) {

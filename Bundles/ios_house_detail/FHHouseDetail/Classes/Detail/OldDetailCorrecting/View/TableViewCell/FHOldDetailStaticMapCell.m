@@ -60,7 +60,7 @@
 
         [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.top.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(self.contentView).offset(-20);
+            make.bottom.mas_equalTo(self.contentView).offset(-30);
             make.height.mas_equalTo(0);
         }];
 

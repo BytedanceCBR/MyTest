@@ -249,18 +249,23 @@
     UILabel *nameKey = [UILabel createLabel:key textColor:@"" fontSize:AdaptFont(16)];
     nameKey.textColor = [UIColor themeGray3];
     UILabel *nameValue = [UILabel createLabel:value textColor:@"" fontSize:AdaptFont(16)];
-    nameValue.numberOfLines = 0;
+    nameValue.numberOfLines = 1;
     nameValue.textColor = [UIColor themeGray1];
+    nameValue.lineBreakMode = NSLineBreakByTruncatingTail;
     [parentView addSubview:nameKey];
     [parentView addSubview:nameValue];
+    [nameKey sizeToFit];
+    CGFloat width = nameKey.width;
     [nameKey mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(parentView);
         make.height.mas_equalTo(20);
+        make.width.mas_equalTo(width);
         make.top.bottom.equalTo(parentView);
     }];
     [nameValue mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameKey.mas_right).mas_offset(AdaptOffset(5));
-        make.centerY.equalTo(nameKey);
+        make.top.equalTo(nameKey);
+        make.right.equalTo(parentView);
     }];
 }
 

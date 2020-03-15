@@ -154,7 +154,7 @@
     if (model.housetype == FHHouseTypeNewHouse) {
         if (model.businessTag.length > 0 && model.advantage.length > 0) {
             topHeight = 40;
-            [self.topBanner updateWithTitle:model.advantage content:model.businessTag];
+            [self.topBanner updateWithTitle:model.businessTag content:model.advantage];
         }
         self.topBanner.hidden = (topHeight <= 0);
         [self.topBanner mas_updateConstraints:^(MASConstraintMaker *make) {

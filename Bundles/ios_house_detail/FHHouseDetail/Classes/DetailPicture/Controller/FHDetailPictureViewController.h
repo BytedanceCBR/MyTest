@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** TTImageInfosModel数组*/
 @property(nonatomic, strong)NSArray * imageInfosModels;
 
+@property(nonatomic, strong)NSArray * smallImageInfosModels;
+
 /** Extended by luohuaqing to support selecting image on preview */
 //@property (nonatomic, assign)PhotosScrollViewMode mode;
 @property (nonatomic, strong)NSArray * images;

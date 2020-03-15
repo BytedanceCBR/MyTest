@@ -159,9 +159,9 @@
     
     [self.bgControl addTarget:self action:@selector(cellClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    _titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:18];
+    _titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:20];
     _titleLabel.textColor = [UIColor themeGray1];
-    _titleLabel.font = [UIFont themeFontMedium:18];
+    _titleLabel.font = [UIFont themeFontMedium:20];
     _titleLabel.textAlignment = NSTextAlignmentLeft;
     _titleLabel.numberOfLines = 1;
     [self.containerView addSubview:_titleLabel];

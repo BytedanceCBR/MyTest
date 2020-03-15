@@ -18,6 +18,8 @@
 #import "FHUtils.h"
 #import "FHMultiMediaModel.h"
 #import "FHCommonDefines.h"
+#import "FHDetailNewModel.h"
+
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
 @property(nonatomic, strong) FHMultiMediaCorrectingScrollView *mediaView;
@@ -339,7 +341,11 @@
     };
     
     [vc setMediaHeaderModel:self.currentData mediaImages:images];
-    
+    FHDetailMediaHeaderCorrectingModel *model = ((FHDetailMediaHeaderCorrectingModel *)self.currentData);
+    if ([model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
+        FHDetailNewTopImage *topImage = model.topImages.firstObject;
+        vc.smallImageInfosModels = topImage.smallImageGroup;
+    }
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
     CGRect frame = [self convertRect:self.bounds toView:window];

@@ -236,8 +236,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [self.view addSubview:_topBar];
     __weak typeof(self) weakSelf = self;
     _naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
+    _naviView.showAlbum = self.smallImageInfosModels > 0;
     _naviView.backActionBlock = ^{
         [weakSelf finished];
+    };
+    _naviView.albumActionBlock  = ^{
+        [weakSelf albumBtnClick];
     };
     _naviView.videoTitle.currentTitleBlock = ^(NSInteger currentIndex) {
         // 1 视频 2 图片
@@ -1111,6 +1115,32 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     } else {
         [self dismissAnimated:NO];
     }
+}
+
+- (void)albumBtnClick
+{
+    if (self.imageInfosModels.count == 0) {
+        return;
+    }
+    
+    if (self.albumImageBtnClickBlock) {
+        self.albumImageBtnClickBlock(self.currentIndex);
+    }
+    
+    FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
+    showVC.pictsArray = self.smallImageInfosModels;
+    __weak typeof(self)weakSelf = self;
+    showVC.albumImageBtnClickBlock = ^(NSInteger index){
+        if (index >= 0) {
+            [weakSelf.photoScrollView setContentOffset:CGPointMake(self.view.frame.size.width * index, 0) animated:NO];
+        }
+    };
+    
+    showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
+        [self stayCallBack:stayTime];
+    };
+    
+    [self presentViewController:showVC animated:NO completion:nil];
 }
 
 - (void)backButtonClicked
