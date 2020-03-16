@@ -20,7 +20,7 @@
 #import "FHHouseType.h"
 #import "FHHomeCellHelper.h"
 #import "UIImage+FIconFont.h"
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
 static const float kSegementedMainPadingBottom = 10;
