@@ -31,6 +31,7 @@ typedef enum : NSUInteger {
 // 表单线索
 typedef enum : NSUInteger {
     FHClueFormPageTypeCNeighborhood = 2, // app_neighbourhood： 1.2 二手房小区详情页底通表单
+    FHClueFormPageTypeCNewHousePicview = 38, // 1.38 新房详情页图片浏览表单  - from：app_newhouse_picview
     FHClueFormPageTypeCNewSales = 39, //   from：app_newhouse_discount： 1.39 新房详情页优惠活动咨询表单
 
 } FHClueFormPageTypeC;

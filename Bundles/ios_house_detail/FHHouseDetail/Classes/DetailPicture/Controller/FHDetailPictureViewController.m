@@ -475,7 +475,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         NSNumber *cluePage = nil;
         if (_houseType == FHHouseTypeNewHouse) {
             fromStr = @"app_newhouse_picview";
-            cluePage = @(FHClueIMPageTypeCNewHousePicview);
+            if(self.mediaHeaderModel.contactViewModel.contactPhone.phone.length > 0) {
+                cluePage = @(FHClueCallPageTypeCNewHousePicview);
+            }else {
+                cluePage = @(FHClueFormPageTypeCNewHousePicview);
+            }
         }
         NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
                                           @"position":@"report_button",
@@ -489,7 +493,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (cluePage) {
             extraDic[kFHCluePage] = cluePage;
         }
-        // todo zjing form clue_page
 
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
     }
