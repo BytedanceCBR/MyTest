@@ -49,13 +49,13 @@
         make.top.mas_equalTo(0);
         make.height.mas_equalTo(19);
         make.left.mas_equalTo(self.tagView.mas_right).mas_offset(12);
-        make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-5);
+        make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-12);
     }];
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(8);
         make.height.mas_equalTo(16);
         make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-5);
+        make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-12);
     }];
     [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.right.mas_equalTo(0);
@@ -71,8 +71,7 @@
         [_tagView setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
         _tagView.layer.cornerRadius = 2;
         _tagView.layer.borderColor = [UIColor colorWithHexString:@"#ff6a6a" alpha:0.3].CGColor;
-        _tagView.layer.borderColor = [UIColor greenColor].CGColor;
-
+        _tagView.layer.borderWidth = 0.5;
         _tagView.layer.masksToBounds = YES;
         [_tagView setBackgroundImage:[UIImage btd_imageWithColor:[UIColor colorWithHexString:@"#ffefec"]] forState:UIControlStateNormal];
         _tagView.titleLabel.font = [UIFont themeFontMedium:AdaptFont(10)];
@@ -175,6 +174,7 @@
             [itemView.tagView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(iconWidth);
             }];
+
             [itemView.submitBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(btnWidth);
             }];

@@ -68,7 +68,7 @@
     }];
     [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftIcon.mas_right).mas_equalTo(5);
-        make.right.mas_equalTo(-15);
+        make.right.mas_equalTo(-12);
         make.centerY.mas_equalTo(self.leftView);
 
     }];
