@@ -108,20 +108,23 @@
         if (tags.count == 1) {
             FHHouseTagsModel *element = tags[0];
             if (element.content && element.textColor && element.backgroundColor) {
-                CGSize textSize = [element.content sizeWithFont: [UIFont themeFontRegular:12] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
+                CGSize textSize =  [element.content sizeWithFont: [UIFont themeFontRegular:12] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
+//                [self getStringRect: [[NSAttributedString alloc]initWithString:element.content attributes:@{}]  size:CGSizeMake( [self tagShowMaxWidth], 14)];
+//
                 if (textSize.width > [self tagShowMaxWidth]) {
                     NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
                     NSString *resultString ;
                     for (int i = 0; i < paramsArrary.count; i ++) {
                         NSString *tagStr = paramsArrary[i];
-                        CGSize tagSize = [resultString sizeWithFont: [UIFont themeFontRegular:12] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
-                        if (tagSize.width < [self tagShowMaxWidth]) {
-                            if (resultString.length >0) {
-                                resultString = [NSString stringWithFormat:@"%@ · %@",resultString,tagStr];
-                            }else {
-                                resultString = tagStr;
-                            }
-                        }else {
+                        if (resultString.length >0) {
+                                                resultString = [NSString stringWithFormat:@"%@ · %@",resultString,tagStr];
+                                            }else {
+                                                resultString = tagStr;
+                                            }
+                        CGSize tagSize =  [resultString sizeWithFont: [UIFont themeFontRegular:12] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
+//                        [self getStringRect:[[NSAttributedString alloc]initWithString:resultString attributes:@{}] size:CGSizeMake( [self tagShowMaxWidth], 14)];
+                       
+                        if (tagSize.width > [self tagShowMaxWidth]) {
                             NSMutableArray *resultArrary = [[resultString componentsSeparatedByString:@" · "] mutableCopy];
                             [resultArrary removeObjectAtIndex: resultArrary.count -1];
                             resultString = @"";

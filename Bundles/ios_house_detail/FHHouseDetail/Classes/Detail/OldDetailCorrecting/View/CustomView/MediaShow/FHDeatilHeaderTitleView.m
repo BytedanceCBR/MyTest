@@ -165,6 +165,7 @@
             make.left.mas_equalTo(self).offset(31);
             make.right.mas_equalTo(self).offset(-35);
             make.top.mas_equalTo(self.topBanner.mas_bottom).offset(28);
+            make.height.mas_offset(25);
 //            make.bottom.mas_equalTo(-tagBottom - tagHeight);
         }];
         [self.tagBacView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -172,7 +173,7 @@
             make.right.mas_equalTo(self).offset(-15);
             make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(18);
             make.height.mas_offset(tagHeight);
-            make.bottom.mas_equalTo(self).offset(-5);
+            make.bottom.mas_equalTo(self).offset(tags.count > 0 ?-5:0);
         }];
     }else if (model.housetype == FHHouseTypeNeighborhood) {
         self.nameLabel.numberOfLines = 1;
