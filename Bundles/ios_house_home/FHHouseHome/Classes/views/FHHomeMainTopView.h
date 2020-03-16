@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)changeSearchBtnAndMapBtnStatus:(BOOL)isShowSearchBtn;
 
 - (void)updateMapSearchBtn;
+
+- (void)changeBackColor:(NSInteger)index;
 @end
 
 NS_ASSUME_NONNULL_END

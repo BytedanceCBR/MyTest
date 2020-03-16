@@ -11,11 +11,13 @@
 #import "FHHomeMainFeedCollectionCell.h"
 #import "FHEnvContext.h"
 #import "ArticleTabbarStyleNewsListViewController.h"
+#import "FHHomeViewController.h"
 
 @interface FHHomeMainViewModel()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHHomeMainViewController *viewController;
 @property(nonatomic , weak) ArticleTabBarStyleNewsListViewController *articleListVC;
+@property(nonatomic , weak) FHHomeViewController *homeListVC;
 @property(nonatomic , strong) NSMutableArray *dataArray;
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
@@ -99,6 +101,10 @@
         self.articleListVC = cell.contentVC;
     }
     
+    if ([cell.contentVC isKindOfClass:[FHHomeViewController class]]) {
+        self.homeListVC = cell.contentVC;
+    }
+    
     return cell;
 }
 
@@ -139,7 +145,10 @@
     if(tabIndex != self.viewController.topView.segmentControl.selectedSegmentIndex){
         self.currentIndex = tabIndex;
         self.viewController.topView.segmentControl.selectedSegmentIndex = self.currentIndex;
+        [self.viewController.topView changeBackColor:tabIndex];
         
+        [self.homeListVC.topBar changeBackColor:tabIndex];
+
         [self sendEnterCategory:tabIndex == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed enterType:FHHomeMainTraceEnterTypeFlip];
         [self sendStayCategory:tabIndex == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse enterType:FHHomeMainTraceEnterTypeFlip];
     }else{

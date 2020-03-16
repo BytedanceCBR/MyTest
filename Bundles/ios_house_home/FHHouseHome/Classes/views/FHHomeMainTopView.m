@@ -517,4 +517,15 @@ static const float kMapSearchBtnRightPading = 50;
     return @[@"找房", @"发现"];
 }
 
+- (void)changeBackColor:(NSInteger)index
+{
+    UIColor *backColor = index == 0 ? [UIColor themeHomeColor] : [UIColor whiteColor];
+    
+    [self.houseSegmentControl setBackgroundColor:backColor];
+    [self.segmentControl setBackgroundColor:backColor];
+    [self setBackgroundColor:backColor];
+    [self.topBackCityContainer setBackgroundColor:backColor];
+    
+}
+
 @end
