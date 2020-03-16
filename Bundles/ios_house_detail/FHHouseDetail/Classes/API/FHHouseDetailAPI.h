@@ -11,6 +11,7 @@
 #import "FHHouseType.h"
 #import "FHMainApi.h"
 #import "FHHouseContactDefines.h"
+#import "FHHouseListBaseItemModel.h"
 
 @class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel,FHDetailFloorPanDetailInfoModel,FHDetailFloorPanListResponseModel;
 @class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel,FHDetailNewTimeLineResponseModel,FHDetailNewCoreDetailModel;
@@ -92,7 +93,7 @@ completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))co
                                  offset:(NSString *)offset
                                   query:(NSString*)query
                                   count:(NSInteger)count
-                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion;
+                             completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 新房-楼盘动态
 +(TTHttpTask*)requestFloorTimeLineSearch:(NSString*)houseId

@@ -27,8 +27,6 @@
 @property(nonatomic, weak) UIImageView *houseVideoImageView;
 @property (nonatomic, weak) LOTAnimationView *vrLoadingView;
 
-@property (nonatomic, weak) UIImageView *shadowImage;
-@property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, copy) NSString *reuseIdentifier;
 @end
 @implementation FHHouseListBaseItemCell
@@ -44,18 +42,6 @@
 }
 
 - (void)initUI {
-    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView).offset(12);
-    }];
-    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset([self.reuseIdentifier isEqualToString:@"FHHouseListBaseItemModel"]?20:12);
-        make.left.mas_equalTo(self.contentView).offset([self.reuseIdentifier isEqualToString:@"FHHouseListBaseItemModel"]?15:0);
-        make.right.mas_equalTo(self.contentView).offset([self.reuseIdentifier isEqualToString:@"FHHouseListBaseItemModel"]?-15:0);
-        make.bottom.mas_equalTo(self.shadowImage).offset([self.reuseIdentifier isEqualToString:@"FHHouseListBaseItemModel"]?-20:-12);
-    }];
     [self.houseMainImageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.mainIma);
         make.left.top.equalTo(self.mainIma);
@@ -105,7 +91,7 @@
         make.right.equalTo(self.unitPrice.mas_right);
         make.top.equalTo(self.unitPrice.mas_bottom).offset(4);
     }];
-    if ([self.reuseIdentifier isEqualToString:@"FHNewHouseCell"] || [self.reuseIdentifier isEqualToString:@"FHHouseListBaseItemModel"]) {
+    if ([self.reuseIdentifier isEqualToString:@"FHNewHouseCell"] ) {
         [self updateConstraintsWithNewHouse];
     }
 }
@@ -243,23 +229,6 @@
     return _vrLoadingView;
 }
 
-- (UIImageView *)shadowImage {
-    if (!_shadowImage) {
-        UIImageView *shadowImage = [[UIImageView alloc]init];
-        [self.contentView addSubview:shadowImage];
-        _shadowImage = shadowImage;
-    }
-    return  _shadowImage;
-}
-
-- (UIView *)containerView {
-    if (!_containerView) {
-        UIView *containerView = [[UIView alloc]init];
-        [self.contentView addSubview: containerView];
-        _containerView = containerView;
-    }
-    return _containerView;
-}
 
 #pragma mark ----新房UI单独处理
 - (void)updateConstraintsWithNewHouse {
@@ -267,25 +236,24 @@
     self.unitPrice.font = [UIFont themeFontMedium:16];
     self.unitPrice.textColor = [UIColor themeOrange1];
     [self.mainIma mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.containerView);
-        make.top.equalTo(self.containerView).offset([self.reuseIdentifier isEqualToString:@"FHHouseListBaseItemModel"]?4:12);
-        make.left.equalTo(self.containerView).offset(15);
+        make.centerY.equalTo(self.contentView);
+        make.left.equalTo(self.contentView).offset(15);
         make.size.mas_equalTo(CGSizeMake(106, 80));
     }];
     [self.unitPrice mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.maintitle);
-        make.right.equalTo(self.containerView).offset(-15);
+        make.right.equalTo(self.contentView).offset(-15);
         make.top.equalTo(self.maintitle.mas_bottom).offset(-3);
     }];
     [self.positionInformation mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.maintitle);
         make.top.equalTo(self.unitPrice.mas_bottom).offset(-1);
-        make.right.equalTo(self.containerView).offset(-15);
+        make.right.equalTo(self.contentView).offset(-15);
     }];
     [self.tagInformation mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.maintitle);
         make.top.equalTo(self.positionInformation.mas_bottom).offset(3);
-        make.right.equalTo(self.containerView).offset(-15);
+        make.right.equalTo(self.contentView).offset(-15);
     }];
 }
 #pragma mark ---------------------- dataPross:数据加载
@@ -317,9 +285,6 @@
             self.houseVideoImageView.hidden = YES;
             [self.vrLoadingView play];
         }
-        if (model.isLast || model.isFirst) {
-            [self updateNewHouseLastCellUIWithModel:model];
-        }
     };
 }
 
@@ -335,46 +300,9 @@
             self.tagInformation.font = [UIFont themeFontRegular:12];
             [self.tagInformation setTextColor:[UIColor themeGray2]];
         case FHHouseTypeNewHouse:
-            [self shadowImageAssignment:model.shadowImageType];
-            [self showShdowImageScopeType:model.shdowImageScopeType];
+
         default:
             break;
-    }
-    
-}
-- (void)updateNewHouseLastCellUIWithModel:(FHHouseListBaseItemModel *)model {
-    if (model.isLast) {
-            [self.mainIma mas_remakeConstraints:^(MASConstraintMaker *make) {
-        //        make.centerY.equalTo(self.containerView);
-                make.top.equalTo(self.containerView).offset(4);
-                make.left.equalTo(self.containerView).offset(15);
-                make.size.mas_equalTo(CGSizeMake(106, 80));
-                make.bottom.equalTo(self.containerView).offset(-20);
-            }];
-    }else {
-            [self.mainIma mas_remakeConstraints:^(MASConstraintMaker *make) {
-        //        make.centerY.equalTo(self.containerView);
-                make.top.equalTo(self.containerView).offset(20);
-                make.left.equalTo(self.containerView).offset(15);
-                make.size.mas_equalTo(CGSizeMake(106, 80));
-                make.bottom.equalTo(self.containerView).offset(-4);
-            }];
-    }
-
-}
-
-- (void)showShdowImageScopeType:(FHHouseShdowImageScopeType)shdowImageScopeType {
-    if ([self.reuseIdentifier isEqualToString:@"FHHouseListBaseItemModel"]) {
-        if(shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
-            [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.bottom.equalTo(self.contentView);
-            }];
-        }
-        if(shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
-            [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(self.contentView);
-            }];
-        }
     }
     
 }
@@ -391,26 +319,4 @@
     return attri;
 }
 
-- (void)shadowImageAssignment:(FHHouseShdowImageType)shadowImageType{
-    if ([self.reuseIdentifier isEqualToString:@"FHHouseListBaseItemModel"]) {
-        UIImage *image;
-        switch (shadowImageType) {
-            case FHHouseShdowImageTypeLR:
-                image = [[UIImage imageNamed:@"left_right"]resizableImageWithCapInsets:UIEdgeInsetsMake(0,25,0,25) resizingMode:UIImageResizingModeStretch];
-                break;
-            case FHHouseShdowImageTypeLTR:
-                image = [[UIImage imageNamed:@"left_top_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,0,25) resizingMode:UIImageResizingModeStretch];
-                break;
-            case FHHouseShdowImageTypeLBR:
-                image = [[UIImage imageNamed:@"left_bottom_right"] resizableImageWithCapInsets:UIEdgeInsetsMake(0,25,30,25) resizingMode:UIImageResizingModeStretch];
-                break;
-            case FHHouseShdowImageTypeRound:
-                image = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,30,25) resizingMode:UIImageResizingModeStretch];
-                break;
-            default:
-                break;
-        }
-        self.shadowImage.image = image;
-    }
-}
 @end

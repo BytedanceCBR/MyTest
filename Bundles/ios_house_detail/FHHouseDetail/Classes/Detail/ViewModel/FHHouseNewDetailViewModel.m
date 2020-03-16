@@ -51,7 +51,7 @@
 
 @interface FHHouseNewDetailViewModel ()
 
-@property (nonatomic, strong , nullable) FHDetailRelatedCourtModel *relatedHouseData;
+@property (nonatomic, strong , nullable) FHListResultHouseModel *relatedHouseData;
 
 @property (nonatomic, strong , nullable) FHDetailNewModel *dataModel;
 
@@ -85,7 +85,7 @@
 //    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     
     //    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
-    [self.tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListBaseItemModel class])];
+//    [self.tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListBaseItemModel class])];
     
     [self.tableView registerClass:[FHOldDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     
@@ -404,7 +404,7 @@
     
     __weak typeof(self) wSelf = self;
     if (!model.isInstantData && model.data) {
-        [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHDetailRelatedCourtModel * _Nullable model, NSError * _Nullable error) {
+        [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
             wSelf.relatedHouseData = model;
             [wSelf processDetailRelatedData];
         }];

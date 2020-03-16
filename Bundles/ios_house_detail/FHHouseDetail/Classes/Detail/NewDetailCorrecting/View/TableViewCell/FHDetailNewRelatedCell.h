@@ -6,7 +6,7 @@
 //
 
 #import "FHDetailBaseCell.h"
-
+#import "FHHouseBase/FHHouseListBaseItemModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @class FHDetailRelatedCourtDataModel;
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewRelatedCellModel : FHDetailBaseModel
 
-@property (nonatomic, strong , nullable) FHDetailRelatedCourtDataModel *relatedHouseData;
+@property (nonatomic, strong , nullable) FHHouseListDataModel *relatedHouseData;
 
 @end
 

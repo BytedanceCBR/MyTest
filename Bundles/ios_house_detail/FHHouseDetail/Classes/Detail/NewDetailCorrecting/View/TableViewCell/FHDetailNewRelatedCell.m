@@ -9,7 +9,6 @@
 #import "FHDetailHeaderView.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import "FHDetailRelatedCourtModel.h"
-#import "FHHouseBase/FHHouseListBaseItemModel.h"
 #import <FHHouseBase/FHHouseListBaseItemCell.h>
 
 @class FHSearchHouseDataItemsModel;
@@ -41,7 +40,7 @@
     
     adjustImageScopeType(model)
     
-    CGFloat cellHeight = 88;
+    CGFloat cellHeight = 104;
     BOOL hasMore = NO;
     CGFloat bottomOffset = 10;
     if (hasMore) {
@@ -50,7 +49,7 @@
     self.items = model.relatedHouseData.items;
     if (model.relatedHouseData.items.count > 0) {
         UITableView *tv = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        tv.estimatedRowHeight = 88;
+        tv.estimatedRowHeight = 104;
         tv.estimatedSectionHeaderHeight = 0;
         tv.estimatedSectionFooterHeight = 0;
         tv.backgroundColor = [UIColor clearColor];
@@ -60,7 +59,7 @@
         tv.separatorStyle = UITableViewCellSeparatorStyleNone;
         tv.showsVerticalScrollIndicator = NO;
         tv.scrollEnabled = NO;
-        [tv registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
+        [tv registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHNewHouseCell"];
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView).offset(10);
@@ -150,7 +149,7 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHNewHouseCell"];
     FHHouseListBaseItemModel *item = self.items[indexPath.row];
     if ([item isKindOfClass:[FHHouseListBaseItemModel class]] && [cell isKindOfClass:[FHHouseListBaseItemCell class]]) {
         FHHouseListBaseItemCell *imageInfoCell = (FHHouseListBaseItemCell *)cell;
@@ -162,7 +161,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 88;
+    return 104;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
