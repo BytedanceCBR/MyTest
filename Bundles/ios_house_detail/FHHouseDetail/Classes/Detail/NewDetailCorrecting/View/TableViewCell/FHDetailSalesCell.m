@@ -213,13 +213,14 @@
         return;
     }
     FHDetailNewDiscountInfoItemModel *itemInfo = model.discountInfo[index];
+
+    [self addClickOptionLog:@(itemInfo.itemType)];
+
     NSString *title = itemInfo.discountReportTitle;
     NSString *subtitle = itemInfo.discountReportSubTitle;
     NSString *toast = itemInfo.discountReportDoneTitle;
     NSString *btnTitle = itemInfo.discountButtonText;
-    NSMutableDictionary *extraDic = @{@"realtor_position":@"be_null",
-                                      @"position":@"be_null",
-                                      @"element_from":@"coupon"
+    NSMutableDictionary *extraDic = @{@"position":@"coupon"
                                       }.mutableCopy;
     extraDic[kFHCluePage] = itemInfo.page;
     extraDic[@"title"] = title;
@@ -229,6 +230,7 @@
 
     [model.contactViewModel fillFormActionWithExtraDict:extraDic];
 }
+
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -273,6 +275,15 @@
 - (NSString *)elementTypeString:(FHHouseType)houseType
 {
     return @"coupon";
+}
+
+-(void)addClickOptionLog:(NSNumber *)itemType
+{
+//    click_position: recieve（领取），subscribe（预约）
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    tracerDic[@"element_type"] = @"coupon";
+    tracerDic[@"item_type"] = itemType;
+    TRACK_EVENT(@"click_options", tracerDic);
 }
 
 - (UIImageView *)shadowImage {
