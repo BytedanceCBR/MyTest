@@ -47,6 +47,7 @@
 #import "FHOldDetailDisclaimerCell.h"
 #import "FHHouseListBaseItemCell.h"
 #import "FHHouseListBaseItemModel.h"
+#import "FHDetailNewRelatedCell.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -102,7 +103,8 @@
     
     //周边新盘上标题
     [self.tableView registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])];
-    
+    [self.tableView registerClass:[FHDetailNewRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewRelatedCellModel class])];
+
 }
 
 // cell identifier
@@ -739,23 +741,28 @@
     self.detailController.isLoadingData = NO;
     if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
     {
-        for(NSInteger i = 0;i < _relatedHouseData.data.items.count; i++)
-        {
-            NSString *data = [(_relatedHouseData.data.items[i]) toJSONString];
-            NSError *error = nil;
-            FHHouseListBaseItemModel *itemModel = [[FHHouseListBaseItemModel alloc] initWithString:data error:&error];
-            itemModel.houseModelType = FHHouseModelTypeNewRelated;
-            //            FHNewHouseItemModel *itemModels = [[FHNewHouseItemModel alloc] initWithString:data error:nil];
-            //            FHNewHouseItemModel *itemModels = [[FHNewHouseItemModel alloc] initWithData:data error:nil];
-            itemModel.index = i;
-            if (i == _relatedHouseData.data.items.count - 1) {
-                itemModel.isLast = YES;
-            }
-            if (i == 0) {
-                itemModel.isFirst = YES;
-            }
-            [self.items addObject:itemModel];
-        }
+        FHDetailNewRelatedCellModel *infoModel = [[FHDetailNewRelatedCellModel alloc] init];
+        infoModel.houseModelType = FHHouseModelTypeNewRelated;
+        infoModel.relatedHouseData = self.relatedHouseData.data;
+        [self.items addObject:infoModel];
+        
+//        for(NSInteger i = 0;i < _relatedHouseData.data.items.count; i++)
+//        {
+//            NSString *data = [(_relatedHouseData.data.items[i]) toJSONString];
+//            NSError *error = nil;
+//            FHHouseListBaseItemModel *itemModel = [[FHHouseListBaseItemModel alloc] initWithString:data error:&error];
+//            itemModel.houseModelType = FHHouseModelTypeNewRelated;
+//            //            FHNewHouseItemModel *itemModels = [[FHNewHouseItemModel alloc] initWithString:data error:nil];
+//            //            FHNewHouseItemModel *itemModels = [[FHNewHouseItemModel alloc] initWithData:data error:nil];
+//            itemModel.index = i;
+//            if (i == _relatedHouseData.data.items.count - 1) {
+//                itemModel.isLast = YES;
+//            }
+//            if (i == 0) {
+//                itemModel.isFirst = YES;
+//            }
+//            [self.items addObject:itemModel];
+//        }
     }
     // 免责声明
     FHDetailNewModel * model = (FHDetailNewModel *)self.detailData;
