@@ -71,10 +71,10 @@
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.shadowImage).offset(12);
                 make.bottom.mas_equalTo(self.shadowImage).offset(-12);
-                make.width.mas_equalTo(textSize.width+50);
+                make.width.mas_equalTo(textSize.width+40);
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];
-            leftOffset += textSize.width+50;
+            leftOffset += textSize.width+40;
             // 设置数据
    
             itemView.keyLabel.text = obj.value;
