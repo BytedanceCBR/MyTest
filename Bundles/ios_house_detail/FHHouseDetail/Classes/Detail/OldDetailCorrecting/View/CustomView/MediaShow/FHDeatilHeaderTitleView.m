@@ -172,7 +172,7 @@
             make.right.mas_equalTo(self).offset(-15);
             make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(18);
             make.height.mas_offset(tagHeight);
-//            make.bottom.mas_equalTo(self);
+            make.bottom.mas_equalTo(self).offset(-5);
         }];
     }else if (model.housetype == FHHouseTypeNeighborhood) {
         self.nameLabel.numberOfLines = 1;
