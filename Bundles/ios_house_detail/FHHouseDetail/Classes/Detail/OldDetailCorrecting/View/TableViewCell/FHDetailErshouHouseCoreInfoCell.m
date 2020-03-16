@@ -62,9 +62,8 @@
         __block CGFloat leftOffset = 15;
         [model.coreInfo enumerateObjectsUsingBlock:^(FHDetailOldDataCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailHouseCoreInfoItemView *itemView = [[FHDetailHouseCoreInfoItemView alloc] init];
-            NSMutableAttributedString *text = [[NSMutableAttributedString alloc]initWithString:obj.value attributes:@{NSFontAttributeName: [UIFont themeFontDINAlternateBold:22]}];
+            NSMutableAttributedString *text = [[NSMutableAttributedString alloc]initWithString:obj.value.length>obj.attr.length?obj.value:obj.attr attributes:@{NSFontAttributeName: [UIFont themeFontDINAlternateBold:22]}];
             CGSize textSize =[self getStringRect:text size:CGSizeMake(CGFLOAT_MAX, 14)];
-
             [self.contentView addSubview:itemView];
             if (idx == count - 1) {
                 itemView.lineView.hidden = YES;
@@ -72,11 +71,12 @@
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.shadowImage).offset(12);
                 make.bottom.mas_equalTo(self.shadowImage).offset(-12);
-                make.width.mas_equalTo(textSize.width+40);
+                make.width.mas_equalTo(textSize.width+50);
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];
-            leftOffset += textSize.width+40;
+            leftOffset += textSize.width+50;
             // 设置数据
+   
             itemView.keyLabel.text = obj.value;
             itemView.valueLabel.text = obj.attr;
             [_itemArr addObject:itemView];
