@@ -157,7 +157,7 @@
 
 - (NSString *)elementTypeString:(FHHouseType)houseType
 {
-    return @"house_info";
+    return @"";
 }
 
 - (UIImageView *)shadowImage {

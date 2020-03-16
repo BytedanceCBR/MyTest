@@ -148,8 +148,8 @@
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
     self.mapMaskBtn.frame = mapFrame;
-    self.locationList.frame = CGRectMake(15, self.mapMaskBtn.bottom + 10, self.cellWidth, 105);
-    self.emptyInfoLabel.frame = self.locationList.bounds;
+    self.locationList.frame = CGRectMake(15, self.mapMaskBtn.bottom + 10, self.cellWidth, 40);
+    self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
     
     CGFloat cellHeight = self.locationList.bottom;
@@ -271,7 +271,7 @@
     _emptyInfoLabel.text = @"附近没有交通信息";
     _emptyInfoLabel.textAlignment = NSTextAlignmentCenter;
     _emptyInfoLabel.hidden = NO;
-    _emptyInfoLabel.textColor = [UIColor themeGray1];
+    _emptyInfoLabel.textColor = [UIColor themeGray3];
     [_locationList addSubview:_emptyInfoLabel];
     
     _mapMaskBtnLocation = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -605,9 +605,9 @@
     //底部列表
     
     NSInteger poiCount = [self.countCategoryDict[category] integerValue];
-    NSInteger height = poiCount > 0 ? (poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 35 : 20;
+    NSInteger height = poiCount > 0 ? (poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 35 : 40;
     self.locationList.frame = CGRectMake(15, self.mapMaskBtn.bottom + 10, self.cellWidth, height);
-    self.emptyInfoLabel.frame = self.locationList.bounds;
+    self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
     CGFloat cellHeight = self.locationList.bottom;
     [UIView performWithoutAnimation:^{

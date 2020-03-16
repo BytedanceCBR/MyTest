@@ -219,9 +219,7 @@
 
 - (NSString *)elementTypeString:(FHHouseType)houseType
 {
-    // todo zjing test
-    return  @"";
-//    return @"house_info";
+    return @"house_info";
 }
 
 - (UIImageView *)shadowImage {

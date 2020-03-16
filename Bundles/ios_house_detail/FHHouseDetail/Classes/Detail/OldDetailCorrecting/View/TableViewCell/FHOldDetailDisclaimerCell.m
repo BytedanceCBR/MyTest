@@ -105,7 +105,7 @@
                 self.imageTitles = imageTitles;
                 self.contactIcon.hidden = NO;
                 [self.contactIcon mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.right.mas_lessThanOrEqualTo(-20);
+                    make.right.mas_lessThanOrEqualTo(-15);
                 }];
             } else {
                 self.contactIcon.hidden = YES;
@@ -167,19 +167,19 @@
     _disclaimerContent.numberOfLines = 0;
     _disclaimerContent.textColor = [UIColor themeGray4];
     _disclaimerContent.font = [UIFont themeFontRegular:12];
-    _disclaimerContent.preferredMaxLayoutWidth = SCREEN_WIDTH-40;
+    _disclaimerContent.preferredMaxLayoutWidth = SCREEN_WIDTH-30;
 
     [self.contentView addSubview:_disclaimerContent];
     
     [self.ownerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.top.mas_equalTo(5);
+        make.left.mas_equalTo(15);
+        make.top.mas_equalTo(0);
         make.height.mas_equalTo(14);
         make.right.mas_equalTo(self.contactIcon.mas_left).offset(-6);
     }];
     
     [self.contactIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_lessThanOrEqualTo(-20);
+        make.right.mas_lessThanOrEqualTo(-15);
         make.centerY.mas_equalTo(self.ownerLabel);
         make.width.mas_equalTo(20);
         make.height.mas_equalTo(14);
@@ -194,9 +194,9 @@
     }];
     
     [self.disclaimerContent mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(10 );
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(10);
         make.bottom.mas_equalTo(-20);
     }];
     
@@ -265,8 +265,8 @@
     self.ownerLabel.hidden = YES;
     self.contactIcon.hidden = YES;
     [self.disclaimerContent mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
         make.top.mas_equalTo(self.contentView);
     }];
 }
@@ -275,8 +275,8 @@
     self.ownerLabel.hidden = NO;
     self.contactIcon.hidden = NO;
     [self.disclaimerContent mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
         make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
         make.bottom.mas_equalTo(-20);
     }];
@@ -285,17 +285,18 @@
 - (void)remakeConstraints {
     
     if ([self.disclaimerContent.attributedText length] > 0) {
-        CGSize size = CGSizeMake(UIScreen.mainScreen.bounds.size.width - 40, MAXFLOAT);
-        YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:size text:self.disclaimerContent.attributedText];
-        if (tagLayout) {
-            self.lineHeight = tagLayout.textBoundingSize.height;
-        } else {
-            self.lineHeight = 0;
-        }
+//        CGSize size = CGSizeMake(UIScreen.mainScreen.bounds.size.width - 30, MAXFLOAT);
+//        YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:size text:self.disclaimerContent.attributedText];
+//        if (tagLayout) {
+//            self.lineHeight = tagLayout.textBoundingSize.height;
+//        } else {
+//            self.lineHeight = 0;
+//        }
         [self.disclaimerContent mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(20);
-            make.right.mas_equalTo(-20);
-            make.top.mas_equalTo(self.contentView);
+            make.left.mas_equalTo(15);
+            make.right.mas_equalTo(-15);
+            make.top.mas_equalTo(0);
+            make.bottom.mas_equalTo(-20);
         }];
         [self.contentView setNeedsLayout];
     }

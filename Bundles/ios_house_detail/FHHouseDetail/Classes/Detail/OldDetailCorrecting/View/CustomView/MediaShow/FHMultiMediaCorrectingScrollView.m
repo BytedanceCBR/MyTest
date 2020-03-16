@@ -184,7 +184,6 @@
         make.bottom.equalTo(self.colletionView);
         make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
     }];
-    // todo zjing test
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
         make.top.equalTo(self.colletionView.mas_bottom).offset(-82);

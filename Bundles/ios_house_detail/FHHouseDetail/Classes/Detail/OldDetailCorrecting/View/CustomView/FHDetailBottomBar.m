@@ -80,7 +80,7 @@
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(18);
         make.left.mas_equalTo(self).offset(15);
-        make.top.mas_equalTo(2);
+        make.top.mas_equalTo(4);
         make.right.mas_equalTo(self.rightIcon.mas_left).offset(-5);
     }];
 }

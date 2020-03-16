@@ -70,9 +70,11 @@
         _tagView = [[UIButton alloc]init];
         [_tagView setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
         _tagView.layer.cornerRadius = 2;
-        _tagView.layer.borderColor = [UIColor colorWithHexString:@"#ff6a6a"].CGColor;
+        _tagView.layer.borderColor = [UIColor colorWithHexString:@"#ff6a6a" alpha:0.3].CGColor;
+        _tagView.layer.borderColor = [UIColor greenColor].CGColor;
+
         _tagView.layer.masksToBounds = YES;
-        _tagView.backgroundColor = [UIColor colorWithHexString:@"#ffefec"];
+        [_tagView setBackgroundImage:[UIImage btd_imageWithColor:[UIColor colorWithHexString:@"#ffefec"]] forState:UIControlStateNormal];
         _tagView.titleLabel.font = [UIFont themeFontMedium:AdaptFont(10)];
     }
     return _tagView;
@@ -122,7 +124,8 @@
 @property (nonatomic, strong) FHDetailHeaderView *headerView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, weak) UIImageView *shadowImage;
-@property (nonatomic, strong)   NSMutableDictionary       *tracerDicCache;
+@property (nonatomic, strong) NSMutableDictionary *tracerDicCache;
+@property (nonatomic, strong) NSMutableArray *itemTypeArr;
 
 @end
 
@@ -149,6 +152,7 @@
         UIView *lastView = nil;
         for (NSInteger idx = 0; idx < itemsCount; idx++) {
             FHDetailNewDiscountInfoItemModel *item = model.discountInfo[idx];
+            [_itemTypeArr addObject:[NSString stringWithFormat:@"%ld",item.itemType]];
             FHDetailSalesItemView *itemView = [[FHDetailSalesItemView alloc]initWithFrame:CGRectZero];
             // 添加事件
             itemView.tag = idx;
@@ -237,6 +241,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        _itemTypeArr = [NSMutableArray array];
         [self setupUI];
     }
     return self;
@@ -275,6 +280,7 @@
 
 - (NSString *)elementTypeString:(FHHouseType)houseType
 {
+    
     return @"coupon";
 }
 

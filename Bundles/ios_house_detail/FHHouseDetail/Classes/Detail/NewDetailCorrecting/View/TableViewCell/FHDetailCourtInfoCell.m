@@ -218,8 +218,7 @@
 // 小区信息
 - (NSString *)elementTypeString:(FHHouseType)houseType
 {
-    // todo zjing test
-    return @"new_detail";
+    return @"";
 }
 
 

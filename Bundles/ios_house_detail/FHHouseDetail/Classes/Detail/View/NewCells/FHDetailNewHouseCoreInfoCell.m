@@ -248,7 +248,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
 
 - (NSString *)elementTypeString:(FHHouseType)houseType
 {
-    return @"house_info";
+    return @"";
 }
 
 - (NSArray *)elementTypeStringArray:(FHHouseType)houseType
