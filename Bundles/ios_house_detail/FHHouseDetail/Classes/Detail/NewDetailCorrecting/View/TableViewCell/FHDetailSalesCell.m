@@ -71,6 +71,7 @@
         [_tagView setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
         _tagView.layer.cornerRadius = 2;
         _tagView.layer.borderColor = [UIColor colorWithHexString:@"#ff6a6a"].CGColor;
+        _tagView.layer.masksToBounds = YES;
         _tagView.backgroundColor = [UIColor colorWithHexString:@"#ffefec"];
         _tagView.titleLabel.font = [UIFont themeFontMedium:AdaptFont(10)];
     }
