@@ -53,7 +53,7 @@
     [self addSubview:self.topBack];
     
     self.topBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.headerBackHeight)];
-    _topBgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+    _topBgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
     _topBgView.hidden = YES;
     [self addSubview:_topBgView];
     // 主标题标签
