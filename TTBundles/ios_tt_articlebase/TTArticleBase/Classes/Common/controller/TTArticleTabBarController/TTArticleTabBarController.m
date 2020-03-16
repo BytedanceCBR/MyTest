@@ -465,6 +465,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             
             // 触发弹窗显示
             [[FHPopupViewManager shared] triggerPopupView];
+            [[FHPopupViewManager shared] triggerPendant];
             
         };
         

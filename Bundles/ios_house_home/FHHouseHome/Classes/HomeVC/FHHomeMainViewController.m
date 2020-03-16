@@ -97,6 +97,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.stayTime = [[NSDate date] timeIntervalSince1970];
     
     [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 - (void)initView {
     self.view.backgroundColor = [UIColor themeHomeColor];

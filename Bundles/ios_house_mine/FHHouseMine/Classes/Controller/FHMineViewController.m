@@ -94,6 +94,7 @@
     [super viewDidAppear:animated];
     [self refreshContentOffset:self.tableView.contentOffset];
     [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
