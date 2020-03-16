@@ -149,24 +149,6 @@ static const float kMapSearchBtnRightPading = 50;
     }
 }
 
-- (void)clickMapSearch
-{
-    if (_mapItemModel) {
-        NSString *openUrlStr =_mapItemModel.openUrl;
-        if (openUrlStr) {
-            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrlStr] userInfo:nil];
-        }
-    }
-    
-    NSMutableDictionary *clickParams = [NSMutableDictionary new];
-    if ([_mapItemModel.logPb isKindOfClass:[NSDictionary class]]) {
-        [clickParams addEntriesFromDictionary:_mapItemModel.logPb];
-    }
-    
-    [FHEnvContext recordEvent:clickParams andEventKey:@""];
-    
-}
-
 - (void)setupSetmentedControl {
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
     
@@ -207,7 +189,7 @@ static const float kMapSearchBtnRightPading = 50;
         make.centerX.equalTo(self.topBackCityContainer);
         make.height.mas_equalTo(kSegementedMainTopHeight);
         if (self.changeCountryBtn) {
-            make.centerY.equalTo(self.changeCountryBtn).offset(2);
+            make.centerY.equalTo(self.changeCountryBtn).offset(-2);
         }else
         {
             make.bottom.mas_equalTo(8);
@@ -224,7 +206,7 @@ static const float kMapSearchBtnRightPading = 50;
         {
             make.bottom.mas_equalTo(8);
         }
-        make.width.height.mas_equalTo(24);
+        make.width.height.mas_equalTo(21);
     }];
 }
 
@@ -322,6 +304,29 @@ static const float kMapSearchBtnRightPading = 50;
     
     
     _searchBtn.hidden = YES;
+}
+
+- (void)clickMapSearch
+{
+    if (_mapItemModel) {
+        NSString *openUrlStr =_mapItemModel.openUrl;
+        if (openUrlStr) {
+            
+            NSMutableDictionary *clickParams = [NSMutableDictionary new];
+            clickParams[@"enter_type"] = @"click";
+            clickParams[@"enter_from"] = @"maintab";
+            
+            if ([_mapItemModel.logPb isKindOfClass:[NSDictionary class]]) {
+                [clickParams addEntriesFromDictionary:_mapItemModel.logPb];
+            }
+
+            NSMutableDictionary *infos = [NSMutableDictionary new];
+            infos[@"tracer"] = clickParams;
+            infos[@"from_home"] = @(1);
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrlStr] userInfo:userInfo];
+        }
+    }
 }
 
 - (void)searchBtnClick
