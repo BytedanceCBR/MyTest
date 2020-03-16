@@ -261,98 +261,64 @@
     FHDetailNewDataFloorpanListListModel *model = (FHDetailNewDataFloorpanListListModel *)data;
     if (model) {
         if (model.images.count > 0) {
+            
             FHDetailNewDataFloorpanListListImagesModel *imageModel = model.images.firstObject;
             NSString *urlStr = imageModel.url;
             if ([urlStr length] > 0) {
-                [self.icon bd_setImageWithURL:[NSURL URLWithString:urlStr] placeholder:[UIImage imageNamed:@"detail_new_floorpan_default"]];
-            } else {
-                self.icon.image = [UIImage imageNamed:@"detail_new_floorpan_default"];
+                WeakSelf;
+//                [self.icon bd_setImageWithURL:[NSURL URLWithString:urlStr] placeholder:[UIImage imageNamed:@"detail_new_floorpan_default"]];
+                [[BDWebImageManager sharedManager] requestImage:[NSURL URLWithString:urlStr] options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+                    StrongSelf;
+                    if (!error && image) {
+                        self.icon.image = image;
+                        self.icon.contentMode = UIViewContentModeScaleAspectFit;
+                    }
+                }];
             }
-        } else {
-            self.icon.image = [UIImage imageNamed:@"detail_new_floorpan_default"];
         }
-        
-        NSMutableAttributedString *textAttrStr = [NSMutableAttributedString new];
-        NSMutableAttributedString *titleAttrStr = [[NSMutableAttributedString alloc] initWithString:model.title ? [NSString stringWithFormat:@"%@ ",model.title] : @""];
-        NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         [UIFont themeFontMedium:16],NSFontAttributeName,
-                                         [UIColor themeGray1],NSForegroundColorAttributeName,nil];
-        [titleAttrStr addAttributes:attributeSelect range:NSMakeRange(0, titleAttrStr.length)];
-        
-        [textAttrStr appendAttributedString:titleAttrStr];
-
-        self.descLabel.attributedText = textAttrStr;
+        self.descLabel.text = model.title;
         self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@ 朝向 %@",model.squaremeter,model.facingDirection];
     }
     [self layoutIfNeeded];
 }
 
 - (void)setupUI {
-    _icon = [[UIImageView alloc] init];
-    _icon.contentMode = UIViewContentModeScaleAspectFit;
-    _icon.layer.cornerRadius = 10.0;
-    _icon.layer.masksToBounds = YES;
-    _icon.layer.borderWidth = 0.5;
-    _icon.layer.borderColor = [[UIColor colorWithHexString:@"#ededed"] CGColor];
-    [self addSubview:_icon];
     
+    _iconView = [[UIView alloc]init];
+    _iconView.layer.borderWidth = 0.5;
+    _iconView.layer.borderColor = [[UIColor colorWithHexString:@"#ededed"] CGColor];
+    _iconView.layer.cornerRadius = 10.0;
+     _iconView.layer.masksToBounds = YES;
+    [self addSubview:_iconView];
+
+    _icon = [[UIImageView alloc] init];
+    _icon.image = [UIImage imageNamed:@"detail_new_floorpan_default"];
+    [_iconView addSubview:_icon];
+    _icon.contentMode = UIViewContentModeScaleAspectFill;
+
     _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _descLabel.font = [UIFont themeFontMedium:16];
     _descLabel.textColor = [UIColor themeGray1];
     [self addSubview:_descLabel];
-    
-    
-//    _statusLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-//    _statusLabel.textColor = [UIColor themeGray1];
-//    _statusLabel.layer.masksToBounds = YES;
-//    _statusLabel.layer.cornerRadius = 2;
-//    [self addSubview:_statusLabel];
-//
-//    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-//    _priceLabel.textColor = [UIColor themeRed1];
-//    _priceLabel.font = [UIFont themeFontMedium:16];
-//    [self addSubview:_priceLabel];
-    
+  
     _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _spaceLabel.textColor = [UIColor themeGray3];
     [self addSubview:_spaceLabel];
     
-    [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
         make.width.height.mas_equalTo(184);
         make.top.mas_equalTo(self);
     }];
     
-//    UIColor *topColor = RGBA(255, 255, 255, 0);
-//    UIColor *bottomColor = RGBA(0, 0, 0, 0.5);
-//    NSArray *gradientColors = [NSArray arrayWithObjects:(id)(topColor.CGColor), (id)(bottomColor.CGColor), nil];
-//    NSArray *gradientLocations = @[@(0),@(1)];
-//    CAGradientLayer *gradientlayer = [[CAGradientLayer alloc] init];
-//    gradientlayer.colors = gradientColors;
-//    gradientlayer.locations = gradientLocations;
-//    gradientlayer.frame = CGRectMake(0, 0, 156, 120);
-//    gradientlayer.cornerRadius = 4.0;
-//    [self.icon.layer addSublayer:gradientlayer];
-    
+    [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(0);
+    }];
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
         make.height.mas_equalTo(20);
         make.top.mas_equalTo(self.icon.mas_bottom).mas_offset(10);
     }];
-    
-//    [self.statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(self.descLabel.mas_right);
-//        make.centerY.equalTo(self.descLabel);
-//    }];
-    
-//    [self.priceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-//    [self.priceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-//    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self);
-//        make.height.mas_equalTo(22);
-//        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(3);
-//        make.bottom.mas_equalTo(self);
-//    }];
-    
     [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.descLabel);
         make.right.mas_equalTo(self);
