@@ -20,7 +20,7 @@
 #import "FHHouseType.h"
 #import "FHHomeCellHelper.h"
 #import "UIImage+FIconFont.h"
-
+#import <UIDevice+BTDAdditions.h>
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
 static const float kSegementedMainPadingBottom = 10;
@@ -480,16 +480,16 @@ static const float kMapSearchBtnRightPading = 50;
     }
     
     if(isShowSearchBtn){
-//        self.searchBtn.hidden = NO;
-//        self.mapSearchLabel.hidden = YES;
-        self.mapSearchLabel.alpha = 0;
-        self.searchBtn.alpha = 0;
+        self.searchBtn.hidden = NO;
+        self.mapSearchLabel.hidden = YES;
+        
+//        self.mapSearchLabel.alpha = 0;
+//        self.searchBtn.alpha = 0;
 
         [UIView animateWithDuration:1 animations:^{
             self.searchBtn.alpha = 1;
-            self.searchBtn.hidden = NO;
             [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.right.equalTo(self).offset(-kMapSearchBtnRightPading - 10);
+                make.right.equalTo(self).offset(-kMapSearchBtnRightPading - ([UIDevice btd_isScreenWidthLarge320] ? 10 : 4));
                 make.centerY.equalTo(self.searchBtn).offset(0);
                 make.width.height.mas_equalTo(20);
             }];
@@ -497,10 +497,10 @@ static const float kMapSearchBtnRightPading = 50;
     }else
     {
         self.searchBtn.hidden = YES;
-//        self.mapSearchLabel.hidden = NO;
+        self.mapSearchLabel.hidden = NO;
  
         [UIView animateWithDuration:1 animations:^{
-            self.mapSearchLabel.alpha = 1;
+//            self.mapSearchLabel.alpha = 1;
 //            self.searchBtn.alpha = 0;
              [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
