@@ -20,7 +20,7 @@
 #import "FHHouseType.h"
 #import "FHHomeCellHelper.h"
 #import "UIImage+FIconFont.h"
-#import <UIDevice+BTDAdditions.h>
+#import <TTDeviceHelper.h>
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
 static const float kSegementedMainPadingBottom = 10;
@@ -489,7 +489,7 @@ static const float kMapSearchBtnRightPading = 50;
         [UIView animateWithDuration:1 animations:^{
             self.searchBtn.alpha = 1;
             [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.right.equalTo(self).offset(-kMapSearchBtnRightPading - ([UIDevice btd_isScreenWidthLarge320] ? 10 : 4));
+                make.right.equalTo(self).offset(-kMapSearchBtnRightPading - ([TTDeviceHelper isScreenWidthLarge320] ? 10 : 4));
                 make.centerY.equalTo(self.searchBtn).offset(0);
                 make.width.height.mas_equalTo(20);
             }];
