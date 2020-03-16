@@ -219,7 +219,7 @@
     }
     FHDetailNewDiscountInfoItemModel *itemInfo = model.discountInfo[index];
 
-    [self addClickOptionLog:@(itemInfo.itemType)];
+    [self addClickOptionLog:@(itemInfo.actionType)];
 
     NSString *title = itemInfo.discountReportTitle;
     NSString *subtitle = itemInfo.discountReportSubTitle;
@@ -284,12 +284,12 @@
     return @"coupon";
 }
 
--(void)addClickOptionLog:(NSNumber *)itemType
+-(void)addClickOptionLog:(NSNumber *)actionType
 {
 //    click_position: recieve（领取），subscribe（预约）
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDic[@"element_type"] = @"coupon";
-    tracerDic[@"item_type"] = itemType;
+    tracerDic[@"action_type"] = actionType;
     TRACK_EVENT(@"click_options", tracerDic);
 }
 
