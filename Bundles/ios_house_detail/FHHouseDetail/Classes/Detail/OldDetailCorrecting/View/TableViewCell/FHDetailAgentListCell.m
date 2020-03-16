@@ -82,10 +82,13 @@
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         __block CGFloat vHeight = 76.0;
+        __block CGFloat marginTop = 0;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             StrongSelf;
             if (obj.realtorScoreDescription.length >0&&obj.realtorScoreDisplay.length >0&&obj.realtorTags.count >0) {
                 vHeight = 100;
+            }else {
+                vHeight = 76;
             }
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj];
             // 添加事件
@@ -100,10 +103,11 @@
             
             [self.containerView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(itemsCount * vHeight);
+                make.top.mas_equalTo(marginTop);
                 make.left.right.mas_equalTo(self.containerView);
                 make.height.mas_equalTo(vHeight);
             }];
+            marginTop = marginTop +vHeight;
             itemView.name.text = obj.realtorName;
             itemView.agency.text = obj.agencyName;
             if (obj.avatarUrl.length > 0) {

@@ -59,7 +59,7 @@
         
         if([model.hotCellType isEqualToString:youwenbida]){
             _bgView.backgroundColor = [UIColor themeGray7];
-            _blackCoverView.hidden = NO;
+            _blackCoverView.hidden = YES;
             _titleLabel.hidden = YES;
             _descLabel.hidden = YES;
             _lookAllLabel.hidden = YES;
