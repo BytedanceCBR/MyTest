@@ -463,6 +463,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
         if (cluePage) {
             extraDic[kFHCluePage] = cluePage;
+            extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         }
         [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }

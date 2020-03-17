@@ -235,6 +235,7 @@
         imExtra[@"im_open_url"] = model.surroundingInfo.surrounding.chatOpenurl;
         imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
         imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNewHouseLocation];
+        imExtra[@"from"] = @"app_newhouse_askneighbourhood";
         [model.contactViewModel onlineActionWithExtraDict:imExtra];
         if ([self.baseViewModel respondsToSelector:@selector(addClickOptionLog:)]) {
             [self.baseViewModel addClickOptionLog:@"education_type"];
