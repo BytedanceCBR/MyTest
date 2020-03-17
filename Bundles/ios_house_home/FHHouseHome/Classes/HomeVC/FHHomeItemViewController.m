@@ -30,6 +30,7 @@
 #import "FHPlaceHolderCell.h"
 #import "UIColor+Theme.h"
 #import "FHHomeMainViewModel.h"
+#import <FHHouseBase/FHRelevantDurationTracker.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -889,6 +890,17 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 {
     if (!self.showPlaceHolder && indexPath.section == 1) {
         [self jumpToDetailPage:indexPath];
+        if (self.houseType == FHHouseTypeSecondHandHouse) {
+            [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+        }
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        [[FHRelevantDurationTracker sharedTracker] sendRelevantDuration];
     }
 }
 
