@@ -223,7 +223,7 @@
 
     __block UIView *lastView = self.tagBacView;
 
-    __block CGFloat maxWidth = 0;
+    __block CGFloat maxWidth = 30;
     [tags enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHHouseTagsModel *tagModel = obj;
         CGSize itemSize = [tagModel.content sizeWithAttributes:@{
@@ -238,8 +238,9 @@
             inset = 4;
         }
         CGFloat itemWidth = itemSize.width + 18;
-        maxWidth = 30 + itemWidth * (idx + 1) + inset * idx;
-        if (maxWidth >= [UIScreen mainScreen].bounds.size.width - 30) {
+        maxWidth += itemWidth + inset;
+        CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 30;
+        if (maxWidth >= tagWidth) {
             *stop = YES;
         }else {
             [self.tagBacView addSubview:label];

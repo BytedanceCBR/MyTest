@@ -423,23 +423,25 @@
         FHMultiMediaItemModel *itemModel = nil;
         
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
-        FHDetailOldDataHouseImageDictListModel *houseImageDictList = [[FHDetailOldDataHouseImageDictListModel alloc] init];
         
         if ([model.data.topImages isKindOfClass:[NSArray class]] && model.data.topImages.count > 0) {
+            NSMutableArray *houseImageList = @[].mutableCopy;
             headerCellModel.topImages = model.data.topImages;
-            FHDetailNewTopImage *topImage = model.data.topImages.firstObject;
-            NSMutableArray *houseImages = [NSMutableArray new];
-            for (NSInteger i = 0; i < topImage.imageGroup.count; i++) {
-                FHDetailNewDataImageGroupModel * groupModel = topImage.imageGroup[i];
-                for (NSInteger j = 0; j < groupModel.images.count; j++) {
-                    [houseImages addObject:groupModel.images[j]];
+            for (NSInteger index = 0; index < model.data.topImages.count; index++) {
+                FHDetailNewTopImage *topImage = model.data.topImages[index];
+                FHDetailOldDataHouseImageDictListModel *houseImageDictList = [[FHDetailOldDataHouseImageDictListModel alloc] init];
+                NSMutableArray *houseImages = [NSMutableArray new];
+                for (NSInteger i = 0; i < topImage.imageGroup.count; i++) {
+                    FHDetailNewDataImageGroupModel * groupModel = topImage.imageGroup[i];
+                    for (NSInteger j = 0; j < groupModel.images.count; j++) {
+                        [houseImages addObject:groupModel.images[j]];
+                    }
                 }
+                houseImageDictList.houseImageList = houseImages;
+                houseImageDictList.houseImageTypeName = topImage.name;
+                [houseImageList addObject:houseImageDictList];
             }
-            houseImageDictList.houseImageList = houseImages;
-            houseImageDictList.houseImageTypeName = topImage.name;
-            if ([houseImageDictList isKindOfClass:[FHDetailOldDataHouseImageDictListModel class]]) {
-                headerCellModel.houseImageDictList = @[houseImageDictList];
-            }
+            headerCellModel.houseImageDictList = houseImageList;
         }
         
         FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
