@@ -115,12 +115,19 @@
             }
             FHDetailContactImageTagModel *tag = obj.imageTag;
             [self refreshIdentifyView:itemView.identifyView withUrl:tag.imageUrl];
+            FHDetailContactModel *model  =  (FHDetailContactModel *)obj;
             if (tag.imageUrl.length > 0) {
                 [itemView.identifyView bd_setImageWithURL:[NSURL URLWithString:tag.imageUrl]];
                 itemView.identifyView.hidden = NO;
             }else {
                 itemView.identifyView.hidden = YES;
             }
+            
+            if (model.realtorCellShow == FHRealtorCellShowStyle0) {
+                               itemView.agency.font = [UIFont themeFontRegular:14];
+                               itemView.identifyView.hidden = YES;
+                   
+               }
             BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
             [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
             if(obj.realtorEvaluate.length > 0) {
@@ -134,7 +141,6 @@
               }
             itemsCount += 1;
         }];
-
     }
     // > 3 添加折叠展开
     if (model.recommendedRealtors.count > 3) {

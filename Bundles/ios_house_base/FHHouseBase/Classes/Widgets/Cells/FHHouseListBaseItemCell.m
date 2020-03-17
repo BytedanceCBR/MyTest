@@ -270,7 +270,7 @@
         if (model.originPrice) {
             self.unitPrice.attributedText = [self originPriceAttr:model.originPrice];
         }else{
-            self.unitPrice.text = model.displayPricePerSqm;
+            self.unitPrice.attributedText = [[NSMutableAttributedString alloc]initWithString:model.displayPricePerSqm attributes:@{}];
         }
         
         self.totalPrice.text = model.displayPrice;

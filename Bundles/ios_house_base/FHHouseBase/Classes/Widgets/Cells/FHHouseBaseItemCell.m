@@ -1374,7 +1374,8 @@
             if (commonModel.originPrice) {
                 self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
             }else{
-                self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+//                self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+                self.pricePerSqmLabel.attributedText = [[NSMutableAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{}];
             }
             [self.pricePerSqmLabel.yoga markDirty];
             if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {

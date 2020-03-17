@@ -119,7 +119,7 @@
 // 单个cell点击
 - (void)cellDidSeleccted:(NSInteger)index {
     if (index >= 0 && index < self.items.count) {
-        FHSearchHouseDataItemsModel *dataItem = self.items[index];
+        FHHouseListBaseItemModel *dataItem = self.items[index];
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"left_pic";
@@ -128,7 +128,7 @@
         tracerDic[@"element_from"] = @"related";
         tracerDic[@"enter_from"] = @"old_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeSecondHandHouse)}];
-        NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",dataItem.hid];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",dataItem.houseid];
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
