@@ -484,7 +484,7 @@ static const float kMapSearchBtnRightPading = 50;
         [UIView animateWithDuration:1 animations:^{
             self.searchBtn.alpha = 1;
             [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.right.equalTo(self).offset(-kMapSearchBtnRightPading - ([TTDeviceHelper isScreenWidthLarge320] ? 10 : 0));
+                make.right.equalTo(self).offset(-kMapSearchBtnRightPading - ([TTDeviceHelper isScreenWidthLarge320] ? 10 : -3));
                 make.centerY.equalTo(self.searchBtn).offset(0);
                 make.width.height.mas_equalTo(20);
             }];
