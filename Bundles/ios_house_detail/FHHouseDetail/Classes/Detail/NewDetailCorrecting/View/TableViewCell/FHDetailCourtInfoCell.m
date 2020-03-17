@@ -229,7 +229,6 @@
     FHDetailCourtInfoCellModel *model = (FHDetailCourtInfoCellModel *)self.currentData;
     if (model.surroundingInfo.surrounding.chatOpenurl.length > 0) {
 
-        // todo zjing  source_from
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"source_from"] = @"education_type";
         imExtra[@"im_open_url"] = model.surroundingInfo.surrounding.chatOpenurl;
