@@ -45,12 +45,6 @@
         make.height.mas_equalTo(0);
     }];
     self.topBanner.hidden = YES;
-    [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(15);
-        make.right.mas_equalTo(self).offset(-15);
-        make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
-        make.height.mas_offset(20);
-    }];
 }
 
 - (UIImageView *)shadowImage {
@@ -143,10 +137,6 @@
     self.mapBtn.hidden = !model.showMapBtn;
     self.nameLabel.text = model.titleStr;
     CGFloat tagHeight = tags.count > 0 ? 20 : 0.01;
-
-    [self.tagBacView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_offset(tagHeight);
-    }];
     
     CGFloat topHeight = 0;
     CGFloat tagTop = tags.count > 0 ? 17 : -5;
@@ -161,17 +151,17 @@
         [self.topBanner mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(topHeight);
         }];
-        [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(31);
             make.right.mas_equalTo(self).offset(-35);
             make.top.mas_equalTo(self.topBanner.mas_bottom).offset(28);
-            make.height.mas_offset(25);
+//            make.height.mas_offset(25);
 //            make.bottom.mas_equalTo(-tagBottom - tagHeight);
         }];
-        [self.tagBacView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(15);
             make.right.mas_equalTo(self).offset(-15);
-            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(18);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(15);
             make.height.mas_offset(tagHeight);
             make.bottom.mas_equalTo(self).offset(tags.count > 0 ?-5:0);
         }];
@@ -179,6 +169,12 @@
         self.nameLabel.numberOfLines = 1;
         self.addressLab.numberOfLines = 1;
         if (model.address.length>0) {
+            [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(15);
+                make.right.mas_equalTo(self).offset(-15);
+                make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
+                make.height.mas_offset(tagHeight);
+            }];
             [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(31);
                 make.right.mas_equalTo(self).offset(-100);
@@ -197,6 +193,12 @@
             }];
             self.addressLab.text = model.address;
         }else {
+            [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(15);
+                make.right.mas_equalTo(self).offset(-15);
+                make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
+                make.height.mas_offset(tagHeight);
+            }];
             [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(31);
                 make.right.mas_equalTo(self).offset(-35);
@@ -205,6 +207,12 @@
             }];
         }
     }else {
+        [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(15);
+            make.right.mas_equalTo(self).offset(-15);
+            make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
+            make.height.mas_offset(tagHeight);
+        }];
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(31);
             make.right.mas_equalTo(self).offset(-35);

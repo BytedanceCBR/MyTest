@@ -102,7 +102,7 @@
     [self.tableView registerClass:[FHDetailNewPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewPropertyListCellModel class])];
     
     //周边新盘上标题
-    [self.tableView registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])];
+//    [self.tableView registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])]
     [self.tableView registerClass:[FHDetailNewRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewRelatedCellModel class])];
 
 }

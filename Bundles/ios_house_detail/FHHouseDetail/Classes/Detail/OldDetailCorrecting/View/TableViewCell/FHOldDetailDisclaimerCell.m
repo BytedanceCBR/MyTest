@@ -197,7 +197,7 @@
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
         make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(10);
-        make.bottom.mas_equalTo(-20);
+//        make.bottom.mas_equalTo(-40);
     }];
     
     [self.tapButton addTarget:self action:@selector(openPhoto:) forControlEvents:UIControlEventTouchUpInside];
@@ -268,6 +268,7 @@
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
         make.top.mas_equalTo(self.contentView);
+         make.bottom.mas_equalTo(-25);
     }];
 }
 
@@ -278,7 +279,7 @@
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
         make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
-        make.bottom.mas_equalTo(-20);
+        make.bottom.mas_equalTo(-25);
     }];
 }
 
@@ -296,7 +297,7 @@
             make.left.mas_equalTo(15);
             make.right.mas_equalTo(-15);
             make.top.mas_equalTo(0);
-            make.bottom.mas_equalTo(-20);
+            make.bottom.mas_equalTo(-25);
         }];
         [self.contentView setNeedsLayout];
     }
