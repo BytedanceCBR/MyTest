@@ -65,6 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTopTagsView:(FHMainOldTopTagsView *)topTagsView;
 - (void)addTagsViewClick:(NSString *)value_id;
+- (void)viewDidAppear:(BOOL)animated;
 
 @end
 
