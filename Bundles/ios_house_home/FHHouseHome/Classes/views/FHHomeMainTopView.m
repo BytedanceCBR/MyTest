@@ -237,15 +237,15 @@ static const float kMapSearchBtnRightPading = 50;
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
     _houseSegmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _houseSegmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
-    _houseSegmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    _houseSegmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _houseSegmentControl.isNeedNetworkCheck = NO;
-    _houseSegmentControl.segmentEdgeInset = UIEdgeInsetsMake(5, 0, 5, 0);
+    _houseSegmentControl.segmentEdgeInset = UIEdgeInsetsMake(8, 10, 0, 10);
     _houseSegmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _houseSegmentControl.selectionIndicatorWidth = 20.0f;
     _houseSegmentControl.selectionIndicatorHeight = 4.0f;
     _houseSegmentControl.hidden = YES;
     _houseSegmentControl.selectionIndicatorCornerRadius = 2.0f;
-    _houseSegmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
+    _houseSegmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     _houseSegmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     [_houseSegmentControl setBackgroundColor:[UIColor themeHomeColor]];
 
@@ -266,13 +266,13 @@ static const float kMapSearchBtnRightPading = 50;
     
     [_houseSegmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topBackCityContainer);
-        make.height.mas_equalTo(kSegementedMainTopHeight);
+//        make.height.mas_equalTo(kSegementedMainTopHeight);
         if (self.changeCountryBtn) {
-            make.centerY.equalTo(self.changeCountryBtn).offset(-2);
+            make.centerY.equalTo(self.changeCountryBtn).offset(-6);
         }else{
             make.bottom.mas_equalTo(8);
         }
-        make.width.mas_equalTo((kSegementedOneWidth + 15) * titlesArray.count);
+        make.width.mas_equalTo((kSegementedOneWidth + 12) * titlesArray.count);
     }];
     
     [self updateSegementedTitles:titlesArray andSelectIndex:indexValue];
@@ -293,12 +293,7 @@ static const float kMapSearchBtnRightPading = 50;
     [_houseSegmentControl mas_updateConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topBackCityContainer);
         make.height.mas_equalTo(kSegementedMainTopHeight);
-        if (self.changeCountryBtn) {
-            make.centerY.equalTo(self.changeCountryBtn).offset(-2);
-        }else
-        {
-            make.bottom.mas_equalTo(8);
-        }
+        make.centerY.equalTo(self.segmentControl).offset(-2);
         make.width.mas_equalTo((kSegementedOneWidth + 12) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : expandWidth));
     }];
     
