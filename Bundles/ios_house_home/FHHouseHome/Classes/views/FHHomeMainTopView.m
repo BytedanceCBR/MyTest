@@ -170,7 +170,7 @@ static const float kMapSearchBtnRightPading = 50;
     _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     //_segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
-    [_segmentControl setBackgroundColor:[UIColor themeHomeColor]];
+    [_segmentControl setBackgroundColor:[UIColor clearColor]];
     
     __weak typeof(self) weakSelf = self;
     _segmentControl.indexChangeBlock = ^(NSInteger index) {
@@ -517,7 +517,7 @@ static const float kMapSearchBtnRightPading = 50;
     UIColor *backColor = index == 0 ? [UIColor themeHomeColor] : [UIColor whiteColor];
     
     [self.houseSegmentControl setBackgroundColor:backColor];
-    [self.segmentControl setBackgroundColor:backColor];
+//    [self.segmentControl setBackgroundColor:backColor];
     [self setBackgroundColor:backColor];
     [self.topBackCityContainer setBackgroundColor:backColor];
     

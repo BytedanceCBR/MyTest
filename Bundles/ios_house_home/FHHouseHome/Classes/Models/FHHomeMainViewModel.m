@@ -142,12 +142,13 @@
         tabIndex = ceilf(tabIndex);
     }
     
+    [self.viewController.topView changeBackColor:(scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width) > 0.5 ? 1 : 0];
+    [self.homeListVC.topBar changeBackColor:(scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width) > 0.5 ? 1 : 0];
+
     if(tabIndex != self.viewController.topView.segmentControl.selectedSegmentIndex){
         self.currentIndex = tabIndex;
         self.viewController.topView.segmentControl.selectedSegmentIndex = self.currentIndex;
-        [self.viewController.topView changeBackColor:tabIndex];
         
-        [self.homeListVC.topBar changeBackColor:tabIndex];
 
         [self sendEnterCategory:tabIndex == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed enterType:FHHomeMainTraceEnterTypeFlip];
         [self sendStayCategory:tabIndex == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse enterType:FHHomeMainTraceEnterTypeFlip];
