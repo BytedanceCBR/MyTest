@@ -71,10 +71,10 @@
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.shadowImage).offset(12);
                 make.bottom.mas_equalTo(self.shadowImage).offset(-12);
-                make.width.mas_equalTo(textSize.width+40);
+                make.width.mas_equalTo(textSize.width+([UIScreen mainScreen].bounds.size.width<375?23:40));
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];
-            leftOffset += textSize.width+40;
+            leftOffset += textSize.width+([UIScreen mainScreen].bounds.size.width<375?23:40);
             // 设置数据
    
             itemView.keyLabel.text = obj.value;
@@ -144,7 +144,7 @@
     _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:22];
     _keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
 //    _keyLabel.font = [UIFont themeFontMedium:22];
-    _keyLabel.font = [UIFont themeFontDINAlternateBold:22];
+    _keyLabel.font =  [UIFont themeFontDINAlternateBold:[UIScreen mainScreen].bounds.size.width<375?20:22];
     [self addSubview:_keyLabel];
     
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
