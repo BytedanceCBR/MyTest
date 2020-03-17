@@ -19,16 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
                              categoryName:(NSString *)categoryName
                                  stayTime:(NSInteger)stayTime
                                     logPb:(NSDictionary *)logPb;
-- (void)appendRelevantDurationWithGroupID:(NSString *)groupID
-                                   itemID:(NSString *)itemID
-                                enterFrom:(NSString *)enterFrom
-                             categoryName:(NSString *)categoryName
-                                 stayTime:(NSInteger)stayTime
-                                    logPb:(NSDictionary *)logPb
-                                 answerID:(nullable NSString *)answerID
-                               questionID:(NSString *)questionID
-                        enterFromAnswerID:(nullable NSString *)enterFromAnswerID
-                          parentEnterFrom:(nullable NSString *)parentEnterFrom;
 
 - (void)beginRelevantDurationTracking;
 - (void)sendRelevantDuration;

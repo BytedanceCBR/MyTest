@@ -60,35 +60,6 @@
     [self appendRelevantDurationWithDictionary:event];
 }
 
-- (void)appendRelevantDurationWithGroupID:(NSString *)groupID
-                                   itemID:(NSString *)itemID
-                                enterFrom:(NSString *)enterFrom
-                             categoryName:(NSString *)categoryName
-                                 stayTime:(NSInteger)stayTime
-                                    logPb:(NSDictionary *)logPb
-                                 answerID:(nullable NSString *)answerID
-                               questionID:(NSString *)questionID
-                        enterFromAnswerID:(nullable NSString *)enterFromAnswerID
-                          parentEnterFrom:(nullable NSString *)parentEnterFrom
-{
-    NSAssert([NSThread isMainThread], @"Must be on main thread");
-
-    NSDictionary *event = @{
-                            @"group_id": groupID ?: @"",
-                            @"item_id": itemID ?: @"",
-                            @"enter_from": enterFrom ?: @"",
-                            @"cagetory_name": categoryName ?: @"",
-                            @"stay_time": @(stayTime),
-                            @"log_pb": logPb ?: @"",
-                            @"link_position": @([self.eventArray count] + 1),
-                            @"ansid": answerID ?: @"",
-                            @"qid": questionID ?: @"",
-                            @"enterfrom_answerid": enterFromAnswerID ?: @"",
-                            @"parent_enterfrom": parentEnterFrom ?: @"",
-                            };
-    [self appendRelevantDurationWithDictionary:event];
-}
-
 - (void)appendRelevantDurationWithDictionary:(NSDictionary *)eventDictionary
 {
     if (!self.tracking) {
@@ -130,7 +101,6 @@
     }
     
     NSDate *endDate = [NSDate date];
-    NSLog(@"zjing test time:%ld",[endDate timeIntervalSinceDate:beforeDate]);
 }
 
 - (void)beginRelevantDurationTracking
