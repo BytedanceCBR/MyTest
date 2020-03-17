@@ -438,7 +438,12 @@
                     }
                 }
                 houseImageDictList.houseImageList = houseImages;
-                houseImageDictList.houseImageTypeName = topImage.name;
+                if ([topImage.name isEqualToString:@"户型"]) {
+                    houseImageDictList.houseImageType = FHDetailHouseImageTypeApartment;
+                }else {
+                    houseImageDictList.houseImageType = FHDetailHouseImageTypeOther;
+                }
+//                houseImageDictList.houseImageTypeName = topImage.name;
                 [houseImageList addObject:houseImageDictList];
             }
             headerCellModel.houseImageDictList = houseImageList;

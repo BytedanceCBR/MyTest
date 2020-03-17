@@ -143,7 +143,7 @@
     }
     
     for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
-        if (listModel.houseImageTypeName.length > 0) {
+//        if (listModel.houseImageTypeName.length > 0) {
             NSString *groupType = nil;
             if(listModel.houseImageType == FHDetailHouseImageTypeApartment){
                 groupType = @"户型";
@@ -170,7 +170,7 @@
                 }
                 index++;
             }
-        }
+//        }
     }
     
     self.model.medias = itemArray;
