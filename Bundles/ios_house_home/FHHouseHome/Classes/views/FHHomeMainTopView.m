@@ -516,7 +516,7 @@ static const float kMapSearchBtnRightPading = 50;
 {
     UIColor *backColor = index == 0 ? [UIColor themeHomeColor] : [UIColor whiteColor];
     
-    [self.houseSegmentControl setBackgroundColor:backColor];
+//    [self.houseSegmentControl setBackgroundColor:backColor];
 //    [self.segmentControl setBackgroundColor:backColor];
     [self setBackgroundColor:backColor];
     [self.topBackCityContainer setBackgroundColor:backColor];
