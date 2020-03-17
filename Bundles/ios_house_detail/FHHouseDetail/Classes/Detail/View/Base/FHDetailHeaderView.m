@@ -68,7 +68,7 @@
 
 - (void)setIsShowLoadMore:(BOOL)isShowLoadMore {
     _isShowLoadMore = isShowLoadMore;
-    _loadMore.hidden = !isShowLoadMore;
+//    _loadMore.hidden = !isShowLoadMore;
     _arrowsImg.hidden = !isShowLoadMore;
 }
 
