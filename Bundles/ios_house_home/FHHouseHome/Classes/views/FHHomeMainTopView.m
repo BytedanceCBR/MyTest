@@ -247,7 +247,7 @@ static const float kMapSearchBtnRightPading = 50;
     _houseSegmentControl.selectionIndicatorCornerRadius = 2.0f;
     _houseSegmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     _houseSegmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
-    [_houseSegmentControl setBackgroundColor:[UIColor themeHomeColor]];
+    [_houseSegmentControl setBackgroundColor:[UIColor clearColor]];
 
     //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
     
