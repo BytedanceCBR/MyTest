@@ -233,7 +233,7 @@ static const float kMapSearchBtnRightPading = 50;
                                           NSForegroundColorAttributeName: [UIColor themeGray1]};
     _houseSegmentControl.titleTextAttributes = titleTextAttributes;
     
-    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:16],
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
     _houseSegmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _houseSegmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
