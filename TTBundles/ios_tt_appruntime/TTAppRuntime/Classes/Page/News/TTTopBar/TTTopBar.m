@@ -719,4 +719,14 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     return _textLeftOffset;
 }
 
+- (void)changeBackColor:(NSInteger)index
+{
+    UIColor *backColor = index == 0 ? [UIColor themeHomeColor] : [UIColor whiteColor];
+    
+    [self setBackgroundColor:backColor];
+    [self.backgroundImageView setBackgroundColor:backColor];
+    [self.selectorView setBackgroundColor:backColor];
+    
+}
+
 @end

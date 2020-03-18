@@ -134,6 +134,7 @@
             if (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 [self requestOriginData:self.isFirstChange isShowPlaceHolder:[FHEnvContext sharedInstance].isRefreshFromCitySwitch];
             }
+            
         }];
         
         [self.tableViewV setBackgroundColor:[UIColor themeHomeColor]];
@@ -486,6 +487,16 @@
     
     if (isNeedCreateScroll) {
         [self setUpSubtableViewContrllers];
+    }
+    
+    
+    if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+        //增加切换城市埋点
+          NSMutableDictionary *traceEnterTopTabache = [NSMutableDictionary new];
+          [traceEnterTopTabache setValue:@"click" forKey:@"enter_type"];
+          [traceEnterTopTabache setValue:@"maintab" forKey:@"enter_from"];
+          [traceEnterTopTabache setValue:@"f_find_house" forKey:@"category_name"];
+          [FHEnvContext recordEvent:traceEnterTopTabache andEventKey:@"enter_category"];
     }
 }
 
