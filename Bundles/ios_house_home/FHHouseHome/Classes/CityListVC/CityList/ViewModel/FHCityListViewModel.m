@@ -366,7 +366,6 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
             // 进历史
             if (switchCompletion) {
                 switchCompletion(isSuccess);
-            [[FHPopupViewManager shared].dataFetcher fetchData];
             }
         }];
     }
