@@ -15,15 +15,12 @@
 #import "FHErrorView.h"
 #import "masonry.h"
 #import "UIViewController+Track.h"
-#import "FHSpringHangView.h"
 #import "FHUserTracker.h"
 #import "TTDeviceHelper.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHHouseESituationViewController ()<YSWebViewDelegate>
 @property(nonatomic, strong)SSWebViewContainer * webContainer;
-//春节活动运营位
-@property (nonatomic, strong) FHSpringHangView *springView;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @end
 
@@ -72,22 +69,6 @@
             make.size.mas_equalTo(CGSizeMake(104, 30));
         }];
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
-}
-
-- (void)popupViewDataFetchSuccess {
-    if([FHEnvContext isSpringHangOpen] && self.springView){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
-}
-
-- (void)popupViewStartFetchData {
-    self.springView.hidden = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -101,20 +82,9 @@
 {
     [super viewDidAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
-}
-
-- (void)_willEnterForeground:(NSNotification *)notification
-{
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
+    
+    [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 
 - (void)finishLoadingWeb
@@ -140,25 +110,7 @@
     [_webContainer tt_endUpdataData];
     
 }
-- (void)addSpringView {
-    if(!_springView){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
-        [self.view addSubview:_springView];
-        _springView.hidden = YES;
-        
-        CGFloat bottom = 49;
-        if (@available(iOS 11.0 , *)) {
-            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-        }
-        
-        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(82);
-            make.height.mas_equalTo(82);
-            make.right.mas_equalTo(self.view).offset(-11);
-        }];
-    }
-}
+
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
     
     NSTimeInterval duration = stayTime * 1000.0;
