@@ -255,14 +255,16 @@ typedef void(^NotificationActionCompletionBlock) (void);
 API_AVAILABLE(ios(10.0))
 {
     // None：不展示横幅，Alert：展示系统横幅
+    [self showRemoteNotificationAlert:content.userInfo];
+    !completionHandler ?: completionHandler(UNNotificationPresentationOptionNone);
 
-    NSString *importanceString = [content.userInfo btd_stringValueForKey:@"importance"];
-    if (importanceString && [importanceString isEqualToString:@"important"]) {
-        [self showRemoteNotificationAlert:content.userInfo];
-        !completionHandler ?: completionHandler(UNNotificationPresentationOptionNone);
-    } else {
-        !completionHandler ?: completionHandler(UNNotificationPresentationOptionAlert);
-    }
+//    NSString *importanceString = [content.userInfo btd_stringValueForKey:@"importance"];
+//    if (importanceString && [importanceString isEqualToString:@"important"]) {
+//        [self showRemoteNotificationAlert:content.userInfo];
+//        !completionHandler ?: completionHandler(UNNotificationPresentationOptionNone);
+//    } else {
+//        !completionHandler ?: completionHandler(UNNotificationPresentationOptionAlert);
+//    }
 }
 
 - (void)bdug_handleRemoteNotification:(BDUGNotificationContent *)content withCompletionHandler:(void (^)(void))completionHandler
