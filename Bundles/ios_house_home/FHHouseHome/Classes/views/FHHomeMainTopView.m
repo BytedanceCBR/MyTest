@@ -459,11 +459,16 @@ static const float kMapSearchBtnRightPading = 50;
         if (dataModel.cityAvailability.iconImage.url) {
             [imageRightView bd_setImageWithURL:[NSURL URLWithString:dataModel.cityAvailability.iconImage.url]];
         }
+        
+        [self setBackgroundColor:[UIColor whiteColor]];
+        [self.topBackCityContainer setBackgroundColor:[UIColor whiteColor]];
     }else
     {
         [self setupSetmentedControl];
         [self setUpHouseSegmentedControl];
         [self updateMapSearchBtn];
+        [self setBackgroundColor:[UIColor themeHomeColor]];
+        [self.topBackCityContainer setBackgroundColor:[UIColor themeHomeColor]];
     }
     
 }
