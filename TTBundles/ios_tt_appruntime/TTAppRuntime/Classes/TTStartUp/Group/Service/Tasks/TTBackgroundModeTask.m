@@ -25,6 +25,8 @@
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TTLaunchDefine.h"
 #import "HMDTTMonitor.h"
+#import <FHCHousePush/TTPushServiceDelegate.h>
+#import <BDUGPushSDK/BDUGPushManager.h>
 
 DEC_TASK("TTBackgroundModeTask",FHTaskTypeService,TASK_PRIORITY_HIGH+9);
 
@@ -131,6 +133,8 @@ static NSUInteger reportTryCount = 0;
                 [wself.class reportDeviceTokenByAppLogout];
             }
         }];
+    } else if ([TTPushServiceDelegate enable]) {
+           [BDUGPushManager handleDeviceToken:[BDUGPushService deviceToken]];
     } else {
         TTUploadTokenRequestParam *param = [TTUploadTokenRequestParam requestParam];
         param.token = [FHCHandleAPNSTask deviceTokenString];

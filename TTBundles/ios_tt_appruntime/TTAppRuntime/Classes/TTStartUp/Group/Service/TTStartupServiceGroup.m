@@ -21,7 +21,6 @@
 #import "TTCookieStartupTask.h"
 #import "TTBackgroundModeTask.h"
 //#import "TTPrivateLetterTask.h"
-#import "TTiOS10NotificationCheckTask.h"
 #import "TTCommonURLSettingTask.h"
 #import "TTLaunchTimerTask.h"
 #import "TTFeedPreloadTask.h"
@@ -52,7 +51,7 @@
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCookie]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeBackgroundMode]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypePrivateLetter]];
-    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeiOS10NotificationCheck]];
+//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeiOS10NotificationCheck]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeReporter]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeLaunchTime]];
 //    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeStatistics]];
@@ -108,9 +107,9 @@
 //        case TTServiceStartupTypePrivateLetter:
 //            return [[TTPrivateLetterTask alloc] init];
 //            break;
-        case TTServiceStartupTypeiOS10NotificationCheck:
-            return [[TTiOS10NotificationCheckTask alloc] init];
-            break;
+//        case TTServiceStartupTypeiOS10NotificationCheck:
+//            return [[TTiOS10NotificationCheckTask alloc] init];
+//            break;
         case TTServiceStartupTypeReporter:
             return [[TTCommonURLSettingTask alloc] init];
             break;
