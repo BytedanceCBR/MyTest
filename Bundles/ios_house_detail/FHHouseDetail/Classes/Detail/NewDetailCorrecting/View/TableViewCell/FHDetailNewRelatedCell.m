@@ -51,7 +51,7 @@
          }];
         [self.tableView reloadData];
     }
-
+    [self layoutIfNeeded];
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
