@@ -738,7 +738,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
             
             NSURL *pushUrl = request.URL;
             if (pushUrl) {
-                    if (@available(iOS 11.0, *)) {
+                    if (@available(iOS 10.0, *)) {
                         [[UIApplication sharedApplication] openURL:pushUrl options:@{} completionHandler:^(BOOL success) {
                             if (!success) {
                                 BDALOG_INFO(@"can't open %@, 第三方APP没有注册URL Scheme", pushUrl);
