@@ -737,21 +737,20 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         if (plistSchemes && [plistSchemes containsObject:request.URL.scheme]) {
             
             NSURL *pushUrl = request.URL;
-            if (pushUrl) {
-                    if (@available(iOS 10.0, *)) {
-                        [[UIApplication sharedApplication] openURL:pushUrl options:@{} completionHandler:^(BOOL success) {
-                            if (!success) {
-                                BDALOG_INFO(@"can't open %@, 第三方APP没有注册URL Scheme", pushUrl);
-                            }
-                        }];
-                    }else {
-                        if ([[UIApplication sharedApplication] canOpenURL:pushUrl]) {
-                            [[UIApplication sharedApplication] openURL:pushUrl];
+            if ([[UIApplication sharedApplication] canOpenURL:pushUrl]) {
+                if (@available(iOS 10.0, *)) {
+                    [[UIApplication sharedApplication] openURL:pushUrl options:@{} completionHandler:^(BOOL success) {
+                        if (!success) {
+                            BDALOG_INFO(@"can't open %@, 第三方APP没有注册URL Scheme", pushUrl);
                         }
-                    }
+                    }];
+                }else {
+                    [[UIApplication sharedApplication] openURL:pushUrl];
                 }
+                return NO;
             }
         }
+    }
     //暂时下掉about:blank拦截 @zengruihuan
     //    if ([[request.URL absoluteString] isEqualToString:@"about:blank"]) {
     //        return NO;
