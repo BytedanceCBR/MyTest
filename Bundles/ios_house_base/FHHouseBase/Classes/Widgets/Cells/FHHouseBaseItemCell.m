@@ -1080,7 +1080,8 @@
         if (commonModel.originPrice) {
             self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
         }else{
-            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+//            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+            self.pricePerSqmLabel.attributedText = [[NSMutableAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{}];
         }
         
         if (self.maskVRImageView) {
@@ -1223,7 +1224,8 @@
     if (model.originPrice) {
         self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];
     }else{
-        self.pricePerSqmLabel.text = model.displayPricePerSqm;
+//        self.pricePerSqmLabel.text = model.displayPricePerSqm;
+        self.pricePerSqmLabel.attributedText = [[NSMutableAttributedString alloc]initWithString:model.displayPricePerSqm attributes:@{}];
     }
     
     

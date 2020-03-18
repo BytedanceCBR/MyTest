@@ -54,7 +54,7 @@
     if (model.disclaimer && model.disclaimer.text.length > 0) {
         NSString *text = model.disclaimer.text;
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text];
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor themeGray4]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:11],NSForegroundColorAttributeName:[UIColor themeGray4]};
         [attrText addAttributes:attr range:NSMakeRange(0, attrText.length)];
         [model.disclaimer.richText enumerateObjectsUsingBlock:^(FHDisclaimerModelDisclaimerRichTextModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSRange range = [self rangeOfArray:obj.highlightRange originalLength:text.length];
@@ -166,7 +166,7 @@
     _disclaimerContent = [[YYLabel alloc] init];
     _disclaimerContent.numberOfLines = 0;
     _disclaimerContent.textColor = [UIColor themeGray4];
-    _disclaimerContent.font = [UIFont themeFontRegular:12];
+    _disclaimerContent.font = [UIFont themeFontRegular:11];
     _disclaimerContent.preferredMaxLayoutWidth = SCREEN_WIDTH-30;
 
     [self.contentView addSubview:_disclaimerContent];

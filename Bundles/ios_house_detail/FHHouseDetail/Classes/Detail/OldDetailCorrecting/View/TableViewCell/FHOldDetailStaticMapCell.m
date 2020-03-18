@@ -316,7 +316,7 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailStaticMapCellModel class]]) {
+    if (![data isKindOfClass:[FHDetailStaticMapCellModel class]]) {
         return;
     }
     self.currentData = data;
