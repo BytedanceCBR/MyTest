@@ -733,7 +733,7 @@ extern NSString *const BOE_OPEN_KEY ;
     
     {
         // im相关调试选项
-        STTableViewCellItem *toggleIMConnectionItem = [[STTableViewCellItem alloc] initWithTitle:@"是否强制IM请求走HTTPS(短连接)，需杀死重启生效" target:self action:nil];
+        STTableViewCellItem *toggleIMConnectionItem = [[STTableViewCellItem alloc] initWithTitle:@"IM强制HTTPS(短连接)，重启生效" target:self action:nil];
         toggleIMConnectionItem.switchStyle = YES;
         toggleIMConnectionItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
         toggleIMConnectionItem.switchAction = @selector(toggleIMConnection);
