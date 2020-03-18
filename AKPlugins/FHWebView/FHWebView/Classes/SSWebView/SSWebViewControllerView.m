@@ -43,6 +43,7 @@
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "FHWebViewConfig.h"
+#import <TTSettingsManager/TTSettingsManager.h>
 
 #define toolBarHeight 40.f
 
@@ -727,13 +728,26 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         }
     }
     
-    
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_webView_open_schema_enable"];
         //暂时受info.plist scheme限制
-    if ([SSCommonLogic webViewOpenSchemaEnable]) {
-            NSArray *plistSchemes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"LSApplicationQueriesSchemes"];
+    if (boolOffline) {
+        NSArray *plistSchemes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"LSApplicationQueriesSchemes"];
             if (plistSchemes && [plistSchemes containsObject:request.URL.scheme] && [[UIApplication sharedApplication] canOpenURL:request.URL]) {
-                if ([[UIApplication sharedApplication] openURL:request.URL]) {
-                    return NO;
+                
+                if (@available(iOS 11.0, *)) {
+                    [[UIApplication sharedApplication] openURL:pushURL options:@{} completionHandler:^(BOOL success) {
+                        if (!success) {
+                            BDALOG_INFO(@"can't open %@, 第三方APP没有注册URL Scheme", openURL);
+                        }else {
+                            return NO;
+                        }
+                    }];
+                }else {
+                    if ([[UIApplication sharedApplication] canOpenURL:pushURL]) {
+                        [[UIApplication sharedApplication] openURL:pushURL];
+                        return NO;
+                    }
                 }
             }
     }

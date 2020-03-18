@@ -5336,12 +5336,12 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
     return boolOffline ? : NO;
 }
 
-+ (BOOL)webViewOpenSchemaEnable
-{
-    NSDictionary *fhSettings = [self fhSettings];
-    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_webView_open_schema_enable"];
-    return boolOffline;
-}
+//+ (BOOL)webViewOpenSchemaEnable
+//{
+//    NSDictionary *fhSettings = [self fhSettings];
+//    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_webView_open_schema_enable"];
+//    return boolOffline;
+//}
 
 + (NSInteger)configEditProfileEntry
 {
