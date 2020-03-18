@@ -15,6 +15,12 @@
 #import "FHLocManager.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "JSONAdditions.h"
+#import "HMDTTMonitor.h"
+#import "TTSandBoxHelper+House.h"
+
+#define kRecommendSocialGroupListNil @"kRecommendSocialGroupListNil"
+#define kHotTopicListNil @"kHotTopicListNil"
+#define kHotCommunityListNil @"kHotCommunityListNil"
 
 @implementation FHFeedUGCCellCommunityModel
 
@@ -533,6 +539,15 @@
         if([model.rawData.subCellType isEqualToString:@"hot_social"]){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCHotCommunity;
             cellModel.hotCellList = model.rawData.hotCellList;
+            if(cellModel.hotCellList.count <= 0){
+                [[HMDTTMonitor defaultManager] hmdTrackService:kHotCommunityListNil metric:nil category:@{
+                    @"version_code": [TTSandBoxHelper fhVersionCode],
+                    @"isEmpty":@(1)
+                } extra:@{
+                  
+                }];
+                return nil;
+            }
         }else{
             cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommend;
             cellModel.elementFrom = @"like_neighborhood";
@@ -540,6 +555,15 @@
                 cellModel.recommendSocialGroupList = model.recommendSocialGroupList;
             }else{
                 cellModel.recommendSocialGroupList = model.rawData.recommendSocialGroupList;
+            }
+            if(cellModel.recommendSocialGroupList.count <= 0){
+                [[HMDTTMonitor defaultManager] hmdTrackService:kRecommendSocialGroupListNil metric:nil category:@{
+                    @"version_code": [TTSandBoxHelper fhVersionCode],
+                    @"isEmpty":@(1)
+                } extra:@{
+                  
+                }];
+                return nil;
             }
         }
     }
@@ -549,6 +573,12 @@
         cellModel.hotTopicList = model.rawData.hotTopicList;
         cellModel.elementFrom = @"hot_topic";
         if(cellModel.hotTopicList.count <= 0){
+            [[HMDTTMonitor defaultManager] hmdTrackService:kHotTopicListNil metric:nil category:@{
+                @"version_code": [TTSandBoxHelper fhVersionCode],
+                @"isEmpty":@(1)
+            } extra:@{
+              
+            }];
             return nil;
         }
     }

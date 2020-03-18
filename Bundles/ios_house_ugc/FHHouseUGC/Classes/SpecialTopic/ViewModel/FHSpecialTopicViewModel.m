@@ -384,26 +384,35 @@
         UIImage *whiteBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor whiteColor]);
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:whiteBackArrowImage forState:UIControlStateHighlighted];
+        
+        UIImage *whiteShareImage = ICON_FONT_IMG(24, @"\U0000e692", [UIColor whiteColor]);
+        [self.viewController.shareButton setBackgroundImage:whiteShareImage forState:UIControlStateNormal];
+        [self.viewController.shareButton setBackgroundImage:whiteShareImage forState:UIControlStateHighlighted];
+        
         self.viewController.titleContainer.hidden = YES;
-        self.viewController.rightBtn.hidden = YES;
-        self.shareButton.hidden = NO;
     } else if (alpha > 0.1f && alpha < 0.9f) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         self.viewController.customNavBarView.title.textColor = [UIColor themeGray1];
         UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
+        
+        UIImage *blackShareImage = ICON_FONT_IMG(24, @"\U0000e692", [UIColor themeGray1]);
+        [self.viewController.shareButton setBackgroundImage:blackShareImage forState:UIControlStateNormal];
+        [self.viewController.shareButton setBackgroundImage:blackShareImage forState:UIControlStateHighlighted];
+        
         self.viewController.titleContainer.hidden = YES;
-        self.viewController.rightBtn.hidden = YES;
-        self.shareButton.hidden = NO;
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         UIImage *blackBackArrowImage = ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]);
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateNormal];
         [self.viewController.customNavBarView.leftBtn setBackgroundImage:blackBackArrowImage forState:UIControlStateHighlighted];
+        
+        UIImage *blackShareImage = ICON_FONT_IMG(24, @"\U0000e692", [UIColor themeGray1]);
+        [self.viewController.shareButton setBackgroundImage:blackShareImage forState:UIControlStateNormal];
+        [self.viewController.shareButton setBackgroundImage:blackShareImage forState:UIControlStateHighlighted];
+        
         self.viewController.titleContainer.hidden = NO;
-        self.viewController.rightBtn.hidden = NO;
-        self.shareButton.hidden = YES;
     }
     [self.viewController.customNavBarView refreshAlpha:alpha];
 }
@@ -442,11 +451,11 @@
     self.viewController.headerView.subtitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     
     self.viewController.titleLabel.text = isEmptyString(headerModel.forum.forumName) ? @"" : headerModel.forum.forumName;
-    self.viewController.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
+//    self.viewController.subTitleLabel.text = isEmptyString(subtitle) ? @"" : subtitle;
     
     CGFloat subTitleHeight = [self.viewController.headerView.subtitleLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)].height;
     
-    CGFloat titleHeight = [self.viewController.headerView.nameLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)].height;
+    CGFloat titleHeight = [self.viewController.headerView.nameLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH - 48, MAXFLOAT)].height;
     
     self.viewController.headerView.subtitleLabel.frame = CGRectMake(15, self.viewController.headerView.height - subTitleHeight - 15, SCREEN_WIDTH - 30, subTitleHeight);
     
@@ -455,10 +464,6 @@
     }else{
         self.viewController.headerView.nameLabel.frame = CGRectMake(24, self.viewController.headerView.height - 12 - subTitleHeight - 15 - titleHeight, SCREEN_WIDTH - 48, titleHeight);
     }
-}
-
-- (void)updateJoinUI:(BOOL)followed {
-    self.viewController.rightBtn.followed = followed;
 }
 
 #pragma UIScrollViewDelegate

@@ -48,24 +48,23 @@ def fhPods
 #    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
     #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '21f52981452d7e1e319da3a07301184164b72251'
     
-#     pod 'FHPopupViewCenter', :path => '../../FHPopupViewCenter', :subspecs => [
-#     'Core',
-#     'DelegateForC'
-#     ]
-   pod 'FHPopupViewCenter', '0.0.2-alpha.39', :subspecs => [
-   'Core',
-   'DelegateForC'
-   ]
+#   pod 'FHPopupViewCenter', :path => '../../FHPopupViewCenter', :subspecs => [
+#   'Core',
+#   'DelegateForC'
+#   ]
+     pod 'FHPopupViewCenter', '0.0.2-rc.0', :subspecs => [
+     'Core',
+     'DelegateForC'
+     ]
 #    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
 #    'Core',
 #    'DelegateForC'
 #    ]
 
-
-    pod 'ios_house_im' , '0.1.19-rc.7'
-
+    pod 'ios_house_im' , '0.1.19-rc.11'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '0e86cef3e26a0083b29c6fa060948d3456f96c46'
+#    pod 'ios_house_im' , :path => '../../cim'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '8141c3506a677f14f05eabb7146120339e0ad283'
 
 end
 
@@ -156,7 +155,7 @@ def appPods
     #-----头条图片/视频选择器-----
     pod 'TTImagePicker', '7.5.5.2'
   
-    pod_binary 'SecGuard' , '0.8.16.5'
+    pod_binary 'SecGuard' , '0.8.16.9'
     
     pod_binary 'IESGeckoKit', '0.4.0'
     pod_binary 'IESWebKit', '0.2.0-rc.3'

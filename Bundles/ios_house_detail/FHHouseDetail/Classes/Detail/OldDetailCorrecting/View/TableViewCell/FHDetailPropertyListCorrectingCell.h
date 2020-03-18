@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)updateWithFloorInfo:(FHDetailDataBaseExtraFloorInfoModel *)floorInfo;
 
+-(void)updateWithHouseCertificationInfo:(FHDetailDataBaseExtraHouseCertificationModel *)houseCertificationInfo;
+
 @end
 
 // FHDetailPropertyListModel
