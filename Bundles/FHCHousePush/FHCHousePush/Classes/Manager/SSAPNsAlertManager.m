@@ -450,7 +450,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
 
 //            NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
             if ([[openURL host] isEqualToString:@"main"]) {
-                NSString * str = [schemaString stringByAppendingString:@"&needToRoot=0"];
+                NSString * str = [schemaString stringByAppendingString:@"&needToRoot=1"];
                 openURL = [TTStringHelper URLWithURLString:str];
                 [[TTRoute sharedRoute] openURL:openURL userInfo:nil objHandler:nil];
 //                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
