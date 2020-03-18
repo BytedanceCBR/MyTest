@@ -104,4 +104,12 @@
     return YES;
 }
 
+/**
+ 非 vc 打开方式
+ */
+- (void)customOpenTargetWithParamObj:(nullable TTRouteParamObj *)paramObj
+{
+    
+}
+
 @end

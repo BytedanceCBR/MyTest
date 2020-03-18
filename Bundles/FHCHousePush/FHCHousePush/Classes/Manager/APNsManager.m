@@ -252,7 +252,7 @@ static APNsManager *_sharedManager = nil;
         else {
             NSURL *pushURL = [TTStringHelper URLWithURLString:openURL];
             if (pushURL) {
-                if (@available(iOS 11.0, *)) {
+                if (@available(iOS 10.0, *)) {
                     [[UIApplication sharedApplication] openURL:pushURL options:@{} completionHandler:^(BOOL success) {
                         if (!success) {
                             BDALOG_INFO(@"can't open %@, 第三方APP没有注册URL Scheme", openURL);

@@ -9,6 +9,7 @@
 #import "JSONModel.h"
 #import "FHDetailBaseModel.h"
 #import "FHHouseNewsSocialModel.h"
+#import "FHHouseBaseInfoModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -121,6 +122,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListImagesModel> *images;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, assign) NSInteger index;
+@property (nonatomic, copy , nullable) NSString *facingDirection;
+
 @end
 
 @interface FHDetailNewDataFloorpanListModel : JSONModel
@@ -129,6 +132,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *userStatus;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListModel> *list;
 @property (nonatomic, copy , nullable) NSString *courtId;
+@property (nonatomic, copy , nullable) NSString *totalNumber;
+
 
 @end
 
@@ -146,6 +151,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *courtAddress;
+@property (nonatomic, copy , nullable) NSString *courtAddressIcon;
 @property (nonatomic, copy , nullable) NSString *areaId;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, copy , nullable) NSString *gaodeImageUrl;
@@ -161,7 +167,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *areaName;
 @property (nonatomic, copy , nullable) NSString *shareInfo;
 @property (nonatomic, copy , nullable) NSString *districtName;
-@property (nonatomic, copy , nullable) NSString *aliasName;
+@property (nonatomic, copy , nullable) NSString *aliasName; // todo zjing 废弃
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *dataSourceId;
 @end
@@ -180,6 +186,60 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataDisclaimerRichTextModel> *richText;
 @end
+
+@protocol FHDetailNewDiscountInfoItemModel <NSObject>
+
+
+@end
+
+@interface FHDetailNewDiscountInfoItemModel : JSONModel
+
+@property (nonatomic, assign) NSInteger itemType;
+@property (nonatomic, copy , nullable) NSString *itemDesc;
+@property (nonatomic, assign) NSInteger actionType;
+@property (nonatomic, copy , nullable) NSString *actionDesc;
+@property (nonatomic, copy , nullable) NSString *discountContent;
+@property (nonatomic, copy , nullable) NSString *discountSubContent;
+
+@property (nonatomic, copy , nullable) NSString *discountReportTitle;
+@property (nonatomic, copy , nullable) NSString *discountReportSubTitle;
+@property (nonatomic, copy , nullable) NSString *discountButtonText;
+@property (nonatomic, copy , nullable) NSString *discountReportDoneTitle;
+@property (nonatomic, strong) NSNumber *page;
+
+@end
+
+@interface FHDetailNewSurroundingInfoSurrounding : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *chatOpenurl;
+
+@end
+
+@interface FHDetailNewSurroundingInfo : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *location;
+@property (nonatomic, strong , nullable) FHDetailNewSurroundingInfoSurrounding *surrounding;
+
+@end
+
+// todo  zjing 与二手房字段保持一致
+
+@protocol FHDetailNewTopImage <NSObject>
+
+
+@end
+
+@interface FHDetailNewTopImage : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, assign) FHDetailHouseImageType type;
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataImageGroupModel> *imageGroup;
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel> *smallImageGroup;
+
+@end
+
+
 
 @interface FHDetailNewDataModel : JSONModel
 
@@ -201,6 +261,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHouseNewsSocialModel *socialInfo ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle; // 推荐经纪人标题文案
+@property (nonatomic, strong , nullable) FHVideoHouseVideoModel *houseVideo ;
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewTopImage> *topImages;
+@property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
+
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewDiscountInfoItemModel> *discountInfo;
+@property (nonatomic, copy , nullable) NSString *relatedCourtInfo;
+@property (nonatomic, strong , nullable) FHDetailNewSurroundingInfo *surroundingInfo ;
+@property(nonatomic , strong) FHDetailNewTopBanner *topBanner;
 
 @end
 

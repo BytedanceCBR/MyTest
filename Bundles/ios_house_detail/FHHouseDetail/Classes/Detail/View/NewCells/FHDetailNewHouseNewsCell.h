@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHDetailHeaderView *headerView;
 @end
 
-@interface FHDetailNewHouseNewsCellModel : JSONModel
+@interface FHDetailNewHouseNewsCellModel : FHDetailBaseModel
 
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, strong) NSString * titleText;

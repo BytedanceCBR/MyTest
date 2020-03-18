@@ -204,26 +204,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *entranceUrl;
 @end
 
-@protocol FHDetailOldDataHouseImageDictListModel<NSObject>
-@end
-
-// 房源详情图片类型
-typedef enum : NSInteger {
-    FHDetailHouseImageTypeOther             = 0, // 其他
-    FHDetailHouseImageTypeApartment         = 2, // 户型
-    FHDetailHouseImageTypeLivingroom        = 3, // 客厅
-    FHDetailHouseImageTypeBedroom           = 4, // 卧室
-    FHDetailHouseImageTypeKitchen           = 5, // 厨房
-    FHDetailHouseImageTypeBathroom          = 6, // 卫生间
-} FHDetailHouseImageType;
-
-@interface FHDetailOldDataHouseImageDictListModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *houseImageTypeName;
-@property (nonatomic, assign) FHDetailHouseImageType houseImageType;
-@property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImageList;
-@property (nonatomic, strong , nullable) NSArray<FHImageModel> *instantHouseImageList;
-@end
 
 
 @protocol FHDetailImShareInfoModel <NSObject>

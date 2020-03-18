@@ -13,7 +13,7 @@
 
 @implementation FHHouseSearcher
 
-+(TTHttpTask *_Nullable)houseSearchWithQuery:(NSString *_Nullable)query param:(NSDictionary * _Nonnull)queryParam offset:(NSInteger)offset needCommonParams:(BOOL)needCommonParams callback:(void(^_Nullable )(NSError *_Nullable error , FHSearchHouseDataModel *_Nullable model))callback
++(TTHttpTask *_Nullable)houseSearchWithQuery:(NSString *_Nullable)query param:(NSDictionary * _Nonnull)queryParam offset:(NSInteger)offset class:(Class)cls  needCommonParams:(BOOL)needCommonParams callback:(void(^_Nullable )(NSError *_Nullable error , id<FHBaseModelProtocol> _Nullable model ))callback
 {
     NSString *path = @"/f100/api/search";
     if (query.length > 0) {
@@ -26,8 +26,8 @@
         query = [query stringByAppendingFormat:@"&search_id=%@",queryParam[@"search_id"]];
     }
     
-    return [FHMainApi postRequest:path uploadLog:YES query:query params:queryParam jsonClass:[FHSearchHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {        
-        callback(error ,[(FHSearchHouseModel *)model data]);
+    return [FHMainApi postRequest:path uploadLog:YES query:query params:queryParam jsonClass:cls completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        callback(error ,model);
     }];
 }
 

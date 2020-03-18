@@ -143,18 +143,18 @@
             }];
         }
         //加载周边时
-            if ([[obj allKeys] containsObject:@"locationPeripherys"] || [[obj allKeys] containsObject:@"housingEvaluation"] || [[obj allKeys] containsObject:@"disclaimers"]) {
-                //如果包含大标题的模块存在，则当前模块第一个元素和上一个模块最后一个元素的阴影不裁剪,同时在当前模块插入标题
-                if (idx > 0) {
-                    FHDetailBaseModel *currentModel = currentItemArr[0];
-                    currentModel.shdowImageScopeType = FHHouseShdowImageScopeTypeTopAll;
-                    NSDictionary *previousItem = moduleItems[idx-1];
-                    NSArray *previousArr = previousItem[[previousItem allKeys][0]];
-                    FHDetailBaseModel *previousModel = previousArr[previousArr.count -1];
-                    previousModel.shdowImageScopeType = FHHouseShdowImageScopeTypeBottomAll;
-                    [FHOldDetailModuleHelper moduleInsertSectionTitle:moduleArr beforeModel:currentModel];
-                }
+        if ([[obj allKeys] containsObject:@"locationPeripherys"] || [[obj allKeys] containsObject:@"housingEvaluation"] || [[obj allKeys] containsObject:@"disclaimers"]) {
+            //如果包含大标题的模块存在，则当前模块第一个元素和上一个模块最后一个元素的阴影不裁剪,同时在当前模块插入标题
+            if (idx > 0) {
+                FHDetailBaseModel *currentModel = currentItemArr[0];
+                currentModel.shdowImageScopeType = FHHouseShdowImageScopeTypeTopAll;
+                NSDictionary *previousItem = moduleItems[idx-1];
+                NSArray *previousArr = previousItem[[previousItem allKeys][0]];
+                FHDetailBaseModel *previousModel = previousArr[previousArr.count -1];
+                previousModel.shdowImageScopeType = FHHouseShdowImageScopeTypeBottomAll;
+                [FHOldDetailModuleHelper moduleInsertSectionTitle:moduleArr beforeModel:currentModel];
             }
+        }
     }];
     return moduleArr;
 }

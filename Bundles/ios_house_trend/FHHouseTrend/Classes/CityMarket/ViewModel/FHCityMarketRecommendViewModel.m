@@ -71,10 +71,10 @@
     [self.specialOldHouseList enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataSpecialOldHouseListModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSString* queryString = [NSString stringWithFormat:@"%@", obj.rankOpenUrl];
         @weakify(self);
-        [FHHouseSearcher houseSearchWithQuery:queryString param:nil offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable model) {
+        [FHHouseSearcher houseSearchWithQuery:queryString param:nil offset:0 class:[FHSearchHouseModel class] needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseModel * _Nullable model) {
             @strongify(self);
             if (error == nil) {
-                self.dataCache[obj.title] = model;
+                self.dataCache[obj.title] = model.data;
             } else {
                 FHSearchHouseDataModel* theModel = [[FHSearchHouseDataModel alloc] init];
                 self.dataCache[obj.title] = theModel;

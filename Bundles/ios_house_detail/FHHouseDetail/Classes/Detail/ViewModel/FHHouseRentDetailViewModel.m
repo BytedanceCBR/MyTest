@@ -33,6 +33,7 @@
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHHouseRentModel.h>
+#import "FHHouseListBaseItemModel.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -42,7 +43,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
 @property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodHouseData;
-@property (nonatomic, strong , nullable) FHHouseRentRelatedResponseDataModel *relatedHouseData;
+//@property (nonatomic, strong , nullable) FHHouseRentRelatedResponseDataModel *relatedHouseData;
+@property (nonatomic, strong , nullable) FHHouseListDataModel *relatedHouseData;
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
@@ -482,9 +484,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
  // 周边房源
  - (void)requestRelatedHouseSearch {
      __weak typeof(self) wSelf = self;
-     [FHHouseDetailAPI requestHouseRentRelated:self.houseId completion:^(FHHouseRentRelatedResponseModel * _Nonnull model, NSError * _Nonnull error) {
+     [FHHouseDetailAPI requestHouseRentRelated:self.houseId class:[FHListResultHouseModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nonnull error) {
+         FHListResultHouseModel *models = (FHListResultHouseModel*)model;
          wSelf.requestRelatedCount += 1;
-         wSelf.relatedHouseData = model.data;
+         wSelf.relatedHouseData = models.data;
          [wSelf processDetailRelatedData];
      }];
  }

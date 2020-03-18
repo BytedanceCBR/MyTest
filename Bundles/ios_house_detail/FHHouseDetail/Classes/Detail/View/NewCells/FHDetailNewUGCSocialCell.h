@@ -15,4 +15,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHDetailNewUGCSocialCellModel : FHDetailBaseModel
+
+@property(nonatomic, strong, nullable) FHHouseNewsSocialModel *socialInfo;
+
+
+@end
+
+
+
 NS_ASSUME_NONNULL_END

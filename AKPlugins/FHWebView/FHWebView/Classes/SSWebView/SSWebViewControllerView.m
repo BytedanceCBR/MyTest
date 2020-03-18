@@ -44,6 +44,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "FHWebViewConfig.h"
 #import <TTSettingsManager/TTSettingsManager.h>
+#import <BDALog/BDAgileLog.h>
 
 #define toolBarHeight 40.f
 
@@ -733,23 +734,22 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         //暂时受info.plist scheme限制
     if (boolOffline) {
         NSArray *plistSchemes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"LSApplicationQueriesSchemes"];
-            if (plistSchemes && [plistSchemes containsObject:request.URL.scheme] && [[UIApplication sharedApplication] canOpenURL:request.URL]) {
-                
-                if (@available(iOS 11.0, *)) {
-                    [[UIApplication sharedApplication] openURL:pushURL options:@{} completionHandler:^(BOOL success) {
+        if (plistSchemes && [plistSchemes containsObject:request.URL.scheme]) {
+            
+            NSURL *pushUrl = request.URL;
+            if ([[UIApplication sharedApplication] canOpenURL:pushUrl]) {
+                if (@available(iOS 10.0, *)) {
+                    [[UIApplication sharedApplication] openURL:pushUrl options:@{} completionHandler:^(BOOL success) {
                         if (!success) {
-                            BDALOG_INFO(@"can't open %@, 第三方APP没有注册URL Scheme", openURL);
-                        }else {
-                            return NO;
+                            BDALOG_INFO(@"can't open %@, 第三方APP没有注册URL Scheme", pushUrl);
                         }
                     }];
                 }else {
-                    if ([[UIApplication sharedApplication] canOpenURL:pushURL]) {
-                        [[UIApplication sharedApplication] openURL:pushURL];
-                        return NO;
-                    }
+                    [[UIApplication sharedApplication] openURL:pushUrl];
                 }
+                return NO;
             }
+        }
     }
     //暂时下掉about:blank拦截 @zengruihuan
     //    if ([[request.URL absoluteString] isEqualToString:@"about:blank"]) {

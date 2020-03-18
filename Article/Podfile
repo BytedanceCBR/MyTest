@@ -47,7 +47,7 @@ def fhPods
     pod 'FHCommonUI', '0.0.17-rc.0'
 #    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
     #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '21f52981452d7e1e319da3a07301184164b72251'
-    
+
 #   pod 'FHPopupViewCenter', :path => '../../FHPopupViewCenter', :subspecs => [
 #   'Core',
 #   'DelegateForC'
@@ -56,7 +56,8 @@ def fhPods
      'Core',
      'DelegateForC'
      ]
-#    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
+
+     #    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
 #    'Core',
 #    'DelegateForC'
 #    ]
