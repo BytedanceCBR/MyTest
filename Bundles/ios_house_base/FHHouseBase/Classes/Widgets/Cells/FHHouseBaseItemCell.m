@@ -1078,7 +1078,7 @@
         _pricePerSqmLabel.font = [UIFont themeFontRegular:12];
         self.priceLabel.text = commonModel.displayPrice;
         if (commonModel.originPrice) {
-            self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
+//            self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
         }else{
 //            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
             self.pricePerSqmLabel.attributedText = [[NSMutableAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{}];
@@ -1222,7 +1222,7 @@
     _pricePerSqmLabel.textColor = [UIColor themeGray1];
     _pricePerSqmLabel.font = [UIFont themeFontRegular:12];
     if (model.originPrice) {
-        self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];
+//        self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];
     }else{
 //        self.pricePerSqmLabel.text = model.displayPricePerSqm;
         self.pricePerSqmLabel.attributedText = [[NSMutableAttributedString alloc]initWithString:model.displayPricePerSqm attributes:@{}];
@@ -1374,7 +1374,7 @@
             self.subTitleLabel.text = commonModel.displaySubtitle;
             self.priceLabel.text = commonModel.displayPrice;
             if (commonModel.originPrice) {
-                self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
+//                self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
             }else{
 //                self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
                 self.pricePerSqmLabel.attributedText = [[NSMutableAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{}];

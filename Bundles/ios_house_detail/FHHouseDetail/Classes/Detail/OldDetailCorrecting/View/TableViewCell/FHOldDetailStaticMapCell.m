@@ -319,8 +319,12 @@
     if (![data isKindOfClass:[FHDetailStaticMapCellModel class]]) {
         return;
     }
-    self.currentData = data;
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) data;
+    adjustImageScopeType(dataModel)
+    if (self.currentData == data) {
+        return;
+    }
+    self.currentData = data;
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
     
     NSDictionary *fhSettings = [self fhSettings];
@@ -328,7 +332,7 @@
     
     [self cleanSubViews];
     [self setupViews:dataModel.useNativeMap];
-    adjustImageScopeType(dataModel)
+    
 
     [self refreshWithDataPoiDetail];
 }
