@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FHHouseNeighborAgencyModel;
 @class FHDetailContactModel;
-
 @protocol FHSearchHouseDataItemsModel<NSObject>
 
 @end

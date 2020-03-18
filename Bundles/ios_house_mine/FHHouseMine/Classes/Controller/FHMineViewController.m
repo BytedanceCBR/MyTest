@@ -18,7 +18,6 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "TTReachability.h"
 #import <FHHouseBase/FHBaseTableView.h>
-#import "FHSpringHangView.h"
 #import "UIViewController+Track.h"
 #import "TTTabBarItem.h"
 #import "TTTabBarManager.h"
@@ -35,9 +34,6 @@
 @property (nonatomic, strong) UIButton *settingBtn;
 @property (nonatomic, assign) CGFloat headerViewHeight;
 @property (nonatomic, assign) CGFloat naviBarHeight;
-//春节活动运营位
-@property (nonatomic, strong) FHSpringHangView *springView;
-
 @end
 
 @implementation FHMineViewController
@@ -81,42 +77,13 @@
     self.ttTrackStayEnable = YES;
     self.ttStatusBarStyle = UIStatusBarStyleLightContent;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
-    
     [self initNavbar];
     [self initView];
     [self initConstraints];
     [self initViewModel];
     [self setupHeaderView];
     [self initSignal];
-    
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-    }
 }
-
-- (void)addSpringView {
-    if(!_springView){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
-        [self.view addSubview:_springView];
-        _springView.hidden = YES;
-        
-        CGFloat bottom = 49;
-        if (@available(iOS 11.0 , *)) {
-            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-        }
-        
-        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(82);
-            make.height.mas_equalTo(82);
-            make.right.mas_equalTo(self.view).offset(-11);
-        }];
-    }
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.viewModel updateHeaderView];
@@ -126,12 +93,8 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self refreshContentOffset:self.tableView.contentOffset];
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
-    
     [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -143,16 +106,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-}
-
-- (void)popupViewDataFetchSuccess {
-    if([FHEnvContext isSpringHangOpen] && self.springView){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
-}
-
-- (void)popupViewStartFetchData {
-    self.springView.hidden = YES;
 }
 
 - (void)initNavbar {
@@ -327,10 +280,7 @@
 }
 
 - (void)trackStartedByAppWillEnterForground {
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
+
 }
 
 @end

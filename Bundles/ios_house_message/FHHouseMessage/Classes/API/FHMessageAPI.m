@@ -68,6 +68,8 @@
     }
 
     Class cls = NSClassFromString(@"FHHouseMsgModel");
+//    Class cls = NSClassFromString(@"FHListResultHouseModel");
+    
 
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }

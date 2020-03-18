@@ -43,6 +43,7 @@
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTLaunchDefine.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <FHCHousePush/TTPushServiceDelegate.h>
 
 DEC_TASK("TTStartupNotificationTask",FHTaskTypeNotification,TASK_PRIORITY_HIGH);
 
@@ -81,7 +82,9 @@ TTAccountMulticastProtocol
 
 - (void)uploadDeviceID
 {
-    
+    if ([TTPushServiceDelegate enable]) {
+        return;
+    }
     [[TTInstallIDManager sharedInstance] observeDeviceDidRegistered:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHTrackerDidRefreshDeviceId" object:nil];
         TTChannelRequestParam *param = [TTChannelRequestParam requestParam];

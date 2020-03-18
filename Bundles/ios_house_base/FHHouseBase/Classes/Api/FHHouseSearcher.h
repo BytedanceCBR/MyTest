@@ -33,7 +33,7 @@ extern NSString const *SUGGESTION_PARAMS_KEY;
  * param need:
  *   house_type
  */
-+(TTHttpTask *_Nullable)houseSearchWithQuery:(NSString *_Nullable)query param:(NSDictionary * _Nonnull)queryParam offset:(NSInteger)offset needCommonParams:(BOOL)needCommonParams callback:(void(^_Nullable )(NSError *_Nullable error , FHSearchHouseDataModel *_Nullable model))callback;
++(TTHttpTask *_Nullable)houseSearchWithQuery:(NSString *_Nullable)query param:(NSDictionary * _Nonnull)queryParam offset:(NSInteger)offset class:(Class)cls  needCommonParams:(BOOL)needCommonParams callback:(void(^_Nullable )(NSError *_Nullable error , id<FHBaseModelProtocol> _Nullable model ))callback;
 
 /**
  * 地图找房 api

@@ -11,6 +11,8 @@
 
 
 #define kSSAPNsAlertManagerTitleKey         @"kSSAPNsAlertManagerTitleKey"
+#define kSSAPNsAlertManagerContentKey         @"kSSAPNsAlertManagerContentKey"
+
 #define kSSAPNsAlertManagerSchemaKey        @"kSSAPNsAlertManagerSchemaKey"
 #define kSSAPNsAlertManagerOldApnsTypeIDKey @"kSSAPNsAlertManagerOldApnsTypeIDKey"  //老的推送方式， 如果有id， 则是推送到详情页
 #define kSSAPNsAlertManagerRidKey           @"kSSAPNsAlertManagerRidKey"
@@ -29,5 +31,8 @@ extern BOOL kFHInAppPushTipsHidden; // 应用内弹窗 隐藏
 
 //打开状态是否弹窗推送消息
 + (void)setCouldShowActivePushAlert:(BOOL)could;
+
+#pragma mark - test
++ (void)showTestPushAlert:(BOOL)isStrong;
 
 @end

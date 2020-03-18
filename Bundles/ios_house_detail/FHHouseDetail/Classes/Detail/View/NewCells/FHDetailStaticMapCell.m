@@ -138,7 +138,7 @@
 
     [self.contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.mapMaskBtn);
-        make.bottom.mas_greaterThanOrEqualTo(self.mapMaskBtn).offset(20);
+        make.bottom.mas_greaterThanOrEqualTo(self.mapMaskBtn).offset(30);
     }];
 }
 

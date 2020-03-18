@@ -66,6 +66,7 @@
 #import "FHHouseListRedirectTipCell.h"
 #import "FHCommuteManager.h"
 #import <TTBaseLib/TTDeviceHelper.h>
+#import <FHHouseBase/FHRelevantDurationTracker.h>
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -851,6 +852,13 @@ extern NSString *const INSTANT_DATA_KEY;
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        [[FHRelevantDurationTracker sharedTracker] sendRelevantDuration];
+    }
+}
+
 -(void)showInputSearch
 {
     [self addClickSearchLog];
@@ -1622,6 +1630,10 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
     [self showHouseDetail:cellModel atIndexPath:indexPath];
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+    }
+
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView

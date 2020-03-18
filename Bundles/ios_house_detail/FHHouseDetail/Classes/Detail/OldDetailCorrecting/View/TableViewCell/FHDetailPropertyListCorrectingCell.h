@@ -18,12 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHPropertyListCorrectingRowView : UIView
 
-@property (nonatomic, strong)   UILabel       *keyLabel;
-@property (nonatomic, strong)   UILabel       *valueLabel;
-
-@end
 
 @interface FHDetailExtarInfoCorrectingRowView : UIControl
 
@@ -45,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)updateWithNeighborhoodInfoData:(FHDetailDataBaseExtraNeighborhoodModel *)neighborModel;
 
 -(void)updateWithFloorInfo:(FHDetailDataBaseExtraFloorInfoModel *)floorInfo;
+
+-(void)updateWithHouseCertificationInfo:(FHDetailDataBaseExtraHouseCertificationModel *)houseCertificationInfo;
 
 @end
 

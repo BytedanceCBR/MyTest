@@ -71,24 +71,20 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
-    
-    if (model.houseType == FHHouseTypeNewHouse) {
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.contentView).mas_offset(-15);
-            make.right.equalTo(self.contentView).mas_offset(15);
-        }];
-    }
+
     // 设置下发标题
     if(model.recommendedRealtorsTitle.length > 0) {
         self.headerView.label.text = model.recommendedRealtorsTitle;
     }else {
         self.headerView.label.text = (model.houseType == FHHouseTypeNewHouse) ? @"优选顾问" : @"推荐经纪人";
     }
+    WeakSelf;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         __block CGFloat vHeight = 76.0;
         __block CGFloat marginTop = 0;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            StrongSelf;
             if (obj.realtorScoreDescription.length >0&&obj.realtorScoreDisplay.length >0&&obj.realtorTags.count >0) {
                 vHeight = 100;
             }else {
@@ -119,12 +115,19 @@
             }
             FHDetailContactImageTagModel *tag = obj.imageTag;
             [self refreshIdentifyView:itemView.identifyView withUrl:tag.imageUrl];
+            FHDetailContactModel *model  =  (FHDetailContactModel *)obj;
             if (tag.imageUrl.length > 0) {
                 [itemView.identifyView bd_setImageWithURL:[NSURL URLWithString:tag.imageUrl]];
                 itemView.identifyView.hidden = NO;
             }else {
                 itemView.identifyView.hidden = YES;
             }
+            
+            if (model.realtorCellShow == FHRealtorCellShowStyle0) {
+                               itemView.agency.font = [UIFont themeFontRegular:14];
+                               itemView.identifyView.hidden = YES;
+                   
+               }
             BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
             [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
             if(obj.realtorEvaluate.length > 0) {
@@ -138,7 +141,6 @@
               }
             itemsCount += 1;
         }];
-
     }
     // > 3 添加折叠展开
     if (model.recommendedRealtors.count > 3) {

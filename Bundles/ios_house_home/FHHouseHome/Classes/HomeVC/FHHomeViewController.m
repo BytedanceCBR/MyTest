@@ -378,12 +378,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-//    //春节活动运营位
-//    if([FHEnvContext isSpringHangOpen]){
-//        [self addSpringView];
-//        [self.springView show:[FHEnvContext enterTabLogName]];
-//    }
-    
     //开屏广告启动不会展示，保留逻辑代码
     if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
         self.adColdHadJump = YES;
@@ -496,12 +490,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
-    
-//    //春节活动运营位
-//    if([FHEnvContext isSpringHangOpen]){
-//        [self addSpringView];
-//        [self.springView show:[FHEnvContext enterTabLogName]];
-//    }
 }
 
 - (void)dealloc
