@@ -17,7 +17,7 @@
 
 @property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, strong)   UIView       *containerView;
-@property (nonatomic, strong)   UITableView       *tableView;
+@property (nonatomic, weak)   UITableView       *tableView;
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowCache; // 埋点缓存
 
 @property (nonatomic, strong , nullable) NSArray<FHHouseListBaseItemModel *> *items;
@@ -32,44 +32,23 @@
         return;
     }
     self.currentData = data;
-    for (UIView *v in self.containerView.subviews) {
-        [v removeFromSuperview];
-    }
     // 添加tableView和查看更多
     FHDetailNewRelatedCellModel *model = (FHDetailNewRelatedCellModel *)data;
     
     adjustImageScopeType(model)
     
     CGFloat cellHeight = 104;
-    BOOL hasMore = NO;
-    CGFloat bottomOffset = 10;
-    if (hasMore) {
-        bottomOffset = 68;
-    }
+//    BOOL hasMore = NO;
+//    CGFloat bottomOffset = 10;
+//    if (hasMore) {
+//        bottomOffset = 68;
+//    }
     self.items = model.relatedHouseData.items;
     if (model.relatedHouseData.items.count > 0) {
-        UITableView *tv = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        tv.estimatedRowHeight = 104;
-        tv.estimatedSectionHeaderHeight = 0;
-        tv.estimatedSectionFooterHeight = 0;
-        tv.backgroundColor = [UIColor clearColor];
-        if (@available(iOS 11.0, *)) {
-            tv.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        }
-        tv.separatorStyle = UITableViewCellSeparatorStyleNone;
-        tv.showsVerticalScrollIndicator = NO;
-        tv.scrollEnabled = NO;
-        [tv registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHNewHouseCell"];
-        [self.containerView addSubview:tv];
-        [tv mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.containerView).offset(10);
-            make.height.mas_equalTo(cellHeight * model.relatedHouseData.items.count);
-            make.left.right.mas_equalTo(self.containerView);
-            make.bottom.mas_equalTo(self.containerView).offset(-bottomOffset);
-        }];
-        self.tableView = tv;
-        self.tableView.delegate = self;
-        self.tableView.dataSource = self;
+
+        [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+             make.height.mas_equalTo(cellHeight * model.relatedHouseData.items.count);
+         }];
         [self.tableView reloadData];
     }
 
@@ -110,6 +89,28 @@
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.bottom.mas_equalTo(self.shadowImage).mas_offset(-30);
     }];
+    UITableView *tv = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    tv.estimatedRowHeight = 104;
+    tv.estimatedSectionHeaderHeight = 0;
+    tv.estimatedSectionFooterHeight = 0;
+    tv.backgroundColor = [UIColor clearColor];
+    if (@available(iOS 11.0, *)) {
+        tv.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    tv.separatorStyle = UITableViewCellSeparatorStyleNone;
+    tv.showsVerticalScrollIndicator = NO;
+    tv.scrollEnabled = NO;
+    [tv registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHNewHouseCell"];
+    [self.containerView addSubview:tv];
+    [tv mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.containerView).offset(10);
+        make.height.mas_equalTo(0);
+        make.left.right.mas_equalTo(self.containerView);
+        make.bottom.mas_equalTo(self.containerView).offset(-10);
+    }];
+    self.tableView = tv;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
@@ -184,7 +185,7 @@
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
     if (vcParentView) {
         CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
-        NSInteger index = (UIScreen.mainScreen.bounds.size.height - point.y - 70) / 108;
+        NSInteger index = (UIScreen.mainScreen.bounds.size.height - point.y - 70) / 104;
         if (index >= 0 && index < self.items.count) {
             [self addHouseShowByIndex:index];
         }
@@ -199,7 +200,7 @@
             return;
         }
         [self.houseShowCache setValue:@(YES) forKey:tempKey];
-        FHSearchHouseDataItemsModel *dataItem = self.items[index];
+        FHHouseListBaseItemModel *dataItem = self.items[index];
         // house_show
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);
@@ -208,8 +209,7 @@
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
         tracerDic[@"element_type"] = @"related";
         tracerDic[@"search_id"] = dataItem.searchId.length > 0 ? dataItem.searchId : @"be_null";
-        // todo zjing test
-//        tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.hid ? dataItem.hid : @"be_null");
+        tracerDic[@"group_id"] = dataItem.houseid ? : @"be_null";
         tracerDic[@"impr_id"] = dataItem.imprId.length > 0 ? dataItem.imprId : @"be_null";
         [tracerDic removeObjectsForKeys:@[@"element_from"]];
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];
