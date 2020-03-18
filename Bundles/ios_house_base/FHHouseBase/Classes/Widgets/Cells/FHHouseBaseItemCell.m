@@ -1080,7 +1080,8 @@
         if (commonModel.originPrice) {
             self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
         }else{
-            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+//            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+            self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
         }
         
         if (self.maskVRImageView) {
@@ -1223,7 +1224,7 @@
     if (model.originPrice) {
         self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];
     }else{
-                self.pricePerSqmLabel.text = model.displayPricePerSqm;
+         self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:model.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
     }
     
     
@@ -1374,7 +1375,7 @@
             if (commonModel.originPrice) {
                 self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
             }else{
-                self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+                self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
             }
             [self.pricePerSqmLabel.yoga markDirty];
             if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
@@ -1926,9 +1927,10 @@
     if (originPrice.length < 1) {
         return nil;
     }
-    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:originPrice];
-    [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
-    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray1] range:NSMakeRange(0, originPrice.length)];
+    NSAttributedString *attri = [[NSAttributedString alloc]initWithString:originPrice attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle),NSStrikethroughColorAttributeName:[UIColor themeGray1]}];
+//    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:originPrice];
+//    [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
+//    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray1] range:NSMakeRange(0, originPrice.length)];
     return attri;
 }
 
@@ -2013,14 +2015,4 @@
 }
 
 
-- (void)prepareForReuse
-{
-    [super prepareForReuse];
-    if ([TTDeviceHelper isScreenWidthLarge320]) {
-        self.pricePerSqmLabel.font = [UIFont themeFontRegular:12];
-    }else {
-        self.pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-    }
-    self.pricePerSqmLabel.textColor = [UIColor themeGray1];
-}
 @end
