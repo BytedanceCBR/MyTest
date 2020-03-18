@@ -215,13 +215,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)subscribe {
-    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-    tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
-    tracerDic[@"position"] = @"card";
-    [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
-    
+
     NSString *phoneNum = self.phoneNum;
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+        
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
+        tracerDic[@"position"] = @"card";
+        [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
+        
         if(self.subscribeBlock){
             self.subscribeBlock(self.phoneNum);
         }

@@ -11,6 +11,7 @@
 #import "FHHouseUGCHeader.h"
 #import "FHEnvContext.h"
 #import "UIViewAdditions.h"
+#import "TTDeviceHelper.h"
 
 #define kCellId @"cellId"
 #define maxCellCount 2
@@ -214,7 +215,15 @@
     if (safeTop > 0) {
         top += safeTop;
     } else {
-        top += [[UIApplication sharedApplication] statusBarFrame].size.height;
+        if([[UIApplication sharedApplication] statusBarFrame].size.height > 0){
+            top += [[UIApplication sharedApplication] statusBarFrame].size.height;
+        }else{
+            if([TTDeviceHelper isIPhoneXSeries]){
+                top += 44;
+            }else{
+                top += 20;
+            }
+        }
     }
     
     if(self.viewController.isUgcOpen){
