@@ -286,7 +286,7 @@ NSDictionary *tt_ttuisettingHelper_cellViewUISettingsDictionary(void) {
             return [UIColor colorWithDayColorName:dayColorHexString nightColorName:nightColorHexString];
         }
     }
-    return [UIColor themeHomeColor];
+    return [UIColor whiteColor];
 //    return [UIColor tt_themedColorForKey:kColorBackground4];
 }
 

@@ -39,4 +39,6 @@
 + (UIImage *)searchBackgroundImage;
 
 + (UIImage *)searchBarImage;
+
+- (void)changeBackColor:(NSInteger)index;
 @end

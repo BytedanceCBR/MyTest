@@ -183,6 +183,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
         [FHEnvContext changeFindTabTitle];
         [FHEnvContext showRedPointForNoUgc];
+        [self.topView  updateMapSearchBtn];
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
     }];
 }
@@ -202,7 +203,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         if ([self.collectionView numberOfItemsInSection:0] > index && index != self.viewModel.currentIndex) {
             [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-            
+            [self.topView changeBackColor:index];
             [self.viewModel sendEnterCategory:(index == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed) enterType:FHHomeMainTraceEnterTypeClick];
             [self.viewModel sendStayCategory:(index == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse) enterType:FHHomeMainTraceEnterTypeClick];
         }
@@ -221,7 +222,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 }
 
 - (void)changeTopSearchBtn:(BOOL)isShow {
-    self.topView.searchBtn.hidden = !isShow;
+    [self.topView changeSearchBtnAndMapBtnStatus:isShow];
 }
 
 #pragma mark notifications

@@ -726,6 +726,17 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
             }
         }
     }
+    
+    
+        //暂时受info.plist scheme限制
+    if ([SSCommonLogic webViewOpenSchemaEnable]) {
+            NSArray *plistSchemes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"LSApplicationQueriesSchemes"];
+            if (plistSchemes && [plistSchemes containsObject:request.URL.scheme] && [[UIApplication sharedApplication] canOpenURL:request.URL]) {
+                if ([[UIApplication sharedApplication] openURL:request.URL]) {
+                    return NO;
+                }
+            }
+    }
     //暂时下掉about:blank拦截 @zengruihuan
     //    if ([[request.URL absoluteString] isEqualToString:@"about:blank"]) {
     //        return NO;
