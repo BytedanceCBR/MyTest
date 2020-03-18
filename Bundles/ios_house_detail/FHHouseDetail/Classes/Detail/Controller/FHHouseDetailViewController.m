@@ -58,6 +58,7 @@
 @property (nonatomic, assign) BOOL isPhoneCallPickUp;
 //是否拨打电话（不区分是否接通）
 @property (nonatomic, assign) BOOL isPhoneCalled;// 新房UGC留资使用
+@property (nonatomic, assign) CGPoint lastContentOffset;
 
 @end
 
@@ -154,7 +155,7 @@
     // Push推送过来的状态栏修改
     __weak typeof(self) wSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [wSelf refreshContentOffset:wSelf.tableView.contentOffset];
+        [wSelf updateStatusBar:wSelf.tableView.contentOffset];
     });
 }
 
@@ -168,7 +169,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.isViewDidDisapper = NO;
-    [self refreshContentOffset:self.tableView.contentOffset];
+    [self updateStatusBar:self.tableView.contentOffset];
     [self.view endEditing:YES];
     [self.viewModel vc_viewDidAppear:animated];
 }
@@ -554,13 +555,22 @@
 {
     CGFloat alpha = contentOffset.y / 139 * 2;
     [self.navBar refreshAlpha:alpha];
+    
+    if ((contentOffset.y <= 0 && _lastContentOffset.y <= 0) || (contentOffset.y > 0 && _lastContentOffset.y > 0)) {
+        return;
+    }
+    _lastContentOffset = contentOffset;
+    [self updateStatusBar:contentOffset];
+}
 
+- (void)updateStatusBar:(CGPoint)contentOffset
+{
+    UIStatusBarStyle style = UIStatusBarStyleLightContent;
+    if (contentOffset.y > 0) {
+        style = UIStatusBarStyleDefault;
+    }
     if (!self.isViewDidDisapper) {
-        if (contentOffset.y > 0) {
-            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
-        }else {
-            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
-        }
+        [[UIApplication sharedApplication]setStatusBarStyle:style];
     }
 }
 
