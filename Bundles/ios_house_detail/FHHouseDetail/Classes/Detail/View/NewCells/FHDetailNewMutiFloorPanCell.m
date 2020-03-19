@@ -14,6 +14,7 @@
 #import "TTRoute.h"
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
+#import "FHHouseNewDetailViewModel.h"
 #import "FHDetailMultitemCollectionView.h"
 
 #define ITEM_HEIGHT 277
@@ -265,7 +266,7 @@
                         [infoDict addEntriesFromDictionary:subPageParams];
                         infoDict[@"tracer"] = traceParam;
                         TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-                        // JOKER：构造测试户型卡片数据，服务端开发完成后替换为服务端下发跳转链接，这里仅前置开发测试使用
+                        // JOKER: 构造测试户型卡片数据，服务端开发完成后替换为服务端下发跳转链接，这里仅前置开发测试使用
                         if([self.baseViewModel.detailData isKindOfClass:FHDetailNewModel.class]) {
                             
                             FHDetailNewModel *houseNewDetailViewModel = (FHDetailNewModel *)self.baseViewModel.detailData;
@@ -278,7 +279,7 @@
                             NSString *house_title = floorPanInfoModel.title;
                             NSString *house_des = [NSString stringWithFormat:@"建面 %@ 朝向 %@", floorPanInfoModel.squaremeter, floorPanInfoModel.facingDirection];
                             NSString *house_avg_price = floorPanInfoModel.pricingPerSqm;
-                            NSString *house_id = model.courtId;
+                            NSString *house_id = houseNewDetailViewModel.data.coreInfo.id;
                             NSString *house_type = @(FHHouseTypeNewHouse).stringValue;
                             NSString *auto_text = @"您好，请问这个户型怎么样?";
                             
