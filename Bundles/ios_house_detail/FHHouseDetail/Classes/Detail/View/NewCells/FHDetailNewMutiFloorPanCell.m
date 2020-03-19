@@ -282,7 +282,7 @@
                             NSString *house_id = houseNewDetailViewModel.data.coreInfo.id;
                             NSString *house_type = @(FHHouseTypeNewHouse).stringValue;
                             NSString *auto_text = @"您好，请问这个户型怎么样?";
-                            NSString *house_price = @"1200万";
+                            NSString *house_price = @"1200万"; // 后端没有对应总价的字段，写死一个用来测试
                             
                             NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://open_single_chat"];
                             NSURLQueryItem *target_user_id_item = [[NSURLQueryItem alloc] initWithName:@"target_user_id" value:realtorId];
