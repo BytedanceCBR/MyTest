@@ -27,7 +27,6 @@
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "UIViewController+Track.h"
-#import "FHSpringHangView.h"
 #import <FHHouseBase/FHPermissionAlertViewController.h>
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 
@@ -41,9 +40,6 @@
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
-//春节活动运营位
-@property (nonatomic, strong) FHSpringHangView *springView;
-
 @end
 
 @implementation FHCommunityViewController
@@ -87,40 +83,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewDataFetchSuccess) name:kFHPopupViewDataFetcherSuccessNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popupViewStartFetchData) name:kFHPopupViewDataFetcherStartFetchDataNotification object:nil];
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
-}
-
-- (void)popupViewDataFetchSuccess {
-    if([FHEnvContext isSpringHangOpen] && self.springView){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
-}
-
-- (void)popupViewStartFetchData {
-    self.springView.hidden = YES;
-}
-
-- (void)addSpringView {
-    if(!_springView){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
-        [self.view addSubview:_springView];
-        _springView.hidden = YES;
-        
-        CGFloat bottom = 49;
-        if (@available(iOS 11.0 , *)) {
-            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-        }
-        
-        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(82);
-            make.height.mas_equalTo(82);
-            make.right.mas_equalTo(self.view).offset(-11);
-        }];
-    }
 }
 
 - (void)dealloc {
@@ -208,10 +172,6 @@
     [self.view addSubview:_containerView];
 
     [self setupSetmentedControl];
-    
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -245,12 +205,8 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
-    
     [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 
 -(BOOL)shouldAutorotate
@@ -495,13 +451,8 @@
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
-    
 }
 
 - (void)trackStartedByAppWillEnterForground {
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
 }
 @end

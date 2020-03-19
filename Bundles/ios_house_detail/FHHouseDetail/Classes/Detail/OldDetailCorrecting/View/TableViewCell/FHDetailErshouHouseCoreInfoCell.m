@@ -58,10 +58,12 @@
     }
     NSInteger count = model.coreInfo.count;
     if (count > 0) {
-        CGFloat width = (UIScreen.mainScreen.bounds.size.width - 30)  / count;
+//        CGFloat width = (UIScreen.mainScreen.bounds.size.width - 30)  / count;
         __block CGFloat leftOffset = 15;
         [model.coreInfo enumerateObjectsUsingBlock:^(FHDetailOldDataCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailHouseCoreInfoItemView *itemView = [[FHDetailHouseCoreInfoItemView alloc] init];
+            NSMutableAttributedString *text = [[NSMutableAttributedString alloc]initWithString:obj.value.length>obj.attr.length?obj.value:obj.attr attributes:@{NSFontAttributeName: [UIFont themeFontDINAlternateBold:22]}];
+            CGSize textSize =[self getStringRect:text size:CGSizeMake(CGFLOAT_MAX, 14)];
             [self.contentView addSubview:itemView];
             if (idx == count - 1) {
                 itemView.lineView.hidden = YES;
@@ -69,17 +71,24 @@
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.shadowImage).offset(12);
                 make.bottom.mas_equalTo(self.shadowImage).offset(-12);
-                make.width.mas_equalTo(width);
+                make.width.mas_equalTo(textSize.width+([UIScreen mainScreen].bounds.size.width<375?23:40));
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];
-            leftOffset += width;
+            leftOffset += textSize.width+([UIScreen mainScreen].bounds.size.width<375?23:40);
             // 设置数据
+   
             itemView.keyLabel.text = obj.value;
             itemView.valueLabel.text = obj.attr;
             [_itemArr addObject:itemView];
         }];
     }
     [self layoutIfNeeded];
+}
+
+- (CGSize)getStringRect:(NSAttributedString *)aString size:(CGSize )sizes
+{
+    CGRect strSize = [aString boundingRectWithSize:CGSizeMake(sizes.width, sizes.height) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+    return  CGSizeMake(strSize.size.width, strSize.size.height);
 }
 
 
@@ -135,7 +144,7 @@
     _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:22];
     _keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
 //    _keyLabel.font = [UIFont themeFontMedium:22];
-    _keyLabel.font = [UIFont themeFontDINAlternateBold:22];
+    _keyLabel.font =  [UIFont themeFontDINAlternateBold:[UIScreen mainScreen].bounds.size.width<375?20:22];
     [self addSubview:_keyLabel];
     
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];

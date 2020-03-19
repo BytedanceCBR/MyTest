@@ -12,6 +12,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHDetailNeighborhoodDataStrategyArticleListModel<NSObject>
+@end
+
+@interface FHDetailNeighborhoodDataStrategyArticleListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *picture;
+@property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *articleType;
+@property (nonatomic, copy , nullable) NSString *groupId;
+@property (nonatomic, copy , nullable) NSString *schema;
+@end
+
+@interface FHDetailNeighborhoodDataStrategyModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataStrategyArticleListModel> *articleList;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
 @interface FHDetailNeighborhoodDataQuestionContentModel : JSONModel
     
     @property (nonatomic, copy , nullable) NSString *count;
@@ -189,6 +208,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionModel *question;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataCommentsModel *comments;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
 @end
 
 @interface FHDetailNeighborhoodModel : JSONModel

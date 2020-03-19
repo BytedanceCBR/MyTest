@@ -7,6 +7,7 @@
 //
 
 #import "TTNotificationServiceExtensionBase.h"
+#import <BDUGPushSDK/BDUGPushExtension.h>
 
 #define WeakSelf   __weak typeof(self) wself = self
 #define StrongSelf __strong typeof(wself) self = wself
@@ -20,45 +21,6 @@ API_AVAILABLE(ios(10.0))
 @end
 
 @implementation TTNotificationServiceExtensionBase
-//
-//- (instancetype)init
-//{
-//    self = [super init];
-//    return self;
-//}
-
-- (void)downloadAttatchmentWithURL:(NSURL *)url
-                        completion:(void (^)(NSURL *localURL))completion {
-    
-    NSURLSessionDownloadTask *downloadTask = [[NSURLSession sharedSession] downloadTaskWithURL:url
-                                                                             completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                                                                                 if (location) {
-                                                                                     NSURL *cacheDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject]];
-                                                                                     NSURL *attatchmentsDir = [cacheDirectoryPath URLByAppendingPathComponent:@"attatchments"];
-                                                                                     NSError * createDireError = nil;
-                                                                                     BOOL isDirectory = NO;
-                                                                                     if (![[NSFileManager defaultManager] fileExistsAtPath:[attatchmentsDir path] isDirectory:&isDirectory]) {
-                                                                                         [[NSFileManager defaultManager] createDirectoryAtPath:[attatchmentsDir path] withIntermediateDirectories:YES attributes:nil error:&createDireError];
-                                                                                     }
-                                                                                     
-                                                                                     NSString *uuid = [[NSUUID UUID] UUIDString];
-                                                                                     NSString *fileName = [uuid stringByAppendingString:[response suggestedFilename]];
-                                                                                     
-                                                                                     NSURL *cacheURL = [attatchmentsDir URLByAppendingPathComponent:fileName];
-                                                                                     NSError *moveItemError = nil;
-                                                                                     BOOL moveSucceed = [[NSFileManager defaultManager] moveItemAtURL:location toURL:cacheURL error:&moveItemError];
-                                                                                     if (completion) {
-                                                                                         completion(moveSucceed ? cacheURL : nil);
-                                                                                     }
-                                                                                 }
-                                                                                 else {
-                                                                                     if (completion) {
-                                                                                         completion(nil);
-                                                                                     }
-                                                                                 }
-                                                                             }];
-    [downloadTask resume];
-}
 
 - (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
     self.contentHandler = contentHandler;
@@ -132,50 +94,14 @@ API_AVAILABLE(ios(10.0))
         }
         [sharedUserDefaults synchronize];
     }
+    //交给push sdk处理
+    WeakSelf;
+    [[BDUGPushExtension defaultManager] handleNotificationServiceRequest:request withAttachmentsComplete:^(UNMutableNotificationContent * _Nonnull notificationContent, NSError * _Nonnull error) {
+        StrongSelf;
+        self.bestAttemptContent = notificationContent;
+        contentHandler(notificationContent ?: request.content);
+    }];
     
-    // 使用new_alert的内容覆盖推送标题和内容
-    NSDictionary *userInfo = request.content.userInfo;
-    NSDictionary *newAlert = userInfo[@"new_alert"];
-    if (newAlert && [newAlert isKindOfClass:[NSDictionary class]]) {
-        NSString *title = newAlert[@"title"];
-        NSString *content = newAlert[@"content"];
-        if (title && [title isKindOfClass:[NSString class]] && title.length > 0) {
-            self.bestAttemptContent.title = title;
-        }
-        if (content && [content isKindOfClass:[NSString class]] && content.length > 0) {
-            self.bestAttemptContent.body = content;
-        }
-    }
-    
-    // 添加附件
-    NSString *attachmentLink = userInfo[@"attachment"];
-    if (attachmentLink && [attachmentLink isKindOfClass:[NSString class]] && attachmentLink.length > 0) {
-        NSURL *attachmentURL = [NSURL URLWithString:attachmentLink];
-        if (attachmentURL) {
-            WeakSelf;
-            [self downloadAttatchmentWithURL:attachmentURL
-                                  completion:^(NSURL *localURL) {
-                                      StrongSelf;
-                                      if (localURL) {
-                                          NSError *error = nil;
-                                          UNNotificationAttachment *attachment = [UNNotificationAttachment attachmentWithIdentifier:@"identifier"
-                                                                                                                                URL:localURL
-                                                                                                                            options:nil
-                                                                                                                              error:&error];
-                                          if (attachment) {
-                                              self.bestAttemptContent.attachments = @[attachment];
-                                          }
-                                      }
-                                      contentHandler(self.bestAttemptContent);
-                                  }];
-        }
-        else {
-            contentHandler(self.bestAttemptContent);
-        }
-    }
-    else {
-        contentHandler(self.bestAttemptContent);
-    }
 }
 
 - (void)serviceExtensionTimeWillExpire {

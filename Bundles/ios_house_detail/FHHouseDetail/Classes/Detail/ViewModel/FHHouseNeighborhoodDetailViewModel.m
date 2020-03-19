@@ -40,8 +40,10 @@
 #import <FHDetailMediaHeaderCell.h>
 #import "FHNeighborhoodDetailModuleHelper.h"
 #import "FHDetailNeighborhoodQACell.h"
+#import "FHDetailNeighborhoodAssessCell.h"
 #import "FHDetailNeighborhoodCommentsCell.h"
 #import "FHDetailQACellModel.h"
+#import "FHDetailAccessCellModel.h"
 #import "FHDetailCommentsCellModel.h"
 #import "TTDeviceHelper.h"
 #import "FHOldDetailStaticMapCell.h""
@@ -102,6 +104,8 @@
 
 //    [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryModel class])];
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateModel class])];
+    
+    [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
 //    [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleModel class])];
 //    [self.tableView registerClass:[FHDetailBlankLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailBlankLineModel class])];
 }
@@ -326,16 +330,27 @@
     }
     
 
-//    // 小区评测
-//    if (model.data.evaluationInfo) {
-//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//        [self.items addObject:grayLine];
-//        FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
-//        infoModel.log_pb = self.listLogPB; // listLogPB也是当前小区的logPb
-//        infoModel.evaluationInfo = model.data.evaluationInfo;
-//        [self.items addObject:infoModel];
-//    }
+    // 小区评测
+    if (model.data.strategy && model.data.strategy.articleList.count > 0) {
+    
+        FHDetailAccessCellModel *cellModel = [[FHDetailAccessCellModel alloc] init];
+        cellModel.houseModelType = FHPlotHouseModelTypeLocationPeriphery;
+        cellModel.strategy = model.data.strategy;
+
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        paramsDict[@"from_gid"] = self.houseId;
+        paramsDict[@"element_type"] = @"guide";
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        paramsDict[@"search_id"] = searchId.length > 0 ? searchId : @"be_null";
+        paramsDict[@"impr_id"] = imprId.length > 0 ? imprId : @"be_null";
+        cellModel.tracerDic = paramsDict;
+        [self.items addObject:cellModel];
+    }
 
     //地图
     if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
@@ -350,6 +365,12 @@
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
         staticMapModel.mapOnly = NO;
+        //小区攻略底部有10px的留白，防止滑动时，放大的卡片底部被下面的cell挡住，所以这里的高度根据留白距离减10
+        if([[self.items lastObject] isKindOfClass:[FHDetailAccessCellModel class]]){
+            staticMapModel.topMargin = 20;
+        }else{
+            staticMapModel.topMargin = 30;
+        }
         [self.items addObject:staticMapModel];
     } else{
         NSString *eventName = @"detail_map_location_failed";

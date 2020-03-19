@@ -29,6 +29,7 @@
 #import <FHCommonUI/FHFeedbackView.h>
 #import <ios_house_im/FHIMConfigManager.h>
 #import <TTSettingsManager/TTSettingsManager.h>
+#import <FHHouseBase/FHRelevantDurationTracker.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -178,6 +179,7 @@
 {
     [super viewWillDisappear:animated];
     [self.viewModel addStayPageLog:self.ttTrackStayTime];
+    [self sendCurrentPageStayTime: self.ttTrackStayTime * 1000.0];
     [self tt_resetStayTime];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -203,17 +205,56 @@
     }
 }
 
+- (void)trySendCurrentPageStayTime {
+    if (self.ttTrackStartTime == 0) {//当前页面没有在展示过
+        return;
+    }
+    double duration = self.ttTrackStayTime * 1000.0;
+    if (duration <= 200) {//低于200毫秒，忽略
+        self.ttTrackStartTime = 0;
+        [self tt_resetStayTime];
+        return;
+    }
+    [self sendCurrentPageStayTime:duration];
+    
+    self.ttTrackStartTime = 0;
+    [self tt_resetStayTime];
+}
+
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
     
-    [self.viewModel addStayPageLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
+    [self.viewModel addStayPageLog:self.ttTrackStayTime * 1000.0];
+    [self trySendCurrentPageStayTime];
 }
 
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+- (void)sendCurrentPageStayTime:(double)duration
+{
+    if (self.houseType != FHHouseTypeSecondHandHouse) {
+        return;
+    }
+    NSString *_categoryName = self.tracerDict[@"enter_from"];
+    NSString *elementFrom = self.tracerDict[@"element_from"];
+    NSString *enterFrom = @"";
+
+    if ([elementFrom isEqualToString:@"be_null"]) {
+        enterFrom = [NSString stringWithFormat:@"click_%@", _categoryName];
+    }else {
+        enterFrom = [NSString stringWithFormat:@"click_%@", elementFrom];
+    }
+    //新加的详情页关联时长
+    [[FHRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:_houseId
+                                                                          itemID:_houseId
+                                                                       enterFrom:enterFrom
+                                                                    categoryName:_categoryName
+                                                                        stayTime:(NSInteger)(duration)
+                                                                           logPb:self.listLogPB];
 }
 
 - (void)startLoadData {

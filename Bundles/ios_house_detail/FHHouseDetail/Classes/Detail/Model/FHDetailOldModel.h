@@ -361,6 +361,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHDetailDataBaseExtraHouseCertificationModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *subName;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+
+@end
 
 @interface FHDetailDataBaseExtraModel : JSONModel
 
@@ -370,6 +377,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraFloorInfoModel *floorInfo;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraSuggestInfoModel *bargain;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraNeighborhoodModel *neighborhoodInfo;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraHouseCertificationModel *houseCertificationInfo;
 
 @end
 

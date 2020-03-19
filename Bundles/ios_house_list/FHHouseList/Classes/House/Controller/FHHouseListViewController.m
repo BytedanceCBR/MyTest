@@ -469,6 +469,7 @@
 {
     [super viewDidAppear:animated];
     [self.viewModel refreshMessageDot];
+    [self.viewModel viewDidAppear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
