@@ -264,7 +264,7 @@
         [_submitBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         _submitBtn.titleLabel.font = [UIFont themeFontRegular:16];
         _submitBtn.layer.cornerRadius = 4;
-        _submitBtn.backgroundColor = [UIColor themeRed1];
+        _submitBtn.backgroundColor = [UIColor themeOrange4];
     }
     return _submitBtn;
 }

@@ -264,7 +264,7 @@
         [_submitBtn setTitle:@"立即加入" forState:UIControlStateNormal];
         [_submitBtn setTitle:@"立即加入" forState:UIControlStateHighlighted];
         _submitBtn.layer.cornerRadius = 4;
-        _submitBtn.backgroundColor = [UIColor themeRed1];
+        _submitBtn.backgroundColor = [UIColor themeOrange4];
     }
     return _submitBtn;
 }

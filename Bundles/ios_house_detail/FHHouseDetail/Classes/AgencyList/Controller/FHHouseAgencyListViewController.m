@@ -100,7 +100,7 @@
         [_confirmBtn setTitle:@"确定" forState:UIControlStateNormal];
         [_confirmBtn setTitle:@"确定" forState:UIControlStateHighlighted];
         _confirmBtn.layer.cornerRadius = 4;
-        _confirmBtn.backgroundColor = [UIColor themeRed1];
+        _confirmBtn.backgroundColor = [UIColor themeOrange4];
     }
     return _confirmBtn;
 }

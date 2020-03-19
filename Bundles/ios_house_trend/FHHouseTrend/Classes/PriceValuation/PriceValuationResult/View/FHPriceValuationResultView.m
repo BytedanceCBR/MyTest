@@ -127,7 +127,7 @@
     [self.cardView addSubview:_toLastMonthLabel];
     
     self.moreInfoBtn = [[UIButton alloc] init];
-    _moreInfoBtn.backgroundColor = [UIColor themeRed1];
+    _moreInfoBtn.backgroundColor = [UIColor themeOrange4];
     [_moreInfoBtn setTitle:@"补全信息，结果更精确" forState:UIControlStateNormal];
     [_moreInfoBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _moreInfoBtn.titleLabel.font = [UIFont themeFontRegular:16];
@@ -198,7 +198,7 @@
     [self addSubview:_bottomView];
     
     self.bottomBtn = [[UIButton alloc] init];
-    _bottomBtn.backgroundColor = [UIColor themeRed1];
+    _bottomBtn.backgroundColor = [UIColor themeOrange4];
     [_bottomBtn setTitle:@"我要卖房" forState:UIControlStateNormal];
     [_bottomBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _bottomBtn.titleLabel.font = [UIFont themeFontRegular:16];

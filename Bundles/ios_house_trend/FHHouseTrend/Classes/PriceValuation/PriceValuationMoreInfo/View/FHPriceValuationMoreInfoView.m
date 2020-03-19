@@ -114,7 +114,7 @@
     [self addSubview:_bottomView];
     
     self.bottomBtn = [[UIButton alloc] init];
-    _bottomBtn.backgroundColor = [UIColor themeRed1];
+    _bottomBtn.backgroundColor = [UIColor themeOrange4];
     [_bottomBtn setTitle:@"确定" forState:UIControlStateNormal];
     [_bottomBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _bottomBtn.titleLabel.font = [UIFont themeFontRegular:18];
