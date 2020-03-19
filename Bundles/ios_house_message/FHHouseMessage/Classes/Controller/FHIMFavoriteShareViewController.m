@@ -308,7 +308,7 @@
     }];
 
     self.sendBtn = [[UIButton alloc] init];
-    _sendBtn.layer.cornerRadius = 4;
+    _sendBtn.layer.cornerRadius = 22; //4;
     _sendBtn.backgroundColor = [UIColor themeOrange4];
     [_sendBtn setAttributedTitle:[self sendAttriTextByCount:0] forState:UIControlStateNormal];
 

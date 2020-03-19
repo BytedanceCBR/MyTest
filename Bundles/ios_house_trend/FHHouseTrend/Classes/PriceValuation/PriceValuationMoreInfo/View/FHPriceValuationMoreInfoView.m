@@ -118,7 +118,7 @@
     [_bottomBtn setTitle:@"确定" forState:UIControlStateNormal];
     [_bottomBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _bottomBtn.titleLabel.font = [UIFont themeFontRegular:18];
-    _bottomBtn.layer.cornerRadius = 4;
+    _bottomBtn.layer.cornerRadius = 22; //4;
     _bottomBtn.layer.masksToBounds = YES;
     [_bottomBtn addTarget:self action:@selector(confirm) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomView addSubview:_bottomBtn];

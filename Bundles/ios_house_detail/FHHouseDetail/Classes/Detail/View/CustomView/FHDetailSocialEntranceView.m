@@ -263,7 +263,7 @@
         _submitBtn.titleLabel.font = [UIFont themeFontRegular:16];
         [_submitBtn setTitle:@"立即加入" forState:UIControlStateNormal];
         [_submitBtn setTitle:@"立即加入" forState:UIControlStateHighlighted];
-        _submitBtn.layer.cornerRadius = 4;
+        _submitBtn.layer.cornerRadius = 20; //4;
         _submitBtn.backgroundColor = [UIColor themeOrange4];
     }
     return _submitBtn;

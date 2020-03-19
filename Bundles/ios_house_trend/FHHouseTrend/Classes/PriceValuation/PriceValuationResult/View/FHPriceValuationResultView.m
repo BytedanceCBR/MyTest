@@ -131,7 +131,7 @@
     [_moreInfoBtn setTitle:@"补全信息，结果更精确" forState:UIControlStateNormal];
     [_moreInfoBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _moreInfoBtn.titleLabel.font = [UIFont themeFontRegular:16];
-    _moreInfoBtn.layer.cornerRadius = 4;
+    _moreInfoBtn.layer.cornerRadius = 22; //4;
     _moreInfoBtn.layer.masksToBounds = YES;
     [_moreInfoBtn addTarget:self action:@selector(moreInfo) forControlEvents:UIControlEventTouchUpInside];
     [self.cardView addSubview:_moreInfoBtn];
@@ -202,7 +202,7 @@
     [_bottomBtn setTitle:@"我要卖房" forState:UIControlStateNormal];
     [_bottomBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _bottomBtn.titleLabel.font = [UIFont themeFontRegular:16];
-    _bottomBtn.layer.cornerRadius = 4;
+    _bottomBtn.layer.cornerRadius = 22; //4;
     _bottomBtn.layer.masksToBounds = YES;
     [_bottomBtn addTarget:self action:@selector(houseSale) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomView addSubview:_bottomBtn];
