@@ -3,6 +3,31 @@
 #import "FHFeedContentModel.h"
 #import "FHUGCShareManager.h"
 NS_ASSUME_NONNULL_BEGIN
+@interface FHFeedUGCContentAttachCardInfoButtonModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, copy , nullable) NSString *schema;
+@end
+
+@interface FHFeedUGCContentAttachCardInfoCoverImageModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *imageStyle;
+@property (nonatomic, copy , nullable) NSString *uri;
+@end
+
+@interface FHFeedUGCContentAttachCardInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *cardStyle;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoButtonModel *button ;
+@property (nonatomic, copy , nullable) NSString *cardType;
+@property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoCoverImageModel *coverImage ;
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *schema;
+@end
+
 @interface FHFeedUGCContentCommunityModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *url;
@@ -393,6 +418,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   BOOL       isStick;                   // 是否置顶
 @property (nonatomic, assign)   FHFeedContentStickStyle stickStyle;// 置顶类型：精华或其它
 @property (nonatomic, strong , nullable) FHFeedUGCContentRawDataModel *rawData;
+@property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoModel *attachCardInfo ; 
 
 @end
 

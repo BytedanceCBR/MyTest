@@ -698,6 +698,10 @@
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
     
+    if(model.attachCardInfo){
+        cellModel.attachCardInfo = model.attachCardInfo;
+    }
+    
     cellModel.isStick = (model.isStick || model.rawData.isStick);
     cellModel.stickStyle = ((model.stickStyle != FHFeedContentStickStyleUnknown) ? model.stickStyle : model.rawData.stickStyle);
     cellModel.contentDecoration = [self contentDecorationFromString:(model.contentDecoration.length > 0 ? model.contentDecoration : model.rawData.contentDecoration)];
