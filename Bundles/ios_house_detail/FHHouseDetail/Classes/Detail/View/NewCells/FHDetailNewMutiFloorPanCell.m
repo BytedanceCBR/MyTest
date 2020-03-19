@@ -282,6 +282,7 @@
                             NSString *house_id = houseNewDetailViewModel.data.coreInfo.id;
                             NSString *house_type = @(FHHouseTypeNewHouse).stringValue;
                             NSString *auto_text = @"您好，请问这个户型怎么样?";
+                            NSString *house_price = @"1200万";
                             
                             NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://open_single_chat"];
                             NSURLQueryItem *target_user_id_item = [[NSURLQueryItem alloc] initWithName:@"target_user_id" value:realtorId];
@@ -292,6 +293,7 @@
                             NSURLQueryItem *house_des_item = [[NSURLQueryItem alloc] initWithName:@"house_des" value:house_des];
                             NSURLQueryItem *house_title_item = [[NSURLQueryItem alloc] initWithName:@"house_title" value:house_title];
                             NSURLQueryItem *house_avg_price_item = [[NSURLQueryItem alloc] initWithName:@"house_avg_price" value:house_avg_price];
+                            NSURLQueryItem *house_price_item = [[NSURLQueryItem alloc] initWithName:@"house_price" value:house_price];
                             NSURLQueryItem *house_id_item = [[NSURLQueryItem alloc] initWithName:@"house_id" value:house_id];
                             NSURLQueryItem *house_type_item = [[NSURLQueryItem alloc] initWithName:@"house_type" value:house_type];
                             NSURLQueryItem *auto_text_item = [[NSURLQueryItem alloc] initWithName:@"auto_text" value:auto_text];
@@ -304,6 +306,7 @@
                                 house_cover_item,
                                 house_des_item,
                                 house_title_item,
+                                house_price_item,
                                 house_avg_price_item,
                                 house_id_item,
                                 house_type_item,
