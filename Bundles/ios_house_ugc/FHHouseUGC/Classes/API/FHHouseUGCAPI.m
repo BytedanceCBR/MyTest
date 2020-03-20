@@ -23,6 +23,7 @@
 #import "FHPostEditListModel.h"
 #import <FHUGCEditedPostModel.h>
 #import "FHUGCPublishTagModel.h"
+#import "FHInterceptionManager.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -241,6 +242,17 @@
     NSString *queryPath = @"/f100/ugc/user_follows";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"type"] = @(type);
+    
+    //加入拦截器
+//    FHInterceptionManager *manager = [[FHInterceptionManager alloc] init];
+//    [manager addParamInterception:5.0f condition:^BOOL{
+//        return NO;
+//    } operation:^{
+//
+//    } failure:^{
+//
+//    }];
+    
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
