@@ -48,19 +48,19 @@ def fhPods
 #    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
     #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '21f52981452d7e1e319da3a07301184164b72251'
 
-#   pod 'FHPopupViewCenter', :path => '../../FHPopupViewCenter', :subspecs => [
-#   'Core',
-#   'DelegateForC'
-#   ]
-     pod 'FHPopupViewCenter', '0.0.2-rc.0', :subspecs => [
-     'Core',
-     'DelegateForC'
-     ]
-
-     #    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
+#    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
 #    'DelegateForC'
 #    ]
+    pod 'FHPopupViewCenter', '0.0.2-rc.1', :subspecs => [
+    'Core',
+    'DelegateForC'
+    ]
+
+    # pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
+    # 'Core',
+    # 'DelegateForC'
+    # ]
 
     pod 'ios_house_im' , '0.1.19-rc.13'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
