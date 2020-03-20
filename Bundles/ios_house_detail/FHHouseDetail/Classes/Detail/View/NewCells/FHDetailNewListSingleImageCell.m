@@ -466,7 +466,7 @@
         
         _priceLabel = [[UILabel alloc]init];
         _priceLabel.font = [UIFont themeFontMedium:14];
-        _priceLabel.textColor = [UIColor themeRed1];
+        _priceLabel.textColor = [UIColor themeOrange1];
     }
     return _priceLabel;
 }

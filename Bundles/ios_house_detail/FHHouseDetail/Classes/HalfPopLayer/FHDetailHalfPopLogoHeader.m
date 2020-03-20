@@ -54,7 +54,7 @@
     
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.font = [UIFont themeFontSemibold:20];
-    _titleLabel.textColor = [UIColor themeRed1];
+    _titleLabel.textColor = [UIColor themeOrange1];
     
     _tipLabel = [[UILabel alloc]init];
     _tipLabel.textColor = [UIColor themeGray3];

@@ -61,7 +61,7 @@
         [attrText addAttributes:attr range:NSMakeRange(0, attrText.length)];
         [model.disclaimer.richText enumerateObjectsUsingBlock:^(FHDisclaimerModelDisclaimerRichTextModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSRange range = [self rangeOfArray:obj.highlightRange originalLength:text.length];
-            UIColor *color = [UIColor themeRed1];
+            UIColor *color = [UIColor themeOrange1];
             __weak typeof(FHDisclaimerModelDisclaimerRichTextModel *) wObj = obj;
             [attrText yy_setTextHighlightRange:range color:color backgroundColor:nil userInfo:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
                 if (wObj.linkUrl.length > 0) {
