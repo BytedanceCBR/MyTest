@@ -307,6 +307,9 @@
         if (model.vrInfo.hasVr) {
             self.houseVideoImageView.hidden = YES;
             [self.vrLoadingView play];
+        }else {
+            self.vrLoadingView.hidden = YES;
+            [self.vrLoadingView stop];
         }
     };
 }
