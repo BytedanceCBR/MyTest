@@ -92,7 +92,7 @@
         _titleLabel = [[UILabel alloc]init];
         _titleLabel.text = @"加入看盘群";
         _titleLabel.font = [UIFont themeFontRegular:12];
-        _titleLabel.textColor = [UIColor themeRed1];
+        _titleLabel.textColor = [UIColor themeOrange1];
     }
     return _titleLabel;
 }

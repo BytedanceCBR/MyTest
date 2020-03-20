@@ -36,7 +36,7 @@
         
         _reportButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_reportButton setTitle:@"举报" forState:UIControlStateNormal];
-        [_reportButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [_reportButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
         [_reportButton addTarget:self action:@selector(onAction:) forControlEvents:UIControlEventTouchUpInside];
         _reportButton.titleLabel.font = [UIFont themeFontRegular:16];
         

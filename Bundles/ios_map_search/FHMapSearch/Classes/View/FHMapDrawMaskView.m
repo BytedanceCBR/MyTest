@@ -175,7 +175,7 @@
 {
     [super drawRect:rect];
     
-    [[UIColor themeRed1] setStroke];
+    [[UIColor themeOrange1] setStroke];
     [self.bezierPath stroke];
 }
 

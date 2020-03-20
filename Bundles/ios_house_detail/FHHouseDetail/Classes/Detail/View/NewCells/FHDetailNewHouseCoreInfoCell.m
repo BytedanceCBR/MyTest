@@ -68,7 +68,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     
     _pricingPerSqmLabel = [UILabel new];
     _pricingPerSqmLabel.font = [UIFont themeFontMedium:16];
-    _pricingPerSqmLabel.textColor = [UIColor themeRed1];
+    _pricingPerSqmLabel.textColor = [UIColor themeOrange1];
     _pricingPerSqmLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_pricingPerSqmLabel];
     [_pricingPerSqmLabel mas_makeConstraints:^(MASConstraintMaker *make) {

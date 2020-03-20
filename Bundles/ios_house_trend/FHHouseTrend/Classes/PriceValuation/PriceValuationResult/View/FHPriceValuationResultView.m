@@ -78,7 +78,7 @@
     }
     [self addSubview:_scrollView];
     
-    UIImage *headerImage = [UIImage imageNamed:@"price_valuation_result_header_image"];
+    UIImage *headerImage = [UIImage imageNamed:@"price_valuation_result_header_image2"];
     self.headerImageView = [[UIImageView alloc] init];
     _headerImageView.image = headerImage;
     [self.scrollView addSubview:_headerImageView];
@@ -106,7 +106,7 @@
     [_titleBtn addTarget:self action:@selector(goToNeiborhoodDetail) forControlEvents:UIControlEventTouchUpInside];
     [self.cardView addSubview:_titleBtn];
 
-    self.priceLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeRed1]];
+    self.priceLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeOrange1]];
     [self.cardView addSubview:_priceLabel];
     
     self.middleSpLine = [[UIView alloc] init];
@@ -668,13 +668,13 @@
             return [UIColor themeRed1];
             break;
         case 1:
-            return [UIColor colorWithHexString:@"#bebebe"];
+            return [UIColor colorWithHexString:@"#ffc464"];
             break;
         case 2:
-            return [UIColor themeGray5];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
         default:
-            return [UIColor themeGray5];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
     }
 }
