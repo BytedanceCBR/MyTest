@@ -141,7 +141,7 @@
     HMSegmentedControl* segmented = [[HMSegmentedControl alloc] initWithSectionTitles:titles];
     segmented.selectionIndicatorHeight = 4;
     segmented.selectionIndicatorCornerRadius = 2.5f;
-    segmented.selectionIndicatorColor = [UIColor themeRed1];
+    segmented.selectionIndicatorColor = [UIColor themeOrange4];
     segmented.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     segmented.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     segmented.isNeedNetworkCheck = NO;

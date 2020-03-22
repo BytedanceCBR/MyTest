@@ -171,7 +171,7 @@
 -(void)configSelectedStyle:(BOOL)isSelected {
     if (isSelected) {
         _nameLabel.textColor = HEXRGBA(@"ffffff");
-        self.contentView.backgroundColor = HEXRGBA(@"ff5869");
+        self.contentView.backgroundColor = HEXRGBA(@"ff9629"); //HEXRGBA(@"ff5869");
     } else {
         _nameLabel.textColor = HEXRGBA(@"333333");
         self.contentView.backgroundColor = HEXRGBA(@"f4f5f6");
