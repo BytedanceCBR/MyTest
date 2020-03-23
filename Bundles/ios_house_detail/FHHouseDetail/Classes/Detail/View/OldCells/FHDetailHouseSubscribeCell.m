@@ -229,7 +229,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
     }else {
         [[ToastManager manager] showToast:@"手机格式错误"];
-        self.textField.textColor = [UIColor themeRed1];
+        self.textField.textColor = [UIColor themeOrange1];
     }
 }
 

@@ -670,8 +670,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
         self.postButton.enabled = YES;
         self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateDisabled];
     } else {
         self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];

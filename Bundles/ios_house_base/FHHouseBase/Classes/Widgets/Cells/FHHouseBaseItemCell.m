@@ -1162,11 +1162,11 @@
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
+            _pricePerSqmLabel.textColor = [UIColor themeOrange1];
         }else {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
+            _pricePerSqmLabel.textColor = [UIColor themeOrange1];
         }
         
         self.priceLabel.text = commonModel.pricePerSqmNum;

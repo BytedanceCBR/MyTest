@@ -51,7 +51,7 @@
     [self addSubview:_scrollView];
 
     self.headerImageView = [[UIImageView alloc] init];
-    _headerImageView.image = [UIImage imageNamed:@"price_valuation_header_image2"];
+    _headerImageView.image = [UIImage imageNamed:@"price_valuation_header_image_orange"];
     _headerImageView.contentMode = UIViewContentModeScaleAspectFill;
     [self.scrollView addSubview:_headerImageView];
 

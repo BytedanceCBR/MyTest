@@ -78,7 +78,7 @@
     }
     [self addSubview:_scrollView];
     
-    UIImage *headerImage = [UIImage imageNamed:@"price_valuation_result_header_image2"];
+    UIImage *headerImage = [UIImage imageNamed:@"price_valuation_result_header_image_orange"];
     self.headerImageView = [[UIImageView alloc] init];
     _headerImageView.image = headerImage;
     [self.scrollView addSubview:_headerImageView];

@@ -26,7 +26,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _backImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"house_find_help_top2"]];
+        _backImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"house_find_help_top_orange"]];
         [self addSubview:_backImageView];
         
         [_backImageView mas_makeConstraints:^(MASConstraintMaker *make) {
