@@ -13,6 +13,7 @@
 
 // 兼容之前的版本
 NSNotificationName kReachabilityChangedNotification = @"TTReachabilityChangedNotification";
+const CGFloat kStaticMapHWRatio  = 7.0f / 16.0f;
 
 @interface FHStaticMapAnnotation ()
 @property(nonatomic, weak) FHStaticMapAnnotationView *annotationView;
@@ -63,9 +64,9 @@ NSNotificationName kReachabilityChangedNotification = @"TTReachabilityChangedNot
 - (nullable UIImage *)transformImageBeforeStoreWithImage:(nullable UIImage *)image {
     NSUInteger widthPixel = (NSUInteger) (image.size.width * image.scale);
     NSUInteger heightPixel = (NSUInteger) (image.size.height * image.scale);
-    NSUInteger expectedHeight = (NSUInteger) round(widthPixel * self.targetHeight / self.targetWidth);
+    NSUInteger expectedHeight = (NSUInteger) (widthPixel * kStaticMapHWRatio);
     if (expectedHeight != heightPixel) {
-        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"bad_picture[width:%tu,height:%tu]", widthPixel, heightPixel]};
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"bad_picture[imageSize:%@,imageSacle:%f,targetSize:%@]", NSStringFromCGSize(image.size),image.scale,NSStringFromCGSize(CGSizeMake(self.targetWidth, self.targetHeight))]};
         self.error = [NSError errorWithDomain:@"transformer" code:1 userInfo:userInfo];
         return image;
     }
