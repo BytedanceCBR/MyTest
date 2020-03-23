@@ -210,22 +210,21 @@
 }
 - (NSString *)displayPrice {
     if (_houseType == FHHouseTypeRentHouse) {
-        return _pricing.length>0?_pricing:_price;
+        return _pricing.length>0?_pricing:(_price.length>0?_price:@"");
     }else if (_houseType == FHHouseTypeNeighborhood){
-        return _pricePerSqm;
+        return _pricePerSqm.length>0?_pricePerSqm:@"";
     }else {
-        return _displayPrice.length>0?_displayPrice:_price;
+        return _displayPrice.length>0?_displayPrice:(_price.length>0?_price:@"");
     }
 }
 
-
 - (NSString *)displaySubtitle {
     if (_houseType == FHHouseTypeRentHouse) {
-        return _subtitle.length>0?_subtitle:_desc;
+        return _subtitle.length>0?_subtitle:(_desc.length>0?_desc:@"");
     }else if(_houseType == FHHouseTypeNewHouse){
-        return _displayDescription.length>0?_displayDescription:_desc;;
+        return _displayDescription.length>0?_displayDescription:(_desc.length>0?_desc:@"");
     }else {
-        return _displaySubtitle.length>0?_displaySubtitle:_desc;
+        return _displaySubtitle.length>0?_displaySubtitle:(_desc.length>0?_desc:@"");
     }
 }
 
@@ -233,7 +232,7 @@
     if (_houseType == FHHouseTypeRentHouse || _houseType == FHHouseTypeNeighborhood) {
         return @" ";
     }else {
-        return _displayPricePerSqm.length>0?_displayPricePerSqm:_pricePerSqm;
+        return _displayPricePerSqm.length>0?_displayPricePerSqm:(_pricePerSqm.length>0?_pricePerSqm:@"");
     }
 }
 
