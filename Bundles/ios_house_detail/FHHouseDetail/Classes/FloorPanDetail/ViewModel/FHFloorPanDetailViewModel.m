@@ -49,6 +49,10 @@
         WeakSelf;
         FHDetailBottomBar *bottomBar = [_subPageVC getBottomBar];
         if ([bottomBar isKindOfClass:[FHDetailBottomBar class]]) {
+            bottomBar.bottomBarContactBlock = ^{
+                StrongSelf;
+                [wself contactAction];
+            };
             bottomBar.bottomBarImBlock = ^{
                 StrongSelf;
                 [wself imAction];
@@ -58,6 +62,34 @@
         [self startLoadData];
     }
     return self;
+}
+
+- (void)contactAction
+{
+    // todo zjing test
+    if (!self.contactViewModel) {
+        return;
+    }
+    NSMutableDictionary *extraDic = @{}.mutableCopy;
+//    if (self.fromStr.length > 0) {
+//        extraDic[@"from"] = self.fromStr;
+//    }
+    
+    NSNumber *cluePage = nil;
+    if(self.contactViewModel.contactPhone.phone.length > 0) {
+        cluePage = @(FHClueCallPageTypeCFloorPlan);
+    }else {
+        cluePage = @(FHClueFormPageTypeCFloorPlan);
+    }
+//    NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
+//                                      @"position":@"report_button",
+////                                      @"element_from":[self elementFrom]
+//                                      }.mutableCopy;
+    if (cluePage) {
+        extraDic[kFHCluePage] = cluePage;
+    }
+
+    [self.contactViewModel contactActionWithExtraDict:extraDic];
 }
 
 - (void)imAction
