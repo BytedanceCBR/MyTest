@@ -245,7 +245,7 @@ typedef void(^NotificationActionCompletionBlock) (void);
         } else if ([allKeys containsObject:@"court_id"]) {
             customDict[@"group_id"] = paramObj.allParams[@"court_id"];
         } else if ([allKeys containsObject:@"house_id"]) {
-            customDict[@"group_id"] = paramObj.allParams[@"neighborhood_id"];
+            customDict[@"group_id"] = paramObj.allParams[@"house_id"];
         }
     }
     return customDict;

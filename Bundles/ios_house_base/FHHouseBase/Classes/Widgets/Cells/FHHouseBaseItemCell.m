@@ -1081,7 +1081,9 @@
             self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
         }else{
 //            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
-            self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+            if (commonModel.displayPricePerSqm.length>0) {
+                 self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+            }
         }
         
         if (self.maskVRImageView) {
@@ -1224,7 +1226,9 @@
     if (model.originPrice) {
         self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];
     }else{
-         self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:model.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+        if (model.displayPricePerSqm.length>0) {
+             self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:model.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+        }
     }
     
     
@@ -1375,7 +1379,9 @@
             if (commonModel.originPrice) {
                 self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
             }else{
-                self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+                if (commonModel.displayPricePerSqm.length>0) {
+                     self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+                }
             }
             [self.pricePerSqmLabel.yoga markDirty];
             if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
