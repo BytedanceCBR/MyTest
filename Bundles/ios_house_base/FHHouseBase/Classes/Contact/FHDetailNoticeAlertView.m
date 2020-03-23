@@ -550,7 +550,7 @@
     if (!_errorTextLabel) {
         _errorTextLabel = [[UILabel alloc]init];
         _errorTextLabel.font = [UIFont themeFontRegular:12];
-        _errorTextLabel.textColor = [UIColor themeRed1];
+        _errorTextLabel.textColor = [UIColor themeOrange1];
         _errorTextLabel.text = @"手机格式错误";
         _errorTextLabel.hidden = YES;
     }

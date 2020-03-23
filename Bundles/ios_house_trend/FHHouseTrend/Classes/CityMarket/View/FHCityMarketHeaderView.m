@@ -50,7 +50,7 @@
         make.top.left.width.mas_equalTo(self);
         make.height.mas_equalTo(160 + _navBarHeight);
     }];
-    _bgView.image = [UIImage imageNamed:@"city_market_header2"];
+    _bgView.image = [UIImage imageNamed:@"city_market_header_orange"];
 }
 
 -(void)initHeaderInfo {
