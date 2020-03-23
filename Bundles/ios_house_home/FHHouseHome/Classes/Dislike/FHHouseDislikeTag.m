@@ -68,7 +68,7 @@
 
 - (void)refreshBorder {
     if (self.isSelected) {
-        self.layer.borderColor = [UIColor themeRed1].CGColor;
+        self.layer.borderColor = [UIColor themeOrange4].CGColor;
     } else {
         self.layer.borderColor = [UIColor colorWithHexStr:@"f2f4f5"].CGColor;
     }

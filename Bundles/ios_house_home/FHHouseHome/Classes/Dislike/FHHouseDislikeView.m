@@ -85,8 +85,8 @@ static FHHouseDislikeView *__visibleDislikeView;
         
         self.okBtn = [[SSThemedButton alloc] initWithFrame:CGRectMake(0, 0, [self buttonWidth], [self buttonHeight])];
         
-        _okBtn.backgroundColorThemeKey = @"red1";
-        _okBtn.highlightedBackgroundColorThemeKey = @"red1";
+        _okBtn.backgroundColorThemeKey = @"orange4";
+        _okBtn.highlightedBackgroundColorThemeKey = @"orange4";
         [_okBtn addTarget:self action:@selector(okBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [_contentBgView addSubview:_okBtn];
         
@@ -104,8 +104,8 @@ static FHHouseDislikeView *__visibleDislikeView;
         
         self.dislikeBtn = [[SSThemedButton alloc] initWithFrame:CGRectMake(0, 0, [self dislikeButtonWidth], [self dislikeButtonHeight])];
         _dislikeBtn.highlightedTitleColorThemeKey = kColorText8;
-        _dislikeBtn.backgroundColorThemeKey = @"red1";
-        _dislikeBtn.highlightedBackgroundColorThemeKey = @"red1";
+        _dislikeBtn.backgroundColorThemeKey = @"orange4";
+        _dislikeBtn.highlightedBackgroundColorThemeKey = @"orange4";
         
         [_dislikeBtn addTarget:self action:@selector(okBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         _dislikeBtn.layer.cornerRadius = 4;
@@ -127,7 +127,7 @@ static FHHouseDislikeView *__visibleDislikeView;
         [_dislikeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_dislikeBtn.titleLabel setFont:[UIFont themeFontMedium:13]];
         _okBtn.layer.cornerRadius = 4;
-        [_okBtn setBackgroundColor:[UIColor themeRed4]];
+        [_okBtn setBackgroundColor:[UIColor themeOrange4]];
         
     }
     return self;
