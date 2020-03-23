@@ -143,7 +143,7 @@
     self.headerView.frame = CGRectMake(15, headerTop, self.cellWidth, headerHeight);
     self.segmentedControl.frame = CGRectMake(15 + 16, self.headerView.bottom + 17, self.cellWidth - 32, 33);
     self.headerView.hidden = (headerHeight == 0);
-    CGFloat mapHeight = self.cellWidth * 7.0f / 16.0f;
+    CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
     CGRect mapFrame = CGRectMake(15, self.segmentedControl.bottom, self.cellWidth, mapHeight);
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
@@ -217,7 +217,7 @@
 }
 
 - (void)setUpMapView:(BOOL)useNativeMap {
-    CGFloat mapHeight = self.cellWidth * 7.0f / 16.0f;
+    CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
     CGRect mapRect = CGRectMake(15, 0, self.cellWidth, mapHeight);
     
     if (useNativeMap) {
@@ -241,7 +241,7 @@
 }
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
-    CGFloat mapHeight = self.cellWidth * 7.0f / 16.0f;
+    CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
     CGRect frame = CGRectMake(15, 0, self.cellWidth, mapHeight);
     WeakSelf;
     [[FHDetailMapViewSnapService sharedInstance] takeSnapWith:self.centerPoint frame:frame targetRect:frame annotations:annotations delegate:self block:^(FHDetailMapSnapTask *task, UIImage *image, BOOL success) {
