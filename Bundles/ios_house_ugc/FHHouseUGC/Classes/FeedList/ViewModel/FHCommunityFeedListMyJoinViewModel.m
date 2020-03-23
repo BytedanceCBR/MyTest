@@ -767,7 +767,7 @@
         TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
         context.refer = self.refer;
         context.categoryId = self.categoryId;
-        context.feedListViewController = self;
+//        context.feedListViewController = self;
         context.clickComment = showComment;
         context.enterType = enterType;
         context.enterFrom = [self pageType];
