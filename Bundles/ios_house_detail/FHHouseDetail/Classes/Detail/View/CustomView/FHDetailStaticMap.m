@@ -62,6 +62,7 @@ const CGFloat kStaticMapHWRatio  = 7.0f / 16.0f;
 }
 
 - (nullable UIImage *)transformImageBeforeStoreWithImage:(nullable UIImage *)image {
+    image = nil;
     NSUInteger widthPixel = (NSUInteger) (image.size.width * image.scale);
     NSUInteger heightPixel = (NSUInteger) (image.size.height * image.scale);
     NSUInteger expectedHeight = (NSUInteger) (widthPixel * kStaticMapHWRatio);
@@ -227,7 +228,7 @@ const CGFloat kStaticMapHWRatio  = 7.0f / 16.0f;
 
     [self.backLayerImageView bd_setImageWithURL:URL
                                     placeholder:[UIImage imageNamed:@"static_map_empty"]
-                                        options:BDImageRequestIgnoreCache
+                                        options:BDImageRequestDefaultOptions
                                     transformer:transformer
                                        progress:nil
                                      completion:block];
