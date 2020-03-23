@@ -258,7 +258,7 @@
         NSString *identifier = NSStringFromClass([data class]);//[self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-            if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNeighborhood) {
+            if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNeighborhood || self.houseType == FHHouseTypeNewHouse) {
                 cell.backgroundColor = [UIColor clearColor];
             }
             if (cell) {

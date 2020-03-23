@@ -54,11 +54,11 @@
     if (model.disclaimer && model.disclaimer.text.length > 0) {
         NSString *text = model.disclaimer.text;
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text];
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor themeGray4]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:11],NSForegroundColorAttributeName:[UIColor themeGray4]};
         [attrText addAttributes:attr range:NSMakeRange(0, attrText.length)];
         [model.disclaimer.richText enumerateObjectsUsingBlock:^(FHDisclaimerModelDisclaimerRichTextModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSRange range = [self rangeOfArray:obj.highlightRange originalLength:text.length];
-            UIColor *color = [UIColor themeRed1];
+            UIColor *color = [UIColor themeOrange1];
             __weak typeof(FHDisclaimerModelDisclaimerRichTextModel *) wObj = obj;
             [attrText yy_setTextHighlightRange:range color:color backgroundColor:nil userInfo:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
                 if (wObj.linkUrl.length > 0) {
@@ -105,7 +105,7 @@
                 self.imageTitles = imageTitles;
                 self.contactIcon.hidden = NO;
                 [self.contactIcon mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.right.mas_lessThanOrEqualTo(-20);
+                    make.right.mas_lessThanOrEqualTo(-15);
                 }];
             } else {
                 self.contactIcon.hidden = YES;
@@ -166,20 +166,20 @@
     _disclaimerContent = [[YYLabel alloc] init];
     _disclaimerContent.numberOfLines = 0;
     _disclaimerContent.textColor = [UIColor themeGray4];
-    _disclaimerContent.font = [UIFont themeFontRegular:12];
-    _disclaimerContent.preferredMaxLayoutWidth = SCREEN_WIDTH-40;
+    _disclaimerContent.font = [UIFont themeFontRegular:11];
+    _disclaimerContent.preferredMaxLayoutWidth = SCREEN_WIDTH-30;
 
     [self.contentView addSubview:_disclaimerContent];
     
     [self.ownerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.top.mas_equalTo(5);
+        make.left.mas_equalTo(15);
+        make.top.mas_equalTo(0);
         make.height.mas_equalTo(14);
         make.right.mas_equalTo(self.contactIcon.mas_left).offset(-6);
     }];
     
     [self.contactIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_lessThanOrEqualTo(-20);
+        make.right.mas_lessThanOrEqualTo(-15);
         make.centerY.mas_equalTo(self.ownerLabel);
         make.width.mas_equalTo(20);
         make.height.mas_equalTo(14);
@@ -194,10 +194,10 @@
     }];
     
     [self.disclaimerContent mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(10 );
-        make.bottom.mas_equalTo(-20);
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(10);
+//        make.bottom.mas_equalTo(-40);
     }];
     
     [self.tapButton addTarget:self action:@selector(openPhoto:) forControlEvents:UIControlEventTouchUpInside];
@@ -265,9 +265,10 @@
     self.ownerLabel.hidden = YES;
     self.contactIcon.hidden = YES;
     [self.disclaimerContent mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
         make.top.mas_equalTo(self.contentView);
+         make.bottom.mas_equalTo(-25);
     }];
 }
 
@@ -275,27 +276,28 @@
     self.ownerLabel.hidden = NO;
     self.contactIcon.hidden = NO;
     [self.disclaimerContent mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
         make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
-        make.bottom.mas_equalTo(-20);
+        make.bottom.mas_equalTo(-25);
     }];
 }
 
 - (void)remakeConstraints {
     
     if ([self.disclaimerContent.attributedText length] > 0) {
-        CGSize size = CGSizeMake(UIScreen.mainScreen.bounds.size.width - 40, MAXFLOAT);
-        YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:size text:self.disclaimerContent.attributedText];
-        if (tagLayout) {
-            self.lineHeight = tagLayout.textBoundingSize.height;
-        } else {
-            self.lineHeight = 0;
-        }
+//        CGSize size = CGSizeMake(UIScreen.mainScreen.bounds.size.width - 30, MAXFLOAT);
+//        YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:size text:self.disclaimerContent.attributedText];
+//        if (tagLayout) {
+//            self.lineHeight = tagLayout.textBoundingSize.height;
+//        } else {
+//            self.lineHeight = 0;
+//        }
         [self.disclaimerContent mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(20);
-            make.right.mas_equalTo(-20);
-            make.top.mas_equalTo(self.contentView);
+            make.left.mas_equalTo(15);
+            make.right.mas_equalTo(-15);
+            make.top.mas_equalTo(0);
+            make.bottom.mas_equalTo(-25);
         }];
         [self.contentView setNeedsLayout];
     }

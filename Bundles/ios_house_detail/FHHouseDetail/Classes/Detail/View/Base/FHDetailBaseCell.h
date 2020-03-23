@@ -14,6 +14,7 @@
 #import "FHHouseTypeManager.h"
 #import "FHHouseDetailBaseViewModel.h"
 #import "FHHouseShadowImageType.h"
+#import "FHDetailCommonDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

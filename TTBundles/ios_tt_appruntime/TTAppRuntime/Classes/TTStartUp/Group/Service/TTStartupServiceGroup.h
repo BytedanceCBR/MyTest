@@ -25,7 +25,7 @@ typedef NS_ENUM(NSUInteger, TTServiceStartupType) {
     TTServiceStartupTypeBackgroundMode,//后台任务
     TTServiceStartupTypeVideoSyncSwitch,//同步开关
     TTServiceStartupTypePrivateLetter,// 私信
-    TTServiceStartupTypeiOS10NotificationCheck,// ios10推送到达时检查锁屏状态
+//    TTServiceStartupTypeiOS10NotificationCheck,// ios10推送到达时检查锁屏状态
     TTServiceStartupTypeNetworkStatusMonitor,//网络联通状态检查
     TTServiceStartupTypeReporter,//举报服务
     TTServiceStartupTypeLaunchTime,//记录启动时间

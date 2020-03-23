@@ -201,6 +201,7 @@
     houseItemsModel.houseType = self.houseType;
     houseItemsModel.imprId = self.imprId;
     houseItemsModel.displayTitle = self.title;
+    houseItemsModel.title = self.title;
     houseItemsModel.displaySubtitle = self.desc;
     houseItemsModel.displayPrice = self.price;
     houseItemsModel.displayPricePerSqm = self.pricePerSqm;

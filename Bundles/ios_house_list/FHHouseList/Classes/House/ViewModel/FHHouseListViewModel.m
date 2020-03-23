@@ -58,6 +58,7 @@
 #import "FHHouseBaseNewHouseCell.h"
 #import "FHMainOldTopTagsView.h"
 #import "FHHouseListRedirectTipCell.h"
+#import <FHHouseBase/FHRelevantDurationTracker.h>
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -214,6 +215,13 @@ extern NSString *const INSTANT_DATA_KEY;
     param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
     param[@"value_id"] = value_id ?: @"be_null";
     TRACK_EVENT(@"click_options", param);
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        [[FHRelevantDurationTracker sharedTracker] sendRelevantDuration];
+    }
 }
 
 - (NSArray *)cellIdArray
@@ -1657,6 +1665,9 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
     [self jump2HouseDetailPage:cellModel withRank:indexPath.row];
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+    }
 }
 
 #pragma mark - 详情页跳转

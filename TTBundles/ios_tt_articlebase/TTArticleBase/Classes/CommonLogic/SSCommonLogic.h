@@ -1150,6 +1150,7 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)useImageVideoNewApi;
 + (NSInteger)configSwitchTimeDaysCount;
 + (BOOL)configSwitchFWebOffline;
+//+ (BOOL)webViewOpenSchemaEnable;
 + (NSInteger)configEditProfileEntry;
 + (BOOL)useNewSearchTransitionAnimation;
 + (BOOL)useNewSearchTransitionAnimationForVideo;

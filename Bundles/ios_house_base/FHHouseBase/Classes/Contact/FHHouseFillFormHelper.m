@@ -452,6 +452,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (params[@"from"]) {
         _from = params[@"from"];
     }
+    _cluePage = params[kFHCluePage];
+
 }
 
 - (void)setLogPbWithNSString:(NSString *)logpb

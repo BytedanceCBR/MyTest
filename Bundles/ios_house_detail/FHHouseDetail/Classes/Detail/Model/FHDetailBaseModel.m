@@ -351,8 +351,79 @@
 }
 @end
 
+@implementation FHVideoHouseVideoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"videoInfos": @"video_infos",
+                           @"infoSubTitle": @"info_sub_title",
+                           @"infoTitle": @"info_title",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHVideoHouseVideoVideoInfosModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"vHeight": @"v_height",
+                           @"imageHeight": @"image_height",
+                           @"vWidth": @"v_width",
+                           @"imageWidth": @"image_width",
+                           @"coverImageUrl": @"cover_image_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailOldDataHouseImageDictListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"houseImageTypeName": @"house_image_type_name",
+                           @"houseImageType": @"house_image_type",
+                           @"houseImageList": @"house_image_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 
 
 
+@implementation FHDetailNewTopBanner
 
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"businessTag": @"business_tag",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end

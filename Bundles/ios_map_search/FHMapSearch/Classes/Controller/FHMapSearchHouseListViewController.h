@@ -8,6 +8,7 @@
 #import "FHBaseViewController.h"
 #import "FHMapSearchHouseListViewModel.h"
 #import "FHMapSearchPolyInfoModel.h"
+#import "FHHouseListBaseItemModel.h"
 
 @class FHSearchHouseDataModel;
 @class FHSearchHouseDataItemsModel;
@@ -23,8 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy)   void (^didSwipeDownDismiss)(FHMapSearchBubbleModel *fromBubble);
 @property(nonatomic , copy)   void (^moveToTop)(); //滑动到顶部
 @property(nonatomic , copy)   void (^moveDock)(); //滑动到一半
-@property(nonatomic , copy)   void (^showHouseDetailBlock)(FHSearchHouseDataItemsModel *model , NSInteger rank , FHMapSearchBubbleModel *fromBubble);
-@property(nonatomic , copy)   void (^showRentHouseDetailBlock)(FHHouseRentDataItemsModel *model , NSInteger rank , FHMapSearchBubbleModel *fromBubble);
+@property(nonatomic , copy)   void (^showHouseDetailBlock)(FHHouseListBaseItemModel *model , NSInteger rank , FHMapSearchBubbleModel *fromBubble);
+@property(nonatomic , copy)   void (^showRentHouseDetailBlock)(FHHouseListBaseItemModel *model , NSInteger rank , FHMapSearchBubbleModel *fromBubble);
 @property(nonatomic , copy)   void (^showNeighborhoodDetailBlock)(FHMapSearchDataListModel *model , FHMapSearchBubbleModel *fromBubble);
 @property(nonatomic , copy)   void (^movingBlock)(CGFloat top);
 -(void)showNeighborHouses:(FHMapSearchDataListModel *)neighbor bubble:(FHMapSearchBubbleModel *)bubble;
