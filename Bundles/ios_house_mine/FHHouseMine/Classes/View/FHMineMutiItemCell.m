@@ -42,7 +42,7 @@
 
 - (void)initViews {
     self.headerView = [[UIImageView alloc] init];
-    UIImage *image = [self ct_imageFromImage:[UIImage imageNamed:@"fh_mine_header_bg"] inRect:CGRectMake(0, 138, [UIScreen mainScreen].bounds.size.width, 32)];
+    UIImage *image = [self ct_imageFromImage:[UIImage imageNamed:@"fh_mine_header_bg2"] inRect:CGRectMake(0, 138, [UIScreen mainScreen].bounds.size.width, 32)];
     _headerView.image = image;
     _headerView.hidden = YES;
     [self.contentView addSubview:_headerView];

@@ -83,7 +83,7 @@
     self.nameLabel.text = model.name;
     
     if(model.isSelected){
-        self.checkView.image = [UIImage imageNamed:@"fh_mine_home_page_selected"];
+        self.checkView.image = [UIImage imageNamed:@"fh_mine_home_page_selected2"];
     }else{
         self.checkView.image = [UIImage imageNamed:@"fh_mine_home_page_normal"];
     }
