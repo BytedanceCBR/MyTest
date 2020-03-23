@@ -870,10 +870,7 @@
                 self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
             }else
             {
-//                self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
-                if (commonModel.displayPricePerSqm.length>0) {
-                     self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
-                }
+                self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:(commonModel.displayPricePerSqm.length>0?commonModel.displayPricePerSqm:@"") attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
             }
             [self.pricePerSqmLabel.yoga markDirty];
 
@@ -1047,9 +1044,7 @@
         self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];
     }else{
 //        self.pricePerSqmLabel.text = model.displayPricePerSqm;
-        if (model.displayPricePerSqm.length>0) {
-             self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:model.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
-        }
+        self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:(model.displayPricePerSqm.length>0?model.displayPricePerSqm:@"") attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
     }
 
     [self.pricePerSqmLabel.yoga markDirty];
