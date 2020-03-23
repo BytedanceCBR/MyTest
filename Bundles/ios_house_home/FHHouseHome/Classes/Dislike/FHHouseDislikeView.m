@@ -309,7 +309,7 @@ static FHHouseDislikeView *__visibleDislikeView;
         NSString * title = [NSString stringWithFormat:@"已选%lu个理由", (unsigned long)self.selectedWords.count];
         NSRange range = NSMakeRange(2, 1);
         NSMutableAttributedString * atrrTitle = [[NSMutableAttributedString alloc] initWithString:title];
-        [atrrTitle setAttributes:@{ NSForegroundColorAttributeName : [UIColor themeRed1] } range:range];
+        [atrrTitle setAttributes:@{ NSForegroundColorAttributeName : [UIColor themeOrange1] } range:range];
         [self.titleLabel setAttributedText:atrrTitle];
     } else {
         [self.titleLabel setText:@"可选理由，精准屏蔽"];
