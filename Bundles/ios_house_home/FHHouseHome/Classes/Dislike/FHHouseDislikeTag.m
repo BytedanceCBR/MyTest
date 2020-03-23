@@ -37,7 +37,7 @@
         self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         
         [self setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
-        [self setTitleColor:[UIColor themeOrange1] forState:UIControlStateSelected];
+        [self setTitleColor:[UIColor themeOrange4] forState:UIControlStateSelected];
         
         [self refreshBorder];
     }
