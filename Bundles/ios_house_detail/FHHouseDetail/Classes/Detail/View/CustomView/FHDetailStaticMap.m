@@ -68,7 +68,7 @@ const CGFloat kStaticMapHWRatio  = 7.0f / 16.0f;
     if (expectedHeight != heightPixel) {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"bad_picture[imageSize:%@,imageSacle:%f,targetSize:%@]", NSStringFromCGSize(image.size),image.scale,NSStringFromCGSize(CGSizeMake(self.targetWidth, self.targetHeight))]};
         self.error = [NSError errorWithDomain:@"transformer" code:1 userInfo:userInfo];
-        return image;
+        return nil;
     }
 
     //居中裁剪
@@ -203,7 +203,7 @@ const CGFloat kStaticMapHWRatio  = 7.0f / 16.0f;
     id block = ^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
         StrongSelf;
         //如果是网络错误，直接返回，网络重连后会重试，但是不回调加载失败
-        if(error){
+        if(error && !transformer.error){
             self.loaded = NO;
             return;
         }
