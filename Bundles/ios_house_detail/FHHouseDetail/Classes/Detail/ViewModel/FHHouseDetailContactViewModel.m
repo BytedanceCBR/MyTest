@@ -326,7 +326,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)setContactPhone:(FHDetailContactModel *)contactPhone
 {
     _contactPhone = contactPhone;
-        
+
     NSString *contactTitle = @"电话咨询";
     NSString *chatTitle = @"在线联系";
     
@@ -485,9 +485,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
         if (extraDict[@"question_id"]) {
             imExtra[@"question_id"] = extraDict[@"question_id"];
-        }
-        if (extraDict[@"is_login_front"]) {
-            imExtra[@"is_login_front"] = extraDict[@"is_login_front"];
         }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
@@ -705,8 +702,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
             extraDic[@"from"] = _fromStr;
         }
-    }else if (self.houseType == FHIMHouseTypeSecondHandHouse) {
-        extraDic[@"is_login_front"] = @(1);
     }
     [self onlineActionWithExtraDict:extraDic];
 }

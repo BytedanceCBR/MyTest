@@ -21,6 +21,7 @@
 #import "FHFloorPanDetailPropertyCell.h"
 #import "FHFloorPanDetailMutiFloorPanCell.h"
 #import "FHHouseDetailSubPageViewController.h"
+#import "FHDetailBottomBar.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -45,10 +46,31 @@
         _floorPanId = floorPanId;
         _currentItems = [NSMutableArray new];
         [self configTableView];
-        
+        WeakSelf;
+        FHDetailBottomBar *bottomBar = [_subPageVC getBottomBar];
+        if ([bottomBar isKindOfClass:[FHDetailBottomBar class]]) {
+            bottomBar.bottomBarImBlock = ^{
+                StrongSelf;
+                [wself imAction];
+            };
+        }
+        self.contactViewModel = [_subPageVC getContactViewModel];
         [self startLoadData];
     }
     return self;
+}
+
+- (void)imAction
+{
+    // todo zjing test
+    FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
+    NSMutableDictionary *imExtra = @{}.mutableCopy;
+//    imExtra[@"source_from"] = @"education_type";
+    imExtra[@"im_open_url"] = contactPhone.imOpenUrl;
+    imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
+    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeFloorplan];
+    imExtra[@"from"] = @"app_floorplan";
+    [self.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 
 // 注册cell类型
@@ -186,6 +208,20 @@
         [self.currentItems addObject:mutiDataModel];
     }
     
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    }else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
+
     [_infoListTable reloadData];
 }
 
