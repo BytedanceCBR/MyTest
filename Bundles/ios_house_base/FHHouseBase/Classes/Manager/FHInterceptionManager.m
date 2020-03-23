@@ -6,6 +6,9 @@
 //
 
 #import "FHInterceptionManager.h"
+#import "HMDTTMonitor.h"
+
+#define InterceptionManagerContinue @"InterceptionManagerContinue"
 
 @interface FHInterceptionManager ()
 
@@ -25,16 +28,16 @@
     self = [super init];
     if (self) {
         self.isContinue = NO;
-        self.maxInterceptTime = 5;
-        self.compareTime = 1;
+        self.maxInterceptTime = 5.0f;
+        self.compareTime = 1.0f;
         self.interceptTime = 0;
         self.success = YES;
+        self.category = @{};
     }
     return self;
 }
 
-- (TTHttpTask *)addParamInterception:(CGFloat)interval condition:(Condition)condition operation:(Operation)operation complete:(Complete)complete task:(Task)task {
-    self.maxInterceptTime = interval;
+- (TTHttpTask *)addParamInterceptionWithCondition:(Condition)condition operation:(Operation)operation complete:(Complete)complete task:(Task)task {
     self.condition = condition;
     self.complete = complete;
     self.operation = operation;
@@ -58,19 +61,6 @@
             
             self.interceptTime = 0;
             [self startTimer];
-            
-//            NSLog(@"______开始");
-//            sleep(5);
-//            NSLog(@"______结束");
-//            BOOL success = NO;
-//
-//            __block TTHttpTask *httpTask = nil;
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                if(self.isContinue){
-//                    httpTask = task();
-//                }
-//                complete(success,httpTask);
-//            });
         });
 
         return nil;
@@ -101,20 +91,36 @@
     self.interceptTime = self.interceptTime + self.compareTime;
     if(self.interceptTime > self.maxInterceptTime){
         //超时
+        [self quitLoop];
         return;
     }
     
     if(self.condition){
         self.success = self.condition();
-        
+        if(self.success){
+            [self quitLoop];
+            return;
+        }
+    }else{
+        [self quitLoop];
     }
-    
+}
+
+- (void)quitLoop {
+    [self stopTimer];
     __block TTHttpTask *httpTask = nil;
     dispatch_async(dispatch_get_main_queue(), ^{
-        if(self.isContinue){
+        if(self.success){
             httpTask = self.task();
+        }else{
+            if(self.isContinue){
+                httpTask = self.task();
+            }
+            //上报错误参数日志
+            [[HMDTTMonitor defaultManager] hmdTrackService:InterceptionManagerContinue metric:nil category:self.category extra:@{
+            }];
         }
-        self.complete(success,httpTask);
+        self.complete(self.success,httpTask);
     });
 }
 

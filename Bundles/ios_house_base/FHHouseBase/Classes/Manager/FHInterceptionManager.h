@@ -14,21 +14,30 @@ typedef BOOL (^Condition)(void);
 typedef void (^Operation)(void);
 typedef void (^Complete)(BOOL success, TTHttpTask * _Nullable httpTask);
 typedef TTHttpTask * _Nullable (^Task)(void);
+typedef void (^Operation)(void);
 
 @interface FHInterceptionManager : NSObject
-
 //最大拦截时间，默认是5秒
 @property(nonatomic , assign) CGFloat maxInterceptTime;
 //比较参数的间隔时间，默认是1秒
 @property(nonatomic , assign) CGFloat compareTime;
 //参数判断失败后是否继续执行请求，默认不执行
 @property(nonatomic , assign) BOOL isContinue;
+//日志上报内容
+@property(nonatomic , strong) NSDictionary *category;
+/**
+添加拦截器方法
 
-- (TTHttpTask *)addParamInterception:(CGFloat)interval
-                   condition:(Condition)condition
-                   operation:(Operation)operation
-                     complete:(Complete)complete
-                     task:(Task)task;
+@param condition 参数判断条件，返回YES或者NO
+@param operation 当参数不满足条件时，补救措施
+@param complete 拦截完成时回调
+@param task 原来的网络请求
+@note 目前一个接口支持使用一个拦截器，不要使用多个
+*/
+- (TTHttpTask *)addParamInterceptionWithCondition:(Condition)condition
+                                        operation:(Operation)operation
+                                         complete:(Complete)complete
+                                             task:(Task)task;
 
 @end
 

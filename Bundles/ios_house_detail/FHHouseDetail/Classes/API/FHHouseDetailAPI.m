@@ -27,8 +27,6 @@
 #import <TTInstallService/TTInstallIDManager.h>
 #import "TTBaseMacro.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
-#import "FHInterceptionManager.h"
-
 
 #define GET @"GET"
 #define POST @"POST"
@@ -80,19 +78,10 @@
         paramDic[@"realtor_id"] = realtorId;
     }
     
-    FHInterceptionManager *manager = [[FHInterceptionManager alloc] init];
-    return [manager addParamInterception:5.0 condition:^BOOL{
-        return NO;
-    } operation:^{
-        
-    } complete:^(BOOL success, TTHttpTask * _Nullable httpTask) {
-        
-    } task:^TTHttpTask * _Nullable{
-        return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailOldModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
-            if (completion) {
-                completion(model,error);
-            }
-        }];
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailOldModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        if (completion) {
+            completion(model,error);
+        }
     }];
 }
 
