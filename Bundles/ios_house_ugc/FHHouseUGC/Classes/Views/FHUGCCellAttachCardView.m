@@ -158,9 +158,15 @@
 
 - (void)buttonClick {
     NSString *routeUrl = self.cellModel.attachCardInfo.button.schema;
+//    routeUrl = @"sslocal://ugc_post?post_content=%23%e5%b0%8f%e5%8c%ba%e9%98%b2%e7%96%ab%e8%bf%9b%e8%a1%8c%e6%97%b6%23+&post_content_rich_span=%7b%22links%22%3a%5b%7b%22link%22%3a%22sslocal%3a%5c%2f%5c%2fconcern%3fcid%3d1657155140612119%26name%3d%e5%b0%8f%e5%8c%ba%e9%98%b2%e7%96%ab%e8%bf%9b%e8%a1%8c%e6%97%b6%22%2c%22flag%22%3a0%2c%22length%22%3a9%2c%22user_info%22%3a%7b%22forum_name%22%3a%22%e5%b0%8f%e5%8c%ba%e9%98%b2%e7%96%ab%e8%bf%9b%e8%a1%8c%e6%97%b6%22%2c%22concern_id%22%3a%221657155140612119%22%2c%22color_info%22%3a%7b%22day%22%3a%22%23FF8151%22%2c%22night%22%3a%22%23FF8151%22%7d%2c%22forum_id%22%3a%221657155140612119%22%7d%2c%22type%22%3a2%2c%22start%22%3a0%7d%5d%7d";
     if(routeUrl.length > 0){
         NSURL *openUrl = [NSURL URLWithString:routeUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        if(([openUrl.host isEqualToString:@"ugc_post"] || [openUrl.host isEqualToString:@"ugc_vote_publish"] || [openUrl.host isEqualToString:@"ugc_wenda_publish"]) && ![TTAccountManager isLogin]){
+            //发布器
+            [self gotoLogin];
+        }else{
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        }
     }
 }
 
@@ -169,6 +175,39 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *page_type = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+    [params setObject:page_type forKey:@"enter_from"];
+    [params setObject:@"click_publisher" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self gotoJumpVC];
+                });
+            }
+        }
+    }];
+}
+
+// 跳转
+- (void)gotoJumpVC {
+    NSString *routeUrl = self.cellModel.attachCardInfo.button.schema;
+//    routeUrl = @"sslocal://ugc_post?post_content=%23%e5%b0%8f%e5%8c%ba%e9%98%b2%e7%96%ab%e8%bf%9b%e8%a1%8c%e6%97%b6%23+&post_content_rich_span=%7b%22links%22%3a%5b%7b%22link%22%3a%22sslocal%3a%5c%2f%5c%2fconcern%3fcid%3d1657155140612119%26name%3d%e5%b0%8f%e5%8c%ba%e9%98%b2%e7%96%ab%e8%bf%9b%e8%a1%8c%e6%97%b6%22%2c%22flag%22%3a0%2c%22length%22%3a9%2c%22user_info%22%3a%7b%22forum_name%22%3a%22%e5%b0%8f%e5%8c%ba%e9%98%b2%e7%96%ab%e8%bf%9b%e8%a1%8c%e6%97%b6%22%2c%22concern_id%22%3a%221657155140612119%22%2c%22color_info%22%3a%7b%22day%22%3a%22%23FF8151%22%2c%22night%22%3a%22%23FF8151%22%7d%2c%22forum_id%22%3a%221657155140612119%22%7d%2c%22type%22%3a2%2c%22start%22%3a0%7d%5d%7d";
+    
+    if(routeUrl.length > 0){
+        NSURL *openUrl = [NSURL URLWithString:routeUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }
 }
 
 @end
