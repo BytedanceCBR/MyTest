@@ -167,15 +167,15 @@
 -(void)initNavbar
 {
     FHFakeInputNavbarType type = FHFakeInputNavbarTypeDefault;
-    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
         type = FHFakeInputNavbarTypeMap;
     }
     // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
         type = FHFakeInputNavbarTypeMessageAndMap;
     }
     
-    if (self.houseType == FHHouseTypeRentHouse || self.houseType == FHHouseTypeNewHouse) {
+    if ( self.houseType == FHHouseTypeNewHouse) {
         type = FHFakeInputNavbarTypeMessageSingle;
     }
     
@@ -594,10 +594,10 @@
 -(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder inputText:(NSString *)inputText{
     
     if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute ) || houseType == FHHouseTypeSecondHandHouse ||houseType == FHHouseTypeNewHouse) {
-        if (houseType == FHHouseTypeSecondHandHouse) {
+        if (houseType == FHHouseTypeSecondHandHouse || houseType == FHHouseTypeRentHouse) {
             // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageAndMap];
-        } else if(houseType == FHHouseTypeRentHouse ||houseType == FHHouseTypeNewHouse){
+        } else if(houseType == FHHouseTypeNewHouse){
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageSingle];
         } else{
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMap];
