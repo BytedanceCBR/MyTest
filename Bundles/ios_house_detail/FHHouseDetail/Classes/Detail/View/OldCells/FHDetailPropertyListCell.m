@@ -463,7 +463,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     _indicatorLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _indicatorLabel.font = [UIFont themeFontRegular:14];
-    _indicatorLabel.textColor = [UIColor themeOrange1];
+    _indicatorLabel.textColor = [UIColor themeOrange4];
     
     _indicator = [[UIImageView alloc]initWithImage:img];
     _indicator.contentMode = UIViewContentModeCenter;
