@@ -184,6 +184,12 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"true"];
         }
         
+        // 升级文章详情页模板后，服务端跳转的时候 有这两个参数：hide_status_bar hide_bar，没有hide_nav_bar，做个兼容吧
+        if ([params valueForKey:@"hide_status_bar"] && [params valueForKey:@"hide_bar"] && ![params valueForKey:@"hide_nav_bar"]) {
+            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"1"] ||  [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"true"];
+            _shouldhideStatusBar = [[NSString stringWithFormat:@"%@", params[@"hide_status_bar"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_status_bar"]] isEqualToString:@"true"];
+        }
+        
         _shouldHideBackButton = NO;
         if ([params valueForKey:@"hide_back_button"]) {
             _shouldHideBackButton = [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"true"];
