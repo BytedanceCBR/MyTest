@@ -153,11 +153,11 @@
     
     
     _messageDotNumber = [[UILabel alloc]init];
-    _messageDotNumber.font = [UIFont themeFontSemibold:8];
+    _messageDotNumber.font = [UIFont themeFontSemibold:10];
     _messageDotNumber.backgroundColor = [UIColor themeOrange1];
     _messageDotNumber.textColor = [UIColor whiteColor];
     _messageDotNumber.textAlignment = NSTextAlignmentCenter;
-    _messageDotNumber.layer.cornerRadius = 7;
+    _messageDotNumber.layer.cornerRadius = 8;
     _messageDotNumber.layer.masksToBounds = YES;
     _messageDotNumber.hidden = YES;
 //    _messageDot = [[UIImageView alloc] init];
@@ -194,8 +194,8 @@
         }];
         [_messageDotNumber mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.messageBtn.mas_centerX).offset(2);
-            make.height.mas_equalTo(14);
-            make.width.mas_equalTo(14);
+            make.height.mas_equalTo(16);
+            make.width.mas_equalTo(16);
             make.top.mas_equalTo(self.messageBtn).offset(6);
         }];
 //        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -219,8 +219,8 @@
         }];
         [_messageDotNumber mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.messageBtn.mas_centerX).offset(2);
-            make.height.mas_equalTo(14);
-            make.width.mas_equalTo(14);
+            make.height.mas_equalTo(16);
+            make.width.mas_equalTo(16);
             make.top.mas_equalTo(self.messageBtn).offset(6);
         }];
 //        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -333,7 +333,7 @@
         self.messageDotNumber.text = dotNumber >99?@"99+":[NSString stringWithFormat:@"%ld",dotNumber];
         if (dotNumber>9) {
             [_messageDotNumber mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(dotNumber>99?21:18);
+                make.width.mas_equalTo(dotNumber>99?29:22);
             }];
         }
     }else {
