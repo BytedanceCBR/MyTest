@@ -36,9 +36,53 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.reuseIdentifier = reuseIdentifier;
-        [self initUI];
+        if ([self.reuseIdentifier isEqualToString:@"FHNewHouseCell"] ) {
+              [self initNewHouseUI];
+          }else {
+              [self initUI];
+          }
+        
+//        [self initUI];
     }
     return self;
+}
+
+- (void)initNewHouseUI
+{
+    self.totalPrice.hidden = YES;
+    self.unitPrice.font = [UIFont themeFontMedium:16];
+    self.unitPrice.textColor = [UIColor themeOrange1];
+    [self.houseMainImageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.mainIma);
+        make.left.top.equalTo(self.mainIma);
+        make.size.mas_equalTo(CGSizeMake(107, 81));
+    }];
+    [self.mainIma mas_makeConstraints:^(MASConstraintMaker *make) {
+         make.centerY.equalTo(self.contentView);
+         make.left.equalTo(self.contentView).offset(15);
+         make.size.mas_equalTo(CGSizeMake(106, 80));
+     }];
+    [self.maintitle mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.mainIma.mas_right).offset(12);
+        make.top.equalTo(self.mainIma);
+        make.right.equalTo(self.contentView).offset(-15);
+        make.height.mas_equalTo(20);
+    }];
+    [self.unitPrice mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.maintitle);
+        make.right.equalTo(self.contentView).offset(-15);
+        make.top.equalTo(self.maintitle.mas_bottom);
+    }];
+    [self.positionInformation mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.maintitle);
+        make.top.equalTo(self.unitPrice.mas_bottom);
+        make.right.equalTo(self.contentView).offset(-15);
+    }];
+    [self.tagInformation mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.maintitle);
+        make.top.equalTo(self.positionInformation.mas_bottom).offset(5);
+        make.right.equalTo(self.contentView).offset(-15);
+    }];
 }
 
 - (void)initUI {
@@ -91,9 +135,6 @@
         make.right.equalTo(self.unitPrice.mas_right);
         make.top.equalTo(self.unitPrice.mas_bottom).offset(4);
     }];
-    if ([self.reuseIdentifier isEqualToString:@"FHNewHouseCell"] ) {
-        [self updateConstraintsWithNewHouse];
-    }
 }
 #pragma mark ---------------------- UIInit:初始化控件
 
@@ -182,7 +223,6 @@
 {
     if (!_houseMainImageBackView) {
         UIView *houseMainImageBackView = [[UIView alloc] init];
-        houseMainImageBackView.backgroundColor = [UIColor yellowColor];
         CALayer * layer = houseMainImageBackView.layer;
         
         layer.shadowOffset = CGSizeMake(0, 4);
@@ -235,26 +275,9 @@
     self.totalPrice.hidden = YES;
     self.unitPrice.font = [UIFont themeFontMedium:16];
     self.unitPrice.textColor = [UIColor themeOrange1];
-    [self.mainIma mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.contentView);
-        make.left.equalTo(self.contentView).offset(15);
-        make.size.mas_equalTo(CGSizeMake(106, 80));
-    }];
-    [self.unitPrice mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.maintitle);
-        make.right.equalTo(self.contentView).offset(-15);
-        make.top.equalTo(self.maintitle.mas_bottom).offset(-3);
-    }];
-    [self.positionInformation mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.maintitle);
-        make.top.equalTo(self.unitPrice.mas_bottom).offset(-1);
-        make.right.equalTo(self.contentView).offset(-15);
-    }];
-    [self.tagInformation mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.maintitle);
-        make.top.equalTo(self.positionInformation.mas_bottom).offset(3);
-        make.right.equalTo(self.contentView).offset(-15);
-    }];
+
+
+
 }
 #pragma mark ---------------------- dataPross:数据加载
 - (void)refreshWithData:(id)data {
@@ -283,7 +306,11 @@
         [self updateContentWithModel:model];
         if (model.vrInfo.hasVr) {
             self.houseVideoImageView.hidden = YES;
+            self.vrLoadingView.hidden = NO;
             [self.vrLoadingView play];
+        }else {
+            self.vrLoadingView.hidden = YES;
+            [self.vrLoadingView stop];
         }
     };
 }
