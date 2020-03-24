@@ -27,6 +27,7 @@
 #import <TTServiceProtocols/NewsBaseDelegateProtocol.h>
 #import "FHCHousePushUtils.h"
 #import <TTAppRuntime/NewsBaseDelegate.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 
 #import <FHHouseBase/FHUserTracker.h>
 #import <TTBaseLib/TTStringHelper.h>
@@ -87,7 +88,8 @@ typedef void(^NotificationActionCompletionBlock) (void);
         param.deviceId = deviceID;
         param.installId = installID;
         param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
-        
+        param.versionCode = [TTSandBoxHelper fhVersionCode];
+
         BDUGNotificationConfig *config = nil;
         if (@available(iOS 10.0, *)) {
             BDUGNotificationAction *actionDislike = [BDUGNotificationAction actionWithIdentifier:kNotificationActionIdentifierDislike
