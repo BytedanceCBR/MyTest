@@ -176,7 +176,7 @@
     }
     
     if (self.houseType == FHHouseTypeRentHouse || self.houseType == FHHouseTypeNewHouse) {
-        type = FHFakeInputNavbarTypeMessage;
+        type = FHFakeInputNavbarTypeMessageSingle;
     }
     
     if ([self.paramObj.sourceURL.host rangeOfString:@"commute_list"].location != NSNotFound) {
@@ -598,7 +598,7 @@
             // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageAndMap];
         } else if(houseType == FHHouseTypeRentHouse ||houseType == FHHouseTypeNewHouse){
-            [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessage];
+            [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageSingle];
         } else{
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMap];
         }

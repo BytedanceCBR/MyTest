@@ -100,7 +100,7 @@
     // FHFakeInputNavbarTypeMessageAndMap 二手房大类页显示消息和小红点
     FHFakeInputNavbarType type ;
     if (_houseType == FHHouseTypeRentHouse || _houseType == FHHouseTypeNewHouse) {
-        type = FHFakeInputNavbarTypeMessage;
+        type = FHFakeInputNavbarTypeMessageSingle;
     }else if(_houseType == FHHouseTypeSecondHandHouse){
         type = FHFakeInputNavbarTypeMessageAndMap;
     }else {
