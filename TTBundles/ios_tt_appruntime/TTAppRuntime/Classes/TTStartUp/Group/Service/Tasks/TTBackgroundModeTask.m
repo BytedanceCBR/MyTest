@@ -15,7 +15,7 @@
 #import "TTNetworkManager.h"
 #import <FHCHousePush/FHCHandleAPNSTask.h>
 #import <TTNetworkManager/TTDefaultHTTPRequestSerializer.h>
-#import "TouTiaoPushSDK.h"
+
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>

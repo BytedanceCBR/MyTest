@@ -15,7 +15,6 @@
 #import "Article.h"
 //#import "TTProjectLogicManager.h"
 #import "TTPushAlertManager.h"
-#import "TouTiaoPushSDK.h"
 //#import "TTSFShareManager.h"
 #import "TTAPNsRouting.h"
 #import "TTPushResourceMgr.h"

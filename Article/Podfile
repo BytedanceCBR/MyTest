@@ -400,7 +400,6 @@ def appPods
     ]
     
     #-----头条推送SDK----
-    pod 'TTPushSDK', '0.1.1'
     pod 'BDUGPushSDK', '2.2.1'
 
     #-----路由-----

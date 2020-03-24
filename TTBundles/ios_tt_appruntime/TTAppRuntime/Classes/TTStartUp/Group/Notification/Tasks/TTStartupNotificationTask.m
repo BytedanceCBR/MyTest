@@ -32,7 +32,7 @@
 #import "NewsBaseDelegate.h"
 #import "TTRoute.h"
 #import "TTCookieManager.h"
-#import "TouTiaoPushSDK.h"
+
 #import "TTUserSettingsManager+Notification.h"
 //#import "TTCommonwealManager.h"
 #import "TTUserInfoStartupTask.h"
@@ -74,27 +74,8 @@ TTAccountMulticastProtocol
         [[AccountKeyChainManager sharedManager] start];
     }
     [self registerNotification];
-    [self uploadDeviceID];
-    
-    //公益项目开始计时
-//    [[TTCommonwealManager sharedInstance] startMonitor];
 }
 
-- (void)uploadDeviceID
-{
-    if ([TTPushServiceDelegate enable]) {
-        return;
-    }
-    [[TTInstallIDManager sharedInstance] observeDeviceDidRegistered:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
-
-        TTChannelRequestParam *param = [TTChannelRequestParam requestParam];
-        param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
-        param.versionCode = [TTSandBoxHelper fhVersionCode];
-        [TouTiaoPushSDK sendRequestWithParam:param completionHandler:^(TTBaseResponse *response) {
-            
-        }];
-    }];
-}
 
 - (void)registerNotification {
     

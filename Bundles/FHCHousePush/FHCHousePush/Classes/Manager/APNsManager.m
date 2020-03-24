@@ -21,7 +21,6 @@
 #import "TTUserSettings/TTUserSettingsReporter.h"
 
 #import "TTNetworkManager.h"
-#import "TouTiaoPushSDK.h"
 //#import "TTSFShareManager.h"
 
 //#import "TSVPushLaunchManager.h"
