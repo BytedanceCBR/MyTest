@@ -1,12 +1,13 @@
 //
-//  FHInterceptionManager.h
+//  FHInterception.h
 //  FHHouseBase
 //
-//  Created by 谢思铭 on 2020/3/20.
+//  Created by 谢思铭 on 2020/3/24.
 //
 
 #import <Foundation/Foundation.h>
 #import "TTNetworkManager.h"
+#import "FHInterceptionConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,15 +17,15 @@ typedef void (^Complete)(BOOL success, TTHttpTask * _Nullable httpTask);
 typedef TTHttpTask * _Nullable (^Task)(void);
 typedef void (^Operation)(void);
 
-@interface FHInterceptionManager : NSObject
+@interface FHInterception : NSObject
 //最大拦截时间，默认是5秒
-@property(nonatomic , assign) CGFloat maxInterceptTime;
+//@property(nonatomic , assign) CGFloat maxInterceptTime;
 //比较参数的间隔时间，默认是1秒
-@property(nonatomic , assign) CGFloat compareTime;
+//@property(nonatomic , assign) CGFloat compareTime;
 //参数判断失败后是否继续执行请求，默认不执行
-@property(nonatomic , assign) BOOL isContinue;
+//@property(nonatomic , assign) BOOL isContinue;
 //日志上报内容
-@property(nonatomic , strong) NSDictionary *category;
+//@property(nonatomic , strong) NSDictionary *category;
 /**
 添加拦截器方法
 
@@ -34,10 +35,13 @@ typedef void (^Operation)(void);
 @param task 原来的网络请求
 @note 目前一个接口支持使用一个拦截器，不要使用多个
 */
-- (TTHttpTask *)addParamInterceptionWithCondition:(Condition)condition
-                                        operation:(Operation)operation
-                                         complete:(Complete)complete
-                                             task:(Task)task;
+- (TTHttpTask *)addParamInterceptionWithConfig:(FHInterceptionConfig *)config
+                                     Condition:(Condition)condition
+                                     operation:(Operation)operation
+                                      complete:(Complete)complete
+                                          task:(Task)task;
+
+- (void)cancel;
 
 @end
 

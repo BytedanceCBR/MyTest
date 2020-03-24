@@ -31,6 +31,7 @@
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
 #define QURL(QPATH) [[self host] stringByAppendingString:QPATH]
+#define kInterceptionUserFollows @"kInterceptionUserFollows"
 
 @implementation FHHouseUGCAPI
 
@@ -246,14 +247,14 @@
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"type"] = @(type);
     
+    FHInterceptionConfig *config = [[FHInterceptionConfig alloc] init];
+    config.category = @{
+                @"url":queryPath,
+                @"desc":@"did为空"
+                };
     //加入拦截器
     WeakSelf;
-    FHInterceptionManager *manager = [[FHInterceptionManager alloc] init];
-    manager.category = @{
-        @"url":queryPath,
-        @"desc":@"did为空"
-    };
-    return [manager addParamInterceptionWithCondition:^BOOL{
+    return [[FHInterceptionManager sharedInstance] addInterception:kInterceptionUserFollows config:config Condition:^BOOL{
         return !isEmptyString([TTInstallIDManager sharedInstance].deviceID);
     } operation:^{
         [wself requestDeviceId];

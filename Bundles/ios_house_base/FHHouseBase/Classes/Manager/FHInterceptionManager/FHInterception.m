@@ -1,16 +1,16 @@
 //
-//  FHInterceptionManager.m
+//  FHInterception.m
 //  FHHouseBase
 //
-//  Created by 谢思铭 on 2020/3/20.
+//  Created by 谢思铭 on 2020/3/24.
 //
 
-#import "FHInterceptionManager.h"
+#import "FHInterception.h"
 #import "HMDTTMonitor.h"
 
 #define InterceptionManagerContinue @"InterceptionManagerContinue"
 
-@interface FHInterceptionManager ()
+@interface FHInterception ()
 
 @property(nonatomic , strong) NSTimer *timer;
 @property(nonatomic , copy) Condition condition;
@@ -19,25 +19,32 @@
 @property(nonatomic , copy) Task task;
 @property(nonatomic , assign) CGFloat interceptTime;
 @property(nonatomic , assign) BOOL success;
+@property(nonatomic , strong) FHInterceptionConfig *config;
+@property(nonatomic , assign) BOOL isRunning;
 
 @end
 
-@implementation FHInterceptionManager
+@implementation FHInterception
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.isContinue = NO;
-        self.maxInterceptTime = 5.0f;
-        self.compareTime = 1.0f;
         self.interceptTime = 0;
         self.success = YES;
-        self.category = @{};
+        self.isRunning = NO;
+        self.config = [[FHInterceptionConfig alloc] init];
     }
     return self;
 }
 
-- (TTHttpTask *)addParamInterceptionWithCondition:(Condition)condition operation:(Operation)operation complete:(Complete)complete task:(Task)task {
+- (TTHttpTask *)addParamInterceptionWithConfig:(FHInterceptionConfig *)config
+                                     Condition:(Condition)condition
+                                     operation:(Operation)operation
+                                      complete:(Complete)complete
+                                          task:(Task)task {
+    if(config){
+        self.config = config;
+    }
     self.condition = condition;
     self.complete = complete;
     self.operation = operation;
@@ -50,9 +57,12 @@
     
     if(paramCurrent){
         //参数没有问题
+        self.isRunning = NO;
         return task();
     }else{
         //参数有问题
+        self.isRunning = YES;
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             //执行解决方案
             if(self.operation){
@@ -64,6 +74,16 @@
         });
 
         return nil;
+    }
+}
+
+- (void)cancel {
+    if(self.isRunning){
+        [self stopTimer];
+        self.isRunning = NO;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.complete(self.success,nil);
+        });
     }
 }
 
@@ -81,15 +101,15 @@
 
 - (NSTimer *)timer {
     if (!_timer) {
-        _timer = [NSTimer timerWithTimeInterval:self.compareTime target:self selector:@selector(compareParamCondition) userInfo:nil repeats:YES];
+        _timer = [NSTimer timerWithTimeInterval:self.config.compareTime target:self selector:@selector(compareParamCondition) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
     }
     return _timer;
 }
 
 - (void)compareParamCondition {
-    self.interceptTime = self.interceptTime + self.compareTime;
-    if(self.interceptTime > self.maxInterceptTime){
+    self.interceptTime = self.interceptTime + self.config.compareTime;
+    if(self.interceptTime > self.config.maxInterceptTime){
         //超时
         [self quitLoop];
         return;
@@ -113,13 +133,14 @@
         if(self.success){
             httpTask = self.task();
         }else{
-            if(self.isContinue){
+            if(self.config.isContinue){
                 httpTask = self.task();
             }
             //上报错误参数日志
-            [[HMDTTMonitor defaultManager] hmdTrackService:InterceptionManagerContinue metric:nil category:self.category extra:@{
+            [[HMDTTMonitor defaultManager] hmdTrackService:InterceptionManagerContinue metric:nil category:self.config.category extra:@{
             }];
         }
+        self.isRunning = NO;
         self.complete(self.success,httpTask);
     });
 }
