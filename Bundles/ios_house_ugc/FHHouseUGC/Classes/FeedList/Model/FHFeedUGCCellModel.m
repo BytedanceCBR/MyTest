@@ -698,7 +698,7 @@
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
     
-    if(model.attachCardInfo){
+    if(model.attachCardInfo && model.attachCardInfo.title.length > 0){
         cellModel.attachCardInfo = model.attachCardInfo;
     }
     
