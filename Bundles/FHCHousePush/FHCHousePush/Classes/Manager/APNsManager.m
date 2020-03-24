@@ -37,7 +37,8 @@
 #import "TTUIResponderHelper.h"
 #import "UIViewController+TTMovieUtil.h"
 #import "FHIntroduceManager.h"
-#import <FHCHousePush/TTPushServiceDelegate.h>
+#import "TTPushServiceDelegate.h"
+
 #import <BDALog/BDAgileLog.h>
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
@@ -121,13 +122,7 @@ static APNsManager *_sharedManager = nil;
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
         wrapperTrackEventWithCustomKeys(@"apn", @"news_notification_view", rid, nil, nil);
     }
-    
-    //V3埋点 使用BDUGPushSDK时通过sdk内置上报
-//     if (![TTPushServiceDelegate enable]) {
-//         [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"notify" postBack:postBack];
-//     }
-
-    
+ 
     if ([self tryForOldAPNsLogical:userInfo]) {
         return;
     }
@@ -180,10 +175,6 @@ static APNsManager *_sharedManager = nil;
         NSString *titleId = [NSString stringWithFormat:@"%@",paramObj.allParams[@"title_id"]];
         param[@"title_id"] = @([titleId longLongValue]);
         param[@"event_type"] = @"house_app2c_v2";
-
-        if (![TTPushServiceDelegate enable]) {
-            [TTTracker eventV3:@"push_click" params:param];
-        }
 
         [FHLocManager sharedInstance].isShowHomeViewController = NO;
         
@@ -298,14 +289,8 @@ static APNsManager *_sharedManager = nil;
 {
     // 注意：根据 app_notice_status api 的定义，close 发送 1，open 发送 0
     // 这个是早期的api，根据server数据库的定义，0为有效值
+    [BDUGPushService uploadNotificationStatus:[NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]]];
 
-    if ([TTPushServiceDelegate enable]) {
-        [BDUGPushService uploadNotificationStatus:[NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]]];
-    } else {
-        TTUploadSwitchRequestParam *param = [TTUploadSwitchRequestParam requestParam];
-        param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
-        [TouTiaoPushSDK sendRequestWithParam:param completionHandler:nil];
-    }
     // 注意：根据 collect_setting api 的定义，close 发送 0，open 发送 1，和 app_notice_status 相反
     NSNumber *apnNotifyValue = @1;
     if ([TTUserSettingsManager apnsNewAlertClosed]) apnNotifyValue = @0;

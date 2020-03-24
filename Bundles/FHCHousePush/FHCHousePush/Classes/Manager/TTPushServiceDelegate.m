@@ -87,7 +87,9 @@ typedef void(^NotificationActionCompletionBlock) (void);
         param.deviceId = deviceID;
         param.installId = installID;
         param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
-        
+        // todo zjing test
+//        param.versionCode = [TTSandBoxHelper fhVersionCode];
+
         BDUGNotificationConfig *config = nil;
         if (@available(iOS 10.0, *)) {
             BDUGNotificationAction *actionDislike = [BDUGNotificationAction actionWithIdentifier:kNotificationActionIdentifierDislike

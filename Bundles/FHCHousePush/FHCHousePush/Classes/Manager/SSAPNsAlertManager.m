@@ -191,10 +191,6 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
                             wrapperTrackEventWithCustomKeys(@"apn", @"news_alert_view", rid, nil, nil);
                         }
-                        if (![TTPushServiceDelegate enable]) {
-                            //pushsdk 新增v3埋点
-                            [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"alert" postBack:postBack];
-                        }
                     }
                 } willHideBlock:nil didHideBlock:nil];
                 
@@ -316,15 +312,6 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                 }
                 if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
                     wrapperTrackEventWithCustomKeys(@"apn", @"news_alert_view", rid, nil, nil);
-                }
-                
-                //V3埋点
-                // NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
-                // [params setValue:rid forKey:@"rule_id"];
-                // [params setValue:@"alert" forKey:@"click_position"];
-                // [TTTrackerWrapper eventV3:@"push_click" params:[params copy] isDoubleSending:YES];
-                if (![TTPushServiceDelegate enable]) {
-                    [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"alert" postBack:postBack];
                 }
             }];
             [alert showFrom:[TTUIResponderHelper topmostViewController] animated:YES];

@@ -133,27 +133,8 @@ static NSUInteger reportTryCount = 0;
                 [wself.class reportDeviceTokenByAppLogout];
             }
         }];
-    } else if ([TTPushServiceDelegate enable]) {
-           [BDUGPushManager handleDeviceToken:[BDUGPushService deviceToken]];
     } else {
-        TTUploadTokenRequestParam *param = [TTUploadTokenRequestParam requestParam];
-        param.token = [FHCHandleAPNSTask deviceTokenString];
-        [TouTiaoPushSDK sendRequestWithParam:param completionHandler:^(TTBaseResponse *response) {
-            if(!response.error && [[response.jsonObj valueForKey:@"message"] isEqualToString:@"success"]) {
-                reportTryCount = 0;
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"push_update_token_result" metric:nil category:@{@"message":@"success",@"has_token":@(1)} extra:nil];
-            } else {
-                [self.class reportDeviceTokenByAppLogout];
-                NSMutableDictionary *categoryDict = @{}.mutableCopy;
-                NSMutableDictionary *extraDict = @{}.mutableCopy;
-                NSString *message = [response.jsonObj valueForKey:@"message"];
-                if ([message isKindOfClass:[NSString class]]) {
-                    categoryDict[@"message"] = message;
-                }
-                categoryDict[@"has_token"] = param.token.length > 0 ? @(1): @(0);
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"push_update_token_result" metric:nil category:categoryDict extra:extraDict];
-            }
-        }];
+           [BDUGPushManager handleDeviceToken:[BDUGPushService deviceToken]];
     }
 }
 
