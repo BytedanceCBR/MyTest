@@ -805,6 +805,15 @@
     }
 }
 
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
+{
+    if (scrollView == self.tableViewV) {
+        [self setUpTableScrollOffsetZero];
+        return YES;
+    }
+    return NO;
+}
+
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (scrollView == self.homeViewController.scrollView) {
         [self setUpHomeItemScrollView:YES];
