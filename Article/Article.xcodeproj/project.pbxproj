@@ -2238,7 +2238,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
-				LLVM_LTO = YES_THIN;
+				LLVM_LTO = NO;
 				MARKETING_VERSION = 0.9.5;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
@@ -2412,7 +2412,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
-				LLVM_LTO = YES_THIN;
+				LLVM_LTO = NO;
 				MARKETING_VERSION = 0.9.5;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
