@@ -57,7 +57,7 @@ def fhPods
 #     'DelegateForC'
 #     ]
 
-     pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '61fffaa1e429d12740521835de6e5dbae8e3ddc8', :subspecs => [
+     pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '117cc7c39042d7b258b19ce7fd8b34a2d2740a6f', :subspecs => [
      'Core',
      'DelegateForC'
      ]
