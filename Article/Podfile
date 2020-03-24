@@ -44,9 +44,9 @@ def fhPods
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
     pod 'ios_house_filter' , '1.0.2'
     
-    pod 'FHCommonUI', '0.0.17-rc.0'
+#    pod 'FHCommonUI', '0.0.17-rc.0'
 #    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
-    #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '21f52981452d7e1e319da3a07301184164b72251'
+    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '0a29266dedfe063ff7997651490ac175452f1839'
 
 #   pod 'FHPopupViewCenter', :path => '../../FHPopupViewCenter', :subspecs => [
 #   'Core',
