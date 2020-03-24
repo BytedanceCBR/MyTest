@@ -30,6 +30,7 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.saveWebPhone" for:@"saveWebPhone"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.config" for:@"config"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.getStatusBarInfo" for:@"getStatusBarInfo"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.getArticleConfig" for:@"getArticleConfig"];
 
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTNetwork.fetch" for:@"fetch"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTNetwork.getNetCommonParams" for:@"getNetCommonParams"];

@@ -40,6 +40,23 @@ static ArticleJSManager * shareManager;
     return shareManager;
 }
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _feArticleH5Config = [[NSUserDefaults standardUserDefaults] valueForKey:@"f_fe_article_config_key"];
+    }
+    return self;
+}
+
+- (void)setFeArticleH5Config:(NSDictionary *)feArticleH5Config {
+    _feArticleH5Config = feArticleH5Config;
+    if (feArticleH5Config) {
+        [[NSUserDefaults standardUserDefaults] setValue:feArticleH5Config forKey:@"f_fe_article_config_key"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
 
 /* 新的详情页前端代码更新逻辑
  * https://wiki.bytedance.com/pages/viewpage.action?pageId=67605605

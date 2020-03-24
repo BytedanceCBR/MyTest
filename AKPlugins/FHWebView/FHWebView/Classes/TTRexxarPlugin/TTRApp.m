@@ -21,6 +21,7 @@
 #import "TTAccount.h"
 #import "TTDeviceHelper.h"
 #import "FHEnvContext.h"
+#import "ArticleJSManager.h"
 
 extern NSString *const kFHPLoginhoneNumberCacheKey;
 
@@ -190,6 +191,20 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                                      @"batteryLevel": [NSNumber numberWithFloat:(batteryLevel*100)],
                                      @"timeStyle": [NSNumber numberWithBool:isTimeStyleTwelve],
                                      @"time" :@(timeStamp)});
+    }
+}
+
+- (void)getArticleConfigWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    NSDictionary *dicData = [ArticleJSManager shareInstance].feArticleH5Config;
+    if (dicData && [dicData isKindOfClass:[NSDictionary class]]) {
+        if (callback) {
+            callback(TTRJSBMsgSuccess, @{@"code": @"1"});
+        }
+    } else {
+        if (callback) {
+            callback(TTRJSBMsgFailed, @{@"code": @"0", @"msg": @"fe_article_h5_config 为空"});
+        }
     }
 }
 

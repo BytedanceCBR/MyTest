@@ -334,6 +334,13 @@
         [ArticleJSManager downloadAssetsWithUrl:url];
     }
     
+    if ([[dSettings allKeys] containsObject:@"f_article_h5_config"]) {
+        NSDictionary *value = [dSettings tt_dictionaryValueForKey:@"f_article_h5_config"];
+        if (value) {
+             [ArticleJSManager shareInstance].feArticleH5Config = [value copy];
+        }
+    }
+    
     if ([[dSettings allKeys] containsObject:@"tt_local_image_download_setting"]) {
         NSDictionary *download_setting = [dSettings tt_dictionaryValueForKey:@"tt_local_image_download_setting"];
         [TTLocalResourceDownloader setLocalResourceNewVersion:[download_setting tt_intValueForKey:@"version"]];
