@@ -20,6 +20,7 @@
 #import "CommonURLSetting.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "UIViewController+Track.h"
+#import "FHHomeTopCitySwitchView.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -110,7 +111,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
-    
     self.automaticallyAdjustsScrollViewInsets = NO;
     //1.初始化layout
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -128,6 +128,16 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor themeGray7];
     [self.containerView addSubview:_collectionView];
+    
+    
+    [self initCitySwitchView];
+}
+
+- (void)initCitySwitchView
+{
+    self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, self.topView.frame.origin.y + self.topView.frame.size.height, MAIN_SCREEN_WIDTH, 42)];
+    self.switchCityView.backgroundColor = [UIColor clearColor];
+    [self.containerView addSubview:self.switchCityView];
 }
 
 - (void)initConstraints {
