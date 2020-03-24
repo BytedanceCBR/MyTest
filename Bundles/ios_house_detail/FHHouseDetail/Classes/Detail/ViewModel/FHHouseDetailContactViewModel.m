@@ -151,9 +151,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)refreshMessageDot {
     if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
-        [_navBar displayMessageDot:YES];
+        [_navBar displayMessageDot:[[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]];
     } else {
-        [_navBar displayMessageDot:NO];
+        [_navBar displayMessageDot:0];
     }
 }
 

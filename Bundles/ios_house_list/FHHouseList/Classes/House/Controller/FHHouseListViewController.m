@@ -174,6 +174,11 @@
     if (self.houseType == FHHouseTypeSecondHandHouse) {
         type = FHFakeInputNavbarTypeMessageAndMap;
     }
+    
+    if (self.houseType == FHHouseTypeRentHouse || self.houseType == FHHouseTypeNewHouse) {
+        type = FHFakeInputNavbarTypeMessage;
+    }
+    
     if ([self.paramObj.sourceURL.host rangeOfString:@"commute_list"].location != NSNotFound) {
         //通勤找房不显示地图
         type = FHFakeInputNavbarTypeDefault;
@@ -200,7 +205,7 @@
     _navbar.messageActionBlock = ^{
         [wself.viewModel showMessageList];
     };
-    
+
     _navbar.tapInputBar = ^{
         [wself.viewModel showInputSearch];
     };
@@ -588,11 +593,13 @@
 
 -(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder inputText:(NSString *)inputText{
     
-    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute ) || houseType == FHHouseTypeSecondHandHouse) {
+    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute ) || houseType == FHHouseTypeSecondHandHouse ||houseType == FHHouseTypeNewHouse) {
         if (houseType == FHHouseTypeSecondHandHouse) {
             // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageAndMap];
-        } else {
+        } else if(houseType == FHHouseTypeRentHouse ||houseType == FHHouseTypeNewHouse){
+            [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessage];
+        } else{
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMap];
         }
     }else {

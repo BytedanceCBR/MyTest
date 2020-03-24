@@ -316,7 +316,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar {
     self.navbar = naviBar;
-    if (_houseType == FHHouseTypeSecondHandHouse) {
+    if (_houseType == FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeNewHouse || _houseType == FHHouseTypeRentHouse) {
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHMessageUnreadChangedNotification" object:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHChatMessageUnreadChangedNotification" object:nil];
@@ -326,9 +326,9 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)refreshMessageDot {
     if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
-        [self.navbar displayMessageDot:YES];
+        [self.navbar displayMessageDot:[[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]];
     } else {
-        [self.navbar displayMessageDot:NO];
+        [self.navbar displayMessageDot:0];
     }
 }
 
@@ -1353,7 +1353,7 @@ extern NSString *const INSTANT_DATA_KEY;
 #pragma mark 消息列表
 - (void)showMessageList {
     // 二手列表页
-    if (_houseType == FHHouseTypeSecondHandHouse) {
+    if (_houseType == FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeRentHouse || _houseType == FHHouseTypeNewHouse) {
         if (self.closeConditionFilter) {
             self.closeConditionFilter();
         }

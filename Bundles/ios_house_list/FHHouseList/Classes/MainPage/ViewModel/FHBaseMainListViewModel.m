@@ -231,7 +231,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)addNotiWithNaviBar:(FHFakeInputNavbar *)naviBar {
     self.navbar = naviBar;
-    if (_mainListPage && _houseType == FHHouseTypeSecondHandHouse) {
+    if ((_mainListPage && _houseType == FHHouseTypeSecondHandHouse) || _houseType == FHHouseTypeRentHouse || _houseType == FHHouseTypeNewHouse) {
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHMessageUnreadChangedNotification" object:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHChatMessageUnreadChangedNotification" object:nil];
@@ -240,10 +240,10 @@ extern NSString *const INSTANT_DATA_KEY;
 }
 
 - (void)refreshMessageDot {
-    if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
-        [self.navbar displayMessageDot:YES];
+      if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
+        [self.navbar displayMessageDot:[[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]];
     } else {
-        [self.navbar displayMessageDot:NO];
+        [self.navbar displayMessageDot:0];
     }
 }
 
@@ -918,7 +918,7 @@ extern NSString *const INSTANT_DATA_KEY;
 - (void)showMessageList {
     [self.houseFilterViewModel closeConditionFilterPanel];
     // 二手房大类页
-    if (_mainListPage && _houseType == FHHouseTypeSecondHandHouse) {
+    if ((_mainListPage && _houseType == FHHouseTypeSecondHandHouse) || _houseType == FHHouseTypeRentHouse || _houseType == FHHouseTypeNewHouse) {
 
         NSMutableDictionary *param = @{}.mutableCopy;
         param[UT_PAGE_TYPE] = [self categoryName] ? : @"be_null";
