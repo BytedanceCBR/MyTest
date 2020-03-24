@@ -28,7 +28,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        UIImage *img = ICON_FONT_IMG(13, @"\U0000e673", nil);//"icon_close"
+        UIImage *img = ICON_FONT_IMG(24, @"\U0000e673", nil);//"icon_close"
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_closeButton setImage:img forState:UIControlStateNormal];
         [_closeButton setImage:img forState:UIControlStateHighlighted];

@@ -1273,8 +1273,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
         MAPolygonRenderer *polygonRenderer = [[MAPolygonRenderer alloc] initWithPolygon:overlay];
         polygonRenderer.lineWidth   = 6.f;
-        polygonRenderer.strokeColor = [UIColor themeOrange1];
-        polygonRenderer.fillColor   = RGBA(0xff, 0x58, 0x69,0.2);
+        polygonRenderer.strokeColor = [UIColor themeOrange4];
+        polygonRenderer.fillColor   = RGBA(0xff, 0x96, 0x29,0.1);
         
         return polygonRenderer;
     }else if ([overlay isKindOfClass:[MAPolyline class]]){
