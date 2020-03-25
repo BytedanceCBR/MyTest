@@ -1353,7 +1353,7 @@ extern NSString *const INSTANT_DATA_KEY;
 #pragma mark 消息列表
 - (void)showMessageList {
     // 二手列表页
-    if (_houseType == FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeRentHouse || _houseType == FHHouseTypeNewHouse) {
+//    if (_houseType == FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeRentHouse || _houseType == FHHouseTypeNewHouse || ) {
         if (self.closeConditionFilter) {
             self.closeConditionFilter();
         }
@@ -1376,7 +1376,7 @@ extern NSString *const INSTANT_DATA_KEY;
         dict[@"tracer"] = tracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }
+//    }
 }
 
 -(void)refreshHouseListUrlCallback:(NSString *)openUrl {
