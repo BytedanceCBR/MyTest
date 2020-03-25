@@ -132,14 +132,13 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                 if ([schemaReplaceString rangeOfString:@"gd_label"].location != NSNotFound) {
                     [schemaReplaceString replaceOccurrencesOfString:@"click_apn" withString:@"click_news_alert" options:NSLiteralSearch range:NSMakeRange(0, schemaReplaceString.length)];
                 }
-                
-                if ([[TTRoute sharedRoute] canOpenURL:[TTStringHelper URLWithURLString:schemaReplaceString]]) {
+                NSURL *openURL = [TTStringHelper URLWithURLString:schemaReplaceString];
+                if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
                     // [ExploreMovieView removeAllExploreMovieView]; 全屏不显示推送了
                     //有可能当前有视频全屏，等视频完全退出后再打开推送来的文章
                     //在旧的navigation架构下，使用的是pushViewController:animated:方法，如果push的时候，还有presentedViewController在上面的话，UIKit会两次调用pushViewController:方法，而后一次由于TTNavigationController做了保护，而无法完成push操作
                     //所以用让openURL操作慢0.1s，确保视频已经完全退出
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        NSURL *openURL = [TTStringHelper URLWithURLString:schemaReplaceString];
 
                         TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
                         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:5];
