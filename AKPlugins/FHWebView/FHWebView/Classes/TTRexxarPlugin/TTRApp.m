@@ -197,9 +197,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)getArticleConfigWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
 {
     NSDictionary *dicData = [ArticleJSManager shareInstance].feArticleH5Config;
-    if (dicData && [dicData isKindOfClass:[NSDictionary class]]) {
+    if (dicData && [dicData isKindOfClass:[NSDictionary class]] && dicData[@"article_card_url"]) {
+        NSString *article_card_url = dicData[@"article_card_url"];
+        if (article_card_url == nil) {
+            article_card_url = @"";// 避免crash
+        }
         if (callback) {
-            callback(TTRJSBMsgSuccess, @{@"code": @"1"});
+            callback(TTRJSBMsgSuccess, @{@"code": @"1",@"article_card_url":article_card_url});
         }
     } else {
         if (callback) {
