@@ -21,7 +21,8 @@
 #import "FHHomeCellHelper.h"
 #import "UIImage+FIconFont.h"
 #import "TTDeviceHelper.h"
-
+#import "FHPopupViewManager.h"
+#import "FHHouseBridgeManager.h"
 @interface FHHomeTopCitySwitchView()
 @property (nonatomic,strong) UIView *bgView;
 @property (nonatomic,strong) UILabel *titleLabel;
@@ -78,31 +79,53 @@
     [_closeBtn setFrame:CGRectMake(self.bgView.frame.size.width - 16 - 10, 13, 16, 16)];
 //    [_closeBtn setBackgroundColor:[UIColor redColor]];
     
+    
     [self updateFrames];
 }
 
 
 - (void)updateFrames
 {
+    
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+ 
     NSString *stringTitle =@"定位显示你在";
-    NSString *stringPosition = [NSString stringWithFormat:@"\"%@\"",@"乌鲁木齐"];
-    
-    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:stringTitle attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont themeFontSemibold:14]}];
-    
-    NSAttributedString *attrPosString = [[NSAttributedString alloc] initWithString:stringPosition attributes:@{NSForegroundColorAttributeName:[UIColor themeOrange4],NSFontAttributeName:[UIFont themeFontSemibold:14]}];
-    [attrString appendAttributedString:attrPosString];
-    _titleLabel.attributedText =attrString;
-    
-    
-    NSString *switchString = [NSString stringWithFormat:@"切换到%@",@"乌鲁木齐"];
-    CGFloat btnWidht = switchString.length * 15;
-    [_switchBtn.titleLabel setFont:[UIFont themeFontSemibold:12]];
-    [_switchBtn setTitle:switchString forState:UIControlStateNormal];
-    [_switchBtn setFrame:CGRectMake(self.bgView.frame.size.width - 36 - btnWidht, 8, btnWidht, 26)];
+    if (configData.citySwitch.cityName) {
+        NSString *stringPosition = [NSString stringWithFormat:@" \"%@\"",configData.citySwitch.cityName];
+        
+        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:stringTitle attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont themeFontSemibold:14]}];
+        
+        NSAttributedString *attrPosString = [[NSAttributedString alloc] initWithString:stringPosition attributes:@{NSForegroundColorAttributeName:[UIColor themeOrange4],NSFontAttributeName:[UIFont themeFontSemibold:14]}];
+        [attrString appendAttributedString:attrPosString];
+        _titleLabel.attributedText =attrString;
+        
+        
+        NSString *switchString = [NSString stringWithFormat:@"切换到%@",configData.citySwitch.cityName];
+        CGFloat btnWidht = switchString.length * 15;
+        [_switchBtn.titleLabel setFont:[UIFont themeFontSemibold:12]];
+        [_switchBtn setTitle:switchString forState:UIControlStateNormal];
+        [_switchBtn setFrame:CGRectMake(self.bgView.frame.size.width - 36 - btnWidht, 8, btnWidht, 26)];
+    }
 }
 
 - (void)switchBtnClick
 {
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    [[FHPopupViewManager shared] outerPopupViewHide];
+    if (configData.citySwitch.openUrl) {
+        [FHEnvContext sharedInstance].refreshConfigRequestType = @"switch_alert";
+        
+        [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = YES;
+        [FHEnvContext openSwitchCityURL:configData.citySwitch.openUrl completion:^(BOOL isSuccess) {
+            // 进历史
+            if (isSuccess) {
+                [[[FHHouseBridgeManager sharedInstance] cityListModelBridge] switchCityByOpenUrlSuccess];
+            }
+        }];
+        NSDictionary *params = @{@"click_type":@"switch",
+                                 @"enter_from":@"default"};
+        [FHEnvContext recordEvent:params andEventKey:@"city_click"];
+    }
     
 }
 
