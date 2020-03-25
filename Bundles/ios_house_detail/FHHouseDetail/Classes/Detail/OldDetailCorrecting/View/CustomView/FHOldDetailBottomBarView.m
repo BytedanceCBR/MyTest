@@ -258,6 +258,16 @@
                 make.left.mas_equalTo(self.leftView.mas_right).offset(20);
             }];
         }
+    }else {
+        if (contactPhone.showRealtorinfo == 1) {
+                [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self);
+                make.right.mas_equalTo(self).offset(-20);
+                make.width.mas_equalTo(AdaptOffset(88));
+                make.height.mas_equalTo(44);
+            }];
+        }
+        
     }
     void (^updateBlock)() = ^{
         [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
