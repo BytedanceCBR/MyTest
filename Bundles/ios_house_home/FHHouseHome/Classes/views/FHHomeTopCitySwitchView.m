@@ -46,7 +46,7 @@
 - (void)setupSubviews
 {
     ///背景图，支持下发
-    _bgView = [[SSThemedImageView alloc] init];
+    _bgView = [[UIView alloc] init];
     _bgView.clipsToBounds = YES;
     _bgView.layer.masksToBounds = YES;
     _bgView.layer.cornerRadius = 10;
@@ -110,6 +110,9 @@
 
 - (void)switchBtnClick
 {
+    
+    [self removeFromSuperview];
+    
     FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
     [[FHPopupViewManager shared] outerPopupViewHide];
     if (configData.citySwitch.openUrl) {
@@ -131,7 +134,7 @@
 
 - (void)closeBtnClick
 {
-    
+    [self removeFromSuperview];
 }
 
 /*
