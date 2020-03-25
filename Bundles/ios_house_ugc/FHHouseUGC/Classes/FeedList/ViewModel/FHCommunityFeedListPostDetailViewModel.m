@@ -1005,7 +1005,7 @@
 
 - (void)trackCardShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dic =  [self trackDict:cellModel rank:rank];
-    if(cellModel.attachCardInfo.extra){
+    if(cellModel.attachCardInfo.extra && cellModel.attachCardInfo.extra.event.length > 0){
         //是房源卡片
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         dict[@"page_type"] = [self pageType];

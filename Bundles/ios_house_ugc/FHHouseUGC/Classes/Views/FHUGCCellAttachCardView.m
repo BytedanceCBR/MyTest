@@ -21,6 +21,7 @@
 #import "FHUGCCellHelper.h"
 #import "TTSettingsManager.h"
 #import "FHUserTracker.h"
+#import "FHHouseContactDefines.h"
 
 @interface FHUGCCellAttachCardView ()
 
@@ -270,21 +271,31 @@
 - (void)imAction:(NSURL *)openUrl {
     TTRouteParamObj *obj =[[TTRoute sharedRoute] routeParamObjWithURL:openUrl];
     
-    NSString *source = @"weitoutiao";
-    NSString *from = @"weitoutiao";
-    
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"source"] = source;
+//    NSString *source = @"";
+    NSString *from = @"";
+    NSString *enterFrom = self.cellModel.tracerDic[@"enter_from"];
+    if(self.cellModel.isFromDetail){
+        from = @"app_weitoutiao";
+//        source = @"1.6";
+        dict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+        dict[kFHCluePage] = @(FHClueIMPageTypeUGCDetail);
+    }else{
+        from = @"app_feed_weitoutiao";
+//        source = @"1.5";
+        dict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+        dict[kFHCluePage] = @(FHClueIMPageTypeUGCFeed);
+    }
+    
+//    dict[@"source"] = source;
     dict[@"from"] = from;
+    dict[@"target_type"] = @(2);
     dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
     dict[@"element_from"] = [self elementFrom];
-    //    dict[@"origin_from"] = @"be_null";
     dict[@"log_pb"] = self.cellModel.tracerDic[@"log_pb"] ?: @"be_null";
-    //    dict[@"origin_search_id"] = @"be_null";
     dict[@"rank"] = self.cellModel.tracerDic[@"rank"] ?: @"be_null";
     dict[@"card_type"] = self.cellModel.tracerDic[@"card_type"] ? : @"be_null";
     dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
-    //    dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
     dict[@"realtor_id"] = obj.queryParams[@"target_user_id"] ?: @"be_null";
     dict[@"house_type"] = @"old";
     dict[@"impr_id"] = self.cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";
@@ -294,9 +305,9 @@
     TRACK_EVENT(@"click_im", dict);
 
     NSMutableDictionary * userInfoDict = @{@"tracer":dict, @"from": from}.mutableCopy;
-    if (!isEmptyString(source)) {
-        userInfoDict[@"source"] = source;
-    }
+//    if (!isEmptyString(source)) {
+//        userInfoDict[@"source"] = source;
+//    }
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
