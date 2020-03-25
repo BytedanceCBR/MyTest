@@ -512,3 +512,23 @@
 }
 @end
 
+@implementation FHFeedUGCContentAttachCardInfoExtraModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"houseType": @"house_type",
+    @"fromGid": @"from_gid",
+    @"imprId": @"impr_id",
+    @"groupId": @"group_id",
+    @"groupSource": @"group_source",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+

@@ -3,6 +3,16 @@
 #import "FHFeedContentModel.h"
 #import "FHUGCShareManager.h"
 NS_ASSUME_NONNULL_BEGIN
+@interface FHFeedUGCContentAttachCardInfoExtraModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *groupSource;
+@property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, copy , nullable) NSString *houseType;
+@property (nonatomic, copy , nullable) NSString *fromGid;
+@property (nonatomic, copy , nullable) NSString *groupId;
+@property (nonatomic, copy , nullable) NSString *event;
+@end
+
 @interface FHFeedUGCContentAttachCardInfoButtonModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *name;
@@ -26,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoCoverImageModel *coverImage ;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *schema;
+@property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoExtraModel *extra ;
 @end
 
 @interface FHFeedUGCContentCommunityModel : JSONModel
