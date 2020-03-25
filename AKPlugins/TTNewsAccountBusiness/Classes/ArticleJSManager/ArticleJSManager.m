@@ -18,7 +18,7 @@
 #define kArticleJSManagerUseJSInBundleKey @"kArticleJSManagerUseJSInBundleKey" // 内测版本控制是否使用下发setting的开关，防止较长项目开发过程中上线的影响
 
 // @"13" 问答详情页新版内容升级
-static NSString *const kJSVersionInBundle = @"283";  // 客户端内置资源版本号
+static NSString *const kJSVersionInBundle = @"1825";  // 客户端内置资源版本号
 
 @interface ArticleJSManager ()
 @property(nonatomic, strong)NSURLSessionDownloadTask *downloadTask;
