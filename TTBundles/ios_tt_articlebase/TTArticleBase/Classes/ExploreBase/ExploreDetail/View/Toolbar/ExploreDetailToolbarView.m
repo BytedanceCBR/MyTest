@@ -75,7 +75,7 @@
         _topButton.hidden = YES;
 
         self.badgeLabel = [[SSThemedLabel alloc] init];
-        self.badgeLabel.backgroundColorThemeKey = @"red1";
+        self.badgeLabel.backgroundColorThemeKey = @"orange1";
         self.badgeLabel.textColorThemeKey = kColorText8;
         self.badgeLabel.font = [UIFont systemFontOfSize:8];
         self.badgeLabel.layer.cornerRadius = 5;
