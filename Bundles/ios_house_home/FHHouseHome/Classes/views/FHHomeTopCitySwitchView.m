@@ -110,7 +110,6 @@
 
 - (void)switchBtnClick
 {
-    
     [self removeFromSuperview];
     
     FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -129,12 +128,22 @@
                                  @"enter_from":@"default"};
         [FHEnvContext recordEvent:params andEventKey:@"city_click"];
     }
-    
+    [self sendTraceClick:YES];
 }
 
 - (void)closeBtnClick
 {
     [self removeFromSuperview];
+    [self sendTraceClick:NO];
+}
+
+- (void)sendTraceClick:(BOOL)isConfirm
+{
+   NSMutableDictionary *popTraceParams = [NSMutableDictionary new];
+   [popTraceParams setValue:@"maintab" forKey:@"page_type"];
+   [popTraceParams setValue:@"city_switch" forKey:@"popup_name"];
+   [popTraceParams setValue:isConfirm ? @"confirm" : @"close" forKey:@"click_position"];
+   [FHEnvContext recordEvent:popTraceParams andEventKey:@"popup_click"];
 }
 
 /*

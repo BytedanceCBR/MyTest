@@ -149,6 +149,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
            
         self.totalNum = 60;
         self.switchTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(downCounter) userInfo:nil repeats:YES];
+        
+        NSMutableDictionary *popTraceParams = [NSMutableDictionary new];
+        [popTraceParams setValue:@"maintab" forKey:@"page_type"];
+        [popTraceParams setValue:@"city_switch" forKey:@"popup_name"];
+        [FHEnvContext recordEvent:popTraceParams andEventKey:@"popup_show"];
     }
 }
 
