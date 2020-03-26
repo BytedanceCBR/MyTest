@@ -144,6 +144,11 @@
             NSMutableDictionary *extraDict = nil;
             
             BOOL success = NO;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
+
             if (response.statusCode == 200 ) {
                 if ([model respondsToSelector:@selector(status)]) {
                     NSString *status = [model performSelector:@selector(status)];
@@ -163,7 +168,7 @@
                 code = response.statusCode;
                 resultType = FHNetworkMonitorTypeNetFailed;
             }
-            [FHMainApi addRequestLog:logPath?:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict];
+            [FHMainApi addRequestLog:logPath?:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
