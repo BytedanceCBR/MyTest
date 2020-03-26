@@ -26,6 +26,7 @@
 #import "FHHouseUGCAPI.h"
 #import "FHIntroduceManager.h"
 #import "FHPopupViewManager.h"
+#import "TTSettingsManager.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -409,7 +410,10 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 [wSelf updateAllConfig:model isNeedDiff:NO];
                 
                 
-                if(!YES)
+                NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+                BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_switch_city_top_close"];
+                
+                if(boolOffline)
                 {
                     // 城市切换弹窗
                      if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity && !isShowIntoduceView) {
@@ -422,9 +426,6 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     }
                 }
              
-                
-
-                
                 //                BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
                 //
                 //                if (!isHasFindHouseCategory && [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {

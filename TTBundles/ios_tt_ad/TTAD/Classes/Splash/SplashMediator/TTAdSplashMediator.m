@@ -42,6 +42,7 @@
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
 #import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "TTSettingsManager.h"
 
 const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回最长忍耐时间 30 000ms
 
@@ -267,7 +268,11 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 {
     [[FHPopupViewManager shared] outerPopupViewHide];
     FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if ([FHLocManager sharedInstance].isShowSwitch) {
+    
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_switch_city_top_close"];
+    
+    if ([FHLocManager sharedInstance].isShowSwitch && boolOffline) {
         if ([model.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.citySwitch.enable boolValue]) {
             [[FHLocManager sharedInstance] showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.citySwitch.cityName] openUrl:model.citySwitch.openUrl];
         }
