@@ -101,7 +101,7 @@
     self.tipImageView.image =  ICON_FONT_IMG(24, text, textColor);
     
     self.titleLabel.text  = model.title;
-    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:ok?[UIColor themeGreen1]:[UIColor themeRed1]};
+    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:ok?[UIColor themeGreen1]:[UIColor themeOrange1]};
     
     self.stateLabel.attributedText = [[NSAttributedString alloc] initWithString:model.subTitle?:@"" attributes:attr];
     
