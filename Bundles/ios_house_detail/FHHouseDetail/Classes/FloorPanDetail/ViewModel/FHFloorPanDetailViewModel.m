@@ -102,6 +102,7 @@
     imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
     imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeFloorplan];
     imExtra[@"from"] = @"app_floorplan";
+    imExtra[@"source"] = @"1.35";
     [self.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 

@@ -254,7 +254,7 @@
                         traceParam[@"rank"] = @(floorPanInfoModel.index);
                         traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
                         traceParam[@"element_from"] = @"house_model";
-                        
+                        traceParam[@"from"] = @"app_newhouse_floorplan";
                         NSDictionary *dict = @{@"house_type":@(1),
                                                @"tracer": traceParam
                                                };
@@ -265,6 +265,13 @@
                         NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams];
                         [infoDict addEntriesFromDictionary:subPageParams];
                         infoDict[@"tracer"] = traceParam;
+                        
+                        // 线索参数
+                        infoDict[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
+                        infoDict[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNewHouseApartmentConsult];
+                        infoDict[@"source"] = @"1.39";
+                        // ---
+                        
                         TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
                         
                         // JOKER: 解析im_openurl，并跳转im咨询户型
