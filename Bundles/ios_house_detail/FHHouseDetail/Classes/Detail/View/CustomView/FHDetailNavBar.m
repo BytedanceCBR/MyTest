@@ -218,7 +218,7 @@
             make.bottom.mas_equalTo(self);
         }];
         [_messageDotNumber mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.messageBtn.mas_centerX).offset(2);
+            make.right.mas_equalTo(self.messageBtn.mas_right).offset(5);
             make.height.mas_equalTo(16);
             make.width.mas_equalTo(16);
             make.top.mas_equalTo(self.messageBtn).offset(6);

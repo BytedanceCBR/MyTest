@@ -46,7 +46,7 @@ def fhPods
     
 #    pod 'FHCommonUI', '0.0.17-rc.0'
 #    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
-    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '0a29266dedfe063ff7997651490ac175452f1839'
+    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => 'ab769d9fe081f65e5e6edcc3dd89c03dfe254cb4'
 
 #   pod 'FHPopupViewCenter', :path => '../../FHPopupViewCenter', :subspecs => [
 #   'Core',
