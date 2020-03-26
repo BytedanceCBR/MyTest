@@ -266,53 +266,11 @@
                         [infoDict addEntriesFromDictionary:subPageParams];
                         infoDict[@"tracer"] = traceParam;
                         TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-                        // JOKER: 构造测试户型卡片数据，服务端开发完成后替换为服务端下发跳转链接，这里仅前置开发测试使用
-                        if([self.baseViewModel.detailData isKindOfClass:FHDetailNewModel.class]) {
-                            
-                            FHDetailNewModel *houseNewDetailViewModel = (FHDetailNewModel *)self.baseViewModel.detailData;
-                            
-                            NSString *realtorId = houseNewDetailViewModel.data.highlightedRealtor.realtorId;
-                            NSString *realtorName = houseNewDetailViewModel.data.highlightedRealtor.realtorName;
-                            NSString *targetId = floorPanInfoModel.id;
-                            NSString *targetType = @(FHHouseTypeApartment).stringValue;
-                            NSString *house_cover = [floorPanInfoModel.images.firstObject url];
-                            NSString *house_title = floorPanInfoModel.title;
-                            NSString *house_des = [NSString stringWithFormat:@"建面 %@ 朝向 %@", floorPanInfoModel.squaremeter, floorPanInfoModel.facingDirection];
-                            NSString *house_avg_price = floorPanInfoModel.pricingPerSqm;
-                            NSString *house_id = houseNewDetailViewModel.data.coreInfo.id;
-                            NSString *house_type = @(FHHouseTypeNewHouse).stringValue;
-                            NSString *auto_text = @"您可以介绍一下这个户型吗？";
-                            NSString *house_price = @"1200万"; // 后端没有对应总价的字段，写死一个用来测试
-                            
-                            NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://open_single_chat"];
-                            NSURLQueryItem *target_user_id_item = [[NSURLQueryItem alloc] initWithName:@"target_user_id" value:realtorId];
-                            NSURLQueryItem *chat_title_item = [[NSURLQueryItem alloc] initWithName:@"chat_title" value:realtorName];
-                            NSURLQueryItem *target_id_item = [[NSURLQueryItem alloc] initWithName:@"target_id" value:targetId];
-                            NSURLQueryItem *target_type_item = [[NSURLQueryItem alloc] initWithName:@"target_type" value:targetType];
-                            NSURLQueryItem *house_cover_item = [[NSURLQueryItem alloc] initWithName:@"house_cover" value:house_cover];
-                            NSURLQueryItem *house_des_item = [[NSURLQueryItem alloc] initWithName:@"house_des" value:house_des];
-                            NSURLQueryItem *house_title_item = [[NSURLQueryItem alloc] initWithName:@"house_title" value:house_title];
-                            NSURLQueryItem *house_avg_price_item = [[NSURLQueryItem alloc] initWithName:@"house_avg_price" value:house_avg_price];
-                            NSURLQueryItem *house_price_item = [[NSURLQueryItem alloc] initWithName:@"house_price" value:house_price];
-                            NSURLQueryItem *house_id_item = [[NSURLQueryItem alloc] initWithName:@"house_id" value:house_id];
-                            NSURLQueryItem *house_type_item = [[NSURLQueryItem alloc] initWithName:@"house_type" value:house_type];
-                            NSURLQueryItem *auto_text_item = [[NSURLQueryItem alloc] initWithName:@"auto_text" value:auto_text];
-                            
-                            components.queryItems = @[
-                                target_user_id_item,
-                                chat_title_item,
-                                target_id_item,
-                                target_type_item,
-                                house_cover_item,
-                                house_des_item,
-                                house_title_item,
-                                house_price_item,
-                                house_avg_price_item,
-                                house_id_item,
-                                house_type_item,
-                                auto_text_item
-                            ];
-                            [[TTRoute sharedRoute] openURLByPushViewController:components.URL userInfo:info];
+                        
+                        // JOKER: 解析im_openurl，并跳转im咨询户型
+                        if(floorPanInfoModel.imOpenUrl.length > 0) {
+                            NSURL *imOpenURL = [NSURL URLWithString:floorPanInfoModel.imOpenUrl];
+                            [[TTRoute sharedRoute] openURLByPushViewController:imOpenURL userInfo:info];
                         }
                     }
                 }
