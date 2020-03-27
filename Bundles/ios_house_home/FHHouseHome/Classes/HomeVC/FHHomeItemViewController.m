@@ -179,6 +179,12 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         NSMutableDictionary *stayTabParams = [NSMutableDictionary new];
         if (self.traceEnterTopTabache) {
             [stayTabParams addEntriesFromDictionary:self.traceEnterTopTabache];
+        }else
+        {
+            [stayTabParams setValue:@"click" forKey:@"enter_type"];
+            [stayTabParams setValue:@"maintab" forKey:@"enter_from"];
+            [stayTabParams setValue:@"f_find_house" forKey:@"category_name"];
+
         }
         NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
         if (duration) {
@@ -233,8 +239,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     if (self.houseType == _listModel.houseType) {
         [self currentViewIsDisappeared];
-    }
-    
+    }    
     self.isDisAppeared = YES;
 }
 

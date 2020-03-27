@@ -413,6 +413,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
                 BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_switch_city_top_close"];
                 
+                //setting控制开关
                 if(boolOffline)
                 {
                     // 城市切换弹窗
