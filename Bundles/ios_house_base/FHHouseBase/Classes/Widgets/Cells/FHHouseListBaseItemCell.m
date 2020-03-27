@@ -15,6 +15,7 @@
 #import "FHHouseListBaseItemModel.h"
 #import <lottie-ios/Lottie/LOTAnimationView.h>
 #import "FHDetailCommonDefine.h"
+
 @interface FHHouseListBaseItemCell()
 @property (nonatomic, weak) UIImageView *mainIma;
 @property (nonatomic, weak) UIImageView *mainImaShadow;
@@ -26,6 +27,12 @@
 @property (nonatomic, weak) UIView *houseMainImageBackView;
 @property(nonatomic, weak) UIImageView *houseVideoImageView;
 @property (nonatomic, weak) LOTAnimationView *vrLoadingView;
+//针对于新房混盘卡片
+@property (nonatomic, weak) UIImageView *radiusView;
+@property (nonatomic, weak) UIView *lineView;
+@property (nonatomic, weak) UIImageView *mainImaTag;
+@property(nonatomic, weak) UIView *houseCellBackView;//背景色
+
 
 @property (nonatomic, copy) NSString *reuseIdentifier;
 @end
@@ -36,17 +43,80 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.reuseIdentifier = reuseIdentifier;
+        //周边新盘，我关注的新房
         if ([self.reuseIdentifier isEqualToString:@"FHNewHouseCell"] ) {
               [self initNewHouseUI];
-          }else {
+        //首页页插入新房
+        }else if([self.reuseIdentifier isEqualToString:@"FHSynchysisNewHouseCell"] || [self.reuseIdentifier isEqualToString:@"FHListSynchysisNewHouseCell"]){
+            [self initSynchysisNewHouseUI];
+        }else {
               [self initUI];
           }
-        
-//        [self initUI];
     }
     return self;
 }
 
+#pragma mark ----首页混排 新房UI单独处理
+- (void)initSynchysisNewHouseUI {
+    [self.houseCellBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.contentView).offset(15);
+        make.right.equalTo(self.contentView).offset(-15);
+        make.size.mas_equalTo(CGSizeMake([UIScreen mainScreen].bounds.size.width-30,88));
+        make.bottom.top.equalTo(self.contentView);
+    }];
+    [self.radiusView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.equalTo(self.contentView);
+        make.left.equalTo(self.contentView).offset([self.reuseIdentifier isEqualToString:@"FHSynchysisNewHouseCell"]?15:0);
+        make.right.equalTo(self.contentView).offset([self.reuseIdentifier isEqualToString:@"FHSynchysisNewHouseCell"]?-27:-12);
+    }];
+    self.totalPrice.hidden = YES;
+    self.unitPrice.font = [UIFont themeFontMedium:16];
+    [self.houseMainImageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.mainIma);
+        make.left.top.equalTo(self.mainIma);
+        make.bottom.equalTo(self.mainIma).offset(-1);
+        make.right.equalTo(self.mainIma).offset(-1);
+    }];
+    [self.mainIma mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.contentView);
+        make.left.equalTo(self.contentView).offset([self.reuseIdentifier isEqualToString:@"FHSynchysisNewHouseCell"]?27:15);
+        make.size.mas_equalTo(CGSizeMake(85, 64));
+    }];
+    [self.mainImaTag mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(self.mainIma);
+        make.size.mas_equalTo(CGSizeMake(32, 18));
+    }];
+    [self.maintitle mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.mainIma.mas_right).offset(12);
+        make.top.equalTo(self.mainIma).offset(-2);
+        make.right.equalTo(self.contentView).offset(-30);
+    }];
+    [self.unitPrice mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.maintitle);
+        make.top.equalTo(self.maintitle.mas_bottom);
+    }];
+    [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+           make.left.equalTo(self.unitPrice.mas_right).offset(6);
+           make.centerY.equalTo(self.unitPrice.mas_centerY);
+           make.size.mas_equalTo(CGSizeMake(1, 13));
+    }];
+    [self.unitPrice setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.unitPrice setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.positionInformation mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.lineView.mas_right).offset(6);
+        make.centerY.equalTo(self.unitPrice.mas_centerY);
+        make.right.equalTo(self.contentView).offset(-27);
+    }];
+    [self.tagInformation mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.maintitle);
+        make.top.equalTo(self.unitPrice.mas_bottom).offset(5);
+        make.right.equalTo(self.contentView).offset(-30);
+    }];
+    self.positionInformation.textColor = [UIColor themeGray3];
+}
+
+
+#pragma mark ----新房UI单独处理
 - (void)initNewHouseUI
 {
     self.totalPrice.hidden = YES;
@@ -85,6 +155,7 @@
     }];
 }
 
+#pragma mark ----二手房，小区，租房
 - (void)initUI {
     [self.houseMainImageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.mainIma);
@@ -147,7 +218,29 @@
     return placeholderImage;
 }
 
--(UILabel *)maintitle
+- (UIImageView *)radiusView
+{
+    if (!_radiusView) {
+        UIImageView *radiusView = [[UIImageView alloc] init];
+        radiusView.image = [UIImage imageNamed:@"list_new_house_bac"];
+        [self.contentView addSubview:radiusView];
+        _radiusView = radiusView;
+    }
+    return _radiusView;
+}
+
+- (UIView *)lineView
+{
+    if (!_lineView) {
+        UIView *lineView = [[UIView alloc] init];
+        lineView.backgroundColor = [UIColor themeGray6];
+        [self.contentView addSubview:lineView];
+        _lineView = lineView;
+    }
+    return _lineView;
+}
+
+- (UILabel *)maintitle
 {
     if (!_maintitle) {
         UILabel *maintitle = [[UILabel alloc]init];
@@ -159,7 +252,7 @@
     return _maintitle;
 }
 
--(UILabel *)positionInformation
+- (UILabel *)positionInformation
 {
     if (!_positionInformation) {
         UILabel *positionInformation = [[UILabel alloc]init];
@@ -171,7 +264,7 @@
     return _positionInformation;
 }
 
--(UILabel *)unitPrice
+- (UILabel *)unitPrice
 {
     if (!_unitPrice) {
         UILabel *unitPrice = [[UILabel alloc]init];
@@ -183,7 +276,7 @@
     return _unitPrice;
 }
 
--(UILabel *)totalPrice
+- (UILabel *)totalPrice
 {
     if (!_totalPrice) {
         UILabel *totalPrice = [[UILabel alloc]init];
@@ -196,7 +289,7 @@
     return _totalPrice;
 }
 
--(YYLabel *)tagInformation
+- (YYLabel *)tagInformation
 {
     if (!_tagInformation) {
         YYLabel *tagInformation = [[YYLabel alloc]init];
@@ -206,6 +299,15 @@
         _tagInformation = tagInformation;
     }
     return _tagInformation;
+}
+
+- (UIImageView *)mainImaTag {
+    if (!_mainImaTag) {
+        UIImageView *mainImaTag = [[UIImageView alloc]init];
+        [self.contentView addSubview:mainImaTag];
+        _mainImaTag = mainImaTag;
+    }
+    return _mainImaTag;
 }
 
 - (UIImageView *)mainIma {
@@ -219,12 +321,11 @@
     return _mainIma;
 }
 
--(UIView *)houseMainImageBackView
+- (UIView *)houseMainImageBackView
 {
     if (!_houseMainImageBackView) {
         UIView *houseMainImageBackView = [[UIView alloc] init];
         CALayer * layer = houseMainImageBackView.layer;
-        
         layer.shadowOffset = CGSizeMake(0, 4);
         layer.shadowRadius = 6;
         layer.shadowColor = [UIColor blackColor].CGColor;;
@@ -233,6 +334,18 @@
         _houseMainImageBackView = houseMainImageBackView;
     }
     return _houseMainImageBackView;
+}
+
+- (UIView *)houseCellBackView
+{
+    if (!_houseCellBackView) {
+        UIView *houseCellBackView = [[UIView alloc] init];
+        houseCellBackView.backgroundColor = [UIColor whiteColor];
+        [self.contentView addSubview:houseCellBackView];
+         houseCellBackView.hidden = YES;
+        _houseCellBackView = houseCellBackView;
+    }
+    return _houseCellBackView;
 }
 
 - (UIImageView *)mainImaShadow {
@@ -244,7 +357,7 @@
     return _mainImaShadow;
 }
 
--(UIImageView *)houseVideoImageView
+- (UIImageView *)houseVideoImageView
 {
     if (!_houseVideoImageView) {
         UIImageView *houseVideoImageView = [[UIImageView alloc]init];
@@ -257,7 +370,7 @@
     return _houseVideoImageView;
 }
 
--(LOTAnimationView *)vrLoadingView
+- (LOTAnimationView *)vrLoadingView
 {
     if (!_vrLoadingView) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
@@ -270,15 +383,8 @@
 }
 
 
-#pragma mark ----新房UI单独处理
-- (void)updateConstraintsWithNewHouse {
-    self.totalPrice.hidden = YES;
-    self.unitPrice.font = [UIFont themeFontMedium:16];
-    self.unitPrice.textColor = [UIColor themeOrange1];
 
 
-
-}
 #pragma mark ---------------------- dataPross:数据加载
 - (void)refreshWithData:(id)data {
     self.currentData = data;
@@ -335,7 +441,7 @@
 }
 
 #pragma mark 字符串处理
--(NSAttributedString *)originPriceAttr:(NSString *)originPrice {
+- (NSAttributedString *)originPriceAttr:(NSString *)originPrice {
     
     if (originPrice.length < 1) {
         return nil;
@@ -345,5 +451,62 @@
     [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray1] range:NSMakeRange(0, originPrice.length)];
     return attri;
 }
+#pragma mark 更新首页混排新房cell
+- (void)updateSynchysisNewHouseCellWithModel:(FHHomeHouseDataItemsModel *)model {
+    if ([model isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        self.maintitle.text = model.displayTitle;
+        self.unitPrice.text = model.displayPricePerSqm;
+        FHImageModel *imageModel = model.images.firstObject;
+        [self.mainIma bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseListBaseItemCell placeholderImage]];
+        FHImageModel *tagimageModel = model.tagImage.firstObject;
+        [self.mainImaTag bd_setImageWithURL:[NSURL URLWithString:tagimageModel.url]];
+        self.positionInformation.text = model.displayDescription;
+        if (model.displayPriceColor) {
+            self.unitPrice.textColor = [UIColor colorWithHexStr:model.displayPriceColor];
+        }else {
+           self.unitPrice.textColor = [UIColor themeOrange1];
+        }
+        self.tagInformation.attributedText = model.tagString;
+    }
+}
+#pragma mark 更新大类页混排新房cell
+- (void)updateSynchysisNewHouseCellWithSearchHouseModel:(FHSearchHouseItemModel *)model {
+    if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        self.maintitle.text = model.displayTitle;
+        self.unitPrice.text = model.displayPricePerSqm;
+        FHImageModel *imageModel = model.images.firstObject;
+        [self.mainIma bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseListBaseItemCell placeholderImage]];
+        FHImageModel *tagimageModel = model.tagImage.firstObject;
+        [self.mainImaTag bd_setImageWithURL:[NSURL URLWithString:tagimageModel.url]];
+        self.positionInformation.text = model.displayDescription;
+        if (model.displayPriceColor) {
+            self.unitPrice.textColor = [UIColor colorWithHexStr:model.displayPriceColor];
+        }else {
+           self.unitPrice.textColor = [UIColor themeOrange1];
+        }
+        self.tagInformation.attributedText = model.tagString;
+    }
+}
 
+-(void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast
+{
+    self.contentView.backgroundColor = [UIColor themeHomeColor];
+    self.houseCellBackView.hidden = NO;
+    if (isFirst) {
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 88) byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 88);
+        maskLayer.path = maskPath.CGPath;
+        self.houseCellBackView.layer.mask = maskLayer;
+    } else if (isLast){
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width-30, 88) byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 88);
+        maskLayer.path = maskPath.CGPath;
+        self.houseCellBackView.layer.mask = maskLayer;
+    }else
+    {
+        self.houseCellBackView.layer.mask = nil;
+    }
+}
 @end
