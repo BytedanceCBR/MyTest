@@ -240,6 +240,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             [self.topView changeBackColor:index];
             [self.viewModel sendEnterCategory:(index == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed) enterType:FHHomeMainTraceEnterTypeClick];
             [self.viewModel sendStayCategory:(index == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse) enterType:FHHomeMainTraceEnterTypeClick];
+            
+            [FHEnvContext sharedInstance].isShowingHomeHouseFind = (index == 0);
         }
         
     };

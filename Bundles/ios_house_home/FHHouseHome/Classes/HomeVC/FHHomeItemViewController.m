@@ -237,9 +237,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 {
     [super viewDidDisappear:animated];
     
-    if (self.houseType == _listModel.houseType) {
+    if (self.houseType == _listModel.houseType && [FHEnvContext sharedInstance].isShowingHomeHouseFind) {
         [self currentViewIsDisappeared];
-    }    
+    }
     self.isDisAppeared = YES;
 }
 
@@ -549,6 +549,11 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType
 {
+    //如果首页没有显示
+    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+        return;
+    }
+    
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     self.tracerModel.enterFrom = @"maintab";
     self.tracerModel.elementFrom = @"maintab_list";
