@@ -16,6 +16,8 @@
 #import "FHDetailHeaderView.h"
 #import "FHHouseNewDetailViewModel.h"
 #import "FHDetailMultitemCollectionView.h"
+#import <TTAccountSDK/TTAccount.h>
+#import "FHHouseIMClueHelper.h"
 
 #define ITEM_HEIGHT 277
 #define ITEM_WIDTH  184
@@ -233,56 +235,53 @@
     }
 }
 
-- (void)collectionCellItemClick:(NSInteger)index item:(UIView *)itemView cell:(FHDetailBaseCollectionCell *)cell {
+- (void)collectionCellItemClick:(NSInteger)index item:(UIView *)itemView cell:(FHDetailBaseCollectionCell *)cell
+{
+    FHDetailNewMutiFloorPanCollectionCell *collectionCell = (FHDetailNewMutiFloorPanCollectionCell *)cell;
+    if (![collectionCell isKindOfClass:[FHDetailNewMutiFloorPanCollectionCell class]]) {
+        return;
+    }
+    // 一键咨询户型按钮点击
+    FHDetailNewMutiFloorPanCellModel *currentModel = (FHDetailNewMutiFloorPanCellModel *)self.currentData;
+    FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
+    if(collectionCell.consultDetailButton != itemView || ![model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+        return;
+    }
+    if (index < 0 || index >= model.list.count ) {
+        return;
+    }
+    FHDetailNewDataFloorpanListListModel *floorPanInfoModel = model.list[index];
+    if (![floorPanInfoModel isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
+        return;
+    }
+    FHHouseIMClueConfigModel *configModel = [[FHHouseIMClueConfigModel alloc]init];
+    configModel.houseId = self.baseViewModel.houseId;
+    configModel.houseType = self.baseViewModel.houseType;
+    configModel.enterFrom = self.baseViewModel.detailTracerDic[@"enter_from"];
+    configModel.elementFrom = @"house_model";
+    configModel.logPb = floorPanInfoModel.logPb;
+    configModel.originFrom = self.baseViewModel.detailTracerDic[@"origin_from"];
+    configModel.cardType = @"left_pic";// todo zjing test
+    configModel.rank = @(floorPanInfoModel.index);
+    configModel.originSearchId = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+    configModel.searchId = self.baseViewModel.detailTracerDic[@"search_id"];
+    configModel.imprId = floorPanInfoModel.imprId;
+    configModel.pageType = [self.baseViewModel pageTypeString];
+    FHDetailContactModel *contactPhone = self.baseViewModel.contactViewModel.contactPhone;
+    configModel.realtorId = contactPhone.realtorId;
+    configModel.realtorRank = @"0";
+    configModel.conversationId = @"be_null";// todo zjing test
+    configModel.realtorLogpb = contactPhone.realtorLogpb;
+    //                            configModel.source =
+    //                            configModel.from =
+    configModel.sourceFrom = @"house_model";// todo zjing test
+    configModel.clueEndpoint = @(FHClueEndPointTypeC);
+    configModel.cluePage = @(FHClueIMPageTypeCNewHouseApartmentConsult);
+    configModel.imOpenUrl = floorPanInfoModel.imOpenUrl;
+    [FHHouseIMClueHelper jump2SessionPageWithConfigModel:configModel];
     
-    if([cell isKindOfClass:FHDetailNewMutiFloorPanCollectionCell.class]) {
-        FHDetailNewMutiFloorPanCollectionCell *collectionCell = (FHDetailNewMutiFloorPanCollectionCell *)cell;
-        
-        // 一键咨询户型按钮点击
-        if(collectionCell.consultDetailButton == itemView) {
-            FHDetailNewMutiFloorPanCellModel *currentModel = (FHDetailNewMutiFloorPanCellModel *)self.currentData;
-            FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
-            if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
-                if (model.list.count > index) {
-                    FHDetailNewDataFloorpanListListModel *floorPanInfoModel = model.list[index];
-                    if ([floorPanInfoModel isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
-                        NSMutableDictionary *traceParam = [NSMutableDictionary new];
-                        traceParam[@"enter_from"] = @"new_detail";
-                        traceParam[@"log_pb"] = floorPanInfoModel.logPb;
-                        traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
-                        traceParam[@"card_type"] = @"left_pic";
-                        traceParam[@"rank"] = @(floorPanInfoModel.index);
-                        traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-                        traceParam[@"element_from"] = @"house_model";
-                        traceParam[@"from"] = @"app_newhouse_floorplan";
-                        NSDictionary *dict = @{@"house_type":@(1),
-                                               @"tracer": traceParam
-                                               };
-                        
-                        NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
-                        infoDict[@"house_type"] = @(1);
-                        [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
-                        NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams];
-                        [infoDict addEntriesFromDictionary:subPageParams];
-                        infoDict[@"tracer"] = traceParam;
-                        
-                        // 线索参数
-                        infoDict[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-                        infoDict[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNewHouseApartmentConsult];
-                        infoDict[@"source"] = @"1.39";
-                        // ---
-                        
-                        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-                        
-                        // JOKER: 解析im_openurl，并跳转im咨询户型
-                        if(floorPanInfoModel.imOpenUrl.length > 0) {
-                            NSURL *imOpenURL = [NSURL URLWithString:floorPanInfoModel.imOpenUrl];
-                            [[TTRoute sharedRoute] openURLByPushViewController:imOpenURL userInfo:info];
-                        }
-                    }
-                }
-            }
-        }
+    if ([self.baseViewModel respondsToSelector:@selector(addClickOptionLog:)]) {
+        [self.baseViewModel addClickOptionLog:@"education_type"];// todo zjing test
     }
 }
 
