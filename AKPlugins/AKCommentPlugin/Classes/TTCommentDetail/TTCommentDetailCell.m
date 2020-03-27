@@ -26,7 +26,7 @@
 #import <TTDiggButton/TTDiggButton.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/TTThemeManager.h>
-#import "UIColor+Theme.h"
+#import <FHCommonUI/UIColor+Theme.h>
 
 
 NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifier";
