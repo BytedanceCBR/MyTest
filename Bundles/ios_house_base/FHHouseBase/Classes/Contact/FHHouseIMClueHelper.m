@@ -29,11 +29,12 @@
     dict[@"realtor_rank"] = configModel.realtorRank ?: @"0";
     dict[@"conversation_id"] = configModel.conversationId ? : @"be_null";
     dict[@"realtor_logpb"] = configModel.realtorLogpb ? : @"be_null";
-    dict[@"source"] = configModel.source; // ? : @"be_null";
-    dict[@"from"] = configModel.from; // ? : @"be_null";
+//    dict[@"source"] = configModel.source; // ? : @"be_null";
+    dict[@"from"] = configModel.from;
     dict[@"source_from"] = configModel.sourceFrom;
     dict[@"search_id"] = configModel.searchId ? : @"be_null";
-
+    dict[@"realtor_position"] = configModel.realtorPosition ? : @"be_null";
+    dict[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"click_im" params:dict];
 
     NSString *urlStr = configModel.imOpenUrl;
@@ -41,10 +42,8 @@
         NSURL *openUrl = [NSURL URLWithString:urlStr];
         NSMutableDictionary *userInfoDict = @{}.mutableCopy;
         if (dict) {
-            [userInfoDict addEntriesFromDictionary:dict];
+            userInfoDict[@"tracer"] = dict;
         }
-//        userInfoDict[@"target_type"] = configModel.targetType;
-//        userInfoDict[@"target_id"] = configModel.targetId;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         [self silentFollowHouse:configModel];
@@ -60,10 +59,6 @@
     configModel.hideToast = YES;
     // 静默关注功能
     [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel completionBlock:^(BOOL isSuccess) {
-        if (isSuccess) {
-            // todo zjing test
-//            wself.isEnterIM = YES;
-        }
     }];
 }
 

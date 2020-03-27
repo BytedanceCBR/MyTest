@@ -88,6 +88,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [clickImParams addEntriesFromDictionary:dict];
         clickImParams[@"im_open_url"] = nil;
     }
+    clickImParams[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"click_im" params:clickImParams];
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
     dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
