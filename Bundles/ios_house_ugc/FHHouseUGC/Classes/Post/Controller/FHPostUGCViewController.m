@@ -1805,6 +1805,7 @@ static NSInteger const kMaxPostImageCount = 9;
         param[@"group_id"] = self.groupId;
         param[UT_ELEMENT_FROM] = self.tracerDict[UT_ELEMENT_FROM];
         param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+        param[UT_ENTER_TYPE] = @"click";
         TRACK_EVENT(UT_GO_DETAIL, param);
     }
 }

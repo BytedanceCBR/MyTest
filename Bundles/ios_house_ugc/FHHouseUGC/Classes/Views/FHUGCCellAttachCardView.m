@@ -148,6 +148,35 @@
                 make.right.mas_equalTo(self.button.mas_left).offset(0);
             }];
         }
+        
+        if(cellModel.isFromDetail){
+            [self trackCardShow:cellModel rank:0];
+        }
+    }
+}
+
+- (void)trackCardShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    if(cellModel.attachCardInfo.extra && cellModel.attachCardInfo.extra.event.length > 0){
+        //是房源卡片
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+        dict[@"page_type"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+        dict[@"group_id"] = cellModel.attachCardInfo.extra.groupId ?: @"be_null";
+        dict[@"from_gid"] = cellModel.attachCardInfo.extra.fromGid ?: @"be_null";
+        dict[@"group_source"] = cellModel.attachCardInfo.extra.groupSource ?: @"be_null";
+        dict[@"impr_id"] = cellModel.attachCardInfo.extra.imprId ?: @"be_null";
+        dict[@"house_type"] = cellModel.attachCardInfo.extra.houseType ?: @"be_null";
+        TRACK_EVENT(cellModel.attachCardInfo.extra.event ?: @"card_show", dict);
+    }else{
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+        dict[@"page_type"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+        dict[@"from_gid"] = cellModel.groupId;
+        dict[@"group_source"] = @(5);
+        dict[@"impr_id"] = cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";
+        dict[@"card_type"] = cellModel.attachCardInfo.cardType ?: @"be_null";
+        dict[@"card_id"] = cellModel.attachCardInfo.id ?: @"be_null";
+        TRACK_EVENT(@"card_show", dict);
     }
 }
 
@@ -226,7 +255,7 @@
 // 跳转
 - (void)gotoPostVC:(NSURL *)openUrl {
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+    dict[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
     dict[@"element_from"] = [self elementFrom];
     dict[@"group_id"] = self.cellModel.groupId;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -238,7 +267,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     
     NSMutableDictionary *traceParam = [NSMutableDictionary new];
-    traceParam[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+    traceParam[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
     traceParam[@"log_pb"] = self.cellModel.tracerDic[@"log_pb"] ?: @"be_null";
     traceParam[@"card_type"] = @"left_pic";
     traceParam[@"rank"] = self.cellModel.tracerDic[@"rank"] ?: @"be_null";
@@ -257,7 +286,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+    traceParam[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
     traceParam[@"element_from"] = [self elementFrom];
     traceParam[@"enter_type"] = @"click";
     traceParam[@"rank"] = self.cellModel.tracerDic[@"rank"] ?: @"be_null";
@@ -290,7 +319,7 @@
 //    dict[@"source"] = source;
     dict[@"from"] = from;
     dict[@"target_type"] = @(2);
-    dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+    dict[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
     dict[@"element_from"] = [self elementFrom];
     dict[@"log_pb"] = self.cellModel.tracerDic[@"log_pb"] ?: @"be_null";
     dict[@"rank"] = self.cellModel.tracerDic[@"rank"] ?: @"be_null";
