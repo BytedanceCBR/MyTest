@@ -179,6 +179,7 @@ typedef enum : NSUInteger {
     if (configModel.itemId.length > 0) {
         params[@"item_id"] = configModel.itemId;
     }
+    params[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"click_call" params:params];
 }
 

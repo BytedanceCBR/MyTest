@@ -34,7 +34,7 @@
     dict[@"source_from"] = configModel.sourceFrom;
     dict[@"search_id"] = configModel.searchId ? : @"be_null";
     dict[@"realtor_position"] = configModel.realtorPosition ? : @"be_null";
-
+    dict[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"click_im" params:dict];
 
     NSString *urlStr = configModel.imOpenUrl;
