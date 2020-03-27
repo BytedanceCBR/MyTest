@@ -67,6 +67,8 @@
 - (void)banInAppRemotePushTip:(BOOL)isBan {
     if(isBan) {
         [self setInAppRemotePushTipCanShow:!kFHInAppPushTipsHidden];
+        [self setIsSavedInAppRemotePushTipCanShowStatus:YES];
+        
         kFHInAppPushTipsHidden = YES;
     }
     else {
