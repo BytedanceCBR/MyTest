@@ -17,7 +17,7 @@
 #import "FHHouseNewDetailViewModel.h"
 #import "FHDetailMultitemCollectionView.h"
 #import <TTAccountSDK/TTAccount.h>
-#import "FHHouseIMClueHelper.h"
+#import <FHHouseBase/FHHouseIMClueHelper.h>
 
 #define ITEM_HEIGHT 277
 #define ITEM_WIDTH  184
