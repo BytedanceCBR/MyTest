@@ -261,7 +261,7 @@
     configModel.elementFrom = @"house_model";
     configModel.logPb = floorPanInfoModel.logPb;
     configModel.originFrom = self.baseViewModel.detailTracerDic[@"origin_from"];
-    configModel.cardType = @"left_pic";// todo zjing test
+    configModel.cardType = @"slide";// todo zjing test
     configModel.rank = @(floorPanInfoModel.index);
     configModel.originSearchId = self.baseViewModel.detailTracerDic[@"origin_search_id"];
     configModel.searchId = self.baseViewModel.detailTracerDic[@"search_id"];
@@ -273,16 +273,13 @@
     configModel.conversationId = @"be_null";// todo zjing test
     configModel.realtorLogpb = contactPhone.realtorLogpb;
     //                            configModel.source =
-    //                            configModel.from =
+    configModel.from = @"app_newhouse_floorplan";
+    configModel.realtorPosition = @"house_model";
     configModel.sourceFrom = @"house_model";// todo zjing test
     configModel.clueEndpoint = @(FHClueEndPointTypeC);
     configModel.cluePage = @(FHClueIMPageTypeCNewHouseApartmentConsult);
     configModel.imOpenUrl = floorPanInfoModel.imOpenUrl;
     [FHHouseIMClueHelper jump2SessionPageWithConfigModel:configModel];
-    
-    if ([self.baseViewModel respondsToSelector:@selector(addClickOptionLog:)]) {
-        [self.baseViewModel addClickOptionLog:@"education_type"];// todo zjing test
-    }
 }
 
 - (UIImageView *)shadowImage

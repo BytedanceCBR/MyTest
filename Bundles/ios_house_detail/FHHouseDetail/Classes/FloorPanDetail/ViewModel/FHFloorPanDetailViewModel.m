@@ -97,7 +97,7 @@
     // todo zjing test
     FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
-//    imExtra[@"source_from"] = @"education_type";
+    imExtra[@"source_from"] = @"house_model_detail";
     imExtra[@"im_open_url"] = contactPhone.imOpenUrl;
     imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
     imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeFloorplan];
