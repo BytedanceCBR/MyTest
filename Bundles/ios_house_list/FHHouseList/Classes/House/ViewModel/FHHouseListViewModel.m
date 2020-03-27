@@ -1365,7 +1365,7 @@ extern NSString *const INSTANT_DATA_KEY;
         param[UT_SEARCH_ID] = self.searchId ? : @"be_null";
         param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ? : @"be_null";
         param[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
-        
+        [param setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
         TRACK_EVENT(@"click_im_message", param);
         
         NSString *messageSchema = @"sslocal://message_conversation_list";
