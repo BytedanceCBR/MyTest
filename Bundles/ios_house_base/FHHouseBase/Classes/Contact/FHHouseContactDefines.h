@@ -68,7 +68,7 @@ typedef enum : NSUInteger {
     FHClueIMPageTypeCNewHousePicview = 36,//    - from：app_newhouse_picview: 1.36  新房详情页图片浏览IM
     FHClueIMPageTypeCNewHouseLocation = 37,//  - app_newhouse_askneighbourhood: 1.37  询周边配套IM线索
     FHClueIMPageTypeCNewHouseMulrealtor = 38,//  app_newhouse_realtor: 1.38 新房经纪人多展位
-    FHClueIMPageTypeCNewHouseApartmentConsult = 39, // app_newhouse_floorplan: 1.39 新房详情页询户型IM入口
+    FHClueIMPageTypeCNewHouseApartmentConsult = 39, // app_newhouse_housetype: 1.39 新房详情页询户型IM入口
     
     FHClueIMPageTypeCNeighborhoodMulrealtor = 41,// app_neighborhood_mulrealtor: 1.41小区详情页经纪人多展位
     FHClueIMPageTypeCNeighborhoodAladdin = 42,// app_neighborhood_aladdin: 1.42小区阿拉丁微聊
