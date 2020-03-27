@@ -17,6 +17,7 @@
 #import "TTDeviceHelper.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHWebViewConfig.h"
+#import "SSWebViewController.h"
 
 @implementation TTRNavi
 
@@ -44,6 +45,21 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
         }];
     }
     callback(TTRJSBMsgSuccess, @{@"code": @1});
+}
+
+// 关闭当前H5页面打开一个Native页面
+- (void)closeAndOpenWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
+    UIViewController *topVC = [TTUIResponderHelper topViewControllerFor:webview];
+    NSString * urlStr = [param objectForKey:@"schema"];
+    NSURL *openURL = [NSURL URLWithString:urlStr];
+    if (topVC && [topVC isKindOfClass:[SSWebViewController class]] && urlStr.length > 0 && openURL) {
+        NSMutableDictionary *infoDict = @{}.mutableCopy;
+        infoDict[@"fh_needRemoveLastVC_key"] = @(YES);
+        infoDict[@"fh_needRemoveedVCNamesString_key"] = @[@"SSWebViewController"];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
+    }
+    callback(TTRJSBMsgSuccess, @{@"code": @0});
 }
 
 - (void)openPageWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
