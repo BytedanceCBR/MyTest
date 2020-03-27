@@ -248,7 +248,7 @@ def appPods
     #-----头条用户设置库--------
     pod 'TTUserSettings', '0.3.4'
 
-    pod_binary 'TTRexxar', '0.8.10', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
+    pod_binary 'TTRexxar', '0.8.14', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
     #----头条组件协议库-----
 
     pod_binary 'TTServiceProtocols','7.5.7.2'
@@ -322,7 +322,7 @@ def appPods
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
     # pod_binary 'TTMonitor','0.7.9.58-rc.3' #这个版本还是有很多问题
-    pod_binary 'Heimdallr','0.7.11', :subspecs => [
+    pod_binary 'Heimdallr','0.7.13-rc.8', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
@@ -458,7 +458,7 @@ def appPods
     pod_source 'OHHTTPStubs', '4.2.1', :configurations => ['Debug']
     pod_binary 'CHTCollectionViewWaterfallLayout', '0.9.5'
     pod_binary 'Aspects', '1.4.1'
-    pod_binary 'SSZipArchive', '1.6.3'
+    pod 'SSZipArchive', '2.1.5'
     pod_binary 'libextobjc', '0.4.1'
     pod_binary 'ReactiveObjC', '3.0.0'
     pod_binary 'SDWebImage', '4.4.1', :subspecs => [
@@ -539,7 +539,7 @@ def appPods
 
     pod_binary 'BDDiamond20', '1.0.2', :subspecs => ['minisdk']
 
-    pod 'Quaterback', '0.0.2-rc.8', :subspecs => [
+    pod 'Quaterback', '1.0.0-alpha.4', :subspecs => [
     'Main/Core',
     'Main/Default'
     ]
