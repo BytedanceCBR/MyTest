@@ -19,7 +19,8 @@
 #import <TTAccountSDK/TTAccount.h>
 #import <FHHouseBase/FHHouseIMClueHelper.h>
 
-#define ITEM_HEIGHT 277
+#define ITEM_HEIGHT 242
+#define ITEM_BOTTOM_HEIGHT 35
 #define ITEM_WIDTH  184
 
 @interface FHDetailNewMutiFloorPanCell ()
@@ -67,9 +68,13 @@
     FHDetailNewDataFloorpanListModel *model = currentModel.floorPanList;
     if (model.list) {
         
+        BOOL hasIM = NO;
         for (NSInteger i = 0; i < model.list.count; i++) {
             FHDetailNewDataFloorpanListListModel *listItemModel = model.list[i];
             listItemModel.index = i;
+            if (listItemModel.imOpenUrl.length > 0) {
+                hasIM = YES;
+            }
         }
         if (model.totalNumber.length > 0) {
             self.headerView.label.text = [NSString stringWithFormat:@"户型介绍（%@）",model.totalNumber];
@@ -77,13 +82,17 @@
             self.headerView.label.text = @"户型介绍";
         }
         self.headerView.isShowLoadMore = model.hasMore;
+        CGFloat itemHeight = ITEM_HEIGHT;
+        if (hasIM) {
+            itemHeight = ITEM_HEIGHT + ITEM_BOTTOM_HEIGHT;
+        }
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 15);
-        flowLayout.itemSize = CGSizeMake(ITEM_WIDTH, ITEM_HEIGHT);
+        flowLayout.itemSize = CGSizeMake(ITEM_WIDTH, itemHeight);
         flowLayout.minimumLineSpacing = 10;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         NSString *identifier = NSStringFromClass([FHDetailNewMutiFloorPanCollectionCell class]);
-        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:ITEM_HEIGHT cellIdentifier:identifier cellCls:[FHDetailNewMutiFloorPanCollectionCell class] datas:model.list];
+        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:itemHeight cellIdentifier:identifier cellCls:[FHDetailNewMutiFloorPanCollectionCell class] datas:model.list];
         colView.tag = 100;
         [self.containerView addSubview:colView];
         __weak typeof(self) wSelf = self;
@@ -277,7 +286,7 @@
     configModel.clueEndpoint = @(FHClueEndPointTypeC);
     configModel.cluePage = @(FHClueIMPageTypeCNewHouseApartmentConsult);
     configModel.imOpenUrl = floorPanInfoModel.imOpenUrl;
-    configModel.extra = @{@"house_model_rank":@(index)};
+    configModel.extraInfo = @{@"house_model_rank":@(index)};
     [FHHouseIMClueHelper jump2SessionPageWithConfigModel:configModel];
 }
 
@@ -330,6 +339,7 @@
                 }];
             }
         }
+        self.consultDetailButton.hidden = model.imOpenUrl.length > 0 ? NO : YES;
         self.descLabel.text = model.title;
         self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@ 朝向 %@",model.squaremeter,model.facingDirection];
     }
@@ -368,6 +378,7 @@
     _consultDetailButton.layer.cornerRadius = 16;
     [_consultDetailButton addTarget:self action:@selector(consultDetailButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_consultDetailButton];
+    _consultDetailButton.hidden = YES;
     
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self);
@@ -395,7 +406,6 @@
         make.top.equalTo(self.spaceLabel.mas_bottom).offset(10);
         make.left.right.equalTo(self);
         make.height.mas_equalTo(32);
-        make.bottom.equalTo(self);
     }];
 }
 

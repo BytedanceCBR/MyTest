@@ -22,7 +22,7 @@
     dict[@"log_pb"] = configModel.logPb ? : @"be_null";
     dict[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
     dict[@"rank"] = configModel.rank ? : @"be_null";
-    dict[@"card_type"] = configModel.cardType ? : @"be_null";
+//    dict[@"card_type"] = configModel.cardType ? : @"be_null";
     dict[@"page_type"] = configModel.pageType ?: @"be_null";
     dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
     dict[@"realtor_id"] = configModel.realtorId ? : @"be_null";;
@@ -43,8 +43,9 @@
         if (dict) {
             userInfoDict[@"tracer"] = dict;
         }
-        if (configModel.extra) {
-            [dict addEntriesFromDictionary:configModel.extra];
+        userInfoDict[@"from"] = configModel.from;
+        if (configModel.extraInfo) {
+            [dict addEntriesFromDictionary:configModel.extraInfo];
         }
         [FHUserTracker writeEvent:@"click_im" params:dict];
 
@@ -131,7 +132,7 @@
 
     _targetId = params[@"target_id"];
     _targetType = params[@"target_type"];
-    _extra = params[@"extra"];
+    _extraInfo = params[@"extra_info"];
 }
 
 - (void)setLogPbWithNSString:(NSString *)logpb

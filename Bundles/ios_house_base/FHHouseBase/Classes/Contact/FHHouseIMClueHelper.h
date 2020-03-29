@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) NSString *source;
 @property (nonatomic , copy) NSString *imOpenUrl;
 @property (nonatomic , copy) NSString *sourceFrom;
-@property (nonatomic , copy) NSDictionary *extra;
+@property (nonatomic , copy) NSDictionary *extraInfo;// 仅埋点用
 
 - (void)setTraceParams:(NSDictionary *)params;
 
