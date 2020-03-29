@@ -160,7 +160,7 @@
         //是房源卡片
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
-        dict[@"page_type"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+        dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
         dict[@"group_id"] = cellModel.attachCardInfo.extra.groupId ?: @"be_null";
         dict[@"from_gid"] = cellModel.attachCardInfo.extra.fromGid ?: @"be_null";
         dict[@"group_source"] = cellModel.attachCardInfo.extra.groupSource ?: @"be_null";
@@ -170,7 +170,7 @@
     }else{
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
-        dict[@"page_type"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+        dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
         dict[@"from_gid"] = cellModel.groupId;
         dict[@"group_source"] = @(5);
         dict[@"impr_id"] = cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";
