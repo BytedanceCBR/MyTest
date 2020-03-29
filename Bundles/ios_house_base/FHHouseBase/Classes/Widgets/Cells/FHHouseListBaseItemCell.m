@@ -88,7 +88,7 @@
     }];
     [self.maintitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainIma.mas_right).offset(12);
-        make.top.equalTo(self.mainIma).offset(-2);
+        make.top.equalTo(self.mainIma).offset(-5);
         make.right.equalTo(self.contentView).offset(-30);
     }];
     [self.unitPrice mas_makeConstraints:^(MASConstraintMaker *make) {

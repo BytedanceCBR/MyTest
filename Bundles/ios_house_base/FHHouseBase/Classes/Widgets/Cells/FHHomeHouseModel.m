@@ -481,7 +481,7 @@
                 if (size1.width +size2.width > [self tagShowMaxWidth]) {
                     break;
                 }else {
-                    [_tagString appendAttributedString: [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@"  "]  attributes:nil]];
+                    [_tagString appendAttributedString: [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@" "]  attributes:nil]];
                     [_tagString appendAttributedString: [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@ ",element.content]  attributes:attDic]];
                     NSRange substringRange = [_tagString.string rangeOfString:element.content];
                     YYTextBorder *border = [YYTextBorder borderWithFillColor:[UIColor colorWithHexStr:element.backgroundColor] cornerRadius:2];
