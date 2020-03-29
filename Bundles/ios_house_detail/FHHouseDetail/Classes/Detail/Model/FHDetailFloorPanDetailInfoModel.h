@@ -8,7 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
 @property (nonatomic, copy , nullable) NSString *pricingSubStatus;
-@property (nonatomic, copy , nullable) NSString *courtSubStatus;
+@property (nonatomic, assign) NSInteger courtSubStatus;
 @end
 
 @protocol FHDetailFloorPanDetailInfoDataBaseInfoModel<NSObject>
@@ -67,6 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
+@property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
+
 
 @end
 

@@ -59,6 +59,8 @@
             };
         }
         self.contactViewModel = [_subPageVC getContactViewModel];
+        self.bottomBar = bottomBar;
+        bottomBar.hidden = YES;
         [self startLoadData];
     }
     return self;
@@ -167,11 +169,11 @@
         [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
         return;
     }
-    
     if (_floorPanId) {
         [self.detailController startLoading];
         __weak typeof(self) wSelf = self;
-        [self.contactViewModel hideBottomBarIfNeed];
+        self.bottomBar.hidden = YES;
+//        [self.contactViewModel hideBottomBarIfNeed];
         [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
@@ -184,7 +186,8 @@
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
             // 放在最后一行，等数据处理完成后，视情况决定是否显示底部工具条
-            [self.contactViewModel hideBottomBarIfNeed];
+            wSelf.bottomBar.hidden = NO;
+//            [wSelf.contactViewModel hideBottomBarIfNeed];
         }];
     }
 }
@@ -256,7 +259,9 @@
         contactPhone.isFormReport = YES;
     }
     self.contactViewModel.contactPhone = contactPhone;
-
+    self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    
     [_infoListTable reloadData];
 }
 

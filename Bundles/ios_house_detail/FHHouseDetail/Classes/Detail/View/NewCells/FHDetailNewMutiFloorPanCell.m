@@ -234,6 +234,7 @@
                 infoDict[@"house_type"] = @(1);
                 [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
                 NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams];
+                subPageParams[@"contact_phone"] = nil;
                 [infoDict addEntriesFromDictionary:subPageParams];
                 infoDict[@"tracer"] = traceParam;
                 TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
