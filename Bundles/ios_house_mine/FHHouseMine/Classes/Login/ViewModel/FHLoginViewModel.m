@@ -510,6 +510,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     } else {
         // 登录失败
         isReport = YES;
+        
+        if (error.code == 1039) {
+            errorMessage = [error.userInfo objectForKey:@"toutiao.account.errmsg_key"];
+        }else {
+            errorMessage = @"啊哦，服务器开小差了";
+            if (!isOneKeyLogin) {
+                errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+            }
+        }
     }
     
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
@@ -526,8 +535,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     tracerDict[@"login_agreement"] = @"1" ; // : @"0";
     
-    [tracerDict setValue:(error ? @"fail" : @"success") forKey:@"result"];
-    [tracerDict setValue:@(error.code) forKey:@"error"];
+    tracerDict[@"result"] = (error ? @"fail" : @"success");
+    tracerDict[@"error"] = @(error.code);
+    tracerDict[@"error_message"] = errorMessage;
 
     TRACK_EVENT(@"login_result", tracerDict);
 }
