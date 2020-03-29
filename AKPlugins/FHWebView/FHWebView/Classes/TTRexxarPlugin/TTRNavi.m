@@ -53,11 +53,14 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     NSString * urlStr = [param objectForKey:@"schema"];
     NSURL *openURL = [NSURL URLWithString:urlStr];
     if (topVC && [topVC isKindOfClass:[SSWebViewController class]] && urlStr.length > 0 && openURL) {
-        NSMutableDictionary *infoDict = @{}.mutableCopy;
-        infoDict[@"fh_needRemoveLastVC_key"] = @(YES);
-        infoDict[@"fh_needRemoveedVCNamesString_key"] = @[@"SSWebViewController"];
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-        [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
+        // 延时 否则跳转不过去
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSMutableDictionary *infoDict = @{}.mutableCopy;
+            infoDict[@"fh_needRemoveLastVC_key"] = @(YES);
+            infoDict[@"fh_needRemoveedVCNamesString_key"] = @[@"SSWebViewController"];
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+            [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
+        });
     }
     callback(TTRJSBMsgSuccess, @{@"code": @0});
 }
