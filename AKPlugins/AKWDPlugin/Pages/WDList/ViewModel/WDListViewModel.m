@@ -228,11 +228,11 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
                 }
             }
             self.inviteUserModels = [NSMutableArray arrayWithArray:responseModel.candidate_invite_user];
-            [self transNewAnswerModelToEntityAndAppendToList:responseModel.data];
-            self.offset = [responseModel.offset floatValue];
+            [self transNewAnswerModelToEntityAndAppendToList:responseModel.answer_list.data];
+            self.offset = [responseModel.answer_list.offset floatValue];
             self.maxTitleLineCount = [responseModel.header_max_lines integerValue];
             
-            self.loadMoreHasMore = [responseModel.has_more boolValue];
+            self.loadMoreHasMore = [responseModel.answer_list.has_more boolValue];
             _latelyHasException = NO;
             
             // api_param 竟然没有使用 ?? !!
@@ -317,10 +317,10 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
     [WDListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:self.offset finishBlock:^(WDWendaV2QuestionBrowResponseModel *responseModel, NSError *error) {
         if (!error) {
             NSUInteger originCount = [self.dataModelsArray count];
-            [self transNewAnswerModelToEntityAndAppendToList:responseModel.data];
+            [self transNewAnswerModelToEntityAndAppendToList:responseModel.answer_list.data];
             NSUInteger afterCount = [self.dataModelsArray count];
-            self.offset = [responseModel.offset floatValue];
-            self.loadMoreHasMore = [responseModel.has_more boolValue];
+            self.offset = [responseModel.answer_list.offset floatValue];
+            self.loadMoreHasMore = [responseModel.answer_list.has_more boolValue];
             if (afterCount <= originCount) {
                 _latelyHasException = YES;
             } else {

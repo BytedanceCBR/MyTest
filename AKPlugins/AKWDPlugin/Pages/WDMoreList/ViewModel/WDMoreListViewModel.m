@@ -98,9 +98,9 @@ NSString * const kWDWendaMoreListViewControllerUMEventName = @"question";
     [self _clear];
     [WDMoreListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:0 finishBlock:^(WDWendaV2QuestionBrowResponseModel *responseModel, NSError *error) {
         if (!error) {
-            [self transModelToEntityAndAppendToList:responseModel.data];
-            self.offset = [responseModel.offset floatValue];
-            self.loadMoreHasMore = [responseModel.has_more boolValue];
+            [self transModelToEntityAndAppendToList:responseModel.answer_list.data];
+            self.offset = [responseModel.answer_list.offset floatValue];
+            self.loadMoreHasMore = [responseModel.answer_list.has_more boolValue];
             _latelyHasException = NO;
         } else {
             _latelyHasException = YES;
@@ -126,10 +126,10 @@ NSString * const kWDWendaMoreListViewControllerUMEventName = @"question";
     [WDMoreListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:self.offset finishBlock:^(WDWendaV2QuestionBrowResponseModel *responseModel, NSError *error) {
         if (!error) {
             NSUInteger originCount = [self.dataModelsArray count];
-            [self transModelToEntityAndAppendToList:responseModel.data];
+            [self transModelToEntityAndAppendToList:responseModel.answer_list.data];
             NSUInteger afterCount = [self.dataModelsArray count];
-            self.offset = [responseModel.offset floatValue];
-            self.loadMoreHasMore = [responseModel.has_more boolValue];
+            self.offset = [responseModel.answer_list.offset floatValue];
+            self.loadMoreHasMore = [responseModel.answer_list.has_more boolValue];
             if (afterCount <= originCount) {
                 _latelyHasException = YES;
             } else {
