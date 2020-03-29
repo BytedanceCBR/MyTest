@@ -267,7 +267,8 @@
                 make.height.mas_equalTo(44);
             }];
         }
-        
+        _contactBtn.layer.shadowColor = [UIColor themeOrange1].CGColor;
+        _contactBtn.backgroundColor = [UIColor themeOrange1];
     }
     void (^updateBlock)() = ^{
         [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
