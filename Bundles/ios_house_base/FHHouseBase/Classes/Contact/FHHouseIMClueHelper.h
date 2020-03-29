@@ -61,6 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) NSString *source;
 @property (nonatomic , copy) NSString *imOpenUrl;
 @property (nonatomic , copy) NSString *sourceFrom;
+@property (nonatomic , copy) NSDictionary *extra;
 
 - (void)setTraceParams:(NSDictionary *)params;
 

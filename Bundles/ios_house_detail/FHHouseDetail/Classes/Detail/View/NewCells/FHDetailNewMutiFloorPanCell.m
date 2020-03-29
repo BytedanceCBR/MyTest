@@ -261,7 +261,6 @@
     configModel.elementFrom = @"house_model";
     configModel.logPb = floorPanInfoModel.logPb;
     configModel.originFrom = self.baseViewModel.detailTracerDic[@"origin_from"];
-    configModel.cardType = @"slide";// todo zjing test
     configModel.rank = @(floorPanInfoModel.index);
     configModel.originSearchId = self.baseViewModel.detailTracerDic[@"origin_search_id"];
     configModel.searchId = self.baseViewModel.detailTracerDic[@"search_id"];
@@ -272,13 +271,13 @@
     configModel.realtorRank = @"0";
     configModel.conversationId = @"be_null";// todo zjing test
     configModel.realtorLogpb = contactPhone.realtorLogpb;
-    //                            configModel.source =
     configModel.from = @"app_newhouse_floorplan";
     configModel.realtorPosition = @"house_model";
     configModel.sourceFrom = @"house_model";// todo zjing test
     configModel.clueEndpoint = @(FHClueEndPointTypeC);
     configModel.cluePage = @(FHClueIMPageTypeCNewHouseApartmentConsult);
     configModel.imOpenUrl = floorPanInfoModel.imOpenUrl;
+    configModel.extra = @{@"house_model_rank":@(index)};
     [FHHouseIMClueHelper jump2SessionPageWithConfigModel:configModel];
 }
 

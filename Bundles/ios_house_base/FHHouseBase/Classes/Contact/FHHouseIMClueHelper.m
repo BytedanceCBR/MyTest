@@ -35,7 +35,6 @@
     dict[@"search_id"] = configModel.searchId ? : @"be_null";
     dict[@"realtor_position"] = configModel.realtorPosition ? : @"be_null";
     dict[@"growth_deepevent"] = @(1);
-    [FHUserTracker writeEvent:@"click_im" params:dict];
 
     NSString *urlStr = configModel.imOpenUrl;
     if (urlStr.length > 0) {
@@ -44,6 +43,11 @@
         if (dict) {
             userInfoDict[@"tracer"] = dict;
         }
+        if (configModel.extra) {
+            [dict addEntriesFromDictionary:configModel.extra];
+        }
+        [FHUserTracker writeEvent:@"click_im" params:dict];
+
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         [self silentFollowHouse:configModel];
@@ -127,6 +131,7 @@
 
     _targetId = params[@"target_id"];
     _targetType = params[@"target_type"];
+    _extra = params[@"extra"];
 }
 
 - (void)setLogPbWithNSString:(NSString *)logpb
