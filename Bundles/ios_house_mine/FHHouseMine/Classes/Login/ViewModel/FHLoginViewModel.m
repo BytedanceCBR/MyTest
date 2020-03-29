@@ -402,6 +402,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)handleLoginResult:(UIImage *)captchaImage phoneNum:(NSString *)phoneNumber smsCode:(NSString *)smsCode error:(NSError *)error isOneKeyLogin:(BOOL)isOneKeyLogin {
+    
+    [self traceLoginResult:captchaImage phoneNum:phoneNumber smsCode:smsCode error:error isOneKeyLogin:isOneKeyLogin];
+    
     if (!error) {
         [[ToastManager manager] showToast:@"登录成功"];
         if (phoneNumber.length > 0) {
@@ -493,6 +496,42 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     tracerDict[@"login_agreement"] = @"1" ; // : @"0";
     TRACK_EVENT(@"click_login", tracerDict);
 }
+
+
+- (void)traceLoginResult:(UIImage *)captchaImage phoneNum:(NSString *)phoneNumber smsCode:(NSString *)smsCode error:(NSError *)error isOneKeyLogin:(BOOL)isOneKeyLogin {
+    BOOL isReport = NO;
+    NSString *errorMessage = nil;
+    if (!error) {
+        // 登录成功
+        isReport = YES;
+    } else if (captchaImage) {
+        // 获取验证码
+        isReport = NO;
+    } else {
+        // 登录失败
+        isReport = YES;
+    }
+    
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
+    tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
+    if (self.fromOneKeyLogin) {
+        tracerDict[@"click_position"] = @"quick_login";
+    }else {
+        tracerDict[@"login_type"] = @"other_login";
+    }
+    if (self.fromOtherLogin) {
+        tracerDict[@"enter_from"] = @"quick_login";
+        tracerDict[@"enter_type"] = @"other_login";
+    }
+    tracerDict[@"login_agreement"] = @"1" ; // : @"0";
+    
+    [tracerDict setValue:(error ? @"fail" : @"success") forKey:@"result"];
+    [tracerDict setValue:@(error.code) forKey:@"error"];
+
+    TRACK_EVENT(@"login_result", tracerDict);
+}
+
 
 - (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
