@@ -74,8 +74,9 @@
     
     self.button = [[UIButton alloc] init];
     [_button setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-    _button.titleLabel.font = [UIFont themeFontRegular:12];
+    _button.titleLabel.font = [UIFont themeFontRegular:14];
     [_button setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [_button setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_button addTarget:self action:@selector(buttonClick) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_button];
 }
@@ -90,7 +91,7 @@
     [self.button mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self).offset(-15);
         make.top.bottom.mas_equalTo(self);
-        make.width.mas_lessThanOrEqualTo(50);
+        make.width.mas_lessThanOrEqualTo(60);
     }];
     
     [self.spLine mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -133,7 +134,7 @@
             }
             [_button setTitle:buttonTitle forState:UIControlStateNormal];
             [self.button mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_lessThanOrEqualTo(50);
+                make.width.mas_lessThanOrEqualTo(60);
             }];
             [self.spLine mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.right.mas_equalTo(self.button.mas_left).offset(-9.5);
