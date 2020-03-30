@@ -1200,16 +1200,5 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
-- (void)hideBottomBarIfNeed {
-    BOOL isHidden = NO;
-    
-    // 没有联系人电话时隐藏
-    BOOL isNoPhone = (self.contactPhone.phone.length <= 0);
-    
-    // 可以添加其它条件
-    
-    isHidden = isNoPhone;
-    
-    self.bottomBar.hidden = isHidden;
-}
+
 @end

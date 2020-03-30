@@ -87,8 +87,6 @@ typedef enum : NSUInteger {
 
 - (void)vc_viewDidDisappear:(BOOL)animated;
 
-/// 视调用时条件检查决定是否隐藏底部工具条
-- (void)hideBottomBarIfNeed;
 @end
 
 NS_ASSUME_NONNULL_END

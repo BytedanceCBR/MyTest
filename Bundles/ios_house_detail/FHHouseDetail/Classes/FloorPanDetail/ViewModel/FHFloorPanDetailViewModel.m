@@ -173,7 +173,6 @@
         [self.detailController startLoading];
         __weak typeof(self) wSelf = self;
         self.bottomBar.hidden = YES;
-//        [self.contactViewModel hideBottomBarIfNeed];
         [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
@@ -185,9 +184,7 @@
                 wSelf.detailController.hasValidateData = NO;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
-            // 放在最后一行，等数据处理完成后，视情况决定是否显示底部工具条
             wSelf.bottomBar.hidden = NO;
-//            [wSelf.contactViewModel hideBottomBarIfNeed];
         }];
     }
 }
