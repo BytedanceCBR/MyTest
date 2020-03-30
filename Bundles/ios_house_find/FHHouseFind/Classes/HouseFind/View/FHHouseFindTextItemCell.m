@@ -44,8 +44,8 @@
 -(void)updateWithTitle:(NSString *)title highlighted:(BOOL)highlighted
 {
     self.titleLabel.text = title;
-    self.contentView.backgroundColor = highlighted ? [UIColor themeOrange4] : [UIColor themeGray7];
-    self.titleLabel.textColor = highlighted ? [UIColor themeWhite] :  [UIColor themeGray1];
+    self.contentView.backgroundColor = highlighted ? [UIColor themeOrange2] : [UIColor themeGray7];
+    self.titleLabel.textColor = highlighted ? [UIColor themeOrange1] :  [UIColor themeGray1];
 }
 
 - (void)setTitleFont:(UIFont *)titleFont
