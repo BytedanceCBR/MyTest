@@ -271,7 +271,7 @@
     configModel.elementFrom = @"house_model";
     configModel.logPb = floorPanInfoModel.logPb;
     configModel.originFrom = self.baseViewModel.detailTracerDic[@"origin_from"];
-    configModel.rank = @(floorPanInfoModel.index);
+    configModel.rank = self.baseViewModel.detailTracerDic[@"rank"];
     configModel.originSearchId = self.baseViewModel.detailTracerDic[@"origin_search_id"];
     configModel.searchId = self.baseViewModel.detailTracerDic[@"search_id"];
     configModel.imprId = floorPanInfoModel.imprId;
