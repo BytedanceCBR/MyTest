@@ -764,6 +764,7 @@
 -(void)updateFollowStatus:(BOOL)followed{
     [[FHUGCConfig sharedInstance] updateScialGroupDataModel:self.data byFollowed:followed];
     [self updateUIWithData:self.data];
+    [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:self.data];
 }
 
 // 未登录状态下进入圈子详情页，点击发帖，这时候跳转登录，如果登录用户已经关注这个圈子，收取通知来更新状态

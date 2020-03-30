@@ -130,7 +130,7 @@
     //初始化静态地图
     [self setUpMapView:useNativeMap];
 
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
+    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
     CGRect mapFrame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, mapHeight);
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
@@ -145,7 +145,7 @@
 //TODO zlj 判断使用native地图
 - (void)addCenterAnnotationMapOnly:(BOOL)useNativeMap {
     self.centerAnnotation.coordinate = self.centerPoint;
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
+    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
     CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, mapHeight);
 
     if (!useNativeMap) {
@@ -182,7 +182,7 @@
     self.starHeaderView.frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 110);
     self.segmentedControl.frame = CGRectMake(0,self.headerView.bottom, MAIN_SCREEN_WIDTH, 50);
 
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
+    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
     CGRect mapFrame = CGRectMake(0, self.segmentedControl.bottom, MAIN_SCREEN_WIDTH, mapHeight);
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
@@ -263,7 +263,7 @@
 }
 
 - (void)setUpMapView:(BOOL)useNativeMap {
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
+    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
     CGRect mapRect = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, mapHeight);
 
     if (useNativeMap) {
@@ -286,7 +286,7 @@
 }
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
+    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
     CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, mapHeight);
     WeakSelf;
     [[FHDetailMapViewSnapService sharedInstance] takeSnapWith:self.centerPoint frame:frame targetRect:frame annotations:annotations delegate:self block:^(FHDetailMapSnapTask *task, UIImage *image, BOOL success) {
