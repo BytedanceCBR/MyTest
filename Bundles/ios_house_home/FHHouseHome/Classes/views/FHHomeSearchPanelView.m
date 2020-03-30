@@ -82,7 +82,7 @@
         make.centerY.equalTo(self);
         make.right.mas_equalTo(self).offset(-15);
     }];
-    [searchButton setBackgroundColor:[UIColor themeHomeColor]];
+    [searchButton setBackgroundColor:[UIColor whiteColor]];
     
     UIImageView *imageButtonLeftIcon = [UIImageView new];
     [searchButton addSubview:imageButtonLeftIcon];
