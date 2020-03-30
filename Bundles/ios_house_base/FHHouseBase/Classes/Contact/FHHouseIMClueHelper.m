@@ -35,6 +35,10 @@
     dict[@"search_id"] = configModel.searchId ? : @"be_null";
     dict[@"realtor_position"] = configModel.realtorPosition ? : @"be_null";
     dict[@"growth_deepevent"] = @(1);
+    
+    // 线索相关字段
+    dict[@"clue_page"] = configModel.cluePage;
+    dict[@"clue_endpoint"] = configModel.clueEndpoint;
 
     NSString *urlStr = configModel.imOpenUrl;
     if (urlStr.length > 0) {
