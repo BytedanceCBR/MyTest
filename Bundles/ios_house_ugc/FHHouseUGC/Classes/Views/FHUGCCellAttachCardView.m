@@ -300,24 +300,21 @@
 
 - (void)imAction:(NSURL *)openUrl {
     TTRouteParamObj *obj =[[TTRoute sharedRoute] routeParamObjWithURL:openUrl];
+    [self addClickIM:obj];
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-//    NSString *source = @"";
+    
     NSString *from = @"";
-    NSString *enterFrom = self.cellModel.tracerDic[@"enter_from"];
     if(self.cellModel.isFromDetail){
         from = @"app_weitoutiao";
-//        source = @"1.6";
         dict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         dict[kFHCluePage] = @(FHClueIMPageTypeUGCDetail);
     }else{
         from = @"app_feed_weitoutiao";
-//        source = @"1.5";
         dict[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         dict[kFHCluePage] = @(FHClueIMPageTypeUGCFeed);
     }
     
-//    dict[@"source"] = source;
     dict[@"from"] = from;
     dict[@"target_type"] = @(2);
     dict[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
@@ -329,18 +326,34 @@
     dict[@"realtor_id"] = obj.queryParams[@"target_user_id"] ?: @"be_null";
     dict[@"house_type"] = @"old";
     dict[@"impr_id"] = self.cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";
-    dict[@"group_id"] = obj.queryParams[@"house_id"] ?: @"be_null";
-    dict[@"from_gid"] = self.cellModel.groupId;
-    
-    TRACK_EVENT(@"click_im", dict);
+    dict[@"group_id"] = self.cellModel.groupId;
+    dict[@"group_type"] = @"weitoutiao";
 
     NSMutableDictionary * userInfoDict = @{@"tracer":dict, @"from": from}.mutableCopy;
-//    if (!isEmptyString(source)) {
-//        userInfoDict[@"source"] = source;
-//    }
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+- (void)addClickIM:(TTRouteParamObj *)obj {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+    dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+    dict[@"house_type"] = @"old";
+    dict[@"impr_id"] = self.cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";
+    dict[@"group_id"] = obj.queryParams[@"house_id"] ?: @"be_null";
+    dict[@"from_gid"] = self.cellModel.groupId;
+    dict[@"realtor_id"] = obj.queryParams[@"target_user_id"] ?: @"be_null";
+//    event_type:
+//    enter_from: neighborhood_tab（群聊tab）
+//    page_type: hot_discuss_feed"（推荐列表页）
+//    house_type:old(二手房)/new（新房）
+//    impr_id: 继承微头条的impr_id即可
+//    group_id:房源id
+//    from_gid:微头条id
+//    realtor_id:经纪人id
+    
+    TRACK_EVENT(@"click_im", dict);
 }
 
 - (NSString *)elementFrom {
