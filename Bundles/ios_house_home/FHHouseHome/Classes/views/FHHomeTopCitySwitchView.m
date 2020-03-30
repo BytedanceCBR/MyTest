@@ -58,7 +58,7 @@
     _titleLabel.font = [UIFont themeFontRegular:14];
     _titleLabel.textColor = [UIColor themeGray3];
     [_bgView addSubview:_titleLabel];
-    [_titleLabel setFrame:CGRectMake(10, 6, 160, 30)];
+    [_titleLabel setFrame:CGRectMake(10, 6, 240, 30)];
     
     
     _switchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -88,14 +88,14 @@
 {
     
     FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
- 
+    CGFloat fontSize = [TTDeviceHelper isScreenWidthLarge320] ? 14 : 10;
     NSString *stringTitle =@"定位显示你在";
     if (configData.citySwitch.cityName) {
         NSString *stringPosition = [NSString stringWithFormat:@" \"%@\"",configData.citySwitch.cityName];
         
-        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:stringTitle attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont themeFontSemibold:14]}];
+        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:stringTitle attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont themeFontSemibold:fontSize]}];
         
-        NSAttributedString *attrPosString = [[NSAttributedString alloc] initWithString:stringPosition attributes:@{NSForegroundColorAttributeName:[UIColor themeOrange4],NSFontAttributeName:[UIFont themeFontSemibold:14]}];
+        NSAttributedString *attrPosString = [[NSAttributedString alloc] initWithString:stringPosition attributes:@{NSForegroundColorAttributeName:[UIColor themeOrange4],NSFontAttributeName:[UIFont themeFontSemibold:fontSize]}];
         [attrString appendAttributedString:attrPosString];
         _titleLabel.attributedText =attrString;
         
@@ -103,7 +103,13 @@
         NSString *switchString = [NSString stringWithFormat:@"切换到%@",configData.citySwitch.cityName];
         CGFloat btnWidht = switchString.length * 15;
         [_switchBtn.titleLabel setFont:[UIFont themeFontSemibold:12]];
-        [_switchBtn setTitle:switchString forState:UIControlStateNormal];
+        if (configData.citySwitch.cityName && configData.citySwitch.cityName.length > 5) {
+            [_switchBtn setTitle:@"切换" forState:UIControlStateNormal];
+            btnWidht = 40;
+        }else
+        {
+            [_switchBtn setTitle:switchString forState:UIControlStateNormal];
+        }
         [_switchBtn setFrame:CGRectMake(self.bgView.frame.size.width - 36 - btnWidht, 8, btnWidht, 26)];
     }
 }
