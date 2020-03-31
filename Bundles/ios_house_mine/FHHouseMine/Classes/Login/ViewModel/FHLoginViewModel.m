@@ -638,7 +638,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         tracerDict[@"enter_from"] = @"quick_login";
         tracerDict[@"enter_type"] = @"other_login";
     }
-    TRACK_EVENT(@"click_verify_code", tracerDict);
+    TRACK_EVENT(@"click_verifycode", tracerDict);
 }
 
 - (BOOL)isPureInt:(NSString *)str {
