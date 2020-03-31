@@ -3656,7 +3656,7 @@
 }
 @end
 
-@implementation WDWendaV2QuestionBrowRequestModel
+@implementation WDWendaV5QuestionBrowRequestModel
 - (instancetype) init
 {
     self = [super init];
@@ -3664,7 +3664,7 @@
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
         self._uri = @"/wenda/v5/question/brow";
-        self._response = @"WDWendaV2QuestionBrowResponseModel";
+        self._response = @"WDWendaV5QuestionBrowResponseModel";
     }
 
     return self;
@@ -3686,7 +3686,7 @@
 @end
 
 
-@implementation WDWendaV2QuestionBrowResponseModel
+@implementation WDWendaV5QuestionBrowResponseModel
 - (instancetype) init
 {
     self = [super init];
