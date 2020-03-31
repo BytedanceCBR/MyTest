@@ -458,7 +458,7 @@ def appPods
     pod_source 'OHHTTPStubs', '4.2.1', :configurations => ['Debug']
     pod_binary 'CHTCollectionViewWaterfallLayout', '0.9.5'
     pod_binary 'Aspects', '1.4.1'
-    pod 'SSZipArchive', '2.1.5'
+    pod_binary 'SSZipArchive', '2.1.5'
     pod_binary 'libextobjc', '0.4.1'
     pod_binary 'ReactiveObjC', '3.0.0'
     pod_binary 'SDWebImage', '4.4.1', :subspecs => [
