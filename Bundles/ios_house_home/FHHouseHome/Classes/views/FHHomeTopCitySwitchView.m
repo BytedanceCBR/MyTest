@@ -89,7 +89,7 @@
     
     FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
     CGFloat fontSize = [TTDeviceHelper isScreenWidthLarge320] ? 14 : 14;
-    NSInteger countNum =  [TTDeviceHelper isScreenWidthLarge320] ? 5 : 4;
+    NSInteger countNum =  [TTDeviceHelper isScreenWidthLarge320] ? 5 : 3;
     NSString *stringTitle =@"定位显示你在";
     if (configData.citySwitch.cityName) {
         NSString *stringPosition = [NSString stringWithFormat:@" \"%@\"",configData.citySwitch.cityName];
