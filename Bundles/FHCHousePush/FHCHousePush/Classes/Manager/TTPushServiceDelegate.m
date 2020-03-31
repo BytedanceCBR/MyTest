@@ -30,6 +30,8 @@
 
 #import <FHHouseBase/FHUserTracker.h>
 #import <TTBaseLib/TTStringHelper.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <FHHouseBase/FHMainApi.h>
 
 static NSString *const kNotificationCategoryIdentifierArticleDetail = @"article_detail";
 static NSString *const kNotificationCategoryIdentifierArticleDetailNoDislike = @"article_detail_no_dislike";
@@ -58,8 +60,8 @@ typedef void(^NotificationActionCompletionBlock) (void);
 {
     TTRegisterKitchenMethod
     TTKitchenRegisterBlock(^{
-        
-        TTKConfigFreezedDictionary(kFSettings, @"使用BDUGPushSDK", @{kUseUGPushSDKKey:@0});
+        // todo zjing test 该字段可去掉
+        TTKConfigFreezedDictionary(kFSettings, @"使用BDUGPushSDK", @{kUseUGPushSDKKey:@1});
     });
 }
 
@@ -87,7 +89,9 @@ typedef void(^NotificationActionCompletionBlock) (void);
         param.deviceId = deviceID;
         param.installId = installID;
         param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
-        
+        // todo zjing test 我理解应该不影响
+        param.versionCode = [TTSandBoxHelper fhVersionCode];
+        param.host = [FHMainApi host];
         BDUGNotificationConfig *config = nil;
         if (@available(iOS 10.0, *)) {
             BDUGNotificationAction *actionDislike = [BDUGNotificationAction actionWithIdentifier:kNotificationActionIdentifierDislike

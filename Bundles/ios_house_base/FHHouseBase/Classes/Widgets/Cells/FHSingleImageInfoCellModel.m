@@ -306,7 +306,7 @@
             if (element.content && element.textColor && element.backgroundColor) {
                 
                 NSMutableString *reulstString = element.content;
-                if (tagList.count > 0) { // todo zjing test
+                if (tagList.count > 0) { 
                     if (reulstString.length * 10 > (maxWidth)) {
                         
                         NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];

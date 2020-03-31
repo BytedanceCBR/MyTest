@@ -12,12 +12,18 @@
 #import "UIFont+House.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
+#import "FHDetailTopBannerView.h"
+
+
 @interface FHDeatilHeaderTitleView ()
 @property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, weak) UIButton *mapBtn;//仅小区展示
 @property (nonatomic, weak) UIView *tagBacView;
 @property (nonatomic, weak) UILabel *nameLabel;
 @property (nonatomic, weak) UILabel *addressLab;
+
+@property (nonatomic, strong) FHDetailTopBannerView *topBanner;
+
 @end
 @implementation FHDeatilHeaderTitleView
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -32,12 +38,13 @@
         make.left.right.top.equalTo(self);
         make.height.equalTo(self);
     }];
-    [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(15);
-        make.right.mas_equalTo(self).offset(-15);
-        make.top.mas_equalTo(self).offset(50);
-        make.height.mas_offset(20);
+    [self addSubview:self.topBanner];
+    [self.topBanner mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self);
+        make.top.mas_equalTo(20);
+        make.height.mas_equalTo(0);
     }];
+    self.topBanner.hidden = YES;
 }
 
 - (UIImageView *)shadowImage {
@@ -49,6 +56,15 @@
     }
     return  _shadowImage;
 }
+
+- (FHDetailTopBannerView *)topBanner
+{
+    if (!_topBanner) {
+        _topBanner = [[FHDetailTopBannerView alloc]init];
+    }
+    return _topBanner;
+}
+
 
 - (UIView *)tagBacView {
     if (!_tagBacView) {
@@ -119,53 +135,95 @@
     _model = model;
     NSArray *tags = model.tags;
     self.mapBtn.hidden = !model.showMapBtn;
+    self.nameLabel.text = model.titleStr;
+    CGFloat tagHeight = tags.count > 0 ? 20 : 0.01;
+    
+    CGFloat topHeight = 0;
+    CGFloat tagTop = tags.count > 0 ? 17 : -5;
+    CGFloat tagBottom = tags.count > 0 ? 17 : 0;
 
-    if (model.address.length>0) {
+    if (model.housetype == FHHouseTypeNewHouse) {
+        if (model.businessTag.length > 0 && model.advantage.length > 0) {
+            topHeight = 40;
+            [self.topBanner updateWithTitle:model.businessTag content:model.advantage];
+        }
+        self.topBanner.hidden = (topHeight <= 0);
+        [self.topBanner mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(topHeight);
+        }];
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(31);
             make.right.mas_equalTo(self).offset(-35);
-            make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(17);
+            make.top.mas_equalTo(self.topBanner.mas_bottom).offset(28);
+//            make.height.mas_offset(25);
+//            make.bottom.mas_equalTo(-tagBottom - tagHeight);
         }];
-        [self.addressLab mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(31);
-            make.right.mas_equalTo(self).offset(-35);
-            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(4);
-            make.bottom.mas_equalTo(self);
+        [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(15);
+            make.right.mas_equalTo(self).offset(-15);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(15);
+            make.height.mas_offset(tagHeight);
+            make.bottom.mas_equalTo(self).offset(tags.count > 0 ?-5:0);
         }];
-        [self.mapBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.nameLabel).offset(5);
-            make.right.equalTo(self).offset(-32);
-            make.size.mas_equalTo(CGSizeMake(44, 44));
-        }];
-        self.addressLab.text = model.address;
-    }else {
-        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(31);
-            make.right.mas_equalTo(self).offset(-35);
-            make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(17);
-            make.bottom.mas_equalTo(self);
-        }];
-    }
-    if (model.housetype == FHHouseTypeNeighborhood) {
+    }else if (model.housetype == FHHouseTypeNeighborhood) {
         self.nameLabel.numberOfLines = 1;
-        [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self).offset(-100);
-        }];
         self.addressLab.numberOfLines = 1;
-        [self.addressLab mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self).offset(-100);
+        if (model.address.length>0) {
+            [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(15);
+                make.right.mas_equalTo(self).offset(-15);
+                make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
+                make.height.mas_offset(tagHeight);
+            }];
+            [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(31);
+                make.right.mas_equalTo(self).offset(-100);
+                make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
+            }];
+            [self.addressLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(31);
+                make.right.mas_equalTo(self).offset(-100);
+                make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(4);
+                make.bottom.mas_equalTo(self);
+            }];
+            [self.mapBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.nameLabel).offset(5);
+                make.right.equalTo(self).offset(-32);
+                make.size.mas_equalTo(CGSizeMake(44, 44));
+            }];
+            self.addressLab.text = model.address;
+        }else {
+            [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(15);
+                make.right.mas_equalTo(self).offset(-15);
+                make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
+                make.height.mas_offset(tagHeight);
+            }];
+            [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(31);
+                make.right.mas_equalTo(self).offset(-35);
+                make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
+                make.bottom.mas_equalTo(self);
+            }];
+        }
+    }else {
+        [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(15);
+            make.right.mas_equalTo(self).offset(-15);
+            make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(30);
+            make.height.mas_offset(tagHeight);
+        }];
+        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(31);
+            make.right.mas_equalTo(self).offset(-35);
+            make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
+            make.bottom.mas_equalTo(self);
         }];
     }
-     self.nameLabel.text = model.titleStr;
+
     __block UIView *lastView = self.tagBacView;
-    if (tags.count  == 0) {
-        [self.tagBacView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_offset(0.01);
-        }];
-        [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(-5);
-        }];
-    }
+
+    __block CGFloat maxWidth = 30;
     [tags enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHHouseTagsModel *tagModel = obj;
         CGSize itemSize = [tagModel.content sizeWithAttributes:@{
@@ -174,18 +232,30 @@
         UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#FFEAD3"]:[UIColor colorWithHexString:@"#F2F1EF"];
         UIColor *tagTextColor = idx == 0 ?[UIColor colorWithHexString:@"#ff9300"]:[UIColor colorWithHexString:@"#a49a92"];
         UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
-        [self.tagBacView addSubview:label];
-        [label mas_makeConstraints:^(MASConstraintMaker *make) {
-            if (idx == 0) {
-                make.left.equalTo(lastView).offset(16);
-            }else {
-                make.left.equalTo(lastView.mas_right).offset(10);
-            }
-            make.top.equalTo(self.tagBacView);
-            make.width.mas_offset(itemSize.width+18);
-            make.height.equalTo(self.tagBacView);
-        }];
-        lastView = label;
+                
+        CGFloat inset = 10;
+        if (self.model.housetype == FHHouseTypeNewHouse) {
+            inset = 4;
+        }
+        CGFloat itemWidth = itemSize.width + 18;
+        maxWidth += itemWidth + inset;
+        CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 30;
+        if (maxWidth >= tagWidth) {
+            *stop = YES;
+        }else {
+            [self.tagBacView addSubview:label];
+            [label mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (idx == 0) {
+                    make.left.equalTo(lastView).offset(16);
+                }else {
+                    make.left.equalTo(lastView.mas_right).offset(inset);
+                }
+                make.top.equalTo(self.tagBacView);
+                make.width.mas_offset(itemWidth);
+                make.height.equalTo(self.tagBacView);
+            }];
+            lastView = label;
+        }
     }];
 }
 
@@ -193,36 +263,5 @@
     if (self.model.mapImageClick) {
         self.model.mapImageClick();
     }
-    
-//    NSMutableDictionary *infoDict = [NSMutableDictionary new];
-//    [infoDict setValue:@"银行" forKey:@"category"];
-//    FHDetailNeighborhoodSubMessageModel *infoModels =self.model.neighborhoodInfoModel;
-//    if (infoModels) {
-//        double lng = [infoModels.neighborhoodInfo.gaodeLng doubleValue];
-//        double lat = [infoModels.neighborhoodInfo.gaodeLat doubleValue];
-//        [infoDict setValue:@(lat) forKey:@"latitude"];
-//        [infoDict setValue:@(lng) forKey:@"longitude"];
-//        [infoDict setValue:infoModels.neighborhoodInfo.name forKey:@"title"];
-//
-//        if (!lng || !lat) {
-//            NSMutableDictionary *params = [NSMutableDictionary new];
-//            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
-//            [params setValue:@"经纬度缺失" forKey:@"reason"];
-//            [params setValue:infoModels.neighborhoodInfo.id forKey:@"house_id"];
-//            [params setValue:@(4) forKey:@"house_type"];
-//            [params setValue:infoModels.name forKey:@"name"];
-//            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
-//        }
-//
-//        NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
-//        [tracer setValue:@"address" forKey:@"click_type"];
-//        [tracer setValue:@"house_info" forKey:@"element_from"];
-//        [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
-//        [infoDict setValue:tracer forKey:@"tracer"];
-//
-//        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
-//    }
-
 }
 @end

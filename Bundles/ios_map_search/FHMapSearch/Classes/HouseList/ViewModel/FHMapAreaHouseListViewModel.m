@@ -246,11 +246,11 @@
 -(TTHttpTask *)requsetSecondHouse:(NSString *)query param:(NSDictionary *)param isHead:(BOOL)isHead
 {
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:isHead?0:self.currentHouseModel.offset needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable houseModel) {
+    TTHttpTask *task = [FHHouseSearcher houseSearchWithQuery:query param:param offset:isHead?0:self.currentHouseModel.offset class:[FHSearchHouseModel class] needCommonParams:YES callback:^(NSError * _Nullable error,FHSearchHouseModel * _Nullable houseModel) {
         if (!wself) {
             return ;
         }
-        [wself processQueryData:houseModel error:error isHead:isHead];
+        [wself processQueryData:houseModel.data error:error isHead:isHead];
         
     }];
     return task;

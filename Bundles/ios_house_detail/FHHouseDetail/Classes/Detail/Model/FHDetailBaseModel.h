@@ -13,6 +13,8 @@
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 #import <FHHouseBase/FHImageModel.h>
 #import <FHHouseBase/FHHouseCoreInfoModel.h>
+#import <UIKit/UIKit.h>
+
 @class FHDetailHouseTitleModel;
 @class FHDetailNewDataSmallImageGroupModel;
 
@@ -272,5 +274,59 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *latRatio;
 @property (nonatomic, copy , nullable) NSString *lngRatio;
 @end
+
+
+@protocol FHVideoHouseVideoVideoInfosModel<NSObject>
+@end
+
+@interface FHVideoHouseVideoVideoInfosModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *vid;
+@property (nonatomic, assign) NSInteger imageWidth;
+@property (nonatomic, assign) NSInteger vHeight;
+@property (nonatomic, assign) NSInteger imageHeight;
+@property (nonatomic, assign) NSInteger vWidth;
+@property (nonatomic, copy , nullable) NSString *coverImageUrl;
+@end
+
+
+@interface FHVideoHouseVideoModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHVideoHouseVideoVideoInfosModel> *videoInfos;
+@property (nonatomic, copy , nullable) NSString *infoSubTitle;
+@property (nonatomic, copy , nullable) NSString *infoTitle;
+@end
+
+@protocol FHDetailOldDataHouseImageDictListModel<NSObject>
+@end
+
+// 房源详情图片类型
+typedef enum : NSInteger {
+    FHDetailHouseImageTypeOther             = 0, // 其他
+    FHDetailHouseImageTypeApartment         = 2, // 户型
+    FHDetailHouseImageTypeLivingroom        = 3, // 客厅
+    FHDetailHouseImageTypeBedroom           = 4, // 卧室
+    FHDetailHouseImageTypeKitchen           = 5, // 厨房
+    FHDetailHouseImageTypeBathroom          = 6, // 卫生间
+} FHDetailHouseImageType;
+
+@interface FHDetailOldDataHouseImageDictListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *houseImageTypeName;
+@property (nonatomic, assign) FHDetailHouseImageType houseImageType;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImageList;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *instantHouseImageList;
+@end
+
+
+
+
+@interface FHDetailNewTopBanner : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *businessTag;
+@property (nonatomic, copy , nullable) NSString *advantage;
+
+@end
+
 
 NS_ASSUME_NONNULL_END

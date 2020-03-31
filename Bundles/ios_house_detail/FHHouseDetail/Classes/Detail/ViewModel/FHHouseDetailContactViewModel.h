@@ -59,6 +59,7 @@ typedef enum : NSUInteger {
 - (NSDictionary *)baseParams;
 
 - (void)fillFormActionWithActionType:(FHFollowActionType)actionType;
+- (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict;
 
 // 关注
 - (void)followActionWithExtra:(NSDictionary *)extra;

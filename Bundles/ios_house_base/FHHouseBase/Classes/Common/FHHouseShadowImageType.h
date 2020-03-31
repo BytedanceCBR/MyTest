@@ -54,6 +54,22 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHPlotHouseModelTypeSold,
     ///小区详情页周边小区
      FHPlotHouseModelTypePeriphery,
+    
+    // 新房详情页属性模块
+    FHHouseModelTypeNewCoreInfo,
+    // 新房详情页优惠信息模块
+    FHHouseModelTypeNewSales,
+    // 新房详情页户型模块
+    FHHouseModelTypeNewFloorPlan,
+    // 新房详情页优质顾问模块
+    FHHouseModelTypeNewAgentList,
+    // 新房详情页位置周边模块
+    FHHouseModelTypeNewLocation,
+    // UGC社区入口
+    FHHouseModelTypeNewSocialInfo,
+    // 周边新盘
+    FHHouseModelTypeNewRelated,
+    
 };
 
 //展示范围。是否进行裁剪

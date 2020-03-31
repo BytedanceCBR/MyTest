@@ -430,6 +430,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [params setValue:[_tracerDict objectForKey:@"origin_from"] forKey:@"origin_from"];
         [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
         [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
+        params[@"enter_from"] = _tracerDict[@"enter_from"];
         [TTTracker eventV3:@"element_show" params:params];
     }
 }
@@ -494,16 +495,38 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict
 {
+    NSString *title = nil;
+    NSString *subtitle = self.subTitle;
+    NSString *btnTitle = @"提交";
+    NSString *fromStr = self.fromStr;
+    NSNumber *cluePage = nil;
+    NSString *toast = nil;
+
+    if (extraDict[@"title"]) {
+        title = extraDict[@"title"];
+    }
+    if (extraDict[@"subtitle"]) {
+        subtitle = extraDict[@"subtitle"];
+    }
+    if (extraDict[@"btn_title"]) {
+        btnTitle = extraDict[@"btn_title"];
+    }
+    if (extraDict[@"from"]) {
+        fromStr = extraDict[@"from"];
+    }
+    if (extraDict[kFHCluePage]) {
+        cluePage = extraDict[kFHCluePage];
+    }
+    if (extraDict[@"toast"]) {
+        toast = extraDict[@"toast"];
+    }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
     fillFormConfig.houseType = self.houseType;
     fillFormConfig.houseId = self.houseId;
     fillFormConfig.topViewController = self.belongsVC;
-    fillFormConfig.from = self.fromStr;
+    fillFormConfig.from = fromStr;
     fillFormConfig.realtorId = self.contactPhone.realtorId;
     fillFormConfig.customHouseId = self.customHouseId;
-    if (self.subTitle && self.subTitle.length > 0) {
-        fillFormConfig.subtitle = self.subTitle;
-    }
     if (self.toast && self.toast.length > 0) {
         fillFormConfig.toast = self.toast;
     }
@@ -511,6 +534,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         fillFormConfig.title = @"咨询经纪人";
         fillFormConfig.btnTitle = @"提交";
         fillFormConfig.cluePage = @(FHClueFormPageTypeCNeighborhood);
+    }
+    if (title.length > 0) {
+        fillFormConfig.title = title;
+    }
+    if (subtitle.length > 0) {
+        fillFormConfig.subtitle = subtitle;
+    }
+    if (cluePage) {
+        fillFormConfig.cluePage = cluePage;
+    }
+    if (toast.length > 0) {
+        fillFormConfig.toast = toast;
     }
     NSMutableDictionary *params = [self baseParams].mutableCopy;
     if (extraDict.count > 0) {
