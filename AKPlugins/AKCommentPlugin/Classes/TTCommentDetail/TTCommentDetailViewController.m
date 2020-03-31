@@ -677,7 +677,8 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     
     if(![TTAccountManager isLogin]) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        [params setObject:@"feed_detail" forKey:@"enter_from"];
+        NSString *enterFrom = self.enterFrom ?:@"feed_detail";
+        [params setObject:enterFrom forKey:@"enter_from"];
         [params setObject:@"feed_like" forKey:@"enter_type"];
         // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
         [params setObject:@(YES) forKey:@"need_pop_vc"];
@@ -1095,6 +1096,10 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         _headerView.delegate = self;
         _headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _headerView.hidePost = self.hidePost;
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"enter_from"] = self.enterFrom;
+        _headerView.traceDict = dict;
+        
         //headView主评论出现的时间
         NSMutableDictionary *extra = [NSMutableDictionary dictionary];
         [extra setValue:@"comment_detail" forKey:@"comment_position"];
