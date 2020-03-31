@@ -15,5 +15,5 @@ if ENV['WORKSPACE']
     #临时解决CI上多进程Pod Install导致的缓存问题
     gem 'cocoapods-fix_cache', '0.3.3'
 else
-    gem 'cocoapods-bytedance-monitor'
+ # gem 'cocoapods-bytedance-monitor'
 end 
