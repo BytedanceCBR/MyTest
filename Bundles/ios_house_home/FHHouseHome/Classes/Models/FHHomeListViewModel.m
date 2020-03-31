@@ -809,6 +809,11 @@
 {
     if (scrollView == self.tableViewV) {
         [self setUpTableScrollOffsetZero];
+        
+        NSMutableDictionary *clickOptDict = [NSMutableDictionary new];
+        [clickOptDict setValue:@"maintab" forKey:@"page_type"];
+        [clickOptDict setValue:@"status_column" forKey:@"click_option"];
+        [FHEnvContext recordEvent:clickOptDict andEventKey:@"click_options"];
         return YES;
     }
     return NO;
