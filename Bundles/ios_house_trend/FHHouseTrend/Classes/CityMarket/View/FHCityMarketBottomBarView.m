@@ -19,7 +19,7 @@
 {
     self = [super init];
     if (self) {
-        self.layer.cornerRadius = 4;
+        self.layer.cornerRadius = 22;
         [self setupUI];
     }
     return self;
