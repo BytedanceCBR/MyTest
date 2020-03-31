@@ -518,8 +518,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         toast = extraDict[@"toast"];
     }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
-    fillFormConfig.houseType = self.houseType;
-    fillFormConfig.houseId = self.houseId;
+    if (self.targetType>0) {
+        fillFormConfig.houseType = self.targetType;
+    }else {
+       fillFormConfig.houseType = self.houseType;
+    }
+    if (self.customHouseId.length>0) {
+        fillFormConfig.houseId = self.customHouseId;
+    }else {
+        fillFormConfig.houseId = self.houseId;
+    }
     fillFormConfig.topViewController = self.belongsVC;
     fillFormConfig.from = fromStr;
     fillFormConfig.realtorId = self.contactPhone.realtorId;
