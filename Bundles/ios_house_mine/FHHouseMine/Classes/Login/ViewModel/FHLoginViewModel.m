@@ -500,7 +500,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)traceLoginResult:(UIImage *)captchaImage phoneNum:(NSString *)phoneNumber smsCode:(NSString *)smsCode error:(NSError *)error isOneKeyLogin:(BOOL)isOneKeyLogin {
     BOOL isReport = NO;
-    NSString *errorMessage = nil;
+    NSString *errorMessage = UT_BE_NULL;
     if (!error) {
         // 登录成功
         isReport = YES;
@@ -536,7 +536,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     tracerDict[@"login_agreement"] = @"1" ; // : @"0";
     
     tracerDict[@"result"] = (error ? @"fail" : @"success");
-    tracerDict[@"error"] = @(error.code);
+    tracerDict[@"error"] = error ? @(error.code) : UT_BE_NULL;
     tracerDict[@"error_message"] = errorMessage;
 
     TRACK_EVENT(@"login_result", tracerDict);
