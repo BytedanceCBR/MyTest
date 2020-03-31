@@ -88,7 +88,8 @@
 {
     
     FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
-    CGFloat fontSize = [TTDeviceHelper isScreenWidthLarge320] ? 14 : 10;
+    CGFloat fontSize = [TTDeviceHelper isScreenWidthLarge320] ? 14 : 14;
+    NSInteger countNum =  [TTDeviceHelper isScreenWidthLarge320] ? 5 : 4;
     NSString *stringTitle =@"定位显示你在";
     if (configData.citySwitch.cityName) {
         NSString *stringPosition = [NSString stringWithFormat:@" \"%@\"",configData.citySwitch.cityName];
@@ -103,7 +104,7 @@
         NSString *switchString = [NSString stringWithFormat:@"切换到%@",configData.citySwitch.cityName];
         CGFloat btnWidht = switchString.length * 15;
         [_switchBtn.titleLabel setFont:[UIFont themeFontSemibold:12]];
-        if (configData.citySwitch.cityName && configData.citySwitch.cityName.length > 5) {
+        if (configData.citySwitch.cityName && configData.citySwitch.cityName.length > countNum) {
             [_switchBtn setTitle:@"切换" forState:UIControlStateNormal];
             btnWidht = 40;
         }else
