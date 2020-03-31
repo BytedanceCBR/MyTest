@@ -30,6 +30,7 @@
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
 #import "UIColor+Theme.h"
+#import "TTAccountManager.h"
 
 
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
@@ -573,9 +574,37 @@
             StrongSelf;
             [self digButtonOnClick:nil];
         }];
-    
+        
+        _digButton.shouldClickBlock = ^BOOL{
+            StrongSelf;
+            BOOL ret = [TTAccountManager isLogin];
+            if(ret == NO) {
+                [self gotoLogin];
+            }
+            return ret;
+        };
+        
+        _digButton.manuallySetSelectedEnabled = YES;
     }
     return _digButton;
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:@"feed_detail" forKey:@"enter_from"];
+    [params setObject:@"feed_like" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                wSelf.digButton.selected = !wSelf.digButton.selected;
+            }
+        }
+    }];
 }
 
 - (TTAsyncLabel *)userInfoLabel {
