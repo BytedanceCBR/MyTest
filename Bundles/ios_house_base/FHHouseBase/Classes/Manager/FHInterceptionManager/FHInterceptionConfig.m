@@ -13,7 +13,7 @@
     self = [super init];
     if (self) {
         self.isContinue = YES;
-        self.maxInterceptTime = 5.0f;
+        self.maxInterceptTime = 10.0f;
         self.compareTime = 1.0f;
         self.category = @{};
     }

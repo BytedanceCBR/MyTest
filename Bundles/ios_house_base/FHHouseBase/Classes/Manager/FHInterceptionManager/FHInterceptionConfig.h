@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHInterceptionConfig : NSObject
-//最大拦截时间，默认是5秒
+//最大拦截时间，默认是10秒
 @property(nonatomic , assign) CGFloat maxInterceptTime;
 //比较参数的间隔时间，默认是1秒
 @property(nonatomic , assign) CGFloat compareTime;
