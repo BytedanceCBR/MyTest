@@ -11,7 +11,7 @@
 #define InterceptionManagerContinue @"InterceptionManagerContinue"
 
 @interface FHInterceptionManager ()
-//接口字典
+//接口字典，保证接口不会重复调用，保证最后一次接口调用结果
 @property(nonatomic , strong) NSMutableDictionary *requestList;
 
 @end

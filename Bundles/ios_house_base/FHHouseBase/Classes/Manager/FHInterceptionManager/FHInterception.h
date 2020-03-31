@@ -18,14 +18,6 @@ typedef TTHttpTask * _Nullable (^Task)(void);
 typedef void (^Operation)(void);
 
 @interface FHInterception : NSObject
-//最大拦截时间，默认是5秒
-//@property(nonatomic , assign) CGFloat maxInterceptTime;
-//比较参数的间隔时间，默认是1秒
-//@property(nonatomic , assign) CGFloat compareTime;
-//参数判断失败后是否继续执行请求，默认不执行
-//@property(nonatomic , assign) BOOL isContinue;
-//日志上报内容
-//@property(nonatomic , strong) NSDictionary *category;
 /**
 添加拦截器方法
 

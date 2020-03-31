@@ -8,7 +8,8 @@
 #import "FHInterception.h"
 #import "HMDTTMonitor.h"
 
-#define InterceptionManagerContinue @"InterceptionManagerContinue"
+#define InterceptionManagerContinue @"interception_manager_continue"
+#define InterceptionManagerComplete @"interception_manager_complete"
 
 @interface FHInterception ()
 
@@ -142,6 +143,18 @@
         }
         self.isRunning = NO;
         self.complete(self.success,httpTask);
+        
+        //每次结束的时候上报结果
+        NSMutableDictionary *reportDic = [NSMutableDictionary dictionary];
+        if(self.config.category.count > 0){
+            [reportDic addEntriesFromDictionary:self.config.category];
+        }
+        reportDic[@"check_gap"] = @(self.config.compareTime);
+        reportDic[@"time_out"] = @(self.config.maxInterceptTime);
+        reportDic[@"intercept_time"] = @(self.interceptTime);
+        reportDic[@"success"] = @(self.success);
+        [[HMDTTMonitor defaultManager] hmdTrackService:InterceptionManagerComplete metric:nil category:reportDic extra:@{
+        }];
     });
 }
 
