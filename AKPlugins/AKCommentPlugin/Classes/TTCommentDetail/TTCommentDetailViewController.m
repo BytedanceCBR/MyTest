@@ -673,8 +673,28 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 #pragma mark - actions
-
 - (void)toolbarDiggButtonOnClicked:(id)sender {
+    
+    if(![TTAccountManager isLogin]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setObject:@"feed_detail" forKey:@"enter_from"];
+        [params setObject:@"feed_like" forKey:@"enter_type"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        params[@"from_ugc"] = @(YES);
+        __weak typeof(self) wSelf = self;
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    [wSelf toolbarDiggButtonOnClicked:sender];
+                }
+            }
+        }];
+        
+        return;
+    }
+    
     if (self.groupId == nil) {
         self.groupId = self.pageState.detailModel.groupModel.groupID;
     }

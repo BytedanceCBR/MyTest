@@ -662,8 +662,36 @@
             weakDigButton.borderColorThemeKey = kColorLine4;
             [wself digButtonOnClick:weakDigButton];
         }];
+        
+        _digButton.shouldClickBlock = ^BOOL{
+            StrongSelf;
+            BOOL ret = [TTAccountManager isLogin];
+            if(ret == NO) {
+                [self gotoLogin];
+            }
+            return ret;
+        };
     }
     return _digButton;
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:@"feed_detail" forKey:@"enter_from"];
+    [params setObject:@"feed_like" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                wSelf.digButton.borderColorThemeKey = kColorLine4;
+                [wSelf digButtonOnClick:wSelf.digButton];
+            }
+        }
+    }];
 }
 
 - (SSThemedLabel *)userInfoLabel {
