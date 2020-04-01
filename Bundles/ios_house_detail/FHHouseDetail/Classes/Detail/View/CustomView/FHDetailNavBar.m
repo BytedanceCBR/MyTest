@@ -7,6 +7,7 @@
 
 #import "FHDetailNavBar.h"
 #import "UIColor+Theme.h"
+#import "UIFont+House.h"
 #import "Masonry.h"
 #import "TTDeviceHelper.h"
 #import <ReactiveObjC/ReactiveObjC.h>
@@ -19,7 +20,8 @@
 @property(nonatomic , strong) UIButton *collectBtn;
 @property(nonatomic , strong) UIButton *shareBtn;
 @property(nonatomic , strong) UIButton *messageBtn;
-@property(nonatomic , strong) UIImageView *messageDot;
+//@property(nonatomic , strong) UIImageView *messageDot;
+@property(nonatomic, strong)UILabel *messageDotNumber;
 @property(nonatomic , strong) UIView *gradientView;
 @property(nonatomic , strong) UIView *bottomLine;
 
@@ -149,10 +151,19 @@
     [_shareBtn addTarget:self action:@selector(shareAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_shareBtn];
     
-    _messageDot = [[UIImageView alloc] init];
-    _messageDot.hidden = YES;
-    [_messageDot setImage:[UIImage imageNamed:@"detail_message_dot"]];
-    [self addSubview:_messageDot];
+    
+    _messageDotNumber = [[UILabel alloc]init];
+    _messageDotNumber.font = [UIFont themeFontSemibold:10];
+    _messageDotNumber.backgroundColor = [UIColor themeOrange1];
+    _messageDotNumber.textColor = [UIColor whiteColor];
+    _messageDotNumber.textAlignment = NSTextAlignmentCenter;
+    _messageDotNumber.layer.cornerRadius = 8;
+    _messageDotNumber.layer.masksToBounds = YES;
+    _messageDotNumber.hidden = YES;
+//    _messageDot = [[UIImageView alloc] init];
+//    _messageDot.hidden = YES;
+//    [_messageDot setImage:[UIImage imageNamed:@"detail_message_dot"]];
+    [self addSubview:_messageDotNumber];
 
     [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(12);
@@ -181,12 +192,18 @@
             make.width.mas_equalTo(40);
             make.bottom.mas_equalTo(self);
         }];
-        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.messageBtn).offset(-5);
-            make.height.mas_equalTo(10);
-            make.width.mas_equalTo(10);
-            make.top.mas_equalTo(self.messageBtn).offset(10);
+        [_messageDotNumber mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.messageBtn.mas_centerX).offset(2);
+            make.height.mas_equalTo(16);
+            make.width.mas_equalTo(16);
+            make.top.mas_equalTo(self.messageBtn).offset(6);
         }];
+//        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.right.mas_equalTo(self.messageBtn).offset(-5);
+//            make.height.mas_equalTo(10);
+//            make.width.mas_equalTo(10);
+//            make.top.mas_equalTo(self.messageBtn).offset(10);
+//        }];
     }else {
         [_messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(-12);
@@ -200,12 +217,18 @@
             make.width.mas_equalTo(40);
             make.bottom.mas_equalTo(self);
         }];
-        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.messageBtn).offset(-5);
-            make.height.mas_equalTo(10);
-            make.width.mas_equalTo(10);
-            make.top.mas_equalTo(self.messageBtn).offset(10);
+        [_messageDotNumber mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.messageBtn.mas_right).offset(5);
+            make.height.mas_equalTo(16);
+            make.width.mas_equalTo(16);
+            make.top.mas_equalTo(self.messageBtn).offset(6);
         }];
+//        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.right.mas_equalTo(self.messageBtn).offset(-5);
+//            make.height.mas_equalTo(10);
+//            make.width.mas_equalTo(10);
+//            make.top.mas_equalTo(self.messageBtn).offset(10);
+//        }];
     }
 
     [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -270,9 +293,9 @@
     self.shareBtn.hidden = !showItem;
     self.collectBtn.hidden = !showItem;
     self.messageBtn.hidden = !showItem;
-    if (!showItem) {
-        self.messageDot.hidden = !showItem;
-    }
+//    if (!showItem) {
+//        self.messageDot.hidden = !showItem;
+//    }
 }
 
 - (void)backAction:(UIButton *)sender
@@ -304,8 +327,18 @@
 }
 
 
-- (void)displayMessageDot:(BOOL)show {
-    self.messageDot.hidden = !show;
+- (void)displayMessageDot:(NSInteger)dotNumber{
+    if (dotNumber >0) {
+        self.messageDotNumber.hidden = NO;
+        self.messageDotNumber.text = dotNumber >99?@"99+":[NSString stringWithFormat:@"%ld",dotNumber];
+        if (dotNumber>9) {
+            [_messageDotNumber mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(dotNumber>99?29:22);
+            }];
+        }
+    }else {
+        self.messageDotNumber.hidden = YES;
+    }
 }
 
 - (UIButton *)shareBtn

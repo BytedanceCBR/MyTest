@@ -24,7 +24,7 @@ typedef enum : NSUInteger {
 
 - (instancetype)initWithType:(FHDetailNavBarType)type;
 - (void)refreshAlpha:(CGFloat)alpha;
-- (void)displayMessageDot:(BOOL)show;
+- (void)displayMessageDot:(NSInteger)dotNumber;
 - (void)setFollowStatus:(NSInteger)followStatus;
 - (void)showRightItems:(BOOL)showItem;
 - (void)hideFollowBtn;

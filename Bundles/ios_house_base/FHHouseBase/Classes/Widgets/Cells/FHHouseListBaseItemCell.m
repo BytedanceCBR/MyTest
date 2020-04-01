@@ -299,7 +299,7 @@
         self.totalPrice.text = model.displayPrice;
         self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
         if (model.reasonTags.count>0) {
-            self.tagInformation.attributedText = model.recommendReasons;
+            self.tagInformation.attributedText = model.recommendReasonStr;
         }else {
             self.tagInformation.attributedText = model.tagString;
         }
