@@ -29,7 +29,7 @@
 
 
 #define SAFE_AREA   UIEdgeInsets safeInsets = UIEdgeInsetsZero; \
-    if (@available(iOS 11.8 , *)) { \
+    if (@available(iOS 11.0 , *)) { \
         safeInsets = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets]; \
     }
 
