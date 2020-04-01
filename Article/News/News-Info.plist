@@ -86,7 +86,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CHANNEL_NAME</key>
-	<string>App store</string>
+	<string>App Store</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
