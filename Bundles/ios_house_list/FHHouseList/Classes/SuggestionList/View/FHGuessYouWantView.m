@@ -135,7 +135,7 @@
                 titleLabel.font = button.label.font;
                 [titleLabel setBackgroundColor:[UIColor clearColor]];
                 [button setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:88/255.0  blue:105/255.0  alpha:0.1]];
-                titleLabel.textColor = [UIColor themeRed1];
+                titleLabel.textColor = [UIColor themeOrange1];
 
                 [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.top.bottom.equalTo(button);

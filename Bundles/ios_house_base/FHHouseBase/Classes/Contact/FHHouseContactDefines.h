@@ -31,6 +31,8 @@ typedef enum : NSUInteger {
 // 表单线索
 typedef enum : NSUInteger {
     FHClueFormPageTypeCNeighborhood = 2, // app_neighbourhood： 1.2 二手房小区详情页底通表单
+    FHClueFormPageTypeCFloorPlan= 4, // app_floorplan： 1.4 新房户型详情页
+
     FHClueFormPageTypeCNewHousePicview = 38, // 1.38 新房详情页图片浏览表单  - from：app_newhouse_picview
     FHClueFormPageTypeCNewSales = 39, //   from：app_newhouse_discount： 1.39 新房详情页优惠活动咨询表单
 
@@ -38,6 +40,7 @@ typedef enum : NSUInteger {
 
 // 电话线索
 typedef enum : NSUInteger {
+    FHClueCallPageTypeCFloorPlan= 4, // app_floorplan： 1.4 新房户型详情页
     FHClueCallPageTypeCNeighborhood = 5, // app_neighborhood: 1.5小区详情页底通电话
     FHClueCallPageTypeCNewHouseMulrealtor = 38,//  app_newhouse_realtor: 1.38 新房经纪人多展位
     FHClueCallPageTypeCNewHousePicview = 39,//    - from：app_newhouse_picview: 1.39  新房详情页图片浏览电话
@@ -51,6 +54,9 @@ typedef enum : NSUInteger {
     
     FHClueIMPageTypeCourt = 3, // app_court: 1.3 新房详情页
     FHClueIMPageTypeCNeighborhood = 4, // app_neighborhood: 1.4小区详情页
+    
+    FHClueIMPageTypeUGCFeed = 5, // app_feed_weitoutiao: 1.5 feed页微头条IM
+    FHClueIMPageTypeUGCDetail = 6, // app_weitoutiao: 1.6 微头条详情页IM
 
     FHClueIMPageTypeCOldSchool = 23, // app_oldhouse_school 1.23小端二手房详情页的咨询学区
     FHClueIMPageTypeCOldFloor = 24, // app_oldhouse_floor：1.24小端二手房详情页的咨询楼层
@@ -65,6 +71,7 @@ typedef enum : NSUInteger {
     FHClueIMPageTypeCNewHousePicview = 36,//    - from：app_newhouse_picview: 1.36  新房详情页图片浏览IM
     FHClueIMPageTypeCNewHouseLocation = 37,//  - app_newhouse_askneighbourhood: 1.37  询周边配套IM线索
     FHClueIMPageTypeCNewHouseMulrealtor = 38,//  app_newhouse_realtor: 1.38 新房经纪人多展位
+    FHClueIMPageTypeCNewHouseApartmentConsult = 39, // app_newhouse_housetype: 1.39 新房详情页询户型IM入口
     
     FHClueIMPageTypeCNeighborhoodMulrealtor = 41,// app_neighborhood_mulrealtor: 1.41小区详情页经纪人多展位
     FHClueIMPageTypeCNeighborhoodAladdin = 42,// app_neighborhood_aladdin: 1.42小区阿拉丁微聊

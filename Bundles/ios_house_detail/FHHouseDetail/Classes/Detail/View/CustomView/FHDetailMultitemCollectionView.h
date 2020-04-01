@@ -12,6 +12,7 @@
 
 typedef void(^kFHMultitemCollectionCellClickBlk)(NSInteger index);
 typedef void(^kFHMultitemCollectionDisplayCellBlk)(NSInteger index);
+typedef void(^kFHMultitemCollectionCellItemClickBlk)(NSInteger index, UIView *itemView, FHDetailBaseCollectionCell* cell);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -32,7 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)reloadData;
 
 @property (nonatomic, copy)     kFHMultitemCollectionCellClickBlk       clickBlk;
-@property (nonatomic, copy)     kFHMultitemCollectionDisplayCellBlk       displayCellBlk;
+@property (nonatomic, copy)     kFHMultitemCollectionCellItemClickBlk   itemClickBlk;
+@property (nonatomic, copy)     kFHMultitemCollectionDisplayCellBlk     displayCellBlk;
 
 @end
 

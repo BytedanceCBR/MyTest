@@ -116,7 +116,7 @@
     self.customNavBarView.seperatorLine.alpha = 0;
     self.customNavBarView.leftBtn.hidden = YES;
     self.customNavBarView.bgView.alpha = 0;
-    self.customNavBarView.bgView.image = [UIImage imageNamed:@"fh_mine_header_bg"];
+    self.customNavBarView.bgView.image = [UIImage imageNamed:@"fh_mine_header_bg_orange"];
     
     self.settingBtn = [[UIButton alloc] init];
     [_settingBtn setBackgroundImage:[UIImage imageNamed:@"fh_mine_setting"] forState:UIControlStateNormal];

@@ -297,6 +297,7 @@
         action.userInfo = info;
         [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
         [_actions addObject:action];
+        item.layer.cornerRadius = 22;
         return item;
     }];
 

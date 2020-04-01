@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)subPageParams;
 - (NSString *)pageTypeString;
 
+- (FHHouseDetailContactViewModel *)getContactViewModel;
+
 @end
 
 NS_ASSUME_NONNULL_END

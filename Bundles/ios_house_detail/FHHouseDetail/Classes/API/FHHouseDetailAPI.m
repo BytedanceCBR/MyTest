@@ -28,7 +28,6 @@
 #import "TTBaseMacro.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
 
-
 #define GET @"GET"
 #define POST @"POST"
 #define DEFULT_ERROR @"请求错误"

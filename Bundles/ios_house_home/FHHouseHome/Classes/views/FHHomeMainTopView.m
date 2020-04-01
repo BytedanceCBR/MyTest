@@ -287,14 +287,12 @@ static const float kMapSearchBtnRightPading = 50;
     {
         _houseSegmentControl.selectedSegmentIndex = _houseSegmentControl.selectedSegmentIndex;
     }
-    
-    CGFloat expandWidth = titles.count > 1 ? 20 : 5;
-    
+        
     [_houseSegmentControl mas_updateConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topBackCityContainer);
         make.height.mas_equalTo(kSegementedMainTopHeight);
         make.centerY.equalTo(self.segmentControl).offset(-2);
-        make.width.mas_equalTo((kSegementedOneWidth + 12) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : expandWidth));
+        make.width.mas_equalTo((kSegementedOneWidth + 12) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 5));
     }];
     
     

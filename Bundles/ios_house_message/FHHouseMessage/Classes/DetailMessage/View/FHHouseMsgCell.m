@@ -103,7 +103,7 @@
     _areaLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [self.infoPanel addSubview:_areaLabel];
     
-    self.priceLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor themeRed1]];
+    self.priceLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor themeOrange1]];
     [self.contentView addSubview:_priceLabel];
     
     self.roomSpaceLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
@@ -252,7 +252,7 @@
         self.priceLabel.textColor = [UIColor themeGray3];
     }else {
         self.titleLabel.textColor = [UIColor themeGray1];
-        self.priceLabel.textColor = [UIColor themeRed1];
+        self.priceLabel.textColor = [UIColor themeOrange1];
     }
 }
 

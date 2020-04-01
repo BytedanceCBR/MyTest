@@ -96,7 +96,7 @@
     [self.contentView addSubview:_subNameLabel];
     
     _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:18];
-    _priceLabel.textColor = [UIColor themeRed1];
+    _priceLabel.textColor = [UIColor themeOrange1];
     _priceLabel.font = [UIFont themeFontMedium:18];
     _priceLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_priceLabel];

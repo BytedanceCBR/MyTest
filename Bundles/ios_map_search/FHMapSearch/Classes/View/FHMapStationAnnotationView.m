@@ -82,8 +82,8 @@
         FHHouseAnnotation *houseAnnotation = (FHHouseAnnotation *)self.annotation;
         houseAnnotation.type = FHHouseAnnotationTypeSelected;
         
-        NSString *bgImageName = @"mapsearch_annotation_bg_red";
-        NSString *arrowImageName = @"mapsearch_annotation_arrow_red";
+        NSString *bgImageName = @"mapsearch_annotation_bg_orange";
+        NSString *arrowImageName = @"mapsearch_annotation_arrow_orange";
         UIColor *textColor = [UIColor whiteColor];
         
         UIImage *img = [UIImage imageNamed:bgImageName];

@@ -8,7 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
 @property (nonatomic, copy , nullable) NSString *pricingSubStatus;
-@property (nonatomic, copy , nullable) NSString *courtSubStatus;
+@property (nonatomic, assign) NSInteger courtSubStatus;
 @end
 
 @protocol FHDetailFloorPanDetailInfoDataBaseInfoModel<NSObject>
@@ -57,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *districtId;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *squaremeter;
-@property (nonatomic, strong , nullable) FHDetailFloorPanDetailInfoDataContactModel *contact ;  
+@property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
 @property (nonatomic, copy , nullable) NSString *pricing;
 @property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataRecommendModel> *recommend;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
@@ -66,6 +66,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
+@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
+@property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
+
+
 @end
 
 @interface FHDetailFloorPanDetailInfoModel : JSONModel 

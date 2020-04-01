@@ -212,7 +212,7 @@
 {
     if (!_priceLabel) {
         _priceLabel = [[UILabel alloc]init];
-        _priceLabel.textColor = [UIColor themeRed1];
+        _priceLabel.textColor = [UIColor themeOrange1];
     
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
@@ -625,7 +625,7 @@
         self.subTitleLabel.text = commonModel.subtitle;
         self.priceLabel.text = commonModel.pricingNum;
         self.pricePerSqmLabel.text = commonModel.pricingUnit;
-        self.pricePerSqmLabel.textColor = [UIColor themeRed1];
+        self.pricePerSqmLabel.textColor = [UIColor themeOrange1];
         
         FHImageModel *imageModel = [commonModel.houseImage firstObject];
         [self updateMainImageWithUrl:imageModel.url];
@@ -645,11 +645,11 @@
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
+            _pricePerSqmLabel.textColor = [UIColor themeOrange1];
         }else {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
+            _pricePerSqmLabel.textColor = [UIColor themeOrange1];
         }
         
         self.priceLabel.text = commonModel.pricePerSqmNum;
@@ -710,7 +710,7 @@
     self.tagLabel.text = model.displayStatsInfo;
     self.priceLabel.text = model.pricePerSqmNum;
     self.pricePerSqmLabel.text = model.pricePerSqmUnit;
-    self.pricePerSqmLabel.textColor = [UIColor themeRed1];
+    self.pricePerSqmLabel.textColor = [UIColor themeOrange1];
     
     [self hideRecommendReason];
     [self updateTitlesLayout:YES];
@@ -735,7 +735,7 @@
     
     self.priceLabel.text = model.pricePerSqmNum;
     self.pricePerSqmLabel.text = model.pricePerSqmUnit;
-    self.pricePerSqmLabel.textColor = [UIColor themeRed1];
+    self.pricePerSqmLabel.textColor = [UIColor themeOrange1];
     
     [self hideRecommendReason];
     
@@ -895,7 +895,7 @@
             self.tagLabel.attributedText =  attributeString;
             self.priceLabel.text = commonModel.pricingNum;
             self.pricePerSqmLabel.text = commonModel.pricingUnit;
-            self.pricePerSqmLabel.textColor = [UIColor themeRed1];
+            self.pricePerSqmLabel.textColor = [UIColor themeOrange1];
             
             FHImageModel *imageModel = [commonModel.houseImage firstObject];
             [self updateMainImageWithUrl:imageModel.url];
@@ -929,7 +929,7 @@
             self.tagLabel.text = commonModel.displayStatsInfo;
             self.priceLabel.text = commonModel.pricePerSqmNum;
             self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
-            self.pricePerSqmLabel.textColor = [UIColor themeRed1];
+            self.pricePerSqmLabel.textColor = [UIColor themeOrange1];
             
             [self hideRecommendReason];
             [self updateTitlesLayout:YES];
@@ -1084,7 +1084,7 @@
     self.tagLabel.attributedText =  attributeString;
     self.priceLabel.text = model.pricingNum;
     self.pricePerSqmLabel.text = model.pricingUnit;
-    self.pricePerSqmLabel.textColor = [UIColor themeRed1];
+    self.pricePerSqmLabel.textColor = [UIColor themeOrange1];
 
     FHImageModel *imageModel = [model.houseImage firstObject];
     [self updateMainImageWithUrl:imageModel.url];

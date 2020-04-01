@@ -231,11 +231,11 @@
 {
     return self.bottomBar;
 }
-//
-//- (FHHouseDetailContactViewModel *)getContactViewModel
-//{
-//    return self.contactViewModel;
-//}
+
+- (FHHouseDetailContactViewModel *)getContactViewModel
+{
+    return self.contactViewModel;
+}
 
 - (NSDictionary *)subPageParams
 {

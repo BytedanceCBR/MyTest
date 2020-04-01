@@ -151,9 +151,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)refreshMessageDot {
     if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
-        [_navBar displayMessageDot:YES];
+        [_navBar displayMessageDot:[[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]];
     } else {
-        [_navBar displayMessageDot:NO];
+        [_navBar displayMessageDot:0];
     }
 }
 
@@ -315,6 +315,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [params setValue:[_tracerDict objectForKey:@"origin_from"] forKey:@"origin_from"];
     [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
     [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
+     [params setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
     [TTTracker eventV3:@"click_im_message" params:params];
     
     
@@ -326,7 +327,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)setContactPhone:(FHDetailContactModel *)contactPhone
 {
     _contactPhone = contactPhone;
-        
+
     NSString *contactTitle = @"电话咨询";
     NSString *chatTitle = @"在线联系";
     
@@ -486,9 +487,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"question_id"]) {
             imExtra[@"question_id"] = extraDict[@"question_id"];
         }
-        if (extraDict[@"is_login_front"]) {
-            imExtra[@"is_login_front"] = extraDict[@"is_login_front"];
-        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
@@ -521,8 +519,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         toast = extraDict[@"toast"];
     }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
-    fillFormConfig.houseType = self.houseType;
-    fillFormConfig.houseId = self.houseId;
+    if (self.targetType>0) {
+        fillFormConfig.houseType = self.targetType;
+    }else {
+       fillFormConfig.houseType = self.houseType;
+    }
+    if (self.customHouseId.length>0) {
+        fillFormConfig.houseId = self.customHouseId;
+    }else {
+        fillFormConfig.houseId = self.houseId;
+    }
     fillFormConfig.topViewController = self.belongsVC;
     fillFormConfig.from = fromStr;
     fillFormConfig.realtorId = self.contactPhone.realtorId;
@@ -705,8 +711,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
             extraDic[@"from"] = _fromStr;
         }
-    }else if (self.houseType == FHIMHouseTypeSecondHandHouse) {
-        extraDic[@"is_login_front"] = @(1);
     }
     [self onlineActionWithExtraDict:extraDic];
 }
@@ -1205,6 +1209,5 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
-
 
 @end

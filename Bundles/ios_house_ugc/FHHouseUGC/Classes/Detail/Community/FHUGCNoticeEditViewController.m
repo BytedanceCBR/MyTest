@@ -288,27 +288,32 @@ typedef enum : NSUInteger {
 - (void)showActionSheet {
     [self traceAlertShowWhenCompletedPressed];
     [self.textView resignFirstResponder];
-    
+    WeakSelf;
     NSString *title = @"向圈子中的人发送公告？";
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle: title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     UIAlertAction *saveOnlyAction = [UIAlertAction actionWithTitle:@"仅保存" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
         [self actionWithType:ActionTypeSaveOnly];
     }];
     
     UIAlertAction *sendSMSAction = [UIAlertAction actionWithTitle:@"消息通知" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
         [self actionWithType:ActionTypeSMS];
     }];
     
     UIAlertAction *pushAction = [UIAlertAction actionWithTitle:@"推送通知" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
         [self actionWithType:ActionTypePush];
     }];
     
     UIAlertAction *pushAndSMSAction = [UIAlertAction actionWithTitle:@"消息加推送" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
         [self actionWithType:ActionTypePushAndSMS];
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        StrongSelf;
         [self.textView becomeFirstResponder];
     }];
     
@@ -365,15 +370,17 @@ typedef enum : NSUInteger {
     BOOL isShowEmptyAlert = isEmpty && !isLeftButtonAction;
     
     NSString *title = isShowEmptyAlert ? @"确定清空公告栏?" : @"退出编辑?";
-    
+    WeakSelf;
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
     
     if(isShowEmptyAlert) {
         [self traceAlertShowWhenUserDecideWithEventName:@"notice_empty_popup_show"];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
             [self traceAlertClickWhenUserDecideWithOptionName:@"cancel"];
         }];
         UIAlertAction *confirmEmptyAction = [UIAlertAction actionWithTitle:@"清空" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
             [self actionWithType:ActionTypeSaveOnly];
             [self traceAlertClickWhenUserDecideWithOptionName:@"empty"];
         }];
@@ -383,10 +390,12 @@ typedef enum : NSUInteger {
     else {
         [self traceAlertShowWhenUserDecideWithEventName:@"notice_quit_popup_show"];
         UIAlertAction *exitAction = [UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
             [self exitPage];
             [self traceAlertClickWhenUserDecideWithOptionName:@"quit"];
         }];
         UIAlertAction *continueEditAction = [UIAlertAction actionWithTitle:@"继续编辑" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
             [self.textView becomeFirstResponder];
             [self traceAlertClickWhenUserDecideWithOptionName:@"continue_edit"];
         }];

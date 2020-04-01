@@ -127,7 +127,7 @@
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
         tracerDic[@"element_from"] = @"related";
-        tracerDic[@"enter_from"] = @"old_detail";
+        tracerDic[@"enter_from"] = @"new_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNewHouse)}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",dataItem.houseid];
         if (urlStr.length > 0) {

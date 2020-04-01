@@ -402,6 +402,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)handleLoginResult:(UIImage *)captchaImage phoneNum:(NSString *)phoneNumber smsCode:(NSString *)smsCode error:(NSError *)error isOneKeyLogin:(BOOL)isOneKeyLogin {
+    
+    [self traceLoginResult:captchaImage phoneNum:phoneNumber smsCode:smsCode error:error isOneKeyLogin:isOneKeyLogin];
+    
     if (!error) {
         [[ToastManager manager] showToast:@"登录成功"];
         if (phoneNumber.length > 0) {
@@ -493,6 +496,52 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     tracerDict[@"login_agreement"] = @"1" ; // : @"0";
     TRACK_EVENT(@"click_login", tracerDict);
 }
+
+
+- (void)traceLoginResult:(UIImage *)captchaImage phoneNum:(NSString *)phoneNumber smsCode:(NSString *)smsCode error:(NSError *)error isOneKeyLogin:(BOOL)isOneKeyLogin {
+    BOOL isReport = NO;
+    NSString *errorMessage = UT_BE_NULL;
+    if (!error) {
+        // 登录成功
+        isReport = YES;
+    } else if (captchaImage) {
+        // 获取验证码
+        isReport = NO;
+    } else {
+        // 登录失败
+        isReport = YES;
+        
+        if (error.code == 1039) {
+            errorMessage = [error.userInfo objectForKey:@"toutiao.account.errmsg_key"];
+        }else {
+            errorMessage = @"啊哦，服务器开小差了";
+            if (!isOneKeyLogin) {
+                errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+            }
+        }
+    }
+    
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
+    tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
+    if (self.fromOneKeyLogin) {
+        tracerDict[@"click_position"] = @"quick_login";
+    }else {
+        tracerDict[@"login_type"] = @"other_login";
+    }
+    if (self.fromOtherLogin) {
+        tracerDict[@"enter_from"] = @"quick_login";
+        tracerDict[@"enter_type"] = @"other_login";
+    }
+    tracerDict[@"login_agreement"] = @"1" ; // : @"0";
+    
+    tracerDict[@"result"] = (error ? @"fail" : @"success");
+    tracerDict[@"error"] = error ? @(error.code) : UT_BE_NULL;
+    tracerDict[@"error_message"] = errorMessage;
+
+    TRACK_EVENT(@"login_result", tracerDict);
+}
+
 
 - (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];

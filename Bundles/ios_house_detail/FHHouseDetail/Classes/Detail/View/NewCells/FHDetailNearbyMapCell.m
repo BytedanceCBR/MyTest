@@ -89,7 +89,6 @@ FHDetailVCViewLifeCycleProtocol>
         
         self.searchApi = [[AMapSearchAPI alloc] init];
         self.searchApi.delegate = self;
-        
         [self setUpLocationListTableView];
     }
     return self;
@@ -137,7 +136,7 @@ FHDetailVCViewLifeCycleProtocol>
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.sectionTitles = @[@"交通(0)",@"购物(0)",@"医院(0)",@"教育(0)"];
     _segmentedControl.selectionIndicatorHeight = 2;
-    _segmentedControl.selectionIndicatorColor = [UIColor themeRed1];
+    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange1];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _segmentedControl.isNeedNetworkCheck = NO;
@@ -148,7 +147,7 @@ FHDetailVCViewLifeCycleProtocol>
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
-                                     [UIColor themeRed1],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeOrange1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
 //    _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(-10, 5, 0, 5);

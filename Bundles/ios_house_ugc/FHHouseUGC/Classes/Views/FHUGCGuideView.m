@@ -127,7 +127,7 @@
     self.focusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 58, 26)];
     _focusLabel.backgroundColor = [UIColor whiteColor];
     _focusLabel.text = @"关注";
-    _focusLabel.textColor = [UIColor themeRed1];
+    _focusLabel.textColor = [UIColor themeOrange1];
     _focusLabel.font = [UIFont themeFontRegular:12];
     _focusLabel.textAlignment = NSTextAlignmentCenter;
     _focusLabel.layer.masksToBounds =YES;
