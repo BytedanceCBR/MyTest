@@ -16,7 +16,7 @@
 #import "UILabel+House.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 
-@interface FHDetailMultitemCollectionView ()<UICollectionViewDataSource, UICollectionViewDelegate>
+@interface FHDetailMultitemCollectionView ()<UICollectionViewDataSource, UICollectionViewDelegate,FHDetailBaseCollectionCellDelegate>
 
 @property (nonatomic, copy)     NSString       *cellIdentifier;
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowCache;
@@ -77,6 +77,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     FHDetailBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:self.cellIdentifier forIndexPath:indexPath];
     if (indexPath.row < self.datas.count) {
+        cell.delegate = self;
         [cell refreshWithData:self.datas[indexPath.row]];
     }
     return cell;
@@ -103,4 +104,11 @@
     }
 }
 
+#pragma mark - FHDetailBaseCollectionCellDelegate
+- (void)clickCellItem:(UIView *)itemView onCell:(FHDetailBaseCollectionCell *)cell {
+    NSIndexPath *indexPath = [self.collectionContainer indexPathForCell:cell];
+    if(self.itemClickBlk) {
+        self.itemClickBlk(indexPath.row, itemView, cell);
+    }
+}
 @end

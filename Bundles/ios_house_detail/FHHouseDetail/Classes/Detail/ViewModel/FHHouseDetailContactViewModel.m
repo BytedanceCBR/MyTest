@@ -327,7 +327,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)setContactPhone:(FHDetailContactModel *)contactPhone
 {
     _contactPhone = contactPhone;
-        
+
     NSString *contactTitle = @"电话咨询";
     NSString *chatTitle = @"在线联系";
     
@@ -487,9 +487,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"question_id"]) {
             imExtra[@"question_id"] = extraDict[@"question_id"];
         }
-        if (extraDict[@"is_login_front"]) {
-            imExtra[@"is_login_front"] = extraDict[@"is_login_front"];
-        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
@@ -522,8 +519,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         toast = extraDict[@"toast"];
     }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
-    fillFormConfig.houseType = self.houseType;
-    fillFormConfig.houseId = self.houseId;
+    if (self.targetType>0) {
+        fillFormConfig.houseType = self.targetType;
+    }else {
+       fillFormConfig.houseType = self.houseType;
+    }
+    if (self.customHouseId.length>0) {
+        fillFormConfig.houseId = self.customHouseId;
+    }else {
+        fillFormConfig.houseId = self.houseId;
+    }
     fillFormConfig.topViewController = self.belongsVC;
     fillFormConfig.from = fromStr;
     fillFormConfig.realtorId = self.contactPhone.realtorId;
@@ -706,8 +711,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
             extraDic[@"from"] = _fromStr;
         }
-    }else if (self.houseType == FHIMHouseTypeSecondHandHouse) {
-        extraDic[@"is_login_front"] = @(1);
     }
     [self onlineActionWithExtraDict:extraDic];
 }
@@ -1206,6 +1209,5 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
-
 
 @end

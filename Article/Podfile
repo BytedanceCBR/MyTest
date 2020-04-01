@@ -52,7 +52,7 @@ def fhPods
 #    'Core',
 #    'DelegateForC'
 #    ]
-    pod 'FHPopupViewCenter', '0.0.2-rc.1', :subspecs => [
+    pod 'FHPopupViewCenter', '0.0.2-rc.5', :subspecs => [
     'Core',
     'DelegateForC'
     ]
@@ -61,11 +61,11 @@ def fhPods
     # 'Core',
     # 'DelegateForC'
     # ]
-
-    pod 'ios_house_im' , '0.1.19-rc.14'
-#    pod 'ios_house_im' , :path => '../../ios_house_im'
-#    pod 'ios_house_im' , :path => '../../cim'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '8141c3506a677f14f05eabb7146120339e0ad283'
+    
+    pod 'ios_house_im' , '0.2.0-rc.2'
+#    pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im'
+#    pod 'ios_house_im' , :path => '../../cim2'
+#     pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '3d1b6668952b9b6d21498495c2a21c82fa6b4e83'
 
 end
 
@@ -370,7 +370,7 @@ def appPods
     pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod_binary 'TTImage', '0.8.4'
-    pod_binary 'BDWebImage', '1.0.16-rc.17',:subspecs => [
+    pod_binary 'BDWebImage', '1.0.20',:subspecs => [
     'Core',
     'Decoder',
     'Download',

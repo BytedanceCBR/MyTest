@@ -1073,10 +1073,15 @@
     self.toolbarView.hidden = NO;
     [self p_refreshToolbarView];
 }
-
+- (NSString *)pageType {
+    return @"article";
+}
 - (void)p_buildCommentViewController
 {
     self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"page_type"] = [self pageType];
+    self.commentViewController.tracerDict = dict;
     self.commentViewController.enableImpressionRecording = YES;
     [self.commentViewController willMoveToParentViewController:self];
     [self addChildViewController:self.commentViewController];
@@ -2725,12 +2730,18 @@
     
     [mdict setValue:self.detailModel.categoryID forKey:@"categoryID"];
     [mdict setValue:self.detailModel.clickLabel forKey:@"enterFrom"];
+    if(self.detailModel.clickLabel.length <= 0) {
+        [mdict setValue:[self pageType] forKey:@"enterFrom"];
+    }
     [mdict setValue:self.detailModel.logPb forKey:@"logPb"];
 
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
     
     detailRoot.categoryID = self.detailModel.categoryID;
     detailRoot.enterFrom = self.detailModel.clickLabel;
+    if(self.detailModel.clickLabel.length <= 0) {
+        detailRoot.enterFrom = [self pageType];
+    }
     detailRoot.logPb = self.detailModel.logPb;
 
     TTModalContainerController *navVC = [[TTModalContainerController alloc] initWithRootViewController:detailRoot];

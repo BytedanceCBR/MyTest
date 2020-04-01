@@ -99,6 +99,7 @@
 #import "HMDSRWTESTEnvironment.h"
 #import "BDTFPSBar.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "IMManager.h"
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
@@ -726,10 +727,31 @@ extern NSString *const BOE_OPEN_KEY ;
         // 弹窗屏蔽策略清空
         STTableViewCellItem *popupDeleteConfigItem = [[STTableViewCellItem alloc] initWithTitle:@"清空当前设备的弹窗屏蔽配置策略" target:self action:@selector(clearPopupViewAckConfig)];
         STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"运营位弹窗" items:@[popupDeleteConfigItem]];
+            
         [dataSource addObject:section];
     }
     
+    {
+        // im相关调试选项
+        STTableViewCellItem *toggleIMConnectionItem = [[STTableViewCellItem alloc] initWithTitle:@"IM强制HTTPS(短连接)，重启生效" target:self action:nil];
+        toggleIMConnectionItem.switchStyle = YES;
+        toggleIMConnectionItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
+        toggleIMConnectionItem.switchAction = @selector(toggleIMConnection);
+        toggleIMConnectionItem.detail = [NSString stringWithFormat:@"https抓包 /message/send  请求，验证是否生效"];
+        
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem]];
+        
+        [dataSource addObject:section];
+    }
+    
+    
     return dataSource;
+}
+
+- (void)toggleIMConnection {
+    BOOL isShortConnectEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
+    [[NSUserDefaults standardUserDefaults] setBool:!isShortConnectEnable forKey:@"_IM_ShortConnection_Enable_"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(void)makeACrash {

@@ -131,6 +131,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)isOpenUrlParamsSame:(NSDictionary *)queryParams;
 
+
+/// 定制Loading动画
+/// @param inView 展示loading动画的宿主视图
+- (void)showLoading:(UIView *_Nullable)inView;
+
+- (void)showLoading:(UIView *_Nullable)inView offset:(CGPoint)offset;
+
+- (void)hideLoading;
+
 @end
 
 NSHashTable *wrap_weak(NSObject * obj);
