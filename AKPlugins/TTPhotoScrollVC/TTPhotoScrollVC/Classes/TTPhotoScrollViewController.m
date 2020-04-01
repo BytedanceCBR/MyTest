@@ -22,6 +22,7 @@
 #import "FHFloorPanPicShowViewController.h"
 #import <Photos/Photos.h>
 #import "HTSDeviceManager.h"
+#import "UIViewController+BanTip.h"
 
 #define indexPromptLabelTextSize 16.f
 #define indexPromptLabelBottomPadding 5.f
@@ -936,6 +937,8 @@ static BOOL staticPhotoBrowserAtTop = NO;
     }
     staticPhotoBrowserAtTop = NO;
     alreadyFinished = YES;
+    
+    [self banTip:NO];
 }
 
 - (void)selectButtonClicked:(id)sender
@@ -1287,6 +1290,8 @@ static BOOL staticPhotoBrowserAtTop = NO;
 
 - (void)presentPhotoScrollViewWithDismissBlock:(TTPhotoScrollViewDismissBlock)block
 {
+    [self banTip:YES];
+    
     staticPhotoBrowserAtTop = YES;
     //统计
     if (_mode == PhotosScrollViewSupportDownloadMode) {
@@ -1377,6 +1382,8 @@ static BOOL staticPhotoBrowserAtTop = NO;
 
 - (void)dismissSelf
 {
+    [self banTip:NO];
+    
     //统计
     if (_mode == PhotosScrollViewSupportDownloadMode) {
         if (self.trackerDic) {

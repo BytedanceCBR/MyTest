@@ -21,7 +21,13 @@
 #import "TTAccount.h"
 #import "TTDeviceHelper.h"
 #import "FHEnvContext.h"
+<<<<<<< HEAD
 #import "ArticleJSManager.h"
+=======
+#import "SSCommonLogic.h"
+#import "IESFalconManager.h"
+#import "FHIESGeckoManager.h"
+>>>>>>> f_alpha
 
 extern NSString *const kFHPLoginhoneNumberCacheKey;
 
@@ -138,6 +144,18 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (phoneNum) {
         [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
     }
+}
+
+- (void)setGeckoWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    BOOL open = [param tt_boolValueForKey:@"open"];
+
+    IESFalconManager.interceptionWKHttpScheme = open;
+    IESFalconManager.interceptionEnable = open;
+          
+    NSString *pattern = @"^(http|https)://.*.(pstatp.com/toutiao|haoduofangs.com/f101/client|99hdf.com/f101/client)";
+    //        [IESFalconManager registerPattern:pattern forGurdAccessKey:[FHIESGeckoManager getGeckoKey]];
+    [IESFalconManager registerPattern:pattern forGeckoAccessKey:[FHIESGeckoManager getGeckoKey]];
 }
 
 - (void)configWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
