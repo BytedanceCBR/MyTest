@@ -30,6 +30,7 @@
 #import "FHhomeHouseTypeBannerCell.h"
 #import "FHHomePlaceHolderCell.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import "FHHouseListBaseItemCell.h"
 
 static NSMutableArray  * _Nullable identifierArr;
 
@@ -79,6 +80,8 @@ static NSMutableArray  * _Nullable identifierArr;
     [tableView registerClass:[FHHomeCityTrendCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeCityTrendCell class])];
     
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
+    
+    [tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHSynchysisNewHouseCell"];
 }
 
 + (void)registerDelegate:(UITableView *)tableView andDelegate:(id)delegate
