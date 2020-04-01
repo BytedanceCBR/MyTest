@@ -44,9 +44,9 @@ def fhPods
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
     pod 'ios_house_filter' , '1.0.2'
     
-    #pod 'FHCommonUI', '0.0.17-rc.0'
+    pod 'FHCommonUI', '0.0.18'
 #    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
-    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '3f4cec94bebbf3c09c2e78ce0511afdb8103386a'
+#    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '3f4cec94bebbf3c09c2e78ce0511afdb8103386a'
 
 #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
@@ -62,10 +62,10 @@ def fhPods
     # 'DelegateForC'
     # ]
 
-#    pod 'ios_house_im' , '0.1.19-rc.14'
+     pod 'ios_house_im' , '0.2.0-rc.3'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #    pod 'ios_house_im' , :path => '../../cim'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'b66a29caec3747def4e1d0bd80d2cc6888b7090e'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'b66a29caec3747def4e1d0bd80d2cc6888b7090e'
 
 end
 
@@ -299,7 +299,7 @@ def appPods
     pod_binary 'TTThemed','0.1.36'
 
     #-----头条UI组件库-----
-    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '9769ae968b6a9745a9ed86ae3160d796537f80d6'
+    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '534a843030a01478c6112a0c168c7fd5360c4832'
     
     pod 'Bytedancebase','1.4.0-rc.0', :subspecs => [
     'BDPlatformSDK',
