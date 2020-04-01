@@ -21,13 +21,10 @@
 #import "TTAccount.h"
 #import "TTDeviceHelper.h"
 #import "FHEnvContext.h"
-<<<<<<< HEAD
 #import "ArticleJSManager.h"
-=======
 #import "SSCommonLogic.h"
 #import "IESFalconManager.h"
 #import "FHIESGeckoManager.h"
->>>>>>> f_alpha
 
 extern NSString *const kFHPLoginhoneNumberCacheKey;
 
