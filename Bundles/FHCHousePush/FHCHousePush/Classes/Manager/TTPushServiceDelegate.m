@@ -30,15 +30,14 @@
 
 #import <FHHouseBase/FHUserTracker.h>
 #import <TTBaseLib/TTStringHelper.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <FHHouseBase/FHMainApi.h>
 
 static NSString *const kNotificationCategoryIdentifierArticleDetail = @"article_detail";
 static NSString *const kNotificationCategoryIdentifierArticleDetailNoDislike = @"article_detail_no_dislike";
 static NSString *const kNotificationActionIdentifierDislike = @"NotificationActionIdentifierDislike";
 static NSString *const kNotificationActionIdentifierFavorite = @"NotificationActionIdentifierFavorite";
 static NSString *const kNotificationActionIdentifierLaunch = @"NotificationActionIdentifierLaunch";
-
-static NSString *const kFSettings = @"f_settings";
-static NSString *const kUseUGPushSDKKey      = @"use_ug_push_sdk";
 
 typedef void(^NotificationActionCompletionBlock) (void);
 
@@ -53,21 +52,6 @@ typedef void(^NotificationActionCompletionBlock) (void);
 
 
 @implementation TTPushServiceDelegate
-
-+ (void)registerKitchen
-{
-    TTRegisterKitchenMethod
-    TTKitchenRegisterBlock(^{
-        
-        TTKConfigFreezedDictionary(kFSettings, @"使用BDUGPushSDK", @{kUseUGPushSDKKey:@0});
-    });
-}
-
-+ (BOOL)enable
-{
-    NSDictionary *dic = [[TTKitchenManager sharedInstance] getDictionary:kFSettings];
-    return [dic btd_boolValueForKey:kUseUGPushSDKKey];
-}
 
 + (instancetype)sharedInstance
 {
@@ -87,7 +71,9 @@ typedef void(^NotificationActionCompletionBlock) (void);
         param.deviceId = deviceID;
         param.installId = installID;
         param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
-        
+        // todo zjing 理论上不影响推送的版本判断，但保险起见还是和线上保持一致
+        param.versionCode = [TTSandBoxHelper fhVersionCode];
+        param.host = [FHMainApi host];
         BDUGNotificationConfig *config = nil;
         if (@available(iOS 10.0, *)) {
             BDUGNotificationAction *actionDislike = [BDUGNotificationAction actionWithIdentifier:kNotificationActionIdentifierDislike
