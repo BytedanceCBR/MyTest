@@ -984,20 +984,31 @@ extern NSString *const BOE_OPEN_KEY ;
         if (!urlStrInput || urlStrInput.length == 0) {
             return ;
         }
-        NSString *stringToSave = [NSString stringWithString:urlStrInput];
         
-        NSString *unencodedString = urlStrInput;
-        NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                                                        (CFStringRef)unencodedString,
-                                                                                                        NULL,
-                                                                                                        (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                                        kCFStringEncodingUTF8));
-        NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
-        
-        [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
-        
-        NSURL *url = [TTURLUtils URLWithString:urlStr];
-        [[TTRoute sharedRoute] openURLByPushViewController:url];
+        if([urlStrInput containsString:@"sslocal://"]){
+            NSString *stringToSave = [NSString stringWithString:urlStrInput];
+             [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
+             
+             NSURL *url = [TTURLUtils URLWithString:urlStrInput];
+             [[TTRoute sharedRoute] openURLByPushViewController:url];
+        }else
+        {
+            NSString *stringToSave = [NSString stringWithString:urlStrInput];
+             
+             NSString *unencodedString = urlStrInput;
+             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                             (CFStringRef)unencodedString,
+                                                                                                             NULL,
+                                                                                                             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                             kCFStringEncodingUTF8));
+             NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+             
+             [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
+             
+             NSURL *url = [TTURLUtils URLWithString:urlStr];
+             [[TTRoute sharedRoute] openURLByPushViewController:url];
+        }
+ 
         
         alertVCWeak = nil;
     }];

@@ -17,5 +17,6 @@ TTR_EXPORT_HANDLER(config)
 TTR_EXPORT_HANDLER(sendNotification)
 TTR_EXPORT_HANDLER(getStatusBarInfo)
 TTR_EXPORT_HANDLER(saveWebPhone)
+TTR_EXPORT_HANDLER(setGecko)
 
 @end

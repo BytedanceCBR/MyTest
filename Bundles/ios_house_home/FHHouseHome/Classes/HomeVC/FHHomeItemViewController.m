@@ -179,6 +179,12 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         NSMutableDictionary *stayTabParams = [NSMutableDictionary new];
         if (self.traceEnterTopTabache) {
             [stayTabParams addEntriesFromDictionary:self.traceEnterTopTabache];
+        }else
+        {
+            [stayTabParams setValue:@"click" forKey:@"enter_type"];
+            [stayTabParams setValue:@"maintab" forKey:@"enter_from"];
+            [stayTabParams setValue:@"f_find_house" forKey:@"category_name"];
+
         }
         NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
         if (duration) {
@@ -231,10 +237,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 {
     [super viewDidDisappear:animated];
     
-    if (self.houseType == _listModel.houseType) {
+    if (self.houseType == _listModel.houseType && [FHEnvContext sharedInstance].isShowingHomeHouseFind) {
         [self currentViewIsDisappeared];
     }
-    
     self.isDisAppeared = YES;
 }
 
@@ -544,6 +549,11 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType
 {
+    //如果首页没有显示
+    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+        return;
+    }
+    
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     self.tracerModel.enterFrom = @"maintab";
     self.tracerModel.elementFrom = @"maintab_list";
