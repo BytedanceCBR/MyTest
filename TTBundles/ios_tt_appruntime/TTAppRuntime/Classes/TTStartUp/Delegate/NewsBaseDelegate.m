@@ -318,31 +318,13 @@ static NSTimeInterval lastTime;
     } sysAuthFlag:0]; //显示系统弹窗前显示自有弹窗的逻辑下掉，0代表直接显示系统弹窗，1代表先自有弹窗，再系统弹窗
 }
 + (void)registerPush:(int)secs {
-    if (![TTPushServiceDelegate enable]) {
-        dispatch_block_t registerBlock = ^{
-            if ([TTDeviceHelper OSVersionNumber] >= 10.0) {
-                [[TTNotificationCenterDelegate sharedNotificationCenterDelegate] registerNotificationCenter];
-            } else {
-                UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge
-                                                                                                     |UIRemoteNotificationTypeSound
-                                                                                                     |UIRemoteNotificationTypeAlert) categories:nil];
-                [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-            }
-        };
-        
-        if(secs > 0) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(secs * NSEC_PER_SEC)), dispatch_get_main_queue(), registerBlock);
-        } else if (registerBlock) {
-            registerBlock();
-        }
-    } else {
-        if (secs > 0) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(secs * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[TTPushServiceDelegate sharedInstance] registerNotification];
-            });
-        } else {
+    
+    if (secs > 0) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(secs * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [[TTPushServiceDelegate sharedInstance] registerNotification];
-        }
+        });
+    } else {
+        [[TTPushServiceDelegate sharedInstance] registerNotification];
     }
 }
 
