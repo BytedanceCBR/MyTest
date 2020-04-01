@@ -39,9 +39,6 @@ static NSString *const kNotificationActionIdentifierDislike = @"NotificationActi
 static NSString *const kNotificationActionIdentifierFavorite = @"NotificationActionIdentifierFavorite";
 static NSString *const kNotificationActionIdentifierLaunch = @"NotificationActionIdentifierLaunch";
 
-static NSString *const kFSettings = @"f_settings";
-static NSString *const kUseUGPushSDKKey      = @"use_ug_push_sdk";
-
 typedef void(^NotificationActionCompletionBlock) (void);
 
 @interface TTPushServiceDelegate ()
@@ -55,21 +52,6 @@ typedef void(^NotificationActionCompletionBlock) (void);
 
 
 @implementation TTPushServiceDelegate
-
-+ (void)registerKitchen
-{
-    TTRegisterKitchenMethod
-    TTKitchenRegisterBlock(^{
-        // todo zjing test 该字段可去掉
-        TTKConfigFreezedDictionary(kFSettings, @"使用BDUGPushSDK", @{kUseUGPushSDKKey:@1});
-    });
-}
-
-+ (BOOL)enable
-{
-    NSDictionary *dic = [[TTKitchenManager sharedInstance] getDictionary:kFSettings];
-    return [dic btd_boolValueForKey:kUseUGPushSDKKey];
-}
 
 + (instancetype)sharedInstance
 {
@@ -89,7 +71,7 @@ typedef void(^NotificationActionCompletionBlock) (void);
         param.deviceId = deviceID;
         param.installId = installID;
         param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
-        // todo zjing test 我理解应该不影响
+        // todo zjing 理论上不影响推送的版本判断，但保险起见还是和线上保持一致
         param.versionCode = [TTSandBoxHelper fhVersionCode];
         param.host = [FHMainApi host];
         BDUGNotificationConfig *config = nil;
