@@ -45,6 +45,7 @@
 #import "FHWebViewConfig.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 #import <BDALog/BDAgileLog.h>
+#import "UIViewAdditions.h"
 
 #define toolBarHeight 40.f
 
@@ -581,9 +582,16 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     _ssWebContainer.frame = [self frameForWebViewContainer];
 }
 
-
 - (CGRect)frameForTitleBarView {
-    return CGRectMake(0, 0, self.frame.size.width, 64.f);
+    CGFloat navHeight = 64.0f;
+    if (@available(iOS 13.0, *)) {
+        navHeight = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0 , *)) {
+        navHeight = 44.f + self.tt_safeAreaInsets.top;
+    } else {
+        navHeight = 64.0f;
+    }
+    return CGRectMake(0, 0, self.frame.size.width, navHeight);
 }
 
 - (CGRect)frameForWebViewContainer {

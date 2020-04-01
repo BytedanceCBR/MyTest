@@ -2186,13 +2186,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_OPTIMIZATION = "";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6.8.6.0;
+				CURRENT_PROJECT_VERSION = 6.9.5.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
@@ -2240,6 +2241,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
+				LLVM_LTO = NO;
 				MARKETING_VERSION = 0.9.5;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
@@ -2270,13 +2272,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_OPTIMIZATION = "";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6.8.6.0;
+				CURRENT_PROJECT_VERSION = 6.9.5.0;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_BITCODE = NO;
@@ -2359,13 +2362,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_OPTIMIZATION = "";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Gong Rui (3VB7F2P4T4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gong Rui (3VB7F2P4T4)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6.8.6.0;
+				CURRENT_PROJECT_VERSION = 6.9.5.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -2413,6 +2417,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
+				LLVM_LTO = NO;
 				MARKETING_VERSION = 0.9.5;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
@@ -2444,13 +2449,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_OPTIMIZATION = "";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsInHouse/NewsInHouse.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6.8.6.0;
+				CURRENT_PROJECT_VERSION = 6.9.5.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;

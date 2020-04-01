@@ -112,6 +112,7 @@ static NSInteger const kMaxPostImageCount = 9;
 @property (nonatomic, copy)     NSString       *selectGroupName; // 选中的小区name
 @property (nonatomic, copy  )   NSString   *neighborhoodId; //小区详情页id
 @property (nonatomic, assign)   BOOL       hasSocialGroup;// 外部传入小区
+@property (nonatomic, copy  )   NSString   *groupId; //微头条卡片进入，微头条id
 
 @property (nonatomic, assign)   BOOL       lastCanShowMessageTip;
 @property (nonatomic, assign)   BOOL       lastInAppPushTipsHidden;
@@ -193,6 +194,7 @@ static NSInteger const kMaxPostImageCount = 9;
             self.postFinishCompletionBlock = [params tt_objectForKey:@"completionBlock"];
             // 选中圈子
             self.neighborhoodId = [params tta_stringForKey:@"neighborhood_id"];
+            self.groupId = [params tta_stringForKey:@"group_id"];
             self.selectGroupId = [params tt_stringValueForKey:@"select_group_id"];
             self.selectGroupName = [params tt_stringValueForKey:@"select_group_name"];
             if (!((self.selectGroupId.length > 0 && self.selectGroupName.length > 0) || self.neighborhoodId.length > 0)) {
@@ -1795,6 +1797,15 @@ static NSInteger const kMaxPostImageCount = 9;
         param[@"group_id"] = self.neighborhoodId;
         param[UT_ELEMENT_FROM] = self.tracerModel.elementFrom;
         param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
+        TRACK_EVENT(UT_GO_DETAIL, param);
+    }else if(self.groupId.length > 0){
+        NSMutableDictionary *param = @{}.mutableCopy;
+        param[UT_PAGE_TYPE] = @"feed_publisher";
+        param[UT_LOG_PB] = self.tracerDict[UT_LOG_PB];
+        param[@"group_id"] = self.groupId;
+        param[UT_ELEMENT_FROM] = self.tracerDict[UT_ELEMENT_FROM];
+        param[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+        param[UT_ENTER_TYPE] = @"click";
         TRACK_EVENT(UT_GO_DETAIL, param);
     }
 }

@@ -54,6 +54,9 @@ typedef enum : NSUInteger {
     
     FHClueIMPageTypeCourt = 3, // app_court: 1.3 新房详情页
     FHClueIMPageTypeCNeighborhood = 4, // app_neighborhood: 1.4小区详情页
+    
+    FHClueIMPageTypeUGCFeed = 5, // app_feed_weitoutiao: 1.5 feed页微头条IM
+    FHClueIMPageTypeUGCDetail = 6, // app_weitoutiao: 1.6 微头条详情页IM
 
     FHClueIMPageTypeCOldSchool = 23, // app_oldhouse_school 1.23小端二手房详情页的咨询学区
     FHClueIMPageTypeCOldFloor = 24, // app_oldhouse_floor：1.24小端二手房详情页的咨询楼层

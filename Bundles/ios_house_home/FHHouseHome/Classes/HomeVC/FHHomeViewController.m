@@ -88,6 +88,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.adColdHadJump = NO;
     self.adUGCHadJump = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    [FHEnvContext sharedInstance].isShowingHomeHouseFind = YES;
     
     [self registerNotifications];
     
