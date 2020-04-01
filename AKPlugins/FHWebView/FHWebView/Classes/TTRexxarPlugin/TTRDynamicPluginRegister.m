@@ -30,6 +30,7 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.saveWebPhone" for:@"saveWebPhone"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.config" for:@"config"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.getStatusBarInfo" for:@"getStatusBarInfo"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.getArticleConfig" for:@"getArticleConfig"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.setGecko" for:@"setGecko"];
 
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTNetwork.fetch" for:@"fetch"];
@@ -42,6 +43,7 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.close" for:@"close"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.open" for:@"open"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openPage" for:@"openPage"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.closeAndOpen" for:@"closeAndOpen"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.handleNavBack" for:@"handleNavBack"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openHotsoon" for:@"openHotsoon"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openApp" for:@"openApp"];
