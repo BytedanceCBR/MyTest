@@ -98,7 +98,14 @@
 -(void)initNavbar
 {
     // FHFakeInputNavbarTypeMessageAndMap 二手房大类页显示消息和小红点
-    FHFakeInputNavbarType type = (_houseType == FHHouseTypeSecondHandHouse ? FHFakeInputNavbarTypeMessageAndMap : FHFakeInputNavbarTypeDefault);
+    FHFakeInputNavbarType type ;
+    if (_houseType == FHHouseTypeRentHouse || _houseType == FHHouseTypeNewHouse) {
+        type = FHFakeInputNavbarTypeMessageSingle;
+    }else if(_houseType == FHHouseTypeSecondHandHouse){
+        type = FHFakeInputNavbarTypeMessageAndMap;
+    }else {
+        type = FHFakeInputNavbarTypeDefault;
+    }
     FHFakeInputNavbarStyle style = FHFakeInputNavbarStyleBorder;
     if (_houseType == FHHouseTypeSecondHandHouse && [FHMainOldTopView showBanner]) {
         style = FHFakeInputNavbarStyleDefault;

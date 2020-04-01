@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
       s.name             = 'TTVPlayerPod'
-      s.version          = '0.1.0'
+      s.version          = '1.1.62'
       s.summary          = '西瓜播放器'
 
 # This description is used to generate tags and improve search results.
