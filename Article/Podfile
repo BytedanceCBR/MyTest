@@ -1,14 +1,14 @@
-#gem 'bd_pod_extentions','6.3.0'
-#require 'bd_pod_extentions'
 
-require File.dirname(__FILE__)+'/pod_binary.rb'
+gem 'bd_pod_extentions'
+
+require 'bd_pod_extentions'
 install! 'cocoapods', :warn_for_multiple_pod_sources => false,:deterministic_uuids => false
 
 # 用于开启Pods的源码与二进制快速转化服务
 plugin 'cocoapods-bytedance-transform'
 # 用于开启依赖解析加速的服务，传true表示使用，false表示不使用
 # bytedanceAnalyzeSpeed(true)
-bd_use_app("thirdParty","public","toutiao","ugc")
+bd_use_app("thirdParty","public","toutiao")
 
 #全部使用源码
 #bd_use_source!
