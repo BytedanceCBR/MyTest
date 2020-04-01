@@ -13,8 +13,6 @@ typedef NS_ENUM (NSInteger , FHHouseType){
     FHHouseTypeSecondHandHouse = 2 , //二手房
     FHHouseTypeRentHouse = 3, //租房
     FHHouseTypeNeighborhood = 4 , // 小区
-    
-    FHHouseTypeApartment = 8, //户型
 };
 
 /*
