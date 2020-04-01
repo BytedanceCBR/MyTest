@@ -150,6 +150,7 @@
         self.viewController.topView.segmentControl.selectedSegmentIndex = self.currentIndex;
         
 
+        [FHEnvContext sharedInstance].isShowingHomeHouseFind = (tabIndex == 0);
         [self sendEnterCategory:tabIndex == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed enterType:FHHomeMainTraceEnterTypeFlip];
         [self sendStayCategory:tabIndex == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse enterType:FHHomeMainTraceEnterTypeFlip];
     }else{

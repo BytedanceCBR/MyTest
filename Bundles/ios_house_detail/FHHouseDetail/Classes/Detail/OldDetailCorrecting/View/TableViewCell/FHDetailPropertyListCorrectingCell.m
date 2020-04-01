@@ -559,7 +559,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             }];
             
             [wself.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_lessThanOrEqualTo(self.logoImageView.mas_left).offset(-10);
+                make.right.mas_lessThanOrEqualTo(wself.logoImageView.mas_left).offset(-10);
             }];
         }        
     }];

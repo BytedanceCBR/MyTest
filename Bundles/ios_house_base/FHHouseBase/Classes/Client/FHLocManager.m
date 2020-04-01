@@ -26,9 +26,11 @@
 #import "FHHouseUGCAPI.h"
 #import "FHIntroduceManager.h"
 #import "FHPopupViewManager.h"
+#import "TTSettingsManager.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
+NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key"; //本地持久化显示时间
 #define kFHHomeHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
 @interface FHLocManager ()
@@ -137,6 +139,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)showCitySwitchAlert:(NSString *)cityName openUrl:(NSString *)openUrl
 {
+
     if (!cityName || !openUrl) {
         return;
     }
@@ -211,6 +214,34 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     [FHUtils setContent:stringCurrentDate forKey:@"f_save_switch_local_time"];
     
     self.isShowSwitch = NO;
+}
+
+- (BOOL)isTopCitySwitchTimeCompare
+{
+    
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSInteger topInterger = [fhSettings tt_integerValueForKey:@"f_switch_city_top_time"];
+    
+    if (topInterger == 0) {
+        return YES;
+    }
+    
+    NSString *stringDate = (NSString *)[FHUtils contentForKey:kFHTopSwitchCityLocalKey];
+    if(stringDate)
+    {
+        NSDate *saveDate = [FHUtils dateFromString:stringDate];
+        
+        NSInteger timeCount = [FHUtils numberOfDaysWithFromDate:saveDate toDate:[NSDate date]];
+        
+        if (timeCount >= topInterger) {
+            return YES;
+        }else
+        {
+            return NO;
+        }
+    }
+    
+    return YES;
 }
 
 - (void)checkUserLocationStatus
@@ -399,10 +430,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
                 BOOL isShowIntoduceView = [FHIntroduceManager sharedInstance].isShowing;
                 
-                // 城市切换弹窗
-                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity && !isShowIntoduceView) {
-                    [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
-                }
+            
                 
                 // 拉取小端运营窗口弹窗配置信息
                 [[FHPopupViewManager shared] fetchData];
@@ -411,6 +439,26 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 [wSelf updateAllConfig:model isNeedDiff:NO];
                 
                 
+                NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+                BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_switch_city_top_close"];
+                
+                //setting控制开关
+                if(boolOffline)
+                {
+                    // 城市切换弹窗
+                     if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity && !isShowIntoduceView) {
+                         [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
+                     }
+                }else
+                {
+                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && [self isTopCitySwitchTimeCompare]) {
+                        NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
+                        [FHUtils setContent:stringCurrentDate forKey:kFHTopSwitchCityLocalKey];
+                        
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeInitSwitchCityTopView" object:nil];
+                    }
+                }
+             
                 //                BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
                 //
                 //                if (!isHasFindHouseCategory && [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {

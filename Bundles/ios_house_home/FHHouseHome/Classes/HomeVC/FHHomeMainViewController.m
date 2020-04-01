@@ -20,6 +20,7 @@
 #import "CommonURLSetting.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "UIViewController+Track.h"
+#import "FHHomeTopCitySwitchView.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -28,6 +29,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL isHaveCheckUpgrage;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
+@property (nonatomic,strong)NSTimer *switchTimer;
+@property (nonatomic,assign)NSInteger totalNum;
 
 @end
 
@@ -69,6 +72,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.isShowing = NO;
     
     [self addStayCategoryLog:self.ttTrackStayTime];
+    
 }
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
@@ -110,7 +114,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
-    
     self.automaticallyAdjustsScrollViewInsets = NO;
     //1.初始化layout
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -128,6 +131,30 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor themeGray7];
     [self.containerView addSubview:_collectionView];
+    
+}
+
+- (void)initCitySwitchView
+{
+    CGFloat top = 0;
+    CGFloat safeTop = 20;
+    if (@available(iOS 11.0, *)) {
+        safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+    }
+    
+    self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
+    self.switchCityView.backgroundColor = [UIColor clearColor];
+    if (self.containerView) {
+        [self.containerView addSubview:self.switchCityView];
+           
+        self.totalNum = 60;
+        self.switchTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(downCounter) userInfo:nil repeats:YES];
+        
+        NSMutableDictionary *popTraceParams = [NSMutableDictionary new];
+        [popTraceParams setValue:@"maintab" forKey:@"page_type"];
+        [popTraceParams setValue:@"city_switch" forKey:@"popup_name"];
+        [FHEnvContext recordEvent:popTraceParams andEventKey:@"popup_show"];
+    }
 }
 
 - (void)initConstraints {
@@ -173,7 +200,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollEnd) name:@"FHHomeMainDidScrollEnd" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initCitySwitchView) name:@"FHHomeInitSwitchCityTopView" object:nil];
 }
+
 - (void)initCityChangeSubscribe
 {
     BOOL isOpen = [FHEnvContext isCurrentCityNormalOpen];
@@ -185,6 +215,10 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         [FHEnvContext showRedPointForNoUgc];
         [self.topView  updateMapSearchBtn];
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
+        
+        if([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+            [self.switchCityView removeFromSuperview];
+        }
     }];
 }
 
@@ -206,6 +240,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             [self.topView changeBackColor:index];
             [self.viewModel sendEnterCategory:(index == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed) enterType:FHHomeMainTraceEnterTypeClick];
             [self.viewModel sendStayCategory:(index == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse) enterType:FHHomeMainTraceEnterTypeClick];
+            
+            [FHEnvContext sharedInstance].isShowingHomeHouseFind = (index == 0);
         }
         
     };
@@ -318,6 +354,23 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:NO];
         }
     }];
+}
+
+- (void)downCounter
+{
+    
+    if (!self.isShowing) {
+        return ;
+    }
+    
+    self.totalNum -= 1;
+    
+    if (self.totalNum <= 0) {
+        [self.switchTimer invalidate];
+        self.switchTimer = nil;
+        
+        [self.switchCityView removeFromSuperview];
+    }
 }
 
 #pragma mark 内测弹窗
