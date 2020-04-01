@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TTPushServiceDelegate : NSObject <BDUGPushServiceDelegate, BDUGPushNotificationDelegate>
 
-+ (BOOL)enable;
-
 + (instancetype)sharedInstance;
 
 - (void)registerNotification;
