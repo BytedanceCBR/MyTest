@@ -1232,12 +1232,14 @@ extern NSString *const BOE_OPEN_KEY ;
     NSString *directory = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject];
     NSString *path = [directory stringByAppendingPathComponent:@"alog"];
     NSArray *array = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+    WeakSelf;
     for (NSString *item in array) {
         if (![item hasSuffix:@".alog"]) {
             continue;
         }
 
         [alertController addAction:[UIAlertAction actionWithTitle:item style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
             NSString *filePath = [path stringByAppendingPathComponent:item];
             [self _shareLog:filePath];
         }]];
