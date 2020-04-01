@@ -163,7 +163,8 @@
                            @"facingDirection": @"facing_direction",
                            @"imprId": @"impr_id",
                            @"searchId": @"search_id",
-                           @"groupId": @"group_id"
+                           @"groupId": @"group_id",
+                           @"imOpenUrl":@"im_openurl",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

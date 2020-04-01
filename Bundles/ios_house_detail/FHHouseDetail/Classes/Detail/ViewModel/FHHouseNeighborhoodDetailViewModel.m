@@ -20,7 +20,7 @@
 #import "FHDetailGrayLineCell.h"
 #import "FHDetailNeighborhoodStatsInfoCell.h"
 #import "FHDetailNeighborhoodPropertyInfoCell.h"
-#import "FHDetailRelatedNeighborhoodCell.h"
+
 #import "FHDetailNeighborhoodHouseCell.h"
 #import "FHDetailNeighborhoodTransationHistoryCell.h"
 //#import "FHODetailCommunityEntryCorrectingCell.h"
@@ -96,7 +96,6 @@
 //        [self.tableView registerClass:[FHDetailNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseModel class])];
    //周边小区
     [self.tableView registerClass:[FHDetailSurroundingAreaCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSurroundingAreaModel class])];
-//    [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodModel class])];
     
     
 //    [self.tableView registerClass:[FHODetailCommunityEntryCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];

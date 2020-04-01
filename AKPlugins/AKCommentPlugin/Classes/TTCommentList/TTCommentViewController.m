@@ -505,7 +505,9 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
             [baseCondition setValue:@(5) forKey:@"source_type"]; // ArticleMomentSourceTypeArticleDetail
             [baseCondition setValue:@(comment.isStick) forKey:@"from_message"];
             [baseCondition setValue:self.serviceID forKey:@"serviceID"]; // serviceID
-            [baseCondition setValue:@(self.fromUGC) forKey:@"fromUGC"]; 
+            [baseCondition setValue:@(self.fromUGC) forKey:@"fromUGC"];
+            NSString *pageType = self.tracerDict[UT_PAGE_TYPE];
+            [baseCondition setValue:pageType forKey:@"enterFrom"];
             [self.delegate tt_commentViewController:self didSelectWithInfo:baseCondition];
         }
     }

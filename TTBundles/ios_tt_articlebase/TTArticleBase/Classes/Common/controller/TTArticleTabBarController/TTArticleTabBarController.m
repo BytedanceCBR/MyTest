@@ -98,6 +98,7 @@
 #import "UIViewController+TTMovieUtil.h"
 #import <TTLaunchTracer.h>
 #import "FHPopupViewManager.h"
+#import <ReactiveObjC/ReactiveObjC.h>
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -254,6 +255,16 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     self.tabBar.backgroundImage = [UIImage new];
     self.tabBar.shadowImage = [UIImage new];
     }
+    
+    // 解决首次安装时，聊房提示在从push进入im会话页时不消失问题
+    @weakify(self);
+    [[[RACObserve(self.tabBar, hidden) subscribeOn:RACScheduler.mainThreadScheduler] distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        BOOL hidden = [x boolValue];
+        if(hidden) {
+            [self.guideView hide];
+        }
+    }];
 }
 
 - (void)addUgcGuide {

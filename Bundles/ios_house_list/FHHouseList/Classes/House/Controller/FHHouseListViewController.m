@@ -167,13 +167,18 @@
 -(void)initNavbar
 {
     FHFakeInputNavbarType type = FHFakeInputNavbarTypeDefault;
-    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
         type = FHFakeInputNavbarTypeMap;
     }
     // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
         type = FHFakeInputNavbarTypeMessageAndMap;
     }
+    
+    if ( self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeNeighborhood) {
+        type = FHFakeInputNavbarTypeMessageSingle;
+    }
+    
     if ([self.paramObj.sourceURL.host rangeOfString:@"commute_list"].location != NSNotFound) {
         //通勤找房不显示地图
         type = FHFakeInputNavbarTypeDefault;
@@ -200,7 +205,7 @@
     _navbar.messageActionBlock = ^{
         [wself.viewModel showMessageList];
     };
-    
+
     _navbar.tapInputBar = ^{
         [wself.viewModel showInputSearch];
     };
@@ -588,11 +593,13 @@
 
 -(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder inputText:(NSString *)inputText{
     
-    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute ) || houseType == FHHouseTypeSecondHandHouse) {
-        if (houseType == FHHouseTypeSecondHandHouse) {
+    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute ) || houseType == FHHouseTypeSecondHandHouse ||houseType == FHHouseTypeNewHouse || houseType == FHHouseTypeNeighborhood) {
+        if (houseType == FHHouseTypeSecondHandHouse || houseType == FHHouseTypeRentHouse) {
             // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageAndMap];
-        } else {
+        } else if(houseType == FHHouseTypeNewHouse||houseType == FHHouseTypeNeighborhood){
+            [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageSingle];
+        } else{
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMap];
         }
     }else {

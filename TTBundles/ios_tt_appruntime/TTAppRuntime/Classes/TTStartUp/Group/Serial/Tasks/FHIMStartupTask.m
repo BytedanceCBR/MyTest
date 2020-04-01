@@ -267,7 +267,14 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     }
     return evaluationModel;
 }
-
+- (BOOL)isEnableIMShortConnect {
+    BOOL ret = NO;
+#if DEBUG
+    BOOL isShortConnectEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
+    ret = isShortConnectEnable;
+#endif
+    return ret;
+}
 @end
 
 @implementation FHIMStartupTask

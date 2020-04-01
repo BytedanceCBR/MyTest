@@ -123,6 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, copy , nullable) NSString *facingDirection;
+@property (nonatomic, copy) NSString *imOpenUrl;
 
 @end
 

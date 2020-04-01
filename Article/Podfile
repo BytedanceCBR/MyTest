@@ -1,14 +1,14 @@
-#gem 'bd_pod_extentions','6.3.0'
-#require 'bd_pod_extentions'
 
-require File.dirname(__FILE__)+'/pod_binary.rb'
+gem 'bd_pod_extentions'
+
+require 'bd_pod_extentions'
 install! 'cocoapods', :warn_for_multiple_pod_sources => false,:deterministic_uuids => false
 
 # 用于开启Pods的源码与二进制快速转化服务
 plugin 'cocoapods-bytedance-transform'
 # 用于开启依赖解析加速的服务，传true表示使用，false表示不使用
 # bytedanceAnalyzeSpeed(true)
-bd_use_app("thirdParty","public","toutiao","ugc")
+bd_use_app("thirdParty","public","toutiao")
 
 #全部使用源码
 #bd_use_source!
@@ -44,15 +44,15 @@ def fhPods
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
     pod 'ios_house_filter' , '1.0.2'
     
-    pod 'FHCommonUI', '0.0.17-rc.0'
+    pod 'FHCommonUI', '0.0.17'
 #    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
-    #pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '21f52981452d7e1e319da3a07301184164b72251'
+#    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => 'ab769d9fe081f65e5e6edcc3dd89c03dfe254cb4'
 
 #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
 #    'DelegateForC'
 #    ]
-    pod 'FHPopupViewCenter', '0.0.2-rc.1', :subspecs => [
+    pod 'FHPopupViewCenter', '0.0.2-rc.5', :subspecs => [
     'Core',
     'DelegateForC'
     ]
@@ -61,11 +61,11 @@ def fhPods
     # 'Core',
     # 'DelegateForC'
     # ]
-
-    pod 'ios_house_im' , '0.1.19-rc.14'
-#    pod 'ios_house_im' , :path => '../../ios_house_im'
-#    pod 'ios_house_im' , :path => '../../cim'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '8141c3506a677f14f05eabb7146120339e0ad283'
+    
+    pod 'ios_house_im' , '0.2.0-rc.2'
+#    pod 'ios_house_im' , :path => '../../ios_house_im/ios_house_im'
+#    pod 'ios_house_im' , :path => '../../cim2'
+#     pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '3d1b6668952b9b6d21498495c2a21c82fa6b4e83'
 
 end
 
@@ -248,7 +248,7 @@ def appPods
     #-----头条用户设置库--------
     pod 'TTUserSettings', '0.3.4'
 
-    pod_binary 'TTRexxar', '0.8.10', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
+    pod_binary 'TTRexxar', '0.8.14', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
     #----头条组件协议库-----
 
     pod_binary 'TTServiceProtocols','7.5.7.2'
@@ -322,7 +322,7 @@ def appPods
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
     # pod_binary 'TTMonitor','0.7.9.58-rc.3' #这个版本还是有很多问题
-    pod_binary 'Heimdallr','0.7.11', :subspecs => [
+    pod_binary 'Heimdallr','0.7.13-rc.8', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
@@ -370,7 +370,7 @@ def appPods
     pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod_binary 'TTImage', '0.8.4'
-    pod_binary 'BDWebImage', '1.0.16-rc.17',:subspecs => [
+    pod_binary 'BDWebImage', '1.0.20',:subspecs => [
     'Core',
     'Decoder',
     'Download',
@@ -400,7 +400,6 @@ def appPods
     ]
     
     #-----头条推送SDK----
-    pod 'TTPushSDK', '0.1.1'
     pod 'BDUGPushSDK', '2.2.1'
 
     #-----路由-----
@@ -458,7 +457,7 @@ def appPods
     pod_source 'OHHTTPStubs', '4.2.1', :configurations => ['Debug']
     pod_binary 'CHTCollectionViewWaterfallLayout', '0.9.5'
     pod_binary 'Aspects', '1.4.1'
-    pod_binary 'SSZipArchive', '1.6.3'
+    pod_binary 'SSZipArchive', '2.1.5'
     pod_binary 'libextobjc', '0.4.1'
     pod_binary 'ReactiveObjC', '3.0.0'
     pod_binary 'SDWebImage', '4.4.1', :subspecs => [
@@ -539,7 +538,7 @@ def appPods
 
     pod_binary 'BDDiamond20', '1.0.2', :subspecs => ['minisdk']
 
-    pod 'Quaterback', '0.0.2-rc.8', :subspecs => [
+    pod 'Quaterback', '1.0.0-alpha.4', :subspecs => [
     'Main/Core',
     'Main/Default'
     ]
@@ -591,16 +590,6 @@ end
 
 # POD POST_INSTALL
 post_install do |installer|
-  
-  # todo zjing test
-#    installer.aggregate_targets.each do |target|
-#        copy_pods_resources_path = "Pods/Target Support Files/#{target.name}/#{target.name}-resources.sh"
-#        string_to_replace = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"'
-#        assets_compile_with_app_icon_arguments = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}" --app-icon "${ASSETCATALOG_COMPILER_APPICON_NAME}" --output-partial-info-plist "${BUILD_DIR}/assetcatalog_generated_info.plist"'
-#        text = File.read(copy_pods_resources_path)
-#        new_contents = text.gsub(string_to_replace, assets_compile_with_app_icon_arguments)
-#        File.open(copy_pods_resources_path, "w") {|file| file.puts new_contents }
-#    end
 
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|

@@ -360,6 +360,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         if ([model isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
             
             NSMutableDictionary *subPageParams = [_floorListVC subPageParams];
+            subPageParams[@"contact_phone"] = nil;
             NSDictionary *tracer = subPageParams[@"tracer"];
             NSMutableDictionary *traceParam = [NSMutableDictionary new];
             if (tracer) {

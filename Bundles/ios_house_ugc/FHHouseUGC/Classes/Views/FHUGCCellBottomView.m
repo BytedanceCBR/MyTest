@@ -252,7 +252,7 @@
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    NSString *enter_from = self.cellModel.tracerDic[@"enter_from"];
+    NSString *enter_from = self.cellModel.tracerDic[UT_PAGE_TYPE];
     if (enter_from.length <= 0) {
         enter_from = @"be_null";
     }
