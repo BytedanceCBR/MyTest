@@ -24,6 +24,7 @@
 #import <KVOController/NSObject+FBKVOController.h>
 #import "UIImage+FIconFont.h"
 #import "UIColor+Theme.h"
+#import "TTAccountManager.h"
 
 //#import "TTUGCEmojiTextAttachment.h"
 
@@ -377,6 +378,26 @@ static NSString * const kWDHasTipSupportsEmojiInputDefaultKey = @"WDHasTipSuppor
 
 - (void)diggButtonClicked:(SSThemedButton *)diggButton
 {
+    if(![TTAccountManager isLogin]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setObject:@"answer" forKey:@"enter_from"];
+        [params setObject:@"feed_like" forKey:@"enter_type"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        params[@"from_ugc"] = @(YES);
+        __weak typeof(self) wSelf = self;
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    [wSelf diggButtonClicked:diggButton];
+                }
+            }
+        }];
+        
+        return;
+    }
+    
     if ([self.detailModel.answerEntity isBuryed]) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"您已经反对过", nil) indicatorImage:nil autoDismiss:YES dismissHandler:nil];
     } else {

@@ -48,6 +48,9 @@ typedef void (^DidClickAtButtonBlock)(BOOL didInputAt);
 @property (nonatomic, copy) DidClickAtButtonBlock atBtnClickBlock;
 @property (nonatomic, assign) BOOL isPushOutAtListController;
 
+// 埋点数据
+@property (nonatomic, strong) NSDictionary *traceDict;
+
 - (void)addHashtag:(FHTopicListResponseDataListModel *)hashtagModel;
 
 //@事件点击

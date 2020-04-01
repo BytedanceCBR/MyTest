@@ -15,6 +15,7 @@
 #import "TTRoute.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "UIViewAdditions.h"
+#import "FHUGCCellAttachCardView.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -25,6 +26,7 @@
 #define guideViewHeight 17
 #define topMargin 20
 #define originViewHeight 80
+#define attachCardViewHeight 57
 
 @interface FHUGCPureTitleCell ()<TTUGCAttributedLabelDelegate>
 
@@ -33,6 +35,7 @@
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
+@property(nonatomic ,strong) FHUGCCellAttachCardView *attachCardView;
 
 @end
 
@@ -88,6 +91,10 @@
     };
     [self.contentView addSubview:_originView];
     
+    self.attachCardView = [[FHUGCCellAttachCardView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    _attachCardView.hidden = YES;
+    [self.contentView addSubview:_attachCardView];
+    
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
@@ -117,6 +124,11 @@
     self.originView.left = leftMargin;
     self.originView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.originView.height = originViewHeight;
+    
+    self.attachCardView.top = self.contentLabel.bottom + 10;
+    self.attachCardView.left = leftMargin;
+    self.attachCardView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.attachCardView.height = attachCardViewHeight;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -169,17 +181,32 @@
         self.contentLabel.height = cellModel.contentHeight;
         [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
     }
-    //origin
+    
+    UIView *lastView = self.contentLabel;
+    CGFloat topOffset = 10;
+     //origin
     if(cellModel.originItemModel){
         self.originView.hidden = NO;
         [self.originView refreshWithdata:cellModel];
-        self.originView.top = self.contentLabel.bottom + 10;
+        self.originView.top = lastView.bottom + topOffset;
         self.originView.height = cellModel.originItemHeight;
-        self.bottomView.top = self.contentLabel.bottom + cellModel.originItemHeight + 20;
+        topOffset += cellModel.originItemHeight;
+        topOffset += 10;
     }else{
         self.originView.hidden = YES;
-        self.bottomView.top = self.contentLabel.bottom + 10;
     }
+    //attach card
+    if(cellModel.attachCardInfo){
+        self.attachCardView.hidden = NO;
+        [self.attachCardView refreshWithdata:cellModel];
+        self.attachCardView.top = lastView.bottom + topOffset;
+        topOffset += attachCardViewHeight;
+        topOffset += 10;
+    }else{
+        self.attachCardView.hidden = YES;
+    }
+    
+    self.bottomView.top = lastView.bottom + topOffset;
     
     [self showGuideView];
 }
@@ -191,6 +218,10 @@
         
         if(cellModel.originItemModel){
             height += (cellModel.originItemHeight + 10);
+        }
+        
+        if(cellModel.attachCardInfo){
+            height += (attachCardViewHeight + 10);
         }
         
         if(cellModel.isInsertGuideCell){

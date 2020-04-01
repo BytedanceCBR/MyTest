@@ -602,6 +602,10 @@ static struct timeval kFHCommentTimeval;
 }
 
 - (void)atAction:(id)sender {
+    self.textViewMediator.traceDict = @{
+        UT_ENTER_FROM: @"mention_page",
+        UT_ENTER_TYPE: @"enter_mention",
+    };
     [self.textViewMediator toolbarDidClickAtButton];
 }
 

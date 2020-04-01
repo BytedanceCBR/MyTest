@@ -145,7 +145,8 @@
                                        }.mutableCopy;
                 [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
                 NSMutableDictionary *subPageParams = model.subPageVC.subPageParams;
-               
+                subPageParams[@"contact_phone"] = nil;
+
 //                subPageParams[@"tracer"] = nil;
                 if (subPageParams) {
                     [infoDict addEntriesFromDictionary:subPageParams];

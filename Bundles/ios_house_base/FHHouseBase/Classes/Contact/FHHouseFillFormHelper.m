@@ -366,6 +366,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (configModel.itemId.length > 0) {
         params[@"item_id"] = configModel.itemId;
     }
+    params[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
 
@@ -395,7 +396,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
     }
     params[@"agency_list"] = dict.count > 0 ? dict : @"be_null";
-
+    params[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
 

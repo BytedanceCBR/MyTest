@@ -34,6 +34,7 @@
 @property (nonatomic, weak) id<TTCommentDetailHeaderDelegate> delegate;
 @property (nonatomic, strong) NSString *trackTag;
 @property (nonatomic, assign)  BOOL fromUGC;//来源是ugc模块新功能，区别以前的评论部分
+@property (nonatomic, strong) NSDictionary *traceDict;
 
 - (instancetype)initWithModel:(TTCommentDetailModel *)model frame:(CGRect)frame needShowGroupItem:(BOOL)showGroup;
 + (CGFloat)heightWithModel:(TTCommentDetailModel *)model width:(CGFloat)width;

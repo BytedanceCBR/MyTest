@@ -274,6 +274,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
         tracerDic[@"position"] = @"card";
+        tracerDic[@"growth_deepevent"] = @(1);
         [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
         
         if(self.subscribeBlock){
@@ -348,6 +349,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
     tracerDic[@"position"] = @"card";
+    tracerDic[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"inform_show" params:tracerDic];
     
     [self showFullPhoneNum:YES];

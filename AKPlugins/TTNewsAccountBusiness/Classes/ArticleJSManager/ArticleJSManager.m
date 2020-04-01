@@ -18,7 +18,7 @@
 #define kArticleJSManagerUseJSInBundleKey @"kArticleJSManagerUseJSInBundleKey" // 内测版本控制是否使用下发setting的开关，防止较长项目开发过程中上线的影响
 
 // @"13" 问答详情页新版内容升级
-static NSString *const kJSVersionInBundle = @"283";  // 客户端内置资源版本号
+static NSString *const kJSVersionInBundle = @"1834";  // 客户端内置资源版本号
 
 @interface ArticleJSManager ()
 @property(nonatomic, strong)NSURLSessionDownloadTask *downloadTask;
@@ -38,6 +38,23 @@ static ArticleJSManager * shareManager;
         shareManager = [[ArticleJSManager alloc] init];
     });
     return shareManager;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _feArticleH5Config = [[NSUserDefaults standardUserDefaults] valueForKey:@"f_fe_article_config_key"];
+    }
+    return self;
+}
+
+- (void)setFeArticleH5Config:(NSDictionary *)feArticleH5Config {
+    _feArticleH5Config = feArticleH5Config;
+    if (feArticleH5Config) {
+        [[NSUserDefaults standardUserDefaults] setValue:feArticleH5Config forKey:@"f_fe_article_config_key"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
 }
 
 
