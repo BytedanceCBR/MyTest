@@ -23,10 +23,15 @@
 #import "FHPostEditListModel.h"
 #import <FHUGCEditedPostModel.h>
 #import "FHUGCPublishTagModel.h"
+#import "FHInterceptionManager.h"
+#import "TTInstallIDManager.h"
+#import "ExploreExtenstionDataHelper.h"
+#import "TTModuleBridge.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
 #define QURL(QPATH) [[self host] stringByAppendingString:QPATH]
+#define kInterceptionUserFollows @"kInterceptionUserFollows"
 
 @implementation FHHouseUGCAPI
 
@@ -241,7 +246,40 @@
     NSString *queryPath = @"/f100/ugc/user_follows";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"type"] = @(type);
-    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+    
+    FHInterceptionConfig *config = [[FHInterceptionConfig alloc] init];
+    config.category = @{
+                @"url":queryPath,
+                @"desc":@"did为空"
+                };
+    //加入拦截器
+    WeakSelf;
+    return [[FHInterceptionManager sharedInstance] addInterception:kInterceptionUserFollows config:config Condition:^BOOL{
+        return !isEmptyString([TTInstallIDManager sharedInstance].deviceID);
+    } operation:^{
+        [wself requestDeviceId];
+    } complete:^(BOOL success, TTHttpTask * _Nullable httpTask) {
+        //如有特殊需求，可用这些结果
+    } task:^TTHttpTask * _Nullable{
+        return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+    }];
+}
+
++ (void)requestDeviceId {
+    [[TTInstallIDManager sharedInstance] startRegisterDeviceWithAutoActivated:YES success:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
+        // 更新installID
+        if(!isEmptyString(installID)) {
+            [ExploreExtenstionDataHelper saveSharedIID:installID];
+            
+            [[TTModuleBridge sharedInstance_tt] registerAction:@"HTSGetInstallID" withBlock:^id _Nullable(id  _Nullable object, id  _Nullable params) {
+                return installID;
+            }];
+        }
+        
+        if (!isEmptyString(deviceID)) {
+            [ExploreExtenstionDataHelper saveSharedDeviceID:deviceID];
+        }
+    } failure:nil];
 }
 
 + (TTHttpTask *)requestFollow:(NSString *)group_id action:(NSInteger)action completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
