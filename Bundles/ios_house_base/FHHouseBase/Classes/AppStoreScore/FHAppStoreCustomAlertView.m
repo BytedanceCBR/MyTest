@@ -276,7 +276,7 @@
         [_leftBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         [_leftBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateHighlighted];
         _leftBtn.titleLabel.font = [UIFont themeFontRegular:16];
-        _leftBtn.layer.cornerRadius = 4;
+        _leftBtn.layer.cornerRadius = 20; //4;
         _leftBtn.backgroundColor = [UIColor themeGray7];
     }
     return _leftBtn;
