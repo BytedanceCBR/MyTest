@@ -870,7 +870,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
             
             NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-            tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
+            tracerDict[@"house_type"] = cellModel.houseType.integerValue == FHHouseTypeNewHouse?@"new":([self houseTypeString] ? : @"be_null");
             tracerDict[@"card_type"] = @"left_pic";
             tracerDict[@"page_type"] = @"maintab";
             tracerDict[@"element_type"] = @"maintab_list";

@@ -2174,7 +2174,7 @@ extern NSString *const INSTANT_DATA_KEY;
         tracerDict[@"group_id"] = houseModel.id ? : @"be_null";
         tracerDict[@"impr_id"] = houseModel.imprId ? : @"be_null";
         tracerDict[@"log_pb"] = houseModel.logPb ? : @"be_null";
-        tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
+        tracerDict[@"house_type"] = houseModel.houseType.integerValue == FHHouseTypeNewHouse?@"new": ([self houseTypeString] ? : @"be_null");
         tracerDict[@"card_type"] = @"left_pic";
         
         [FHUserTracker writeEvent:@"house_show" params:tracerDict];
