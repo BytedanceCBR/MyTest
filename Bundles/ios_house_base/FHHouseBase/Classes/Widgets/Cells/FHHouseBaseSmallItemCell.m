@@ -603,7 +603,10 @@
             self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
         }else
         {
-            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+//            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+            if (commonModel.displayPricePerSqm.length>0) {
+                 self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+            }
         }
         
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
@@ -867,7 +870,7 @@
                 self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
             }else
             {
-                self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+                self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:(commonModel.displayPricePerSqm.length>0?commonModel.displayPricePerSqm:@"") attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
             }
             [self.pricePerSqmLabel.yoga markDirty];
 
@@ -1040,7 +1043,8 @@
     if (model.originPrice) {
         self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];
     }else{
-        self.pricePerSqmLabel.text = model.displayPricePerSqm;
+//        self.pricePerSqmLabel.text = model.displayPricePerSqm;
+        self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:(model.displayPricePerSqm.length>0?model.displayPricePerSqm:@"") attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
     }
 
     [self.pricePerSqmLabel.yoga markDirty];

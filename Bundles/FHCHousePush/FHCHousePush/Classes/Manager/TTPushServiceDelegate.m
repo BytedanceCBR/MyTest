@@ -27,6 +27,7 @@
 #import <TTServiceProtocols/NewsBaseDelegateProtocol.h>
 #import "FHCHousePushUtils.h"
 #import <TTAppRuntime/NewsBaseDelegate.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 
 #import <FHHouseBase/FHUserTracker.h>
 #import <TTBaseLib/TTStringHelper.h>
@@ -71,9 +72,8 @@ typedef void(^NotificationActionCompletionBlock) (void);
         param.deviceId = deviceID;
         param.installId = installID;
         param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
-        // todo zjing 理论上不影响推送的版本判断，但保险起见还是和线上保持一致
         param.versionCode = [TTSandBoxHelper fhVersionCode];
-        param.host = [FHMainApi host];
+
         BDUGNotificationConfig *config = nil;
         if (@available(iOS 10.0, *)) {
             BDUGNotificationAction *actionDislike = [BDUGNotificationAction actionWithIdentifier:kNotificationActionIdentifierDislike
@@ -231,7 +231,7 @@ typedef void(^NotificationActionCompletionBlock) (void);
         } else if ([allKeys containsObject:@"court_id"]) {
             customDict[@"group_id"] = paramObj.allParams[@"court_id"];
         } else if ([allKeys containsObject:@"house_id"]) {
-            customDict[@"group_id"] = paramObj.allParams[@"neighborhood_id"];
+            customDict[@"group_id"] = paramObj.allParams[@"house_id"];
         }
     }
     return customDict;
