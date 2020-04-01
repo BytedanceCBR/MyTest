@@ -82,7 +82,7 @@
     
     self.saveBtn = [[UIButton alloc] init];
     [_saveBtn setTitle:@"保存" forState:UIControlStateNormal];
-    [_saveBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [_saveBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     _saveBtn.titleLabel.font = [UIFont themeFontRegular:16];
     [_saveBtn addTarget:self action:@selector(saveInfo) forControlEvents:UIControlEventTouchUpInside];
     [self.customNavBarView addRightViews:@[_saveBtn] viewsWidth:@[@32] viewsHeight:@[@22] viewsRightOffset:@[@20]];
@@ -110,7 +110,7 @@
     }
     
     _remainLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _remainLabel.textColor = [UIColor themeRed1];
+    _remainLabel.textColor = [UIColor themeOrange1];
     _remainLabel.font = [UIFont themeFontRegular:10];
     _remainLabel.textAlignment = NSTextAlignmentRight;
     [self.bgView addSubview:_remainLabel];

@@ -88,7 +88,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.bgView addSubview:_tipLabel];
     
     _subscribeBtn = [[UIButton alloc] init];
-    _subscribeBtn.backgroundColor = [UIColor themeRed1];
+    _subscribeBtn.backgroundColor = [UIColor themeOrange4];
     [_subscribeBtn setTitle:@"订阅动态" forState:UIControlStateNormal];
     [_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _subscribeBtn.titleLabel.font = [UIFont themeFontRegular:14];
@@ -230,7 +230,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
     }else {
         [[ToastManager manager] showToast:@"手机格式错误"];
-        self.textField.textColor = [UIColor themeRed1];
+        self.textField.textColor = [UIColor themeOrange1];
     }
 }
 

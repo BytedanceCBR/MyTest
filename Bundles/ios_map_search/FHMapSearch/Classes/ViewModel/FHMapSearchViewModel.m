@@ -376,7 +376,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //    r.lineWidth = 1;///精度圈 边线宽度，默认0
     r.locationDotBgColor = [UIColor clearColor];///定位点背景色，不设置默认白色
     r.locationDotFillColor = [UIColor themeRed1];///定位点蓝色圆点颜色，不设置默认蓝色
-    UIImage *image = [UIImage imageNamed:@"mapsearch_location_center"];
+    UIImage *image = [UIImage imageNamed:@"mapsearch_location_center_orange"];
     r.image = image;
     [self.mapView updateUserLocationRepresentation:r];
     
@@ -1273,14 +1273,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
         MAPolygonRenderer *polygonRenderer = [[MAPolygonRenderer alloc] initWithPolygon:overlay];
         polygonRenderer.lineWidth   = 6.f;
-        polygonRenderer.strokeColor = [UIColor themeRed1];
-        polygonRenderer.fillColor   = RGBA(0xff, 0x58, 0x69,0.2);
+        polygonRenderer.strokeColor = [UIColor themeOrange4];
+        polygonRenderer.fillColor   = RGBA(0xff, 0x96, 0x29,0.1);
         
         return polygonRenderer;
     }else if ([overlay isKindOfClass:[MAPolyline class]]){
         MAPolylineRenderer *polygonRenderer = [[MAPolylineRenderer alloc] initWithPolyline:overlay];
         polygonRenderer.lineWidth   = 12.f;
-        polygonRenderer.strokeColor = [UIColor themeRed1];
+        polygonRenderer.strokeColor = [UIColor themeOrange1];
         polygonRenderer.lineJoinType = kMALineJoinRound;
         polygonRenderer.lineCapType  = kMALineCapRound;
         return polygonRenderer;

@@ -1268,9 +1268,9 @@ static NSInteger const kMaxPostImageCount = 9;
     self.postButton.enabled = isEnable;
     
     if(isEnable) {
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateHighlighted];
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateDisabled];
     }
     else {
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateHighlighted];

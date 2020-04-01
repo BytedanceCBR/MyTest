@@ -15,7 +15,7 @@
     self = [super initWithAnnotation:annotation
                      reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.image = SYS_IMG(@"mapsearch_station_icon");
+        self.image = SYS_IMG(@"mapsearch_station_icon_orange");
         
         CGRect frame = self.frame;
         frame.size = CGSizeMake(22,22);

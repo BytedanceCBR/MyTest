@@ -152,6 +152,7 @@
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
+#import "UIColor+Theme.h"
 
 #define kVideoCategoryID @"video"
 #define kVideoShowListDigg @"video_show_list_digg"
@@ -1367,8 +1368,8 @@ static NSMutableArray *s_reusableCardViews;
     switch (labelStyle) {
         case ArticleLabelTypeTopic://专题
         case ArticleLabelTypeHeadline://要闻
-            textClr = [UIColor tt_themedColorForKey:kCellTypeLabelTextRed];
-            borderClr = [UIColor tt_themedColorForKey:kCellTypeLabelLineRed];
+            textClr = [UIColor themeOrange1];
+            borderClr = [UIColor themeOrange1];
             break;
             
         case ArticleLabelTypeComics:

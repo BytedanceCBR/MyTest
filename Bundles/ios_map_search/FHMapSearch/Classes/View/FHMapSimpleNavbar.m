@@ -104,7 +104,7 @@
     
     UIImage *img = nil;
     if(type == FHMapSimpleNavbarTypeClose){
-        img = ICON_FONT_IMG(18, @"\U0000e673",[UIColor themeGray1]);
+        img = ICON_FONT_IMG(24, @"\U0000e673",[UIColor themeGray1]);
     }else{
         img = ICON_FONT_IMG(22, @"\U0000e68a",[UIColor themeGray1]);
     }
