@@ -767,7 +767,7 @@
         TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
         context.refer = self.refer;
         context.categoryId = self.categoryId;
-        context.feedListViewController = self;
+//        context.feedListViewController = self;
         context.clickComment = showComment;
         context.enterType = enterType;
         context.enterFrom = [self pageType];
@@ -968,6 +968,36 @@
 - (void)trackClientShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict =  [self trackDict:cellModel rank:rank];
     TRACK_EVENT(@"feed_client_show", dict);
+    
+    if(cellModel.attachCardInfo){
+        [self trackCardShow:cellModel rank:rank];
+    }
+}
+
+- (void)trackCardShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+    NSMutableDictionary *dic =  [self trackDict:cellModel rank:rank];
+    if(cellModel.attachCardInfo.extra && cellModel.attachCardInfo.extra.event.length > 0){
+        //是房源卡片
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"page_type"] = [self pageType];
+        dict[@"enter_from"] = dic[@"enter_from"] ? dic[@"enter_from"] : @"be_null";
+        dict[@"group_id"] = cellModel.attachCardInfo.extra.groupId ?: @"be_null";
+        dict[@"from_gid"] = cellModel.attachCardInfo.extra.fromGid ?: @"be_null";
+        dict[@"group_source"] = cellModel.attachCardInfo.extra.groupSource ?: @"be_null";
+        dict[@"impr_id"] = cellModel.attachCardInfo.extra.imprId ?: @"be_null";
+        dict[@"house_type"] = cellModel.attachCardInfo.extra.houseType ?: @"be_null";
+        TRACK_EVENT(cellModel.attachCardInfo.extra.event ?: @"card_show", dict);
+    }else{
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"page_type"] = [self pageType];
+        dict[@"enter_from"] = dic[@"enter_from"] ? dic[@"enter_from"] : @"be_null";
+        dict[@"from_gid"] = cellModel.groupId;
+        dict[@"group_source"] = @(5);
+        dict[@"impr_id"] = cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";
+        dict[@"card_type"] = cellModel.attachCardInfo.cardType ?: @"be_null";
+        dict[@"card_id"] = cellModel.attachCardInfo.id ?: @"be_null";
+        TRACK_EVENT(@"card_show", dict);
+    }
 }
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {

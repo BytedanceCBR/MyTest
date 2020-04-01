@@ -315,6 +315,7 @@
     @"stickStyle": @"stick_style",
     @"rawData": @"raw_data",
     @"threadId": @"thread_id_str",
+    @"attachCardInfo": @"attach_card_info",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -463,6 +464,68 @@
 @end
 
 @implementation FHFeedUGCContentUgcRecommendModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedUGCContentAttachCardInfoButtonModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedUGCContentAttachCardInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"cardType": @"card_type",
+    @"coverImage": @"cover_image",
+    @"cardStyle": @"card_style",
+    @"desc": @"description",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedUGCContentAttachCardInfoCoverImageModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"imageStyle": @"image_style",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFeedUGCContentAttachCardInfoExtraModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"houseType": @"house_type",
+    @"fromGid": @"from_gid",
+    @"imprId": @"impr_id",
+    @"groupId": @"group_id",
+    @"groupSource": @"group_source",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
