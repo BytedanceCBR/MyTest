@@ -57,6 +57,12 @@ extern NSString *const  SSViewControllerBaseConditionADIDKey;
  *  @param supportRotate  是否支持旋转
  */
 static inline void ssOpenWebView(NSURL * requestURL, NSString * title, UINavigationController * naviController, BOOL supportRotate, NSDictionary *parameters) {
+    // 判断是否是小程序链接 如果是，则不进行页面跳转
+    NSString *hostStr = requestURL.host;
+    if (hostStr.length > 0 && [hostStr isEqualToString:@"microapp"]) {
+        // 小程序 ：sslocal://microapp?app_id=ttdab0ac0d459a6266 需要添加监控
+        return;
+    }
     [SSWebViewController openWebViewForNSURL:requestURL title:title navigationController:naviController supportRotate:supportRotate conditions:parameters];
 }
 

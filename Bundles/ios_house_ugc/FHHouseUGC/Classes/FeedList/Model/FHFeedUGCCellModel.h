@@ -196,6 +196,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, assign) CGFloat bottomLineHeight;
 @property (nonatomic, assign) CGFloat bottomLineLeftMargin;
 @property (nonatomic, assign) CGFloat bottomLineRightMargin;
+//底部卡片
+@property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoModel *attachCardInfo ;
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 
