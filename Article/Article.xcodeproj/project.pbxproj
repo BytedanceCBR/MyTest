@@ -2240,7 +2240,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
-				MARKETING_VERSION = 0.9.4;
+				MARKETING_VERSION = 0.9.5;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2330,7 +2330,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 0.9.4;
+				MARKETING_VERSION = 0.9.5;
 				ONLY_ACTIVE_ARCH = NO;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2413,7 +2413,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
-				MARKETING_VERSION = 0.9.4;
+				MARKETING_VERSION = 0.9.5;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2506,7 +2506,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 0.9.4;
+				MARKETING_VERSION = 0.9.5;
 				ONLY_ACTIVE_ARCH = NO;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
