@@ -46,7 +46,7 @@
 
 - (void)initView {
     self.headerImageView = [[UIImageView alloc] init];
-    UIImage *image = [self ct_imageFromImage:[UIImage imageNamed:@"fh_mine_header_bg"] inRect:self.bounds];
+    UIImage *image = [self ct_imageFromImage:[UIImage imageNamed:@"fh_mine_header_bg_orange"] inRect:self.bounds];
     _headerImageView.image = image;
     [self addSubview:_headerImageView];
     

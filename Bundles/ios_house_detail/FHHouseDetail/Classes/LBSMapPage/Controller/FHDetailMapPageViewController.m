@@ -234,7 +234,7 @@ static MAMapView *kFHPageMapView = nil;
         buttonLabel.textAlignment = NSTextAlignmentCenter;
         buttonLabel.font = [UIFont themeFontRegular:9];
         if (i == self.selectedIndex) {
-            buttonLabel.textColor = [UIColor themeRed1];
+            buttonLabel.textColor = [UIColor themeOrange1];
             self.previouseLabel = buttonLabel;
         }else
         {
@@ -291,7 +291,7 @@ static MAMapView *kFHPageMapView = nil;
     if (button.tag < [_imageNameArray count] && self.previouseIconButton.tag < [_imageNameArray count]) {
         [self.previouseIconButton setImage:[UIImage imageNamed:_imageNameArray[self.previouseIconButton.tag]] forState:UIControlStateNormal];
         self.previouseLabel.textColor = [UIColor themeGray1];
-        buttonLabel.textColor = [UIColor themeRed1];
+        buttonLabel.textColor = [UIColor themeOrange1];
         [button setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",_imageNameArray[button.tag]]] forState:UIControlStateNormal];
     }
     if (self.nameArray.count > button.tag) {

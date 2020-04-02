@@ -51,7 +51,7 @@
     [self addSubview:_scrollView];
 
     self.headerImageView = [[UIImageView alloc] init];
-    _headerImageView.image = [UIImage imageNamed:@"price_valuation_header_image"];
+    _headerImageView.image = [UIImage imageNamed:@"price_valuation_header_image_orange"];
     _headerImageView.contentMode = UIViewContentModeScaleAspectFill;
     [self.scrollView addSubview:_headerImageView];
 
@@ -89,11 +89,11 @@
     [self.inputView addSubview:_floorItemView];
 
     self.evaluateBtn = [[UIButton alloc] init];
-    _evaluateBtn.backgroundColor = [UIColor themeRed1];
+    _evaluateBtn.backgroundColor = [UIColor themeOrange4];
     [_evaluateBtn setTitle:@"立即估价" forState:UIControlStateNormal];
     [_evaluateBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _evaluateBtn.titleLabel.font = [UIFont themeFontRegular:16];
-    _evaluateBtn.layer.cornerRadius = 4;
+    _evaluateBtn.layer.cornerRadius = 22; //4;
     _evaluateBtn.layer.masksToBounds = YES;
     [self setEvaluateBtnEnabled:NO];
 

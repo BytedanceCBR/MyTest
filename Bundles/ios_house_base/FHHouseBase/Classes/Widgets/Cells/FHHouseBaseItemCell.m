@@ -1080,8 +1080,7 @@
         if (commonModel.originPrice) {
             self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
         }else{
-//            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
-            self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+          self.pricePerSqmLabel.attributedText =  [[NSAttributedString alloc]initWithString:(commonModel.displayPricePerSqm.length>0?commonModel.displayPricePerSqm:@"") attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
         }
         
         if (self.maskVRImageView) {
@@ -1162,11 +1161,11 @@
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
+            _pricePerSqmLabel.textColor = [UIColor themeOrange1];
         }else {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
+            _pricePerSqmLabel.textColor = [UIColor themeOrange1];
         }
         
         self.priceLabel.text = commonModel.pricePerSqmNum;
@@ -1224,7 +1223,7 @@
     if (model.originPrice) {
         self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];
     }else{
-         self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:model.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+        self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:(model.displayPricePerSqm.length>0?model.displayPricePerSqm:@"") attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
     }
     
     
@@ -1375,7 +1374,9 @@
             if (commonModel.originPrice) {
                 self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
             }else{
-                self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+                if (commonModel.displayPricePerSqm.length>0) {
+                     self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+                }
             }
             [self.pricePerSqmLabel.yoga markDirty];
             if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {

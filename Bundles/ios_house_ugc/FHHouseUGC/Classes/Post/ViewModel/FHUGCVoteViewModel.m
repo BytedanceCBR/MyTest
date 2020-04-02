@@ -144,7 +144,7 @@
         UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [confirmButton setTitle:@"确定" forState:UIControlStateNormal];
         confirmButton.titleLabel.font = [UIFont themeFontRegular:16];
-        [confirmButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [confirmButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
         [confirmButton sizeToFit];
         [confirmButton addTarget:self action:@selector(dateConfirmAction:) forControlEvents:UIControlEventTouchUpInside];
         

@@ -230,16 +230,16 @@
 {
     switch (index) {
         case 0:
-            return [UIColor colorWithHexString:@"#bebebe"];
-            break;
-        case 1:
             return [UIColor themeRed1];
             break;
+        case 1:
+            return [UIColor colorWithHexString:@"#ffc464"];
+            break;
         case 2:
-            return [UIColor themeGray5];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
         default:
-            return [UIColor themeGray5];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
     }
 }

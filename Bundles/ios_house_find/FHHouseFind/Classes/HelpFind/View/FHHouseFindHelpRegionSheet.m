@@ -27,8 +27,8 @@
 {
     _regionSelected = regionSelected;
     if (regionSelected) {
-        self.selectImgView.image = ICON_FONT_IMG(16, @"\U0000e689", [UIColor themeRed1]);  //@"housefind_selected"
-        self.regionLabel.textColor = [UIColor themeRed1];
+        self.selectImgView.image = ICON_FONT_IMG(16, @"\U0000e689", [UIColor themeOrange1]);  //@"housefind_selected"
+        self.regionLabel.textColor = [UIColor themeOrange1];
     }else {
         self.selectImgView.image = ICON_FONT_IMG(16, @"\U0000e669", nil);//@"housefind_normal";
         self.regionLabel.textColor = [UIColor themeGray1];
@@ -239,8 +239,8 @@
         _finishBtn = [[UIButton alloc]init];
         [_finishBtn setTitle:@"完成" forState:UIControlStateNormal];
         [_finishBtn setTitle:@"完成" forState:UIControlStateHighlighted];
-        [_finishBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-        [_finishBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
+        [_finishBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+        [_finishBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateHighlighted];
     }
     return _finishBtn;
 }

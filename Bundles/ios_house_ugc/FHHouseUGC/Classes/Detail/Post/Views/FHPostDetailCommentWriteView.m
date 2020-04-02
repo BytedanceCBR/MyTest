@@ -602,6 +602,10 @@ static struct timeval kFHCommentTimeval;
 }
 
 - (void)atAction:(id)sender {
+    self.textViewMediator.traceDict = @{
+        UT_ENTER_FROM: @"mention_page",
+        UT_ENTER_TYPE: @"enter_mention",
+    };
     [self.textViewMediator toolbarDidClickAtButton];
 }
 
@@ -697,7 +701,7 @@ static struct timeval kFHCommentTimeval;
         _publishButton.titleLabel.font = [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]];
         [_publishButton sizeToFit];
         _publishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-        _publishButton.titleColorThemeKey = @"red1";
+        _publishButton.titleColorThemeKey = @"orange1";
         _publishButton.disabledTitleColorThemeKey = @"grey4";
         [_publishButton addTarget:self action:@selector(publish:) forControlEvents:UIControlEventTouchUpInside];
         _publishButton.enabled = NO;

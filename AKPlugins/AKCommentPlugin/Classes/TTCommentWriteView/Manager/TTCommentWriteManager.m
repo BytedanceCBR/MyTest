@@ -616,7 +616,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                 [params setObject:self.enterFrom forKey:@"enter_from"];
             }
             if (self.enter_type.length > 0) {
-                [params setObject:self.enter_type forKey:@"enter_type"];
+                [params setObject:@"submit_comment" forKey:@"enter_type"];
             }
 
             params[@"from_ugc"] = @(YES);

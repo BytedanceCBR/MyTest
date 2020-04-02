@@ -338,6 +338,7 @@
     
     if([TTDeviceHelper OSVersionNumber] >= 8.0 && [TTDeviceHelper isPadDevice])
     {
+        WeakSelf;
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:nil]];
         if(hasPickedImg)
@@ -345,6 +346,7 @@
             [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"删除图片", nil)
                                                                 style:UIAlertActionStyleDefault
                                                               handler:^(UIAlertAction *action) {
+                                                                  StrongSelf;
                                                                   [self deletePickedImg];
                                                               }]];
         }
@@ -352,6 +354,7 @@
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"手机相册", nil)
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction *action) {
+                                                              StrongSelf;
                                                               [self openPickerControllerByType:UIImagePickerControllerSourceTypePhotoLibrary];
                                                           }]];
         alertController.popoverPresentationController.sourceView = sender;

@@ -94,6 +94,8 @@
     @"pricingPerSqm": @"pricing_per_sqm",
     @"districtName": @"district_name",
     @"courtId": @"court_id",
+    @"highlightedRealtor": @"highlighted_realtor",
+    @"chooseAgencyList": @"choose_agency_list",
     @"saleStatus": @"sale_status"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

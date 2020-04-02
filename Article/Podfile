@@ -44,15 +44,15 @@ def fhPods
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
     pod 'ios_house_filter' , '1.0.2'
     
-    pod 'FHCommonUI', '0.0.17'
+    pod 'FHCommonUI', '0.0.18'
 #    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
-#    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => 'ab769d9fe081f65e5e6edcc3dd89c03dfe254cb4'
+#    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '3f4cec94bebbf3c09c2e78ce0511afdb8103386a'
 
 #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
 #    'DelegateForC'
 #    ]
-    pod 'FHPopupViewCenter', '0.0.2-rc.1', :subspecs => [
+    pod 'FHPopupViewCenter', '0.0.2-rc.5', :subspecs => [
     'Core',
     'DelegateForC'
     ]
@@ -62,10 +62,10 @@ def fhPods
     # 'DelegateForC'
     # ]
 
-    pod 'ios_house_im' , '0.1.19-rc.14'
+     pod 'ios_house_im' , '0.2.0-rc.3'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #    pod 'ios_house_im' , :path => '../../cim'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '8141c3506a677f14f05eabb7146120339e0ad283'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'b66a29caec3747def4e1d0bd80d2cc6888b7090e'
 
 end
 
@@ -248,7 +248,7 @@ def appPods
     #-----头条用户设置库--------
     pod 'TTUserSettings', '0.3.4'
 
-    pod_binary 'TTRexxar', '0.8.10', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
+    pod_binary 'TTRexxar', '0.8.14', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
     #----头条组件协议库-----
 
     pod_binary 'TTServiceProtocols','7.5.7.2'
@@ -299,8 +299,8 @@ def appPods
     pod_binary 'TTThemed','0.1.36'
 
     #-----头条UI组件库-----
-    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '57edbf09a86dec979924d180402df4b742bdfb6f'
-
+    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '534a843030a01478c6112a0c168c7fd5360c4832'
+    
     pod 'Bytedancebase','1.4.0-rc.0', :subspecs => [
     'BDPlatformSDK',
     'BDDeprecatedSDK'
@@ -322,7 +322,7 @@ def appPods
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
     # pod_binary 'TTMonitor','0.7.9.58-rc.3' #这个版本还是有很多问题
-    pod_binary 'Heimdallr','0.7.11', :subspecs => [
+    pod_binary 'Heimdallr','0.7.13-rc.8', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
@@ -370,7 +370,7 @@ def appPods
     pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod_binary 'TTImage', '0.8.4'
-    pod_binary 'BDWebImage', '1.0.16-rc.17',:subspecs => [
+    pod_binary 'BDWebImage', '1.0.20',:subspecs => [
     'Core',
     'Decoder',
     'Download',
@@ -457,7 +457,7 @@ def appPods
     pod_source 'OHHTTPStubs', '4.2.1', :configurations => ['Debug']
     pod_binary 'CHTCollectionViewWaterfallLayout', '0.9.5'
     pod_binary 'Aspects', '1.4.1'
-    pod_binary 'SSZipArchive', '1.6.3'
+    pod_binary 'SSZipArchive', '2.1.5'
     pod_binary 'libextobjc', '0.4.1'
     pod_binary 'ReactiveObjC', '3.0.0'
     pod_binary 'SDWebImage', '4.4.1', :subspecs => [
@@ -538,7 +538,7 @@ def appPods
 
     pod_binary 'BDDiamond20', '1.0.2', :subspecs => ['minisdk']
 
-    pod 'Quaterback', '0.0.2-rc.8', :subspecs => [
+    pod 'Quaterback', '1.0.0-alpha.4', :subspecs => [
     'Main/Core',
     'Main/Default'
     ]
