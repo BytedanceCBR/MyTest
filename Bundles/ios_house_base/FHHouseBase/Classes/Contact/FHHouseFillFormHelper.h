@@ -9,6 +9,7 @@
 #import "JSONModel.h"
 #import <FHHouseBase/FHHouseType.h>
 #import <FHHouseBase/FHHouseContactDefines.h>
+#import "FHAssociateFormReportModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,8 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel; // 填表单
 + (void)fillFormActionWithConfig:(NSDictionary *)config;
-+ (void)fillOnlineFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel; // 在线联系
-+ (void)fillOnlineFormActionWithConfig:(NSDictionary *)config;
+
+#pragma mark - associate refactor
++ (void)fillFormActionWithAssociateReport:(NSDictionary *)associateReportDict;
++ (void)fillFormActionWithAssociateReportModel:(FHAssociateFormReportModel *)associateReport;
 
 @end
 

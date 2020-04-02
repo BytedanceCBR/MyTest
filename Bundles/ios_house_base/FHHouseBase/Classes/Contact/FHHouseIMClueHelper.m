@@ -79,6 +79,72 @@
     }
 }
 
++ (void)jump2SessionPageWithAssociateDict:(NSDictionary *)associateDict
+{
+    FHAssociateIMModel *configModel = [[FHAssociateIMModel alloc]initWithDictionary:associateDict error:nil];
+    if (configModel) {
+        [self jump2SessionPageWithAssociateIM:configModel];
+    }
+}
+
++ (void)jump2SessionPageWithAssociateIM:(FHAssociateIMModel *)associateIM
+{
+    NSString *urlStr = associateIM.imOpenUrl;
+    if (urlStr.length > 0) {
+        NSURL *openUrl = [NSURL URLWithString:urlStr];
+        NSMutableDictionary *userInfoDict = @{}.mutableCopy;
+//        if (dict) {
+//            userInfoDict[@"tracer"] = dict;
+//        }
+        [self addClickIMLog:associateIM.reportParams];
+        
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        [self silentFollowHouseWithAssociateIM:associateIM];
+    }
+}
+
++ (void)silentFollowHouseWithAssociateIM:(FHAssociateIMModel *)associateIM
+{
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]init];
+    configModel.houseType = associateIM.houseType;
+    configModel.followId = associateIM.houseId;
+    configModel.actionType = associateIM.houseType;
+    configModel.hideToast = YES;
+    // 静默关注功能
+    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel completionBlock:^(BOOL isSuccess) {
+    }];
+}
+
++ (void)addClickIMLog:(FHAssociateIMModel *)associateIM
+{
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    FHAssociateReportParams *configModel = associateIM.reportParams;
+    
+    dict[@"enter_from"] = configModel.enterFrom ? : @"be_null";
+    dict[@"element_from"] = configModel.elementFrom ? : @"be_null";
+    dict[@"origin_from"] = configModel.originFrom ? : @"be_null";
+    dict[@"log_pb"] = configModel.logPb ? : @"be_null";
+    dict[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
+    dict[@"rank"] = configModel.rank ? : @"be_null";
+    dict[@"card_type"] = configModel.cardType ? : @"be_null";
+    dict[@"page_type"] = configModel.pageType ?: @"be_null";
+    dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
+    dict[@"realtor_id"] = configModel.realtorId ? : @"be_null";;
+    dict[@"realtor_rank"] = configModel.realtorRank ?: @"0";
+    dict[@"conversation_id"] = configModel.conversationId ? : @"be_null";
+    dict[@"realtor_logpb"] = configModel.realtorLogpb ? : @"be_null";
+
+    // todo zjing test
+//    dict[@"from"] = configModel.from;
+//    dict[@"source_from"] = configModel.sourceFrom;
+    dict[@"search_id"] = configModel.searchId ? : @"be_null";
+    dict[@"realtor_position"] = configModel.realtorPosition ? : @"be_null";
+    dict[@"growth_deepevent"] = @(1);
+
+    [FHUserTracker writeEvent:@"click_im" params:dict];
+}
+
 @end
 
 @implementation FHHouseIMClueConfigModel

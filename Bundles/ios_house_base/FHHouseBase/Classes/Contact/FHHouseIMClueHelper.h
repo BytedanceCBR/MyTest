@@ -9,6 +9,7 @@
 #import "FHHouseContactDefines.h"
 #import <JSONModel/JSONModel.h>
 #import "FHHouseType.h"
+#import "FHAssociateIMModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)jump2SessionPageWithConfigModel:(FHHouseIMClueConfigModel *)configModel;
 + (void)jump2SessionPageWithConfig:(NSDictionary *)configDict;
 
++ (void)jump2SessionPageWithAssociateIM:(FHAssociateIMModel *)associateIM;
++ (void)jump2SessionPageWithAssociateDict:(NSDictionary *)associateDict;
 
 @end
 
