@@ -410,21 +410,23 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 + (void)addInformShowLogWithAssociateReport:(FHAssociateFormReportModel *)associateReport
 {
     NSMutableDictionary *params = @{}.mutableCopy;
-    FHAssociateReportParams *configModel = associateReport.reportParams;
+    NSDictionary *reportParams = associateReport.reportParams;
     
-    params[@"page_type"] = configModel.pageType ? : @"be_null";
-    params[@"card_type"] = configModel.cardType ? : @"be_null";
-    params[@"enter_from"] = configModel.enterFrom ? : @"be_null";
-    params[@"element_from"] = configModel.elementFrom ? : @"be_null";
-    params[@"rank"] = configModel.rank ? : @"be_null";
-    params[@"origin_from"] = configModel.originFrom ? : @"be_null";
-    params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
-    params[@"log_pb"] = configModel.logPb ? : @"be_null";
+    params[@"page_type"] = reportParams[@"page_type"] ? : @"be_null";
+    params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
+    params[@"enter_from"] = reportParams[@"enter_from"] ? : @"be_null";
+    params[@"element_from"] = reportParams[@"element_from"] ? : @"be_null";
+    params[@"rank"] = reportParams[@"rank"] ? : @"be_null";
+    params[@"origin_from"] = reportParams[@"origin_from"] ? : @"be_null";
+    params[@"origin_search_id"] = reportParams[@"origin_search_id"] ? : @"be_null";
+    params[@"log_pb"] = reportParams[@"log_pb"] ? : @"be_null";
+    params[kFHAssociateInfo] = associateReport.associateInfo;
+
     // todo zjing test
-    params[@"position"] = configModel.position ? : @"button";
-    if (configModel.itemId.length > 0) {
-        params[@"item_id"] = configModel.itemId;
-    }
+    params[@"position"] = reportParams[@"position"] ? : @"be_null";
+    params[@"item_id"] = reportParams[@"item_id"] ? : @"be_null";
+    params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
+
     params[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
@@ -433,22 +435,21 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 + (void)addClickConfirmLogWithAssociateReport:(FHAssociateFormReportModel *)associateReport alertView:(FHDetailNoticeAlertView *)alertView
 {
     NSMutableDictionary *params = @{}.mutableCopy;
-    FHAssociateReportParams *configModel = associateReport.reportParams;
-
-    params[@"page_type"] = configModel.pageType ? : @"be_null";
-    params[@"card_type"] = configModel.cardType ? : @"be_null";
-    params[@"enter_from"] = configModel.enterFrom ? : @"be_null";
-    params[@"element_from"] = configModel.elementFrom ? : @"be_null";
-    params[@"rank"] = configModel.rank ? : @"be_null";
-    params[@"origin_from"] = configModel.originFrom ? : @"be_null";
-    params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
-    params[@"log_pb"] = configModel.logPb ? : @"be_null";
-    params[@"position"] = configModel.position ? : @"button";
+    NSDictionary *reportParams = associateReport.reportParams;
+    params[@"page_type"] = reportParams[@"page_type"] ? : @"be_null";
+    params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
+    params[@"enter_from"] = reportParams[@"enter_from"] ? : @"be_null";
+    params[@"element_from"] = reportParams[@"element_from"] ? : @"be_null";
+    params[@"rank"] = reportParams[@"rank"] ? : @"be_null";
+    params[@"origin_from"] = reportParams[@"origin_from"] ? : @"be_null";
+    params[@"origin_search_id"] = reportParams[@"origin_search_id"] ? : @"be_null";
+    params[@"log_pb"] = reportParams[@"log_pb"] ? : @"be_null";
     params[kFHAssociateInfo] = associateReport.associateInfo;
 
-    if (configModel.itemId.length > 0) {
-        params[@"item_id"] = configModel.itemId;
-    }
+    // todo zjing test
+    params[@"position"] = reportParams[@"position"] ? : @"be_null";
+    params[@"item_id"] = reportParams[@"item_id"] ? : @"be_null";
+    params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
 
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : associateReport.chooseAgencyList;
