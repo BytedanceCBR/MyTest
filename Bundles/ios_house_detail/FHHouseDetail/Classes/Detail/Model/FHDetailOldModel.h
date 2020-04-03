@@ -59,6 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 
@@ -332,6 +333,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *extraContent;
 @property (nonatomic, copy , nullable) NSString *baseContent;
 @property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 
@@ -341,6 +343,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *baseContent;
 @property (nonatomic, copy , nullable) NSString *extraContent;
 @property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 
@@ -350,6 +353,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *realtorId;
 @property (nonatomic, copy , nullable) NSString *autoText;
 @property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 
@@ -465,6 +469,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *subscriptionToast;
 @property (nonatomic, copy , nullable) NSString *reportToast;
 @property (nonatomic, copy , nullable) NSString *reportDoneToast;
+@property (nonatomic, strong, nullable) FHClueSceneInfoContainerModel *middleSubscriptionAssociateInfo;
+@property (nonatomic, strong, nullable) FHClueSceneInfoContainerModel *houseImageAssociateInfo;
+@property (nonatomic, strong, nullable) FHClueSceneInfoContainerModel *recommendRealtorsAssociateInfo;
+@property (nonatomic, strong, nullable) FHClueSceneInfoContainerModel *houseReviewCommentAssociateInfo;
 
 @end
 
