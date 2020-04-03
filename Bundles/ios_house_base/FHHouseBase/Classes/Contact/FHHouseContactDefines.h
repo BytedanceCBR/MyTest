@@ -11,6 +11,8 @@
 #define kFHCluePage @"clue_page"
 #define kFHClueEndpoint @"clue_endpoint"
 
+#define kFHAssociateInfo @"associate_info"
+
 typedef enum : NSUInteger {
     FHFollowActionTypeNew = 1,
     FHFollowActionTypeOld = 2,

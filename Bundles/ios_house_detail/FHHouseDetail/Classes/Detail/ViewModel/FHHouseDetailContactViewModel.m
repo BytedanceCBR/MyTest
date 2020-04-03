@@ -53,6 +53,7 @@
 #import "FHHouseNewDetailViewModel.h"
 #import "FHDetailBaseCell.h"
 
+
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate>
@@ -489,6 +490,54 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
+}
+
+#pragma mark - associate refactor
+- (void)fillFormActionWithParams:(NSDictionary *)formParamsDict
+{
+    NSString *title = nil;
+    NSString *subtitle = self.subTitle;
+    NSString *btnTitle = @"提交";
+    NSString *toast = self.toast;
+    NSDictionary *associateInfoDict = formParamsDict[kFHAssociateInfo];
+    if (formParamsDict[@"title"]) {
+        title = formParamsDict[@"title"];
+    }
+    if (formParamsDict[@"subtitle"]) {
+        subtitle = formParamsDict[@"subtitle"];
+    }
+    if (formParamsDict[@"btn_title"]) {
+        btnTitle = formParamsDict[@"btn_title"];
+    }
+    if (formParamsDict[@"toast"]) {
+        toast = formParamsDict[@"toast"];
+    }
+    FHAssociateFormReportModel *associateReport = [[FHAssociateFormReportModel alloc]init];
+    if (self.houseType == FHHouseTypeNeighborhood) {
+        associateReport.title = @"咨询经纪人";
+        associateReport.btnTitle = @"提交";
+    }
+    if (title.length > 0) {
+        associateReport.title = title;
+    }
+    if (subtitle.length > 0) {
+        associateReport.subtitle = subtitle;
+    }
+    if (toast.length > 0) {
+        associateReport.toast = toast;
+    }
+    associateReport.houseType = self.houseType;
+    associateReport.houseId = self.houseId;
+    associateReport.topViewController = self.belongsVC;
+
+    NSMutableDictionary *params = [self baseParams].mutableCopy;
+    if (formParamsDict.count > 0) {
+        [params addEntriesFromDictionary:formParamsDict];
+    }
+    associateReport.reportParams = params;
+    associateReport.associateInfo = associateInfoDict;
+    associateReport.chooseAgencyList = self.chooseAgencyList;
+    [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];
 }
 
 - (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict

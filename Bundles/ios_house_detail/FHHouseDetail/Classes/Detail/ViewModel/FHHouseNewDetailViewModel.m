@@ -12,8 +12,7 @@
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailPhotoHeaderCell.h"
 #import "FHDetailHouseNameCell.h"
-#import "FHDetailNewHouseCoreInfoCell.h"
-#import "FHDetailNewHouseNewsCell.h"
+
 #import "FHDetailNewTimeLineItemCell.h"
 
 #import "FHDetailNewMutiFloorPanCell.h"
@@ -23,7 +22,7 @@
 #import "FHDetailRelatedCourtModel.h"
 #import "FHNewHouseItemModel.h"
 #import "FHDetailDisclaimerCell.h"
-#import "FHDetailNewListSingleImageCell.h"
+
 #import "FHDetailStaticMapCell.h"
 #import "HMDTTMonitor.h"
 #import <FHHouseBase/FHCommonDefines.h>
@@ -71,21 +70,15 @@
 //    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameModel class])];
     
 //    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
-    
-//    [self.tableView registerClass:[FHDetailNewHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseCoreInfoModel class])];
-    
+        
     [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewMutiFloorPanCellModel class])];
-    
-//    [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCellModel class])];
-    
+        
     [self.tableView registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
     
 //    [self.tableView registerClass:[FHDetailNewTimeLineItemCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemModel class])];
     
 //    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     
-    //    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
-//    [self.tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListBaseItemModel class])];
     
     [self.tableView registerClass:[FHOldDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     
@@ -627,33 +620,6 @@
         socialInfoCM.socialInfo = model.data.socialInfo;
         [self.items addObject:socialInfoCM];
     }
-    
-    //楼盘动态
-    //    if (model.data.timeline.list.count != 0) {
-    //        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-    //        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-    //        [self.items addObject:grayLine];
-    //
-    //        FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
-    //        newsCellModel.hasMore = model.data.timeline.hasMore;
-    //        newsCellModel.titleText = @"楼盘动态";
-    //        newsCellModel.courtId = model.data.coreInfo.id;
-    //        newsCellModel.clickEnable = YES;
-    //
-    //        [self.items addObject:newsCellModel];
-    //
-    //        for (NSInteger i = 0; i < model.data.timeline.list.count; i++) {
-    //            FHDetailNewDataTimelineListModel *itemModel = model.data.timeline.list[i];
-    //            FHDetailNewTimeLineItemModel *item = [[FHDetailNewTimeLineItemModel alloc] init];
-    //            item.desc = itemModel.desc;
-    //            item.title = itemModel.title;
-    //            item.createdTime = itemModel.createdTime;
-    //            item.isFirstCell = (i == 0);
-    //            item.isLastCell = (i == model.data.timeline.list.count - 1);
-    //            item.courtId = model.data.coreInfo.id;
-    //            [self.items addObject:item];
-    //        }
-    //    }
     
     if (model.data.surroundingInfo) {
         FHDetailCourtInfoCellModel *infoModel = [[FHDetailCourtInfoCellModel alloc] init];

@@ -232,7 +232,14 @@
     extraDic[@"subtitle"] = subtitle;
     extraDic[@"btn_title"] = btnTitle;
     extraDic[@"toast"] = toast;
-
+    // todo zjing test
+    NSDictionary *associateInfoDict = @{@"from":@"old_house_detail",
+                                        @"source":@"1.38",
+                                        @"endpoint":@"1",
+                                        @"target_type":@"1",
+                                        @"extra_info":@{}
+    };
+    extraDic[kFHAssociateInfo] = associateInfoDict;
     [model.contactViewModel fillFormActionWithExtraDict:extraDic];
 }
 

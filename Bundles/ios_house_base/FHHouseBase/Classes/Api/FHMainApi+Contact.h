@@ -42,7 +42,7 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 中介转接电话
-;
+
 + (TTHttpTask*)requestVirtualNumber:(NSString*)realtorId
                             houseId:(NSString*)houseId
                           houseType:(FHHouseType)houseType
@@ -60,6 +60,13 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                            cluePage:(NSNumber*)cluePage
                        clueEndpoint:(NSNumber*)clueEndpoint
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
+#pragma mark - associate refactor
++ (TTHttpTask*)requestVirtualNumber:(NSDictionary*)phoneAssociate completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
+// 详情页线索提交表单
++ (TTHttpTask*)requestCallReport:(NSDictionary*)reportAssociate
+                                     agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
+                                     completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 房源关注
 + (TTHttpTask*)requestFollow:(NSString*)followId
