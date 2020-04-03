@@ -205,7 +205,6 @@
     imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
     imExtra[kFHCluePage] = @(FHClueIMPageTypePresentation);
      [model.contactViewModel onlineActionWithExtraDict:imExtra];
-//    [model.phoneCallViewModel imchatActionWithPhone:model.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
 @end
 
