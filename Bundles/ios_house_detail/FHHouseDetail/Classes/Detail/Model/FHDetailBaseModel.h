@@ -95,21 +95,10 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *borderColor;
 @end
 
-
-@interface FHClueInfoModel: JSONModel
-@property (nonatomic, copy) NSString *from;
-@property (nonatomic, copy) NSString *source;
-@property (nonatomic, copy) NSString *endpoint;
-@property (nonatomic, copy) NSString *page;
-@property (nonatomic, copy) NSString *targetType;
-@property (nonatomic, copy) NSString *targetId;
-@property (nonatomic, strong) NSDictionary *extraInfo;
-@end
-
 @interface FHClueAssociateInfoModel: JSONModel
-@property (nonatomic, strong, nullable) FHClueInfoModel *imInfo;
-@property (nonatomic, strong, nullable) FHClueInfoModel *phoneInfo;
-@property (nonatomic, strong, nullable) FHClueInfoModel *reportFormInfo;
+@property (nonatomic, strong, nullable) NSDictionary *imInfo;
+@property (nonatomic, strong, nullable) NSDictionary *phoneInfo;
+@property (nonatomic, strong, nullable) NSDictionary *reportFormInfo;
 @end
 
 @interface FHClueSceneInfoContainerModel: JSONModel

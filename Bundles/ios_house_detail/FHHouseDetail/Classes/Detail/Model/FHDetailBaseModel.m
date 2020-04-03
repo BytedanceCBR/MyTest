@@ -111,23 +111,6 @@
 }
 @end
 
-@implementation FHClueInfoModel
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-+(JSONKeyMapper *)keyMapper {
-    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        NSDictionary *dict = @{
-                               @"targetType": @"target_type",
-                               @"targetId": @"target_id",
-                               @"extraInfo":@"extra_info",
-                               };
-        return dict[keyName]?:keyName;
-    }];
-}
-@end
-
 @implementation FHClueAssociateInfoModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
