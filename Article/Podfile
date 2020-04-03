@@ -433,9 +433,9 @@ def appPods
     pod 'BDUGContainer', '1.1.2'
     pod 'BDUGTrackerInterface', '1.1.1'
     pod 'BDUGMonitorInterface', '1.0.0'
-    pod 'BDUGAccountOnekeyLogin', '1.1.6-rc.0'
+    pod 'BDUGAccountOnekeyLogin', '1.1.8-rc.0'
     pod 'TYRZApiSDK' , '1.2.2-rc.0'
-    pod 'EAccountApiSDK', '1.1.1'
+    pod 'EAccountApiSDK', '1.2.0-alpha.0'
     pod 'BDUGUnionSDK', '0.1.2'
   
     #************业务SDK**********
