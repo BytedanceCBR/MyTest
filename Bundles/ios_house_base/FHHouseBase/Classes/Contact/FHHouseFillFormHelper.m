@@ -20,7 +20,7 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import "IMManager.h"
 #import "HMDTTMonitor.h"
-#import "FHHousePhoneCallUtils.h"
+
 #import "FHHouseFollowUpHelper.h"
 #import "FHFillFormAgencyListItemModel.h"
 #import "FHHouseDetailViewController.h"
@@ -123,28 +123,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (configModel) {
         [self fillFormActionWithConfigModel:configModel];
     }
-}
-
-
-+(void)phoneCallAction:(FHHouseFillFormConfigModel *)configModel
-{
-    NSDictionary *tracerDict = [configModel toDictionary];
-    FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]init];
-    [contactConfig setTraceParams:tracerDict];
-    contactConfig.houseType = configModel.houseType;
-    contactConfig.houseId = configModel.houseId;
-    contactConfig.phone = configModel.phone;
-    contactConfig.realtorId = configModel.realtorId;
-    contactConfig.searchId = configModel.searchId;
-    contactConfig.imprId = configModel.imprId;
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
-        if(success && [configModel.topViewController isKindOfClass:[FHHouseDetailViewController class]]){
-            FHHouseDetailViewController *vc = (FHHouseDetailViewController *)configModel.topViewController;
-            vc.isPhoneCallShow = YES;
-            vc.phoneCallRealtorId = contactConfig.realtorId;
-            vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
-        }
-    }];
 }
 
 + (void)fillFormRequest:(FHHouseFillFormConfigModel *)configModel phone:(NSString *)phone alertView:(FHDetailNoticeAlertView *)alertView
