@@ -95,6 +95,27 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *borderColor;
 @end
 
+
+@interface FHClueInfoModel: JSONModel
+@property (nonatomic, copy) NSString *from;
+@property (nonatomic, copy) NSString *source;
+@property (nonatomic, copy) NSString *endpoint;
+@property (nonatomic, copy) NSString *page;
+@property (nonatomic, copy) NSString *targetType;
+@property (nonatomic, copy) NSString *targetId;
+@property (nonatomic, strong) NSDictionary *extraInfo;
+@end
+
+@interface FHClueAssociateInfoModel: JSONModel
+@property (nonatomic, strong, nullable) FHClueInfoModel *imInfo;
+@property (nonatomic, strong, nullable) FHClueInfoModel *phoneInfo;
+@property (nonatomic, strong, nullable) FHClueInfoModel *reportFormInfo;
+@end
+
+@interface FHClueSceneInfoContainerModel: JSONModel
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+@end
+
 @protocol FHDetailContactModel<NSObject>
 @end
 
@@ -133,6 +154,8 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 
 @property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @property (nonatomic, strong , nullable) NSDictionary *realtorLogpb;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+
 - (nonnull id)copyWithZone:(nullable NSZone *)zone;
 
 - (void)encodeWithCoder:(nonnull NSCoder *)aCoder;
