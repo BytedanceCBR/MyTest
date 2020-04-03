@@ -149,7 +149,6 @@
         }
         [tracerDic removeObjectForKey:@"enter_from"];
         [tracerDic removeObjectForKey:@"element_from"];
-        [tracerDic removeObjectForKey:@"house_type"];
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }
