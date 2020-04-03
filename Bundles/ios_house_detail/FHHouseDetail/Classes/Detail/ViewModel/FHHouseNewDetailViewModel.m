@@ -550,7 +550,11 @@
         FHDetailNewPropertyListCellModel *houseCore = [[FHDetailNewPropertyListCellModel alloc] init];
         houseCore.houseModelType = FHHouseModelTypeNewCoreInfo;
         houseCore.baseInfo = model.data.baseInfo;
-        houseCore.disclaimerModel = [[FHDetailDisclaimerModel alloc] initWithData:[model.data.disclaimer toJSONData] error:nil];
+        NSDictionary *dic = [model.data.disclaimer toDictionary];
+        FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc]init];
+        disclaimerModel.disclaimer =  [[FHDisclaimerModel alloc] initWithData:[model.data.disclaimer toJSONData] error:nil];
+        disclaimerModel.contact = model.data.contact ;
+        houseCore.disclaimerModel = disclaimerModel;
         houseCore.houseName = houseName;
         houseCore.courtId = model.data.coreInfo.id;
         [self.items addObject:houseCore];
