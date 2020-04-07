@@ -538,7 +538,7 @@ def appPods
 
     pod_binary 'BDDiamond20', '1.0.2', :subspecs => ['minisdk']
 
-    pod 'Quaterback', '1.0.0-alpha.4', :subspecs => [
+    pod 'Quaterback', '0.0.2-rc.8', :subspecs => [
     'Main/Core',
     'Main/Default'
     ]
