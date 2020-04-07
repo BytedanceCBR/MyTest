@@ -168,24 +168,37 @@
                 NSArray *previousArr = previousItem[[previousItem allKeys][0]];
                 FHDetailBaseModel *previousModel = previousArr[previousArr.count -1];
                 previousModel.shdowImageScopeType = FHHouseShdowImageScopeTypeBottomAll;
-                [FHOldDetailModuleHelper moduleInsertSectionTitle:moduleArr beforeModel:currentModel];
+                
+                //设置title
+                NSString *currentModelTitle = nil;
+                if (currentModel == FHHouseModelTypeLocationPeriphery) {
+                    if(neighborhoodInfos.count > 0){
+                        currentModelTitle = @"周边配套";
+                    }else{
+                        currentModelTitle = @"位置及周边配套";
+                    }
+                }
+                [FHOldDetailModuleHelper moduleInsertSectionTitle:moduleArr beforeModel:currentModel title:currentModelTitle];
             }
         }
     }];
     return moduleArr;
 }
-+ (void)moduleInsertSectionTitle:(NSMutableArray *)returnArr beforeModel:(FHDetailBaseModel *) model{
++ (void)moduleInsertSectionTitle:(NSMutableArray *)returnArr beforeModel:(FHDetailBaseModel *) model title:(NSString *)title {
     __block NSInteger insterIndex = 0 ;
     FHDetailListSectionTitleModel *titleMolde = [[FHDetailListSectionTitleModel alloc]init];
     if (model.houseModelType == FHHouseModelTypeNeighborhoodInfo) {
         titleMolde.title = @"小区信息";
-    }
-    if (model.houseModelType == FHHouseModelTypeLocationPeriphery) {
-        titleMolde.title = @"周边配套";
-    }
-    if (model.houseModelType == FHHouseModelTypeHousingEvaluation) {
+    }else if (model.houseModelType == FHHouseModelTypeLocationPeriphery) {
+        titleMolde.title = @"位置及周边配套";
+    }else if (model.houseModelType == FHHouseModelTypeHousingEvaluation) {
         titleMolde.title = @"房源评价动态";
     }
+    //外面传了就直接用
+    if(title.length > 0){
+        titleMolde.title = title;
+    }
+    
     [returnArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isEqual:model]) {
             insterIndex = idx;

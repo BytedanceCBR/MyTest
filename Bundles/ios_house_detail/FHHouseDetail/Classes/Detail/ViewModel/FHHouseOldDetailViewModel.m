@@ -474,6 +474,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self.items addObject:userHouseCommentModel];
     }
     
+    BOOL hasOtherNeighborhoodInfo = NO;
+    if ((model.data.strategy && model.data.strategy.articleList.count > 0) || (model.data.comments) || (model.data.question)) {
+        hasOtherNeighborhoodInfo = YES;
+    }
+    
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -481,7 +486,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
         FHDetailNeighborhoodInfoCorrectingModel *infoModel = [[FHDetailNeighborhoodInfoCorrectingModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
-        infoModel.houseModelType = FHHouseModelTypeNeighborhoodInfo;
+        if(hasOtherNeighborhoodInfo){
+            infoModel.houseModelType = FHHouseModelTypeNeighborhoodInfo;
+        }else{
+            infoModel.houseModelType = FHHouseModelTypeLocationPeriphery;
+        }
         infoModel.tableView = self.tableView;
         infoModel.contactViewModel = self.contactViewModel;
         [self.items addObject:infoModel];
@@ -498,7 +507,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     // 小区评测
     if (model.data.strategy && model.data.strategy.articleList.count > 0) {
-    
+        
         FHDetailAccessCellModel *cellModel = [[FHDetailAccessCellModel alloc] init];
         cellModel.houseModelType = FHPlotHouseModelTypeNeighborhoodStrategy;
         cellModel.strategy = model.data.strategy;
@@ -568,6 +577,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
         staticMapModel.mapOnly = NO;
+        if(hasOtherNeighborhoodInfo){
+            staticMapModel.topMargin = 30;
+            staticMapModel.bottomMargin = 0;
+        }else{
+            staticMapModel.topMargin = 0;
+            staticMapModel.bottomMargin = 30;
+        }
         [self.items addObject:staticMapModel];
     } else{
         NSString *eventName = @"detail_map_location_failed";
