@@ -56,6 +56,15 @@
             case FHHouseModelTypeLocationPeriphery:
                 [locationPeripherys addObject:obj];
                 break;
+            case FHPlotHouseModelTypeNeighborhoodStrategy:
+                [locationPeripherys addObject:obj];
+                break;
+            case FHPlotHouseModelTypeNeighborhoodQA:
+                [locationPeripherys addObject:obj];
+                break;
+            case FHPlotHouseModelTypeNeighborhoodComment:
+                [locationPeripherys addObject:obj];
+                break;
             case FHHouseModelTypeTips:
                 [tips addObject:obj];
                 break;

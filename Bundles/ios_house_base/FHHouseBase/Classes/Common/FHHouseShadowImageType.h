@@ -48,6 +48,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHPlotHouseModelTypeNeighborhoodQA,
     ///小区详情页小区点评
     FHPlotHouseModelTypeNeighborhoodComment,
+    ///小区详情页小区攻略
+    FHPlotHouseModelTypeNeighborhoodStrategy,
     ///小区详情页推荐经纪人
      FHPlotHouseModelTypeAgentlist,
     ///小区详情页已售房源
