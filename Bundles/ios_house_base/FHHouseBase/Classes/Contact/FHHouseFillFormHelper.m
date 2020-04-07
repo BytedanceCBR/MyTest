@@ -358,7 +358,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : associateReport.chooseAgencyList;
-    [FHMainApi requestCallReport:associateReport agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReport:associateReport.associateInfo agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];

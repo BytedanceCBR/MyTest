@@ -103,6 +103,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             if (wself.fromStr.length > 0) {
                 extraDic[@"from"] = wself.fromStr;
             }
+            // todo zjing test
+             NSDictionary *associateInfoDict = @{@"from":@"old_house_detail",
+                                                 @"source":@"1.38",
+                                                 @"endpoint":@"1",
+                                                 @"target_type":@"1",
+                                                 @"extra_info":@{}
+             };
+            extraDic[kFHAssociateInfo] = associateInfoDict;
             [wself contactActionWithExtraDict:extraDic];
         };
         _bottomBar.bottomBarLicenseBlock = ^{
@@ -441,7 +449,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)contactActionWithExtraDict:(NSDictionary *)extraDict {
     if (self.contactPhone.phone.length < 1) {
         // 填表单
-        [self fillFormActionWithExtraDict:extraDict];
+        NSMutableDictionary *associateParamDict = @{}.mutableCopy;
+        associateParamDict[kFHAssociateInfo] = extraDict[kFHAssociateInfo];
+        NSMutableDictionary *reportParamsDict = [self baseParams].mutableCopy;
+        if (extraDict.count > 0) {
+            [reportParamsDict addEntriesFromDictionary:extraDict];
+        }
+        associateParamDict[kFHReportParams] = reportParamsDict;
+        [self fillFormActionWithParams:associateParamDict];
     }else {
         // 拨打电话
         [self callActionWithExtraDict:extraDict];
@@ -500,6 +515,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSString *btnTitle = @"提交";
     NSString *toast = self.toast;
     NSDictionary *associateInfoDict = formParamsDict[kFHAssociateInfo];
+    NSDictionary *reportParamsDict = formParamsDict[kFHReportParams];
+
     if (formParamsDict[@"title"]) {
         title = formParamsDict[@"title"];
     }
@@ -530,11 +547,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     associateReport.houseId = self.houseId;
     associateReport.topViewController = self.belongsVC;
 
-    NSMutableDictionary *params = [self baseParams].mutableCopy;
-    if (formParamsDict.count > 0) {
-        [params addEntriesFromDictionary:formParamsDict];
-    }
-    associateReport.reportParams = params;
+    associateReport.reportParams = reportParamsDict;
     associateReport.associateInfo = associateInfoDict;
     associateReport.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];

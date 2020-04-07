@@ -324,7 +324,6 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/call_report"];
-    // todo zjing test
     NSString *userName = [TTAccount sharedAccount].user.name ? : [TTInstallIDManager sharedInstance].deviceID; //如果没有名字，则取did
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (agencyList.count > 0) {
@@ -339,6 +338,8 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
         }
         paramDic[@"choose_agency_list"] = array;
     }
+    paramDic[kFHAssociateInfo] = reportAssociate;
+
     return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:POST needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         FHDetailResponseModel *model = nil;
         NSError *jerror = nil;

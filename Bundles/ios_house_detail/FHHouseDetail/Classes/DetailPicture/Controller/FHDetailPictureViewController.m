@@ -494,7 +494,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (cluePage) {
             extraDic[kFHCluePage] = cluePage;
         }
-
+        // todo zjing test
+         NSDictionary *associateInfoDict = @{@"from":@"old_house_detail",
+                                             @"source":@"1.38",
+                                             @"endpoint":@"1",
+                                             @"target_type":@"1",
+                                             @"extra_info":@{}
+         };
+        extraDic[kFHAssociateInfo] = associateInfoDict;
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }

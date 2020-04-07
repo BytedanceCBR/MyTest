@@ -247,10 +247,6 @@ typedef enum : NSUInteger {
         userInfo[@"show_loading"] = @(1);
         [[NSNotificationCenter defaultCenter]postNotificationName:@"kFHDetailLoadingNotification" object:nil userInfo:userInfo];
     }
-    
-    // todo zjing test
-//    [self isPhoneCallParamsValid:configModel];
-
     [FHMainApi requestVirtualNumber:associateInfo completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         NSMutableDictionary *userInfo = @{}.mutableCopy;
