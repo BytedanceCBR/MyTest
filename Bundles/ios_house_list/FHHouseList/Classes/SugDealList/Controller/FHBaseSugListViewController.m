@@ -48,6 +48,7 @@
     [super viewDidLoad];
 
     [self setupUI];
+    self.view.backgroundColor = [UIColor themeGray7];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     __weak typeof(self) weakSelf = self;
     self.panBeginAction = ^{

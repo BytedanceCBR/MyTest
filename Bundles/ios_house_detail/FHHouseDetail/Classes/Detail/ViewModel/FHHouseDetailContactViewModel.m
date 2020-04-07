@@ -520,15 +520,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
     if (self.targetType>0) {
-        fillFormConfig.houseType = self.targetType;
+        fillFormConfig.targetType = @(self.targetType);
     }else {
        fillFormConfig.houseType = self.houseType;
     }
-    if (self.customHouseId.length>0) {
-        fillFormConfig.houseId = self.customHouseId;
-    }else {
-        fillFormConfig.houseId = self.houseId;
-    }
+    fillFormConfig.houseId = self.houseId;
+    fillFormConfig.houseType = self.houseType;
     fillFormConfig.topViewController = self.belongsVC;
     fillFormConfig.from = fromStr;
     fillFormConfig.realtorId = self.contactPhone.realtorId;
@@ -570,17 +567,21 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSString *subtitle = nil;
     NSString *btnTitle = @"提交";
     NSString *fromStr = nil;
+    NSString *position = nil;
+    // position: change_price（变价通知） /   on_sell（开盘通知）
 
     if (actionType == FHFollowActionTypeFloorPan) {
         title = @"开盘通知";
         subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
         btnTitle = @"提交";
         fromStr = @"app_sellnotice";
+        position = @"on_sell";
     }else if (actionType == FHFollowActionTypePriceChanged) {
         title = @"变价通知";
         subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
         btnTitle = @"提交";
         fromStr = @"app_pricenotice";
+        position = @"change_price";
     }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
     fillFormConfig.houseType = self.houseType;
@@ -603,6 +604,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.tracerDict) {
         [params addEntriesFromDictionary:self.tracerDict];
     }
+    params[@"position"] = position;
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
