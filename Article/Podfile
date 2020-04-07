@@ -322,7 +322,7 @@ def appPods
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
     # pod_binary 'TTMonitor','0.7.9.58-rc.3' #这个版本还是有很多问题
-    pod_binary 'Heimdallr','0.7.13-rc.8', :subspecs => [
+    pod_binary 'Heimdallr','0.7.11', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
@@ -538,7 +538,7 @@ def appPods
 
     pod_binary 'BDDiamond20', '1.0.2', :subspecs => ['minisdk']
 
-    pod 'Quaterback', '1.0.0-alpha.4', :subspecs => [
+    pod 'Quaterback', '0.0.2-rc.8', :subspecs => [
     'Main/Core',
     'Main/Default'
     ]
