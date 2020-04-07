@@ -129,21 +129,6 @@
 @end
 
 
-@implementation FHClueSceneInfoContainerModel
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-+(JSONKeyMapper *)keyMapper {
-    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        NSDictionary *dict = @{
-                               @"associateInfo": @"associate_info",
-                               };
-        return dict[keyName]?:keyName;
-    }];
-}
-@end
-
 @implementation FHDetailContactModel
 + (JSONKeyMapper*)keyMapper
 {

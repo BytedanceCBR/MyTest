@@ -299,6 +299,11 @@
         vc.associateInfo = model.data.houseImageAssociateInfo;
 
         vc.followStatus = self.baseViewModel.contactViewModel.followStatus;
+    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
+        FHDetailNewModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
+        vc.associateInfo = model.data.imageGroupAssociateInfo;
+    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
+        FHDetailNeighborhoodModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
     }
     
     //如果是小区，移除按钮

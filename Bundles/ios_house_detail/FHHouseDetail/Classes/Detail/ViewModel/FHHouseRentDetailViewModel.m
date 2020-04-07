@@ -300,7 +300,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if([self isShowSubscribe]){
         FHDetailHouseSubscribeModel *subscribeModel = [[FHDetailHouseSubscribeModel alloc] init];
         subscribeModel.tableView = self.tableView;
-//        subscribeModel.associateInfo = model.data.middleSubscriptionAssociateInfo;
+        subscribeModel.associateInfo = model.data.middleSubscriptionAssociateInfo;
         [self.items addObject:subscribeModel];
         
         __weak typeof(self) wSelf = self;

@@ -60,6 +60,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNewCoreDetailDataDisclaimerModel *disclaimer ;  
 @property (nonatomic, copy , nullable) NSString *deliveryDate;
 @property (nonatomic, copy , nullable) NSString *propertyPrice;
+//@property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
+//@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
+//@property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
+
 @end
 
 @interface FHDetailNewCoreDetailModel : JSONModel 

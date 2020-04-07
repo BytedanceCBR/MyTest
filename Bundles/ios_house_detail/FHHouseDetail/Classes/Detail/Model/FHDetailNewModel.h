@@ -221,6 +221,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *location;
 @property (nonatomic, strong , nullable) FHDetailNewSurroundingInfoSurrounding *surrounding;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 
@@ -270,6 +271,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *relatedCourtInfo;
 @property (nonatomic, strong , nullable) FHDetailNewSurroundingInfo *surroundingInfo ;
 @property(nonatomic , strong) FHDetailNewTopBanner *topBanner;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *changePriceNotifyAssociateInfo;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *beginSellingNotifyAssociateInfo;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *recommendRealtorsAssociateInfo;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageGroupAssociateInfo;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *discountInfoAssociateInfo;
+
 
 @end
 

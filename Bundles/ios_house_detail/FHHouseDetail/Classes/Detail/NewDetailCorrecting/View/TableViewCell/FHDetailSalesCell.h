@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDiscountInfoItemModel *> *discountInfo;
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 

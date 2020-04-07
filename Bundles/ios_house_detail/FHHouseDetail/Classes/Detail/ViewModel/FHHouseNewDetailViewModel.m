@@ -565,6 +565,8 @@
     FHDetailNewPriceNotifyCellModel *priceInfo = [[FHDetailNewPriceNotifyCellModel alloc] init];
     priceInfo.houseModelType = FHHouseModelTypeNewCoreInfo;
     priceInfo.contactModel = self.contactViewModel;
+    priceInfo.priceAssociateInfo = model.data.changePriceNotifyAssociateInfo;
+    priceInfo.openAssociateInfo = model.data.beginSellingNotifyAssociateInfo;
     [self.items addObject:priceInfo];
     
     // 优惠信息
@@ -573,6 +575,7 @@
         salesModel.discountInfo = model.data.discountInfo;
         salesModel.houseModelType = FHHouseModelTypeNewSales;
         salesModel.contactViewModel = self.contactViewModel;
+        priceInfo.priceAssociateInfo = model.data.discountInfoAssociateInfo;
         [self.items addObject:salesModel];
     }
     
@@ -596,7 +599,7 @@
         agentListModel.houseModelType = FHHouseModelTypeNewAgentList;
         agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
-//        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
+        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
 
         /******* 这里的 逻辑   ********/
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:self.houseId];
