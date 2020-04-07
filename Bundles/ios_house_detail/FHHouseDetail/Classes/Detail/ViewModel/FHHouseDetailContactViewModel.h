@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHHouseDetailFollowUpViewModel;
 @class FHDetailImShareInfoModel;
 @class FHHouseContactConfigModel;
-@class FHHouseNewsSocialModel;
+@class FHHouseNewsSocialModel,FHAssociatePhoneModel;
 
 typedef enum : NSUInteger {
     FHUGCCommunityLoginTypeMemberTalk = 1, // 群聊按钮
@@ -44,7 +44,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy , nullable) NSString *subTitle;
 @property (nonatomic, copy , nullable) NSString *toast;//表单提交成功的提示语
 @property (nonatomic, strong)   FHHouseNewsSocialModel       *socialInfo;// 新房圈子信息
-@property (nonatomic, strong)   FHHouseContactConfigModel    *socialContactConfig;// 圈子拨打电话存储数据
+@property (nonatomic, strong)   FHAssociatePhoneModel    *socialContactConfig;// 圈子拨打电话存储数据
 @property (nonatomic, assign)   BOOL  needRefetchSocialGroupData;// 进入下个页面返回 是否需要重新拉取圈子数据
 @property (nonatomic, assign)   FHUGCCommunityLoginType       ugcLoginType; // 1：community_member_talk(底部群聊入口), 2：community_tip(群聊引导弹窗)
 

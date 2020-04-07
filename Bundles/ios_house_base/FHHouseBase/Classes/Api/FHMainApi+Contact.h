@@ -62,7 +62,13 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 #pragma mark - associate refactor
-+ (TTHttpTask*)requestVirtualNumber:(NSDictionary*)phoneAssociate completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
++ (TTHttpTask*)requestVirtualNumber:(NSDictionary*)phoneAssociate
+                          realtorId:(NSString*)realtorId
+                            houseId:(NSString*)houseId
+                          houseType:(FHHouseType)houseType
+                           searchId:(NSString*)searchId
+                             imprId:(NSString*)imprId
+                         completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
 // 详情页线索提交表单
 + (TTHttpTask*)requestCallReport:(NSDictionary*)reportAssociate
                                      agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList

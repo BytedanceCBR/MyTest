@@ -17,6 +17,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTReachability/TTReachability.h>
 #import <FHHouseBase/FHHouseContactDefines.h>
+#import <JSONModel/JSONModel.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -269,13 +270,36 @@
     }];
 }
 
-+ (TTHttpTask*)requestVirtualNumber:(NSDictionary*)phoneAssociate completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion
++ (TTHttpTask*)requestVirtualNumber:(NSDictionary*)phoneAssociate
+                          realtorId:(NSString*)realtorId
+                           houseId:(NSString*)houseId
+                         houseType:(FHHouseType)houseType
+                          searchId:(NSString*)searchId
+                            imprId:(NSString*)imprId
+                         completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (realtorId.length > 0) {
+        paramDic[@"realtor_id"] = realtorId;
+    }
+    if (houseId.length > 0) {
+        paramDic[@"house_id"] = houseId;
+    }
+    paramDic[@"house_type"] = @(houseType);
+    if (searchId.length > 0) {
+        paramDic[@"search_id"] = searchId;
+    }
+    if (imprId.length > 0) {
+        paramDic[@"impr_id"] = imprId;
+    }
     if (phoneAssociate) {
-        paramDic[@"phone_associate"] = phoneAssociate;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:phoneAssociate options:0 error:nil];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (data && string) {
+            paramDic[@"phone_associate"] = string;
+        }
     }
 
     return [[TTNetworkManager shareInstance]requestForJSONWithResponse:url params:paramDic method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
