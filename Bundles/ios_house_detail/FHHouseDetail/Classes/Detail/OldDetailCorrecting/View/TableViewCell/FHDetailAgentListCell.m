@@ -287,6 +287,16 @@
             imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNewHouseMulrealtor];
         }else {
             imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+            // 二手房经纪人推荐展位
+            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",contact.realtorType == FHRealtorTypeNormal ? FHClueIMPageTypeCOldHouseMulrealtor: FHClueIMPageTypeCOldHouseExpertMid];
+            
+            if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
+                FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
+                if(detailOldModel.data.recommendRealtorsAssociateInfo) {
+                    imExtra[kFHAssociateInfo] =  detailOldModel.data.recommendRealtorsAssociateInfo;
+                }
+            }
         }
         [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
     }

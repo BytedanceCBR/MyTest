@@ -201,9 +201,15 @@
         return;
     }
     imExtra[@"realtor_position"] = @"trade_tips";
-    imExtra[@"element_from"] = @"app_oldhouse_price";
+    imExtra[@"from"] = @"app_oldhouse_price";
     imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
     imExtra[kFHCluePage] = @(FHClueIMPageTypePresentation);
+    if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
+        FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
+        if(detailOldModel.data.baseExtra.bargain.associateInfo) {
+            imExtra[kFHAssociateInfo] = detailOldModel.data.baseExtra.bargain.associateInfo;
+        }
+    }
      [model.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 @end

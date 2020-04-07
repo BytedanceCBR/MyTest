@@ -10,7 +10,6 @@
 
 #define kFHCluePage @"clue_page"
 #define kFHClueEndpoint @"clue_endpoint"
-
 #define kFHAssociateInfo @"associate_info"
 
 typedef enum : NSUInteger {
@@ -59,7 +58,12 @@ typedef enum : NSUInteger {
     
     FHClueIMPageTypeUGCFeed = 5, // app_feed_weitoutiao: 1.5 feed页微头条IM
     FHClueIMPageTypeUGCDetail = 6, // app_weitoutiao: 1.6 微头条详情页IM
-
+    
+    FHClueIMPageTypeCOldHouse = 12, // app_oldhouse: 1.12 二手房详情页
+    FHClueIMPageTypeCOldHouseMulrealtor = 13,     // app_oldhouse_mulrealtor: 1.13 二手房多展位-在线联系入口
+    FHClueIMPageTypeCOldHouseEvaluate = 18, // app_oldhouse_evaluate: 1.18 小端中的二手房详情页房评在线联系
+    FHClueIMPageTypeCOldHouseExpertMid = 21,      // app_oldhouse_expert_mid: 1.21 小端中二手房小区专家中部展位在线联系
+    
     FHClueIMPageTypeCOldSchool = 23, // app_oldhouse_school 1.23小端二手房详情页的咨询学区
     FHClueIMPageTypeCOldFloor = 24, // app_oldhouse_floor：1.24小端二手房详情页的咨询楼层
     FHClueIMPageTypeCQuickQuestion = 25, // app_oldhouse_question：1.25小端二手房详情页的快速提问

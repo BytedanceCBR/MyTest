@@ -457,6 +457,20 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     imExtra[@"im_open_url"] = openUrl;
     imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
     imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",isFloorAction?FHClueIMPageTypeCOldFloor:FHClueIMPageTypeCOldBudget];
+    if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
+        FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
+        
+        if(isFloorAction) {
+            if(detailOldModel.data.baseExtra.floorInfo.associateInfo) {
+                imExtra[kFHAssociateInfo] = detailOldModel.data.baseExtra.floorInfo.associateInfo;
+            }
+        }
+        else {
+            if(detailOldModel.data.baseExtra.budget.associateInfo) {
+                imExtra[kFHAssociateInfo] = detailOldModel.data.baseExtra.budget.associateInfo;
+            }
+        }
+    }
     [propertyModel.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 

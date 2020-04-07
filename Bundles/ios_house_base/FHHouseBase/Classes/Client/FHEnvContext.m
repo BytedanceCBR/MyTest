@@ -1081,6 +1081,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return nil;
 }
 
++ (BOOL)isSwitchToIMNew {
+    BOOL ret = NO;
+    
+    ret = YES;
+    
+    return ret;
+}
+
 -(void)showPermssionPage
 {
     UIViewController *rootController = [UIApplication sharedApplication].delegate.window.rootViewController;

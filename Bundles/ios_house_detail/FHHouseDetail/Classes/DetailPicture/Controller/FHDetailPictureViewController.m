@@ -465,6 +465,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             extraDic[kFHCluePage] = cluePage;
             extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         }
+        // 头图im入口线索透传
+        if(self.mediaHeaderModel.houseImageAssociateInfo) {
+            extraDic[kFHAssociateInfo] = self.mediaHeaderModel.houseImageAssociateInfo;
+        }
         [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }
 }

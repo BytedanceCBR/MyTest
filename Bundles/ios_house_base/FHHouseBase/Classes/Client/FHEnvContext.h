@@ -302,6 +302,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)getCurrentTabIdentifier;
 
++ (BOOL)isSwitchToIMNew;
 @end
 
 

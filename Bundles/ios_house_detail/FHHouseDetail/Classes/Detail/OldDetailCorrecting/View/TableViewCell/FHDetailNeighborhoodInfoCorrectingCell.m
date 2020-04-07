@@ -365,6 +365,12 @@
         imExtra[@"im_open_url"] = model.neighborhoodInfo.schoolConsult.openUrl;
         imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
         imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldSchool];
+        if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
+            FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
+            if(detailOldModel.data.neighborhoodInfo.schoolConsult.associateInfo) {
+                imExtra[kFHAssociateInfo] = detailOldModel.data.neighborhoodInfo.schoolConsult.associateInfo;
+            }
+        }
         [model.contactViewModel onlineActionWithExtraDict:imExtra];
         if (self.baseViewModel) {
             [self.baseViewModel addClickOptionLog:@"education_type"];

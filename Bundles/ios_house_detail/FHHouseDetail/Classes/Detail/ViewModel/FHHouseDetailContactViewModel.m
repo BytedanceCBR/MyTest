@@ -488,6 +488,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"question_id"]) {
             imExtra[@"question_id"] = extraDict[@"question_id"];
         }
+        
+        if(extraDict[kFHAssociateInfo]) {
+            imExtra[kFHAssociateInfo] = extraDict[kFHAssociateInfo];
+        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
@@ -752,7 +756,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.houseType == FHHouseTypeNeighborhood) {
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
-    }else if (self.houseType == FHIMHouseTypeNewHouse) {
+    }
+    else if (self.houseType == FHHouseTypeNewHouse) {
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCourt);
         extraDic[@"from"] = @"app_court";
@@ -761,6 +766,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             extraDic[@"from"] = _fromStr;
         }
     }
+    else if(self.houseType == FHHouseTypeSecondHandHouse) {
+        extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+        extraDic[kFHCluePage] = @(FHClueIMPageTypeCOldHouse);
+    }
+    
     [self onlineActionWithExtraDict:extraDic];
 }
 
@@ -773,6 +783,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         cluePageType = FHClueIMPageTypeNewHouseDetail;
     }else if ([fromStr isEqualToString:@"app_newhouse_apartmentlist"]) {
         cluePageType = FHClueIMPageTypeApartmentlist;
+    } else if([fromStr isEqualToString:@"app_oldhouse"]) {
+        cluePageType = FHClueIMPageTypeCOldHouse;
     }
     return cluePageType;
 }

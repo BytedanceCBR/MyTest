@@ -91,28 +91,64 @@
 {
     NSString *urlStr = associateIM.imOpenUrl;
     if (urlStr.length > 0) {
+        // 上报IM点击埋点
+        [self addClickIMLog:associateIM];
+        
+        // 执行跳转
+        NSURLComponents *urlComponents = [NSURLComponents componentsWithString:urlStr];
+        
+        __block BOOL isUrlContainAssociateInfo = NO;
+        __block BOOL isUrlContainReportParams = NO;
+        [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull queryItem, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([queryItem.name isEqualToString:@"report_params"]) {
+                isUrlContainReportParams = YES;
+            } else if([queryItem.name isEqualToString:@"associate_info"]) {
+                isUrlContainAssociateInfo = YES;
+            }
+        }];
+        
         NSURL *openUrl = [NSURL URLWithString:urlStr];
         NSMutableDictionary *userInfoDict = @{}.mutableCopy;
-//        if (dict) {
-//            userInfoDict[@"tracer"] = dict;
-//        }
-        [self addClickIMLog:associateIM.reportParams];
+        
+        if(isUrlContainReportParams == NO) {
+            userInfoDict[@"report_params"] = associateIM.reportParams.toDictionary;
+        }
+        
+        if(isUrlContainAssociateInfo == NO) {
+            userInfoDict[@"associate_info"] = associateIM.associateInfo.toDictionary;
+        }
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        
+        // 静默关注处理
         [self silentFollowHouseWithAssociateIM:associateIM];
     }
 }
 
 + (void)silentFollowHouseWithAssociateIM:(FHAssociateIMModel *)associateIM
 {
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]init];
+    NSMutableDictionary *params = @{}.mutableCopy;
+    
+    if(associateIM.reportParams.toDictionary) {
+        [params addEntriesFromDictionary:associateIM.reportParams.toDictionary];
+    }
+    
+    if(associateIM.reportParams.extra) {
+        [params addEntriesFromDictionary:associateIM.reportParams.extra];
+    }
+
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc] initWithDictionary:params error:nil];
+    
     configModel.houseType = associateIM.houseType;
     configModel.followId = associateIM.houseId;
     configModel.actionType = associateIM.houseType;
     configModel.hideToast = YES;
     // 静默关注功能
     [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel completionBlock:^(BOOL isSuccess) {
+        if(associateIM.slientFollowCallbackBlock) {
+            associateIM.slientFollowCallbackBlock(isSuccess);
+        }
     }];
 }
 
@@ -133,14 +169,15 @@
     dict[@"realtor_id"] = configModel.realtorId ? : @"be_null";;
     dict[@"realtor_rank"] = configModel.realtorRank ?: @"0";
     dict[@"conversation_id"] = configModel.conversationId ? : @"be_null";
-    dict[@"realtor_logpb"] = configModel.realtorLogpb ? : @"be_null";
-
-    // todo zjing test
-//    dict[@"from"] = configModel.from;
-//    dict[@"source_from"] = configModel.sourceFrom;
-    dict[@"search_id"] = configModel.searchId ? : @"be_null";
     dict[@"realtor_position"] = configModel.realtorPosition ? : @"be_null";
     dict[@"growth_deepevent"] = @(1);
+    dict[@"realtor_logpb"] = configModel.realtorLogpb;
+    
+    
+    if(configModel.extra) {
+        [dict addEntriesFromDictionary:configModel.extra];
+        dict[@"im_open_url"] = nil;
+    }
 
     [FHUserTracker writeEvent:@"click_im" params:dict];
 }

@@ -101,10 +101,6 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, strong, nullable) NSDictionary *reportFormInfo;
 @end
 
-@interface FHClueSceneInfoContainerModel: JSONModel
-@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
-@end
-
 @protocol FHDetailContactModel<NSObject>
 @end
 

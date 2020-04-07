@@ -256,6 +256,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
 
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
+        headerCellModel.houseImageAssociateInfo = model.data.houseImageAssociateInfo;
         headerCellModel.houseImageDictList = model.data.houseImageDictList;
         if (!isInstant) {
             FHDetailOldDataHouseImageDictListModel *imgModel = [headerCellModel.houseImageDictList firstObject];
