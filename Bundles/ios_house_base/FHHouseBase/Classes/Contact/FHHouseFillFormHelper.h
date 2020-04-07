@@ -17,8 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFillFormHelper : NSObject
 
-+ (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel; // 填表单
-+ (void)fillFormActionWithConfig:(NSDictionary *)config;
+//+ (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel; // 填表单
+//+ (void)fillFormActionWithConfig:(NSDictionary *)config;
 
 #pragma mark - associate refactor
 + (void)fillFormActionWithAssociateReport:(NSDictionary *)associateReportDict;
