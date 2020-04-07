@@ -28,7 +28,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        UIImage *img = ICON_FONT_IMG(13, @"\U0000e673", nil);//"icon_close"
+        UIImage *img = ICON_FONT_IMG(24, @"\U0000e673", nil);//"icon_close"
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_closeButton setImage:img forState:UIControlStateNormal];
         [_closeButton setImage:img forState:UIControlStateHighlighted];
@@ -36,7 +36,7 @@
         
         _reportButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_reportButton setTitle:@"举报" forState:UIControlStateNormal];
-        [_reportButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [_reportButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
         [_reportButton addTarget:self action:@selector(onAction:) forControlEvents:UIControlEventTouchUpInside];
         _reportButton.titleLabel.font = [UIFont themeFontRegular:16];
         

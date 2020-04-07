@@ -74,7 +74,7 @@
 
         _priceLabel = [UILabel new];
         _priceLabel.font = [UIFont themeFontMedium:14];
-        _priceLabel.textColor = [UIColor themeRed1];
+        _priceLabel.textColor = [UIColor themeOrange1];
         _priceLabel.textAlignment = NSTextAlignmentLeft;
 
         [self.contentView addSubview:_priceLabel];

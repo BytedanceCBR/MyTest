@@ -25,7 +25,7 @@
 }
 
 + (UIColor *)progressViewLineFillColor {
-    return [UIColor themeRed1];
+    return [UIColor themeOrange1];
 }
 
 + (FHAppVersion)appVersion {

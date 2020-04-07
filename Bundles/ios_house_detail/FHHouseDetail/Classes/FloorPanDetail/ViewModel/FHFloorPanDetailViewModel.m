@@ -21,6 +21,7 @@
 #import "FHFloorPanDetailPropertyCell.h"
 #import "FHFloorPanDetailMutiFloorPanCell.h"
 #import "FHHouseDetailSubPageViewController.h"
+#import "FHDetailBottomBar.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -45,10 +46,57 @@
         _floorPanId = floorPanId;
         _currentItems = [NSMutableArray new];
         [self configTableView];
-        
+        WeakSelf;
+        FHDetailBottomBar *bottomBar = [_subPageVC getBottomBar];
+        if ([bottomBar isKindOfClass:[FHDetailBottomBar class]]) {
+            bottomBar.bottomBarContactBlock = ^{
+                StrongSelf;
+                [wself contactAction];
+            };
+            bottomBar.bottomBarImBlock = ^{
+                StrongSelf;
+                [wself imAction];
+            };
+        }
+        self.contactViewModel = [_subPageVC getContactViewModel];
+        self.bottomBar = bottomBar;
+        bottomBar.hidden = YES;
         [self startLoadData];
     }
     return self;
+}
+
+- (void)contactAction
+{
+    // todo zjing test
+    if (!self.contactViewModel) {
+        return;
+    }
+    NSMutableDictionary *extraDic = @{}.mutableCopy;
+    NSNumber *cluePage = nil;
+    if(self.contactViewModel.contactPhone.phone.length > 0) {
+        cluePage = @(FHClueCallPageTypeCFloorPlan);
+    }else {
+        cluePage = @(FHClueFormPageTypeCFloorPlan);
+    }
+    if (cluePage) {
+        extraDic[kFHCluePage] = cluePage;
+    }
+
+    [self.contactViewModel contactActionWithExtraDict:extraDic];
+}
+
+- (void)imAction
+{
+    // todo zjing test
+    FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
+    NSMutableDictionary *imExtra = @{}.mutableCopy;
+    imExtra[@"source_from"] = @"house_model_detail";
+    imExtra[@"im_open_url"] = contactPhone.imOpenUrl;
+    imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
+    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeFloorplan];
+    imExtra[@"from"] = @"app_floorplan";
+    [self.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 
 // 注册cell类型
@@ -113,10 +161,10 @@
         [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
         return;
     }
-    
     if (_floorPanId) {
         [self.detailController startLoading];
         __weak typeof(self) wSelf = self;
+        self.bottomBar.hidden = YES;
         [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
@@ -128,6 +176,7 @@
                 wSelf.detailController.hasValidateData = NO;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
+            wSelf.bottomBar.hidden = NO;
         }];
     }
 }
@@ -185,6 +234,22 @@
         }
         [self.currentItems addObject:mutiDataModel];
     }
+    
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    }else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
+    self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     
     [_infoListTable reloadData];
 }

@@ -265,7 +265,7 @@ TTEditUserProfileViewControllerDelegate
         [_readModeSwitch addTarget:self action:@selector(readModeChanged:) forControlEvents:UIControlEventValueChanged];
         
         self.pushNotificatoinSwitch = [[SettingSwitch alloc] initWithFrame:CGRectZero];
-        self.pushNotificatoinSwitch.onTintColor = [UIColor tt_themedColorForKey:@"red1"];
+        self.pushNotificatoinSwitch.onTintColor = [UIColor tt_themedColorForKey:@"orange4"];
         [_pushNotificatoinSwitch addTarget:self action:@selector(pushNotificationChanged:) forControlEvents:UIControlEventValueChanged];
         self.showAwardCoinTipSwitch = [[SettingSwitch alloc] initWithFrame:CGRectZero];
         [_showAwardCoinTipSwitch addTarget:self action:@selector(showAwardCoinTipSwitchAction:) forControlEvents:UIControlEventValueChanged];

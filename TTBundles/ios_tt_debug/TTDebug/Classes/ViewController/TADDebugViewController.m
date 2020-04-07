@@ -110,15 +110,15 @@
     [vc addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = @"scheme";
     }];
+    __weak UIAlertController *weakVc = vc;
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        [vc dismissViewControllerAnimated:YES completion:^{
-            
-        }];
+        __strong typeof(weakVc) strongVc = weakVc;
+        [strongVc dismissViewControllerAnimated:YES completion:nil];
     }];
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [vc dismissViewControllerAnimated:YES completion:^{
-            
-        }];
+        __strong typeof(weakVc) strongVc = weakVc;
+        [strongVc dismissViewControllerAnimated:YES completion:nil];
+        
         NSString *urlString = vc.textFields.firstObject.text;
         NSURL *url = [NSURL URLWithString:urlString];
         BOOL canopen = [[TTRoute sharedRoute] canOpenURL:url];
@@ -154,10 +154,10 @@
 - (void)_showBundleInfo {
     TTAdRNBundleInfo *bundleInfo = [TTCanvasBundleManager currentCanvasBundleInfo];
     UIAlertController *vc = [UIAlertController alertControllerWithTitle:@"React Bundle" message:bundleInfo.debugDescription preferredStyle:UIAlertControllerStyleActionSheet];
+    __weak UIAlertController *weakVc = vc;
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        [vc dismissViewControllerAnimated:YES completion:^{
-            
-        }];
+        __strong typeof(weakVc) strongVc = weakVc;
+        [strongVc dismissViewControllerAnimated:YES completion:nil];
     }];
     [vc addAction:cancelAction];
     [self presentViewController:vc animated:YES completion:nil];
@@ -166,18 +166,18 @@
 - (void)_downloadCanvasRNBundle
 {
     UIAlertController *vc = [UIAlertController alertControllerWithTitle:@"下载自定义bundle" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    __weak UIAlertController *weakVc = vc;
     [vc addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = @"bundel url zip";
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        [vc dismissViewControllerAnimated:YES completion:^{
-            
-        }];
+        __strong typeof(weakVc) strongVc = weakVc;
+        [strongVc dismissViewControllerAnimated:YES completion:nil];
     }];
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [vc dismissViewControllerAnimated:YES completion:^{
-            
-        }];
+        __strong typeof(weakVc) strongVc = weakVc;
+        [strongVc dismissViewControllerAnimated:YES completion:nil];
+        
         NSString *urlString = vc.textFields.firstObject.text;
         NSString *bundle_url = urlString;
         [TTCanvasBundleManager sharedInstance].isDebug = YES;

@@ -145,7 +145,8 @@
                                        }.mutableCopy;
                 [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
                 NSMutableDictionary *subPageParams = model.subPageVC.subPageParams;
-               
+                subPageParams[@"contact_phone"] = nil;
+
 //                subPageParams[@"tracer"] = nil;
                 if (subPageParams) {
                     [infoDict addEntriesFromDictionary:subPageParams];
@@ -245,7 +246,7 @@
     [self addSubview:_statusLabel];
     
     _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _priceLabel.textColor = [UIColor themeRed1];
+    _priceLabel.textColor = [UIColor themeOrange1];
     _priceLabel.font = [UIFont themeFontMedium:16];
     [self addSubview:_priceLabel];
     

@@ -38,7 +38,7 @@
         [self addSubview:_tipLabel];
         
         _pathLayer = [CALayer layer];
-        _pathLayer.contents = (__bridge id)[SYS_IMG(@"mapsearch_draw_path") CGImage];
+        _pathLayer.contents = (__bridge id)[SYS_IMG(@"mapsearch_draw_path_orange") CGImage];
         
         _handLayer = [CALayer layer];
         _handLayer.contents = (__bridge id)[SYS_IMG(@"mapsearch_draw_hand") CGImage];

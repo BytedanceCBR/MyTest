@@ -48,7 +48,7 @@
     [self.contentView addSubview:_nameLabel];
     
     self.checkView = [[UIImageView alloc] init];
-    _checkView.image = [UIImage imageNamed:@"fh_mine_home_page_normal"];
+    _checkView.image = [UIImage imageNamed:@"fh_mine_home_page_normal_orange"];
     [self.contentView addSubview:_checkView];
 }
 
@@ -83,9 +83,9 @@
     self.nameLabel.text = model.name;
     
     if(model.isSelected){
-        self.checkView.image = [UIImage imageNamed:@"fh_mine_home_page_selected"];
+        self.checkView.image = [UIImage imageNamed:@"fh_mine_home_page_selected_orange"];
     }else{
-        self.checkView.image = [UIImage imageNamed:@"fh_mine_home_page_normal"];
+        self.checkView.image = [UIImage imageNamed:@"fh_mine_home_page_normal_orange"];
     }
 }
 

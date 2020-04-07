@@ -612,9 +612,9 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         }
         
         NSString *gdExtJson = nil;
-        if([self.gdExtJson isKindOfClass:[NSString class]]){
+        if([wSelf.gdExtJson isKindOfClass:[NSString class]]){
             gdExtJson = wSelf.gdExtJson;
-        }else if([self.gdExtJson isKindOfClass:[NSDictionary class]]){
+        }else if([wSelf.gdExtJson isKindOfClass:[NSDictionary class]]){
             gdExtJson = [wSelf.gdExtJson tt_JSONRepresentation];
         }
         
@@ -638,8 +638,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
         }];
     };
     
-    wSelf.sendAnswerBlock = sendAnswerBlock;
-    [wSelf.uploadImageManager uploadImages:wSelf.taskModel.imageList];
+    self.sendAnswerBlock = sendAnswerBlock;
+    [self.uploadImageManager uploadImages:self.taskModel.imageList];
 }
 
 
@@ -670,8 +670,8 @@ static CGFloat kWenDaToolbarHeight = 80.f;
     if (self.inputTextView.text.length > 0 || self.addImagesView.selectedImageCacheTasks.count > 0) {
         self.postButton.enabled = YES;
         self.postButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-        [self.postButton setTitleColor:[UIColor themeRed1] forState:UIControlStateDisabled];
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+        [self.postButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateDisabled];
     } else {
         self.postButton.highlightedTitleColorThemeKey = kColorText9Highlighted;
         [self.postButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];

@@ -97,7 +97,7 @@
 {
     _resetButton = [self buttonWithTitle:@"不限条件" titleColor:[UIColor themeGray1] font: [UIFont themeFontRegular:16] bgColor:[UIColor themeGray7] action:@selector(onResetAction)];
     
-    _confirmButton = [self buttonWithTitle:@"确定" titleColor:[UIColor whiteColor] font:[UIFont themeFontMedium:16] bgColor:[UIColor themeRed1] action:@selector(onConfirmAction)];
+    _confirmButton = [self buttonWithTitle:@"确定" titleColor:[UIColor whiteColor] font:[UIFont themeFontMedium:16] bgColor:[UIColor themeOrange4] action:@selector(onConfirmAction)];
     
     _bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CONTAINER_WIDTH, BOTTOM_BAR_HEIGHT)];
     UIView *topLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_bottomBar.bounds), 0.5)];
@@ -181,7 +181,7 @@
     [button setTitleColor:titleColor forState:UIControlStateNormal];
     button.titleLabel.font = font;
     button.backgroundColor = bgColor;
-    button.layer.cornerRadius = 4;
+    button.layer.cornerRadius = BOTTOM_BUTTON_HEIGHT/2.0; //4;
     button.layer.masksToBounds = YES;
     [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     

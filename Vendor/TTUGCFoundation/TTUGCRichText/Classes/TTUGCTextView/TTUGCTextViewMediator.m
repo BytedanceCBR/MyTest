@@ -99,13 +99,7 @@
 }
 
 - (void)gotoLogin {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    NSString *enter_from = @"";
-    if (enter_from.length <= 0) {
-        enter_from = @"be_null";
-    }
-    [params setObject:enter_from forKey:@"enter_from"];
-//    [params setObject:@"feed_like" forKey:@"enter_type"];
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:self.traceDict];
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     params[@"from_ugc"] = @(YES);
     __weak typeof(self) wSelf = self;
