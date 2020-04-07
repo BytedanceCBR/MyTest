@@ -27,6 +27,7 @@
     NSMutableArray *billBoard = [[NSMutableArray alloc]init];
     NSMutableArray *housingEvaluation = [[NSMutableArray alloc]init];
     NSMutableArray *agentlist = [[NSMutableArray alloc]init];
+    NSMutableArray *neighborhoodInfos = [[NSMutableArray alloc]init];
     NSMutableArray *locationPeripherys = [[NSMutableArray alloc]init];
     NSMutableArray *tips = [[NSMutableArray alloc]init];
     NSMutableArray *plots = [[NSMutableArray alloc]init];
@@ -56,14 +57,17 @@
             case FHHouseModelTypeLocationPeriphery:
                 [locationPeripherys addObject:obj];
                 break;
+            case FHHouseModelTypeNeighborhoodInfo:
+                [neighborhoodInfos addObject:obj];
+                break;
             case FHPlotHouseModelTypeNeighborhoodStrategy:
-                [locationPeripherys addObject:obj];
+                [neighborhoodInfos addObject:obj];
                 break;
             case FHPlotHouseModelTypeNeighborhoodQA:
-                [locationPeripherys addObject:obj];
+                [neighborhoodInfos addObject:obj];
                 break;
             case FHPlotHouseModelTypeNeighborhoodComment:
-                [locationPeripherys addObject:obj];
+                [neighborhoodInfos addObject:obj];
                 break;
             case FHHouseModelTypeTips:
                 [tips addObject:obj];
@@ -100,6 +104,9 @@
     if (housingEvaluation.count > 0) {
         [moduleItems addObject:@{@"housingEvaluation":housingEvaluation}];
     }
+    if (neighborhoodInfos.count > 0) {
+        [moduleItems addObject:@{@"neighborhoodInfos":neighborhoodInfos}];
+    }
     if (locationPeripherys.count > 0) {
         [moduleItems addObject:@{@"locationPeripherys":locationPeripherys}];
     }
@@ -127,7 +134,7 @@
             }];
         }
 //        多个cell模块
-        if ([[obj allKeys] containsObject:@"locationPeripherys"] || [[obj allKeys] containsObject:@"plots"]|| [[obj allKeys] containsObject:@"housingEvaluation"]) {
+        if ([[obj allKeys] containsObject:@"locationPeripherys"] || [[obj allKeys] containsObject:@"plots"]|| [[obj allKeys] containsObject:@"housingEvaluation"] || [[obj allKeys] containsObject:@"neighborhoodInfos"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 if (idx == currentItemArr.count-1 && currentItemArr.count != 1) {
@@ -152,7 +159,7 @@
             }];
         }
         //加载周边时
-        if ([[obj allKeys] containsObject:@"locationPeripherys"] || [[obj allKeys] containsObject:@"housingEvaluation"] || [[obj allKeys] containsObject:@"disclaimers"]) {
+        if ([[obj allKeys] containsObject:@"locationPeripherys"] || [[obj allKeys] containsObject:@"housingEvaluation"] || [[obj allKeys] containsObject:@"disclaimers"] || [[obj allKeys] containsObject:@"neighborhoodInfos"]) {
             //如果包含大标题的模块存在，则当前模块第一个元素和上一个模块最后一个元素的阴影不裁剪,同时在当前模块插入标题
             if (idx > 0) {
                 FHDetailBaseModel *currentModel = currentItemArr[0];
@@ -170,8 +177,11 @@
 + (void)moduleInsertSectionTitle:(NSMutableArray *)returnArr beforeModel:(FHDetailBaseModel *) model{
     __block NSInteger insterIndex = 0 ;
     FHDetailListSectionTitleModel *titleMolde = [[FHDetailListSectionTitleModel alloc]init];
+    if (model.houseModelType == FHHouseModelTypeNeighborhoodInfo) {
+        titleMolde.title = @"小区信息";
+    }
     if (model.houseModelType == FHHouseModelTypeLocationPeriphery) {
-        titleMolde.title = @"位置及周边配套";
+        titleMolde.title = @"周边配套";
     }
     if (model.houseModelType == FHHouseModelTypeHousingEvaluation) {
         titleMolde.title = @"房源评价动态";

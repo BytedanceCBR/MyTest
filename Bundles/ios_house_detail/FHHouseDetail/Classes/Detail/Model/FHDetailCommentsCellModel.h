@@ -25,6 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *commentTitle;
 @property (nonatomic, copy) NSString *contentEmptyTitle;
+@property (nonatomic, assign) CGFloat topMargin;
+@property (nonatomic, assign) CGFloat bottomMargin;
+
 @end
 
 NS_ASSUME_NONNULL_END

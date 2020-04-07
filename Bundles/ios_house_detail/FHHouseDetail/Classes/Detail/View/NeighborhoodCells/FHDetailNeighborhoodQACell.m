@@ -162,6 +162,14 @@
     self.currentData = data;
     FHDetailQACellModel *cellModel = (FHDetailQACellModel *)data;
     self.shadowImage.image = cellModel.shadowImage;
+    
+    _titleView.height = cellModel.headerViewHeight;
+    self.tableView.tableHeaderView = _titleView;
+    
+    [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.titleView).offset(cellModel.topMargin);
+    }];
+    
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(cellModel.viewHeight);
     }];

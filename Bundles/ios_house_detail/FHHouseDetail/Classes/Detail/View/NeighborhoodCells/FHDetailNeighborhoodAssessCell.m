@@ -117,6 +117,10 @@
     FHDetailAccessCellModel *cellModel = (FHDetailAccessCellModel *)data;
     self.shadowImage.image = cellModel.shadowImage;
     
+    [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.containerView).offset(cellModel.topMargin);
+    }];
+    
     FHDetailNeighborhoodDataStrategyModel *strategy = cellModel.strategy;
     
     _titleLabel.text = strategy.title.length > 0 ? strategy.title : @"小区攻略";
