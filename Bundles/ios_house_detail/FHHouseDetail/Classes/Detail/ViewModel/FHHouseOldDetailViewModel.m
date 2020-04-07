@@ -328,6 +328,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         FHDetailHouseSubscribeCorrectingModel *subscribeModel = [[FHDetailHouseSubscribeCorrectingModel alloc] init];
         subscribeModel.tableView = self.tableView;
         subscribeModel.houseModelType = FHHouseModelTypeSubscribe;
+        subscribeModel.associateInfo = model.data.middleSubscriptionAssociateInfo;
         [self.items addObject:subscribeModel];
         
         __weak typeof(self) wSelf = self;
@@ -413,6 +414,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         agentListModel.houseModelType = FHHouseModelTypeAgentlist;
         agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
@@ -451,6 +453,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         houseReviewCommentModel.imprId = imprId;
         houseReviewCommentModel.houseId = self.houseId;
         houseReviewCommentModel.houseType = self.houseType;
+        houseReviewCommentModel.associateInfo = model.data.houseReviewCommentAssociateInfo;
         [self.items addObject:houseReviewCommentModel];
     }
     
@@ -712,8 +715,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSString *houseId = self.houseId;
     NSString *from = @"app_oldhouse_subscription";
 
-    
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReport:subscribeModel.associateInfo.reportFormInfo agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+
+//    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;

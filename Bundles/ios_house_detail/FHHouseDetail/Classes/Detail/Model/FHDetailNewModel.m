@@ -371,8 +371,11 @@
                            @"surroundingInfo": @"surrounding_info",
                            @"topImages": @"top_images",
                            @"topBanner": @"top_banner",
-
-
+                           @"changePriceNotifyAssociateInfo": @"change_price_notify_associate_info",
+                           @"beginSellingNotifyAssociateInfo": @"begin_selling_notify_associate_info",
+                           @"recommendRealtorsAssociateInfo": @"recommend_realtors_associate_info",
+                           @"imageGroupAssociateInfo": @"image_group_associate_info",
+                           @"discountInfoAssociateInfo": @"discount_info_associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

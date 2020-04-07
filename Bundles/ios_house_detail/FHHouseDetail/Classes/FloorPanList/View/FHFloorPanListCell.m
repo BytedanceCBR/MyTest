@@ -145,26 +145,27 @@
         if (!model.saleStatus) {
             self.statusLabel.text = @"";
             self.statusBGView.backgroundColor = [UIColor clearColor];
-            return;
+            self.statusLabel.backgroundColor = [UIColor clearColor];
+        }else {
+            self.statusLabel.text = model.saleStatus.content;
+            if ([model.saleStatus.textColor isKindOfClass:[NSString class]]) {
+                self.statusLabel.textColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.textColor]];
+            }else
+            {
+                self.statusLabel.textColor = [UIColor whiteColor];
+            }
+            
+            if ([model.saleStatus.backgroundColor isKindOfClass:[NSString class]]) {
+                self.statusLabel.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
+                _statusBGView.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
+                
+            }else
+            {
+                self.statusLabel.backgroundColor = [UIColor whiteColor];
+                _statusBGView.backgroundColor = [UIColor whiteColor];
+            }
         }
 
-        self.statusLabel.text = model.saleStatus.content;
-        if ([model.saleStatus.textColor isKindOfClass:[NSString class]]) {
-            self.statusLabel.textColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.textColor]];
-        }else
-        {
-            self.statusLabel.textColor = [UIColor whiteColor];
-        }
-
-        if ([model.saleStatus.backgroundColor isKindOfClass:[NSString class]]) {
-            self.statusLabel.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
-            _statusBGView.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
-
-        }else
-        {
-            self.statusLabel.backgroundColor = [UIColor whiteColor];
-            _statusBGView.backgroundColor = [UIColor whiteColor];
-        }
         
         if (model.index == 0) {
             [_iconView mas_remakeConstraints:^(MASConstraintMaker *make) {

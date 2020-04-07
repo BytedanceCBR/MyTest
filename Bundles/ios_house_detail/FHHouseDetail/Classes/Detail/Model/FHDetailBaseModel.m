@@ -128,6 +128,7 @@
 }
 @end
 
+
 @implementation FHDetailContactModel
 + (JSONKeyMapper*)keyMapper
 {

@@ -28,6 +28,8 @@
 #import "FHDetailVideoInfoView.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHLoadingButton.h"
+#import "FHDetailBaseModel.h"
+
 #define kFHDPTopBarHeight 44.f
 #define kFHDPBottomBarHeight 54.f
 
@@ -476,16 +478,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 电话咨询点击
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
-        NSString *fromStr = @"app_oldhouse_picview";
-        NSNumber *cluePage = nil;
-        if (_houseType == FHHouseTypeNewHouse) {
-            fromStr = @"app_newhouse_picview";
-            if(self.mediaHeaderModel.contactViewModel.contactPhone.phone.length > 0) {
-                cluePage = @(FHClueCallPageTypeCNewHousePicview);
-            }else {
-                cluePage = @(FHClueFormPageTypeCNewHousePicview);
-            }
-        }
+//        NSString *fromStr = @"app_oldhouse_picview";
+//        NSNumber *cluePage = nil;
+//        if (_houseType == FHHouseTypeNewHouse) {
+//            fromStr = @"app_newhouse_picview";
+//            if(self.mediaHeaderModel.contactViewModel.contactPhone.phone.length > 0) {
+//                cluePage = @(FHClueCallPageTypeCNewHousePicview);
+//            }else {
+//                cluePage = @(FHClueFormPageTypeCNewHousePicview);
+//            }
+//        }
         NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
                                           @"position":@"report_button",
                                           @"element_from":[self elementFrom]
@@ -494,11 +496,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
         }
-        extraDic[@"from"] = fromStr;
-        if (cluePage) {
-            extraDic[kFHCluePage] = cluePage;
+//        extraDic[@"from"] = fromStr;
+//        if (cluePage) {
+//            extraDic[kFHCluePage] = cluePage;
+//        }
+        NSDictionary *associateInfoDict = nil;
+        FHDetailContactModel *contactPhone = self.mediaHeaderModel.contactViewModel.contactPhone;
+        if (contactPhone.phone.length > 0) {
+            associateInfoDict = contactPhone.associateInfo.phoneInfo;
+        }else {
+            associateInfoDict = contactPhone.associateInfo.reportFormInfo;
         }
-
+        extraDic[kFHAssociateInfo] = associateInfoDict;
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }

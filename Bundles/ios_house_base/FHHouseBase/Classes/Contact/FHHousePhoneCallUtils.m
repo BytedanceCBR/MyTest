@@ -247,11 +247,7 @@ typedef enum : NSUInteger {
         userInfo[@"show_loading"] = @(1);
         [[NSNotificationCenter defaultCenter]postNotificationName:@"kFHDetailLoadingNotification" object:nil userInfo:userInfo];
     }
-    
-    // todo zjing test
-//    [self isPhoneCallParamsValid:configModel];
-
-    [FHMainApi requestVirtualNumber:associateInfo completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestVirtualNumberWithAssociateInfo:associateInfo realtorId:associatePhoneModel.realtorId houseId:associatePhoneModel.houseId houseType:associatePhoneModel.houseType searchId:associatePhoneModel.searchId imprId:associatePhoneModel.imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         NSMutableDictionary *userInfo = @{}.mutableCopy;
         userInfo[@"house_id"] = houseId;
@@ -266,7 +262,7 @@ typedef enum : NSUInteger {
             }else {
                 [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal extraDict:nil errorCode:0 message:nil];
             }
-            [self addClickCallWith:associateInfo isVirtual:isVirtual];
+            [self addClickCallWith:associatePhoneModel isVirtual:isVirtual];
             [self callPhone:urlStr];
             if (completionBlock) {
                 completionBlock(YES,nil,model.data);
@@ -288,33 +284,32 @@ typedef enum : NSUInteger {
 + (void)addClickCallWith:(FHAssociatePhoneModel *)phoneAssociate isVirtual:(NSInteger)isVirtual
 {
     NSMutableDictionary *params = @{}.mutableCopy;
-    FHAssociateReportParams *configModel = phoneAssociate.reportParams;
+    NSDictionary *reportParams = phoneAssociate.reportParams;
     
-    params[@"page_type"] = configModel.pageType ? : @"be_null";
-    params[@"card_type"] = configModel.cardType ? : @"be_null";
-    params[@"enter_from"] = configModel.enterFrom ? : @"be_null";
-    params[@"element_from"] = configModel.elementFrom ? : @"be_null";
-    params[@"rank"] = configModel.rank ? : @"be_null";
-    params[@"origin_from"] = configModel.originFrom ? : @"be_null";
-    params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
-    params[@"log_pb"] = configModel.logPb ? : @"be_null";
+    params[@"page_type"] = reportParams[@"page_type"] ? : @"be_null";
+    params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
+    params[@"enter_from"] = reportParams[@"enter_from"] ? : @"be_null";
+    params[@"element_from"] = reportParams[@"element_from"] ? : @"be_null";
+    params[@"rank"] = reportParams[@"rank"] ? : @"be_null";
+    params[@"origin_from"] = reportParams[@"origin_from"] ? : @"be_null";
+    params[@"origin_search_id"] = reportParams[@"origin_search_id"] ? : @"be_null";
+    params[@"log_pb"] = reportParams[@"log_pb"] ? : @"be_null";
+    params[kFHAssociateInfo] = phoneAssociate.associateInfo;
     params[@"has_auth"] = @(1);
     params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];
     params[@"is_dial"] = @(1);
+    params[@"realtor_logpb"] = reportParams[@"realtor_logpb"];
     params[@"growth_deepevent"] = @(1);
 
     // todo zjing test
-    params[@"realtor_logpb"] = configModel.realtorLogpb;
-    if (configModel.itemId.length > 0) {
-        params[@"item_id"] = configModel.itemId;
+    params[@"position"] = reportParams[@"position"] ? : @"be_null";
+    if (reportParams[@"item_id"]) {
+        params[@"item_id"] = reportParams[@"item_id"];
     }
-    params[@"realtor_id"] = configModel.realtorId ? : @"be_null";
-    params[@"realtor_rank"] = configModel.realtorRank ? : @(0);
-    params[@"realtor_position"] = configModel.realtorPosition ? : @"detail_button";
-    //    params[@"conversation_id"] = @"be_null";
-
-    params[kFHAssociateInfo] = phoneAssociate.associateInfo;
-
+    params[@"realtor_position"] = reportParams[@"realtor_position"] ? : @"detail_button";
+    params[@"realtor_rank"] = reportParams[@"realtor_rank"] ? : @(0);
+    params[@"realtor_id"] = reportParams[@"realtor_id"] ? : @"be_null";
+    
     [FHUserTracker writeEvent:@"click_call" params:params];
 }
 

@@ -44,6 +44,7 @@
                            @"ugcSocialGroup":@"ugc_social_group",
                            @"recommendedRealtors": @"recommended_realtors",
                            @"recommendedRealtorsTitle": @"recommended_realtors_title",
+                           @"recommendRealtorsAssociateInfo": @"recommend_realtors_associate_info",
                            @"highlightedRealtor": @"highlighted_realtor",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

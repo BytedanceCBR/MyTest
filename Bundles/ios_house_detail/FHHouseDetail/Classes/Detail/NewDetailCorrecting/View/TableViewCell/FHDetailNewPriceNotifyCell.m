@@ -121,9 +121,25 @@
     FHDetailNewPriceNotifyCellModel *model = (FHDetailNewPriceNotifyCellModel *)self.currentData;
     if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
         FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
-        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithActionType:)]) {
-            [contactViewModel fillFormActionWithActionType:FHFollowActionTypeFloorPan];
-        }
+
+        NSString *title = @"开盘通知";
+        NSString *subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
+        NSString *btnTitle = @"提交";
+        NSString *fromStr = @"app_sellnotice";
+
+        // todo zjing test
+        NSDictionary *associateInfoDict = @{@"from":@"old_house_detail",
+                                            @"source":@"1.38",
+                                            @"endpoint":@"1",
+                                            @"target_type":@"1",
+                                            @"extra_info":@{}
+        };
+        NSMutableDictionary *associateParamDict = @{}.mutableCopy;
+        associateParamDict[kFHAssociateInfo] = associateInfoDict;
+        NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
+        associateParamDict[kFHReportParams] = reportParamsDict;
+        
+        [contactViewModel fillFormActionWithParams:associateParamDict];
     }
 }
 - (void)priceChangedNotifyActionClick
@@ -131,9 +147,24 @@
     FHDetailNewPriceNotifyCellModel *model = (FHDetailNewPriceNotifyCellModel *)self.currentData;
     if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
         FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
-        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithActionType:)]) {
-            [contactViewModel fillFormActionWithActionType:FHFollowActionTypePriceChanged];
-        }
+        NSString *title = @"变价通知";
+        NSString *subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
+        NSString *btnTitle = @"提交";
+        NSString *fromStr = @"app_pricenotice";
+        
+        // todo zjing test
+        NSDictionary *associateInfoDict = @{@"from":@"old_house_detail",
+                                            @"source":@"1.38",
+                                            @"endpoint":@"1",
+                                            @"target_type":@"1",
+                                            @"extra_info":@{}
+        };
+        NSMutableDictionary *associateParamDict = @{}.mutableCopy;
+        associateParamDict[kFHAssociateInfo] = associateInfoDict;
+        NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
+        associateParamDict[kFHReportParams] = reportParamsDict;
+        
+        [contactViewModel fillFormActionWithParams:associateParamDict];
     }
 }
 
