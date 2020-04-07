@@ -362,7 +362,7 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
         }
         paramDic[@"choose_agency_list"] = array;
     }
-    paramDic[kFHAssociateInfo] = reportAssociate;
+    paramDic[@"report_form_info"] = reportAssociate;
 
     return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:POST needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
         FHDetailResponseModel *model = nil;
