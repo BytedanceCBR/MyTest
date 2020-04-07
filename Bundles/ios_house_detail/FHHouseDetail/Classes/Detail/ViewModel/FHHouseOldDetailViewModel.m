@@ -412,6 +412,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         agentListModel.houseModelType = FHHouseModelTypeAgentlist;
         agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
@@ -450,6 +451,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         houseReviewCommentModel.imprId = imprId;
         houseReviewCommentModel.houseId = self.houseId;
         houseReviewCommentModel.houseType = self.houseType;
+        houseReviewCommentModel.associateInfo = model.data.houseReviewCommentAssociateInfo;
         [self.items addObject:houseReviewCommentModel];
     }
     

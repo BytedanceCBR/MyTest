@@ -270,7 +270,7 @@
     }];
 }
 
-+ (TTHttpTask*)requestVirtualNumber:(NSDictionary*)phoneAssociate
++ (TTHttpTask*)requestVirtualNumberWithAssociateInfo:(NSDictionary*)phoneAssociate
                           realtorId:(NSString*)realtorId
                            houseId:(NSString*)houseId
                          houseType:(FHHouseType)houseType
@@ -298,7 +298,7 @@
         NSData *data = [NSJSONSerialization dataWithJSONObject:phoneAssociate options:0 error:nil];
         NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         if (data && string) {
-            paramDic[@"phone_associate"] = string;
+            paramDic[@"phone_info"] = string;
         }
     }
 

@@ -455,6 +455,7 @@
         agentListModel.houseModelType = FHPlotHouseModelTypeAgentlist;
         agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+//        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
 
         /******* 这里的 逻辑   ********/
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:self.houseId];

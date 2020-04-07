@@ -58,8 +58,8 @@ typedef enum : NSUInteger {
 // 基本埋点数据
 - (NSDictionary *)baseParams;
 
-- (void)fillFormActionWithActionType:(FHFollowActionType)actionType;
-- (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict;
+//- (void)fillFormActionWithActionType:(FHFollowActionType)actionType;
+//- (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict;
 
 #pragma mark - associate refactor
 - (void)fillFormActionWithParams:(NSDictionary *)formParamsDict;

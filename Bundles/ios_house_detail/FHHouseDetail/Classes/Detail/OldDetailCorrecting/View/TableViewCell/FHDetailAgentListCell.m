@@ -236,27 +236,42 @@
         if (self.baseViewModel.detailTracerDic) {
             [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
         }
+        NSDictionary *associateInfoDict = model.associateInfo.phoneInfo;
+        extraDict[kFHAssociateInfo] = associateInfoDict;
+        FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+        associatePhone.reportParams = extraDict;
+        associatePhone.associateInfo = associateInfoDict;
+        associatePhone.realtorId = contact.realtorId;
+        associatePhone.searchId = model.searchId;
+        associatePhone.imprId = model.imprId;
 
-        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
-        contactConfig.houseType = self.baseViewModel.houseType;
-        contactConfig.houseId = self.baseViewModel.houseId;
-        contactConfig.phone = contact.phone;
-        contactConfig.realtorId = contact.realtorId;
-        contactConfig.searchId = model.searchId;
-        contactConfig.imprId = model.imprId;
-        contactConfig.realtorType = contact.realtorType;
-        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
-            contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhoodMulrealtor);
-        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
-            contactConfig.cluePage = @(FHClueCallPageTypeCNewHouseMulrealtor);
-        }else {
-            contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
-        }
-        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+        associatePhone.houseType = self.baseViewModel.houseType;
+        associatePhone.houseId = self.baseViewModel.houseId;
+        associatePhone.showLoading = YES;
+        
+        //        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
+//        contactConfig.houseType = self.baseViewModel.houseType;
+//        contactConfig.houseId = self.baseViewModel.houseId;
+//        contactConfig.phone = contact.phone;
+//        contactConfig.realtorId = contact.realtorId;
+//        contactConfig.searchId = model.searchId;
+//        contactConfig.imprId = model.imprId;
+//        contactConfig.realtorType = contact.realtorType;
+//        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+//            contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhoodMulrealtor);
+//        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
+//            contactConfig.cluePage = @(FHClueCallPageTypeCNewHouseMulrealtor);
+//        }else {
+//            contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+//        }
+        
+        [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+
+//        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
             if(success && [model.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
                 FHHouseDetailViewController *vc = (FHHouseDetailViewController *)model.belongsVC;
                 vc.isPhoneCallShow = YES;
-                vc.phoneCallRealtorId = contactConfig.realtorId;
+                vc.phoneCallRealtorId = contact.realtorId;
                 vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
             }
         }];

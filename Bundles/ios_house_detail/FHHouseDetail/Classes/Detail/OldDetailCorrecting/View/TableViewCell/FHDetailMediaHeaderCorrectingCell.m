@@ -296,6 +296,7 @@
         vc.houseId = houseId;
         vc.priceStr = priceStr;
         vc.infoStr = infoStr;
+        vc.associateInfo = model.data.houseImageAssociateInfo;
 
         vc.followStatus = self.baseViewModel.contactViewModel.followStatus;
     }

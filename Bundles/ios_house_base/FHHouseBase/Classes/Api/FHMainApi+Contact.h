@@ -62,7 +62,7 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 #pragma mark - associate refactor
-+ (TTHttpTask*)requestVirtualNumber:(NSDictionary*)phoneAssociate
++ (TTHttpTask*)requestVirtualNumberWithAssociateInfo:(NSDictionary*)phoneAssociate
                           realtorId:(NSString*)realtorId
                             houseId:(NSString*)houseId
                           houseType:(FHHouseType)houseType
