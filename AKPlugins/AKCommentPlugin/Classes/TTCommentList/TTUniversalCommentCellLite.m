@@ -583,8 +583,6 @@
             }
             return ret;
         };
-        
-        _digButton.manuallySetSelectedEnabled = YES;
     }
     return _digButton;
 }
@@ -602,7 +600,7 @@
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                wSelf.digButton.selected = !wSelf.digButton.selected;
+                [wSelf digButtonOnClick:wSelf.digButton];
             }
         }
     }];
