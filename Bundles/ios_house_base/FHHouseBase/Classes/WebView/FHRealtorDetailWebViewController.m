@@ -80,19 +80,36 @@ static NSString *s_oldAgent = nil;
     if (extraDict) {
         [params addEntriesFromDictionary:extraDict];
     }
-    FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:params error:nil];
-    contactConfig.houseType = self.houseType ? self.houseType : 9;
-    contactConfig.houseId = self.houseId;
-    contactConfig.phone = phone;
-    contactConfig.realtorId = self->_realtorId;
-    contactConfig.from = @"app_realtor_mainpage";
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
-        if (success) {
-            completion(TTRJSBMsgSuccess, @{});
-        }else {
-            completion(TTRJSBMsgFailed, @{});
-        }
-    }];
+//    FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:params error:nil];
+//    contactConfig.houseType = self.houseType ? self.houseType : 9;
+//    contactConfig.houseId = self.houseId;
+//    contactConfig.phone = phone;
+//    contactConfig.realtorId = self->_realtorId;
+//    contactConfig.from = @"app_realtor_mainpage";
+//    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+//        if (success) {
+//            completion(TTRJSBMsgSuccess, @{});
+//        }else {
+//            completion(TTRJSBMsgFailed, @{});
+//        }
+//    }];
+    
+    // todo zjing test
+    NSDictionary *associateInfoDict = nil;
+    params[kFHAssociateInfo] = associateInfoDict;
+    FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+    associatePhone.reportParams = params;
+    associatePhone.associateInfo = associateInfoDict;
+    associatePhone.realtorId = self->_realtorId;
+    if (params[@"log_pb"]) {
+        NSDictionary *logPb = params[@"log_pb"];
+        associatePhone.searchId = logPb[@"search_id"];
+        associatePhone.imprId = logPb[@"impr_id"];
+    }
+    associatePhone.houseType = self.houseType ? self.houseType : 9;
+    associatePhone.houseId = self.houseId;
+    associatePhone.showLoading = YES;
+    [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:nil];
     
 //    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
 //    configModel.houseType = self.houseType;
