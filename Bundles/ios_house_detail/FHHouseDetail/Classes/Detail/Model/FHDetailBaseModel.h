@@ -337,5 +337,12 @@ typedef enum : NSInteger {
 
 @end
 
+@interface FHDetailNewUserStatusModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
+@property (nonatomic, copy , nullable) NSString *pricingSubStatus;
+@property (nonatomic, assign) NSInteger courtSubStatus;
+@end
+
 
 NS_ASSUME_NONNULL_END

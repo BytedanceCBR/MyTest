@@ -46,7 +46,20 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         _segmentedControl = segmentView;
         _currentCourtId = courtId;
         self.detailController = viewController;
-        
+        FHDetailBottomBar *bottomBar = [viewController getBottomBar];
+//        if ([bottomBar isKindOfClass:[FHDetailBottomBar class]]) {
+//            bottomBar.bottomBarContactBlock = ^{
+//                StrongSelf;
+//                [wself contactAction];
+//            };
+//            bottomBar.bottomBarImBlock = ^{
+//                StrongSelf;
+//                [wself imAction];
+//            };
+//        }
+        self.contactViewModel = [viewController getContactViewModel];
+        self.bottomBar = bottomBar;
+        bottomBar.hidden = YES;
         [self startLoadData];
 
     }
@@ -306,6 +319,22 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     };
     
     [self refreshCurrentShowList];
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    }else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
+    self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.bottomBar.hidden = NO;
 }
 
 #pragma UITableViewDelegate

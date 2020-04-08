@@ -24,12 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHDetailNewDataUserStatusModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
-@property (nonatomic, copy , nullable) NSString *pricingSubStatus;
-@property (nonatomic, assign) NSInteger courtSubStatus;
-@end
 
 @protocol FHDetailNewDataGlobalPricingListModel<NSObject>
 @end
@@ -130,10 +124,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNewDataFloorpanListModel : JSONModel
 
 @property (nonatomic, assign) BOOL hasMore;
-@property (nonatomic, copy , nullable) NSString *userStatus;
+@property (nonatomic, strong , nullable) FHDetailNewUserStatusModel *userStatus;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListModel> *list;
 @property (nonatomic, copy , nullable) NSString *courtId;
 @property (nonatomic, copy , nullable) NSString *totalNumber;
+//@property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
+@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
+@property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
 
 
 @end
@@ -246,7 +244,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNewDataModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *imprId;
-@property (nonatomic, strong , nullable) FHDetailNewDataUserStatusModel *userStatus ;
+@property (nonatomic, strong , nullable) FHDetailNewUserStatusModel *userStatus ;
 @property (nonatomic, strong , nullable) FHDetailNewDataGlobalPricingModel *globalPricing ;
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataImageGroupModel> *imageGroup;
@@ -283,7 +281,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewTimeLineDataModel : JSONModel
 
-@property (nonatomic, strong , nullable) FHDetailNewDataUserStatusModel *userStatus ;
+@property (nonatomic, strong , nullable) FHDetailNewUserStatusModel *userStatus ;
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataTimelineListModel> *list;
 

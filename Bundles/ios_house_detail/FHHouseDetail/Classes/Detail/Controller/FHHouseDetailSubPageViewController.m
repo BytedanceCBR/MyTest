@@ -28,9 +28,11 @@
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 @property (nonatomic, assign) NSInteger followStatus;
-@property (nonatomic, copy) NSString *customHouseId; //
-@property (nonatomic, copy) NSString *fromStr; //
-@property (nonatomic, assign) NSInteger targetType;
+
+//@property (nonatomic, copy) NSString *customHouseId; //
+//@property (nonatomic, copy) NSString *fromStr; //
+//@property (nonatomic, assign) NSInteger targetType;
+
 @property (nonatomic, strong) TTRouteParamObj *paramObj;
 
 @end
@@ -66,34 +68,36 @@
                 }
                 break;
         }
-        if ([paramObj.sourceURL.absoluteString containsString:@"floor_plan_detail"]) {
-            self.customHouseId = paramObj.allParams[@"floor_plan_id"];
-        }
-        self.fromStr = [self fromStrBySourceUrl:paramObj.host];
-        self.targetType = [self targetTypeBySourceUrl:paramObj.host];
+//        if ([paramObj.sourceURL.absoluteString containsString:@"floor_plan_detail"]) {
+//            self.customHouseId = paramObj.allParams[@"floor_plan_id"];
+//        }
+//        self.fromStr = [self fromStrBySourceUrl:paramObj.host];
+//        self.targetType = [self targetTypeBySourceUrl:paramObj.host];
         
         if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
             self.houseId = paramObj.allParams[@"neighborhood_id"];
         }
         NSDictionary *allInfo = paramObj.userInfo.allInfo;
-        if ([paramObj.allParams[@"subscribe_status"] isKindOfClass:[NSString class]]) {
-            NSString *statusStr = paramObj.allParams[@"subscribe_status"];
-            if (statusStr.length > 0) {
-                if ([statusStr isEqualToString:@"true"]) {
-                    _followStatus = 1;
-                }else {
-                    _followStatus = 0;
-                }
-            }
-        }else {
-            _followStatus = [allInfo[@"follow_status"] integerValue];
-        }
-        if (allInfo[@"contact_phone"]) {
-            _contactPhone = allInfo[@"contact_phone"];
-        }else {
-            _contactPhone = [[FHDetailContactModel alloc]init];
-            _contactPhone.phone = paramObj.allParams[@"telephone"];
-        }
+        
+//        if ([paramObj.allParams[@"subscribe_status"] isKindOfClass:[NSString class]]) {
+//            NSString *statusStr = paramObj.allParams[@"subscribe_status"];
+//            if (statusStr.length > 0) {
+//                if ([statusStr isEqualToString:@"true"]) {
+//                    _followStatus = 1;
+//                }else {
+//                    _followStatus = 0;
+//                }
+//            }
+//        }else {
+//            _followStatus = [allInfo[@"follow_status"] integerValue];
+//        }
+//        if (allInfo[@"contact_phone"]) {
+//            _contactPhone = allInfo[@"contact_phone"];
+//        }else {
+//            _contactPhone = [[FHDetailContactModel alloc]init];
+//            _contactPhone.phone = paramObj.allParams[@"telephone"];
+//        }
+        
         if ([paramObj.queryParams[@"log_pb"] isKindOfClass:[NSString class]]) {
             
             NSData *jsonData = [paramObj.queryParams[@"log_pb"] dataUsingEncoding:NSUTF8StringEncoding];
@@ -119,28 +123,28 @@
     return self;
 }
 
-- (NSString *)fromStrBySourceUrl:(NSString *)host
-{
-    NSString *fromStr = @"";
-    if ([host isEqualToString:@"floor_plan_detail"]) {
-        fromStr = @"app_floorplan";
-    }else if ([host isEqualToString:@"floor_coreinfo_detail"]) {
-        fromStr = @"app_newhouse_detail";
-    }else if ([host isEqualToString:@"floor_timeline_detail"]) {
-        fromStr = @"app_newhouse_news";
-    }else if ([host isEqualToString:@"floor_pan_list"]) {
-        fromStr = @"app_newhouse_apartmentlist";
-    }
-    return fromStr;
-}
-- (NSInteger )targetTypeBySourceUrl:(NSString *)host
-{
-    NSInteger targetType = 0;
-    if ([host isEqualToString:@"floor_plan_detail"]) {
-        targetType = 8;
-    }
-    return targetType;
-}
+//- (NSString *)fromStrBySourceUrl:(NSString *)host
+//{
+//    NSString *fromStr = @"";
+//    if ([host isEqualToString:@"floor_plan_detail"]) {
+//        fromStr = @"app_floorplan";
+//    }else if ([host isEqualToString:@"floor_coreinfo_detail"]) {
+//        fromStr = @"app_newhouse_detail";
+//    }else if ([host isEqualToString:@"floor_timeline_detail"]) {
+//        fromStr = @"app_newhouse_news";
+//    }else if ([host isEqualToString:@"floor_pan_list"]) {
+//        fromStr = @"app_newhouse_apartmentlist";
+//    }
+//    return fromStr;
+//}
+//- (NSInteger )targetTypeBySourceUrl:(NSString *)host
+//{
+//    NSInteger targetType = 0;
+//    if ([host isEqualToString:@"floor_plan_detail"]) {
+//        targetType = 8;
+//    }
+//    return targetType;
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -184,9 +188,9 @@
         }
     }];
     self.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
-    self.contactViewModel.customHouseId = self.customHouseId;
-    self.contactViewModel.fromStr = self.fromStr;
-    self.contactViewModel.targetType = self.targetType;
+//    self.contactViewModel.customHouseId = self.customHouseId;
+//    self.contactViewModel.fromStr = self.fromStr;
+//    self.contactViewModel.targetType = self.targetType;
     self.contactViewModel.searchId = self.searchId;
     self.contactViewModel.imprId = self.imprId;
     NSMutableDictionary *tracer = @{}.mutableCopy;
@@ -196,8 +200,8 @@
     }
     self.contactViewModel.tracerDict = tracer;
     self.contactViewModel.belongsVC = self;
-    self.contactViewModel.contactPhone = self.contactPhone;
-    self.contactViewModel.followStatus = self.followStatus;
+//    self.contactViewModel.contactPhone = self.contactPhone;
+//    self.contactViewModel.followStatus = self.followStatus;
     NSDictionary *allInfo = _paramObj.allParams;
     if (allInfo[@"choose_agency_list"]) {
         self.contactViewModel.chooseAgencyList = allInfo[@"choose_agency_list"];
@@ -231,8 +235,8 @@
 {
     return self.bottomBar;
 }
-
 - (FHHouseDetailContactViewModel *)getContactViewModel
+
 {
     return self.contactViewModel;
 }

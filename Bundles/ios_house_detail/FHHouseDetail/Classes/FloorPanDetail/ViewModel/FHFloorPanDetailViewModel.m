@@ -68,21 +68,10 @@
 
 - (void)contactAction
 {
-    // todo zjing test
     if (!self.contactViewModel) {
         return;
     }
     NSMutableDictionary *extraDic = @{}.mutableCopy;
-    NSNumber *cluePage = nil;
-    if(self.contactViewModel.contactPhone.phone.length > 0) {
-        cluePage = @(FHClueCallPageTypeCFloorPlan);
-    }else {
-        cluePage = @(FHClueFormPageTypeCFloorPlan);
-    }
-    if (cluePage) {
-        extraDic[kFHCluePage] = cluePage;
-    }
-
     [self.contactViewModel contactActionWithExtraDict:extraDic];
 }
 
@@ -250,7 +239,7 @@
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
-    
+
     [_infoListTable reloadData];
 }
 

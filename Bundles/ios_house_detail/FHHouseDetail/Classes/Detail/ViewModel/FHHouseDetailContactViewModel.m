@@ -884,11 +884,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     else if (self.houseType == FHHouseTypeNewHouse) {
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCourt);
-        extraDic[@"from"] = @"app_court";
-        if (_fromStr.length > 0) {
-            extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
-            extraDic[@"from"] = _fromStr;
-        }
+//        extraDic[@"from"] = @"app_court";
+//        if (_fromStr.length > 0) {
+//            extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
+//            extraDic[@"from"] = _fromStr;
+//        }
     }
     else if(self.houseType == FHHouseTypeSecondHandHouse) {
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
