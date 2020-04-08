@@ -575,7 +575,6 @@
         salesModel.discountInfo = model.data.discountInfo;
         salesModel.houseModelType = FHHouseModelTypeNewSales;
         salesModel.contactViewModel = self.contactViewModel;
-        priceInfo.priceAssociateInfo = model.data.discountInfoAssociateInfo;
         [self.items addObject:salesModel];
     }
     

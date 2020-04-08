@@ -132,15 +132,13 @@
     dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
     dict[@"realtor_id"] = configModel.realtorId ? : @"be_null";;
     dict[@"realtor_rank"] = configModel.realtorRank ?: @"0";
-    dict[@"conversation_id"] = configModel.conversationId ? : @"be_null";
     dict[@"realtor_logpb"] = configModel.realtorLogpb ? : @"be_null";
-
-    // todo zjing test
-//    dict[@"from"] = configModel.from;
-//    dict[@"source_from"] = configModel.sourceFrom;
-    dict[@"search_id"] = configModel.searchId ? : @"be_null";
     dict[@"realtor_position"] = configModel.realtorPosition ? : @"be_null";
     dict[@"growth_deepevent"] = @(1);
+
+    dict[@"conversation_id"] = configModel.conversationId ? : @"be_null";
+
+    //    dict[@"search_id"] = configModel.searchId ? : @"be_null";
 
     [FHUserTracker writeEvent:@"click_im" params:dict];
 }

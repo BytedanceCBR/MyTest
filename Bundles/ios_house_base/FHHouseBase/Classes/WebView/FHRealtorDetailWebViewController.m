@@ -95,7 +95,7 @@ static NSString *s_oldAgent = nil;
 //    }];
     
     // todo zjing test
-    NSDictionary *associateInfoDict = nil;
+    NSDictionary *associateInfoDict = extraDict[@"phone_info"];
     params[kFHAssociateInfo] = associateInfoDict;
     FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
     associatePhone.reportParams = params;

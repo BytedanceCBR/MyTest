@@ -140,8 +140,21 @@
         if ([character isEqualToString:@"\\"])
             [processString deleteCharactersInRange:NSMakeRange(i, 1)];
     }
-    
     NSDictionary *reportParamsDict = [FHUtils dictionaryWithJsonString:processString];
+    
+    NSDictionary *associateInfoDict = nil;
+    NSString *associateInfoStr = [param tt_stringValueForKey:@"phone_info"];
+    if (associateInfoStr) {
+        NSMutableString *processString= [NSMutableString stringWithString:associateInfoStr];
+        NSString *character = nil;
+        for (int i = 0; i < processString.length; i ++) {
+            character = [processString substringWithRange:NSMakeRange(i, 1)];
+            
+            if ([character isEqualToString:@"\\"])
+                [processString deleteCharactersInRange:NSMakeRange(i, 1)];
+        }
+        associateInfoDict = [FHUtils dictionaryWithJsonString:processString];
+    }
     NSMutableDictionary *callParams = [NSMutableDictionary new];
     
     if ([param isKindOfClass:[NSDictionary class]]) {
@@ -178,7 +191,6 @@
     }
 //    callParams[@"from"] = @"app_realtor_mainpage";
     // todo zjing test
-    NSDictionary *associateInfoDict = nil;
     callParams[kFHAssociateInfo] = associateInfoDict;
     FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
     associatePhone.reportParams = reportParamsDict;
