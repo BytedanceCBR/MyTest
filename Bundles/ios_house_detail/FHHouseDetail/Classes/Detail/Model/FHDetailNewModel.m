@@ -134,23 +134,6 @@
 }
 @end
 
-@implementation FHDetailNewDataUserStatusModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"courtOpenSubStatus": @"court_open_sub_status",
-                           @"pricingSubStatus": @"pricing_sub_status",
-                           @"courtSubStatus": @"court_sub_status",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailNewDataFloorpanListListModel
 + (JSONKeyMapper*)keyMapper

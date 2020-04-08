@@ -17,23 +17,7 @@
 }
 @end
 
-@implementation FHDetailFloorPanDetailInfoDataUserStatusModel
-+ (JSONKeyMapper*)keyMapper
-{
-  NSDictionary *dict = @{
-    @"courtOpenSubStatus": @"court_open_sub_status",
-    @"pricingSubStatus": @"pricing_sub_status",
-    @"courtSubStatus": @"court_sub_status",
-  };
-  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-     return dict[keyName]?:keyName;
-  }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
+
 
 @implementation FHDetailFloorPanDetailInfoDataRecommendModel
 + (JSONKeyMapper*)keyMapper
@@ -84,7 +68,6 @@
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
-    @"userStatus": @"user_status",
     @"areaId": @"area_id",
     @"baseInfo": @"base_info",
     @"logPb": @"log_pb",
@@ -94,8 +77,11 @@
     @"pricingPerSqm": @"pricing_per_sqm",
     @"districtName": @"district_name",
     @"courtId": @"court_id",
+    
+    @"userStatus": @"user_status",
     @"highlightedRealtor": @"highlighted_realtor",
     @"chooseAgencyList": @"choose_agency_list",
+    
     @"saleStatus": @"sale_status"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

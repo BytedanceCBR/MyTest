@@ -48,7 +48,6 @@
     @"powerWaterGasDesc": @"power_water_gas_desc",
     @"propertyType": @"property_type",
     @"propertyName": @"property_name",
-    @"userStatus": @"user_status",
     @"saleAddress": @"sale_address",
     @"saleStatus": @"sale_status",
     @"developerName": @"developer_name",
@@ -65,6 +64,10 @@
     @"buildingType": @"building_type",
     @"buildingCategory": @"building_category",
     @"deliveryDate": @"delivery_date",
+
+    @"userStatus": @"user_status",
+    @"highlightedRealtor": @"highlighted_realtor",
+    @"chooseAgencyList": @"choose_agency_list",
     @"propertyPrice": @"property_price",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -77,23 +80,6 @@
 }
 @end
 
-@implementation FHDetailNewCoreDetailDataUserStatusModel
-+ (JSONKeyMapper*)keyMapper
-{
-  NSDictionary *dict = @{
-    @"courtOpenSubStatus": @"court_open_sub_status",
-    @"pricingSubStatus": @"pricing_sub_status",
-    @"courtSubStatus": @"court_sub_status",
-  };
-  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-     return dict[keyName]?:keyName;
-  }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailNewCoreDetailDataPermitListModel
 + (JSONKeyMapper*)keyMapper
