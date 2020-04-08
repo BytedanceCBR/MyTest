@@ -1338,7 +1338,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/../../../cim2/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
@@ -1663,7 +1663,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/../../../cim2/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
