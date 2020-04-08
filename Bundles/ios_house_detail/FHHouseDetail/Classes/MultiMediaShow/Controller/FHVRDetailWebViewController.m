@@ -8,39 +8,76 @@
 #import "FHVRDetailWebViewController.h"
 #import "BDImageView.h"
 #import <TTUIWidget/UIView+Refresh_ErrorHandler.h>
+#import "FHCommonDefines.h"
 
-@interface FHVRDetailWebViewController ()
+@interface FHVRDetailWebViewController ()<TTRouteInitializeProtocol>
 @property(nonatomic,strong)BDImageView *maskLoadingView;
+@property(nonatomic, retain)SSWebViewContainer * webContainer;
+@property(nonatomic, strong)NSURL * requestURL;
+
 @end
 
 @implementation FHVRDetailWebViewController
 
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
+{
+    if (self) {
+
+        NSDictionary *params = paramObj.allParams;
+        
+        self.webContainer = [[SSWebViewContainer alloc] initWithFrame:CGRectMake(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT) baseCondition:@{@"use_wk":@(YES)}];
+        [_webContainer.ssWebView addDelegate:self];
+        [_webContainer hiddenProgressView:YES];
+        if (@available(iOS 11.0 , *)) {
+            _webContainer.ssWebView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+        _webContainer.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        _webContainer.ssWebView.opaque = NO;
+        _webContainer.ssWebView.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
+        _webContainer.disableConnectCheck = YES;
+        _webContainer.disableEndRefresh = NO;
+                
+        NSString * urlStr = nil;
+        if ([params.allKeys containsObject:@"url"]) {
+            urlStr = [params objectForKey:@"url"];
+        }
+        self.requestURL = [NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]];
+        [_webContainer.ssWebView loadRequest:self.requestURL];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self.view addSubview:_webContainer];
+
     __weak __typeof(self) weakSelf = self;
     [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
         [weakSelf.ssWebView.ssWebContainer tt_endUpdataData];
         [weakSelf.maskLoadingView removeFromSuperview];
     } forMethodName:@"closeLoading"];
     // Do any additional setup after loading the view.
+    
+    
+//    if (!_maskLoadingView) {
+//        UIImage *imageData = [UIImage imageNamed:@"fh_vr_loading"];
+//        _maskLoadingView = [BDImageView new];
+//        [_maskLoadingView setImage:imageData];
+//        [_maskLoadingView setFrame:self.view.frame];
+//        _maskLoadingView.contentMode = UIViewContentModeScaleAspectFill;
+//        [_maskLoadingView setBackgroundColor:[UIColor redColor]];
+//        [self.view addSubview:_maskLoadingView];
+//        [self.view bringSubviewToFront:_maskLoadingView];
+//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [self.navigationController setNavigationBarHidden:YES];
 
-    if (!_maskLoadingView) {
-        UIImage *imageData = [UIImage imageNamed:@"fh_vr_loading"];
-        _maskLoadingView = [BDImageView new];
-        [_maskLoadingView setImage:imageData];
-        [_maskLoadingView setFrame:self.view.frame];
-        _maskLoadingView.contentMode = UIViewContentModeScaleAspectFill;
-        [_maskLoadingView setBackgroundColor:[UIColor redColor]];
-        [self.view addSubview:_maskLoadingView];
-        [self.view bringSubviewToFront:_maskLoadingView];
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
