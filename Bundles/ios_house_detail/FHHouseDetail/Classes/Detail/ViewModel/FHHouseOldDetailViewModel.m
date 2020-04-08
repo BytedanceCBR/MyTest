@@ -55,7 +55,7 @@
 #import "FHOldDetailModuleHelper.h"
 #import "FHDetailStaticMapCell.h"
 #import "FHOldDetailStaticMapCell.h"
-
+#import "SSWebViewController.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -257,6 +257,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
         headerCellModel.houseImageDictList = model.data.houseImageDictList;
+        headerCellModel.weakVC = self.detailController;
         if (!isInstant) {
             FHDetailOldDataHouseImageDictListModel *imgModel = [headerCellModel.houseImageDictList firstObject];
             imgModel.instantHouseImageList = [self instantHouseImages];
@@ -264,7 +265,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
         houseTitleModel.titleStr = model.data.title;
         houseTitleModel.tags = model.data.tags;
-
+     
         headerCellModel.vrModel = model.data.vrData;
         headerCellModel.vedioModel = itemModel;// 添加视频模型数据
         headerCellModel.contactViewModel = self.contactViewModel;
