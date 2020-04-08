@@ -34,12 +34,11 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
 @implementation FHFloorPanListViewModel
 
--(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems andCourtId:(NSString *)courtId {
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems andCourtId:(NSString *)courtId {
     self = [super init];
     if (self) {
-        _nameLeftArray = @[@"不限",@"在售",@"待售",@"售罄"];
+        //_nameLeftArray = @[@"不限",@"在售",@"待售",@"售罄"];
         _floorListTable = tableView;
-        _leftFilterView = leftScrollView;
         _elementShowCaches = [NSMutableDictionary new];
         _allItems = allItems;
         _floorListVC = viewController;
@@ -271,7 +270,6 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         [FHHouseDetailAPI requestFloorPanListSearch:_currentCourtId completion:^(FHDetailFloorPanListResponseModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
-                self.leftFilterView.hidden = NO;
                 self.floorListTable.hidden = NO;
                 self.segmentedControl.hidden = NO;
                 
@@ -295,8 +293,6 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         _segmentedControl.sectionTitles = [self getSegementViewTitlsArray];
     }
     [self configTableView];
-    
-    [self setUpLeftFilterView];
     
     WeakSelf;
     _segmentedControl.indexChangeBlock = ^(NSInteger index) {
@@ -328,6 +324,9 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FHFloorPanListCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHFloorPanListCell class])];
+    BOOL isFirst = (indexPath.row == 0);
+    BOOL isLast = (indexPath.row == _currentItems.count - 1);
+    
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass([FHFloorPanListCell class])];
     }
@@ -335,10 +334,10 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         if (indexPath.row == 0) {
             ((FHDetailNewDataFloorpanListListModel *)self.currentItems[indexPath.row]).index = indexPath.row;
         }
-        [cell refreshWithData:_currentItems[indexPath.row]];
+        [cell refreshWithData:_currentItems[indexPath.row] isFirst:isFirst isLast:isLast];
         cell.baseViewModel = self;
     }
-    cell.backgroundColor = [UIColor whiteColor];
+    cell.backgroundColor = [UIColor themeGray7];
     return cell;
 }
 

@@ -47,11 +47,10 @@
     
     [self setUpSegmentedControl];
     
-    [self setUpLeftView];
     
     [self setUpFloorListTable];
     
-    _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andLeftScrollView:self.leftFilterView andSegementView:self.segmentedControl andItems:_floorList andCourtId:_courtId];
+    _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andSegementView:self.segmentedControl andItems:_floorList andCourtId:_courtId];
     
     [self setNavBarTitle:@"楼盘户型"];
     
@@ -151,12 +150,12 @@
     
     [_floorListTable mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.view);
-        make.left.equalTo(self.leftView.mas_right);
-        make.top.equalTo(self.segmentedControl.mas_bottom);
+        make.left.equalTo(0);
+        make.top.equalTo(self.segmentedControl.mas_bottom).offset(0);
         make.bottom.equalTo([self getBottomBar].mas_top);
     }];
     
-    [_floorListTable setBackgroundColor:[UIColor whiteColor]];
+    [_floorListTable setBackgroundColor:[UIColor themeGray7]];
 }
 
 /*
