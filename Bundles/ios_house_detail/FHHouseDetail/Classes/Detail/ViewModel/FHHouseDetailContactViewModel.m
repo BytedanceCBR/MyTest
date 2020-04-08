@@ -52,7 +52,9 @@
 #import "FHHouseUGCAPI.h"
 #import "FHHouseNewDetailViewModel.h"
 #import "FHDetailBaseCell.h"
-
+#import "FHDetailNewModel.h"
+#import "FHDetailOldModel.h"
+#import "FHDetailNeighborhoodModel.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -893,6 +895,45 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCOldHouse);
     }
     
+    // 透传associate_info
+    if([self.belongsVC isKindOfClass:FHHouseDetailViewController.class]) {
+        FHHouseDetailViewController *houseDetailVC = (FHHouseDetailViewController *)self.belongsVC;
+        NSObject *detailData  = houseDetailVC.viewModel.detailData;
+        switch(houseDetailVC.viewModel.houseType) {
+            case FHHouseTypeNewHouse:
+            {
+                if([detailData isKindOfClass:FHDetailNewModel.class]) {
+                    FHDetailNewModel *detailNewModel = (FHDetailNewModel *)detailData;
+                    if(detailNewModel.data.highlightedRealtor.associateInfo) {
+                        extraDic[kFHAssociateInfo] = detailNewModel.data.highlightedRealtor.associateInfo;
+                    }
+                }
+            }
+                break;
+            case FHHouseTypeSecondHandHouse:
+            {
+                if([detailData isKindOfClass:FHDetailOldModel.class]) {
+                    FHDetailOldModel *detailOldModel = (FHDetailOldModel *)detailData;
+                    if(detailOldModel.data.highlightedRealtor.associateInfo) {
+                        extraDic[kFHAssociateInfo] = detailOldModel.data.highlightedRealtor.associateInfo;
+                    }
+                }
+            }
+                break;
+            case FHHouseTypeNeighborhood:
+            {
+                if([detailData isKindOfClass:FHDetailNeighborhoodModel.class]) {
+                    FHDetailNeighborhoodModel *detailNeighborhoodModel = (FHDetailNeighborhoodModel *)detailData;
+                    if(detailNeighborhoodModel.data.highlightedRealtor.associateInfo) {
+                        extraDic[kFHAssociateInfo] = detailNeighborhoodModel.data.highlightedRealtor.associateInfo;
+                    }
+                }
+            }
+                break;
+            default:
+                break;
+        }
+    }
     [self onlineActionWithExtraDict:extraDic];
 }
 

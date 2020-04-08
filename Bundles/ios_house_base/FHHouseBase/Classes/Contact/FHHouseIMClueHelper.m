@@ -172,6 +172,7 @@
     dict[@"realtor_position"] = configModel.realtorPosition ? : @"be_null";
     dict[@"growth_deepevent"] = @(1);
     dict[@"realtor_logpb"] = configModel.realtorLogpb;
+    dict[@"source_from"] = configModel.sourceFrom;
     
     
     if(configModel.extra) {

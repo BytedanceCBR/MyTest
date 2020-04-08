@@ -276,6 +276,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *recommendRealtorsAssociateInfo;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageGroupAssociateInfo;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *discountInfoAssociateInfo;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *floorplanListAssociateInfo;
 
 
 @end

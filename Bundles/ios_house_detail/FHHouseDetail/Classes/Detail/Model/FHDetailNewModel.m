@@ -287,6 +287,15 @@
     return YES;
 }
 
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"associateInfo": @"associate_info",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 @end
 
 
@@ -376,6 +385,7 @@
                            @"recommendRealtorsAssociateInfo": @"recommend_realtors_associate_info",
                            @"imageGroupAssociateInfo": @"image_group_associate_info",
                            @"discountInfoAssociateInfo": @"discount_info_associate_info",
+                           @"floorplanListAssociateInfo": @"floorplan_list_associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -11,6 +11,8 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
+#import "FHDetailNewModel.h"
+#import "FHDetailNeighborhoodModel.h"
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "FHDetailHeaderView.h"
@@ -305,13 +307,42 @@
             // 二手房经纪人推荐展位
             imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
             imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",contact.realtorType == FHRealtorTypeNormal ? FHClueIMPageTypeCOldHouseMulrealtor: FHClueIMPageTypeCOldHouseExpertMid];
-            
-            if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
-                FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
-                if(detailOldModel.data.recommendRealtorsAssociateInfo) {
-                    imExtra[kFHAssociateInfo] =  detailOldModel.data.recommendRealtorsAssociateInfo;
+        }
+        
+        
+        switch (self.baseViewModel.houseType) {
+            case FHHouseTypeNewHouse:
+            {
+                if([self.baseViewModel.detailData isKindOfClass:FHDetailNewModel.class]) {
+                    FHDetailNewModel *detailNewModel = (FHDetailNewModel *)self.baseViewModel.detailData;
+                    if(detailNewModel.data.recommendRealtorsAssociateInfo) {
+                        imExtra[kFHAssociateInfo] =  detailNewModel.data.recommendRealtorsAssociateInfo;
+                    }
                 }
             }
+                break;
+            case FHHouseTypeSecondHandHouse:
+            {
+                if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
+                    FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
+                    if(detailOldModel.data.recommendRealtorsAssociateInfo) {
+                        imExtra[kFHAssociateInfo] =  detailOldModel.data.recommendRealtorsAssociateInfo;
+                    }
+                }
+            }
+                break;
+            case FHHouseTypeNeighborhood:
+            {
+                if([self.baseViewModel.detailData isKindOfClass:FHDetailNeighborhoodModel.class]) {
+                    FHDetailNeighborhoodModel *detailNeighborhoodModel = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
+                    if(detailNeighborhoodModel.data.recommendRealtorsAssociateInfo) {
+                        imExtra[kFHAssociateInfo] =  detailNeighborhoodModel.data.recommendRealtorsAssociateInfo;
+                    }
+                }
+            }
+                break;
+            default:
+                break;
         }
         [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
     }

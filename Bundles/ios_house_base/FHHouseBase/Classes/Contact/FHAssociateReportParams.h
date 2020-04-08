@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *conversationId;// todo zjing test
 @property(nonatomic ,copy) NSString *position;
 
+// 选填
+@property(nonatomic, copy) NSString *sourceFrom;
 
 @end
 

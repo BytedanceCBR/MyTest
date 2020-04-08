@@ -18,6 +18,7 @@
 #import "FHDetailMultitemCollectionView.h"
 #import <TTAccountSDK/TTAccount.h>
 #import <FHHouseBase/FHHouseIMClueHelper.h>
+#import "FHEnvContext.h"
 
 #define ITEM_HEIGHT 242
 #define ITEM_BOTTOM_HEIGHT 35
@@ -264,31 +265,72 @@
     if (![floorPanInfoModel isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
         return;
     }
-    FHHouseIMClueConfigModel *configModel = [[FHHouseIMClueConfigModel alloc]init];
-    configModel.houseId = self.baseViewModel.houseId;
-    configModel.houseType = self.baseViewModel.houseType;
-    configModel.enterFrom = self.baseViewModel.detailTracerDic[@"enter_from"];
-    configModel.elementFrom = @"house_model";
-    configModel.logPb = floorPanInfoModel.logPb;
-    configModel.originFrom = self.baseViewModel.detailTracerDic[@"origin_from"];
-    configModel.rank = self.baseViewModel.detailTracerDic[@"rank"];
-    configModel.originSearchId = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-    configModel.searchId = self.baseViewModel.detailTracerDic[@"search_id"];
-    configModel.imprId = floorPanInfoModel.imprId;
-    configModel.pageType = [self.baseViewModel pageTypeString];
-    FHDetailContactModel *contactPhone = self.baseViewModel.contactViewModel.contactPhone;
-    configModel.realtorId = contactPhone.realtorId;
-    configModel.realtorRank = @"0";
-    configModel.conversationId = @"be_null";// todo zjing test
-    configModel.realtorLogpb = contactPhone.realtorLogpb;
-    configModel.from = @"app_newhouse_floorplan";
-    configModel.realtorPosition = @"house_model";
-    configModel.sourceFrom = @"house_model";// todo zjing test
-    configModel.clueEndpoint = @(FHClueEndPointTypeC);
-    configModel.cluePage = @(FHClueIMPageTypeCNewHouseApartmentConsult);
-    configModel.imOpenUrl = floorPanInfoModel.imOpenUrl;
-    configModel.extraInfo = @{@"house_model_rank":@(index)};
-    [FHHouseIMClueHelper jump2SessionPageWithConfigModel:configModel];
+    
+    if([FHEnvContext isSwitchToIMNew] == NO) {
+        FHHouseIMClueConfigModel *configModel = [[FHHouseIMClueConfigModel alloc]init];
+        configModel.houseId = self.baseViewModel.houseId;
+        configModel.houseType = self.baseViewModel.houseType;
+        configModel.enterFrom = self.baseViewModel.detailTracerDic[@"enter_from"];
+        configModel.elementFrom = @"house_model";
+        configModel.logPb = floorPanInfoModel.logPb;
+        configModel.originFrom = self.baseViewModel.detailTracerDic[@"origin_from"];
+        configModel.rank = self.baseViewModel.detailTracerDic[@"rank"];
+        configModel.originSearchId = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+        configModel.searchId = self.baseViewModel.detailTracerDic[@"search_id"];
+        configModel.imprId = floorPanInfoModel.imprId;
+        configModel.pageType = [self.baseViewModel pageTypeString];
+        FHDetailContactModel *contactPhone = self.baseViewModel.contactViewModel.contactPhone;
+        configModel.realtorId = contactPhone.realtorId;
+        configModel.realtorRank = @"0";
+        configModel.conversationId = @"be_null";// todo zjing test
+        configModel.realtorLogpb = contactPhone.realtorLogpb;
+        configModel.from = @"app_newhouse_floorplan";
+        configModel.realtorPosition = @"house_model";
+        configModel.sourceFrom = @"house_model";// todo zjing test
+        configModel.clueEndpoint = @(FHClueEndPointTypeC);
+        configModel.cluePage = @(FHClueIMPageTypeCNewHouseApartmentConsult);
+        configModel.imOpenUrl = floorPanInfoModel.imOpenUrl;
+        configModel.extraInfo = @{@"house_model_rank":@(index)};
+        [FHHouseIMClueHelper jump2SessionPageWithConfigModel:configModel];
+    }
+    
+    else {
+    
+        // IM 透传数据模型
+        FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
+        associateIMModel.houseId = self.baseViewModel.houseId;
+        associateIMModel.houseType = self.baseViewModel.houseType;
+        if([self.baseViewModel.detailData isKindOfClass:FHDetailNewModel.class]) {
+            FHDetailNewModel *detailNewModel = (FHDetailNewModel *)self.baseViewModel.detailData;
+            if(detailNewModel.data.floorplanListAssociateInfo) {
+                associateIMModel.associateInfo = detailNewModel.data.floorplanListAssociateInfo;
+            }
+        }
+        // IM 相关埋点上报参数
+        FHAssociateReportParams *reportParams = [FHAssociateReportParams new];
+        reportParams.enterFrom = self.baseViewModel.detailTracerDic[@"enter_from"];
+        reportParams.elementFrom = @"house_model";
+        reportParams.logPb = floorPanInfoModel.logPb;
+        reportParams.originFrom = self.baseViewModel.detailTracerDic[@"origin_from"];
+        reportParams.rank = self.baseViewModel.detailTracerDic[@"rank"];
+        reportParams.originSearchId = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+        reportParams.searchId = self.baseViewModel.detailTracerDic[@"search_id"];
+        reportParams.pageType = [self.baseViewModel pageTypeString];
+        FHDetailContactModel *contactPhone = self.baseViewModel.contactViewModel.contactPhone;
+        reportParams.realtorId = contactPhone.realtorId;
+        reportParams.realtorRank = @"0";
+        reportParams.conversationId = @"be_null";
+        reportParams.realtorLogpb = contactPhone.realtorLogpb;
+        reportParams.realtorPosition = @"house_model";
+        reportParams.sourceFrom = @"house_model";
+        reportParams.extra = @{@"house_model_rank":@(index)};
+        associateIMModel.reportParams = reportParams;
+        
+        // IM跳转链接
+        associateIMModel.imOpenUrl = floorPanInfoModel.imOpenUrl;
+        // 跳转IM
+        [FHHouseIMClueHelper jump2SessionPageWithAssociateIM:associateIMModel];
+    }
 }
 
 - (UIImageView *)shadowImage
