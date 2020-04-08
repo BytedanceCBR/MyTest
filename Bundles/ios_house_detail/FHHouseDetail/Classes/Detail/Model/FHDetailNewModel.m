@@ -106,8 +106,10 @@
                            @"hasMore": @"has_more",
                            @"userStatus": @"user_status",
                            @"totalNumber": @"total_number",
+                           @"highlightedRealtor": @"highlighted_realtor",
+                           @"chooseAgencyList": @"choose_agency_list",
                            
-                           };
+    };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];

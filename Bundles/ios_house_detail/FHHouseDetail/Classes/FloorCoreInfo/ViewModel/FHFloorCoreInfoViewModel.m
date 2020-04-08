@@ -40,7 +40,20 @@
         _houseNameModel = model;
         _disclaimerModel = disClaimerModel;
         [self configTableView];
-        
+        FHDetailBottomBar *bottomBar = [viewController getBottomBar];
+        //        if ([bottomBar isKindOfClass:[FHDetailBottomBar class]]) {
+        //            bottomBar.bottomBarContactBlock = ^{
+        //                StrongSelf;
+        //                [wself contactAction];
+        //            };
+        //            bottomBar.bottomBarImBlock = ^{
+        //                StrongSelf;
+        //                [wself imAction];
+        //            };
+        //        }
+        self.contactViewModel = [viewController getContactViewModel];
+        self.bottomBar = bottomBar;
+        bottomBar.hidden = YES;
         [self startLoadData];
     
     }
@@ -194,6 +207,7 @@
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.bottomBar.hidden = NO;
 
     [_infoListTable reloadData];
 }

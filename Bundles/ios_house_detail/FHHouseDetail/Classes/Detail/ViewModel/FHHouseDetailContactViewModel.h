@@ -36,9 +36,9 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign)   BOOL       showenOnline;// 是否显示在线联系，默认不显示
 @property (nonatomic, copy)     NSString       *onLineName;// 在线联系 名称
 @property (nonatomic, copy)     NSString       *phoneCallName;// 电话咨询 或者 询底价 名称
-@property (nonatomic, copy, nullable) NSString *customHouseId;// floor_plan_detail:floor_plan_id
-@property (nonatomic, copy, nullable) NSString *fromStr;//floor_plan_detail:app_floor_plan
-@property (nonatomic, assign) NSInteger targetType;//新房子页面电话线索新增类型
+//@property (nonatomic, copy, nullable) NSString *customHouseId;// floor_plan_detail:floor_plan_id
+//@property (nonatomic, copy, nullable) NSString *fromStr;//floor_plan_detail:app_floor_plan
+//@property (nonatomic, assign) NSInteger targetType;//新房子页面电话线索新增类型
 @property (nonatomic, strong) FHDetailImShareInfoModel* imShareInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
 @property (nonatomic, copy , nullable) NSString *subTitle;

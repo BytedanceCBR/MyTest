@@ -124,7 +124,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNewDataFloorpanListModel : JSONModel
 
 @property (nonatomic, assign) BOOL hasMore;
-@property (nonatomic, copy , nullable) NSString *userStatus;
+@property (nonatomic, strong , nullable) FHDetailNewUserStatusModel *userStatus;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListModel> *list;
 @property (nonatomic, copy , nullable) NSString *courtId;
 @property (nonatomic, copy , nullable) NSString *totalNumber;

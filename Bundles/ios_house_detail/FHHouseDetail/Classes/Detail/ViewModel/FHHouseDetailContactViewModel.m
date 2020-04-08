@@ -877,27 +877,27 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }else if (self.houseType == FHIMHouseTypeNewHouse) {
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCourt);
-        extraDic[@"from"] = @"app_court";
-        if (_fromStr.length > 0) {
-            extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
-            extraDic[@"from"] = _fromStr;
-        }
+//        extraDic[@"from"] = @"app_court";
+//        if (_fromStr.length > 0) {
+//            extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
+//            extraDic[@"from"] = _fromStr;
+//        }
     }
     [self onlineActionWithExtraDict:extraDic];
 }
 
-+ (FHClueIMPageTypeC)imCluePageTypeByFromString:(NSString *)fromStr
-{
-    FHClueIMPageTypeC cluePageType = FHClueIMPageTypeCourt;
-    if ([fromStr isEqualToString:@"app_floorplan"]) {
-        cluePageType = FHClueIMPageTypeFloorplan;
-    }else if ([fromStr isEqualToString:@"app_newhouse_detail"]) {
-        cluePageType = FHClueIMPageTypeNewHouseDetail;
-    }else if ([fromStr isEqualToString:@"app_newhouse_apartmentlist"]) {
-        cluePageType = FHClueIMPageTypeApartmentlist;
-    }
-    return cluePageType;
-}
+//+ (FHClueIMPageTypeC)imCluePageTypeByFromString:(NSString *)fromStr
+//{
+//    FHClueIMPageTypeC cluePageType = FHClueIMPageTypeCourt;
+//    if ([fromStr isEqualToString:@"app_floorplan"]) {
+//        cluePageType = FHClueIMPageTypeFloorplan;
+//    }else if ([fromStr isEqualToString:@"app_newhouse_detail"]) {
+//        cluePageType = FHClueIMPageTypeNewHouseDetail;
+//    }else if ([fromStr isEqualToString:@"app_newhouse_apartmentlist"]) {
+//        cluePageType = FHClueIMPageTypeApartmentlist;
+//    }
+//    return cluePageType;
+//}
 
 // 新房群聊按钮点击
 - (void)groupChatAction {
