@@ -154,7 +154,7 @@ end
 
 def appPods
     #-----头条图片/视频选择器-----
-    pod 'TTImagePicker', '7.5.5.2'
+    pod 'TTImagePicker', '7.5.5.2.1-bugfix'
   
     pod_binary 'SecGuard' , '0.8.16.9'
     
@@ -400,7 +400,7 @@ def appPods
     ]
     
     #-----头条推送SDK----
-    pod 'BDUGPushSDK', '2.2.1'
+    pod 'BDUGPushSDK', '2.2.3'
 
     #-----路由-----
     pod 'TTRoute','1.1.3-rc.0-f100' # git:'git@code.byted.org:TTIOS/tt_pods_route.git', :branch => 'f100'
@@ -538,7 +538,7 @@ def appPods
 
     pod_binary 'BDDiamond20', '1.0.2', :subspecs => ['minisdk']
 
-    pod 'Quaterback', '1.0.0-alpha.4', :subspecs => [
+    pod 'Quaterback', '0.0.2-rc.8', :subspecs => [
     'Main/Core',
     'Main/Default'
     ]
@@ -577,13 +577,13 @@ target 'f100' do
 end
 
 target 'serviceNofExtension' do
-  pod 'BDUGPushSDK','2.2.1',:subspecs => [
+  pod 'BDUGPushSDK','2.2.3',:subspecs => [
   'Extension'
   ]
 end
 
 target 'com.f100.client.FHNotificationServiceExtension' do
-  pod 'BDUGPushSDK','2.2.1',:subspecs => [
+  pod 'BDUGPushSDK','2.2.3',:subspecs => [
   'Extension'
   ]
 end
