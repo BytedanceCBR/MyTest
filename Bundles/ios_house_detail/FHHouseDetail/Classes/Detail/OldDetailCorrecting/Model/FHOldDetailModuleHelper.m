@@ -171,7 +171,7 @@
                 
                 //设置title
                 NSString *currentModelTitle = nil;
-                if (currentModel == FHHouseModelTypeLocationPeriphery) {
+                if (currentModel.houseModelType == FHHouseModelTypeLocationPeriphery) {
                     if(neighborhoodInfos.count > 0){
                         currentModelTitle = @"周边配套";
                     }else{
@@ -190,7 +190,7 @@
     if (model.houseModelType == FHHouseModelTypeNeighborhoodInfo) {
         titleMolde.title = @"小区信息";
     }else if (model.houseModelType == FHHouseModelTypeLocationPeriphery) {
-        titleMolde.title = @"周边配套";
+        titleMolde.title = @"位置及周边配套";
     }else if (model.houseModelType == FHHouseModelTypeHousingEvaluation) {
         titleMolde.title = @"房源评价动态";
     }
