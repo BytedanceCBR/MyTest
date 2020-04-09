@@ -9,6 +9,8 @@
 #import "BDImageView.h"
 #import <TTUIWidget/UIView+Refresh_ErrorHandler.h>
 #import "FHCommonDefines.h"
+#import <TTBaseLib/TTUIResponderHelper.h>
+#import "UIViewController+NavigationBarStyle.h"
 
 @interface FHVRDetailWebViewController ()<TTRouteInitializeProtocol>
 @property(nonatomic,strong)BDImageView *maskLoadingView;
@@ -62,10 +64,9 @@
     
     [self.view addSubview:_webContainer];
 
-
+    self.ttDisableDragBack = YES;
     // Do any additional setup after loading the view.
     
-
 }
 
 - (void)viewWillAppear:(BOOL)animated
