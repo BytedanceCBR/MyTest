@@ -69,19 +69,20 @@
 {
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
-    _segmentedControl.selectionIndicatorHeight = 2;
-    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange1];
+    _segmentedControl.selectionIndicatorHeight = 4;
+    _segmentedControl.selectionIndicatorWidth = 20;
+    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange4];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
     //    _segmentedControl.selec
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
-                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
+                                     [UIColor blackColor],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontMedium:16],NSFontAttributeName,
-                                     [UIColor themeOrange1],NSForegroundColorAttributeName,nil];
+                                     [UIFont themeFontSemibold:18],NSFontAttributeName,
+                                     [UIColor blackColor],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
     _segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 30);
@@ -124,10 +125,13 @@
     [_floorListTable mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.view);
         make.left.equalTo(0);
-        make.top.equalTo(self.segmentedControl.mas_bottom).offset(0);
+        make.top.equalTo(self.segmentedControl.mas_bottom);
         make.bottom.equalTo([self getBottomBar].mas_top);
     }];
-    
+    self.floorListTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.floorListTable.separatorColor = RGB(0xe7, 0xe7, 0xe7);
+    self.floorListTable.separatorInset = UIEdgeInsetsMake(0, 34, 0, 34);
+    \
     [_floorListTable setBackgroundColor:[UIColor themeGray7]];
 }
 

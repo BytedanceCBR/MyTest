@@ -75,40 +75,35 @@
     return _cellBackView;
 }
 
+-(CAShapeLayer *)maskLayer:(UIRectCorner)rectCorner
+{
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106) byRoundingCorners:rectCorner cornerRadii:CGSizeMake(10, 10)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106);
+    maskLayer.path = maskPath.CGPath;
+    return maskLayer;
+}
+
 - (void)refreshWithData:(bool)isFirst andLast:(BOOL)isLast
 {
-    
     self.cellBackView.hidden = NO;
     if (isFirst && isLast) {
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106) byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(10, 10)];
-        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-        maskLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106);
-        maskLayer.path = maskPath.CGPath;
-        self.cellBackView.layer.mask = maskLayer;
-    }
-    else if (isFirst) {
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106) byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
-        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-        maskLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106);
-        maskLayer.path = maskPath.CGPath;
-        self.cellBackView.layer.mask = maskLayer;
+        self.cellBackView.layer.mask = [self maskLayer:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft | UIRectCornerBottomRight];
+    } else if (isFirst) {
+        self.cellBackView.layer.mask = [self maskLayer:UIRectCornerTopLeft | UIRectCornerTopRight];
     } else if (isLast) {
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width-30, 106) byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(10, 10)];
-         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-         maskLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106);
-         maskLayer.path = maskPath.CGPath;
-         self.cellBackView.layer.mask = maskLayer;
+         self.cellBackView.layer.mask = [self maskLayer:UIRectCornerBottomLeft | UIRectCornerBottomRight];
     } else {
         self.cellBackView.layer.mask = nil;
-        self.topLine = [[UIView alloc] init];
-        [self.contentView addSubview:_topLine];
-        self.topLine.backgroundColor = [UIColor themeGray7];
-        [self.topLine mas_makeConstraints:^(MASConstraintMaker *make){
-            make.left.mas_equalTo(34);
-            make.right.mas_equalTo(-34);
-            make.top.mas_equalTo(0);
-            make.height.mas_equalTo(1);
-        }];
+//        self.topLine = [[UIView alloc] init];
+//        [self.contentView addSubview:_topLine];
+//        self.topLine.backgroundColor = [UIColor themeGray7];
+//        [self.topLine mas_makeConstraints:^(MASConstraintMaker *make){
+//            make.left.mas_equalTo(34);
+//            make.right.mas_equalTo(-34);
+//            make.top.mas_equalTo(0);
+//            make.height.mas_equalTo(1);
+//        }];
     }
 }
 

@@ -101,7 +101,9 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     if ([_floorListTable numberOfSections] && [_floorListTable numberOfRowsInSection:0]) {
         [_floorListTable scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
-    _floorListTable.contentOffset = CGPointMake(0, 0);
+    _floorListTable.contentInset = UIEdgeInsetsMake(20,0,0,0);
+    _floorListTable.contentOffset = CGPointMake(0, -20);
+    
 }
 
 - (NSArray<FHDetailNewDataFloorpanListListModel *> *)getSelectFilterDataList
@@ -181,7 +183,6 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     WeakSelf;
     _segmentedControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
-        self.floorListTable.contentOffset = CGPointMake(0, 0);
         [self refreshCurrentShowList];
     };
     
@@ -228,21 +229,13 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 20;
+    return CGFLOAT_MIN;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return CGFLOAT_MIN;
 }
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    UIView *view = [[UIView alloc] init];
-    view.backgroundColor = [UIColor themeGray7];
-    return view;
-}
- 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
