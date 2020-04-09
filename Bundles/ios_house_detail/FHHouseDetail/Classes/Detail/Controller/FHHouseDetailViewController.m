@@ -73,7 +73,14 @@
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.ridcode = paramObj.allParams[@"ridcode"];
         self.realtorId = paramObj.allParams[@"realtor_id"];
-        self.extraInfo = paramObj.allParams[kFHClueExtraInfo];
+        
+        NSObject *extraInfo = paramObj.allParams[kFHClueExtraInfo];
+        if ([extraInfo isKindOfClass:[NSString class]]) {
+            NSDictionary *extraInfoDict = [self getDictionaryFromJSONString:extraInfo];
+            self.extraInfo = extraInfoDict;
+        }else if ([extraInfo isKindOfClass:[NSDictionary class]]) {
+            self.extraInfo = extraInfo;
+        }
 
         if (!self.houseType) {
             if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
