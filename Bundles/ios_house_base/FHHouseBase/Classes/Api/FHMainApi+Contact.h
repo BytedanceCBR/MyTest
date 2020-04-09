@@ -70,9 +70,15 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                              imprId:(NSString*)imprId
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
 // 详情页线索提交表单
-+ (TTHttpTask*)requestCallReport:(NSDictionary*)reportAssociate
-                                     agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
-                                     completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
++ (TTHttpTask*)requestCallReportByHouseId:(NSString*)houseId
+       phone:(NSString*)phone
+        from:(NSString*)from
+    cluePage:(NSNumber*)cluePage
+clueEndpoint:(NSNumber*)clueEndpoint
+  targetType:(NSNumber *)targetType
+reportAssociate:(NSDictionary*)reportAssociate
+agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
+completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 房源关注
 + (TTHttpTask*)requestFollow:(NSString*)followId

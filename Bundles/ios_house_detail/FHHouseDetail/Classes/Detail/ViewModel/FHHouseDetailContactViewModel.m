@@ -456,6 +456,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         // 填表单
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
         associateParamDict[kFHReportParams] = reportParamsDict;
+        associateParamDict[kFHAssociateInfo] = associateInfoDict;
         [self fillFormActionWithParams:associateParamDict];
     }else {
 
