@@ -222,6 +222,7 @@
                                                             @"showMaxLine",
                                                             @"picDisplayType",
                                                             @"recommendDict",
+                                                            @"happyKnocking",
                                                             @"commoditys",
                                                             @"payStatus",
                                                             @"titleRichSpanJSONString",

@@ -78,13 +78,21 @@
     }
 }
 
-- (void)cancel {
+- (void)cancelInterception {
     if(self.isRunning){
         [self stopTimer];
         self.isRunning = NO;
         dispatch_async(dispatch_get_main_queue(), ^{
             self.complete(self.success,nil);
         });
+    }
+}
+
+- (void)breakInterception {
+    if(self.isRunning){
+        self.isRunning = NO;
+        self.success = YES;
+        [self quitLoop];
     }
 }
 

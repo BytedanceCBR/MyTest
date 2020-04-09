@@ -40,7 +40,7 @@
     if(uniqueId.length > 0){
         FHInterception *interception = self.requestList[uniqueId];
         if(interception){
-            [interception cancel];
+            [interception cancelInterception];
         }else{
             interception = [[FHInterception alloc] init];
         }
@@ -56,6 +56,24 @@
         } task:task];
     }
     return nil;
+}
+
+- (void)cancelInterception:(NSString *)uniqueId {
+    if(uniqueId.length > 0){
+        FHInterception *interception = self.requestList[uniqueId];
+        if(interception){
+            [interception cancelInterception];
+        }
+    }
+}
+
+- (void)breakInterception:(NSString *)uniqueId {
+    if(uniqueId.length > 0){
+        FHInterception *interception = self.requestList[uniqueId];
+        if(interception){
+            [interception breakInterception];
+        }
+    }
 }
 
 @end
