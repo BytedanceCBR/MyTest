@@ -46,6 +46,7 @@
             weakSelf.isNeedRemoveMask = YES;
            [weakSelf.ssWebView.ssWebContainer tt_endUpdataData];
            [weakSelf.maskLoadingView removeFromSuperview];
+            weakSelf.ttDisableDragBack = YES;
         } forMethodName:@"closeLoading"];
         
         
@@ -64,7 +65,6 @@
     
     [self.view addSubview:_webContainer];
 
-    self.ttDisableDragBack = YES;
     // Do any additional setup after loading the view.
     
 }
