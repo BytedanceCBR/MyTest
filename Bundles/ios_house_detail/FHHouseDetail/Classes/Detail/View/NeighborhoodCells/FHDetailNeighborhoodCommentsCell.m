@@ -82,7 +82,7 @@
     self.cellManager = [[FHUGCCellManager alloc] init];
     [self.cellManager registerAllCell:_tableView];
     
-    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 65)];
+    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 50)];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"小区点评";

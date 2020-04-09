@@ -151,7 +151,7 @@
             CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:count width:[UIScreen mainScreen].bounds.size.width - leftMargin - leftPadding - rightMargin - rightPadding];
             height += imageViewheight;
         }
-        height += vGap;
+//        height += vGap;
 //        height += bottomViewHeight;
 
         return height;
@@ -259,8 +259,17 @@
         CGFloat decorationHeight = topPadding + userInfoViewHeight;
         CGFloat decorationWidth = decorationHeight;
         CGFloat decorationRightOffset = 10;
-        self.decorationImageView.frame = CGRectMake(leftMargin + self.contentContainer.width - decorationRightOffset - decorationWidth, topMargin, decorationWidth, decorationHeight);
-        [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence"]];
+    
+        if(self.cellModel.isInNeighbourhoodCommentsList){
+            self.decorationImageView.frame = CGRectMake(leftMargin + self.contentContainer.width - decorationRightOffset - decorationWidth, topMargin, decorationWidth, decorationHeight);
+            [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence"]];
+        }else{
+            self.decorationImageView.centerY = self.userInfoView.centerY;
+            self.decorationImageView.right = self.userInfoView.right - 20;
+            self.decorationImageView.width = 44;
+            self.decorationImageView.height = 44;
+            [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence_small"]];
+        }
     }
 }
 
