@@ -536,7 +536,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     // 小区点评
     if(model.data.comments) {
         FHDetailCommentsCellModel *commentsModel = [[FHDetailCommentsCellModel alloc] init];
-        commentsModel.neighborhoodId = self.houseId;
+        commentsModel.neighborhoodId = model.data.neighborhoodInfo.id;
+        commentsModel.houseId = self.houseId;
         commentsModel.topMargin = 12;
         commentsModel.bottomMargin = 12.0f;
         commentsModel.comments = model.data.comments;
@@ -554,7 +555,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (model.data.question) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
-        qaModel.neighborhoodId = self.houseId;
+        qaModel.neighborhoodId = model.data.neighborhoodInfo.id;
         qaModel.topMargin = 0.0f;
         qaModel.question = model.data.question;
         qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
