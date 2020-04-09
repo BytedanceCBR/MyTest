@@ -48,7 +48,7 @@
     
     //总数
     if(self.totalCount > 2 || self.dataList.count <= 0){
-        self.footerViewHeight = _bottomMargin + 55;
+        self.footerViewHeight = _bottomMargin + 45;
     }else{
         self.footerViewHeight = 10;
     }

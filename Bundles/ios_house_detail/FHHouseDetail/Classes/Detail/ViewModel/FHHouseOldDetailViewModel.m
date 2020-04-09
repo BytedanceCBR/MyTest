@@ -539,7 +539,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         commentsModel.neighborhoodId = model.data.neighborhoodInfo.id;
         commentsModel.houseId = self.houseId;
         commentsModel.topMargin = 12;
-        commentsModel.bottomMargin = 12.0f;
+        commentsModel.bottomMargin = 22.0f;
         commentsModel.comments = model.data.comments;
         commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
