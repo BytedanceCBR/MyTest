@@ -95,15 +95,6 @@
          self.cellBackView.layer.mask = [self maskLayer:UIRectCornerBottomLeft | UIRectCornerBottomRight];
     } else {
         self.cellBackView.layer.mask = nil;
-//        self.topLine = [[UIView alloc] init];
-//        [self.contentView addSubview:_topLine];
-//        self.topLine.backgroundColor = [UIColor themeGray7];
-//        [self.topLine mas_makeConstraints:^(MASConstraintMaker *make){
-//            make.left.mas_equalTo(34);
-//            make.right.mas_equalTo(-34);
-//            make.top.mas_equalTo(0);
-//            make.height.mas_equalTo(1);
-//        }];
     }
 }
 

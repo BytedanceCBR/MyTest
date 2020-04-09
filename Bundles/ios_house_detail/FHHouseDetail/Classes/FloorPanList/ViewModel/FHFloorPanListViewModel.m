@@ -101,7 +101,6 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     if ([_floorListTable numberOfSections] && [_floorListTable numberOfRowsInSection:0]) {
         [_floorListTable scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
-    _floorListTable.contentInset = UIEdgeInsetsMake(20,0,0,0);
     _floorListTable.contentOffset = CGPointMake(0, -20);
     
 }
