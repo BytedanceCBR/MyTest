@@ -135,7 +135,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
 
-    [FHHouseDetailAPI requestRentDetail:self.houseId completion:^(FHRentDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestRentDetail:self.houseId extraInfo:self.extraInfo completion:^(FHRentDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];

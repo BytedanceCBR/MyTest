@@ -53,6 +53,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 @property (nonatomic, strong)   NSObject       *detailData; // 详情页数据：FHDetailOldDataModel等
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property(nonatomic , weak) FHDetailQuestionButton *questionBtn;
+@property (nonatomic, strong) NSDictionary *extraInfo;
 
 // 子类实现
 - (void)registerCellClasses;
