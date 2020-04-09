@@ -576,7 +576,7 @@
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(3);
         layout.marginLeft = YGPointValue(5);
-        layout.maxWidth = YGPointValue([UIScreen mainScreen].bounds.size.width - MAIN_IMG_WIDTH - 73);
+        layout.maxWidth = YGPointValue([UIScreen mainScreen].bounds.size.width - MAIN_IMG_WIDTH - 80);
         layout.marginRight = YGPointValue(3);
         layout.height = YGPointValue(13);
     }];
