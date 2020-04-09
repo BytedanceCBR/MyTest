@@ -483,7 +483,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         //ugc 圈子入口,写在这儿是因为如果小区模块移除，那么圈子入口也不展示
-        BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
+//        BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
         FHDetailNeighborhoodInfoCorrectingModel *infoModel = [[FHDetailNeighborhoodInfoCorrectingModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
         if(hasOtherNeighborhoodInfo){
@@ -494,14 +494,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         infoModel.tableView = self.tableView;
         infoModel.contactViewModel = self.contactViewModel;
         [self.items addObject:infoModel];
-        if(showUgcEntry){
-            model.data.ugcSocialGroup.houseType = FHHouseTypeSecondHandHouse;
-            model.data.ugcSocialGroup.houseModelType = FHHouseModelTypeLocationPeriphery;
-            [self.items addObject:model.data.ugcSocialGroup];
-        } else{
+        //这个功能不要了 by xsm
+//        if(showUgcEntry){
+//            model.data.ugcSocialGroup.houseType = FHHouseTypeSecondHandHouse;
+//            if(hasOtherNeighborhoodInfo){
+//                model.data.ugcSocialGroup.houseModelType = FHHouseModelTypeNeighborhoodInfo;
+//            }else{
+//                model.data.ugcSocialGroup.houseModelType = FHHouseModelTypeLocationPeriphery;
+//            }
+//            [self.items addObject:model.data.ugcSocialGroup];
+//        } else{
             //            FHDetailBlankLineModel *whiteLine = [[FHDetailBlankLineModel alloc] init];
             //            [self.items addObject:whiteLine];
-        }
+//        }
         
     }
     

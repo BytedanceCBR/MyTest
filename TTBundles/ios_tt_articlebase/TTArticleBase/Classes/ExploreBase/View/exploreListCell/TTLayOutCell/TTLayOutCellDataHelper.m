@@ -595,6 +595,16 @@
     return typeString;
 }
 
++ (NSDictionary *)getCustomSourceImageDataWithOrderedData:(ExploreOrderedData *)data
+{
+    NSDictionary *customSourceImageData = nil;
+    if ([data.originalData isKindOfClass:[Article class]]) {
+        Article *art = data.originalData;
+        customSourceImageData = [[data article] happyKnocking];
+    }
+    return customSourceImageData;
+}
+
 + (NSString *)getAbstractStringWithOrderedData:(ExploreOrderedData *)data
 {
     NSString *abstractString = nil;

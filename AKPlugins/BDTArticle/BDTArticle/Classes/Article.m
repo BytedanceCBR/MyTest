@@ -834,6 +834,10 @@
             self.recommendDict = [dataDict dictionaryValueForKey:@"ugc_recommend" defalutValue:nil];
         }
         
+        if ([dataDict objectForKey:@"happy_knocking"]) {
+            self.happyKnocking = [dataDict dictionaryValueForKey:@"happy_knocking" defalutValue:nil];
+        }
+        
         if ([dataDict objectForKey:@"title_image"]) {
             NSDictionary *dict = [dataDict dictionaryValueForKey:@"title_image" defalutValue:nil];
             if (dict != nil) {
