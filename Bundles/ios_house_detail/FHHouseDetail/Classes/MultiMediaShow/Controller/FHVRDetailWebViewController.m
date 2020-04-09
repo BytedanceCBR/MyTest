@@ -44,7 +44,7 @@
         __weak __typeof(self) weakSelf = self;
         [_webContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
             weakSelf.isNeedRemoveMask = YES;
-           [weakSelf.ssWebView.ssWebContainer tt_endUpdataData];
+           [weakSelf.webContainer tt_endUpdataData];
            [weakSelf.maskLoadingView removeFromSuperview];
             weakSelf.ttDisableDragBack = YES;
         } forMethodName:@"closeLoading"];
@@ -94,15 +94,15 @@
     }
 
     
-    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"show" data:nil];
-    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"preload_open" data:nil];
+    [_webContainer.ssWebView ttr_fireEvent:@"show" data:nil];
+    [_webContainer.ssWebView ttr_fireEvent:@"preload_open" data:nil];
 
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"hide" data:nil];
+    [_webContainer.ssWebView ttr_fireEvent:@"hide" data:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated

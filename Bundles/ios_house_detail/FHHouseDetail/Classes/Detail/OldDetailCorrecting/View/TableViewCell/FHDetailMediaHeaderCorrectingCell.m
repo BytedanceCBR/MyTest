@@ -92,7 +92,10 @@
         self.weakDetailVC = ((FHDetailMediaHeaderCorrectingModel *)data).weakVC;
     }
     
-    [self performSelector:@selector(createVRPreloadWebview) withObject:nil afterDelay:1];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self  createVRPreloadWebview];
+    });
+//    [self performSelector:@selector(createVRPreloadWebview) withObject:nil afterDelay:1];
 }
 
 - (void)createVRPreloadWebview{
