@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorPanListCell : FHDetailBaseCell
 
-- (void)refreshWithData:(id)data isFirst:(bool)isFirst isLast:(BOOL)isLast;
+- (void)refreshWithData:(bool)isFirst andLast:(BOOL)isLast;
 
 @end
 

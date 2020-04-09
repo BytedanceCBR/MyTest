@@ -12,20 +12,15 @@
 #import "FHHouseDetailSubPageViewController.h"
 #import <FHDetailNewModel.h>
 
-static const NSString *kDefaultLeftFilterStatus = @"0";
 static const NSString *kDefaultTopFilterStatus = @"-1";
 
 @interface FHFloorPanListViewModel()
 @property (nonatomic , weak) UITableView *floorListTable;
-@property (nonatomic , weak) UIScrollView *leftFilterView;
-@property (nonatomic , strong) UILabel *currentTapLabel;
 @property (nonatomic , weak) FHHouseDetailSubPageViewController *floorListVC;
 @property (nonatomic , strong) NSMutableArray <FHDetailNewDataFloorpanListListModel *> *allItems;
 @property (nonatomic , strong) NSMutableArray <FHDetailNewDataFloorpanListListModel *> *currentItems;
-@property (nonatomic , assign) NSInteger leftFilterIndex;
 @property (nonatomic , strong) NSMutableArray *topRoomCountArray;
 @property (nonatomic , weak) HMSegmentedControl *segmentedControl;
-@property (nonatomic , strong) NSArray * nameLeftArray;
 @property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
 @property (nonatomic, strong)   NSString  *currentCourtId;
 
@@ -37,7 +32,6 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 -(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems andCourtId:(NSString *)courtId {
     self = [super init];
     if (self) {
-        //_nameLeftArray = @[@"不限",@"在售",@"待售",@"售罄"];
         _floorListTable = tableView;
         _elementShowCaches = [NSMutableDictionary new];
         _allItems = allItems;
@@ -57,83 +51,6 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     _floorListTable.delegate = self;
     _floorListTable.dataSource = self;
     [self registerCellClasses];
-}
-
-- (void)setUpLeftFilterView
-{
-    NSMutableArray *labelsArray = [NSMutableArray new];
-    
-    UIView * previousView = nil;
-    
-    for (NSInteger i = 0; i < self.nameLeftArray.count; i++) {
-        UIView *labelContentView = [[UIView alloc] init];
-        [self.leftFilterView addSubview:labelContentView];
-        
-        if (self.leftFilterView && [self.leftFilterView.subviews containsObject:labelContentView] && labelContentView.superview) {
-            [labelContentView mas_makeConstraints:^(MASConstraintMaker *make) {
-                if (i==0) {
-                    make.top.equalTo(self.leftFilterView);
-                }else
-                {
-                    if (previousView) {
-                        make.top.equalTo(previousView.mas_bottom);
-                    }
-                }
-                
-                make.left.right.equalTo(self.leftFilterView);
-                make.height.mas_equalTo(50);
-            }];
-        }
-        
-        previousView = labelContentView;
-        
-        UILabel *labelClick = [UILabel new];
-        labelClick.text = self.nameLeftArray[i];
-        if (i == 0) {
-            _currentTapLabel = labelClick;
-            labelClick.textColor = [UIColor themeOrange1];
-            labelClick.backgroundColor = [UIColor whiteColor];
-            _leftFilterIndex = 0;
-        }else
-        {
-            labelClick.textColor = [UIColor themeGray1];
-            labelClick.backgroundColor = [UIColor themeGray7];
-        }
-        labelClick.font = [UIFont themeFontRegular:15];
-        labelClick.tag = i;
-        [labelContentView addSubview:labelClick];
-        labelClick.textAlignment = NSTextAlignmentCenter;
-        labelClick.userInteractionEnabled = YES;
-        [labelClick mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.bottom.equalTo(labelContentView);
-            make.height.mas_equalTo(50);
-            make.width.mas_equalTo(80);
-        }];
-        
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(labelClickAction:)];
-        [labelClick addGestureRecognizer:tapGesture];
-        
-        [labelsArray addObject:labelContentView];
-    }
-}
-
-- (void)labelClickAction:(UITapGestureRecognizer *)tap
-{
-    UIView *tapView = tap.view;
-    _leftFilterIndex = tapView.tag;
-
-    if (_currentTapLabel) {
-        _currentTapLabel.textColor = [UIColor themeGray1];
-        _currentTapLabel.backgroundColor = [UIColor themeGray7];
-    }
-    
-    if ([tapView isKindOfClass:[UILabel class]]) {
-          ((UILabel *)tapView).textColor = [UIColor themeOrange1];
-          ((UILabel *)tapView).backgroundColor = [UIColor whiteColor];
-          _currentTapLabel = tapView;
-    }
-    
-    [self refreshCurrentShowList];
 }
 
 - (NSArray *)getSegementViewTitlsArray
@@ -194,47 +111,14 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         roomCuntKey = _topRoomCountArray[_segmentedControl.selectedSegmentIndex - 1];
     }
     
-    NSString *status = kDefaultLeftFilterStatus;
-    if (self.currentTapLabel.tag != 0) {
-       
-        if (self.currentTapLabel.tag == 1) {
-            //在售
-//            status = [NSString stringWithFormat:@"%d",2];
-            status = @"在售";
-        }else if(self.currentTapLabel.tag == 2)
-        {
-            //待售
-//            status = [NSString stringWithFormat:@"%d",1];
-            status = @"待售";
-        }else
-        {
-            //售磬
-//            status = [NSString stringWithFormat:@"%d",self.currentTapLabel.tag];
-            status = @"售罄";
-        }
-    }
-    
     NSMutableArray *currentItemsArray = [NSMutableArray new];
     for(FHDetailNewDataFloorpanListListModel *model in _allItems)
     {
-        if([status isEqualToString:kDefaultLeftFilterStatus] && [roomCuntKey isEqualToString:kDefaultTopFilterStatus])
-        {
+        if([roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
             [currentItemsArray addObject:model];
         }
-        else if([status isEqualToString:kDefaultLeftFilterStatus])
-        {
-            if ([model.roomCount isEqualToString:roomCuntKey]) {
+        else if ([model.roomCount isEqualToString:roomCuntKey]) {
                 [currentItemsArray addObject:model];
-            }
-        }else if ([roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
-            if ([model.saleStatus.content isEqualToString:status]) {
-                [currentItemsArray addObject:model];
-            }
-        }else
-        {
-            if ([model.roomCount isEqualToString:roomCuntKey] && [model.saleStatus.content isEqualToString:status]) {
-                [currentItemsArray addObject:model];
-            }
         }
     }
     return currentItemsArray;
@@ -334,7 +218,8 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         if (indexPath.row == 0) {
             ((FHDetailNewDataFloorpanListListModel *)self.currentItems[indexPath.row]).index = indexPath.row;
         }
-        [cell refreshWithData:_currentItems[indexPath.row] isFirst:isFirst isLast:isLast];
+        [cell refreshWithData:_currentItems[indexPath.row]];
+        [cell refreshWithData:isFirst andLast:isLast];
         cell.baseViewModel = self;
     }
     cell.backgroundColor = [UIColor themeGray7];
@@ -343,7 +228,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return CGFLOAT_MIN;
+    return 20;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -351,6 +236,13 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     return CGFLOAT_MIN;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view = [[UIView alloc] init];
+    view.backgroundColor = [UIColor themeGray7];
+    return view;
+}
+ 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

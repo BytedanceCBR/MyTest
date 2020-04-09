@@ -14,8 +14,6 @@
 @interface FHFloorPanListViewController ()
 @property (nonatomic , strong) HMSegmentedControl *segmentedControl;
 @property (nonatomic , strong) UIView *segementBottomLine;
-@property (nonatomic , strong) UIScrollView *leftFilterView;
-@property (nonatomic , strong) UIView *leftView;
 @property (nonatomic , strong) UITableView *floorListTable;
 @property (nonatomic , strong) FHFloorPanListViewModel *panListModel;
 @property (nonatomic , strong) NSMutableArray<FHDetailNewDataFloorpanListListModel *> *floorList;
@@ -44,9 +42,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    
     [self setUpSegmentedControl];
-    
     
     [self setUpFloorListTable];
     
@@ -109,29 +105,6 @@
         make.left.right.equalTo(_segmentedControl);
         make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
         make.height.mas_equalTo(0.5);
-    }];
-    
-}
-
-- (void)setUpLeftView
-{
-    _leftView = [UIView new];
-    _leftView.backgroundColor = [UIColor themeGray7];
-    [self.view addSubview:_leftView];
-    
-    [_leftView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(80);
-        make.left.equalTo(self.view);
-        make.top.equalTo(self.segmentedControl.mas_bottom);
-        make.bottom.equalTo([self getBottomBar].mas_top);
-    }];
-    
-    _leftFilterView = [UIScrollView new];
-    _leftFilterView.backgroundColor = [UIColor themeGray7];
-    [_leftView addSubview:_leftFilterView];
-    
-    [_leftFilterView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.leftView);
     }];
 }
 

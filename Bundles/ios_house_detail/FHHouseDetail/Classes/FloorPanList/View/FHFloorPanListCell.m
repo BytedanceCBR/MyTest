@@ -17,9 +17,9 @@
 @property (nonatomic , strong) UIButton *mapMaskBtn;
 @property (nonatomic , strong) UIView *statusBGView;
 @property (nonatomic , strong) UILabel *statusLabel;
-@property (nonatomic , strong) UIView *containerView;
 @property (nonatomic , strong) UIView *topLine;
 @property (nonatomic , strong) UIView *emptyView;
+@property (nonatomic , strong) UIView *cellBackView;
 @end
 
 @implementation FHFloorPanListCell
@@ -29,93 +29,122 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
-       
-        _emptyView = [[UIView alloc] init];
-        [self.contentView addSubview:_emptyView];
-        _emptyView.backgroundColor = [UIColor themeGray7];
         
-        _containerView = [[UIView alloc] init];
-        [self.contentView addSubview:_containerView];
-        _containerView.backgroundColor = [UIColor whiteColor];
+        [self.contentView addSubview:self.cellBackView];
         
         _iconView = [UIImageView new];
         _iconView.image = [UIImage imageNamed:@"default_image"];
-        _iconView.layer.borderColor = [UIColor themeGray6].CGColor;
-        _iconView.layer.borderWidth = 0.5;
-        _iconView.layer.cornerRadius = 4;
+        _iconView.layer.borderColor = RGB(0xed, 0xed, 0xed).CGColor;
+        _iconView.layer.borderWidth = 1;
+        _iconView.layer.cornerRadius = 8;
         _iconView.layer.masksToBounds = YES;
-        [self.containerView addSubview:_iconView];
+        [self.contentView addSubview:_iconView];
         
         _nameLabel = [UILabel new];
         _nameLabel.font = [UIFont themeFontMedium:16];
-        _nameLabel.textColor = [UIColor themeGray1];
+        _nameLabel.textColor = RGB(0x4a, 0x4a, 0x4a);
         _nameLabel.textAlignment = NSTextAlignmentLeft;
-        [self.containerView addSubview:_nameLabel];
+        [self.contentView addSubview:_nameLabel];
 
         _roomSpaceLabel = [UILabel new];
         _roomSpaceLabel.font = [UIFont themeFontRegular:12];
         _roomSpaceLabel.textColor = [UIColor themeGray3];
         _roomSpaceLabel.textAlignment = NSTextAlignmentLeft;
-        [self.containerView addSubview:_roomSpaceLabel];
+        [self.contentView addSubview:_roomSpaceLabel];
 
         _priceLabel = [UILabel new];
-        _priceLabel.font = [UIFont themeFontMedium:14];
+        _priceLabel.font = [UIFont themeFontSemibold:16];
         _priceLabel.textColor = [UIColor themeOrange1];
-        _priceLabel.textAlignment = NSTextAlignmentLeft;
-        [self.containerView addSubview:_priceLabel];
+        _priceLabel.textAlignment = NSTextAlignmentRight;
+        [self.contentView addSubview:_priceLabel];
+        
+        [self initConstaints];
 
     }
     return self;
 }
 
-- (void)refreshWithData:(id)data isFirst:(bool)isFirst isLast:(BOOL)isLast
+- (UIView *)cellBackView
 {
-    if (isFirst) {
-        [_emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.mas_equalTo(0);
-            make.height.mas_equalTo(20);
+    if (!_cellBackView) {
+        UIView *cellBackView = [[UIView alloc] init];
+        cellBackView.backgroundColor = [UIColor whiteColor];
+         cellBackView.hidden = YES;
+        _cellBackView = cellBackView;
+    }
+    return _cellBackView;
+}
+
+- (void)refreshWithData:(bool)isFirst andLast:(BOOL)isLast
+{
+    
+    self.cellBackView.hidden = NO;
+    if (isFirst && isLast) {
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106) byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(10, 10)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106);
+        maskLayer.path = maskPath.CGPath;
+        self.cellBackView.layer.mask = maskLayer;
+    }
+    else if (isFirst) {
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106) byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106);
+        maskLayer.path = maskPath.CGPath;
+        self.cellBackView.layer.mask = maskLayer;
+    } else if (isLast) {
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width-30, 106) byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(10, 10)];
+         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+         maskLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 106);
+         maskLayer.path = maskPath.CGPath;
+         self.cellBackView.layer.mask = maskLayer;
+    } else {
+        self.cellBackView.layer.mask = nil;
+        self.topLine = [[UIView alloc] init];
+        [self.contentView addSubview:_topLine];
+        self.topLine.backgroundColor = [UIColor themeGray7];
+        [self.topLine mas_makeConstraints:^(MASConstraintMaker *make){
+            make.left.mas_equalTo(34);
+            make.right.mas_equalTo(-34);
+            make.top.mas_equalTo(0);
+            make.height.mas_equalTo(1);
         }];
     }
-    
-    [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
-        make.top.mas_equalTo(self.emptyView.mas_bottom);
-        make.height.mas_equalTo(106);
-    }];
-    [self initConstaints];
-    [self refreshWithData:data];
 }
 
 -(void)initConstaints
 {
+    [self.cellBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.top.bottom.mas_equalTo(0);
+    }];
+    
     [_iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(22);
-        make.top.mas_equalTo(23);
-        make.width.mas_equalTo(53);
-        make.height.mas_equalTo(61);
+        make.left.mas_equalTo(31);
+        make.top.mas_equalTo(20);
+        make.bottom.mas_equalTo(-20);
+        make.width.mas_equalTo(66);
+        make.height.mas_equalTo(66);
     }];
     
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(95);
+        make.left.mas_equalTo(_iconView.mas_right).offset(13);
         make.top.mas_equalTo(32);
-        make.right.mas_equalTo(22);
-        make.width.mas_equalTo(100);
-        make.height.mas_equalTo(22);
+        make.height.mas_equalTo(19);
     }];
     
     [_roomSpaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.iconView.mas_right).offset(12);
-        make.top.equalTo(self.nameLabel.mas_bottom);
+        make.left.equalTo(_nameLabel.mas_left);
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(8);
         make.right.mas_equalTo(-15);
-        make.height.mas_equalTo(16);
+        make.height.mas_equalTo(14);
     }];
 
     [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.iconView.mas_right).offset(12);
-        make.top.equalTo(self.roomSpaceLabel.mas_bottom).offset(12);
-        make.bottom.mas_equalTo(-10);
-        make.height.mas_equalTo(20);
+        make.right.mas_equalTo(-31);
+        make.top.mas_equalTo(32);
+        make.height.mas_equalTo(19);
     }];
     
     
@@ -127,7 +156,16 @@
         FHDetailNewDataFloorpanListListModel *model = (FHDetailNewDataFloorpanListListModel*)data;
         self.nameLabel.text = model.title;
         if ([model.squaremeter isKindOfClass:[NSString class]]) {
-            self.roomSpaceLabel.text = [NSString stringWithFormat:@"建面 %@",model.squaremeter];
+            if (model.squaremeter.length > 0) {
+                NSString *roomSpace = [NSString stringWithFormat:@"建面 %@",model.squaremeter];
+                if (model.facingDirection.length > 0) {
+                    self.roomSpaceLabel.text = [NSString stringWithFormat:@"%@ | %@", roomSpace, model.facingDirection];
+                } else {
+                    self.roomSpaceLabel.text = roomSpace;
+                }
+            } else {
+                self.roomSpaceLabel.text = @"";
+            }
         }else
         {
             self.roomSpaceLabel.text = @"";
@@ -147,24 +185,6 @@
                 }
             }
         }
-        
-        if (model.index == 0) {
-            [_iconView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(20);
-                make.bottom.equalTo(self.contentView).offset(-10);
-                make.top.equalTo(self.contentView).offset(20);
-                make.width.mas_equalTo(100);
-                make.height.mas_equalTo(75);
-            }];
-            
-            [_nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(self.iconView.mas_right).offset(12);
-                make.top.mas_equalTo(20);
-                make.right.mas_equalTo(22);
-                make.width.mas_equalTo(100);
-                make.height.mas_equalTo(22);
-            }];
-       }
     }
 }
 
