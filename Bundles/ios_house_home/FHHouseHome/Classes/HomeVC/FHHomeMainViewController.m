@@ -144,7 +144,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
     self.switchCityView.backgroundColor = [UIColor clearColor];
-    if (self.containerView) {
+    if (self.containerView && ![self.containerView.subviews containsObject:self.switchCityView]) {
         [self.containerView addSubview:self.switchCityView];
            
         self.totalNum = 60;

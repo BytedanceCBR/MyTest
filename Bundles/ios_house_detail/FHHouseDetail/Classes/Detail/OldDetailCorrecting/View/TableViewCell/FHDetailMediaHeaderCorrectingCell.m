@@ -20,6 +20,7 @@
 #import "FHCommonDefines.h"
 #import "FHDetailNewModel.h"
 #import <FHVRDetailWebViewController.h>
+#import "FHVRCacheManager.h"
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -28,6 +29,7 @@
 @property(nonatomic, strong) NSMutableArray *imageList;
 @property(nonatomic, strong) NSMutableDictionary *pictureShowDict;
 @property(nonatomic, assign) BOOL isLarge;
+@property(nonatomic, assign) BOOL isHasClickVR;
 @property(nonatomic, assign) NSInteger currentIndex;
 @property(nonatomic, assign) NSTimeInterval enterTimestamp;
 @property (nonatomic, assign)   NSInteger       vedioCount;
@@ -55,6 +57,7 @@
     if(self.vedioCount > 0){
         [self.mediaView.videoVC close];
     }
+    [[FHVRCacheManager sharedInstance] removeVRPreloadCache:self.hash];
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
@@ -106,13 +109,14 @@
 
     FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vrModel;
     //VR
-    if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr){
+    if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr && [FHVRCacheManager sharedInstance].currentVRPreloadCount == 0 && !self.isHasClickVR){
         NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@&type=preload",vrModel.openUrl,reportParams];
         NSString *resultOpenURl = [NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[openUrl URLEncodedString]];
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:nil];
         TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:[NSURL URLWithString:resultOpenURl] userInfo:userInfo];
         self.preloadRouteObj = routeObj;
+        [[FHVRCacheManager sharedInstance] addVRPreloadCache:self.hash];
     }
     
     
@@ -299,7 +303,7 @@
                 param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;
                 NSString *reportParams = [FHUtils getJsonStrFrom:param];
                 NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@",vrModel.openUrl,reportParams];
-    
+                self.isHasClickVR = YES;
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[openUrl URLEncodedString]]]];
             }
         }
@@ -711,6 +715,7 @@
         [self.mediaView.videoVC pause];
     }
 }
+
 
 @end
 
