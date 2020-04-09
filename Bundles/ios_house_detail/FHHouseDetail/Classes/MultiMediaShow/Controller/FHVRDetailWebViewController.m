@@ -14,6 +14,7 @@
 @property(nonatomic,strong)BDImageView *maskLoadingView;
 @property(nonatomic, retain)SSWebViewContainer * webContainer;
 @property(nonatomic, strong)NSURL * requestURL;
+@property(nonatomic, assign)BOOL isNeedRemoveMask;
 
 @end
 
@@ -37,6 +38,15 @@
         _webContainer.disableConnectCheck = YES;
         _webContainer.disableEndRefresh = NO;
                 
+        
+        __weak __typeof(self) weakSelf = self;
+        [_webContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
+            weakSelf.isNeedRemoveMask = YES;
+           [weakSelf.ssWebView.ssWebContainer tt_endUpdataData];
+           [weakSelf.maskLoadingView removeFromSuperview];
+        } forMethodName:@"closeLoading"];
+        
+        
         NSString * urlStr = nil;
         if ([params.allKeys containsObject:@"url"]) {
             urlStr = [params objectForKey:@"url"];
@@ -52,24 +62,10 @@
     
     [self.view addSubview:_webContainer];
 
-    __weak __typeof(self) weakSelf = self;
-    [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
-        [weakSelf.ssWebView.ssWebContainer tt_endUpdataData];
-        [weakSelf.maskLoadingView removeFromSuperview];
-    } forMethodName:@"closeLoading"];
+
     // Do any additional setup after loading the view.
     
-    
-//    if (!_maskLoadingView) {
-//        UIImage *imageData = [UIImage imageNamed:@"fh_vr_loading"];
-//        _maskLoadingView = [BDImageView new];
-//        [_maskLoadingView setImage:imageData];
-//        [_maskLoadingView setFrame:self.view.frame];
-//        _maskLoadingView.contentMode = UIViewContentModeScaleAspectFill;
-//        [_maskLoadingView setBackgroundColor:[UIColor redColor]];
-//        [self.view addSubview:_maskLoadingView];
-//        [self.view bringSubviewToFront:_maskLoadingView];
-//    }
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -77,7 +73,35 @@
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [self.navigationController setNavigationBarHidden:YES];
+    
+    
+    if (self.isNeedRemoveMask) {
+        [_webContainer tt_endUpdataData];
+        [self.maskLoadingView removeFromSuperview];
+    }else
+    {
+        if (!_maskLoadingView) {
+            UIImage *imageData = [UIImage imageNamed:@"fh_vr_loading"];
+            _maskLoadingView = [BDImageView new];
+            [_maskLoadingView setImage:imageData];
+            [_maskLoadingView setFrame:self.view.frame];
+            _maskLoadingView.contentMode = UIViewContentModeScaleAspectFill;
+            [_maskLoadingView setBackgroundColor:[UIColor redColor]];
+            [self.view addSubview:_maskLoadingView];
+            [self.view bringSubviewToFront:_maskLoadingView];
+        }
+    }
 
+    
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"show" data:nil];
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"preload_open" data:nil];
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"hide" data:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
