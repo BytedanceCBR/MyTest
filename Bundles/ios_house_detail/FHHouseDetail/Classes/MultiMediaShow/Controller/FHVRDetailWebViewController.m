@@ -95,7 +95,6 @@
 
     
     [_webContainer.ssWebView ttr_fireEvent:@"show" data:nil];
-    [_webContainer.ssWebView ttr_fireEvent:@"preload_open" data:nil];
 
 }
 
@@ -109,6 +108,7 @@
 {
     [super viewDidAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [_webContainer.ssWebView ttr_fireEvent:@"preload_open" data:nil];
 }
 
 
