@@ -8,7 +8,7 @@
 
 #import "FRPostAssetViewColumn.h"
 #import <TTThemed/SSThemed.h>
-#import <TTImagePicker/TTImagePickerManager.h>
+#import <TTImagePickerBase/TTImagePickerManager.h>
 #import <TTImagePicker/TTImagePickerLoadingView.h>
 #import <TTBaseLib/UIViewAdditions.h>
 
@@ -146,8 +146,11 @@
         });
     }
     
-    [[TTImagePickerManager manager] getPhotoWithAsset:asset.asset photoWidth:self.width completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
-        if (!photo) {
+    TTImagePickerImageConfigItem *configItem = [TTImagePickerImageConfigItem getDefaultSettings];
+    configItem.photoWidth = self.width;
+    configItem.enableICloud = YES;
+    [[TTImagePickerManager manager] getPhotoWithAsset:asset.asset configItem:configItem progressHandler:nil completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+                if (!photo) {
             return;
         }
         //太恶心了，这个黑色闪烁问题卡了一天...
@@ -156,10 +159,7 @@
         if (finalImg) {
             self.assetImageView.image = finalImg;
         }
-    } progressHandler:nil isIcloudEabled:YES isSingleTask:NO];
-    
-
-    
+    }];
 }
 
 - (void)setTask:(TTUGCImageCompressTask *)task {
