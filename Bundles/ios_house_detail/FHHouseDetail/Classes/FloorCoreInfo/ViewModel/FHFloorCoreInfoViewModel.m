@@ -151,6 +151,7 @@
 }
 
 - (void)processDetailData:(FHDetailNewCoreDetailModel *)model {
+    self.detailData = model;
     NSMutableArray *itemsArray = [NSMutableArray new];
     
     // 添加标题

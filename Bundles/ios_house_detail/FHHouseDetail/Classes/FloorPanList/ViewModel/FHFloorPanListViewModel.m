@@ -301,6 +301,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 }
 
 - (void)processDetailData:(FHDetailFloorPanListResponseModel *)model {
+    self.detailData = model;
     self.allItems = model.data.list;
     self.currentItems = model.data.list;
 

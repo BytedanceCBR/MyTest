@@ -152,11 +152,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         associateIMModel.reportParams = reportParams;
         
         // IM跳转链接
-        NSString *imOpenUrl = contactPhone.imOpenUrl;
-        if (extra[IM_OPEN_URL]) {
-            imOpenUrl = extra[IM_OPEN_URL];
-        }
-        associateIMModel.imOpenUrl = imOpenUrl;
+        associateIMModel.imOpenUrl = extra[IM_OPEN_URL]?:contactPhone.imOpenUrl;
         
         // 配置静默关注回调
         WeakSelf;

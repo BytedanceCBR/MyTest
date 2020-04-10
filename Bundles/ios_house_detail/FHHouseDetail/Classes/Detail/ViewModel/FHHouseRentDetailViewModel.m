@@ -229,8 +229,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)processDetailData:(FHRentDetailResponseModel *)model {
 
     //当前IM全是非B端注册经纪人
-    model.data.contact.unregistered = YES;
-    FHDetailContactModel *contactPhone = model.data.contact;
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    }else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
     if (contactPhone.phone.length > 0) {
         
         if ([self isShowSubscribe]) {

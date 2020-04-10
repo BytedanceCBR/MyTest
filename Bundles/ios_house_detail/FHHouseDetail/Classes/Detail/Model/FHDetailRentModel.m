@@ -177,6 +177,7 @@
                            @"houseOverview": @"house_overreview",
                            @"coreInfo": @"core_info",
                            @"reportUrl": @"report_url",
+                           @"highlightedRealtor": @"highlighted_realtor",
                            @"shareInfo": @"share_info",
                            @"userStatus": @"user_status",
                            @"camplaintUrl": @"camplaint_url",

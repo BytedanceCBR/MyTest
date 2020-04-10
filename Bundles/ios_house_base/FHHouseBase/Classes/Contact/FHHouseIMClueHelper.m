@@ -155,28 +155,29 @@
 + (void)addClickIMLog:(FHAssociateIMModel *)associateIM
 {
     NSMutableDictionary *dict = @{}.mutableCopy;
-    FHAssociateReportParams *configModel = associateIM.reportParams;
+    FHAssociateReportParams *reportParams = associateIM.reportParams;
     
-    dict[@"enter_from"] = configModel.enterFrom ? : @"be_null";
-    dict[@"element_from"] = configModel.elementFrom ? : @"be_null";
-    dict[@"origin_from"] = configModel.originFrom ? : @"be_null";
-    dict[@"log_pb"] = configModel.logPb ? : @"be_null";
-    dict[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
-    dict[@"rank"] = configModel.rank ? : @"be_null";
-    dict[@"card_type"] = configModel.cardType ? : @"be_null";
-    dict[@"page_type"] = configModel.pageType ?: @"be_null";
+    dict[@"enter_from"] = reportParams.enterFrom ? : @"be_null";
+    dict[@"element_from"] = reportParams.elementFrom ? : @"be_null";
+    dict[@"origin_from"] = reportParams.originFrom ? : @"be_null";
+    dict[@"log_pb"] = reportParams.logPb ? : @"be_null";
+    dict[@"origin_search_id"] = reportParams.originSearchId ? : @"be_null";
+    dict[@"rank"] = reportParams.rank ? : @"be_null";
+    dict[@"card_type"] = reportParams.cardType ? : @"be_null";
+    dict[@"page_type"] = reportParams.pageType ?: @"be_null";
     dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
-    dict[@"realtor_id"] = configModel.realtorId ? : @"be_null";;
-    dict[@"realtor_rank"] = configModel.realtorRank ?: @"0";
-    dict[@"conversation_id"] = configModel.conversationId ? : @"be_null";
-    dict[@"realtor_position"] = configModel.realtorPosition ? : @"be_null";
+    dict[@"realtor_id"] = reportParams.realtorId ? : @"be_null";;
+    dict[@"realtor_rank"] = reportParams.realtorRank ?: @"0";
+    dict[@"conversation_id"] = reportParams.conversationId ? : @"be_null";
+    dict[@"realtor_position"] = reportParams.realtorPosition ? : @"be_null";
     dict[@"growth_deepevent"] = @(1);
-    dict[@"realtor_logpb"] = configModel.realtorLogpb;
-    dict[@"source_from"] = configModel.sourceFrom;
+    dict[@"realtor_logpb"] = reportParams.realtorLogpb;
+    dict[@"source_from"] = reportParams.sourceFrom;
+    dict[@"associate_info"] = associateIM.associateInfo.toDictionary;
     
     
-    if(configModel.extra) {
-        [dict addEntriesFromDictionary:configModel.extra];
+    if(reportParams.extra) {
+        [dict addEntriesFromDictionary:reportParams.extra];
         dict[@"im_open_url"] = nil;
     }
 

@@ -55,6 +55,10 @@
 #import "FHDetailNewModel.h"
 #import "FHDetailOldModel.h"
 #import "FHDetailNeighborhoodModel.h"
+#import "FHFloorMoreCoreInfoViewController.h"
+#import "FHDetailNewCoreDetailModel.h"
+#import "FHFloorPanListViewController.h"
+#import "FHDetailRentModel.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -884,24 +888,20 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     else if (self.houseType == FHHouseTypeNewHouse) {
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCourt);
-//        extraDic[@"from"] = @"app_court";
-//        if (_fromStr.length > 0) {
-//            extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
-//            extraDic[@"from"] = _fromStr;
-//        }
     }
     else if(self.houseType == FHHouseTypeSecondHandHouse) {
         extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         extraDic[kFHCluePage] = @(FHClueIMPageTypeCOldHouse);
     }
     
-    // 透传associate_info
+    // ------------- 房源详情页 --------------------//
     if([self.belongsVC isKindOfClass:FHHouseDetailViewController.class]) {
         FHHouseDetailViewController *houseDetailVC = (FHHouseDetailViewController *)self.belongsVC;
         NSObject *detailData  = houseDetailVC.viewModel.detailData;
         switch(houseDetailVC.viewModel.houseType) {
             case FHHouseTypeNewHouse:
             {
+                // 新房详情页
                 if([detailData isKindOfClass:FHDetailNewModel.class]) {
                     FHDetailNewModel *detailNewModel = (FHDetailNewModel *)detailData;
                     if(detailNewModel.data.highlightedRealtor.associateInfo) {
@@ -912,6 +912,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 break;
             case FHHouseTypeSecondHandHouse:
             {
+                // 二手房详情页
                 if([detailData isKindOfClass:FHDetailOldModel.class]) {
                     FHDetailOldModel *detailOldModel = (FHDetailOldModel *)detailData;
                     if(detailOldModel.data.highlightedRealtor.associateInfo) {
@@ -920,8 +921,20 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 }
             }
                 break;
+            case FHHouseTypeRentHouse:
+            {
+                // 租房详情页
+                if([detailData isKindOfClass:FHRentDetailResponseModel.class]) {
+                    FHRentDetailResponseModel *detailRentalModel = (FHRentDetailResponseModel *)detailData;
+                    if(detailRentalModel.data.highlightedRealtor.associateInfo) {
+                        extraDic[kFHAssociateInfo] = detailRentalModel.data.highlightedRealtor.associateInfo;
+                    }
+                }
+            }
+                break;
             case FHHouseTypeNeighborhood:
             {
+                // 小区详情页
                 if([detailData isKindOfClass:FHDetailNeighborhoodModel.class]) {
                     FHDetailNeighborhoodModel *detailNeighborhoodModel = (FHDetailNeighborhoodModel *)detailData;
                     if(detailNeighborhoodModel.data.highlightedRealtor.associateInfo) {
@@ -934,6 +947,28 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 break;
         }
     }
+    
+    // ------------- 房源详情页子页面 ---------------//
+    
+    if([self.belongsVC isKindOfClass:FHHouseDetailSubPageViewController.class]) {
+        FHHouseDetailSubPageViewController *detailSubPageVC = (FHHouseDetailSubPageViewController *)self.belongsVC;
+        NSObject *detailSubData = detailSubPageVC.viewModel.detailData;
+        //新房详情页楼盘信息子页面
+        if([detailSubData isKindOfClass:FHDetailNewCoreDetailModel.class]) {
+            FHDetailNewCoreDetailModel *detailNewCoreDetailModel = (FHDetailNewCoreDetailModel *)detailSubData;
+            if(detailNewCoreDetailModel.data.highlightedRealtor.associateInfo) {
+                extraDic[kFHAssociateInfo] = detailNewCoreDetailModel.data.highlightedRealtor.associateInfo;
+            }
+        }
+        // 新房详情页户型列表页子页面
+        if([detailSubData isKindOfClass:FHDetailFloorPanListResponseModel.class]) {
+            FHDetailFloorPanListResponseModel *detailFloorPanListModel = (FHDetailFloorPanListResponseModel *)detailSubData;
+            if(detailFloorPanListModel.data.highlightedRealtor.associateInfo) {
+                extraDic[kFHAssociateInfo] = detailFloorPanListModel.data.highlightedRealtor.associateInfo;
+            }
+        }
+    }
+        
     [self onlineActionWithExtraDict:extraDic];
 }
 
