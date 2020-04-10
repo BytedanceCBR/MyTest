@@ -150,7 +150,7 @@
     configItem.photoWidth = self.width;
     configItem.enableICloud = YES;
     [[TTImagePickerManager manager] getPhotoWithAsset:asset.asset configItem:configItem progressHandler:nil completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
-                if (!photo) {
+        if (!photo) {
             return;
         }
         //太恶心了，这个黑色闪烁问题卡了一天...
