@@ -193,7 +193,7 @@
         NSUInteger firstLoc = 1;
         NSUInteger secondLoc = 1;
         
-        for (int i=1; i<nowPicing.length; i++) {      //处理出数字区间
+        for (int i=1; i < nowPicing.length; i++) {      //处理出数字区间
             c = [nowPicing characterAtIndex:i];
             if (!isdigit(c)) {
                 secondLoc = i;
@@ -203,13 +203,13 @@
         NSRange range = NSMakeRange(firstLoc, secondLoc - firstLoc);
         [noteStr addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:20] range:range];
         self.totalPirce.attributedText = noteStr;
-        [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(31);
-            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(14);
-            make.right.mas_equalTo(self).offset(- 35);
-            make.height.mas_equalTo(20);
-        }];
     }
+    [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).offset(31);
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(14);
+        make.right.mas_equalTo(self).offset(- 35);
+        make.height.mas_equalTo(20);
+    }];
     
 }
 
