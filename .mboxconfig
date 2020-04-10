@@ -1,0 +1,9 @@
+{
+    "podfile": "Article/Podfile",
+    "xcodeproj": "Article/Article.xcodeproj",
+    "plugins": ["toutiao", "bdtransform", "rocket", "code"],
+    "gems": [
+    	{"bd_pod_extentions": "6.3.0"},
+    	{"cocoapods-BDTransform": "~> 5.0"}
+    ]
+}

@@ -595,22 +595,22 @@ post_install do |installer|
         target.build_configurations.each do |config|
             # Fix libstdc++.6在Xcode10编译报错问题
 
-            if target.name == "Pods-NewsLiteInHouse"
-                xcconfig_path = config.base_configuration_reference.real_path
-                xcconfig = File.read(xcconfig_path)
-                new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
-                new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
+            # if target.name == "Pods-NewsLiteInHouse"
+            #     xcconfig_path = config.base_configuration_reference.real_path
+            #     xcconfig = File.read(xcconfig_path)
+            #     new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
+            #     new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
 
-                File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
-            end
-            if target.name == "Pods-f100"
-                xcconfig_path = config.base_configuration_reference.real_path
-                xcconfig = File.read(xcconfig_path)
-                new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
-                new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
+            #     File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
+            # end
+            # if target.name == "Pods-f100"
+            #     xcconfig_path = config.base_configuration_reference.real_path
+            #     xcconfig = File.read(xcconfig_path)
+            #     new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
+            #     new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
 
-                File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
-            end
+            #     File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
+            # end
         end
         #账号
         if target.name == "TTAccountSDK"
