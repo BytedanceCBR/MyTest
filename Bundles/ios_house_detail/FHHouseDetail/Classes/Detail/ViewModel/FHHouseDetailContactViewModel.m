@@ -583,6 +583,20 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         fromStr = @"app_pricenotice";
         position = @"change_price";
     }
+//    else if (actionType == FHFollowActionTypeOldPriceChanged) {
+//        title = @"变价通知";
+//        subtitle = @"订阅变价通知，【房源】变价信息会及时发送到您的手机";
+//        btnTitle = @"提交";
+//        fromStr = @"app_pricenotice";
+//        position = @"change_price";
+//    }
+//    else if (actionType == FHFollowActionTypePaymentConsultation){
+//        title = @"首付咨询";
+//        subtitle = @"订阅首付咨询，房源首付信息会及时发送到您的手机";
+//        btnTitle = @"提交";
+//        fromStr = @"";
+//        position = @"loan";
+//    }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
     fillFormConfig.houseType = self.houseType;
     fillFormConfig.houseId = self.houseId;

@@ -18,6 +18,7 @@ typedef enum : NSUInteger {
     FHFollowActionTypeNeighborhood = 4,
     FHFollowActionTypePriceChanged = 5,
     FHFollowActionTypeFloorPan = 6,
+    FHFollowActionTypeOldPriceChanged = 7,
 } FHFollowActionType;
 
 #pragma mark endpoint
@@ -32,7 +33,8 @@ typedef enum : NSUInteger {
 typedef enum : NSUInteger {
     FHClueFormPageTypeCNeighborhood = 2, // app_neighbourhood： 1.2 二手房小区详情页底通表单
     FHClueFormPageTypeCFloorPlan= 4, // app_floorplan： 1.4 新房户型详情页
-
+    FHClueFormPageTypeCOldPriceChangeNotice = 11, // from：app_oldhouse_shoufu 1.11小端二手房详情页的变价通知
+    FHClueFormPageTypeCOldHouseShoufu = 13, // from：app_oldhouse_shoufu 1.13小端二手房详情页的咨询首付
     FHClueFormPageTypeCNewHousePicview = 38, // 1.38 新房详情页图片浏览表单  - from：app_newhouse_picview
     FHClueFormPageTypeCNewSales = 39, //   from：app_newhouse_discount： 1.39 新房详情页优惠活动咨询表单
 
@@ -57,7 +59,6 @@ typedef enum : NSUInteger {
     
     FHClueIMPageTypeUGCFeed = 5, // app_feed_weitoutiao: 1.5 feed页微头条IM
     FHClueIMPageTypeUGCDetail = 6, // app_weitoutiao: 1.6 微头条详情页IM
-
     FHClueIMPageTypeCOldSchool = 23, // app_oldhouse_school 1.23小端二手房详情页的咨询学区
     FHClueIMPageTypeCOldFloor = 24, // app_oldhouse_floor：1.24小端二手房详情页的咨询楼层
     FHClueIMPageTypeCQuickQuestion = 25, // app_oldhouse_question：1.25小端二手房详情页的快速提问

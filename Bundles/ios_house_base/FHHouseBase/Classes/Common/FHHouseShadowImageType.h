@@ -19,6 +19,9 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeDefault = 0,
     ///二手房房源属性模块
     FHHouseModelTypeCoreInfo,
+    ///二手房房源首付及月供
+    FHHouseModelTypeAdvisoryLoan,
+    
     ///二手房订阅房源动态模块
     FHHouseModelTypeSubscribe,
     ///二手房房源概况
