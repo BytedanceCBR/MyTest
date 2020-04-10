@@ -210,7 +210,7 @@
         if(enabled){
             self.evaluateBtn.alpha = 1.0;
         }else{
-            self.evaluateBtn.alpha = 0.6;
+            self.evaluateBtn.alpha = 0.3;
         }
     }
 }

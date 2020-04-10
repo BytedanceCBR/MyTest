@@ -145,6 +145,7 @@
         if (!model.saleStatus) {
             self.statusLabel.text = @"";
             self.statusBGView.backgroundColor = [UIColor clearColor];
+            self.statusLabel.backgroundColor = [UIColor clearColor];
             return;
         }
 
