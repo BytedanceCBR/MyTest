@@ -345,6 +345,10 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
+            NSInteger responseCode = -1;
+            if (monitorModel.monitorStatus) {
+                responseCode = monitorModel.monitorStatus;
+            }
             if (!error) {
                 NSDictionary *dataDict = [jsonObj isKindOfClass:[NSDictionary class]]? jsonObj: nil;
                 if ([dataDict tt_longValueForKey:@"err_no"] == 0) {
@@ -385,7 +389,7 @@
                             // 成功埋点 status = 0 成功（不上报） status = 2：转json失败
                             NSMutableDictionary *metric = @{}.mutableCopy;
                             metric[@"post_id"] = @(self.threadID);
-                            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_detail_error" metric:metric category:@{@"status":@(2)} extra:nil];
+                            [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_post_detail_error" metric:metric category:@{@"status":@(2),@"response_code":@(responseCode)} extra:nil];
                             
                             resultType = FHNetworkMonitorTypeBizFailed + 2;
                             code = 2;
@@ -401,7 +405,7 @@
             // 序列化时间
             serDate = [NSDate date];
             // 帖子接口成功率
-            [FHMainApi addRequestLog:@"/f100/ugc/thread" startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:@"/f100/ugc/thread" startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             
             if (completion) {
                 completion(error,total);

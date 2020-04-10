@@ -606,6 +606,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     associateReport.associateInfo = associateInfoDict;
     associateReport.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];
+
 }
 
 //- (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict
