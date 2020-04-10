@@ -53,7 +53,7 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
         make.top.equalTo(self.contentView).offset(-12);
-        make.bottom.equalTo(self.contentView);
+        make.bottom.equalTo(self.contentView).offset(12);
     }];
     
     _containerView = [[UIView alloc] init];
@@ -83,7 +83,7 @@
         make.top.mas_equalTo(self.shadowImage).offset(20);
         make.left.mas_equalTo(self.contentView).offset(16);
         make.right.mas_equalTo(self.contentView).offset(-16);
-        make.bottom.mas_equalTo(self.shadowImage);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -127,6 +127,12 @@
     
     _cardSliderView.tracerDic = cellModel.tracerDic;
     [_cardSliderView setCardListData:cellModel.cards];
+    
+    if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll) {
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView);
+        }];
+    }
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
