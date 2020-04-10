@@ -128,9 +128,6 @@
         make.top.equalTo(self.segmentedControl.mas_bottom);
         make.bottom.equalTo([self getBottomBar].mas_top);
     }];
-    self.floorListTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    self.floorListTable.separatorColor = RGB(0xe7, 0xe7, 0xe7);
-    self.floorListTable.separatorInset = UIEdgeInsetsMake(0, 34, 0, 34);
     self.floorListTable.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
     [_floorListTable setBackgroundColor:[UIColor themeGray7]];
 }

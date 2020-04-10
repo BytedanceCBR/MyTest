@@ -32,6 +32,10 @@
         
         [self.contentView addSubview:self.cellBackView];
         
+        _topLine = [[UIView alloc] init];
+        [self.contentView addSubview:_topLine];
+        _topLine.backgroundColor =  RGB(0xe7, 0xe7, 0xe7);
+        
         _iconView = [UIImageView new];
         _iconView.image = [UIImage imageNamed:@"default_image"];
         _iconView.layer.borderColor = RGB(0xed, 0xed, 0xed).CGColor;
@@ -96,10 +100,22 @@
     } else {
         self.cellBackView.layer.mask = nil;
     }
+    if (isFirst) {
+        self.topLine.hidden = YES;
+    } else {
+        self.topLine.hidden = NO;
+    }
 }
 
 -(void)initConstaints
 {
+    [self.topLine mas_makeConstraints:^(MASConstraintMaker *make){
+        make.left.mas_equalTo(34);
+        make.right.mas_equalTo(-34);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(1);
+    }];
+    
     [self.cellBackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
@@ -132,8 +148,6 @@
         make.top.mas_equalTo(32);
         make.height.mas_equalTo(19);
     }];
-    
-    
 }
 
 - (void)refreshWithData:(id)data
