@@ -320,7 +320,7 @@
 - (void)startLoadData
 {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             if (model.data) {
                 wSelf.dataModel = model;
@@ -543,7 +543,10 @@
         FHDetailNewPropertyListCellModel *houseCore = [[FHDetailNewPropertyListCellModel alloc] init];
         houseCore.houseModelType = FHHouseModelTypeNewCoreInfo;
         houseCore.baseInfo = model.data.baseInfo;
-        houseCore.disclaimerModel = [[FHDetailDisclaimerModel alloc] initWithData:[model.data.disclaimer toJSONData] error:nil];
+        FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc]init];
+        disclaimerModel.disclaimer =  [[FHDisclaimerModel alloc] initWithData:[model.data.disclaimer toJSONData] error:nil];
+        disclaimerModel.contact = model.data.contact ;
+        houseCore.disclaimerModel = disclaimerModel;
         houseCore.houseName = houseName;
         houseCore.courtId = model.data.coreInfo.id;
         [self.items addObject:houseCore];
@@ -575,7 +578,6 @@
         salesModel.discountInfo = model.data.discountInfo;
         salesModel.houseModelType = FHHouseModelTypeNewSales;
         salesModel.contactViewModel = self.contactViewModel;
-        priceInfo.priceAssociateInfo = model.data.discountInfoAssociateInfo;
         [self.items addObject:salesModel];
     }
     

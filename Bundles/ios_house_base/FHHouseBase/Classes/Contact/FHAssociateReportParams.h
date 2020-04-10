@@ -34,7 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark 其他埋点
 // 必填
-// todo zjing test
 @property (nonatomic, copy) NSString *pageType;
 @property (nonatomic, copy) NSString *cardType;
 @property (nonatomic, copy) NSString *rank;

@@ -358,7 +358,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : associateReport.chooseAgencyList;
-    [FHMainApi requestCallReport:associateReport.associateInfo agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:associateReport.houseId phone:phone from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:associateReport.associateInfo agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
@@ -421,13 +421,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     params[@"origin_search_id"] = reportParams[@"origin_search_id"] ? : @"be_null";
     params[@"log_pb"] = reportParams[@"log_pb"] ? : @"be_null";
     params[kFHAssociateInfo] = associateReport.associateInfo;
+    params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
+    params[@"position"] = reportParams[@"position"] ? : @"be_null";
+    params[@"growth_deepevent"] = @(1);
 
     // todo zjing test
-    params[@"position"] = reportParams[@"position"] ? : @"be_null";
     params[@"item_id"] = reportParams[@"item_id"] ? : @"be_null";
-    params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
 
-    params[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
 
@@ -445,11 +445,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     params[@"origin_search_id"] = reportParams[@"origin_search_id"] ? : @"be_null";
     params[@"log_pb"] = reportParams[@"log_pb"] ? : @"be_null";
     params[kFHAssociateInfo] = associateReport.associateInfo;
+    params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
+    params[@"position"] = reportParams[@"position"] ? : @"be_null";
 
     // todo zjing test
-    params[@"position"] = reportParams[@"position"] ? : @"be_null";
     params[@"item_id"] = reportParams[@"item_id"] ? : @"be_null";
-    params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
 
     NSMutableDictionary *dict = @{}.mutableCopy;
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : associateReport.chooseAgencyList;

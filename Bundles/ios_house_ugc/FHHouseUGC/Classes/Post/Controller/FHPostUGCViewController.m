@@ -854,6 +854,22 @@ static NSInteger const kMaxPostImageCount = 9;
     }
 }
 
+- (BOOL)checkPostContentShowAlertIfNeedWhenCancel {
+    BOOL isContentChanged = [self checkPostContentChanged];
+    
+    BOOL isHasNewInputContent = isContentChanged;
+
+    // 小区点评，非编辑状态下，退出时，如果用户输入内容或选择了图片，
+    // 则弹出提示确认删除弹窗
+    if(self.neighborhoodId.length > 0 && !self.isOuterEdit) {
+        if(self.addImagesView.selectedImageCacheTasks.count != 0 || self.inputTextView.trimmedLength > 0) {
+            isHasNewInputContent = YES;
+        }
+    }
+    
+    return isHasNewInputContent;
+}
+
 - (void)cancel:(id)sender {
     
     [(TTNavigationController*)self.navigationController panRecognizer].enabled = YES;
@@ -862,7 +878,7 @@ static NSInteger const kMaxPostImageCount = 9;
     
     NSString * inputText = [self.inputTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
-    BOOL shouldAlert = [self checkPostContentChanged];
+    BOOL shouldAlert = [self checkPostContentShowAlertIfNeedWhenCancel];
     
     if (!shouldAlert) {
         [self postFinished:NO];

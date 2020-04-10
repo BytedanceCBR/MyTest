@@ -166,15 +166,14 @@
     dict[@"card_type"] = reportParams.cardType ? : @"be_null";
     dict[@"page_type"] = reportParams.pageType ?: @"be_null";
     dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
-    dict[@"realtor_id"] = reportParams.realtorId ? : @"be_null";;
+    dict[@"realtor_id"] = reportParams.realtorId ? : @"be_null";
     dict[@"realtor_rank"] = reportParams.realtorRank ?: @"0";
     dict[@"conversation_id"] = reportParams.conversationId ? : @"be_null";
     dict[@"realtor_position"] = reportParams.realtorPosition ? : @"be_null";
-    dict[@"growth_deepevent"] = @(1);
     dict[@"realtor_logpb"] = reportParams.realtorLogpb;
+    dict[@"growth_deepevent"] = @(1);
     dict[@"source_from"] = reportParams.sourceFrom;
     dict[@"associate_info"] = associateIM.associateInfo.toDictionary;
-    
     
     if(reportParams.extra) {
         [dict addEntriesFromDictionary:reportParams.extra];

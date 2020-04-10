@@ -12,6 +12,7 @@
 #define kFHClueEndpoint @"clue_endpoint"
 #define kFHAssociateInfo @"associate_info"
 #define kFHReportParams @"report_params"
+#define kFHClueExtraInfo @"extra_info"
 
 typedef enum : NSUInteger {
     FHFollowActionTypeNew = 1,

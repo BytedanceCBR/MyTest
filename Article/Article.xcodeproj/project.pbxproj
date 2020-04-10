@@ -72,14 +72,12 @@
 		B373CE9B2174587A008F9905 /* sound1.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE61FE007BD0093E05D /* sound1.caf */; };
 		B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943B1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.debug.xcconfig */; };
 		B373CEA42174587A008F9905 /* PushNotification.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */; };
-		B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */; };
 		B373CEA62174587A008F9905 /* Weather.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B50C7B41F5D44EF00BF89A1 /* Weather.xcassets */; };
 		B373CEAA2174587A008F9905 /* sound3.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE71FE007BE0093E05D /* sound3.caf */; };
 		B373CEAF2174587A008F9905 /* CommonResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */; };
 		B373CEB02174587A008F9905 /* sound2.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE91FE007C00093E05D /* sound2.caf */; };
 		B373CEB32174587A008F9905 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943E1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig */; };
 		B373CEB42174587A008F9905 /* sound5.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE81FE007BF0093E05D /* sound5.caf */; };
-		B373CEBB2174587A008F9905 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */; };
 		B373CEBD2174587A008F9905 /* NewsInHouse.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694371CF2E5A5009997F0 /* NewsInHouse.debug.xcconfig */; };
 		B373CEBF2174587A008F9905 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943D1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig */; };
 		B373CEC52174587A008F9905 /* NewsResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1E15E061D77117900B551D9 /* NewsResource.xcassets */; };
@@ -157,14 +155,12 @@
 		FEFA59DB205FB1A8001F50D8 /* sound1.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE61FE007BD0093E05D /* sound1.caf */; };
 		FEFA59E3205FB1A8001F50D8 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943B1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.debug.xcconfig */; };
 		FEFA59EE205FB1A8001F50D8 /* PushNotification.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */; };
-		FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */; };
 		FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B50C7B41F5D44EF00BF89A1 /* Weather.xcassets */; };
 		FEFA59F6205FB1A8001F50D8 /* sound3.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE71FE007BE0093E05D /* sound3.caf */; };
 		FEFA59FB205FB1A8001F50D8 /* CommonResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */; };
 		FEFA59FC205FB1A8001F50D8 /* sound2.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE91FE007C00093E05D /* sound2.caf */; };
 		FEFA5A04205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943E1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig */; };
 		FEFA5A06205FB1A8001F50D8 /* sound5.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE81FE007BF0093E05D /* sound5.caf */; };
-		FEFA5A13205FB1A8001F50D8 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */; };
 		FEFA5A15205FB1A8001F50D8 /* NewsInHouse.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694371CF2E5A5009997F0 /* NewsInHouse.debug.xcconfig */; };
 		FEFA5A16205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943D1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig */; };
 		FEFA5A1C205FB1A8001F50D8 /* NewsResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1E15E061D77117900B551D9 /* NewsResource.xcassets */; };
@@ -387,8 +383,6 @@
 		B388C9E62142652800653188 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BABBC50951FAFEF890ADA65C /* Pods-serviceNofExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-serviceNofExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-serviceNofExtension/Pods-serviceNofExtension.release.xcconfig"; sourceTree = "<group>"; };
 		BFF8D6E57A4E39A98F0D633D /* Pods-NewsLiteInHouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLiteInHouse.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse.release.xcconfig"; sourceTree = "<group>"; };
-		C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "synchronize_banner_add_friends_press-667h@2x.jpg"; sourceTree = "<group>"; };
-		C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "synchronize_banner_add_friends_press-736h@3x.jpg"; sourceTree = "<group>"; };
 		CFA1F540F85DFB96DD4FB618 /* libPods-serviceNofExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-serviceNofExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D013795E1DFE8BEF0020C6BD /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = FrameworkResource.xcassets; sourceTree = "<group>"; };
@@ -788,8 +782,6 @@
 			children = (
 				F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */,
 				6BD907021DB877E40072138C /* default_profile_background_image.jpg */,
-				C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */,
-				C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */,
 				FE700DC91B8D98F8004A435E /* yw_1222.jpg */,
 			);
 			path = OtherResource;
@@ -1040,8 +1032,6 @@
 				7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */,
 				FB6C55D023ACD41800651456 /* firework.json in Resources */,
 				B373CEA42174587A008F9905 /* PushNotification.xcassets in Resources */,
-				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
-				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				3DB49F932265E34900A0780E /* iconfont_new.ttf in Resources */,
 				3D83DD132306A933008B583E /* gaode_style_extra.data in Resources */,
 				FBA5894323AB872A0053EC79 /* introduce_1.json in Resources */,
@@ -1060,7 +1050,6 @@
 				3D7D2F4622704CAB00A95FAF /* Icon-72@2x.png in Resources */,
 				B373CEB42174587A008F9905 /* sound5.caf in Resources */,
 				3D721AA0218FE7FA006C1156 /* gaode_map_style.data in Resources */,
-				B373CEBB2174587A008F9905 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
 				3DB49F8F2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				3D2F399C2270545700AE567D /* IPhoneLogicSetting.strings in Resources */,
 				B373CEBD2174587A008F9905 /* NewsInHouse.debug.xcconfig in Resources */,
@@ -1107,8 +1096,6 @@
 				D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */,
 				FEFA59E3205FB1A8001F50D8 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				FEFA59EE205FB1A8001F50D8 /* PushNotification.xcassets in Resources */,
-				FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
-				FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				3DB49F922265E34900A0780E /* iconfont_new.ttf in Resources */,
 				FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */,
 				FBA5893023AB64D20053EC79 /* introduce_3.json in Resources */,
@@ -1125,7 +1112,6 @@
 				3D7D2F4522704CAB00A95FAF /* Icon-72@2x.png in Resources */,
 				FEFA5A06205FB1A8001F50D8 /* sound5.caf in Resources */,
 				3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */,
-				FEFA5A13205FB1A8001F50D8 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
 				FB6C55CF23ACD41800651456 /* firework.json in Resources */,
 				D37495E223965409006D44D2 /* gaode_house_detail_style.data in Resources */,
 				3DB49F8E2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
@@ -1338,9 +1324,8 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/../../../cim2/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -1663,9 +1648,8 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/../../../cim2/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -2193,7 +2177,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6.9.5.0;
+				CURRENT_PROJECT_VERSION = 6.9.6.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
@@ -2242,7 +2226,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 0.9.5;
+				MARKETING_VERSION = 0.9.6;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2279,7 +2263,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6.9.5.0;
+				CURRENT_PROJECT_VERSION = 6.9.6.0;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_BITCODE = NO;
@@ -2332,8 +2316,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
-				LLVM_LTO = NO;
-				MARKETING_VERSION = 0.9.5;
+				LLVM_LTO = YES_THIN;
+				MARKETING_VERSION = 0.9.6;
 				ONLY_ACTIVE_ARCH = NO;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2369,7 +2353,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Gong Rui (3VB7F2P4T4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gong Rui (3VB7F2P4T4)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6.9.5.0;
+				CURRENT_PROJECT_VERSION = 6.9.6.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -2418,7 +2402,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 0.9.5;
+				MARKETING_VERSION = 0.9.6;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2456,7 +2440,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6.9.5.0;
+				CURRENT_PROJECT_VERSION = 6.9.6.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -2511,8 +2495,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
-				LLVM_LTO = NO;
-				MARKETING_VERSION = 0.9.5;
+				LLVM_LTO = YES_THIN;
+				MARKETING_VERSION = 0.9.6;
 				ONLY_ACTIVE_ARCH = NO;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";

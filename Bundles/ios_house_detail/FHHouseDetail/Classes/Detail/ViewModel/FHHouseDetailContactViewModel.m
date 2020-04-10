@@ -462,6 +462,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         // 填表单
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
         associateParamDict[kFHReportParams] = reportParamsDict;
+        associateParamDict[kFHAssociateInfo] = associateInfoDict;
         [self fillFormActionWithParams:associateParamDict];
     }else {
 
@@ -531,61 +532,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 }
 
 #pragma mark - associate refactor
-- (void)callActionWithParams:(NSDictionary *)phoneParamsDict
-{
-    WeakSelf;
-    NSDictionary *associateInfoDict = phoneParamsDict[kFHAssociateInfo];
-    NSDictionary *reportParamsDict = phoneParamsDict[kFHReportParams];
-    FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
-    associatePhone.reportParams = reportParamsDict;
-    associatePhone.associateInfo = associateInfoDict;
-    
-    associatePhone.houseType = self.houseType;
-    associatePhone.houseId = self.houseId;
-
-    associatePhone.searchId = self.searchId;
-    associatePhone.imprId = self.imprId;
-    associatePhone.showLoading = YES;
-    associatePhone.realtorId = self.contactPhone.realtorId;
-
-    // 圈子电话咨询数据备份
-    // todo zjing test
-    self.socialContactConfig = nil;
-    if (self.houseType == FHHouseTypeNewHouse) {
-        // 拨打电话 弹窗显示的话 本数据保留，否则 删除 nil
-        // todo zjing test
-        self.socialContactConfig = [[FHAssociatePhoneModel alloc]init];
-
-        self.socialContactConfig.houseType = self.houseType;
-        self.socialContactConfig.houseId = self.houseId;
-//        self.socialContactConfig.phone = self.contactPhone.phone;
-        self.socialContactConfig.realtorId = self.contactPhone.realtorId;
-    }
-    
-    [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
-        
-        if(success && [wself.phoneCallViewModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
-            FHHouseDetailViewController *vc = (FHHouseDetailViewController *)wself.phoneCallViewModel.belongsVC;
-            vc.isPhoneCallShow = YES;
-            // todo zjing test
-            vc.phoneCallRealtorId = wself.contactPhone.realtorId;
-
-            vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
-        } else {
-            wself.socialContactConfig = nil;
-        }
-    }];
-    // todo zjing test
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:reportParamsDict error:nil];
-    configModel.houseType = self.houseType;
-    configModel.followId = self.houseId;
-    configModel.actionType = self.houseType;
-    
-    // 静默关注功能
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
-
-}
-
 - (void)callActionWithAssociatePhone:(FHAssociatePhoneModel *)associatePhone
 {
     WeakSelf;
@@ -670,6 +616,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     associateReport.associateInfo = associateInfoDict;
     associateReport.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];
+
 }
 
 //- (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict

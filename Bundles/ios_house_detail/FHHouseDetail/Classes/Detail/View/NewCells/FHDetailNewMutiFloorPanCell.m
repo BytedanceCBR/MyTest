@@ -131,31 +131,25 @@
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"slide";
         tracerDic[@"log_pb"] = itemModel.logPb ? itemModel.logPb : @"be_null";
-        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNewHouse];
+        tracerDic[@"house_type"] = @"house_model";
         tracerDic[@"element_type"] = @"house_model";
         if (itemModel.logPb) {
             [tracerDic addEntriesFromDictionary:itemModel.logPb];
         }
-        
         if (itemModel.searchId) {
             [tracerDic setValue:itemModel.searchId forKey:@"search_id"];
         }
-        
         if ([itemModel.groupId isKindOfClass:[NSString class]] && itemModel.groupId.length > 0) {
             [tracerDic setValue:itemModel.groupId forKey:@"group_id"];
         }else
         {
             [tracerDic setValue:itemModel.id forKey:@"group_id"];
         }
-        
         if (itemModel.imprId) {
             [tracerDic setValue:itemModel.imprId forKey:@"impr_id"];
         }
-        
         [tracerDic removeObjectForKey:@"enter_from"];
         [tracerDic removeObjectForKey:@"element_from"];
-        [tracerDic removeObjectForKey:@"house_type"];
-        
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }

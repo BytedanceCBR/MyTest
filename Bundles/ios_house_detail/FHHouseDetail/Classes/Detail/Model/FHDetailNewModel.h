@@ -205,6 +205,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *discountButtonText;
 @property (nonatomic, copy , nullable) NSString *discountReportDoneTitle;
 @property (nonatomic, strong) NSNumber *page;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 

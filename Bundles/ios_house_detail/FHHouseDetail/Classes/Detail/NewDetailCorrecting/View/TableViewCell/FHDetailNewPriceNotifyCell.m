@@ -125,17 +125,10 @@
         NSString *title = @"开盘通知";
         NSString *subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
         NSString *btnTitle = @"提交";
-        NSString *fromStr = @"app_sellnotice";
+//        NSString *fromStr = @"app_sellnotice";
 
-        // todo zjing test
-        NSDictionary *associateInfoDict = @{@"from":@"old_house_detail",
-                                            @"source":@"1.38",
-                                            @"endpoint":@"1",
-                                            @"target_type":@"1",
-                                            @"extra_info":@{}
-        };
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
-        associateParamDict[kFHAssociateInfo] = associateInfoDict;
+        associateParamDict[kFHAssociateInfo] = model.openAssociateInfo.reportFormInfo;
         NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
         associateParamDict[kFHReportParams] = reportParamsDict;
         
@@ -150,17 +143,10 @@
         NSString *title = @"变价通知";
         NSString *subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
         NSString *btnTitle = @"提交";
-        NSString *fromStr = @"app_pricenotice";
+//        NSString *fromStr = @"app_pricenotice";
         
-        // todo zjing test
-        NSDictionary *associateInfoDict = @{@"from":@"old_house_detail",
-                                            @"source":@"1.38",
-                                            @"endpoint":@"1",
-                                            @"target_type":@"1",
-                                            @"extra_info":@{}
-        };
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
-        associateParamDict[kFHAssociateInfo] = associateInfoDict;
+        associateParamDict[kFHAssociateInfo] = model.priceAssociateInfo.reportFormInfo;
         NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
         associateParamDict[kFHReportParams] = reportParamsDict;
         

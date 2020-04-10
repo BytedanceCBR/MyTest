@@ -517,6 +517,7 @@
     if (self.houseType == FHHouseTypeNeighborhood || self.houseType == FHHouseTypeSecondHandHouse) {
         params[@"growth_deepevent"] = @(1);
     }
+    params[kFHClueExtraInfo] = self.extraInfo;
     [FHUserTracker writeEvent:@"go_detail" params:params];
     
 }
@@ -597,6 +598,7 @@
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:self.detailTracerDic];
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    params[kFHClueExtraInfo] = self.extraInfo;
     [FHUserTracker writeEvent:@"stay_page" params:params];
     
 }

@@ -342,7 +342,13 @@
     }];
 }
 
-+ (TTHttpTask*)requestCallReport:(NSDictionary*)reportAssociate
++ (TTHttpTask*)requestCallReportByHouseId:(NSString*)houseId
+       phone:(NSString*)phone
+        from:(NSString*)from
+    cluePage:(NSNumber*)cluePage
+clueEndpoint:(NSNumber*)clueEndpoint
+  targetType:(NSNumber *)targetType
+reportAssociate:(NSDictionary*)reportAssociate
 agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
 completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
@@ -350,6 +356,24 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
     NSString* url = [host stringByAppendingString:@"/f100/api/call_report"];
     NSString *userName = [TTAccount sharedAccount].user.name ? : [TTInstallIDManager sharedInstance].deviceID; //如果没有名字，则取did
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (houseId.length > 0) {
+        paramDic[@"house_id"] = houseId;
+    }
+    if (userName.length > 0) {
+        paramDic[@"user_name"] = userName;
+    }
+    if (phone.length > 0) {
+        paramDic[@"user_phone"] = phone;
+    }
+    if (targetType) {
+        paramDic[@"target_type"] = targetType;
+    }
+    if (cluePage) {
+        paramDic[@"page"] = cluePage;
+        paramDic[@"endpoint"] = clueEndpoint ? clueEndpoint : @(FHClueEndPointTypeC);
+    }else if (from.length > 0) {
+        paramDic[@"from"] = from;
+    }
     if (agencyList.count > 0) {
         NSMutableArray *array = @[].mutableCopy;
         for (FHFillFormAgencyListItemModel *item in agencyList) {

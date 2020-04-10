@@ -150,33 +150,33 @@ typedef enum : NSUInteger {
 
 #pragma mark - log
 // 拨打电话和经纪人展位拨打电话
-+ (void)addClickCallLog:(FHHouseContactConfigModel *)configModel isVirtual:(NSInteger)isVirtual
-{
-    NSMutableDictionary *params = @{}.mutableCopy;
-    
-    params[@"page_type"] = configModel.pageType ? : @"be_null";
-    params[@"card_type"] = configModel.cardType ? : @"be_null";
-    params[@"enter_from"] = configModel.enterFrom ? : @"be_null";
-    params[@"element_from"] = configModel.elementFrom ? : @"be_null";
-    params[@"rank"] = configModel.rank ? : @"be_null";
-    params[@"origin_from"] = configModel.originFrom ? : @"be_null";
-    params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
-    params[@"log_pb"] = configModel.logPb ? : @"be_null";
-    
-    params[@"has_auth"] = @(1);
-    params[@"realtor_id"] = configModel.realtorId ? : @"be_null";
-    params[@"realtor_rank"] = configModel.realtorRank ? : @(0);
-    params[@"realtor_position"] = configModel.realtorPosition ? : @"detail_button";
-    params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];
-    params[@"is_dial"] = @(1);
-    params[@"conversation_id"] = @"be_null";
-    params[@"realtor_logpb"] = configModel.realtorLogpb;
-    if (configModel.itemId.length > 0) {
-        params[@"item_id"] = configModel.itemId;
-    }
-    params[@"growth_deepevent"] = @(1);
-    [FHUserTracker writeEvent:@"click_call" params:params];
-}
+//+ (void)addClickCallLog:(FHHouseContactConfigModel *)configModel isVirtual:(NSInteger)isVirtual
+//{
+//    NSMutableDictionary *params = @{}.mutableCopy;
+//
+//    params[@"page_type"] = configModel.pageType ? : @"be_null";
+//    params[@"card_type"] = configModel.cardType ? : @"be_null";
+//    params[@"enter_from"] = configModel.enterFrom ? : @"be_null";
+//    params[@"element_from"] = configModel.elementFrom ? : @"be_null";
+//    params[@"rank"] = configModel.rank ? : @"be_null";
+//    params[@"origin_from"] = configModel.originFrom ? : @"be_null";
+//    params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
+//    params[@"log_pb"] = configModel.logPb ? : @"be_null";
+//
+//    params[@"has_auth"] = @(1);
+//    params[@"realtor_id"] = configModel.realtorId ? : @"be_null";
+//    params[@"realtor_rank"] = configModel.realtorRank ? : @(0);
+//    params[@"realtor_position"] = configModel.realtorPosition ? : @"detail_button";
+//    params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];
+//    params[@"is_dial"] = @(1);
+//    params[@"conversation_id"] = @"be_null";
+//    params[@"realtor_logpb"] = configModel.realtorLogpb;
+//    if (configModel.itemId.length > 0) {
+//        params[@"item_id"] = configModel.itemId;
+//    }
+//    params[@"growth_deepevent"] = @(1);
+//    [FHUserTracker writeEvent:@"click_call" params:params];
+//}
 
 + (void)addDetailCallExceptionLog:(NSInteger)status extraDict:(NSDictionary *)extraDict errorCode:(NSInteger)errorCode message:(NSString *)message
 {
@@ -300,16 +300,16 @@ typedef enum : NSUInteger {
     params[@"is_dial"] = @(1);
     params[@"realtor_logpb"] = reportParams[@"realtor_logpb"];
     params[@"growth_deepevent"] = @(1);
+    params[@"realtor_position"] = reportParams[@"realtor_position"] ? : @"detail_button";
+    params[@"realtor_rank"] = reportParams[@"realtor_rank"] ? : @(0);
+    params[@"realtor_id"] = reportParams[@"realtor_id"] ? : @"be_null";
 
     // todo zjing test
     params[@"position"] = reportParams[@"position"] ? : @"be_null";
     if (reportParams[@"item_id"]) {
         params[@"item_id"] = reportParams[@"item_id"];
     }
-    params[@"realtor_position"] = reportParams[@"realtor_position"] ? : @"detail_button";
-    params[@"realtor_rank"] = reportParams[@"realtor_rank"] ? : @(0);
-    params[@"realtor_id"] = reportParams[@"realtor_id"] ? : @"be_null";
-    
+
     [FHUserTracker writeEvent:@"click_call" params:params];
 }
 

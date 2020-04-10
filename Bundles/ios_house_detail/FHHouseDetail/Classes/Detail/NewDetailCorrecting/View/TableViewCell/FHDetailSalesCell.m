@@ -232,15 +232,8 @@
     extraDic[@"subtitle"] = subtitle;
     extraDic[@"btn_title"] = btnTitle;
     extraDic[@"toast"] = toast;
-    // todo zjing test
-    NSDictionary *associateInfoDict = @{@"from":@"old_house_detail",
-                                        @"source":@"1.38",
-                                        @"endpoint":@"1",
-                                        @"target_type":@"1",
-                                        @"extra_info":@{}
-    };
     NSMutableDictionary *associateParamDict = @{}.mutableCopy;
-    associateParamDict[kFHAssociateInfo] = associateInfoDict;
+    associateParamDict[kFHAssociateInfo] = itemInfo.associateInfo;
     NSMutableDictionary *reportParamsDict = [model.contactViewModel baseParams].mutableCopy;
     if (extraDic.count > 0) {
         [reportParamsDict addEntriesFromDictionary:extraDic];
