@@ -48,7 +48,7 @@
            [weakSelf.webContainer tt_endUpdataData];
            [weakSelf.maskLoadingView removeFromSuperview];
             weakSelf.ttDisableDragBack = YES;
-            if (self.isShowing) {
+            if (weakSelf.isShowing) {
                 [weakSelf.webContainer.ssWebView ttr_fireEvent:@"preload_open" data:nil];
             }
         } forMethodName:@"closeLoading"];
