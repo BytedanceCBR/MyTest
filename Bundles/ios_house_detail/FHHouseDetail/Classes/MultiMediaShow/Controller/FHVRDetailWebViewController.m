@@ -17,6 +17,7 @@
 @property(nonatomic, retain)SSWebViewContainer * webContainer;
 @property(nonatomic, strong)NSURL * requestURL;
 @property(nonatomic, assign)BOOL isNeedRemoveMask;
+@property(nonatomic, assign)BOOL isShowing;
 
 @end
 
@@ -47,6 +48,9 @@
            [weakSelf.webContainer tt_endUpdataData];
            [weakSelf.maskLoadingView removeFromSuperview];
             weakSelf.ttDisableDragBack = YES;
+            if (self.isShowing) {
+                [weakSelf.webContainer.ssWebView ttr_fireEvent:@"preload_open" data:nil];
+            }
         } forMethodName:@"closeLoading"];
         
         
@@ -75,6 +79,7 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [self.navigationController setNavigationBarHidden:YES];
     
+    self.isShowing = YES;
     
     if (self.isNeedRemoveMask) {
         [_webContainer tt_endUpdataData];
@@ -92,7 +97,6 @@
             [self.view bringSubviewToFront:_maskLoadingView];
         }
     }
-
     
     [_webContainer.ssWebView ttr_fireEvent:@"show" data:nil];
 
@@ -101,6 +105,9 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
+    self.isShowing = NO;
+
     [_webContainer.ssWebView ttr_fireEvent:@"hide" data:nil];
 }
 

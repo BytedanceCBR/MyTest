@@ -21,6 +21,8 @@
 #import "FHDetailNewModel.h"
 #import <FHVRDetailWebViewController.h>
 #import "FHVRCacheManager.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -92,9 +94,13 @@
         self.weakDetailVC = ((FHDetailMediaHeaderCorrectingModel *)data).weakVC;
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self  createVRPreloadWebview];
-    });
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_webview_preload_close"];
+    if (!boolOffline) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self  createVRPreloadWebview];
+        });
+    }
 //    [self performSelector:@selector(createVRPreloadWebview) withObject:nil afterDelay:1];
 }
 
