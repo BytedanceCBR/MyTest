@@ -495,7 +495,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 {
     NSString *title = nil;
     NSString *subtitle = self.subTitle;
-    NSString *btnTitle = @"提交";
+    NSString *btnTitle = nil;
     NSString *fromStr = self.fromStr;
     NSNumber *cluePage = nil;
     NSString *toast = nil;
@@ -540,6 +540,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
     if (title.length > 0) {
         fillFormConfig.title = title;
+    }
+    if (btnTitle.length > 0) {
+        fillFormConfig.btnTitle = btnTitle;
     }
     if (subtitle.length > 0) {
         fillFormConfig.subtitle = subtitle;

@@ -191,8 +191,9 @@
         if ([contactViewModel respondsToSelector:@selector(fillFormActionWithExtraDict:)]) {
             NSDictionary *infoDic =  @{kFHCluePage:@(FHClueFormPageTypeCOldPriceChangeNotice),
                                        @"title":@"变价通知",
-                                       @"subtitle":@"订阅变价通知，【房源】变价信息会及时发送到您的手机",
+                                       @"subtitle":@"订阅变价通知，房源变价信息会及时发送到您的手机",
                                        @"position":@"change_price",
+                                       @"btn_title":@"提交"
             };
             [contactViewModel fillFormActionWithExtraDict:infoDic];
             // 静默关注功能

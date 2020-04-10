@@ -18,9 +18,9 @@
 @property (nonatomic, weak) UIImageView *rightArrow;
 @property (nonatomic, weak) UILabel *submessageLab;
 @property (nonatomic, weak) UIView *priceBacView;
-@property (nonatomic, weak) UILabel *downPaymentsTitle;//最低首付title
+//@property (nonatomic, weak) UILabel *downPaymentsTitle;//最低首付title
 @property (nonatomic, weak) UILabel *downPayments;
-@property (nonatomic, weak) UILabel *monthlySupplyTitle;//月供title
+//@property (nonatomic, weak) UILabel *monthlySupplyTitle;//月供title
 @property (nonatomic, weak) UILabel *monthlySupply;
 @property (nonatomic, weak) UIView *lineView;//中间分割线
 @property (nonatomic, weak) UIButton *consultationBtn;
@@ -61,8 +61,20 @@
         }];
     }
     self.submessageLab.text = model.downPayment.text;
-    self.downPayments.text = model.downPayment.minDownPayment;
-    self.monthlySupply.text = model.downPayment.monthlyPayment;
+    self.downPayments.attributedText = [self returnAttributedStringWithTitle:@"最低首付  " info:model.downPayment.minDownPayment isdownPayments:YES];
+    self.monthlySupply.attributedText = [self returnAttributedStringWithTitle:@"月供  " info:model.downPayment.monthlyPayment isdownPayments:NO];
+}
+
+- (NSMutableAttributedString *) returnAttributedStringWithTitle:(NSString *)title info:(NSString *)info isdownPayments:(BOOL)isdownPayments {
+    NSString *titleStr = title;
+    NSString *infoStr = info;
+    NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@%@",titleStr,infoStr]];
+    [attStr addAttribute:NSFontAttributeName value:[UIFont themeFontRegular:14] range:NSMakeRange(0, titleStr.length)];
+    [attStr addAttribute:NSForegroundColorAttributeName value: [UIColor themeGray3] range:NSMakeRange(0, titleStr.length)];
+    [attStr addAttribute:NSFontAttributeName value:[UIFont themeFontSemibold:16] range:NSMakeRange(titleStr.length, attStr.length- titleStr.length)];
+    [attStr addAttribute:NSForegroundColorAttributeName value: [UIColor themeGray2] range:NSMakeRange(titleStr.length, attStr.length- titleStr.length)];
+    [attStr addAttribute:NSBaselineOffsetAttributeName value:@(isdownPayments?-1.3:-1) range:NSMakeRange(titleStr.length, attStr.length- titleStr.length)];
+    return attStr;
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -128,24 +140,18 @@
     }];
     [self.downPayments mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.lineView.mas_centerY);
-        make.right.equalTo(self.lineView.mas_left).offset(-20);
-    }];
-    [self.downPaymentsTitle mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.lineView.mas_centerY);
-        make.right.equalTo(self.downPayments.mas_left).offset(-8);
-    }];
-    [self.monthlySupplyTitle mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.lineView.mas_centerY);
-        make.left.equalTo(self.lineView.mas_right).offset(20);
+        make.right.equalTo(self.lineView.mas_left);
+        make.left.equalTo(self.priceBacView);
     }];
     [self.monthlySupply mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.lineView.mas_centerY);
-        make.left.equalTo(self.monthlySupplyTitle.mas_right).offset(8);
+        make.left.equalTo(self.lineView.mas_right);
+        make.right.equalTo(self.priceBacView);
     }];
     [self.consultationBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.titleImage);
         make.right.equalTo(self.rightArrow.mas_right);
-        make.top.equalTo(self.downPaymentsTitle.mas_bottom).offset(25);
+        make.top.equalTo(self.downPayments.mas_bottom).offset(25);
         make.height.mas_offset(40);
         make.bottom.equalTo(self.containerView).offset(-20);
     }];
@@ -182,7 +188,7 @@
 
 - (UIImageView *)rightArrow {
     if (!_rightArrow) {
-        UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeGray3]); //@"detail_entrance_arrow"
+        UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", [UIColor colorWithHexStr:@"a57d59"]); //@"detail_entrance_arrow"
         UIImageView *rightArrow = [[UIImageView alloc]initWithImage:img];
         [self.containerView addSubview:rightArrow];
         _rightArrow = rightArrow;
@@ -247,36 +253,11 @@
         UILabel *downPayments = [[UILabel alloc]init];
         downPayments.font = [UIFont themeFontSemibold:16];
         downPayments.textColor = [UIColor themeGray2];
+        downPayments.textAlignment = NSTextAlignmentCenter;
         [self.containerView addSubview:downPayments];
         _downPayments = downPayments;
     }
     return _downPayments;
-}
-
-- (UILabel *)downPaymentsTitle
-{
-    if (!_downPaymentsTitle) {
-        UILabel *downPaymentsTitle = [[UILabel alloc]init];
-        downPaymentsTitle.font = [UIFont themeFontRegular:14];
-        downPaymentsTitle.text = @"最低首付";
-        downPaymentsTitle.textColor = [UIColor themeGray3];
-        [self.containerView addSubview:downPaymentsTitle];
-        _downPaymentsTitle = downPaymentsTitle;
-    }
-    return _downPaymentsTitle;
-}
-
-- (UILabel *)monthlySupplyTitle
-{
-    if (!_monthlySupplyTitle) {
-        UILabel *monthlySupplyTitle = [[UILabel alloc]init];
-        monthlySupplyTitle.font = [UIFont themeFontRegular:14];
-        monthlySupplyTitle.textColor = [UIColor themeGray3];
-        monthlySupplyTitle.text = @"月供";
-        [self.containerView addSubview:monthlySupplyTitle];
-        _monthlySupplyTitle = monthlySupplyTitle;
-    }
-    return _monthlySupplyTitle;
 }
 
 - (UILabel *)monthlySupply
@@ -285,6 +266,7 @@
         UILabel *monthlySupply = [[UILabel alloc]init];
         monthlySupply.font = [UIFont themeFontSemibold:16];
         monthlySupply.textColor = [UIColor themeGray2];
+        monthlySupply.textAlignment = NSTextAlignmentCenter;
         [self.containerView addSubview:monthlySupply];
         _monthlySupply = monthlySupply;
     }
@@ -319,16 +301,7 @@
 
 - (void)tapConsultation:(UIButton *)sender {
     FHDetailAdvisoryLoanModel *model = (FHDetailAdvisoryLoanModel *)self.currentData;
-    if (model.contactModel.contactPhone.phone.length<0) {
-        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithExtraDict:)]) {
-            NSDictionary *infoDic =  @{kFHCluePage:@(FHClueFormPageTypeCOldHouseShoufu),
-                                       @"title":@"首付咨询",
-                                       @"subtitle":@"订阅首付咨询，房源首付信息会及时发送到您的手机",
-                                       @"position":@"loan",
-            };
-            [model.contactModel fillFormActionWithExtraDict:infoDic];
-        }
-    }else {
+    if (model.contactModel.contactPhone.phone.length>0) {
         NSDictionary *userInfoDict = @{@"tracer":@{}};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         NSString *openUrl = model.downPayment.openUrl;
@@ -336,18 +309,28 @@
             NSURL *url = [NSURL URLWithString:openUrl];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
+    }else {
+        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithExtraDict:)]) {
+            NSDictionary *infoDic =  @{kFHCluePage:@(FHClueFormPageTypeCOldHouseShoufu),
+                                       @"title":@"首付咨询",
+                                       @"subtitle":@"订阅首付咨询，房源首付信息会及时发送到您的手机",
+                                       @"position":@"loan",
+                                       @"btn_title":@"提交"
+            };
+            [model.contactModel fillFormActionWithExtraDict:infoDic];
+        }
     }
 }
 
 - (void)tapCalculator:(UIButton *)sender {
-        FHDetailAdvisoryLoanModel *model = (FHDetailAdvisoryLoanModel *)self.currentData;
-        NSDictionary *userInfoDict = @{@"tracer":@{}};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-        NSString *openUrl = model.downPayment.calculatorUrl;
-        if (openUrl.length > 0) {
-            NSURL *url = [NSURL URLWithString:openUrl];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-        }
+    FHDetailAdvisoryLoanModel *model = (FHDetailAdvisoryLoanModel *)self.currentData;
+    NSDictionary *userInfoDict = @{@"tracer":@{}};
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+    NSString *openUrl = model.downPayment.calculatorUrl;
+    if (openUrl.length > 0) {
+        NSURL *url = [NSURL URLWithString:openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
 }
 @end
 @implementation FHDetailAdvisoryLoanModel
