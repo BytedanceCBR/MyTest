@@ -331,6 +331,8 @@
     if (scrollView != self.infoListTable) {
         return;
     }
+   
+    [self.detailController refreshContentOffset:scrollView.contentOffset];
 }
 
 @end
