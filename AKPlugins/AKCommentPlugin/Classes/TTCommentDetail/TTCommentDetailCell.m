@@ -402,8 +402,6 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
             }
             return ret;
         };
-        
-        _digButton.manuallySetSelectedEnabled = YES;
     }
     return _digButton;
 }
@@ -421,7 +419,7 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
             if ([TTAccountManager isLogin]) {
-                wSelf.digButton.selected = !wSelf.digButton.selected;
+                [wSelf digButtonOnClick:wSelf.digButton];
             }
         }
     }];
