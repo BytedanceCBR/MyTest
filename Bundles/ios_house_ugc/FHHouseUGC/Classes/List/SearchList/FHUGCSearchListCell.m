@@ -106,7 +106,7 @@
     FHUGCScialGroupDataModel *model = self.currentData;
     if ([model isKindOfClass:[FHUGCScialGroupDataModel class]]) {
         NSAttributedString *text1 = [self processHighlightedDefault:model.socialGroupName textColor:[UIColor themeGray1] fontSize:15.0];
-        self.titleLabel.attributedText = [self processHighlighted:text1 originText:model.socialGroupName textColor:[UIColor themeRed1] fontSize:15.0];
+        self.titleLabel.attributedText = [self processHighlighted:text1 originText:model.socialGroupName textColor:[UIColor themeOrange1] fontSize:15.0];
         // self.titleLabel.text = model.socialGroupName;
         self.descLabel.text = model.countText;
         self.followButton.followed = [model.hasFollow boolValue];
@@ -244,7 +244,7 @@
         _chooseButton.layer.borderColor = [UIColor themeRed1].CGColor;
         _chooseButton.layer.borderWidth = 0.5;
         _chooseButton.titleLabel.font = [UIFont themeFontRegular:12];
-        [_chooseButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [_chooseButton setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
         [_chooseButton setTitle:@"选择" forState:UIControlStateNormal];
         _chooseButton.userInteractionEnabled = NO;
     }

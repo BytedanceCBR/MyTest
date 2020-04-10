@@ -85,8 +85,10 @@
         [self loadJSbundleAndShowWithIp:nil port:nil moduleName:nil];
     } else {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ip地址或module为空" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        __weak UIAlertController *weakAlert = alert;
         [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [alert dismissViewControllerAnimated:NO completion:nil];
+            __strong typeof(weakAlert) strongAlert = weakAlert;
+            [strongAlert dismissViewControllerAnimated:NO completion:nil];
         }]];
         [self presentViewController:alert animated:YES completion:nil];
     }

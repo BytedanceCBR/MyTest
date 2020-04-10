@@ -104,11 +104,11 @@
     }];
     // infoButton
     _infoButton = [[UIButton alloc] init];
-    [_infoButton setImage:[UIImage imageNamed:@"info-outline-material"] forState:UIControlStateNormal];
+    [_infoButton setImage:[UIImage imageNamed:@"reportimage"] forState:UIControlStateNormal];
     [_infoButton setTitle:@"举报" forState:UIControlStateNormal];
     NSAttributedString *attriStr = [[NSAttributedString alloc] initWithString:@"举报" attributes:@{
                                                                                                  NSFontAttributeName:[UIFont themeFontRegular:12],
-                                                                                                 NSForegroundColorAttributeName:[UIColor themeRed1]
+                                                                                                 NSForegroundColorAttributeName:[UIColor themeGray3]
                                                                                                  }];
     [_infoButton setAttributedTitle:attriStr forState:UIControlStateNormal];
     _infoButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);

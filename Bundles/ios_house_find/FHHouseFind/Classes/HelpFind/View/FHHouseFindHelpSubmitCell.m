@@ -73,7 +73,7 @@
         [_resetBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
         [_resetBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateHighlighted];
         _resetBtn.backgroundColor = [UIColor themeGray7];
-        _resetBtn.layer.cornerRadius = 4;
+        _resetBtn.layer.cornerRadius = 20; //4;
     }
     return _resetBtn;
 }
@@ -87,8 +87,8 @@
         [_confirmBtn setTitle:@"确定" forState:UIControlStateHighlighted];
         [_confirmBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_confirmBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        _confirmBtn.backgroundColor = [UIColor themeRed1];
-        _confirmBtn.layer.cornerRadius = 4;
+        _confirmBtn.backgroundColor = [UIColor themeOrange4];
+        _confirmBtn.layer.cornerRadius = 20; //4;
     }
     return _confirmBtn;
 }

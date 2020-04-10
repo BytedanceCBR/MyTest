@@ -23,10 +23,15 @@
 #import "FHPostEditListModel.h"
 #import <FHUGCEditedPostModel.h>
 #import "FHUGCPublishTagModel.h"
+#import "FHInterceptionManager.h"
+#import "TTInstallIDManager.h"
+#import "ExploreExtenstionDataHelper.h"
+#import "TTModuleBridge.h"
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
 #define QURL(QPATH) [[self host] stringByAppendingString:QPATH]
+#define kInterceptionUserFollows @"kInterceptionUserFollows"
 
 @implementation FHHouseUGCAPI
 
@@ -59,7 +64,7 @@
         paramDic[@"tab_name"] = tabName;
     }
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance]  requestForBinaryWithResponse:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         __block NSError *backError = error;
         
         NSDate *backDate = [NSDate date];
@@ -71,6 +76,10 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             id<FHBaseModelProtocol> model = nil;
             if (backError && !obj) {
                 code = backError.code;
@@ -94,7 +103,7 @@
                     }
                 }
             }
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
@@ -167,8 +176,7 @@
             requestLogPath = [NSString stringWithFormat:@"%@_%@",url.path,category];
         }
     }
-    
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:queryPath params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:queryPath params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         __block NSError *backError = error;
         NSDate *backDate = [NSDate date];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -179,6 +187,11 @@
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
             id <FHBaseModelProtocol> model = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
+
             if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -201,7 +214,7 @@
                     }
                 }
             }
-            [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model, backError);
@@ -241,7 +254,40 @@
     NSString *queryPath = @"/f100/ugc/user_follows";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"type"] = @(type);
-    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+    
+    FHInterceptionConfig *config = [[FHInterceptionConfig alloc] init];
+    config.category = @{
+                @"url":queryPath,
+                @"desc":@"did为空"
+                };
+    //加入拦截器
+    WeakSelf;
+    return [[FHInterceptionManager sharedInstance] addInterception:kInterceptionUserFollows config:config Condition:^BOOL{
+        return !isEmptyString([TTInstallIDManager sharedInstance].deviceID);
+    } operation:^{
+        [wself requestDeviceId];
+    } complete:^(BOOL success, TTHttpTask * _Nullable httpTask) {
+        //如有特殊需求，可用这些结果
+    } task:^TTHttpTask * _Nullable{
+        return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+    }];
+}
+
++ (void)requestDeviceId {
+    [[TTInstallIDManager sharedInstance] startRegisterDeviceWithAutoActivated:YES success:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
+        // 更新installID
+        if(!isEmptyString(installID)) {
+            [ExploreExtenstionDataHelper saveSharedIID:installID];
+            
+            [[TTModuleBridge sharedInstance_tt] registerAction:@"HTSGetInstallID" withBlock:^id _Nullable(id  _Nullable object, id  _Nullable params) {
+                return installID;
+            }];
+        }
+        
+        if (!isEmptyString(deviceID)) {
+            [ExploreExtenstionDataHelper saveSharedDeviceID:deviceID];
+        }
+    } failure:nil];
 }
 
 + (TTHttpTask *)requestFollow:(NSString *)group_id action:(NSInteger)action completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion {
@@ -362,7 +408,7 @@
     paramDic[@"cell_type"] = @(cellType);
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
@@ -374,7 +420,10 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             BOOL success = NO;
             if(backError && !obj) {
                 code = backError.code;
@@ -409,7 +458,7 @@
                     }
                 }
             }
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(success,error);
@@ -447,7 +496,7 @@
     Class jsonCls = [FHFeedOperationResultModel class];
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -459,6 +508,10 @@
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
             id<FHBaseModelProtocol> model = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -481,7 +534,7 @@
                     }
                 }
             }
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
@@ -548,7 +601,7 @@
     }
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
@@ -566,7 +619,10 @@
             BOOL hasNew = NO;
             NSTimeInterval interval = 0;
             NSTimeInterval cacheDuration = 0;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -606,7 +662,7 @@
                 }
             }
             
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(hasNew,interval,cacheDuration,backError);
@@ -627,7 +683,7 @@
     }
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
@@ -643,7 +699,10 @@
             
             BOOL success = NO;
             FHTopicHeaderModel *headerModel = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -680,7 +739,7 @@
                     }
                 }
             }
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(headerModel,backError);
@@ -713,7 +772,7 @@
     
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
         
@@ -728,7 +787,10 @@
              
             
             FHTopicFeedListModel *listModel = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -765,7 +827,7 @@
                     }
                 }
             }
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(listModel, backError);
@@ -783,7 +845,8 @@
     [paramDic addEntriesFromDictionary:params];
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -795,7 +858,10 @@
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
             FHUGCNoticeModel *model = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -819,7 +885,7 @@
                 }
             }
             
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -920,7 +986,7 @@
     [paramDic addEntriesFromDictionary:params];
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -931,7 +997,10 @@
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
             FHUGCVoteModel *model = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -955,7 +1024,7 @@
                 }
             }
             
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -983,7 +1052,7 @@
     }
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
@@ -997,9 +1066,12 @@
             NSDictionary *exceptionDict = nil;
             
             FHUGCVoteResponseModel *model = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if(backError) {
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(2)} extra:nil];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(2),@"response_code":@(responseCode)} extra:nil];
             }
             
             if (backError && !obj) {
@@ -1025,13 +1097,13 @@
                 }
                 
                 if([model.status integerValue] == 0 && !backError) {
-                    [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(0)} extra:nil];
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(0),@"response_code":@(responseCode)} extra:nil];
                 } else {
-                    [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(1)} extra:nil];
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"vote_action" metric:nil category:@{@"status":@(1),@"response_code":@(responseCode)} extra:nil];
                 }
             }
             
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model,backError);
@@ -1053,7 +1125,7 @@
         paramDic[@"option_num"] = optionNum;
     }
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
         
@@ -1064,11 +1136,14 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             BOOL success = NO;
             
             if(backError) {
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"unvote_action" metric:nil category:@{@"status":@(2)} extra:nil];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"unvote_action" metric:nil category:@{@"status":@(2),@"response_code":@(responseCode)} extra:nil];
             }
             
             if (backError && !obj) {
@@ -1107,7 +1182,7 @@
                     }
                 }
             }
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(success,error);
@@ -1124,7 +1199,8 @@
     [paramDic addEntriesFromDictionary:params];
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj) {
+    
+    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHVoteHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
@@ -1136,7 +1212,10 @@
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
             FHUGCWendaModel *model = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -1160,7 +1239,7 @@
                 }
             }
             
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
 
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1183,8 +1262,7 @@
     paramDic[@"offset"] = @(offset);
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
-        
+    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
         
@@ -1195,7 +1273,10 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             FHUGCPostHistoryModel *model = nil;
             if (backError && !obj) {
                 code = backError.code;
@@ -1220,7 +1301,7 @@
                 }
             }
             
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1236,7 +1317,7 @@
     NSString *url = QURL(queryPath);
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:params method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:@"POST" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
@@ -1248,7 +1329,10 @@
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
             FHUGCEditedPostModel *model = nil;
-            
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -1272,7 +1356,7 @@
                 }
             }
             
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1288,7 +1372,7 @@
     NSString *url = QURL(queryPath);
     
     NSDate *startDate = [NSDate date];
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
         
@@ -1300,6 +1384,10 @@
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
             FHUGCPublishTagModel *model = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -1323,7 +1411,7 @@
                 }
             }
             
-            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:queryPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1367,8 +1455,7 @@
             requestLogPath = [NSString stringWithFormat:@"%@_%@",url.path,categoryName];
         }
     }
-    
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         __block NSError *backError = error;
         NSDate *backDate = [NSDate date];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1378,6 +1465,10 @@
             NSString *errMsg = nil;
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             id <FHBaseModelProtocol> model = nil;
             if (backError && !obj) {
                 code = backError.code;
@@ -1401,7 +1492,7 @@
                     }
                 }
             }
-            [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
 //                dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model, backError);
@@ -1431,8 +1522,7 @@
             requestLogPath = [NSString stringWithFormat:@"%@_%@",url.path,forumId];
         }
     }
-    
-    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         __block NSError *backError = error;
         NSDate *backDate = [NSDate date];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1443,6 +1533,10 @@
             NSMutableDictionary *extraDict = nil;
             NSDictionary *exceptionDict = nil;
             id <FHBaseModelProtocol> model = nil;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
             if (backError && !obj) {
                 code = backError.code;
                 resultType = FHNetworkMonitorTypeNetFailed;
@@ -1465,7 +1559,7 @@
                     }
                 }
             }
-            [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict];
+            [FHMainApi addRequestLog:requestLogPath startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
             if (completion) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(model, backError);

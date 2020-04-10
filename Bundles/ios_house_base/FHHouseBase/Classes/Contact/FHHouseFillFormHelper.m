@@ -244,9 +244,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     NSString *houseId = customHouseId.length > 0 ? customHouseId : configModel.houseId;
+    NSNumber *targetType = configModel.targetType ? : @(configModel.houseType);
     NSString *from = fromStr.length > 0 ? fromStr : [self fromStrByHouseType:configModel.houseType];
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : configModel.chooseAgencyList;
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:configModel.cluePage clueEndpoint:configModel.clueEndpoint targetType:@(configModel.houseType) agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:configModel.cluePage clueEndpoint:configModel.clueEndpoint targetType:targetType agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
@@ -366,6 +367,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (configModel.itemId.length > 0) {
         params[@"item_id"] = configModel.itemId;
     }
+    params[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
 
@@ -395,7 +397,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
     }
     params[@"agency_list"] = dict.count > 0 ? dict : @"be_null";
-
+    params[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
 

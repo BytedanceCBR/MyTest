@@ -113,9 +113,9 @@
     [self.scrollView addSubview:_sendVerifyCodeBtn];
 
     self.confirmBtn = [[UIButton alloc] init];
-    _confirmBtn.backgroundColor = [UIColor themeRed1];
+    _confirmBtn.backgroundColor = [UIColor themeOrange4];
     _confirmBtn.alpha = 0.6;
-    _confirmBtn.layer.cornerRadius = 4;
+    _confirmBtn.layer.cornerRadius = 23; //4;
     [_confirmBtn addTarget:self action:@selector(confirm) forControlEvents:UIControlEventTouchUpInside];
     [self setButtonContent:@"登录" font:[UIFont themeFontRegular:16] color:[UIColor whiteColor] state:UIControlStateNormal btn:_confirmBtn];
     [self.scrollView addSubview:_confirmBtn];

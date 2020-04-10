@@ -56,7 +56,7 @@
     [self addSubview:_iconView];
     _keyLabel = [[UILabel alloc] init];
     _keyLabel.text = @"";
-    _keyLabel.textColor = [UIColor themeRed1];
+    _keyLabel.textColor = [UIColor themeOrange1];
     _keyLabel.font = [UIFont themeFontRegular:14];
     [self addSubview:_keyLabel];
     

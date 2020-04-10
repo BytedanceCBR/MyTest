@@ -29,6 +29,9 @@
 @property (nonatomic, assign)   BOOL       needRemoveLastVC;// fh_needRemoveLastVC_key @(YES)
 @property (nonatomic, copy)     NSArray       *needRemovedVCNameStringArrs; // 类名数组key：fh_needRemoveedVCNamesString_key
 
+
+@property (nonatomic , strong) UIView *loadingView;
+
 @end
 
 @implementation FHBaseViewController
@@ -333,6 +336,35 @@
  */
 - (BOOL)isOpenUrlParamsSame:(NSDictionary *)queryParams {
     return NO;
+}
+
+-(UIView *)loadingView
+{
+    if (!_loadingView) {
+        _loadingView = [[UIView alloc] initWithFrame:CGRectZero];
+        _loadingView.backgroundColor = [UIColor whiteColor];
+    }
+    return _loadingView;
+}
+
+-(void)showLoading:(UIView *)inView
+{
+    [self showLoading:inView offset:CGPointZero];
+}
+
+-(void)showLoading:(UIView *)inView offset:(CGPoint)offset
+{
+    if (!inView) {
+        inView = self.view;
+    }
+    [inView addSubview:self.loadingView];
+    _loadingView.frame = inView.bounds;
+    [inView addSubview:_loadingView];
+}
+
+-(void)hideLoading
+{
+    [_loadingView removeFromSuperview];
 }
 
 #pragma mark - UIViewControllerErrorHandler

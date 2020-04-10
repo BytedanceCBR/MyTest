@@ -93,8 +93,8 @@ static TTFeedDislikeView *__visibleDislikeView;
         
         self.okBtn = [[SSThemedButton alloc] initWithFrame:CGRectMake(0, 0, [self buttonWidth], [self buttonHeight])];
         
-        _okBtn.backgroundColorThemeKey = @"red1";
-        _okBtn.highlightedBackgroundColorThemeKey = @"red1";
+        _okBtn.backgroundColorThemeKey = @"orange4";
+        _okBtn.highlightedBackgroundColorThemeKey = @"orange4";
         [_okBtn addTarget:self action:@selector(okBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [_contentBgView addSubview:_okBtn];
         
@@ -353,7 +353,7 @@ static TTFeedDislikeView *__visibleDislikeView;
         NSString * title = [NSString stringWithFormat:@"已选%lu个理由", (unsigned long)self.selectedWords.count];
         NSRange range = NSMakeRange(2, 1);
         NSMutableAttributedString * atrrTitle = [[NSMutableAttributedString alloc] initWithString:title];
-        [atrrTitle setAttributes:@{ NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:@"red1"] } range:range];
+        [atrrTitle setAttributes:@{ NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:@"orange1"] } range:range];
         [self.titleLabel setAttributedText:atrrTitle];
     } else {
         [self.titleLabel setText:@"可选理由，精准屏蔽"];

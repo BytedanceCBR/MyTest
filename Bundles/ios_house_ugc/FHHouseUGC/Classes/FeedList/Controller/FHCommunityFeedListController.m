@@ -342,7 +342,26 @@
         page_type = @"nearby_list";
     }
     [params setObject:page_type forKey:@"enter_from"];
-    [params setObject:@"click_publisher" forKey:@"enter_type"];
+    
+    NSString *enter_type = UT_BE_NULL;
+    switch (from) {
+        case FHUGCLoginFrom_POST:
+            enter_type = @"click_publisher_moments";
+            break;
+        case FHUGCLoginFrom_GROUPCHAT:
+            enter_type = @"ugc_member_talk";
+            break;
+        case FHUGCLoginFrom_VOTE:
+            enter_type = @"click_publisher_vote";
+            break;
+        case FHUGCLoginFrom_WENDA:
+            enter_type = @"click_publisher_question";
+            break;
+        default:
+            break;
+    }
+    [params setObject:enter_type forKey:@"enter_type"];
+    
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);

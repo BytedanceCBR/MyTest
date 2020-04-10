@@ -287,7 +287,7 @@
     [self.contentView addSubview:_descLabel];
     
     _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _priceLabel.textColor = [UIColor themeRed1];
+    _priceLabel.textColor = [UIColor themeOrange1];
     _priceLabel.font = [UIFont themeFontMedium:16];
     [self.contentView addSubview:_priceLabel];
     

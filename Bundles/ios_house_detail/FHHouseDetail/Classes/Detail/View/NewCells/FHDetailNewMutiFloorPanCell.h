@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UILabel       *statusLabel;
 @property (nonatomic, strong)   UILabel       *priceLabel;
 @property (nonatomic, strong)   UILabel       *spaceLabel;
-
+@property (nonatomic, strong)   UIButton      *consultDetailButton;
 
 @end
 

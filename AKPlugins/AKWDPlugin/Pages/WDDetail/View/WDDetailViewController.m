@@ -64,6 +64,7 @@
 #import <TTUIWidget/TTBubbleView.h>
 #import <TTImpression/TTRelevantDurationTracker.h>
 #import <TTVideoService/TTFFantasyTracker.h>
+#import "TTCommentViewController.h"
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -814,7 +815,14 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_buildCommentViewController
 {
-    self.commentViewController = [[NSClassFromString(@"TTCommentViewController") alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
+    self.commentViewController = [[TTCommentViewController alloc] initWithViewFrame:[self p_contentVisableRect] dataSource:self delegate:self];
+    
+    TTCommentViewController *vc = (TTCommentViewController *)(self.commentViewController);
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"enter_from"] = self.detailModel.gdExtJsonDict[@"enter_from"];
+    vc.tracerDict = dict;
+    
+    
     self.commentViewController.enableImpressionRecording = YES;
     [self.commentViewController willMoveToParentViewController:self];
     [self addChildViewController:self.commentViewController];
@@ -1090,7 +1098,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:conditions commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         *willRepostFwID = fwID;
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
-
+    commentManager.enterFrom = self.detailModel.gdExtJsonDict[@"enter_from"];
     self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
 
     self.commentWriteView.emojiInputViewVisible = switchToEmojiInput;

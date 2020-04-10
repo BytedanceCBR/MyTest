@@ -77,9 +77,9 @@
 - (void)setupUI {
     self.backgroundColor = [UIColor whiteColor];
     self.iconImageView = [[UIImageView alloc] init];
-    self.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e6b3", [UIColor themeRed1]);
+    self.iconImageView.image = ICON_FONT_IMG(24, @"\U0000e6b3", [UIColor themeOrange1]);
     [self addSubview:_iconImageView];
-    self.titleLabel = [self labelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeRed1]];
+    self.titleLabel = [self labelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeOrange1]];
     [self addSubview:_titleLabel];
     self.titleLabel.text = @"写回答";
     self.titleLabel.font = [UIFont themeFontRegular:16];
