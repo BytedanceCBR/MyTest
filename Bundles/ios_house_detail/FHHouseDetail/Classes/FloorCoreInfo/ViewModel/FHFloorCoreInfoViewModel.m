@@ -16,7 +16,6 @@
 #import "FHFloorPanCorePropertyCell.h"
 #import "FHDetailGrayLineCell.h"
 #import "FHDetailDisclaimerCell.h"
-#import "FHFloorPanCorePermitCell.h"
 
 @interface FHFloorCoreInfoViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -54,8 +53,6 @@
     [self.infoListTable registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     
     [self.infoListTable registerClass:[FHFloorPanCorePropertyCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePropertyCell class])];
-    
-    [self.infoListTable registerClass:[FHFloorPanCorePermitCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePermitCell class])];
 
     [self.infoListTable registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
 }
@@ -74,11 +71,6 @@
     // 属性信息
     if ([model isKindOfClass:[FHFloorPanCorePropertyCellModel class]]) {
         return [FHFloorPanCorePropertyCell class];
-    }
-    
-    // 准字信息
-    if ([model isKindOfClass:[FHFloorPanCorePermitCellModel class]]) {
-        return [FHFloorPanCorePermitCell class];
     }
     
     // 版权信息
@@ -171,7 +163,7 @@
     if (model.data.permitList.count > 0) {
         [self.currentItems addObject:grayLine];
         
-        FHFloorPanCorePermitCellModel *permitModel = [self createPermitInfoModel:model.data.permitList.firstObject];
+        FHFloorPanCorePropertyCellModel *permitModel = [self createPermitInfoModel:model.data.permitList.firstObject];
         [self.currentItems addObject:permitModel];
     }
     
