@@ -147,7 +147,6 @@
 
 - (void)setFloorPanModel{
     NSArray *tags = _model.tags;
-    
     if (tags) {
         FHHouseTagsModel *tagModel = [tags firstObject];
         CGSize itemSize = [_model.titleStr sizeWithAttributes:@{
@@ -167,11 +166,10 @@
             //make.right.mas_equalTo(self).offset(-35 -40 -4);
             make.width.mas_equalTo(itemWidth);
             make.height.mas_equalTo(28);
-            make.top.mas_equalTo(self.topBanner.mas_bottom).offset(28);
+            make.top.mas_equalTo(self.mas_top).offset(50);
         }];
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
-            make.height.mas_equalTo(20);
             make.width.mas_equalTo(40);
             make.centerY.mas_equalTo(self.nameLabel);
         }];
@@ -181,7 +179,7 @@
             make.left.mas_equalTo(self).offset(31);
             make.height.mas_equalTo(28);
             make.right.mas_equalTo(self).offset(-35);
-            make.top.mas_equalTo(self.topBanner.mas_bottom).offset(28);
+            make.top.mas_equalTo(self.mas_top).offset(50);
         }];
     }
     NSString *picing = _model.totalPicing;
@@ -206,11 +204,11 @@
         [noteStr addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:20] range:range];
         self.totalPirce.attributedText = noteStr;
     }
-    [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) { //会塌掉，不知道为什么？
+    [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(31);
-        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(14);
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(10);
         make.right.mas_equalTo(self).offset(- 35);
-        make.height.mas_equalTo(20);
+        make.height.mas_equalTo(24);
         make.bottom.mas_equalTo(self);
     }];
     
