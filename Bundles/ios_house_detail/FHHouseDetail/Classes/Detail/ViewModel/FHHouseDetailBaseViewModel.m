@@ -209,8 +209,6 @@
     imExtra[@"realtor_position"] = @"be_null";
     imExtra[@"source_from"] = @"house_ask_question";
     imExtra[@"im_open_url"] = model.openUrl;
-    imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCQuickQuestion];
     imExtra[@"question_id"] = model.id;
     [self.contactViewModel onlineActionWithExtraDict:imExtra];
 }

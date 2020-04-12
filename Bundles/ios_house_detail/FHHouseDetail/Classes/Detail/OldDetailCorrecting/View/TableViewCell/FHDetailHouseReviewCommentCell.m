@@ -314,9 +314,7 @@
 
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"realtor_position"] = @"realtor_evaluation";
-    imExtra[@"from"] = @"app_oldhouse_evaluate";
-    imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld", FHClueIMPageTypeCOldHouseEvaluate];
+    
     if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
         FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
         if(detailOldModel.data.houseReviewCommentAssociateInfo) {

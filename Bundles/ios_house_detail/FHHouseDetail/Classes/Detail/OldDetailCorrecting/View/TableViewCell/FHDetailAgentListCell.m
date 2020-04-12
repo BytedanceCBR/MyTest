@@ -296,19 +296,6 @@
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"realtor_position"] = @"detail_related";
-        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
-            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodMulrealtor];
-        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
-            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNewHouseMulrealtor];
-        }else {
-            imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
-            // 二手房经纪人推荐展位
-            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",contact.realtorType == FHRealtorTypeNormal ? FHClueIMPageTypeCOldHouseMulrealtor: FHClueIMPageTypeCOldHouseExpertMid];
-        }
-        
         
         switch (self.baseViewModel.houseType) {
             case FHHouseTypeNewHouse:

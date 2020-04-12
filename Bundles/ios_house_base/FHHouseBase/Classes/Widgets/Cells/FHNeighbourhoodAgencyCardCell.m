@@ -345,11 +345,7 @@
         if (self.phoneCallViewModel) {
             NSMutableDictionary *imExtra = @{}.mutableCopy;
             imExtra[@"realtor_position"] = @"neighborhood_expert_card";
-            imExtra[@"from"] = @"app_neighborhood_aladdin";
-//            imExtra[@"enter_from"] = self.traceParams[@"enter_from"];
-            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodAladdin];
-            
+                        
             if(self.modelData.associateInfo) {
                 imExtra[kFHAssociateInfo] = self.modelData.associateInfo;
             }

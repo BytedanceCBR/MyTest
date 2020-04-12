@@ -828,18 +828,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         extraDic[@"position"] = @"online";
         extraDic[@"realtor_position"] = @"online";
     }
-    if (self.houseType == FHHouseTypeNeighborhood) {
-        extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-        extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
-    }
-    else if (self.houseType == FHHouseTypeNewHouse) {
-        extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-        extraDic[kFHCluePage] = @(FHClueIMPageTypeCourt);
-    }
-    else if(self.houseType == FHHouseTypeSecondHandHouse) {
-        extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-        extraDic[kFHCluePage] = @(FHClueIMPageTypeCOldHouse);
-    }
     
     // ------------- 房源详情页 --------------------//
     if([self.belongsVC isKindOfClass:FHHouseDetailViewController.class]) {
@@ -917,21 +905,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
         
     [self onlineActionWithExtraDict:extraDic];
-}
-
-+ (FHClueIMPageTypeC)imCluePageTypeByFromString:(NSString *)fromStr
-{
-    FHClueIMPageTypeC cluePageType = FHClueIMPageTypeCourt;
-    if ([fromStr isEqualToString:@"app_floorplan"]) {
-        cluePageType = FHClueIMPageTypeFloorplan;
-    }else if ([fromStr isEqualToString:@"app_newhouse_detail"]) {
-        cluePageType = FHClueIMPageTypeNewHouseDetail;
-    }else if ([fromStr isEqualToString:@"app_newhouse_apartmentlist"]) {
-        cluePageType = FHClueIMPageTypeApartmentlist;
-    } else if([fromStr isEqualToString:@"app_oldhouse"]) {
-        cluePageType = FHClueIMPageTypeCOldHouse;
-    }
-    return cluePageType;
 }
 
 // 新房群聊按钮点击

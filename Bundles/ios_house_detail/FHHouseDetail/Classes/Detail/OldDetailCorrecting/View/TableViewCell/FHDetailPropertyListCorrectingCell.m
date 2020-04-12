@@ -451,12 +451,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }
     FHDetailPropertyListCorrectingModel *propertyModel = (FHDetailPropertyListCorrectingModel *)self.currentData;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
-    imExtra[@"from"] = isFloorAction?@"app_oldhouse_floor":@"app_oldhouse_mortgage";
-    imExtra[@"source"] = isFloorAction?@"app_oldhouse_floor":@"app_oldhouse_mortgage";
     imExtra[@"source_from"] = isFloorAction?@"floor_type":@"loan";
     imExtra[@"im_open_url"] = openUrl;
-    imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",isFloorAction?FHClueIMPageTypeCOldFloor:FHClueIMPageTypeCOldBudget];
     if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
         FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
         

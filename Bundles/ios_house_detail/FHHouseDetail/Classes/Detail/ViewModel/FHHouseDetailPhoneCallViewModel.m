@@ -57,113 +57,49 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 // extra:realtor_position element_from item_id
 - (void)imchatActionWithPhone:(FHDetailContactModel *)contactPhone realtorRank:(NSString *)rank extraDic:(NSDictionary *)extra {
-        
-    if([FHEnvContext isSwitchToIMNew] == NO) {
-        
-        NSMutableDictionary *tempExtra = extra.mutableCopy;
-        tempExtra[kFHAssociateInfo] = nil;
-        extra = tempExtra.copy;
-        
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"event_type"] = @"house_app2c_v2";
-        dict[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
-        dict[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
-        dict[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
-        dict[@"log_pb"] = self.tracerDict[@"log_pb"];
-        dict[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
-        if (rank.length > 0) {
-            dict[@"rank"] = rank;
-        }else {
-            dict[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
-        }
-        dict[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
-        dict[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
-        dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
-        dict[@"realtor_id"] = contactPhone.realtorId;
-        dict[@"realtor_rank"] = rank ?: @"0";
-        dict[@"conversation_id"] = @"be_null";
-        dict[@"realtor_logpb"] = contactPhone.realtorLogpb;
-        if (extra) {
-            [dict addEntriesFromDictionary:extra];
-        }
-        
-        NSString* from = extra[@"from"] ? : @"be_null";
-        NSString *source = extra[@"source"];
-        
-        NSMutableDictionary *clickImParams = @{}.mutableCopy;
-        if (dict) {
-            [clickImParams addEntriesFromDictionary:dict];
-            clickImParams[@"im_open_url"] = nil;
-        }
-        clickImParams[@"growth_deepevent"] = @(1);
-        [FHUserTracker writeEvent:@"click_im" params:clickImParams];
-        dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
-        dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
-        if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *logPbDict = self.tracerDict[@"log_pb"];
-            dict[@"impr_id"] = logPbDict[@"impr_id"] ? : @"be_null";
-            dict[@"search_id"] = logPbDict[@"search_id"] ? : @"be_null";
-            dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
-        }
-        NSString *urlStr = contactPhone.imOpenUrl;
-        if (extra[IM_OPEN_URL]) {
-            urlStr = extra[IM_OPEN_URL];
-        }
-        NSURL *openUrl = [NSURL URLWithString:urlStr];
-        NSMutableDictionary * userInfoDict = @{@"tracer":dict, @"from": from}.mutableCopy;
-        if (!isEmptyString(source)) {
-            userInfoDict[@"source"] = source;
-        }
-        NSString *realtorPosition = extra[@"realtor_position"];
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-        [self silentFollow:extra];
-    }
     
-    else {
-        // IM 透传数据模型
-        FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
-        associateIMModel.houseId = self.houseId;
-        associateIMModel.houseType = self.houseType;
-        associateIMModel.associateInfo = extra[kFHAssociateInfo]?:contactPhone.associateInfo;
-        NSMutableDictionary *tempExtra = extra.mutableCopy;
-        tempExtra[kFHAssociateInfo] = nil;
-        extra = tempExtra.copy;
-        
-        // IM 相关埋点上报参数
-        FHAssociateReportParams *reportParams = [FHAssociateReportParams new];
-        reportParams.enterFrom = self.tracerDict[@"enter_from"] ? : @"be_null";
-        reportParams.elementFrom = self.tracerDict[@"element_from"] ? : @"be_null";
-        reportParams.originFrom = self.tracerDict[@"origin_from"] ? : @"be_null";
-        reportParams.logPb = self.tracerDict[@"log_pb"];
-        reportParams.originSearchId = self.tracerDict[@"origin_search_id"] ? : @"be_null";
-        reportParams.rank = (rank.length > 0) ? rank : (self.tracerDict[@"rank"] ? : @"be_null");
-        reportParams.cardType = self.tracerDict[@"card_type"] ? : @"be_null";
-        reportParams.pageType = self.tracerDict[@"page_type"] ?: @"be_null";
-        reportParams.realtorId = contactPhone.realtorId;
-        reportParams.realtorRank = rank ?: @"0";
-        reportParams.realtorLogpb = contactPhone.realtorLogpb;
-        reportParams.conversationId = @"be_null";
-        reportParams.extra = extra;
-        reportParams.realtorPosition = extra[@"realtor_position"];
-        reportParams.searchId = self.tracerDict[@"search_id"] ? : @"be_null";
-        reportParams.groupId = self.tracerDict[@"group_id"]?:(self.tracerDict[@"log_pb"][@"group_id"] ? : @"be_null");
-        
-        associateIMModel.reportParams = reportParams;
-        
-        // IM跳转链接
-        associateIMModel.imOpenUrl = extra[IM_OPEN_URL]?:contactPhone.imOpenUrl;
-        
-        // 配置静默关注回调
-        WeakSelf;
-        associateIMModel.slientFollowCallbackBlock = ^(BOOL isSuccess) {
-            if (isSuccess) {
-                wself.isEnterIM = YES;
-            }
-        };
-        // 跳转IM
-        [FHHouseIMClueHelper jump2SessionPageWithAssociateIM:associateIMModel];
-    }
+    // IM 透传数据模型
+    FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
+    associateIMModel.houseId = self.houseId;
+    associateIMModel.houseType = self.houseType;
+    associateIMModel.associateInfo = extra[kFHAssociateInfo]?:contactPhone.associateInfo;
+    NSMutableDictionary *tempExtra = extra.mutableCopy;
+    tempExtra[kFHAssociateInfo] = nil;
+    extra = tempExtra.copy;
+    
+    // IM 相关埋点上报参数
+    FHAssociateReportParams *reportParams = [FHAssociateReportParams new];
+    reportParams.enterFrom = self.tracerDict[@"enter_from"] ? : @"be_null";
+    reportParams.elementFrom = self.tracerDict[@"element_from"] ? : @"be_null";
+    reportParams.originFrom = self.tracerDict[@"origin_from"] ? : @"be_null";
+    reportParams.logPb = self.tracerDict[@"log_pb"];
+    reportParams.originSearchId = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    reportParams.rank = (rank.length > 0) ? rank : (self.tracerDict[@"rank"] ? : @"be_null");
+    reportParams.cardType = self.tracerDict[@"card_type"] ? : @"be_null";
+    reportParams.pageType = self.tracerDict[@"page_type"] ?: @"be_null";
+    reportParams.realtorId = contactPhone.realtorId;
+    reportParams.realtorRank = rank ?: @"0";
+    reportParams.realtorLogpb = contactPhone.realtorLogpb;
+    reportParams.conversationId = @"be_null";
+    reportParams.extra = extra;
+    reportParams.realtorPosition = extra[@"realtor_position"];
+    reportParams.searchId = self.tracerDict[@"search_id"] ? : @"be_null";
+    reportParams.groupId = self.tracerDict[@"group_id"]?:(self.tracerDict[@"log_pb"][@"group_id"] ? : @"be_null");
+    
+    associateIMModel.reportParams = reportParams;
+    
+    // IM跳转链接
+    associateIMModel.imOpenUrl = extra[IM_OPEN_URL]?:contactPhone.imOpenUrl;
+    
+    // 配置静默关注回调
+    WeakSelf;
+    associateIMModel.slientFollowCallbackBlock = ^(BOOL isSuccess) {
+        if (isSuccess) {
+            wself.isEnterIM = YES;
+        }
+    };
+    // 跳转IM
+    [FHHouseIMClueHelper jump2SessionPageWithAssociateIM:associateIMModel];
 }
 
 - (void)silentFollow:(NSDictionary *)extraDict
