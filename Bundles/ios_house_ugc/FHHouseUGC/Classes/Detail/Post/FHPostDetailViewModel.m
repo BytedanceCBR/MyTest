@@ -329,6 +329,9 @@
         if (self.lastPageSocialGroupId.length > 0) {
             [param setValue:self.lastPageSocialGroupId forKey:@"social_group_id"];
         }
+        if(self.threadDetailSource.length > 0){
+            param[@"thread_detail_source"] = self.threadDetailSource;
+        }
         uint64_t startTime = [NSObject currentUnixTime];
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];

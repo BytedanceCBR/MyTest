@@ -420,6 +420,7 @@
     dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
     dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
     dict[@"tid"] = cellModel.groupId;
+    dict[@"thread_detail_source"] = @"ugc_thread";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     FHFeedUGCContentModel *contentModel = cellModel.originData;
     NSString *routeUrl = @"sslocal://thread_detail";
