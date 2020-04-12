@@ -115,7 +115,7 @@
         }
         
         if(isUrlContainAssociateInfo == NO) {
-            userInfoDict[@"associate_info"] = associateIM.associateInfo.toDictionary;
+            userInfoDict[@"associate_info"] = associateIM.associateInfo.imInfo;
         }
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
