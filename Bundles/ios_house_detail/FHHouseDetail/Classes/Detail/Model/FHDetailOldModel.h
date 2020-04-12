@@ -217,6 +217,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *coverImage;
 @property (nonatomic, copy , nullable) NSString *description;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
 //@protocol FHVideoHouseVideoVideoInfosModel<NSObject>

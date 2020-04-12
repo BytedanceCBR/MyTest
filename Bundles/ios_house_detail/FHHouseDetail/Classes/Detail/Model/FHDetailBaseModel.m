@@ -66,6 +66,7 @@
                            @"isVideo": @"is_video",
                            @"shareUrl": @"share_url",
                            @"desc": @"description",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
