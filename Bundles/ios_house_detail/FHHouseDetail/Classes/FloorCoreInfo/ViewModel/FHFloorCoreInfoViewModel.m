@@ -148,7 +148,7 @@
     
     FHFloorPanCorePropertyCellModel *companyModel = [self createCompanyInfoModel:model];
     // 添加分割线--当存在某个数据的时候在顶部添加分割线
-    FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+    FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] initWithHeight:16];
     [self.currentItems addObject:grayLine];
     [self.currentItems addObject:companyModel];
 
@@ -171,8 +171,7 @@
     if (model.data.permitList.count > 0) {
         [self.currentItems addObject:grayLine];
         
-        FHFloorPanCorePermitCellModel *permitModel = [[FHFloorPanCorePermitCellModel alloc] init];
-        permitModel.permitList = model.data.permitList;
+        FHFloorPanCorePermitCellModel *permitModel = [self createPermitInfoModel:model.data.permitList.firstObject];
         [self.currentItems addObject:permitModel];
     }
     
@@ -181,6 +180,7 @@
     }
     
     [_infoListTable reloadData];
+    _infoListTable.contentOffset = CGPointMake(0, -15);
 }
 
 - (FHFloorPanCorePropertyCellModel *)createWaterInfoModel:(FHDetailNewCoreDetailModel *)model
@@ -272,19 +272,16 @@
 {
     FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
     
-    NSArray *pNameArray = [NSArray arrayWithObjects:@"环线",@"楼盘地址",@"售楼地址", nil];
+    NSArray *pNameArray = [NSArray arrayWithObjects:@"楼盘地址",@"售楼地址", nil];
     NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
     for (NSInteger i = 0; i < pNameArray.count; i++) {
         FHFloorPanCorePropertyCellItemModel *pItemModel = [[FHFloorPanCorePropertyCellItemModel alloc] init];
         pItemModel.propertyName = pNameArray[i];
         switch (i) {
             case 0:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.circuitDesc];
-                break;
-            case 1:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.generalAddress];
                 break;
-            case 2:
+            case 1:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.saleAddress];
                 break;
     
@@ -332,6 +329,36 @@
     
     return companyInfoModel;
 }
+
+- (FHFloorPanCorePropertyCellModel *)createPermitInfoModel:(FHDetailNewCoreDetailDataPermitListModel *)model
+{
+    FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
+    
+    NSArray *pNameArray = [NSArray arrayWithObjects:@"预售许可证",@"发证信息",@"绑定信息", nil];
+    NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < pNameArray.count; i++) {
+        FHFloorPanCorePropertyCellItemModel *pItemModel = [[FHFloorPanCorePropertyCellItemModel alloc] init];
+        pItemModel.propertyName = pNameArray[i];
+        switch (i) {
+            case 0:
+                pItemModel.propertyValue = [self checkPValueStr:model.permit];
+                break;
+            case 1:
+                pItemModel.propertyValue = [self checkPValueStr:model.permitDate];
+                break;
+            case 2:
+                pItemModel.propertyValue = [self checkPValueStr:model.bindBuilding];
+                break;
+            default:
+                break;
+        }
+        [pItemsArray addObject:pItemModel];
+    }
+    companyInfoModel.list = pItemsArray;
+    
+    return companyInfoModel;
+}
+
 
 #pragma UITableViewDelegate
 

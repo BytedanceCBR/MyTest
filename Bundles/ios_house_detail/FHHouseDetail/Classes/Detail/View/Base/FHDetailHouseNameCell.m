@@ -19,6 +19,7 @@
 
 @interface FHDetailHouseNameCell ()
 
+@property (nonatomic, strong)   UIView        *containerView;
 @property (nonatomic, strong)   UILabel       *nameLabel;
 @property (nonatomic, strong)   UILabel       *aliasLabel;
 @property (nonatomic, strong)   UILabel       *secondaryLabel;
@@ -55,13 +56,19 @@
     } else if (type == 2) {
         // 新房
         self.bottomLine.hidden = NO;
+        self.contentView.backgroundColor = [UIColor themeGray7];
+        self.containerView.hidden = NO;
+        _aliasLabel.textColor = RGB(0xae, 0xad, 0xad);
+        _secondaryLabel.textColor = [UIColor themeGray2];
+        _secondaryLabel.font = [UIFont themeFontSemibold:12];
     }
+    [self initConstraints:type];
     if (model.isHiddenLine) {
         self.bottomLine.hidden = YES;
     }
     self.nameLabel.text = model.name;
     [self setAlias:model.aliasName];
-    [self setTags:model.tags];
+    [self setTags:model.tags Type:type];
     
     if(self.baseViewModel.houseType == FHHouseTypeSecondHandHouse) {
         if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
@@ -87,7 +94,22 @@
     return self;
 }
 
+- (UIView *)containerView
+{
+    if (!_containerView) {
+        _containerView = [[UIView alloc] init];
+        _containerView.backgroundColor = [UIColor whiteColor];
+        _containerView.layer.cornerRadius = 10;
+        _containerView.layer.masksToBounds = YES;
+    }
+    return _containerView;
+}
+
 - (void)setupUI {
+    
+    [self.contentView addSubview:self.containerView];
+    self.containerView.hidden = YES;
+    
     _nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:24];
     _nameLabel.textColor = [UIColor themeGray1];
     _nameLabel.font = [UIFont themeFontMedium:24];
@@ -113,29 +135,51 @@
     [self.contentView addSubview:_bottomLine];
     
     // 布局
-    [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.top.mas_equalTo(20);
+    //[self initConstraints:0];
+}
+
+-(void) initConstraints:(NSInteger)type
+{
+    [self.containerView mas_remakeConstraints:^(MASConstraintMaker *make) {
+           make.left.mas_equalTo(15);
+           make.right.mas_equalTo(-15);
+        make.top.bottom.mas_equalTo(0);
     }];
-    [self.aliasLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(4);
+    CGFloat nameOffsetX = 0;
+    CGFloat secondaryOffsetX = 0;
+    CGFloat nameOffsetY = 0;
+    CGFloat secondaryOffsetY = 0;
+    CGFloat tagsViewOffsetY = 0;
+    if (type == 2) {
+        nameOffsetX = 11;
+        secondaryOffsetX = 8;
+        nameOffsetY = 5;
+        secondaryOffsetY = 6;
+        tagsViewOffsetY = -10;
+    }
+    [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20 + nameOffsetX);
+        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.top.mas_equalTo(20 + nameOffsetY);
+    }];
+    [self.aliasLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(4 + secondaryOffsetY);
         make.left.mas_equalTo(self.nameLabel.mas_left);
         make.height.mas_equalTo(0);
     }];
-    [self.secondaryLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.secondaryLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.aliasLabel);
-        make.left.mas_equalTo(self.aliasLabel.mas_right).offset(4);
+        make.left.mas_equalTo(self.aliasLabel.mas_right).offset(4 + secondaryOffsetX);
         make.height.mas_equalTo(0);
     }];
-    [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.tagsView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.aliasLabel.mas_bottom).offset(-2);
         make.left.mas_equalTo(self.nameLabel.mas_left);
-        make.bottom.mas_equalTo(self.contentView).offset(-16);
+        make.bottom.mas_equalTo(self.contentView).offset(-16 + tagsViewOffsetY);
         make.right.mas_equalTo(self.contentView).offset(-20);
     }];
     CGFloat hei = UIScreen.mainScreen.scale > 2 ? 0.34 : 0.5;
-    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomLine mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.contentView);
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
@@ -172,10 +216,10 @@
     }
 }
 
-- (void)setTags:(NSArray *)tags {
+- (void)setTags:(NSArray *)tags Type:(NSInteger)type {
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
     __block CGFloat height = 0;
-    NSMutableAttributedString *dotAttributedString = [self createTagAttributeTextNormal:@" · " fontSize:12.0];
+    NSMutableAttributedString *dotAttributedString = [self createTagAttributeTextNormal:@" · " fontSize:12.0 Type:type];
     [tags enumerateObjectsUsingBlock:^(FHHouseTagsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (![obj isKindOfClass:[FHHouseTagsModel class]]) {
             *stop = YES;
@@ -183,7 +227,7 @@
         if (idx > 0) {
             [text appendAttributedString:dotAttributedString];
         }
-        NSAttributedString *attr = [self createTagAttributeTextNormal:obj.content fontSize:12.0];
+        NSAttributedString *attr = [self createTagAttributeTextNormal:obj.content fontSize:12.0 Type:type];
         [text appendAttributedString:attr];
         YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:CGSizeMake(UIScreen.mainScreen.bounds.size.width - 40, 10000) text:text];
         CGFloat lineHeight = tagLayout.textBoundingSize.height;
@@ -203,10 +247,13 @@
     self.tagsView.attributedText = text;
 }
 
-- (NSMutableAttributedString *)createTagAttributeTextNormal:(NSString *)content fontSize:(CGFloat)fontSize {
+- (NSMutableAttributedString *)createTagAttributeTextNormal:(NSString *)content fontSize:(CGFloat)fontSize Type:(NSInteger)type {
     NSMutableAttributedString * attributeText = [[NSMutableAttributedString alloc] initWithString:content];
     attributeText.yy_font = [UIFont themeFontRegular:fontSize];
     attributeText.yy_color = [UIColor themeGray3];
+    if (type == 2) {
+        attributeText.yy_color = RGB(0xae, 0xad, 0xad);
+    }
     attributeText.yy_lineSpacing = 2;
     attributeText.yy_lineHeightMultiple = 0;
     attributeText.yy_maximumLineHeight = 0;

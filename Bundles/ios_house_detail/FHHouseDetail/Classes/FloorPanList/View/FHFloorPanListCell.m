@@ -163,6 +163,8 @@
                 } else {
                     self.roomSpaceLabel.text = roomSpace;
                 }
+            } else if (model.facingDirection.length > 0) {
+                self.roomSpaceLabel.text = model.facingDirection;
             } else {
                 self.roomSpaceLabel.text = @"";
             }
