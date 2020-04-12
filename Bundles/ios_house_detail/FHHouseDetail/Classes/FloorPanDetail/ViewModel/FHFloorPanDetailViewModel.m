@@ -71,8 +71,7 @@
     if (!self.contactViewModel) {
         return;
     }
-    NSMutableDictionary *extraDic = @{}.mutableCopy;
-    [self.contactViewModel contactActionWithExtraDict:extraDic];
+    [self.contactViewModel contactAction];
 }
 
 - (void)imAction

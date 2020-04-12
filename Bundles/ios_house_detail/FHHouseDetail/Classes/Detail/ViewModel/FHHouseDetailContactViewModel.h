@@ -55,6 +55,8 @@ typedef enum : NSUInteger {
 - (void)onlineActionWithExtraDict:(NSDictionary *)extraDict;
 // 拨打电话 + 询底价填表单
 - (void)contactActionWithExtraDict:(NSDictionary *)extraDict;
+- (void)contactAction;
+
 // 基本埋点数据
 - (NSDictionary *)baseParams;
 
