@@ -98,14 +98,13 @@
 
     if (titleModel.tags.count>0) {
         //这里分别加上标签高度20，标签间隔20，标题间隔20,再减去重叠部分67,得到当前模块高度
-         if (!titleModel.isFloorPan) {
-                _photoCellHeight += 20 + 20;
-            }
+        if (!titleModel.isFloorPan) {
+            _photoCellHeight += 20 + 20;
         }
-    if (titleModel.isFloorPan) {
-        _photoCellHeight += 20 + 20;
     }
-
+    if (titleModel.isFloorPan) {
+           _photoCellHeight += 20 + 20;
+       }
     
     if (((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
         _photoCellHeight = _photoCellHeight +22;

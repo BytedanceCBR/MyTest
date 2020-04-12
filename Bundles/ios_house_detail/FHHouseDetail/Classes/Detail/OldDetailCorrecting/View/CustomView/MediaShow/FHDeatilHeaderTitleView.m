@@ -177,8 +177,8 @@
     else{
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(31);
-            make.height.mas_equalTo(28);
             make.right.mas_equalTo(self).offset(-35);
+            make.height.mas_equalTo(28);
             make.top.mas_equalTo(self.mas_top).offset(50);
         }];
     }
