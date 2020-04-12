@@ -170,6 +170,8 @@
 		<string>snssdk147</string>
 		<string>snssdk1370</string>
 		<string>youmischeme</string>
+		<string>douyinopensdk</string>
+		<string>douyinv1opensdk</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

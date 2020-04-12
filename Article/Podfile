@@ -427,7 +427,9 @@ def appPods
     'Logger',
     'WeChatAccount',
     'OneKeyLogin',
-    'ThirdPartyAccountFoundation'
+    'ThirdPartyAccountFoundation',
+    'TTAwemeAccount',
+    'AppleAccount'
     ]
     pod 'BDUGContainer', '1.1.2'
     pod 'BDUGTrackerInterface', '1.1.1'
