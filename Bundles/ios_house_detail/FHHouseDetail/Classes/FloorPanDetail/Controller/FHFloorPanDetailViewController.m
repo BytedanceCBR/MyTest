@@ -228,7 +228,6 @@
         _infoListTable.estimatedSectionFooterHeight = 0;
         _infoListTable.estimatedSectionHeaderHeight = 0;
     }
-    //[_infoListTable setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:_infoListTable];
     
     [_infoListTable mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -236,7 +235,6 @@
         make.bottom.equalTo([self getBottomBar].mas_top);
     }];
     _infoListTable.backgroundColor = [UIColor themeGray7];
- //   [_infoListTable setBackgroundColor:[UIColor whiteColor]];
     
 }
 

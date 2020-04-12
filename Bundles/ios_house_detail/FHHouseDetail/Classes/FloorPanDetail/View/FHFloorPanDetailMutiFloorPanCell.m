@@ -20,6 +20,9 @@
 #import "FHDetailCommonDefine.h"
 @interface FHFloorPanDetailMutiFloorPanCell ()
 
+#define ITEM_HEIGHT 170
+#define ITEM_WIDTH  140
+
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong) UIImageView *shadowImage;
@@ -67,21 +70,21 @@
         self.headerView.label.font = [UIFont themeFontMedium:20];
         self.headerView.isShowLoadMore = NO;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-        flowLayout.itemSize = CGSizeMake(156, 170);
+        flowLayout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 15);
+        flowLayout.itemSize = CGSizeMake(ITEM_WIDTH, ITEM_HEIGHT);
         flowLayout.minimumLineSpacing = 10;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         NSString *identifier = NSStringFromClass([FHFloorPanDetailMutiFloorPanCollectionCell class]);
-        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:170 cellIdentifier:identifier cellCls:[FHFloorPanDetailMutiFloorPanCollectionCell class] datas:model.recommend];
+        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:ITEM_HEIGHT cellIdentifier:identifier cellCls:[FHFloorPanDetailMutiFloorPanCollectionCell class] datas:model.recommend];
         [self.containerView addSubview:colView];
         __weak typeof(self) wSelf = self;
         colView.clickBlk = ^(NSInteger index) {
             [wSelf collectionCellClick:index];
         };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(20);
+            make.top.mas_equalTo(0);
             make.left.right.mas_equalTo(self.containerView);
-            make.bottom.mas_equalTo(self.containerView);
+            make.bottom.mas_equalTo(self.containerView).mas_equalTo(-30);
         }];
         [colView reloadData];
     }
@@ -214,32 +217,41 @@
         } else {
             self.icon.image = [UIImage imageNamed:@"default_image"];
         }
+        self.icon.contentMode = UIViewContentModeScaleAspectFit;
         
         NSMutableAttributedString *textAttrStr = [NSMutableAttributedString new];
         NSMutableAttributedString *titleAttrStr = [[NSMutableAttributedString alloc] initWithString:model.title ? [NSString stringWithFormat:@"%@ ",model.title] : @""];
         NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         [UIFont themeFontRegular:16],NSFontAttributeName,
+                                         [UIFont themeFontMedium:16],NSFontAttributeName,
                                          [UIColor themeGray1],NSForegroundColorAttributeName,nil];
         [titleAttrStr addAttributes:attributeSelect range:NSMakeRange(0, titleAttrStr.length)];
         
         [textAttrStr appendAttributedString:titleAttrStr];
-        
+        self.descLabel.attributedText = textAttrStr;
         if (model.saleStatus) {
             
             //@(-1),NSBaselineOffsetAttributeName
-            NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
-            NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
-                                          [UIFont themeFontMedium:12],NSFontAttributeName,
-                                          model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray3],NSBackgroundColorAttributeName,nil];
-            
-            [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
-            
+//            NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
+//            NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
+//                                          [UIFont themeFontMedium:12],NSFontAttributeName,
+//                                          model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray3],NSBackgroundColorAttributeName,nil];
+//
+//            [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
+//
             //            [textAttrStr appendAttributedString:tagStr];
             
-            self.statusLabel.attributedText = tagStr;
+            UIColor *tagBacColor = [UIColor colorWithHexString:@"#FFEAD3"];
+            UIColor *tagTextColor = [UIColor colorWithHexString:@"#ff9300"];
+            self.statusLabel.textAlignment = NSTextAlignmentCenter;
+            self.statusLabel.backgroundColor = tagBacColor;
+            self.statusLabel.textColor = tagTextColor;
+            self.statusLabel.layer.cornerRadius = 10;
+            self.statusLabel.layer.masksToBounds = YES;
+            self.statusLabel.text = model.saleStatus.content;
+            
             
         }
-        self.descLabel.attributedText = textAttrStr;
+        
 //        self.priceLabel.text = model.pricingPerSqm;
 //        self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@",model.squaremeter];;
     }
@@ -247,80 +259,80 @@
 }
 
 - (void)setupUI {
-    _icon = [[UIImageView alloc] init];
-    _icon.layer.cornerRadius = 10.0;
-    _icon.layer.masksToBounds = YES;
-    _icon.layer.borderWidth = 1.0;
-    _icon.layer.borderColor = [[UIColor colorWithHexString:@"#ededed"] CGColor];
-    [self addSubview:_icon];
+     _iconView = [[UIView alloc]init];
+     _iconView.layer.borderWidth = 1.0;
+     _iconView.layer.borderColor = [[UIColor colorWithHexString:@"#ededed"] CGColor];
+     _iconView.layer.cornerRadius = 10.0;
+      _iconView.layer.masksToBounds = YES;
+     [self addSubview:_iconView];
+
+     _icon = [[UIImageView alloc] init];
+     _icon.image = [UIImage imageNamed:@"detail_new_floorpan_default"];
+     [_iconView addSubview:_icon];
+     _icon.contentMode = UIViewContentModeScaleAspectFill;
+
     
     _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     _descLabel.textColor = [UIColor themeGray1];
     [self addSubview:_descLabel];
     
-    _statusLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _statusLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _statusLabel.textColor = [UIColor themeGray1];
     _statusLabel.layer.masksToBounds = YES;
     _statusLabel.textAlignment = UITextAlignmentCenter;
     _statusLabel.layer.cornerRadius = 9;
     [self addSubview:_statusLabel];
+
     
-    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _priceLabel.textColor = [UIColor themeOrange1];
-    _priceLabel.font = [UIFont themeFontMedium:16];
-    [self addSubview:_priceLabel];
-    
-    _spaceLabel = [UILabel createLabel:@"" textColor:@"#ffffff" fontSize:12];
-    _spaceLabel.textColor = [UIColor themeGray3];
-    [self addSubview:_spaceLabel];
-    
-    [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
-        make.width.mas_equalTo(140);
-        make.height.mas_equalTo(140);
+        make.width.mas_equalTo(ITEM_WIDTH);
+        make.height.mas_equalTo(ITEM_WIDTH);
         make.top.mas_equalTo(self);
     }];
-    
-//    UIColor *topColor = RGBA(255, 255, 255, 0);
-//    UIColor *bottomColor = RGBA(0, 0, 0, 0.5);
-//    NSArray *gradientColors = [NSArray arrayWithObjects:(id)(topColor.CGColor), (id)(bottomColor.CGColor), nil];
-//    NSArray *gradientLocations = @[@(0),@(1)];
-//    CAGradientLayer *gradientlayer = [[CAGradientLayer alloc] init];
-//    gradientlayer.colors = gradientColors;
-//    gradientlayer.locations = gradientLocations;
-//    gradientlayer.frame = CGRectMake(0, 0, 156, 120);
-//    gradientlayer.cornerRadius = 4.0;
-//    [self.icon.layer addSublayer:gradientlayer];
+    [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.iconView);
+        make.width.height.equalTo(self.iconView);
+    }];
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self);
         make.height.mas_equalTo(19);
-        make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.iconView.mas_bottom).offset(10);
     }];
     
     [self.statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.descLabel.mas_right);
         make.centerY.equalTo(self.descLabel);
-        make.height.mas_equalTo(18);
+        make.height.mas_equalTo(20);
         make.width.mas_equalTo(40);
-    }];
-    
-    [self.priceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [self.priceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self);
-        make.height.mas_equalTo(22);
-        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(3);
         make.bottom.mas_equalTo(self);
     }];
-    
-    [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.priceLabel.mas_right).offset(6);
-        make.right.mas_equalTo(self);
-        make.height.mas_equalTo(22);
-        make.centerY.equalTo(self.priceLabel.mas_centerY);
-        make.bottom.equalTo(self);
-    }];
+    //
+    //    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    //    _priceLabel.textColor = [UIColor themeOrange1];
+    //    _priceLabel.font = [UIFont themeFontMedium:16];
+    //    [self addSubview:_priceLabel];
+    //
+    //    _spaceLabel = [UILabel createLabel:@"" textColor:@"#ffffff" fontSize:12];
+    //    _spaceLabel.textColor = [UIColor themeGray3];
+    //    [self addSubview:_spaceLabel];
+//    [self.priceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+//    [self.priceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+//    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self);
+//        make.height.mas_equalTo(22);
+//        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(3);
+//        make.bottom.mas_equalTo(self);
+//    }];
+//
+//    [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(self.priceLabel.mas_right).offset(6);
+//        make.right.mas_equalTo(self);
+//        make.height.mas_equalTo(22);
+//        make.centerY.equalTo(self.priceLabel.mas_centerY);
+//        make.bottom.equalTo(self);
+//    }];
 }
 
 @end

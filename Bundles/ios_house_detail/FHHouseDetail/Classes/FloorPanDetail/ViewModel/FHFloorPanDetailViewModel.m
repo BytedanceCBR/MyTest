@@ -228,8 +228,8 @@
     //楼盘户型
     if (model.data.recommend && model.data.recommend.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.currentItems addObject:grayLine];
+//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+//        [self.currentItems addObject:grayLine];
         
         FHFloorPanDetailMutiFloorPanCellModel *mutiDataModel = [[FHFloorPanDetailMutiFloorPanCellModel alloc] init];
         mutiDataModel.recommend = model.data.recommend;
@@ -240,6 +240,7 @@
                 modelItem.index = i;
             }
         }
+        mutiDataModel.shadowImageType = FHHouseShdowImageTypeRound;
         [self.currentItems addObject:mutiDataModel];
     }
     
