@@ -15,6 +15,7 @@
 #import "YYText.h"
 #import "TTRichSpanText+Link.h"
 #import "TTUGCEmojiParser.h"
+#import "TTUGCTextRender.h"
 
 @implementation FHUGCCellHelper
 
@@ -148,7 +149,10 @@
         if (model.numberOfLines > 0) {
             parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
         }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
+//        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
+        
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:15];
+        
         if (attrStr) {
             UIFont *font = [UIFont themeFontRegular:16];
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
@@ -256,6 +260,56 @@
     }
 }
 
++ (void)setAsyncRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model {
+    //内容
+//    [label setText:model.contentAStr];
+    TTUGCTextRender *textRender = [[TTUGCTextRender alloc] initWithAttributedText:model.contentAStr];
+    textRender.maximumNumberOfLines = model.numberOfLines;
+    textRender.font = [UIFont themeFontRegular:16];
+    if(model.showLookMore){
+//        label.attributedTruncationToken = [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:16]
+//                                                             contentColor:[UIColor themeGray1]
+//                                                                    color:[UIColor themeRed3]];
+        textRender.truncatedToken = [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:16]
+                                                       contentColor:[UIColor themeGray1]
+                                                              color:[UIColor themeRed3]];
+    }
+    
+    NSMutableArray *linkModels = [NSMutableArray array];
+    if(model.needLinkSpan && model.richContent){
+        NSArray <TTRichSpanLink *> *richSpanLinks = [model.richContent richSpanLinksOfAttributedString];
+        for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+            NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+            UIColor *linkColor = [UIColor themeRed3];
+            if (range.location + range.length <= model.contentAStr.length) {
+                if(model.supportedLinkType){
+                    if(model.supportedLinkType.count > 0 && [model.supportedLinkType containsObject:@(richSpanLink.type)]){
+//                        [label addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                        
+                        NSTextCheckingResult *checkingResult = [NSTextCheckingResult transitInformationCheckingResultWithRange:range components:@{}];
+                        TTUGCAsyncLabelLink *link =
+                        [[TTUGCAsyncLabelLink alloc] initWithAttributes:linkColor ? @{NSForegroundColorAttributeName : linkColor} : nil
+                                                     textCheckingResult:checkingResult];
+                        link.linkURL = [NSURL URLWithString:richSpanLink.link];//非图片的都可以这么用。
+                        [linkModels addObject:link];
+                    }
+                }else{
+                    //不设置默认全部支持
+                    NSTextCheckingResult *checkingResult = [NSTextCheckingResult transitInformationCheckingResultWithRange:range components:@{}];
+                    TTUGCAsyncLabelLink *link =
+                    [[TTUGCAsyncLabelLink alloc] initWithAttributes:linkColor ? @{NSForegroundColorAttributeName : linkColor} : nil
+                                                 textCheckingResult:checkingResult];
+                    link.linkURL = [NSURL URLWithString:richSpanLink.link];//非图片的都可以这么用。
+                    [linkModels addObject:link];
+                }
+            }
+        }
+    }
+    
+    [textRender addLinks:linkModels];
+    label.textRender = textRender;
+}
+
 + (void)setOriginRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model {
     //内容
     [label setText:model.originItemModel.contentAStr];
@@ -282,15 +336,19 @@
                        withConstraints:(CGSize)size
                       maxNumberOfLines:(NSUInteger)maxLine
                 limitedToNumberOfLines:(NSUInteger*)numberOfLines {
-    long lines = [TTUGCAttributedLabel numberOfLinesAttributedString:attrStr withConstraints:size.width];
+//    long lines = [TTUGCAttributedLabel numberOfLinesAttributedString:attrStr withConstraints:size.width];
+    long lines = [TTUGCTextRender numberOfLinesAttributedString:attrStr constraintsWidth:size.width];
     
     if (lines <= maxLine) { //用最大行数能显示全，就用最大行数显示
         *numberOfLines = maxLine;
     }
     
-    return [TTUGCAttributedLabel sizeThatFitsAttributedString:attrStr
-                                              withConstraints:CGSizeMake(size.width, FLT_MAX)
-                                       limitedToNumberOfLines:*numberOfLines];
+//    return [TTUGCAttributedLabel sizeThatFitsAttributedString:attrStr
+//                                              withConstraints:CGSizeMake(size.width, FLT_MAX)
+//                                       limitedToNumberOfLines:*numberOfLines];
+    return [TTUGCTextRender sizeThatFitsAttributedString:attrStr
+                                         constraintsSize:CGSizeMake(size.width, CGFLOAT_MAX)
+                                  limitedToNumberOfLines:*numberOfLines];;
 }
 
 //问答回答和文章优质评论
