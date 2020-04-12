@@ -235,7 +235,7 @@
                 modelItem.index = i;
             }
         }
-        mutiDataModel.houseModelType = FHFloorPlanHouseModelTypeFloorPlan;
+        mutiDataModel.houseModelType = FHFloorPanHouseModelTypeFloorPlan;
         [self.currentItems addObject:mutiDataModel];
     }
     // 免责声明

@@ -30,7 +30,7 @@
             case FHFloorPanHouseModelTypeCoreInfo:
                 [coreInfos addObject:obj];
                 break;
-            case FHFloorPlanHouseModelTypeFloorPlan:
+            case FHFloorPanHouseModelTypeFloorPlan:
                 [floorPlans addObject:obj];
                 break;
             case FHHouseModelTypeDisclaimer:

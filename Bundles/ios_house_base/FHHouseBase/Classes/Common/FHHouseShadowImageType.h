@@ -73,7 +73,7 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     // 户型详情页属性模块
     FHFloorPanHouseModelTypeCoreInfo,
     // 户型详情页户型模块
-    FHFloorPlanHouseModelTypeFloorPlan,
+    FHFloorPanHouseModelTypeFloorPlan,
     
 };
 

@@ -172,6 +172,7 @@
             make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
             make.width.mas_equalTo(40);
             make.centerY.mas_equalTo(self.nameLabel);
+            make.height.mas_equalTo(20);
         }];
     }
     else{
@@ -183,8 +184,10 @@
         }];
     }
     NSString *picing = _model.totalPicing;
-    if (picing == nil || [picing isEqualToString:@"暂无售价"]) {
-        self.totalPirce.text = picing ? picing : @"暂无报价";
+    if (picing == nil || [picing isEqualToString:@"暂无售价"] || picing.length == 0) {
+        self.totalPirce.text = (picing.length == 0) ? @"暂无报价" : picing;
+        NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.totalPirce.text];
+        self.totalPirce.attributedText = noteStr;
     }else{
         self.totalPirce.text = [NSString stringWithFormat:@"约%@/套",picing];
         NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.totalPirce.text];
