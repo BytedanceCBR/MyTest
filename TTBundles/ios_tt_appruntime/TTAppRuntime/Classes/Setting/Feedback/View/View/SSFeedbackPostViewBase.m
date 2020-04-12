@@ -596,14 +596,11 @@
 #pragma mark --- ttimage picker delegate ---
 
 - (TTImagePickerController *)getTTImagePicker {
-    if (!_ttImagePickerController) {
-        _ttImagePickerController = [[TTImagePickerController alloc] initWithDelegate:self];
-        _ttImagePickerController.enableICloud = YES;
-        _ttImagePickerController.maxResourcesCount = 1;
-        _ttImagePickerController.isGetOriginResource = NO;
-        _ttImagePickerController.isHideGIF = YES;
-    }
-
+    _ttImagePickerController = [[TTImagePickerController alloc] initWithDelegate:self];
+    _ttImagePickerController.enableICloud = YES;
+    _ttImagePickerController.maxResourcesCount = 1;
+    _ttImagePickerController.isGetOriginResource = NO;
+    _ttImagePickerController.isHideGIF = YES;
     return _ttImagePickerController;
 }
 - (void)ttimagePickerController:(TTImagePickerController *)picker didFinishTakePhoto:(UIImage *)photo selectedAssets:(NSArray<TTAsset *> *)assets withInfo:(NSDictionary *)info
