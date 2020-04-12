@@ -38,6 +38,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @implementation FHLoginViewModel
 
++ (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]) {
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
+}
+
 - (instancetype)initWithView:(FHLoginView *)view controller:(FHLoginViewController *)viewController;
 {
     self = [super init];
@@ -53,6 +61,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     return self;
 }
 
+#pragma mark - UI
 - (void)viewWillAppear {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
@@ -67,35 +76,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self stopTimer];
     }
 }
-- (BOOL)getOneKeyLoginSwitchOff
-{
-    BOOL disableOneKeyLogin = NO;
-    BOOL disableTelecom = NO;
-    BOOL disableUnicom = NO;
-    BOOL disableMobile = NO;
-    NSDictionary *fhSettings = [FHLoginViewModel fhSettings];
-    NSDictionary *loginSettings = [fhSettings tt_dictionaryValueForKey:@"login_settings"];
-    if (loginSettings) {
-        disableOneKeyLogin = [loginSettings tt_boolValueForKey:@"disable_onekeylogin"];
-        disableTelecom = [loginSettings tt_boolValueForKey:@"disable_telecom"];
-        disableUnicom = [loginSettings tt_boolValueForKey:@"disable_unicom"];
-        disableMobile = [loginSettings tt_boolValueForKey:@"disable_mobile"];
-    }
-    if (disableOneKeyLogin) {
-        return disableOneKeyLogin;
-    }
-    NSString *service = [TTAccount sharedAccount].service;
-    if ([service isEqualToString:TTAccountMobile]) {
-        return disableMobile;
-    }else if ([service isEqualToString:TTAccountUnion]) {
-        return disableUnicom;
-    }else if ([service isEqualToString:TTAccountTelecom]) {
-        return disableTelecom;
-    }
-}
 
-
-#pragma mark - 一键登录
 - (void)startLoadData
 {
     if (![TTReachability isNetworkConnected]) {
@@ -136,6 +117,46 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self addEnterCategoryLog];
 }
 
+- (void)checkToEnableConfirmBtn {
+    BOOL hasPhoneInput = self.view.phoneInput.text.length > 0;
+    BOOL hasVerifyCodeInput = self.view.varifyCodeInput.text.length > 0;
+    BOOL confirmEnable = hasPhoneInput && (self.view.isOneKeyLogin || hasVerifyCodeInput);
+    [self.view enableConfirmBtn:confirmEnable];
+}
+
+- (void)acceptCheckBoxChange:(BOOL)selected {
+//    self.view.acceptCheckBox.selected = !selected;
+    [self checkToEnableConfirmBtn];
+}
+
+#pragma mark - 运营商一键登录
+/// 运营商一键登录开关
+- (BOOL)getOneKeyLoginSwitchOff {
+    BOOL disableOneKeyLogin = NO;
+    BOOL disableTelecom = NO;
+    BOOL disableUnicom = NO;
+    BOOL disableMobile = NO;
+    NSDictionary *fhSettings = [FHLoginViewModel fhSettings];
+    NSDictionary *loginSettings = [fhSettings tt_dictionaryValueForKey:@"login_settings"];
+    if (loginSettings) {
+        disableOneKeyLogin = [loginSettings tt_boolValueForKey:@"disable_onekeylogin"];
+        disableTelecom = [loginSettings tt_boolValueForKey:@"disable_telecom"];
+        disableUnicom = [loginSettings tt_boolValueForKey:@"disable_unicom"];
+        disableMobile = [loginSettings tt_boolValueForKey:@"disable_mobile"];
+    }
+    if (disableOneKeyLogin) {
+        return disableOneKeyLogin;
+    }
+    NSString *service = [TTAccount sharedAccount].service;
+    if ([service isEqualToString:TTAccountMobile]) {
+        return disableMobile;
+    }else if ([service isEqualToString:TTAccountUnion]) {
+        return disableUnicom;
+    }else if ([service isEqualToString:TTAccountTelecom]) {
+        return disableTelecom;
+    }
+}
+
 - (void)getOneKeyLoginPhoneNum
 {
     __weak typeof(self)wself = self;
@@ -150,6 +171,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         BOOL showOneKeyLogin = !error && phoneNumber.length > 0;
         [wself showOneKeyLoginView:showOneKeyLogin phoneNum:phoneNumber];
     }];
+}
+
+- (NSString *)serviceNameStr {
+    NSString *service = [TTAccount sharedAccount].service;
+    if ([service isEqualToString:TTAccountMobile]) {
+        return @"中国移动认证";
+    } else if ([service isEqualToString:TTAccountUnion]) {
+        return @"中国联通认证";
+    } else if ([service isEqualToString:TTAccountTelecom]) {
+        return @"中国电信认证";
+    } else {
+        return @"";
+    }
 }
 
 - (NSMutableAttributedString *)protocolAttrTextByIsOneKeyLogin:(BOOL)isOneKeyLogin {
@@ -216,19 +250,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     return attrText;
 }
 
-- (NSString *)serviceNameStr {
-    NSString *service = [TTAccount sharedAccount].service;
-    if ([service isEqualToString:TTAccountMobile]) {
-        return @"中国移动认证";
-    } else if ([service isEqualToString:TTAccountUnion]) {
-        return @"中国联通认证";
-    } else if ([service isEqualToString:TTAccountTelecom]) {
-        return @"中国电信认证";
-    } else {
-        return @"";
-    }
-}
-
 - (void)requestOneKeyLogin {
     __weak typeof(self) wself = self;
     [[ToastManager manager] showToast:@"正在登录中"];
@@ -237,76 +258,37 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }];
 }
 
-#pragma mark - 键盘通知
-
-- (void)keyboardWillShowNotifiction:(NSNotification *)notification {
-    if (_isHideKeyBoard) {
-        return;
-    }
-    
-    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
-    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
-    
-    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions) [curve integerValue] animations:^{
-        
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        self.view.scrollView.contentOffset = CGPointMake(0, 120);
-        self.viewController.customNavBarView.title.hidden = NO;
-        
-    }completion:^(BOOL finished) {
-        
-    }];
+#pragma mark - FHLoginViewDelegate
+- (void)confirm {
+    [self.view endEditing:YES];
+    [self quickLogin:self.view.phoneInput.text smsCode:self.view.varifyCodeInput.text captcha:nil];
 }
 
-- (void)keyboardWillHideNotifiction:(NSNotification *)notification {
-    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
-    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
-    
-    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        self.view.scrollView.contentOffset = CGPointMake(0, 0);
-        self.viewController.customNavBarView.title.hidden = YES;
-        
-    } completion:^(BOOL finished) {
-        
-    }];
+- (void)sendVerifyCode {
+    [self sendVerifyCodeWithCaptcha:nil];
 }
 
-#pragma mark -- textFieldDidChange
-
-- (void)textFieldDidChange:(NSNotification *)notification {
-    UITextField *textField = (UITextField *)notification.object;
-    if (textField != self.view.phoneInput && textField != self.view.varifyCodeInput) {
-        return;
-    }
-    NSString *text = textField.text;
-    NSInteger limit = 0;
-    if(textField == self.view.phoneInput){
-        limit = 11;
-        if(!self.isRequestingSMS){
-            [self.view enableSendVerifyCodeBtn:self.view.phoneInput.text.length > 0];
-        }
-    } else if (textField == self.view.varifyCodeInput) {
-        limit = 6;
-    }
-    
-    if(text.length > limit){
-        textField.text = [text substringToIndex:limit];
-    }
-    //设置登录和获取验证码是否可点击
-    [self checkToEnableConfirmBtn];
+- (void)goToUserProtocol
+{
+    self.noDismissVC = YES;
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
+    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
-- (void)checkToEnableConfirmBtn {
-    BOOL hasPhoneInput = self.view.phoneInput.text.length > 0;
-    BOOL hasVerifyCodeInput = self.view.varifyCodeInput.text.length > 0;
-    BOOL confirmEnable = hasPhoneInput && (self.view.isOneKeyLogin || hasVerifyCodeInput);
-    [self.view enableConfirmBtn:confirmEnable];
+- (void)goToSecretProtocol
+{
+    self.noDismissVC = YES;
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/private_policy.html&title=隐私政策&hide_more=1",[FHMineAPI host]];
+    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
-#pragma mark -- FHLoginViewDelegate
-
-#pragma mark 一键登录
+- (void)otherLoginAction
+{
+    self.fromOtherLogin = YES;
+    [self showOneKeyLoginView:NO phoneNum:nil];
+}
 
 - (void)oneKeyLoginAction {
     [self traceLogin];
@@ -317,12 +299,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self requestOneKeyLogin];
 }
 
-#pragma mark 其他方式登录
-- (void)otherLoginAction
-{
-    self.fromOtherLogin = YES;
-    [self showOneKeyLoginView:NO phoneNum:nil];
+- (void)appleLoginAction {
+    
 }
+
+- (void)awesomeLoginAction {
+    
+}
+
 
 - (void)goToServiceProtocol:(NSString *)urlStr {
     self.noDismissVC = YES;
@@ -342,32 +326,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     info[@"extra_js"] = jsCodeStr;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-}
-
-- (void)goToUserProtocol
-{
-    self.noDismissVC = YES;
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
-    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-}
-
-- (void)goToSecretProtocol
-{
-    self.noDismissVC = YES;
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/private_policy.html&title=隐私政策&hide_more=1",[FHMineAPI host]];
-    NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-}
-
-- (void)acceptCheckBoxChange:(BOOL)selected {
-//    self.view.acceptCheckBox.selected = !selected;
-    [self checkToEnableConfirmBtn];
-}
-
-- (void)confirm {
-    [self.view endEditing:YES];
-    [self quickLogin:self.view.phoneInput.text smsCode:self.view.varifyCodeInput.text captcha:nil];
 }
 
 - (void)quickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha {
@@ -463,6 +421,66 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }];
 }
 
+#pragma mark - 键盘通知
+- (void)keyboardWillShowNotifiction:(NSNotification *)notification {
+    if (_isHideKeyBoard) {
+        return;
+    }
+    
+    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+    
+    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions) [curve integerValue] animations:^{
+        
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.scrollView.contentOffset = CGPointMake(0, 120);
+        self.viewController.customNavBarView.title.hidden = NO;
+        
+    }completion:^(BOOL finished) {
+        
+    }];
+}
+
+- (void)keyboardWillHideNotifiction:(NSNotification *)notification {
+    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+    
+    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.scrollView.contentOffset = CGPointMake(0, 0);
+        self.viewController.customNavBarView.title.hidden = YES;
+        
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+#pragma mark - textFieldDidChange
+
+- (void)textFieldDidChange:(NSNotification *)notification {
+    UITextField *textField = (UITextField *)notification.object;
+    if (textField != self.view.phoneInput && textField != self.view.varifyCodeInput) {
+        return;
+    }
+    NSString *text = textField.text;
+    NSInteger limit = 0;
+    if(textField == self.view.phoneInput){
+        limit = 11;
+        if(!self.isRequestingSMS){
+            [self.view enableSendVerifyCodeBtn:self.view.phoneInput.text.length > 0];
+        }
+    } else if (textField == self.view.varifyCodeInput) {
+        limit = 6;
+    }
+    
+    if(text.length > limit){
+        textField.text = [text substringToIndex:limit];
+    }
+    //设置登录和获取验证码是否可点击
+    [self checkToEnableConfirmBtn];
+}
+
+#pragma mark - 埋点
 - (void)traceAnnounceAgreement {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict].mutableCopy;
     tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
@@ -567,9 +585,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
-- (void)sendVerifyCode {
-    [self sendVerifyCodeWithCaptcha:nil];
-}
 
 - (void)sendVerifyCodeWithCaptcha:(NSString *)captcha {
     [self.view endEditing:YES];
@@ -652,6 +667,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self startTimer];
 }
 
+#pragma mark - Timer
 - (void)setVerifyCodeButtonCountDown {
     if (self.verifyCodeRetryTime < 0) {
         self.verifyCodeRetryTime = 0;
@@ -688,14 +704,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
     }
     return _timer;
-}
-
-+ (NSDictionary *)fhSettings {
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]) {
-        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
-    } else {
-        return nil;
-    }
 }
 
 @end
