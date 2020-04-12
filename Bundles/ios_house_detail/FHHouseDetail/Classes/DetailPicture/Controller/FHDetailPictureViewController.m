@@ -492,9 +492,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         NSDictionary *associateInfoDict = nil;
         FHDetailContactModel *contactPhone = self.mediaHeaderModel.contactViewModel.contactPhone;
         if (contactPhone.phone.length > 0) {
-            associateInfoDict = contactPhone.associateInfo.phoneInfo;
+            associateInfoDict = self.associateInfo.phoneInfo;
         }else {
-            associateInfoDict = contactPhone.associateInfo.reportFormInfo;
+            associateInfoDict = self.associateInfo.reportFormInfo;
         }
         extraDic[kFHAssociateInfo] = associateInfoDict;
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];

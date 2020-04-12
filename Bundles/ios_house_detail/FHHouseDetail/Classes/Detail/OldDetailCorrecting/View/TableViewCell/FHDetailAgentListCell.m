@@ -249,7 +249,7 @@
 
         associatePhone.houseType = self.baseViewModel.houseType;
         associatePhone.houseId = self.baseViewModel.houseId;
-        associatePhone.showLoading = YES;
+        associatePhone.showLoading = NO;
         
         //        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
 //        contactConfig.houseType = self.baseViewModel.houseType;
