@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHFloorPanDetailMutiFloorPanCellModel : JSONModel
+@interface FHFloorPanDetailMutiFloorPanCellModel : FHDetailBaseModel
 @property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataRecommendModel *> *recommend;
 @property(nonatomic , weak) FHHouseDetailSubPageViewController *subPageVC;
 @end

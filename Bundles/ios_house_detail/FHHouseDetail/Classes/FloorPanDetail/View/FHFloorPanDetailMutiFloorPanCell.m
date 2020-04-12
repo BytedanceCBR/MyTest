@@ -17,12 +17,12 @@
 #import "FHDetailMultitemCollectionView.h"
 #import "FHDetailFloorPanDetailInfoModel.h"
 #import "FHHouseDetailSubPageViewController.h"
-
+#import "FHDetailCommonDefine.h"
 @interface FHFloorPanDetailMutiFloorPanCell ()
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
-
+@property (nonatomic, strong) UIImageView *shadowImage;
 @end
 
 @implementation FHFloorPanDetailMutiFloorPanCell
@@ -51,8 +51,11 @@
     for (UIView *v in self.containerView.subviews) {
         [v removeFromSuperview];
     }
+    
     //
     FHFloorPanDetailMutiFloorPanCellModel *model = (FHFloorPanDetailMutiFloorPanCellModel *)data;
+    adjustImageScopeType(model);
+    
     if (model.recommend) {
         
         for (NSInteger i = 0; i < model.recommend.count; i++) {
@@ -61,7 +64,7 @@
         }
         
         self.headerView.label.text = @"推荐居室户型";
-        self.headerView.label.font = [UIFont themeFontMedium:18];
+        self.headerView.label.font = [UIFont themeFontMedium:20];
         self.headerView.isShowLoadMore = NO;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
@@ -97,22 +100,31 @@
 }
 
 - (void)setupUI {
+    [self.contentView addSubview:self.shadowImage];
+    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.contentView);
+        make.top.equalTo(self.contentView).offset(-12);
+        make.bottom.equalTo(self.contentView).offset(12);
+    }];
     _headerView = [[FHDetailHeaderView alloc] init];
-    _headerView.label.text = @"楼盘户型";
+    _headerView.label.text = @"推荐居室户型";
+    
+    
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.shadowImage).offset(15);
+        make.right.mas_equalTo(self.shadowImage).offset(-15);
+        make.top.mas_equalTo(self.shadowImage).offset(30);
         make.height.mas_equalTo(46);
     }];
     [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     _containerView = [[UIView alloc] init];
-    _containerView.clipsToBounds = YES;
-    _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView).offset(-20);
+        make.top.mas_equalTo(self.headerView.mas_bottom).mas_offset(30);
+        make.left.mas_equalTo(self.shadowImage).mas_offset(15);
+        make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
     }];
 }
 
@@ -157,6 +169,13 @@
         }
     }
     
+}
+- (UIImageView *)shadowImage
+{
+    if (!_shadowImage) {
+        _shadowImage = [[UIImageView alloc]init];
+    }
+    return _shadowImage;
 }
 
 @end
@@ -210,7 +229,7 @@
             //@(-1),NSBaselineOffsetAttributeName
             NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
             NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
-                                          [UIFont themeFontRegular:10],NSFontAttributeName,
+                                          [UIFont themeFontMedium:12],NSFontAttributeName,
                                           model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray3],NSBackgroundColorAttributeName,nil];
             
             [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
@@ -229,10 +248,10 @@
 
 - (void)setupUI {
     _icon = [[UIImageView alloc] init];
-    _icon.layer.cornerRadius = 4.0;
+    _icon.layer.cornerRadius = 10.0;
     _icon.layer.masksToBounds = YES;
-    _icon.layer.borderWidth = 0.5;
-    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
+    _icon.layer.borderWidth = 1.0;
+    _icon.layer.borderColor = [[UIColor colorWithHexString:@"#ededed"] CGColor];
     [self addSubview:_icon];
     
     _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
@@ -242,7 +261,8 @@
     _statusLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     _statusLabel.textColor = [UIColor themeGray1];
     _statusLabel.layer.masksToBounds = YES;
-    _statusLabel.layer.cornerRadius = 2;
+    _statusLabel.textAlignment = UITextAlignmentCenter;
+    _statusLabel.layer.cornerRadius = 9;
     [self addSubview:_statusLabel];
     
     _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
@@ -256,8 +276,8 @@
     
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
-        make.width.mas_equalTo(156);
-        make.height.mas_equalTo(116);
+        make.width.mas_equalTo(140);
+        make.height.mas_equalTo(140);
         make.top.mas_equalTo(self);
     }];
     
@@ -274,13 +294,15 @@
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self);
-        make.height.mas_equalTo(22);
+        make.height.mas_equalTo(19);
         make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
     }];
     
     [self.statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.descLabel.mas_right);
         make.centerY.equalTo(self.descLabel);
+        make.height.mas_equalTo(18);
+        make.width.mas_equalTo(40);
     }];
     
     [self.priceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];

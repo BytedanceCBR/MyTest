@@ -46,7 +46,6 @@
     FHDetailNavBar *navbar = [self  getNaviBar];
     [navbar refreshAlpha:0];
     [self setUpinfoListTable];
-    
     [self addDefaultEmptyViewFullScreen];
 
     _coreInfoListViewModel = [[FHFloorPanDetailViewModel alloc] initWithController:self tableView:_infoListTable floorPanId:_floorPanId];
@@ -229,15 +228,15 @@
         _infoListTable.estimatedSectionFooterHeight = 0;
         _infoListTable.estimatedSectionHeaderHeight = 0;
     }
-    [_infoListTable setBackgroundColor:[UIColor whiteColor]];
+    //[_infoListTable setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:_infoListTable];
     
     [_infoListTable mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
         make.bottom.equalTo([self getBottomBar].mas_top);
     }];
-    
-    [_infoListTable setBackgroundColor:[UIColor whiteColor]];
+    _infoListTable.backgroundColor = [UIColor themeGray7];
+ //   [_infoListTable setBackgroundColor:[UIColor whiteColor]];
     
 }
 

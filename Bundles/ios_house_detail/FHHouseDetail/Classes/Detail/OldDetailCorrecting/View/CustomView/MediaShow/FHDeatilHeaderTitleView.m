@@ -166,6 +166,7 @@
             make.left.mas_equalTo(self).offset(31);
             //make.right.mas_equalTo(self).offset(-35 -40 -4);
             make.width.mas_equalTo(itemWidth);
+            make.height.mas_equalTo(28);
             make.top.mas_equalTo(self.topBanner.mas_bottom).offset(28);
         }];
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -178,6 +179,7 @@
     else{
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(31);
+            make.height.mas_equalTo(28);
             make.right.mas_equalTo(self).offset(-35);
             make.top.mas_equalTo(self.topBanner.mas_bottom).offset(28);
         }];
@@ -204,11 +206,12 @@
         [noteStr addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:20] range:range];
         self.totalPirce.attributedText = noteStr;
     }
-    [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) { //会塌掉，不知道为什么？
         make.left.mas_equalTo(self).offset(31);
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(14);
         make.right.mas_equalTo(self).offset(- 35);
         make.height.mas_equalTo(20);
+        make.bottom.mas_equalTo(self);
     }];
     
 }

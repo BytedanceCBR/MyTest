@@ -24,6 +24,8 @@
 #import "FHDetailBottomBar.h"
 
 #import "FHDetailMediaHeaderCorrectingCell.h"
+#import "FHDetailPropertyListCorrectingCell.h"
+#import "FHOldDetailModuleHelper.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -115,6 +117,7 @@
     [self.infoListTable registerClass:[FHFloorPanDetailMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailMutiFloorPanCellModel class])];
     
     [self.infoListTable registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
+     [self.infoListTable registerClass:[FHDetailPropertyListCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCorrectingModel class])];
     
 }
 
@@ -199,19 +202,27 @@
         [self.currentItems addObject:headerCellModel];
     }
     
-    if (model.data) {
-        FHFloorPanTitleCellModel *cellModel = [[FHFloorPanTitleCellModel alloc] init];
-        cellModel.title = model.data.title;
-        cellModel.pricing = model.data.pricing;
-        cellModel.pricingPerSqm = model.data.pricingPerSqm;
-        cellModel.saleStatus = model.data.saleStatus;
-        [self.currentItems addObject:cellModel];
-    }
+//    if (model.data) {
+//        FHFloorPanTitleCellModel *cellModel = [[FHFloorPanTitleCellModel alloc] init];
+//        cellModel.title = model.data.title;
+//        cellModel.pricing = model.data.pricing;
+//        cellModel.pricingPerSqm = model.data.pricingPerSqm;
+//        cellModel.saleStatus = model.data.saleStatus;
+//        [self.currentItems addObject:cellModel];
+//    }
     
-    if (model.data.baseInfo) {
-        FHFloorPanDetailPropertyCellModel *cellModel = [[FHFloorPanDetailPropertyCellModel alloc] init];
-        cellModel.baseInfo = model.data.baseInfo;
-        [self.currentItems addObject:cellModel];
+    if (model.data.baseInfo) { //为什么颜色那么白。
+//        FHFloorPanDetailPropertyCellModel *cellModel = [[FHFloorPanDetailPropertyCellModel alloc] init];
+//        cellModel.baseInfo = model.data.baseInfo;
+//        [self.currentItems addObject:cellModel];
+        FHDetailPropertyListCorrectingModel *propertyModel = [[FHDetailPropertyListCorrectingModel alloc] init];
+        propertyModel.baseInfo = model.data.baseInfo;
+        propertyModel.contactViewModel = self.contactViewModel;
+        propertyModel.shadowImageType = FHHouseShdowImageTypeLBR;
+     //   propertyModel.shdowImageScopeType = FHHouseShdowImageScopeTypeBottomAll;
+        propertyModel.houseModelType = FHHouseModelTypeCoreInfo;
+        [self.currentItems addObject:propertyModel];
+        
     }
     
     //楼盘户型
@@ -247,7 +258,7 @@
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
-    
+ //   self.currentItems =  [FHOldDetailModuleHelper moduleClassificationMethod:self.currentItems];
     [_infoListTable reloadData];
 }
 
