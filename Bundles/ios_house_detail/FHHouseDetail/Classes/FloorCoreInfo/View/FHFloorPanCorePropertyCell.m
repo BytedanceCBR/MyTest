@@ -88,7 +88,7 @@
             [valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(nameLabel.mas_right).offset(16);
                 make.top.equalTo(nameLabel);
-                make.right.equalTo(itemContenView).offset(-15);
+                make.right.equalTo(itemContenView).offset(-31);
                 make.bottom.equalTo(itemContenView);
                 //make.height.mas_equalTo(16);
             }];
