@@ -220,7 +220,7 @@
         self.icon.contentMode = UIViewContentModeScaleAspectFit;
         
         NSMutableAttributedString *textAttrStr = [NSMutableAttributedString new];
-        NSMutableAttributedString *titleAttrStr = [[NSMutableAttributedString alloc] initWithString:model.title ? [NSString stringWithFormat:@"%@ ",model.title] : @""];
+        NSMutableAttributedString *titleAttrStr = [[NSMutableAttributedString alloc] initWithString:model.title ? [NSString stringWithFormat:@"%@",model.title] : @""];
         NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
                                          [UIFont themeFontMedium:16],NSFontAttributeName,
                                          [UIColor themeGray1],NSForegroundColorAttributeName,nil];
@@ -248,8 +248,16 @@
             self.statusLabel.layer.cornerRadius = 10;
             self.statusLabel.layer.masksToBounds = YES;
             self.statusLabel.text = model.saleStatus.content;
+            CGSize itemSize = [model.title sizeWithAttributes:@{
+            NSFontAttributeName: [UIFont themeFontMedium:16]
+            }];
+            CGFloat itemWidth = itemSize.width;
+            if (itemWidth > ITEM_WIDTH - 42) {
+                itemWidth = ITEM_WIDTH - 42;
+            }
+            //宽为W,总长度为ITEM_WIDTH 那么标题的右端点就是 ITEM_WIDTH-W 又因为一定要保证销售状态的出现，如果预留40的空间。
             [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(self).offset(-40);
+                make.right.mas_equalTo(self).offset(-ITEM_WIDTH + itemWidth);
             }];
             
         }
@@ -311,7 +319,7 @@
     }];
     
     [self.statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.descLabel.mas_right);
+        make.left.equalTo(self.descLabel.mas_right).offset(2);
         make.centerY.equalTo(self.descLabel);
         make.height.mas_equalTo(20);
         make.width.mas_equalTo(40);
