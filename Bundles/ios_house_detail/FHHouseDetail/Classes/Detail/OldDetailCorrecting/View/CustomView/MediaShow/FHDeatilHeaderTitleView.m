@@ -182,7 +182,7 @@
         }];
     }
     NSString *picing = _model.totalPicing;
-    if (picing == nil || [picing isEqualToString:@"暂无售价"] || picing.length == 0) {
+    if (picing.length == 0 || [picing isEqualToString:@"暂无售价"]) {
         self.totalPirce.text = (picing.length == 0) ? @"暂无报价" : picing;
         NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.totalPirce.text];
         self.totalPirce.attributedText = noteStr;

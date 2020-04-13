@@ -81,6 +81,9 @@
         colView.clickBlk = ^(NSInteger index) {
             [wSelf collectionCellClick:index];
         };
+        colView.displayCellBlk = ^(NSInteger index) {
+            [wSelf collectionDisplayCell:index];
+        };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
             make.left.right.mas_equalTo(self.containerView);
@@ -147,7 +150,7 @@
                 
             
                 NSMutableDictionary *traceParam = [NSMutableDictionary new];
-                traceParam[@"enter_from"] = @"new_detail";
+                traceParam[@"enter_from"] = @"house_model_detail";
                 traceParam[@"log_pb"] = floorPanInfoModel.logPb; 
                 traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
                 traceParam[@"card_type"] = @"left_pic";
@@ -166,12 +169,32 @@
                 if (subPageParams) {
                     [infoDict addEntriesFromDictionary:subPageParams];
                 }
+                infoDict[@"tracer"] = traceParam;
                 TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_plan_detail"] userInfo:info];
             }
         }
     }
     
+}
+
+- (void)collectionDisplayCell:(NSInteger)index {
+    FHFloorPanDetailMutiFloorPanCellModel *model = (FHFloorPanDetailMutiFloorPanCellModel *)self.currentData;
+      if ([model isKindOfClass:[FHFloorPanDetailMutiFloorPanCellModel class]]) {
+          if (model.recommend.count > index) {
+              FHDetailFloorPanDetailInfoDataRecommendModel *floorPanInfoModel = model.recommend[index];
+              if ([floorPanInfoModel isKindOfClass:[FHDetailFloorPanDetailInfoDataRecommendModel class]]) {
+                // house_show
+                NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+                tracerDic[@"rank"] = @(index);
+                tracerDic[@"card_type"] = @"left_pic";
+                tracerDic[@"log_pb"] = floorPanInfoModel.logPb ? floorPanInfoModel.logPb : @"be_null";
+                tracerDic[@"element_from"] = @"house_model";
+                tracerDic[@"page_type"] = @"house_model_detail";
+                [FHUserTracker writeEvent:@"house_show" params:tracerDic];
+              }
+          }
+      }
 }
 - (UIImageView *)shadowImage
 {
@@ -230,16 +253,6 @@
         self.descLabel.attributedText = textAttrStr;
         if (model.saleStatus) {
             self.statusLabel.hidden = NO;
-            //@(-1),NSBaselineOffsetAttributeName
-//            NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
-//            NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                          [UIFont themeFontMedium:12],NSFontAttributeName,
-//                                          model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray3],NSBackgroundColorAttributeName,nil];
-//
-//            [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
-//
-            //            [textAttrStr appendAttributedString:tagStr];
-            
             UIColor *tagBacColor = [UIColor colorWithHexString:@"#FFEAD3"];
             UIColor *tagTextColor = [UIColor colorWithHexString:@"#ff9300"];
             self.statusLabel.textAlignment = NSTextAlignmentCenter;
@@ -325,31 +338,6 @@
         make.width.mas_equalTo(40);
         make.bottom.mas_equalTo(self);
     }];
-    //
-    //    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    //    _priceLabel.textColor = [UIColor themeOrange1];
-    //    _priceLabel.font = [UIFont themeFontMedium:16];
-    //    [self addSubview:_priceLabel];
-    //
-    //    _spaceLabel = [UILabel createLabel:@"" textColor:@"#ffffff" fontSize:12];
-    //    _spaceLabel.textColor = [UIColor themeGray3];
-    //    [self addSubview:_spaceLabel];
-//    [self.priceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-//    [self.priceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-//    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self);
-//        make.height.mas_equalTo(22);
-//        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(3);
-//        make.bottom.mas_equalTo(self);
-//    }];
-//
-//    [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(self.priceLabel.mas_right).offset(6);
-//        make.right.mas_equalTo(self);
-//        make.height.mas_equalTo(22);
-//        make.centerY.equalTo(self.priceLabel.mas_centerY);
-//        make.bottom.equalTo(self);
-//    }];
 }
 
 @end

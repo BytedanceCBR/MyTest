@@ -108,16 +108,6 @@
 
 // 注册cell类型
 - (void)registerCellClasses {
-//     // 图片头部
-//    [self.infoListTable registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderModel class])];
-//    // 标题
-//    [self.infoListTable registerClass:[FHFloorPanTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanTitleCellModel class])];
-//    // 属性信息
-//    [self.infoListTable registerClass:[FHFloorPanDetailPropertyCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailPropertyCellModel class])];
-    
-
-
-    
     //头部轮播
     [self.infoListTable registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
     
@@ -178,7 +168,7 @@
     NSMutableArray *itemsArray = [NSMutableArray new];
     
     self.currentModel = model;
-    
+    //头部轮播图
     if (1) {
         FHMultiMediaItemModel *itemModel = nil;
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
@@ -208,11 +198,8 @@
         headerCellModel.titleDataModel = houseTitleModel;
         [self.currentItems addObject:headerCellModel];
     }
-    
+    //基础信息
     if (model.data.baseInfo) {
-//        FHFloorPanDetailGrayLineModel *grayLine = [[FHFloorPanDetailGrayLineModel alloc]init];
-//        grayLine.houseModelType = FHFloorPanHouseModelTypeCoreInfo;
-//        [self.currentItems addObject:grayLine];
         FHFloorPanDetailPropertyListModel *propertyModel = [[FHFloorPanDetailPropertyListModel alloc] init];
         propertyModel.baseInfo = model.data.baseInfo;
         propertyModel.houseModelType = FHFloorPanHouseModelTypeCoreInfo;
@@ -222,9 +209,6 @@
     
     //楼盘户型
     if (model.data.recommend && model.data.recommend.count > 0) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//        [self.currentItems addObject:grayLine];
         
         FHFloorPanDetailMutiFloorPanCellModel *mutiDataModel = [[FHFloorPanDetailMutiFloorPanCellModel alloc] init];
         mutiDataModel.recommend = model.data.recommend;
