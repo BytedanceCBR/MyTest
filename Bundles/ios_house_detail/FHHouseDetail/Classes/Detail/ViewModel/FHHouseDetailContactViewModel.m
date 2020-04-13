@@ -99,7 +99,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         
         __weak typeof(self)wself = self;
         _bottomBar.bottomBarContactBlock = ^{
-            [wself contactActionWithExtraDict:nil];
+            [wself contactAction];
         };
         _bottomBar.bottomBarLicenseBlock = ^{
             [wself licenseAction];
@@ -434,14 +434,21 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 }
 
 // 拨打电话 + 询底价填表单
-- (void)contactActionWithExtraDict:(NSDictionary *)extraDict
+- (void)contactAction
 {
+    NSMutableDictionary *extraDict = @{}.mutableCopy;
     NSDictionary *associateInfoDict = nil;
     if (self.contactPhone.phone.length > 0) {
         associateInfoDict = self.contactPhone.associateInfo.phoneInfo;
     }else {
         associateInfoDict = self.contactPhone.associateInfo.reportFormInfo;
     }
+    extraDict[kFHAssociateInfo] = associateInfoDict;
+    [self contactActionWithExtraDict:extraDict];
+}
+- (void)contactActionWithExtraDict:(NSDictionary *)extraDict
+{
+    NSDictionary *associateInfoDict = nil;
     if (extraDict[kFHAssociateInfo]) {
         associateInfoDict = extraDict[kFHAssociateInfo];
     }
