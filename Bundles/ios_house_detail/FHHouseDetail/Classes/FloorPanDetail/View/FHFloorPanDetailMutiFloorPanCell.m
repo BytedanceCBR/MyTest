@@ -229,7 +229,7 @@
         [textAttrStr appendAttributedString:titleAttrStr];
         self.descLabel.attributedText = textAttrStr;
         if (model.saleStatus) {
-            
+            self.statusLabel.hidden = NO;
             //@(-1),NSBaselineOffsetAttributeName
 //            NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
 //            NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -248,8 +248,16 @@
             self.statusLabel.layer.cornerRadius = 10;
             self.statusLabel.layer.masksToBounds = YES;
             self.statusLabel.text = model.saleStatus.content;
+            [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self).offset(-40);
+            }];
             
-            
+        }
+        else{
+            [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(self);
+            }];
+            self.statusLabel.hidden = YES;
         }
         
 //        self.priceLabel.text = model.pricingPerSqm;
@@ -299,6 +307,7 @@
         make.left.mas_equalTo(self);
         make.height.mas_equalTo(19);
         make.top.mas_equalTo(self.iconView.mas_bottom).offset(10);
+        make.right.mas_equalTo(self).offset(-40);
     }];
     
     [self.statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
