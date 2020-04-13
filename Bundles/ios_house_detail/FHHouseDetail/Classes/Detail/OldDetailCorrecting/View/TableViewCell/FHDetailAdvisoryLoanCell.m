@@ -8,6 +8,8 @@
 #import "FHDetailAdvisoryLoanCell.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHHouseContactDefines.h>
+#import "FHHouseFollowUpConfigModel.h"
+#import "FHHouseFollowUpHelper.h"
 @interface FHDetailAdvisoryLoanCell()
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, weak) UIImageView *shadowImage;
@@ -320,6 +322,16 @@
             [model.contactModel fillFormActionWithExtraDict:infoDic];
         }
     }
+    // 静默关注功能
+     NSMutableDictionary *params = @{}.mutableCopy;
+     if (self.baseViewModel.detailTracerDic) {
+         [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
+     }
+     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+     configModel.houseType = self.baseViewModel.houseType;
+     configModel.followId = self.baseViewModel.houseId;
+     configModel.actionType = self.baseViewModel.houseType;
+     [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
 }
 
 - (void)tapCalculator:(UIButton *)sender {
