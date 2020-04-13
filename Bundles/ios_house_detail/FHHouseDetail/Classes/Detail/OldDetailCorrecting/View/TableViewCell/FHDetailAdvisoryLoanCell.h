@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailDownPaymentModel *downPayment;
 @property (nonatomic, weak) UIViewController *belongsVC;
 @property (nonatomic, weak)  FHHouseDetailContactViewModel *contactModel;
+@property (nonatomic, weak)     FHHouseDetailBaseViewModel       *baseViewModel;
 @end
 
 NS_ASSUME_NONNULL_END

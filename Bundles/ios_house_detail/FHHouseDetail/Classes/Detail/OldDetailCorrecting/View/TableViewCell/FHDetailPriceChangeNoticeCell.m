@@ -33,6 +33,10 @@
     // Configure the view for the selected state
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"price_notice";
+}
+
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailPriceNoticeModel class]]) {
         return;
@@ -231,9 +235,30 @@
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"url":url,@"title":@"价格解析",@"fhJSParams":jsParams}];
             NSString *jumpUrl = @"sslocal://webview";
             [[TTRoute sharedRoute] openURLByPushViewController:[[NSURL alloc] initWithString:jumpUrl] userInfo:userInfo];
-            
+            [self addGoDetailLog];
         }
     }
+}
+
+- (void)addGoDetailLog
+{
+    FHDetailPriceNoticeModel *model = (FHDetailPriceNoticeModel *)self.currentData;
+    //    1. event_type ：house_app2c_v2
+    //    2. page_type（详情页类型）：rent_detail（租房详情页），old_detail（二手房详情页）
+    //    3. card_type（房源展现时的卡片样式）：left_pic（左图）
+    //    4. enter_from（详情页入口）：search_related_list（搜索结果推荐）
+    //    5. element_from ：search_related
+    //    6. rank
+    //    7. origin_from
+    //    8. origin_search_id
+    //    9.log_pb
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (model.baseViewModel.detailTracerDic) {
+        [params addEntriesFromDictionary:model.baseViewModel.detailTracerDic];
+    }
+    [params setValue:@"price_analysis" forKey:@"page_type"];
+    [FHUserTracker writeEvent:@"go_detail" params:params];
+    
 }
 @end
 

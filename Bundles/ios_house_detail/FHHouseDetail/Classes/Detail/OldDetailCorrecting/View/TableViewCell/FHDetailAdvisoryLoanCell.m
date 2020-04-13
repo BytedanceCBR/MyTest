@@ -40,6 +40,10 @@
     // Configure the view for the selected state
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"loan_consult";
+}
+
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailAdvisoryLoanModel class]]) {
         return;
@@ -343,6 +347,28 @@
         NSURL *url = [NSURL URLWithString:openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
+}
+
+- (void)addGoDetailLog
+{
+    FHDetailAdvisoryLoanModel *model = (FHDetailAdvisoryLoanModel *)self.currentData;
+    //    1. event_type ：house_app2c_v2
+    //    2. page_type（详情页类型）：rent_detail（租房详情页），old_detail（二手房详情页）
+    //    3. card_type（房源展现时的卡片样式）：left_pic（左图）
+    //    4. enter_from（详情页入口）：search_related_list（搜索结果推荐）
+    //    5. element_from ：search_related
+    //    6. rank
+    //    7. origin_from
+    //    8. origin_search_id
+    //    9.log_pb
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (model.baseViewModel.detailTracerDic) {
+        [params addEntriesFromDictionary:model.baseViewModel.detailTracerDic];
+    }
+    [params setValue:@"debit_calculator" forKey:@"page_type"];
+    [params setValue:@"loan_consult" forKey:@"element_from"];
+    [FHUserTracker writeEvent:@"go_detail" params:params];
+    
 }
 @end
 @implementation FHDetailAdvisoryLoanModel

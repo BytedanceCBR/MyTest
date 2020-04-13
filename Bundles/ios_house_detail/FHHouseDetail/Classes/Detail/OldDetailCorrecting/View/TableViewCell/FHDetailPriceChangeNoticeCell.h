@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) UIViewController *belongsVC;
 @property (nonatomic, weak)   id contactModel;
 
+
 @end
 
 @interface FHDetailPriceChangeNoticeItem : UIControl

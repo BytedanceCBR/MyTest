@@ -342,6 +342,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         advisoryLoanModel.houseModelType = FHHouseModelTypeAdvisoryLoan;
         advisoryLoanModel.downPayment = model.data.downPaymentInfo;
          advisoryLoanModel.contactModel = self.contactViewModel;
+        advisoryLoanModel.baseViewModel = self;
          [self.items addObject:advisoryLoanModel];
     }
     //添加订阅房源动态卡片
