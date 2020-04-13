@@ -264,12 +264,8 @@
     FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
     associateIMModel.houseId = self.baseViewModel.houseId;
     associateIMModel.houseType = self.baseViewModel.houseType;
-    if([self.baseViewModel.detailData isKindOfClass:FHDetailNewModel.class]) {
-        FHDetailNewModel *detailNewModel = (FHDetailNewModel *)self.baseViewModel.detailData;
-        if(detailNewModel.data.floorplanListAssociateInfo) {
-            associateIMModel.associateInfo = detailNewModel.data.floorplanListAssociateInfo;
-        }
-    }
+    associateIMModel.associateInfo = floorPanInfoModel.associateInfo;
+
     // IM 相关埋点上报参数
     FHAssociateReportParams *reportParams = [FHAssociateReportParams new];
     reportParams.enterFrom = self.baseViewModel.detailTracerDic[@"enter_from"];

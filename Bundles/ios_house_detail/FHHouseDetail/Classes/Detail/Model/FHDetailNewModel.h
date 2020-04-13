@@ -118,6 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, copy , nullable) NSString *facingDirection;
 @property (nonatomic, copy) NSString *imOpenUrl;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 
@@ -275,7 +276,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *recommendRealtorsAssociateInfo;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageGroupAssociateInfo;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *discountInfoAssociateInfo;
-@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *floorplanListAssociateInfo;
 
 
 @end
