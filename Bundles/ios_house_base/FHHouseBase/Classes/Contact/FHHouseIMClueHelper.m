@@ -93,31 +93,11 @@
     if (urlStr.length > 0) {
         // 上报IM点击埋点
         [self addClickIMLog:associateIM];
-        
         // 执行跳转
-        NSURLComponents *urlComponents = [NSURLComponents componentsWithString:urlStr];
-        
-        __block BOOL isUrlContainAssociateInfo = NO;
-        __block BOOL isUrlContainReportParams = NO;
-        [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull queryItem, NSUInteger idx, BOOL * _Nonnull stop) {
-            if([queryItem.name isEqualToString:@"report_params"]) {
-                isUrlContainReportParams = YES;
-            } else if([queryItem.name isEqualToString:@"associate_info"]) {
-                isUrlContainAssociateInfo = YES;
-            }
-        }];
-        
         NSURL *openUrl = [NSURL URLWithString:urlStr];
         NSMutableDictionary *userInfoDict = @{}.mutableCopy;
-        
-        if(isUrlContainReportParams == NO) {
-            userInfoDict[@"report_params"] = associateIM.reportParams.toDictionary;
-        }
-        
-        if(isUrlContainAssociateInfo == NO) {
-            userInfoDict[@"associate_info"] = associateIM.associateInfo.imInfo;
-        }
-        
+        userInfoDict[@"report_params"] = associateIM.reportParams.toDictionary;
+        userInfoDict[@"associate_info"] = associateIM.associateInfo.imInfo;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         
