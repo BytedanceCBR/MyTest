@@ -65,6 +65,21 @@
     [self addSubview:_indexView];
     self.tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapClick:)];;
     [self addGestureRecognizer:_tapGes];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+#pragma mark  埋点
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    [self removeTimer];
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+    if (!_timer) {
+        [self removeTimer];
+        [self addTimer];
+    }
 }
 
 - (void)setTimeDuration:(NSTimeInterval)timeDuration {
@@ -239,6 +254,7 @@
 - (void)dealloc
 {
     [_timer invalidate];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
