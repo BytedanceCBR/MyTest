@@ -201,7 +201,7 @@
         associatePhone.searchId = logPb[@"search_id"];
         associatePhone.imprId = logPb[@"impr_id"];
     }
-    associatePhone.houseType = houseType;
+    associatePhone.houseType = houseType.integerValue;
     associatePhone.houseId = houseId;
     associatePhone.showLoading = YES;
     [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
