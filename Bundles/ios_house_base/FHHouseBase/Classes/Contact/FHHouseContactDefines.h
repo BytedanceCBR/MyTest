@@ -71,7 +71,7 @@ typedef enum : NSUInteger {
     //--
     
 //    FHClueIMPageTypeCQuickQuestion = 25, // app_oldhouse_question：1.25小端二手房详情页的快速提问
-    FHClueIMPageTypeCExpertDetail = 26, // app_oldhouse_expert_detail 26小端二手房详情页专家展位进经纪人主页后的在线联系
+//    FHClueIMPageTypeCExpertDetail = 26, // app_oldhouse_expert_detail 26小端二手房详情页专家展位进经纪人主页后的在线联系
     
     //--
 //    FHClueIMPageTypePresentation = 27,//二手房详情页购房小建议
