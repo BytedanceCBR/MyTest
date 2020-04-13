@@ -60,7 +60,7 @@ static TTGoogleMapGeocoder *_sharedGeocoder;
         [self.httpTask cancel];
         
         __weak TTGoogleMapGeocoder *weakSelf = self;
-        self.httpTask = [TTUGCRequestManager requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:NO callBackWithMonitor:^(NSError *error, id jsonObj, TTUGCRequestMonitorModel *monitorModel) {
+        self.httpTask = [TTUGCRequestManager requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:NO callBackWithMonitor:^(NSError *error, id jsonObj, TTHttpResponse *response) {
             if (completionHandler) {
                 if ([jsonObj isKindOfClass:[NSDictionary class]] && completionHandler && [[jsonObj tt_stringValueForKey:@"status"] isEqualToString:@"OK"]) {
                     completionHandler(weakSelf, [weakSelf _placemarkItemWithGMapResponse:jsonObj], error);
