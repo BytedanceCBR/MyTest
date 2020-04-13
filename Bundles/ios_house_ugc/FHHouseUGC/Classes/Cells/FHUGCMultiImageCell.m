@@ -30,9 +30,9 @@
 #define originViewHeight 80
 #define attachCardViewHeight 57
 
-@interface FHUGCMultiImageCell ()<TTUGCAttributedLabelDelegate>
+@interface FHUGCMultiImageCell ()<TTUGCAsyncLabelDelegate>
 
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
@@ -71,17 +71,17 @@
     __weak typeof(self) wself = self;
     [self.contentView addSubview:_userInfoView];
     
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
-    NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-                                     };
-    self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = linkAttributes;
-    self.contentLabel.inactiveLinkAttributes = linkAttributes;
+//    NSDictionary *linkAttributes = @{
+//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+//                                     };
+//    self.contentLabel.linkAttributes = linkAttributes;
+//    self.contentLabel.activeLinkAttributes = linkAttributes;
+//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
@@ -193,7 +193,7 @@
         self.contentLabel.hidden = NO;
         self.contentLabel.height = cellModel.contentHeight;
         self.multiImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
-        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     //图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
@@ -300,9 +300,9 @@
     }
 }
 
-#pragma mark - TTUGCAttributedLabelDelegate
+#pragma mark - TTUGCAsyncLabelDelegate
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
         if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
             [self.delegate lookAllLinkClicked:self.cellModel cell:self];

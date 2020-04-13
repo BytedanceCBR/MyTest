@@ -151,10 +151,12 @@
         }
 //        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
         
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:15];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:16];
         
         if (attrStr) {
-            UIFont *font = [UIFont themeFontRegular:16];
+            CGFloat fontSize = 16.0f;
+            UIFont *font = [UIFont themeFontRegular:fontSize];
+            CGFloat lineHeight = ceil(fontSize * 1.4);
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
             [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
@@ -162,11 +164,11 @@
             
             NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             
-            paragraphStyle.minimumLineHeight = 21;
-            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.minimumLineHeight = lineHeight;
+            paragraphStyle.maximumLineHeight = lineHeight;
             paragraphStyle.lineSpacing = 2;
             
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
             [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
             
             [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
@@ -285,8 +287,8 @@
                 if(model.supportedLinkType){
                     if(model.supportedLinkType.count > 0 && [model.supportedLinkType containsObject:@(richSpanLink.type)]){
 //                        [label addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
-                        
-                        NSTextCheckingResult *checkingResult = [NSTextCheckingResult transitInformationCheckingResultWithRange:range components:@{}];
+                        NSTextCheckingResult *checkingResult = [NSTextCheckingResult linkCheckingResultWithRange:range URL:[NSURL URLWithString:richSpanLink.link]];
+//                        NSTextCheckingResult *checkingResult = [NSTextCheckingResult transitInformationCheckingResultWithRange:range components:@{}];
                         TTUGCAsyncLabelLink *link =
                         [[TTUGCAsyncLabelLink alloc] initWithAttributes:linkColor ? @{NSForegroundColorAttributeName : linkColor} : nil
                                                      textCheckingResult:checkingResult];
