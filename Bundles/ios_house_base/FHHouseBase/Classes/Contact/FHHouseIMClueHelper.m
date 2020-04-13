@@ -97,7 +97,7 @@
         NSURL *openUrl = [NSURL URLWithString:urlStr];
         NSMutableDictionary *userInfoDict = @{}.mutableCopy;
         userInfoDict[@"report_params"] = associateIM.reportParams.toDictionary;
-        userInfoDict[@"associate_info"] = associateIM.associateInfo.imInfo;
+        userInfoDict[@"associate_info"] = associateIM.associateInfo.imInfo; // 只传入im_info即可
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         
@@ -153,7 +153,7 @@
     dict[@"realtor_logpb"] = reportParams.realtorLogpb;
     dict[@"growth_deepevent"] = @(1);
     dict[@"source_from"] = reportParams.sourceFrom;
-    dict[@"associate_info"] = associateIM.associateInfo.toDictionary;
+    dict[@"associate_info"] = associateIM.associateInfo.imInfo; // 只传im_info即可
     
     if(reportParams.extra) {
         [dict addEntriesFromDictionary:reportParams.extra];
