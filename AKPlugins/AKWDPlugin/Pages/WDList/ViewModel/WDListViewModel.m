@@ -458,7 +458,7 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
 }
 
 - (NSString *)moreListAnswersTitle {
-    return [NSString stringWithFormat:@"查看%lld个折叠回答",self.questionEntity.normalAnsCount.longLongValue];
+    return [NSString stringWithFormat:@"%lld个折叠回答",self.questionEntity.normalAnsCount.longLongValue];
 }
 
 - (NSInteger)defaultNumberOfLines {
