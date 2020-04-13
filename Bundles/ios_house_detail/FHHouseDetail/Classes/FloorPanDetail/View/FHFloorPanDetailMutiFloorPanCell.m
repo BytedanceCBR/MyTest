@@ -248,22 +248,22 @@
             self.statusLabel.layer.cornerRadius = 10;
             self.statusLabel.layer.masksToBounds = YES;
             self.statusLabel.text = model.saleStatus.content;
-            CGSize itemSize = [model.title sizeWithAttributes:@{
-            NSFontAttributeName: [UIFont themeFontMedium:16]
-            }];
+            [self.descLabel sizeToFit];
+            CGSize itemSize = [self.descLabel sizeThatFits:CGSizeMake(ITEM_WIDTH, 20)];
             CGFloat itemWidth = itemSize.width;
             if (itemWidth > ITEM_WIDTH - 42) {
                 itemWidth = ITEM_WIDTH - 42;
             }
-            //宽为W,总长度为ITEM_WIDTH 那么标题的右端点就是 ITEM_WIDTH-W 又因为一定要保证销售状态的出现，如果预留40的空间。
+            
+            //宽为W,总长度为ITEM_WIDTH 那么标题的右端点就是 ITEM_WIDTH-W 又因为一定要保证销售状态的出现，需要预留42的空间。
             [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(self).offset(-ITEM_WIDTH + itemWidth);
+                make.width.mas_equalTo(itemWidth);
             }];
             
         }
         else{
             [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(self);
+                make.width.mas_equalTo(ITEM_WIDTH);
             }];
             self.statusLabel.hidden = YES;
         }
@@ -315,7 +315,7 @@
         make.left.mas_equalTo(self);
         make.height.mas_equalTo(19);
         make.top.mas_equalTo(self.iconView.mas_bottom).offset(10);
-        make.right.mas_equalTo(self).offset(-40);
+        make.width.mas_equalTo(ITEM_WIDTH - 42);
     }];
     
     [self.statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {

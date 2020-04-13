@@ -149,21 +149,19 @@
     NSArray *tags = _model.tags;
     if (tags) {
         FHHouseTagsModel *tagModel = [tags firstObject];
-        CGSize itemSize = [_model.titleStr sizeWithAttributes:@{
-                                                                 NSFontAttributeName: [UIFont themeFontMedium:24]
-                                                                 }];
+        [self.nameLabel sizeToFit];
+        CGSize itemSize = [self.nameLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, 28)];
         UIColor *tagBacColor = [UIColor colorWithHexString:@"#FFEAD3"];
         UIColor *tagTextColor = [UIColor colorWithHexString:@"#ff9300"];
         UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
         CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 31;
-        CGFloat itemWidth = itemSize.width + 5;
+        CGFloat itemWidth = itemSize.width;
         if (itemWidth > tagWidth - 31 - 40 -4) {
             itemWidth = tagWidth - 31 - 40 -4;
         }
         [self addSubview:label];
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(31);
-            //make.right.mas_equalTo(self).offset(-35 -40 -4);
             make.width.mas_equalTo(itemWidth);
             make.height.mas_equalTo(28);
             make.top.mas_equalTo(self.mas_top).offset(50);
