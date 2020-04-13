@@ -107,7 +107,7 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
     NSString *WBAppID = TTLogicString(@"sinaAppKey", @"2504490989");
     NSString *WBAppSecret  = TTLogicString(@"sinaAppSecret", @"8ba197824d80d38928470e1ffa4c5618");
     NSString *hotsoonAppID = TTLogicString(@"hotsoonOAuthAppID", @"bdefc41a8703eae8ce"); // 默认值是普通版appId
-    NSString *awemeAppID = TTLogicString(@"awemeOAuthAppID", @"bd3ffc36cf30e111d0"); // 默认值是普通版appId
+    NSString *awemeAppID = [TTSandBoxHelper isInHouseApp] ? @"awua3q1k3j4ymeii" : @"awua3q1k3j4ymeii";; // 默认值是普通版appId
     
     //  https://bytedance.feishu.cn/space/doc/doccnmfRT2HS5OmN6LlbtI
     NSString *mobileAppID = [TTSandBoxHelper isInHouseApp] ? @"300011896473" : @"300011896471";
@@ -184,7 +184,7 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
     awemeConf.platformType = TTAccountAuthTypeDouyin;
     awemeConf.consumerKey  = awemeAppID;
     awemeConf.platformName = PLATFORM_DOUYIN;
-    awemeConf.platformAppId = TTLogicString(@"awemePlatformAppID", nil);
+    awemeConf.platformAppId = @"846";
     [TTAccount registerPlatform:awemeConf];
 }
 

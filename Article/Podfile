@@ -572,6 +572,7 @@ target 'NewsLiteInHouse' do
 end
 
 target 'f100' do
+#    testPods
     fhPods
     appPods
     appDevelopPods

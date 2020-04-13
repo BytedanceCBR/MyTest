@@ -300,11 +300,22 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)appleLoginAction {
-    
+    __weak typeof(self) weakSelf = self;
+    [TTAccount requestLoginForPlatform:TTAccountAuthTypeApple completion:^(BOOL success, NSError *error) {
+        [weakSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
+    }];
 }
 
 - (void)awesomeLoginAction {
-    
+    __weak typeof(self) weakSelf = self;
+    [TTAccount requestLoginForPlatform:TTAccountAuthTypeDouyin willLogin:^(NSString * _Nonnull info) {
+        NSLog(@"info:%@",info);
+    } completion:^(BOOL success, NSError *error) {
+        [weakSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
+    }];
+//    [TTAccount requestLoginForPlatform:TTAccountAuthTypeDouyin completion:^(BOOL success, NSError *error) {
+//        [weakSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
+//    }];
 }
 
 
@@ -329,8 +340,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 - (void)quickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha {
+
     __weak typeof(self) weakSelf = self;
-    
     if (![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
         [[ToastManager manager] showToast:@"手机号错误"];
         return;

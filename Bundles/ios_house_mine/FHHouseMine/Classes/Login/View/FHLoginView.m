@@ -56,7 +56,6 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         [self initViews];
-        [self initConstraints];
     }
     return self;
 }
@@ -65,21 +64,44 @@
     self.scrollView = [[UIScrollView alloc] init];
 //    _scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self addSubview:_scrollView];
+    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.left.right.mas_equalTo(self);
+    }];
 
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:30] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"手机快捷登录";
     [self.scrollView addSubview:_titleLabel];
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.scrollView).offset(40);
+        make.left.mas_equalTo(self.scrollView).offset(30);
+        make.height.mas_equalTo(42);
+    }];
 
     self.serviceLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
     self.serviceLabel.hidden = YES;
     [self.scrollView addSubview:self.serviceLabel];
+    [self.serviceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.singleLine);
+        make.centerY.mas_equalTo(self.phoneInput);
+    }];
 
     self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
     _subTitleLabel.text = @"未注册手机验证后自动注册";
     [self.scrollView addSubview:_subTitleLabel];
+    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
+        make.left.mas_equalTo(self.scrollView).offset(30);
+        make.height.mas_equalTo(20);
+    }];
 
     self.rightView = [[UIView alloc] init];
     [self.scrollView addSubview:_rightView];
+    [self.rightView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.scrollView);
+        make.left.mas_equalTo(self.scrollView).offset(30);
+        make.right.mas_equalTo(self).offset(-30);
+        make.height.mas_equalTo(1);
+    }];
 
     self.phoneInput = [[UITextField alloc] init];
     _phoneInput.font = [UIFont themeFontRegular:14];
@@ -88,10 +110,22 @@
     _phoneInput.keyboardType = UIKeyboardTypePhonePad;
     _phoneInput.returnKeyType = UIReturnKeyDone;
     [self.scrollView addSubview:_phoneInput];
+    [self.phoneInput mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.subTitleLabel.mas_bottom).offset(40);
+        make.left.mas_equalTo(self.titleLabel);
+        make.right.mas_equalTo(self.rightView);
+        make.height.mas_equalTo(20);
+    }];
 
     self.singleLine = [[UIView alloc] init];
     _singleLine.backgroundColor = [UIColor themeGray6];
     [self.scrollView addSubview:_singleLine];
+    [self.singleLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(11);
+        make.left.mas_equalTo(self.titleLabel);
+        make.right.mas_equalTo(self.rightView);
+        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+    }];
 
     self.varifyCodeInput = [[UITextField alloc] init];
     _varifyCodeInput.font = [UIFont themeFontRegular:14];
@@ -100,10 +134,22 @@
     _varifyCodeInput.keyboardType = UIKeyboardTypePhonePad;
     _varifyCodeInput.returnKeyType = UIReturnKeyGo;
     [self.scrollView addSubview:_varifyCodeInput];
+    [self.varifyCodeInput mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(43);
+        make.left.mas_equalTo(self.titleLabel);
+        make.right.mas_equalTo(self.rightView);
+        make.height.mas_equalTo(20);
+    }];
 
     self.singleLine2 = [[UIView alloc] init];
     _singleLine2.backgroundColor = [UIColor themeGray6];
     [self.scrollView addSubview:_singleLine2];
+    [self.singleLine2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.varifyCodeInput.mas_bottom).offset(11);
+        make.left.mas_equalTo(self.titleLabel);
+        make.right.mas_equalTo(self.rightView);
+        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+    }];
 
     self.sendVerifyCodeBtn = [[UIButton alloc] init];
     [self setButtonContent:@"获取验证码" font:[UIFont themeFontRegular:14] color:[UIColor themeGray1] state:UIControlStateNormal btn:_sendVerifyCodeBtn];
@@ -111,7 +157,25 @@
     _sendVerifyCodeBtn.enabled = NO;
     [_sendVerifyCodeBtn addTarget:self action:@selector(sendVerifyCode) forControlEvents:UIControlEventTouchUpInside];
     [self.scrollView addSubview:_sendVerifyCodeBtn];
+    [self.sendVerifyCodeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.varifyCodeInput);
+        make.right.mas_equalTo(self.rightView);
+        make.height.mas_equalTo(30);
+    }];
 
+    self.agreementLabel = [[YYLabel alloc] init];
+    _agreementLabel.numberOfLines = 0;
+    _agreementLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    _agreementLabel.textColor = [UIColor themeGray3];
+    _agreementLabel.font = [UIFont themeFontRegular:13];
+    [self.scrollView addSubview:_agreementLabel];
+    [self.agreementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.titleLabel);
+        make.top.mas_equalTo(self.singleLine.mas_bottom).offset(20);
+        make.right.mas_equalTo(self.rightView);
+        make.height.mas_equalTo(0);
+    }];
+    
     self.confirmBtn = [[UIButton alloc] init];
     _confirmBtn.backgroundColor = [UIColor themeOrange4];
     _confirmBtn.alpha = 0.6;
@@ -119,6 +183,12 @@
     [_confirmBtn addTarget:self action:@selector(confirm) forControlEvents:UIControlEventTouchUpInside];
     [self setButtonContent:@"登录" font:[UIFont themeFontRegular:16] color:[UIColor whiteColor] state:UIControlStateNormal btn:_confirmBtn];
     [self.scrollView addSubview:_confirmBtn];
+    [self.confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.agreementLabel.mas_bottom).offset(20);
+        make.left.mas_equalTo(self.titleLabel);
+        make.right.mas_equalTo(self.rightView);
+        make.height.mas_equalTo(46);
+    }];
 
     self.otherLoginBtn = [[UIButton alloc] init];
     [self setButtonContent:@"其他方式登录" font:[UIFont themeFontRegular:14] color:[UIColor themeGray2] state:UIControlStateNormal btn:self.otherLoginBtn];
@@ -127,13 +197,11 @@
     [self.otherLoginBtn addTarget:self action:@selector(otherLoginBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     self.otherLoginBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
     self.otherLoginBtn.hidden = YES;
-
-    self.agreementLabel = [[YYLabel alloc] init];
-    _agreementLabel.numberOfLines = 0;
-    _agreementLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    _agreementLabel.textColor = [UIColor themeGray3];
-    _agreementLabel.font = [UIFont themeFontRegular:13];
-    [self.scrollView addSubview:_agreementLabel];
+    [self.otherLoginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.confirmBtn);
+        make.top.mas_equalTo(self.confirmBtn.mas_bottom).mas_offset(20);
+        make.height.mas_equalTo(20);
+    }];
 
 //    self.acceptCheckBox = [[FHLoginAcceptButton alloc] init];
 //    self.acceptCheckBox.hotAreaInsets = UIEdgeInsetsMake(20, 30, 0, 30);
@@ -142,8 +210,38 @@
 //    [_acceptCheckBox setImage:[UIImage imageNamed:@"ic-filter-normal"] forState:UIControlStateNormal];
 //    [_acceptCheckBox addTarget:self action:@selector(acceptCheckBoxChange) forControlEvents:UIControlEventTouchUpInside];
 //    [self.scrollView addSubview:_acceptCheckBox];
-}
+    
+    UIStackView *stackView = [[UIStackView alloc] init];
+//    stackView.distribution = UIStackViewDistributionEqualSpacing;
+    stackView.alignment = UIStackViewAlignmentCenter;
+    stackView.axis = UILayoutConstraintAxisHorizontal;
+    stackView.backgroundColor = UIColor.greenColor;
+    [self.scrollView addSubview:stackView];
+    [stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.otherLoginBtn.mas_bottom).mas_offset(20);
+        make.width.mas_equalTo(40+138+20);
+        make.height.mas_equalTo(40);
+        make.centerX.mas_equalTo(self);
+    }];
+    
+    UIButton *douyinLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [douyinLoginButton setImage:[UIImage imageNamed:@"douyin_login_common_icon"] forState:UIControlStateNormal];
+    [douyinLoginButton addTarget:self action:@selector(douyinLoginAction) forControlEvents:UIControlEventTouchUpInside];
+    [douyinLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(40, 40));
+    }];
+    [stackView addArrangedSubview:douyinLoginButton];
+    
+    UIButton *appleLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [appleLoginButton setImage:[UIImage imageNamed:@"apple_login_icon"] forState:UIControlStateNormal];
+    [appleLoginButton addTarget:self action:@selector(appleLoginAction) forControlEvents:UIControlEventTouchUpInside];
+    [appleLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(138, 40));
+    }];
+    [stackView addArrangedSubview:appleLoginButton];
+    
 
+}
 
 - (void)showOneKeyLoginView:(BOOL)isOneKeyLogin {
     _isOneKeyLogin = isOneKeyLogin;
@@ -185,84 +283,6 @@
 
 - (void)updateLoadingState:(BOOL)isLoading {
     self.scrollView.hidden = isLoading;
-}
-
-- (void)initConstraints {
-
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.scrollView).offset(40);
-        make.left.mas_equalTo(self.scrollView).offset(30);
-        make.height.mas_equalTo(42);
-    }];
-
-    [self.serviceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.singleLine);
-        make.centerY.mas_equalTo(self.phoneInput);
-    }];
-
-    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
-        make.left.mas_equalTo(self.scrollView).offset(30);
-        make.height.mas_equalTo(20);
-    }];
-
-    [self.rightView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.scrollView);
-        make.left.mas_equalTo(self.scrollView).offset(30);
-        make.right.mas_equalTo(self).offset(-30);
-        make.height.mas_equalTo(1);
-    }];
-
-    [self.phoneInput mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.subTitleLabel.mas_bottom).offset(40);
-        make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(20);
-    }];
-
-    [self.singleLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(11);
-        make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
-    }];
-
-    [self.varifyCodeInput mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(43);
-        make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(20);
-    }];
-
-    [self.singleLine2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.varifyCodeInput.mas_bottom).offset(11);
-        make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
-    }];
-
-    [self.sendVerifyCodeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.varifyCodeInput);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(30);
-    }];
-
-    [self.confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.agreementLabel.mas_bottom).offset(20);
-        make.left.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.rightView);
-        make.height.mas_equalTo(46);
-    }];
-
-    [self.otherLoginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.confirmBtn);
-        make.top.mas_equalTo(self.confirmBtn.mas_bottom).mas_offset(20);
-        make.height.mas_equalTo(20);
-    }];
-
-    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.left.right.mas_equalTo(self);
-    }];
 }
 
 - (void)setAgreementContent:(NSAttributedString *)attrText showAcceptBox:(BOOL)showAcceptBox {
@@ -345,6 +365,18 @@
 
 - (void)enableSendVerifyCodeBtn:(BOOL)enabled {
     self.sendVerifyCodeBtn.enabled = enabled;
+}
+
+- (void)douyinLoginAction {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(awesomeLoginAction)]) {
+        [self.delegate awesomeLoginAction];
+    }
+}
+
+- (void)appleLoginAction {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(appleLoginAction)]) {
+        [self.delegate appleLoginAction];
+    }
 }
 
 @end
