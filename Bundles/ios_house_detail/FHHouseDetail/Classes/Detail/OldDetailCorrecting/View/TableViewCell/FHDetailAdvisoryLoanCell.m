@@ -350,6 +350,16 @@
     if (openUrl.length > 0) {
         NSURL *url = [NSURL URLWithString:openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        // 静默关注功能
+                NSMutableDictionary *params = @{}.mutableCopy;
+                if (self.baseViewModel.detailTracerDic) {
+                    [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
+                }
+                FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+                configModel.houseType = self.baseViewModel.houseType;
+                configModel.followId = self.baseViewModel.houseId;
+                configModel.actionType = self.baseViewModel.houseType;
+                [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
     }
 }
 
