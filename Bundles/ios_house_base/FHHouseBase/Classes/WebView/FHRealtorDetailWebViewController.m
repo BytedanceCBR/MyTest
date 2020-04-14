@@ -66,12 +66,13 @@ static NSString *s_oldAgent = nil;
 
         self.tracerDict[@"pageType"] = @"realtor_detail";
         NSDictionary *reportParams = params[@"reportParams"];
-        [self callWithPhone:phone extraDict:reportParams completion:completion];
+        NSDictionary *phoneInfo = params[@"phone_info"];
+        [self callWithPhone:phone extraDict:reportParams phoneInfo:phoneInfo completion:completion];
     } forMethodName:@"phoneSwitch"];
     [FHUserTracker writeEvent:@"go_detail" params:[self goDetailParams]];
 }
 
-- (void)callWithPhone:(NSString *)phone extraDict:(NSDictionary *)extraDict completion:(TTRJSBResponse)completion {
+- (void)callWithPhone:(NSString *)phone extraDict:(NSDictionary *)extraDict phoneInfo:(NSDictionary *)phoneInfo completion:(TTRJSBResponse)completion {
     
     NSMutableDictionary *params = @{}.mutableCopy;
     if (self.tracerDict) {
@@ -94,12 +95,10 @@ static NSString *s_oldAgent = nil;
 //        }
 //    }];
     
-    // todo zjing test
-    NSDictionary *associateInfoDict = extraDict[@"phone_info"];
-    params[kFHAssociateInfo] = associateInfoDict;
+    params[kFHAssociateInfo] = phoneInfo;
     FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
     associatePhone.reportParams = params;
-    associatePhone.associateInfo = associateInfoDict;
+    associatePhone.associateInfo = phoneInfo;
     associatePhone.realtorId = self->_realtorId;
     if (params[@"log_pb"]) {
         NSDictionary *logPb = params[@"log_pb"];
