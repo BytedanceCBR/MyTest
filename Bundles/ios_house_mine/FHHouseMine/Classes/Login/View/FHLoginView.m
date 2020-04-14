@@ -282,10 +282,6 @@
     [self enableConfirmBtn:phoneNum.length > 0];
 }
 
-- (void)updateLoadingState:(BOOL)isLoading {
-    self.scrollView.hidden = isLoading;
-}
-
 - (void)setAgreementContent:(NSAttributedString *)attrText showAcceptBox:(BOOL)showAcceptBox {
     self.agreementLabel.attributedText = attrText;
     CGFloat boxWidth = showAcceptBox ? 15 : 0;
@@ -339,8 +335,8 @@
 }
 
 - (void)otherLoginBtnDidClick:(UIButton *)btn {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(otherLoginAction)]) {
-        [self.delegate otherLoginAction];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(verifyCodeLoginAction)]) {
+        [self.delegate verifyCodeLoginAction];
     }
 }
 

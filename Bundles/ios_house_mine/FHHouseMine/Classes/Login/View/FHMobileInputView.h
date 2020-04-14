@@ -9,7 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHLoginViewDelegate;
+
 @interface FHMobileInputView : UIView
+
+@property(nonatomic , weak) id<FHLoginViewDelegate> delegate;
 
 @end
 

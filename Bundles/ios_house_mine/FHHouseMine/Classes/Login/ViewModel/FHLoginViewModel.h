@@ -9,10 +9,15 @@
 #import "FHLoginViewController.h"
 #import "FHLoginView.h"
 #import "TTAccountLoginManager.h"
+#import "FHLoginDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHLoginViewModel : NSObject
+@interface FHLoginViewModel : NSObject<FHLoginViewDelegate>
+
+- (instancetype)initWithController:(FHLoginViewController *)viewController;
+
+@property (nonatomic, assign) FHLoginProcessType processType;
 
 //屏蔽TTNavigationViewController带来的键盘变化
 @property(nonatomic, assign) BOOL isHideKeyBoard;
@@ -20,13 +25,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL needPopVC;
 @property(nonatomic, assign) BOOL noDismissVC;
 @property(nonatomic, assign) BOOL present;
-@property (nonatomic, assign) BOOL fromOneKeyLogin;
-@property (nonatomic, assign) BOOL fromOtherLogin;
+@property (nonatomic, assign) BOOL isOneKeyLogin;
+@property (nonatomic, assign) BOOL isOtherLogin;
 @property (nonatomic, assign)   BOOL  isNeedCheckUGCAdUser;
 
-- (instancetype)initWithView:(FHLoginView *)view controller:(FHLoginViewController *)viewController;
+@property (nonatomic, copy) void (^configureSubview)(FHLoginViewType type,NSDictionary *infoDict);
 
 
+- (void)startLoadData;
 - (void)addEnterCategoryLog;
 
 @end

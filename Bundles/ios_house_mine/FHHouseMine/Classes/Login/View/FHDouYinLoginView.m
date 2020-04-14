@@ -6,15 +6,92 @@
 //
 
 #import "FHDouYinLoginView.h"
+#import "FHLoginDefine.h"
+#import <Masonry/Masonry.h>
+#import <FHCommonUI/UIColor+Theme.h>
+#import <FHCommonUI/UIFont+House.h>
+#import "YYLabel.h"
+#import "NSAttributedString+YYText.h"
+
+@interface FHDouYinLoginView ()
+
+@property (nonatomic, strong) UIButton *douyinLoginButton;
+@property (nonatomic, strong) UIButton *otherLoginButton;
+@property(nonatomic, strong) YYLabel *agreementLabel;
+
+@end
 
 @implementation FHDouYinLoginView
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        UIImageView *logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_logo_onekey"]];
+        [self addSubview:logoImageView];
+        [logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(self);
+            make.top.mas_equalTo(60);
+        }];
+        
+        self.douyinLoginButton = [UIButton buttonWithType:UIButtonTypeCustom] ;
+        self.douyinLoginButton.backgroundColor = [UIColor themeOrange4];
+//        self.douyinLoginButton.alpha = 0.6;
+        self.douyinLoginButton.layer.cornerRadius = 23; //4;
+        [self.douyinLoginButton addTarget:self action:@selector(douyinLoginButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        self.douyinLoginButton.titleLabel.font = [UIFont themeFontRegular:16];
+        [self.douyinLoginButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.douyinLoginButton setTitle:@"抖音一键登录" forState:UIControlStateNormal];
+        [self addSubview:self.douyinLoginButton];
+        [self.douyinLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(logoImageView.mas_bottom).offset(87);
+            make.left.mas_equalTo(57);
+            make.right.mas_equalTo(-57);
+            make.height.mas_equalTo(46);
+        }];
+        
+        self.otherLoginButton = [UIButton buttonWithType:UIButtonTypeCustom] ;
+        self.otherLoginButton.layer.borderColor = [UIColor themeGray6].CGColor;
+        self.otherLoginButton.layer.cornerRadius = 23; //4;
+        self.otherLoginButton.layer.borderWidth = 1.0/UIScreen.mainScreen.scale;
+        [self.otherLoginButton addTarget:self action:@selector(otherLoginButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        self.otherLoginButton.titleLabel.font = [UIFont themeFontRegular:16];
+        [self.otherLoginButton setTitleColor:[UIColor themeGray2] forState:UIControlStateNormal];
+        [self.otherLoginButton setTitle:@"其他方式登录" forState:UIControlStateNormal];
+        [self addSubview:self.otherLoginButton];
+        [self.otherLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.douyinLoginButton.mas_bottom).offset(20);
+            make.left.mas_equalTo(57);
+            make.right.mas_equalTo(-57);
+            make.height.mas_equalTo(46);
+        }];
+        
+        self.agreementLabel = [[YYLabel alloc] init];
+        _agreementLabel.numberOfLines = 0;
+        _agreementLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        _agreementLabel.textColor = [UIColor themeGray3];
+        _agreementLabel.font = [UIFont themeFontRegular:13];
+        [self addSubview:_agreementLabel];
+        [self.agreementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(self);
+            make.bottom.mas_equalTo(-20);
+        }];
+    }
+    return self;
 }
-*/
+
+- (void)updateProtocol:(NSAttributedString *)protocol{
+    self.agreementLabel.attributedText = protocol;
+}
+
+- (void)douyinLoginButtonAction {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(awesomeLoginAction)]) {
+        [self.delegate awesomeLoginAction];
+    }
+}
+
+- (void)otherLoginButtonAction {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(verifyCodeLoginAction)]) {
+        [self.delegate verifyCodeLoginAction];
+    }
+}
 
 @end

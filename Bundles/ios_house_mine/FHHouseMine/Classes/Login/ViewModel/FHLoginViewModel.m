@@ -19,14 +19,14 @@
 #import <YYText/NSAttributedString+YYText.h>
 #import "TTAccountMobileCaptchaAlertView.h"
 #import "TTThemedAlertController.h"
+#import "FHLoginContainerViewController.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
 
-@interface FHLoginViewModel()<FHLoginViewDelegate>
+@interface FHLoginViewModel()
 
 @property(nonatomic , weak) FHLoginViewController *viewController;
-@property(nonatomic , strong) FHLoginView *view;
 @property(nonatomic , assign) BOOL isRequestingSMS;
 @property(nonatomic , strong) NSTimer *timer;
 @property(nonatomic , assign) NSInteger verifyCodeRetryTime;
@@ -46,17 +46,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
-- (instancetype)initWithView:(FHLoginView *)view controller:(FHLoginViewController *)viewController;
+- (instancetype)initWithController:(FHLoginViewController *)viewController;
 {
     self = [super init];
     if (self) {
-        
-        view.delegate = self;
         _needPopVC = YES;
         _isNeedCheckUGCAdUser = NO;
-        _view = view;
+        _processType = FHLoginProcessTestB;
         _viewController = viewController;
-        [self startLoadData];
     }
     return self;
 }
@@ -90,38 +87,69 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
 
-    [self updateLoadingState:YES];
+    [self.viewController startLoading];
     [self getOneKeyLoginPhoneNum];
 }
 
-- (void)updateLoadingState:(BOOL)isLoading {
-    if (isLoading) {
-        [self.viewController startLoading];
-    } else {
-        [self.viewController endLoading];
-    }
-    [self.view updateLoadingState:isLoading];
-}
 
+/// 是否显示运营商一键登录
+/// @param isOneKeyLogin YES：显示运营商一键登录 NO：显示手机号快捷登录
+/// @param phoneNum 手机号
 - (void)showOneKeyLoginView:(BOOL)isOneKeyLogin phoneNum:(NSString *)phoneNum {
-    [self updateLoadingState:NO];
-    self.fromOneKeyLogin = isOneKeyLogin;
-    [self.view showOneKeyLoginView:isOneKeyLogin];
-    [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin] showAcceptBox:YES];
-    [self.view updateOneKeyLoginWithPhone:phoneNum service:isOneKeyLogin ? [self serviceNameStr] : nil];
+    [self.viewController endLoading];
+    self.isOneKeyLogin = isOneKeyLogin;
+//    [self.view showOneKeyLoginView:isOneKeyLogin];
+//    [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin] showAcceptBox:YES];
+//    [self.view updateOneKeyLoginWithPhone:phoneNum service:isOneKeyLogin ? [self serviceNameStr] : nil];
 //    [self.view.acceptCheckBox setSelected:NO];
-    [self checkToEnableConfirmBtn];
-    if (isOneKeyLogin) {
-        [self.view enableSendVerifyCodeBtn:NO];
-    }
+//    [self checkToEnableConfirmBtn];
+//    if (isOneKeyLogin) {
+//        [self.view enableSendVerifyCodeBtn:NO];
+//    }
     [self addEnterCategoryLog];
+    
+    //判断 self.processType
+    
+    FHLoginViewType viewType = FHLoginViewTypeOneKey;
+    
+    switch (self.processType) {
+        case FHLoginProcessOrigin:
+            if (self.isOneKeyLogin) {
+                viewType = FHLoginViewTypeOneKey;
+            } else {
+                viewType = FHLoginViewTypeMobile;
+            }
+            break;
+        case FHLoginProcessTestA:
+            if (self.isOneKeyLogin) {
+                viewType = FHLoginViewTypeOneKey;
+            } else {
+                viewType = FHLoginViewTypeDouYin;
+            }
+            break;
+        case FHLoginProcessTestB:
+            viewType = FHLoginViewTypeDouYin;
+            break;
+        default:
+            break;
+    }
+    
+    if (self.configureSubview) {
+        NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
+        if (isOneKeyLogin) {
+            infoDict[@"phone"] = phoneNum?:@"";
+            infoDict[@"service"] = [self serviceNameStr];
+        }
+        infoDict[@"protocol"] = [self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin];
+        self.configureSubview(viewType, infoDict.copy);
+    }
 }
 
 - (void)checkToEnableConfirmBtn {
-    BOOL hasPhoneInput = self.view.phoneInput.text.length > 0;
-    BOOL hasVerifyCodeInput = self.view.varifyCodeInput.text.length > 0;
-    BOOL confirmEnable = hasPhoneInput && (self.view.isOneKeyLogin || hasVerifyCodeInput);
-    [self.view enableConfirmBtn:confirmEnable];
+//    BOOL hasPhoneInput = self.view.phoneInput.text.length > 0;
+//    BOOL hasVerifyCodeInput = self.view.varifyCodeInput.text.length > 0;
+//    BOOL confirmEnable = hasPhoneInput && (self.view.isOneKeyLogin || hasVerifyCodeInput);
+//    [self.view enableConfirmBtn:confirmEnable];
 }
 
 - (void)acceptCheckBoxChange:(BOOL)selected {
@@ -260,8 +288,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 #pragma mark - FHLoginViewDelegate
 - (void)confirm {
-    [self.view endEditing:YES];
-    [self quickLogin:self.view.phoneInput.text smsCode:self.view.varifyCodeInput.text captcha:nil];
+//    [self.view endEditing:YES];
+//    [self quickLogin:self.view.phoneInput.text smsCode:self.view.varifyCodeInput.text captcha:nil];
 }
 
 - (void)sendVerifyCode {
@@ -284,10 +312,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
-- (void)otherLoginAction
+- (void)verifyCodeLoginAction
 {
-    self.fromOtherLogin = YES;
-    [self showOneKeyLoginView:NO phoneNum:nil];
+    self.isOtherLogin = YES;
+//    [self showOneKeyLoginView:NO phoneNum:nil];
+    FHLoginContainerViewController *vc = [[FHLoginContainerViewController alloc] init];
+    vc.viewModel = self;
+    vc.viewType = FHLoginViewTypeMobile;
+    [self.viewController.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)oneKeyLoginAction {
@@ -396,7 +428,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         if (error.code == 1039) {
             TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"登录信息" message:[error.userInfo objectForKey:@"toutiao.account.errmsg_key"] preferredType:TTThemedAlertControllerTypeAlert];
             [alertController addActionWithTitle:@"确认" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-                [self otherLoginAction];
+                [self verifyCodeLoginAction];
             }];
             [alertController showFrom:self.viewController animated:YES];
         }else {
@@ -444,8 +476,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions) [curve integerValue] animations:^{
         
         [UIView setAnimationBeginsFromCurrentState:YES];
-        self.view.scrollView.contentOffset = CGPointMake(0, 120);
-        self.viewController.customNavBarView.title.hidden = NO;
+//        self.view.scrollView.contentOffset = CGPointMake(0, 120);
+//        self.viewController.customNavBarView.title.hidden = NO;
         
     }completion:^(BOOL finished) {
         
@@ -458,8 +490,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
         [UIView setAnimationBeginsFromCurrentState:YES];
-        self.view.scrollView.contentOffset = CGPointMake(0, 0);
-        self.viewController.customNavBarView.title.hidden = YES;
+//        self.view.scrollView.contentOffset = CGPointMake(0, 0);
+//        self.viewController.customNavBarView.title.hidden = YES;
         
     } completion:^(BOOL finished) {
         
@@ -469,24 +501,24 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 #pragma mark - textFieldDidChange
 
 - (void)textFieldDidChange:(NSNotification *)notification {
-    UITextField *textField = (UITextField *)notification.object;
-    if (textField != self.view.phoneInput && textField != self.view.varifyCodeInput) {
-        return;
-    }
-    NSString *text = textField.text;
-    NSInteger limit = 0;
-    if(textField == self.view.phoneInput){
-        limit = 11;
-        if(!self.isRequestingSMS){
-            [self.view enableSendVerifyCodeBtn:self.view.phoneInput.text.length > 0];
-        }
-    } else if (textField == self.view.varifyCodeInput) {
-        limit = 6;
-    }
-    
-    if(text.length > limit){
-        textField.text = [text substringToIndex:limit];
-    }
+//    UITextField *textField = (UITextField *)notification.object;
+//    if (textField != self.view.phoneInput && textField != self.view.varifyCodeInput) {
+//        return;
+//    }
+//    NSString *text = textField.text;
+//    NSInteger limit = 0;
+//    if(textField == self.view.phoneInput){
+//        limit = 11;
+//        if(!self.isRequestingSMS){
+//            [self.view enableSendVerifyCodeBtn:self.view.phoneInput.text.length > 0];
+//        }
+//    } else if (textField == self.view.varifyCodeInput) {
+//        limit = 6;
+//    }
+//
+//    if(text.length > limit){
+//        textField.text = [text substringToIndex:limit];
+//    }
     //设置登录和获取验证码是否可点击
     [self checkToEnableConfirmBtn];
 }
@@ -496,12 +528,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict].mutableCopy;
     tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
     tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
-    if (self.fromOneKeyLogin) {
+    if (self.isOneKeyLogin) {
         tracerDict[@"login_type"] = @"quick_login";
     }else {
         tracerDict[@"login_type"] = @"other_login";
     }
-    if (self.fromOtherLogin) {
+    if (self.isOtherLogin) {
         tracerDict[@"enter_from"] = @"quick_login";
         tracerDict[@"enter_type"] = @"other_login";
     }
@@ -513,12 +545,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
     tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
-    if (self.fromOneKeyLogin) {
+    if (self.isOneKeyLogin) {
         tracerDict[@"click_position"] = @"quick_login";
     }else {
         tracerDict[@"login_type"] = @"other_login";
     }
-    if (self.fromOtherLogin) {
+    if (self.isOtherLogin) {
         tracerDict[@"enter_from"] = @"quick_login";
         tracerDict[@"enter_type"] = @"other_login";
     }
@@ -553,12 +585,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
     tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
-    if (self.fromOneKeyLogin) {
+    if (self.isOneKeyLogin) {
         tracerDict[@"click_position"] = @"quick_login";
     }else {
         tracerDict[@"login_type"] = @"other_login";
     }
-    if (self.fromOtherLogin) {
+    if (self.isOtherLogin) {
         tracerDict[@"enter_from"] = @"quick_login";
         tracerDict[@"enter_type"] = @"other_login";
     }
@@ -576,12 +608,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
     tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
-    if (self.fromOneKeyLogin) {
+    if (self.isOneKeyLogin) {
         tracerDict[@"login_type"] = @"quick_login";
     }else {
         tracerDict[@"login_type"] = @"other_login";
     }
-    if (self.fromOtherLogin) {
+    if (self.isOtherLogin) {
         tracerDict[@"enter_from"] = @"quick_login";
         tracerDict[@"enter_type"] = @"other_login";
     }
@@ -598,43 +630,43 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 
 - (void)sendVerifyCodeWithCaptcha:(NSString *)captcha {
-    [self.view endEditing:YES];
-    
-    __weak typeof(self) weakSelf = self;
-    NSString *phoneNumber = self.view.phoneInput.text;
-    
-    if (![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
-        [[ToastManager manager] showToast:@"手机号错误"];
-        return;
-    }
-    
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络错误"];
-        return;
-    }
-    
-    if (self.isRequestingSMS) {
-        return;
-    }
-    
-    self.isRequestingSMS = YES;
-    [[ToastManager manager] showToast:@"正在获取验证码"];
-    [self traceVerifyCode];
-    
-    [FHMineAPI requestSendVerifyCode:phoneNumber captcha:captcha completion:^(NSNumber *_Nonnull retryTime, UIImage *_Nonnull captchaImage, NSError *_Nonnull error) {
-        if (!error) {
-            [weakSelf blockRequestSendMessage:[retryTime integerValue]];
-            [[ToastManager manager] showToast:@"短信验证码发送成功"];
-            weakSelf.isVerifyCodeRetry = YES;
-        } else if (captchaImage) {
-            weakSelf.isRequestingSMS = NO;
-            [weakSelf showCaptcha:captchaImage error:error];
-        } else {
-            NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];
-            [[ToastManager manager] showToast:errorMessage];
-            weakSelf.isRequestingSMS = NO;
-        }
-    }];
+//    [self.view endEditing:YES];
+//
+//    __weak typeof(self) weakSelf = self;
+//    NSString *phoneNumber = self.view.phoneInput.text;
+//
+//    if (![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
+//        [[ToastManager manager] showToast:@"手机号错误"];
+//        return;
+//    }
+//
+//    if (![TTReachability isNetworkConnected]) {
+//        [[ToastManager manager] showToast:@"网络错误"];
+//        return;
+//    }
+//
+//    if (self.isRequestingSMS) {
+//        return;
+//    }
+//
+//    self.isRequestingSMS = YES;
+//    [[ToastManager manager] showToast:@"正在获取验证码"];
+//    [self traceVerifyCode];
+//
+//    [FHMineAPI requestSendVerifyCode:phoneNumber captcha:captcha completion:^(NSNumber *_Nonnull retryTime, UIImage *_Nonnull captchaImage, NSError *_Nonnull error) {
+//        if (!error) {
+//            [weakSelf blockRequestSendMessage:[retryTime integerValue]];
+//            [[ToastManager manager] showToast:@"短信验证码发送成功"];
+//            weakSelf.isVerifyCodeRetry = YES;
+//        } else if (captchaImage) {
+//            weakSelf.isRequestingSMS = NO;
+//            [weakSelf showCaptcha:captchaImage error:error];
+//        } else {
+//            NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+//            [[ToastManager manager] showToast:errorMessage];
+//            weakSelf.isRequestingSMS = NO;
+//        }
+//    }];
 }
 
 - (void)showCaptcha:(UIImage *)captchaImage error:(NSError *)error {
@@ -660,7 +692,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
     tracerDict[@"is_resent"] = @(self.isVerifyCodeRetry);
     tracerDict[@"login_type"] = tracerDict[@"login_type"] ? : @"other_login";
-    if (self.fromOtherLogin) {
+    if (self.isOtherLogin) {
         tracerDict[@"enter_from"] = @"quick_login";
         tracerDict[@"enter_type"] = @"other_login";
     }
@@ -680,21 +712,21 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 #pragma mark - Timer
 - (void)setVerifyCodeButtonCountDown {
-    if (self.verifyCodeRetryTime < 0) {
-        self.verifyCodeRetryTime = 0;
-    }
-    
-    if (self.verifyCodeRetryTime == 0) {
-        [self stopTimer];
-        [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray1] state:UIControlStateNormal btn:self.view.sendVerifyCodeBtn];
-        [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray3] state:UIControlStateDisabled btn:self.view.sendVerifyCodeBtn];
-        self.view.sendVerifyCodeBtn.enabled = (self.view.phoneInput.text.length > 0);
-        self.isRequestingSMS = NO;
-    } else {
-        self.view.sendVerifyCodeBtn.enabled = NO;
-        [self.view setButtonContent:[NSString stringWithFormat:@"重新发送(%lis)", (long) self.verifyCodeRetryTime] font:[UIFont themeFontRegular:14] color:[UIColor themeGray3] state:UIControlStateDisabled btn:self.view.sendVerifyCodeBtn];
-    }
-    self.verifyCodeRetryTime--;
+//    if (self.verifyCodeRetryTime < 0) {
+//        self.verifyCodeRetryTime = 0;
+//    }
+//
+//    if (self.verifyCodeRetryTime == 0) {
+//        [self stopTimer];
+//        [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray1] state:UIControlStateNormal btn:self.view.sendVerifyCodeBtn];
+//        [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray3] state:UIControlStateDisabled btn:self.view.sendVerifyCodeBtn];
+//        self.view.sendVerifyCodeBtn.enabled = (self.view.phoneInput.text.length > 0);
+//        self.isRequestingSMS = NO;
+//    } else {
+//        self.view.sendVerifyCodeBtn.enabled = NO;
+//        [self.view setButtonContent:[NSString stringWithFormat:@"重新发送(%lis)", (long) self.verifyCodeRetryTime] font:[UIFont themeFontRegular:14] color:[UIColor themeGray3] state:UIControlStateDisabled btn:self.view.sendVerifyCodeBtn];
+//    }
+//    self.verifyCodeRetryTime--;
 }
 
 - (void)startTimer {

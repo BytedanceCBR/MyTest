@@ -7,6 +7,9 @@
 
 #import "FHLoginViewController.h"
 #import "FHLoginView.h"
+#import "FHOneKeyLoginView.h"
+#import "FHMobileInputView.h"
+#import "FHDouYinLoginView.h"
 #import "FHLoginViewModel.h"
 #import "FHTracerModel.h"
 #import "FHUserTracker.h"
@@ -16,8 +19,11 @@
 
 @interface FHLoginViewController ()<TTRouteInitializeProtocol>
 
-@property(nonatomic, strong) FHLoginViewModel *viewModel;
-@property(nonatomic ,strong) FHLoginView *loginView;
+@property (nonatomic, strong) FHLoginViewModel *viewModel;
+@property (nonatomic ,strong) FHOneKeyLoginView *onekeyLoginView;
+@property (nonatomic, strong) FHMobileInputView *mobileInputView;
+@property (nonatomic, strong) FHDouYinLoginView *douyinLoginView;
+@property (nonatomic, weak) UIView *currentShowView;
 @property (nonatomic, strong)     TTAcountFLoginDelegate       *loginDelegate;
 @property (nonatomic, assign)   BOOL       needPopVC;
 @property (nonatomic, assign)   BOOL       isFromUGC;
@@ -68,41 +74,21 @@
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initNavbar];
-    [self initView];
-    [self initConstraints];
     [self initViewModel];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
-}
-
-- (void)initView {
-    self.loginView = [[FHLoginView alloc] initWithFrame:self.view.bounds];
-    [self.view addSubview:_loginView];
-}
-
-- (void)initConstraints {
-    [self.loginView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0, *)) {
-            make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
-        } else {
-            make.top.mas_equalTo(64);
-        }
-        make.left.right.bottom.equalTo(self.view);
-    }];
 }
 
 - (void)dealloc
@@ -123,24 +109,95 @@
 }
 
 - (void)initViewModel {
-    self.viewModel = [[FHLoginViewModel alloc] initWithView:self.loginView controller:self];
+    __weak typeof(self) weakSelf = self;
+    self.viewModel = [[FHLoginViewModel alloc] initWithController:self];
     self.viewModel.needPopVC = self.needPopVC;
     self.viewModel.present = self.present;
     self.viewModel.isNeedCheckUGCAdUser = self.isFromMineTab;
     self.viewModel.loginDelegate = self.loginDelegate;
+    [self.viewModel setConfigureSubview:^(FHLoginViewType type, NSDictionary * _Nonnull infoDict) {
+        [weakSelf configureSubviewWithType:type info:infoDict];
+    }];
+    [self.viewModel startLoadData];
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
-        if([change[@"new"] boolValue]){
-            [self.view endEditing:YES];
-            self.viewModel.isHideKeyBoard = NO;
-        }else{
-            if(!self.viewModel.noDismissVC){
-                self.viewModel.isHideKeyBoard = YES;
+- (void)configureSubviewWithType:(FHLoginViewType )type info:(NSDictionary *)infoDict {
+    switch (type) {
+        case FHLoginViewTypeOneKey:
+        {
+            if (self.currentShowView && self.currentShowView == self.onekeyLoginView) {
+                return;
             }
+            [self.currentShowView removeFromSuperview];
+            if (!self.onekeyLoginView) {
+                self.onekeyLoginView = [[FHOneKeyLoginView alloc] init];
+                self.onekeyLoginView.delegate = self.viewModel;
+            }
+            [self.view addSubview:self.onekeyLoginView];
+            [self.onekeyLoginView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (@available(iOS 11.0, *)) {
+                    make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
+                    make.bottom.mas_equalTo(self.mas_bottomLayoutGuide);
+                } else {
+                    make.top.mas_equalTo(64);
+                    make.bottom.mas_equalTo(-20);
+                }
+                make.left.right.equalTo(self.view);
+            }];
+            self.currentShowView = self.onekeyLoginView;
+            [self.onekeyLoginView updateOneKeyLoginWithPhone:infoDict[@"phone"] service:infoDict[@"service"] protocol:infoDict[@"protocol"]];
         }
+            break;
+        case FHLoginViewTypeMobile:
+        {
+            if (self.currentShowView && self.currentShowView == self.mobileInputView) {
+                return;
+            }
+            [self.currentShowView removeFromSuperview];
+            if (!self.mobileInputView) {
+                self.mobileInputView = [[FHMobileInputView alloc] init];
+                self.mobileInputView.delegate = self.viewModel;
+            }
+            [self.view addSubview:self.mobileInputView];
+            [self.mobileInputView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (@available(iOS 11.0, *)) {
+                    make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
+                    make.bottom.mas_equalTo(self.mas_bottomLayoutGuide);
+                } else {
+                    make.top.mas_equalTo(64);
+                    make.bottom.mas_equalTo(-20);
+                }
+                make.left.right.equalTo(self.view);
+            }];
+            self.currentShowView = self.mobileInputView;
+        }
+            break;
+        case FHLoginViewTypeDouYin:
+        {
+            if (self.currentShowView && self.currentShowView == self.douyinLoginView) {
+                return;
+            }
+            [self.currentShowView removeFromSuperview];
+            if (!self.douyinLoginView) {
+                self.douyinLoginView = [[FHDouYinLoginView alloc] init];
+                self.douyinLoginView.delegate = self.viewModel;
+            }
+            [self.view addSubview:self.douyinLoginView];
+            [self.douyinLoginView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (@available(iOS 11.0, *)) {
+                    make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
+                    make.bottom.mas_equalTo(self.mas_bottomLayoutGuide);
+                } else {
+                    make.top.mas_equalTo(64);
+                    make.bottom.mas_equalTo(-20);
+                }
+                make.left.right.equalTo(self.view);
+            }];
+            self.currentShowView = self.douyinLoginView;
+        }
+            break;
+        default:
+            break;
     }
 }
 

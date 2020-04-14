@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)confirm;
 
 - (void)sendVerifyCode;
+- (void)quickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha;
 
 - (void)goToUserProtocol;
 
@@ -23,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 //- (void)acceptCheckBoxChange:(BOOL)selected;
 
 /// 验证码登录
-- (void)otherLoginAction;
+- (void)verifyCodeLoginAction;
 
 /// 运营商一键登录
 - (void)oneKeyLoginAction;
@@ -41,6 +42,12 @@ typedef NS_ENUM(NSUInteger, FHLoginViewType) {
     FHLoginViewTypeMobile = 1,
     FHLoginViewTypeVerify = 2,
     FHLoginViewTypeDouYin = 3
+};
+
+typedef NS_ENUM(NSUInteger, FHLoginProcessType) {
+    FHLoginProcessOrigin = 0, //线上策略，优先运营商一键登录 -> 手机号验证码登录
+    FHLoginProcessTestA = 1, //优先运营商一键登录 -> 抖音一键登录 -> 手机号验证码登录
+    FHLoginProcessTestB = 2, //优先抖音一键登录 -> 运营商一键登录 -> 手机号验证码登录
 };
 
 @interface FHLoginDefine : NSObject

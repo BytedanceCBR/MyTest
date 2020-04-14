@@ -33,7 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)enableSendVerifyCodeBtn:(BOOL)enabled;
 - (void)showOneKeyLoginView:(BOOL)isOneKeyLogin;
 - (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service;
-- (void)updateLoadingState:(BOOL)isLoading;
 - (void)setAgreementContent:(NSAttributedString *)attrText showAcceptBox:(BOOL)showAcceptBox;
 
 @end
