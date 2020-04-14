@@ -474,7 +474,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *recommendRealtorsAssociateInfo;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseReviewCommentAssociateInfo;
-
+@property (nonatomic, strong ,nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
 @end
 
 @interface FHDetailOldModel : JSONModel

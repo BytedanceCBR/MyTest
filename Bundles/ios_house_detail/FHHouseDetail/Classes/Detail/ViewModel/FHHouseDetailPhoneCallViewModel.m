@@ -62,7 +62,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
     associateIMModel.houseId = self.houseId;
     associateIMModel.houseType = self.houseType;
-    associateIMModel.associateInfo = extra[kFHAssociateInfo]?:contactPhone.associateInfo;
+    associateIMModel.associateInfo = extra[kFHAssociateInfo];
     NSMutableDictionary *tempExtra = extra.mutableCopy;
     tempExtra[kFHAssociateInfo] = nil;
     extra = tempExtra.copy;

@@ -614,6 +614,7 @@
                            @"houseImageAssociateInfo": @"house_image_associate_info",
                            @"recommendRealtorsAssociateInfo": @"recommend_realtors_associate_info",
                            @"houseReviewCommentAssociateInfo": @"house_review_comment_associate_info",
+                           @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
 
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

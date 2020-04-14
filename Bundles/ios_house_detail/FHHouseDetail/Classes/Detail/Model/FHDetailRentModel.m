@@ -184,6 +184,7 @@
                            @"imShareInfo": @"im_share_info",
                            @"chooseAgencyList": @"choose_agency_list",
                            @"middleSubscriptionAssociateInfo":@"middle_subscription_associate_info",
+                           @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
                            @"baseExtra": @"base_extra",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
