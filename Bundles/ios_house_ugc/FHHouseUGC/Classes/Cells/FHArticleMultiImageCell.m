@@ -102,6 +102,7 @@
         make.top.mas_equalTo(self.contentView).offset(topMargin);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
+        make.height.mas_equalTo(0);
     }];
     
     [self.imageViewContainer mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -153,8 +154,14 @@
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.title)){
         self.contentLabel.hidden = YES;
+        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
     }else{
         self.contentLabel.hidden = NO;
+        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(cellModel.contentHeight);
+        }];
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     self.bottomView.cellModel = cellModel;
