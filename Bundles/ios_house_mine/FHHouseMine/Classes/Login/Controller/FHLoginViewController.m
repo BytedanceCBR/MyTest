@@ -75,20 +75,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.viewModel viewWillAppear];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.viewModel viewWillDisappear];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = @"手机快捷登录";
-    self.customNavBarView.title.hidden = YES;
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
 }

@@ -15,6 +15,7 @@
 #import "ToastManager.h"
 #import "FHNavBarView.h"
 #import <TTBaseLib/UIViewAdditions.h>
+#import "FHLoginDefine.h"
 
 @implementation FHLoginAcceptButton : UIButton
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {

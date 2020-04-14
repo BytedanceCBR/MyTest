@@ -26,9 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithView:(FHLoginView *)view controller:(FHLoginViewController *)viewController;
 
-- (void)viewWillAppear;
-
-- (void)viewWillDisappear;
 
 - (void)addEnterCategoryLog;
 

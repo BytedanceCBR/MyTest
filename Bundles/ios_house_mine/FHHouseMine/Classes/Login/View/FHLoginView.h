@@ -9,34 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FHLoginViewDelegate <NSObject>
-
-@required
-- (void)confirm;
-- (void)sendVerifyCode;
-
-@optional
-- (void)goToUserProtocol;
-
-- (void)goToSecretProtocol;
-
-//@optional
-//- (void)acceptCheckBoxChange:(BOOL)selected;
-
-/// 验证码登录
-- (void)otherLoginAction;
-
-/// 运营商一键登录
-- (void)oneKeyLoginAction;
-
-/// 苹果登录
-- (void)appleLoginAction;
-
-/// 抖音一键登录
-- (void)awesomeLoginAction;
-
-@end
-
+@protocol FHLoginViewDelegate;
 
 @interface FHLoginAcceptButton : UIButton
 @property (nonatomic, assign)UIEdgeInsets hotAreaInsets;
