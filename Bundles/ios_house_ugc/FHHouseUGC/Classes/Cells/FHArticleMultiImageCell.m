@@ -23,7 +23,7 @@
 
 @interface FHArticleMultiImageCell ()
 
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) NSMutableArray *imageViewList;
 @property(nonatomic ,strong) UIView *imageViewContainer;
 @property(nonatomic ,strong) FHArticleCellBottomView *bottomView;
@@ -61,7 +61,7 @@
 }
 
 - (void)initViews {
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
@@ -155,7 +155,7 @@
         self.contentLabel.hidden = YES;
     }else{
         self.contentLabel.hidden = NO;
-        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     self.bottomView.cellModel = cellModel;
     self.bottomView.descLabel.attributedText = cellModel.desc;

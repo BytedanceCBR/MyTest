@@ -21,10 +21,10 @@
 #import "JSONAdditions.h"
 #import "FHUGCCellHelper.h"
 
-@interface FHUGCCellOriginItemView ()<TTUGCAttributedLabelDelegate>
+@interface FHUGCCellOriginItemView ()<TTUGCAsyncLabelDelegate>
 
 @property(nonatomic ,strong) UIImageView *iconView;
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,assign) BOOL isClickLink;
 
 @end
@@ -58,17 +58,17 @@
     _iconView.clipsToBounds = YES;
     [self addSubview:_iconView];
     
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = 2;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor themeGray7];
-    NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-                                     };
-    _contentLabel.linkAttributes = linkAttributes;
-    _contentLabel.activeLinkAttributes = linkAttributes;
-    _contentLabel.inactiveLinkAttributes = linkAttributes;
+//    NSDictionary *linkAttributes = @{
+//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+//                                     };
+//    _contentLabel.linkAttributes = linkAttributes;
+//    _contentLabel.activeLinkAttributes = linkAttributes;
+//    _contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self addSubview:_contentLabel];
 }
@@ -91,7 +91,7 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         self.cellModel = cellModel;
-        [FHUGCCellHelper setOriginRichContent:self.contentLabel model:cellModel];
+        [FHUGCCellHelper setOriginRichContent:self.contentLabel model:cellModel numberOfLines:2];
         if(cellModel.originItemModel.imageModel){
             [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.originItemModel.imageModel.url] placeholder:nil];
             _iconView.hidden = NO;
@@ -133,12 +133,12 @@
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    NSLog(@"touch_end");
+//    NSLog(@"touch_end");
 }
 
-#pragma mark - TTUGCAttributedLabelDelegate
+#pragma mark - TTUGCAsyncLabelDelegate
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if(self.goToLinkBlock){
         self.goToLinkBlock(self.cellModel, url);
     }
