@@ -76,7 +76,6 @@
 
 - (void)imAction
 {
-    // todo zjing test
     FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"source_from"] = @"house_model_detail";

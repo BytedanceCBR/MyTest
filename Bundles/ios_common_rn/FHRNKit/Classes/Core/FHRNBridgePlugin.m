@@ -190,7 +190,6 @@
         callParams[@"log_pb"] = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
     }
 //    callParams[@"from"] = @"app_realtor_mainpage";
-    // todo zjing test
     callParams[kFHAssociateInfo] = associateInfoDict;
     FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
     associatePhone.reportParams = reportParamsDict;

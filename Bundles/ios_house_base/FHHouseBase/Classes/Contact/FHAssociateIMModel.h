@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHAssociateReportParams *reportParams; // 埋点参数
 @property (nonatomic , copy) NSString *imOpenUrl;
 
-#pragma mark 必填 todo zjing test
+#pragma mark 必填 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
 

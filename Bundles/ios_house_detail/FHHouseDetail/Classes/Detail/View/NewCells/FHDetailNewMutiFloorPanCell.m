@@ -279,11 +279,11 @@
     FHDetailContactModel *contactPhone = self.baseViewModel.contactViewModel.contactPhone;
     configModel.realtorId = contactPhone.realtorId;
     configModel.realtorRank = @"0";
-    configModel.conversationId = @"be_null";// todo zjing test
+    configModel.conversationId = @"be_null";
     configModel.realtorLogpb = contactPhone.realtorLogpb;
     configModel.from = @"app_newhouse_floorplan";
     configModel.realtorPosition = @"house_model";
-    configModel.sourceFrom = @"house_model";// todo zjing test
+    configModel.sourceFrom = @"house_model";
     configModel.clueEndpoint = @(FHClueEndPointTypeC);
     configModel.cluePage = @(FHClueIMPageTypeCNewHouseApartmentConsult);
     configModel.imOpenUrl = floorPanInfoModel.imOpenUrl;
