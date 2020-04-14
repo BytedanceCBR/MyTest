@@ -445,9 +445,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSMutableDictionary *extraDict = @{}.mutableCopy;
     NSDictionary *associateInfoDict = nil;
     if (self.contactPhone.phone.length > 0) {
-        associateInfoDict = self.contactPhone.associateInfo.phoneInfo;
+        associateInfoDict = self.highlightedRealtorAssociateInfo.phoneInfo;
     }else {
-        associateInfoDict = self.contactPhone.associateInfo.reportFormInfo;
+        associateInfoDict = self.highlightedRealtorAssociateInfo.reportFormInfo;
     }
     extraDict[kFHAssociateInfo] = associateInfoDict;
     [self contactActionWithExtraDict:extraDict];

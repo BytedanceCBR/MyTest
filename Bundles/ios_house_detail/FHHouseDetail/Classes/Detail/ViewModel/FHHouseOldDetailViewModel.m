@@ -572,6 +572,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     self.contactViewModel.toast = model.data.reportDoneToast;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
     if (model.isInstantData) {
         [self.tableView reloadData];
     }else{

@@ -393,6 +393,7 @@
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.contactViewModel.socialInfo = model.data.socialInfo;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
     self.weakSocialInfo = model.data.socialInfo;
     
     __weak typeof(self) wSelf = self;

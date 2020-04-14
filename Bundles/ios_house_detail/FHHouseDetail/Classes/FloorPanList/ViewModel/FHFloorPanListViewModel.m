@@ -335,6 +335,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
     self.bottomBar.hidden = NO;
 }
 
