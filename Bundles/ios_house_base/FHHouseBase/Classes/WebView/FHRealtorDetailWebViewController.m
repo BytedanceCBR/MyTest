@@ -139,7 +139,13 @@ static NSString *s_oldAgent = nil;
     associatePhone.houseType = self.houseType ? self.houseType : 9;
     associatePhone.houseId = self.houseId;
     associatePhone.showLoading = NO;
-    [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:nil];
+    [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+        if (success) {
+            completion(TTRJSBMsgSuccess, @{});
+        }else {
+            completion(TTRJSBMsgFailed, @{});
+        }
+    }];
     
 //    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
 //    configModel.houseType = self.houseType;
