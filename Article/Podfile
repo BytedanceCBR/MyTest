@@ -45,8 +45,8 @@ def fhPods
     pod 'ios_house_filter' , '1.0.2'
     
 #    pod 'FHCommonUI', '0.0.18'
-    pod 'FHCommonUI',:path => '../../../ios_common_ui/'
-#    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '3f4cec94bebbf3c09c2e78ce0511afdb8103386a'
+#    pod 'FHCommonUI',:path => '../../../ios_common_ui/'
+    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '697e7c324271df43013708eb1b8b53c11b1373dc'
 
 #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
