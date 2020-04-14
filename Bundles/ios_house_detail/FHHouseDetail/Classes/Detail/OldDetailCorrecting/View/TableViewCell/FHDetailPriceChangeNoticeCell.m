@@ -200,16 +200,19 @@
                                        @"btn_title":@"提交"
             };
             [contactViewModel fillFormActionWithExtraDict:infoDic];
-            // 静默关注功能
-             NSMutableDictionary *params = @{}.mutableCopy;
-             if (self.baseViewModel.detailTracerDic) {
-                 [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
-             }
-             FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-             configModel.houseType = self.baseViewModel.houseType;
-             configModel.followId = self.baseViewModel.houseId;
-             configModel.actionType = self.baseViewModel.houseType;
-             [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
+            __weak typeof(self)ws = self;
+            contactViewModel.fillFormSubmitBlock = ^{
+                  // 静默关注功能
+                           NSMutableDictionary *params = @{}.mutableCopy;
+                           if (ws.baseViewModel.detailTracerDic) {
+                               [params addEntriesFromDictionary:ws.baseViewModel.detailTracerDic];
+                           }
+                           FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+                           configModel.houseType = ws.baseViewModel.houseType;
+                           configModel.followId = ws.baseViewModel.houseId;
+                           configModel.actionType = ws.baseViewModel.houseType;
+                           [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
+            };
         }
     }
 

@@ -324,18 +324,22 @@
                                        @"btn_title":@"提交"
             };
             [model.contactModel fillFormActionWithExtraDict:infoDic];
+            __weak typeof(self)WS = self;
+            model.contactModel.fillFormSubmitBlock = ^{
+                  // 静默关注功能
+                   NSMutableDictionary *params = @{}.mutableCopy;
+                   if (WS.baseViewModel.detailTracerDic) {
+                       [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
+                   }
+                   FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+                   configModel.houseType = WS.baseViewModel.houseType;
+                   configModel.followId = WS.baseViewModel.houseId;
+                   configModel.actionType = WS.baseViewModel.houseType;
+                   [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
+            };
         }
     }
-    // 静默关注功能
-     NSMutableDictionary *params = @{}.mutableCopy;
-     if (self.baseViewModel.detailTracerDic) {
-         [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
-     }
-     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-     configModel.houseType = self.baseViewModel.houseType;
-     configModel.followId = self.baseViewModel.houseId;
-     configModel.actionType = self.baseViewModel.houseType;
-     [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
+  
 }
 
 - (void)tapCalculator:(UIButton *)sender {

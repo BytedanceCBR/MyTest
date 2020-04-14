@@ -561,7 +561,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
     fillFormConfig.chooseAgencyList = self.chooseAgencyList;
-    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
+    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig submitBlock:^{
+        if (self.fillFormSubmitBlock) {
+            self.fillFormSubmitBlock();
+        }
+    }];
 }
 
 - (void)fillFormActionWithActionType:(FHFollowActionType)actionType
@@ -627,7 +631,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     fillFormConfig.imprId = self.imprId;
     fillFormConfig.from = fromStr;
     fillFormConfig.chooseAgencyList = self.chooseAgencyList;
-    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
+    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig submitBlock:^{
+        if (self.fillFormSubmitBlock) {
+            self.fillFormSubmitBlock();
+        }
+    }];
 }
 
 // 拨打电话
