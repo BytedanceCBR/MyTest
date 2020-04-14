@@ -448,24 +448,17 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 在线联系点击
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
-        NSString *fromStr = @"app_oldhouse_picview";
-        NSNumber *cluePage = nil;
-        if (_houseType == FHHouseTypeNewHouse) {
-            fromStr = @"app_newhouse_picview";
-            cluePage = @(FHClueIMPageTypeCNewHousePicview);
-        }
-        NSMutableDictionary *extraDic = @{@"realtor_position":@"online",
-                                          @"position":@"online",
-                                          @"element_from":[self elementFrom],
-                                          @"from":fromStr
-                                          }.mutableCopy;
+        NSMutableDictionary *extraDic = @{}.mutableCopy;
+        extraDic[@"realtor_position"] = @"online";
+        extraDic[@"position"] = @"online";
+        extraDic[@"element_from"] = [self elementFrom];
         NSString *vid = [self videoId];
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
         }
-        if (cluePage) {
-            extraDic[kFHCluePage] = cluePage;
-            extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+        // 头图im入口线索透传
+        if(self.mediaHeaderModel.houseImageAssociateInfo) {
+            extraDic[kFHAssociateInfo] = self.mediaHeaderModel.houseImageAssociateInfo;
         }
         [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }

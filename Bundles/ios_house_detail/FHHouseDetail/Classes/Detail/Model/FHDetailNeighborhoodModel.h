@@ -210,6 +210,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataCommentsModel *comments;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *recommendRealtorsAssociateInfo;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
 
 @end
 

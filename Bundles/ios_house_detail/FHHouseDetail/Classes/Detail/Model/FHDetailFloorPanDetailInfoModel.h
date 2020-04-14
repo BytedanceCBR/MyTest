@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
 @property (nonatomic, strong , nullable) FHDetailNewUserStatusModel *userStatus ;
-
+@property (nonatomic, strong , nullable)  FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
 
 @end
 

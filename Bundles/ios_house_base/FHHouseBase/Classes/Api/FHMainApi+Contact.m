@@ -498,5 +498,16 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
     [[HMDTTMonitor defaultManager]hmdTrackService:@"clue_call_error_rate" metric:nil category:categoryDict extra:extraDict];
 }
 
-
++(TTHttpTask *)requestAssoicateEntrance:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
+ 
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/associate_entrance"];
+    
+    return [[TTNetworkManager shareInstance] requestForJSONWithResponse:url params:params method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
+        
+        if(completion) {
+            completion(error, jsonObj);
+        }
+    }];
+}
 @end

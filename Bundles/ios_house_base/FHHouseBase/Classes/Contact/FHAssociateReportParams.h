@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSDictionary *logPb;
 @property(nonatomic, copy) NSString *searchId;
 @property(nonatomic, copy) NSString *originSearchId;
-
+@property(nonatomic, copy) NSString *groupId;
 @property (nonatomic, strong) NSDictionary *extra; // 埋点参数
 
 #pragma mark 其他埋点
@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *conversationId;
 @property(nonatomic ,copy) NSString *position;
 
+// 选填
+@property(nonatomic, copy) NSString *sourceFrom;
 
 @end
 

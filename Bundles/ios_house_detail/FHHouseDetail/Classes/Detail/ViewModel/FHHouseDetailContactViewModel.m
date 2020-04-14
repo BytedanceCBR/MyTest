@@ -52,7 +52,13 @@
 #import "FHHouseUGCAPI.h"
 #import "FHHouseNewDetailViewModel.h"
 #import "FHDetailBaseCell.h"
-
+#import "FHDetailNewModel.h"
+#import "FHDetailOldModel.h"
+#import "FHDetailNeighborhoodModel.h"
+#import "FHFloorMoreCoreInfoViewController.h"
+#import "FHDetailNewCoreDetailModel.h"
+#import "FHFloorPanListViewController.h"
+#import "FHDetailRentModel.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -524,6 +530,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"question_id"]) {
             imExtra[@"question_id"] = extraDict[@"question_id"];
         }
+        
+        if(extraDict[kFHAssociateInfo]) {
+            imExtra[kFHAssociateInfo] = extraDict[kFHAssociateInfo];
+        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
@@ -825,33 +835,84 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         extraDic[@"position"] = @"online";
         extraDic[@"realtor_position"] = @"online";
     }
-    if (self.houseType == FHHouseTypeNeighborhood) {
-        extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-        extraDic[kFHCluePage] = @(FHClueIMPageTypeCNeighborhood);
-    }else if (self.houseType == FHIMHouseTypeNewHouse) {
-        extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-        extraDic[kFHCluePage] = @(FHClueIMPageTypeCourt);
-//        extraDic[@"from"] = @"app_court";
-//        if (_fromStr.length > 0) {
-//            extraDic[kFHCluePage] = @([FHHouseDetailContactViewModel imCluePageTypeByFromString:_fromStr]);
-//            extraDic[@"from"] = _fromStr;
-//        }
+    
+    // ------------- 房源详情页 --------------------//
+    if([self.belongsVC isKindOfClass:FHHouseDetailViewController.class]) {
+        FHHouseDetailViewController *houseDetailVC = (FHHouseDetailViewController *)self.belongsVC;
+        NSObject *detailData  = houseDetailVC.viewModel.detailData;
+        switch(houseDetailVC.viewModel.houseType) {
+            case FHHouseTypeNewHouse:
+            {
+                // 新房详情页
+                if([detailData isKindOfClass:FHDetailNewModel.class]) {
+                    FHDetailNewModel *detailNewModel = (FHDetailNewModel *)detailData;
+                    if(detailNewModel.data.highlightedRealtorAssociateInfo) {
+                        extraDic[kFHAssociateInfo] = detailNewModel.data.highlightedRealtorAssociateInfo;
+                    }
+                }
+            }
+                break;
+            case FHHouseTypeSecondHandHouse:
+            {
+                // 二手房详情页
+                if([detailData isKindOfClass:FHDetailOldModel.class]) {
+                    FHDetailOldModel *detailOldModel = (FHDetailOldModel *)detailData;
+                    if(detailOldModel.data.highlightedRealtorAssociateInfo) {
+                        extraDic[kFHAssociateInfo] = detailOldModel.data.highlightedRealtorAssociateInfo;
+                    }
+                }
+            }
+                break;
+            case FHHouseTypeRentHouse:
+            {
+                // 租房详情页
+                if([detailData isKindOfClass:FHRentDetailResponseModel.class]) {
+                    FHRentDetailResponseModel *detailRentalModel = (FHRentDetailResponseModel *)detailData;
+                    if(detailRentalModel.data.highlightedRealtorAssociateInfo) {
+                        extraDic[kFHAssociateInfo] = detailRentalModel.data.highlightedRealtorAssociateInfo;
+                    }
+                }
+            }
+                break;
+            case FHHouseTypeNeighborhood:
+            {
+                // 小区详情页
+                if([detailData isKindOfClass:FHDetailNeighborhoodModel.class]) {
+                    FHDetailNeighborhoodModel *detailNeighborhoodModel = (FHDetailNeighborhoodModel *)detailData;
+                    if(detailNeighborhoodModel.data.highlightedRealtorAssociateInfo) {
+                        extraDic[kFHAssociateInfo] = detailNeighborhoodModel.data.highlightedRealtorAssociateInfo;
+                    }
+                }
+            }
+                break;
+            default:
+                break;
+        }
     }
+    
+    // ------------- 房源详情页子页面 ---------------//
+    
+    if([self.belongsVC isKindOfClass:FHHouseDetailSubPageViewController.class]) {
+        FHHouseDetailSubPageViewController *detailSubPageVC = (FHHouseDetailSubPageViewController *)self.belongsVC;
+        NSObject *detailSubData = detailSubPageVC.viewModel.detailData;
+        //新房详情页楼盘信息子页面
+        if([detailSubData isKindOfClass:FHDetailNewCoreDetailModel.class]) {
+            FHDetailNewCoreDetailModel *detailNewCoreDetailModel = (FHDetailNewCoreDetailModel *)detailSubData;
+            if(detailNewCoreDetailModel.data.highlightedRealtorAssociateInfo) {
+                extraDic[kFHAssociateInfo] = detailNewCoreDetailModel.data.highlightedRealtorAssociateInfo;
+            }
+        }
+        // 新房详情页户型列表页子页面
+        if([detailSubData isKindOfClass:FHDetailFloorPanListResponseModel.class]) {
+            FHDetailFloorPanListResponseModel *detailFloorPanListModel = (FHDetailFloorPanListResponseModel *)detailSubData;
+            if(detailFloorPanListModel.data.highlightedRealtorAssociateInfo) {
+                extraDic[kFHAssociateInfo] = detailFloorPanListModel.data.highlightedRealtorAssociateInfo;
+            }
+        }
+    }
+        
     [self onlineActionWithExtraDict:extraDic];
 }
-
-//+ (FHClueIMPageTypeC)imCluePageTypeByFromString:(NSString *)fromStr
-//{
-//    FHClueIMPageTypeC cluePageType = FHClueIMPageTypeCourt;
-//    if ([fromStr isEqualToString:@"app_floorplan"]) {
-//        cluePageType = FHClueIMPageTypeFloorplan;
-//    }else if ([fromStr isEqualToString:@"app_newhouse_detail"]) {
-//        cluePageType = FHClueIMPageTypeNewHouseDetail;
-//    }else if ([fromStr isEqualToString:@"app_newhouse_apartmentlist"]) {
-//        cluePageType = FHClueIMPageTypeApartmentlist;
-//    }
-//    return cluePageType;
-//}
 
 // 新房群聊按钮点击
 - (void)groupChatAction {

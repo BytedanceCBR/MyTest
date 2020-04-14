@@ -51,7 +51,8 @@
     
     [self setUpFloorListTable];
     
-    _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andLeftScrollView:self.leftFilterView andSegementView:self.segmentedControl andItems:_floorList andCourtId:_courtId];
+    self.panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andLeftScrollView:self.leftFilterView andSegementView:self.segmentedControl andItems:_floorList andCourtId:_courtId];
+    self.viewModel = self.panListModel;
     
     [self setNavBarTitle:@"楼盘户型"];
     

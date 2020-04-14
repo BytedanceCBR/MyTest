@@ -93,6 +93,9 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
                         completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 
+/// 请求线索信息
+/// @param params 接口参数
++ (TTHttpTask *)requestAssoicateEntrance:(NSDictionary *)params completion:(void (^)(NSError *error, id jsonObj))completion;
 @end
 
 NS_ASSUME_NONNULL_END

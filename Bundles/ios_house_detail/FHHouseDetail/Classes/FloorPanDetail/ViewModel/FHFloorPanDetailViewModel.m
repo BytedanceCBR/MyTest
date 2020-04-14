@@ -80,9 +80,9 @@
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"source_from"] = @"house_model_detail";
     imExtra[@"im_open_url"] = contactPhone.imOpenUrl;
-    imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeFloorplan];
-    imExtra[@"from"] = @"app_floorplan";
+    if(self.currentModel.data.highlightedRealtorAssociateInfo) {
+        imExtra[kFHAssociateInfo] = self.currentModel.data.highlightedRealtorAssociateInfo;
+    }
     [self.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 

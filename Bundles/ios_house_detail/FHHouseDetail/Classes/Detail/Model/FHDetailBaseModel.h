@@ -17,6 +17,7 @@
 
 @class FHDetailHouseTitleModel;
 @class FHDetailNewDataSmallImageGroupModel;
+@class FHClueAssociateInfoModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -65,6 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *shareUrl;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
 @interface FHDetailContactImageTagModel : JSONModel
