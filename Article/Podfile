@@ -65,7 +65,7 @@ def fhPods
 #     pod 'ios_house_im' , '0.2.0-rc.3'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #    pod 'ios_house_im' , :path => '../../cim3'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'a01e7911048d40ab203620200f865e2e147a54ed'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'b0b53ebbcbb17ae920f1f57c14b24239324091cc'
 
 end
 
@@ -154,7 +154,7 @@ end
 
 def appPods
     #-----头条图片/视频选择器-----
-    pod 'TTImagePicker', '7.5.5.11'
+    pod 'TTImagePicker', '7.5.5.12'
     pod 'TTImagePickerBase', '1.0.4'
   
     pod_binary 'SecGuard' , '0.8.16.9'
