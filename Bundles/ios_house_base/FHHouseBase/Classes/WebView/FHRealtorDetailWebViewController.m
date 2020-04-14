@@ -17,6 +17,8 @@
 
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTBaseLib/TTDeviceHelper.h>
+#import <FHHouseBase/FHUtils.h>
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 @interface FHRealtorDetailWebViewController ()
 {
@@ -65,9 +67,38 @@ static NSString *s_oldAgent = nil;
         self.houseId = params[@"house_id"];
 
         self.tracerDict[@"pageType"] = @"realtor_detail";
-        NSDictionary *reportParams = params[@"reportParams"];
-        NSDictionary *phoneInfo = params[@"phone_info"];
-        [self callWithPhone:phone extraDict:reportParams phoneInfo:phoneInfo completion:completion];
+        NSDictionary *reportParams = nil;
+        
+        if ([params[@"reportParams"] isKindOfClass:[NSString class]]) {
+            reportParams = params[@"reportParams"];
+        }else if ([params[@"reportParams"] isKindOfClass:[NSString class]]) {
+            NSString *reportParamsStr = [params btd_stringValueForKey:@"reportParams"];
+            if (reportParamsStr) {
+                NSMutableString *processString= [NSMutableString stringWithString:reportParamsStr];
+                NSString *character = nil;
+                for (int i = 0; i < processString.length; i ++) {
+                    character = [processString substringWithRange:NSMakeRange(i, 1)];
+                    
+                    if ([character isEqualToString:@"\\"])
+                        [processString deleteCharactersInRange:NSMakeRange(i, 1)];
+                }
+                reportParams = [FHUtils dictionaryWithJsonString:processString];
+            }
+        }
+        NSDictionary *associateInfoDict = nil;
+        NSString *associateInfoStr = [params btd_stringValueForKey:@"phone_info"];
+        if (associateInfoStr) {
+            NSMutableString *processString= [NSMutableString stringWithString:associateInfoStr];
+            NSString *character = nil;
+            for (int i = 0; i < processString.length; i ++) {
+                character = [processString substringWithRange:NSMakeRange(i, 1)];
+                
+                if ([character isEqualToString:@"\\"])
+                    [processString deleteCharactersInRange:NSMakeRange(i, 1)];
+            }
+            associateInfoDict = [FHUtils dictionaryWithJsonString:processString];
+        }
+        [self callWithPhone:phone extraDict:reportParams phoneInfo:associateInfoDict completion:completion];
     } forMethodName:@"phoneSwitch"];
     [FHUserTracker writeEvent:@"go_detail" params:[self goDetailParams]];
 }
@@ -107,7 +138,7 @@ static NSString *s_oldAgent = nil;
     }
     associatePhone.houseType = self.houseType ? self.houseType : 9;
     associatePhone.houseId = self.houseId;
-    associatePhone.showLoading = YES;
+    associatePhone.showLoading = NO;
     [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:nil];
     
 //    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
