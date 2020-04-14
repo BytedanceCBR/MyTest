@@ -308,12 +308,27 @@
 - (void)tapConsultation:(UIButton *)sender {
     FHDetailAdvisoryLoanModel *model = (FHDetailAdvisoryLoanModel *)self.currentData;
     if (model.contactModel.contactPhone.phone.length>0) {
-        NSDictionary *userInfoDict = @{@"tracer":@{}};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         NSString *openUrl = model.downPayment.openUrl;
         if (openUrl.length > 0) {
             NSURL *url = [NSURL URLWithString:openUrl];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+            NSMutableDictionary *imExtra = @{}.mutableCopy;
+            imExtra[@"from"] = @"app_oldhouse_mortgage";
+            imExtra[@"source"] = @"app_oldhouse_mortgage";
+            imExtra[@"source_from"] = @"loan";
+            imExtra[@"im_open_url"] = openUrl;
+            imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
+            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldBudget];
+            [model.contactModel onlineActionWithExtraDict:imExtra];
+            // 静默关注功能
+                    NSMutableDictionary *params = @{}.mutableCopy;
+                    if (self.baseViewModel.detailTracerDic) {
+                        [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
+                    }
+                    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+                    configModel.houseType = self.baseViewModel.houseType;
+                    configModel.followId = self.baseViewModel.houseId;
+                    configModel.actionType = self.baseViewModel.houseType;
+                    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
         }
     }else {
         if ([model.contactModel respondsToSelector:@selector(fillFormActionWithExtraDict:)]) {
@@ -347,19 +362,10 @@
     NSDictionary *userInfoDict = @{@"tracer":@{}};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     NSString *openUrl = model.downPayment.calculatorUrl;
+    [self addGoDetailLog];
     if (openUrl.length > 0) {
         NSURL *url = [NSURL URLWithString:openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-        // 静默关注功能
-                NSMutableDictionary *params = @{}.mutableCopy;
-                if (self.baseViewModel.detailTracerDic) {
-                    [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
-                }
-                FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-                configModel.houseType = self.baseViewModel.houseType;
-                configModel.followId = self.baseViewModel.houseId;
-                configModel.actionType = self.baseViewModel.houseType;
-                [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
     }
 }
 
