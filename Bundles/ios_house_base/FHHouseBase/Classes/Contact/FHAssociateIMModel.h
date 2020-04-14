@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *imOpenUrl;
 @property (nonatomic, copy) FHASSOCIATEIMCALLBACKBLOCK slientFollowCallbackBlock; // 静默关注回调Block
 
-#pragma mark 必填 todo zjing test
+#pragma mark 必填 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
 

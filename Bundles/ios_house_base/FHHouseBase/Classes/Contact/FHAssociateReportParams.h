@@ -43,9 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 选填
 @property (nonatomic, copy) NSString *itemId;// 表单和电话都有用到
 //@property (nonatomic, assign) FHRealtorType realtorType;
-@property (nonatomic, strong) NSNumber *realtorRank;// todo zjing test
-@property (nonatomic, copy) NSString *realtorPosition;// todo zjing test
-@property (nonatomic, copy) NSString *conversationId;// todo zjing test
+@property (nonatomic, strong) NSNumber *realtorRank;
+@property (nonatomic, copy) NSString *realtorPosition;
+@property (nonatomic, copy) NSString *conversationId;
 @property(nonatomic ,copy) NSString *position;
 
 // 选填
