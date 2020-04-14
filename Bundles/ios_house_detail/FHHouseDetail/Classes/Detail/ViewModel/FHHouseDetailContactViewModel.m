@@ -846,7 +846,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 // 新房详情页
                 if([detailData isKindOfClass:FHDetailNewModel.class]) {
                     FHDetailNewModel *detailNewModel = (FHDetailNewModel *)detailData;
-                    if(detailNewModel.data.highlightedRealtor.associateInfo) {
+                    if(detailNewModel.data.highlightedRealtorAssociateInfo) {
                         extraDic[kFHAssociateInfo] = detailNewModel.data.highlightedRealtorAssociateInfo;
                     }
                 }
@@ -857,7 +857,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 // 二手房详情页
                 if([detailData isKindOfClass:FHDetailOldModel.class]) {
                     FHDetailOldModel *detailOldModel = (FHDetailOldModel *)detailData;
-                    if(detailOldModel.data.highlightedRealtor.associateInfo) {
+                    if(detailOldModel.data.highlightedRealtorAssociateInfo) {
                         extraDic[kFHAssociateInfo] = detailOldModel.data.highlightedRealtorAssociateInfo;
                     }
                 }
@@ -868,7 +868,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 // 租房详情页
                 if([detailData isKindOfClass:FHRentDetailResponseModel.class]) {
                     FHRentDetailResponseModel *detailRentalModel = (FHRentDetailResponseModel *)detailData;
-                    if(detailRentalModel.data.highlightedRealtor.associateInfo) {
+                    if(detailRentalModel.data.highlightedRealtorAssociateInfo) {
                         extraDic[kFHAssociateInfo] = detailRentalModel.data.highlightedRealtorAssociateInfo;
                     }
                 }
@@ -879,7 +879,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 // 小区详情页
                 if([detailData isKindOfClass:FHDetailNeighborhoodModel.class]) {
                     FHDetailNeighborhoodModel *detailNeighborhoodModel = (FHDetailNeighborhoodModel *)detailData;
-                    if(detailNeighborhoodModel.data.highlightedRealtor.associateInfo) {
+                    if(detailNeighborhoodModel.data.highlightedRealtorAssociateInfo) {
                         extraDic[kFHAssociateInfo] = detailNeighborhoodModel.data.highlightedRealtorAssociateInfo;
                     }
                 }
@@ -898,14 +898,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         //新房详情页楼盘信息子页面
         if([detailSubData isKindOfClass:FHDetailNewCoreDetailModel.class]) {
             FHDetailNewCoreDetailModel *detailNewCoreDetailModel = (FHDetailNewCoreDetailModel *)detailSubData;
-            if(detailNewCoreDetailModel.data.highlightedRealtor.associateInfo) {
+            if(detailNewCoreDetailModel.data.highlightedRealtorAssociateInfo) {
                 extraDic[kFHAssociateInfo] = detailNewCoreDetailModel.data.highlightedRealtorAssociateInfo;
             }
         }
         // 新房详情页户型列表页子页面
         if([detailSubData isKindOfClass:FHDetailFloorPanListResponseModel.class]) {
             FHDetailFloorPanListResponseModel *detailFloorPanListModel = (FHDetailFloorPanListResponseModel *)detailSubData;
-            if(detailFloorPanListModel.data.highlightedRealtor.associateInfo) {
+            if(detailFloorPanListModel.data.highlightedRealtorAssociateInfo) {
                 extraDic[kFHAssociateInfo] = detailFloorPanListModel.data.highlightedRealtorAssociateInfo;
             }
         }
