@@ -22,7 +22,6 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.contentView.backgroundColor = [UIColor themeGray7];
         [self.contentView addSubview:self.containerView];
         [self initConstraints];
     }

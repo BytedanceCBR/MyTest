@@ -16,6 +16,7 @@
 #import "FHFloorPanCorePropertyCell.h"
 #import "FHDetailGrayLineCell.h"
 #import "FHDetailDisclaimerCell.h"
+#import "FHOldDetailDisclaimerCell.h"
 
 @interface FHFloorCoreInfoViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -23,8 +24,8 @@
 @property (nonatomic , strong) NSMutableArray *currentItems;
 @property (nonatomic , strong) NSString *courtId;
 @property(nonatomic , strong) FHDetailHouseNameModel *houseNameModel;
-@property(nonatomic , strong) FHDetailDisclaimerModel *disclaimerModel;
-
+@property(nonatomic , strong) FHOldDetailDisclaimerModel *oldDisclaimerModel;
+@property(nonatomic , strong) FHDetailDisclaimerModel *disClaimerModel;
 @end
 @implementation FHFloorCoreInfoViewModel
 
@@ -37,7 +38,10 @@
         _courtId = courtId;
         _currentItems = [NSMutableArray new];
         _houseNameModel = model;
-        _disclaimerModel = disClaimerModel;
+        _disClaimerModel = disClaimerModel;
+        _oldDisclaimerModel = [[FHOldDetailDisclaimerModel alloc] init];
+        _oldDisclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[_disClaimerModel.disclaimer toJSONData] error:nil];
+        _oldDisclaimerModel.contact = [[FHDetailContactModel alloc] initWithData:[_disClaimerModel.contact toJSONData] error:nil];
         [self configTableView];
         
         [self startLoadData];
@@ -54,7 +58,7 @@
     
     [self.infoListTable registerClass:[FHFloorPanCorePropertyCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePropertyCell class])];
 
-    [self.infoListTable registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
+    [self.infoListTable registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -74,8 +78,8 @@
     }
     
     // 版权信息
-    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
-        return [FHDetailDisclaimerCell class];
+    if ([model isKindOfClass:[FHOldDetailDisclaimerModel class]]) {
+        return [FHOldDetailDisclaimerCell class];
     }
     
     return [FHDetailBaseCell class];
@@ -167,8 +171,10 @@
         [self.currentItems addObject:permitModel];
     }
     
-    if (_disclaimerModel) {
-        [self.currentItems addObject:_disclaimerModel];
+    if (_oldDisclaimerModel) {
+        FHDetailGrayLineModel *newGrayLine = [[FHDetailGrayLineModel alloc] initWithHeight:25];
+        [self.currentItems addObject:newGrayLine];
+        [self.currentItems addObject:_oldDisclaimerModel];
     }
     
     [_infoListTable reloadData];
@@ -377,6 +383,7 @@
         NSString *identifier = [self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            cell.backgroundColor = [UIColor themeGray7];
             [cell refreshWithData:data];
             return cell;
         }

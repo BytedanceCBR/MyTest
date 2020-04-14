@@ -56,7 +56,6 @@
     } else if (type == 2) {
         // 新房
         self.bottomLine.hidden = NO;
-        self.contentView.backgroundColor = [UIColor themeGray7];
         self.containerView.hidden = NO;
         _aliasLabel.textColor = RGB(0xae, 0xad, 0xad);
         _secondaryLabel.textColor = [UIColor themeGray2];
