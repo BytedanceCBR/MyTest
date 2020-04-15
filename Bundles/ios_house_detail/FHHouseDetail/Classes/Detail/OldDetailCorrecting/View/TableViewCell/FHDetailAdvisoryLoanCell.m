@@ -387,6 +387,7 @@
     }
     [params setValue:@"debit_calculator" forKey:@"page_type"];
     [params setValue:@"loan_consult" forKey:@"element_from"];
+     [params setValue:@"old_detail" forKey:@"enterfrom_from"];
     [FHUserTracker writeEvent:@"go_detail" params:params];
     
 }
