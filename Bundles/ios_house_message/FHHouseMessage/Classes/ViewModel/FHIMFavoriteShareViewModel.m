@@ -14,6 +14,7 @@
 #import "FHHouseListModel.h"
 #import "FHDetailBaseModel.h"
 #import "TTSandBoxHelper.h"
+#import "TTAccount.h"
 
 @interface FHIMFavoriteShareModel : NSObject
 @property (nonatomic, assign) NSInteger houseType;
@@ -91,8 +92,6 @@
             houseTag = @"租房";
         }
         NSString *channel = [TTSandBoxHelper getCurrentChannel];
-        NSDictionary *imInfo = obj.associateInfo.imInfo;
-        
         NSMutableDictionary *extra = @{}.mutableCopy;
         extra[KSCHEMA_HOUSE_TAG] = houseTag;
         extra[KSCHEMA_HOUSE_COVER] =  obj.cover ? : @"";
@@ -105,11 +104,12 @@
         extra[KSCHEMA_HOUSE_CHANNEL] = [self getChannel] ? : @"local_test";
         
         // 线索相关参数
-        extra[KSCHEMA_HOUSE_FROM] = imInfo[KSCHEMA_HOUSE_FROM];
-        extra[KSCHEMA_HOUSE_CLUE_ENDPOINT] = imInfo[KSCHEMA_HOUSE_CLUE_ENDPOINT];
-        extra[KSCHEMA_HOUSE_CLUE_PAGE] = imInfo[KSCHEMA_HOUSE_CLUE_PAGE];
-        extra[KSCHEMA_TARGET_ID] = imInfo[KSCHEMA_TARGET_ID]?:obj.houseId;
-        extra[KSCHEMA_TARGET_TYPE] = imInfo[KSCHEMA_TARGET_TYPE]?:[@(obj.houseType) stringValue];
+        NSDictionary *imInfo = obj.associateInfo.imInfo;
+        extra[KSCHEMA_HOUSE_FROM] = [imInfo tta_stringForKey:KSCHEMA_HOUSE_FROM];
+        extra[KSCHEMA_HOUSE_CLUE_ENDPOINT] = [imInfo tta_stringForKey:KSCHEMA_HOUSE_CLUE_ENDPOINT];
+        extra[KSCHEMA_HOUSE_CLUE_PAGE] = [imInfo tta_stringForKey:KSCHEMA_HOUSE_CLUE_PAGE];
+        extra[KSCHEMA_TARGET_ID] = [imInfo tta_stringForKey:KSCHEMA_TARGET_ID];
+        extra[KSCHEMA_TARGET_TYPE] = [imInfo tta_stringForKey:KSCHEMA_TARGET_TYPE];
         // ---
         
         houseMsg.extraDic = extra;

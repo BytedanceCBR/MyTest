@@ -142,7 +142,6 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 
 @property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @property (nonatomic, strong , nullable) NSDictionary *realtorLogpb;
-@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 - (nonnull id)copyWithZone:(nullable NSZone *)zone;
 
