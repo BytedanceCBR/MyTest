@@ -30,6 +30,8 @@
 #import <FHCommonUI/FHFeedbackView.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import "FHMainApi+Contact.h"
+#import "FHHousePhoneCallUtils.h"
+#import "FHDetailBaseModel.h"
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -101,6 +103,10 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
 - (void)tryGetPhoneNumber:(NSString *)userId withImprId:(NSString *)imprId tracer:(NSDictionary *)tracer clueParams:(NSDictionary *)clueParams withBlock:(PhoneCallback)finishBlock
 {
+    void (^displayPhoneIconAction)(void) = [clueParams[@"displayPhoneIconAction"] copy];
+    NSMutableDictionary *copyClueParams = clueParams.mutableCopy;
+    copyClueParams[@"displayPhoneIconAction"] = nil;
+    clueParams = copyClueParams;
     [FHMainApi requestAssoicateEntrance:clueParams completion:^(NSError * _Nonnull error, id  _Nonnull jsonObj) {
         if(!error && jsonObj) {
             
@@ -115,7 +121,20 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
             param[@"realtor_id"] = userId;
             param[@"enterfrom"] = @"app_chat";
             param[@"impr_id"] = imprId ? : @"be_null";
-            NSDictionary* phoneAssociate = jsonObj;
+            
+            NSDictionary* phoneAssociate = nil;
+            
+            id data = jsonObj[@"data"];
+            if(data && [data isKindOfClass:NSDictionary.class]) {
+                id associateInfoDic = data[@"associate_info"];
+                if(associateInfoDic && [associateInfoDic isKindOfClass:NSDictionary.class]) {
+                    NSError *error = nil;
+                    FHClueAssociateInfoModel *associateInfo = [[FHClueAssociateInfoModel alloc] initWithDictionary:associateInfoDic error:&error];
+                    if(!error) {
+                        phoneAssociate = associateInfo.phoneInfo;
+                    }
+                }
+            }
             if (phoneAssociate) {
                 NSData *data = [NSJSONSerialization dataWithJSONObject:phoneAssociate options:0 error:nil];
                 NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -171,10 +190,16 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     if ([@"be_null" isEqualToString:serverImprId]) {
                         [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_IMPRID extra:monitorParams];
                     }
-                    
-                    NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@",phone];
+                    NSString *phoneUrl = [NSString stringWithFormat:@"tel://%@", phone];
                     NSURL *url = [NSURL URLWithString:phoneUrl];
-                    [[UIApplication sharedApplication] openURL:url];
+                    if ([[UIApplication sharedApplication]canOpenURL:url]) {
+                        if (@available(iOS 10.0, *)) {
+                            [[UIApplication sharedApplication]openURL:url options:@{} completionHandler:nil];
+                        } else {
+                            // Fallback on earlier versions
+                            [[UIApplication sharedApplication]openURL:url];
+                        }
+                    }
                 } else {
                     [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
                     [monitorParams setValue:error forKey:@"server_error"];
@@ -213,7 +238,6 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
         }
         
         else {
-            void (^displayPhoneIconAction)(void) = clueParams[@"displayPhoneIconAction"];
             if(displayPhoneIconAction) {
                 displayPhoneIconAction();
             }
