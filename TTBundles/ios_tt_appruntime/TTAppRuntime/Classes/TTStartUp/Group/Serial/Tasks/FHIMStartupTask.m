@@ -31,6 +31,7 @@
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import "FHMainApi+Contact.h"
 #import "FHHousePhoneCallUtils.h"
+#import "FHDetailBaseModel.h"
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -120,7 +121,20 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
             param[@"realtor_id"] = userId;
             param[@"enterfrom"] = @"app_chat";
             param[@"impr_id"] = imprId ? : @"be_null";
-            NSDictionary* phoneAssociate = jsonObj;
+            
+            NSDictionary* phoneAssociate = nil;
+            
+            id data = jsonObj[@"data"];
+            if(data && [data isKindOfClass:NSDictionary.class]) {
+                id associateInfoDic = data[@"associate_info"];
+                if(associateInfoDic && [associateInfoDic isKindOfClass:NSDictionary.class]) {
+                    NSError *error = nil;
+                    FHClueAssociateInfoModel *associateInfo = [[FHClueAssociateInfoModel alloc] initWithDictionary:associateInfoDic error:&error];
+                    if(!error) {
+                        phoneAssociate = associateInfo.phoneInfo;
+                    }
+                }
+            }
             if (phoneAssociate) {
                 NSData *data = [NSJSONSerialization dataWithJSONObject:phoneAssociate options:0 error:nil];
                 NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -176,7 +190,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     if ([@"be_null" isEqualToString:serverImprId]) {
                         [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_IMPRID extra:monitorParams];
                     }
-                    NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@", phone];
+                    NSString *phoneUrl = [NSString stringWithFormat:@"tel://%@", phone];
                     NSURL *url = [NSURL URLWithString:phoneUrl];
                     if ([[UIApplication sharedApplication]canOpenURL:url]) {
                         if (@available(iOS 10.0, *)) {
