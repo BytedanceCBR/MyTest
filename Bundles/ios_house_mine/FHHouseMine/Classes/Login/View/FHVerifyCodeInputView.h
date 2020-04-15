@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , weak) id<FHLoginViewDelegate> delegate;
 
+- (void)updateMobileNumber:(NSString *)mobileNumber;
+
+- (void)updateTimeCountDownValue:(NSInteger )countdownSeconds;
+
 @end
 
 NS_ASSUME_NONNULL_END

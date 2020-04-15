@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , weak) id<FHLoginViewDelegate> delegate;
 
+@property (nonatomic, weak) UITextField *mobileTextField;
+
+- (void)updateProtocol:(NSAttributedString *)protocol;
+
 @end
 
 NS_ASSUME_NONNULL_END

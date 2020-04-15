@@ -89,8 +89,8 @@
 }
 
 - (void)otherLoginButtonAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(verifyCodeLoginAction)]) {
-        [self.delegate verifyCodeLoginAction];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(goToMobileLogin)]) {
+        [self.delegate goToMobileLogin];
     }
 }
 

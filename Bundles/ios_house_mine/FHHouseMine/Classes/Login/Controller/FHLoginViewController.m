@@ -89,6 +89,7 @@
     [self setupDefaultNavBar:NO];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
+    self.customNavBarView.seperatorLine.hidden = YES;
 }
 
 - (void)dealloc
@@ -194,6 +195,7 @@
                 make.left.right.equalTo(self.view);
             }];
             self.currentShowView = self.douyinLoginView;
+            [self.douyinLoginView updateProtocol:infoDict[@"protocol"]];
         }
             break;
         default:

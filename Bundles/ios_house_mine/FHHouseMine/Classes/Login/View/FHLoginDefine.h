@@ -11,20 +11,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHLoginViewDelegate <NSObject>
 
-- (void)confirm;
-
-- (void)sendVerifyCode;
-- (void)quickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha;
-
 - (void)goToUserProtocol;
 
 - (void)goToSecretProtocol;
 
-//@optional
-//- (void)acceptCheckBoxChange:(BOOL)selected;
+/// 跳转手机登录，内部判断是否支持运营商一键登录，不支持跳转输入手机号界面
+- (void)goToMobileLogin;
 
-/// 验证码登录
-- (void)verifyCodeLoginAction;
+/// 跳转输入手机号界面
+- (void)goToMobileInput;
+
+/// 跳转发送验证码界面
+- (void)goToSendVerifyCode:(NSString *)mobileNumber;
+
+- (void)sendVerifyCode;
+
+- (void)mobileLogin:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha;
 
 /// 运营商一键登录
 - (void)oneKeyLoginAction;
@@ -34,6 +36,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 抖音一键登录
 - (void)awesomeLoginAction;
+
+//@optional
+//- (void)acceptCheckBoxChange:(BOOL)selected;
+- (void)confirm;
+/// 验证码
+- (void)verifyCodeLoginAction;
 
 @end
 

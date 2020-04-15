@@ -13,10 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHLoginContainerViewController : FHBaseViewController
 
-@property (nonatomic, weak) FHLoginViewModel *viewModel;
-
-@property (nonatomic, assign) FHLoginViewType viewType;
-
 @end
 
 NS_ASSUME_NONNULL_END

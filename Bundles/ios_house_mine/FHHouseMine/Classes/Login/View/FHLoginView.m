@@ -216,7 +216,6 @@
 //    stackView.distribution = UIStackViewDistributionEqualSpacing;
     stackView.alignment = UIStackViewAlignmentCenter;
     stackView.axis = UILayoutConstraintAxisHorizontal;
-    stackView.backgroundColor = UIColor.greenColor;
     [self.scrollView addSubview:stackView];
     [stackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.otherLoginBtn.mas_bottom).mas_offset(20);

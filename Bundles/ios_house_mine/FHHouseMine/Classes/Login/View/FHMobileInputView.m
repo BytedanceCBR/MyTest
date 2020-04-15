@@ -13,17 +13,20 @@
 #import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
 
-@interface FHMobileInputView ()
+@interface FHMobileInputView ()<UITextFieldDelegate>
 
 @property (nonatomic, strong) YYLabel *agreementLabel;
-
-@property (nonatomic, strong) UITextField *mobileTextField;
 
 @property (nonatomic, strong) UIButton *confirmButton;
 
 @end
 
 @implementation FHMobileInputView
+
+- (void)dealloc {
+    _mobileTextField.delegate = nil;
+    NSLog(@"FHMobileInputView dealloc");
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -50,19 +53,23 @@
             make.right.mas_equalTo(-30);
         }];
         
-        self.mobileTextField = [[UITextField alloc] init];
-        self.mobileTextField.font = [UIFont themeFontRegular:20];
-        self.mobileTextField.placeholder = @"请输入手机号";
-        self.mobileTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入手机号" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray5]}];
-        self.mobileTextField.keyboardType = UIKeyboardTypePhonePad;
-        self.mobileTextField.returnKeyType = UIReturnKeyDone;
-        [self addSubview:self.mobileTextField];
+        UITextField *mobileTextField = [[UITextField alloc] init];
+        mobileTextField.font = [UIFont themeFontRegular:20];
+        mobileTextField.placeholder = @"请输入手机号";
+        mobileTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入手机号" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray5]}];
+        mobileTextField.keyboardType = UIKeyboardTypePhonePad;
+        mobileTextField.returnKeyType = UIReturnKeyDone;
+//        mobileTextField.delegate = self;
+        [mobileTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+        [self addSubview:mobileTextField];
+        self.mobileTextField = mobileTextField;
         [self.mobileTextField mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.agreementLabel.mas_bottom).offset(40);
             make.left.mas_equalTo(titleLabel.mas_left);
             make.right.mas_equalTo(-30);
             make.height.mas_equalTo(56);
         }];
+//        [self.mobileTextField becomeFirstResponder];
         
         UILabel *otherLabel = [[UILabel alloc] init];
         otherLabel.font = [UIFont themeFontRegular:14];
@@ -78,7 +85,6 @@
         stackView.distribution = UIStackViewDistributionEqualSpacing;
         stackView.alignment = UIStackViewAlignmentCenter;
         stackView.axis = UILayoutConstraintAxisHorizontal;
-        stackView.backgroundColor = UIColor.greenColor;
         [self addSubview:stackView];
         
         CGFloat stackViewWidth = 0;
@@ -128,8 +134,32 @@
     return self;
 }
 
-- (void)confirmButtonAction {
+- (void)textFieldDidChange:(UITextField *)textField {
+    NSString *text = textField.text;
+    NSInteger limit = 11;
+    if(text.length > limit){
+        textField.text = [text substringToIndex:limit];
+    }
     
+    if (text.length >= limit) {
+        self.confirmButton.alpha = 1;
+    } else {
+        self.confirmButton.alpha = 0.3;
+    }
+
+}
+
+- (void)updateProtocol:(NSAttributedString *)protocol{
+    self.agreementLabel.attributedText = protocol;
+}
+
+- (void)confirmButtonAction {
+    if (self.mobileTextField.text.length < 11) {
+        return;
+    }
+    if (self.delegate && [self.delegate respondsToSelector:@selector(goToSendVerifyCode:)]) {
+        [self.delegate goToSendVerifyCode:self.mobileTextField.text];
+    }
 }
 
 @end

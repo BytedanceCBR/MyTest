@@ -20,6 +20,8 @@
 #import "TTAccountMobileCaptchaAlertView.h"
 #import "TTThemedAlertController.h"
 #import "FHLoginContainerViewController.h"
+#import <TTRoute/TTRoute.h>
+//#import <BDABTestSDK/BDABTestManager.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -32,7 +34,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property(nonatomic , assign) NSInteger verifyCodeRetryTime;
 //是否重新是重新发送验证码
 @property(nonatomic , assign) BOOL isVerifyCodeRetry;
-@property(nonatomic , copy) NSString *oneKeyPhone;
 
 @end
 
@@ -99,7 +100,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.viewController endLoading];
     self.isOneKeyLogin = isOneKeyLogin;
 //    [self.view showOneKeyLoginView:isOneKeyLogin];
-//    [self.view setAgreementContent:[self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin] showAcceptBox:YES];
 //    [self.view updateOneKeyLoginWithPhone:phoneNum service:isOneKeyLogin ? [self serviceNameStr] : nil];
 //    [self.view.acceptCheckBox setSelected:NO];
 //    [self checkToEnableConfirmBtn];
@@ -140,7 +140,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             infoDict[@"phone"] = phoneNum?:@"";
             infoDict[@"service"] = [self serviceNameStr];
         }
-        infoDict[@"protocol"] = [self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin];
+        infoDict[@"protocol"] = [self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin viewType:viewType];
         self.configureSubview(viewType, infoDict.copy);
     }
 }
@@ -214,7 +214,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
-- (NSMutableAttributedString *)protocolAttrTextByIsOneKeyLogin:(BOOL)isOneKeyLogin {
+- (NSMutableAttributedString *)protocolAttrTextByIsOneKeyLogin:(BOOL)isOneKeyLogin viewType:(FHLoginViewType )viewType{
     __weak typeof(self) wself = self;
     NSMutableAttributedString *attrText = [NSMutableAttributedString new];
     NSRange serviceRange;
@@ -261,19 +261,35 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [wself goToSecretProtocol];
         }];
     } else {
-        attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
-        [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
-        userProtocolRange = NSMakeRange(7, 7);
-        privacyRange = NSMakeRange(17, 4);
-        YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
-        [attrText yy_setTextUnderline:decoration range:userProtocolRange];
-        [attrText yy_setTextUnderline:decoration range:privacyRange];
-        [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-            [wself goToUserProtocol];
-        }];
-        [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-            [wself goToSecretProtocol];
-        }];
+        if (viewType == FHLoginViewTypeDouYin) {
+            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
+            [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
+            userProtocolRange = NSMakeRange(7, 7);
+            privacyRange = NSMakeRange(17, 4);
+            YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
+            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
+            [attrText yy_setTextUnderline:decoration range:privacyRange];
+            [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+                [wself goToUserProtocol];
+            }];
+            [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+                [wself goToSecretProtocol];
+            }];
+        } else if (viewType == FHLoginViewTypeMobile) {
+            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
+            [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
+            userProtocolRange = NSMakeRange(7, 7);
+            privacyRange = NSMakeRange(17, 4);
+            YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
+            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
+            [attrText yy_setTextUnderline:decoration range:privacyRange];
+            [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+                [wself goToUserProtocol];
+            }];
+            [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+                [wself goToSecretProtocol];
+            }];
+        }
     }
     return attrText;
 }
@@ -312,14 +328,33 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
-- (void)verifyCodeLoginAction
-{
-    self.isOtherLogin = YES;
-//    [self showOneKeyLoginView:NO phoneNum:nil];
-    FHLoginContainerViewController *vc = [[FHLoginContainerViewController alloc] init];
-    vc.viewModel = self;
-    vc.viewType = FHLoginViewTypeMobile;
+- (void)goToContainerController:(FHLoginViewType )viewType {
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"viewType"] = @(viewType);
+    dict[@"viewModel"] = self;
+    FHLoginContainerViewController *vc = [[FHLoginContainerViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(dict.copy)];
     [self.viewController.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)goToMobileLogin {
+    if (self.isOneKeyLogin) {
+        [self goToContainerController:FHLoginViewTypeOneKey];
+    } else {
+        [self goToMobileInput];
+    }
+}
+
+- (void)goToMobileInput {
+    self.isOtherLogin = YES;
+    [self goToContainerController:FHLoginViewTypeMobile];
+}
+
+- (void)goToSendVerifyCode:(NSString *)mobileNumber {
+//    [self showOneKeyLoginView:NO phoneNum:nil];
+    self.mobileNumber = mobileNumber;
+//    [self sendVerifyCodeWithCaptcha:nil];
+    [self goToContainerController:FHLoginViewTypeVerify];
 }
 
 - (void)oneKeyLoginAction {
@@ -371,10 +406,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
-- (void)quickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha {
+- (void)mobileLogin:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha {
 
     __weak typeof(self) weakSelf = self;
-    if (![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
+    if (![mobileNumber hasPrefix:@"1"] || mobileNumber.length != 11 || ![self isPureInt:mobileNumber]) {
         [[ToastManager manager] showToast:@"手机号错误"];
         return;
     }
@@ -397,8 +432,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     [[ToastManager manager] showToast:@"正在登录中"];
     
-    [FHMineAPI requestQuickLogin:phoneNumber smsCode:smsCode captcha:captcha completion:^(UIImage *_Nonnull captchaImage, NSNumber *_Nonnull newUser, NSError *_Nonnull error) {
-        [weakSelf handleLoginResult:captchaImage phoneNum:phoneNumber smsCode:smsCode error:error isOneKeyLogin:NO];
+    [FHMineAPI requestQuickLogin:mobileNumber smsCode:smsCode captcha:captcha completion:^(UIImage *_Nonnull captchaImage, NSNumber *_Nonnull newUser, NSError *_Nonnull error) {
+        [weakSelf handleLoginResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyLogin:NO];
     }];
 }
 
@@ -428,7 +463,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         if (error.code == 1039) {
             TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"登录信息" message:[error.userInfo objectForKey:@"toutiao.account.errmsg_key"] preferredType:TTThemedAlertControllerTypeAlert];
             [alertController addActionWithTitle:@"确认" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-                [self verifyCodeLoginAction];
+                [self goToMobileInput];
             }];
             [alertController showFrom:self.viewController animated:YES];
         }else {
@@ -453,7 +488,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     __weak typeof(self) wself = self;
     [alertView showWithDismissBlock:^(TTAccountMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
         if (alertView.captchaValue.length > 0) {
-            [wself quickLogin:phoneNumber smsCode:smsCode captcha:alertView.captchaValue];
+            [wself mobileLogin:phoneNumber smsCode:smsCode captcha:alertView.captchaValue];
         }
 #if DEBUG
         else {
@@ -632,41 +667,43 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)sendVerifyCodeWithCaptcha:(NSString *)captcha {
 //    [self.view endEditing:YES];
 //
-//    __weak typeof(self) weakSelf = self;
-//    NSString *phoneNumber = self.view.phoneInput.text;
-//
-//    if (![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
-//        [[ToastManager manager] showToast:@"手机号错误"];
-//        return;
-//    }
-//
-//    if (![TTReachability isNetworkConnected]) {
-//        [[ToastManager manager] showToast:@"网络错误"];
-//        return;
-//    }
-//
-//    if (self.isRequestingSMS) {
-//        return;
-//    }
-//
-//    self.isRequestingSMS = YES;
-//    [[ToastManager manager] showToast:@"正在获取验证码"];
-//    [self traceVerifyCode];
-//
-//    [FHMineAPI requestSendVerifyCode:phoneNumber captcha:captcha completion:^(NSNumber *_Nonnull retryTime, UIImage *_Nonnull captchaImage, NSError *_Nonnull error) {
-//        if (!error) {
-//            [weakSelf blockRequestSendMessage:[retryTime integerValue]];
-//            [[ToastManager manager] showToast:@"短信验证码发送成功"];
-//            weakSelf.isVerifyCodeRetry = YES;
-//        } else if (captchaImage) {
-//            weakSelf.isRequestingSMS = NO;
-//            [weakSelf showCaptcha:captchaImage error:error];
-//        } else {
-//            NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];
-//            [[ToastManager manager] showToast:errorMessage];
-//            weakSelf.isRequestingSMS = NO;
-//        }
-//    }];
+    __weak typeof(self) weakSelf = self;
+    NSString *phoneNumber = self.mobileNumber;
+
+    if (![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]) {
+        [[ToastManager manager] showToast:@"手机号错误"];
+        return;
+    }
+
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络错误"];
+        return;
+    }
+
+    if (self.isRequestingSMS) {
+        return;
+    }
+
+    self.isRequestingSMS = YES;
+    [[ToastManager manager] showToast:@"正在获取验证码"];
+    [self traceVerifyCode];
+
+    [FHMineAPI requestSendVerifyCode:phoneNumber captcha:captcha completion:^(NSNumber *_Nonnull retryTime, UIImage *_Nonnull captchaImage, NSError *_Nonnull error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!error) {
+            [strongSelf blockRequestSendMessage:[retryTime integerValue]];
+            [[ToastManager manager] showToast:@"短信验证码发送成功"];
+            strongSelf.isVerifyCodeRetry = YES;
+            [strongSelf goToContainerController:FHLoginViewTypeVerify];
+        } else if (captchaImage) {
+            strongSelf.isRequestingSMS = NO;
+            [strongSelf showCaptcha:captchaImage error:error];
+        } else {
+            NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+            [[ToastManager manager] showToast:errorMessage];
+            strongSelf.isRequestingSMS = NO;
+        }
+    }];
 }
 
 - (void)showCaptcha:(UIImage *)captchaImage error:(NSError *)error {
@@ -712,21 +749,24 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 #pragma mark - Timer
 - (void)setVerifyCodeButtonCountDown {
-//    if (self.verifyCodeRetryTime < 0) {
-//        self.verifyCodeRetryTime = 0;
-//    }
-//
-//    if (self.verifyCodeRetryTime == 0) {
-//        [self stopTimer];
+    if (self.verifyCodeRetryTime < 0) {
+        self.verifyCodeRetryTime = 0;
+    }
+
+    if (self.verifyCodeRetryTime == 0) {
+        [self stopTimer];
 //        [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray1] state:UIControlStateNormal btn:self.view.sendVerifyCodeBtn];
 //        [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray3] state:UIControlStateDisabled btn:self.view.sendVerifyCodeBtn];
 //        self.view.sendVerifyCodeBtn.enabled = (self.view.phoneInput.text.length > 0);
-//        self.isRequestingSMS = NO;
-//    } else {
+        self.isRequestingSMS = NO;
+    } else {
 //        self.view.sendVerifyCodeBtn.enabled = NO;
 //        [self.view setButtonContent:[NSString stringWithFormat:@"重新发送(%lis)", (long) self.verifyCodeRetryTime] font:[UIFont themeFontRegular:14] color:[UIColor themeGray3] state:UIControlStateDisabled btn:self.view.sendVerifyCodeBtn];
-//    }
-//    self.verifyCodeRetryTime--;
+    }
+    if (self.updateTimeCountDownValue) {
+        self.updateTimeCountDownValue(self.verifyCodeRetryTime);
+    }
+    self.verifyCodeRetryTime--;
 }
 
 - (void)startTimer {

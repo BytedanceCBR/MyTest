@@ -174,7 +174,6 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
     hotsoonConf.platformAppId = TTLogicString(@"hotsoonPlatformAppID", nil);
     [TTAccount registerPlatform:hotsoonConf];
     
-    //TODO:需要判断ios13吗
     TTAccountPlatformConfiguration *apple = [[TTAccountPlatformConfiguration alloc] init];
     apple.platformAppId = @"844";
     apple.platformType = TTAccountAuthTypeApple;
@@ -185,6 +184,7 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
     awemeConf.consumerKey  = awemeAppID;
     awemeConf.platformName = PLATFORM_DOUYIN;
     awemeConf.platformAppId = @"846";
+    awemeConf.permissions = [NSOrderedSet orderedSetWithObjects:@"user_info",@"mobile", nil];
     [TTAccount registerPlatform:awemeConf];
 }
 

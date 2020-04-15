@@ -82,7 +82,6 @@
         stackView.distribution = UIStackViewDistributionEqualSpacing;
         stackView.alignment = UIStackViewAlignmentCenter;
         stackView.axis = UILayoutConstraintAxisHorizontal;
-        stackView.backgroundColor = UIColor.greenColor;
         [self addSubview:stackView];
         
         CGFloat stackViewWidth = 0;
@@ -148,8 +147,8 @@
 }
 
 - (void)codeLoginAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(verifyCodeLoginAction)]) {
-        [self.delegate verifyCodeLoginAction];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(goToMobileInput)]) {
+        [self.delegate goToMobileInput];
     }
 }
 
