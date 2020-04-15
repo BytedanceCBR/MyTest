@@ -22,6 +22,7 @@
     }
     
     NSMutableArray *coreInfos = [[NSMutableArray alloc]init];
+     NSMutableArray *advisoryLoans = [[NSMutableArray alloc]init];
     NSMutableArray *subscribes = [[NSMutableArray alloc]init];
     NSMutableArray *outlineInfo = [[NSMutableArray alloc]init];
     NSMutableArray *billBoard = [[NSMutableArray alloc]init];
@@ -37,6 +38,9 @@
         switch (model.houseModelType) {
             case FHHouseModelTypeCoreInfo:
                 [coreInfos addObject:obj];
+                break;
+            case FHHouseModelTypeAdvisoryLoan:
+                [advisoryLoans addObject:obj];
                 break;
             case FHHouseModelTypeSubscribe:
                 [subscribes addObject:obj];
@@ -76,6 +80,9 @@
     if (coreInfos.count > 0) {
         [moduleItems addObject:@{@"coreInfos":coreInfos}];
     }
+    if (advisoryLoans.count>0) {
+         [moduleItems addObject:@{@"advisoryLoans":advisoryLoans}];
+    }
     if (subscribes.count > 0) {
         [moduleItems addObject:@{@"subscribes":subscribes}];
     }
@@ -111,7 +118,7 @@
 //        单个cell模块
         if([[obj allKeys] containsObject:@"subscribes"] || [[obj allKeys] containsObject:@"outlineInfo"]
            || [[obj allKeys] containsObject:@"billBoard"] || [[obj allKeys] containsObject:@"agentlist"]
-           || [[obj allKeys] containsObject:@"tips"] || [[obj allKeys] containsObject:@"peripherys"]) {
+           || [[obj allKeys] containsObject:@"tips"] || [[obj allKeys] containsObject:@"peripherys"] || [[obj allKeys] containsObject:@"advisoryLoans"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 model.shadowImageType = FHHouseShdowImageTypeRound;;

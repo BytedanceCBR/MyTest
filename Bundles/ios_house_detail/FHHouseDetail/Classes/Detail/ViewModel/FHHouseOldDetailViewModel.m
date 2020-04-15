@@ -5,7 +5,6 @@
 //  Created by 张元科 on 2019/1/30.
 //
 #import "FHHouseOldDetailViewModel.h"
-#import "FHDetailBaseCell.h"
 #import "FHHouseDetailAPI.h"
 #import "FHOldDetailPhotoHeaderCell.h"
 #import "FHDetailOldModel.h"
@@ -55,6 +54,8 @@
 #import "FHOldDetailModuleHelper.h"
 #import "FHDetailStaticMapCell.h"
 #import "FHOldDetailStaticMapCell.h"
+#import "FHDetailAdvisoryLoanCell.h"
+#import "FHDetailPriceChangeNoticeCell.h"
 
 
 extern NSString *const kFHPhoneNumberCacheKey;
@@ -77,8 +78,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailMediaHeaderCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCorrectingModel class])];
    //属性模块
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoModel class])];
-     [self.tableView registerClass:[FHDetailPropertyListCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCorrectingModel class])];
-    [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryModel class])];
+    [self.tableView registerClass:[FHDetailPropertyListCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCorrectingModel class])];
+//    [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryModel class])];
+     [self.tableView registerClass:[FHDetailPriceChangeNoticeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceNoticeModel class])];
+    
+    //首付及月供
+     [self.tableView registerClass:[FHDetailAdvisoryLoanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAdvisoryLoanModel class])];
     //推荐经纪人
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
     //用户房源评价
@@ -303,14 +308,24 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         coreInfoModel.houseModelType = FHHouseModelTypeCoreInfo;
         [self.items addObject:coreInfoModel];
     }
-    // 价格变动
-    if (model.data.priceChangeHistory) {
-        FHDetailPriceChangeHistoryModel *priceChangeHistoryModel = [[FHDetailPriceChangeHistoryModel alloc] init];
-        priceChangeHistoryModel.priceChangeHistory = model.data.priceChangeHistory;
-        priceChangeHistoryModel.houseModelType = FHHouseModelTypeCoreInfo;
-        priceChangeHistoryModel.baseViewModel = self;
-        [self.items addObject:priceChangeHistoryModel];
-    }
+//    // 价格变动
+//    if (model.data.priceChangeHistory) {
+//        FHDetailPriceChangeHistoryModel *priceChangeHistoryModel = [[FHDetailPriceChangeHistoryModel alloc] init];
+//        priceChangeHistoryModel.priceChangeHistory = model.data.priceChangeHistory;
+//        priceChangeHistoryModel.houseModelType = FHHouseModelTypeCoreInfo;
+//        priceChangeHistoryModel.baseViewModel = self;
+//        [self.items addObject:priceChangeHistoryModel];
+//    }
+    
+        // 价格变动
+        if (model.data.priceChangeNotice) {
+            FHDetailPriceNoticeModel *priceChangeNoticeModel = [[FHDetailPriceNoticeModel alloc] init];
+            priceChangeNoticeModel.priceChangeNotice = model.data.priceChangeNotice;
+            priceChangeNoticeModel.houseModelType = FHHouseModelTypeCoreInfo;
+            priceChangeNoticeModel.baseViewModel = self;
+            priceChangeNoticeModel.contactModel = self.contactViewModel;
+            [self.items addObject:priceChangeNoticeModel];
+        }
     // 添加属性列表
     if (model.data.baseInfo || model.data.certificate || model.data.baseExtra) {
         FHDetailPropertyListCorrectingModel *propertyModel = [[FHDetailPropertyListCorrectingModel alloc] init];
@@ -321,9 +336,17 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         propertyModel.contactViewModel = self.contactViewModel;
         [self.items addObject:propertyModel];
     }
-    
+    // 首付及月供模块
+    if (model.data.downPaymentInfo) {
+        FHDetailAdvisoryLoanModel *advisoryLoanModel = [[FHDetailAdvisoryLoanModel alloc]init];
+        advisoryLoanModel.houseModelType = FHHouseModelTypeAdvisoryLoan;
+        advisoryLoanModel.downPayment = model.data.downPaymentInfo;
+         advisoryLoanModel.contactModel = self.contactViewModel;
+        advisoryLoanModel.baseViewModel = self;
+         [self.items addObject:advisoryLoanModel];
+    }
     //添加订阅房源动态卡片
-    if([self isShowSubscribe]){
+    if(([self isShowSubscribe]) && !model.data.downPaymentInfo){
         FHDetailHouseSubscribeCorrectingModel *subscribeModel = [[FHDetailHouseSubscribeCorrectingModel alloc] init];
         subscribeModel.tableView = self.tableView;
         subscribeModel.houseModelType = FHHouseModelTypeSubscribe;
@@ -483,6 +506,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
         
     }
+    
 
     //地图
     if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
