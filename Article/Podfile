@@ -46,7 +46,7 @@ def fhPods
     
 #    pod 'FHCommonUI', '0.0.0.1'
 #    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
-    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '30cdf33a6a0aefa52a465f9e21754da2a0e2ccb8'
+    pod 'FHCommonUI','0.0.19-rc.0'
 
 #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
@@ -61,7 +61,7 @@ def fhPods
     # 'Core',
     # 'DelegateForC'
     # ]
-     pod 'ios_house_im' , '0.2.0-rc.6'
+     pod 'ios_house_im' , '0.2.0-rc.7'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #    pod 'ios_house_im' , :path => '../../cim3'
 #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'b0b53ebbcbb17ae920f1f57c14b24239324091cc'
