@@ -21,6 +21,8 @@
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "UIViewController+Track.h"
 #import "FHHomeTopCitySwitchView.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -201,7 +203,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollEnd) name:@"FHHomeMainDidScrollEnd" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL boolSwitchCityHome = [fhSettings tt_boolValueForKey:@"f_home_switch_city_view"];
+    if (!boolSwitchCityHome) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initCitySwitchView) name:@"FHHomeInitSwitchCityTopView" object:nil];
 }
 
