@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
+NS_CLASS_DEPRECATED_IOS(2_0, 2_0, "use FHAssociateFormReportModel instead")
 @interface FHHouseFillFormConfigModel : JSONModel
 
 #pragma mark 必填
