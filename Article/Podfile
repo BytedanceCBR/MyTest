@@ -396,7 +396,7 @@ def appPods
     'TrackerCore',
     'TrackerHome'
     ]
-    pod 'BDDataDecorator','2.0.1',:subspecs => [
+    pod_binary 'BDDataDecorator','2.0.1',:subspecs => [
       'Data',
     ]
     
