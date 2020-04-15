@@ -17,8 +17,7 @@ typedef enum : NSUInteger {
     FHFollowActionTypeRent = 3,
     FHFollowActionTypeNeighborhood = 4,
     FHFollowActionTypePriceChanged = 5,
-    FHFollowActionTypeFloorPan = 6,
-    FHFollowActionTypeOldPriceChanged = 7,
+    FHFollowActionTypeFloorPan = 6
 } FHFollowActionType;
 
 #pragma mark endpoint
