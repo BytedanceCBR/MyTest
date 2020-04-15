@@ -236,6 +236,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ;
 
 @property (nonatomic, assign) BOOL isRecommendCell;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 

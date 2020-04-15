@@ -101,6 +101,10 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
 - (void)tryGetPhoneNumber:(NSString *)userId withImprId:(NSString *)imprId tracer:(NSDictionary *)tracer clueParams:(NSDictionary *)clueParams withBlock:(PhoneCallback)finishBlock
 {
+    void (^displayPhoneIconAction)(void) = [clueParams[@"displayPhoneIconAction"] copy];
+    NSMutableDictionary *copyClueParams = clueParams.mutableCopy;
+    copyClueParams[@"displayPhoneIconAction"] = nil;
+    clueParams = copyClueParams;
     [FHMainApi requestAssoicateEntrance:clueParams completion:^(NSError * _Nonnull error, id  _Nonnull jsonObj) {
         if(!error && jsonObj) {
             
@@ -213,7 +217,6 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
         }
         
         else {
-            void (^displayPhoneIconAction)(void) = clueParams[@"displayPhoneIconAction"];
             if(displayPhoneIconAction) {
                 displayPhoneIconAction();
             }
