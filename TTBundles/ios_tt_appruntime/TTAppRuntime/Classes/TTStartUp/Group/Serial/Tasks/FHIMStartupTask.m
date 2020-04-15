@@ -175,8 +175,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     if ([@"be_null" isEqualToString:serverImprId]) {
                         [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_IMPRID extra:monitorParams];
                     }
-                    
-                    NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@",phone];
+                    NSString *phoneUrl = [NSString stringWithFormat:@"tel://%@", phone];
                     NSURL *url = [NSURL URLWithString:phoneUrl];
                     [[UIApplication sharedApplication] openURL:url];
                 } else {
