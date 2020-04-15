@@ -27,7 +27,7 @@ typedef  void(^fillFormSubmitCallBack)();
 
 #pragma mark - associate refactor
 + (void)fillFormActionWithAssociateReport:(NSDictionary *)associateReportDict;
-+ (void)fillFormActionWithAssociateReportModel:(FHAssociateFormReportModel *)associateReport submitBlock:(fillFormSubmitCallBack)fillFormSubmitCallBack;
++ (void)fillFormActionWithAssociateReportModel:(FHAssociateFormReportModel *)associateReport;
 
 @end
 

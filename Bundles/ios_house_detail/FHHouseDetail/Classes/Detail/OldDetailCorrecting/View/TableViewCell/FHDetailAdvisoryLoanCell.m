@@ -312,50 +312,31 @@
         if (openUrl.length > 0) {
             NSURL *url = [NSURL URLWithString:openUrl];
             NSMutableDictionary *imExtra = @{}.mutableCopy;
-//            imExtra[@"from"] = @"app_oldhouse_mortgage";
-//            imExtra[@"source"] = @"app_oldhouse_mortgage";
-//            imExtra[@"source_from"] = @"loan";
-//            imExtra[@"im_open_url"] = openUrl;
+            imExtra[@"from"] = @"app_oldhouse_mortgage";
+            imExtra[@"source"] = @"app_oldhouse_mortgage";
+            imExtra[@"source_from"] = @"loan";
+            imExtra[@"im_open_url"] = openUrl;
 //            imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-            imExtra[kFHAssociateInfo] = model.downPayment.associateInfo;
+//            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldBudget];
             [model.contactModel onlineActionWithExtraDict:imExtra];
-            // 静默关注功能
-            NSMutableDictionary *params = @{}.mutableCopy;
-            if (self.baseViewModel.detailTracerDic) {
-                [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
-            }
-            FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-            configModel.houseType = self.baseViewModel.houseType;
-            configModel.followId = self.baseViewModel.houseId;
-            configModel.actionType = self.baseViewModel.houseType;
-            [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
         }
     }else {
         if ([model.contactModel respondsToSelector:@selector(fillFormActionWithExtraDict:)]) {
-            NSDictionary *exDic = @{@"title":@"首付咨询",
-                                    @"subtitle":@"订阅首付咨询，房源首付信息会及时发送到您的手机",
-                                    @"btn_title":@"提交",
-                                    kFHAssociateInfo:model.downPayment.associateInfo,
-                                    kFHReportParams:@{@"position":@"loan"}
-                                    
+            NSDictionary *infoDic =  @{kFHCluePage:@(FHClueFormPageTypeCOldHouseShoufu),
+                                       @"title":@"首付咨询",
+                                       @"subtitle":@"订阅首付咨询，房源首付信息会及时发送到您的手机",
+                                       @"position":@"loan",
+                                       @"btn_title":@"提交"
             };
-            [model.contactModel fillFormActionWithParams:exDic];
-            __weak typeof(self)WS = self;
-            model.contactModel.fillFormSubmitBlock = ^{
-                // 静默关注功能
-                NSMutableDictionary *params = @{}.mutableCopy;
-                if (WS.baseViewModel.detailTracerDic) {
-                    [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
-                }
-                FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-                configModel.houseType = WS.baseViewModel.houseType;
-                configModel.followId = WS.baseViewModel.houseId;
-                configModel.actionType = WS.baseViewModel.houseType;
-                [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
-            };
+            NSMutableDictionary *associateParamDict = @{}.mutableCopy;
+            associateParamDict[kFHAssociateInfo] = model.downPayment.associateInfo.reportFormInfo;
+            NSMutableDictionary *reportParamsDict = [model.contactModel baseParams].mutableCopy;
+            associateParamDict[kFHReportParams] = reportParamsDict;
+            
+            [model.contactModel fillFormActionWithParams:associateParamDict];
         }
     }
-    
+  
 }
 
 - (void)tapCalculator:(UIButton *)sender {
@@ -388,7 +369,7 @@
     }
     [params setValue:@"debit_calculator" forKey:@"page_type"];
     [params setValue:@"loan_consult" forKey:@"element_from"];
-    [params setValue:@"old_detail" forKey:@"enter_from"];
+     [params setValue:@"old_detail" forKey:@"enter_from"];
     [FHUserTracker writeEvent:@"go_detail" params:params];
     
 }

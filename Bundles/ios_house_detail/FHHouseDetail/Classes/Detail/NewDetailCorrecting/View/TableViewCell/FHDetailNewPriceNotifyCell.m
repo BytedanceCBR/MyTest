@@ -125,11 +125,10 @@
         NSString *title = @"开盘通知";
         NSString *subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
         NSString *btnTitle = @"提交";
-//        NSString *fromStr = @"app_sellnotice";
-
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
         associateParamDict[kFHAssociateInfo] = model.openAssociateInfo.reportFormInfo;
         NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
+        reportParamsDict[@"position"] = @"app_pricenotice";
         associateParamDict[kFHReportParams] = reportParamsDict;
         
         [contactViewModel fillFormActionWithParams:associateParamDict];
@@ -143,11 +142,10 @@
         NSString *title = @"变价通知";
         NSString *subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
         NSString *btnTitle = @"提交";
-//        NSString *fromStr = @"app_pricenotice";
-        
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
         associateParamDict[kFHAssociateInfo] = model.priceAssociateInfo.reportFormInfo;
         NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
+        reportParamsDict[@"position"] = @"app_pricenotice";
         associateParamDict[kFHReportParams] = reportParamsDict;
         
         [contactViewModel fillFormActionWithParams:associateParamDict];

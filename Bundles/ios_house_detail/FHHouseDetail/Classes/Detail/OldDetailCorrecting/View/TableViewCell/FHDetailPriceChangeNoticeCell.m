@@ -29,7 +29,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-    
+
     // Configure the view for the selected state
 }
 
@@ -75,9 +75,9 @@
     self.leftNoticeItem.content = priceChangeNotice.changeTitle;
     self.rightNoticeItem.content = priceChangeNotice.analysisTitle;
     
-    //    FHDetailPriceNoticeModel
+//    FHDetailPriceNoticeModel
     
-    //    self.infoLabel.text = model.priceChangeHistory.priceChangeDesc;
+//    self.infoLabel.text = model.priceChangeHistory.priceChangeDesc;
     [self layoutIfNeeded];
 }
 
@@ -120,9 +120,9 @@
         make.right.equalTo(self.lineView.mas_left);
     }];
     [self.rightNoticeItem mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.top.bottom.equalTo(self.bgView);
-        make.left.equalTo(self.lineView.mas_right);
-    }];
+          make.right.top.bottom.equalTo(self.bgView);
+          make.left.equalTo(self.lineView.mas_right);
+      }];
 }
 
 - (UIImageView *)shadowImage {
@@ -169,8 +169,8 @@
 - (FHDetailPriceChangeNoticeItem *)rightNoticeItem {
     if (!_rightNoticeItem) {
         FHDetailPriceChangeNoticeItem *rightNoticeItem = [[FHDetailPriceChangeNoticeItem alloc]init];
-        rightNoticeItem.imageName = @"price_routing";
-        [rightNoticeItem addTarget:self action:@selector(priceRoutingAction:) forControlEvents:UIControlEventTouchDown];
+         rightNoticeItem.imageName = @"price_routing";
+         [rightNoticeItem addTarget:self action:@selector(priceRoutingAction:) forControlEvents:UIControlEventTouchDown];
         [self.bgView addSubview:rightNoticeItem];
         _rightNoticeItem = rightNoticeItem;
     }
@@ -192,32 +192,23 @@
     FHDetailPriceNoticeModel *model = (FHDetailPriceNoticeModel *)self.currentData;
     if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
         FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
-        if ([contactViewModel respondsToSelector:@selector(fillFormActionWithExtraDict:)]) {
-            
-            NSDictionary *infoDic = @{ @"title":@"变价通知",
-                                       @"subtitle":@"订阅变价通知，房源变价信息会及时发送到您的手机",
-                                       @"btn_title":@"提交",
-                                       kFHAssociateInfo:model.priceChangeNotice.associateInfo,
-                                       kFHReportParams:@{@"position":@"change_price"}
-                                       
-            };
-            [contactViewModel fillFormActionWithParams:infoDic];
-            __weak typeof(self)ws = self;
-            contactViewModel.fillFormSubmitBlock = ^{
-                // 静默关注功能
-                NSMutableDictionary *params = @{}.mutableCopy;
-                if (ws.baseViewModel.detailTracerDic) {
-                    [params addEntriesFromDictionary:ws.baseViewModel.detailTracerDic];
-                }
-                FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-                configModel.houseType = ws.baseViewModel.houseType;
-                configModel.followId = ws.baseViewModel.houseId;
-                configModel.actionType = ws.baseViewModel.houseType;
-                [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
-            };
+        NSMutableDictionary *extraDic = @{@"position":@"change_price"
+                                          }.mutableCopy;
+        extraDic[@"title"] = @"变价通知";
+        extraDic[@"subtitle"] = @"订阅变价通知，房源变价信息会及时发送到您的手机";
+        extraDic[@"btn_title"] = @"提交";
+        NSMutableDictionary *associateParamDict = @{}.mutableCopy;
+        associateParamDict[kFHAssociateInfo] = model.priceChangeNotice.associateInfo.reportFormInfo;
+        NSMutableDictionary *reportParamsDict = [model.contactModel baseParams].mutableCopy;
+        if (extraDic.count > 0) {
+            reportParamsDict[@"position"] = @"change_price";
+            [reportParamsDict addEntriesFromDictionary:extraDic];
+            reportParamsDict[kFHAssociateInfo] = model.priceChangeNotice.associateInfo.reportFormInfo;
         }
+        associateParamDict[kFHReportParams] = reportParamsDict;
+        [model.contactModel fillFormActionWithParams:associateParamDict];
     }
-    
+
 }
 
 - (void)priceRoutingAction:(id)sender {

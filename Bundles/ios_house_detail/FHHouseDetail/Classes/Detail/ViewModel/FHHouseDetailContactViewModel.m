@@ -621,23 +621,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     associateReport.houseType = self.houseType;
     associateReport.houseId = self.houseId;
     associateReport.topViewController = self.belongsVC;
-    //    [fillFormConfig setTraceParams:params];
-    //    fillFormConfig.searchId = self.searchId;
-    //    fillFormConfig.imprId = self.imprId;
-    //    fillFormConfig.chooseAgencyList = self.chooseAgencyList;
-    //    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig submitBlock:^{
-    //
-    //    }];
-    //}
-    
     associateReport.reportParams = reportParamsDict;
     associateReport.associateInfo = associateInfoDict;
     associateReport.chooseAgencyList = self.chooseAgencyList;
-    [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport submitBlock:^{
-        if (self.fillFormSubmitBlock) {
-            self.fillFormSubmitBlock();
-        }
-    }];
+    [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];
     
 }
 
