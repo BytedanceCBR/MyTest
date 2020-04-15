@@ -209,7 +209,7 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
     
 //    [self _clear];
     
-    [WDListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:0 finishBlock:^(WDWendaV2QuestionBrowResponseModel *responseModel, NSError *error) {
+    [WDListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:0 finishBlock:^(WDWendaV5QuestionBrowResponseModel *responseModel, NSError *error) {
         if (!error) {
             self.tabModelArray = responseModel.module_list;
             self.questionEntity = [WDQuestionEntity genQuestionEntityFromModel:responseModel.question];
@@ -228,11 +228,11 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
                 }
             }
             self.inviteUserModels = [NSMutableArray arrayWithArray:responseModel.candidate_invite_user];
-            [self transNewAnswerModelToEntityAndAppendToList:responseModel.data];
-            self.offset = [responseModel.offset floatValue];
+            [self transNewAnswerModelToEntityAndAppendToList:responseModel.answer_list.data];
+            self.offset = [responseModel.answer_list.offset floatValue];
             self.maxTitleLineCount = [responseModel.header_max_lines integerValue];
             
-            self.loadMoreHasMore = [responseModel.has_more boolValue];
+            self.loadMoreHasMore = [responseModel.answer_list.has_more boolValue];
             _latelyHasException = NO;
             
             // api_param 竟然没有使用 ?? !!
@@ -314,13 +314,13 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
     _isFinish = NO;
     self.startTime = CACurrentMediaTime();
     
-    [WDListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:self.offset finishBlock:^(WDWendaV2QuestionBrowResponseModel *responseModel, NSError *error) {
+    [WDListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:self.offset finishBlock:^(WDWendaV5QuestionBrowResponseModel *responseModel, NSError *error) {
         if (!error) {
             NSUInteger originCount = [self.dataModelsArray count];
-            [self transNewAnswerModelToEntityAndAppendToList:responseModel.data];
+            [self transNewAnswerModelToEntityAndAppendToList:responseModel.answer_list.data];
             NSUInteger afterCount = [self.dataModelsArray count];
-            self.offset = [responseModel.offset floatValue];
-            self.loadMoreHasMore = [responseModel.has_more boolValue];
+            self.offset = [responseModel.answer_list.offset floatValue];
+            self.loadMoreHasMore = [responseModel.answer_list.has_more boolValue];
             if (afterCount <= originCount) {
                 _latelyHasException = YES;
             } else {
@@ -458,7 +458,7 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
 }
 
 - (NSString *)moreListAnswersTitle {
-    return [NSString stringWithFormat:@"查看%lld个折叠回答",self.questionEntity.normalAnsCount.longLongValue];
+    return [NSString stringWithFormat:@"%lld个折叠回答",self.questionEntity.normalAnsCount.longLongValue];
 }
 
 - (NSInteger)defaultNumberOfLines {
@@ -510,18 +510,18 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
                     apiParam:(NSDictionary *)apiParam
                    gdExtJson:(NSDictionary *)gdExtJson
                       offset:(NSInteger)offset
-                 finishBlock:(void(^)(WDWendaV2QuestionBrowResponseModel *responseModel, NSError *error))finishBlock {
-    WDWendaV2QuestionBrowRequestModel *requestModel = [[WDWendaV2QuestionBrowRequestModel alloc] init];
+                 finishBlock:(void(^)(WDWendaV5QuestionBrowResponseModel *responseModel, NSError *error))finishBlock {
+    WDWendaV5QuestionBrowRequestModel *requestModel = [[WDWendaV5QuestionBrowRequestModel alloc] init];
     requestModel.qid = qid;
     requestModel.api_param = [apiParam tt_JSONRepresentation];
     requestModel.gd_ext_json = [gdExtJson tt_JSONRepresentation];
     requestModel.offset = @(offset);
-    requestModel.count = @(20);
+    requestModel.count = @(10);
     requestModel.request_type = WDWendaListRequestTypeNICE;
     
     [[WDNetWorkPluginManager sharedInstance_tt] requestModel:requestModel callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
         if (finishBlock) {
-            finishBlock((WDWendaV2QuestionBrowResponseModel *) responseModel, error);
+            finishBlock((WDWendaV5QuestionBrowResponseModel *) responseModel, error);
         }
     }];
 }

@@ -207,7 +207,7 @@
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView).mas_offset(40);
-        make.centerX.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.contentView).mas_offset(20);
     }];
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(10);

@@ -8,7 +8,7 @@ install! 'cocoapods', :warn_for_multiple_pod_sources => false,:deterministic_uui
 plugin 'cocoapods-bytedance-transform'
 # 用于开启依赖解析加速的服务，传true表示使用，false表示不使用
 # bytedanceAnalyzeSpeed(true)
-bd_use_app("thirdParty","public","toutiao")
+bd_use_app("thirdParty","public","toutiao", "fProject")
 
 #全部使用源码
 #bd_use_source!
@@ -44,9 +44,9 @@ def fhPods
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
     pod 'ios_house_filter' , '1.0.2'
     
-    pod 'FHCommonUI', '0.0.18'
+#    pod 'FHCommonUI', '0.0.0.1'
 #    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
-#    pod 'FHCommonUI', :git => 'git@code.byted.org:fproject/ios_common_ui.git', :commit => '3f4cec94bebbf3c09c2e78ce0511afdb8103386a'
+    pod 'FHCommonUI','0.0.19-rc.0'
 
 #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
@@ -61,11 +61,10 @@ def fhPods
     # 'Core',
     # 'DelegateForC'
     # ]
-
-     pod 'ios_house_im' , '0.2.0-rc.3'
+     pod 'ios_house_im' , '0.2.0-rc.7'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
-#    pod 'ios_house_im' , :path => '../../cim'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'b66a29caec3747def4e1d0bd80d2cc6888b7090e'
+#    pod 'ios_house_im' , :path => '../../cim3'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'b0b53ebbcbb17ae920f1f57c14b24239324091cc'
 
 end
 
@@ -154,7 +153,8 @@ end
 
 def appPods
     #-----头条图片/视频选择器-----
-    pod 'TTImagePicker', '7.5.5.2.1-bugfix'
+    pod 'TTImagePicker', '7.5.5.12'
+    pod 'TTImagePickerBase', '1.0.4'
   
     pod_binary 'SecGuard' , '0.8.16.9'
     
@@ -222,7 +222,7 @@ def appPods
     pod_binary 'BDTFactoryConfigurator', '0.1.0'
 
     pod_binary 'TencentQQSDK','1.0.0' #QQ SDK降级 iOS13有问题
-    pod_binary 'WechatSDK','0.1.5'
+    pod        'WechatSDK','0.1.5'
 
     #-----免流量统计-----
     pod_binary 'TTFlowStatisticsManager', '0.0.10'
@@ -251,7 +251,7 @@ def appPods
     pod_binary 'TTRexxar', '0.8.14', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
     #----头条组件协议库-----
 
-    pod_binary 'TTServiceProtocols','7.5.7.2'
+    pod 'TTServiceProtocols','7.5.7.2'
     pod_binary 'BDTrackerProtocol','2.1.1'
 
 
@@ -305,7 +305,7 @@ def appPods
     'BDPlatformSDK',
     'BDDeprecatedSDK'
     ]
-    pod_binary 'ByteDanceKit', '2.0.8', :subspecs => [
+    pod 'ByteDanceKit', '2.0.8', :subspecs => [
     'Foundation',
     'UIKit'
     ]
@@ -353,11 +353,11 @@ def appPods
     'UserException', #
     'Protect'
     ]
-    pod_binary 'TTMacroManager','1.0.1'
+    pod 'TTMacroManager','1.0.1'
     
     # pod_binary 'AWECloudCommand' , '1.0.7'
     pod_binary 'BDALog' , '0.1.12'
-    pod_binary 'BDAlogProtocol','0.1.7'
+    pod 'BDAlogProtocol','0.1.7'
 
     #----- 长连接 & IM -----
     pod_binary 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
@@ -395,7 +395,7 @@ def appPods
     'TrackerCore',
     'TrackerHome'
     ]
-    pod 'BDDataDecorator','2.0.1',:subspecs => [
+    pod_binary 'BDDataDecorator','2.0.1',:subspecs => [
       'Data',
     ]
     
@@ -595,22 +595,22 @@ post_install do |installer|
         target.build_configurations.each do |config|
             # Fix libstdc++.6在Xcode10编译报错问题
 
-            if target.name == "Pods-NewsLiteInHouse"
-                xcconfig_path = config.base_configuration_reference.real_path
-                xcconfig = File.read(xcconfig_path)
-                new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
-                new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
+            # if target.name == "Pods-NewsLiteInHouse"
+            #     xcconfig_path = config.base_configuration_reference.real_path
+            #     xcconfig = File.read(xcconfig_path)
+            #     new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
+            #     new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
 
-                File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
-            end
-            if target.name == "Pods-f100"
-                xcconfig_path = config.base_configuration_reference.real_path
-                xcconfig = File.read(xcconfig_path)
-                new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
-                new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
+            #     File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
+            # end
+            # if target.name == "Pods-f100"
+            #     xcconfig_path = config.base_configuration_reference.real_path
+            #     xcconfig = File.read(xcconfig_path)
+            #     new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
+            #     new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
 
-                File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
-            end
+            #     File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
+            # end
         end
         #账号
         if target.name == "TTAccountSDK"

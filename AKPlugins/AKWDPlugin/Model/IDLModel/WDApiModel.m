@@ -429,6 +429,25 @@
 }
 @end
 
+@implementation WDAnswerListModel
+- (instancetype) init
+{
+    self = [super init];
+    if (self) {
+        [self reset];
+    }
+
+    return self;
+}
+
+- (void) reset
+{
+    self.data = (NSArray<WDWendaListCellStructModel> *)@[];
+    self.offset = nil;
+    self.has_more = nil;
+}
+@end
+
 @implementation WDUserPositionStructModel
 - (instancetype) init
 {
@@ -3637,15 +3656,15 @@
 }
 @end
 
-@implementation WDWendaV2QuestionBrowRequestModel
+@implementation WDWendaV5QuestionBrowRequestModel
 - (instancetype) init
 {
     self = [super init];
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/wenda/v2/question/brow";
-        self._response = @"WDWendaV2QuestionBrowResponseModel";
+        self._uri = @"/wenda/v5/question/brow";
+        self._response = @"WDWendaV5QuestionBrowResponseModel";
     }
 
     return self;
@@ -3667,7 +3686,7 @@
 @end
 
 
-@implementation WDWendaV2QuestionBrowResponseModel
+@implementation WDWendaV5QuestionBrowResponseModel
 - (instancetype) init
 {
     self = [super init];
@@ -3683,7 +3702,8 @@
     self.err_no = nil;
     self.err_tips = nil;
     self.question = nil;
-    self.data = (NSArray<WDWendaListCellStructModel> *)@[];
+//    self.data = (NSArray<WDWendaListCellStructModel> *)@[];
+    self.answer_list = nil;
     self.offset = nil;
     self.has_more = nil;
     self.api_param = nil;
