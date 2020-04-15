@@ -487,6 +487,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"question_id"]) {
             imExtra[@"question_id"] = extraDict[@"question_id"];
         }
+        if ([extraDict[@"source_from"] isEqualToString:@"loan"]) {
+           imExtra[@"realtor_position"] = @"loan";
+        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
@@ -495,7 +498,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 {
     NSString *title = nil;
     NSString *subtitle = self.subTitle;
-    NSString *btnTitle = @"提交";
+    NSString *btnTitle = nil;
     NSString *fromStr = self.fromStr;
     NSNumber *cluePage = nil;
     NSString *toast = nil;
@@ -541,6 +544,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (title.length > 0) {
         fillFormConfig.title = title;
     }
+    if (btnTitle.length > 0) {
+        fillFormConfig.btnTitle = btnTitle;
+    }
     if (subtitle.length > 0) {
         fillFormConfig.subtitle = subtitle;
     }
@@ -558,7 +564,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
     fillFormConfig.chooseAgencyList = self.chooseAgencyList;
-    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
+    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig submitBlock:^{
+        if (self.fillFormSubmitBlock) {
+            self.fillFormSubmitBlock();
+        }
+    }];
 }
 
 - (void)fillFormActionWithActionType:(FHFollowActionType)actionType
@@ -610,7 +620,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     fillFormConfig.imprId = self.imprId;
     fillFormConfig.from = fromStr;
     fillFormConfig.chooseAgencyList = self.chooseAgencyList;
-    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
+    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig submitBlock:^{
+        if (self.fillFormSubmitBlock) {
+            self.fillFormSubmitBlock();
+        }
+    }];
 }
 
 // 拨打电话

@@ -16,7 +16,6 @@
 #import <AVFoundation/AVMediaFormat.h>
 #import <TTUIWidget/TTThemedAlertController.h>
 #import <TTThemed/SSThemed.h>
-#import <TTImagePicker/ALAssetsLibrary+TTImagePicker.h>
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTThemed/UIImage+TTThemeExtension.h>
@@ -31,6 +30,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <TTBaseLib/TTUIResponderHelper.h>
 
 #define NumberOfImagesPerRow 3
 #define ImagesInterval 4.f
@@ -56,11 +56,6 @@
 @end
 
 @implementation FRAddMultiImagesView
-
-- (void)dealloc
-{
-    [TTImagePickerManager manager].accessIcloud = NO;
-}
 
 - (instancetype)initWithFrame:(CGRect)frame assets:(NSArray *)assets images:(NSArray <UIImage *> *)images
 {
@@ -247,11 +242,10 @@
         return;
     }
     
-    [TTImagePickerManager manager].accessIcloud = YES;
-    
     TTImagePickerController *imgPick = [[TTImagePickerController alloc] initWithDelegate:self];
-    imgPick.maxImagesCount = self.selectionLimit - [self.selectedImageCacheTasks count];
-    imgPick.isRequestPhotosBack = NO;
+    imgPick.enableICloud = YES;
+    imgPick.maxResourcesCount = self.selectionLimit - [self.selectedImageCacheTasks count];
+    imgPick.isGetOriginResource = NO;
     imgPick.isHideGIF = YES;
     [imgPick presentOn:self.viewController.navigationController];
     
@@ -299,7 +293,7 @@
     if (!assets) {
         return;
     }
-    
+        
     for (id asset in assets) {
         if([asset isKindOfClass:[UIImage class]]) {
             [self appendSelectedImage:asset];
@@ -325,10 +319,18 @@
 
 #pragma mark - TTImagePickerControllerDelegate
 
-- (void)ttimagePickerController:(TTImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray<TTAssetModel *> *)assets
-{
-    if (!SSIsEmptyArray(assets)) {
-        [self addAssets:assets];
+- (void)ttimagePickerController:(TTImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray<TTAsset *> *)assets {
+
+    NSMutableArray *oldAssets = [NSMutableArray arrayWithCapacity:assets.count];
+    
+    [assets enumerateObjectsUsingBlock:^(TTAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+        TTAssetModel *oldAssetModel = [TTAssetModel modelWithAsset:asset.asset type:asset.type];
+        [oldAssets addObject:oldAssetModel];
+    }];
+    
+    
+    if (!SSIsEmptyArray(oldAssets)) {
+        [self addAssets:oldAssets];
     }
 
     if (self.delegate && [self.delegate respondsToSelector:@selector(addMultiImagesViewPresentedViewControllerDidDismiss)]) {
@@ -336,10 +338,17 @@
     }
 }
 
-- (void)ttimagePickerController:(TTImagePickerController *)picker didFinishTakePhoto:(UIImage *)photo selectedAssets:(NSArray<TTAssetModel *> *)assets withInfo:(NSDictionary *)info
-{
-    if (!SSIsEmptyArray(assets)) {
-        [self addAssets:assets];
+- (void)ttimagePickerController:(TTImagePickerController *)picker didFinishTakePhoto:(UIImage *)photo selectedAssets:(NSArray<TTAsset *> *)assets withInfo:(NSDictionary *)info {
+
+    NSMutableArray *oldAssets = [NSMutableArray arrayWithCapacity:assets.count];
+    
+    [assets enumerateObjectsUsingBlock:^(TTAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+        TTAssetModel *oldAssetModel = [TTAssetModel modelWithAsset:asset.asset type:asset.type];
+        [oldAssets addObject:oldAssetModel];
+    }];
+    
+    if (!SSIsEmptyArray(oldAssets)) {
+        [self addAssets:oldAssets];
     }
     [self appendSelectedImage:photo];
 
