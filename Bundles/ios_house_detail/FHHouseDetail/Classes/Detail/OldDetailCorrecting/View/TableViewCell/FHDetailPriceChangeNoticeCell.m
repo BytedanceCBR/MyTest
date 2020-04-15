@@ -260,7 +260,7 @@
         [params addEntriesFromDictionary:model.baseViewModel.detailTracerDic];
     }
     [params setValue:@"price_analysis" forKey:@"page_type"];
-    [params setValue:@"old_detail" forKey:@"enterfrom_from"];
+    [params setValue:@"old_detail" forKey:@"enter_from"];
     [FHUserTracker writeEvent:@"go_detail" params:params];
     
 }
