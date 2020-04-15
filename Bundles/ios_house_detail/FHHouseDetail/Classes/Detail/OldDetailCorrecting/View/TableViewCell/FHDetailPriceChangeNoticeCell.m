@@ -170,7 +170,7 @@
     if (!_rightNoticeItem) {
         FHDetailPriceChangeNoticeItem *rightNoticeItem = [[FHDetailPriceChangeNoticeItem alloc]init];
          rightNoticeItem.imageName = @"price_routing";
-         [rightNoticeItem addTarget:self action:@selector(jumpTo:) forControlEvents:UIControlEventTouchDown];
+         [rightNoticeItem addTarget:self action:@selector(priceRoutingAction:) forControlEvents:UIControlEventTouchDown];
         [self.bgView addSubview:rightNoticeItem];
         _rightNoticeItem = rightNoticeItem;
     }
@@ -218,7 +218,7 @@
 
 }
 
-- (void)jumpTo:(id)sender {
+- (void)priceRoutingAction:(id)sender {
     if (self.currentData) {
         FHDetailPriceNoticeModel *model = (FHDetailPriceNoticeModel *)self.currentData;
         NSString *pushUrl = model.priceChangeNotice.priceAnalysisUrl;
