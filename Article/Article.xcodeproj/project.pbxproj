@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -969,7 +969,7 @@
 				};
 			};
 			buildConfigurationList = 3AA5027A15876A1F00EB27FA /* Build configuration list for PBXProject "Article" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 11.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1208,216 +1208,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-resources.sh",
-				"${PODS_ROOT}/../../AKPlugins/AKShareServicePlugin/Classes/TTShare.xcassets",
-				"${PODS_ROOT}/../../AKPlugins/AKWDPlugin/Resources/WDResource.xcassets",
-				"${PODS_ROOT}/../../AKPlugins/AKWDPlugin/Resources/wd_iconfont.ttf",
-				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/TTJSBAuthInfo.plist",
-				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/vconsole.js",
-				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccountSessionSDK/SessionCheck.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/BDSSOAuthSDK/BDSSOAuthSDK.bundle",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/BottomShadow@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/BottomShadow@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/brightness_video@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/brightness_video@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/forward_video@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/forward_video@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPause@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPause@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen_exit@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen_exit@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/ios_light@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/ios_light@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Pause@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Pause@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Replay@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Replay@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/TopShadow@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/TopShadow@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_fullLoading@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_fullLoading@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
-				"${PODS_CONFIGURATION_BUILD_DIR}/BDUGDeepLink/BDUGDeepLinkResource.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/Bytedancebase/BDPlatformSDKResource.bundle",
-				"${PODS_ROOT}/../../Bundles/FHCHousePush/FHCHousePush/Assets/push.xcassets",
-				"${PODS_ROOT}/FHCommonUI/FHCommonUI/Assets/CommonUI.xcassets",
-				"${PODS_ROOT}/FHCommonUI/FHCommonUI/Assets/Emoji.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FHCommonUI/FHCommonUI.bundle",
-				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/iconfont_f100.ttf",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FHHouseBase/FHHouseBase.bundle",
-				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_find/FHHouseFind/Assets/HouseFind.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_find/FHHouseFind/Assets/fast_qa_banner.jpg",
-				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/commute_banner.jpg",
-				"${PODS_ROOT}/../../Bundles/ios_house_message/FHHouseMessage/Assets/FHHouseMessage.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_mine/FHHouseMine/Assets/FHHouseMine.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_ugc/FHHouseUGC/Assets/FHHouseUGC.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
-				"${PODS_ROOT}/FHPopupViewCenter/Assets/images.xcassets",
-				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
-				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
-				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
-				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/Heimdallr.plist",
-				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React/Resources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountSDK/TTAccountSDKResource.bundle",
-				"${PODS_ROOT}/../../AKPlugins/TTAdModule/TTAdModule/Assets/Images.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_aikan/TTAiKan/Assets/ThirdParty.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/RootTab.storyboard",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/transparent_1px@2x.png",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTAppStoreStarManager/TTAppStoreStarManager.bundle",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/Settings.bundle",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button_press.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button_press@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_cancel.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_cancel@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_cancel_press.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_cancel_press@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/SSQRCode/scan_background@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/SSQRCode/scan_line@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/NetworkStubFiles/NetworkStubItems.plist",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/NetworkStubFiles/Stub_Article_Information.txt",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_article_video/TTArticleVideo/Assets/TTVTab.storyboard",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_article_video/TTArticleVideo/Assets/Video.storyboard",
-				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTImagePicker/TTImagePickerResources.bundle",
-				"${PODS_ROOT}/../../AKPlugins/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
-				"${PODS_ROOT}/../../AKPlugins/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
-				"${PODS_ROOT}/../../AKPlugins/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
-				"${PODS_ROOT}/../../AKPlugins/TTPlatformBaseLib/TTPlatformBaseLib/Resource/iconfont.ttf",
-				"${PODS_ROOT}/TTPlayerSDK/TTPlayerSDK/Assets/ttplayer.metallib",
-				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareCopy/TTShareCopy.xcassets",
-				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareQQ/TTShareQQ.xcassets",
-				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
-				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTBackButtonView.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTDialogViewResource.bundle",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTVPlayerPod/TTVPlayerResource.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTVerifyKit/TTVerifyKitResource.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
-				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/wd_iconfont.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTJSBAuthInfo.plist",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/vconsole.js",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SessionCheck.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDSSOAuthSDK.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BottomShadow@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BottomShadow@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/brightness_video@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/brightness_video@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/forward_video@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/forward_video@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPause@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPause@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen_exit@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen_exit@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_light@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_light@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Replay@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Replay@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopShadow@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopShadow@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_fullLoading@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_fullLoading@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDUGDeepLinkResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDPlatformSDKResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FHCommonUI.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iconfont_f100.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FHHouseBase.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fast_qa_banner.jpg",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/commute_banner.jpg",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Heimdallr.plist",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Resources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountSDKResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RootTab.storyboardc",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/transparent_1px@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAppStoreStarManager.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Settings.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button_press.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button_press@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_cancel.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_cancel@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_cancel_press.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_cancel_press@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/scan_background@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/scan_line@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/NetworkStubItems.plist",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Stub_Article_Information.txt",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVTab.storyboardc",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Video.storyboardc",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTImagePickerResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iconfont.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ttplayer.metallib",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTThemed.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUGCRichText.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBackButtonView.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTDialogViewResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Profile.storyboardc",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVPlayerResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerifyKitResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TencentQQSDK.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_house_im.bundle",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1534,213 +1330,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-f100/Pods-f100-resources.sh",
-				"${PODS_ROOT}/../../AKPlugins/AKShareServicePlugin/Classes/TTShare.xcassets",
-				"${PODS_ROOT}/../../AKPlugins/AKWDPlugin/Resources/WDResource.xcassets",
-				"${PODS_ROOT}/../../AKPlugins/AKWDPlugin/Resources/wd_iconfont.ttf",
-				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/TTJSBAuthInfo.plist",
-				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/vconsole.js",
-				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccountSessionSDK/SessionCheck.bundle",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/BottomShadow@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/BottomShadow@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/brightness_video@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/brightness_video@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/forward_video@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/forward_video@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPause@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPause@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen_exit@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen_exit@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/ios_light@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/ios_light@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Pause@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Pause@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Replay@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Replay@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/TopShadow@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/TopShadow@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_fullLoading@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_fullLoading@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
-				"${PODS_CONFIGURATION_BUILD_DIR}/BDUGDeepLink/BDUGDeepLinkResource.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/Bytedancebase/BDPlatformSDKResource.bundle",
-				"${PODS_ROOT}/../../Bundles/FHCHousePush/FHCHousePush/Assets/push.xcassets",
-				"${PODS_ROOT}/FHCommonUI/FHCommonUI/Assets/CommonUI.xcassets",
-				"${PODS_ROOT}/FHCommonUI/FHCommonUI/Assets/Emoji.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FHCommonUI/FHCommonUI.bundle",
-				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/iconfont_f100.ttf",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FHHouseBase/FHHouseBase.bundle",
-				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_find/FHHouseFind/Assets/HouseFind.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_find/FHHouseFind/Assets/fast_qa_banner.jpg",
-				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/commute_banner.jpg",
-				"${PODS_ROOT}/../../Bundles/ios_house_message/FHHouseMessage/Assets/FHHouseMessage.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_mine/FHHouseMine/Assets/FHHouseMine.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_house_ugc/FHHouseUGC/Assets/FHHouseUGC.xcassets",
-				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
-				"${PODS_ROOT}/FHPopupViewCenter/Assets/images.xcassets",
-				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
-				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
-				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
-				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/Heimdallr.plist",
-				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React/Resources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountSDK/TTAccountSDKResource.bundle",
-				"${PODS_ROOT}/../../AKPlugins/TTAdModule/TTAdModule/Assets/Images.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_aikan/TTAiKan/Assets/ThirdParty.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/RootTab.storyboard",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/transparent_1px@2x.png",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTAppStoreStarManager/TTAppStoreStarManager.bundle",
-				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/Settings.bundle",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button_press.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button_press@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_cancel.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_cancel@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_cancel_press.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_cancel_press@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/SSQRCode/scan_background@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/SSQRCode/scan_line@2x.png",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/NetworkStubFiles/NetworkStubItems.plist",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/NetworkStubFiles/Stub_Article_Information.txt",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_article_video/TTArticleVideo/Assets/TTVTab.storyboard",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_article_video/TTArticleVideo/Assets/Video.storyboard",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTImagePicker/TTImagePickerResources.bundle",
-				"${PODS_ROOT}/../../AKPlugins/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
-				"${PODS_ROOT}/../../AKPlugins/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
-				"${PODS_ROOT}/../../AKPlugins/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
-				"${PODS_ROOT}/../../AKPlugins/TTPlatformBaseLib/TTPlatformBaseLib/Resource/iconfont.ttf",
-				"${PODS_ROOT}/TTPlayerSDK/TTPlayerSDK/Assets/ttplayer.metallib",
-				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareCopy/TTShareCopy.xcassets",
-				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareQQ/TTShareQQ.xcassets",
-				"${PODS_ROOT}/../../AKPlugins/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTThemed/TTThemed.bundle",
-				"${PODS_ROOT}/../../Vendor/TTUGCFoundation/TTUGCFoundation/Assets/UGCImage.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTBackButtonView.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTDialogViewResource.bundle",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTVPlayerPod/TTVPlayerResource.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTVerifyKit/TTVerifyKitResource.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TencentQQSDK/TencentQQSDK.bundle",
-				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-f100/Pods-f100-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/wd_iconfont.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTJSBAuthInfo.plist",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/vconsole.js",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SessionCheck.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BottomShadow@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BottomShadow@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/brightness_video@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/brightness_video@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/forward_video@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/forward_video@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPause@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPause@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen_exit@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen_exit@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_light@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_light@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Replay@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Replay@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopShadow@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TopShadow@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_fullLoading@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_fullLoading@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDUGDeepLinkResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDPlatformSDKResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FHCommonUI.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iconfont_f100.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FHHouseBase.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fast_qa_banner.jpg",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/commute_banner.jpg",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Heimdallr.plist",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Resources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountSDKResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RootTab.storyboardc",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/transparent_1px@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAppStoreStarManager.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Settings.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button_press.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button_press@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_cancel.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_cancel@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_cancel_press.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_cancel_press@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/scan_background@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/scan_line@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/NetworkStubItems.plist",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Stub_Article_Information.txt",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVTab.storyboardc",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Video.storyboardc",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTImagePickerResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iconfont.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ttplayer.metallib",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTThemed.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUGCRichText.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBackButtonView.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTDialogViewResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Profile.storyboardc",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVPlayerResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVerifyKitResource.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TencentQQSDK.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_house_im.bundle",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-f100/Pods-f100-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2007,7 +1602,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = serviceNofExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1.serviceNofExtension;
@@ -2056,7 +1655,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = serviceNofExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1.serviceNofExtension;
@@ -2104,7 +1707,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = com.f100.client.FHNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client.FHNotificationServiceExtension;
@@ -2153,7 +1760,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = com.f100.client.FHNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client.FHNotificationServiceExtension;
@@ -2220,7 +1831,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
@@ -2311,7 +1925,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
@@ -2396,7 +2013,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
@@ -2490,7 +2110,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libs/MZSDk",
