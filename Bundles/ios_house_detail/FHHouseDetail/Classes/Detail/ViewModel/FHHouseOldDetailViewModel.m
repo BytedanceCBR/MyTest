@@ -323,6 +323,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             FHDetailPriceNoticeModel *priceChangeNoticeModel = [[FHDetailPriceNoticeModel alloc] init];
             priceChangeNoticeModel.priceChangeNotice = model.data.priceChangeNotice;
             priceChangeNoticeModel.houseModelType = FHHouseModelTypeCoreInfo;
+            priceChangeNoticeModel.associateInfo =  model.data.middleSubscriptionAssociateInfo;
             priceChangeNoticeModel.baseViewModel = self;
             priceChangeNoticeModel.contactModel = self.contactViewModel;
             [self.items addObject:priceChangeNoticeModel];

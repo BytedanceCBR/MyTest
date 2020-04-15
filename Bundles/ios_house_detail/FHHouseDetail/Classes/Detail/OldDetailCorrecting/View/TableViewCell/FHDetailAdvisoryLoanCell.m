@@ -318,17 +318,19 @@
             imExtra[@"im_open_url"] = openUrl;
 //            imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
 //            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldBudget];
+            if(model.downPayment.associateInfo) {
+                         imExtra[kFHAssociateInfo] = model.downPayment.associateInfo;
+            }
             [model.contactModel onlineActionWithExtraDict:imExtra];
         }
     }else {
-        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithExtraDict:)]) {
-            NSDictionary *infoDic =  @{kFHCluePage:@(FHClueFormPageTypeCOldHouseShoufu),
+        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithParams:)]) {
+            NSMutableDictionary *associateParamDict =  @{
                                        @"title":@"首付咨询",
                                        @"subtitle":@"订阅首付咨询，房源首付信息会及时发送到您的手机",
                                        @"position":@"loan",
                                        @"btn_title":@"提交"
-            };
-            NSMutableDictionary *associateParamDict = @{}.mutableCopy;
+            }.mutableCopy;
             associateParamDict[kFHAssociateInfo] = model.downPayment.associateInfo.reportFormInfo;
             NSMutableDictionary *reportParamsDict = [model.contactModel baseParams].mutableCopy;
             associateParamDict[kFHReportParams] = reportParamsDict;

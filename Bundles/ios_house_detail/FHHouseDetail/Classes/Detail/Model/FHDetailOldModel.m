@@ -576,8 +576,7 @@
                            @"priceAnalysisUrl": @"price_analysis_url",
                            @"showType": @"show_type",
                            @"changeTitle": @"change_title",
-                           @"analysisTitle": @"analysis_title",
-                           @"associateInfo": @"associate_info",
+                           @"analysisTitle": @"analysis_title"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

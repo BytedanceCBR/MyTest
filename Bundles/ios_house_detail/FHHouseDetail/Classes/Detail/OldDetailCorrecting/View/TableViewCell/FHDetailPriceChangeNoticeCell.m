@@ -192,18 +192,17 @@
     FHDetailPriceNoticeModel *model = (FHDetailPriceNoticeModel *)self.currentData;
     if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
         FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
-        NSMutableDictionary *extraDic = @{@"position":@"change_price"
+        NSMutableDictionary *associateParamDict = @{@"position":@"change_price"
                                           }.mutableCopy;
-        extraDic[@"title"] = @"变价通知";
-        extraDic[@"subtitle"] = @"订阅变价通知，房源变价信息会及时发送到您的手机";
-        extraDic[@"btn_title"] = @"提交";
-        NSMutableDictionary *associateParamDict = @{}.mutableCopy;
-        associateParamDict[kFHAssociateInfo] = model.priceChangeNotice.associateInfo.reportFormInfo;
+        associateParamDict[@"title"] = @"变价通知";
+        associateParamDict[@"subtitle"] = @"订阅变价通知，房源变价信息会及时发送到您的手机";
+        associateParamDict[@"btn_title"] = @"提交";
+        associateParamDict[kFHAssociateInfo] = model.associateInfo.reportFormInfo;
         NSMutableDictionary *reportParamsDict = [model.contactModel baseParams].mutableCopy;
-        if (extraDic.count > 0) {
+        if (associateParamDict.count > 0) {
             reportParamsDict[@"position"] = @"change_price";
-            [reportParamsDict addEntriesFromDictionary:extraDic];
-            reportParamsDict[kFHAssociateInfo] = model.priceChangeNotice.associateInfo.reportFormInfo;
+            [reportParamsDict addEntriesFromDictionary:associateParamDict];
+            reportParamsDict[kFHAssociateInfo] = model.associateInfo.reportFormInfo;
         }
         associateParamDict[kFHReportParams] = reportParamsDict;
         [model.contactModel fillFormActionWithParams:associateParamDict];
