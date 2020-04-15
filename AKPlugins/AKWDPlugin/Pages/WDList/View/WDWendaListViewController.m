@@ -624,9 +624,9 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
                 self.listFooterView.height = kWDWendaListFooterViewHeight + bottom;
                 _answerListView.tableFooterView = self.listFooterView;
                 WeakSelf;
-                [self.listFooterView setTitle:[NSString stringWithFormat:@"%@",self.viewModel.moreListAnswersTitle] isShowArrow:YES isNoAnswers:NO clickedBlock:^{
-                    StrongSelf;
-                    [self _enterMoreListController];
+                [self.listFooterView setTitle:[NSString stringWithFormat:@"%@",self.viewModel.moreListAnswersTitle] isShowArrow:NO isNoAnswers:NO clickedBlock:^{
+//                    StrongSelf;
+//                    [self _enterMoreListController];
                 }];
             } else {
                 // 查看0个折叠回答

@@ -82,7 +82,7 @@
     self.cellManager = [[FHUGCCellManager alloc] init];
     [self.cellManager registerAllCell:_tableView];
     
-    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 65)];
+    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 50)];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"小区点评";
@@ -150,6 +150,14 @@
     self.currentData = data;
     FHDetailCommentsCellModel *cellModel = (FHDetailCommentsCellModel *)data;
     self.shadowImage.image = cellModel.shadowImage;
+    
+    _titleView.height = cellModel.headerViewHeight;
+    self.tableView.tableHeaderView = _titleView;
+    
+    [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.titleView).offset(cellModel.topMargin);
+    }];
+    
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(cellModel.viewHeight);
     }];
@@ -250,7 +258,8 @@
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"neiborhood_comment";
+    [self trackClientShow];
+    return @"neighborhood_comment";
 }
 
 #pragma mark - UITableViewDataSource
@@ -432,5 +441,25 @@
     
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+- (void)trackClientShow {
+    FHDetailCommentsCellModel *cellModel = (FHDetailCommentsCellModel *)self.currentData;
+    for (NSInteger i = 0; i < self.dataList.count; i++) {
+        FHFeedUGCCellModel *cm = self.dataList[i];
+        NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+        tracerDict[UT_ORIGIN_FROM] = cellModel.tracerDict[@"origin_from"] ?: @"be_null";
+        tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"enter_from"] ?: @"be_null";
+        tracerDict[UT_PAGE_TYPE] = cellModel.tracerDict[@"page_type"] ?: @"be_null";
+        tracerDict[UT_RANK] = @(i);
+        tracerDict[UT_GROUP_ID] = cm.groupId;
+        tracerDict[@"impr_id"] = cellModel.tracerDict[@"log_pb"][@"impr_id"] ?: @"be_null";
+        if(cellModel.houseId){
+            tracerDict[@"from_gid"] = cellModel.houseId;
+        }else if(cellModel.neighborhoodId){
+            tracerDict[@"from_gid"] = cellModel.neighborhoodId;
+        }
+        TRACK_EVENT(@"feed_client_show", tracerDict);
+    }
 }
 @end

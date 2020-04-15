@@ -759,7 +759,7 @@
 }
 
 - (NSString *)pageType {
-    return @"neigborhood_question_list";
+    return @"neighborhood_question_list";
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
