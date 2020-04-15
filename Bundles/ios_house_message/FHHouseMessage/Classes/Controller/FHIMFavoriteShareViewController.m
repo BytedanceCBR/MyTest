@@ -22,6 +22,7 @@
 #import "IFHMyFavoriteController.h"
 #import "TTTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHHouseErrorHubManager.h"
 
 @interface FHIMFavoriteViewController : NSObject<IFHMyFavoriteController>
 
@@ -378,6 +379,7 @@
     trace[@"log_pb"] = @"be_null";
     trace[@"send_total"] = @([self.shareViewModel.selectedItems count]);
     [TTTracker eventV3:@"click_send" params:trace];
+    [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"click_send" Params:trace errorHubType:FHErrorHubTypeBuryingPoint];
 }
 
 -(NSString*)houseTypeByIndex:(NSUInteger)index {

@@ -31,7 +31,7 @@
 #import "FHHomePlaceHolderCell.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import "FHHouseListBaseItemCell.h"
-
+#import "FHHouseErrorHubManager.h"
 static NSMutableArray  * _Nullable identifierArr;
 
 @interface FHHomeCellHelper ()
@@ -165,6 +165,8 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
             [TTTracker eventV3:@"operation_show" params:dictTraceParams];
+            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams errorHubType:FHErrorHubTypeBuryingPoint];
+            
         }];
     }
     
@@ -207,6 +209,7 @@ static NSMutableArray  * _Nullable identifierArr;
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
             [TTTracker eventV3:@"operation_show" params:dictTraceParams];
+            [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:@"operation_show" Params:dictTraceParams errorHubType:FHErrorHubTypeBuryingPoint];
         }];
     }
 }

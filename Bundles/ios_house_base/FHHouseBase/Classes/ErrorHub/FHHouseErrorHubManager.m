@@ -54,11 +54,13 @@
     }else {
         [dataArr addObject:Data];
     }
-    [dataArr writeToFile:[self localDataPathWithType:errorHubType] atomically:YES];
+    NSDictionary *hostError = @{@"host_error":dataArr};
+    [hostError writeToFile:[self localDataPathWithType:errorHubType] atomically:YES];
 }
 
 - (NSArray *)loadDataFromLocalDataWithType:(FHErrorHubType)errorHubType {
-    NSArray *readArr=[[NSArray alloc]initWithContentsOfFile:[self localDataPathWithType:errorHubType]];
+    NSDictionary *data = [[NSDictionary alloc]initWithContentsOfFile:[self localDataPathWithType:errorHubType]];
+    NSArray *readArr = [data objectForKey:[[data allKeys] firstObject]];
     return readArr;
 }
 
@@ -70,16 +72,59 @@
         case FHErrorHubTypeRequest:
             strFinalPath = [NSString stringWithFormat:@"%@/requestErrorHub.plist",strPath];
             break;
-            
+        case FHErrorHubTypeBuryingPoint:
+            strFinalPath = [NSString stringWithFormat:@"%@/buryingPointError.plist",strPath];
+            break;
         default:
             break;
     }
-    
     ;
     return strFinalPath;
 }
 
+- (void)checkBuryingPointWithEvent:(NSString *)eventName Params:(NSDictionary* )eventParams errorHubType:(FHErrorHubType)errorHubType {
+    NSArray *eventArr = [self localCheckBuryingPointData];
+    NSMutableDictionary *errorSaveDic = [[NSMutableDictionary alloc]init];
+    [errorSaveDic setValue:eventParams forKey:@"parmas"];
+    [errorSaveDic setValue:eventName forKey:@"event"];
+    [eventArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSDictionary *dic = obj;
+        if ([[dic objectForKey:@"event"] isEqualToString:eventName]) {
+            NSArray *params = dic[@"params"];
+            [params enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSDictionary *paramItem = obj;
+                if ([paramItem[@"type"] isEqualToString:@"mandatory"]) {
+                    NSString *checkKey = paramItem[@"param_name"];
+                    NSString *checkValue = eventParams[checkKey];
+                    NSArray *rangeArr = paramItem[@"rang"];
+                    NSString *level = paramItem[@"error_level"];
+                    if (checkValue.length<1) {
+                        [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@为空",checkKey] forKey:@"error"];
+                    }else {
+                        if (![rangeArr containsObject:checkValue]) {
+                            [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@取值范围错误",checkKey] forKey:@"error"];
+                        }
+                    }
+                    NSString *errStr = errorSaveDic[@"error"] ;
+                    if (errStr.length>0) {
+                        if ([level isEqualToString:@"critical"]) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [FHHouseErrorHubView showErrorHubViewWithTitle:@"埋点异常" content:[NSString stringWithFormat:@"event_name:%@",eventName]];
+                            });
+                        }
+                        [self addLogWithData:errorSaveDic logType:errorHubType];
+                    }
+                }
+            }];
+        }
+    }];
+    NSLog(@"%@",eventArr);
+    
+}
 
-
-
+- (NSArray *)localCheckBuryingPointData {
+    NSError *error;
+    NSDictionary *dataDict = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle mainBundle] pathForResource:@"buryingPointCheck"ofType:@"plist"] error:&error];
+    return dataDict[@"data"];
+}
 @end

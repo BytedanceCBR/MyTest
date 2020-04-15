@@ -35,6 +35,7 @@
 #import "TTFeedDislikeConfig.h"
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
+#import "FHHouseErrorHubManager.h"
 
 #define kMaskViewTag 20141209
 
@@ -1212,6 +1213,7 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
         [parameters addEntriesFromDictionary:extraParameters];
     }
     [TTTracker eventV3:event params:parameters];
+    [[FHHouseErrorHubManager sharedInstance] checkBuryingPointWithEvent:event Params:parameters errorHubType:FHErrorHubTypeBuryingPoint];
 }
 
 @end
