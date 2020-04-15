@@ -61,8 +61,6 @@ def fhPods
     # 'Core',
     # 'DelegateForC'
     # ]
-
-
      pod 'ios_house_im' , '0.2.0-rc.6'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #    pod 'ios_house_im' , :path => '../../cim3'
