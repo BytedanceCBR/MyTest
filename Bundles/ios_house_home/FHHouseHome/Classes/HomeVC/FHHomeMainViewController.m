@@ -136,28 +136,16 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)initCitySwitchView
 {
-    CGFloat top = 0;
-    CGFloat safeTop = 20;
-    if (@available(iOS 11.0, *)) {
-        safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
-    }
-    
-    self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
-    self.switchCityView.backgroundColor = [UIColor clearColor];
-    if (self.containerView) {
-        [self.containerView addSubview:self.switchCityView];
-        dispatch_async(dispatch_get_main_queue(), ^{
-           CGFloat top = 0;
-           CGFloat safeTop = 20;
-           if (@available(iOS 11.0, *)) {
-               safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
-           }
-           
-           self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
-           self.switchCityView.backgroundColor = [UIColor clearColor];
-           if (self.containerView && ![self.containerView.subviews containsObject:self.switchCityView] && [[NSThread currentThread] isMainThread]) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.containerView && ![self.containerView.subviews containsObject:self.switchCityView] && [[NSThread currentThread] isMainThread]) {
+               CGFloat top = 0;
+               CGFloat safeTop = 20;
+               if (@available(iOS 11.0, *)) {
+                   safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+               }
+               self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
+                self.switchCityView.backgroundColor = [UIColor clearColor];
                [self.containerView addSubview:self.switchCityView];
-                  
                self.totalNum = 60;
                self.switchTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(downCounter) userInfo:nil repeats:YES];
                
@@ -165,9 +153,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
                [popTraceParams setValue:@"maintab" forKey:@"page_type"];
                [popTraceParams setValue:@"city_switch" forKey:@"popup_name"];
                [FHEnvContext recordEvent:popTraceParams andEventKey:@"popup_show"];
-           }
-        });
-    }
+        }
+    });
+
 }
 
 - (void)initConstraints {
