@@ -63,6 +63,7 @@
 
 @property (nonatomic, strong) SSThemedLabel             *titleLabel;        //标题
 @property (nonatomic, strong) TTArticlePicView          *picView;           //图片
+@property (nonatomic, strong) UIImageView               *customSourceImageView;   //用图片来显示来源
 @property (nonatomic, strong) TTAsyncCornerImageView    *sourceImageView;   //来源头像
 @property (nonatomic, strong) SSThemedLabel             *sourceLabel;       //来源名称
 @property (nonatomic, strong) SSThemedLabel             *infoLabel;         //信息

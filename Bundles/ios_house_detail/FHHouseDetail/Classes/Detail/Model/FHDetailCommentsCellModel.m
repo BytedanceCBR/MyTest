@@ -11,6 +11,16 @@
 #import "FHUGCCellManager.h"
 
 @implementation FHDetailCommentsCellModel
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _topMargin = 30.0f;
+        _bottomMargin = 35.0f;
+    }
+    return self;
+}
+
 - (void)setComments:(FHDetailNeighborhoodDataCommentsModel *)comments {
     _comments = comments;
     
@@ -38,12 +48,12 @@
     
     //总数
     if(self.totalCount > 2 || self.dataList.count <= 0){
-        self.footerViewHeight = 80;
+        self.footerViewHeight = _bottomMargin + 45;
     }else{
         self.footerViewHeight = 10;
     }
     
-    self.headerViewHeight = 65;
+    self.headerViewHeight = _topMargin + 20;
     
     if(self.dataList.count > 0){
         self.viewHeight = self.headerViewHeight + self.footerViewHeight;

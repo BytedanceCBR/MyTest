@@ -54,9 +54,15 @@
 #import "FHOldDetailModuleHelper.h"
 #import "FHDetailStaticMapCell.h"
 #import "FHOldDetailStaticMapCell.h"
+#import "FHDetailAccessCellModel.h"
+#import "FHDetailNeighborhoodQACell.h"
+#import "FHDetailNeighborhoodAssessCell.h"
+#import "FHDetailNeighborhoodCommentsCell.h"
+#import "FHDetailQACellModel.h"
+#import "FHDetailAccessCellModel.h"
+#import "FHDetailCommentsCellModel.h"
 #import "FHDetailAdvisoryLoanCell.h"
 #import "FHDetailPriceChangeNoticeCell.h"
-
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -117,6 +123,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHODetailCommunityEntryCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommunityEntryModel class])];
     //经纪人带看房评
     [self.tableView registerClass:[FHDetailHouseReviewCommentCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseReviewCommentCellModel class])];
+    //小区问答
+    [self.tableView registerClass:[FHDetailNeighborhoodQACell class] forCellReuseIdentifier:NSStringFromClass([FHDetailQACellModel class])];
+    //小区点评
+    [self.tableView registerClass:[FHDetailNeighborhoodCommentsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailCommentsCellModel class])];
+    //小区攻略
+    [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
 }
 
 // cell identifier
@@ -489,26 +501,98 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self.items addObject:userHouseCommentModel];
     }
     
+    BOOL hasOtherNeighborhoodInfo = NO;
+    if ((model.data.strategy && model.data.strategy.articleList.count > 0) || (model.data.comments) || (model.data.question)) {
+        hasOtherNeighborhoodInfo = YES;
+    }
+    
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         //ugc 圈子入口,写在这儿是因为如果小区模块移除，那么圈子入口也不展示
-        BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
+//        BOOL showUgcEntry = model.data.ugcSocialGroup && model.data.ugcSocialGroup.activeCountInfo && model.data.ugcSocialGroup.activeInfo.count > 0;
         FHDetailNeighborhoodInfoCorrectingModel *infoModel = [[FHDetailNeighborhoodInfoCorrectingModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
-        infoModel.houseModelType = FHHouseModelTypeLocationPeriphery;
+        if(hasOtherNeighborhoodInfo){
+            infoModel.houseModelType = FHHouseModelTypeNeighborhoodInfo;
+        }else{
+            infoModel.houseModelType = FHHouseModelTypeLocationPeriphery;
+        }
         infoModel.tableView = self.tableView;
         infoModel.contactViewModel = self.contactViewModel;
         [self.items addObject:infoModel];
-        if(showUgcEntry){
-            model.data.ugcSocialGroup.houseType = FHHouseTypeSecondHandHouse;
-            model.data.ugcSocialGroup.houseModelType = FHHouseModelTypeLocationPeriphery;
-            [self.items addObject:model.data.ugcSocialGroup];
-        } else{
+        //这个功能不要了 by xsm
+//        if(showUgcEntry){
+//            model.data.ugcSocialGroup.houseType = FHHouseTypeSecondHandHouse;
+//            if(hasOtherNeighborhoodInfo){
+//                model.data.ugcSocialGroup.houseModelType = FHHouseModelTypeNeighborhoodInfo;
+//            }else{
+//                model.data.ugcSocialGroup.houseModelType = FHHouseModelTypeLocationPeriphery;
+//            }
+//            [self.items addObject:model.data.ugcSocialGroup];
+//        } else{
             //            FHDetailBlankLineModel *whiteLine = [[FHDetailBlankLineModel alloc] init];
             //            [self.items addObject:whiteLine];
-        }
+//        }
         
+    }
+    
+    // 小区评测
+    if (model.data.strategy && model.data.strategy.articleList.count > 0) {
+        
+        FHDetailAccessCellModel *cellModel = [[FHDetailAccessCellModel alloc] init];
+        cellModel.houseModelType = FHPlotHouseModelTypeNeighborhoodStrategy;
+        cellModel.strategy = model.data.strategy;
+        cellModel.topMargin = 0.0f;
+        
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        paramsDict[@"from_gid"] = self.houseId;
+        paramsDict[@"element_type"] = @"guide";
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        paramsDict[@"search_id"] = searchId.length > 0 ? searchId : @"be_null";
+        paramsDict[@"impr_id"] = imprId.length > 0 ? imprId : @"be_null";
+        cellModel.tracerDic = paramsDict;
+        [self.items addObject:cellModel];
+    }
+    
+    // 小区点评
+    if(model.data.comments) {
+        FHDetailCommentsCellModel *commentsModel = [[FHDetailCommentsCellModel alloc] init];
+        commentsModel.neighborhoodId = model.data.neighborhoodInfo.id;
+        commentsModel.houseId = self.houseId;
+        commentsModel.topMargin = 12;
+        commentsModel.bottomMargin = 22.0f;
+        commentsModel.comments = model.data.comments;
+        commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        commentsModel.tracerDict = paramsDict;
+        [self.items addObject:commentsModel];
+    }
+    
+    // 小区问答
+    if (model.data.question) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
+        qaModel.neighborhoodId = model.data.neighborhoodInfo.id;
+        qaModel.topMargin = 0.0f;
+        qaModel.question = model.data.question;
+        qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        qaModel.tracerDict = paramsDict;
+        [self.items addObject:qaModel];
     }
     
 
@@ -527,6 +611,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         staticMapModel.tableView = self.tableView;
         staticMapModel.staticImage = model.data.neighborhoodInfo.gaodeImage;
         staticMapModel.mapOnly = NO;
+        if(hasOtherNeighborhoodInfo){
+            staticMapModel.topMargin = 30;
+            staticMapModel.bottomMargin = 0;
+        }else{
+            staticMapModel.topMargin = 0;
+            staticMapModel.bottomMargin = 30;
+        }
         [self.items addObject:staticMapModel];
     } else{
         NSString *eventName = @"detail_map_location_failed";
