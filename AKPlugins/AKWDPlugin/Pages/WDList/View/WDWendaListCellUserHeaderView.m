@@ -58,7 +58,8 @@
 - (void)refreshUserInfoContent:(WDPersonModel *)user descInfo:(NSString *)descInfo followButtonHidden:(BOOL)hidden {
     [self.cellAvatarView setImageWithURLString:user.avatarURLString];
 //    [self.cellAvatarView showOrHideVerifyViewWithVerifyInfo:user.userAuthInfo decoratorInfo:user.userDecoration];
-    [self.userNameButton setTitle:user.name forState:UIControlStateNormal];
+    NSString *userName = user.name ?: @"佚名";
+    [self.userNameButton setTitle:userName forState:UIControlStateNormal];
     [self.userDescLabel setText:descInfo];
     
     // add by zjing 去掉问答折叠cell的关注

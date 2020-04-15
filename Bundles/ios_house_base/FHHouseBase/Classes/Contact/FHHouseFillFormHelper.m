@@ -206,6 +206,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 #pragma mark log
 
+
 + (NSDictionary *)baseParamsWithConfigModel:(FHHouseFillFormConfigModel *)configModel
 {
     NSMutableDictionary *params = @{}.mutableCopy;
@@ -221,6 +222,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         params[@"item_id"] = configModel.itemId;
     }
     return params;
+
 }
 
 // 表单展示

@@ -25,7 +25,7 @@ typedef enum : NSUInteger {
 } FHUGCCommunityLoginType;
 
 @interface FHHouseDetailContactViewModel : NSObject
-
+typedef  void(^fillFormSubmit)();
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 @property (nonatomic, strong) FHDetailShareInfoModel *shareInfo;
 @property (nonatomic, copy) NSString *searchId;
@@ -48,6 +48,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign)   BOOL  needRefetchSocialGroupData;// 进入下个页面返回 是否需要重新拉取圈子数据
 @property (nonatomic, assign)   FHUGCCommunityLoginType       ugcLoginType; // 1：community_member_talk(底部群聊入口), 2：community_tip(群聊引导弹窗)
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
+@property (nonatomic, copy) fillFormSubmit fillFormSubmitBlock;
 
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBar *)bottomBar;

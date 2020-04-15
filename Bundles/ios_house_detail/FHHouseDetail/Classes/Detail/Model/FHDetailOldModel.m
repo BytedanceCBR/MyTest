@@ -568,6 +568,49 @@
 
 @end
 
+@implementation FHDetailPriceChangeNoticeModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"priceAnalysisUrl": @"price_analysis_url",
+                           @"showType": @"show_type",
+                           @"changeTitle": @"change_title",
+                           @"analysisTitle": @"analysis_title",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHDetailDownPaymentModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"minDownPayment": @"min_down_payment",
+                           @"monthlyPayment": @"monthly_payment",
+                           @"openUrl": @"open_url",
+                           @"calculatorUrl": @"calculator_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
 @implementation FHDetailOldDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -616,6 +659,8 @@
                            @"houseReviewCommentAssociateInfo": @"house_review_comment_associate_info",
                            @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
 
+                           @"priceChangeNotice":@"price_change_notice",
+                           @"downPaymentInfo":@"down_payment_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

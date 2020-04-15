@@ -108,7 +108,7 @@ typedef void(^WDWendaListManagerFinishBlock)(NSError * error);
                     apiParam:(NSDictionary *)apiParam
                    gdExtJson:(NSDictionary *)gdExtJson
                       offset:(NSInteger)offset
-                 finishBlock:(void(^)(WDWendaV2QuestionBrowResponseModel *responseModel, NSError *error))finishBlock;
+                 finishBlock:(void(^)(WDWendaV5QuestionBrowResponseModel *responseModel, NSError *error))finishBlock;
 
 @end
 

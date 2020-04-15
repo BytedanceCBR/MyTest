@@ -533,6 +533,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         
         if(extraDict[kFHAssociateInfo]) {
             imExtra[kFHAssociateInfo] = extraDict[kFHAssociateInfo];
+//        if ([extraDict[@"source_from"] isEqualToString:@"loan"]) {
+//           imExtra[@"realtor_position"] = @"loan";
         }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
@@ -589,6 +591,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSDictionary *associateInfoDict = formParamsDict[kFHAssociateInfo];
     NSDictionary *reportParamsDict = formParamsDict[kFHReportParams];
 
+
     if (formParamsDict[@"title"]) {
         title = formParamsDict[@"title"];
     }
@@ -618,6 +621,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     associateReport.houseType = self.houseType;
     associateReport.houseId = self.houseId;
     associateReport.topViewController = self.belongsVC;
+//    [fillFormConfig setTraceParams:params];
+//    fillFormConfig.searchId = self.searchId;
+//    fillFormConfig.imprId = self.imprId;
+//    fillFormConfig.chooseAgencyList = self.chooseAgencyList;
+//    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig submitBlock:^{
+//        if (self.fillFormSubmitBlock) {
+//            self.fillFormSubmitBlock();
+//        }
+//    }];
+//}
 
     associateReport.reportParams = reportParamsDict;
     associateReport.associateInfo = associateInfoDict;

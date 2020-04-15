@@ -20,7 +20,7 @@ typedef enum : NSUInteger {
     FHFollowActionTypeRent = 3,
     FHFollowActionTypeNeighborhood = 4,
     FHFollowActionTypePriceChanged = 5,
-    FHFollowActionTypeFloorPan = 6,
+    FHFollowActionTypeFloorPan = 6
 } FHFollowActionType;
 
 #pragma mark endpoint
@@ -35,7 +35,8 @@ typedef enum : NSUInteger {
 typedef enum : NSUInteger {
     FHClueFormPageTypeCNeighborhood = 2, // app_neighbourhood： 1.2 二手房小区详情页底通表单
     FHClueFormPageTypeCFloorPlan= 4, // app_floorplan： 1.4 新房户型详情页
-
+    FHClueFormPageTypeCOldPriceChangeNotice = 11, // from：app_oldhouse_shoufu 1.11小端二手房详情页的变价通知
+    FHClueFormPageTypeCOldHouseShoufu = 13, // from：app_oldhouse_shoufu 1.13小端二手房详情页的咨询首付
     FHClueFormPageTypeCNewHousePicview = 38, // 1.38 新房详情页图片浏览表单  - from：app_newhouse_picview
     FHClueFormPageTypeCNewSales = 39, //   from：app_newhouse_discount： 1.39 新房详情页优惠活动咨询表单
 
@@ -77,6 +78,7 @@ typedef enum : NSUInteger {
 //    FHClueIMPageTypePresentation = 27,//二手房详情页购房小建议
 //    FHClueIMPageTypeCOldBudget = 28, // app_oldhouse_mortgage：1.28小端二手房详情页的咨询房贷
     //--
+
     
 
 //    FHClueIMPageTypeNewHouseDetail = 33, // app_newhouse_detail: 1.33 楼盘信息页
