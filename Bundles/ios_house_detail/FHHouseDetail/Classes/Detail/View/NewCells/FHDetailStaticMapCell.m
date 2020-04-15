@@ -20,6 +20,15 @@
 #import "HMDUserExceptionTracker.h"
 
 @implementation FHDetailStaticMapCellModel
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _bottomMargin = 30;
+    }
+    return self;
+}
+
 @end
 
 @implementation FHDetailStaticMapPOIAnnotationView

@@ -54,6 +54,8 @@
 #import <TTBaseLib/TTStringHelper.h>
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
+#import "UIImageView+BDWebImage.h"
+#import "TTRoute.h"
 
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
@@ -354,6 +356,15 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     typeLabel.layer.borderWidth = [TTDeviceHelper ssOnePixel];
     [self addSubview:typeLabel];
     self.typeLabel = typeLabel;
+    /** 图片来源标签 如幸福敲门 by xsm */
+    SSThemedImageView *customSourceImageView =[[SSThemedImageView alloc] init];
+    customSourceImageView.backgroundColor = [TTUISettingHelper cellViewBackgroundColor];
+    customSourceImageView.contentMode  = UIViewContentModeScaleAspectFit;
+    customSourceImageView.hidden = YES;
+    [self addSubview:customSourceImageView];
+    self.customSourceImageView = customSourceImageView;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(customSourceImageViewClicked:)];
+    [customSourceImageView addGestureRecognizer:tap];
     /** 顶按钮 */
     TTAlphaThemedButton *digButton = [[TTAlphaThemedButton alloc] init];
     digButton.selectedTitleColorThemeKey = kColorText4;
@@ -576,6 +587,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     [self layoutInfoLabel];
     [self layoutLiveTextLabel];
     [self layoutTypeLabel];
+    [self layoutCustomSourceImageView];
     [self layoutDigButton];
     [self layoutCommentButton];
     [self layoutForwardButton];
@@ -765,6 +777,19 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                 self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:@"orange1"].CGColor;
             }
         }
+    }
+}
+
+- (void)layoutCustomSourceImageView
+{
+    TTLayOutCellBaseModel *cellLayOut = self.orderedData.cellLayOut;
+    self.customSourceImageView.hidden = cellLayOut.customSourceImageViewHidden;
+    if (!self.customSourceImageView.hidden) {
+        self.customSourceImageView.frame = cellLayOut.customSourceImageViewFrame;
+        if (!isEmptyString(cellLayOut.customSourceImageUrl)){
+            [self.customSourceImageView bd_setImageWithURL:[NSURL URLWithString:cellLayOut.customSourceImageUrl] placeholder:nil];
+        }
+        self.customSourceImageView.userInteractionEnabled = cellLayOut.customSourceImageViewCanClick;
     }
 }
 
@@ -1214,6 +1239,15 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
             [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:sourceUrl]];
             [self trackForCellWithLabel:@"head_image_click"];
         }
+    }
+}
+
+- (void)customSourceImageViewClicked:(UITapGestureRecognizer *)tap {
+    NSDictionary *customSourceData = [[self.orderedData article] happyKnocking];
+    NSString *urlStr = customSourceData[@"schema"];
+    if(urlStr.length > 0){
+        NSURL* url = [NSURL URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     }
 }
 
