@@ -721,7 +721,7 @@
 }
 
 - (NSString *)pageType {
-    return @"neiborhood_comment_list";
+    return @"neighborhood_comment_list";
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {

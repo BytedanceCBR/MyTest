@@ -74,6 +74,14 @@ TTAccountMulticastProtocol
         [[AccountKeyChainManager sharedManager] start];
     }
     [self registerNotification];
+    [self sendDeviceIDNotification];
+}
+
+- (void)sendDeviceIDNotification {
+    //did注册成功后发送通知
+    [[TTInstallIDManager sharedInstance] observeDeviceDidRegistered:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHTrackerDidRefreshDeviceId" object:nil];
+    }];
 }
 
 

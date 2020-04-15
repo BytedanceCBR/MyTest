@@ -35,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL mapOnly;
 @property(nonatomic, assign) BOOL useNativeMap; //降级控制，外部不使用
 @property(nonatomic, assign) CGFloat topMargin; //小区详情页使用
+@property(nonatomic, assign) CGFloat bottomMargin;
 @end
 
 @interface FHDetailStaticMapCell : FHDetailBaseCell

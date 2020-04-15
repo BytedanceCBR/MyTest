@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *contentEmptyTitle;
 @property (nonatomic, copy) NSString *askSchema;
 @property (nonatomic, copy) NSString *questionListSchema;
+@property (nonatomic, assign) CGFloat topMargin;
 
 @end
 
