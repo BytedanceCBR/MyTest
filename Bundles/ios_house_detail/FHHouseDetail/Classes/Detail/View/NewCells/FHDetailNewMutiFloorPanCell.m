@@ -23,11 +23,14 @@
 #define ITEM_BOTTOM_HEIGHT 35
 #define ITEM_WIDTH  184
 
-@interface FHDetailNewMutiFloorPanCell ()
+@interface FHDetailNewMutiFloorPanCell ()<FHDetailScrollViewDidScrollProtocol>
 
 @property (nonatomic, strong) FHDetailHeaderView *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong) UIImageView *shadowImage;
+@property (nonatomic, strong)   NSMutableDictionary *houseShowCache;
+@property (nonatomic, strong)   NSMutableDictionary *subHouseShowCache;
+@property (strong, nonatomic)  FHDetailMultitemCollectionView *colView;
 
 @end
 
@@ -39,6 +42,8 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setupUI];
+        self.houseShowCache = [NSMutableDictionary new];
+        self.subHouseShowCache = [NSMutableDictionary new];
     }
     return self;
 }
@@ -92,26 +97,27 @@
         flowLayout.minimumLineSpacing = 10;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         NSString *identifier = NSStringFromClass([FHDetailNewMutiFloorPanCollectionCell class]);
-        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:itemHeight cellIdentifier:identifier cellCls:[FHDetailNewMutiFloorPanCollectionCell class] datas:model.list];
-        colView.tag = 100;
-        [self.containerView addSubview:colView];
+        _colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:itemHeight cellIdentifier:identifier cellCls:[FHDetailNewMutiFloorPanCollectionCell class] datas:model.list];
+        _colView.tag = 100;
+        _colView.isNewHouseFloorPan = YES;
+        [self.containerView addSubview:_colView];
         __weak typeof(self) wSelf = self;
-        colView.clickBlk = ^(NSInteger index) {
+        _colView.clickBlk = ^(NSInteger index) {
             [wSelf collectionCellClick:index];
         };
-        colView.itemClickBlk = ^(NSInteger index, UIView *itemView, FHDetailBaseCollectionCell *cell) {
+        _colView.itemClickBlk = ^(NSInteger index, UIView *itemView, FHDetailBaseCollectionCell *cell) {
             [wSelf collectionCellItemClick:index item:itemView cell: cell];
         };
-        colView.displayCellBlk = ^(NSInteger index) {
+        _colView.displayCellBlk = ^(NSInteger index) {
             [wSelf collectionDisplayCell:index];
         };
-        [colView mas_makeConstraints:^(MASConstraintMaker *make) {
+        [_colView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
             make.left.right.mas_equalTo(self.containerView);
 //            make.height.mas_equalTo(242);
             make.bottom.mas_equalTo(self.containerView).mas_offset(-30);
         }];
-        [colView reloadData];
+        [_colView reloadData];
     }
     
     [self layoutIfNeeded];
@@ -291,6 +297,30 @@
         _shadowImage = [[UIImageView alloc]init];
     }
     return _shadowImage;
+}
+
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
+        if (vcParentView) {
+            UIWindow* window = [UIApplication sharedApplication].keyWindow;
+            CGFloat SH = [UIScreen mainScreen].bounds.size.height;
+            CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+            CGFloat bottombarHight =  self.baseViewModel.houseType ==FHHouseTypeRentHouse? 64:80;
+            if (SH -bottombarHight >point.y) {
+              if ([self.houseShowCache valueForKey:@"isShowFloorPan"]) {
+                    return;
+              }else {
+                  NSMutableArray * visibles = self.colView.collectionContainer.indexPathsForVisibleItems;
+                  [self.houseShowCache setValue:@(YES) forKey:@"isShowFloorPan"];
+                  [visibles enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                      NSIndexPath *indexPath = (NSIndexPath *)obj;
+                      [self collectionDisplayCell:indexPath.row];
+                      NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+                      [self.subHouseShowCache setValue:@(YES) forKey:tempKey];
+                  }];
+                  _colView.subHouseShowCache = self.subHouseShowCache;
+              }
+            }
+    }
 }
 
 @end

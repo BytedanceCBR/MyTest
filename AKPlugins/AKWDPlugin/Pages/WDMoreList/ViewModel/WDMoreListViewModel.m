@@ -96,11 +96,11 @@ NSString * const kWDWendaMoreListViewControllerUMEventName = @"question";
     }
     _isLoading = YES;
     [self _clear];
-    [WDMoreListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:0 finishBlock:^(WDWendaV2QuestionBrowResponseModel *responseModel, NSError *error) {
+    [WDMoreListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:0 finishBlock:^(WDWendaV5QuestionBrowResponseModel *responseModel, NSError *error) {
         if (!error) {
-            [self transModelToEntityAndAppendToList:responseModel.data];
-            self.offset = [responseModel.offset floatValue];
-            self.loadMoreHasMore = [responseModel.has_more boolValue];
+            [self transModelToEntityAndAppendToList:responseModel.answer_list.data];
+            self.offset = [responseModel.answer_list.offset floatValue];
+            self.loadMoreHasMore = [responseModel.answer_list.has_more boolValue];
             _latelyHasException = NO;
         } else {
             _latelyHasException = YES;
@@ -123,13 +123,13 @@ NSString * const kWDWendaMoreListViewControllerUMEventName = @"question";
     }
     _isLoading = YES;
     _isFinish = NO;
-    [WDMoreListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:self.offset finishBlock:^(WDWendaV2QuestionBrowResponseModel *responseModel, NSError *error) {
+    [WDMoreListViewModel requestForQuestionID:self.qID apiParam:self.apiParameter gdExtJson:self.gdExtJson offset:self.offset finishBlock:^(WDWendaV5QuestionBrowResponseModel *responseModel, NSError *error) {
         if (!error) {
             NSUInteger originCount = [self.dataModelsArray count];
-            [self transModelToEntityAndAppendToList:responseModel.data];
+            [self transModelToEntityAndAppendToList:responseModel.answer_list.data];
             NSUInteger afterCount = [self.dataModelsArray count];
-            self.offset = [responseModel.offset floatValue];
-            self.loadMoreHasMore = [responseModel.has_more boolValue];
+            self.offset = [responseModel.answer_list.offset floatValue];
+            self.loadMoreHasMore = [responseModel.answer_list.has_more boolValue];
             if (afterCount <= originCount) {
                 _latelyHasException = YES;
             } else {
@@ -237,18 +237,18 @@ NSString * const kWDWendaMoreListViewControllerUMEventName = @"question";
                     apiParam:(NSDictionary *)apiParam
                    gdExtJson:(NSDictionary *)gdExtJson
                       offset:(NSInteger)offset
-                 finishBlock:(void(^)(WDWendaV2QuestionBrowResponseModel *responseModel, NSError *error))finishBlock {
-    WDWendaV2QuestionBrowRequestModel *requestModel = [[WDWendaV2QuestionBrowRequestModel alloc] init];
+                 finishBlock:(void(^)(WDWendaV5QuestionBrowResponseModel *responseModel, NSError *error))finishBlock {
+    WDWendaV5QuestionBrowRequestModel *requestModel = [[WDWendaV5QuestionBrowRequestModel alloc] init];
     requestModel.qid = qid;
     requestModel.api_param = [apiParam tt_JSONRepresentation];
     requestModel.gd_ext_json = [gdExtJson tt_JSONRepresentation];
     requestModel.offset = @(offset);
-    requestModel.count = @(20);
+    requestModel.count = @(10);
     requestModel.request_type = WDWendaListRequestTypeNORMAL;
     
     [[WDNetWorkPluginManager sharedInstance_tt] requestModel:requestModel callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
         if (finishBlock) {
-            finishBlock((WDWendaV2QuestionBrowResponseModel *) responseModel, error);
+            finishBlock((WDWendaV5QuestionBrowResponseModel *) responseModel, error);
         }
     }];
 }
