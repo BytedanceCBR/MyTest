@@ -427,6 +427,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *changeTitle;
 @property (nonatomic, copy , nullable) NSString *analysisTitle;
 @property (nonatomic, strong , nullable) NSArray *history;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
 @interface FHDetailDownPaymentModel : JSONModel
@@ -435,6 +436,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *calculatorUrl;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
 @interface FHDetailOldDataModel : JSONModel

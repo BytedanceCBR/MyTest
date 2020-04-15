@@ -577,6 +577,7 @@
                            @"showType": @"show_type",
                            @"changeTitle": @"change_title",
                            @"analysisTitle": @"analysis_title",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -599,6 +600,7 @@
                            @"monthlyPayment": @"monthly_payment",
                            @"openUrl": @"open_url",
                            @"calculatorUrl": @"calculator_url",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

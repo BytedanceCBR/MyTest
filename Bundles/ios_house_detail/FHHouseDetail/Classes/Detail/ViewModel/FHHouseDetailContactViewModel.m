@@ -92,7 +92,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _needRefetchSocialGroupData = NO;
         
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:_houseType houseId:_houseId];
-
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshFollowStatus:) name:@"follow_up_did_changed" object:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHMessageUnreadChangedNotification" object:nil];
@@ -100,7 +100,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHChatMessageUnreadChangedNotification" object:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshBottomBarLoadingState:) name:kFHDetailLoadingNotification object:nil];
-
+        
         [FHEnvContext sharedInstance].messageManager ;
         
         __weak typeof(self)wself = self;
@@ -122,7 +122,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             wself.ugcLoginType = FHUGCCommunityLoginTypeMemberTalk;
             [wself groupChatAction];
         };
- 
+        
         _navBar.collectActionBlock = ^(BOOL followStatus){
             if (!followStatus) {
                 
@@ -243,7 +243,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)jump2RealtorDetail
 {
     if (self.houseType != FHHouseTypeNewHouse) {
-          [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES extra:nil];
+        [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES extra:nil];
     }
 }
 
@@ -269,7 +269,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSString *title = self.shareInfo.title ? : @"";
     NSString *desc = self.shareInfo.desc ? : @"";
     NSString *webPageUrl = self.shareInfo.shareUrl ? : @"";
-
+    
     NSMutableArray *shareContentItems = @[].mutableCopy;
     if(TTAccountManager.isLogin &&
        (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) &&
@@ -282,21 +282,21 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         fhImShareItem.tracer = dict;
         [shareContentItems addObject:fhImShareItem];
     }
-
+    
     TTWechatContentItem *wechatItem = [[TTWechatContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage shareType:TTShareWebPage];
     [shareContentItems addObject:wechatItem];
     TTWechatTimelineContentItem *timeLineItem = [[TTWechatTimelineContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage shareType:TTShareWebPage];
     [shareContentItems addObject:timeLineItem];
-
+    
     // 大师说PM说微信不用判断
     if ([QQApiInterface isQQInstalled] && [QQApiInterface isQQSupportApi]) {
-
+        
         TTQQFriendContentItem *qqFriendItem = [[TTQQFriendContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage imageUrl:@"" shareTye:TTShareWebPage];
         [shareContentItems addObject:qqFriendItem];
         TTQQZoneContentItem *qqZoneItem = [[TTQQZoneContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage imageUrl:@"" shareTye:TTShareWebPage];
         [shareContentItems addObject:qqZoneItem];
     }
-
+    
     TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:webPageUrl];
     [shareContentItems addObject:copyContentItem];
     [self.shareManager displayActivitySheetWithContent:shareContentItems];
@@ -318,7 +318,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [params setValue:[_tracerDict objectForKey:@"origin_from"] forKey:@"origin_from"];
     [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
     [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
-     [params setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
+    [params setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
     [TTTracker eventV3:@"click_im_message" params:params];
     
     
@@ -330,7 +330,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)setContactPhone:(FHDetailContactModel *)contactPhone
 {
     _contactPhone = contactPhone;
-
+    
     NSString *contactTitle = @"电话咨询";
     NSString *chatTitle = @"在线联系";
     
@@ -376,14 +376,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO extra:nil];
         }
     }
-
+    
     @catch (NSException *exception) {
         // 捕获到的异常exception
         if (exception) {
             NSString* descriptionExc = [exception description];
             NSMutableDictionary *excepDict = [NSMutableDictionary dictionary];
             [excepDict setValue:descriptionExc forKey:@"exception"];
-
+            
             [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:1 extra:excepDict];
             self.phoneCallViewModel.rnIsUnAvalable = YES;
         }
@@ -391,7 +391,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     @finally {
         // 结果处理
     }
-
+    
 }
 
 - (void)setSocialInfo:(FHHouseNewsSocialModel *)socialInfo {
@@ -472,15 +472,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         associateParamDict[kFHAssociateInfo] = associateInfoDict;
         [self fillFormActionWithParams:associateParamDict];
     }else {
-
-//        associatePhone.realtorType = self.contactPhone.realtorType;
+        
+        //        associatePhone.realtorType = self.contactPhone.realtorType;
         FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
         associatePhone.reportParams = reportParamsDict;
         associatePhone.associateInfo = associateInfoDict;
         
         associatePhone.houseType = self.houseType;
         associatePhone.houseId = self.houseId;
-//
+        //
         associatePhone.searchId = self.searchId;
         associatePhone.imprId = self.imprId;
         associatePhone.showLoading = YES;
@@ -496,7 +496,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (extraDict.count > 0) {
         [params addEntriesFromDictionary:extraDict];
     }
- 
+    
     NSString *realtor_pos = @"detail_button";
     if (params && [params isKindOfClass:[NSDictionary class]]) {
         realtor_pos = params[@"realtor_position"] ? : @"detail_button";
@@ -533,8 +533,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         
         if(extraDict[kFHAssociateInfo]) {
             imExtra[kFHAssociateInfo] = extraDict[kFHAssociateInfo];
-//        if ([extraDict[@"source_from"] isEqualToString:@"loan"]) {
-//           imExtra[@"realtor_position"] = @"loan";
+            //        if ([extraDict[@"source_from"] isEqualToString:@"loan"]) {
+            //           imExtra[@"realtor_position"] = @"loan";
         }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
@@ -553,10 +553,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         // 拨打电话 弹窗显示的话 本数据保留，否则 删除 nil
         // todo zjing test
         self.socialContactConfig = [[FHAssociatePhoneModel alloc]init];
-
+        
         self.socialContactConfig.houseType = associatePhone.houseType;
         self.socialContactConfig.houseId = associatePhone.houseId;
-//        self.socialContactConfig.phone = self.contactPhone.phone;
+        //        self.socialContactConfig.phone = self.contactPhone.phone;
         self.socialContactConfig.realtorId = associatePhone.realtorId;
     }
     NSString *realtorId = associatePhone.realtorId;
@@ -567,7 +567,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             vc.isPhoneCallShow = YES;
             // todo zjing test
             vc.phoneCallRealtorId = realtorId;
-
+            
             vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
         } else {
             wself.socialContactConfig = nil;
@@ -590,8 +590,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSString *toast = self.toast;
     NSDictionary *associateInfoDict = formParamsDict[kFHAssociateInfo];
     NSDictionary *reportParamsDict = formParamsDict[kFHReportParams];
-
-
+    
+    
     if (formParamsDict[@"title"]) {
         title = formParamsDict[@"title"];
     }
@@ -621,22 +621,24 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     associateReport.houseType = self.houseType;
     associateReport.houseId = self.houseId;
     associateReport.topViewController = self.belongsVC;
-//    [fillFormConfig setTraceParams:params];
-//    fillFormConfig.searchId = self.searchId;
-//    fillFormConfig.imprId = self.imprId;
-//    fillFormConfig.chooseAgencyList = self.chooseAgencyList;
-//    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig submitBlock:^{
-//        if (self.fillFormSubmitBlock) {
-//            self.fillFormSubmitBlock();
-//        }
-//    }];
-//}
-
+    //    [fillFormConfig setTraceParams:params];
+    //    fillFormConfig.searchId = self.searchId;
+    //    fillFormConfig.imprId = self.imprId;
+    //    fillFormConfig.chooseAgencyList = self.chooseAgencyList;
+    //    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig submitBlock:^{
+    //
+    //    }];
+    //}
+    
     associateReport.reportParams = reportParamsDict;
     associateReport.associateInfo = associateInfoDict;
     associateReport.chooseAgencyList = self.chooseAgencyList;
-    [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];
-
+    [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport submitBlock:^{
+        if (self.fillFormSubmitBlock) {
+            self.fillFormSubmitBlock();
+        }
+    }];
+    
 }
 
 //- (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict
@@ -843,7 +845,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)imAction {
     NSMutableDictionary *extraDic = @{@"realtor_position":@"detail_button",
-                               @"position":@"button"}.mutableCopy;
+                                      @"position":@"button"}.mutableCopy;
     if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
         extraDic[@"position"] = @"online";
         extraDic[@"realtor_position"] = @"online";
@@ -923,7 +925,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             }
         }
     }
-        
+    
     [self onlineActionWithExtraDict:extraDic];
 }
 
@@ -1012,7 +1014,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     dict[@"chat_name"] = self.socialInfo.socialGroupInfo.socialGroupName;
     dict[@"community_id"] = self.socialInfo.socialGroupInfo.socialGroupId;
     NSMutableDictionary *reportDic = [NSMutableDictionary dictionary];
-
+    
     NSDictionary *log_pb = self.tracerDict[@"log_pb"];
     NSString *group_id = nil;
     if (log_pb && [log_pb isKindOfClass:[NSDictionary class]]) {
@@ -1129,12 +1131,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"enter_type"] = @"click";
     tracerDic[@"group_id"] = group_id ?: @"be_null";
     if (self.ugcLoginType == FHUGCCommunityLoginTypeMemberTalk) {
-         tracerDic[@"click_position"] = @"community_member_talk";
+        tracerDic[@"click_position"] = @"community_member_talk";
     } else if (self.ugcLoginType == FHUGCCommunityLoginTypeTip) {
         tracerDic[@"click_position"] = @"community_tip";
     }
     tracerDic[@"card_type"] = @"be_null";
-
+    
     [FHUserTracker writeEvent:@"click_join" params:tracerDic];
 }
 
@@ -1307,13 +1309,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)addElementShowLog:(FHDetailContactModel *)contactPhone
 {
-//    1. event_type ：house_app2c_v2
-//    2. page_type（页面类型）：old_detail（二手房详情页）
-//    3. element_type（组件类型）：底部button：old_detail_button，详情页推荐经纪人：old_detail_related
-//    4. rank
-//    5. origin_from
-//    6. origin_search_id
-//    7.log_pb
+    //    1. event_type ：house_app2c_v2
+    //    2. page_type（页面类型）：old_detail（二手房详情页）
+    //    3. element_type（组件类型）：底部button：old_detail_button，详情页推荐经纪人：old_detail_related
+    //    4. rank
+    //    5. origin_from
+    //    6. origin_search_id
+    //    7.log_pb
     NSMutableDictionary *tracerDic = @{}.mutableCopy;
     tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
     tracerDic[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";

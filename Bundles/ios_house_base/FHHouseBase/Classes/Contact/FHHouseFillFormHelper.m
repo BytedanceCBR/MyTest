@@ -280,11 +280,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     FHAssociateFormReportModel *configModel = [[FHAssociateFormReportModel alloc]initWithDictionary:associateReportDict error:nil];
     if (configModel) {
-        [self fillFormActionWithAssociateReportModel:configModel];
+        [self fillFormActionWithAssociateReportModel:configModel submitBlock:nil];
     }
 }
 
-+ (void)fillFormActionWithAssociateReportModel:(FHAssociateFormReportModel *)associateReport
++ (void)fillFormActionWithAssociateReportModel:(FHAssociateFormReportModel *)associateReport submitBlock:(fillFormSubmitCallBack)fillFormSubmitCallBack;
 {
     NSString *title = associateReport.title;
     NSString *subtitle = associateReport.subtitle;
@@ -340,6 +340,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
         [wself fillFormRequestWithAssociateReport:associateReport phone:phoneNum alertView:alert];
         [wself addClickConfirmLogWithAssociateReport:associateReport alertView:alert];
+        if (fillFormSubmitCallBack) {
+            fillFormSubmitCallBack();
+        }
     };
 
     alertView.tipClickBlock = ^{
