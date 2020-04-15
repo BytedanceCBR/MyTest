@@ -30,6 +30,7 @@
 #import <FHCommonUI/FHFeedbackView.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import "FHMainApi+Contact.h"
+#import "FHHousePhoneCallUtils.h"
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -175,9 +176,16 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     if ([@"be_null" isEqualToString:serverImprId]) {
                         [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_IMPRID extra:monitorParams];
                     }
-                    NSString *phoneUrl = [NSString stringWithFormat:@"tel://%@", phone];
+                    NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@", phone];
                     NSURL *url = [NSURL URLWithString:phoneUrl];
-                    [[UIApplication sharedApplication] openURL:url];
+                    if ([[UIApplication sharedApplication]canOpenURL:url]) {
+                        if (@available(iOS 10.0, *)) {
+                            [[UIApplication sharedApplication]openURL:url options:@{} completionHandler:nil];
+                        } else {
+                            // Fallback on earlier versions
+                            [[UIApplication sharedApplication]openURL:url];
+                        }
+                    }
                 } else {
                     [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
                     [monitorParams setValue:error forKey:@"server_error"];
