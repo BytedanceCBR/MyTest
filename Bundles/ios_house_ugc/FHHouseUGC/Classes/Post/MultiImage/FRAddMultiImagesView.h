@@ -11,10 +11,9 @@
 #import <TTUGCFoundation/TTUGCImageCompressManager.h>
 #import <ios_house_im/FRUploadImageModel.h>
 #import "WDImageObjectUploadImageModel.h"
+#import <TTImagePicker/ALAssetsLibrary+TTImagePicker.h>
 
 @class FRAddMultiImagesView;
-@class ALAssetsLibrary;
-@class ALAsset;
 @protocol FRAddMultiImagesViewDelegate <NSObject>
 
 @optional
