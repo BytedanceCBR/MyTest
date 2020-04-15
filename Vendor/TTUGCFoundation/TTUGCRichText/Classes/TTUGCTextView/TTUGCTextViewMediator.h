@@ -13,7 +13,6 @@
 #import "TTUGCTextView.h"
 #import "TTUGCSearchUserViewController.h"
 #import "TTUGCSearchHashtagViewController.h"
-#import "TTImagePickerController.h"
 
 typedef void (^DidClickHashtagButtonBlock)(BOOL didInputTextHashtag);
 typedef void (^DidClickAtButtonBlock)(BOOL didInputAt);
