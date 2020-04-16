@@ -1,16 +1,16 @@
 //
-//  FHSuggestionListViewController.m
+//  FHChildSuggestionListViewController.m
 //  FHHouseList
 //
-//  Created by 张元科 on 2018/12/20.
+//  Created by xubinbin on 2020/4/16.
 //
 
-#import "FHSuggestionListViewController.h"
+#import "FHChildSuggestionListViewController.h"
 #import "TTDeviceHelper.h"
 #import "FHHouseType.h"
 #import "FHHouseTypeManager.h"
 #import "FHPopupMenuView.h"
-#import "FHSuggestionListViewModel.h"
+#import "FHChildSuggestionListViewModel.h"
 #import "FHEnvContext.h"
 #import "ToastManager.h"
 #import "TTNavigationController.h"
@@ -19,11 +19,11 @@
 #import "TTInstallIDManager.h"
 #import "FHOldSuggestionItemCell.h"
 
-@interface FHSuggestionListViewController ()<UITextFieldDelegate>
+@interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
 @property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, weak)     FHPopupMenuView       *popupMenuView;
-@property (nonatomic, strong)   FHSuggestionListViewModel      *viewModel;
+@property (nonatomic, strong)   FHChildSuggestionListViewModel      *viewModel;
 
 @property (nonatomic, assign)   FHEnterSuggestionType       fromSource;
 @property (nonatomic, copy)   NSString*   autoFillInputText;
@@ -37,7 +37,7 @@
 
 @end
 
-@implementation FHSuggestionListViewController
+@implementation FHChildSuggestionListViewController
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
@@ -50,7 +50,7 @@
         }
         // 2、house_type
         _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
-        _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
+        _viewModel = [[FHChildSuggestionListViewModel alloc] initWithController:self];
         NSInteger hp = [paramObj.allParams[@"house_type"] integerValue];
         if (hp >= 1 && hp <= 4) {
             _viewModel.houseType = hp;
@@ -159,12 +159,17 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.canSearchWithRollData = NO;
-    
+    self.hasDismissedVC = NO;
+    [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     if (self.autoFillInputText) {
         self.naviBar.searchInput.text = self.autoFillInputText;
     }
     self.houseType = self.viewModel.houseType;// 执行网络请求等逻辑
+    __weak typeof(self) weakSelf = self;
+    self.panBeginAction = ^{
+        [weakSelf.naviBar.searchInput resignFirstResponder];
+    };
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -190,6 +195,7 @@
 
 - (void)setupUI {
     [self setupNaviBar];
+    [self setupTableView];
 }
 
 - (void)setupNaviBar {
@@ -212,6 +218,73 @@
     [_naviBar.searchTypeBtn addTarget:self action:@selector(searchTypeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     _naviBar.searchInput.delegate = self;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
+}
+
+- (void)setupTableView {
+    self.historyTableView  = [self createTableView];
+    self.historyTableView.tag = 1;
+    self.historyTableView.hidden = NO;
+    
+    self.suggestTableView  = [self createTableView];
+    self.suggestTableView.tag = 2;
+    self.suggestTableView.hidden = YES;
+}
+
+- (FHSuggectionTableView *)createTableView {
+    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    FHSuggectionTableView *tableView = [[FHSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    __weak typeof(self) weakSelf = self;
+    tableView.handleTouch = ^{
+        [weakSelf.view endEditing:YES];
+    };
+    tableView.backgroundColor = UIColor.whiteColor;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    if (isIphoneX) {
+        tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    }
+    tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    [self.view addSubview:tableView];
+    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.naviBar.mas_bottom);
+        make.bottom.mas_equalTo(self.view);
+    }];
+    tableView.delegate  = self.viewModel;
+    tableView.dataSource = self.viewModel;
+    [tableView registerClass:[FHSuggestionItemCell class] forCellReuseIdentifier:@"suggestItemCell"];
+    [tableView registerClass:[FHSuggestionNewHouseItemCell class] forCellReuseIdentifier:@"suggestNewItemCell"];
+        [tableView registerClass:[FHOldSuggestionItemCell class] forCellReuseIdentifier:@"FHOldSuggestionItemCell"];
+    [tableView registerClass:[FHSuggestHeaderViewCell class] forCellReuseIdentifier:@"suggestHeaderCell"];
+    if (@available(iOS 11.0 , *)) {
+        tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    tableView.estimatedRowHeight = 0;
+    tableView.estimatedSectionFooterHeight = 0;
+    tableView.estimatedSectionHeaderHeight = 0;
+    
+    return tableView;
+}
+
+- (void)setHouseType:(FHHouseType)houseType {
+    if (_houseType == houseType) {
+        return;
+    }
+    if (self.canSearchWithRollData) {
+        self.canSearchWithRollData = NO;
+    }
+    _houseType = houseType;
+    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:houseType]];
+    _naviBar.searchTypeLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:houseType];
+    CGSize size = [self.naviBar.searchTypeLabel sizeThatFits:CGSizeMake(100, 21)];
+    [self.naviBar.searchTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(size.width);
+    }];
+    self.viewModel.houseType = self.houseType;
+    // 清空埋点key
+    [self.viewModel.historyShowTracerDic removeAllObjects];
+    // 网络请求
+    [self requestData];
 }
 
 - (NSArray *)houseTypeSectionByConfig:(FHConfigDataModel *)config {
@@ -229,6 +302,128 @@
         [items addObject:@(FHHouseTypeNeighborhood)];
     }
     return items;
+}
+
+- (void)searchTypeBtnClick:(UIButton *)btn {
+    NSArray *items = @[@(FHHouseTypeSecondHandHouse),
+                       @(FHHouseTypeRentHouse),
+                       @(FHHouseTypeNewHouse),
+                       @(FHHouseTypeNeighborhood),];
+    FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (model) {
+        items = [self houseTypeSectionByConfig:model];
+    }
+    NSMutableArray *menuItems = [[NSMutableArray alloc] init];
+    [items enumerateObjectsUsingBlock:^(NSNumber *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHHouseType houseType = [obj integerValue];
+        FHPopupMenuItem *item = [self getPopupItemBy:houseType];
+        [menuItems addObject:item];
+    }];
+    
+    FHPopupMenuView *popup = [[FHPopupMenuView alloc] initWithTargetView:self.naviBar.searchTypeBtn menus:menuItems];
+    [self.view addSubview:popup];
+    self.popupMenuView = popup;
+    [popup mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.right.mas_equalTo(self.view);
+    }];
+    [self.popupMenuView showOnTargetView];
+    
+}
+- (FHPopupMenuItem *)getPopupItemBy:(FHHouseType)ht {
+    FHPopupMenuItem *item = [[FHPopupMenuItem alloc] initWithHouseType:ht isSelected:self.houseType == ht];
+    __weak typeof(self) weakSelf = self;
+    item.itemClickBlock = ^(FHHouseType houseType) {
+        weakSelf.houseType = houseType;
+        [weakSelf.popupMenuView removeFromSuperview];
+    };
+    return item;
+}
+
+// 文本框文字变化，进行sug请求
+- (void)textFiledTextChangeNoti:(NSNotification *)noti {
+    NSInteger maxCount = 80;
+    NSString *text = self.naviBar.searchInput.text;
+    UITextRange *selectedRange = [self.naviBar.searchInput markedTextRange];
+    //获取高亮部分
+    UITextPosition *position = [self.naviBar.searchInput positionFromPosition:selectedRange.start offset:0];
+    // 没有高亮选择的字，说明不是拼音输入
+    if (position) {
+        return;
+    }
+    if (text.length > maxCount) {
+        text = [text substringToIndex:maxCount];
+        self.naviBar.searchInput.text = text;
+    }
+    BOOL hasText = text.length > 0;
+    _suggestTableView.hidden = !hasText;
+    _historyTableView.hidden = hasText;
+    if (hasText) {
+        [self requestSuggestion:text];
+    } else {
+        // 清空sug列表数据
+        [self.viewModel clearSugTableView];
+    }
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    if (self.popupMenuView) {
+        [self.popupMenuView removeFromSuperview];
+    }
+    return YES;
+}
+
+// 输入框执行搜索
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    NSString *userInputText = self.naviBar.searchInput.text;
+    
+    // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
+    NSString *rollText = self.homePageRollDic[@"text"];
+    if (self.canSearchWithRollData) {
+        if (userInputText.length <= 0 && rollText.length > 0) {
+            userInputText = rollText;
+        }
+    }
+    // 保存关键词搜索到历史记录
+    /*
+    NSString *tempStr = [userInputText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (tempStr.length > 0) {
+    }
+     */
+    
+    NSString *pageType = [self.viewModel pageTypeString];
+    NSDictionary *houseSearchParams = @{
+                                        @"enter_query":userInputText,
+                                        @"search_query":userInputText,
+                                        @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                        @"query_type":@"enter"
+                                        };
+    // 拼接URL
+    NSString * fullText = [userInputText stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+    NSString * placeHolderStr = (fullText.length > 0 ? fullText : userInputText);
+    
+    NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%ld&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
+    if (self.suggestDelegate != NULL) {
+        NSDictionary *infos = @{
+                                @"houseSearch":houseSearchParams
+                                };
+        if (self.tracerDict.count > 0) {
+            infos = @{
+                      @"houseSearch":houseSearchParams,
+                      @"tracer": self.tracerDict
+                      };
+        }
+        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
+    } else {
+        self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
+        NSDictionary *infos = @{@"houseSearch":houseSearchParams,
+                               @"tracer": self.tracerDict
+                               };
+        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
+    }
+    return YES;
 }
 
 - (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos {
@@ -285,6 +480,68 @@
     }
 }
 
+#pragma mark - Request
+
+// 执行网络请求
+- (void)requestData {
+    // Sug
+    NSString *text = self.naviBar.searchInput.text;
+    BOOL hasText = text.length > 0;
+    if (hasText) {
+         [self requestSuggestion:text];
+        _suggestTableView.hidden = !hasText;
+        _historyTableView.hidden = hasText;
+    }
+    // 历史记录 + 猜你想搜
+    [self.viewModel clearHistoryTableView];
+    self.viewModel.loadRequestTimes = 0;
+    [self requestHistoryFromRemote];
+    [self requestGuessYouWantData];
+    [self requestSugSubscribe];
+}
+
+// 历史记录
+- (void)requestHistoryFromRemote {
+    if (![FHEnvContext isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+    } else {
+        [self.viewModel requestSearchHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
+    }
+}
+
+// 删除历史记录
+- (void)requestDeleteHistory {
+    if (![FHEnvContext isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+    } else {
+        [self.viewModel requestDeleteHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
+    }
+}
+
+// 猜你想搜
+- (void)requestGuessYouWantData {
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    if (cityId) {
+        [self.viewModel requestGuessYouWant:cityId houseType:self.houseType];
+    }
+}
+
+// 搜索订阅
+- (void)requestSugSubscribe {
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    if (cityId) {
+        [self.viewModel requestSugSubscribe:cityId houseType:self.houseType];
+    }
+}
+
+// sug建议
+- (void)requestSuggestion:(NSString *)text {
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    if (cityId) {
+        [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
+    }
+}
+
 #pragma mark - dealloc
 
 - (void)dealloc
@@ -293,3 +550,4 @@
 }
 
 @end
+
