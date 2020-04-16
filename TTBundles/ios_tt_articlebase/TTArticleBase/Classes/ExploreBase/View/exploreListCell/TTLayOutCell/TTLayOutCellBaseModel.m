@@ -101,6 +101,7 @@
     self.picViewHidden = YES;
     self.liveTextLabelHidden = YES;
     self.typeLabelHidden = YES;
+    self.customSourceImageViewHidden = YES;
     self.abstractLabelHidden = YES;
     self.commentLabelHidden = YES;
     self.bottomLineViewHidden = YES;

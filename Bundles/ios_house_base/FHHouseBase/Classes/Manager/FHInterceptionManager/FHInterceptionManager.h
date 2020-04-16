@@ -34,6 +34,20 @@ NS_ASSUME_NONNULL_BEGIN
                        complete:(Complete)complete
                            task:(Task)task;
 
+/**
+立即退出拦截器并且中止后续操作
+
+@param uniqueId 唯一id不要和其他的拦截器重复，参考命名 “kInterception + 接口名”，如kInterceptionUserFollows。
+ */
+- (void)cancelInterception:(NSString *)uniqueId;
+
+/**
+立即退出拦截器并且直接调用接口
+
+@param uniqueId 唯一id不要和其他的拦截器重复，参考命名 “kInterception + 接口名”，如kInterceptionUserFollows。
+ */
+- (void)breakInterception:(NSString *)uniqueId;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -912,10 +912,12 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 {
     if (!self.showPlaceHolder && indexPath.section == 1) {
         [self jumpToDetailPage:indexPath];
-        FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
-            if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse) {
-                [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
-            }
+        if(self.houseDataItemsModel.count > indexPath.row){
+            FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
+                if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse) {
+                    [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+             }
+        }
     }
 }
 
