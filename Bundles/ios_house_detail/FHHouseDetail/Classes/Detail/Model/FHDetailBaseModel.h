@@ -83,6 +83,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
     FHRealtorCellShowStyle0,
     FHRealtorCellShowStyle1,
     FHRealtorCellShowStyle2,
+    FHRealtorCellShowStyle3,
 };
 
 @protocol FHRealtorTag<NSObject>

@@ -262,6 +262,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHouseNewsSocialModel *socialInfo ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle; // 推荐经纪人标题文案
+@property (nonatomic, copy , nullable) NSString *recommendedRealtorsSubTitle; // 推荐经纪人副标题文案
 @property (nonatomic, strong , nullable) FHVideoHouseVideoModel *houseVideo ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewTopImage> *topImages;
 @property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;

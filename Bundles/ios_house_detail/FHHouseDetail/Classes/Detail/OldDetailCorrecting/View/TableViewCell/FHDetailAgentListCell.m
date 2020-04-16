@@ -78,6 +78,12 @@
     }else {
         self.headerView.label.text = (model.houseType == FHHouseTypeNewHouse) ? @"优选顾问" : @"推荐经纪人";
     }
+    if ((model.houseType == FHHouseTypeNewHouse)) {
+        [self.headerView setSubTitleWithTitle:model.recommendedRealtorsSubTitle];
+    }else{
+        [self.headerView removeSubTitleWithTitle];
+    }
+    
     WeakSelf;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
@@ -517,9 +523,9 @@
         case FHHouseTypeSecondHandHouse:
             return @"old_detail_related";
             break;
-         case FHHouseTypeNeighborhood:
+        case FHHouseTypeNeighborhood:
             return @"neighborhood_detail_related";
-            case FHHouseTypeNewHouse:
+        case FHHouseTypeNewHouse:
                return @"new_detail_related";
         default:
             break;
@@ -668,6 +674,9 @@
             case FHRealtorCellShowStyle2: // 经纪人名字和公司名字左右排列的样式: 话术
                 [self layoutForStyle2];
                 break;
+            case FHRealtorCellShowStyle3: // 经纪人名字和公司名字左右排列的样式: 公司介绍且公司名字后面有灰色背景
+                [self layoutForStyle3];
+                break;
             case FHRealtorCellShowStyle0: // 经纪人名字和公司名字上下排列的样式
             default:
                 [self layoutForStyle0];
@@ -729,6 +738,12 @@
               make.top.equalTo(self.name.mas_bottom).offset(8);
           }];
     }
+
+}
+
+- (void)layoutForStyle3 {
+    [self setupUI];
+    
 
 }
 
