@@ -9,8 +9,6 @@
 #import "FRAddMultiImagesView.h"
 #import "FRPostAssetViewColumn.h"
 #import "TTPostThreadDefine.h"
-//#import "TTPostThreadBridge.h"
-
 #import <TTUIWidget/TTIndicatorView.h>
 #import <AVFoundation/AVCaptureDevice.h>
 #import <AVFoundation/AVMediaFormat.h>
@@ -31,6 +29,7 @@
 #import "UIFont+House.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
+#import "TTAsset+FBusiness.h"
 
 #define NumberOfImagesPerRow 3
 #define ImagesInterval 4.f
@@ -321,13 +320,7 @@
 
 - (void)ttimagePickerController:(TTImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray<TTAsset *> *)assets {
 
-    NSMutableArray *oldAssets = [NSMutableArray arrayWithCapacity:assets.count];
-    
-    [assets enumerateObjectsUsingBlock:^(TTAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
-        TTAssetModel *oldAssetModel = [TTAssetModel modelWithAsset:asset.asset type:asset.type];
-        [oldAssets addObject:oldAssetModel];
-    }];
-    
+    NSMutableArray *oldAssets = [assets convertToTTAssetModelArray];
     
     if (!SSIsEmptyArray(oldAssets)) {
         [self addAssets:oldAssets];
@@ -340,13 +333,8 @@
 
 - (void)ttimagePickerController:(TTImagePickerController *)picker didFinishTakePhoto:(UIImage *)photo selectedAssets:(NSArray<TTAsset *> *)assets withInfo:(NSDictionary *)info {
 
-    NSMutableArray *oldAssets = [NSMutableArray arrayWithCapacity:assets.count];
-    
-    [assets enumerateObjectsUsingBlock:^(TTAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
-        TTAssetModel *oldAssetModel = [TTAssetModel modelWithAsset:asset.asset type:asset.type];
-        [oldAssets addObject:oldAssetModel];
-    }];
-    
+    NSMutableArray *oldAssets = [assets convertToTTAssetModelArray];
+        
     if (!SSIsEmptyArray(oldAssets)) {
         [self addAssets:oldAssets];
     }
@@ -401,8 +389,8 @@
                 [selectedModels addObject:model];
             }
         }
-        
-        TTImagePreviewViewController *previewVC = [TTImagePreviewViewController deletePreviewViewControllerWithModes:selectedModels index:index delegate:self];
+                
+        TTImagePreviewViewController *previewVC = [TTImagePreviewViewController deletePreviewViewControllerWithModes:[selectedModels convertToTTAssetArray] index:index delegate:self];
         previewVC.tapView = sender.assetImageView;
         [previewVC presentOn:self.viewController.navigationController];
         
