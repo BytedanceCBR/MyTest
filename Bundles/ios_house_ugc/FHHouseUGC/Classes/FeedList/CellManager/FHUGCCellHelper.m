@@ -444,7 +444,7 @@
                                              withConstraints:CGSizeMake(width, FLT_MAX)
                                             maxNumberOfLines:numberOfLines
                                       limitedToNumberOfLines:&numberOfLines];
-            model.originItemHeight = size.height + 36;
+            model.originItemHeight = size.height + 30;
         }
     }else{
         model.originItemHeight = 0;

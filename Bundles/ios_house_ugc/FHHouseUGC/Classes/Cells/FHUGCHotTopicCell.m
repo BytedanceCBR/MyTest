@@ -137,6 +137,13 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
+    
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    
     [self.clientShowDict removeAllObjects];
     self.currentData = data;
     

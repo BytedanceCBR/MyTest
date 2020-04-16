@@ -77,6 +77,7 @@
         make.left.mas_equalTo(self).offset(10);
         make.right.mas_equalTo(self).offset(-10);
         make.centerY.mas_equalTo(self);
+        make.height.mas_equalTo(80);
     }];
     
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -101,6 +102,7 @@
             _iconView.hidden = YES;
             [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(10);
+                make.height.mas_equalTo(cellModel.originItemHeight);
             }];
         }
     }
