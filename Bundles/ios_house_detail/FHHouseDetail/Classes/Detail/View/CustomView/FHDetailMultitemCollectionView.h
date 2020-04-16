@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)     kFHMultitemCollectionCellItemClickBlk   itemClickBlk;
 @property (nonatomic, copy)     kFHMultitemCollectionDisplayCellBlk     displayCellBlk;
 
+@property (nonatomic, strong)   NSMutableDictionary *subHouseShowCache;
+@property (nonatomic, assign)   BOOL isNewHouseFloorPan;
 @end
 
 NS_ASSUME_NONNULL_END

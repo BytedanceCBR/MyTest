@@ -259,7 +259,7 @@
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
     [self trackClientShow];
-    return @"neiborhood_comment";
+    return @"neighborhood_comment";
 }
 
 #pragma mark - UITableViewDataSource

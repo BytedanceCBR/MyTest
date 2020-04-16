@@ -48,7 +48,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     return YES;
 }
 
-+ (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel
++ (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel submitBlock:(fillFormSubmit)submitBlock
 {
     NSString *title = configModel.title;
     NSString *subtitle = configModel.subtitle;
@@ -104,6 +104,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
         [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
         [wself addClickConfirmLog:configModel alertView:alert];
+        if (submitBlock) {
+            submitBlock();
+        }
     };
 
     alertView.tipClickBlock = ^{
@@ -121,7 +124,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     FHHouseFillFormConfigModel *configModel = [[FHHouseFillFormConfigModel alloc]initWithDictionary:config error:nil];
     if (configModel) {
-        [self fillFormActionWithConfigModel:configModel];
+        [self fillFormActionWithConfigModel:configModel submitBlock:nil];
     }
 }
 

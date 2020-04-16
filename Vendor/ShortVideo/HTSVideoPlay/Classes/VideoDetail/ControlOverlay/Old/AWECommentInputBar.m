@@ -9,7 +9,7 @@
 #import "AWECommentInputBar.h"
 #import "HTSVideoPlayColor.h"
 #import "HTSVideoPlayToast.h"
-#import "TTDeviceHelper.h"
+#import <TTBaseLib/TTDeviceUIUtils.h>
 #import "SSThemed.h"
 #import "TTThemeConst.h"
 #import "UIImageAdditions.h"

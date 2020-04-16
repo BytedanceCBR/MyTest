@@ -291,7 +291,7 @@
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"neigborhood_question";
+    return @"neighborhood_question";
 }
 
 #pragma mark - UITableViewDataSource
