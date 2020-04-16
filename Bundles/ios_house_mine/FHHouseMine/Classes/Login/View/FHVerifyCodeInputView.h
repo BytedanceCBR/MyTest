@@ -13,7 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHVerifyCodeInputView : UIView
 
-@property(nonatomic , weak) id<FHLoginViewDelegate> delegate;
+@property (nonatomic, copy) NSArray<UITextField *> *textFieldArray;
+
+@property (nonatomic , weak) id<FHLoginViewDelegate> delegate;
 
 - (void)updateMobileNumber:(NSString *)mobileNumber;
 

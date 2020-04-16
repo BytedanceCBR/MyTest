@@ -16,18 +16,12 @@
 
 @property (nonatomic, assign) FHLoginViewType viewType;
 
-
-@property (nonatomic, weak) FHMobileInputView *mobileInputView;
-
 @end
 
 @implementation FHLoginContainerViewController
 
 - (void)dealloc {
     _viewModel = nil;
-    [_mobileInputView endEditing:YES];
-    _mobileInputView.delegate = nil;
-    NSLog(@"FHLoginContainerViewController dealloc");
 }
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
@@ -49,15 +43,13 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (self.mobileInputView) {
-        [self.mobileInputView.mobileTextField becomeFirstResponder];
-    }
 }
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
+    self.customNavBarView.seperatorLine.hidden = YES;
 }
 
 - (void)setupUI {
@@ -94,7 +86,7 @@
                 }
                 make.left.right.equalTo(self.view);
             }];
-            self.mobileInputView = mobileInputView;
+            [mobileInputView.mobileTextField becomeFirstResponder];
         }
             break;
         case FHLoginViewTypeVerify:
@@ -112,6 +104,7 @@
                 }
                 make.left.right.equalTo(self.view);
             }];
+            [verifyCodeInputView.textFieldArray.firstObject becomeFirstResponder];
             [verifyCodeInputView updateMobileNumber:self.viewModel.mobileNumber];
             
             __weak FHVerifyCodeInputView * weakCodeView = verifyCodeInputView;

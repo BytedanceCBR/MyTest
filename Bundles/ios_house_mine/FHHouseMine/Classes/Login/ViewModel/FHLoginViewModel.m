@@ -353,8 +353,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)goToSendVerifyCode:(NSString *)mobileNumber {
 //    [self showOneKeyLoginView:NO phoneNum:nil];
     self.mobileNumber = mobileNumber;
-//    [self sendVerifyCodeWithCaptcha:nil];
-    [self goToContainerController:FHLoginViewTypeVerify];
+    [self sendVerifyCodeWithCaptcha:nil];
+//    [self goToContainerController:FHLoginViewTypeVerify];
 }
 
 - (void)oneKeyLoginAction {

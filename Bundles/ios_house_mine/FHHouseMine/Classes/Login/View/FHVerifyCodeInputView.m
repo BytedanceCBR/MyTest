@@ -10,15 +10,16 @@
 #import <Masonry/Masonry.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
+#import "FHLoginVerifyCodeTextField.h"
 
-@interface FHVerifyCodeInputView ()<UITextFieldDelegate>
+@interface FHVerifyCodeInputView ()<UITextFieldDelegate,FHVerifyCodeTextFieldDeleteDelegate>
 
 @property (nonatomic, strong) UILabel *mobileNumberLabel;
 
-@property (nonatomic, strong) UITextField *codeTextFieldOne;
-@property (nonatomic, strong) UITextField *codeTextFieldTwo;
-@property (nonatomic, strong) UITextField *codeTextFieldThree;
-@property (nonatomic, strong) UITextField *codeTextFieldFour;
+@property (nonatomic, weak) FHLoginVerifyCodeTextField *codeTextFieldOne;
+@property (nonatomic, weak) FHLoginVerifyCodeTextField *codeTextFieldTwo;
+@property (nonatomic, weak) FHLoginVerifyCodeTextField *codeTextFieldThree;
+@property (nonatomic, weak) FHLoginVerifyCodeTextField *codeTextFieldFour;
 
 @property (nonatomic, strong) UIButton *sendVerifyCodeButton;
 
@@ -71,6 +72,7 @@
         [self.sendVerifyCodeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.sendVerifyCodeButton setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
         [self.sendVerifyCodeButton setTitle:@"发送验证码" forState:UIControlStateNormal];
+        self.sendVerifyCodeButton.enabled = NO;
         [self.sendVerifyCodeButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(self);
             make.height.mas_equalTo(46);
@@ -82,19 +84,19 @@
         stackView.axis = UILayoutConstraintAxisHorizontal;
         [self addSubview:stackView];
 
-        CGFloat stackViewWidth = CGRectGetWidth(self.frame) - 30 * 2;
+        CGFloat stackViewWidth = 62 * 4 + 25 * 3;//CGRectGetWidth(self.frame) - 30 * 2;
 
-        self.codeTextFieldOne = [[UITextField alloc] init];
-        [stackView addArrangedSubview:[self setupTextField:self.codeTextFieldOne]];
+        FHLoginVerifyCodeTextField *codeTextFieldOne = [[FHLoginVerifyCodeTextField alloc] init];
+        [stackView addArrangedSubview:[self setupTextField:codeTextFieldOne]];
 
-        self.codeTextFieldTwo = [[UITextField alloc] init];
-        [stackView addArrangedSubview:[self setupTextField:self.codeTextFieldTwo]];
+        FHLoginVerifyCodeTextField *codeTextFieldTwo = [[FHLoginVerifyCodeTextField alloc] init];
+        [stackView addArrangedSubview:[self setupTextField:codeTextFieldTwo]];
 
-        self.codeTextFieldThree = [[UITextField alloc] init];
-        [stackView addArrangedSubview:[self setupTextField:self.codeTextFieldThree]];
+        FHLoginVerifyCodeTextField *codeTextFieldThree = [[FHLoginVerifyCodeTextField alloc] init];
+        [stackView addArrangedSubview:[self setupTextField:codeTextFieldThree]];
 
-        self.codeTextFieldFour = [[UITextField alloc] init];
-        [stackView addArrangedSubview:[self setupTextField:self.codeTextFieldFour]];
+        FHLoginVerifyCodeTextField *codeTextFieldFour = [[FHLoginVerifyCodeTextField alloc] init];
+        [stackView addArrangedSubview:[self setupTextField:codeTextFieldFour]];
 
         [stackView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(stackViewWidth);
@@ -102,16 +104,21 @@
             make.centerX.mas_equalTo(self);
             make.top.mas_equalTo(self.mobileNumberLabel.mas_bottom).mas_offset(40);
         }];
-        
+
+        self.codeTextFieldOne = codeTextFieldOne;
+        self.codeTextFieldTwo = codeTextFieldTwo;
+        self.codeTextFieldThree = codeTextFieldThree;
+        self.codeTextFieldFour = codeTextFieldFour;
+        self.textFieldArray = @[codeTextFieldOne, codeTextFieldTwo, codeTextFieldThree, codeTextFieldFour];
     }
     return self;
 }
 
-- (UIView *)setupTextField:(UITextField *)textField{
+- (UIView *)setupTextField:(FHLoginVerifyCodeTextField *)textField{
     
-    CGFloat stackViewWidth = CGRectGetWidth(self.frame) - 30 * 2;
+    CGFloat stackViewWidth = 62 * 4 + 25 * 3;//CGRectGetWidth(self.frame) - 30 * 2;
     CGFloat itemMargin = 25;
-    CGFloat itemWidth = floor((stackViewWidth - itemMargin) / 4.0);
+    CGFloat itemWidth = 62;//floor((stackViewWidth - itemMargin) / 4.0);
     CGFloat itemHeight = 62;
     
     UIView *itemView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, itemWidth, itemHeight)];
@@ -119,13 +126,17 @@
         make.size.mas_equalTo(CGSizeMake(itemWidth, itemHeight));
     }];
     
-    textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    textField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    textField.textAlignment = NSTextAlignmentCenter;
+//    textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+//    textField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     textField.font = [UIFont themeFontRegular:24];
     textField.textColor = [UIColor themeGray1];
-    textField.keyboardType = UIKeyboardTypePhonePad;
+    textField.keyboardType = UIKeyboardTypeNumberPad;
     textField.returnKeyType = UIReturnKeyDone;
-    [textField addTarget:self action:@selector(textFiledDidChange:) forControlEvents:UIControlEventEditingChanged];
+    textField.deleteDelegate = self;
+    textField.delegate = self;
+//    [textField addTarget:self action:@selector(textFiledDidChange:) forControlEvents:UIControlEventEditingChanged];
+    
     textField.inputAccessoryView = self.sendVerifyCodeButton;
     [itemView addSubview:textField];
     [textField mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -160,7 +171,7 @@
 - (void)updateMobileNumber:(NSString *)mobileNumber {
     self.mobileNumber = mobileNumber;
     NSString *formattedMobile;
-    if (self.mobileNumber.length > 11) {
+    if (self.mobileNumber.length == 11) {
         formattedMobile = [NSString stringWithFormat:@"%@ %@ %@",[self.mobileNumber substringWithRange:NSMakeRange(0, 3)],[self.mobileNumber substringWithRange:NSMakeRange(3, 4)],[self.mobileNumber substringWithRange:NSMakeRange(7, 4)]];
     }
     self.mobileNumberLabel.text = [NSString stringWithFormat:@"验证码已发送至 %@",formattedMobile];
@@ -178,34 +189,58 @@
     }
 }
 
-- (void)textFiledDidChange:(UITextField *)textField {
-    // 这个地方再考虑一下，可以使用一个 string 来保存 smsCode 的更改，来判断 应该哪个 textField 弹键盘
-    if (textField == self.codeTextFieldOne) {
-        if (self.codeTextFieldOne.text.length == 1) {
-            [self.codeTextFieldTwo becomeFirstResponder];
+//- (void)textFiledDidChange:(UITextField *)textField {
+//    // 这个地方再考虑一下，可以使用一个 string 来保存 smsCode 的更改，来判断 应该哪个 textField 弹键盘
+//    if (textField == self.codeTextFieldOne) {
+//        if (self.codeTextFieldOne.text.length == 1) {
+//            [self.codeTextFieldTwo becomeFirstResponder];
+//        }
+//    } else if (textField == self.codeTextFieldTwo) {
+//        [self.codeTextFieldThree becomeFirstResponder];
+//    } else if (textField == self.codeTextFieldThree) {
+//        [self.codeTextFieldFour becomeFirstResponder];
+//    } else if (textField == self.codeTextFieldFour) {
+//        NSString *smsCode = [NSString stringWithFormat:@"%@%@%@%@",self.codeTextFieldOne.text,self.codeTextFieldTwo.text,self.codeTextFieldThree.text,self.codeTextFieldFour.text];
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(mobileLogin:smsCode:captcha:)]) {
+//            [self.delegate mobileLogin:self.mobileNumber smsCode:smsCode captcha:nil];
+//        }
+//    }
+//}
+
+#pragma mark - FHVerifyCodeTextFieldDeleteDelegate
+- (void)didClickBackWard {
+    for (NSUInteger i = 1; i < self.textFieldArray.count; i++) {
+        if (!self.textFieldArray[i].isFirstResponder) {
+            continue;
         }
-    } else if (textField == self.codeTextFieldTwo) {
-        [self.codeTextFieldThree becomeFirstResponder];
-    } else if (textField == self.codeTextFieldThree) {
-        [self.codeTextFieldFour becomeFirstResponder];
-    } else if (textField == self.codeTextFieldFour) {
-        NSString *smsCode = [NSString stringWithFormat:@"%@%@%@%@",self.codeTextFieldOne.text,self.codeTextFieldTwo.text,self.codeTextFieldThree.text,self.codeTextFieldFour.text];
-        if (self.delegate && [self.delegate respondsToSelector:@selector(mobileLogin:smsCode:captcha:)]) {
-            [self.delegate mobileLogin:self.mobileNumber smsCode:smsCode captcha:nil];
-        }
+        [self.textFieldArray[i] resignFirstResponder];
+        [self.textFieldArray[i - 1] becomeFirstResponder];
+        self.textFieldArray[i - 1].text = @"";
     }
 }
 
 #pragma mark - UITextFieldDelegate
-- (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    if (textField == self.codeTextFieldOne) {
-        [self.codeTextFieldTwo becomeFirstResponder];
-    } else if (textField == self.codeTextFieldTwo) {
-        [self.codeTextFieldThree becomeFirstResponder];
-    } else if (textField == self.codeTextFieldThree) {
-        [self.codeTextFieldFour becomeFirstResponder];
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if (!textField.text.length) {
+        NSUInteger index = [self.textFieldArray indexOfObject:textField];
+        [textField resignFirstResponder];
+        
+        if (index == self.textFieldArray.count - 1) {
+            self.textFieldArray[index].text = string;
+            
+            NSMutableString *smsCode = [NSMutableString string];
+            for (UITextField *tf in self.textFieldArray) {
+                [smsCode appendString:tf.text?:@""];
+            }
+            if (self.delegate && [self.delegate respondsToSelector:@selector(mobileLogin:smsCode:captcha:)]) {
+                [self.delegate mobileLogin:self.mobileNumber smsCode:smsCode captcha:nil];
+            }
+            return NO;
+        }
+        self.textFieldArray[index].text = string;
+        [self.textFieldArray[index + 1] becomeFirstResponder];
     }
-    return YES;
+    return NO;
 }
 
 @end
