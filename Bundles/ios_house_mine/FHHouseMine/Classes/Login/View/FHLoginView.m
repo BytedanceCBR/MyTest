@@ -346,9 +346,9 @@
 //}
 
 - (void)sendVerifyCode {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode)]) {
-        [self.delegate sendVerifyCode];
-    }
+//    if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode:needPush:)]) {
+//        [self.delegate sendVerifyCode:<#(nonnull NSString *)#> needPush:<#(BOOL)#>];
+//    }
 }
 
 - (void)enableConfirmBtn:(BOOL)enabled {

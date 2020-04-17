@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHLoginViewDelegate <NSObject>
 
+- (void)popLastViewController;
+
 - (void)goToUserProtocol;
 
 - (void)goToSecretProtocol;
@@ -21,10 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 跳转输入手机号界面
 - (void)goToMobileInput;
 
-/// 跳转发送验证码界面
-- (void)goToSendVerifyCode:(NSString *)mobileNumber;
-
-- (void)sendVerifyCode;
+/// 发送验证码
+/// @param mobileNumber 手机号
+/// @param needPush 需要跳转输入验证码页面 needPush:true 如果重新发送验证码:needPush:false
+- (void)sendVerifyCode:(NSString *)mobileNumber needPush:(BOOL )needPush;
 
 - (void)mobileLogin:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha;
 

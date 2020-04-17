@@ -153,12 +153,24 @@
     self.agreementLabel.attributedText = protocol;
 }
 
+- (void)douyinLoginAction {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(awesomeLoginAction)]) {
+        [self.delegate awesomeLoginAction];
+    }
+}
+
+- (void)appleLoginAction {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(appleLoginAction)]) {
+        [self.delegate appleLoginAction];
+    }
+}
+
 - (void)confirmButtonAction {
     if (self.mobileTextField.text.length < 11) {
         return;
     }
-    if (self.delegate && [self.delegate respondsToSelector:@selector(goToSendVerifyCode:)]) {
-        [self.delegate goToSendVerifyCode:self.mobileTextField.text];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode:needPush:)]) {
+        [self.delegate sendVerifyCode:self.mobileTextField.text needPush:YES];
     }
 }
 

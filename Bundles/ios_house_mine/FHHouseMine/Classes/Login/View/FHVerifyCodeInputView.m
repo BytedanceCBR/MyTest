@@ -161,11 +161,24 @@
 }
 
 - (void)changeNumberAction {
-    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(popLastViewController)]) {
+        [self.delegate popLastViewController];
+    }
 }
 
 - (void)sendVerifyCodeAction {
+    for (UITextField *textField in self.textFieldArray) {
+        textField.text = @"";
+        if (textField.isFirstResponder) {
+            [textField resignFirstResponder];
+        }
+    }
     
+    if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode:needPush:)]) {
+        [self.delegate sendVerifyCode:self.mobileNumber needPush:NO];
+    }
+    
+    [self.textFieldArray.firstObject becomeFirstResponder];
 }
 
 - (void)updateMobileNumber:(NSString *)mobileNumber {
@@ -207,6 +220,16 @@
 //    }
 //}
 
+- (void)beginLoginWithMobile {
+    NSMutableString *smsCode = [NSMutableString string];
+    for (UITextField *tf in self.textFieldArray) {
+        [smsCode appendString:tf.text?:@""];
+    }
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mobileLogin:smsCode:captcha:)]) {
+        [self.delegate mobileLogin:self.mobileNumber smsCode:smsCode captcha:nil];
+    }
+}
+
 #pragma mark - FHVerifyCodeTextFieldDeleteDelegate
 - (void)didClickBackWard {
     for (NSUInteger i = 1; i < self.textFieldArray.count; i++) {
@@ -222,23 +245,38 @@
 #pragma mark - UITextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if (!textField.text.length) {
-        NSUInteger index = [self.textFieldArray indexOfObject:textField];
-        [textField resignFirstResponder];
-        
-        if (index == self.textFieldArray.count - 1) {
-            self.textFieldArray[index].text = string;
+        //用户输入
+        if (string.length == 1) {
+            NSUInteger index = [self.textFieldArray indexOfObject:textField];
+            [textField resignFirstResponder];
             
-            NSMutableString *smsCode = [NSMutableString string];
-            for (UITextField *tf in self.textFieldArray) {
-                [smsCode appendString:tf.text?:@""];
+            if (index == self.textFieldArray.count - 1) {
+                self.textFieldArray[index].text = string;
+                [self beginLoginWithMobile];
+                return NO;
             }
-            if (self.delegate && [self.delegate respondsToSelector:@selector(mobileLogin:smsCode:captcha:)]) {
-                [self.delegate mobileLogin:self.mobileNumber smsCode:smsCode captcha:nil];
+            self.textFieldArray[index].text = string;
+            [self.textFieldArray[index + 1] becomeFirstResponder];
+        }
+        //来自键盘的快捷提示
+        if (string.length >= 4) {
+            return NO;
+            //TODO:放到外面，延迟设置
+            for (NSUInteger i = 0; i < self.textFieldArray.count; i++) {
+                NSString *number = [string substringWithRange:NSMakeRange(i, 1)];
+                UITextField *tf = self.textFieldArray[i];
+                tf.delegate = nil;
+                tf.text = number;
+                tf.delegate = self;
+                if (tf.isFirstResponder) {
+                    [tf resignFirstResponder];
+                }
             }
+            [self.textFieldArray[self.textFieldArray.count - 1] becomeFirstResponder];
+            [self beginLoginWithMobile];
             return NO;
         }
-        self.textFieldArray[index].text = string;
-        [self.textFieldArray[index + 1] becomeFirstResponder];
+
     }
     return NO;
 }

@@ -303,13 +303,18 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 #pragma mark - FHLoginViewDelegate
+- (void)popLastViewController {
+    [self.viewController.navigationController popViewControllerAnimated:YES];
+}
+
 - (void)confirm {
 //    [self.view endEditing:YES];
 //    [self quickLogin:self.view.phoneInput.text smsCode:self.view.varifyCodeInput.text captcha:nil];
 }
 
-- (void)sendVerifyCode {
-    [self sendVerifyCodeWithCaptcha:nil];
+- (void)sendVerifyCode:(NSString *)mobileNumber needPush:(BOOL)needPush {
+    self.mobileNumber = mobileNumber;
+    [self sendVerifyCodeWithCaptcha:nil needPushVerifyCodeView:needPush];
 }
 
 - (void)goToUserProtocol
@@ -348,13 +353,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)goToMobileInput {
     self.isOtherLogin = YES;
     [self goToContainerController:FHLoginViewTypeMobile];
-}
-
-- (void)goToSendVerifyCode:(NSString *)mobileNumber {
-//    [self showOneKeyLoginView:NO phoneNum:nil];
-    self.mobileNumber = mobileNumber;
-    [self sendVerifyCodeWithCaptcha:nil];
-//    [self goToContainerController:FHLoginViewTypeVerify];
 }
 
 - (void)oneKeyLoginAction {
@@ -659,12 +657,20 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if(self.present){
         [self.viewController dismissViewControllerAnimated:YES completion:nil];
     }else{
-        [self.viewController.navigationController popViewControllerAnimated:YES];
+        if ([self.viewController.navigationController.viewControllers containsObject:self.viewController]) {
+            NSUInteger index = [self.viewController.navigationController.viewControllers indexOfObject:self.viewController];
+            if (index > 0) {
+                index -= 1;
+            }
+            [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:YES];
+        } else {
+            [self.viewController.navigationController popToRootViewControllerAnimated:YES];
+        }
     }
 }
 
 
-- (void)sendVerifyCodeWithCaptcha:(NSString *)captcha {
+- (void)sendVerifyCodeWithCaptcha:(NSString *)captcha needPushVerifyCodeView:(BOOL )needPushVerifyCodeView{
 //    [self.view endEditing:YES];
 //
     __weak typeof(self) weakSelf = self;
@@ -680,7 +686,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
 
+    //如果是已发送验证码，就不继续发送了，直接进去验证码界面
     if (self.isRequestingSMS) {
+        [self goToContainerController:FHLoginViewTypeVerify];
         return;
     }
 
@@ -694,7 +702,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [strongSelf blockRequestSendMessage:[retryTime integerValue]];
             [[ToastManager manager] showToast:@"短信验证码发送成功"];
             strongSelf.isVerifyCodeRetry = YES;
-            [strongSelf goToContainerController:FHLoginViewTypeVerify];
+            if (needPushVerifyCodeView) {
+                [strongSelf goToContainerController:FHLoginViewTypeVerify];
+            }
         } else if (captchaImage) {
             strongSelf.isRequestingSMS = NO;
             [strongSelf showCaptcha:captchaImage error:error];
@@ -712,7 +722,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     __weak typeof(self) wself = self;
     [alertView showWithDismissBlock:^(TTAccountMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
         if (alertView.captchaValue.length > 0) {
-            [wself sendVerifyCodeWithCaptcha:alertView.captchaValue];
+            [wself sendVerifyCodeWithCaptcha:alertView.captchaValue needPushVerifyCodeView:YES];
         }
 #if DEBUG
         else {
