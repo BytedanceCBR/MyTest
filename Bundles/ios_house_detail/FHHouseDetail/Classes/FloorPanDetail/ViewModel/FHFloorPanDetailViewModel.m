@@ -225,9 +225,15 @@
     // 免责声明
     if (1) {
         FHOldDetailDisclaimerModel *infoModel = [[FHOldDetailDisclaimerModel alloc] init];
-        infoModel.disclaimer = [[FHDetailNewCoreDetailDataDisclaimerModel alloc]init];
-        infoModel.disclaimer.text = @"楼盘信息仅供参考，请以开发商公示为准，若有误可反馈纠错";
+        infoModel.disclaimer = model.data.disclaimer;
+        //infoModel.disclaimer.text = @"楼盘信息仅供参考，请以开发商公示为准，若有误可反馈纠错";
         infoModel.houseModelType = FHHouseModelTypeDisclaimer;
+        if (!model.data.highlightedRealtor) {
+            // 当且仅当没有合作经纪人时，才在disclaimer中显示 经纪人 信息
+            infoModel.contact = model.data.contact;
+        } else {
+            infoModel.contact = nil;
+        }
         [self.currentItems addObject:infoModel];
     }
     

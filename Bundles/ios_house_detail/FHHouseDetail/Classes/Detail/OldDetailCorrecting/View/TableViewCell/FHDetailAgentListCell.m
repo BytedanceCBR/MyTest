@@ -675,7 +675,25 @@
     }
     return _agencyBac;
 }
-
+- (UIView *)agencyDescriptionBac{
+    if (!_agencyDescriptionBac) {
+        _agencyDescriptionBac = [[UIView alloc]init];
+        _agencyDescriptionBac.backgroundColor = [UIColor colorWithHexString:@"#fefaf4"];
+        _agencyDescriptionBac.layer.cornerRadius = 2.0;
+        _agencyDescriptionBac.layer.masksToBounds = YES;
+    }
+    return _agencyDescriptionBac;
+}
+- (UILabel *)agencyDescriptionLabel{
+    if (!_agencyDescriptionLabel) {
+        _agencyDescriptionLabel = [[UILabel alloc] init];
+        _agencyDescriptionLabel.font = [UIFont themeFontRegular:10];
+        _agencyDescriptionLabel.backgroundColor = [UIColor clearColor];
+        _agencyDescriptionLabel.textColor = [UIColor themeBlack];
+        _agencyDescriptionLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _agencyDescriptionLabel;
+}
 
 
 -(instancetype)initWithModel:(FHDetailContactModel *)model {
@@ -771,9 +789,29 @@
     
     self.agency.textColor = [UIColor colorWithHexString:@"#929292"];
     self.agency.font = [UIFont themeFontMedium:10];
-    
-    [self newHouseodifiedLayoutNameNeedShowCenter:YES];
-    
+    self.model.agencyDescription = @"活动 | 预约看房 免费专车接送";
+    [self newHouseModifiedLayoutNameNeedShowCenter:self.model.agencyDescription.length <= 0];
+    if (self.model.agencyDescription.length > 0) {
+        [self addSubview:self.agencyDescriptionBac];
+        [self addSubview:self.agencyDescriptionLabel];
+        self.agencyDescriptionLabel.text = self.model.agencyDescription;
+        [self.agencyDescriptionLabel sizeToFit];
+        
+        [self.agencyDescriptionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.agencyDescriptionBac).offset(3);
+            make.bottom.mas_equalTo(self.agencyDescriptionBac).offset(-3);
+            make.left.mas_equalTo(self.agencyDescriptionBac).offset(10);
+            make.right.mas_equalTo(self.agencyDescriptionBac).offset(-10);
+        }];
+        [self.agencyDescriptionLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+        
+        [self.agencyDescriptionBac mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.avator.mas_right).offset(8);
+            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left);
+            make.height.mas_equalTo(18);
+            make.bottom.mas_equalTo(self.avator);
+        }];
+    }
     
     [self.callBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(26);
@@ -785,9 +823,10 @@
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-38);
         make.top.mas_equalTo(self.name);
     }];
+    
 }
 
--(void) newHouseodifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
+-(void) newHouseModifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
 
     [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avator.mas_right).offset(10);
@@ -806,17 +845,12 @@
         make.centerY.equalTo(self.name);
         make.height.mas_equalTo(16);
         make.left.mas_equalTo(self.name.mas_right).offset(4);
-        make.right.mas_equalTo(self.licenceIcon.mas_left).offset(-10);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
     
     [self.agency setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     self.agency.textAlignment = NSTextAlignmentCenter;
-    [self.licenceIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.agency.mas_right).offset(5);
-        make.width.height.mas_equalTo(20);
-        make.centerY.mas_equalTo(self.name);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
-    }];
+    
 }
 
 -(void)modifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
@@ -1053,3 +1087,4 @@
 }
 
 @end
+

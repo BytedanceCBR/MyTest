@@ -11,7 +11,6 @@
 #import "FHHouseDetailBaseViewModel.h"
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
-
 NS_ASSUME_NONNULL_BEGIN
 // 推荐经纪人-列表
 @interface FHDetailAgentListCell : FHDetailBaseCell <FHDetailScrollViewDidScrollProtocol>
@@ -31,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UILabel     *score;
 @property (nonatomic, strong)   UILabel     *scoreDescription;
 @property (nonatomic, strong)   UILabel     *realtorEvaluate;  // 话术
+@property (nonatomic, strong)   UIView      *agencyDescriptionBac;
+@property (nonatomic, strong)   UILabel     *agencyDescriptionLabel;//公司介绍
 
 
 -(instancetype)initWithModel:(FHDetailContactModel *)model;
@@ -56,5 +57,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) UIViewController *belongsVC;
 
 @end
+
 
 NS_ASSUME_NONNULL_END
