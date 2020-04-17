@@ -14,6 +14,8 @@
 @class TTHttpTask;
 @class FHUGCNoticeModel;
 
+#define kInterceptionUserFollows @"kInterceptionUserFollows"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseUGCAPI : NSObject
