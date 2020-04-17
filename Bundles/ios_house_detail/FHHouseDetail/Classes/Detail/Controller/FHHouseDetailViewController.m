@@ -425,6 +425,8 @@
     }
     
     [self.view setNeedsUpdateConstraints];
+    
+    
 }
 
 - (void)setupCallCenter
