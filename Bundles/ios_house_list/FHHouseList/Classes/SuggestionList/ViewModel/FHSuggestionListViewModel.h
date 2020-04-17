@@ -10,6 +10,7 @@
 #import "FHSuggestionListModel.h"
 #import "FHSuggestionListViewController.h"
 #import "FHBaseCollectionView.h"
+#import "HMSegmentedControl.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   NSInteger       associatedCount;
 @property (nonatomic, assign)   FHEnterSuggestionType       fromPageType;
 @property (nonatomic, copy)     NSString       *pageTypeStr;
+@property (nonatomic, weak) HMSegmentedControl *segmentControl;
+@property(nonatomic , assign) NSInteger currentTabIndex;
 
 -(instancetype)initWithController:(FHSuggestionListViewController *)viewController;
 -(void)initCollectionView:(FHBaseCollectionView *) collectionView;

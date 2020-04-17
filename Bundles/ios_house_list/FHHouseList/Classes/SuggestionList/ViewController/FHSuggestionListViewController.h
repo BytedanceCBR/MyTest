@@ -47,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   FHSuggectionTableView       *suggestTableView;
 
 @property (nonatomic, strong)     FHSearchBar     *naviBar;
+@property (nonatomic, strong) NSMutableArray *houseTypeArray;
 
 - (void)requestDeleteHistory;
 

@@ -11,8 +11,10 @@
 
 @interface FHSuggestionListViewModel ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property(nonatomic , weak) FHSuggestionListViewController *listController;
+@property (nonatomic, weak) FHSuggestionListViewController *listController;
 @property (nonatomic, weak) FHBaseCollectionView *collectionView;
+@property (nonatomic, strong) NSMutableArray *cellArray;
+@property (nonatomic, assign) BOOL isFirstLoad;
 @end
 
 @implementation FHSuggestionListViewModel
@@ -21,8 +23,17 @@
     self = [super init];
     if (self) {
         self.listController = viewController;
+        [self initDataArray];
+        _isFirstLoad = YES;
     }
     return self;
+}
+
+- (void)initDataArray {
+    self.cellArray = [NSMutableArray array];
+    for (NSInteger i = 0; i < 4; i++) {
+        [self.cellArray addObject:[NSNull null]];
+    }
 }
 
 - (void)initCollectionView:(FHBaseCollectionView *)collectionView
@@ -33,6 +44,17 @@
     [self.collectionView registerClass:[FHSuggestionCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FHSuggestionCollectionViewCell class])];
 }
 
+- (void)setCurrentTabIndex:(NSInteger)currentTabIndex
+{
+    if (_currentTabIndex != currentTabIndex) {
+        _currentTabIndex = currentTabIndex;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentTabIndex inSection:0];
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+    }
+}
+
+
+
 #pragma mark - UICollectionViewDelegate
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
@@ -41,7 +63,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 5;
+    return _segmentControl.sectionTitles.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -52,8 +74,25 @@
     if (row % 2 == 1) {
         cell.backgroundColor = [UIColor redColor];
     } else {
-        cell.backgroundColor = [UIColor blackColor];
+        cell.backgroundColor = [UIColor blueColor];
+    }
+    self.cellArray[row] = cell;
+    if (_isFirstLoad) {
+        _isFirstLoad = NO;
+        
+    }
+    if (row == _currentTabIndex) {
+        [self initCell];
     }
     return cell;
 }
+
+
+-(void)initCell
+{
+    if (_currentTabIndex < self.cellArray.count && self.cellArray[_currentTabIndex]) {
+        
+    }
+}
+
 @end

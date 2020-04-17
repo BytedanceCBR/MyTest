@@ -37,9 +37,11 @@
 @property (nonatomic, assign)   BOOL       hasDismissedVC;
 
 @property (nonatomic, strong) HMSegmentedControl *segmentControl;
+@property (nonatomic, strong) FHSearchBar *searchBar;
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) FHBaseCollectionView *collectionView;
+
 
 @end
 
@@ -167,7 +169,6 @@
     self.canSearchWithRollData = NO;
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-    self.houseType = self.viewModel.houseType;// 执行网络请求等逻辑
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -187,11 +188,34 @@
     self.topView.backgroundColor = [UIColor themeGray8];
     [self.view addSubview:_topView];
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
+    CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20) + 54;
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(0);
         make.height.mas_equalTo(naviHeight);
     }];
+    [self setupSegmentedControl];
+    self.houseType = self.viewModel.houseType;
+    
+    self.naviBar = [[FHSearchBar alloc] initWithFrame:CGRectZero];
+    [self.naviBar setSearchPlaceHolderText:@"二手房/租房/小区"];
+    self.naviBar.backBtn.hidden = YES;
+    [self.topView addSubview:_naviBar];
+    [self.naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(_segmentControl.mas_bottom);
+        make.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(54);
+    }];
+    [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:self.houseType]];
+    _naviBar.searchTypeLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
+    CGSize size = [self.naviBar.searchTypeLabel sizeThatFits:CGSizeMake(100, 20)];
+    [self.naviBar.searchTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(size.width);
+    }];
+    [_naviBar.searchTypeBtn addTarget:self action:@selector(searchTypeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    _naviBar.searchInput.delegate = self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
     
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
@@ -200,18 +224,19 @@
         make.top.mas_equalTo(_topView.mas_bottom);
     }];
     
-   //1.初始化layout
-   UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-   //设置collectionView滚动方向
-   [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-   layout.minimumLineSpacing = 0;
-   layout.minimumInteritemSpacing = 0;
+    //1.初始化layout
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.itemSize = CGSizeMake([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height - naviHeight);
+    //设置collectionView滚动方向
+    [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+    layout.minimumLineSpacing = 0;
+    layout.minimumInteritemSpacing = 0;
     //2.初始化collectionView
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
     _collectionView.bounces = NO;
-    _collectionView.scrollEnabled = NO;
+    _collectionView.scrollEnabled = YES;
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor themeGray7];
     [self.containerView addSubview:_collectionView];
@@ -219,9 +244,11 @@
         make.left.right.top.bottom.mas_equalTo(0);
     }];
     [self.viewModel initCollectionView:_collectionView];
-    [self setupSegmentedControl];
 }
 
+- (void)textFiledTextChangeNoti:(NSNotification *)noti {
+    
+}
 
 - (void)setupSegmentedControl {
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
@@ -244,11 +271,8 @@
     _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     [_segmentControl setBackgroundColor:[UIColor clearColor]];
-    
-    __weak typeof(self) weakSelf = self;
-    _segmentControl.indexChangeBlock = ^(NSInteger index) {
-        //
-    };
+    self.viewModel.segmentControl = _segmentControl;
+    [self bindTopIndexChanged];
     
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
         
@@ -258,10 +282,19 @@
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(_topView);
         make.height.mas_equalTo(44);
-        make.bottom.mas_equalTo(-6);
+        make.bottom.mas_equalTo(-60);
         make.left.mas_equalTo(50);
         make.right.mas_equalTo(-50);
     }];
+}
+
+-(void)bindTopIndexChanged
+{
+    WeakSelf;
+    _segmentControl.indexChangeBlock = ^(NSInteger index) {
+        StrongSelf;
+        self.viewModel.currentTabIndex = index;
+    };
 }
 
 -(NSArray *)getSegmentTitles
@@ -275,6 +308,26 @@
         items = [self houseTypeSectionByConfig:model];
     }
     return items;
+}
+
+- (void)setHouseType:(FHHouseType)houseType
+{
+    if (_houseType == houseType) {
+        return;
+    }
+    _houseType = houseType;
+    _segmentControl.selectedSegmentIndex = [self getSegmentControlIndex];
+    self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
+}
+
+-(NSInteger)getSegmentControlIndex
+{
+    for (int i = 0; i < _segmentControl.sectionTitles.count; i++) {
+        if ([[[FHHouseTypeManager sharedInstance] stringValueForType:_houseType] isEqualToString:_segmentControl.sectionTitles[i]]) {
+            return i;
+        }
+    }
+    return 0;
 }
 
 
