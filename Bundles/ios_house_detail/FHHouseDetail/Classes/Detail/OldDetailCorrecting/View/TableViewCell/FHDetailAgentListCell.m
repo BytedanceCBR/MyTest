@@ -96,6 +96,7 @@
             }else {
                 vHeight = 76;
             }
+            obj.realtorCellShow = FHRealtorCellShowStyle3;
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj];
             // 添加事件
             itemView.tag = idx;
@@ -130,10 +131,12 @@
             }
             
             if (model.realtorCellShow == FHRealtorCellShowStyle0) {
-                               itemView.agency.font = [UIFont themeFontRegular:14];
-                               itemView.identifyView.hidden = YES;
-                   
-               }
+                itemView.agency.font = [UIFont themeFontRegular:14];
+                itemView.identifyView.hidden = YES;
+            }
+            if (model.realtorCellShow == FHRealtorCellShowStyle3){
+                itemView.identifyView.hidden = YES;
+            }
             BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
             [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
             if(obj.realtorEvaluate.length > 0) {
@@ -660,6 +663,18 @@
     return _vSepLine;
 }
 
+- (UIImageView *)agencyBac{
+    if (!_agencyBac) {
+        _agencyBac = [[UIImageView alloc]init];
+        _agencyBac.image = [UIImage imageNamed:@"realtor_name_bac"];
+        _agencyBac.layer.borderWidth = 0.5;
+        _agencyBac.layer.borderColor = [[UIColor colorWithHexString:@"#d6d6d6"] CGColor];
+        _agencyBac.layer.cornerRadius = 2.0;
+        _agencyBac.layer.masksToBounds = YES;
+        
+    }
+    return _agencyBac;
+}
 
 
 
@@ -742,9 +757,66 @@
 }
 
 - (void)layoutForStyle3 {
-    [self setupUI];
+    [self setupUI];//realtor_name_bac
+    //
+    self.score.hidden = YES;
+    self.scoreDescription.hidden = YES;
+    [self addSubview:self.agencyBac];
+    [self.agencyBac mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.agency);
+    }];
+    [self bringSubviewToFront:self.agency];
+    self.name.font = [UIFont themeFontMedium:16];
+    self.name.textColor = [UIColor themeBlack];
     
+    self.agency.textColor = [UIColor colorWithHexString:@"#929292"];
+    self.agency.font = [UIFont themeFontMedium:10];
+    
+    [self newHouseodifiedLayoutNameNeedShowCenter:YES];
+    
+    
+    [self.callBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(26);
+        make.right.mas_equalTo(-15);
+        make.top.mas_equalTo(self.name);
+    }];
+    [self.imBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(26);
+        make.right.mas_equalTo(self.callBtn.mas_left).offset(-38);
+        make.top.mas_equalTo(self.name);
+    }];
+}
 
+-(void) newHouseodifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
+
+    [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.avator.mas_right).offset(10);
+        if (showCenter) {
+            make.centerY.mas_equalTo(self.avator);
+        }
+        else{
+            make.top.mas_equalTo(self.avator);
+        }
+        make.height.mas_equalTo(20);
+    }];
+    
+    [self.name setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];  //这个好神奇！！！
+    
+    [self.agency mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.name);
+        make.height.mas_equalTo(16);
+        make.left.mas_equalTo(self.name.mas_right).offset(4);
+        make.right.mas_equalTo(self.licenceIcon.mas_left).offset(-10);
+    }];
+    
+    [self.agency setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+    self.agency.textAlignment = NSTextAlignmentCenter;
+    [self.licenceIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.agency.mas_right).offset(5);
+        make.width.height.mas_equalTo(20);
+        make.centerY.mas_equalTo(self.name);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+    }];
 }
 
 -(void)modifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
@@ -765,9 +837,9 @@
                 make.top.mas_equalTo(self.avator).offset(4);
             }
             make.height.mas_equalTo(20);
-        }];
+    }];
     [self.name setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
-
+    
     [self.agency mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.name);
         make.height.mas_equalTo(20);
