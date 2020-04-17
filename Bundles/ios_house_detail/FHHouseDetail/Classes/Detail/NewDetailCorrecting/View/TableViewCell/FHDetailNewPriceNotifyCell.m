@@ -128,7 +128,7 @@
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
         associateParamDict[kFHAssociateInfo] = model.openAssociateInfo.reportFormInfo;
         NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
-        reportParamsDict[@"position"] = @"app_pricenotice";
+        reportParamsDict[@"position"] = @"on_sell";
         associateParamDict[kFHReportParams] = reportParamsDict;
         
         [contactViewModel fillFormActionWithParams:associateParamDict];
@@ -145,7 +145,7 @@
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
         associateParamDict[kFHAssociateInfo] = model.priceAssociateInfo.reportFormInfo;
         NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
-        reportParamsDict[@"position"] = @"app_pricenotice";
+        reportParamsDict[@"position"] = @"change_price";
         associateParamDict[kFHReportParams] = reportParamsDict;
         
         [contactViewModel fillFormActionWithParams:associateParamDict];

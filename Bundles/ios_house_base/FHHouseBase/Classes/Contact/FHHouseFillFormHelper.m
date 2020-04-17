@@ -427,7 +427,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     params[@"position"] = reportParams[@"position"] ? : @"be_null";
     params[@"growth_deepevent"] = @(1);
 
-    // todo zjing test
     params[@"item_id"] = reportParams[@"item_id"] ? : @"be_null";
 
     [FHUserTracker writeEvent:@"inform_show" params:params];
@@ -450,7 +449,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
     params[@"position"] = reportParams[@"position"] ? : @"be_null";
 
-    // todo zjing test
     params[@"item_id"] = reportParams[@"item_id"] ? : @"be_null";
 
     NSMutableDictionary *dict = @{}.mutableCopy;

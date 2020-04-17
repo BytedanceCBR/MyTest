@@ -450,6 +450,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         associateInfoDict = self.highlightedRealtorAssociateInfo.reportFormInfo;
     }
     extraDict[kFHAssociateInfo] = associateInfoDict;
+    extraDict[@"position"] = @"button";
     [self contactActionWithExtraDict:extraDict];
 }
 - (void)contactActionWithExtraDict:(NSDictionary *)extraDict

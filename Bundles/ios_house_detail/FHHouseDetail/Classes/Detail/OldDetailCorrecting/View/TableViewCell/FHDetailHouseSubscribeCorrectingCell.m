@@ -270,11 +270,13 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
     NSString *phoneNum = self.phoneNum;
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
-        
+
+        FHDetailHouseSubscribeCorrectingModel *model = (FHDetailHouseSubscribeCorrectingModel *)self.currentData;
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
         tracerDic[@"position"] = @"card";
         tracerDic[@"growth_deepevent"] = @(1);
+        tracerDic[kFHAssociateInfo] = model.associateInfo.reportFormInfo;
         [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
         
         if(self.subscribeBlock){
