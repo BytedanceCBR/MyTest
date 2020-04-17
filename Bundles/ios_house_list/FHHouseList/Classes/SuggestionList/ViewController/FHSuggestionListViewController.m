@@ -18,11 +18,12 @@
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
 #import "FHOldSuggestionItemCell.h"
+#import "HMSegmentedControl.h"
+#import "FHBaseCollectionView.h"
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
 @property (nonatomic, assign)     FHHouseType       houseType;
-@property (nonatomic, weak)     FHPopupMenuView       *popupMenuView;
 @property (nonatomic, strong)   FHSuggestionListViewModel      *viewModel;
 
 @property (nonatomic, assign)   FHEnterSuggestionType       fromSource;
@@ -34,6 +35,11 @@
 @property (nonatomic, strong)   NSMutableDictionary       *homePageRollDic;// 传入搜索列表的轮播词-只用于搜索框展示和搜索用
 @property (nonatomic, assign)   BOOL       canSearchWithRollData; // 如果为YES，支持placeholder搜索
 @property (nonatomic, assign)   BOOL       hasDismissedVC;
+
+@property (nonatomic, strong) HMSegmentedControl *segmentControl;
+@property (nonatomic, strong) UIView *topView;
+@property (nonatomic, strong) UIView *containerView;
+@property (nonatomic, strong) FHBaseCollectionView *collectionView;
 
 @end
 
@@ -159,74 +165,132 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.canSearchWithRollData = NO;
-    
+    [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-    if (self.autoFillInputText) {
-        self.naviBar.searchInput.text = self.autoFillInputText;
-    }
     self.houseType = self.viewModel.houseType;// 执行网络请求等逻辑
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if (self.homePageRollDic) {
-        NSString *text = self.homePageRollDic[@"text"];
-        if (text.length > 0) {
-            [self.naviBar setSearchPlaceHolderText:text];
-            self.canSearchWithRollData = YES;
-        }
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.naviBar resignFirstResponder];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.naviBar.searchInput resignFirstResponder];
 }
 
 - (void)setupUI {
-    [self setupNaviBar];
-}
-
-- (void)setupNaviBar {
+    self.topView = [[UIView alloc] init];
+    self.topView.backgroundColor = [UIColor themeGray8];
+    [self.view addSubview:_topView];
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    _naviBar = [[FHSearchBar alloc] initWithType:FHSearchNavTypeSug];
-    [_naviBar setSearchPlaceHolderText:@"二手房/租房/小区"];
-    [self.view addSubview:_naviBar];
     CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
-    [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.view);
+    [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(0);
         make.height.mas_equalTo(naviHeight);
     }];
-    [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
-    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:self.houseType]];
-    _naviBar.searchTypeLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
-    CGSize size = [self.naviBar.searchTypeLabel sizeThatFits:CGSizeMake(100, 20)];
-    [self.naviBar.searchTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(size.width);
-    }];
-    [_naviBar.searchTypeBtn addTarget:self action:@selector(searchTypeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    _naviBar.searchInput.delegate = self;
     
+    self.containerView = [[UIView alloc] init];
+    [self.view addSubview:_containerView];
+    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(0);
+        make.top.mas_equalTo(_topView.mas_bottom);
+    }];
+    
+   //1.初始化layout
+   UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+   //设置collectionView滚动方向
+   [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+   layout.minimumLineSpacing = 0;
+   layout.minimumInteritemSpacing = 0;
+    //2.初始化collectionView
+    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    _collectionView.allowsSelection = NO;
+    _collectionView.pagingEnabled = YES;
+    _collectionView.bounces = NO;
+    _collectionView.scrollEnabled = NO;
+    _collectionView.showsHorizontalScrollIndicator = NO;
+    _collectionView.backgroundColor = [UIColor themeGray7];
+    [self.containerView addSubview:_collectionView];
+    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.mas_equalTo(0);
+    }];
+    [self.viewModel initCollectionView:_collectionView];
+    [self setupSegmentedControl];
 }
+
+
+- (void)setupSegmentedControl {
+    _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
+    
+    NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
+                                          NSForegroundColorAttributeName: [UIColor themeGray1]};
+    _segmentControl.titleTextAttributes = titleTextAttributes;
+    
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
+                                                  NSForegroundColorAttributeName: [UIColor themeGray1]};
+    _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
+    _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
+    _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    _segmentControl.isNeedNetworkCheck = NO;
+    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+    _segmentControl.selectionIndicatorWidth = 20.0f;
+    _segmentControl.selectionIndicatorHeight = 4.0f;
+    _segmentControl.selectionIndicatorCornerRadius = 2.0f;
+    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+    _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+    [_segmentControl setBackgroundColor:[UIColor clearColor]];
+    
+    __weak typeof(self) weakSelf = self;
+    _segmentControl.indexChangeBlock = ^(NSInteger index) {
+        //
+    };
+    
+    _segmentControl.indexRepeatBlock = ^(NSInteger index) {
+        
+    };
+    
+    [self.topView addSubview:_segmentControl];
+    [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_topView);
+        make.height.mas_equalTo(44);
+        make.bottom.mas_equalTo(-6);
+        make.left.mas_equalTo(50);
+        make.right.mas_equalTo(-50);
+    }];
+}
+
+-(NSArray *)getSegmentTitles
+{
+    NSArray *items = @[[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeSecondHandHouse],
+                       [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeRentHouse],
+                       [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeNewHouse],
+                       [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeNeighborhood],];
+    FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (model) {
+        items = [self houseTypeSectionByConfig:model];
+    }
+    return items;
+}
+
 
 - (NSArray *)houseTypeSectionByConfig:(FHConfigDataModel *)config {
     NSMutableArray *items = [[NSMutableArray alloc] init];
     if (config.searchTabFilter.count > 0) {
-        [items addObject:@(FHHouseTypeSecondHandHouse)];
+        [items addObject: [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeSecondHandHouse]];
     }
     if (config.searchTabRentFilter.count > 0) {
-        [items addObject:@(FHHouseTypeRentHouse)];
+        [items addObject:[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeRentHouse]];
     }
     if (config.searchTabCourtFilter.count > 0) {
-        [items addObject:@(FHHouseTypeNewHouse)];
+        [items addObject:[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeNewHouse]];
     }
     if (config.searchTabNeighborhoodFilter.count > 0) {
-        [items addObject:@(FHHouseTypeNeighborhood)];
+        [items addObject:[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeNeighborhood]];
     }
     return items;
 }
