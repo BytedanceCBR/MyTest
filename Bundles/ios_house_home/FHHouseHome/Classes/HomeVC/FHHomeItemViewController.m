@@ -236,35 +236,15 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             
             NSIndexSet *sectionSet=[[NSIndexSet alloc] initWithIndex:1];
             if (self.tableView.numberOfSections > 1) {
-//                [self.tableView reloadSections:sectionSet withRowAnimation:UITableViewRowAnimationAutomatic];
-                               
-                /* Animate the table view reload */
-//                [UIView transitionWithView: self.tableView duration: 1 options:UIViewAnimationOptionTransitionCrossDissolve animations: ^(void){
-//                    [self.tableView reloadData];
-//                 }completion: ^(BOOL isFinished) {
-//
-//                 }];
-                
-                
                 NSMutableArray *indexArr = [NSMutableArray new];
-                for (NSInteger i = 1; i <= similarItems.count; i++) {
+                for (NSInteger i = 0; i < similarItems.count; i++) {
                   NSIndexPath *tarIndexPath = [NSIndexPath indexPathForRow:i + targetIndex inSection:1];
                   [indexArr addObject:tarIndexPath];
                 }
-//
-//
-//                // 批量操作
-                [UIView animateWithDuration:2 animations:^{
-                   [CATransaction setDisableActions:YES]; // 或者[UIView setAnimationsEnabled:NO];
-                   [self.tableView beginUpdates];
-
-    //               [self.tableView deleteSections:indexArr withRowAnimation:UITableViewRowAnimationNone];
-                    [self.tableView insertRowsAtIndexPaths:indexArr withRowAnimation:UITableViewRowAnimationAutomatic];
-                    [self.tableView endUpdates];
-                    
-                    [self.tableView reloadData];
-                } completion:^(BOOL finished) {
-                }];
+                
+                [self.tableView beginUpdates];
+                [self.tableView insertRowsAtIndexPaths:indexArr withRowAnimation:UITableViewRowAnimationBottom];
+                [self.tableView endUpdates];
             }
         }
     }
