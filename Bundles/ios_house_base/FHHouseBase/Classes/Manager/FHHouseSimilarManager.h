@@ -11,6 +11,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseSimilarManager : NSObject
 
++(instancetype)sharedInstance;
+
+- (void)requestForSimilarHouse:(NSDictionary *)parmasIds;
+
+- (NSArray *)getCurrentSimilarArray;
+
 @end
 
 NS_ASSUME_NONNULL_END

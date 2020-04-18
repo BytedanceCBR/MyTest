@@ -32,6 +32,7 @@
 #import "FHHomeMainViewModel.h"
 #import <FHHouseBase/FHRelevantDurationTracker.h>
 #import "FHHouseListBaseItemCell.h"
+#import "FHHouseSimilarManager.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -56,6 +57,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 @property (nonatomic, assign) BOOL isDisAppeared;
 @property (nonatomic, weak) FHHomeListViewModel *listModel;
 @property (nonatomic, assign) NSInteger lastOffset;
+@property (nonatomic, assign) NSInteger lastClickOffset;
 @end
 
 @implementation FHHomeItemViewController
@@ -219,6 +221,53 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     }
     
     [self resumeVRIcon];
+
+}
+
+- (void)resumeSimliarHouses
+{
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        NSArray * similarItems = [[FHHouseSimilarManager sharedInstance] getCurrentSimilarArray];
+        if (similarItems.count > 0) {
+            NSInteger targetIndex = self.lastClickOffset + 1;
+            NSRange range = NSMakeRange(targetIndex, [similarItems count]);
+            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
+            [self.houseDataItemsModel insertObjects:similarItems atIndexes:indexSet];
+            
+            NSIndexSet *sectionSet=[[NSIndexSet alloc] initWithIndex:1];
+            if (self.tableView.numberOfSections > 1) {
+//                [self.tableView reloadSections:sectionSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                               
+                /* Animate the table view reload */
+//                [UIView transitionWithView: self.tableView duration: 1 options:UIViewAnimationOptionTransitionCrossDissolve animations: ^(void){
+//                    [self.tableView reloadData];
+//                 }completion: ^(BOOL isFinished) {
+//
+//                 }];
+                
+                
+                NSMutableArray *indexArr = [NSMutableArray new];
+                for (NSInteger i = 1; i <= similarItems.count; i++) {
+                  NSIndexPath *tarIndexPath = [NSIndexPath indexPathForRow:i + targetIndex inSection:1];
+                  [indexArr addObject:tarIndexPath];
+                }
+//
+//
+//                // 批量操作
+                [UIView animateWithDuration:2 animations:^{
+                   [CATransaction setDisableActions:YES]; // 或者[UIView setAnimationsEnabled:NO];
+                   [self.tableView beginUpdates];
+
+    //               [self.tableView deleteSections:indexArr withRowAnimation:UITableViewRowAnimationNone];
+                    [self.tableView insertRowsAtIndexPaths:indexArr withRowAnimation:UITableViewRowAnimationAutomatic];
+                    [self.tableView endUpdates];
+                    
+                    [self.tableView reloadData];
+                } completion:^(BOOL finished) {
+                }];
+            }
+        }
+    }
 }
 
 - (void)resumeVRIcon{
@@ -925,6 +974,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     if (self.houseType == FHHouseTypeSecondHandHouse) {
         [[FHRelevantDurationTracker sharedTracker] sendRelevantDuration];
     }
+    
+    [self resumeSimliarHouses];
 }
 
 #pragma mark - 详情页跳转
@@ -978,6 +1029,16 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if (jumpUrl != nil) {
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+        }
+        
+        
+        if (houseType == FHHouseTypeSecondHandHouse) {
+            self.lastClickOffset = indexPath.row;
+            NSMutableDictionary *parmasIds = [NSMutableDictionary new];
+            [parmasIds setValue:self.currentSearchId forKey:@"search_id"];
+            [parmasIds setValue:theModel.idx forKey:@"house_id"];
+            [parmasIds setValue:@"94349544675" forKey:@"channel_id"];
+            [[FHHouseSimilarManager sharedInstance] requestForSimilarHouse:parmasIds];
         }
     }
 }
