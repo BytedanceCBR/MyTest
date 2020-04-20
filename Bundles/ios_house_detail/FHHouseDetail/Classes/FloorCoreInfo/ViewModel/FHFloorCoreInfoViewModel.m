@@ -24,12 +24,10 @@
 @property (nonatomic , strong) NSMutableArray *currentItems;
 @property (nonatomic , strong) NSString *courtId;
 @property(nonatomic , strong) FHDetailHouseNameModel *houseNameModel;
-@property(nonatomic , strong) FHOldDetailDisclaimerModel *oldDisclaimerModel;
-@property(nonatomic , strong) FHDetailDisclaimerModel *disClaimerModel;
 @end
 @implementation FHFloorCoreInfoViewModel
 
--(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId houseNameModel:(JSONModel *)model housedisclaimerModel:(JSONModel *)disClaimerModel
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId houseNameModel:(JSONModel *)model
 {
     self = [super init];
     if (self) {
@@ -38,10 +36,6 @@
         _courtId = courtId;
         _currentItems = [NSMutableArray new];
         _houseNameModel = model;
-        _disClaimerModel = disClaimerModel;
-        _oldDisclaimerModel = [[FHOldDetailDisclaimerModel alloc] init];
-        _oldDisclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[_disClaimerModel.disclaimer toJSONData] error:nil];
-        _oldDisclaimerModel.contact = [[FHDetailContactModel alloc] initWithData:[_disClaimerModel.contact toJSONData] error:nil];
         [self configTableView];
         
         [self startLoadData];
@@ -171,10 +165,16 @@
         [self.currentItems addObject:permitModel];
     }
     
-    if (_oldDisclaimerModel) {
+    if (model.data.disclaimer) {
         FHDetailGrayLineModel *newGrayLine = [[FHDetailGrayLineModel alloc] initWithHeight:25];
         [self.currentItems addObject:newGrayLine];
-        [self.currentItems addObject:_oldDisclaimerModel];
+        FHDetailDisclaimerModel *disclaimerModel = (FHDetailDisclaimerModel *)model.data.disclaimer;
+        
+        FHOldDetailDisclaimerModel *oldDisclaimerModel = [[FHOldDetailDisclaimerModel alloc] init];
+        
+        oldDisclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[disclaimerModel.disclaimer toJSONData] error:nil];
+        oldDisclaimerModel.contact = [[FHDetailContactModel alloc] initWithData:[disclaimerModel.contact toJSONData] error:nil];
+        [self.currentItems addObject:oldDisclaimerModel];
     }
     
     [_infoListTable reloadData];

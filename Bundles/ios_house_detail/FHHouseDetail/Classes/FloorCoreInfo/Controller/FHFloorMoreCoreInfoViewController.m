@@ -18,7 +18,6 @@
 @property (nonatomic , strong) FHFloorCoreInfoViewModel *coreInfoListViewModel;
 @property (nonatomic , strong) NSString *courtId;
 @property(nonatomic , strong) FHDetailHouseNameModel *houseNameModel;
-@property(nonatomic , strong) FHDetailDisclaimerModel *disclaimerModel;
 
 @end
 
@@ -29,7 +28,6 @@
     if (self) {
         _courtId = paramObj.allParams[@"court_id"];
         _houseNameModel = paramObj.userInfo.allInfo[@"courtInfo"];
-        _disclaimerModel = paramObj.userInfo.allInfo[@"disclaimerInfo"];
     }
     return self;
 }
@@ -41,7 +39,7 @@
     
     [self addDefaultEmptyViewFullScreen];
     
-    _coreInfoListViewModel = [[FHFloorCoreInfoViewModel alloc] initWithController:self tableView:_infoListTable courtId:_courtId houseNameModel:_houseNameModel housedisclaimerModel:_disclaimerModel];
+    _coreInfoListViewModel = [[FHFloorCoreInfoViewModel alloc] initWithController:self tableView:_infoListTable courtId:_courtId houseNameModel:_houseNameModel];
     
     [self setNavBarTitle:@"楼盘信息"];
     [self.view bringSubviewToFront:[self getNaviBar]];
