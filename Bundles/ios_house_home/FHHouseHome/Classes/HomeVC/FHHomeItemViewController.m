@@ -58,6 +58,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 @property (nonatomic, weak) FHHomeListViewModel *listModel;
 @property (nonatomic, assign) NSInteger lastOffset;
 @property (nonatomic, assign) NSInteger lastClickOffset;
+@property (nonatomic, strong) NSMutableArray *cacheClickIds;
+@property (nonatomic, strong) NSMutableArray *cacheSimilarIds;
+
 @end
 
 @implementation FHHomeItemViewController
@@ -74,6 +77,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.houseDataItemsModel = [NSMutableArray new];
+    self.cacheClickIds = [NSMutableArray new];
+    self.cacheSimilarIds = [NSMutableArray new];
+    
     self.isRetryedPullDownRefresh = NO;
     self.hasMore = YES;
     self.isOriginRequest = YES;
@@ -226,14 +232,18 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)resumeSimliarHouses
 {
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse && [[FHHouseSimilarManager sharedInstance] checkTimeIsInvalid]) {
         NSArray * similarItems = [[FHHouseSimilarManager sharedInstance] getCurrentSimilarArray];
         if (similarItems.count > 0) {
             NSInteger targetIndex = self.lastClickOffset + 1;
             NSRange range = NSMakeRange(targetIndex, [similarItems count]);
             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
             [self.houseDataItemsModel insertObjects:similarItems atIndexes:indexSet];
-            
+            [similarItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj isKindOfClass:[FHHomeHouseDataItemsModel class]] && ((FHHomeHouseDataItemsModel*)obj).idx) {
+                    [self.cacheSimilarIds addObject:((FHHomeHouseDataItemsModel*)obj).idx];
+                }
+            }];
             NSIndexSet *sectionSet=[[NSIndexSet alloc] initWithIndex:1];
             if (self.tableView.numberOfSections > 1) {
                 NSMutableArray *indexArr = [NSMutableArray new];
@@ -245,6 +255,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 [self.tableView beginUpdates];
                 [self.tableView insertRowsAtIndexPaths:indexArr withRowAnimation:UITableViewRowAnimationBottom];
                 [self.tableView endUpdates];
+                
+                [[FHHouseSimilarManager sharedInstance] resetSimilarArray];
             }
         }
     }
@@ -489,6 +501,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             self.originSearchId = model.data.searchId;
             self.houseDataItemsModel = [NSMutableArray arrayWithArray:model.data.items];
             self.lastOffset = model.data.items.count;
+            
+            [self.cacheSimilarIds removeAllObjects];
+            [self.cacheClickIds removeAllObjects];
         }else
         {
             if (model.data.items && self.houseDataItemsModel && model.data.items.count != 0) {
@@ -1014,11 +1029,18 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         
         if (houseType == FHHouseTypeSecondHandHouse) {
             self.lastClickOffset = indexPath.row;
-            NSMutableDictionary *parmasIds = [NSMutableDictionary new];
-            [parmasIds setValue:self.currentSearchId forKey:@"search_id"];
-            [parmasIds setValue:theModel.idx forKey:@"house_id"];
-            [parmasIds setValue:@"94349544675" forKey:@"channel_id"];
-            [[FHHouseSimilarManager sharedInstance] requestForSimilarHouse:parmasIds];
+            if (![self.cacheSimilarIds containsObject:theModel.idx] && ![self.cacheClickIds containsObject:theModel.idx]) {
+                NSMutableDictionary *parmasIds = [NSMutableDictionary new];
+                [parmasIds setValue:self.currentSearchId forKey:@"search_id"];
+                [parmasIds setValue:theModel.idx forKey:@"house_id"];
+                [parmasIds setValue:@"94349544675" forKey:@"channel_id"];
+
+                [[FHHouseSimilarManager sharedInstance] requestForSimilarHouse:parmasIds];
+                
+                if (theModel.idx) {
+                    [self.cacheClickIds addObject:theModel.idx];
+                }
+            }
         }
     }
 }

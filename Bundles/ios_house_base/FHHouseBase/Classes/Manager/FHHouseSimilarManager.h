@@ -17,6 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray *)getCurrentSimilarArray;
 
+- (void)resetSimilarArray;
+
+- (BOOL)checkTimeIsInvalid;
+
 @end
 
 NS_ASSUME_NONNULL_END
