@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHHouseType.h"
 #import "FHBaseViewController.h"
 #import "FHSuggestionItemCell.h"
 #import "FHHouseSuggestionDelegate.h"
@@ -50,6 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)     FHSuggestionSearchBar     *naviBar;
 @property (nonatomic, strong) NSMutableArray *houseTypeArray;
+@property (nonatomic, assign)     FHHouseType       houseType;
 
 - (void)requestDeleteHistory;
 

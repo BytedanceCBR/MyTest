@@ -24,7 +24,6 @@
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
-@property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, strong)   FHSuggestionListViewModel      *viewModel;
 
 @property (nonatomic, assign)   FHEnterSuggestionType       fromSource;

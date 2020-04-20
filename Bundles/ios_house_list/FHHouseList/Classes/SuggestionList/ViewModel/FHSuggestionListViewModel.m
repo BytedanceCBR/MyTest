@@ -110,10 +110,10 @@
     }else if (diff < 0){
         tabIndex = ceilf(tabIndex);
     }
-    NSLog(@"%f", tabIndex);
     if (tabIndex != self.listController.segmentControl.selectedSegmentIndex) {
         self.currentTabIndex = tabIndex;
         self.listController.segmentControl.selectedSegmentIndex = tabIndex;
+        self.listController.houseType = [self.listController.houseTypeArray[(int)tabIndex] integerValue];
     } else {
         CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
         [self.listController.segmentControl setScrollValue:value isDirectionLeft:diff < 0];
