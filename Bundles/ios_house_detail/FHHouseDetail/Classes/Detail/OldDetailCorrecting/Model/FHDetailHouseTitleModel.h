@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *businessTag;
 @property (nonatomic, copy , nullable) NSString *advantage;
 
+@property (nonatomic, assign) BOOL isFloorPan;
+@property (nonatomic, copy) NSString *totalPicing;
 @end
 
 NS_ASSUME_NONNULL_END

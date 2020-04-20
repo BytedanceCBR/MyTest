@@ -21,6 +21,8 @@
 @property (nonatomic, weak) UIView *tagBacView;
 @property (nonatomic, weak) UILabel *nameLabel;
 @property (nonatomic, weak) UILabel *addressLab;
+@property (nonatomic, weak) UILabel *totalPirce;//仅户型详情页x展示
+
 
 @property (nonatomic, strong) FHDetailTopBannerView *topBanner;
 
@@ -111,6 +113,18 @@
     return _mapBtn;
 }
 
+- (UILabel *)totalPirce{
+    if (!_totalPirce) {
+        UILabel *totalPirce = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+        totalPirce.textColor = [UIColor themeOrange1];
+        totalPirce.font = [UIFont themeFontMedium:14];
+        totalPirce.numberOfLines = 1;
+        [self addSubview:totalPirce];
+        _totalPirce = totalPirce;
+    }
+    return _totalPirce;
+}
+
 - (UILabel *)createLabelWithText:(NSString *)text bacColor:(UIColor *)bacColor textColor:(UIColor *)textColor{
     UILabel *label = [[UILabel alloc]init];
     label.textAlignment = NSTextAlignmentCenter;
@@ -131,6 +145,76 @@
    
 }
 
+- (void)setFloorPanModel{
+    NSArray *tags = _model.tags;
+    if (tags) {
+        FHHouseTagsModel *tagModel = [tags firstObject];
+        [self.nameLabel sizeToFit];
+        CGSize itemSize = [self.nameLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, 28)];
+        UIColor *tagBacColor = [UIColor colorWithHexString:@"#FFEAD3"];
+        UIColor *tagTextColor = [UIColor colorWithHexString:@"#ff9300"];
+        UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
+        CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 31;
+        CGFloat itemWidth = itemSize.width;
+        if (itemWidth > tagWidth - 31 - 40 -4) {
+            itemWidth = tagWidth - 31 - 40 -4;
+        }
+        [self addSubview:label];
+        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(31);
+            make.width.mas_equalTo(itemWidth);
+            make.height.mas_equalTo(28);
+            make.top.mas_equalTo(self.mas_top).offset(50);
+        }];
+        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
+            make.width.mas_equalTo(40);
+            make.centerY.mas_equalTo(self.nameLabel);
+            make.height.mas_equalTo(20);
+        }];
+    }
+    else{
+        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(31);
+            make.right.mas_equalTo(self).offset(-35);
+            make.height.mas_equalTo(28);
+            make.top.mas_equalTo(self.mas_top).offset(50);
+        }];
+    }
+    NSString *picing = _model.totalPicing;
+    if (picing.length == 0 || [picing isEqualToString:@"暂无售价"]) {
+        self.totalPirce.text = (picing.length == 0) ? @"暂无报价" : picing;
+        NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.totalPirce.text];
+        self.totalPirce.attributedText = noteStr;
+    }else{
+        self.totalPirce.text = [NSString stringWithFormat:@"约%@/套",picing];
+        NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.totalPirce.text];
+        NSString *nowPicing = self.totalPirce.text;
+        unichar c;
+        NSUInteger firstLoc = 1;
+        NSUInteger secondLoc = 1;
+        
+        for (int i=1; i < nowPicing.length; i++) {      //处理出数字区间
+            c = [nowPicing characterAtIndex:i];
+            if (!isdigit(c)) {
+                secondLoc = i;
+                break;
+            }
+        }
+        NSRange range = NSMakeRange(firstLoc, secondLoc - firstLoc);
+        [noteStr addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:20] range:range];
+        self.totalPirce.attributedText = noteStr;
+    }
+    [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).offset(31);
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(10);
+        make.right.mas_equalTo(self).offset(- 35);
+        make.height.mas_equalTo(24);
+        make.bottom.mas_equalTo(self);
+    }];
+    
+}
+
 - (void)setModel:(FHDetailHouseTitleModel *)model {
     _model = model;
     NSArray *tags = model.tags;
@@ -141,7 +225,12 @@
     CGFloat topHeight = 0;
     CGFloat tagTop = tags.count > 0 ? 17 : -5;
     CGFloat tagBottom = tags.count > 0 ? 17 : 0;
-
+    
+    if (model.isFloorPan) {
+        [self setFloorPanModel];
+        return;
+    }
+        
     if (model.housetype == FHHouseTypeNewHouse) {
         if (model.businessTag.length > 0 && model.advantage.length > 0) {
             topHeight = 40;

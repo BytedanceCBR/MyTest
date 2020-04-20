@@ -1326,6 +1326,7 @@
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -1650,6 +1651,7 @@
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
 				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (

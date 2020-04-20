@@ -363,6 +363,7 @@
                            @"chooseAgencyList": @"choose_agency_list",
                            @"recommendedRealtors": @"recommended_realtors",
                            @"recommendedRealtorsTitle": @"recommended_realtors_title",
+                           @"recommendedRealtorsSubTitle":@"recommended_realtors_sub_title",
                            @"socialInfo":@"ugc_social_group",
                            @"houseVideo": @"house_video",
                            @"baseInfo": @"base_info",
