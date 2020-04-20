@@ -64,6 +64,7 @@
         } else {
             _viewModel.houseType = 2;// 默认二手房
         }
+        
         _viewModel.fromPageType = self.fromSource;
         // 3、sug_delegate 代理
         /*
@@ -300,7 +301,7 @@
     };
 }
 
--(NSArray *)getSegmentTitles
+-(NSArray *)getSegmentTitles//
 {
     NSArray *items = @[[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeSecondHandHouse],
                        [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeRentHouse],
@@ -309,6 +310,7 @@
     FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (model) {
         items = [self houseTypeSectionByConfig:model];
+        //传给viewModel
     }
     return items;
 }

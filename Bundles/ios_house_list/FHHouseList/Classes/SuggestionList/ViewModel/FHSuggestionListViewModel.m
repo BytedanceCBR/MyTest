@@ -13,7 +13,8 @@
 
 @property (nonatomic, weak) FHSuggestionListViewController *listController;
 @property (nonatomic, weak) FHBaseCollectionView *collectionView;
-@property (nonatomic, strong) NSMutableArray *cellArray;
+@property (nonatomic, strong) FHSuggestionCollectionViewCell *lastCell;
+@property (nonatomic, strong) NSMutableDictionary *cellDict;
 @property (nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
@@ -25,19 +26,14 @@
 -(instancetype)initWithController:(FHSuggestionListViewController *)viewController {
     self = [super init];
     if (self) {
+        _currentTabIndex = -1;
         self.listController = viewController;
-        [self initDataArray];
+        self.cellDict = [NSMutableDictionary new];
         _isFirstLoad = YES;
     }
     return self;
 }
 
-- (void)initDataArray {
-    self.cellArray = [NSMutableArray array];
-    for (NSInteger i = 0; i < 4; i++) {
-        [self.cellArray addObject:[NSNull null]];
-    }
-}
 
 - (void)initCollectionView:(FHBaseCollectionView *)collectionView
 {
@@ -73,24 +69,26 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellIdentifier = NSStringFromClass([FHSuggestionCollectionViewCell class]);
-    FHSuggestionCollectionViewCell *cell = (FHSuggestionCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
     NSInteger row = indexPath.item;
-    if (row % 2 == 1) {
-        cell.backgroundColor = [UIColor redColor];
-    } else {
-        cell.backgroundColor = [UIColor blueColor];
-    }
-    self.cellArray[row] = cell;
-    if (_isFirstLoad) {
-        _isFirstLoad = NO;
+    UICollectionViewCell *cell = NULL;
+    if (row >= 0 && row < self.listController.houseTypeArray.count) {
         
+        NSString *rowStr = [NSString stringWithFormat:@"%ld", row];
+        if (self.cellDict[rowStr]) {
+            return self.cellDict[rowStr];
+        } else {
+            NSString *cellIdentifier = NSStringFromClass([FHSuggestionCollectionViewCell class]);
+            
+            cellIdentifier = [NSString stringWithFormat:@"%@_%ld", cellIdentifier, row];
+            [collectionView registerClass:[FHSuggestionCollectionViewCell class] forCellWithReuseIdentifier:cellIdentifier];
+            cell = (FHSuggestionCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+            
+            self.cellDict[rowStr] = cell;
+            [self initCellWithIndex:row];
+            return cell;
+        }
     }
-    if (row == _currentTabIndex) {
-        cell.tag = self.listController.houseTypeArray[row];
-        [self initCell];
-    }
-    return cell;
+    return [[UICollectionViewCell alloc] init];
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -114,22 +112,26 @@
         self.currentTabIndex = tabIndex;
         self.listController.segmentControl.selectedSegmentIndex = tabIndex;
         self.listController.houseType = [self.listController.houseTypeArray[(int)tabIndex] integerValue];
+        //[self initCellWithIndex:tabIndex];
     } else {
+        //加载数据
         CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
         [self.listController.segmentControl setScrollValue:value isDirectionLeft:diff < 0];
     }
     _oldX = scrollView.contentOffset.x;
 }
 
-//侧滑切换tab
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    
-}
-
--(void)initCell
+-(void)initCellWithIndex:(NSInteger)index;
 {
-    if (_currentTabIndex < self.cellArray.count && self.cellArray[_currentTabIndex]) {
+    NSString *rowStr = [NSString stringWithFormat:@"%ld", index];
+    if (index < self.listController.houseTypeArray.count && index >= 0 && self.cellDict[rowStr]) {
+        FHSuggestionCollectionViewCell *cell = self.cellDict[rowStr];
         
+        [cell refreshData:self.listController.paramObj andHouseType:[self.listController.houseTypeArray[index] integerValue]];
+        
+        if (cell.vc && ![self.listController.childViewControllers containsObject:cell.vc]) {
+            [self.listController addChildViewController:cell.vc];
+        }
     }
 }
 

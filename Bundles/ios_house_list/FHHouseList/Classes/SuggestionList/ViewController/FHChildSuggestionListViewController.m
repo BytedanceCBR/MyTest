@@ -21,7 +21,6 @@
 
 @interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
-@property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, weak)     FHPopupMenuView       *popupMenuView;
 @property (nonatomic, strong)   FHChildSuggestionListViewModel      *viewModel;
 

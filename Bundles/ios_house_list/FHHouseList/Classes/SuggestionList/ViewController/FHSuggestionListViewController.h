@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *houseTypeArray;
 @property (nonatomic, assign)     FHHouseType       houseType;
 
+@property (nonatomic, copy) TTRouteParamObj *paramObj;
+
 - (void)requestDeleteHistory;
 
 - (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos;
