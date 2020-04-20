@@ -14,8 +14,6 @@
 @interface FHFloorPanListViewController ()
 @property (nonatomic , strong) HMSegmentedControl *segmentedControl;
 @property (nonatomic , strong) UIView *segementBottomLine;
-@property (nonatomic , strong) UIScrollView *leftFilterView;
-@property (nonatomic , strong) UIView *leftView;
 @property (nonatomic , strong) UITableView *floorListTable;
 @property (nonatomic , strong) FHFloorPanListViewModel *panListModel;
 @property (nonatomic , strong) NSMutableArray<FHDetailNewDataFloorpanListListModel *> *floorList;
@@ -44,14 +42,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    
     [self setUpSegmentedControl];
-    
-    [self setUpLeftView];
     
     [self setUpFloorListTable];
     
-    _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andLeftScrollView:self.leftFilterView andSegementView:self.segmentedControl andItems:_floorList andCourtId:_courtId];
+    _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andSegementView:self.segmentedControl andItems:_floorList andCourtId:_courtId];
     
     [self setNavBarTitle:@"楼盘户型"];
     
@@ -74,19 +69,20 @@
 {
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
-    _segmentedControl.selectionIndicatorHeight = 2;
-    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange1];
+    _segmentedControl.selectionIndicatorHeight = 4;
+    _segmentedControl.selectionIndicatorWidth = 20;
+    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange4];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
     //    _segmentedControl.selec
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
-                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
+                                     [UIColor blackColor],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontMedium:16],NSFontAttributeName,
-                                     [UIColor themeOrange1],NSForegroundColorAttributeName,nil];
+                                     [UIFont themeFontSemibold:18],NSFontAttributeName,
+                                     [UIColor blackColor],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
     _segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 30);
@@ -111,29 +107,6 @@
         make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
         make.height.mas_equalTo(0.5);
     }];
-    
-}
-
-- (void)setUpLeftView
-{
-    _leftView = [UIView new];
-    _leftView.backgroundColor = [UIColor themeGray7];
-    [self.view addSubview:_leftView];
-    
-    [_leftView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(80);
-        make.left.equalTo(self.view);
-        make.top.equalTo(self.segmentedControl.mas_bottom);
-        make.bottom.equalTo([self getBottomBar].mas_top);
-    }];
-    
-    _leftFilterView = [UIScrollView new];
-    _leftFilterView.backgroundColor = [UIColor themeGray7];
-    [_leftView addSubview:_leftFilterView];
-    
-    [_leftFilterView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.leftView);
-    }];
 }
 
 - (void)setUpFloorListTable
@@ -151,12 +124,12 @@
     
     [_floorListTable mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.view);
-        make.left.equalTo(self.leftView.mas_right);
+        make.left.equalTo(0);
         make.top.equalTo(self.segmentedControl.mas_bottom);
         make.bottom.equalTo([self getBottomBar].mas_top);
     }];
-    
-    [_floorListTable setBackgroundColor:[UIColor whiteColor]];
+    self.floorListTable.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
+    [_floorListTable setBackgroundColor:[UIColor themeGray7]];
 }
 
 /*

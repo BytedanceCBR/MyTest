@@ -15,8 +15,7 @@
 #import "FHDetailHouseNameCell.h"
 #import "FHFloorPanCorePropertyCell.h"
 #import "FHDetailGrayLineCell.h"
-#import "FHDetailDisclaimerCell.h"
-#import "FHFloorPanCorePermitCell.h"
+#import "FHOldDetailDisclaimerCell.h"
 
 @interface FHFloorCoreInfoViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -24,12 +23,10 @@
 @property (nonatomic , strong) NSMutableArray *currentItems;
 @property (nonatomic , strong) NSString *courtId;
 @property(nonatomic , strong) FHDetailHouseNameModel *houseNameModel;
-@property(nonatomic , strong) FHDetailDisclaimerModel *disclaimerModel;
-
 @end
 @implementation FHFloorCoreInfoViewModel
 
--(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId houseNameModel:(JSONModel *)model housedisclaimerModel:(JSONModel *)disClaimerModel
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId houseNameModel:(JSONModel *)model
 {
     self = [super init];
     if (self) {
@@ -38,7 +35,6 @@
         _courtId = courtId;
         _currentItems = [NSMutableArray new];
         _houseNameModel = model;
-        _disclaimerModel = disClaimerModel;
         [self configTableView];
         
         [self startLoadData];
@@ -54,10 +50,8 @@
     [self.infoListTable registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     
     [self.infoListTable registerClass:[FHFloorPanCorePropertyCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePropertyCell class])];
-    
-    [self.infoListTable registerClass:[FHFloorPanCorePermitCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePermitCell class])];
 
-    [self.infoListTable registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
+    [self.infoListTable registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -76,14 +70,9 @@
         return [FHFloorPanCorePropertyCell class];
     }
     
-    // 准字信息
-    if ([model isKindOfClass:[FHFloorPanCorePermitCellModel class]]) {
-        return [FHFloorPanCorePermitCell class];
-    }
-    
     // 版权信息
-    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
-        return [FHDetailDisclaimerCell class];
+    if ([model isKindOfClass:[FHOldDetailDisclaimerModel class]]) {
+        return [FHOldDetailDisclaimerCell class];
     }
     
     return [FHDetailBaseCell class];
@@ -148,7 +137,7 @@
     
     FHFloorPanCorePropertyCellModel *companyModel = [self createCompanyInfoModel:model];
     // 添加分割线--当存在某个数据的时候在顶部添加分割线
-    FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+    FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] initWithHeight:16];
     [self.currentItems addObject:grayLine];
     [self.currentItems addObject:companyModel];
 
@@ -171,16 +160,23 @@
     if (model.data.permitList.count > 0) {
         [self.currentItems addObject:grayLine];
         
-        FHFloorPanCorePermitCellModel *permitModel = [[FHFloorPanCorePermitCellModel alloc] init];
-        permitModel.permitList = model.data.permitList;
+        FHFloorPanCorePropertyCellModel *permitModel = [self createPermitInfoModel:model.data.permitList.firstObject];
         [self.currentItems addObject:permitModel];
     }
     
-    if (_disclaimerModel) {
-        [self.currentItems addObject:_disclaimerModel];
+    if (model.data.disclaimer) {
+        FHDetailGrayLineModel *newGrayLine = [[FHDetailGrayLineModel alloc] initWithHeight:25];
+        [self.currentItems addObject:newGrayLine];
+        
+        FHOldDetailDisclaimerModel *oldDisclaimerModel = [[FHOldDetailDisclaimerModel alloc] init];
+        
+        oldDisclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[model.data.disclaimer toJSONData] error:nil];
+        oldDisclaimerModel.contact = nil;
+        [self.currentItems addObject:oldDisclaimerModel];
     }
     
     [_infoListTable reloadData];
+    _infoListTable.contentOffset = CGPointMake(0, -15);
 }
 
 - (FHFloorPanCorePropertyCellModel *)createWaterInfoModel:(FHDetailNewCoreDetailModel *)model
@@ -272,19 +268,16 @@
 {
     FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
     
-    NSArray *pNameArray = [NSArray arrayWithObjects:@"环线",@"楼盘地址",@"售楼地址", nil];
+    NSArray *pNameArray = [NSArray arrayWithObjects:@"楼盘地址",@"售楼地址", nil];
     NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
     for (NSInteger i = 0; i < pNameArray.count; i++) {
         FHFloorPanCorePropertyCellItemModel *pItemModel = [[FHFloorPanCorePropertyCellItemModel alloc] init];
         pItemModel.propertyName = pNameArray[i];
         switch (i) {
             case 0:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.circuitDesc];
-                break;
-            case 1:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.generalAddress];
                 break;
-            case 2:
+            case 1:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.saleAddress];
                 break;
     
@@ -333,6 +326,36 @@
     return companyInfoModel;
 }
 
+- (FHFloorPanCorePropertyCellModel *)createPermitInfoModel:(FHDetailNewCoreDetailDataPermitListModel *)model
+{
+    FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
+    
+    NSArray *pNameArray = [NSArray arrayWithObjects:@"预售许可证",@"发证信息",@"绑定信息", nil];
+    NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < pNameArray.count; i++) {
+        FHFloorPanCorePropertyCellItemModel *pItemModel = [[FHFloorPanCorePropertyCellItemModel alloc] init];
+        pItemModel.propertyName = pNameArray[i];
+        switch (i) {
+            case 0:
+                pItemModel.propertyValue = [self checkPValueStr:model.permit];
+                break;
+            case 1:
+                pItemModel.propertyValue = [self checkPValueStr:model.permitDate];
+                break;
+            case 2:
+                pItemModel.propertyValue = [self checkPValueStr:model.bindBuilding];
+                break;
+            default:
+                break;
+        }
+        [pItemsArray addObject:pItemModel];
+    }
+    companyInfoModel.list = pItemsArray;
+    
+    return companyInfoModel;
+}
+
+
 #pragma UITableViewDelegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -358,6 +381,7 @@
         NSString *identifier = [self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            cell.backgroundColor = [UIColor themeGray7];
             [cell refreshWithData:data];
             return cell;
         }
