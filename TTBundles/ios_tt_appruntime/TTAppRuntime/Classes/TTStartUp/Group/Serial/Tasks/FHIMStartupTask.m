@@ -110,20 +110,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     [FHMainApi requestAssoicateEntrance:clueParams completion:^(NSError * _Nonnull error, id  _Nonnull jsonObj) {
         if(!error && jsonObj) {
             
-            if (isEmptyString(userId)) {
-                finishBlock(@"click_call", imprId,true);
-                [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_UID extra:@{@"client_type":@"client_c"}];
-                return;
-            }
-            NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-            NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
-            NSMutableDictionary *param = @{}.mutableCopy;
-            param[@"realtor_id"] = userId;
-            param[@"enterfrom"] = @"app_chat";
-            param[@"impr_id"] = imprId ? : @"be_null";
-            
             NSDictionary* phoneAssociate = nil;
-            
             id data = jsonObj[@"data"];
             if(data && [data isKindOfClass:NSDictionary.class]) {
                 id associateInfoDic = data[@"associate_info"];
@@ -135,6 +122,24 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     }
                 }
             }
+            
+            if (isEmptyString(userId)) {
+                
+                NSMutableDictionary *dict = @{}.mutableCopy;
+                dict[@"impr_id"] = imprId;
+                dict[@"associate_info"] = phoneAssociate;
+                finishBlock(@"click_call", dict, true);
+                
+                [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_UID extra:@{@"client_type":@"client_c"}];
+                return;
+            }
+            NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+            NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
+            NSMutableDictionary *param = @{}.mutableCopy;
+            param[@"realtor_id"] = userId;
+            param[@"enterfrom"] = @"app_chat";
+            param[@"impr_id"] = imprId ? : @"be_null";
+        
             if (phoneAssociate) {
                 NSData *data = [NSJSONSerialization dataWithJSONObject:phoneAssociate options:0 error:nil];
                 NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -180,7 +185,10 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     phone = [number stringByReplacingOccurrencesOfString:@"" withString:@""];
                     isAssociate = YES;
                     
-                    finishBlock(@"click_call", serverImprId,true);
+                    NSMutableDictionary *dict = @{}.mutableCopy;
+                    dict[@"impr_id"] = serverImprId;
+                    dict[@"associate_info"] = phoneAssociate;
+                    finishBlock(@"click_call", dict, true);
                     if (phone.length == 0) {
                         [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_NUMBER_EMPTY extra:monitorParams];
                         [[ToastManager manager] showToast:@"获取电话号码失败"];
@@ -204,7 +212,11 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
                     [monitorParams setValue:error forKey:@"server_error"];
                     [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_SERVER_ERROR extra:monitorParams];
-                    finishBlock(@"click_call", imprId,true);
+                    
+                    NSMutableDictionary *dict = @{}.mutableCopy;
+                    dict[@"impr_id"] = imprId;
+                    dict[@"associate_info"] = phoneAssociate;
+                    finishBlock(@"click_call", dict,true);
                     
                     if ([obj isKindOfClass:[NSDictionary class]]) {
                         NSDictionary *jsonObj = (NSDictionary *)obj;
