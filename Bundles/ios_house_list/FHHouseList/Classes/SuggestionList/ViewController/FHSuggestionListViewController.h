@@ -10,7 +10,8 @@
 #import "FHSuggestionItemCell.h"
 #import "FHHouseSuggestionDelegate.h"
 #import <FHCommonUI/FHSearchBar.h>
-
+#import "HMSegmentedControl.h"
+#import "FHSuggestionSearchBar.h"
 typedef enum : NSUInteger {
     FHEnterSuggestionTypeDefault       =   0,// H5
     FHEnterSuggestionTypeHome       =   1,// 首页
@@ -43,10 +44,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FHSuggestionListViewController : FHBaseViewController
 
+@property (nonatomic, strong) HMSegmentedControl *segmentControl;
 @property (nonatomic, strong)   FHSuggectionTableView       *historyTableView;
 @property (nonatomic, strong)   FHSuggectionTableView       *suggestTableView;
 
-@property (nonatomic, strong)     FHSearchBar     *naviBar;
+@property (nonatomic, strong)     FHSuggestionSearchBar     *naviBar;
 @property (nonatomic, strong) NSMutableArray *houseTypeArray;
 
 - (void)requestDeleteHistory;

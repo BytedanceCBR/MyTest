@@ -20,6 +20,7 @@
 #import "FHOldSuggestionItemCell.h"
 #import "HMSegmentedControl.h"
 #import "FHBaseCollectionView.h"
+#import "FHSuggestionSearchBar.h"
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -36,8 +37,7 @@
 @property (nonatomic, assign)   BOOL       canSearchWithRollData; // 如果为YES，支持placeholder搜索
 @property (nonatomic, assign)   BOOL       hasDismissedVC;
 
-@property (nonatomic, strong) HMSegmentedControl *segmentControl;
-@property (nonatomic, strong) FHSearchBar *searchBar;
+@property (nonatomic, strong) FHSuggestionSearchBar *searchBar;
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) FHBaseCollectionView *collectionView;
@@ -167,12 +167,20 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.canSearchWithRollData = NO;
+    self.houseTypeArray = [NSMutableArray new];
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    if (self.homePageRollDic) {
+        NSString *text = self.homePageRollDic[@"text"];
+        if (text.length > 0) {
+            [self.naviBar setSearchPlaceHolderText:text];
+            self.canSearchWithRollData = YES;
+        }
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -194,25 +202,19 @@
         make.height.mas_equalTo(naviHeight);
     }];
     [self setupSegmentedControl];
-    self.houseType = self.viewModel.houseType;
     
-    self.naviBar = [[FHSearchBar alloc] initWithFrame:CGRectZero];
+    
+    
+    self.naviBar = [[FHSuggestionSearchBar alloc] initWithFrame:CGRectZero];
     [self.naviBar setSearchPlaceHolderText:@"二手房/租房/小区"];
-    self.naviBar.backBtn.hidden = YES;
     [self.topView addSubview:_naviBar];
     [self.naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(_segmentControl.mas_bottom);
+        make.top.mas_equalTo(_segmentControl.mas_bottom).offset(6);
         make.left.right.mas_equalTo(0);
         make.height.mas_equalTo(54);
     }];
     [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:self.houseType]];
-    _naviBar.searchTypeLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
-    CGSize size = [self.naviBar.searchTypeLabel sizeThatFits:CGSizeMake(100, 20)];
-    [self.naviBar.searchTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(size.width);
-    }];
-    [_naviBar.searchTypeBtn addTarget:self action:@selector(searchTypeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     _naviBar.searchInput.delegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
@@ -244,6 +246,7 @@
         make.left.right.top.bottom.mas_equalTo(0);
     }];
     [self.viewModel initCollectionView:_collectionView];
+    self.houseType = self.viewModel.houseType;
 }
 
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
@@ -291,9 +294,10 @@
 -(void)bindTopIndexChanged
 {
     WeakSelf;
-    _segmentControl.indexChangeBlock = ^(NSInteger index) {
+    self.segmentControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
         self.viewModel.currentTabIndex = index;
+        self.houseType = [self.houseTypeArray[index] integerValue];
     };
 }
 
@@ -316,6 +320,7 @@
         return;
     }
     _houseType = houseType;
+    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:houseType]];
     _segmentControl.selectedSegmentIndex = [self getSegmentControlIndex];
     self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
 }
@@ -335,15 +340,19 @@
     NSMutableArray *items = [[NSMutableArray alloc] init];
     if (config.searchTabFilter.count > 0) {
         [items addObject: [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeSecondHandHouse]];
+        [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeSecondHandHouse]];
     }
     if (config.searchTabRentFilter.count > 0) {
         [items addObject:[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeRentHouse]];
+        [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeRentHouse]];
     }
     if (config.searchTabCourtFilter.count > 0) {
         [items addObject:[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeNewHouse]];
+        [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeNewHouse]];
     }
     if (config.searchTabNeighborhoodFilter.count > 0) {
         [items addObject:[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeNeighborhood]];
+        [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeNeighborhood]];
     }
     return items;
 }

@@ -15,6 +15,9 @@
 @property (nonatomic, weak) FHBaseCollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray *cellArray;
 @property (nonatomic, assign) BOOL isFirstLoad;
+@property(nonatomic , assign) CGPoint beginOffSet;
+@property(nonatomic , assign) CGFloat oldX;
+
 @end
 
 @implementation FHSuggestionListViewModel
@@ -49,6 +52,8 @@
     if (_currentTabIndex != currentTabIndex) {
         _currentTabIndex = currentTabIndex;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentTabIndex inSection:0];
+
+        [self.collectionView layoutIfNeeded];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
     }
 }
@@ -82,11 +87,44 @@
         
     }
     if (row == _currentTabIndex) {
+        cell.tag = self.listController.houseTypeArray[row];
         [self initCell];
     }
     return cell;
 }
 
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.beginOffSet = CGPointMake(self.currentTabIndex * [UIScreen mainScreen].bounds.size.width, scrollView.contentOffset.y);
+    self.oldX = scrollView.contentOffset.x;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat tabIndex = scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width;
+    CGFloat scrollDistance = scrollView.contentOffset.x - _oldX;
+    CGFloat diff = scrollView.contentOffset.x - self.beginOffSet.x;
+    if(diff >= 0){
+        tabIndex = floorf(tabIndex);
+    }else if (diff < 0){
+        tabIndex = ceilf(tabIndex);
+    }
+    NSLog(@"%f", tabIndex);
+    if (tabIndex != self.listController.segmentControl.selectedSegmentIndex) {
+        self.currentTabIndex = tabIndex;
+        self.listController.segmentControl.selectedSegmentIndex = tabIndex;
+    } else {
+        CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
+        [self.listController.segmentControl setScrollValue:value isDirectionLeft:diff < 0];
+    }
+    _oldX = scrollView.contentOffset.x;
+}
+
+//侧滑切换tab
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    
+}
 
 -(void)initCell
 {
