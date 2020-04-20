@@ -91,8 +91,14 @@
     }
 }
 
+
+
 // house_show埋点
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.isNewHouseFloorPan && !self.subHouseShowCache.allKeys.count >0) {
+        return;
+    }
+    
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     if ([self.houseShowCache valueForKey:tempKey]) {
         return;
@@ -102,6 +108,11 @@
     if (self.displayCellBlk) {
         self.displayCellBlk(indexPath.row);
     }
+}
+
+- (void )setSubHouseShowCache:(NSMutableDictionary *)subHouseShowCache {
+    _subHouseShowCache = subHouseShowCache;
+    [_houseShowCache addEntriesFromDictionary:subHouseShowCache];
 }
 
 #pragma mark - FHDetailBaseCollectionCellDelegate

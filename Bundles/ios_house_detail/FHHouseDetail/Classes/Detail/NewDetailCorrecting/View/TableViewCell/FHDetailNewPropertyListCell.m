@@ -160,7 +160,6 @@
     }
     FHHouseBaseInfoModel *obj = model.baseInfo[index];
     if (obj.openUrl.length > 0) {
-       // todo zjing test
         NSURL *url = [NSURL URLWithString:obj.openUrl];
         [[TTRoute sharedRoute]openURLByPushViewController:url];
     }
