@@ -96,7 +96,6 @@
             }else {
                 vHeight = 76;
             }
-            obj.realtorCellShow = FHRealtorCellShowStyle3;
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj];
             // 添加事件
             itemView.tag = idx;
@@ -789,7 +788,6 @@
     
     self.agency.textColor = [UIColor colorWithHexString:@"#929292"];
     self.agency.font = [UIFont themeFontMedium:10];
-    self.model.agencyDescription = @"活动 | 预约看房 免费专车接送";
     [self newHouseModifiedLayoutNameNeedShowCenter:self.model.agencyDescription.length <= 0];
     if (self.model.agencyDescription.length > 0) {
         [self addSubview:self.agencyDescriptionBac];
