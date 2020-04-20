@@ -43,7 +43,7 @@ static const NSInteger kTopScrollViewTag = 100;
         self.categoryLabel.text = @"为你推荐";
         self.backgroundColor = [UIColor themeHomeColor];
         [self addSubview:self.categoryLabel];
-        self.categoryLabel.frame = CGRectMake(20, 0, 100, 30);
+        self.categoryLabel.frame = CGRectMake(15, 0, 100, 30);
         [self setUpSegmentedControl];
     }
     return self;

@@ -336,6 +336,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, retain, nullable) NSNumber *banBury;
 @property (nonatomic, retain, nullable) NSNumber *banDigg;
+/**
+ *  图片来源信息 by xsm
+ */
+@property (nonatomic, strong, nullable) NSDictionary *happyKnocking;
 
 
 @property (nonatomic, copy, nullable) NSString * schema;

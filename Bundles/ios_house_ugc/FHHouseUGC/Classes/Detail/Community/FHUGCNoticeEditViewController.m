@@ -18,6 +18,7 @@
 #import "TTUGCEmojiParser.h"
 #import "FHUGCNoticeModel.h"
 #import "TTNavigationController.h"
+#import <TTBaseLib/TTUIResponderHelper.h>
 
 typedef enum : NSUInteger {
     ActionTypeSaveOnly = 0,
