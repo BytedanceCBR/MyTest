@@ -273,7 +273,7 @@ def appPods
     #-----点赞分享顶踩不感兴趣----
     pod_binary 'TTBatchItemAction','0.1.8'
     #-------AB测库--------
-    pod_binary 'TTABManager', '0.0.7'
+    pod 'TTABManager', :path => '../AKPlugins/TTABManager', :inhibit_warnings => false
     #-----头条网络业务库------
     pod_binary 'TTNetBusiness', '0.0.10'
 
