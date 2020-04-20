@@ -15,7 +15,6 @@
 #import "FHDetailHouseNameCell.h"
 #import "FHFloorPanCorePropertyCell.h"
 #import "FHDetailGrayLineCell.h"
-#import "FHDetailDisclaimerCell.h"
 #import "FHOldDetailDisclaimerCell.h"
 
 @interface FHFloorCoreInfoViewModel()<UITableViewDelegate,UITableViewDataSource>
@@ -168,12 +167,11 @@
     if (model.data.disclaimer) {
         FHDetailGrayLineModel *newGrayLine = [[FHDetailGrayLineModel alloc] initWithHeight:25];
         [self.currentItems addObject:newGrayLine];
-        FHDetailDisclaimerModel *disclaimerModel = (FHDetailDisclaimerModel *)model.data.disclaimer;
         
         FHOldDetailDisclaimerModel *oldDisclaimerModel = [[FHOldDetailDisclaimerModel alloc] init];
         
-        oldDisclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[disclaimerModel.disclaimer toJSONData] error:nil];
-        oldDisclaimerModel.contact = [[FHDetailContactModel alloc] initWithData:[disclaimerModel.contact toJSONData] error:nil];
+        oldDisclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[model.data.disclaimer toJSONData] error:nil];
+        oldDisclaimerModel.contact = nil;
         [self.currentItems addObject:oldDisclaimerModel];
     }
     
