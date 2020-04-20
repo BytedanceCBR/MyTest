@@ -87,6 +87,8 @@
 #import "TTURLUtils.h"
 #import <FHHouseBase/FHEnvContext.h>
 
+#import "FHAccountBindingViewController.h"
+
 //爱看
 #import "AKTaskSettingHelper.h"
 #import "FHUserTracker.h"
@@ -155,6 +157,7 @@ typedef NS_ENUM(NSUInteger, TTSettingCellType) {
     SettingCellTypeUserProtocol,            // 用户协议
     SettingCellTypePrivacyProtocol,         // 隐私政策
     SettingCellTypeBusinessLicense,         // 证照资质
+    SettingCellTypeFHAccountBindingSetting, // 幸福里账号设置
     SettingCellTypeLogoutUnRegister         // 注销登录
 
 };
@@ -727,7 +730,12 @@ TTEditUserProfileViewControllerDelegate
         UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    } else if (cellType == SettingCellTypeBlockUsersList) {
+    }else if(cellType == SettingCellTypeFHAccountBindingSetting){
+        cell.textLabel.text = NSLocalizedString(@"账号设置", nil);
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
+        cell.accessoryView = accessoryImage;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }else if (cellType == SettingCellTypeBlockUsersList) {
         cell.textLabel.text = NSLocalizedString(@"黑名单", nil);
         UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
@@ -824,11 +832,17 @@ TTEditUserProfileViewControllerDelegate
             }
             return array;
         }
-        case kTTSettingSectionTypeAbout:
-            return @[@(SettingCellTypeAbout),
-                     @(SettingCellTypeUserProtocol),
-                     @(SettingCellTypePrivacyProtocol),
-                    @(SettingCellTypeBusinessLicense)];
+        case kTTSettingSectionTypeAbout:{
+            NSMutableArray *array = [NSMutableArray arrayWithArray:@[
+                                                                     @(SettingCellTypeAbout),
+                                                                      @(SettingCellTypeUserProtocol),
+                                                                      @(SettingCellTypePrivacyProtocol),
+                                                                     @(SettingCellTypeBusinessLicense),]];
+            if ([TTAccountManager isLogin]) {
+                [array addObject:@(SettingCellTypeFHAccountBindingSetting)];
+            }
+            return array;
+        }
         case kTTSettingSectionTypeLogout:
             return @[@(SettingCellTypeLogout)];
 //        case kTTSettingSectionTypeLogoutUnRegister:
@@ -1328,6 +1342,8 @@ TTEditUserProfileViewControllerDelegate
         [self showEditUserView:nil]; //编辑资料
     } else if (cellType == SettingCellTypeAccountBindingSetting) {
         [self openAccountBindingSettingDidSelectCell:nil];
+    } else if (cellType == SettingCellTypeFHAccountBindingSetting) {
+        [self openFHAccountBindingSettingDidSelectCell];
     } else if (cellType == SettingCellTypeBlockUsersList) {
         [ self openUserBlacklistsDidSelectCell:nil];
     } else if (cellType == SettingCellTypeLogout) {
@@ -1582,6 +1598,12 @@ TTEditUserProfileViewControllerDelegate
     wrapperTrackEvent(@"setting", @"enter_edit_account");
     
     TTAccountBindingViewController *vc = [[TTAccountBindingViewController alloc] init];
+    UINavigationController *topNav = [TTUIResponderHelper topNavigationControllerFor:self];
+    [topNav pushViewController:vc animated:YES];
+}
+
+-(void)openFHAccountBindingSettingDidSelectCell{
+    FHAccountBindingViewController *vc = [[FHAccountBindingViewController alloc] init];
     UINavigationController *topNav = [TTUIResponderHelper topNavigationControllerFor:self];
     [topNav pushViewController:vc animated:YES];
 }
