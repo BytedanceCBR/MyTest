@@ -1038,6 +1038,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
 }
 
++ (BOOL)isNewDiscovery {
+    return YES;
+}
+
 + (BOOL)isIntroduceOpen {
     return YES;
 }

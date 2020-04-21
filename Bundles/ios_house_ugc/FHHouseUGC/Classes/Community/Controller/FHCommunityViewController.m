@@ -59,7 +59,7 @@
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     //test
-    self.isNewDiscovery = NO;
+    self.isNewDiscovery = [FHEnvContext isNewDiscovery];
     self.hasShowDots = NO;
     self.isUgcOpen = [FHEnvContext isUGCOpen];
     self.alreadyShowGuide = NO;

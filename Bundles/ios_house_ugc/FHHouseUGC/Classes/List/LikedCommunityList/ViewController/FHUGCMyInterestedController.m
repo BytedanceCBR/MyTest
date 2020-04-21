@@ -14,12 +14,14 @@
 #import "UIViewController+Track.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import "FHUGCSearchView.h"
 
 @interface FHUGCMyInterestedController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
-@property(nonatomic, strong) FHUGCMyInterestedViewModel *viewModel;
-@property(nonatomic ,strong) UITableView *tableView;
-@property (nonatomic, assign) NSTimeInterval lastRequestTime;
+@property (nonatomic , strong) FHUGCMyInterestedViewModel *viewModel;
+@property (nonatomic , strong) UITableView *tableView;
+@property (nonatomic , assign) NSTimeInterval lastRequestTime;
+@property (nonatomic , strong) FHUGCSearchView *searchView;
 
 @end
 
@@ -79,7 +81,11 @@
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
     if(self.type == FHUGCMyInterestedTypeEmpty){
-        headerView = [self emptyHeaderView];
+        if([FHEnvContext isNewDiscovery]){
+            headerView = [self emptyHeaderViewDiscovery];
+        }else{
+            headerView = [self emptyHeaderView];
+        }
     }
     _tableView.tableHeaderView = headerView;
     
@@ -111,6 +117,21 @@
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 36)];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, [UIScreen mainScreen].bounds.size.width, 21)];
+    label.font = [UIFont themeFontRegular:15];
+    label.textColor = [UIColor themeGray1];
+    label.text = @"猜你喜欢";
+    [headerView addSubview:label];
+    
+    return headerView;
+}
+
+- (UIView *)emptyHeaderViewDiscovery {
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 36 + 49)];
+    
+    FHUGCSearchView *searchView = [[FHUGCSearchView alloc] initWithFrame:CGRectMake(20, 15, [UIScreen mainScreen].bounds.size.width - 40, 34)];
+    [headerView addSubview:searchView];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 15 + 49, [UIScreen mainScreen].bounds.size.width, 21)];
     label.font = [UIFont themeFontRegular:15];
     label.textColor = [UIColor themeGray1];
     label.text = @"猜你喜欢";

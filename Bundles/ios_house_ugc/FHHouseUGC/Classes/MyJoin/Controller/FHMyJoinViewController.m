@@ -13,6 +13,7 @@
 #import "FHUserTracker.h"
 #import "TTArticleTabBarController.h"
 #import "TTTabBarManager.h"
+#import "FHEnvContext.h"
 
 @interface FHMyJoinViewController ()
 
@@ -119,7 +120,6 @@
     FHCommunityFeedListController *vc =[[FHCommunityFeedListController alloc] init];
     vc.listType = FHCommunityFeedListTypeMyJoin;
     vc.showErrorView = NO;
-//    vc.hidePublishBtn = YES;
     vc.tableHeaderView = self.neighbourhoodView;
     vc.tracerDict = [self.tracerDict mutableCopy];
     
@@ -165,7 +165,8 @@
 
 - (FHMyJoinNeighbourhoodView *)neighbourhoodView {
     if(!_neighbourhoodView){
-        _neighbourhoodView = [[FHMyJoinNeighbourhoodView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 194)];
+        _neighbourhoodViewHeight = [FHEnvContext isNewDiscovery] ? 144 : 194;
+        _neighbourhoodView = [[FHMyJoinNeighbourhoodView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _neighbourhoodViewHeight)];
     }
     return _neighbourhoodView;
 }
