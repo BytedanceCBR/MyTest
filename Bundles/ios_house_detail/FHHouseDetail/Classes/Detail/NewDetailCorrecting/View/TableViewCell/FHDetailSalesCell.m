@@ -223,7 +223,7 @@
 
     NSString *title = itemInfo.discountReportTitle;
     NSString *subtitle = itemInfo.discountReportSubTitle;
-    NSString *toast = itemInfo.discountReportDoneTitle;
+    NSString *toast = [NSString stringWithFormat:@"%@，%@",itemInfo.discountReportDoneTitle,itemInfo.discountReportDoneSubTitle];
     NSString *btnTitle = itemInfo.discountButtonText;
     NSMutableDictionary *extraDic = @{@"position":@"coupon"
                                       }.mutableCopy;

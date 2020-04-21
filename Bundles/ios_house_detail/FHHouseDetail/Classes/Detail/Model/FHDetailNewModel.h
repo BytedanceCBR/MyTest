@@ -206,6 +206,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *discountReportSubTitle;
 @property (nonatomic, copy , nullable) NSString *discountButtonText;
 @property (nonatomic, copy , nullable) NSString *discountReportDoneTitle;
+@property (nonatomic, copy , nullable) NSString *discountReportDoneSubTitle;
 @property (nonatomic, strong) NSNumber *page;
 
 @end
