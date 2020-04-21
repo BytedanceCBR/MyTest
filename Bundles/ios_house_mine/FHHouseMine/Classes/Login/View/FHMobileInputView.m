@@ -12,6 +12,8 @@
 #import <FHCommonUI/UIFont+House.h>
 #import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
+#import <ByteDanceKit/ByteDanceKit.h>
+#import "FHLoginVerifyCodeTextField.h"
 
 @interface FHMobileInputView ()<UITextFieldDelegate>
 
@@ -53,7 +55,7 @@
             make.right.mas_equalTo(-30);
         }];
         
-        UITextField *mobileTextField = [[UITextField alloc] init];
+        UITextField *mobileTextField = [[FHLoginVerifyCodeTextField alloc] init];
         mobileTextField.font = [UIFont themeFontRegular:20];
         mobileTextField.placeholder = @"请输入手机号";
         mobileTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入手机号" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray5]}];
@@ -69,7 +71,6 @@
             make.right.mas_equalTo(-30);
             make.height.mas_equalTo(56);
         }];
-//        [self.mobileTextField becomeFirstResponder];
         
         UILabel *otherLabel = [[UILabel alloc] init];
         otherLabel.font = [UIFont themeFontRegular:14];
@@ -151,6 +152,11 @@
 
 - (void)updateProtocol:(NSAttributedString *)protocol{
     self.agreementLabel.attributedText = protocol;
+    CGFloat height = [protocol.string btd_heightWithFont:protocol.yy_font width:CGRectGetWidth(UIScreen.mainScreen.bounds) - 60];
+    [self.agreementLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(height);
+    }];
+
 }
 
 - (void)douyinLoginAction {

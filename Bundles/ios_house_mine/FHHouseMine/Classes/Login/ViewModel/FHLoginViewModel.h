@@ -30,13 +30,24 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   BOOL  isNeedCheckUGCAdUser;
 @property (nonatomic , copy) NSString *mobileNumber;
 
-@property (nonatomic, copy) void (^configureSubview)(FHLoginViewType type,NSDictionary *infoDict);
 
+/// 这个回调，是请求判断是否支持运营商登录，请求判断是否支持抖音一键登录以后的回调
+/// 只适用于FHLoginViewController 回调，type变化后view会跟着变化
+@property (nonatomic, copy) void (^loginViewViewTypeChanged)(FHLoginViewType type);
+
+/// 验证码页面的回调
 @property (nonatomic, copy) void (^updateTimeCountDownValue)(NSInteger secondsValue);
 
-
+/// 请求运营商和抖音登录的权限
 - (void)startLoadData;
 - (void)addEnterCategoryLog;
+
+/// 用户协议
+/// @param viewType 根据 type 不同返回不同的协议
+- (NSAttributedString *)protocolAttrTextByIsOneKeyLoginViewType:(FHLoginViewType )viewType;
+
+/// 如果是运营商，返回运营商名称
+- (NSString *)serviceName;
 
 @end
 

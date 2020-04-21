@@ -99,6 +99,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)showOneKeyLoginView:(BOOL)isOneKeyLogin phoneNum:(NSString *)phoneNum {
     [self.viewController endLoading];
     self.isOneKeyLogin = isOneKeyLogin;
+    self.mobileNumber = phoneNum;
 //    [self.view showOneKeyLoginView:isOneKeyLogin];
 //    [self.view updateOneKeyLoginWithPhone:phoneNum service:isOneKeyLogin ? [self serviceNameStr] : nil];
 //    [self.view.acceptCheckBox setSelected:NO];
@@ -134,14 +135,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             break;
     }
     
-    if (self.configureSubview) {
-        NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
-        if (isOneKeyLogin) {
-            infoDict[@"phone"] = phoneNum?:@"";
-            infoDict[@"service"] = [self serviceNameStr];
-        }
-        infoDict[@"protocol"] = [self protocolAttrTextByIsOneKeyLogin:isOneKeyLogin viewType:viewType];
-        self.configureSubview(viewType, infoDict.copy);
+    if (self.loginViewViewTypeChanged) {
+        self.loginViewViewTypeChanged(viewType);
     }
 }
 
@@ -201,7 +196,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }];
 }
 
-- (NSString *)serviceNameStr {
+- (NSString *)serviceName {
     NSString *service = [TTAccount sharedAccount].service;
     if ([service isEqualToString:TTAccountMobile]) {
         return @"中国移动认证";
@@ -214,7 +209,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
-- (NSMutableAttributedString *)protocolAttrTextByIsOneKeyLogin:(BOOL)isOneKeyLogin viewType:(FHLoginViewType )viewType{
+- (NSAttributedString *)protocolAttrTextByIsOneKeyLoginViewType:(FHLoginViewType )viewType{
     __weak typeof(self) wself = self;
     NSMutableAttributedString *attrText = [NSMutableAttributedString new];
     NSRange serviceRange;
@@ -225,48 +220,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                                       NSFontAttributeName: [UIFont themeFontRegular:13],
                                       NSForegroundColorAttributeName: [UIColor themeGray3],
                                       };
-    if (isOneKeyLogin) {
-        if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {
-            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国移动认证服务条款》以及《幸福里用户协议》和《隐私政策》"];
-            serviceRange = NSMakeRange(7, 10);
-            userProtocolRange = NSMakeRange(21, 7);
-            privacyRange = NSMakeRange(31, 4);
-            urlStr = [NSString stringWithFormat:@"https://wap.cmpassport.com/resources/html/contract.html"];
-        } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountTelecom]) {
-            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国电信认证服务协议》以及《幸福里用户协议》和《隐私政策》"];
-            serviceRange = NSMakeRange(7, 10);
-            userProtocolRange = NSMakeRange(21, 7);
-            privacyRange = NSMakeRange(31, 4);
-            urlStr = [NSString stringWithFormat:@"https://e.189.cn/sdk/agreement/detail.do?hidetop=true"];
-        } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountUnion]) {
-            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国联通服务与隐私协议》以及《幸福里用户协议》和《隐私政策》"];
-            serviceRange = NSMakeRange(7, 11);
-            userProtocolRange = NSMakeRange(22, 7);
-            privacyRange = NSMakeRange(32, 4);
-            urlStr = [NSString stringWithFormat:@"https://opencloud.wostore.cn/authz/resource/html/disclaimer.html?fromsdk=true"];
-        }
-        [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
-        YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
-        [attrText yy_setTextUnderline:decoration range:serviceRange];
-        [attrText yy_setTextUnderline:decoration range:userProtocolRange];
-        [attrText yy_setTextUnderline:decoration range:privacyRange];
-        
-        [attrText yy_setTextHighlightRange:serviceRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-            [wself goToServiceProtocol:urlStr];
-        }];
-        [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-            [wself goToUserProtocol];
-        }];
-        [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-            [wself goToSecretProtocol];
-        }];
-    } else {
-        if (viewType == FHLoginViewTypeDouYin) {
+    switch (viewType) {
+        case FHLoginViewTypeDouYin:{
             attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
             [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
             userProtocolRange = NSMakeRange(7, 7);
             privacyRange = NSMakeRange(17, 4);
             YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
+            [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
             [attrText yy_setTextUnderline:decoration range:userProtocolRange];
             [attrText yy_setTextUnderline:decoration range:privacyRange];
             [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
@@ -275,23 +236,66 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
                 [wself goToSecretProtocol];
             }];
-        } else if (viewType == FHLoginViewTypeMobile) {
-            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
+            break;
+        }
+        case FHLoginViewTypeOneKey:{
+            if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {
+                attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国移动认证服务条款》以及\n《幸福里用户协议》和《隐私政策》"];
+                serviceRange = NSMakeRange(7, 10);
+                userProtocolRange = NSMakeRange(21, 7);
+                privacyRange = NSMakeRange(31, 4);
+                urlStr = [NSString stringWithFormat:@"https://wap.cmpassport.com/resources/html/contract.html"];
+            } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountTelecom]) {
+                attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国电信认证服务协议》以及\n《幸福里用户协议》和《隐私政策》"];
+                serviceRange = NSMakeRange(7, 10);
+                userProtocolRange = NSMakeRange(21, 7);
+                privacyRange = NSMakeRange(31, 4);
+                urlStr = [NSString stringWithFormat:@"https://e.189.cn/sdk/agreement/detail.do?hidetop=true"];
+            } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountUnion]) {
+                attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国联通服务与隐私协议》以及\n《幸福里用户协议》和《隐私政策》"];
+                serviceRange = NSMakeRange(7, 11);
+                userProtocolRange = NSMakeRange(22, 7);
+                privacyRange = NSMakeRange(32, 4);
+                urlStr = [NSString stringWithFormat:@"https://opencloud.wostore.cn/authz/resource/html/disclaimer.html?fromsdk=true"];
+            }
             [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
-            userProtocolRange = NSMakeRange(7, 7);
-            privacyRange = NSMakeRange(17, 4);
+            [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
             YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
+            [attrText yy_setTextUnderline:decoration range:serviceRange];
             [attrText yy_setTextUnderline:decoration range:userProtocolRange];
             [attrText yy_setTextUnderline:decoration range:privacyRange];
+            
+            [attrText yy_setTextHighlightRange:serviceRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+                [wself goToServiceProtocol:urlStr];
+            }];
             [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
                 [wself goToUserProtocol];
             }];
             [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
                 [wself goToSecretProtocol];
             }];
+            break;
         }
+        case FHLoginViewTypeMobile:{
+            attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
+                       [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
+                       userProtocolRange = NSMakeRange(7, 7);
+                       privacyRange = NSMakeRange(17, 4);
+                       YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
+                       [attrText yy_setTextUnderline:decoration range:userProtocolRange];
+                       [attrText yy_setTextUnderline:decoration range:privacyRange];
+                       [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+                           [wself goToUserProtocol];
+                       }];
+                       [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+                           [wself goToSecretProtocol];
+                       }];
+            break;
+        }
+        default:
+            break;
     }
-    return attrText;
+    return attrText.copy;
 }
 
 - (void)requestOneKeyLogin {

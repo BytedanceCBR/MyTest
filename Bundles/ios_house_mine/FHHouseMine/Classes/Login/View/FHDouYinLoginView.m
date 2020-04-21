@@ -12,6 +12,7 @@
 #import <FHCommonUI/UIFont+House.h>
 #import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHDouYinLoginView ()
 
@@ -65,21 +66,30 @@
         }];
         
         self.agreementLabel = [[YYLabel alloc] init];
-        _agreementLabel.numberOfLines = 0;
-        _agreementLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        _agreementLabel.textColor = [UIColor themeGray3];
-        _agreementLabel.font = [UIFont themeFontRegular:13];
+        self.agreementLabel.numberOfLines = 0;
+        self.agreementLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        self.agreementLabel.textAlignment = NSTextAlignmentCenter;
+        self.agreementLabel.textColor = [UIColor themeGray3];
+        self.agreementLabel.font = [UIFont themeFontRegular:13];
         [self addSubview:_agreementLabel];
         [self.agreementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self);
             make.bottom.mas_equalTo(-20);
+            make.left.mas_equalTo(30);
+            make.right.mas_equalTo(-30);
+            make.height.mas_equalTo(0);
         }];
     }
     return self;
 }
 
 - (void)updateProtocol:(NSAttributedString *)protocol{
+    
     self.agreementLabel.attributedText = protocol;
+    [self.agreementLabel sizeToFit];
+    CGFloat height = [protocol.string btd_heightWithFont:protocol.yy_font width:CGRectGetWidth(UIScreen.mainScreen.bounds) - 60];
+    [self.agreementLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(height);
+    }];
 }
 
 - (void)douyinLoginButtonAction {

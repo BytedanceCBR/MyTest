@@ -16,6 +16,8 @@
 
 @property (nonatomic, assign) FHLoginViewType viewType;
 
+@property (nonatomic, weak) UITextField *textField;
+
 @end
 
 @implementation FHLoginContainerViewController
@@ -45,6 +47,23 @@
     [super viewDidAppear:animated];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if (self.textField) {
+        self.textField.enabled = YES;
+        [self.textField becomeFirstResponder];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (self.textField) {
+        [self.textField resignFirstResponder];
+        self.textField.enabled = NO;
+    }
+    [self.view endEditing:YES];
+}
+
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
@@ -69,6 +88,7 @@
                 }
                 make.left.right.equalTo(self.view);
             }];
+            [onekeyLoginView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType]];
         }
             break;
         case FHLoginViewTypeMobile:
@@ -86,7 +106,8 @@
                 }
                 make.left.right.equalTo(self.view);
             }];
-            [mobileInputView.mobileTextField becomeFirstResponder];
+            self.textField = mobileInputView.mobileTextField;
+            [mobileInputView updateProtocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType]];
         }
             break;
         case FHLoginViewTypeVerify:
@@ -104,7 +125,7 @@
                 }
                 make.left.right.equalTo(self.view);
             }];
-            [verifyCodeInputView.textFieldArray.firstObject becomeFirstResponder];
+            self.textField = verifyCodeInputView.textFieldArray.firstObject;
             [verifyCodeInputView updateMobileNumber:self.viewModel.mobileNumber];
             
             __weak FHVerifyCodeInputView * weakCodeView = verifyCodeInputView;

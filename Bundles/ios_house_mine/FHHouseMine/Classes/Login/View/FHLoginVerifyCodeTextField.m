@@ -16,4 +16,8 @@
     }
 }
 
+- (BOOL)becomeFirstResponder{
+    return [super becomeFirstResponder];
+}
+
 @end

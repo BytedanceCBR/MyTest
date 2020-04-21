@@ -12,6 +12,7 @@
 #import <FHCommonUI/UIFont+House.h>
 #import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHOneKeyLoginView ()
 
@@ -74,8 +75,10 @@
         _agreementLabel.font = [UIFont themeFontRegular:13];
         [self addSubview:_agreementLabel];
         [self.agreementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self);
             make.bottom.mas_equalTo(-20);
+            make.left.mas_equalTo(30);
+            make.right.mas_equalTo(-30);
+            make.height.mas_equalTo(0);
         }];
         
         UIStackView *stackView = [[UIStackView alloc] init];
@@ -128,7 +131,13 @@
 - (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service protocol:(NSAttributedString *)protocol{
     self.phoneNumberLabel.text = phoneNum;
     self.serviceLabel.text = service;
+    
+    
     self.agreementLabel.attributedText = protocol;
+    CGFloat height = [protocol.string btd_heightWithFont:protocol.yy_font width:CGRectGetWidth(UIScreen.mainScreen.bounds) - 60];
+    [self.agreementLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(height);
+    }];
     [self enableConfirmBtn:phoneNum.length > 0];
 }
 

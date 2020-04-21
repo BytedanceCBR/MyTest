@@ -116,13 +116,14 @@
     self.viewModel.present = self.present;
     self.viewModel.isNeedCheckUGCAdUser = self.isFromMineTab;
     self.viewModel.loginDelegate = self.loginDelegate;
-    [self.viewModel setConfigureSubview:^(FHLoginViewType type, NSDictionary * _Nonnull infoDict) {
-        [weakSelf configureSubviewWithType:type info:infoDict];
+    [self.viewModel setLoginViewViewTypeChanged:^(FHLoginViewType type) {
+        [weakSelf configureSubviewWithType:type];
     }];
     [self.viewModel startLoadData];
 }
 
-- (void)configureSubviewWithType:(FHLoginViewType )type info:(NSDictionary *)infoDict {
+- (void)configureSubviewWithType:(FHLoginViewType )type {
+    
     switch (type) {
         case FHLoginViewTypeOneKey:
         {
@@ -146,7 +147,7 @@
                 make.left.right.equalTo(self.view);
             }];
             self.currentShowView = self.onekeyLoginView;
-            [self.onekeyLoginView updateOneKeyLoginWithPhone:infoDict[@"phone"] service:infoDict[@"service"] protocol:infoDict[@"protocol"]];
+            [self.onekeyLoginView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:type]];
         }
             break;
         case FHLoginViewTypeMobile:
@@ -171,6 +172,7 @@
                 make.left.right.equalTo(self.view);
             }];
             self.currentShowView = self.mobileInputView;
+            [self.mobileInputView updateProtocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:type]];
         }
             break;
         case FHLoginViewTypeDouYin:
@@ -195,7 +197,7 @@
                 make.left.right.equalTo(self.view);
             }];
             self.currentShowView = self.douyinLoginView;
-            [self.douyinLoginView updateProtocol:infoDict[@"protocol"]];
+            [self.douyinLoginView updateProtocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:type]];
         }
             break;
         default:
