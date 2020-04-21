@@ -47,4 +47,10 @@
     return nil;
 }
 
+
+- (NSString *)pageType {
+    NSString *page_type = UT_BE_NULL;
+    return page_type;
+}
+
 @end

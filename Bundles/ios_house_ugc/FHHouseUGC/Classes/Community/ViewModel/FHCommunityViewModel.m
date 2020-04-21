@@ -283,4 +283,17 @@
     [self initCell:@"flip"];
 }
 
+- (NSString *)pageType {
+    NSString *page_type = UT_BE_NULL;
+    if(self.currentTabIndex < self.dataArray.count){
+        FHCommunityCollectionCellType type = [self.dataArray[self.currentTabIndex] integerValue];
+        if (type == FHCommunityCollectionCellTypeMyJoin) {
+            page_type = @"my_join_list";
+        } else  if (type == FHCommunityCollectionCellTypeNearby) {
+            page_type = @"nearby_list";
+        }
+    }
+    return page_type;
+}
+
 @end

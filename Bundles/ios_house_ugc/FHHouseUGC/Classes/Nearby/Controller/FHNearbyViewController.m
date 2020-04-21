@@ -102,6 +102,7 @@
         _feedVC.listType = FHCommunityFeedListTypeNearby;
         _feedVC.currentLocaton = self.currentLocaton;
         _feedVC.tableHeaderView = self.headerView;
+        _feedVC.hidePublishBtn = YES;
         _feedVC.view.frame = self.view.bounds;
         _feedVC.tracerDict = [self.tracerDict mutableCopy];
         [self addChildViewController:_feedVC];

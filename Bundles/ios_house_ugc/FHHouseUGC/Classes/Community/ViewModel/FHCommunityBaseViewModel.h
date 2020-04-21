@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHCommunityViewController.h"
+#import "FHUserTracker.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)changeTab:(NSInteger)index;
 
 - (NSArray *)getSegmentTitles;
+
+- (NSString *)pageType;
 
 @end
 

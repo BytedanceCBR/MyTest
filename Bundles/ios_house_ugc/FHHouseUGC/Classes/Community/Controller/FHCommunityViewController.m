@@ -30,6 +30,10 @@
 #import "UIViewController+Track.h"
 #import <FHHouseBase/FHPermissionAlertViewController.h>
 #import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "FHUGCPostMenuView.h"
+#import "FHCommonDefines.h"
+#import "TTAccountManager.h"
+#import "FHHouseUGCHeader.h"
 
 @interface FHCommunityViewController ()
 
@@ -43,6 +47,9 @@
 @property(nonatomic, assign) BOOL alreadyShowGuide;
 //新的发现页面
 @property(nonatomic, assign) BOOL isNewDiscovery;
+@property(nonatomic, strong) UIButton *publishBtn;
+@property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
+
 @end
 
 @implementation FHCommunityViewController
@@ -180,6 +187,15 @@
 
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
+    
+    [self initPublishBtn];
+}
+
+- (void)initPublishBtn {
+    self.publishBtn = [[UIButton alloc] init];
+    [_publishBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
+    [_publishBtn addTarget:self action:@selector(goToPublish) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_publishBtn];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -227,7 +243,6 @@
     return NO;
 }
 
-
 - (void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] - self.stayTime) * 1000.0;
@@ -244,7 +259,6 @@
         [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
     }
 }
-
 
 - (void)setupCollectionView {
     if (self.collectionView) {
@@ -410,6 +424,12 @@
         make.left.right.equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(-bottom);
     }];
+    
+    [self.publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.view).offset(-bottom);
+        make.right.mas_equalTo(self.view).offset(-12);
+        make.width.height.mas_equalTo(64);
+    }];
 }
 
 - (void)initViewModel {
@@ -446,6 +466,174 @@
     if (self.navigationController.viewControllers.count <= 1) {
         [self.viewModel changeTab:1];
     }
+}
+
+#pragma mark - 发布器
+
+- (void)goToPublish {
+    
+    [self showPublishMenu];
+}
+
+- (FHUGCPostMenuView *)publishMenuView {
+    
+    if(!_publishMenuView) {
+        _publishMenuView = [[FHUGCPostMenuView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        _publishMenuView.delegate = self;
+    }
+    return _publishMenuView;
+}
+
+- (void)showPublishMenu {
+    [self.publishMenuView showForButton:self.publishBtn];
+}
+
+#pragma mark - FHUGCPostMenuViewDelegate
+
+- (void)gotoPostPublish {
+    [self gotoPostThreadVC];
+    
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ELEMENT_TYPE] = @"feed_icon";
+    params[UT_PAGE_TYPE] = [self.viewModel pageType];
+    TRACK_EVENT(@"click_options", params);
+}
+
+- (void)gotoVotePublish {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ELEMENT_TYPE] = @"vote_icon";
+    params[UT_PAGE_TYPE] = [self.viewModel pageType];
+    TRACK_EVENT(@"click_options", params);
+    
+    if ([TTAccountManager isLogin]) {
+        [self gotoVoteVC];
+    } else {
+        [self gotoLogin:FHUGCLoginFrom_VOTE];
+    }
+}
+
+- (void)gotoWendaPublish {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ELEMENT_TYPE] = @"question_icon";
+    params[UT_PAGE_TYPE] = [self.viewModel pageType];
+    TRACK_EVENT(@"click_options", params);
+    
+    if ([TTAccountManager isLogin]) {
+        [self gotoWendaVC];
+    } else {
+        [self gotoLogin:FHUGCLoginFrom_WENDA];
+    }
+}
+
+// 发布按钮点击
+- (void)gotoPostThreadVC {
+    if ([TTAccountManager isLogin]) {
+        [self gotoPostVC];
+    } else {
+        [self gotoLogin:FHUGCLoginFrom_POST];
+    }
+}
+
+- (void)gotoLogin:(FHUGCLoginFrom)from {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *page_type = [self.viewModel pageType];
+    [params setObject:page_type forKey:@"enter_from"];
+    
+    NSString *enter_type = UT_BE_NULL;
+    switch (from) {
+        case FHUGCLoginFrom_POST:
+            enter_type = @"click_publisher_moments";
+            break;
+        case FHUGCLoginFrom_GROUPCHAT:
+            enter_type = @"ugc_member_talk";
+            break;
+        case FHUGCLoginFrom_VOTE:
+            enter_type = @"click_publisher_vote";
+            break;
+        case FHUGCLoginFrom_WENDA:
+            enter_type = @"click_publisher_question";
+            break;
+        default:
+            break;
+    }
+    [params setObject:enter_type forKey:@"enter_type"];
+    
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    
+                    switch (from) {
+                        case FHUGCLoginFrom_POST:
+                        {
+                            [self gotoPostVC];
+                        }
+                            break;
+                        case FHUGCLoginFrom_VOTE:
+                        {
+                            [self gotoVoteVC];
+                        }
+                            break;
+                        case FHUGCLoginFrom_WENDA:
+                        {
+                            [self gotoWendaVC];
+                        }
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+        }
+    }];
+}
+
+// 跳转到投票发布器
+- (void)gotoVoteVC {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[UT_ENTER_FROM] = [self.viewModel pageType];
+    dict[TRACER_KEY] = tracerDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+}
+
+- (void)gotoWendaVC {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[UT_ENTER_FROM] = [self.viewModel pageType];
+    dict[TRACER_KEY] = tracerDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+}
+
+// 跳转到UGC发布器
+- (void)gotoPostVC {
+
+    // 跳转到发布器
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"element_type"] = @"feed_publisher";
+    NSString *page_type = [self.viewModel pageType];
+    tracerDict[@"page_type"] = page_type;
+    [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
+    
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    traceParam[@"page_type"] = @"feed_publisher";
+    traceParam[@"enter_from"] = page_type;
+    dict[TRACER_KEY] = traceParam;
+    dict[VCTITLE_KEY] = @"发帖";
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
+    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
 
 //进入搜索页
