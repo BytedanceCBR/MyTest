@@ -197,7 +197,8 @@
                                        @"title":@"变价通知",
                                        @"subtitle":@"订阅变价通知，房源变价信息会及时发送到您的手机",
                                        @"position":@"change_price",
-                                       @"btn_title":@"提交"
+                                       @"btn_title":@"提交",
+                                       @"toast":@"提交成功，经纪人将尽快与您联系"
             };
             [contactViewModel fillFormActionWithExtraDict:infoDic];
             __weak typeof(self)ws = self;
