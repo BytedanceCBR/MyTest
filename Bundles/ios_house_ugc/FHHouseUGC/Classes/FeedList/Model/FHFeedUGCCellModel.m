@@ -451,7 +451,7 @@
         cellModel.largeImageList = model.rawData.commentBase.imageList;
         
         double time = [model.rawData.commentBase.createTime doubleValue];
-        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time type:@"onlyDate"];
         cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
         
         cellModel.desc = [self generateUGCDescWithCreateTime:model.rawData.commentBase.createTime readCount:model.rawData.commentBase.action.readCount distanceInfo:nil];
@@ -679,7 +679,7 @@
         cellModel.contentRichSpan = model.rawData.titleRichSpan;
         
         double time = [model.rawData.createTime doubleValue];
-        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+        NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time type:@"onlyDate"];
         cellModel.desc = [[NSAttributedString alloc] initWithString:publishTime];
         
         cellModel.imageList = model.rawData.firstFrameImageList;
@@ -822,7 +822,7 @@
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [createTime doubleValue];
     
-    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time];
+    NSString *publishTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:time type:@"onlyDate"];
     
     if(!isEmptyString(publishTime)){
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
