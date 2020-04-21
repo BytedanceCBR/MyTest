@@ -307,9 +307,8 @@
 
 - (void)tapConsultation:(UIButton *)sender {
     FHDetailAdvisoryLoanModel *model = (FHDetailAdvisoryLoanModel *)self.currentData;
-    if (model.contactModel.contactPhone.phone.length>0) {
-        NSString *openUrl = model.downPayment.openUrl;
-        if (openUrl.length > 0) {
+    NSString *openUrl = model.downPayment.openUrl;
+    if (openUrl.length>0) {
             NSURL *url = [NSURL URLWithString:openUrl];
             NSMutableDictionary *imExtra = @{}.mutableCopy;
             imExtra[@"from"] = @"app_oldhouse_mortgage";
@@ -329,7 +328,6 @@
                     configModel.followId = self.baseViewModel.houseId;
                     configModel.actionType = self.baseViewModel.houseType;
                     [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
-        }
     }else {
         if ([model.contactModel respondsToSelector:@selector(fillFormActionWithExtraDict:)]) {
             NSDictionary *infoDic =  @{kFHCluePage:@(FHClueFormPageTypeCOldHouseShoufu),
