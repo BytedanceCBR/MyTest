@@ -80,6 +80,23 @@
     return _segmentControl.sectionTitles.count;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    //子vc segtableview去重
+    if ([cell isKindOfClass: [FHSuggestionCollectionViewCell class]]) {
+        
+        NSInteger row = indexPath.item;
+        NSString *rowStr = [NSString stringWithFormat:@"%ld", row];
+        if (self.cellDict[rowStr]) {
+            FHSuggestionCollectionViewCell *newCell = (FHSuggestionCollectionViewCell *)cell;
+            [newCell.vc textFiledTextChange:self.listController.naviBar.searchInput.text];
+        } else {
+            self.cellDict[rowStr] = cell;
+            [self initCellWithIndex:row];
+        }
+    }
+}
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.item;
@@ -95,10 +112,7 @@
             cellIdentifier = [NSString stringWithFormat:@"%@_%ld", cellIdentifier, row];
             [collectionView registerClass:[FHSuggestionCollectionViewCell class] forCellWithReuseIdentifier:cellIdentifier];
             cell = (FHSuggestionCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-            self.cellDict[rowStr] = cell;
-            [self initCellWithIndex:row];
         }
-        [cell.vc textFiledTextChange:self.listController.naviBar.searchInput.text];
         return cell;
     }
     return [[UICollectionViewCell alloc] init];
