@@ -49,19 +49,27 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
     if (self.textField) {
-        self.textField.enabled = YES;
         [self.textField becomeFirstResponder];
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
     if (self.textField) {
         [self.textField resignFirstResponder];
-        self.textField.enabled = NO;
     }
-    [self.view endEditing:YES];
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
+        [self.view endEditing:YES];
+    }
 }
 
 - (void)initNavbar {
