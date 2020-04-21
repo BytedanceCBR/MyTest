@@ -9,7 +9,6 @@
 #import <Lynx/LynxView.h>
 #import <mach/mach_time.h>
 #import "FHLynxCoreBridge.h"
-#import "LynxEnv.h"
 
 @interface FHLynxView()
 @property (nonatomic, assign) CGRect lynxViewFrame;
@@ -114,7 +113,7 @@
     if (!_lynxView) {
         _lynxView = [[LynxView alloc] initWithBuilderBlock:^(LynxViewBuilder* builder) {
             builder.isUIRunningMode = YES;
-            builder.config = [[LynxConfig alloc] initWithProvider:[[LynxEnv sharedInstance] config].templateProvider];
+            builder.config = [[LynxConfig alloc] initWithProvider:LynxConfig.globalConfig.templateProvider];
             [builder.config registerModule:[FHLynxCoreBridge class]];
         }];
         switch (self.widthMode) {
