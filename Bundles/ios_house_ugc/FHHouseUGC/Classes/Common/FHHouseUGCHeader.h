@@ -14,6 +14,7 @@ typedef NS_ENUM(NSInteger, FHCommunityFeedListType)
     FHCommunityFeedListTypeMyJoin,
     FHCommunityFeedListTypePostDetail,
     FHCommunityFeedListTypeSpecialTopic,
+    FHCommunityFeedListTypeCustom,
 };
 
 typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
@@ -21,8 +22,7 @@ typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
     FHCommunityCollectionCellTypeNone = -1,
     FHCommunityCollectionCellTypeMyJoin = 0,
     FHCommunityCollectionCellTypeNearby,
-    FHCommunityCollectionCellTypeDiscovery,
-    FHCommunityCollectionCellTypeFindHouse,
+    FHCommunityCollectionCellTypeCustom,
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)

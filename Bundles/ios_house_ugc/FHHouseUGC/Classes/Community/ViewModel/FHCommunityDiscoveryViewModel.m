@@ -1,22 +1,23 @@
 //
-//  FHCommunityViewModel.m
+//  FHCommunityDiscoveryViewModel.m
 //  FHHouseUGC
 //
-//  Created by 谢思铭 on 2019/6/2.
+//  Created by 谢思铭 on 2020/4/20.
 //
 
-#import "FHCommunityViewModel.h"
+#import "FHCommunityDiscoveryViewModel.h"
 #import "FHCommunityViewController.h"
-#import "FHCommunityCollectionCell.h"
+#import "FHCommunityDiscoveryCell.h"
 #import "FHHouseUGCHeader.h"
 #import "FHEnvContext.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
+#import "FHUGCCategoryManager.h"
+#import "FHCommunityDiscoveryCellModel.h"
 
 #define kCellId @"cellId"
-#define maxCellCount 2
 
-@interface FHCommunityViewModel ()<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface FHCommunityDiscoveryViewModel ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
 @property(nonatomic , strong) NSMutableArray *cellArray;
 @property(nonatomic , strong) NSArray *dataArray;
@@ -24,16 +25,16 @@
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
 
-@property(nonatomic , strong) FHCommunityCollectionCell *lastCell;
+@property(nonatomic , strong) FHCommunityDiscoveryCell *lastCell;
 
 @end
 
-@implementation FHCommunityViewModel
+@implementation FHCommunityDiscoveryViewModel
 
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(FHCommunityViewController *)viewController {
     self = [super initWithCollectionView:collectionView controller:viewController];
     
-    self.currentTabIndex = 1;
+    self.currentTabIndex = 0;
     
     collectionView.delegate = self;
     collectionView.dataSource = self;
@@ -50,54 +51,37 @@
 }
 
 - (void)viewWillDisappear {
-    if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
-        FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
+    if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityDiscoveryCell class]]){
+        FHCommunityDiscoveryCell *cell = (FHCommunityDiscoveryCell *)self.cellArray[self.currentTabIndex];
         [cell cellDisappear];
     }
 }
 
 - (void)initDataArray {
     self.cellArray = [NSMutableArray array];
-    
-    for (NSInteger i = 0; i < maxCellCount; i++) {
-        [self.cellArray addObject:[NSNull null]];
+    NSMutableArray *dataArray = [NSMutableArray array];
+    NSArray *categories = [[FHUGCCategoryManager sharedManager] allCategories];
+    for (NSInteger i = 0; i < categories.count; i++) {
+        FHUGCCategoryDataDataModel *category = categories[i];
+        if(category && category.name.length > 0 && category.category.length > 0){
+            [self.cellArray addObject:[NSNull null]];
+            FHCommunityDiscoveryCellModel *cellModel = [FHCommunityDiscoveryCellModel cellModelForCategory:category];
+            [dataArray addObject:cellModel];
+        }
     }
-    
-    self.dataArray = @[
-                       @(FHCommunityCollectionCellTypeMyJoin),
-                       @(FHCommunityCollectionCellTypeNearby),
-                       ];
+    self.dataArray = dataArray;
 }
 
 - (NSArray *)getSegmentTitles {
     NSMutableArray *titles = [NSMutableArray array];
-    
-    NSDictionary *ugcTitles = [FHEnvContext ugcTabName];
-    if(ugcTitles[kUGCTitleMyJoinList]){
-        NSString *name = ugcTitles[kUGCTitleMyJoinList];
-        if(name.length > 2){
-            name = [name substringToIndex:2];
+    NSArray *categories = [[FHUGCCategoryManager sharedManager] allCategories];
+    for (FHUGCCategoryDataDataModel *category in categories) {
+        if(category.name.length > 0){
+            [titles addObject:category.name];
         }
-        [titles addObject:name];
-    }else{
-        [titles addObject:@"关注"];
     }
     
-    if(ugcTitles[kUGCTitleNearbyList]){
-        NSString *name = ugcTitles[kUGCTitleNearbyList];
-        if(name.length > 2){
-            name = [name substringToIndex:2];
-        }
-        [titles addObject:name];
-    }else{
-        [titles addObject:@"附近"];
-    }
-    
-    if(titles.count == 2){
-        return titles;
-    }
-    
-    return @[@"关注", @"附近"];
+    return titles;
 }
 
 - (void)selectCurrentTabIndex {
@@ -122,8 +106,8 @@
 }
 
 - (void)initCell:(NSString *)enterType {
-    if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
-        FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
+    if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityDiscoveryCell class]]){
+        FHCommunityDiscoveryCell *cell = (FHCommunityDiscoveryCell *)self.cellArray[self.currentTabIndex];
         cell.enterType = enterType;
         
         if(self.currentTabIndex == 0){
@@ -132,7 +116,8 @@
             cell.withTips = NO;
         }
         
-        cell.type = [self.dataArray[self.currentTabIndex] integerValue];
+        FHCommunityDiscoveryCellModel *cellModel = self.dataArray[self.currentTabIndex];
+        cell.cellModel = cellModel;
         
         //在进入之前报一下上一次tab的埋点
         if(_lastCell && _lastCell != cell){
@@ -152,8 +137,8 @@
 }
 
 - (void)refreshCell:(BOOL)isHead {
-    if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
-        FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
+    if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityDiscoveryCell class]]){
+        FHCommunityDiscoveryCell *cell = (FHCommunityDiscoveryCell *)self.cellArray[self.currentTabIndex];
         [cell refreshData:isHead];
     }
 }
@@ -183,8 +168,8 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSString *cellIdentifier = [NSString stringWithFormat:@"cell_%ld", [indexPath row]];
-    [collectionView registerClass:[FHCommunityCollectionCell class] forCellWithReuseIdentifier:cellIdentifier];
-    FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+    [collectionView registerClass:[FHCommunityDiscoveryCell class] forCellWithReuseIdentifier:cellIdentifier];
+    FHCommunityDiscoveryCell *cell = (FHCommunityDiscoveryCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
     NSInteger row = indexPath.row;
     self.cellArray[row] = cell;
     
@@ -284,3 +269,4 @@
 }
 
 @end
+

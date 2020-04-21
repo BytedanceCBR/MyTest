@@ -1,59 +1,64 @@
 //
-//  FHCommunityCollectionCell.m
+//  FHCommunityDiscoveryCell.m
 //  FHHouseUGC
 //
-//  Created by 谢思铭 on 2019/6/2.
+//  Created by 谢思铭 on 2020/4/20.
 //
 
-#import "FHCommunityCollectionCell.h"
+#import "FHCommunityDiscoveryCell.h"
 #import "ArticleTabbarStyleNewsListViewController.h"
 #import "FHCommunityFeedListController.h"
 #import "FHNearbyViewController.h"
 #import "FHMyJoinViewController.h"
 #import "FHHouseFindViewController.h"
 
-@interface FHCommunityCollectionCell ()
+@interface FHCommunityDiscoveryCell ()
 
 @property(nonatomic, strong) FHBaseViewController *vc;
 
 @end
 
-@implementation FHCommunityCollectionCell
+@implementation FHCommunityDiscoveryCell
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self){
         self.contentView.backgroundColor = [UIColor clearColor];
-        _type = FHCommunityCollectionCellTypeNone;
     }
     
     return self;
 }
 
-- (void)setType:(FHCommunityCollectionCellType)type {
-    if(_type != type){
-        _type = type;
+- (void)setCellModel:(FHCommunityDiscoveryCellModel *)cellModel {
+    if(_cellModel != cellModel){
+        _cellModel = cellModel;
         [self initViews];
     }else{
         self.vc.tracerDict = [self traceDic].mutableCopy;
-
-        if(self.type == FHCommunityCollectionCellTypeNearby){
+        
+        if(cellModel.type == FHCommunityCollectionCellTypeNearby){
             FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
             [vc viewWillAppear];
-        }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
+        }else if(cellModel.type == FHCommunityCollectionCellTypeMyJoin){
             FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
             vc.withTips = self.withTips;
+            [vc viewWillAppear];
+        }else if(cellModel.type == FHCommunityCollectionCellTypeCustom){
+            FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
             [vc viewWillAppear];
         }
     }
 }
 
 - (void)cellDisappear {
-    if(self.type == FHCommunityCollectionCellTypeNearby){
+    if(_cellModel.type == FHCommunityCollectionCellTypeNearby){
         FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
         [vc viewWillDisappear];
-    }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
+    }else if(_cellModel.type == FHCommunityCollectionCellTypeMyJoin){
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+        [vc viewWillDisappear];
+    }else if(_cellModel.type == FHCommunityCollectionCellTypeCustom){
+        FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
         [vc viewWillDisappear];
     }
 }
@@ -65,12 +70,18 @@
         self.vc = nil;
     }
     
-    if(self.type == FHCommunityCollectionCellTypeNearby){
+    if(_cellModel.type == FHCommunityCollectionCellTypeNearby){
         FHNearbyViewController *vc = [[FHNearbyViewController alloc] init];
         self.vc = vc;
-    }else if(self.type == FHCommunityCollectionCellTypeMyJoin){
+    }else if(_cellModel.type == FHCommunityCollectionCellTypeMyJoin){
         FHMyJoinViewController *vc = [[FHMyJoinViewController alloc] init];
         vc.withTips = self.withTips;
+        self.vc = vc;
+    }else if(_cellModel.type == FHCommunityCollectionCellTypeCustom){
+        FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
+        vc.listType = FHCommunityFeedListTypeCustom;
+        vc.category = _cellModel.category;
+        vc.hidePublishBtn = YES;
         self.vc = vc;
     }
     
@@ -79,6 +90,11 @@
     if(self.vc){
         self.vc.view.frame = self.bounds;
         [self.contentView addSubview:self.vc.view];
+        
+        if([self.vc isKindOfClass:[FHCommunityFeedListController class]]){
+            FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
+            [vc viewWillAppear];
+        }
     }
 }
 
@@ -97,6 +113,13 @@
     }else if([self.vc isKindOfClass:[FHMyJoinViewController class]]){
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
         [vc refreshFeedListData:isHead];
+    }else if([self.vc isKindOfClass:[FHCommunityFeedListController class]]){
+        FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
+        if(isHead){
+            [vc scrollToTopAndRefreshAllData];
+        }else{
+            [vc scrollToTopAndRefresh];
+        }
     }
 }
 
@@ -104,7 +127,7 @@
     NSString *enterType = self.enterType ? self.enterType : @"default";
     return @{
              @"enter_from":@"neighborhood_tab",
-             @"enter_type":self.enterType,
+             @"enter_type":enterType,
              };
 }
 

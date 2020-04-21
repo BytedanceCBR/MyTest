@@ -25,16 +25,6 @@
 #import "TTURLDomainHelper.h"
 #import "TTAccountBusiness.h"
 
-//用于存储category的version值
-#define kArticleCategoryManagerVersionKey @"kArticleCategoryManagerVersionKey"
-
-#define kCategoryStoreVersion 2
-
-#define KArticleCategoryManagerHasNewTipKey [NSString stringWithFormat:@"KArticleCategoryManagerHasNewTip%i", kCategoryStoreVersion]
-
-#define kArticleCategoryManagerUserSelectedLocalCityKey @"kArticleCategoryManagerUserSelectedLocalCityKey"
-#define kArticleCategoryManagerServerLocalCityNameKey   @"kArticleCategoryManagerServerLocalCityNameKey"
-
 NSString *const kTTInsertCategoryToLastPositionNotification = @"kInsertCategoryToLastPositionNotification";
 NSString *const kTTInsertCategoryNotificationCategoryKey = @"kInsertCategoryNotificationCategoryKey";
 NSString *const kTTInsertCategoryNotificationPositionKey          = @"kInsertCategoryNotificationPositionKey";

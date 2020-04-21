@@ -8,6 +8,7 @@
 #import "FHCommunityViewController.h"
 #import "TTDeviceHelper.h"
 #import "FHCommunityViewModel.h"
+#import "FHCommunityDiscoveryViewModel.h"
 #import "UIButton+TTAdditions.h"
 #import "FHTopicDetailViewController.h"
 #import "FHCommunityDetailViewController.h"
@@ -32,7 +33,7 @@
 
 @interface FHCommunityViewController ()
 
-@property(nonatomic, strong) FHCommunityViewModel *viewModel;
+@property(nonatomic, strong) FHCommunityBaseViewModel *viewModel;
 @property(nonatomic, strong) UIView *bottomLineView;
 @property(nonatomic, strong) UIView *topView;
 @property(nonatomic, strong) UIButton *searchBtn;
@@ -40,6 +41,8 @@
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
+//新的发现页面
+@property(nonatomic, assign) BOOL isNewDiscovery;
 @end
 
 @implementation FHCommunityViewController
@@ -48,14 +51,21 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
+    //test
+    self.isNewDiscovery = NO;
     self.hasShowDots = NO;
     self.isUgcOpen = [FHEnvContext isUGCOpen];
     self.alreadyShowGuide = NO;
     self.ttTrackStayEnable = YES;
 
     [self initView];
-    [self initConstraints];
     [self initViewModel];
+    if(self.isNewDiscovery){
+        [self setupDiscoverySetmentedControl];
+    }else{
+        [self setupSetmentedControl];
+    }
+    [self initConstraints];
 
     [self onUnreadMessageChange];
     [self onFocusHaveNewContents];
@@ -70,9 +80,6 @@
             [self initViewModel];
         }
         self.segmentControl.sectionTitles = [self getSegmentTitles];
-//        if([FHEnvContext isSpringHangOpen] && self.springView){
-//            [self.springView show:[FHEnvContext enterTabLogName]];
-//        }
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
@@ -92,7 +99,7 @@
 }
 
 - (void)addUgcGuide {
-    if ([FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide) {
+    if ([FHUGCGuideHelper shouldShowSearchGuide] && self.isUgcOpen && !self.alreadyShowGuide && !self.isNewDiscovery) {
         [self.guideView show:self.view dismissDelayTime:5.0f completion:^{
             [FHUGCGuideHelper hideSearchGuide];
         }];
@@ -166,12 +173,13 @@
     [_searchBtn setImage: ICON_FONT_IMG(24, @"\U0000e675", [UIColor blackColor]) forState:UIControlStateNormal];//fh_ugc_search
     _searchBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_searchBtn addTarget:self action:@selector(goToSearch) forControlEvents:UIControlEventTouchUpInside];
+    if(self.isNewDiscovery){
+        _searchBtn.hidden = YES;
+    }
     [self.topView addSubview:_searchBtn];
 
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
-
-    [self setupSetmentedControl];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -287,7 +295,39 @@
 //    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
 //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
+    
+    [self.topView addSubview:_segmentControl];
 
+    __weak typeof(self) weakSelf = self;
+    _segmentControl.indexChangeBlock = ^(NSInteger index) {
+        [weakSelf.viewModel segmentViewIndexChanged:index];
+    };
+    
+    _segmentControl.indexRepeatBlock = ^(NSInteger index) {
+        [weakSelf.viewModel refreshCell:NO];
+    };
+}
+
+- (void)setupDiscoverySetmentedControl {
+    _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
+
+    NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
+            NSForegroundColorAttributeName: [UIColor themeGray3]};
+    _segmentControl.titleTextAttributes = titleTextAttributes;
+
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
+            NSForegroundColorAttributeName: [UIColor themeOrange1]};
+    _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
+    _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
+    _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
+    _segmentControl.isNeedNetworkCheck = NO;
+    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(9, 10, 0, 14);
+    _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+    _segmentControl.selectionIndicatorWidth = 20.0f;
+    _segmentControl.selectionIndicatorHeight = 4.0f;
+    _segmentControl.selectionIndicatorCornerRadius = 2.0f;
+    _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+    
     [self.topView addSubview:_segmentControl];
 
     __weak typeof(self) weakSelf = self;
@@ -301,36 +341,7 @@
 }
 
 - (NSArray *)getSegmentTitles {
-    NSMutableArray *titles = [NSMutableArray array];
-    
-    NSDictionary *ugcTitles = [FHEnvContext ugcTabName];
-    if(ugcTitles[kUGCTitleMyJoinList]){
-        NSString *name = ugcTitles[kUGCTitleMyJoinList];
-        if(name.length > 2){
-            name = [name substringToIndex:2];
-        }
-        [titles addObject:name];
-    }else{
-        [titles addObject:@"关注"];
-    }
-    
-    if(ugcTitles[kUGCTitleNearbyList]){
-        NSString *name = ugcTitles[kUGCTitleNearbyList];
-        if(name.length > 2){
-            name = [name substringToIndex:2];
-        }
-        [titles addObject:name];
-    }else{
-        [titles addObject:@"附近"];
-    }
-        
-//    [titles addObject:@"发现"];
-    
-    if(titles.count == 2){
-        return titles;
-    }
-    
-    return @[@"关注", @"附近"];
+    return [self.viewModel getSegmentTitles];
 }
 
 - (void)initConstraints {
@@ -378,13 +389,22 @@
         make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
 
-    [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.topView);
-        make.width.mas_equalTo([self.segmentControl totalSegmentedControlWidth]);
-        make.height.mas_equalTo(44);
-        make.bottom.mas_equalTo(self.topView).offset(-8);
-    }];
-
+    if(self.isNewDiscovery){
+        [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(self.topView);
+//            make.width.mas_equalTo([self.segmentControl totalSegmentedControlWidth]);
+            make.height.mas_equalTo(44);
+            make.bottom.mas_equalTo(self.topView).offset(-8);
+        }];
+    }else{
+        [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(self.topView);
+            make.width.mas_equalTo([self.segmentControl totalSegmentedControlWidth]);
+            make.height.mas_equalTo(44);
+            make.bottom.mas_equalTo(self.topView).offset(-8);
+        }];
+    }
+    
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.topView.mas_bottom);
         make.left.right.equalTo(self.view);
@@ -394,8 +414,11 @@
 
 - (void)initViewModel {
     [self setupCollectionView];
-    _viewModel = [[FHCommunityViewModel alloc] initWithCollectionView:self.collectionView controller:self];
-    _viewModel.searchBtn = self.searchBtn;
+    if(self.isNewDiscovery){
+        _viewModel = [[FHCommunityDiscoveryViewModel alloc] initWithCollectionView:self.collectionView controller:self];
+    }else{
+        _viewModel = [[FHCommunityViewModel alloc] initWithCollectionView:self.collectionView controller:self];
+    }
 }
 
 - (void)showSegmentControl:(BOOL)isShow {
@@ -455,4 +478,5 @@
 
 - (void)trackStartedByAppWillEnterForground {
 }
+
 @end
