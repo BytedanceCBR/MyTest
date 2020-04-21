@@ -21,11 +21,9 @@
 
 @interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
-@property (nonatomic, weak)     FHPopupMenuView       *popupMenuView;
 @property (nonatomic, strong)   FHChildSuggestionListViewModel      *viewModel;
 
 @property (nonatomic, assign)   FHEnterSuggestionType       fromSource;
-@property (nonatomic, copy)   NSString*   autoFillInputText;
 
 @property (nonatomic, weak)     id<FHHouseSuggestionDelegate>    suggestDelegate;
 @property (nonatomic, weak)     UIViewController   *backListVC; // 需要返回到的页面
@@ -132,9 +130,6 @@
             self.viewModel.homePageRollDic = self.homePageRollDic;
         }
         //自动填充，并初始请求
-        if (paramObj.allParams[@"search_history_text"]) {
-            self.autoFillInputText = paramObj.allParams[@"search_history_text"];
-        }
     }
     return self;
 }
@@ -168,10 +163,6 @@
 - (void)setFatherVC:(FHSuggestionListViewController *)fatherVC
 {
     _fatherVC = fatherVC;
-    __weak typeof(self) weakSelf = self;
-    _fatherVC.textChangeBlock = ^(NSString * _Nonnull text) {
-        [weakSelf textFiledTextChange:text];
-    };
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -393,7 +384,7 @@
     // Sug
     NSString *text = @"";
     if (self.fatherVC) {
-        self.fatherVC.naviBar.searchInput.text;
+        text = self.fatherVC.naviBar.searchInput.text;
     }
     BOOL hasText = text.length > 0;
     if (hasText) {
@@ -455,7 +446,7 @@
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 }
 
 @end

@@ -41,6 +41,13 @@
     [cell.vc doTextFieldShouldReturn:text];
 }
 
+- (void)textFieldTextChange:(NSString *)text
+{
+    NSString *rowStr = [NSString stringWithFormat:@"%ld", _currentTabIndex];
+    FHSuggestionCollectionViewCell *cell = _cellDict[rowStr];
+    [cell.vc textFiledTextChange:text];
+}
+
 - (void)initCollectionView:(FHBaseCollectionView *)collectionView
 {
     self.collectionView = collectionView;

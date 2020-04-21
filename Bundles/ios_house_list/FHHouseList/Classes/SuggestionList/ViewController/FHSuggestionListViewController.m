@@ -33,7 +33,6 @@
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) FHBaseCollectionView *collectionView;
 
-
 @end
 
 @implementation FHSuggestionListViewController
@@ -41,6 +40,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.paramObj = paramObj;
         // 2、house_type
         _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
         _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
@@ -50,7 +50,8 @@
         } else {
             _viewModel.houseType = 2;// 默认二手房
         }
-          
+
+        
         id dic = paramObj.allParams[@"homepage_roll_data"];
         if (dic) {
             self.homePageRollDic = [NSMutableDictionary dictionaryWithDictionary:dic];
@@ -109,6 +110,7 @@
     self.panBeginAction = ^{
         [weakSelf.naviBar.searchInput resignFirstResponder];
     };
+    [self.viewModel textFieldTextChange:self.naviBar.searchInput.text];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -201,9 +203,7 @@
         text = [text substringToIndex:maxCount];
         self.naviBar.searchInput.text = text;
     }
-    if (self.textChangeBlock) {
-        self.textChangeBlock(text);
-    }
+    [self.viewModel textFieldTextChange:text];
 }
 
 - (void)setupSegmentedControl {
@@ -229,9 +229,6 @@
     [_segmentControl setBackgroundColor:[UIColor clearColor]];
     self.viewModel.segmentControl = _segmentControl;
     [self bindTopIndexChanged];
-    _segmentControl.indexRepeatBlock = ^(NSInteger index) {
-        
-    };
     [self.topView addSubview:_segmentControl];
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(_topView);

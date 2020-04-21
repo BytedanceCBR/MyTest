@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithController:(FHSuggestionListViewController *)viewController;
 -(void)initCollectionView:(FHBaseCollectionView *) collectionView;
 -(void)textFieldShouldReturn:(NSString *)text;
+-(void)textFieldTextChange:(NSString *)text;
 @end
 
 NS_ASSUME_NONNULL_END
