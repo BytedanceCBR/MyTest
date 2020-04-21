@@ -55,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) TTRouteParamObj *paramObj;
 
+@property (nonatomic, copy) void(^textChangeBlock)(NSString *text);
+
 - (void)requestDeleteHistory;
 
 - (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos;

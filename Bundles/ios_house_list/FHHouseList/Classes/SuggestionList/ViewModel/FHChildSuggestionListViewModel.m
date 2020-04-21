@@ -16,6 +16,7 @@
 #import "FHSugSubscribeModel.h"
 #import "FHSugSubscribeListViewModel.h"
 #import "FHOldSuggestionItemCell.h"
+#import "FHSuggestionListViewController.h"
 
 @interface FHChildSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource, FHSugSubscribeListDelegate>
 
@@ -865,7 +866,9 @@
         
         if (!self.hasShowKeyboard) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.listController.naviBar.searchInput becomeFirstResponder];
+                if (self.listController.fatherVC) {
+                    [self.listController.fatherVC.naviBar.searchInput becomeFirstResponder];
+                }
             });
             self.hasShowKeyboard = YES;
         }

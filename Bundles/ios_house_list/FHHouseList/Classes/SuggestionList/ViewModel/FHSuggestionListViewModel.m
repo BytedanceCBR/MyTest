@@ -34,6 +34,12 @@
     return self;
 }
 
+- (void)textFieldShouldReturn:(NSString *)text
+{
+    NSString *rowStr = [NSString stringWithFormat:@"%ld", _currentTabIndex];
+    FHSuggestionCollectionViewCell *cell = _cellDict[rowStr];
+    [cell.vc doTextFieldShouldReturn:text];
+}
 
 - (void)initCollectionView:(FHBaseCollectionView *)collectionView
 {
@@ -70,23 +76,23 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.item;
-    UICollectionViewCell *cell = NULL;
+    FHSuggestionCollectionViewCell *cell = NULL;
     if (row >= 0 && row < self.listController.houseTypeArray.count) {
         
         NSString *rowStr = [NSString stringWithFormat:@"%ld", row];
         if (self.cellDict[rowStr]) {
-            return self.cellDict[rowStr];
+           cell = self.cellDict[rowStr];
         } else {
             NSString *cellIdentifier = NSStringFromClass([FHSuggestionCollectionViewCell class]);
             
             cellIdentifier = [NSString stringWithFormat:@"%@_%ld", cellIdentifier, row];
             [collectionView registerClass:[FHSuggestionCollectionViewCell class] forCellWithReuseIdentifier:cellIdentifier];
             cell = (FHSuggestionCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-            
             self.cellDict[rowStr] = cell;
             [self initCellWithIndex:row];
-            return cell;
         }
+        [cell.vc textFiledTextChange:self.listController.naviBar.searchInput.text];
+        return cell;
     }
     return [[UICollectionViewCell alloc] init];
 }
@@ -112,7 +118,6 @@
         self.currentTabIndex = tabIndex;
         self.listController.segmentControl.selectedSegmentIndex = tabIndex;
         self.listController.houseType = [self.listController.houseTypeArray[(int)tabIndex] integerValue];
-        //[self initCellWithIndex:tabIndex];
     } else {
         //加载数据
         CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
@@ -131,6 +136,7 @@
         
         if (cell.vc && ![self.listController.childViewControllers containsObject:cell.vc]) {
             [self.listController addChildViewController:cell.vc];
+            cell.vc.fatherVC = self.listController;
         }
     }
 }

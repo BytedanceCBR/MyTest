@@ -161,63 +161,33 @@
     self.hasDismissedVC = NO;
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-    if (self.autoFillInputText) {
-        self.naviBar.searchInput.text = self.autoFillInputText;
-    }
     self.houseType = self.viewModel.houseType;// 执行网络请求等逻辑
+
+}
+
+- (void)setFatherVC:(FHSuggestionListViewController *)fatherVC
+{
+    _fatherVC = fatherVC;
     __weak typeof(self) weakSelf = self;
-    self.panBeginAction = ^{
-        [weakSelf.naviBar.searchInput resignFirstResponder];
+    _fatherVC.textChangeBlock = ^(NSString * _Nonnull text) {
+        [weakSelf textFiledTextChange:text];
     };
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if (self.homePageRollDic) {
-        NSString *text = self.homePageRollDic[@"text"];
-        if (text.length > 0) {
-            [self.naviBar setSearchPlaceHolderText:text];
-            self.canSearchWithRollData = YES;
-        }
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.naviBar resignFirstResponder];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.naviBar.searchInput resignFirstResponder];
 }
 
 - (void)setupUI {
-    [self setupNaviBar];
     [self setupTableView];
-}
-
-- (void)setupNaviBar {
-    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    _naviBar = [[FHSearchBar alloc] initWithType:FHSearchNavTypeSug];
-    [_naviBar setSearchPlaceHolderText:@"二手房/租房/小区"];
-    [self.view addSubview:_naviBar];
-    CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
-    [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(naviHeight);
-    }];
-    [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
-    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:self.houseType]];
-    _naviBar.searchTypeLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
-    CGSize size = [self.naviBar.searchTypeLabel sizeThatFits:CGSizeMake(100, 20)];
-    [self.naviBar.searchTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(size.width);
-    }];
-    [_naviBar.searchTypeBtn addTarget:self action:@selector(searchTypeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    _naviBar.searchInput.delegate = self;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
 - (void)setupTableView {
@@ -246,7 +216,7 @@
     [self.view addSubview:tableView];
     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.naviBar.mas_bottom);
+        make.top.mas_equalTo(0);
         make.bottom.mas_equalTo(self.view);
     }];
     tableView.delegate  = self.viewModel;
@@ -273,12 +243,6 @@
         self.canSearchWithRollData = NO;
     }
     _houseType = houseType;
-    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:houseType]];
-    _naviBar.searchTypeLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:houseType];
-    CGSize size = [self.naviBar.searchTypeLabel sizeThatFits:CGSizeMake(100, 21)];
-    [self.naviBar.searchTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(size.width);
-    }];
     self.viewModel.houseType = self.houseType;
     // 清空埋点key
     [self.viewModel.historyShowTracerDic removeAllObjects];
@@ -303,56 +267,9 @@
     return items;
 }
 
-- (void)searchTypeBtnClick:(UIButton *)btn {
-    NSArray *items = @[@(FHHouseTypeSecondHandHouse),
-                       @(FHHouseTypeRentHouse),
-                       @(FHHouseTypeNewHouse),
-                       @(FHHouseTypeNeighborhood),];
-    FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if (model) {
-        items = [self houseTypeSectionByConfig:model];
-    }
-    NSMutableArray *menuItems = [[NSMutableArray alloc] init];
-    [items enumerateObjectsUsingBlock:^(NSNumber *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHHouseType houseType = [obj integerValue];
-        FHPopupMenuItem *item = [self getPopupItemBy:houseType];
-        [menuItems addObject:item];
-    }];
-    
-    FHPopupMenuView *popup = [[FHPopupMenuView alloc] initWithTargetView:self.naviBar.searchTypeBtn menus:menuItems];
-    [self.view addSubview:popup];
-    self.popupMenuView = popup;
-    [popup mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.bottom.right.mas_equalTo(self.view);
-    }];
-    [self.popupMenuView showOnTargetView];
-    
-}
-- (FHPopupMenuItem *)getPopupItemBy:(FHHouseType)ht {
-    FHPopupMenuItem *item = [[FHPopupMenuItem alloc] initWithHouseType:ht isSelected:self.houseType == ht];
-    __weak typeof(self) weakSelf = self;
-    item.itemClickBlock = ^(FHHouseType houseType) {
-        weakSelf.houseType = houseType;
-        [weakSelf.popupMenuView removeFromSuperview];
-    };
-    return item;
-}
 
-// 文本框文字变化，进行sug请求
-- (void)textFiledTextChangeNoti:(NSNotification *)noti {
-    NSInteger maxCount = 80;
-    NSString *text = self.naviBar.searchInput.text;
-    UITextRange *selectedRange = [self.naviBar.searchInput markedTextRange];
-    //获取高亮部分
-    UITextPosition *position = [self.naviBar.searchInput positionFromPosition:selectedRange.start offset:0];
-    // 没有高亮选择的字，说明不是拼音输入
-    if (position) {
-        return;
-    }
-    if (text.length > maxCount) {
-        text = [text substringToIndex:maxCount];
-        self.naviBar.searchInput.text = text;
-    }
+- (void) textFiledTextChange:(NSString *)text
+{
     BOOL hasText = text.length > 0;
     _suggestTableView.hidden = !hasText;
     _historyTableView.hidden = hasText;
@@ -364,19 +281,10 @@
     }
 }
 
-#pragma mark - UITextFieldDelegate
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    
-    if (self.popupMenuView) {
-        [self.popupMenuView removeFromSuperview];
-    }
-    return YES;
-}
 
 // 输入框执行搜索
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    NSString *userInputText = self.naviBar.searchInput.text;
+- (void)doTextFieldShouldReturn:(NSString *)text {
+    NSString *userInputText = text;
     
     // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
     NSString *rollText = self.homePageRollDic[@"text"];
@@ -422,7 +330,6 @@
                                };
         [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
     }
-    return YES;
 }
 
 - (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos {
@@ -484,7 +391,10 @@
 // 执行网络请求
 - (void)requestData {
     // Sug
-    NSString *text = self.naviBar.searchInput.text;
+    NSString *text = @"";
+    if (self.fatherVC) {
+        self.fatherVC.naviBar.searchInput.text;
+    }
     BOOL hasText = text.length > 0;
     if (hasText) {
          [self requestSuggestion:text];

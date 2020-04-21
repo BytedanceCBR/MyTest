@@ -47,13 +47,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, strong)   FHSuggectionTableView       *historyTableView;
 @property (nonatomic, strong)   FHSuggectionTableView       *suggestTableView;
-
-@property (nonatomic, strong)     FHSearchBar     *naviBar;
+@property (nonatomic, weak) FHSuggestionListViewController *fatherVC;
 
 - (void)requestDeleteHistory;
 
 - (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos;
-
+- (void)doTextFieldShouldReturn:(NSString *)text;
+- (void)textFiledTextChange:(NSString *)text;
 @end
 
 NS_ASSUME_NONNULL_END
