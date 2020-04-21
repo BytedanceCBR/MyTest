@@ -334,7 +334,8 @@
                                        @"title":@"首付咨询",
                                        @"subtitle":@"订阅首付咨询，房源首付信息会及时发送到您的手机",
                                        @"position":@"loan",
-                                       @"btn_title":@"提交"
+                                       @"btn_title":@"提交",
+                                       @"toast":@"提交成功，经纪人将尽快与您联系"
             };
             [model.contactModel fillFormActionWithExtraDict:infoDic];
             __weak typeof(self)WS = self;
