@@ -40,7 +40,8 @@ def fhPods
     
     pod 'FHWebView', :path => '../AKPlugins/FHWebView'
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
-    
+    pod 'FHLynxKit' , :path => '../Bundles/ios_common_lynx'
+
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
     pod 'ios_house_filter' , '1.0.2'
     
@@ -398,6 +399,15 @@ def appPods
     pod 'BDDataDecorator','2.0.1',:subspecs => [
       'Data',
     ]
+    
+    pod 'Lynx','1.0.8',:subspecs =>[
+    'Framework',
+    'InspectorFramework',
+    'Native',
+    'InspectorNative',
+    'JSRuntime',
+    'ReleaseResource',
+    'DebugResource']
     
     #-----头条推送SDK----
     pod 'BDUGPushSDK', '2.2.3'
