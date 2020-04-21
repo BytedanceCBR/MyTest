@@ -22,20 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSArray *dataList;
 //内容分类
 @property(nonatomic, strong) NSString *category;
-//频道id
-@property(nonatomic, strong) NSString *channelId;
-//发布按钮
-@property(nonatomic, strong) UIButton *publishBtn;
-@property(nonatomic, copy) void(^publishBlock)(void);
 //附加在feed上面的自定义view
 @property(nonatomic, strong) UIView *tableHeaderView;
 @property(nonatomic, strong) UITableView *tableView;
 //是否需要下拉刷新，默认为YES
 @property(nonatomic, assign) BOOL tableViewNeedPullDown;
-//发布按钮距离底部的高度,默认为0
-@property(nonatomic, assign) CGFloat publishBtnBottomHeight;
-//发布按钮隐藏
-@property(nonatomic, assign) BOOL hidePublishBtn;
 //是否需要在返回这个页面时候去刷新数据
 @property(nonatomic, assign) BOOL needReloadData;
 //当前定位的位置

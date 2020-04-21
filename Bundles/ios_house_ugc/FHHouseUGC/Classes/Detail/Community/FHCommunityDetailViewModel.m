@@ -441,7 +441,7 @@
     feedListController.scrollViewDelegate = self;
     feedListController.listType = FHCommunityFeedListTypePostDetail;
     feedListController.forumId = self.viewController.communityId;
-    feedListController.hidePublishBtn = YES;
+//    feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
     feedListController.isResetStatusBar = NO;
     //错误页高度

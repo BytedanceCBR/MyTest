@@ -7,15 +7,12 @@
 
 #import "FHCommunityFeedListCustomViewModel.h"
 #import "FHUGCBaseCell.h"
-#import "FHTopicListModel.h"
 #import "FHHouseUGCAPI.h"
 #import "FHFeedListModel.h"
 #import "UIScrollView+Refresh.h"
 #import "FHFeedUGCCellModel.h"
-#import "Article.h"
 #import "TTBaseMacro.h"
 #import "TTStringHelper.h"
-#import "FHUGCGuideHelper.h"
 #import "FHUGCConfig.h"
 #import "ToastManager.h"
 #import "FHEnvContext.h"
@@ -32,9 +29,6 @@
 
 @interface FHCommunityFeedListCustomViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
-@property(nonatomic, strong) FHFeedUGCCellModel *guideCellModel;
-@property(nonatomic, assign) BOOL alreadShowFeedGuide;
-
 @end
 
 @implementation FHCommunityFeedListCustomViewModel
@@ -44,8 +38,6 @@
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
-        // 发帖成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 编辑成功
@@ -163,14 +155,6 @@
     if(fCityId){
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
-    // 附近 Feed添加一个参数
-    __block NSNumber *open_times = [[NSUserDefaults standardUserDefaults] valueForKey:@"user_neighbor_channel_open_times_key"];
-    if (!open_times) {
-        open_times = [NSNumber numberWithInteger:0];
-    }
-    if (open_times && isHead) {
-        [extraDic setValue:[NSString stringWithFormat:@"%ld",[open_times integerValue]] forKey:@"user_neighbor_channel_open_times"];
-    }
 
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
@@ -204,13 +188,6 @@
 
         if(model){
             if(isHead){
-                if (open_times) {
-                    NSInteger val = [open_times integerValue];
-                    val += 1;
-                    open_times = [NSNumber numberWithInteger:val];
-                    [[NSUserDefaults standardUserDefaults] setValue:open_times forKey:@"user_neighbor_channel_open_times_key"];
-                    [[NSUserDefaults standardUserDefaults] synchronize];
-                }
                 if(feedListModel.hasMore){
                     [wself.dataList removeAllObjects];
                 }
@@ -241,7 +218,6 @@
             if(wself.dataList.count > 0){
                 [wself updateTableViewWithMoreData:wself.tableView.hasMore];
                 [wself.viewController.emptyView hideEmptyView];
-                [wself insertGuideCell];
             }else{
                 [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
                 wself.viewController.showenRetryButton = NO;
@@ -275,12 +251,6 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-//    //fake
-//    if(isHead){
-//        [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
-//        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake].groupId];
-//    }
-    
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
         cellModel.categoryId = self.categoryId;
@@ -310,92 +280,6 @@
             break;
         }
     }
-}
-
-- (void)insertGuideCell {
-    if([FHUGCGuideHelper shouldShowFeedGuide] && !self.alreadShowFeedGuide){
-        //符合引导页显示条件时
-        for (NSInteger i = 0; i < self.dataList.count; i++) {
-            FHFeedUGCCellModel *cellModel = self.dataList[i];
-            if(cellModel.cellType != FHUGCFeedListCellTypeUGCRecommend && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner2 && cellModel.showCommunity) {
-                if(self.guideCellModel){
-                    self.guideCellModel.isInsertGuideCell = NO;
-                    self.guideCellModel.ischanged = YES;
-                }
-                cellModel.isInsertGuideCell = YES;
-                cellModel.ischanged = YES;
-                self.guideCellModel = cellModel;
-                //显示以后次数加1
-                if(![FHUGCConfig sharedInstance].isAlreadyShowFeedGuide){
-                    [FHUGCConfig sharedInstance].isAlreadyShowFeedGuide = YES;
-                    [FHUGCGuideHelper addFeedGuideCount];
-                }
-                return;
-            }
-        }
-    }
-}
-
-- (void)closeGuideView {
-    if(self.guideCellModel.isInsertGuideCell){
-        NSInteger row = [self.dataList indexOfObject:self.guideCellModel];
-        if(row < self.dataList.count && row >= 0){
-            self.guideCellModel.isInsertGuideCell = NO;
-            
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        }
-    }
-}
-
-// 发帖成功，插入数据
-- (void)postThreadSuccess:(NSNotification *)noti {
-    FHFeedUGCCellModel *cellModel = noti.userInfo[@"cell_model"];
-    if(cellModel) {
-        [self insertPostData:cellModel];
-    }
-}
-// 发帖和发投票后插入逻辑
-- (void)insertPostData:(FHFeedUGCCellModel *)cellModel {
-    if (cellModel == nil) {
-        return;
-    }
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (cellModel) {
-            //去重逻辑
-            [self removeDuplicaionModel:cellModel.groupId];
-            
-            // JOKER: 找到第一个非置顶贴的下标
-            __block NSUInteger index = self.dataList.count;
-            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
-                
-                //这里的只是针对附近的tab，而且后面的类型根据实际需求改变
-                if(!isStickTop && cellModel.cellSubType != FHUGCFeedListCellSubTypeUGCHotCommunity) {
-                    index = idx;
-                    *stop = YES;
-                }
-            }];
-            cellModel.tableView = self.tableView;
-            cellModel.categoryId = self.categoryId;
-            cellModel.feedVC = self.viewController;
-            // 插入在置顶贴的下方
-            [self.dataList insertObject:cellModel atIndex:index];
-            [self.tableView reloadData];
-            [self.tableView layoutIfNeeded];
-            self.needRefreshCell = NO;
-            // JOKER: 发贴成功插入贴子后，滚动使露出
-            if(index <= 1) {
-                [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
-            } else {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
-                [self.tableView setContentOffset:rect.origin
-                                        animated:YES];
-            }
-        }
-    });
 }
 
 - (void)postDeleteSuccess:(NSNotification *)noti {
@@ -574,7 +458,7 @@
         // 评论
         NSMutableDictionary *dict = [NSMutableDictionary new];
         NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = @"hot_discuss_feed";
+        traceParam[@"enter_from"] = [self pageType];
         traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
         traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
         traceParam[@"log_pb"] = cellModel.logPb;
@@ -629,7 +513,7 @@
         // 投票
         NSMutableDictionary *dict = @{@"begin_show_comment":@(showComment)}.mutableCopy;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = @"hot_discuss_feed";
+        traceParam[@"enter_from"] = [self pageType];
         traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
         traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
         traceParam[@"log_pb"] = cellModel.logPb;
@@ -645,7 +529,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = @"hot_discuss_feed";
+    traceParam[@"enter_from"] = [self pageType];
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
@@ -677,7 +561,6 @@
         TTVFeedCellSelectContext *context = [[TTVFeedCellSelectContext alloc] init];
         context.refer = self.refer;
         context.categoryId = self.categoryId;
-//        context.feedListViewController = self;
         context.clickComment = showComment;
         context.enterType = enterType;
         context.enterFrom = [self pageType];
@@ -712,14 +595,10 @@
 }
 
 - (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    //关闭引导cell
-    [self closeGuideView];
-    [FHUGCGuideHelper hideFeedGuide];
-    
     if(cellModel.community.socialGroupId){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = cellModel.community.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"hot_discuss_feed",
+        dict[@"tracer"] = @{@"enter_from":[self pageType],
                             @"enter_type":@"click",
                             @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
                             @"log_pb":cellModel.logPb ?: @"be_null"};
@@ -734,10 +613,6 @@
     self.currentCellModel = cellModel;
     self.currentCell = cell;
     [self jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
-}
-
-- (void)closeFeedGuide:(FHFeedUGCCellModel *)cellModel {
-    self.alreadShowFeedGuide = YES;
 }
 
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
@@ -893,14 +768,6 @@
     if(cellModel.attachCardInfo){
         [self trackCardShow:cellModel rank:rank];
     }
-
-    if(cellModel.isInsertGuideCell){
-        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
-        guideDict[@"element_type"] = @"feed_community_guide_notice";
-        guideDict[@"page_type"] = @"nearby_list";
-        guideDict[@"enter_from"] = @"neighborhood_tab";
-        TRACK_EVENT(@"element_show", guideDict);
-    }
     
     if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
         //对于热门小区的展现，在cell里面报，这里就不报了
@@ -941,7 +808,7 @@
 - (void)trackElementShow:(NSInteger)rank elementType:(NSString *)elementType {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"element_type"] = elementType ? elementType : @"be_null";
-    dict[@"page_type"] = @"hot_discuss_feed";
+    dict[@"page_type"] = [self pageType];
     dict[@"enter_from"] = @"neighborhood_tab";
     dict[@"rank"] = @(rank);
     
@@ -950,7 +817,7 @@
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"enter_from"] = @"nearby_list";
+    dict[@"enter_from"] = @"neighborhood_tab";
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
@@ -959,7 +826,7 @@
 }
 
 - (NSString *)pageType {
-    return @"hot_discuss_feed";
+    return self.categoryId;
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {

@@ -81,7 +81,6 @@
         FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
         vc.listType = FHCommunityFeedListTypeCustom;
         vc.category = _cellModel.category;
-        vc.hidePublishBtn = YES;
         self.vc = vc;
     }
     

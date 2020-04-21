@@ -25,21 +25,18 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHUGCConfig.h"
 #import "ToastManager.h"
-#import "FHUGCPostMenuView.h"
-#import "FHCommonDefines.h"
 
-@interface FHCommunityFeedListController ()<SSImpressionProtocol, FHUGCPostMenuViewDelegate>
+@interface FHCommunityFeedListController ()<SSImpressionProtocol>
 
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
 @property(nonatomic, assign) NSInteger currentCityId;
-@property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
 
 @end
 
 @implementation FHCommunityFeedListController
 
--(instancetype)init{
+- (instancetype)init {
     self = [super init];
     if(self){
         _tableViewNeedPullDown = YES;
@@ -60,8 +57,7 @@
     [TTAccount addMulticastDelegate:self];
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[SSImpressionManager shareInstance] removeRegist:self];
     [TTAccount removeMulticastDelegate:self];
 }
@@ -97,7 +93,6 @@
             }];
         }
     }
-    [self initPublishBtn];
 }
 
 - (void)initTableView {
@@ -152,14 +147,6 @@
     [self.view addSubview:self.notifyBarView];
 }
 
-- (void)initPublishBtn {
-    self.publishBtn = [[UIButton alloc] init];
-    [_publishBtn setImage:[UIImage imageNamed:@"fh_ugc_publish"] forState:UIControlStateNormal];
-    [_publishBtn addTarget:self action:@selector(goToPublish) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:_publishBtn];
-    _publishBtn.hidden = self.hidePublishBtn;
-}
-
 - (void)initConstraints {
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
@@ -168,12 +155,6 @@
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.tableView);
         make.height.mas_equalTo(32);
-    }];
-    
-    [self.publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.view).offset(-self.publishBtnBottomHeight);
-        make.right.mas_equalTo(self.view).offset(-12);
-        make.width.height.mas_equalTo(64);
     }];
 }
 
@@ -254,200 +235,6 @@
 
 - (void)retryLoadData {
     [self startLoadData];
-}
-
-- (void)goToPublish {
-    
-    [self showPublishMenu];
-}
-
-- (FHUGCPostMenuView *)publishMenuView {
-    
-    if(!_publishMenuView) {
-        _publishMenuView = [[FHUGCPostMenuView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        _publishMenuView.delegate = self;
-    }
-    return _publishMenuView;
-}
-
-- (void)showPublishMenu {
-    [self.publishMenuView showForButton:self.publishBtn];
-}
-
-#pragma mark - FHUGCPostMenuViewDelegate
-
-- (void)gotoPostPublish {
-    
-    if(self.publishBlock){
-        self.publishBlock();
-        return;
-    }
-    [self gotoPostThreadVC];
-    
-    NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_ELEMENT_TYPE] = @"feed_icon";
-    params[UT_PAGE_TYPE] = [self pageType];
-    TRACK_EVENT(@"click_options", params);
-}
-
-- (void)gotoVotePublish {
-    
-    NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_ELEMENT_TYPE] = @"vote_icon";
-    params[UT_PAGE_TYPE] = [self pageType];
-    TRACK_EVENT(@"click_options", params);
-    
-    if ([TTAccountManager isLogin]) {
-        [self gotoVoteVC];
-    } else {
-        [self gotoLogin:FHUGCLoginFrom_VOTE];
-    }
-}
-
-- (void)gotoWendaPublish {
-    
-    NSMutableDictionary *params = @{}.mutableCopy;
-    params[UT_ELEMENT_TYPE] = @"question_icon";
-    params[UT_PAGE_TYPE] = [self pageType];
-    TRACK_EVENT(@"click_options", params);
-    
-    if ([TTAccountManager isLogin]) {
-        [self gotoWendaVC];
-    } else {
-        [self gotoLogin:FHUGCLoginFrom_WENDA];
-    }
-    
-}
-
-// 发布按钮点击
-- (void)gotoPostThreadVC {
-    if ([TTAccountManager isLogin]) {
-        [self gotoPostVC];
-    } else {
-        [self gotoLogin:FHUGCLoginFrom_POST];
-    }
-}
-
-- (NSString *)pageType {
-    NSString *page_type = UT_BE_NULL;
-    if (self.listType == FHCommunityFeedListTypeMyJoin) {
-        page_type = @"my_join_list";
-    } else  if (self.listType == FHCommunityFeedListTypeNearby) {
-        page_type = @"nearby_list";
-    }
-    return page_type;
-}
-
-- (void)gotoLogin:(FHUGCLoginFrom)from {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    NSString *page_type = @"nearby_list";
-    if (self.listType == FHCommunityFeedListTypeMyJoin) {
-        page_type = @"my_join_list";
-    } else  if (self.listType == FHCommunityFeedListTypeNearby) {
-        page_type = @"nearby_list";
-    }
-    [params setObject:page_type forKey:@"enter_from"];
-    
-    NSString *enter_type = UT_BE_NULL;
-    switch (from) {
-        case FHUGCLoginFrom_POST:
-            enter_type = @"click_publisher_moments";
-            break;
-        case FHUGCLoginFrom_GROUPCHAT:
-            enter_type = @"ugc_member_talk";
-            break;
-        case FHUGCLoginFrom_VOTE:
-            enter_type = @"click_publisher_vote";
-            break;
-        case FHUGCLoginFrom_WENDA:
-            enter_type = @"click_publisher_question";
-            break;
-        default:
-            break;
-    }
-    [params setObject:enter_type forKey:@"enter_type"];
-    
-    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
-    [params setObject:@(YES) forKey:@"need_pop_vc"];
-    params[@"from_ugc"] = @(YES);
-    __weak typeof(self) wSelf = self;
-    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-        if (type == TTAccountAlertCompletionEventTypeDone) {
-            // 登录成功
-            if ([TTAccountManager isLogin]) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    
-                    switch (from) {
-                        case FHUGCLoginFrom_POST:
-                        {
-                            [self gotoPostVC];
-                        }
-                            break;
-                        case FHUGCLoginFrom_VOTE:
-                        {
-                            [self gotoVoteVC];
-                        }
-                            break;
-                        case FHUGCLoginFrom_WENDA:
-                        {
-                            [self gotoWendaVC];
-                        }
-                            break;
-                        default:
-                            break;
-                    }
-                });
-            }
-        }
-    }];
-}
-
-// 跳转到投票发布器
-- (void)gotoVoteVC {
-    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_vote_publish"];
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[UT_ENTER_FROM] = [self pageType];
-    dict[TRACER_KEY] = tracerDict;
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
-}
-
-- (void)gotoWendaVC {
-    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_wenda_publish"];
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[UT_ENTER_FROM] = [self pageType];
-    dict[TRACER_KEY] = tracerDict;
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
-}
-
-// 跳转到UGC发布器
-- (void)gotoPostVC {
-
-    // 跳转到发布器
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"element_type"] = @"feed_publisher";
-    NSString *page_type = @"nearby_list";
-    if (self.listType == FHCommunityFeedListTypeMyJoin) {
-        page_type = @"my_join_list";
-    } else  if (self.listType == FHCommunityFeedListTypeNearby) {
-        page_type = @"nearby_list";
-    }
-    tracerDict[@"page_type"] = page_type;// “附近”：’nearby_list‘；“我加入的”：’my_join_list‘；'圈子子详情页‘：community_group_detail‘
-    [FHUserTracker writeEvent:@"click_publisher" params:tracerDict];
-    
-    NSMutableDictionary *traceParam = @{}.mutableCopy;
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    traceParam[@"page_type"] = @"feed_publisher";
-    traceParam[@"enter_from"] = page_type;
-    dict[TRACER_KEY] = traceParam;
-    dict[VCTITLE_KEY] = @"发帖";
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    
-    NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
-    [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
 
 #pragma mark - show notify

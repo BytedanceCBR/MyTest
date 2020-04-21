@@ -119,7 +119,7 @@
     FHCommunityFeedListController *vc =[[FHCommunityFeedListController alloc] init];
     vc.listType = FHCommunityFeedListTypeMyJoin;
     vc.showErrorView = NO;
-    vc.hidePublishBtn = YES;
+//    vc.hidePublishBtn = YES;
     vc.tableHeaderView = self.neighbourhoodView;
     vc.tracerDict = [self.tracerDict mutableCopy];
     
