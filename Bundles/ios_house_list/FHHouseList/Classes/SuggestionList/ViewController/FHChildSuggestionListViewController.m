@@ -156,8 +156,6 @@
     self.hasDismissedVC = NO;
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-    //self.houseType = self.viewModel.houseType;// 执行网络请求等逻辑
-
 }
 
 - (void)setFatherVC:(FHSuggestionListViewController *)fatherVC

@@ -56,8 +56,8 @@
         self.hasShowKeyboard = NO;
         self.sectionHeaderView = [[UIView alloc] init];
         self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
-        [self setupGuessYouWantView];
         [self setupSubscribeView];
+        [self setupGuessYouWantView];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:@"kFHSugSubscribeNotificationName" object:nil];
     }
     return self;
@@ -114,7 +114,8 @@
     };
     [self.sectionHeaderView addSubview:self.guessYouWantView];
     [self.guessYouWantView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.mas_equalTo(self.sectionHeaderView);
+        make.left.right.mas_equalTo(self.sectionHeaderView);
+        make.top.mas_equalTo(self.subscribeView.mas_bottom);
         make.height.mas_equalTo(CGFLOAT_MIN);
     }];
     self.guessYouWantView.hidden = YES;
@@ -138,7 +139,7 @@
     [self.sectionHeaderView addSubview:self.subscribeView];
     [self.subscribeView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.sectionHeaderView);
-        make.top.mas_equalTo(self.guessYouWantView.mas_bottom);
+        make.top.mas_equalTo(0);
         make.height.mas_equalTo(CGFLOAT_MIN);
     }];
     self.subscribeView.hidden = YES;

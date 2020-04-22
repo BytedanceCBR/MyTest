@@ -84,16 +84,14 @@
 {
     //子vc segtableview去重
     if ([cell isKindOfClass: [FHSuggestionCollectionViewCell class]]) {
-        
         NSInteger row = indexPath.item;
         NSString *rowStr = [NSString stringWithFormat:@"%ld", row];
-        if (self.cellDict[rowStr]) {
-            FHSuggestionCollectionViewCell *newCell = (FHSuggestionCollectionViewCell *)cell;
-            [newCell.vc textFiledTextChange:self.listController.naviBar.searchInput.text];
-        } else {
+        if (!self.cellDict[rowStr]) {
             self.cellDict[rowStr] = cell;
             [self initCellWithIndex:row];
         }
+        FHSuggestionCollectionViewCell *newCell = (FHSuggestionCollectionViewCell *)cell;
+        [newCell.vc textFiledTextChange:self.listController.naviBar.searchInput.text];
     }
 }
 
@@ -154,7 +152,6 @@
         FHSuggestionCollectionViewCell *cell = self.cellDict[rowStr];
         
         [cell refreshData:self.listController.paramObj andHouseType:[self.listController.houseTypeArray[index] integerValue]];
-        
         if (cell.vc && ![self.listController.childViewControllers containsObject:cell.vc]) {
             [self.listController addChildViewController:cell.vc];
             cell.vc.fatherVC = self.listController;
