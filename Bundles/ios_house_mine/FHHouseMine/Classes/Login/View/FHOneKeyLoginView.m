@@ -132,7 +132,6 @@
     self.phoneNumberLabel.text = phoneNum;
     self.serviceLabel.text = service;
     
-    
     self.agreementLabel.attributedText = protocol;
     CGFloat height = [protocol.string btd_heightWithFont:protocol.yy_font width:CGRectGetWidth(UIScreen.mainScreen.bounds) - 60];
     [self.agreementLabel mas_updateConstraints:^(MASConstraintMaker *make) {

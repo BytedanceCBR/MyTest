@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHLoginViewDelegate <NSObject>
 
+#pragma mark - Action
+///返回上一级VC
 - (void)popLastViewController;
 
 - (void)goToUserProtocol;
@@ -28,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param needPush 需要跳转输入验证码页面 needPush:true 如果重新发送验证码:needPush:false
 - (void)sendVerifyCode:(NSString *)mobileNumber needPush:(BOOL )needPush;
 
+#pragma mark - Login
+
 - (void)mobileLogin:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha;
 
 /// 运营商一键登录
@@ -39,11 +43,18 @@ NS_ASSUME_NONNULL_BEGIN
 /// 抖音一键登录
 - (void)awesomeLoginAction;
 
+#pragma mark - Bind
+- (void)bindCancelAction;
+
+- (void)oneKeyBindAction;
+
+- (void)mobileBind:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha;
+
 //@optional
 //- (void)acceptCheckBoxChange:(BOOL)selected;
-- (void)confirm;
+//- (void)confirm;
 /// 验证码
-- (void)verifyCodeLoginAction;
+//- (void)verifyCodeLoginAction;
 
 @end
 

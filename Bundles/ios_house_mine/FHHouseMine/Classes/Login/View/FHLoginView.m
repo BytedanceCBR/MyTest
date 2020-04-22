@@ -322,21 +322,21 @@
 }
 
 - (void)confirm {
-    if (self.isOneKeyLogin) {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(oneKeyLoginAction)]) {
-            [self.delegate oneKeyLoginAction];
-        }
-    } else {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(confirm)]) {
-            [self.delegate confirm];
-        }
-    }
+//    if (self.isOneKeyLogin) {
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(oneKeyLoginAction)]) {
+//            [self.delegate oneKeyLoginAction];
+//        }
+//    } else {
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(confirm)]) {
+//            [self.delegate confirm];
+//        }
+//    }
 }
 
 - (void)otherLoginBtnDidClick:(UIButton *)btn {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(verifyCodeLoginAction)]) {
-        [self.delegate verifyCodeLoginAction];
-    }
+//    if (self.delegate && [self.delegate respondsToSelector:@selector(verifyCodeLoginAction)]) {
+//        [self.delegate verifyCodeLoginAction];
+//    }
 }
 
 //- (void)acceptCheckBoxChange {

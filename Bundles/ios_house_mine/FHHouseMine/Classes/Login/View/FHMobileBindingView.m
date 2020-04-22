@@ -6,15 +6,21 @@
 //
 
 #import "FHMobileBindingView.h"
+#import "FHLoginDefine.h"
+#import <Masonry/Masonry.h>
+#import <FHCommonUI/UIColor+Theme.h>
+#import <FHCommonUI/UIFont+House.h>
+#import "YYLabel.h"
+#import "NSAttributedString+YYText.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @implementation FHMobileBindingView
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        
+    }
+    return self;
 }
-*/
 
 @end

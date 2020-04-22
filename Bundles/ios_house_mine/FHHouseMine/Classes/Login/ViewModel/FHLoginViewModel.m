@@ -501,6 +501,18 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }];
 }
 
+- (void)bindCancelAction {
+    
+}
+
+- (void)oneKeyBindAction {
+    
+}
+
+- (void)mobileBind:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha {
+    
+}
+
 #pragma mark - 键盘通知
 - (void)keyboardWillShowNotifiction:(NSNotification *)notification {
     if (_isHideKeyBoard) {
