@@ -15,7 +15,7 @@
 #import "HTSVideoPlayToast.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <TTNewsAccountBusiness/TTRepostServiceProtocol.h>
-#import <TTServiceCenter.h>
+#import "TTServiceCenter.h"
 
 
 @implementation TSVVideoDetailShareHelper

@@ -6,8 +6,8 @@
 //
 
 #import "FHMyFavoriteViewModel.h"
-#import <TTRoute.h>
-#import <TTHttpTask.h>
+#import "TTRoute.h"
+#import "TTHttpTask.h"
 #import "FHMessageCell.h"
 #import "FHMineAPI.h"
 #import "FHUnreadMsgModel.h"
@@ -16,7 +16,7 @@
 #import "FHFollowModel.h"
 #import "FHSingleImageInfoCellModel.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
-#import <UIScrollView+Refresh.h>
+#import "UIScrollView+Refresh.h"
 #import "ToastManager.h"
 #import "FHHouseDetailAPI.h"
 #import "FHPlaceHolderCell.h"
@@ -24,6 +24,9 @@
 #import "FHRefreshCustomFooter.h"
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import "IFHMyFavoriteController.h"
+#import "FHHouseListBaseItemCell.h"
+#import "FHHouseListBaseItemModel.h"
+#import "FHHomePlaceHolderCell.h"
 
 extern NSString *const kFHDetailFollowUpNotification;
 
@@ -84,8 +87,13 @@ extern NSString *const kFHDetailFollowUpNotification;
 }
 
 -(void)registerCell:(UITableView*)tableView {
-    [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
-    [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
+//    [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
+//    [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
+    [tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:self.type == FHHouseTypeNewHouse?@"FHNewHouseCell":kCellId];
+    [tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
+    if (self.type == FHHouseTypeNewHouse ) {
+         [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
+    }
 }
 
 - (void)dealloc {
@@ -109,7 +117,8 @@ extern NSString *const kFHDetailFollowUpNotification;
 
     __weak typeof(self) wself = self;
     
-    self.requestTask = [FHMineAPI requestFocusDetailInfoWithType:self.type offset:self.offset searchId:self.searchId limit:self.limit className:@"FHFollowModel" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+//    self.requestTask = [FHMineAPI requestFocusDetailInfoWithType:self.type offset:self.offset searchId:self.searchId limit:self.limit className:@"FHFollowModel" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+      self.requestTask = [FHMineAPI requestFocusDetailInfoWithType:self.type offset:self.offset searchId:self.searchId limit:self.limit className:@"FHListResultHouseModel" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         [wself.tableView.mj_footer endRefreshing];
         
@@ -142,24 +151,34 @@ extern NSString *const kFHDetailFollowUpNotification;
 }
 
 - (void)handleSuccess:(id<FHBaseModelProtocol>  _Nonnull) model isHead:(BOOL)isHead {
-    FHFollowModel *followModel = (FHFollowModel *)model;
+//    FHFollowModel *followModel = (FHFollowModel *)model;
+    FHListResultHouseModel *followModel = (FHListResultHouseModel *)model;
     NSArray *itemArray = [NSArray array];
     if(self.type == FHHouseTypeNeighborhood){
-        FHHouseNeighborModel *houseModel = [followModel toHouseNeighborModel];
-        itemArray = houseModel.data.items;
+//        FHHouseNeighborModel *houseModel = [followModel toHouseNeighborModel];
+//        itemArray = houseModel.data.items;
+         FHHouseListDataModel *houseModel = followModel.data;
+        itemArray = houseModel.followItems;
     }else if(self.type == FHHouseTypeSecondHandHouse){
-        FHSearchHouseModel *houseModel = [followModel toHouseSecondHandModel];
-        itemArray = houseModel.data.items;
+              FHHouseListDataModel *houseModel = followModel.data;
+        
+//        FHSearchHouseModel *houseModel = [followModel toHouseSecondHandModel];
+        itemArray = houseModel.followItems;
     }else if(self.type == FHHouseTypeNewHouse){
-        FHNewHouseListResponseModel *houseModel = [followModel toHouseNewModel];
-        itemArray = houseModel.data.items;
+//        FHNewHouseListResponseModel *houseModel = [followModel toHouseNewModel];
+//        itemArray = houseModel.data.items;
+        FHHouseListDataModel *houseModel = followModel.data;
+        itemArray = houseModel.followItems;
     }else if(self.type == FHHouseTypeRentHouse){
-        FHHouseRentModel *houseModel = [followModel toHouseRentModel];
-        itemArray = houseModel.data.items;
+                 FHHouseListDataModel *houseModel = followModel.data;
+                itemArray = houseModel.followItems;
+//        FHHouseRentModel *houseModel = [followModel toHouseRentModel];
+//        itemArray = houseModel.data.items;
     }
     
     [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
+//        FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
+        FHHouseListBaseItemModel *cellModel = (FHHouseListBaseItemModel *)obj;
         if (cellModel) {
             cellModel.isRecommendCell = NO;
             [self.dataList addObject:cellModel];
@@ -338,8 +357,10 @@ extern NSString *const kFHDetailFollowUpNotification;
         // 取消收藏
         NSString *followId = notification.userInfo[@"followId"];
         NSInteger index = [self.dataList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            FHSingleImageInfoCellModel *cellModel = (FHSingleImageInfoCellModel *)obj;
-            if([followId isEqualToString:[self getFollowId:cellModel]]){
+//            FHSingleImageInfoCellModel *cellModel = (FHSingleImageInfoCellModel *)obj;
+//            if([followId isEqualToString:[self getFollowId:cellModel]]){
+            FHHouseListBaseItemModel *cellModel = (FHHouseListBaseItemModel *)obj;
+                       if([followId isEqualToString:cellModel.houseid]){
                 return YES;
             }
             return NO;
@@ -352,8 +373,10 @@ extern NSString *const kFHDetailFollowUpNotification;
         // 收藏
         NSString *followId = notification.userInfo[@"followId"];
         NSInteger index = [self.removedDataList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            FHSingleImageInfoCellModel *cellModel = (FHSingleImageInfoCellModel *)obj;
-            if([followId isEqualToString:[self getFollowId:cellModel]]){
+//            FHSingleImageInfoCellModel *cellModel = (FHSingleImageInfoCellModel *)obj;
+//            if([followId isEqualToString:[self getFollowId:cellModel]]){
+            FHHouseListBaseItemModel *cellModel = (FHHouseListBaseItemModel *)obj;
+                       if([followId isEqualToString:cellModel.houseid]){
                 return YES;
             }
             return NO;
@@ -421,10 +444,10 @@ extern NSString *const kFHDetailFollowUpNotification;
     TRACK_EVENT(@"category_refresh", dict);
 }
 
-- (void)trackHouseShow:(FHSingleImageInfoCellModel *)cellModel rank:(NSInteger)rank {
+- (void)trackHouseShow:(FHHouseListBaseItemModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [self categoryLogDict];
     dict[@"card_type"] = @"left_pic";
-    dict[@"group_id"] = cellModel.houseId;
+    dict[@"group_id"] = cellModel.houseid;
     dict[@"house_type"] = [self houseType];
     dict[@"impr_id"] = cellModel.imprId;
     dict[@"log_pb"] = cellModel.logPb;
@@ -433,9 +456,9 @@ extern NSString *const kFHDetailFollowUpNotification;
     TRACK_EVENT(@"house_show", dict);
 }
 
-- (void)trackDeleteFollow:(FHSingleImageInfoCellModel *)cellModel {
+- (void)trackDeleteFollow:(FHHouseListBaseItemModel *)cellModel {
     NSMutableDictionary *dict = [self categoryLogDict];
-    dict[@"group_id"] = cellModel.houseId;
+    dict[@"group_id"] = cellModel.houseid;
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"page_type"] = [self categoryName];
     TRACK_EVENT(@"delete_follow", dict);
@@ -461,14 +484,14 @@ extern NSString *const kFHDetailFollowUpNotification;
     if (indexPath.row >= self.dataList.count) {
         return;
     }
-    FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+    FHHouseListBaseItemModel *cellModel = self.dataList[indexPath.row];
 
     if (!_clientShowDict) {
         _clientShowDict = [NSMutableDictionary new];
     }
 
     NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
-    NSString *followId = [self getFollowId:cellModel];
+    NSString *followId = cellModel.houseid;
     if(followId){
         if (_clientShowDict[followId]) {
             return;
@@ -488,18 +511,24 @@ extern NSString *const kFHDetailFollowUpNotification;
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(self.showPlaceHolder){
-        FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHFavoriteListPlaceholderCellId];
-        return cell;
+        if (self.type == FHHouseTypeNewHouse) {
+            FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHFavoriteListPlaceholderCellId];
+            return cell;
+        }else {
+            FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHFavoriteListPlaceholderCellId];
+            return cell;
+        }
     }else{
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
+        FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier: self.type == FHHouseTypeNewHouse?@"FHNewHouseCell":kCellId];
         BOOL isFirstCell = (indexPath.row == 0);
 //        BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
         
         if (indexPath.row < self.dataList.count) {
-            FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-            [cell refreshTopMargin: 20];
-            [cell updateWithHouseCellModel:cellModel];            
+            FHHouseListBaseItemModel *cellModel = self.dataList[indexPath.row];
+//            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+//            [cell refreshTopMargin: 20];
+//            [cell updateWithHouseCellModel:cellModel];
+            [cell refreshWithData:cellModel];
         }
         return cell;
     }
@@ -513,25 +542,32 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.showPlaceHolder) {
-        return 105;
-    }else{
-        if (indexPath.row < self.dataList.count) {
-            BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
-            FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-            return (isLastCell ? 125 : 105)+reasonHeight;
-        }else{
-            return 0;
-        }
+    if (self.type == FHHouseTypeNewHouse) {
+        return 104;
+    }else {
+        return 88;
     }
+    
+//    if (self.showPlaceHolder) {
+//        return 88;
+//    }else{
+//        if (indexPath.row < self.dataList.count) {
+////            BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
+////            FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+////            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+////            return (isLastCell ? 125 : 105)+reasonHeight;
+//            return 88;
+//        }else{
+//            return 0;
+//        }
+//    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     if (indexPath.row < self.dataList.count) {
-        FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+        FHHouseListBaseItemModel *cellModel = self.dataList[indexPath.row];
         if (cellModel) {
             [self jump2HouseDetailPage:cellModel withRank:indexPath.row];
         }
@@ -550,7 +586,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     __weak typeof(self) wself = self;
     if (editingStyle == UITableViewCellEditingStyleDelete){
         if(indexPath.row < wself.dataList.count){
-            FHSingleImageInfoCellModel *cellModel = wself.dataList[indexPath.row];
+            FHHouseListBaseItemModel *cellModel = wself.dataList[indexPath.row];
             [wself trackDeleteFollow:cellModel];
             [[ToastManager manager] showCustomLoading:@"正在取消关注"];
             [self cancelHouseFollow:cellModel completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
@@ -578,7 +614,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     __weak typeof(self) wself = self;
     UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"取消关注" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         if(indexPath.row < wself.dataList.count){
-            FHSingleImageInfoCellModel *cellModel = wself.dataList[indexPath.row];
+            FHHouseListBaseItemModel *cellModel = wself.dataList[indexPath.row];
             [wself trackDeleteFollow:cellModel];
             [[ToastManager manager] showCustomLoading:@"正在取消关注"];
             [wself cancelHouseFollow:cellModel completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
@@ -604,7 +640,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 }
 
 #pragma mark - 详情页跳转
--(void)jump2HouseDetailPage:(FHSingleImageInfoCellModel *)cellModel withRank:(NSInteger)rank {
+-(void)jump2HouseDetailPage:(FHHouseListBaseItemModel *)cellModel withRank:(NSInteger)rank {
     
     NSMutableDictionary *traceParam = [self categoryLogDict];
     traceParam[@"card_type"] = @"left_pic";
@@ -620,32 +656,29 @@ extern NSString *const kFHDetailFollowUpNotification;
     
     switch (self.type) {
         case FHHouseTypeNewHouse:
-            if (cellModel.houseModel) {
-                
-                FHNewHouseItemModel *theModel = cellModel.houseModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId];
-            }
+//            if (cellModel.houseModel) {
+//
+//                FHNewHouseItemModel *theModel = cellModel.houseModel;
+                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",cellModel.houseid];
+//            }
             break;
         case FHHouseTypeSecondHandHouse:
-            if (cellModel.secondModel) {
-                
-                FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
-            }
+
+                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",cellModel.houseid];
             break;
         case FHHouseTypeRentHouse:
-            if (cellModel.rentModel) {
-                
-                FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];
-            }
+//            if (cellModel.rentModel) {
+//
+//                FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
+                urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",cellModel.houseid];
+//            }
             break;
         case FHHouseTypeNeighborhood:
-            if (cellModel.neighborModel) {
-                
-                FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
-            }
+//            if (cellModel.neighborModel) {
+//
+//                FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
+                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",cellModel.houseid];
+//            }
             break;
         default:
             break;
@@ -657,44 +690,44 @@ extern NSString *const kFHDetailFollowUpNotification;
     }
 }
 
-- (void)cancelHouseFollow:(FHSingleImageInfoCellModel *)cellModel completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion {
-    NSString *followId = [self getFollowId:cellModel];
+- (void)cancelHouseFollow:(FHHouseListBaseItemModel *)cellModel completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString *followId = cellModel.houseid;
     [FHMainApi requestCancelFollow:followId houseType:self.type actionType:self.type completion:completion];
 }
 
-- (NSString *)getFollowId:(FHSingleImageInfoCellModel *)cellModel {
-    NSString *followId = @"";
-    switch (self.type) {
-        case FHHouseTypeNewHouse:
-            if (cellModel.houseModel) {
-                FHNewHouseItemModel *theModel = cellModel.houseModel;
-                followId = theModel.houseId;
-            }
-            break;
-        case FHHouseTypeSecondHandHouse:
-            if (cellModel.secondModel) {
-                FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
-                followId = theModel.hid;
-            }
-            break;
-        case FHHouseTypeRentHouse:
-            if (cellModel.rentModel) {
-                FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
-                followId = theModel.id;
-            }
-            break;
-        case FHHouseTypeNeighborhood:
-            if (cellModel.neighborModel) {
-                FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
-                followId = theModel.id;
-            }
-            break;
-        default:
-            break;
-    }
-    
-    return followId;
-}
+//- (NSString *)getFollowId:(FHSingleImageInfoCellModel *)cellModel {
+//    NSString *followId = @"";
+//    switch (self.type) {
+//        case FHHouseTypeNewHouse:
+//            if (cellModel.houseModel) {
+//                FHNewHouseItemModel *theModel = cellModel.houseModel;
+//                followId = theModel.houseId;
+//            }
+//            break;
+//        case FHHouseTypeSecondHandHouse:
+//            if (cellModel.secondModel) {
+//                FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+//                followId = theModel.hid;
+//            }
+//            break;
+//        case FHHouseTypeRentHouse:
+//            if (cellModel.rentModel) {
+//                FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
+//                followId = theModel.id;
+//            }
+//            break;
+//        case FHHouseTypeNeighborhood:
+//            if (cellModel.neighborModel) {
+//                FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
+//                followId = theModel.id;
+//            }
+//            break;
+//        default:
+//            break;
+//    }
+//
+//    return followId;
+//}
 
 -(NSString *)pageTypeString {
     switch (self.type) {

@@ -8,13 +8,13 @@
 
 #import "TTVideoPGCBar.h"
 //#import "UIButton+TTCache.h"
-#import <SDWebImageManager.h>
+#import "SDWebImageManager.h"
 #import "SSThemed.h"
 #import "TTAlphaThemedButton.h"
 #import "UIDevice+TTAdditions.h"
 #import "TTRoute.h"
 #import "ExploreMovieView.h"
-#import <TTUserSettingsManager+FontSettings.h>
+#import "TTUserSettingsManager+FontSettings.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTThemeManager.h"
 #import "TTStringHelper.h"

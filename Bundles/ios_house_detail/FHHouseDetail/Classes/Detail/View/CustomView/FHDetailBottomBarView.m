@@ -11,7 +11,7 @@
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "Masonry.h"
-#import <BDWebImage.h>
+#import "BDWebImage.h"
 #import "UIColor+Theme.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHCommonDefines.h>
@@ -403,8 +403,9 @@
         }
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
-        _contactBtn.layer.cornerRadius = 4;
-        _contactBtn.backgroundColor = [UIColor themeRed1];
+        _contactBtn.layer.cornerRadius = 22;//4;
+        _contactBtn.backgroundColor = [UIColor themeOrange4];
+        
     }
     return _contactBtn;
 }

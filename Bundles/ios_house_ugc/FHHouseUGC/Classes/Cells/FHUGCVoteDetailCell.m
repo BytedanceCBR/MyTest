@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCVoteDetailCell.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
@@ -15,16 +15,16 @@
 #import "FHCommentBaseDetailViewModel.h"
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
-#import <TTBusinessManager+StringUtils.h>
-#import <UIViewAdditions.h>
+#import "TTBusinessManager+StringUtils.h"
+#import "UIViewAdditions.h"
 #import "TTAccountManager.h"
 #import "FHHouseUGCAPI.h"
 #import "ToastManager.h"
 #import "FHUGCVoteResponseModel.h"
 #import "FHUserTracker.h"
-#import <MJRefresh.h>
-#import <FHRefreshCustomFooter.h>
-#import <UIScrollView+Refresh.h>
+#import "MJRefresh.h"
+#import "FHRefreshCustomFooter.h"
+#import "UIScrollView+Refresh.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -260,7 +260,7 @@
     self.cellModel = data;
     //设置userInfo
     self.userInfoView.cellModel = self.cellModel;
-    self.userInfoView.userName.text = self.cellModel.user.name;
+    self.userInfoView.userName.text = !isEmptyString(self.cellModel.user.name) ? self.cellModel.user.name : @"用户";
     self.userInfoView.descLabel.attributedText = self.cellModel.desc;
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     __weak typeof(self) weakSelf = self;
@@ -670,7 +670,7 @@
     [self.voteButton startLoading];
     self.voteInfo.voteState = FHUGCVoteStateVoting;
     __weak typeof(self) weakSelf = self;
-    [FHHouseUGCAPI requestVoteSubmit:self.voteInfo.voteId optionIDs:options optionNum:optionNum completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    [FHHouseUGCAPI requestVoteSubmit:self.voteInfo.voteId optionIDs:options optionNum:optionNum class:FHUGCVoteResponseModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [weakSelf.voteButton stopLoading];
         if (error) {
             [[ToastManager manager] showToast:error.domain];

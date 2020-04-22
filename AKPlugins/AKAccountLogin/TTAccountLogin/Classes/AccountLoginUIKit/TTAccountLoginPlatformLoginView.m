@@ -7,12 +7,12 @@
 //
 
 #import "TTAccountLoginPlatformLoginView.h"
-#import <TTAlphaThemedButton.h>
-#import <UIButton+TTAdditions.h>
-#import <UIViewAdditions.h>
-#import <TTThemeManager.h>
-#import <Masonry.h>
-#import <TTAccountSDK.h>
+#import "TTAlphaThemedButton.h"
+#import "UIButton+TTAdditions.h"
+#import "UIViewAdditions.h"
+#import "TTThemeManager.h"
+#import "Masonry.h"
+#import "TTAccountSDK.h"
 #import "TTAccountLoginConfLogic.h"
 #import <TTAccountSDK/TTAccountAuthWeChat.h>
 

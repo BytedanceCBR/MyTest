@@ -11,7 +11,8 @@
 #import "FHUtils.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHWeakProxy.h"
-
+#import "NSDictionary+TTAdditions.h"
+#import "TTSettingsManager.h"
 
 // FHHomeScrollBannerView
 @interface FHHomeScrollBannerView ()<UIScrollViewDelegate>
@@ -65,6 +66,26 @@
     [self addSubview:_indexView];
     self.tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapClick:)];;
     [self addGestureRecognizer:_tapGes];
+    
+    
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_home_scroll_banner_fps"];
+    if (!boolOffline) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    }
+}
+
+#pragma mark  埋点
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    [self removeTimer];
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+    if (!_timer) {
+        [self removeTimer];
+        [self addTimer];
+    }
 }
 
 - (void)setTimeDuration:(NSTimeInterval)timeDuration {
@@ -238,8 +259,8 @@
 
 - (void)dealloc
 {
-//    [self removeGestureRecognizer:_tapGes];// todo zjing zhangyuanke confirm ???
     [_timer invalidate];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView

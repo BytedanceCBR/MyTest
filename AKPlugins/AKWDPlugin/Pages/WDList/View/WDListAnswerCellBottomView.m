@@ -6,14 +6,15 @@
 //
 
 #import "WDListAnswerCellBottomView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "WDAnswerService.h"
 #import "FHUserTracker.h"
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
+#import "TTAccountManager.h"
 
 @interface WDListAnswerCellBottomView ()
 
@@ -95,6 +96,26 @@
 }
 
 - (void)followBtnClick {
+    if(![TTAccountManager isLogin]) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setObject:@"question" forKey:@"enter_from"];
+        [params setObject:@"feed_like" forKey:@"enter_type"];
+        // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+        [params setObject:@(YES) forKey:@"need_pop_vc"];
+        params[@"from_ugc"] = @(YES);
+        __weak typeof(self) wSelf = self;
+        [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+            if (type == TTAccountAlertCompletionEventTypeDone) {
+                // 登录成功
+                if ([TTAccountManager isLogin]) {
+                    [wSelf followBtnClick];
+                }
+            }
+        }];
+        
+        return;
+    }
+    
     NSMutableDictionary *tempDic = [self.apiParams mutableCopy];
     tempDic[@"page_type"] = @"question";
     self.apiParams = [tempDic copy];

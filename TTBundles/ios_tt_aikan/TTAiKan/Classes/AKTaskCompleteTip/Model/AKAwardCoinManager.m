@@ -11,7 +11,7 @@
 #import "AKTaskSettingHelper.h"
 #import "TTInterfaceTipManager.h"
 #import <TTAccountSDK/TTAccount.h>
-#import <TTPersistence.h>
+#import "TTPersistence.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
 

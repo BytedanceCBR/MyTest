@@ -10,9 +10,9 @@
 #import "WDDetailModel.h"
 #import "WDAnswerEntity.h"
 #import "SSThemed.h"
-#import <KVOController.h>
+#import "KVOController.h"
 #import <ReactiveObjC/ReactiveObjC.h>
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 
 static const CGFloat kLeftRightMargin = 15.0f;
 static const CGFloat kFontSize = 14.0f;

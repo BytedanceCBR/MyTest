@@ -8,7 +8,7 @@
 #import "FHBaseSugListViewModel.h"
 #import "FHBaseSugListViewModel+Internal.h"
 #import "FHSuggestionItemCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <TTRoute/TTRoute.h>

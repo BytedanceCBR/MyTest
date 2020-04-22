@@ -13,7 +13,7 @@
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTNetworkManager/TTNetworkUtil.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTCommentDetailReplyCommentModel.h"
 #import "TTCommentDefines.h"
 #import "TTCommentDataManager.h"
@@ -199,7 +199,7 @@ static bool isTTCommentPublishing = NO;
         if (self.enterFrom.length > 0) {
             
             [params setObject:self.enterFrom forKey:@"enter_from"];
-            [params setObject:@"comment" forKey:@"enter_type"];
+            [params setObject:@"submit_comment" forKey:@"enter_type"];
         }
         params[@"from_ugc"] = @(YES);
         [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {

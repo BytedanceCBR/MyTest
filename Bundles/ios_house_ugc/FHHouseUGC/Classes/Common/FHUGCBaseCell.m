@@ -13,9 +13,9 @@
 - (UIImageView *)decorationImageView {
     if(!_decorationImageView) {
         _decorationImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-        _decorationImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _decorationImageView.contentMode = UIViewContentModeScaleAspectFit;
         _decorationImageView.hidden = YES;
-        [self addSubview:_decorationImageView];
+        [self.contentView addSubview:_decorationImageView];
     }
     return _decorationImageView;
 }
@@ -34,7 +34,7 @@
     NSString *decorationImageUrlStr = cellModel.contentDecoration.url;
     BOOL isShowDecoration = cellModel.isStick && (decorationImageUrlStr.length > 0);
     self.decorationImageView.hidden = !(isShowDecoration);
-    if(decorationImageUrlStr.length > 0) {
+    if(!cellModel.isCustomDecorateImageView && decorationImageUrlStr.length > 0) {
         [self.decorationImageView sd_setImageWithURL:[NSURL URLWithString:decorationImageUrlStr]];
     }
 }

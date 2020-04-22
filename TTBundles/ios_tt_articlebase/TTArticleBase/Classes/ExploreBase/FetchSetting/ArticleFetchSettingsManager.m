@@ -39,7 +39,7 @@
 #import "TTDeviceHelper.h"
 //#import "TTFantasy.h"
 #import "TTRNCommonABTest.h"
-#import "TTCookieManager.h"
+#import "FHCookieManager.h"
 #import "NewsBaseDelegate.h"
 #import "TTDebugRealMonitorManager.h"
 #import "TTCanvasBundleManager.h"
@@ -329,9 +329,16 @@
         [TTInAppPushSettings parseInAppPushSettings:dSettings];
     }
     
-    if ([[dSettings allKeys] containsObject:@"tt_aikan_fe_article_assets"]) {
-        NSString *url = [dSettings tt_stringValueForKey:@"tt_aikan_fe_article_assets"];
+    if ([[dSettings allKeys] containsObject:@"f_fe_article_assets"]) {
+        NSString *url = [dSettings tt_stringValueForKey:@"f_fe_article_assets"];
         [ArticleJSManager downloadAssetsWithUrl:url];
+    }
+    
+    if ([[dSettings allKeys] containsObject:@"f_article_h5_config"]) {
+        NSDictionary *value = [dSettings tt_dictionaryValueForKey:@"f_article_h5_config"];
+        if (value) {
+             [ArticleJSManager shareInstance].feArticleH5Config = [value copy];
+        }
     }
     
     if ([[dSettings allKeys] containsObject:@"tt_local_image_download_setting"]) {

@@ -6,11 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "FHURLSettings.h"
 #import "FHHouseType.h"
 #import "FHMainApi.h"
 #import "FHHouseContactDefines.h"
+#import "FHHouseListBaseItemModel.h"
 
 @class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel,FHDetailFloorPanDetailInfoModel,FHDetailFloorPanListResponseModel;
 @class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel,FHDetailNewTimeLineResponseModel,FHDetailNewCoreDetailModel;
@@ -45,8 +46,11 @@ NS_ASSUME_NONNULL_BEGIN
                      completion:(void(^)(FHRentDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 租房-周边房源
-+ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId
-                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion;
+//+ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId
+//                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion;
+
++ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId class:(Class)cls
+completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))completion;
 
 // 租房-同小区房源
 + (TTHttpTask*)requestHouseRentSameNeighborhood:(NSString*)rentId
@@ -89,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
                                  offset:(NSString *)offset
                                   query:(NSString*)query
                                   count:(NSInteger)count
-                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion;
+                             completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 新房-楼盘动态
 +(TTHttpTask*)requestFloorTimeLineSearch:(NSString*)houseId

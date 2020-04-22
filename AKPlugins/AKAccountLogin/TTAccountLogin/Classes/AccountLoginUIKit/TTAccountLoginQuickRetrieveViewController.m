@@ -7,8 +7,8 @@
 //
 
 #import "TTAccountLoginQuickRetrieveViewController.h"
-#import <TTIndicatorView.h>
-#import <UIViewAdditions.h>
+#import "TTIndicatorView.h"
+#import "UIViewAdditions.h"
 #import "TTAccountLoginAlert.h"
 
 

@@ -7,7 +7,7 @@
 //
 
 #import "TTReportActivity.h"
-#import <TTShareManager.h>
+#import "TTShareManager.h"
 
 NSString * const TTActivityTypeReportt = @"com.toutiao.UIKit.activity.Report";
 

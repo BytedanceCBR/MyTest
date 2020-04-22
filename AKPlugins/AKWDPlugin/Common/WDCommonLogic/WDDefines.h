@@ -27,7 +27,7 @@
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import <TTThemed/TTThemeConst.h>
 #import <TTThemed/TTThemeManager.h>
-#import <Masonry.h>
+#import "Masonry.h"
 
 #import <TTTracker/TTTracker.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>

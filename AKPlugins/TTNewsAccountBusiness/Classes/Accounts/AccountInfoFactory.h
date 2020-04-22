@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTBaseMacro.h>
+#import "TTBaseMacro.h"
 #import "TTThirdPartyAccountInfoBase.h"
 
 

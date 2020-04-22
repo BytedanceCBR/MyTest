@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailFoldViewButton.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -56,7 +56,7 @@
     [self addSubview:_iconView];
     _keyLabel = [[UILabel alloc] init];
     _keyLabel.text = @"";
-    _keyLabel.textColor = [UIColor themeRed1];
+    _keyLabel.textColor = [UIColor themeOrange1];
     _keyLabel.font = [UIFont themeFontRegular:14];
     [self addSubview:_keyLabel];
     
@@ -77,10 +77,10 @@
     _isFold = isFold;
     if (isFold) {
         _keyLabel.text = self.downText;
-        _iconView.image = _foldImage;
+        _iconView.image = _openImage;
     } else {
         _keyLabel.text = self.upText;
-        _iconView.image = _openImage;
+        _iconView.image = _foldImage;
     }
 }
 

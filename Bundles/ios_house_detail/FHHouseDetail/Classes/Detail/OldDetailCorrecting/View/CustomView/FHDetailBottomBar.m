@@ -73,15 +73,14 @@
         make.edges.mas_equalTo(self);
     }];
     [self.rightIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self);
+        make.centerY.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self).offset(-10);
-        make.width.mas_equalTo(3);
-        make.height.mas_equalTo(6);
+        make.width.height.mas_equalTo(10);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(18);
         make.left.mas_equalTo(self).offset(15);
-        make.centerY.mas_equalTo(self);
+        make.top.mas_equalTo(4);
         make.right.mas_equalTo(self.rightIcon.mas_left).offset(-5);
     }];
 }
@@ -92,7 +91,7 @@
         _titleLabel = [[UILabel alloc]init];
         _titleLabel.text = @"加入看盘群";
         _titleLabel.font = [UIFont themeFontRegular:12];
-        _titleLabel.textColor = [UIColor themeRed1];
+        _titleLabel.textColor = [UIColor themeOrange4];
     }
     return _titleLabel;
 }

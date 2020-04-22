@@ -12,7 +12,6 @@
 #import "TTTrackerProxy.h"
 #import "TTNetworkHelper.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
-#import "TTExtensions.h"
 #import "UIDevice+TTAdditions.h"
 #import "NSDictionary+TTAdditions.h"
 #import <TTABManager/TTABHelper.h>
@@ -42,6 +41,8 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "TTSettingsManager.h"
 
 const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回最长忍耐时间 30 000ms
 
@@ -98,7 +99,7 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
         
         [dict setValue:[TTDeviceHelper openUDID] forKey:TT_OPEN_UDID];
         [dict setValue:displayDensity forKey:TT_DIS_DENSITY];
-        [dict setValue:[TTExtensions carrierName] forKey:TT_CARRIER];
+        [dict setValue:[TTNetworkHelper carrierName] forKey:TT_CARRIER];
         [dict setValue:[TTNetworkHelper carrierMNC] forKey:TT_MCC_MNC];
         [dict setValue:[TTSandBoxHelper getCurrentChannel] forKey:TT_CHANNEL];
         [dict setValue:[TTSandBoxHelper ssAppID] forKey:TT_APP_ID];
@@ -258,14 +259,20 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (void)splashViewWillAppear
 {
+    [[FHPopupViewManager shared] outerPopupViewShow];
     [FHLocManager sharedInstance].isShowSplashAdView = YES;
     self.isNotClicked = NO;
 }
 
 - (void)splashViewDidDisappear
 {
+    [[FHPopupViewManager shared] outerPopupViewHide];
     FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if ([FHLocManager sharedInstance].isShowSwitch) {
+    
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_switch_city_top_close"];
+    
+    if ([FHLocManager sharedInstance].isShowSwitch && boolOffline) {
         if ([model.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.citySwitch.enable boolValue]) {
             [[FHLocManager sharedInstance] showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.citySwitch.cityName] openUrl:model.citySwitch.openUrl];
         }

@@ -18,7 +18,7 @@
 
 #import "TTRoute.h"
 #import "ArticleSearchBar.h"
-#import <TTUserSettingsManager+FontSettings.h>
+#import "TTUserSettingsManager+FontSettings.h"
 
 #import "TTLocationManager.h"
 #import "TTIndicatorView.h"
@@ -33,7 +33,7 @@
 #import "TTURLUtils.h"
 #import "TTNavigationController.h"
 #import "TTNetworkHelper.h"
-#import <TTTracker.h>
+#import "TTTracker.h"
 #import "TTCustomAnimationDelegate.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TTTopBar.h"
@@ -42,7 +42,6 @@
 #import "SSCommonLogic.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <BDTSharedHeaders/SSCommonDefines.h>
-#import <Crashlytics/Answers.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
@@ -598,8 +597,7 @@
         if (!isEmptyString(text)) {
             [self.historyView.manager insertKeyword:text];
             [self updateOverlayWebViewSearchHistory:text];
-            
-            [Answers logSearchWithQuery:text customAttributes:nil];
+
         }
         _suggestionView.tableView.scrollsToTop = NO;
     }
@@ -931,7 +929,6 @@
                 NSURL *URL = [NSURL tt_URLWithString:[ArticleURLSetting searchInitialPageURLString] parameters:nil];
                 if (URL.path && [failingURLString rangeOfString:URL.path].length > 0) {
                     [[TTMonitor shareManager] trackService:@"search_suggest_load_fail" status:1 extra:nil];
-                    [Answers logCustomEventWithName:@"searchView" customAttributes:@{@"suggest_load_fail":@((now - self.startLoadTime) * 1000)}];
                     self.hasSendSuggestWebLoadFailTime = YES;
                 }
             }
@@ -943,7 +940,6 @@
                 NSURL *URL = [NSURL tt_URLWithString:searchUrlString parameters:nil];
                 if (URL.path && [failingURLString rangeOfString:URL.path].length > 0) {
                     [[TTMonitor shareManager] trackService:@"search_load_fail" status:1 extra:nil];
-                    [Answers logCustomEventWithName:@"searchView" customAttributes:@{@"load_fail":@((now - self.startLoadTime) * 1000)}];
                     self.hasSendSearchWebLoadFailTime = YES;
                 }
             }
@@ -960,14 +956,12 @@
     
     if (_overlayWebView.ssWebView == webView && !self.hasSendSuggestWebLoadTime) {
         [[TTMonitor shareManager] trackService:@"search_suggest_load" value:@((now - self.startLoadTime) * 1000) extra:nil];
-        [Answers logCustomEventWithName:@"searchView" customAttributes:@{@"suggest_load_finish":@((now - self.startLoadTime) * 1000)}];
         self.hasSendSuggestWebLoadTime = YES;
         return;
     }
     
     if (_webView.ssWebView == webView && !self.hasSendSearchWebLoadTime) {
         [[TTMonitor shareManager] trackService:@"search_load" value:@((now - self.startLoadTime) * 1000) extra:nil];
-        [Answers logCustomEventWithName:@"searchView" customAttributes:@{@"load_finish":@((now - self.startLoadTime) * 1000)}];
         self.hasSendSearchWebLoadTime = YES;
     }
 
@@ -1190,7 +1184,6 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
     [dict setValue:@(timeInterval) forKey:@"stayPage"];
     [dict setValue:self.from forKey:@"from"];
-    [Answers logCustomEventWithName:@"searchView" customAttributes:dict];
     
     [self resetStayPageTrack];
 }

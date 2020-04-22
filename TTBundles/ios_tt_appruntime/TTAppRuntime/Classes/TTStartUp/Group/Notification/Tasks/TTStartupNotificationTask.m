@@ -13,11 +13,11 @@
 #import "TTShareConstants.h"
 #import "TTReachability.h"
 #import "ExploreEntryManager.h"
-#import <TTIndicatorView.h>
+#import "TTIndicatorView.h"
 #import "TTUserSettingsReporter.h"
 
 #import "AccountKeyChainManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTAccountLoginViewControllerGuide.h"
 
 #import "NewFeedbackAlertManager.h"
@@ -32,7 +32,7 @@
 #import "NewsBaseDelegate.h"
 #import "TTRoute.h"
 #import "TTCookieManager.h"
-#import "TouTiaoPushSDK.h"
+
 #import "TTUserSettingsManager+Notification.h"
 //#import "TTCommonwealManager.h"
 #import "TTUserInfoStartupTask.h"
@@ -43,6 +43,7 @@
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTLaunchDefine.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
+#import <FHCHousePush/TTPushServiceDelegate.h>
 
 DEC_TASK("TTStartupNotificationTask",FHTaskTypeNotification,TASK_PRIORITY_HIGH);
 
@@ -73,25 +74,16 @@ TTAccountMulticastProtocol
         [[AccountKeyChainManager sharedManager] start];
     }
     [self registerNotification];
-    [self uploadDeviceID];
-    
-    //公益项目开始计时
-//    [[TTCommonwealManager sharedInstance] startMonitor];
+    [self sendDeviceIDNotification];
 }
 
-- (void)uploadDeviceID
-{
-    
+- (void)sendDeviceIDNotification {
+    //did注册成功后发送通知
     [[TTInstallIDManager sharedInstance] observeDeviceDidRegistered:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHTrackerDidRefreshDeviceId" object:nil];
-        TTChannelRequestParam *param = [TTChannelRequestParam requestParam];
-        param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
-        param.versionCode = [TTSandBoxHelper fhVersionCode];
-        [TouTiaoPushSDK sendRequestWithParam:param completionHandler:^(TTBaseResponse *response) {
-            
-        }];
     }];
 }
+
 
 - (void)registerNotification {
     
@@ -115,7 +107,7 @@ TTAccountMulticastProtocol
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shareToPlatformNeedEnterBackground:) name:kShareToPlatformNeedEnterBackground object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
 }
 
 #pragma mark - TTAccountMulticastProtocol
@@ -191,7 +183,7 @@ TTAccountMulticastProtocol
 }
 
 - (void)connectionChanged:(NSNotification *)notification {
-    static BOOL isAppLaunching = YES; // 第一次APP启动会发送kReachabilityChangedNotification通知，过滤掉请求用户信息
+    static BOOL isAppLaunching = YES; // 第一次APP启动会发送TTReachabilityChangedNotification通知，过滤掉请求用户信息
     if (TTNetworkConnected() && !isAppLaunching) {
         if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
             [TTAccountManager startGetAccountStatus:NO context:self];

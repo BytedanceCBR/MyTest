@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailRelatedHouseCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -70,7 +70,7 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
-    CGFloat cellHeight = 96;
+    CGFloat cellHeight = 88;
     BOOL hasMore = model.relatedHouseData.hasMore;
     CGFloat bottomOffset = 20;
     if (hasMore) {
@@ -85,7 +85,7 @@
     _headerView.label.text = title;
     if (model.relatedHouseData.items.count > 0) {
         UITableView *tv = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        tv.estimatedRowHeight = 96;
+        tv.estimatedRowHeight = 88;
         tv.estimatedSectionHeaderHeight = 0;
         tv.estimatedSectionFooterHeight = 0;
         tv.backgroundColor = [UIColor clearColor];
@@ -284,7 +284,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 { 
-    return 96;
+    return 88;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

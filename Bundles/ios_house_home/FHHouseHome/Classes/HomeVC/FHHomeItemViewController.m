@@ -6,19 +6,19 @@
 //
 
 #import "FHHomeItemViewController.h"
-#import <FHRefreshCustomFooter.h>
-#import <TTBaseMacro.h>
-#import <FHEnvContext.h>
-#import <ToastManager.h>
-#import <UIScrollView+Refresh.h>
-#import <TTHttpTask.h>
+#import "FHRefreshCustomFooter.h"
+#import "TTBaseMacro.h"
+#import "FHEnvContext.h"
+#import "ToastManager.h"
+#import "UIScrollView+Refresh.h"
+#import "TTHttpTask.h"
 #import "FHHomeRequestAPI.h"
-#import <FHHomePlaceHolderCell.h>
+#import "FHHomePlaceHolderCell.h"
 #import "FHhomeHouseTypeBannerCell.h"
 #import "TTDeviceHelper.h"
-#import <FHHouseBaseItemCell.h>
-#import <FHHomeCellHelper.h>
-#import <FHPlaceHolderCell.h>
+#import "FHHouseBaseItemCell.h"
+#import "FHHomeCellHelper.h"
+#import "FHPlaceHolderCell.h"
 #import "FHHomeListViewModel.h"
 #import "TTSandBoxHelper.h"
 #import <FHHomeSearchPanelViewModel.h>
@@ -26,10 +26,12 @@
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
-#import <FHHouseBaseNewHouseCell.h>
-#import <FHPlaceHolderCell.h>
-#import <UIColor+Theme.h>
-#import <FHHomeMainViewModel.h>
+#import "FHHouseBaseNewHouseCell.h"
+#import "FHPlaceHolderCell.h"
+#import "UIColor+Theme.h"
+#import "FHHomeMainViewModel.h"
+#import <FHHouseBase/FHRelevantDurationTracker.h>
+#import "FHHouseListBaseItemCell.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -125,6 +127,23 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterCategoryWithEnterType:) name:@"FHHomeItemVCEnterCategory" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stayCategoryWithEnterType:) name:@"FHHomeItemVCStayCategory" object:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+#pragma mark  埋点
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+      
+    }
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        [self resumeVRIcon];
+    }
 }
 
 - (void)removeNotifications
@@ -161,6 +180,12 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         NSMutableDictionary *stayTabParams = [NSMutableDictionary new];
         if (self.traceEnterTopTabache) {
             [stayTabParams addEntriesFromDictionary:self.traceEnterTopTabache];
+        }else
+        {
+            [stayTabParams setValue:@"click" forKey:@"enter_type"];
+            [stayTabParams setValue:@"maintab" forKey:@"enter_from"];
+            [stayTabParams setValue:@"f_find_house" forKey:@"category_name"];
+
         }
         NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
         if (duration) {
@@ -192,16 +217,30 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [FHEnvContext recordEvent:self.traceEnterCategoryCache andEventKey:@"enter_category"];
         }
     }
+    
+    [self resumeVRIcon];
+}
+
+- (void)resumeVRIcon{
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        NSArray *tableCells = [self.tableView visibleCells];
+        if (tableCells) {
+            [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
+                    [obj performSelector:@selector(resumeVRIcon)];
+                }
+            }];
+        }
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
     
-    if (self.houseType == _listModel.houseType) {
+    if (self.houseType == _listModel.houseType && [FHEnvContext sharedInstance].isShowingHomeHouseFind) {
         [self currentViewIsDisappeared];
     }
-    
     self.isDisAppeared = YES;
 }
 
@@ -511,6 +550,11 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType
 {
+    //如果首页没有显示
+    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+        return;
+    }
+    
     NSMutableDictionary *tracerDict = [NSMutableDictionary new];
     self.tracerModel.enterFrom = @"maintab";
     self.tracerModel.elementFrom = @"maintab_list";
@@ -580,7 +624,10 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // 滚动时发出通知
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeSubTableViewDidScroll" object:scrollView];
+    if (self.scrollDidScrollCallBack) {
+        self.scrollDidScrollCallBack(scrollView);
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -658,6 +705,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
     if(indexPath.section == kFHHomeHouseTypeBannerViewSection)
     {
         if ([self checkIsHaveEntrancesList]) {
@@ -771,7 +819,15 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
             return cell;
         }
-        
+        if (self.houseDataItemsModel.count>0) {
+               FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)self.houseDataItemsModel[indexPath.row];
+            if ([model.houseType integerValue] == FHHouseTypeNewHouse && [model.cellStyle isEqualToString:@"6"]) {
+                      FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSynchysisNewHouseCell"];
+                [cell updateSynchysisNewHouseCellWithModel:model];
+                  [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
+                      return cell;
+                  }
+        }
         if (self.houseType == FHHouseTypeNewHouse) {
             //to do 房源cell
             FHHouseBaseNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellNewHouseItemImageId];
@@ -784,6 +840,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
             return cell;
         }
+        
+        
         //to do 房源cell
         NSString *identifier = self.houseType == FHHouseTypeRentHouse ? kCellRentHouseItemImageId : kCellSmallItemImageId;
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
@@ -822,7 +880,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
             
             NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-            tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
+            tracerDict[@"house_type"] = cellModel.houseType.integerValue == FHHouseTypeNewHouse?@"new":([self houseTypeString] ? : @"be_null");
             tracerDict[@"card_type"] = @"left_pic";
             tracerDict[@"page_type"] = @"maintab";
             tracerDict[@"element_type"] = @"maintab_list";
@@ -854,6 +912,20 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 {
     if (!self.showPlaceHolder && indexPath.section == 1) {
         [self jumpToDetailPage:indexPath];
+        if(self.houseDataItemsModel.count > indexPath.row){
+            FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
+                if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse) {
+                    [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+             }
+        }
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        [[FHRelevantDurationTracker sharedTracker] sendRelevantDuration];
     }
 }
 
@@ -876,14 +948,17 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             houseType = [theModel.houseType integerValue];
         }
         
-        if (houseType != 0) {
-            if (houseType != self.houseType) {
-                return;
-            }
-        }else
-        {
+        if (houseType == 0) {
             houseType = self.houseType;
         }
+//        if (houseType != 0) {
+//            if (houseType != self.houseType) {
+//                return;
+//            }
+//        }else
+//        {
+//            houseType = self.houseType;
+//        }
                 
         NSMutableDictionary *dict = @{@"house_type":@(houseType),
                                @"tracer": traceParam

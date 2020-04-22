@@ -8,7 +8,7 @@
 #import "FHFloorPanListViewModel.h"
 #import "FHHouseDetailAPI.h"
 #import "FHFloorPanListCell.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import "FHHouseDetailSubPageViewController.h"
 #import <FHDetailNewModel.h>
 
@@ -70,7 +70,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         UIView *labelContentView = [[UIView alloc] init];
         [self.leftFilterView addSubview:labelContentView];
         
-        if ([self.leftFilterView.subviews containsObject:labelContentView]) {
+        if (self.leftFilterView && [self.leftFilterView.subviews containsObject:labelContentView] && labelContentView.superview) {
             [labelContentView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (i==0) {
                     make.top.equalTo(self.leftFilterView);
@@ -92,7 +92,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         labelClick.text = self.nameLeftArray[i];
         if (i == 0) {
             _currentTapLabel = labelClick;
-            labelClick.textColor = [UIColor themeRed1];
+            labelClick.textColor = [UIColor themeOrange1];
             labelClick.backgroundColor = [UIColor whiteColor];
             _leftFilterIndex = 0;
         }else
@@ -129,7 +129,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     }
     
     if ([tapView isKindOfClass:[UILabel class]]) {
-          ((UILabel *)tapView).textColor = [UIColor themeRed1];
+          ((UILabel *)tapView).textColor = [UIColor themeOrange1];
           ((UILabel *)tapView).backgroundColor = [UIColor whiteColor];
           _currentTapLabel = tapView;
     }
@@ -360,6 +360,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         if ([model isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
             
             NSMutableDictionary *subPageParams = [_floorListVC subPageParams];
+            subPageParams[@"contact_phone"] = nil;
             NSDictionary *tracer = subPageParams[@"tracer"];
             NSMutableDictionary *traceParam = [NSMutableDictionary new];
             if (tracer) {

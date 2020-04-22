@@ -29,8 +29,8 @@
 #import "AWEVideoDetailTracker.h"
 #import "TSVChannelDecoupledConfig.h"
 #import "TSVShortVideoDecoupledFetchManager.h"
-#import <TSVPrefetchVideoManager.h>
-#import <ReactiveObjC.h>
+#import "TSVPrefetchVideoManager.h"
+#import "ReactiveObjC.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTBaseLib/TTStringHelper.h>

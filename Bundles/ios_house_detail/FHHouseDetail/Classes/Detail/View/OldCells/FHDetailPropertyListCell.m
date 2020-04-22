@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailPropertyListCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "UILabel+House.h"
@@ -463,7 +463,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     _indicatorLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _indicatorLabel.font = [UIFont themeFontRegular:14];
-    _indicatorLabel.textColor = [UIColor themeRed1];
+    _indicatorLabel.textColor = [UIColor themeOrange4];
     
     _indicator = [[UIImageView alloc]initWithImage:img];
     _indicator.contentMode = UIViewContentModeCenter;
@@ -547,7 +547,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }
 
     if (!IS_EMPTY_STRING(detectiveModel.warnContent)) {
-        NSAttributedString *warnStr = [[NSAttributedString alloc] initWithString:detectiveModel.warnContent attributes:@{NSForegroundColorAttributeName:[UIColor themeRed1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
+        NSAttributedString *warnStr = [[NSAttributedString alloc] initWithString:detectiveModel.warnContent attributes:@{NSForegroundColorAttributeName:[UIColor themeOrange1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
         [minfoAttrStr appendAttributedString:warnStr];
     }
     
@@ -624,7 +624,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
     if (!IS_EMPTY_STRING(budgetmodel.baseContent)) {
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:budgetmodel.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor themeRed1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:budgetmodel.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor themeOrange1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
         [minfoAttrStr appendAttributedString:infoStr];
     }
     _infoLabel.attributedText = minfoAttrStr;

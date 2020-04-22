@@ -19,7 +19,7 @@
 #import "TTProfileFunctionCell.h"
 #import "TTProfileTopFunctionCell.h"
 #import "TTProfileMessageFunctionCell.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "ArticleBadgeManager.h"
 #import "TTSettingMineTabGroup.h"
 #import "TTSettingMineTabManager.h"
@@ -57,7 +57,7 @@
 #import "FHMessageNotificationTipsManager.h"
 #import "FHMessageNotificationMacro.h"
 //#import "TTPLManager.h"
-#import <TTTracker.h>
+#import "TTTracker.h"
 //#import "TTCommonwealManager.h"
 #import "BDTAccountClientManager.h"
 #import "TTAccountBindingMobileViewController.h"

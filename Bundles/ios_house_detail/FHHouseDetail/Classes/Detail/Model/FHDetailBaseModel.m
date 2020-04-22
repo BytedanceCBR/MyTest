@@ -5,7 +5,7 @@
 //  Created by 张静 on 2019/1/31.
 //
 
-#import "FHDetailBaseModel.h"
+#import "FHDetailBaseModel.h"shadowImage
 
 @implementation FHDetailBaseModel
 - (void)setShadowImageType:(FHHouseShdowImageType)shadowImageType {
@@ -135,6 +135,8 @@
                            @"realtorCellShow":@"realtor_cell_show",
                            @"realtorTags":@"realtor_tags",
                            @"realtorEvaluate":@"realtor_evaluate",
+                           @"realtorScoreDisplay":@"realtor_score_display",
+                           @"realtorScoreDescription":@"realtor_score_description"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -349,8 +351,79 @@
 }
 @end
 
+@implementation FHVideoHouseVideoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"videoInfos": @"video_infos",
+                           @"infoSubTitle": @"info_sub_title",
+                           @"infoTitle": @"info_title",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHVideoHouseVideoVideoInfosModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"vHeight": @"v_height",
+                           @"imageHeight": @"image_height",
+                           @"vWidth": @"v_width",
+                           @"imageWidth": @"image_width",
+                           @"coverImageUrl": @"cover_image_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailOldDataHouseImageDictListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"houseImageTypeName": @"house_image_type_name",
+                           @"houseImageType": @"house_image_type",
+                           @"houseImageList": @"house_image_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 
 
 
+@implementation FHDetailNewTopBanner
 
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"businessTag": @"business_tag",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end

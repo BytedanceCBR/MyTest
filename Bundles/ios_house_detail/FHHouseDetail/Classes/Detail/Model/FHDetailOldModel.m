@@ -378,6 +378,7 @@
     NSDictionary *dict = @{
                            @"baseTitle": @"base_title",
                            @"baseContent":@"base_content",
+                           @"extraContent":@"extra_content",
                            @"openUrl":@"open_url",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -427,6 +428,24 @@
 }
 @end
 
+@implementation FHDetailDataBaseExtraHouseCertificationModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"baseTitle": @"base_title",
+                           @"subName":@"title",
+                           @"openUrl":@"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailDataBaseExtraFloorInfoModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -453,6 +472,7 @@
     NSDictionary *dict = @{
                            @"floorInfo": @"floor_info",
                            @"neighborhoodInfo": @"neighborhood_info",
+                           @"houseCertificationInfo":@"house_certification"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -544,6 +564,49 @@
 
 @end
 
+@implementation FHDetailPriceChangeNoticeModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"priceAnalysisUrl": @"price_analysis_url",
+                           @"showType": @"show_type",
+                           @"changeTitle": @"change_title",
+                           @"analysisTitle": @"analysis_title",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHDetailDownPaymentModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"minDownPayment": @"min_down_payment",
+                           @"monthlyPayment": @"monthly_payment",
+                           @"openUrl": @"open_url",
+                           @"calculatorUrl": @"calculator_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
 @implementation FHDetailOldDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -586,6 +649,8 @@
                            @"subscriptionToast": @"subscription_toast",
                            @"reportToast": @"report_toast",
                            @"reportDoneToast": @"report_done_toast",
+                           @"priceChangeNotice":@"price_change_notice",
+                           @"downPaymentInfo":@"down_payment_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -649,23 +714,6 @@
 }
 @end
 
-@implementation FHDetailOldDataHouseImageDictListModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"houseImageTypeName": @"house_image_type_name",
-                           @"houseImageType": @"house_image_type",
-                           @"houseImageList": @"house_image_list",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailOldDataHousePricingRankBuySuggestionModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
@@ -673,6 +721,7 @@
     return YES;
 }
 @end
+
 
 //@implementation FHDetailDataBaseInfoModel
 //

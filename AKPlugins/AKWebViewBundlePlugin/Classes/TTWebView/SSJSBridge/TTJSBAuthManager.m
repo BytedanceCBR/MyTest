@@ -10,7 +10,7 @@
 #import "TTURLDomainHelper.h"
 #import <TTRexxar/TTRexxarEngine.h>
 #import <TTRexxar/TTRJSBForwarding.h>
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 
 NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";

@@ -8,7 +8,7 @@
 
 #import "SSViewControllerBase.h"
 #import "TTExploreMainViewController.h"
-#import <FHHomeMainViewModel.h>
+#import "FHHomeMainViewModel.h"
 
 @interface ArticleTabBarStyleNewsListViewController : SSViewControllerBase
 

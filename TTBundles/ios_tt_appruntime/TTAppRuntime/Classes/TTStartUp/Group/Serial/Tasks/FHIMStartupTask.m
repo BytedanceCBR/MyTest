@@ -16,8 +16,8 @@
 #import "FHIMAccountCenterImpl.h"
 #import "FHBubbleTipManager.h"
 #import "FHURLSettings.h"
-#import <TTNetworkManager.h>
-#import <FHEnvContext.h>
+#import "TTNetworkManager.h"
+#import "FHEnvContext.h"
 #import "ToastManager.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <Heimdallr/HMDTTMonitor.h>
@@ -25,7 +25,7 @@
 #import "TTLaunchDefine.h"
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import <TTReachability/TTReachability.h>
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import <FHHouseDetail/FHHouseDetailAPI.h>
 #import <FHCommonUI/FHFeedbackView.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
@@ -267,7 +267,14 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     }
     return evaluationModel;
 }
-
+- (BOOL)isEnableIMShortConnect {
+    BOOL ret = NO;
+#if DEBUG
+    BOOL isShortConnectEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
+    ret = isShortConnectEnable;
+#endif
+    return ret;
+}
 @end
 
 @implementation FHIMStartupTask

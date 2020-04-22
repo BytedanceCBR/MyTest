@@ -7,7 +7,7 @@
 
 #import "TTRShortVideo.h"
 #import <TTServiceKit/TTServiceCenter.h>
-#import <TTSettingsManager.h>
+#import "TTSettingsManager.h"
 
 NSString * const TTWebviewRedpackIntroClickedNotification = @"TTWebviewRedpackIntroClickedNotification";
 

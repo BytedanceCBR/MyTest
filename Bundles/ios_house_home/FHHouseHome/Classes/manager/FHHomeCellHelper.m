@@ -12,24 +12,25 @@
 #import <FHHouseBase/FHConfigModel.h>
 #import "UITableView+FDTemplateLayoutCell.h"
 #import <FHHouseBase/FHSpringboardView.h>
-#import <BDWebImage.h>
+#import "BDWebImage.h"
 #import "UIColor+Theme.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "FHUserTracker.h"
 #import "FHHouseBridgeManager.h"
-#import <TTTracker.h>
+#import "TTTracker.h"
 #import "TTDeviceHelper.h"
 #import "FHHomeHeaderTableViewCell.h"
 #import "FHPlaceHolderCell.h"
 #import "FHEnvContext.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
-#import <TTArticleCategoryManager.h>
-#import <UIFont+House.h>
+#import "TTArticleCategoryManager.h"
+#import "UIFont+House.h"
 #import "FHHomeScrollBannerCell.h"
 #import <FHHouseList/FHCommuteManager.h>
 #import "FHhomeHouseTypeBannerCell.h"
 #import "FHHomePlaceHolderCell.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
+#import "FHHouseListBaseItemCell.h"
 
 static NSMutableArray  * _Nullable identifierArr;
 
@@ -79,6 +80,8 @@ static NSMutableArray  * _Nullable identifierArr;
     [tableView registerClass:[FHHomeCityTrendCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeCityTrendCell class])];
     
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
+    
+    [tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHSynchysisNewHouseCell"];
 }
 
 + (void)registerDelegate:(UITableView *)tableView andDelegate:(id)delegate
@@ -348,9 +351,12 @@ static NSMutableArray  * _Nullable identifierArr;
         }
         
         //首页工具箱里面的icon追加上报
-        NSString *enterFrom = dictTrace[@"enter_from"];
-        if(enterFrom && [enterFrom isEqualToString:@"tools_box"]){
-            [self addCLickIconLog:itemModel];
+        NSString *enterFrom = traceParams[@"enter_from"];
+        if (enterFrom && [enterFrom isEqualToString:@"tools_box"]) {
+            [self addCLickIconLog:itemModel andPageType:@"tools_box"];
+        }else
+        {
+            [self addCLickIconLog:itemModel andPageType:@"maintab"];
         }
         
         [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
@@ -724,11 +730,14 @@ static NSMutableArray  * _Nullable identifierArr;
     [FHUserTracker writeEvent:@"city_market_click" params:param];
 }
 
-+(void)addCLickIconLog:(FHConfigDataOpDataItemsModel *)itemModel
++(void)addCLickIconLog:(FHConfigDataOpDataItemsModel *)itemModel andPageType:(NSString *)pageType
 {
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    if([itemModel.logPb isKindOfClass:[NSDictionary class]]){
+        [param addEntriesFromDictionary:itemModel.logPb];
+    }
     param[@"log_pb"] = itemModel.logPb ?: @"be_null";
-    param[@"page_type"] = @"tools_box";
+    param[@"page_type"] = pageType;
     [FHUserTracker writeEvent:@"click_icon" params:param];
 }
 

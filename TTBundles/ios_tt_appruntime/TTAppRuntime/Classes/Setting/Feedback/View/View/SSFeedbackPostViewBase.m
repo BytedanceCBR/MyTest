@@ -21,6 +21,7 @@
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTImagePicker/TTImagePickerController.h>
+#import <TTImagePickerBase/TTImagePickerManager.h>
 #import <TTBaseLib/TTBaseMacro.h>
 
 #define kPhotoSourceSelectActionSheetTag 100
@@ -338,6 +339,7 @@
     
     if([TTDeviceHelper OSVersionNumber] >= 8.0 && [TTDeviceHelper isPadDevice])
     {
+        WeakSelf;
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:nil]];
         if(hasPickedImg)
@@ -345,6 +347,7 @@
             [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"删除图片", nil)
                                                                 style:UIAlertActionStyleDefault
                                                               handler:^(UIAlertAction *action) {
+                                                                  StrongSelf;
                                                                   [self deletePickedImg];
                                                               }]];
         }
@@ -352,6 +355,7 @@
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"手机相册", nil)
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction *action) {
+                                                              StrongSelf;
                                                               [self openPickerControllerByType:UIImagePickerControllerSourceTypePhotoLibrary];
                                                           }]];
         alertController.popoverPresentationController.sourceView = sender;
@@ -592,17 +596,15 @@
 #pragma mark --- ttimage picker delegate ---
 
 - (TTImagePickerController *)getTTImagePicker {
-    [TTImagePickerManager manager].accessIcloud = YES;
-    if (!_ttImagePickerController) {
-        _ttImagePickerController = [[TTImagePickerController alloc] initWithDelegate:self];
-    }
-    _ttImagePickerController.maxImagesCount = 1;
-    _ttImagePickerController.isRequestPhotosBack = NO;
-    //    _ttImagePickerController.isHideGIF = YES;
+    _ttImagePickerController = [[TTImagePickerController alloc] initWithDelegate:self];
+    _ttImagePickerController.enableICloud = YES;
+    _ttImagePickerController.maxResourcesCount = 1;
+    _ttImagePickerController.isGetOriginResource = NO;
+    _ttImagePickerController.isHideGIF = YES;
     return _ttImagePickerController;
 }
-
-- (void)ttimagePickerController:(TTImagePickerController *)picker didFinishTakePhoto:(UIImage *)photo selectedAssets:(NSArray<TTAssetModel *> *)assets withInfo:(NSDictionary *)info {
+- (void)ttimagePickerController:(TTImagePickerController *)picker didFinishTakePhoto:(UIImage *)photo selectedAssets:(NSArray<TTAsset *> *)assets withInfo:(NSDictionary *)info
+{
     if (photo != nil) {
         NSURL *imageURL = [info objectForKey:UIImagePickerControllerReferenceURL];
         UIImage *scaleImage = [[self class]cropSquareImage:photo];
@@ -612,9 +614,8 @@
     }
 }
 
-- (void)ttimagePickerController:(TTImagePickerController *)picker
-         didFinishPickingPhotos:(NSArray<UIImage *> *)photos
-                   sourceAssets:(NSArray<TTAssetModel *> *)assets {
+- (void)ttimagePickerController:(TTImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray<TTAsset *> *)assets {
+    
     if (photos.count > 0) {
         UIImage *image = [photos firstObject];
         UIImage *scaleImage = [[self class]cropSquareImage:image];
@@ -622,9 +623,12 @@
             [self pickedImage:scaleImage withReferenceURL:nil];
         }
     }else if (assets.count > 0){
-        TTAssetModel *model = [assets firstObject];
+        TTAsset *model = [assets firstObject];
         WeakSelf;
-        [[TTImagePickerManager manager] getPhotoWithAsset:model.asset completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+        TTImagePickerImageConfigItem *configItem = [TTImagePickerImageConfigItem getDefaultSettings];
+        configItem.photoWidth = TTImagePickerImageWidthDefault;
+        configItem.enableICloud = picker.enableICloud;
+        [[TTImagePickerManager manager] getPhotoWithAsset:model.asset configItem:configItem progressHandler:nil completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
             if (photo) {
                 UIImage *scaleImage = [[wself class]cropSquareImage:photo];
                 if (scaleImage) {

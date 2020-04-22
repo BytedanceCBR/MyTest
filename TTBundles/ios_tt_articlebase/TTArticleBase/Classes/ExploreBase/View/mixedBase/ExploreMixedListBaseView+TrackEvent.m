@@ -13,7 +13,6 @@
 #import "ExploreCellBase.h"
 #import "TTCategoryDefine.h"
 #import "TTMonitor.h"
-//#import "Bubble-Swift.h"
 #import "TTCategoryStayTrackManager.h"
 #import "FHEnvContext.h"
 #import <BDTSharedHeaders/SSCommonDefines.h>
@@ -166,7 +165,7 @@
     [events setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"timestamp"];
     [[TTMonitor shareManager] trackService:@"feed_load" status:(success ? 0 : 1) extra:events];
     
-    CLSLog(@"%@", trackLabel);
+    //CLSLog(@"%@", trackLabel);
 }
 
 @end

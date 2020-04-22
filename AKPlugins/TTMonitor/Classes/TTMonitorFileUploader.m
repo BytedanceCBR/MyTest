@@ -74,7 +74,7 @@ static NSMutableArray *sendedList;
     NSString * appID = [TTExtensions ssAppID];
     NSString * platForm = @"iphone";
     
-    NSString * uploadUrlStr = [NSString stringWithFormat:@"http://amfr.snssdk.com/file_report/upload?device_id=%@&aid=%@&device_platform=%@",deviceID,appID,platForm];
+    NSString * uploadUrlStr = [NSString stringWithFormat:@"https://amfr.snssdk.com/file_report/upload?device_id=%@&aid=%@&device_platform=%@",deviceID,appID,platForm];
     NSURL *url = [NSURL URLWithString:uploadUrlStr];
     
     //2 request

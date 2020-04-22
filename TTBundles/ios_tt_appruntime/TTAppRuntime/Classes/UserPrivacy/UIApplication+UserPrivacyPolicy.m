@@ -8,8 +8,7 @@
 #import "UIApplication+UserPrivacyPolicy.h"
 #import "SSWebViewController.h"
 #import "AKHelper.h"
-//#import "Bubble-Swift.h"
-#import <FHURLSettings.h>
+#import "FHURLSettings.h"
 
 #define TT_USER_PRIVACY_PROTECTION_ADDRESS  @"https://www.toutiao.com/privacy_protection/"
 

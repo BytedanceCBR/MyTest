@@ -8,8 +8,8 @@
 #import "FHUGCRecommendSubCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
-#import <UIImageView+BDWebImage.h>
+#import "Masonry.h"
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCFollowButton.h"
 #import "FHFeedContentModel.h"
 #import "FHUGCConfig.h"
@@ -84,7 +84,7 @@
     dict[@"house_type"] = @"community";
     dict[@"element_from"] = @"like_neighborhood";
     dict[@"log_pb"] = _model.logPb;
-    dict[@"page_type"] = @"nearby_list";
+    dict[@"page_type"] = @"hot_discuss_feed";
     dict[@"enter_from"] = @"neighborhood_tab";
     dict[@"rank"] = @(rank);
     

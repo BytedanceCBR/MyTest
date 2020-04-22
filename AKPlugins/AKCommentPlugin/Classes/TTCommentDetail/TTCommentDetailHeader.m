@@ -12,7 +12,7 @@
 #import <TTThemed/TTThemeManager.h>
 #import <TTAvatar/ExploreAvatarView+VerifyIcon.h>
 #import <TTAvatar/TTAsyncCornerImageView+VerifyIcon.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import <TTBaseLib/TTBusinessManager.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTPlatformBaseLib/TTIconFontDefine.h>
@@ -29,7 +29,7 @@
 #import <TTUGCFoundation/TTRichSpanText.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
 #import <TTUGCFoundation/TTRichSpanText+Emoji.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 #import "TTRichSpanText+Link.h"
 
 @interface TTCommentDetailHeaderUIHelper : NSObject
@@ -662,8 +662,37 @@
             weakDigButton.borderColorThemeKey = kColorLine4;
             [wself digButtonOnClick:weakDigButton];
         }];
+        
+        _digButton.shouldClickBlock = ^BOOL{
+            StrongSelf;
+            BOOL ret = [TTAccountManager isLogin];
+            if(ret == NO) {
+                [self gotoLogin];
+            }
+            return ret;
+        };
     }
     return _digButton;
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *enterFrom = self.traceDict[@"enter_from"]?:@"feed_detail";
+    [params setObject:enterFrom forKey:@"enter_from"];
+    [params setObject:@"feed_like" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                wSelf.digButton.borderColorThemeKey = kColorLine4;
+                [wSelf digButtonOnClick:wSelf.digButton];
+            }
+        }
+    }];
 }
 
 - (SSThemedLabel *)userInfoLabel {

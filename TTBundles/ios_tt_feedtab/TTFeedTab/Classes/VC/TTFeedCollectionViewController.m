@@ -27,12 +27,11 @@
 //#import "TTForumPostThreadStatusViewModel.h"
 #import "TTSettingsManager.h"
 #import "TTRelevantDurationTracker.h"
-#import <TTMonitor.h>
-//#import "Bubble-Swift.h"
+#import "TTMonitor.h"
 #import "FHHomeConfigManager.h"
 #import "FHEnvContext.h"
 #import "TTFeedCollectionWebListCell.h"
-#import <FHUtils.h>
+#import "FHUtils.h"
 #import <TTThemed/TTThemeManager.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <Masonry/Masonry.h>
@@ -172,7 +171,15 @@ TTFeedCollectionCellDelegate>
             [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
         }else
         {
-            [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            //切换城市之后埋点变化
+            if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+                if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+                    [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+                }
+            }else
+            {
+                [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            }
         }
         
     }

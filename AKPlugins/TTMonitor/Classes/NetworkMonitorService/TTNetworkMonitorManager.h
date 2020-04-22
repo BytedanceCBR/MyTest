@@ -25,9 +25,15 @@
 //extern const NSString *  const kTTNetworkManagerMonitorRequestTriedTimesKey;
 
 
+@protocol TTNetworkMonitorSwitchDelegate<NSObject>
+
+- (BOOL)shouldIgnoreNetworkForTTMonitor;
+
+@end
 
 @interface TTNetworkMonitorManager : NSObject
 
+@property (nonatomic, weak) id<TTNetworkMonitorSwitchDelegate> switchDelegate;
 
 + (instancetype)defaultMonitorManager;
 

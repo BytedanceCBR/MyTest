@@ -6,9 +6,10 @@
 //
 
 #import "FHBaseViewController.h"
-#import <HMSegmentedControl.h>
-#import <FHBaseCollectionView.h>
+#import "HMSegmentedControl.h"
+#import "FHBaseCollectionView.h"
 #import "FHHomeMainTopView.h"
+#import "UIViewController+Track.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHBaseCollectionView *collectionView;
 @property (nonatomic,strong) FHHomeMainTopView *topView;
 @property(nonatomic, strong) UIView *containerView;
+@property(nonatomic, strong) UIView *switchCityView;
 
 - (void)changeTopStatusShowHouse:(BOOL)isShowHouse;
 - (void)changeTopSearchBtn:(BOOL)isShow;

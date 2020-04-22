@@ -9,7 +9,7 @@
 #import "ArticleMessageManager.h"
 #import "ArticleURLSetting.h"
 #import "SSUserModel.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "SSUpdateListNotifyManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import "ArticleBadgeManager.h"

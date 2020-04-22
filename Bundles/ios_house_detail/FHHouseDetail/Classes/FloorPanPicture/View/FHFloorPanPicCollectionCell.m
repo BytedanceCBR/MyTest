@@ -8,10 +8,10 @@
 #import "FHFloorPanPicCollectionCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIImageView+BDWebImage.h"
-#import <FHHouseBaseItemCell.h>
-#import <TTDeviceHelper.h>
+#import "FHHouseBaseItemCell.h"
+#import "TTDeviceHelper.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @implementation FHFloorPanPicCollectionCell

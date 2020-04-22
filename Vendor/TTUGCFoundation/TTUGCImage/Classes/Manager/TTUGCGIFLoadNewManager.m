@@ -9,7 +9,7 @@
 #import <TTWebImageManager.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <FRImageInfoModel.h>
-#import <BDWebImageManager.h>
+#import "BDWebImageManager.h"
 #import <pthread/pthread.h>
 #import <TTUGCImageView.h>
 #import "TTUGCImageHelper.h"

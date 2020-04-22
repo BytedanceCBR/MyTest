@@ -295,7 +295,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *tagImage;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *houseImage;
+@property (nonatomic, copy , nullable) NSString *displayPriceColor;
+@property (nonatomic, strong, nullable) NSMutableAttributedString *tagString;
+
 
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, strong, nullable)   FHHouseItemHouseVideo*   houseVideo;
@@ -313,6 +317,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHomeHouseDataItemsTitleTagModel *titleTag ;
 //埋点使用
 @property (nonatomic, strong , nullable) NSDictionary *tracerDict;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *reasonTags;
+@property (nonatomic, copy , nullable) NSString *addrData;
 
 @end
 

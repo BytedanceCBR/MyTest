@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeMainBaseCollectionCell : UICollectionViewCell
-@property(nonatomic,weak)UIViewController *contentVC;
+@property(nonatomic,strong)UIViewController *contentVC;
 @end
 
 NS_ASSUME_NONNULL_END

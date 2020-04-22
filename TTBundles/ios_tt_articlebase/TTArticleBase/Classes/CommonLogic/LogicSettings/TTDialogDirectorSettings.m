@@ -6,7 +6,7 @@
 //
 
 #import "TTDialogDirectorSettings.h"
-#import <TTSettingsManager.h>
+#import "TTSettingsManager.h"
 #import <TTDialogDirector/TTDialogDirector.h>
 
 

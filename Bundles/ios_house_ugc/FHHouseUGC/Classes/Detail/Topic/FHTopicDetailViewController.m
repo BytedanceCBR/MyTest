@@ -26,14 +26,14 @@
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
 #import "FHUserTracker.h"
-#import <UIScrollView+Refresh.h>
+#import "UIScrollView+Refresh.h"
 #import "FHFeedOperationView.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "SSImpressionManager.h"
 #import "FHUserTracker.h"
 #import "UIViewController+Track.h"
 #import "TTAccountManager.h"
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 @interface FHTopicDetailViewController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol>
 
@@ -164,7 +164,9 @@
 - (void)setupUI {
     self.navOffset = 64;
     CGFloat navOffset = 64;
-    if (@available(iOS 11.0 , *)) {
+    if (@available(iOS 13.0, *)) {
+        navOffset = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0 , *)) {
         navOffset = 44.f + self.view.tt_safeAreaInsets.top;
     } else {
         navOffset = 64;
@@ -489,7 +491,26 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSString *page_type = @"topic_detail";
     [params setObject:page_type forKey:@"enter_from"];
-    [params setObject:@"click_publisher" forKey:@"enter_type"];
+    
+    NSString *enter_type = UT_BE_NULL;
+     switch (from) {
+         case FHUGCLoginFrom_POST:
+             enter_type = @"click_publisher_moments";
+             break;
+         case FHUGCLoginFrom_GROUPCHAT:
+             enter_type = @"ugc_member_talk";
+             break;
+         case FHUGCLoginFrom_VOTE:
+             enter_type = @"click_publisher_vote";
+             break;
+         case FHUGCLoginFrom_WENDA:
+             enter_type = @"click_publisher_question";
+             break;
+         default:
+             break;
+     }
+     [params setObject:enter_type forKey:@"enter_type"];
+    
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);

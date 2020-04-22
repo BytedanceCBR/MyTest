@@ -8,7 +8,7 @@
 
 #import "TTVisitorViewController.h"
 #import "TTVisitorModel.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "TTVisitorCell.h"
 #import "TTVisitorDateCell.h"
 #import "ArticleProfileFollowConst.h"

@@ -9,7 +9,7 @@
 #import "UIColor+Theme.h"
 #import <Masonry/Masonry.h>
 #import "FHMapSearchModel.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "UIFont+House.h"
 
 
@@ -45,7 +45,7 @@
         
         _nameLabel = [self labelColor:[UIColor themeGray1] font:[UIFont themeFontMedium:20]];
         _locationLabel = [self labelColor:[UIColor themeGray3] font:[UIFont themeFontRegular:12]];
-        _priceLabel = [self labelColor:[UIColor themeRed1] font:[UIFont themeFontMedium:16]];
+        _priceLabel = [self labelColor:[UIColor themeOrange1] font:[UIFont themeFontMedium:16]];
         
         _nameLabel.adjustsFontSizeToFitWidth = YES;
 

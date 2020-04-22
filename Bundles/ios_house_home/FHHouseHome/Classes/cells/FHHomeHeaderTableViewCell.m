@@ -9,7 +9,7 @@
 #import "FHHomeTableViewDelegate.h"
 #import "FHHomeConfigManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
 @interface FHHomeHeaderTableViewCell()
 @property (nonatomic, strong) FHHomeTableViewDelegate *tableViewDelegate;
 @end

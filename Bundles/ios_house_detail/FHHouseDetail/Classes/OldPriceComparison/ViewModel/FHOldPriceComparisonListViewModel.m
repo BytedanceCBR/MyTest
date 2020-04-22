@@ -21,7 +21,10 @@
 #import <TTReachability/TTReachability.h>
 #import "ToastManager.h"
 #import "FHOldPriceComparisonListController.h"
-#import "FHOldPriceComparisonCell.h"
+//#import "FHOldPriceComparisonCell.h"
+#import "FHHouseListBaseItemCell.h"
+#import "FHHouseListBaseItemModel.h"
+#import "FHHomePlaceHolderCell.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -80,8 +83,8 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     _refreshFooter.hidden = YES;
-    [_tableView registerClass:[FHOldPriceComparisonCell class] forCellReuseIdentifier:kSingleImageCellId];
-    [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
+    [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
+    [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -120,7 +123,7 @@
                              @"page_type":@"price_analysis_list"
                              };
     
-    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:params offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:params offset:offset searchId:searchId sugParam:nil class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
             return ;
@@ -134,7 +137,7 @@
 
 - (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error {
     if (model != NULL && error == NULL) {
-        FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
+        FHHouseListDataModel *houseModel = ((FHListResultHouseModel *)model).data;
         self.currentHouseModel = houseModel;
         BOOL hasMore = houseModel.hasMore;
         self.searchId = houseModel.searchId;
@@ -144,7 +147,8 @@
             self.maskView.hidden = YES;
             // 转换模型类型
             [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
+//                FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
+                FHHouseListBaseItemModel *cellModel = (FHHouseListBaseItemModel *)obj;
                 if (cellModel) {
                     cellModel.isRecommendCell = NO;
                     cellModel.isSubscribCell = NO;
@@ -177,13 +181,13 @@
     }
 }
 
-- (FHSingleImageInfoCellModel *)houseItemByModel:(id)obj {
-    FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc] init];
-    if ([obj isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
-        cellModel.secondModel = obj;
-    }
-    return cellModel;
-}
+//- (FHSingleImageInfoCellModel *)houseItemByModel:(id)obj {
+//    FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc] init];
+//    if ([obj isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+//        cellModel.secondModel = obj;
+//    }
+//    return cellModel;
+//}
 
 - (void)processError:(FHEmptyMaskViewType)maskViewType tips:(NSString *)tips {
     // 此时需要看是否已经有有效数据，如果已经有的话只需要toast提示，不显示空页面
@@ -210,14 +214,15 @@
     if (indexPath.row >= self.houseList.count) {
         return;
     }
-    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+//    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+    FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
     if (cellModel) {
         NSString *origin_from = self.listController.tracerDict[@"origin_from"];
         NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
         NSString *urlStr = NULL;
-        FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
-        if (theModel) {
-            urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
+//        FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+//        if (theModel) {
+            urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",cellModel.houseid];
             
             NSMutableDictionary *traceParam = @{}.mutableCopy;
             traceParam[@"card_type"] = @"left_pic";
@@ -236,7 +241,7 @@
             
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-        }
+//        }
     }
 }
 
@@ -258,14 +263,15 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.listController.hasValidateData == YES) {
-        FHOldPriceComparisonCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
-        FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-        [cell refreshTopMargin: 20];
-        [cell updateWithHouseCellModel:cellModel];
+        FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
+        FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
+        [cell refreshWithData: cellModel];
+//        [cell refreshTopMargin: 20];
+//        [cell updateWithHouseCellModel:cellModel];
         return cell;
     } else {
         // PlaceholderCell
-        FHPlaceHolderCell *cell = (FHPlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
+        FHHomePlaceHolderCell *cell = (FHHomePlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
         return cell;
     }
     return [[UITableViewCell alloc] init];
@@ -284,11 +290,12 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.listController.hasValidateData) {
-        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-        return isLastCell ? 106 : 86;
-    }
-    return 86;
+//    if (self.listController.hasValidateData) {
+//        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
+//        return isLastCell ? 106 : 86;
+//    }
+//    return 86;
+    return 88;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -313,7 +320,7 @@
     if (!self.listController.hasValidateData) {
         return;
     }
-    FHSingleImageInfoCellModel * cellModel = self.houseList[indexPath.row];
+    FHHouseListBaseItemModel * cellModel = self.houseList[indexPath.row];
     
     if (!cellModel) {
         return;

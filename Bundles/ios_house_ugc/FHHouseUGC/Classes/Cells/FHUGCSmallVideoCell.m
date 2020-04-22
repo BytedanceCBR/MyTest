@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCSmallVideoCell.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
 #import "FHUGCCellBottomView.h"
@@ -14,8 +14,8 @@
 #import "FHUGCCellHelper.h"
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
-#import <TTBusinessManager+StringUtils.h>
-#import <UIViewAdditions.h>
+#import "TTBusinessManager+StringUtils.h"
+#import "UIViewAdditions.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -178,7 +178,7 @@
     self.cellModel = cellModel;
     //设置userInfo
     self.userInfoView.cellModel = cellModel;
-    self.userInfoView.userName.text = cellModel.user.name;
+    self.userInfoView.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
     [self.userInfoView updateDescLabel];
     [self.userInfoView updateEditState];
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];

@@ -12,8 +12,8 @@
 #import <TTBaseLib/TTBusinessManager.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTThemed/UIImage+TTThemeExtension.h>
-#import <UIColor+Theme.h>
-#import <UIImage+FIconFont.h>
+#import "UIColor+Theme.h"
+#import "UIImage+FIconFont.h"
 
 
 @interface TTDiggButton()

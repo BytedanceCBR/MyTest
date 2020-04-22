@@ -6,8 +6,8 @@
 //
 
 #import "FHHouseDetailWebViewController.h"
-#import <TTRJSBForwarding.h>
-#import <TTRStaticPlugin.h>
+#import "TTRJSBForwarding.h"
+#import "TTRStaticPlugin.h"
 #import <FHHouseDetail/FHHouseDetailPhoneCallViewModel.h>
 #import "TTRoute.h"
 #import <TTTracker/TTTracker.h>
@@ -17,17 +17,17 @@
 #import <FHHouseBase/FHHouseFillFormHelper.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTBaseLib/TTDeviceHelper.h>
-#import <SSCommonLogic.h>
-#import <FHEnvContext.h>
-#import <FHErrorView.h>
-#import <Masonry.h>
-#import <UIViewController+Refresh_ErrorHandler.h>
-#import <UIViewAdditions.h>
+#import "SSCommonLogic.h"
+#import "FHEnvContext.h"
+#import "FHErrorView.h"
+#import "Masonry.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
+#import "UIViewAdditions.h"
 #import "UIView+Refresh_ErrorHandler.h"
-#import <FHUtils.h>
-#import <FHMainApi.h>
-#import <UIFont+House.h>
-#import <UIColor+Theme.h>
+#import "FHUtils.h"
+#import "FHMainApi.h"
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
 
 @interface FHHouseDetailWebViewController ()
 {
@@ -87,7 +87,11 @@
 - (CGRect)frameForListView
 {
     CGFloat topTipheight = _isShowTopTip ? 30 : 0 ;
-    if (@available(iOS 11.0 , *)) {
+    CGFloat topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    if (@available(iOS 13.0 , *)) {
+        CGRect rect = CGRectMake(0.0f, 44.f + topInset + topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - (44.f + topInset) - topTipheight);
+        return rect;
+    } else if (@available(iOS 11.0 , *)) {
         CGRect rect = CGRectMake(0.0f, 44.f + self.view.tt_safeAreaInsets.top + topTipheight, self.view.bounds.size.width, self.view.bounds.size.height - (44.f + self.view.tt_safeAreaInsets.top) - topTipheight);
         return rect;
     } else {

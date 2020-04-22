@@ -13,6 +13,7 @@ typedef NS_ENUM(NSInteger, FHCommunityFeedListType)
     FHCommunityFeedListTypeNearby = 0,
     FHCommunityFeedListTypeMyJoin,
     FHCommunityFeedListTypePostDetail,
+    FHCommunityFeedListTypeSpecialTopic,
 };
 
 typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
@@ -42,6 +43,8 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
     FHUGCFeedListCellSubTypeUGCSmallVideo,                         //小视频
     FHUGCFeedListCellSubTypeUGCVoteDetail,                         //新投票类型
     FHUGCFeedListCellSubTypeUGCHotCommunity,                       //UGC附近顶部 主推圈子
+    FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion,              //小区问答
+    FHUGCFeedListCellSubTypeUGCNeighbourhoodComments,              //小区点评
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)

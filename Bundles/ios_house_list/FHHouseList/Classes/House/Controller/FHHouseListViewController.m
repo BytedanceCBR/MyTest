@@ -6,12 +6,12 @@
 //
 
 #import "FHHouseListViewController.h"
-#import <TTRoute.h>
-#import <Masonry.h>
+#import "TTRoute.h"
+#import "Masonry.h"
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHFakeInputNavbar.h"
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHTracerModel.h"
 #import "FHErrorMaskView.h"
@@ -28,7 +28,7 @@
 #import "FHCommuteManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHMainOldTopTagsView.h"
-#import <TTNavigationController.h>
+#import "TTNavigationController.h"
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
@@ -167,13 +167,18 @@
 -(void)initNavbar
 {
     FHFakeInputNavbarType type = FHFakeInputNavbarTypeDefault;
-    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
         type = FHFakeInputNavbarTypeMap;
     }
     // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
         type = FHFakeInputNavbarTypeMessageAndMap;
     }
+    
+    if ( self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeNeighborhood) {
+        type = FHFakeInputNavbarTypeMessageSingle;
+    }
+    
     if ([self.paramObj.sourceURL.host rangeOfString:@"commute_list"].location != NSNotFound) {
         //通勤找房不显示地图
         type = FHFakeInputNavbarTypeDefault;
@@ -200,7 +205,7 @@
     _navbar.messageActionBlock = ^{
         [wself.viewModel showMessageList];
     };
-    
+
     _navbar.tapInputBar = ^{
         [wself.viewModel showInputSearch];
     };
@@ -469,6 +474,7 @@
 {
     [super viewDidAppear:animated];
     [self.viewModel refreshMessageDot];
+    [self.viewModel viewDidAppear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -587,11 +593,13 @@
 
 -(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder inputText:(NSString *)inputText{
     
-    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute ) || houseType == FHHouseTypeSecondHandHouse) {
-        if (houseType == FHHouseTypeSecondHandHouse) {
+    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute ) || houseType == FHHouseTypeSecondHandHouse ||houseType == FHHouseTypeNewHouse || houseType == FHHouseTypeNeighborhood) {
+        if (houseType == FHHouseTypeSecondHandHouse || houseType == FHHouseTypeRentHouse) {
             // FHFakeInputNavbarTypeMessageAndMap 二手房列表页显示消息和小红点
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageAndMap];
-        } else {
+        } else if(houseType == FHHouseTypeNewHouse||houseType == FHHouseTypeNeighborhood){
+            [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMessageSingle];
+        } else{
             [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMap];
         }
     }else {
@@ -708,6 +716,17 @@
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        NSArray *tableCells = [self.tableView visibleCells];
+        if (tableCells) {
+            [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
+                        [obj performSelector:@selector(resumeVRIcon)];
+                    }
+            }];
+        }
+    }
 }
 
 #pragma mark - lazy load

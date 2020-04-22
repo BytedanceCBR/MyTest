@@ -11,7 +11,7 @@
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "Masonry.h"
-#import <BDWebImage.h>
+#import "BDWebImage.h"
 #import "UIColor+Theme.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHCommonDefines.h>
@@ -258,6 +258,17 @@
                 make.left.mas_equalTo(self.leftView.mas_right).offset(20);
             }];
         }
+    }else {
+        if (contactPhone.showRealtorinfo == 1) {
+                [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self);
+                make.right.mas_equalTo(self).offset(-20);
+                make.width.mas_equalTo(AdaptOffset(88));
+                make.height.mas_equalTo(44);
+            }];
+        }
+        _contactBtn.layer.shadowColor = [UIColor themeOrange1].CGColor;
+        _contactBtn.backgroundColor = [UIColor themeOrange1];
     }
     void (^updateBlock)() = ^{
         [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {

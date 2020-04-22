@@ -33,7 +33,7 @@
 #import "Article+TTADComputedProperties.h"
 
 #import "ExploreOrderedActionCell.h"
-#import <TTRelevantDurationTracker.h>
+#import "TTRelevantDurationTracker.h"
 
 #import "ExploreOrderedData+TTAd.h"
 #import "SSADEventTracker.h"

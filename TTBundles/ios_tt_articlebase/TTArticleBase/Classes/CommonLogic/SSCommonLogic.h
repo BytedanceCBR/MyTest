@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <SSCommonDefines.h>
+#import "SSCommonDefines.h"
 
 extern NSString * const kIntroductionViewControllerRemovedNotification;
 extern NSString * const kFeedRefreshButtonSettingEnabledNotification;
@@ -1150,6 +1150,7 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)useImageVideoNewApi;
 + (NSInteger)configSwitchTimeDaysCount;
 + (BOOL)configSwitchFWebOffline;
+//+ (BOOL)webViewOpenSchemaEnable;
 + (NSInteger)configEditProfileEntry;
 + (BOOL)useNewSearchTransitionAnimation;
 + (BOOL)useNewSearchTransitionAnimationForVideo;

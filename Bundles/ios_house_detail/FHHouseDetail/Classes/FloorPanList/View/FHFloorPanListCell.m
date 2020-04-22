@@ -7,7 +7,7 @@
 
 #import "FHFloorPanListCell.h"
 #import "FHDetailNewModel.h"
-#import <BDWebImage.h>
+#import "BDWebImage.h"
 
 @interface FHFloorPanListCell ()
 @property (nonatomic , strong) UIImageView *iconView;
@@ -74,7 +74,7 @@
 
         _priceLabel = [UILabel new];
         _priceLabel.font = [UIFont themeFontMedium:14];
-        _priceLabel.textColor = [UIColor themeRed1];
+        _priceLabel.textColor = [UIColor themeOrange1];
         _priceLabel.textAlignment = NSTextAlignmentLeft;
 
         [self.contentView addSubview:_priceLabel];
@@ -145,6 +145,7 @@
         if (!model.saleStatus) {
             self.statusLabel.text = @"";
             self.statusBGView.backgroundColor = [UIColor clearColor];
+            self.statusLabel.backgroundColor = [UIColor clearColor];
             return;
         }
 

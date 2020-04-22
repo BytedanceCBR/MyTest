@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCCellBottomView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHCommonApi.h"
@@ -16,7 +16,7 @@
 #import "UIButton+TTAdditions.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import "TTMessageCenter.h"
 #import "TTVideoArticleService+Action.h"
 #import "TTVideoArticleServiceMessage.h"
@@ -136,7 +136,8 @@
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
-        make.left.right.mas_equalTo(self);
+        make.left.mas_equalTo(self).offset(0);
+        make.right.mas_equalTo(self).offset(0);
         make.height.mas_equalTo(5);
     }];
 }
@@ -188,6 +189,13 @@
     }else{
         self.guideView.hidden = YES;
     }
+    
+    [self.bottomSepView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.positionView.mas_bottom).offset(20);
+        make.left.mas_equalTo(self).offset(cellModel.bottomLineLeftMargin);
+        make.right.mas_equalTo(self).offset(-cellModel.bottomLineRightMargin);
+        make.height.mas_equalTo(cellModel.bottomLineHeight);
+    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -244,7 +252,7 @@
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    NSString *enter_from = self.cellModel.tracerDic[@"enter_from"];
+    NSString *enter_from = self.cellModel.tracerDic[UT_PAGE_TYPE];
     if (enter_from.length <= 0) {
         enter_from = @"be_null";
     }

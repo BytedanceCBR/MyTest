@@ -10,7 +10,7 @@
 #import "FHDetailOldModel.h"
 #import "FHHouseDetailBaseViewModel.h"
 #import "FHRentSameNeighborhoodResponse.h"
-#import <YYText.h>
+#import "YYText.h"
 #import "FHDetailRentModel.h"
 
 NS_ASSUME_NONNULL_BEGIN

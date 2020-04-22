@@ -9,8 +9,8 @@
 #import "MASConstraintMaker.h"
 #import "UILabel+House.h"
 #import "FHDetailOldModel.h"
-#import "BDWebImage.h"
-#import <Masonry.h>
+#import <BDWebImage/BDWebImage.h>
+#import "Masonry.h"
 #import "TTTAttributedLabel.h"
 #import "FHUGCCellHelper.h"
 #import "PNColor.h"
@@ -240,10 +240,12 @@
 
     [self setComment:modelData];
     self.houseReviewView.text = modelData.commentText ?: @"";
-    [self.nameView mas_updateConstraints:^(MASConstraintMaker *make) {
-        NSUInteger nameLen = MIN(self.nameView.text.length, 4);
-        make.width.mas_equalTo(nameLen * 14 + 1);
-    }];
+    CGSize nameViewSize = [self.nameView.text  sizeWithFont:[UIFont themeFontMedium:14] constrainedToSize:CGSizeMake(MAXFLOAT, 30)];
+    if (nameViewSize.width>56) {
+            [self.nameView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(56);
+        }];
+    }
     [self.realtorLabelContainer mas_updateConstraints:^(MASConstraintMaker *make) {
         NSInteger height = isEmptyString(self.houseReviewView.text) ? 20 : 37;
         make.height.mas_equalTo(height);

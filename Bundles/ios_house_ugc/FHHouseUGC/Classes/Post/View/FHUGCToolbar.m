@@ -431,7 +431,8 @@
             
             NSInteger index = [self.tags indexOfObject:tag];
             [self.tags removeObjectAtIndex: index];
-            [self.tagSelectCollectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
+            [collectionView reloadData];
+            
             if(self.tags.count <= 0) {
                 [self relayoutSelctCollectionView];
             }

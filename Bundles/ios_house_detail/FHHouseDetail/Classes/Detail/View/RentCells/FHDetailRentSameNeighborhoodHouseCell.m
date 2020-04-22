@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailRentSameNeighborhoodHouseCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -287,7 +287,7 @@
     [self.contentView addSubview:_descLabel];
     
     _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _priceLabel.textColor = [UIColor themeRed1];
+    _priceLabel.textColor = [UIColor themeOrange1];
     _priceLabel.font = [UIFont themeFontMedium:16];
     [self.contentView addSubview:_priceLabel];
     

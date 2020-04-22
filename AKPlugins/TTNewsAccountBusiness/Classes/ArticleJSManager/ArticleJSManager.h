@@ -20,6 +20,11 @@ typedef void (^ArticleJSManagerLoadResourcesCallback)(NSString *path, NSError *e
 + (ArticleJSManager *)shareInstance;
 
 /*
+ * 前端h5模板数据，Settings下发数据 f_article_h5_config
+ */
+@property (nonatomic, strong)     NSDictionary       *feArticleH5Config;
+
+/*
  * @bried 处理settings API返回的相关字段
  *
  * @params assetsUrl     JS下载地址

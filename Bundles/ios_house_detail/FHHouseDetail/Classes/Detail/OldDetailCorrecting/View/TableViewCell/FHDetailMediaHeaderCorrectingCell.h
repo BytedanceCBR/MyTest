@@ -10,8 +10,9 @@
 #import "FHMultiMediaModel.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "FHDetailHouseTitleModel.h"
-
 NS_ASSUME_NONNULL_BEGIN
+
+@class FHDetailNewTopImage;
 
 @interface FHDetailMediaHeaderCorrectingCell : FHDetailBaseCell
 
@@ -28,5 +29,6 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, assign) BOOL isInstantData;
 @property (nonatomic, strong, nullable)   FHDetailHouseVRDataModel  *vrModel;// 视频模型
 @property (strong, nonatomic) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewTopImage *> *topImages;
 
 @end

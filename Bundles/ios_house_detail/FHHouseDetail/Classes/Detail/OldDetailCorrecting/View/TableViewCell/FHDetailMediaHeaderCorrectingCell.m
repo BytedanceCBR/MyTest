@@ -14,10 +14,12 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "FHMultiMediaVideoCell.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
-#import <NSString+URLEncoding.h>
-#import <FHUtils.h>
+#import "NSString+URLEncoding.h"
+#import "FHUtils.h"
 #import "FHMultiMediaModel.h"
 #import "FHCommonDefines.h"
+#import "FHDetailNewModel.h"
+
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
 @property(nonatomic, strong) FHMultiMediaCorrectingScrollView *mediaView;
@@ -73,6 +75,7 @@
     self.currentData = data;
     [self generateModel];
     [self.mediaView updateModel:self.model withTitleModel: ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel];
+    self.mediaView.baseViewModel = self.baseViewModel;
     //有视频才传入埋点
     if(self.vedioCount > 0){
         self.mediaView.tracerDic = [self tracerDic];
@@ -82,18 +85,26 @@
 
 - (void)reckoncollectionHeightWithData:(id)data {
     FHDetailHouseTitleModel *titleModel =  ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel;
-    _photoCellHeight = [FHDetailMediaHeaderCell cellHeight];
+    _photoCellHeight = [FHDetailMediaHeaderCorrectingCell cellHeight];
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:24]};
     CGRect rect = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH-70, CGFLOAT_MAX)
                                               options:NSStringDrawingUsesLineFragmentOrigin
                                            attributes:attributes
                                               context:nil];
+    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
+        _photoCellHeight += 40;
+    }
+    _photoCellHeight += 30 + rect.size.height -67;
+
     if (titleModel.tags.count>0) {
         //这里分别加上标签高度20，标签间隔20，标题间隔20,再减去重叠部分67,得到当前模块高度
-        _photoCellHeight = _photoCellHeight + 20 + 30 + rect.size.height + 20 -67;
-    }else {
-        _photoCellHeight = _photoCellHeight + 30 + rect.size.height -67;
+        _photoCellHeight += 20 + 20;
     }
+    
+    if (((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
+        _photoCellHeight = _photoCellHeight +22;
+    }
+    
     [self.mediaView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_offset(_photoCellHeight);
     }];
@@ -122,7 +133,7 @@
     return self;
 }
 - (void)createUI {
-    _photoCellHeight = [FHDetailMediaHeaderCell cellHeight];
+    _photoCellHeight = [FHDetailMediaHeaderCorrectingCell cellHeight];
     _pictureShowDict = [NSMutableDictionary dictionary];
     _vedioCount = 0;
     _imageList = [[NSMutableArray alloc] init];
@@ -163,7 +174,7 @@
     }
     
     for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
-        if (listModel.houseImageTypeName.length > 0) {
+//        if (listModel.houseImageTypeName.length > 0) {
             NSString *groupType = nil;
             if(listModel.houseImageType == FHDetailHouseImageTypeApartment){
                 groupType = @"户型";
@@ -190,7 +201,7 @@
                 }
                 index++;
             }
-        }
+//        }
     }
     
     self.model.medias = itemArray;
@@ -262,7 +273,8 @@
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
-    
+    vc.houseType = self.baseViewModel.houseType;
+
     vc.topVC = self.baseViewModel.detailController;
     
 //    if (FHVideoModel.cellhou == FHCellt) {
@@ -330,7 +342,11 @@
     };
     
     [vc setMediaHeaderModel:self.currentData mediaImages:images];
-    
+    FHDetailMediaHeaderCorrectingModel *model = ((FHDetailMediaHeaderCorrectingModel *)self.currentData);
+    if ([model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
+        FHDetailNewTopImage *topImage = model.topImages.firstObject;
+        vc.smallImageInfosModels = topImage.smallImageGroup;
+    }
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
     CGRect frame = [self convertRect:self.bounds toView:window];

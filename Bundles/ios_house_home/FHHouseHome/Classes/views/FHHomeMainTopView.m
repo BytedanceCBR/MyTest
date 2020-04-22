@@ -7,23 +7,24 @@
 
 #import "FHHomeMainTopView.h"
 #import "UIColor+Expanded.h"
-#import <UIFont+House.h>
-#import <UIColor+Theme.h>
-#import <FHEnvContext.h>
-#import <SSThemed.h>
-#import <Masonry.h>
-#import <TTDeviceHelper.h>
-#import <UIButton+TTAdditions.h>
-#import <TTRoute.h>
-#import <UIImageView+BDWebImage.h>
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
+#import "FHEnvContext.h"
+#import "SSThemed.h"
+#import "Masonry.h"
+#import "TTDeviceHelper.h"
+#import "UIButton+TTAdditions.h"
+#import "TTRoute.h"
+#import "UIImageView+BDWebImage.h"
 #import "FHHomeConfigManager.h"
-#import <FHHouseType.h>
-#import <FHHomeCellHelper.h>
-#import <UIImage+FIconFont.h>
-
+#import "FHHouseType.h"
+#import "FHHomeCellHelper.h"
+#import "UIImage+FIconFont.h"
+#import "TTDeviceHelper.h"
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
 static const float kSegementedMainPadingBottom = 10;
+static const float kMapSearchBtnRightPading = 50;
 
 @interface FHHomeMainTopView()
 
@@ -32,7 +33,8 @@ static const float kSegementedMainPadingBottom = 10;
 @property (nonatomic, strong) UIButton * changeCountryBtn;
 @property (nonatomic, strong) UILabel * countryLabel;
 @property (nonatomic, strong) UIImageView * cityImageButtonLeftIcon;
-
+@property (nonatomic, assign) BOOL isShowSearchBtn;
+@property (nonatomic, strong) FHConfigDataOpData2ItemsModel *mapItemModel;
 @end
 
 @implementation FHHomeMainTopView
@@ -74,6 +76,7 @@ static const float kSegementedMainPadingBottom = 10;
     [_searchBtn setImage:ICON_FONT_IMG(24,@"\U0000e675",[UIColor themeGray1]) forState:UIControlStateNormal];
     [_searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
     _searchBtn.hidden = YES;
+    _searchBtn.hitTestEdgeInsets =  UIEdgeInsetsMake(-5, -5, -5, -5);
     [self addSubview:_searchBtn];
     
     WeakSelf;
@@ -81,6 +84,69 @@ static const float kSegementedMainPadingBottom = 10;
         StrongSelf;
         [self showUnValibleCity];
     }];
+        
+}
+
+- (void)updateMapSearchBtn
+{
+    
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+
+    if (configData.mainPageTopOpData && configData.mainPageTopOpData.items.count >= 1 && configData.cityAvailability.enable.boolValue) {
+        
+        __block FHConfigDataOpData2ItemsModel *mapItemModel = nil;
+         [configData.mainPageTopOpData.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+             if ([obj isKindOfClass:[FHConfigDataOpData2ItemsModel class]]) {
+                 if ([((FHConfigDataOpData2ItemsModel *)obj).id isEqualToString:@"map_search"]) {
+                     mapItemModel = (FHConfigDataOpData2ItemsModel *)obj;
+                 }
+             }
+         }];
+        
+        _mapItemModel = mapItemModel;
+        
+        if (!mapItemModel) {
+            return;
+        }
+        
+        if ([self.subviews containsObject:_mapSearchLabel]  || [self.subviews containsObject:_mapSearchLabel] ) {
+            return;
+        }
+        
+        _mapSearchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_mapSearchBtn setImage:[UIImage imageNamed:@"home_map_icon"] forState:UIControlStateNormal];
+        [_mapSearchBtn addTarget:self action:@selector(clickMapSearch) forControlEvents:UIControlEventTouchUpInside];
+        _mapSearchBtn.hitTestEdgeInsets =  UIEdgeInsetsMake(-10, -10, -10, -30);
+
+        [self addSubview:_mapSearchBtn];
+        
+        _mapSearchLabel = [UILabel new];
+        _mapSearchLabel.text = @"地图";
+        _mapSearchLabel.textColor = [UIColor themeGray1];
+        _mapSearchLabel.font = [UIFont themeFontMedium:14];
+        [self addSubview:_mapSearchLabel];
+
+        
+        [_mapSearchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
+            make.centerY.equalTo(self.searchBtn).offset(0);
+            make.width.height.mas_equalTo(20);
+        }];
+        
+        [_mapSearchLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+              make.left.equalTo(self.mapSearchBtn.mas_right).offset(5);
+              make.centerY.equalTo(self.mapSearchBtn).offset(0);
+              make.width.mas_equalTo(40);
+    //          make.height.mas_equalTo(24);
+        }];
+            
+    }else
+    {
+        [_mapSearchBtn removeFromSuperview];
+        _mapSearchBtn = nil;
+        [_mapSearchLabel removeFromSuperview];
+        _mapSearchLabel = nil;
+    }
 }
 
 - (void)setupSetmentedControl {
@@ -104,7 +170,7 @@ static const float kSegementedMainPadingBottom = 10;
     _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     //_segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
-    [_segmentControl setBackgroundColor:[UIColor themeHomeColor]];
+    [_segmentControl setBackgroundColor:[UIColor clearColor]];
     
     __weak typeof(self) weakSelf = self;
     _segmentControl.indexChangeBlock = ^(NSInteger index) {
@@ -135,12 +201,12 @@ static const float kSegementedMainPadingBottom = 10;
     [_searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self).offset(-15);
         if (self.segmentControl) {
-            make.centerY.equalTo(self.segmentControl).offset(2);
+            make.centerY.equalTo(self.segmentControl).offset(0);
         }else
         {
             make.bottom.mas_equalTo(8);
         }
-        make.width.height.mas_equalTo(24);
+        make.width.height.mas_equalTo(21);
     }];
 }
 
@@ -171,17 +237,17 @@ static const float kSegementedMainPadingBottom = 10;
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
     _houseSegmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _houseSegmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
-    _houseSegmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    _houseSegmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _houseSegmentControl.isNeedNetworkCheck = NO;
-    _houseSegmentControl.segmentEdgeInset = UIEdgeInsetsMake(5, 0, 5, 0);
+    _houseSegmentControl.segmentEdgeInset = UIEdgeInsetsMake(8, 10, 0, 10);
     _houseSegmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _houseSegmentControl.selectionIndicatorWidth = 20.0f;
     _houseSegmentControl.selectionIndicatorHeight = 4.0f;
     _houseSegmentControl.hidden = YES;
     _houseSegmentControl.selectionIndicatorCornerRadius = 2.0f;
-    _houseSegmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
+    _houseSegmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     _houseSegmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
-    [_houseSegmentControl setBackgroundColor:[UIColor themeHomeColor]];
+    [_houseSegmentControl setBackgroundColor:[UIColor clearColor]];
 
     //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
     
@@ -200,13 +266,13 @@ static const float kSegementedMainPadingBottom = 10;
     
     [_houseSegmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topBackCityContainer);
-        make.height.mas_equalTo(kSegementedMainTopHeight);
+//        make.height.mas_equalTo(kSegementedMainTopHeight);
         if (self.changeCountryBtn) {
-            make.centerY.equalTo(self.changeCountryBtn).offset(-2);
+            make.centerY.equalTo(self.changeCountryBtn).offset(-6);
         }else{
             make.bottom.mas_equalTo(8);
         }
-        make.width.mas_equalTo((kSegementedOneWidth + 15) * titlesArray.count);
+        make.width.mas_equalTo((kSegementedOneWidth + 12) * titlesArray.count);
     }];
     
     [self updateSegementedTitles:titlesArray andSelectIndex:indexValue];
@@ -221,23 +287,39 @@ static const float kSegementedMainPadingBottom = 10;
     {
         _houseSegmentControl.selectedSegmentIndex = _houseSegmentControl.selectedSegmentIndex;
     }
-    
-    CGFloat expandWidth = titles.count > 1 ? 20 : 5;
-    
+        
     [_houseSegmentControl mas_updateConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topBackCityContainer);
         make.height.mas_equalTo(kSegementedMainTopHeight);
-        if (self.changeCountryBtn) {
-            make.centerY.equalTo(self.changeCountryBtn).offset(-2);
-        }else
-        {
-            make.bottom.mas_equalTo(8);
-        }
-        make.width.mas_equalTo((kSegementedOneWidth + 12) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : expandWidth));
+        make.centerY.equalTo(self.segmentControl).offset(-2);
+        make.width.mas_equalTo((kSegementedOneWidth + 12) * titles.count - ([TTDeviceHelper isScreenWidthLarge320] ? 0 : 5));
     }];
     
     
     _searchBtn.hidden = YES;
+}
+
+- (void)clickMapSearch
+{
+    if (_mapItemModel) {
+        NSString *openUrlStr =_mapItemModel.openUrl;
+        if (openUrlStr) {
+            
+            NSMutableDictionary *clickParams = [NSMutableDictionary new];
+            clickParams[@"enter_type"] = @"click";
+            clickParams[@"enter_from"] = @"maintab";
+            
+            if ([_mapItemModel.logPb isKindOfClass:[NSDictionary class]]) {
+                [clickParams addEntriesFromDictionary:_mapItemModel.logPb];
+            }
+
+            NSMutableDictionary *infos = [NSMutableDictionary new];
+            infos[@"tracer"] = clickParams;
+            infos[@"from_home"] = @(1);
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrlStr] userInfo:userInfo];
+        }
+    }
 }
 
 - (void)searchBtnClick
@@ -375,16 +457,73 @@ static const float kSegementedMainPadingBottom = 10;
         if (dataModel.cityAvailability.iconImage.url) {
             [imageRightView bd_setImageWithURL:[NSURL URLWithString:dataModel.cityAvailability.iconImage.url]];
         }
+        
+        [self setBackgroundColor:[UIColor whiteColor]];
+        [self.topBackCityContainer setBackgroundColor:[UIColor whiteColor]];
     }else
     {
         [self setupSetmentedControl];
         [self setUpHouseSegmentedControl];
+        [self updateMapSearchBtn];
+        [self setBackgroundColor:[UIColor themeHomeColor]];
+        [self.topBackCityContainer setBackgroundColor:[UIColor themeHomeColor]];
     }
     
 }
 
+- (void)changeSearchBtnAndMapBtnStatus:(BOOL)isShowSearchBtn
+{
+    if (self.isShowSearchBtn == isShowSearchBtn) {
+        return;
+    }
+    
+    if(isShowSearchBtn){
+        self.searchBtn.hidden = NO;
+        self.mapSearchLabel.hidden = YES;
+        
+//        self.mapSearchLabel.alpha = 0;
+//        self.searchBtn.alpha = 0;
+
+        [UIView animateWithDuration:1 animations:^{
+            self.searchBtn.alpha = 1;
+            [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.equalTo(self).offset(-kMapSearchBtnRightPading - ([TTDeviceHelper isScreenWidthLarge320] ? 10 : -3));
+                make.centerY.equalTo(self.searchBtn).offset(0);
+                make.width.height.mas_equalTo(20);
+            }];
+        }];
+    }else
+    {
+        self.searchBtn.hidden = YES;
+        self.mapSearchLabel.hidden = NO;
+ 
+        [UIView animateWithDuration:1 animations:^{
+//            self.mapSearchLabel.alpha = 1;
+//            self.searchBtn.alpha = 0;
+             [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
+            make.centerY.equalTo(self.searchBtn).offset(0);
+            make.width.height.mas_equalTo(20);
+           }];
+        }];
+    }
+    
+    self.isShowSearchBtn = isShowSearchBtn;
+}
+
 - (NSArray *)getSegmentTitles {
     return @[@"找房", @"发现"];
+}
+
+- (void)changeBackColor:(NSInteger)index
+{
+    UIColor *backColor = index == 0 ? [UIColor themeHomeColor] : [UIColor whiteColor];
+    
+//    [self.houseSegmentControl setBackgroundColor:backColor];
+//    [self.segmentControl setBackgroundColor:backColor];
+    [self setBackgroundColor:backColor];
+    [self.topBackCityContainer setBackgroundColor:backColor];
+    
 }
 
 @end

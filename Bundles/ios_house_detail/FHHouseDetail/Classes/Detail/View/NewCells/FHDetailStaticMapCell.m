@@ -5,7 +5,7 @@
 //  Created by zhulijun on 2019/11/26.
 //
 
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import <FHHouseDetail/FHDetailHeaderView.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHDetailStaticMapCell.h"
@@ -20,6 +20,15 @@
 #import "HMDUserExceptionTracker.h"
 
 @implementation FHDetailStaticMapCellModel
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _bottomMargin = 30;
+    }
+    return self;
+}
+
 @end
 
 @implementation FHDetailStaticMapPOIAnnotationView
@@ -130,7 +139,7 @@
     //初始化静态地图
     [self setUpMapView:useNativeMap];
 
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
+    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
     CGRect mapFrame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, mapHeight);
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
@@ -138,14 +147,14 @@
 
     [self.contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.mapMaskBtn);
-        make.bottom.mas_greaterThanOrEqualTo(self.mapMaskBtn).offset(20);
+        make.bottom.mas_greaterThanOrEqualTo(self.mapMaskBtn).offset(30);
     }];
 }
 
 //TODO zlj 判断使用native地图
 - (void)addCenterAnnotationMapOnly:(BOOL)useNativeMap {
     self.centerAnnotation.coordinate = self.centerPoint;
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
+    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
     CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, mapHeight);
 
     if (!useNativeMap) {
@@ -182,7 +191,7 @@
     self.starHeaderView.frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 110);
     self.segmentedControl.frame = CGRectMake(0,self.headerView.bottom, MAIN_SCREEN_WIDTH, 50);
 
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
+    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
     CGRect mapFrame = CGRectMake(0, self.segmentedControl.bottom, MAIN_SCREEN_WIDTH, mapHeight);
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
@@ -237,13 +246,13 @@
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.sectionTitles = @[@"交通(0)", @"购物(0)", @"医院(0)", @"教育(0)"];
     _segmentedControl.selectionIndicatorHeight = 2;
-    _segmentedControl.selectionIndicatorColor = [UIColor themeRed1];
+    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange1];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _segmentedControl.isNeedNetworkCheck = NO;
 
     NSDictionary *attributeNormal = @{NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor themeGray3]};
-    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor themeRed1]};
+    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor themeOrange1]};
 
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
@@ -263,7 +272,7 @@
 }
 
 - (void)setUpMapView:(BOOL)useNativeMap {
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
+    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
     CGRect mapRect = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, mapHeight);
 
     if (useNativeMap) {
@@ -286,7 +295,7 @@
 }
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
-    CGFloat mapHeight = MAIN_SCREEN_WIDTH * 7.0f / 16.0f;
+    CGFloat mapHeight = MAIN_SCREEN_WIDTH * kStaticMapHWRatio;
     CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, mapHeight);
     WeakSelf;
     [[FHDetailMapViewSnapService sharedInstance] takeSnapWith:self.centerPoint frame:frame targetRect:frame annotations:annotations delegate:self block:^(FHDetailMapSnapTask *task, UIImage *image, BOOL success) {

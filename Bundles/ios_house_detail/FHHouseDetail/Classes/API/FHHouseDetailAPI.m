@@ -22,7 +22,7 @@
 #import "FHDetailFloorPanDetailInfoModel.h"
 #import "FHTransactionHistoryModel.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import <BDAgileLog.h>
+#import "BDAgileLog.h"
 #import <FHHouseBase/FHMainApi.h>
 #import <TTInstallService/TTInstallIDManager.h>
 #import "TTBaseMacro.h"
@@ -125,8 +125,8 @@
 }
 
 // 租房-周边房源
-+ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId
-                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion {
++ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId class:(Class)cls
+                            completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/related_rent"];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -137,8 +137,9 @@
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_RENT;
 
     __weak typeof(self)wself = self;
-    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHHouseRentRelatedResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
-        FHHouseRentRelatedResponseModel* model = (FHHouseRentRelatedResponseModel*)m;
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:cls completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
+//        FHHouseRentRelatedResponseModel* model = (FHHouseRentRelatedResponseModel*)m;
+        id<FHBaseModelProtocol> model = m;
         if (!error && model) {
             if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
                 error = nil;
@@ -367,7 +368,7 @@
                                  offset:(NSString *)offset
                                   query:(NSString*)query
                                   count:(NSInteger)count
-                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion {
+                             completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingFormat:@"/f100/api/related_court?court_id=%@&offset=%@",houseId,offset];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -375,7 +376,7 @@
         url = [NSString stringWithFormat:@"%@&%@",url,query];
     }
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_COURT;
-    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedCourtModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHListResultHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion(model,error);
         }

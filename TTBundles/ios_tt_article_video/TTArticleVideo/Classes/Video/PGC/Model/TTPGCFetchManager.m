@@ -7,7 +7,7 @@
 //
 
 #import "TTPGCFetchManager.h"
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "TTDefaultJSONResponseSerializer.h"
 
 static NSString *url = @"http://ic.snssdk.com/video_api/get_video_pgc/";

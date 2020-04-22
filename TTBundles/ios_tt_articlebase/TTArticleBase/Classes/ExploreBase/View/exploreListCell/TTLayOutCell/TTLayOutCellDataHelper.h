@@ -46,6 +46,7 @@
 + (NSString *)getTimeDurationStringWithOrderedData:(ExploreOrderedData *)data;
 + (NSString *)getUserAuthInfoWithOrderedData:(ExploreOrderedData *)data;
 + (NSString *)getUserDecorationWithOrderedData:(ExploreOrderedData *)data;
++ (NSDictionary *)getCustomSourceImageDataWithOrderedData:(ExploreOrderedData *)data;
 + (BOOL)isFollowedWithOrderedData:(ExploreOrderedData *)data;
 + (BOOL)userIsFollowedByOthersWithOrderedData:(ExploreOrderedData *)data;
 

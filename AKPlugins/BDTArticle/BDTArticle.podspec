@@ -30,16 +30,6 @@ Pod::Spec.new do |s|
 
     s.source_files = 'BDTArticle/Classes/**/*'
 
-    s.dependency 'TTFriendRelation'
-    s.dependency 'TTBaseLib'
-    s.dependency 'TTAdModule'
-    s.dependency 'TTNewsAccountBusiness'
-    s.dependency 'TTPlatformUIModel'
-    s.dependency 'TTImage'
-    s.dependency 'Crashlytics'
-    s.dependency 'TTUGCFoundation/TTUGCActionDataService'
-    s.dependency 'TTNetworkManager', '~> 2.2'
-    s.dependency 'TTSettingsManager', '>= 0.3'
 
 end
 

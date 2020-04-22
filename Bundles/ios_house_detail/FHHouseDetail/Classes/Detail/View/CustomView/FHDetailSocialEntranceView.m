@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailSocialEntranceView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -18,7 +18,7 @@
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import "FHHouseNewsSocialModel.h"
 #import "FHDetailNoticeAlertView.h"
 #import "UIImage+FIconFont.h"
@@ -247,7 +247,7 @@
 {
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc]init];
-        UIImage *img = ICON_FONT_IMG(13, @"\U0000e673", nil);
+        UIImage *img = ICON_FONT_IMG(24, @"\U0000e673", nil);
         [_closeBtn setImage:img forState:UIControlStateNormal];
         [_closeBtn setImage:img forState:UIControlStateHighlighted];
     }
@@ -263,8 +263,8 @@
         _submitBtn.titleLabel.font = [UIFont themeFontRegular:16];
         [_submitBtn setTitle:@"立即加入" forState:UIControlStateNormal];
         [_submitBtn setTitle:@"立即加入" forState:UIControlStateHighlighted];
-        _submitBtn.layer.cornerRadius = 4;
-        _submitBtn.backgroundColor = [UIColor themeRed1];
+        _submitBtn.layer.cornerRadius = 20; //4;
+        _submitBtn.backgroundColor = [UIColor themeOrange4];
     }
     return _submitBtn;
 }
@@ -306,7 +306,7 @@
     _rightBgView = [[UIView alloc] initWithFrame:CGRectZero];
     _rightBgView.layer.cornerRadius = 4;
     _rightBgView.clipsToBounds = YES;
-    _rightBgView.backgroundColor = [UIColor themeRed1];
+    _rightBgView.backgroundColor = [UIColor themeOrange4];
     [self addSubview:_rightBgView];
     
     _messageLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];

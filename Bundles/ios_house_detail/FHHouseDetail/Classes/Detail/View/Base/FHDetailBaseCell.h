@@ -6,14 +6,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Masonry.h>
-#import <UIFont+House.h>
-#import <UIColor+Theme.h>
+#import "Masonry.h"
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
 #import "FHHouseDetailBaseViewModel.h"
 #import "FHHouseShadowImageType.h"
+#import "FHDetailCommonDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -54,11 +55,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@class FHDetailBaseCollectionCell;
+@protocol FHDetailBaseCollectionCellDelegate <NSObject>
+
+- (void)clickCellItem:(UIView *)itemView onCell:(FHDetailBaseCollectionCell*)cell;
+
+@end
 // FHDetailBaseCollectionCell
 @interface FHDetailBaseCollectionCell : UICollectionViewCell
 
 // 当前cell的模型数据
 @property (nonatomic, weak , nullable) id currentData;
+
+// 当前cell的代理对象
+@property (nonatomic, weak) id<FHDetailBaseCollectionCellDelegate> delegate;
 
 // 当前方法不需重写
 + (Class)cellViewClass;

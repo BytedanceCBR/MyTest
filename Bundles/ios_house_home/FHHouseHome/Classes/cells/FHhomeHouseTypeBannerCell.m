@@ -6,16 +6,16 @@
 //
 
 #import "FHhomeHouseTypeBannerCell.h"
-#import <UIFont+House.h>
-#import <UIColor+Theme.h>
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
 #import "FHEnvContext.h"
 #import "FHConfigModel.h"
 #import "UIImageView+BDWebImage.h"
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import "FHHouseBridgeManager.h"
-#import <TTRoute.h>
-#import <FHHomeConfigManager.h>
-#import <FHHomeCellHelper.h>
+#import "TTRoute.h"
+#import "FHHomeConfigManager.h"
+#import "FHHomeCellHelper.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
 
 @interface FHhomeHouseTypeBannerCell()
@@ -64,7 +64,7 @@
     
     CGFloat viewWidth = ([UIScreen mainScreen].bounds.size.width - 32) / 4.0f;
     if ([TTDeviceHelper isScreenWidthLarge320]) {
-        viewWidth = ([UIScreen mainScreen].bounds.size.width - 30) / 4.0f;
+        viewWidth = ([UIScreen mainScreen].bounds.size.width - 24) / 4.0f;
     }
     CGFloat scaleRatio = 0.9;
 
@@ -78,7 +78,7 @@
         FHConfigDataOpData2ItemsModel *itemModel = items[i];
 
         UIView *containView = [UIView new];
-        [containView setFrame:CGRectMake( i * viewWidth + 15, 8.0f, viewWidth, 80)];
+        [containView setFrame:CGRectMake( i * viewWidth + 12, 8.0f, viewWidth, 80)];
         [containView setBackgroundColor:[UIColor clearColor]];
         containView.layer.cornerRadius = 2;
         

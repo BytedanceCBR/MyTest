@@ -8,10 +8,10 @@
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import "FHHouseType.h"
 #import "FHHouseDetailAPI.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "YYCache.h"
 #import <FHCommonUI/ToastManager.h>
-#import <TTReachability.h>
+#import "TTReachability.h"
 #import <TTPhotoScrollVC/TTPhotoScrollViewController.h>
 #import "FHDetailBottomBarView.h"
 #import "TTAccount.h"
@@ -20,11 +20,12 @@
 #import <FHHouseBase/FHGeneralBizConfig.h>
 #import <FHHouseBase/FHEnvContext.h>
 #import "IMManager.h"
-#import <HMDTTMonitor.h>
-#import <FHUtils.h>
-#import <NSDictionary+TTAdditions.h>
-#import <FHIESGeckoManager.h>
-#import <FHRNHelper.h>
+#import "HMDTTMonitor.h"
+#import "FHUtils.h"
+#import "NSDictionary+TTAdditions.h"
+#import "FHIESGeckoManager.h"
+#import "FHRNHelper.h"
+#import <TTSettingsManager/TTSettingsManager.h>
 
 #define IM_OPEN_URL @"im_open_url"
 
@@ -87,6 +88,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [clickImParams addEntriesFromDictionary:dict];
         clickImParams[@"im_open_url"] = nil;
     }
+    clickImParams[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"click_im" params:clickImParams];
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
     dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
@@ -105,9 +107,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (!isEmptyString(source)) {
         userInfoDict[@"source"] = source;
     }
+    NSString *realtorPosition = extra[@"realtor_position"];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    
     [self silentFollow:extra];
 }
 

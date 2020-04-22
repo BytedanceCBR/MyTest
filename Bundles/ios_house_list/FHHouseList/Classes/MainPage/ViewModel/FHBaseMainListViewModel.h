@@ -59,6 +59,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)addStayLog:(NSTimeInterval)duration;
 
+- (void)viewDidAppear:(BOOL)animated;
+
 @end
 
 NS_ASSUME_NONNULL_END

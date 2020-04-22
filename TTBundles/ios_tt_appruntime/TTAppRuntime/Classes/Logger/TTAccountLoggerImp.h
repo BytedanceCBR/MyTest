@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TTAccountSDK.h>
-#import <TTAccountMonitorProtocol.h>
+#import "TTAccountSDK.h"
+#import "TTAccountMonitorProtocol.h"
 #import <TTAccountSDK/TTAccountAuthLogger.h>
 
 

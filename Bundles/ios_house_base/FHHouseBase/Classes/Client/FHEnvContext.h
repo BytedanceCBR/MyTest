@@ -61,6 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isRefreshFromAlertCitySwitch;
 @property (nonatomic, assign) BOOL isRefreshFromCitySwitch;
 @property (nonatomic, assign) BOOL isClickTab;
+@property (nonatomic, assign) BOOL isShowingHomeHouseFind;
 @property (nonatomic, copy) NSString * refreshConfigRequestType;
 
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
@@ -298,6 +299,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)addRemoteNotification:(UIApplication *)application userInfo:(NSDictionary *)userInfo;
 
 -(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler ;
+
++ (NSString *)getCurrentTabIdentifier;
 
 @end
 

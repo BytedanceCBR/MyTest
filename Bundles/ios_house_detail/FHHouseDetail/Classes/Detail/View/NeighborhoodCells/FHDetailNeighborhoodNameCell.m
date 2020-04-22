@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailNeighborhoodNameCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -18,7 +18,7 @@
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 
 @interface FHDetailNeighborhoodNameCell ()
 
@@ -96,7 +96,7 @@
     [self.contentView addSubview:_subNameLabel];
     
     _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:18];
-    _priceLabel.textColor = [UIColor themeRed1];
+    _priceLabel.textColor = [UIColor themeOrange1];
     _priceLabel.font = [UIFont themeFontMedium:18];
     _priceLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_priceLabel];

@@ -28,7 +28,7 @@
 #import "FLEXManager.h"
 #import "TTMemoryMonitor.h"
 #import "TTTrackerWrapper.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "TTSandBoxHelper.h"
 #import "TSVDebugViewController.h"
 #import "TADDebugViewController.h"
@@ -46,7 +46,7 @@
 #import "TTVideoTip.h"
 #import "TTLogServer.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 
 //#import "TTABAuthorizationManager.h"
 #import "TTCanvasBundleManager.h"
@@ -93,11 +93,13 @@
 //#import <BDNetworkDevMonitor/BDNetworkDevMonitor.h>
 
 #import "TTInstallResetDevicePage.h"
-#import <BDAgileLog.h>
+#import "BDAgileLog.h"
 //#import <TTBaseLib/UIAlertController+TTAdditions.h>
 #import "UIAlertController+TTAdditions.h"
 #import "HMDSRWTESTEnvironment.h"
 #import "BDTFPSBar.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "IMManager.h"
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
@@ -164,6 +166,10 @@ extern NSString *const BOE_OPEN_KEY ;
         
         NSMutableArray *itemArray = [NSMutableArray array];
 
+        STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Schema（H5）页面跳转" target:self action:@selector(_openHtmlBridge)];
+        htmlBridgeDebugItem.switchStyle = NO;
+        [itemArray addObject:htmlBridgeDebugItem];
+        
         STTableViewCellItem *logViewItem = [[STTableViewCellItem alloc] initWithTitle:@"埋点验证" target:self action:@selector(_openLogViewSetting)];
         logViewItem.switchStyle = NO;
         [itemArray addObject:logViewItem];
@@ -171,10 +177,6 @@ extern NSString *const BOE_OPEN_KEY ;
         STTableViewCellItem *clientABDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"😘F项目客户端AB实验调试选项点这里😘" target:self action:@selector(_openABTestSDKClientABTestVC)];
         clientABDebugItem.switchStyle = NO;
         [itemArray addObject:clientABDebugItem];
-
-        STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"H5与原生交互测试" target:self action:@selector(_openHtmlBridge)];
-        htmlBridgeDebugItem.switchStyle = NO;
-        [itemArray addObject:htmlBridgeDebugItem];
         
         STTableViewCellItem *rnBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"RN_Debug" target:self action:@selector(_openRNBridge)];
         rnBridgeDebugItem.switchStyle = NO;
@@ -721,8 +723,35 @@ extern NSString *const BOE_OPEN_KEY ;
     //
     //        [dataSource addObject:sectionVideoAD];
     //    }
+    {
+        // 弹窗屏蔽策略清空
+        STTableViewCellItem *popupDeleteConfigItem = [[STTableViewCellItem alloc] initWithTitle:@"清空当前设备的弹窗屏蔽配置策略" target:self action:@selector(clearPopupViewAckConfig)];
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"运营位弹窗" items:@[popupDeleteConfigItem]];
+            
+        [dataSource addObject:section];
+    }
+    
+    {
+        // im相关调试选项
+        STTableViewCellItem *toggleIMConnectionItem = [[STTableViewCellItem alloc] initWithTitle:@"IM强制HTTPS(短连接)，重启生效" target:self action:nil];
+        toggleIMConnectionItem.switchStyle = YES;
+        toggleIMConnectionItem.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
+        toggleIMConnectionItem.switchAction = @selector(toggleIMConnection);
+        toggleIMConnectionItem.detail = [NSString stringWithFormat:@"https抓包 /message/send  请求，验证是否生效"];
+        
+        STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"IM相关调试选项" items:@[toggleIMConnectionItem]];
+        
+        [dataSource addObject:section];
+    }
+    
     
     return dataSource;
+}
+
+- (void)toggleIMConnection {
+    BOOL isShortConnectEnable = [[NSUserDefaults standardUserDefaults] boolForKey:@"_IM_ShortConnection_Enable_"];
+    [[NSUserDefaults standardUserDefaults] setBool:!isShortConnectEnable forKey:@"_IM_ShortConnection_Enable_"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(void)makeACrash {
@@ -759,6 +788,24 @@ extern NSString *const BOE_OPEN_KEY ;
     [searchDictionary setObject:@"kTTFirstLaunchAccount" forKey:(id)kSecAttrAccount];
     [searchDictionary setObject:@"kTTFirstLaunchService" forKey:(id)kSecAttrService];
     SecItemDelete((CFDictionaryRef)searchDictionary);
+}
+
+- (void)clearPopupViewAckConfig {
+    [[FHPopupViewManager shared].dataFetcher requestDeleteAckPopupConfigCompletion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        
+        NSString *content = @"本设备的弹窗屏蔽策略已重置";
+        if(error) {
+            content = @"本设备的弹窗屏蔽策略重置失败";
+        }
+        
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"运营位弹窗" message:content preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+        
+        [alertVC addAction:confirmAction];
+        
+        [self presentViewController:alertVC animated:YES completion:nil];
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -906,8 +953,32 @@ extern NSString *const BOE_OPEN_KEY ;
 #endif
 }
 
+- (void)_gotoHtmlBridge:(NSString *)urlStrInput {
+    NSString *stringToSave = [NSString stringWithString:urlStrInput];
+    
+    NSString *unencodedString = urlStrInput;
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                    (CFStringRef)unencodedString,
+                                                                                                    NULL,
+                                                                                                    (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                    kCFStringEncodingUTF8));
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+    
+    [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
+    
+    NSURL *url = [TTURLUtils URLWithString:urlStr];
+    [[TTRoute sharedRoute] openURLByPushViewController:url];
+}
+
 - (void)_openHtmlBridge
 {
+    NSString *tempUrl = [UIPasteboard generalPasteboard].string;
+    if (tempUrl.length > 0 && [tempUrl hasPrefix:@"http"]) {
+        [self _gotoHtmlBridge:tempUrl];
+        [UIPasteboard generalPasteboard].string = @"";
+        return;
+    }
+    
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"请输入调试地址" message:nil preferredType:TTThemedAlertControllerTypeAlert];
     
 //    [alertVC addTextFieldWithConfigurationHandler:^(UITextField *textField) {
@@ -935,20 +1006,31 @@ extern NSString *const BOE_OPEN_KEY ;
         if (!urlStrInput || urlStrInput.length == 0) {
             return ;
         }
-        NSString *stringToSave = [NSString stringWithString:urlStrInput];
         
-        NSString *unencodedString = urlStrInput;
-        NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                                                        (CFStringRef)unencodedString,
-                                                                                                        NULL,
-                                                                                                        (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                                        kCFStringEncodingUTF8));
-        NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
-        
-        [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
-        
-        NSURL *url = [TTURLUtils URLWithString:urlStr];
-        [[TTRoute sharedRoute] openURLByPushViewController:url];
+        if([urlStrInput containsString:@"sslocal://"]){
+            NSString *stringToSave = [NSString stringWithString:urlStrInput];
+             [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
+             
+             NSURL *url = [TTURLUtils URLWithString:urlStrInput];
+             [[TTRoute sharedRoute] openURLByPushViewController:url];
+        }else
+        {
+            NSString *stringToSave = [NSString stringWithString:urlStrInput];
+             
+             NSString *unencodedString = urlStrInput;
+             NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                             (CFStringRef)unencodedString,
+                                                                                                             NULL,
+                                                                                                             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                             kCFStringEncodingUTF8));
+             NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+             
+             [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
+             
+             NSURL *url = [TTURLUtils URLWithString:urlStr];
+             [[TTRoute sharedRoute] openURLByPushViewController:url];
+        }
+ 
         
         alertVCWeak = nil;
     }];
@@ -1172,12 +1254,14 @@ extern NSString *const BOE_OPEN_KEY ;
     NSString *directory = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject];
     NSString *path = [directory stringByAppendingPathComponent:@"alog"];
     NSArray *array = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+    WeakSelf;
     for (NSString *item in array) {
         if (![item hasSuffix:@".alog"]) {
             continue;
         }
 
         [alertController addAction:[UIAlertAction actionWithTitle:item style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            StrongSelf;
             NSString *filePath = [path stringByAppendingPathComponent:item];
             [self _shareLog:filePath];
         }]];

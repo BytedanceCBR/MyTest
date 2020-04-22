@@ -7,8 +7,8 @@
 //
 
 #import "NewsBaseDelegate.h"
-#import <TTWeChatShare.h>
-#import <TTAccountBusiness.h>
+#import "TTWeChatShare.h"
+#import "TTAccountBusiness.h"
 #import "TTRoute.h"
 #import "TTIndicatorView.h"
 #import "SSFeedbackManager.h"
@@ -20,6 +20,7 @@
 #import "ExploreLogicSetting.h"
 
 #import "TTTrackerWrapper.h"
+#import "TTReachability.h"
 
 //#if GREY
 //#import "TTSparkRescue.h"
@@ -76,14 +77,14 @@
 #import "TTViewControllerHierarchyHelper.h"
 #import "TTLocalImageTracker.h"
 #import <TTDialogDirector/TTDialogDirector.h>
-#import <TTMonitor/TTExtensions.h>
-#import <Crashlytics/Crashlytics.h>
+#import "TTNetworkHelper.h"
 #import "TTLaunchManager.h"
 #import "GAIAEngine+TTBase.h"
 #import "BDUGDeepLinkManager.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import <FHHouseBase/FHEnvContext.h>
 
+#import "TTPushServiceDelegate.h"
 
 #if INHOUSE
 #import "TTStartupDebugGroup.h"
@@ -98,7 +99,7 @@ static NSTimeInterval lastTime;
 
 //static NSString *const kTTUseWebViewLaunch = @"kTTUseWebViewLaunch";
 
-@interface NewsBaseDelegate()<CrashlyticsDelegate, TTWeChatSharePayDelegate, TTWeChatShareRequestDelegate, BDUGDeepLinkDelegate>{
+@interface NewsBaseDelegate()< TTWeChatSharePayDelegate, TTWeChatShareRequestDelegate, BDUGDeepLinkDelegate>{
     NSUInteger _reportTryCount;
     NSMutableDictionary * _remotoNotificationDict;
 }
@@ -162,11 +163,29 @@ static NSTimeInterval lastTime;
     return YES;
 }
 
+- (NetworkStatus)_syncToGetCurrentNetWorkStatus
+{
+    NetworkStatus status = [[TTReachability reachabilityWithHostName:@"www.apple.com"] currentReachabilityStatus];
+    if (status == ReachableViaWiFi) {
+        return ReachableViaWiFi;
+    } else if (status == ReachableViaWWAN) {
+        switch ([TTReachability currentCellularConnectionForService:TTCellularServiceTypePrimary]) {
+            case TTCellularNetworkConnection2G:
+            case TTCellularNetworkConnection3G:
+            case TTCellularNetworkConnection4G:
+            default:
+                return ReachableViaWWAN;
+        }
+    } else {
+        return NotReachable;
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     [GAIAEngine appDidFinishLaunching];
     // add by zjing 这行代码要保留，为了解决启动时addObserver引起的死锁crash问题，我只是代码的搬运工，有问题找谷妈妈
-    [TTExtensions networkStatus];
+    [self _syncToGetCurrentNetWorkStatus];
     
     self.userLaunchTheAppDirectly = SSIsEmptyDictionary(launchOptions);
     if ([TTVersionHelper isFirstLaunchAfterUpdate]) {
@@ -288,57 +307,24 @@ static NSTimeInterval lastTime;
     [self startRegisterRemoteNotificationAfterDelay:.5];
 }
 
-+ (void)startRegisterRemoteNotificationAfterDelay:(float)secs
++ (void)startRegisterRemoteNotificationAfterDelay:(int)secs
 {
     if (![[FHEnvContext sharedInstance ] hasConfirmPermssionProtocol]) {
         return;
     }
     
     [[TTAuthorizeManager sharedManager].pushObj filterAuthorizeStrategyWithCompletionHandler:^{
-        [self startRegisterRemoteNotificationAfterAuthorizeWithDelay:secs];
+        [self registerPush:secs];
     } sysAuthFlag:0]; //显示系统弹窗前显示自有弹窗的逻辑下掉，0代表直接显示系统弹窗，1代表先自有弹窗，再系统弹窗
 }
-
-+ (void)startRegisterRemoteNotificationAfterAuthorizeWithDelay:(float)secs{
-    if(secs > 0)
-    {
-        int64_t delayInSeconds = secs;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            if ([TTDeviceHelper OSVersionNumber] >= 10.0) {
-                [[TTNotificationCenterDelegate sharedNotificationCenterDelegate] registerNotificationCenter];
-            }
-            else if ([TTDeviceHelper OSVersionNumber] >= 8.0) {
-                UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge
-                                                                                                     |UIRemoteNotificationTypeSound
-                                                                                                     |UIRemoteNotificationTypeAlert) categories:nil];
-                [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-                
-            }
-            else {
-                [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                                                       UIRemoteNotificationTypeAlert |
-                                                                                       UIRemoteNotificationTypeSound)];
-            }
++ (void)registerPush:(int)secs {
+    
+    if (secs > 0) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(secs * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[TTPushServiceDelegate sharedInstance] registerNotification];
         });
-    }
-    else
-    {
-        if ([TTDeviceHelper OSVersionNumber] >= 10.0) {
-            [[TTNotificationCenterDelegate sharedNotificationCenterDelegate] registerNotificationCenter];
-        }
-        else if ([TTDeviceHelper OSVersionNumber] >= 8.0) {
-            UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge
-                                                                                                 |UIRemoteNotificationTypeSound
-                                                                                                 |UIRemoteNotificationTypeAlert) categories:nil];
-            [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-            
-        }
-        else {
-            [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                                                   UIRemoteNotificationTypeAlert |
-                                                                                   UIRemoteNotificationTypeSound)];
-        }
+    } else {
+        [[TTPushServiceDelegate sharedInstance] registerNotification];
     }
 }
 
@@ -763,12 +749,15 @@ static NSTimeInterval lastTime;
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-    CGPoint location = [[[event allTouches] anyObject] locationInView:self.window];
-    CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
-    
-    if (CGRectContainsPoint(statusBarFrame, location)) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kScrollToTopKey" object:nil];
-    }
+    if ([[UIDevice currentDevice].systemVersion doubleValue] < 10.0) {
+            CGPoint location = [[[event allTouches] anyObject] locationInView:self.window];
+         CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
+         
+         if (CGRectContainsPoint(statusBarFrame, location)) {
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"kScrollToTopKey" object:nil];
+         }
+     }
+
 }
 
 #pragma mark - TTWeChatSharePayDelegate

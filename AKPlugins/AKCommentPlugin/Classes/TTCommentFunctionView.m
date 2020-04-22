@@ -9,7 +9,7 @@
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTUIWidget/TTAlphaThemedButton.h>
-#import <TTUGCAttributedLabel.h>
+#import "TTUGCAttributedLabel.h"
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
 #import "TTCommentKitchenConfig.h"

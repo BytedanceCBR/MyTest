@@ -292,7 +292,7 @@ NSString *const kTTPublishUnloginImageName = @"publish_unlogin";
 - (void)connectionChanged:(NSNotification *)notification {
     TTPersistence *persistence = [TTPersistence persistenceWithName:kTTTopBarConfigurationPath];
     if (((NSNumber *)[persistence valueForKey:kTTTopBarImagesDownloadKey]).boolValue == YES) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:TTReachabilityChangedNotification object:nil];
         return;
     }
     [self retryDonwloadZipFileIfNeed];
@@ -316,7 +316,7 @@ NSString *const kTTPublishUnloginImageName = @"publish_unlogin";
             } else {
                 static dispatch_once_t onceToken;
                 dispatch_once(&onceToken, ^{
-                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
                 });
             }
             
@@ -370,7 +370,7 @@ NSString *const kTTPublishUnloginImageName = @"publish_unlogin";
             LOGD(@"TTTopBar 资源包md5不匹配!!!");
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^{
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
             });
         }
     });

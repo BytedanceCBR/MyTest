@@ -190,43 +190,6 @@
 }
 @end
 
-@implementation FHVideoHouseVideoVideoInfosModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"vHeight": @"v_height",
-                           @"imageHeight": @"image_height",
-                           @"vWidth": @"v_width",
-                           @"imageWidth": @"image_width",
-                           @"coverImageUrl": @"cover_image_url",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
-@implementation FHVideoHouseVideoModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"videoInfos": @"video_infos",
-                           @"infoSubTitle": @"info_sub_title",
-                           @"infoTitle": @"info_title",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailNeighborhoodDataTotalSalesListModel
 + (JSONKeyMapper*)keyMapper
@@ -263,4 +226,134 @@
 }
 @end
 
+@implementation FHDetailNeighborhoodDataQuestionModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"questionWrite": @"question_write",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end
 
+@implementation FHDetailNeighborhoodDataQuestionQuestionWriteModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"contentEmptyTitle": @"content_empty_title",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end
+
+@implementation FHDetailNeighborhoodDataQuestionContentModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"questionListSchema": @"question_list_schema",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end
+
+
+@implementation FHDetailNeighborhoodDataCommentsModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"commentsWrite": @"comments_write",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end
+
+
+@implementation FHDetailNeighborhoodDataCommentsCommentsWriteModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"contentEmptyTitle": @"content_empty_title",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end
+
+@implementation FHDetailNeighborhoodDataCommentsContentModel
++ (JSONKeyMapper*)keyMapper
+    {
+        NSDictionary *dict = @{
+                               @"commentsListSchema": @"comments_list_schema",
+                               };
+        return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+            return dict[keyName]?:keyName;
+        }];
+    }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+    {
+        return YES;
+    }
+    @end
+
+@implementation FHDetailNeighborhoodDataStrategyArticleListModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"articleType": @"article_type",
+    @"desc": @"copy_writing",
+    @"groupId": @"group_id",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailNeighborhoodDataStrategyModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"articleList": @"article_list",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end

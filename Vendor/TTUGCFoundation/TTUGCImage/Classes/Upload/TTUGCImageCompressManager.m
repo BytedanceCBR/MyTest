@@ -9,13 +9,14 @@
 #import "TTUGCImageCompressManager.h"
 #import <Photos/Photos.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-#import <TTImagePickerManager.h>
+#import "TTImagePickerManager.h"
 #import <TTBaseLib/NSStringAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
-#import <YYImageCoder.h>
+#import "YYImageCoder.h"
 #import "TTUGCImageCompressHelper.h"
 #import "TTImagePickerDefineHead.h"
 #import "TTImagePickerManager.h"
+#import "TTAsset+FBusiness.h"
 #import <TTKitchen/TTKitchen.h>
 #import "NSData+ImageContentType.h"
 #import <TTKitchenExtension/TTKitchenExtension.h>
@@ -326,9 +327,11 @@
                         }
 
                         task.photoResult = nil;
-                        TTAssetModel *model = [[TTImagePickerManager manager] assetModelWithAsset:task.originalSource
+                        TTAsset *asset = [[TTImagePickerManager manager] assetModelWithAsset:task.originalSource
                                                                                 allowPickingVideo:NO
                                                                                 allowPickingImage:YES];
+                        
+                        TTAssetModel *model = [TTAssetModel convertFromTTAsset:asset];
                         task.assetModel = model;
                         
                         [self getPhotoWithAssetModel:model completion:^(TTImagePickerResult *pickerResult) {
@@ -370,7 +373,17 @@
                           task:(TTUGCImageCompressTask *)task
 {
     if (model.type == TTAssetModelMediaTypePhotoGif) {
-        [[TTImagePickerManager manager] getOriginalPhotoDataWithAsset:model.asset completion:^(NSData *data, BOOL isDegraded) {
+        
+        TTImagePickerImageConfigItem *configItem = [TTImagePickerImageConfigItem getDefaultSettings];
+        configItem.enableOriginal = YES;
+        
+        [[TTImagePickerManager manager] getPhotoDataWithAsset:model.asset configItem:configItem progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+            
+            for (iCloudSyncProgressHandler block in task.iCloudProgresses) {
+                block(progress, error, stop, info);
+            }
+            
+        } completion:^(NSData *data, NSDictionary *info, BOOL isDegraded) {
             
             if (!isDegraded ) {
                 
@@ -381,21 +394,13 @@
                         block(NO);
                     }
                 }
-              
+                
                 TTImagePickerResult* result = [[TTImagePickerResult alloc] init];
                 result.image = [UIImage imageWithData:data];
                 result.data = data;
-                result.assetModel = model;
+                result.assetModel = [TTAsset convertFromTTAssetModel:model];
                 completion(result);
-             
             }
-
-        } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-            
-            for (iCloudSyncProgressHandler block in task.iCloudProgresses) {
-                block(progress, error, stop, info);
-            }
-          
         }];
         
     }else{
@@ -404,7 +409,15 @@
             PHAsset *phAsset = (PHAsset *)model.asset;
             limitWidth = [TTUGCImageCompressHelper getLimitSizeWithImageSize:CGSizeMake(phAsset.pixelWidth, phAsset.pixelHeight)].width;
         }
-        [[TTImagePickerManager manager] getPhotoWithAssetNonScale:model.asset photoWidth:limitWidth completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+        
+        TTImagePickerImageConfigItem *configItem = [TTImagePickerImageConfigItem getDefaultSettings];
+        configItem.photoWidth = limitWidth;
+        configItem.enableICloud = YES;
+        [[TTImagePickerManager manager] getPhotoWithAsset:model.asset configItem:configItem progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+            for (iCloudSyncProgressHandler block in task.iCloudProgresses) {
+                block(progress, error, stop, info);
+            }
+        } completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
             if (!isDegraded) {
                 for (iCloudSyncCompletion block in task.iCloudCompletes) {
                     if (photo) {
@@ -415,16 +428,10 @@
                 }
                 TTImagePickerResult* result = [[TTImagePickerResult alloc] init];
                 result.image = photo;
-                result.assetModel = model;
+                result.assetModel = [TTAsset convertFromTTAssetModel:model];
                 completion(result);
-              
             }
-          
-        } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-            for (iCloudSyncProgressHandler block in task.iCloudProgresses) {
-                block(progress, error, stop, info);
-            }
-        } isIcloudEabled:YES isSingleTask:NO isCached:NO];
+        }];
     }
 }
 

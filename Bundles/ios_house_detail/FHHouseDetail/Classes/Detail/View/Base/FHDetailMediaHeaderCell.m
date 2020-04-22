@@ -14,8 +14,8 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "FHMultiMediaVideoCell.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
-#import <NSString+URLEncoding.h>
-#import <FHUtils.h>
+#import "NSString+URLEncoding.h"
+#import "FHUtils.h"
 #import "FHMultiMediaModel.h"
 
 @interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
@@ -143,7 +143,7 @@
     }
     
     for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
-        if (listModel.houseImageTypeName.length > 0) {
+//        if (listModel.houseImageTypeName.length > 0) {
             NSString *groupType = nil;
             if(listModel.houseImageType == FHDetailHouseImageTypeApartment){
                 groupType = @"户型";
@@ -170,7 +170,7 @@
                 }
                 index++;
             }
-        }
+//        }
     }
     
     self.model.medias = itemArray;

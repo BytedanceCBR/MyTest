@@ -16,19 +16,18 @@
 #import "SSCommonLogic.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "UIViewController+Track.h"
-#import <Crashlytics/Crashlytics.h>
 #import "TTInteractExitHelper.h"
 #import <TTServiceKit/TTServiceCenter.h>
 #import "TTAdManagerProtocol.h"
-#import <TTInteractExitHelper.h>
+#import "TTInteractExitHelper.h"
 #import "TTInterfaceTipHeader.h"
 #import "TTTopBar.h"
 #import "TTCustomAnimationDelegate.h"
 #import "TTAdSplashMediator.h"
 #import <Masonry/Masonry.h>
 #import "Log.h"
-#import <FHEnvContext.h>
-#import <FHIntroduceManager.h>
+#import "FHEnvContext.h"
+#import "FHIntroduceManager.h"
 
 @interface ArticleTabBarStyleNewsListViewController ()<TTInteractExitProtocol>
 
@@ -137,11 +136,19 @@
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     SharedAppDelegate.mainViewDidShow = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MainList_ViewAppear" object:nil];
+    
+    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+         [self viewAppearForEnterType:FHHomeMainTraceEnterTypeClick];
+     }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    
+    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+        [self viewDisAppearForEnterType:FHHomeMainTraceEnterTypeClick];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

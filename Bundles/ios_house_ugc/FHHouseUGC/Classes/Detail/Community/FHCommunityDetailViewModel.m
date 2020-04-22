@@ -25,17 +25,17 @@
 #import "MJRefresh.h"
 #import "FHCommonDefines.h"
 #import "TTUIResponderHelper.h"
-#import <TTUGCEmojiParser.h>
+#import "TTUGCEmojiParser.h"
 #import "TTAccount.h"
 #import "TTAccount+Multicast.h"
 #import "TTAccountManager.h"
 #import "TTHorizontalPagingView.h"
 #import "IMManager.h"
-#import <TTThemedAlertController.h>
+#import "TTThemedAlertController.h"
 #import "FHFeedUGCCellModel.h"
-#import <TTUGCDefine.h>
+#import "TTUGCDefine.h"
 #import <FHUGCCategoryHelper.h>
-#import <UIImage+FIconFont.h>
+#import "UIImage+FIconFont.h"
 
 #define kSegmentViewHeight 52
 
@@ -596,7 +596,26 @@
 - (void)gotoLogin:(FHUGCLoginFrom)from {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setObject:@"community_group_detail" forKey:@"enter_from"];
-    [params setObject:@"feed_like" forKey:@"enter_type"];
+    
+    NSString *enter_type = UT_BE_NULL;
+    switch (from) {
+        case FHUGCLoginFrom_POST:
+            enter_type = @"click_publisher_moments";
+            break;
+        case FHUGCLoginFrom_GROUPCHAT:
+            enter_type = @"ugc_member_talk";
+            break;
+        case FHUGCLoginFrom_VOTE:
+            enter_type = @"click_publisher_vote";
+            break;
+        case FHUGCLoginFrom_WENDA:
+            enter_type = @"click_publisher_question";
+            break;
+        default:
+            break;
+    }
+    [params setObject:enter_type forKey:@"enter_type"];
+    
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
@@ -764,6 +783,7 @@
 -(void)updateFollowStatus:(BOOL)followed{
     [[FHUGCConfig sharedInstance] updateScialGroupDataModel:self.data byFollowed:followed];
     [self updateUIWithData:self.data];
+    [[FHUGCConfig sharedInstance] updateSocialGroupDataWith:self.data];
 }
 
 // 未登录状态下进入圈子详情页，点击发帖，这时候跳转登录，如果登录用户已经关注这个圈子，收取通知来更新状态

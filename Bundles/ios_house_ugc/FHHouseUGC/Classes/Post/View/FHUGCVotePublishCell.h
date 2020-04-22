@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHUGCVotePublishModel.h"
-#import <TTUGCTextView.h>
+#import "TTUGCTextView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

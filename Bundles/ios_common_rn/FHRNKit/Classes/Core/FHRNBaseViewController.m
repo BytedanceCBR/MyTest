@@ -11,27 +11,27 @@
 #import "TTRNKitHelper.h"
 #import "TTRNKit.h"
 #import "TTRNKitMacro.h"
-#import <FHEnvContext.h>
-#import <FHIESGeckoManager.h>
-#import <TTInstallIDManager.h>
+#import "FHEnvContext.h"
+#import "FHIESGeckoManager.h"
+#import "TTInstallIDManager.h"
 #import "FHRNDebugViewController.h"
 #import "FHRNKitMacro.h"
 #import <TTRNKitViewWrapper.h>
 #import <TTRNKitViewWrapper+Private.h>
-#import <UIViewAdditions.h>
-#import <TTUIResponderHelper.h>
-#import <UIViewController+Refresh_ErrorHandler.h>
+#import "UIViewAdditions.h"
+#import "TTUIResponderHelper.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
 #import "RCTRootView.h"
 #import <RCTDevLoadingView.h>
 #import <UIView+BridgeModule.h>
 #import <TTRNBridgeEngine.h>
 #import "FHRNHelper.h"
 #import "RCTDevLoadingView.h"
-#import <HMDTTMonitor.h>
-#import <TTReachability.h>
-#import <FHEnvContext.h>
+#import "HMDTTMonitor.h"
+#import "TTReachability.h"
+#import "FHEnvContext.h"
 #import <TTCommonBridgeManager.h>
-#import <FHUtils.h>
+#import "FHUtils.h"
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -118,7 +118,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
         
         self.isAppeared = NO;
         _traceCache = [NSMutableArray new];
@@ -285,7 +285,9 @@
     {
         [_container mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.bottom.equalTo(self.view);
-            if (@available(iOS 11.0 , *)) {
+            if (@available(iOS 13.0 , *)) {
+                make.top.mas_equalTo(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+            } else if (@available(iOS 11.0 , *)) {
                 make.top.mas_equalTo(44.f + self.view.tt_safeAreaInsets.top);
             } else {
                 make.top.mas_equalTo(65);
@@ -515,8 +517,10 @@
         
     } else if (specialHost) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:specialHost message:nil preferredStyle:UIAlertControllerStyleAlert];
+        __weak UIAlertController *weakAlert = alert;
         [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [alert dismissViewControllerAnimated:NO completion:nil];
+            __strong typeof(weakAlert) strongAlert = weakAlert;
+            [strongAlert dismissViewControllerAnimated:NO completion:nil];
         }]];
         [self presentViewController:alert animated:YES completion:nil];
     }

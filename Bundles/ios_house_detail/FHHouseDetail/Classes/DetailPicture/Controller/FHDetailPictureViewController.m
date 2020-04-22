@@ -236,8 +236,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [self.view addSubview:_topBar];
     __weak typeof(self) weakSelf = self;
     _naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
+    _naviView.showAlbum = self.smallImageInfosModels > 0;
     _naviView.backActionBlock = ^{
         [weakSelf finished];
+    };
+    _naviView.albumActionBlock  = ^{
+        [weakSelf albumBtnClick];
     };
     _naviView.videoTitle.currentTitleBlock = ^(NSInteger currentIndex) {
         // 1 视频 2 图片
@@ -442,14 +446,24 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 在线联系点击
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
+        NSString *fromStr = @"app_oldhouse_picview";
+        NSNumber *cluePage = nil;
+        if (_houseType == FHHouseTypeNewHouse) {
+            fromStr = @"app_newhouse_picview";
+            cluePage = @(FHClueIMPageTypeCNewHousePicview);
+        }
         NSMutableDictionary *extraDic = @{@"realtor_position":@"online",
                                           @"position":@"online",
                                           @"element_from":[self elementFrom],
-                                          @"from":@"app_oldhouse_picview"
+                                          @"from":fromStr
                                           }.mutableCopy;
         NSString *vid = [self videoId];
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
+        }
+        if (cluePage) {
+            extraDic[kFHCluePage] = cluePage;
+            extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
         }
         [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }
@@ -458,6 +472,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 电话咨询点击
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
+        NSString *fromStr = @"app_oldhouse_picview";
+        NSNumber *cluePage = nil;
+        if (_houseType == FHHouseTypeNewHouse) {
+            fromStr = @"app_newhouse_picview";
+            if(self.mediaHeaderModel.contactViewModel.contactPhone.phone.length > 0) {
+                cluePage = @(FHClueCallPageTypeCNewHousePicview);
+            }else {
+                cluePage = @(FHClueFormPageTypeCNewHousePicview);
+            }
+        }
         NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
                                           @"position":@"report_button",
                                           @"element_from":[self elementFrom]
@@ -466,7 +490,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
         }
-        extraDic[@"from"] = @"app_oldhouse_picview";
+        extraDic[@"from"] = fromStr;
+        if (cluePage) {
+            extraDic[kFHCluePage] = cluePage;
+        }
+
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }
@@ -1111,6 +1139,32 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     } else {
         [self dismissAnimated:NO];
     }
+}
+
+- (void)albumBtnClick
+{
+    if (self.imageInfosModels.count == 0) {
+        return;
+    }
+    
+    if (self.albumImageBtnClickBlock) {
+        self.albumImageBtnClickBlock(self.currentIndex);
+    }
+    
+    FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
+    showVC.pictsArray = self.smallImageInfosModels;
+    __weak typeof(self)weakSelf = self;
+    showVC.albumImageBtnClickBlock = ^(NSInteger index){
+        if (index >= 0) {
+            [weakSelf.photoScrollView setContentOffset:CGPointMake(self.view.frame.size.width * index, 0) animated:NO];
+        }
+    };
+    
+    showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
+        [self stayCallBack:stayTime];
+    };
+    
+    [self presentViewController:showVC animated:NO completion:nil];
 }
 
 - (void)backButtonClicked

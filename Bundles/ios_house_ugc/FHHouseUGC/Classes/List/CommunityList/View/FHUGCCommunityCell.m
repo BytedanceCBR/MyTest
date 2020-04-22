@@ -4,7 +4,7 @@
 
 #import "FHUGCCommunityCell.h"
 #import "FHUGCScialGroupModel.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "UIViewAdditions.h"
 
 @interface FHUGCCommunityCell ()

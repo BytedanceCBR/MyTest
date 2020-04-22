@@ -26,7 +26,9 @@
 #import <TTDiggButton/TTDiggButton.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/TTThemeManager.h>
-#import <UIColor+Theme.h>
+#import "UIColor+Theme.h"
+#import "TTAccountLoginManager.h"
+#import "TTAccountManager.h"
 
 
 NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifier";
@@ -392,8 +394,35 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
         [_digButton setClickedBlock:^(TTDiggButtonClickType type) {
             [wself digButtonOnClick:nil];
         }];
+        
+        _digButton.shouldClickBlock = ^BOOL{
+            BOOL ret = [TTAccountManager isLogin];
+            if(ret == NO) {
+                [wself gotoLogin];
+            }
+            return ret;
+        };
     }
     return _digButton;
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *enterFrom = @"feed_detail";
+    [params setObject:enterFrom forKey:@"enter_from"];
+    [params setObject:@"feed_like" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                [wSelf digButtonOnClick:wSelf.digButton];
+            }
+        }
+    }];
 }
 
 - (TTAsyncLabel *)userInfoLabel {

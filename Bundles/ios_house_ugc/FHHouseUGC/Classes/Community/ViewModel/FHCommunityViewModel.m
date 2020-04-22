@@ -9,7 +9,9 @@
 #import "FHCommunityViewController.h"
 #import "FHCommunityCollectionCell.h"
 #import "FHHouseUGCHeader.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
+#import "UIViewAdditions.h"
+#import "TTDeviceHelper.h"
 
 #define kCellId @"cellId"
 #define maxCellCount 2
@@ -208,12 +210,20 @@
     CGFloat top = 0;
     CGFloat safeTop = 0;
     if (@available(iOS 11.0, *)) {
-        safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+        safeTop = self.viewController.view.tt_safeAreaInsets.top;
     }
     if (safeTop > 0) {
         top += safeTop;
     } else {
-        top += [[UIApplication sharedApplication] statusBarFrame].size.height;
+        if([[UIApplication sharedApplication] statusBarFrame].size.height > 0){
+            top += [[UIApplication sharedApplication] statusBarFrame].size.height;
+        }else{
+            if([TTDeviceHelper isIPhoneXSeries]){
+                top += 44;
+            }else{
+                top += 20;
+            }
+        }
     }
     
     if(self.viewController.isUgcOpen){

@@ -6,7 +6,7 @@
 //
 
 #import "FHArticleCellBottomView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHFeedOperationView.h"
@@ -104,7 +104,8 @@
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.positionView.mas_bottom).offset(10);
-        make.left.right.mas_equalTo(self);
+        make.left.mas_equalTo(self).offset(0);
+        make.right.mas_equalTo(self).offset(0);
         make.height.mas_equalTo(5);
     }];
 }
@@ -129,6 +130,15 @@
     }else{
         self.guideView.hidden = YES;
     }
+    
+    self.moreBtn.hidden = cellModel.hiddenMore;
+    
+    [self.bottomSepView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.positionView.mas_bottom).offset(10);
+        make.left.mas_equalTo(self).offset(cellModel.bottomLineLeftMargin);
+        make.right.mas_equalTo(self).offset(-cellModel.bottomLineRightMargin);
+        make.height.mas_equalTo(cellModel.bottomLineHeight);
+    }];
 }
 
 - (void)showPositionView:(BOOL)isShow {

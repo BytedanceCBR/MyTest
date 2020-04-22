@@ -9,7 +9,7 @@
 #import "TTFollowingViewController.h"
 #import "SSThemed.h"
 #import "ArticleFriend.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "FriendDataManager.h"
 #import "TTFollowingDetailCell.h"
 #import "TTFollowingMergeCell.h"

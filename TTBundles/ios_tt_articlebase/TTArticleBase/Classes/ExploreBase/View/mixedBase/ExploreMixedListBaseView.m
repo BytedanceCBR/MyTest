@@ -7,7 +7,7 @@
 //
 
 #import "ExploreMixedListBaseView.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "Article.h"
 #import "WapData.h"
 #import "HuoShan.h"
@@ -105,7 +105,6 @@
 //#import "TTRNView.h"
 #import "NSObject+FBKVOController.h"
 #import "TTLayOutCellViewBase.h"
-#import <Crashlytics/Crashlytics.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "ArticleURLSetting.h"
 //#import "TTForumCellHelper.h"
@@ -166,16 +165,16 @@
 #import "FHHomeConfigManager.h"
 #import "FHFeedHouseCellHelper.h"
 #import "FHFeedHouseItemCell.h"
-//#import "Bubble-Swift.h"
-#import <FHEnvContext.h>
-#import <FHLocManager.h>
-#import <FHHomeCellHelper.h>
+#import "FHEnvContext.h"
+#import "FHLocManager.h"
+#import "FHHomeCellHelper.h"
 #import "SSCommonLogic.h"
 #import "TTSandBoxHelper.h"
-#import <FHUtils.h>
-#import <TTTabBarItem.h>
-#import <HMDTTMonitor.h>
-#import <UIColor+Theme.h>
+#import "FHUtils.h"
+#import "TTTabBarItem.h"
+#import "HMDTTMonitor.h"
+#import "UIColor+Theme.h"
+#import <TTUIWidget/TTRefreshAnimationView.h>
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -747,7 +746,9 @@ TTRefreshViewDelegate
         sself.refreshFromType = ListDataOperationReloadFromTypeLoadMore;
         [wself loadMoreWithUmengLabel:[wself modifyEventLabelForRefreshEvent:@"load_more"]];
     }];
-    [_listView.pullDownView setUpRefreshBackColor:[UIColor themeHomeColor]];
+    _listView.pullDownView.backgroundColor = [UIColor whiteColor];
+    _listView.pullDownView.bgView.backgroundColor = [UIColor whiteColor];
+    _listView.pullDownView.defaultRefreshAnimateView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)didFinishLoadTable
@@ -947,7 +948,7 @@ TTRefreshViewDelegate
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBeComeactive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
 }
 
 - (void)didAppear
@@ -982,7 +983,7 @@ TTRefreshViewDelegate
         }
     }
         
-    self.listView.backgroundColor = [UIColor themeHomeColor];
+    self.listView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)willAppear
@@ -1286,7 +1287,7 @@ TTRefreshViewDelegate
     [super themeChanged:notification];
 //    self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
     
-    self.backgroundColor = [UIColor themeHomeColor];
+    self.backgroundColor = [UIColor whiteColor];
     self.listView.backgroundColor = self.backgroundColor;
 }
 
@@ -2143,7 +2144,7 @@ TTRefreshViewDelegate
     }
 
     [self tt_startUpdate];
-    [self.ttLoadingView setBackgroundColor:[UIColor themeHomeColor]];
+    [self.ttLoadingView setBackgroundColor:[UIColor whiteColor]];
 //    //有开屏广告展示的时候首页列表页初始化和广告同步进行，故此优化仅针对于无开屏广告展示且读取本地缓存的时候
 //    static BOOL isFirst = YES; // 只是第一次启动时异步调用，之后同步调用，避免切换频道闪白问题
 //    if (fromLocal && ![SSADManager shareInstance].adShow && [SSCommonLogic shouldUseOptimisedLaunch] /*&& isFirst*/) {
@@ -4819,8 +4820,6 @@ TTRefreshViewDelegate
         }
         
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:tipKey];
-        
-        [Answers logCustomEventWithName:@"TTFeedGuideView" customAttributes:@{@"type":@"dislike"}];
         
         TTFeedGuideView<TTGuideProtocol> *feedGuideItem = [[TTFeedGuideView alloc] initWithFrame:self.window.bounds];
         

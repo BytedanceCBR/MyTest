@@ -12,8 +12,8 @@
 #import "TTUGCDefine.h"
 //#import "Thread.h"
 #import "TTCommentDataManager.h"
-#import <TTAccountBusiness.h>
-#import <DetailActionRequestManager.h>
+#import "TTAccountBusiness.h"
+#import "DetailActionRequestManager.h"
 
 extern NSString *const kTTEditUserInfoDidFinishNotificationName;
 

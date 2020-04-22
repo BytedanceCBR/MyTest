@@ -8,7 +8,7 @@
 
 
 #import "ArticleBadgeManager.h"
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 #import "SSUpdateListNotifyManager.h"
 #import "FriendDataManager.h"
 #import "SettingView.h"

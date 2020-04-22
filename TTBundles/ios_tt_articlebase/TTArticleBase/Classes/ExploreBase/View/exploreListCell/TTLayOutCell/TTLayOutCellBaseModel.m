@@ -18,7 +18,7 @@
 #import "TTArticleCellConst.h"
 #import "TTLayOutCellDataHelper.h"
 #import <TTVerifyKit/TTVerifyIconHelper.h>
-#import <TTAccountBusiness.h>
+#import "TTAccountBusiness.h"
 //#import "TTThreadCellHelper.h"
 
 @interface TTLayOutCellBaseModel()
@@ -101,6 +101,7 @@
     self.picViewHidden = YES;
     self.liveTextLabelHidden = YES;
     self.typeLabelHidden = YES;
+    self.customSourceImageViewHidden = YES;
     self.abstractLabelHidden = YES;
     self.commentLabelHidden = YES;
     self.bottomLineViewHidden = YES;

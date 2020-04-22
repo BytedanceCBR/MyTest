@@ -8,7 +8,7 @@
 #import "FHDetailQuestionPopView.h"
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
-#import <Masonry.h>
+#import "Masonry.h"
 #import <TTThemed/SSThemed.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHCommonUI/FHRoundShadowView.h>

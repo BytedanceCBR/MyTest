@@ -21,21 +21,20 @@
 #import "FHMessageManager.h"
 #import "FHHouseBridgeManager.h"
 #import "FHMessageManager.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import "FHIESGeckoManager.h"
-#import <TTDeviceHelper.h>
+#import "TTDeviceHelper.h"
 #import <BDALog/BDAgileLog.h>
 #import "FHUGCConfigModel.h"
-#import <TTTabBarManager.h>
-#import <TTTabBarItem.h>
+#import "TTTabBarManager.h"
+#import "TTTabBarItem.h"
 #import <FHHouseBase/TTDeviceHelper+FHHouse.h>
-#import <TTArticleTabBarController.h>
-#import <TTCategoryBadgeNumberManager.h>
+#import "TTArticleTabBarController.h"
+#import "TTCategoryBadgeNumberManager.h"
 #import "FHMainApi.h"
-#import <FHMinisdkManager.h>
-#import <FHIntroduceManager.h>
-#import <TTSettingsManager.h>
-#import <NSDictionary+TTAdditions.h>
+#import "FHIntroduceManager.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 #import <TTLocationManager/TTLocationManager.h>
 #import "FHStashModel.h"
 #import <UserNotifications/UserNotifications.h>
@@ -49,8 +48,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
-@property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
-@property (atomic ,   assign) BOOL inPasueFOrPermission;
+@property (atomic, strong) NSMutableDictionary *commonRequestParam;
+@property (atomic,   assign) BOOL inPasueFOrPermission;
 @property (nonatomic, strong) FHStashModel *stashModel;
 @property (nonatomic, copy)   NSNumber *hasPermission;
 @end
@@ -529,10 +528,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 - (NSDictionary *)getRequestCommonParams
 {
-    if (!_commonRequestParam) {
+    if (!self.commonRequestParam) {
         [self updateRequestCommonParams];
     }
-    return _commonRequestParam;
+    return self.commonRequestParam;
 }
 
 - (void)onStartApp
@@ -566,11 +565,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //更新公共参数
     [self updateRequestCommonParams];
-    
-    //初始化拉新拉活sdk
-    if([FHEnvContext isSpringOpen]){
-        [[FHMinisdkManager sharedInstance] initTask];
-    }
     
     NSString *startFeedCatgegory = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getFeedStartCategoryName];
     
@@ -1071,6 +1065,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
             tabName = @"discover_tab";
         }
     }
+        if([currentTabIdentifier isEqualToString:kFHouseHouseEpidemicSituationTabKey]){
+                tabName = @"operation_tab";
+        }
     return tabName;
 }
 
@@ -1171,8 +1168,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     
     self.stashModel = nil;
-    
-    [[FHMinisdkManager sharedInstance] goSpring];
     
     [self startLocation];
     [self check2CityList];

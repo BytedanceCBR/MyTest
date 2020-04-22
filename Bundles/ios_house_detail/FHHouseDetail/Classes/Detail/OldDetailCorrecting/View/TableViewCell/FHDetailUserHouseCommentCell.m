@@ -6,7 +6,7 @@
 #import "FHDetailUserHouseCommentCell.h"
 #import "FHDetailOldModel.h"
 #import "FHDetailHeaderView.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 
 
 @interface FHDetailUserHouseCommentItemView : UIControl

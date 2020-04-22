@@ -7,7 +7,7 @@
 
 #import "FHCityMarketHeaderPropertyBar.h"
 #import "FHCityMarketHeaderPropertyItemView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 @implementation FHCityMarketHeaderPropertyBar
 
 - (instancetype)init

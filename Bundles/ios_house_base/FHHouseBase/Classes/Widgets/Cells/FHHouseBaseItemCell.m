@@ -25,9 +25,9 @@
 #import "TTReachability.h"
 #import "FHUserTracker.h"
 #import "UIImage+FIconFont.h"
-#import <Lottie/LOTAnimationView.h>
-#import <UIColor+Theme.h>
-#import <FHShadowView.h>
+#import <lottie-ios/Lottie/LOTAnimationView.h>
+#import "UIColor+Theme.h"
+#import "FHShadowView.h"
 
 #define MAIN_NORMAL_TOP     10
 #define MAIN_FIRST_TOP      20
@@ -134,6 +134,13 @@
     return self;
 }
 
+- (void)resumeVRIcon
+{
+    if (self.vrLoadingView && !self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
+    }
+}
+
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
@@ -225,10 +232,10 @@
 {
     if (!_tagLabel) {
         _tagLabel = [[YYLabel alloc]init];
-//        _tagLabel.numberOfLines = 0;
+        //        _tagLabel.numberOfLines = 0;
         _tagLabel.font = [UIFont themeFontRegular:12];
         _tagLabel.textColor = [UIColor themeGray3];
-//        _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        //        _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
     return _tagLabel;
 }
@@ -333,7 +340,7 @@
 
 -(CGFloat)contentSmallImageMaxWidth
 {
-    return  SCREEN_WIDTH - (_isHomePage ? 20 : 15) - YOGA_RIGHT_PRICE_WIDITH - 90; //根据UI图 直接计算出来
+    return  SCREEN_WIDTH - (_isHomePage ? 20 : 5) - YOGA_RIGHT_PRICE_WIDITH - 90; //根据UI图 直接计算出来
 }
 
 -(CGFloat)contentSmallImageTagMaxWidth
@@ -503,12 +510,12 @@
     [self.contentView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.flexDirection = YGFlexDirectionRow;
-
+        
         layout.paddingLeft = YGPointValue(leftMargin);
         layout.paddingRight = YGPointValue(leftMargin);
         layout.paddingTop = YGPointValue(0);
         //        layout.paddingTop = YGPointValue(10);
-
+        
         layout.width = YGPointValue(SCREEN_WIDTH);
         layout.height = YGPointValue(MAIN_SMALL_CELL_HEIGHT);
         layout.flexGrow = 1;
@@ -546,8 +553,8 @@
     [_leftInfoView addSubview:self.houseMainImageBackView];
     [_leftInfoView addSubview:self.mainImageView];
     
-        [_leftInfoView addSubview:self.imageTagLabelBgView];
-        [_imageTagLabelBgView addSubview:self.imageTagLabel];
+    [_leftInfoView addSubview:self.imageTagLabelBgView];
+    [_imageTagLabelBgView addSubview:self.imageTagLabel];
     
     [_mainImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -568,7 +575,6 @@
     }];
     
     [self.leftInfoView addSubview:self.houseVideoImageView];
-//    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video_small"];
     
     [_houseVideoImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -579,17 +585,6 @@
         layout.height = YGPointValue(16.0f);
     }];
     
-    [self.leftInfoView addSubview:self.vrLoadingView];
-    self.vrLoadingView.hidden = YES;
-    //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
-    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 10);
-        layout.left = YGPointValue(12);
-        layout.width = YGPointValue(16);
-        layout.height = YGPointValue(16);
-    }];
     
     _rightInfoView = [[UIView alloc] init];
     [self.contentView addSubview:_rightInfoView];
@@ -597,7 +592,7 @@
     [_rightInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.left = YGPointValue((isHomePage ? 117 : 102) + INFO_TO_ICON_MARGIN);
+        layout.left = YGPointValue((isHomePage ? 113 : 102) + INFO_TO_ICON_MARGIN);
         layout.flexDirection = YGFlexDirectionColumn;
         layout.flexGrow = 1;
         layout.top = YGPointValue(0);
@@ -663,19 +658,21 @@
         layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth]);
         layout.flexGrow = 0;
     }];
-    
+    CGFloat maxWidth = [self contentSmallImageMaxWidth] - 45;
+    if (_isHomePage) {
+        maxWidth = [self contentSmallImageMaxWidth] - 60;
+    }
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(8);
         layout.marginLeft = YGPointValue(0);
         layout.height = YGPointValue(16);
-        layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth]);
+        layout.maxWidth = YGPointValue(maxWidth);
     }];
-    
     
     _priceBgView = [[UIView alloc] init];
     
-    //    [_rightInfoView addSubview:_priceBgView];
+    //    [_rightInfoView addSubview:_priceBgView];r
     _rightInfoView = [[UIView alloc] init];
     [self.contentView addSubview:_priceBgView];
     
@@ -784,8 +781,8 @@
     [_leftInfoView addSubview:self.houseMainImageBackView];
     [_leftInfoView addSubview:self.mainImageView];
     
-        [_leftInfoView addSubview:self.imageTagLabelBgView];
-        [_imageTagLabelBgView addSubview:self.imageTagLabel];
+    [_leftInfoView addSubview:self.imageTagLabelBgView];
+    [_imageTagLabelBgView addSubview:self.imageTagLabel];
     
     [_mainImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -817,25 +814,13 @@
         layout.height = YGPointValue(16.0f);
     }];
     
-    [self.leftInfoView addSubview:self.vrLoadingView];
-    self.vrLoadingView.hidden = YES;
-    //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
-    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 10);
-        layout.left = YGPointValue(12);
-        layout.width = YGPointValue(16);
-        layout.height = YGPointValue(16);
-    }];
-    
     _rightInfoView = [[UIView alloc] init];
     [self.contentView addSubview:_rightInfoView];
     
     [_rightInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
-        layout.left = YGPointValue((isHomePage ? 117 : 102) + INFO_TO_ICON_MARGIN);
+        layout.left = YGPointValue((isHomePage ? 113 : 102) + INFO_TO_ICON_MARGIN);
         layout.flexDirection = YGFlexDirectionColumn;
         //        layout.flexGrow = 1;
         layout.top = YGPointValue(0);
@@ -851,7 +836,7 @@
     [_rightInfoView addSubview:self.statInfoLabel];
     [_rightInfoView addSubview:self.tagLabel];
     [_rightInfoView addSubview:self.distanceLabel];
-
+    
     [titleView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.flexDirection = YGFlexDirectionRow;
@@ -898,12 +883,16 @@
         layout.flexGrow = 0;
     }];
     
+    CGFloat maxWidth = [self contentSmallImageMaxWidth] - 45;
+    if (_isHomePage) {
+        maxWidth = [self contentSmallImageMaxWidth] - 60;
+    }
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(8);
         layout.marginLeft = YGPointValue(0);
         layout.height = YGPointValue(16);
-        layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth] - 10);
+        layout.maxWidth = YGPointValue(maxWidth);
     }];
     self.distanceLabel.hidden = YES;
     [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -1034,7 +1023,7 @@
     }
     
     [self hideRecommendReason];
-//        [self updateTitlesLayout:YES];
+    //        [self updateTitlesLayout:YES];
     
     [self.contentView.yoga applyLayoutPreservingOrigin:NO];
 }
@@ -1058,7 +1047,21 @@
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
-    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
+    NSAttributedString *attributeString = nil;
+    if (commonModel.reasonTags.count > 0) {
+        FHHouseTagsModel *element = commonModel.reasonTags.firstObject;
+        if (element.content && element.textColor && element.backgroundColor) {
+            UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor themeRed4];
+            UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor whiteColor];
+            attributeString = [FHSingleImageInfoCellModel createTagAttrString:element.content textColor:textColor backgroundColor:backgroundColor];
+            _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            
+        }
+    }else {
+        _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        CGFloat maxWidth = [self contentSmallImageMaxWidth] - 60;
+        attributeString = [FHSingleImageInfoCellModel newTagsStringWithTagList:commonModel.tags maxWidth:maxWidth];
+    }
     self.tagLabel.attributedText =  attributeString;
     self.priceLabel.text = commonModel.displayPricePerSqm;
     //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
@@ -1077,7 +1080,7 @@
         if (commonModel.originPrice) {
             self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
         }else{
-            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+          self.pricePerSqmLabel.attributedText =  [[NSAttributedString alloc]initWithString:(commonModel.displayPricePerSqm.length>0?commonModel.displayPricePerSqm:@"") attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
         }
         
         if (self.maskVRImageView) {
@@ -1085,7 +1088,21 @@
             self.maskVRImageView = nil;
         }
         
-        if (_vrLoadingView && commonModel.vrInfo.hasVr) {
+        if (commonModel.vrInfo.hasVr) {
+            if (![self.leftInfoView.subviews containsObject:self.vrLoadingView]) {
+                [self.leftInfoView addSubview:self.vrLoadingView];
+                self.vrLoadingView.hidden = YES;
+                //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
+                [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                    layout.isEnabled = YES;
+                    layout.position = YGPositionTypeAbsolute;
+                    layout.top = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 10);
+                    layout.left = YGPointValue(12);
+                    layout.width = YGPointValue(16);
+                    layout.height = YGPointValue(16);
+                }];
+            }
+            
             _vrLoadingView.hidden = NO;
             [_vrLoadingView play];
             self.houseVideoImageView.hidden = YES;
@@ -1096,7 +1113,9 @@
             [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, MAIN_IMG_WIDTH, MAIN_IMG_HEIGHT)];
         }else
         {
-            _vrLoadingView.hidden = YES;
+            if (_vrLoadingView) {
+                _vrLoadingView.hidden = YES;
+            }
         }
         
         //处理标签
@@ -1123,7 +1142,11 @@
         self.mainTitleLabel.text = commonModel.title;
         self.subTitleLabel.text = commonModel.subtitle;
         self.priceLabel.text = commonModel.pricing;
-        
+        if (commonModel.addrData.length > 0) {
+            self.tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            attributeString = [FHSingleImageInfoCellModel createTagAttrString:commonModel.addrData textColor:[UIColor themeGray2] backgroundColor:[UIColor whiteColor]];
+            self.tagLabel.attributedText =  attributeString;
+        }
         [self.mainTitleLabel.yoga markDirty];
         [self.subTitleLabel.yoga markDirty];
         [self.rightInfoView.yoga markDirty];
@@ -1138,27 +1161,15 @@
         if ([TTDeviceHelper isScreenWidthLarge320]) {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:16];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
+            _pricePerSqmLabel.textColor = [UIColor themeOrange1];
         }else {
             _priceLabel.font = [UIFont themeFontDINAlternateBold:15];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
-            _pricePerSqmLabel.textColor = [UIColor themeRed1];
+            _pricePerSqmLabel.textColor = [UIColor themeOrange1];
         }
         
         self.priceLabel.text = commonModel.pricePerSqmNum;
         self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
-        
-        
-        //        if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
-        //
-        //            self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
-        //            self.imageTagLabel.text = commonModel.houseImageTag.text;
-        //            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
-        //            self.imageTagLabelBgView.hidden = NO;
-        //        }else {
-        //
-        //            self.imageTagLabelBgView.hidden = YES;
-        //        }
     }
     
     [self hideRecommendReason];
@@ -1212,7 +1223,7 @@
     if (model.originPrice) {
         self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];
     }else{
-        self.pricePerSqmLabel.text = model.displayPricePerSqm;
+        self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:(model.displayPricePerSqm.length>0?model.displayPricePerSqm:@"") attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
     }
     
     
@@ -1312,7 +1323,7 @@
         NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
         self.tagLabel.attributedText =  attributeString;
         self.pricePerSqmLabel.hidden = YES;
-
+        
         self.priceLabel.text = model.displayPricePerSqm;
         FHImageModel *imageModel = model.images.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
@@ -1320,16 +1331,28 @@
     {
         FHSearchHouseItemModel *commonModel = (FHSearchHouseItemModel *)data;
         self.closeBtn.hidden = YES;
-
+        
         self.priceLabel.text = commonModel.pricePerSqmNum;
         self.pricePerSqmLabel.text = commonModel.pricePerSqmUnit;
         self.pricePerSqmLabel.hidden = NO;
-
+        
         self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
         self.mainTitleLabel.text = commonModel.displayTitle;
         self.subTitleLabel.text = commonModel.displayDescription;
-        NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
-
+        NSAttributedString * attributeString = nil;
+        if (commonModel.reasonTags.count > 0) {
+            FHHouseTagsModel *element = commonModel.reasonTags.firstObject;
+            if (element.content && element.textColor && element.backgroundColor) {
+                UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor themeRed4];
+                UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor whiteColor];
+                attributeString = [FHSingleImageInfoCellModel createTagAttrString:element.content textColor:textColor backgroundColor:backgroundColor];
+                _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            }
+        }else {
+            CGFloat maxWidth = [self contentSmallImageMaxWidth] - 45;
+            attributeString = [FHSingleImageInfoCellModel newTagsStringWithTagList:commonModel.tags maxWidth:maxWidth];
+            _tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        }
         self.priceLabel.text = commonModel.displayPricePerSqm;
         //    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
         FHImageModel *imageModel = commonModel.images.firstObject;
@@ -1337,7 +1360,7 @@
         
         FHHouseType houseType = commonModel.houseType.integerValue;
         if (houseType == FHHouseTypeSecondHandHouse) {
-           
+            
             _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
             _pricePerSqmLabel.textColor = [UIColor themeGray1];
             _pricePerSqmLabel.font = [UIFont themeFontRegular:12];
@@ -1351,7 +1374,9 @@
             if (commonModel.originPrice) {
                 self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
             }else{
-                self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+                if (commonModel.displayPricePerSqm.length>0) {
+                     self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:commonModel.displayPricePerSqm attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+                }
             }
             [self.pricePerSqmLabel.yoga markDirty];
             if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
@@ -1368,7 +1393,21 @@
                 self.maskVRImageView = nil;
             }
             
-            if (_vrLoadingView && commonModel.vrInfo.hasVr) {
+            if (commonModel.vrInfo.hasVr) {
+                if (![self.leftInfoView.subviews containsObject:self.vrLoadingView]) {
+                    [self.leftInfoView addSubview:self.vrLoadingView];
+                    self.vrLoadingView.hidden = YES;
+                    //    [self.vrLoadingView setBackgroundColor:[UIColor redColor]];
+                    [self.vrLoadingView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                        layout.isEnabled = YES;
+                        layout.position = YGPositionTypeAbsolute;
+                        layout.top = YGPointValue(MAIN_SMALL_IMG_HEIGHT - 10);
+                        layout.left = YGPointValue(12);
+                        layout.width = YGPointValue(16);
+                        layout.height = YGPointValue(16);
+                    }];
+                }
+                
                 _vrLoadingView.hidden = NO;
                 [_vrLoadingView play];
                 self.houseVideoImageView.hidden = YES;
@@ -1379,7 +1418,9 @@
                 [self.maskVRImageView setFrame:CGRectMake(0.0f, 0.0f, MAIN_IMG_WIDTH, MAIN_IMG_HEIGHT)];
             }else
             {
-                _vrLoadingView.hidden = YES;
+                if (_vrLoadingView) {
+                    _vrLoadingView.hidden = YES;
+                }
             }
             //处理标签
             BOOL imageTagHidden = self.imageTagLabelBgView.hidden;
@@ -1405,7 +1446,7 @@
             
             self.tagLabel.attributedText =  attributeString;
             _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
-
+            
             NSArray *firstRow = [commonModel.bottomText firstObject];
             NSDictionary *bottomText = nil;
             if ([firstRow isKindOfClass:[NSArray class]]) {
@@ -1421,9 +1462,14 @@
             self.priceLabel.text = commonModel.pricing;
             self.pricePerSqmLabel.text = nil;
             self.pricePerSqmLabel.hidden = YES;
-            [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-                layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth] - 10);
-            }];
+            //            [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            //                layout.maxWidth = YGPointValue([self contentSmallImageTagMaxWidth]);
+            //            }];
+            if (commonModel.addrData.length > 0) {
+                self.tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+                attributeString = [FHSingleImageInfoCellModel createTagAttrString:commonModel.addrData textColor:[UIColor themeGray2] backgroundColor:[UIColor whiteColor]];
+                self.tagLabel.attributedText =  attributeString;
+            }
             _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
             [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                 if (self.priceLabel.yoga.marginTop.value != 28.5) {
@@ -1448,7 +1494,7 @@
             FHImageModel *imageModel = commonModel.images.firstObject;
             [self updateMainImageWithUrl:imageModel.url];
             _priceLabel.font = [UIFont themeFontSemibold:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 15];
-
+            
             self.imageTagLabelBgView.hidden = YES;
             [self updateImageTopLeft];
             
@@ -1490,7 +1536,7 @@
         }
         
         [self hideRecommendReason];
-
+        
         [self.contentView.yoga applyLayoutPreservingOrigin:NO];
     }
 }
@@ -1538,34 +1584,10 @@
         
         [commuteAttr appendAttributedString:timeAttr];
         self.distanceLabel.attributedText = commuteAttr;
-//        [self.rightInfoView addSubview:self.distanceLabel];
         self.distanceLabel.hidden = NO;
-        if (!_distanceLabel){
-//            [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-//                layout.isEnabled = YES;
-//                layout.marginTop = YGPointValue(10);
-//                layout.alignSelf = YGAlignCount;
-//                layout.flexGrow = 1;
-//            }];
-        }
-//        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-//            layout.isEnabled = YES;
-//            layout.marginTop = YGPointValue(4);
-//            layout.marginLeft = YGPointValue(-3);
-//            layout.height = YGPointValue(15);
-//        }];
-        //因为有表情 强制计算宽度
-//        [self.distanceLabel sizeToFit];
-//        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-//            layout.width = YGPointValue(ceil(self.distanceLabel.frame.size.width));//x 设备上会出现因为小数计算显示不全的，改为上取整
-//        }];
-//        self.leftInfoView.yoga.justifyContent = YGJustifySpaceBetween;
         [self.distanceLabel.yoga markDirty];
-//        [self.rightInfoView.yoga markDirty];
     }else{
         self.distanceLabel.hidden = YES;
-//        [_distanceLabel removeFromSuperview];
-//        _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     }
 }
 
@@ -1590,16 +1612,16 @@
     FHImageModel *imageModel = model.houseImage.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
     
-        if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
-            self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
-            self.imageTagLabel.text = model.houseImageTag.text;
-            self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
-            self.imageTagLabelBgView.hidden = NO;
-        }else {
-            self.imageTagLabelBgView.hidden = YES;
-        }
+    if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
+        self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
+        self.imageTagLabel.text = model.houseImageTag.text;
+        self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
+        self.imageTagLabelBgView.hidden = NO;
+    }else {
+        self.imageTagLabelBgView.hidden = YES;
+    }
     
-//        [self updateImageTopLeft];
+    //        [self updateImageTopLeft];
     
     self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = model.displaySubtitle;
@@ -1820,7 +1842,7 @@
     [self.priceLabel.yoga markDirty];
     //    [self.originPriceLabel.yoga markDirty];
     [self.pricePerSqmLabel.yoga markDirty];
-
+    
     //    CGFloat priceBgTopMargin = showTags?PRICE_BG_TOP_MARGIN:(oneRow?6:2);
     //    if (self.priceBgView.yoga.marginTop.value != priceBgTopMargin) {
     //        [self.priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -1906,9 +1928,10 @@
     if (originPrice.length < 1) {
         return nil;
     }
-    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:originPrice];
-    [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
-    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray1] range:NSMakeRange(0, originPrice.length)];
+    NSAttributedString *attri = [[NSAttributedString alloc]initWithString:originPrice attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle),NSStrikethroughColorAttributeName:[UIColor themeGray1]}];
+//    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:originPrice];
+//    [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
+//    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray1] range:NSMakeRange(0, originPrice.length)];
     return attri;
 }
 
@@ -1950,8 +1973,8 @@
         [dislikeView showAtPoint:point
                         fromView:self.closeBtn
                  didDislikeBlock:^(FHHouseDislikeView * _Nonnull view) {
-                     [wself dislikeConfirm:view];
-                 }];
+            [wself dislikeConfirm:view];
+        }];
     }
 }
 
@@ -1991,5 +2014,6 @@
         TRACK_EVENT(@"click_house_dislike", tracerDict);
     }
 }
+
 
 @end

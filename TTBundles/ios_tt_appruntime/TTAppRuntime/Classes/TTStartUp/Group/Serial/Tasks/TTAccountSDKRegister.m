@@ -7,9 +7,9 @@
 //
 
 #import "TTAccountSDKRegister.h"
-#import <TTAccountBusiness.h>
-#import <TTAccountLoginConfLogic.h>
-#import <TTSandBoxHelper.h>
+#import "TTAccountBusiness.h"
+#import "TTAccountLoginConfLogic.h"
+#import "TTSandBoxHelper.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "SSCookieManager.h"
 #import "TTInstallIDManager.h"
@@ -21,10 +21,7 @@
 #import "TTAccountTestSettings.h"
 #import "CommonURLSetting.h"
 #import <FHHouseBase/FHURLSettings.h>
-#import <FHHouseBase/FHUserTracker.h>
-#import <FHHouseBase/FHMonitor.h>
-#import <BDUGTrackerInterface/BDUGTrackerInterface.h>
-#import <BDUGMonitorInterface/BDUGMonitorInterface.h>
+#import "FHContainerStartupTask.h"
 
 //#import <BDSDKApi+CompanyProduct.h>
 #import "TTLaunchDefine.h"
@@ -44,9 +41,8 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
     [super startWithApplication:application options:launchOptions];
     
     // 需要业务方通过注入的方式，实现打点上报和监控功能
-    BDUG_BIND_CLASS_PROTOCOL([FHUserTracker class], BDUGTrackerInterface);
-    BDUG_BIND_CLASS_PROTOCOL([FHMonitor class], BDUGMonitorInterface);
-    
+    [FHContainerStartupTask registerInterfaces];
+
     [self.class startAccountService];
     [self.class configureAccountSDK];
     [self.class configureAccountLoginManager];

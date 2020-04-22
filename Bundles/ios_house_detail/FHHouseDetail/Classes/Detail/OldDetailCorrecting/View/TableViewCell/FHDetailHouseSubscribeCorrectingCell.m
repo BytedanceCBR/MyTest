@@ -146,7 +146,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         textField.layer.borderWidth  = 0.5;
         textField.keyboardType = UIKeyboardTypeNumberPad;
         textField.placeholder = @"填写手机号";
-        [textField setValue:[UIColor colorWithHexStr:@"#d9d9d9"] forKeyPath:@"_placeholderLabel.textColor"];
+        textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"填写手机号" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexStr:@"#d9d9d9"]}];
         textField.layer.cornerRadius = 16;
         textField.layer.masksToBounds = YES;
         textField.delegate = self;
@@ -267,19 +267,22 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (void)subscribe {
-    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-    tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
-    tracerDic[@"position"] = @"card";
-    [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
-    
+
     NSString *phoneNum = self.phoneNum;
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+        
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
+        tracerDic[@"position"] = @"card";
+        tracerDic[@"growth_deepevent"] = @(1);
+        [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
+        
         if(self.subscribeBlock){
             self.subscribeBlock(self.phoneNum);
         }
     }else {
         [[ToastManager manager] showToast:@"手机格式错误"];
-        self.textField.textColor = [UIColor themeRed1];
+        self.textField.textColor = [UIColor themeOrange1];
     }
 }
 
@@ -346,6 +349,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
     tracerDic[@"position"] = @"card";
+    tracerDic[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"inform_show" params:tracerDic];
     
     [self showFullPhoneNum:YES];

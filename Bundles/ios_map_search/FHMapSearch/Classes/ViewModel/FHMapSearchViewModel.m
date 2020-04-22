@@ -7,7 +7,7 @@
 
 #import "FHMapSearchViewModel.h"
 #import <AMapFoundationKit/AMapFoundationKit.h>
-#import <UIViewAdditions.h>
+#import "UIViewAdditions.h"
 #import "FHHouseType.h"
 #import "TTNetworkManager.h"
 #import "FHMapSearchTypes.h"
@@ -19,7 +19,7 @@
 #import "FHMapSearchHouseListViewController.h"
 #import "FHHouseSearcher.h"
 #import <TTRoute/TTRoute.h>
-#import <TTReachability.h>
+#import "TTReachability.h"
 #import "FHMainManager+Toast.h"
 #import "FHUserTracker.h"
 #import "FHMapSearchBubbleModel.h"
@@ -151,7 +151,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             _lastBubble.resizeLevel = 10;
         }
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];
         
         self.configModel.searchId = nil;
         
@@ -193,7 +193,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)dealloc
 {
     [_requestHouseTask cancel];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:TTReachabilityChangedNotification object:nil];
     if (self->drawLinePoints) {
         free(self->drawLinePoints);
     }
@@ -376,7 +376,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //    r.lineWidth = 1;///精度圈 边线宽度，默认0
     r.locationDotBgColor = [UIColor clearColor];///定位点背景色，不设置默认白色
     r.locationDotFillColor = [UIColor themeRed1];///定位点蓝色圆点颜色，不设置默认蓝色
-    UIImage *image = [UIImage imageNamed:@"mapsearch_location_center"];
+    UIImage *image = [UIImage imageNamed:@"mapsearch_location_center_orange"];
     r.image = image;
     [self.mapView updateUserLocationRepresentation:r];
     
@@ -516,7 +516,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _houseListViewController.movingBlock = ^(CGFloat top) {
 //            [wself changeNavbarAlpha:NO];
         };
-        _houseListViewController.showHouseDetailBlock = ^(FHSearchHouseDataItemsModel * _Nonnull model , NSInteger rank , FHMapSearchBubbleModel *fromBubble) {
+        _houseListViewController.showHouseDetailBlock = ^(FHHouseListBaseItemModel * _Nonnull model , NSInteger rank , FHMapSearchBubbleModel *fromBubble) {
             [wself showHoseDetailPage:model rank:rank fromBubble:fromBubble];
         };
         
@@ -524,7 +524,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [wself showNeighborhoodDetailPage:model fromBubble:fromBubble];
         };
         
-        _houseListViewController.showRentHouseDetailBlock = ^(FHHouseRentDataItemsModel * _Nonnull model, NSInteger rank , FHMapSearchBubbleModel *fromBubble) {
+        _houseListViewController.showRentHouseDetailBlock = ^(FHHouseListBaseItemModel * _Nonnull model, NSInteger rank , FHMapSearchBubbleModel *fromBubble) {
             [wself showRentHouseDetailPage:model rank:rank fromBubble:fromBubble];
         };
                 
@@ -1273,14 +1273,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
         MAPolygonRenderer *polygonRenderer = [[MAPolygonRenderer alloc] initWithPolygon:overlay];
         polygonRenderer.lineWidth   = 6.f;
-        polygonRenderer.strokeColor = [UIColor themeRed1];
-        polygonRenderer.fillColor   = RGBA(0xff, 0x58, 0x69,0.2);
+        polygonRenderer.strokeColor = [UIColor themeOrange4];
+        polygonRenderer.fillColor   = RGBA(0xff, 0x96, 0x29,0.1);
         
         return polygonRenderer;
     }else if ([overlay isKindOfClass:[MAPolyline class]]){
         MAPolylineRenderer *polygonRenderer = [[MAPolylineRenderer alloc] initWithPolyline:overlay];
         polygonRenderer.lineWidth   = 12.f;
-        polygonRenderer.strokeColor = [UIColor themeRed1];
+        polygonRenderer.strokeColor = [UIColor themeOrange1];
         polygonRenderer.lineJoinType = kMALineJoinRound;
         polygonRenderer.lineCapType  = kMALineCapRound;
         return polygonRenderer;
@@ -1641,7 +1641,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     return self.houseListOpenUrl;
 }
 
--(void)showHoseDetailPage:(FHSearchHouseDataItemsModel *)model rank:(NSInteger)rank fromBubble:(FHMapSearchBubbleModel *)fromBubble
+-(void)showHoseDetailPage:(FHHouseListBaseItemModel *)model rank:(NSInteger)rank fromBubble:(FHMapSearchBubbleModel *)fromBubble
 {
     //fschema://old_house_detail?house_id=xxx
     NSString *enterFrom =  @"mapfind";
@@ -1651,7 +1651,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         enterFrom = @"subwayfind";
     }
     
-    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@",model.hid];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@",model.houseid];
     TTRouteUserInfo *userInfo = nil;
     NSMutableDictionary *tracerDic = [NSMutableDictionary new];
     [tracerDic addEntriesFromDictionary:self.logBaseParams];
@@ -1705,7 +1705,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
 }
 
--(void)showRentHouseDetailPage:(FHHouseRentDataItemsModel *)model rank:(NSInteger)rank fromBubble:(FHMapSearchBubbleModel *)fromBubble
+-(void)showRentHouseDetailPage:(FHHouseListBaseItemModel *)model rank:(NSInteger)rank fromBubble:(FHMapSearchBubbleModel *)fromBubble
 {
     NSString *enterFrom =  @"mapfind";
     if (fromBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
@@ -1713,7 +1713,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }else if (fromBubble.lastShowMode == FHMapSearchShowModeSubway){
         enterFrom = @"subwayfind";
     }
-    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://rent_detail?house_id=%@&card_type=left_pic&enter_from=mapfind&element_from=half_category&rank=%ld",model.id,rank];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://rent_detail?house_id=%@&card_type=left_pic&enter_from=mapfind&element_from=half_category&rank=%ld",model.houseid,rank];
     TTRouteUserInfo *userInfo = nil;
     
     NSMutableDictionary *tracer = [[NSMutableDictionary alloc]init];
@@ -1726,7 +1726,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     tracer[@"rank"] = [@(rank) description];
     
     if (model.logPb) {
-        NSString *groupId = model.id;
+        NSString *groupId = model.houseid;
         NSString *imprId = model.imprId;
         NSString *searchId = model.searchId;
         if (groupId) {

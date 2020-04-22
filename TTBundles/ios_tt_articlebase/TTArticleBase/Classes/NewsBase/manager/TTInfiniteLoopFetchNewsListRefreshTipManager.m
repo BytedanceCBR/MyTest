@@ -9,12 +9,12 @@
 #import "TTInfiniteLoopFetchNewsListRefreshTipManager.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "ExploreOrderedData+TTBusiness.h"
-#import <TTNetworkManager.h>
+#import "TTNetworkManager.h"
 #import "ArticleURLSetting.h"
 #import "ListDataHeader.h"
 #import "TTArticleCategoryManager.h"
 #import "TTLocationManager.h"
-#import <JSONModel.h>
+#import "JSONModel.h"
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 

@@ -18,7 +18,7 @@
 #import "FHHouseRentModel.h"
 #import "FHFeedHouseCellHelper.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
-#import <FHSingleImageInfoCellModel.h>
+#import "FHSingleImageInfoCellModel.h"
 
 #define kFHFeedHouseCellId @"kFHFeedHouseCellId"
 

@@ -16,7 +16,7 @@
 #import <CoreMotion/CoreMotion.h>
 
 #import "ExploreMovieMiniSliderView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIButton+TTAdditions.h"
 #import "TTMovieAdjustView.h"
 #import "TTMovieBrightnessView.h"

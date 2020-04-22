@@ -7,7 +7,7 @@
 
 #import "FHMessageViewController.h"
 #import "FHMessageViewModel.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIViewController+NavbarItem.h"
 #import "UIColor+Theme.h"
 #import "TTReachability.h"
@@ -28,17 +28,14 @@
 #import <FHCHousePush/FHPushMessageTipView.h>
 #import <FHHouseBase/FHBaseTableView.h>
 #import <FHMessageNotificationManager.h>
-#import "FHSpringHangView.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHMessageViewController ()
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
 @property(nonatomic, strong) FHPushMessageTipView *pushTipView;
 @property (nonatomic, copy)     NSString       *enter_from;// 外部传入
-//春节活动运营位
-@property (nonatomic, strong) FHSpringHangView *springView;
-
 @end
 
 @implementation FHMessageViewController
@@ -53,41 +50,11 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:TTReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 //     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(periodicalFetchUnreadMessage:) name:kPeriodicalFetchUnreadMessage object:nil];
-    
-    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-        if([FHEnvContext isSpringHangOpen] && self.springView){
-            [self.springView show:[FHEnvContext enterTabLogName]];
-        }
-    }];
-    
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-    }
-}
-
-- (void)addSpringView {
-    if(!_springView){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
-        [self.view addSubview:_springView];
-        _springView.hidden = YES;
-        
-        CGFloat bottom = 49;
-        if (@available(iOS 11.0 , *)) {
-            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-        }
-        
-        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(82);
-            make.height.mas_equalTo(82);
-            make.right.mas_equalTo(self.view).offset(-11);
-        }];
-    }
 }
 
 - (void)applicationDidBecomeActive
@@ -118,10 +85,8 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
+    [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -191,6 +156,9 @@
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    if (@available(iOS 11.0 , *)) {
+          _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+      }
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.01f)];
     _tableView.tableHeaderView = headerView;
@@ -243,10 +211,10 @@
         }
     }
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(44);
-        if (@available(iOS 11.0, *)) {
+        if (@available(iOS 13.0, *)) {
+            make.top.mas_equalTo(self.view).offset(44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top);
+        } else if (@available(iOS 11.0, *)) {
             make.top.mas_equalTo(self.view).offset(44.f + self.view.tt_safeAreaInsets.top);
-//            make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
         } else {
             make.top.mas_equalTo(64);
         }
@@ -343,11 +311,6 @@
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
-    
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
 }
 
 - (BOOL) isAlignToSafeBottom {

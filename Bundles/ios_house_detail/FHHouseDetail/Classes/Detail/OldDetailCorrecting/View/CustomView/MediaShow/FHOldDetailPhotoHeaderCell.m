@@ -6,12 +6,12 @@
 //
 
 #import "FHOldDetailPhotoHeaderCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
-#import <TTShareManager.h>
-#import <TTPhotoScrollViewController.h>
+#import "TTShareManager.h"
+#import "TTPhotoScrollViewController.h"
 #import "FHUserTracker.h"
 #import "FHFloorPanPicShowViewController.h"
 #import "FHDetailPictureViewController.h"
@@ -75,6 +75,7 @@
     self.currentData = data;
     id images = ((FHDetailPhotoHeaderModel *)data).houseImage;
     self.titleView.model = ((FHDetailPhotoHeaderModel *)data).titleDataModel;
+    self.titleView.baseViewModel  = self.baseViewModel;
     [self updateWithImages:images];
 }
 
@@ -93,7 +94,8 @@
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
         
-        _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 276/375) collectionViewLayout:layout];
+//        _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 276/375) collectionViewLayout:layout];
+        _colletionView = [[FHBaseCollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
         _colletionView.backgroundColor = [UIColor whiteColor];
         _colletionView.pagingEnabled = YES;
         _colletionView.showsHorizontalScrollIndicator = NO;
@@ -104,6 +106,11 @@
         _colletionView.dataSource = self;
         
         [self.contentView addSubview:_colletionView];
+        [_colletionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.equalTo(self.contentView);
+            make.top.equalTo(self.contentView);
+            make.height.mas_offset(SCREEN_WIDTH * 276/375);
+        }];
         
         // 底部渐变蒙层
         [self.contentView addSubview:self.bottomGradientView];
@@ -186,7 +193,7 @@
         gradientLayer.frame = frame;
         gradientLayer.colors = @[
                                  (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
-                                 (__bridge id)[UIColor colorWithWhite:1 alpha:1].CGColor
+                                 (__bridge id)[UIColor themeGray7].CGColor
                                  ];
         gradientLayer.startPoint = CGPointMake(0.5, 0);
         gradientLayer.endPoint = CGPointMake(0.5, 1);
@@ -214,7 +221,7 @@
     [self.colletionView reloadData];
 
     // 二手房头图头显示底部渐变层
-    self.bottomGradientView.hidden = !(self.baseViewModel.houseType == FHHouseTypeSecondHandHouse);
+    self.bottomGradientView.hidden = !(self.baseViewModel.houseType == FHHouseTypeSecondHandHouse || self.baseViewModel.houseType == FHHouseTypeNeighborhood);
     BOOL isShowBottomBannerView = NO;
     if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
         FHDetailOldModel *detailOldModel = self.baseViewModel.detailData;

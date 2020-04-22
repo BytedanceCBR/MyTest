@@ -19,6 +19,8 @@
 - (void)handleApplicationEnterForeground;
 - (void)handleApplicationEnterBackground;
 
+- (void)handleViewAppear:(UIViewController *)view;
+
 // 标记程序上次启动发生了崩溃
 + (void)setAppCrashFlagForLastTimeLaunch;
 

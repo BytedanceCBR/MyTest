@@ -6,9 +6,9 @@
 //
 
 #import "FHDetailSameNeighborhoodHouseCell.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIFont+House.h"
-#import <UIImageView+BDWebImage.h>
+#import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
@@ -69,6 +69,11 @@
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.bottom.equalTo(self.contentView);
+        }];
+    }
+    if (model.shadowImageType == FHHouseShdowImageTypeLTR) {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.shadowImage).offset(-25);
         }];
     }
     if (model.sameNeighborhoodHouseData) {

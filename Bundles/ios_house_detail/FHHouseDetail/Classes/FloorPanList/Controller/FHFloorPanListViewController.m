@@ -6,8 +6,8 @@
 //
 
 #import "FHFloorPanListViewController.h"
-#import <HMSegmentedControl.h>
-#import <FHEnvContext.h>
+#import "HMSegmentedControl.h"
+#import "FHEnvContext.h"
 #import "FHFloorPanListViewModel.h"
 #import <FHHouseBase/FHBaseTableView.h>
 
@@ -75,7 +75,7 @@
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
     _segmentedControl.selectionIndicatorHeight = 2;
-    _segmentedControl.selectionIndicatorColor = [UIColor themeRed1];
+    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange1];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
@@ -86,7 +86,7 @@
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontMedium:16],NSFontAttributeName,
-                                     [UIColor themeRed1],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeOrange1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
     _segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 30);

@@ -17,18 +17,20 @@
 #import "FHUtils.h"
 #import "FHHouseEnvContextBridge.h"
 #import "FHHouseBridgeManager.h"
-#import <NSDictionary+TTAdditions.h>
-#import <NSTimer+NoRetain.h>
-#import <TTUIResponderHelper.h>
-#import <HMDTTMonitor.h>
-#import <TTInstallIDManager.h>
-#import <TTArticleCategoryManager.h>
+#import "NSDictionary+TTAdditions.h"
+#import "NSTimer+NoRetain.h"
+#import "TTUIResponderHelper.h"
+#import "HMDTTMonitor.h"
+#import "TTInstallIDManager.h"
+#import "TTArticleCategoryManager.h"
 #import "FHHouseUGCAPI.h"
-#import <FHIntroduceManager.h>
-#import <FHMinisdkManager.h>
+#import "FHIntroduceManager.h"
+#import "FHPopupViewManager.h"
+#import "TTSettingsManager.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
+NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key"; //本地持久化显示时间
 #define kFHHomeHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
 @interface FHLocManager ()
@@ -36,7 +38,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 @property (nonatomic, strong) YYCache       *locationCache;
 @property (nonatomic, assign) BOOL isHasSendPermissionTrace;
 @property(nonatomic , strong) NSTimer *messageTimer;
-
+@property (nonatomic, assign) CLAuthorizationStatus currentStatus;
 @end
 
 @implementation FHLocManager
@@ -71,6 +73,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)loadCurrentLocationData {
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+
     if (self.isHaveLocationAuthorization) {
         self.currentReGeocode = [self.locationCache objectForKey:@"fh_currentReGeocode"];
         self.currentLocaton = [self.locationCache objectForKey:@"fh_currentLocaton"];
@@ -84,6 +88,13 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     self.isShowSwitch = YES;
     self.isShowSplashAdView = NO;
     self.isShowHomeViewController = YES;
+}
+
+#pragma mark -- notification
+
+- (void)_willEnterForeground:(NSNotification *)notification
+{
+    self.currentStatus = CLLocationManager.authorizationStatus;
 }
 
 - (void)saveCurrentLocationData {
@@ -109,7 +120,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 {
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"您还没有开启定位权限" message:@"请前往系统设置开启，以便我们更好地为您推荐房源及丰富信息推荐维度" preferredType:TTThemedAlertControllerTypeAlert];
     [alertVC addActionWithGrayTitle:@"手动选择" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-        
+
     }];
     
     [alertVC addActionWithTitle:@"前往设置" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
@@ -128,6 +139,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)showCitySwitchAlert:(NSString *)cityName openUrl:(NSString *)openUrl
 {
+
     if (!cityName || !openUrl) {
         return;
     }
@@ -166,6 +178,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:titleStr message:nil preferredType:TTThemedAlertControllerTypeAlert];
     [alertVC addActionWithGrayTitle:@"暂不" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+        [[FHPopupViewManager shared] outerPopupViewHide];
         NSDictionary *params = @{@"click_type":@"cancel",
                                  @"enter_from":@"default"};
         [FHEnvContext recordEvent:params andEventKey:@"city_click"];
@@ -173,6 +186,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+        [[FHPopupViewManager shared] outerPopupViewHide];
         if (openUrl) {
             [FHEnvContext sharedInstance].refreshConfigRequestType = @"switch_alert";
             
@@ -191,6 +205,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     UIViewController *topVC = [TTUIResponderHelper topmostViewController];
     if (topVC) {
+        [[FHPopupViewManager shared] outerPopupViewShow];
         [alertVC showFrom:topVC animated:YES];
     }
     
@@ -199,6 +214,34 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     [FHUtils setContent:stringCurrentDate forKey:@"f_save_switch_local_time"];
     
     self.isShowSwitch = NO;
+}
+
+- (BOOL)isTopCitySwitchTimeCompare
+{
+    
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSInteger topInterger = [fhSettings tt_integerValueForKey:@"f_switch_city_top_time"];
+    
+    if (topInterger == 0) {
+        return YES;
+    }
+    
+    NSString *stringDate = (NSString *)[FHUtils contentForKey:kFHTopSwitchCityLocalKey];
+    if(stringDate)
+    {
+        NSDate *saveDate = [FHUtils dateFromString:stringDate];
+        
+        NSInteger timeCount = [FHUtils numberOfDaysWithFromDate:saveDate toDate:[NSDate date]];
+        
+        if (timeCount >= topInterger) {
+            return YES;
+        }else
+        {
+            return NO;
+        }
+    }
+    
+    return YES;
 }
 
 - (void)checkUserLocationStatus
@@ -210,8 +253,10 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (BOOL)isHaveLocationAuthorization
 {
-    CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
-    switch (status) {
+    if (!self.currentStatus) {
+        self.currentStatus = CLLocationManager.authorizationStatus;
+    }
+    switch (self.currentStatus) {
         case kCLAuthorizationStatusDenied:
         {
             return NO;
@@ -255,17 +300,18 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     }
 }
 
-- (void)setUpLocManagerLocalInfo
++ (NSString *)amapAPIKey
 {
-    NSString *apiKeyString = nil;
     if ([[TTSandBoxHelper bundleIdentifier] isEqualToString:@"com.bytedance.fp1"]) {
-        apiKeyString = @"003c8c31d052f8882bfb2a1d712dea84";
-    }else
-    {
-        apiKeyString = @"69c1887b8d0d2d252395c58e3da184dc";
+        return @"003c8c31d052f8882bfb2a1d712dea84";
+    } else {
+        return @"69c1887b8d0d2d252395c58e3da184dc";
     }
-    
-    [AMapServices sharedServices].apiKey = apiKeyString;
+}
+
+- (void)setUpLocManagerLocalInfo
+{    
+    [AMapServices sharedServices].apiKey = [FHLocManager amapAPIKey];
     [AMapServices sharedServices].enableHTTPS = YES;
     [AMapServices sharedServices].crashReportEnabled = false;
 }
@@ -298,7 +344,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
         
         NSInteger statusNum = 1;
-        if (![self isHaveLocationAuthorization]) {
+        if (![wSelf isHaveLocationAuthorization]) {
             statusNum = 2;
         }else if (![FHEnvContext isNetworkConnected])
         {
@@ -383,16 +429,36 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 
                 BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
                 BOOL isShowIntoduceView = [FHIntroduceManager sharedInstance].isShowing;
-                BOOL isShowSpringLoginView = [FHMinisdkManager sharedInstance].isShowing;
                 
-                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity && !isShowIntoduceView && !isShowSpringLoginView) {
-                    [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
-                }
+            
+                
+                // 拉取小端运营窗口弹窗配置信息
+                [[FHPopupViewManager shared] fetchData];
                 
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 [wSelf updateAllConfig:model isNeedDiff:NO];
                 
                 
+                NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+                BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_switch_city_top_close"];
+                
+                //setting控制开关
+                if(boolOffline)
+                {
+                    // 城市切换弹窗
+                     if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity && !isShowIntoduceView) {
+                         [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
+                     }
+                }else
+                {
+                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && [self isTopCitySwitchTimeCompare]) {
+                        NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
+                        [FHUtils setContent:stringCurrentDate forKey:kFHTopSwitchCityLocalKey];
+                        
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeInitSwitchCityTopView" object:nil];
+                    }
+                }
+             
                 //                BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
                 //
                 //                if (!isHasFindHouseCategory && [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
@@ -425,6 +491,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         
         if (model.data && completion) {
             completion(YES, model);
+            [[FHPopupViewManager shared] fetchData];
         }else
         {
             completion(NO, model);
@@ -453,6 +520,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     [FHEnvContext sharedInstance].generalBizConfig.configCache = model.data;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [[FHEnvContext sharedInstance] saveGeneralConfig:model];
+        
     });
     [FHEnvContext saveCurrentUserCityId:model.data.currentCityId];
     

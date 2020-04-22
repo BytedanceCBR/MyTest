@@ -28,10 +28,10 @@
 #import <TTTracker/TTTracker.h>
 #import <TTUsersettings/TTUserSettingsManager+FontSettings.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 
 static NSString *const kHasMessageHost = @"dispatch_message";
-static NSString *const kJSBridgeScheme = @"bytedance";
+//static NSString *const kJSBridgeScheme = @"bytedance";
 
 NSString *const TTWebViewDidBlockRequestNotification = @"WebViewDidBlockRequest";
 NSString *const TTWebViewRequestKey = @"request";

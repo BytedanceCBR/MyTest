@@ -30,7 +30,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <Masonry/Masonry.h>
 #import "SSCommonLogic.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 
 #define newkTitleFontSize [TTVideoFontSizeManager settedRelatedTitleFontSize]
 

@@ -3,7 +3,7 @@
 //
 
 #import "FHODetailCommunityEntryCorrectingCell.h"
-#import "BDWebImage.h"
+#import <BDWebImage/BDWebImage.h>
 #import "NSTimer+NoRetain.h"
 #import "TTBaseMacro.h"
 #import "IMConsDefine.h"

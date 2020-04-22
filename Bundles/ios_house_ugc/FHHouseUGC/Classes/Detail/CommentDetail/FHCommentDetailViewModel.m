@@ -30,7 +30,7 @@
 #import "FHUGCDetailGrayLineCell.h"
 #import "FHPostDetailCell.h"
 #import "FHUGCCellHelper.h"
-#import <TTBusinessManager+StringUtils.h>
+#import "TTBusinessManager+StringUtils.h"
 #import "HMDTTMonitor.h"
 
 @interface FHCommentDetailViewModel ()<UITableViewDelegate,UITableViewDataSource,TTCommentDetailCellDelegate>

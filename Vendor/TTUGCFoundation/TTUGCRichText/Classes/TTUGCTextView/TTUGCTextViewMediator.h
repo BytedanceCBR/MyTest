@@ -13,7 +13,6 @@
 #import "TTUGCTextView.h"
 #import "TTUGCSearchUserViewController.h"
 #import "TTUGCSearchHashtagViewController.h"
-#import "TTImagePickerController.h"
 
 typedef void (^DidClickHashtagButtonBlock)(BOOL didInputTextHashtag);
 typedef void (^DidClickAtButtonBlock)(BOOL didInputAt);
@@ -47,6 +46,9 @@ typedef void (^DidClickAtButtonBlock)(BOOL didInputAt);
 @property (nonatomic, copy) DidClickHashtagButtonBlock hashTagBtnClickBlock;
 @property (nonatomic, copy) DidClickAtButtonBlock atBtnClickBlock;
 @property (nonatomic, assign) BOOL isPushOutAtListController;
+
+// 埋点数据
+@property (nonatomic, strong) NSDictionary *traceDict;
 
 - (void)addHashtag:(FHTopicListResponseDataListModel *)hashtagModel;
 

@@ -9,13 +9,15 @@
 #import "FHHomeMainViewController.h"
 #import "FHHomeMainHouseCollectionCell.h"
 #import "FHHomeMainFeedCollectionCell.h"
-#import <FHEnvContext.h>
-#import <ArticleTabbarStyleNewsListViewController.h>
+#import "FHEnvContext.h"
+#import "ArticleTabbarStyleNewsListViewController.h"
+#import "FHHomeViewController.h"
 
 @interface FHHomeMainViewModel()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHHomeMainViewController *viewController;
 @property(nonatomic , weak) ArticleTabBarStyleNewsListViewController *articleListVC;
+@property(nonatomic , weak) FHHomeViewController *homeListVC;
 @property(nonatomic , strong) NSMutableArray *dataArray;
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
@@ -99,6 +101,10 @@
         self.articleListVC = cell.contentVC;
     }
     
+    if ([cell.contentVC isKindOfClass:[FHHomeViewController class]]) {
+        self.homeListVC = cell.contentVC;
+    }
+    
     return cell;
 }
 
@@ -136,10 +142,15 @@
         tabIndex = ceilf(tabIndex);
     }
     
+    [self.viewController.topView changeBackColor:(scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width) > 0.5 ? 1 : 0];
+    [self.homeListVC.topBar changeBackColor:(scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width) > 0.5 ? 1 : 0];
+
     if(tabIndex != self.viewController.topView.segmentControl.selectedSegmentIndex){
         self.currentIndex = tabIndex;
         self.viewController.topView.segmentControl.selectedSegmentIndex = self.currentIndex;
         
+
+        [FHEnvContext sharedInstance].isShowingHomeHouseFind = (tabIndex == 0);
         [self sendEnterCategory:tabIndex == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed enterType:FHHomeMainTraceEnterTypeFlip];
         [self sendStayCategory:tabIndex == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse enterType:FHHomeMainTraceEnterTypeFlip];
     }else{
@@ -169,7 +180,26 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeItemVCEnterCategory" object:@(enterType)];
     }else
     {
-        [self.articleListVC viewAppearForEnterType:enterType];
+        //切换城市补报
+        if (!self.articleListVC) {
+              NSMutableDictionary *traceDict = [NSMutableDictionary new];
+             if (enterType == FHHomeMainTraceEnterTypeClick) {
+                 [traceDict setValue:@"click" forKey:@"enter_type"];
+             }else
+             {
+                 [traceDict setValue:@"flip" forKey:@"enter_type"];
+             }
+                          
+             [traceDict setValue:@"maintab" forKey:@"enter_from"];
+             [traceDict setValue:@"discover_stream" forKey:@"category_name"];
+             [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
+            
+             [traceDict setValue:@"f_house_news"
+                                 forKey:@"category_name"];
+             [FHEnvContext recordEvent:traceDict andEventKey:@"enter_category"];
+        }else{
+           [self.articleListVC viewAppearForEnterType:enterType];
+        }
     }
 }
 

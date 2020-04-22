@@ -78,10 +78,24 @@
     CGFloat labelY = top + floor((kCellInfoBarHeight - kCellTypeLabelHeight) / 2) + 5;
     CGFloat margin = 4;
     NSString *typeString = [TTLayOutCellDataHelper getTypeStringWithOrderedData:self.orderedData];
+    NSDictionary *customSourceImageData = [TTLayOutCellDataHelper getCustomSourceImageDataWithOrderedData:self.orderedData];
+    NSString *imageUrl = customSourceImageData[@"icon"][@"url"];
+    CGFloat imageWidth = [customSourceImageData[@"icon"][@"width"] doubleValue];
+    CGFloat imageHeight = [customSourceImageData[@"icon"][@"height"] doubleValue];
+    NSString *customSourceSchema = customSourceImageData[@"schema"];
     
     CGFloat sourceMaxWidth = containWidth - kCellUninterestedButtonWidth - 4;
     
-    if (!isEmptyString(typeString)) {
+    if (customSourceImageData && imageUrl.length > 0 && imageWidth > 0 && imageHeight > 0) {
+        CGRect customSourceImageViewFrame = CGRectMake(left, labelY, imageWidth+ kCellTypeLabelInnerPadding * 2, imageHeight);
+        self.customSourceImageViewFrame = customSourceImageViewFrame;
+        
+        left += self.customSourceImageViewFrame.size.width + kCellTypelabelRightPaddingToInfoLabel;
+        sourceMaxWidth -= (self.customSourceImageViewFrame.size.width + kCellTypelabelRightPaddingToInfoLabel);
+        self.customSourceImageViewHidden = NO;
+        self.customSourceImageUrl = imageUrl;
+        self.customSourceImageViewCanClick = (customSourceSchema.length > 0);
+    }else if (!isEmptyString(typeString)) {
         //优化，字符串相同时避免重复计算
         if (![self.typeLabelStr isEqualToString:typeString]) {
             CGSize typeSize = [typeString sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:kCellTypeLabelFontSize]}];

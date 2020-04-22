@@ -10,23 +10,24 @@
 #import "FHHomeSectionHeader.h"
 #import "FHEnvContext.h"
 #import "FHHomeRequestAPI.h"
-#import <FHHomeHouseModel.h>
+#import "FHHomeHouseModel.h"
 #import "TTURLUtils.h"
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
 #import "ToastManager.h"
 #import <TTUIWidget/ArticleListNotifyBarView.h>
-#import <UIScrollView+Refresh.h>
-#import <MJRefresh.h>
-#import <FHRefreshCustomFooter.h>
-#import <TTArticleCategoryManager.h>
+#import "UIScrollView+Refresh.h"
+#import "MJRefresh.h"
+#import "FHRefreshCustomFooter.h"
+#import "TTArticleCategoryManager.h"
 #import "FHHomeCellHelper.h"
-#import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 #import "FHHomeItemViewController.h"
 #import "FHHomeSearchPanelViewModel.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
-#import <FHUtils.h>
-#import <FHHomeMainViewController.h>
+#import "FHUtils.h"
+#import "FHHomeMainViewController.h"
+#import <TTUIWidget/TTRefreshAnimationView.h>
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -53,6 +54,7 @@
 @property (nonatomic, strong) TTHttpTask * requestRefreshTask;
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
 @property (nonatomic, assign) BOOL isFirstChange;
+@property (nonatomic, assign) BOOL isShowTopTabbar;
 @property (nonatomic, assign) BOOL isRequestFromSwitch; //左右切换房源类型
 @property(nonatomic, weak)   NSTimer *timer;
 
@@ -99,7 +101,7 @@
         
         //**************
         // 监听子控制器发出的通知
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subTableViewDidScroll:) name:@"FHHomeSubTableViewDidScroll" object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subTableViewDidScroll:) name:@"FHHomeSubTableViewDidScroll" object:nil];
 
 
         //*************
@@ -132,10 +134,13 @@
             if (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                 [self requestOriginData:self.isFirstChange isShowPlaceHolder:[FHEnvContext sharedInstance].isRefreshFromCitySwitch];
             }
+            
         }];
         
         [self.tableViewV setBackgroundColor:[UIColor themeHomeColor]];
-        [self.tableViewV.pullDownView setUpRefreshBackColor:[UIColor themeHomeColor]];
+        self.tableViewV.pullDownView.backgroundColor = [UIColor themeHomeColor];
+        self.tableViewV.pullDownView.bgView.backgroundColor = [UIColor themeHomeColor];
+        self.tableViewV.pullDownView.defaultRefreshAnimateView.backgroundColor = [UIColor themeHomeColor];
         //       __block NSString *previousCityId = configDataModel.currentCityId;
         //订阅config变化发送网络请求
         [FHHomeCellHelper sharedInstance].isFirstLanuch = YES;
@@ -305,6 +310,27 @@
             
             // 添加子控制器
             [self.homeViewController addChildViewController:itemVC];
+            
+            itemVC.scrollDidScrollCallBack = ^(UIScrollView * _Nonnull currentTable) {
+                weakSelf.tableViewV.scrollEnabled = YES;
+                UIScrollView *scrollView = currentTable;
+                weakSelf.childVCScrollView = scrollView;
+                if (weakSelf.tableViewV.contentOffset.y < weakSelf.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
+                    scrollView.contentOffset = CGPointZero;
+                    scrollView.showsVerticalScrollIndicator = NO;
+                    
+                    //将未滑动到置顶的子table置顶
+                    for (FHHomeItemViewController *vc in weakSelf.itemsVCArray) {
+                        if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
+                            vc.tableView.contentOffset = CGPointZero;
+                        }
+                    }
+                } else {
+                    //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
+                    scrollView.showsVerticalScrollIndicator = YES;
+                }
+            };
+            
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
                 [weakSelf processRequestData:refreshType andHouseType:houseType andIsSucees:isSuccess andDataModel:dataModel];
             };
@@ -461,6 +487,16 @@
     
     if (isNeedCreateScroll) {
         [self setUpSubtableViewContrllers];
+    }
+    
+    
+    if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+        //增加切换城市埋点
+          NSMutableDictionary *traceEnterTopTabache = [NSMutableDictionary new];
+          [traceEnterTopTabache setValue:@"click" forKey:@"enter_type"];
+          [traceEnterTopTabache setValue:@"maintab" forKey:@"enter_from"];
+          [traceEnterTopTabache setValue:@"f_find_house" forKey:@"category_name"];
+          [FHEnvContext recordEvent:traceEnterTopTabache andEventKey:@"enter_category"];
     }
 }
 
@@ -730,10 +766,16 @@
         
         if (offSetY < self.headerHeight + 80) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"headerViewToTop" object:nil];
-            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
+            if (self.isShowTopTabbar) {
+                [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
+                self.isShowTopTabbar = NO;
+            }
         }else
         {
-            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
+            if (!self.isShowTopTabbar) {
+                [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
+                self.isShowTopTabbar = YES;
+            }
         }
     } else if (scrollView == self.homeViewController.scrollView) {
         
@@ -761,6 +803,20 @@
         };
         mainVC.topView.houseSegmentControl.selectedSegmentIndex = scrollIndex;
     }
+}
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
+{
+    if (scrollView == self.tableViewV) {
+        [self setUpTableScrollOffsetZero];
+        
+        NSMutableDictionary *clickOptDict = [NSMutableDictionary new];
+        [clickOptDict setValue:@"maintab" forKey:@"page_type"];
+        [clickOptDict setValue:@"status_column" forKey:@"click_option"];
+        [FHEnvContext recordEvent:clickOptDict andEventKey:@"click_options"];
+        return YES;
+    }
+    return NO;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
@@ -810,23 +866,23 @@
 #pragma mark notifications
 
 - (void)subTableViewDidScroll:(NSNotification *)noti {
-    self.tableViewV.scrollEnabled = YES;
-    UIScrollView *scrollView = noti.object;
-    self.childVCScrollView = scrollView;
-    if (self.tableViewV.contentOffset.y < self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
-        scrollView.contentOffset = CGPointZero;
-        scrollView.showsVerticalScrollIndicator = NO;
-        
-        //将未滑动到置顶的子table置顶
-        for (FHHomeItemViewController *vc in self.itemsVCArray) {
-            if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
-                vc.tableView.contentOffset = CGPointZero;
-            }
-        }
-    } else {
-        //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
-        scrollView.showsVerticalScrollIndicator = YES;
-    }
+//    self.tableViewV.scrollEnabled = YES;
+//    UIScrollView *scrollView = noti.object;
+//    self.childVCScrollView = scrollView;
+//    if (self.tableViewV.contentOffset.y < self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight) {
+//        scrollView.contentOffset = CGPointZero;
+//        scrollView.showsVerticalScrollIndicator = NO;
+//
+//        //将未滑动到置顶的子table置顶
+//        for (FHHomeItemViewController *vc in self.itemsVCArray) {
+//            if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
+//                vc.tableView.contentOffset = CGPointZero;
+//            }
+//        }
+//    } else {
+//        //        self.tableView.contentOffset = CGPointMake(0, HeaderViewH);
+//        scrollView.showsVerticalScrollIndicator = YES;
+//    }
 }
 
 #pragma mark changeTopStatus

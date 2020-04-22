@@ -9,17 +9,17 @@
 #import "FHDetailNoticeAlertView.h"
 #import "FHHouseType.h"
 #import "FHMainApi+Contact.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 #import "YYCache.h"
 #import <FHCommonUI/ToastManager.h>
-#import <TTReachability.h>
+#import "TTReachability.h"
 #import "TTAccount.h"
 #import "TTTracker.h"
 #import <FHHouseBase/FHUserTracker.h>
 #import <FHHouseBase/FHGeneralBizConfig.h>
 #import <FHHouseBase/FHEnvContext.h>
 #import "IMManager.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import "FHHousePhoneCallUtils.h"
 #import "FHHouseFollowUpHelper.h"
 #import "FHFillFormAgencyListItemModel.h"
@@ -48,7 +48,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     return YES;
 }
 
-+ (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel
++ (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel submitBlock:(fillFormSubmit)submitBlock
 {
     NSString *title = configModel.title;
     NSString *subtitle = configModel.subtitle;
@@ -104,6 +104,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
         [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
         [wself addClickConfirmLog:configModel alertView:alert];
+        if (submitBlock) {
+            submitBlock();
+        }
     };
 
     alertView.tipClickBlock = ^{
@@ -121,7 +124,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     FHHouseFillFormConfigModel *configModel = [[FHHouseFillFormConfigModel alloc]initWithDictionary:config error:nil];
     if (configModel) {
-        [self fillFormActionWithConfigModel:configModel];
+        [self fillFormActionWithConfigModel:configModel submitBlock:nil];
     }
 }
 
@@ -244,9 +247,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     NSString *houseId = customHouseId.length > 0 ? customHouseId : configModel.houseId;
+    NSNumber *targetType = configModel.targetType ? : @(configModel.houseType);
     NSString *from = fromStr.length > 0 ? fromStr : [self fromStrByHouseType:configModel.houseType];
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : configModel.chooseAgencyList;
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:configModel.cluePage clueEndpoint:configModel.clueEndpoint targetType:@(configModel.houseType) agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from cluePage:configModel.cluePage clueEndpoint:configModel.clueEndpoint targetType:targetType agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
@@ -366,6 +370,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (configModel.itemId.length > 0) {
         params[@"item_id"] = configModel.itemId;
     }
+    params[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
 
@@ -395,7 +400,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
     }
     params[@"agency_list"] = dict.count > 0 ? dict : @"be_null";
-
+    params[@"growth_deepevent"] = @(1);
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
 
@@ -452,6 +457,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (params[@"from"]) {
         _from = params[@"from"];
     }
+    _cluePage = params[kFHCluePage];
+
 }
 
 - (void)setLogPbWithNSString:(NSString *)logpb

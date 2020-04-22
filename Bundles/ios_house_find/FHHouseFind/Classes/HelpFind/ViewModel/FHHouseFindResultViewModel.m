@@ -6,20 +6,22 @@
 //
 
 #import "FHHouseFindResultViewModel.h"
-#import <FHHouseType.h>
-#import <FHHouseBaseItemCell.h>
-#import <FHErrorView.h>
-#import <FHSingleImageInfoCellModel.h>
-#import <FHUserTracker.h>
-#import <FHHouseBridgeManager.h>
-#import <TTRoute.h>
-#import <FHHouseListAPI.h>
-#import <TTHttpTask.h>
+#import "FHHouseType.h"
+#import "FHHouseBaseItemCell.h"
+#import "FHErrorView.h"
+#import "FHSingleImageInfoCellModel.h"
+#import "FHUserTracker.h"
+#import "FHHouseBridgeManager.h"
+#import "FHHouseListBaseItemCell.h"
+#import "FHHouseListBaseItemModel.h"
+#import "TTRoute.h"
+#import "FHHouseListAPI.h"
+#import "TTHttpTask.h"
 #import "FHHouseFindResultViewController.h"
 #import "FHHouseFindResultTopHeader.h"
 #import "FHHouseFindResultViewController.h"
-#import <FHUtils.h>
-#import <FHEnvContext.h>
+#import "FHUtils.h"
+#import "FHEnvContext.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
 
 #define kBaseCellId @"kBaseCellId"
@@ -238,7 +240,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kBaseCellId];
+//    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kBaseCellId];
+     [self.tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kBaseCellId];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kBaseErrorCellId];
     
 }
@@ -267,7 +270,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 //    }
     
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel *  _Nullable model, NSError * _Nullable error) {
     
             if (!wself) {
                 return ;
@@ -286,7 +289,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         BOOL hasMore = NO;
         NSString *refreshTip;
         
-        FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
+        FHHouseListDataModel *houseModel = ((FHListResultHouseModel *)model).data;
         hasMore = houseModel.hasMore;
         refreshTip = houseModel.refreshTip;
         itemArray = houseModel.items;
@@ -294,9 +297,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
-            cellModel.houseType = FHHouseTypeSecondHandHouse;
-            
+//            FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
+//            cellModel.houseType = FHHouseTypeSecondHandHouse;
+        FHHouseListBaseItemModel *cellModel = (FHHouseListBaseItemModel *)obj;
             if (cellModel) {
                 [self.houseList addObject:cellModel];
             }
@@ -457,14 +460,22 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         return cellError;
     }
     
-    FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
-    if (indexPath.row < self.houseList.count) {
-        FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+//    FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
+//    if (indexPath.row < self.houseList.count) {
+//        FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+//
+//        [cell refreshTopMargin: 20];
+//        [cell updateWithHouseCellModel:cellModel];
+//        return cell;
+//    }
+       FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
+        if (indexPath.row < self.houseList.count) {
+            FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
 
-        [cell refreshTopMargin: 20];
-        [cell updateWithHouseCellModel:cellModel];
-        return cell;
-    }
+    //        [cell refreshTopMargin: 20];
+            [cell refreshWithData:cellModel];
+        }
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -473,10 +484,10 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     if (indexPath.section == 0) {
         if (indexPath.row < self.houseList.count) {
             
-            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-            if (![self.houseShowCache.allKeys containsObject:cellModel.houseId] && cellModel.houseId) {
+            FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
+            if (![self.houseShowCache.allKeys containsObject:cellModel.houseid] && cellModel.houseid) {
                 [self addHouseShowLog:cellModel withRank:indexPath.row];
-                self.houseShowCache[cellModel.houseId] = @"1";
+                self.houseShowCache[cellModel.houseid] = @"1";
             }
         }
     }
@@ -489,16 +500,17 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     }
     
     if (indexPath.row < self.houseList.count) {
-        FHSingleImageInfoCellModel *cellModel  = nil;
-        BOOL isLastCell = NO;
-        
-        cellModel = self.houseList[indexPath.row];
-        
-        isLastCell = (indexPath.row == self.houseList.count - 1);
-        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-        return (isLastCell ? 125 : 105) + reasonHeight;
+//        FHSingleImageInfoCellModel *cellModel  = nil;
+//        BOOL isLastCell = NO;
+//
+//        cellModel = self.houseList[indexPath.row];
+//
+//        isLastCell = (indexPath.row == self.houseList.count - 1);
+//        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+//        return (isLastCell ? 125 : 105) + reasonHeight;
+         return 88;
     }
-    return 105;
+    return 88;
 }
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -527,7 +539,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 0) {
         if (indexPath.row < self.houseList.count) {
-            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
             if (cellModel) {
                 [self jump2HouseDetailPage:cellModel withRank:indexPath.row];
             }
@@ -536,7 +548,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 }
 
 #pragma mark house_show log
--(void)addHouseShowLog:(FHSingleImageInfoCellModel *)cellModel withRank: (NSInteger) rank {
+-(void)addHouseShowLog:(FHHouseListBaseItemModel *)cellModel withRank: (NSInteger) rank {
     if (!cellModel) {
         return;
     }
@@ -602,7 +614,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 }
 
 #pragma mark - 详情页跳转
--(void)jump2HouseDetailPage:(FHSingleImageInfoCellModel *)cellModel withRank: (NSInteger) rank  {
+-(void)jump2HouseDetailPage:(FHHouseListBaseItemModel *)cellModel withRank: (NSInteger) rank  {
     NSMutableDictionary *traceParam = @{}.mutableCopy;
 
     traceParam[@"enter_from"] = [self pageTypeString];
@@ -625,32 +637,32 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
-            if (cellModel.houseModel) {
-                
-                FHNewHouseItemModel *theModel = cellModel.houseModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId];
-            }
+//            if (cellModel.houseModel) {
+//
+//                FHNewHouseItemModel *theModel = cellModel.houseModel;
+//                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId];
+//            }
             break;
         case FHHouseTypeSecondHandHouse:
-            if (cellModel.secondModel) {
+//            if (cellModel.secondModel) {
                 
-                FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.hid];
-            }
+//                FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
+                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",cellModel.houseid];
+//            }
             break;
         case FHHouseTypeRentHouse:
-            if (cellModel.rentModel) {
-                
-                FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];
-            }
+//            if (cellModel.rentModel) {
+//
+//                FHHouseRentDataItemsModel *theModel = cellModel.rentModel;
+//                urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];
+//            }
             break;
         case FHHouseTypeNeighborhood:
-            if (cellModel.neighborModel) {
-                
-                FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
-                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
-            }
+//            if (cellModel.neighborModel) {
+//
+//                FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
+//                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
+//            }
             break;
         default:
             break;

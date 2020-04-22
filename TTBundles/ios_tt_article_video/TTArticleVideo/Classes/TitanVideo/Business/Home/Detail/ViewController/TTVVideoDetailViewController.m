@@ -569,7 +569,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
         [TTVVideoAlbumHolder holder].albumView.frame = CGRectMake(0, self.headerPosterVC.interactModel.minMovieH, self.view.width, self.view.height-self.headerPosterVC.interactModel.minMovieH);
     }
     
-    CLS_LOG(@"TTVideoDetailViewController viewDidLoad with groupID %@",[self.detailModel uniqueID]);
+    // CLS_LOG(@"TTVideoDetailViewController viewDidLoad with groupID %@",[self.detailModel uniqueID]);
     [self.detailStateStore sendAction:TTVDetailEventTypeViewDidLoad payload:nil];
     [AKAwardCoinVideoMonitorManager shareInstance].videoDetailModel = self.detailModel;
 }
@@ -758,10 +758,14 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     [self tt_startUpdate];
     
     [self.view addSubview:self.topView];
-    
-    self.statusBarBackgrView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.ttv_statusBarHidden ? 0 : self.view.tt_safeAreaInsets.top)];
-    self.statusBarBackgrView.backgroundColor = [UIColor blackColor];
     self.initInsets = self.view.tt_safeAreaInsets;
+    if (@available(iOS 13.0, *)) {
+        self.initInsets =  [UIApplication sharedApplication].keyWindow.safeAreaInsets;
+    } else {
+        self.initInsets = self.view.tt_safeAreaInsets;
+    }
+    self.statusBarBackgrView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.ttv_statusBarHidden ? 0 : self.initInsets.top)];
+    self.statusBarBackgrView.backgroundColor = [UIColor blackColor];
     [self.view addSubview:self.statusBarBackgrView];
 }
 

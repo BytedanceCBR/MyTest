@@ -21,22 +21,24 @@
 #import "TTUserSettings/TTUserSettingsReporter.h"
 
 #import "TTNetworkManager.h"
-#import "TouTiaoPushSDK.h"
 //#import "TTSFShareManager.h"
 
 //#import "TSVPushLaunchManager.h"
 //#import "TTArticleTabBarController.h"
 //#import "TTLaunchTracer.h"
 #import <FHHouseBase/FHHouseBridgeManager.h>
-#import <FHLocManager.h>
+#import "FHLocManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
-#import <FHEnvContext.h>
-#import <JSONAdditions.h>
+#import "FHEnvContext.h"
+#import "JSONAdditions.h"
 #import "FHBaseViewController.h"
 #import "TTUIResponderHelper.h"
 #import "UIViewController+TTMovieUtil.h"
 #import "FHIntroduceManager.h"
+#import "TTPushServiceDelegate.h"
+
+#import <BDALog/BDAgileLog.h>
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
@@ -103,6 +105,8 @@ static APNsManager *_sharedManager = nil;
 
 - (void)handleRemoteNotification:(NSDictionary *)userInfo
 {
+    [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:TTTrackerLaunchFromRemotePush];
+
     if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
         //正在展示隐私弹窗        
         return;
@@ -117,12 +121,7 @@ static APNsManager *_sharedManager = nil;
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
         wrapperTrackEventWithCustomKeys(@"apn", @"news_notification_view", rid, nil, nil);
     }
-    
-
-//    [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"notify" postBack:postBack];
-
-    [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:TTTrackerLaunchFromRemotePush];
-    
+ 
     if ([self tryForOldAPNsLogical:userInfo]) {
         return;
     }
@@ -175,8 +174,6 @@ static APNsManager *_sharedManager = nil;
         NSString *titleId = [NSString stringWithFormat:@"%@",paramObj.allParams[@"title_id"]];
         param[@"title_id"] = @([titleId longLongValue]);
         param[@"event_type"] = @"house_app2c_v2";
-
-        [TTTracker eventV3:@"push_click" params:param];
 
         [FHLocManager sharedInstance].isShowHomeViewController = NO;
         
@@ -243,8 +240,19 @@ static APNsManager *_sharedManager = nil;
             }
         }
         else {
-            if ([[UIApplication sharedApplication] canOpenURL:[TTStringHelper URLWithURLString:openURL]]) {
-                [[UIApplication sharedApplication] openURL:[TTStringHelper URLWithURLString:openURL]];
+            NSURL *pushURL = [TTStringHelper URLWithURLString:openURL];
+            if (pushURL) {
+                if (@available(iOS 10.0, *)) {
+                    [[UIApplication sharedApplication] openURL:pushURL options:@{} completionHandler:^(BOOL success) {
+                        if (!success) {
+                            BDALOG_INFO(@"can't open %@, 第三方APP没有注册URL Scheme", openURL);
+                        }
+                    }];
+                }else {
+                    if ([[UIApplication sharedApplication] canOpenURL:pushURL]) {
+                        [[UIApplication sharedApplication] openURL:pushURL];
+                    }
+                }
             }
         }
     }
@@ -280,23 +288,8 @@ static APNsManager *_sharedManager = nil;
 {
     // 注意：根据 app_notice_status api 的定义，close 发送 1，open 发送 0
     // 这个是早期的api，根据server数据库的定义，0为有效值
-    
-    //         add by zjing 写死了是YES
-//    if(![SSCommonLogic pushSDKEnable]) {
-//        NSMutableString *tURL = [NSMutableString stringWithFormat:@"%@?notice=%d", [[FHHouseBridgeManager sharedInstance].pushBridge appNoticeStatusURLString], [TTUserSettingsManager apnsNewAlertClosed]];
-//
-////        NSMutableString *tURL = [NSMutableString stringWithFormat:@"%@?notice=%d", [CommonURLSetting appNoticeStatusURLString], [TTUserSettingsManager apnsNewAlertClosed]];
-//        if(!isEmptyString([[TTInstallIDManager sharedInstance] deviceID])) {
-//            [tURL appendFormat:@"&device_id=%@", [[TTInstallIDManager sharedInstance] deviceID]];
-//        }
-//
-//        [[TTNetworkManager shareInstance] requestForJSONWithURL:tURL params:nil method:@"GET" needCommonParams:YES callback:NULL];
-//
-//    } else {
-        TTUploadSwitchRequestParam *param = [TTUploadSwitchRequestParam requestParam];
-        param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
-        [TouTiaoPushSDK sendRequestWithParam:param completionHandler:nil];
-//    }
+    [BDUGPushService uploadNotificationStatus:[NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]]];
+
     // 注意：根据 collect_setting api 的定义，close 发送 0，open 发送 1，和 app_notice_status 相反
     NSNumber *apnNotifyValue = @1;
     if ([TTUserSettingsManager apnsNewAlertClosed]) apnNotifyValue = @0;

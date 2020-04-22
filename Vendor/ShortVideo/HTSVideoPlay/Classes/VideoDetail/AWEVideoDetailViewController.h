@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "SSViewControllerBase.h"
 #import "TTRoute.h"
-#import <SSThemed.h>
+#import "SSThemed.h"
 
 @class TTShortVideoModel;
 @class AWEVideoDetailViewController;

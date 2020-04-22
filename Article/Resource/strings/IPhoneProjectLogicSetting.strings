@@ -33,8 +33,6 @@
 // SSAppPageController
 "home"                  = "FHHomeSchemaObject";
 "main"                  = "FHHomeSchemaObject";
-//春节活动临时加的，和main行为一致
-"spring"                = "FHHomeSchemaObject";
 
 //"profile"               = "ArticleMomentProfileViewController"; //旧版个人主页
 "profile"               = "FHPersonalHomePageController"; //新版个人主页
@@ -190,7 +188,7 @@
 "ugc_post_at_list" = "TTUGCSearchUserViewController";
 "ugc_community_detail" = "FHCommunityDetailViewController";
 "ugc_my_interest" = "FHUGCMyInterestedController";
-"ugc_post_wd_answer" = "FHWDAnswerPictureTextViewController";
+"wenda_post" = "FHWDAnswerPictureTextViewController";
 "ugc_message_list" = "FHMessageListController";
 "ugc_search_list" = "FHUGCSearchListController";
 "ugc_community_list" = "FHUGCCommunityListViewController";
@@ -209,5 +207,8 @@
 
 //幸福问答
 "quick_ask" = "FHFastQAViewController";
-
-"spring_login" = "SpringLoginViewController";
+//小区问答
+"ugc_wenda_list" = "FHNeighbourhoodQuestionController";
+"ugc_community_reviews_list" = "FHNeighbourhoodCommentsController";
+//专题页
+"forum_topic" = "FHSpecialTopicViewController";

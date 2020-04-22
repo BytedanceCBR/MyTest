@@ -16,7 +16,7 @@
 #import "UIViewController+Track.h"
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import <FHRNHelper.h>
+#import "FHRNHelper.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
@@ -28,6 +28,10 @@
 #import "TTNavigationController.h"
 #import <FHCommonUI/FHFeedbackView.h>
 #import <ios_house_im/FHIMConfigManager.h>
+#import <TTSettingsManager/TTSettingsManager.h>
+#import <FHHouseBase/FHRelevantDurationTracker.h>
+#import <CallKit/CXCallObserver.h>
+#import <CallKit/CXCall.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -53,10 +57,12 @@
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 //@property (nonatomic, strong) id instantData;
 @property (nonatomic, strong) CTCallCenter *callCenter;
+@property (nonatomic, strong) CXCallObserver *callObserver;
 //是否拨打电话已接通
 @property (nonatomic, assign) BOOL isPhoneCallPickUp;
 //是否拨打电话（不区分是否接通）
 @property (nonatomic, assign) BOOL isPhoneCalled;// 新房UGC留资使用
+@property (nonatomic, assign) CGPoint lastContentOffset;
 
 @end
 
@@ -130,7 +136,7 @@
         }
         
         
-        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
+//        self.instantData = paramObj.allParams[INSTANT_DATA_KEY];
     }
     return self;
 }
@@ -153,7 +159,7 @@
     // Push推送过来的状态栏修改
     __weak typeof(self) wSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [wSelf refreshContentOffset:wSelf.tableView.contentOffset];
+        [wSelf updateStatusBar:wSelf.tableView.contentOffset];
     });
 }
 
@@ -167,7 +173,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.isViewDidDisapper = NO;
-    [self refreshContentOffset:self.tableView.contentOffset];
+    [self updateStatusBar:self.tableView.contentOffset];
     [self.view endEditing:YES];
     [self.viewModel vc_viewDidAppear:animated];
 }
@@ -176,6 +182,7 @@
 {
     [super viewWillDisappear:animated];
     [self.viewModel addStayPageLog:self.ttTrackStayTime];
+    [self sendCurrentPageStayTime: self.ttTrackStayTime * 1000.0];
     [self tt_resetStayTime];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -201,12 +208,28 @@
     }
 }
 
+- (void)trySendCurrentPageStayTime {
+    if (self.ttTrackStartTime == 0) {//当前页面没有在展示过
+        return;
+    }
+    double duration = self.ttTrackStayTime * 1000.0;
+    if (duration <= 200) {//低于200毫秒，忽略
+        self.ttTrackStartTime = 0;
+        [self tt_resetStayTime];
+        return;
+    }
+    [self sendCurrentPageStayTime:duration];
+    
+    self.ttTrackStartTime = 0;
+    [self tt_resetStayTime];
+}
+
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
     
-    [self.viewModel addStayPageLog:self.ttTrackStayTime];
-    [self tt_resetStayTime];
+    [self.viewModel addStayPageLog:self.ttTrackStayTime * 1000.0];
+    [self trySendCurrentPageStayTime];
 }
 
 - (void)trackStartedByAppWillEnterForground {
@@ -214,11 +237,34 @@
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
+- (void)sendCurrentPageStayTime:(double)duration
+{
+    if (self.houseType != FHHouseTypeSecondHandHouse) {
+        return;
+    }
+    NSString *_categoryName = self.tracerDict[@"enter_from"];
+    NSString *elementFrom = self.tracerDict[@"element_from"];
+    NSString *enterFrom = @"";
+
+    if ([elementFrom isEqualToString:@"be_null"]) {
+        enterFrom = [NSString stringWithFormat:@"click_%@", _categoryName];
+    }else {
+        enterFrom = [NSString stringWithFormat:@"click_%@", elementFrom];
+    }
+    //新加的详情页关联时长
+    [[FHRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:_houseId
+                                                                          itemID:_houseId
+                                                                       enterFrom:enterFrom
+                                                                    categoryName:_categoryName
+                                                                        stayTime:(NSInteger)(duration)
+                                                                           logPb:self.listLogPB];
+}
+
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        if (!self.instantData) {
+//        if (!self.instantData) {
             [self startLoading];
-        }
+//        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
@@ -268,10 +314,10 @@
     _bottomMaskView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_bottomMaskView];
     
-    if (_houseType == FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeNewHouse) {
-        _bottomBar = [[FHOldDetailBottomBarView alloc]initWithFrame:CGRectZero];
+    if  (_houseType == FHHouseTypeRentHouse ) {
+        _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
     }else {
-         _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
+         _bottomBar = [[FHOldDetailBottomBarView alloc]initWithFrame:CGRectZero];
     }
     
     [self.view addSubview:_bottomBar];
@@ -320,7 +366,7 @@
     }];
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(_houseType ==FHHouseTypeSecondHandHouse || _houseType == FHHouseTypeNewHouse? 80:64);
+        make.height.mas_equalTo(_houseType ==FHHouseTypeRentHouse? 64:80);
         if (@available(iOS 11.0, *)) {
             make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
         }else {
@@ -339,9 +385,9 @@
     }];
     
     [_bottomGroupChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(26);
+        make.height.mas_equalTo(32);
         make.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.bottomBar.mas_top).offset(-16);
+        make.bottom.mas_equalTo(self.bottomBar.mas_top).offset(-30);
     }];
     
     [self.view bringSubviewToFront:_navBar];
@@ -371,18 +417,59 @@
     [self.view setNeedsUpdateConstraints];
 }
 
-- (void)setupCallCenter {
+- (void)setupCallCenter
+{
     @weakify(self);
-    self.callCenter = [[CTCallCenter alloc] init];
-    _callCenter.callEventHandler = ^(CTCall* call){
-        @strongify(self);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self callHandlerWith:call];
-        });
-    };
+    
+    if (@available(iOS 10.0 , *)) {
+        _callObserver = [[CXCallObserver alloc]init];
+        [_callObserver setDelegate:self queue:dispatch_get_main_queue()];
+    }else {
+        _callCenter = [[CTCallCenter alloc] init];
+        _callCenter.callEventHandler = ^(CTCall* call){
+            @strongify(self);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self callHandlerWith:call];
+            });
+        };
+    }
 }
 
-- (void)callHandlerWith:(CTCall*)call {
+- (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call{
+    
+//    NSLog(@"outgoing :%d  onHold :%d   hasConnected :%d   hasEnded :%d",call.outgoing,call.onHold,call.hasConnected,call.hasEnded);
+    /** 以下为我手动测试 如有错误欢迎指出
+      拨通:  outgoing :1  onHold :0   hasConnected :0   hasEnded :0
+      拒绝:  outgoing :1  onHold :0   hasConnected :0   hasEnded :1
+      链接:  outgoing :1  onHold :0   hasConnected :1   hasEnded :0
+      挂断:  outgoing :1  onHold :0   hasConnected :1   hasEnded :1
+     
+      新来电话:    outgoing :0  onHold :0   hasConnected :0   hasEnded :0
+      保留并接听:  outgoing :1  onHold :1   hasConnected :1   hasEnded :0
+      另一个挂掉:  outgoing :0  onHold :0   hasConnected :1   hasEnded :0
+      保持链接:    outgoing :1  onHold :0   hasConnected :1   hasEnded :1
+      对方挂掉:    outgoing :0  onHold :0   hasConnected :1   hasEnded :1
+     */
+    //接通
+    if (call.outgoing) {
+        self.isPhoneCalled = YES;
+    }
+    if (call.outgoing && call.hasConnected) {
+        //通话中
+        self.isPhoneCallPickUp = YES;
+    }
+    //挂断
+    if (call.hasEnded) {
+        if (self.isPhoneCalled && self.isPhoneCallPickUp) {
+            [self checkShowFeedbackView];
+        }
+        [self checkShowSocialAlert];
+        self.isPhoneCalled = NO;
+    }
+}
+
+- (void)callHandlerWith:(CTCall*)call
+{
     if ([call.callState isEqualToString:CTCallStateDisconnected]){
         //未接通和挂断
         if (self.isPhoneCalled && self.isPhoneCallPickUp) {
@@ -402,6 +489,7 @@
         //doNothing
     }
 }
+
 
 // 埋点数据处理:1、paramObj.allParams中的"tracer"字段，2、allParams中的origin_from、report_params等字段
 - (void)processTracerData:(NSDictionary *)allParams {
@@ -508,6 +596,7 @@
     detailTracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     detailTracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
     detailTracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    detailTracerDic[@"from_gid"] = self.tracerDict[@"from_gid"];
     // 以下3个参数都在:log_pb中
     // group_id
     // impr_id
@@ -553,13 +642,22 @@
 {
     CGFloat alpha = contentOffset.y / 139 * 2;
     [self.navBar refreshAlpha:alpha];
+    
+    if ((contentOffset.y <= 0 && _lastContentOffset.y <= 0) || (contentOffset.y > 0 && _lastContentOffset.y > 0)) {
+        return;
+    }
+    _lastContentOffset = contentOffset;
+    [self updateStatusBar:contentOffset];
+}
 
+- (void)updateStatusBar:(CGPoint)contentOffset
+{
+    UIStatusBarStyle style = UIStatusBarStyleLightContent;
+    if (contentOffset.y > 0) {
+        style = UIStatusBarStyleDefault;
+    }
     if (!self.isViewDidDisapper) {
-        if (contentOffset.y > 0) {
-            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
-        }else {
-            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
-        }
+        [[UIApplication sharedApplication]setStatusBarStyle:style];
     }
 }
 
@@ -752,6 +850,15 @@
         tracerDic[@"click_position"] = @"cancel";
         [self addRealtorEvaluatePopupClickLog:tracerDic];
     }];
+    BOOL isForceEnableConfirm = NO;
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] != nil) {
+        NSInteger info = [[fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] integerValue];
+        if (info == 1) {
+            isForceEnableConfirm = YES;
+        }
+    }
+    feedbackView.isForceEnableConfirm = isForceEnableConfirm;
     [feedbackView showFrom:nil];
     [self addRealtorEvaluatePopupShowLog:tracerDic];
 }
@@ -786,6 +893,17 @@
         _questionBtn.isFold = YES;
     }
     return _questionBtn;
+}
+
+
+- (void)dealloc
+{
+    if (@available(iOS 10.0 , *)) {
+        [_callObserver setDelegate:nil queue:dispatch_get_main_queue()];
+        _callObserver = nil;
+    }else {
+        _callCenter = nil;
+    }
 }
 
 @end

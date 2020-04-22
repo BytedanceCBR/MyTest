@@ -18,8 +18,10 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "TTReachability.h"
 #import <FHHouseBase/FHBaseTableView.h>
-#import "FHSpringHangView.h"
 #import "UIViewController+Track.h"
+#import "TTTabBarItem.h"
+#import "TTTabBarManager.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHMineViewController ()<UIViewControllerErrorHandler>
 
@@ -32,12 +34,42 @@
 @property (nonatomic, strong) UIButton *settingBtn;
 @property (nonatomic, assign) CGFloat headerViewHeight;
 @property (nonatomic, assign) CGFloat naviBarHeight;
-//春节活动运营位
-@property (nonatomic, strong) FHSpringHangView *springView;
-
 @end
 
 @implementation FHMineViewController
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [TTAccount addMulticastDelegate:self];
+
+    }
+
+    return self;
+}
+
+- (void)dealloc {
+    [TTAccount removeMulticastDelegate:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - TTAccountMulticastProtocol
+
+- (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
+{
+    [self checkMineTabName];
+}
+
+- (void)checkMineTabName {
+    //登录或未登录切换tab的名称
+    TTTabBarItem *tabItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseMineTabKey];
+    if([TTAccount sharedAccount].isLogin){
+        [tabItem setTitle:@"我的"];
+    } else {
+        [tabItem setTitle:@"未登录"];
+    }
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -51,32 +83,7 @@
     [self initViewModel];
     [self setupHeaderView];
     [self initSignal];
-    
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-    }
 }
-
-- (void)addSpringView {
-    if(!_springView){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
-        [self.view addSubview:_springView];
-        _springView.hidden = YES;
-        
-        CGFloat bottom = 49;
-        if (@available(iOS 11.0 , *)) {
-            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-        }
-        
-        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(82);
-            make.height.mas_equalTo(82);
-            make.right.mas_equalTo(self.view).offset(-11);
-        }];
-    }
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.viewModel updateHeaderView];
@@ -86,10 +93,8 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self refreshContentOffset:self.tableView.contentOffset];
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
+    [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -111,7 +116,7 @@
     self.customNavBarView.seperatorLine.alpha = 0;
     self.customNavBarView.leftBtn.hidden = YES;
     self.customNavBarView.bgView.alpha = 0;
-    self.customNavBarView.bgView.image = [UIImage imageNamed:@"fh_mine_header_bg"];
+    self.customNavBarView.bgView.image = [UIImage imageNamed:@"fh_mine_header_bg_orange"];
     
     self.settingBtn = [[UIButton alloc] init];
     [_settingBtn setBackgroundImage:[UIImage imageNamed:@"fh_mine_setting"] forState:UIControlStateNormal];
@@ -174,9 +179,9 @@
 - (void)initSignal {
     //config改变后需要重新刷新数据
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-        if([FHEnvContext isSpringHangOpen] && self.springView){
-            [self.springView show:[FHEnvContext enterTabLogName]];
-        }
+//        if([FHEnvContext isSpringHangOpen] && self.springView){
+//            [self.springView show:[FHEnvContext enterTabLogName]];
+//        }
         [self startLoadData];
     }];
 }
@@ -275,10 +280,7 @@
 }
 
 - (void)trackStartedByAppWillEnterForground {
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
+
 }
 
 @end

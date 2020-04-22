@@ -10,8 +10,8 @@
 #import "TTDeviceHelper.h"
 #import "UIColor+Theme.h"
 #import "FHEnvContext.h"
-#import <UIViewAdditions.h>
-#import <ToastManager.h>
+#import "UIViewAdditions.h"
+#import "ToastManager.h"
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 30;
@@ -43,7 +43,7 @@ static const NSInteger kTopScrollViewTag = 100;
         self.categoryLabel.text = @"为你推荐";
         self.backgroundColor = [UIColor themeHomeColor];
         [self addSubview:self.categoryLabel];
-        self.categoryLabel.frame = CGRectMake(20, 0, 100, 30);
+        self.categoryLabel.frame = CGRectMake(15, 0, 100, 30);
         [self setUpSegmentedControl];
     }
     return self;
@@ -55,7 +55,7 @@ static const NSInteger kTopScrollViewTag = 100;
     _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * 3, kSegementedPadingTop, (kSegementedOneWidth + 5) * 3, kSegementedHeight);
     _segmentedControl.sectionTitles = @[@"",@"",@""];
     _segmentedControl.selectionIndicatorHeight = 0;
-    _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#ff5869"];
+    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange4]; //[UIColor colorWithHexString:@"#ff5869"];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleFullWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;

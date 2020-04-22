@@ -7,19 +7,22 @@
 
 #import "FHHomeMainViewController.h"
 #import "FHHomeMainViewModel.h"
-#import <TTDeviceHelper.h>
-#import <FHEnvContext.h>
-#import <FHMainApi.h>
-#import <TTThemedAlertController.h>
-#import <TTUIResponderHelper.h>
-#import <FHUtils.h>
-#import <TTSandBoxHelper.h>
+#import "TTDeviceHelper.h"
+#import "FHEnvContext.h"
+#import "FHMainApi.h"
+#import "TTThemedAlertController.h"
+#import "TTUIResponderHelper.h"
+#import "FHUtils.h"
+#import "TTSandBoxHelper.h"
 #import "TTSandBoxHelper+House.h"
-#import <TTAppUpdateHelper.h>
-#import <TTInstallIDManager.h>
-#import <CommonURLSetting.h>
-#import <FHMinisdkManager.h>
-#import "FHSpringHangView.h"
+#import "TTAppUpdateHelper.h"
+#import "TTInstallIDManager.h"
+#import "CommonURLSetting.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "UIViewController+Track.h"
+#import "FHHomeTopCitySwitchView.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -27,8 +30,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic,strong)FHHomeMainViewModel *viewModel;
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL isHaveCheckUpgrage;
-//春节活动运营位
-@property (nonatomic, strong) FHSpringHangView *springView;
+@property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
+@property (nonatomic,strong)NSTimer *switchTimer;
+@property (nonatomic,assign)NSInteger totalNum;
 
 @end
 
@@ -49,6 +53,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.isShowing = YES;
+    self.ttTrackStayEnable = YES;
 
     //UGC地推包检查粘贴板
     [self checkPasteboard:NO];
@@ -61,17 +66,30 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         //#endif
     }
     
-    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
-        //春节活动
-        [[FHMinisdkManager sharedInstance] goSpring];
-    }
-    
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.isShowing = NO;
     
+    [self addStayCategoryLog:self.ttTrackStayTime];
+    
+}
+
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    if (self.stayTime>0) {
+        NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
+          [tracerDict setValue:@"main" forKey:@"tab_name"];
+          [tracerDict setValue:@(0) forKey:@"with_tips"];
+          [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
+          tracerDict[@"stay_time"] = @((int)duration);
+          
+          if (((int)duration) > 0) {
+              [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+          }
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -82,33 +100,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
+    self.stayTime = [[NSDate date] timeIntervalSince1970];
+    
+    [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
 }
-
-- (void)addSpringView {
-    if(!_springView){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
-        [self.view addSubview:_springView];
-        _springView.hidden = YES;
-        
-        CGFloat bottom = 49;
-        if (@available(iOS 11.0 , *)) {
-            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-        }
-        
-        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(82);
-            make.height.mas_equalTo(82);
-            make.right.mas_equalTo(self.view).offset(-11);
-        }];
-    }
-}
-
 - (void)initView {
     self.view.backgroundColor = [UIColor themeHomeColor];
     self.isHaveCheckUpgrage = NO;
@@ -119,7 +115,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
-    
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     //1.初始化layout
@@ -138,6 +133,31 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor themeGray7];
     [self.containerView addSubview:_collectionView];
+    
+}
+
+- (void)initCitySwitchView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.containerView && ![self.containerView.subviews containsObject:self.switchCityView] && [[NSThread currentThread] isMainThread]) {
+               CGFloat top = 0;
+               CGFloat safeTop = 20;
+               if (@available(iOS 11.0, *)) {
+                   safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+               }
+               self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
+                self.switchCityView.backgroundColor = [UIColor clearColor];
+               [self.containerView addSubview:self.switchCityView];
+               self.totalNum = 60;
+               self.switchTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(downCounter) userInfo:nil repeats:YES];
+               
+               NSMutableDictionary *popTraceParams = [NSMutableDictionary new];
+               [popTraceParams setValue:@"maintab" forKey:@"page_type"];
+               [popTraceParams setValue:@"city_switch" forKey:@"popup_name"];
+               [FHEnvContext recordEvent:popTraceParams andEventKey:@"popup_show"];
+        }
+    });
+
 }
 
 - (void)initConstraints {
@@ -183,6 +203,13 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollEnd) name:@"FHHomeMainDidScrollEnd" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL boolSwitchCityHome = [fhSettings tt_boolValueForKey:@"f_home_switch_city_view"];
+    if (!boolSwitchCityHome) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initCitySwitchView) name:@"FHHomeInitSwitchCityTopView" object:nil];
 }
 
 - (void)initCityChangeSubscribe
@@ -194,10 +221,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *)x;
         [FHEnvContext changeFindTabTitle];
         [FHEnvContext showRedPointForNoUgc];
-        if([FHEnvContext isSpringHangOpen] && self.springView){
-            [self.springView show:[FHEnvContext enterTabLogName]];
-        }
+        [self.topView  updateMapSearchBtn];
         self.viewModel = [[FHHomeMainViewModel alloc] initWithCollectionView:self.collectionView controller:self];
+        
+        if([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+            [self.switchCityView removeFromSuperview];
+        }
     }];
 }
 
@@ -206,12 +235,17 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     if (self.isShowing) {
         [self checkPasteboard:NO];
     }
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-        [self.springView show:[FHEnvContext enterTabLogName]];
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    if (self.switchCityView) {
+        [self.switchTimer invalidate];
+        self.switchTimer = nil;
+        [self.switchCityView removeFromSuperview];
+        self.switchCityView = nil;
     }
 }
+
 
 - (void)bindTopIndexChanged
 {
@@ -221,11 +255,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         if ([self.collectionView numberOfItemsInSection:0] > index && index != self.viewModel.currentIndex) {
             [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-            
+            [self.topView changeBackColor:index];
             [self.viewModel sendEnterCategory:(index == 0 ? FHHomeMainTraceTypeHouse : FHHomeMainTraceTypeFeed) enterType:FHHomeMainTraceEnterTypeClick];
             [self.viewModel sendStayCategory:(index == 0 ? FHHomeMainTraceTypeFeed : FHHomeMainTraceTypeHouse) enterType:FHHomeMainTraceEnterTypeClick];
+            
+            [FHEnvContext sharedInstance].isShowingHomeHouseFind = (index == 0);
         }
-        
     };
 }
 
@@ -240,7 +275,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 }
 
 - (void)changeTopSearchBtn:(BOOL)isShow {
-    self.topView.searchBtn.hidden = !isShow;
+    [self.topView changeSearchBtnAndMapBtnStatus:isShow];
 }
 
 #pragma mark notifications
@@ -338,6 +373,22 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     }];
 }
 
+- (void)downCounter
+{
+    if (!self.isShowing) {
+        return ;
+    }
+    
+    self.totalNum -= 1;
+    
+    if (self.totalNum <= 0) {
+        [self.switchTimer invalidate];
+        self.switchTimer = nil;
+        
+        [self.switchCityView removeFromSuperview];
+    }
+}
+
 #pragma mark 内测弹窗
 - (void)checkLocalTestUpgradeVersionAlert
 {
@@ -352,6 +403,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [TTAppUpdateHelper sharedInstance].delegate = self;
     [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
         [self.view addSubview:view];
+        [[FHPopupViewManager shared] outerPopupViewShow];
     } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
         //        if (!downloadUrl) {
         //            return;
@@ -359,7 +411,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         //        NSURL *url = [NSURL URLWithString:downloadUrl];
         //        [[UIApplication sharedApplication] openURL:url];
     } closeBlock:^{
-        
+        [[FHPopupViewManager shared] outerPopupViewHide];
     }];
 }
 

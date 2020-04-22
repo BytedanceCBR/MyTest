@@ -18,7 +18,7 @@
 #import "TTLaunchOrientationHelper.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 #import "ArticleAPNsManager.h"
-#import <TTAdSplashMediator.h>
+#import "TTAdSplashMediator.h"
 #import <TTAppRuntime/NewsBaseDelegate.h>
 #import <FHHouseBase/FHEnvContext.h>
 

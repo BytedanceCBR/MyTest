@@ -58,19 +58,19 @@ DEC_TASK("TTUserConfigReportTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+4);
         return [params copy];
     }];
     [TTUserSettingsReporter sharedInstance].reportUrl = [CommonURLSetting reportUserConfigurationString];
-    [[TTUserSettingsReporter sharedInstance] startReportUserConfiguration];
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    if (![[defaults objectForKey:@"get_phone_info_upload"] boolValue]) {
-        NSString *deviceName = [UIDevice currentDevice].name;
-        if (!isEmptyString(deviceName)) {
-            [TTTrackerWrapper eventV3:@"get_phone_info" params:@{@"phone_name":deviceName}];
-        }
-        [defaults setBool:YES forKey:@"get_phone_info_upload"];
-        [defaults synchronize];
-    }
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[TTUserSettingsReporter sharedInstance] startReportUserConfiguration];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+          
+          if (![[defaults objectForKey:@"get_phone_info_upload"] boolValue]) {
+              NSString *deviceName = [UIDevice currentDevice].name;
+              if (!isEmptyString(deviceName)) {
+                  [TTTrackerWrapper eventV3:@"get_phone_info" params:@{@"phone_name":deviceName}];
+              }
+              [defaults setBool:YES forKey:@"get_phone_info_upload"];
+              [defaults synchronize];
+          }
+    });
 }
 
 @end

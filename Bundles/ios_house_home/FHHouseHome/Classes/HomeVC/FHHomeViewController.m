@@ -17,29 +17,27 @@
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
 #import "FHLocManager.h"
-#import <HMDTTMonitor.h>
+#import "HMDTTMonitor.h"
 #import "TTSandBoxHelper.h"
 #import "TTArticleCategoryManager.h"
 #import "FHHomeScrollBannerCell.h"
-#import <TTDeviceHelper.h>
-#import <TTAppUpdateHelper.h>
-#import <TTInstallIDManager.h>
-#import <CommonURLSetting.h>
-#import <FHCommuteManager.h>
-#import <TTUIResponderHelper.h>
+#import "TTDeviceHelper.h"
+#import "TTAppUpdateHelper.h"
+#import "TTInstallIDManager.h"
+#import "CommonURLSetting.h"
+#import "FHCommuteManager.h"
+#import "TTUIResponderHelper.h"
 #import "TTTabBarController.h"
 #import <FHHomeSearchPanelViewModel.h>
-#import <ExploreLogicSetting.h>
+#import "ExploreLogicSetting.h"
 #import <FHHouseBase/TTSandBoxHelper+House.h>
-#import <TTArticleTabBarController.h>
+#import "TTArticleTabBarController.h"
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
-#import <TTThemedAlertController.h>
-#import <FHUtils.h>
+#import "TTThemedAlertController.h"
+#import "FHUtils.h"
 #import "FHHomeBaseScrollView.h"
-#import <FHHomeMainViewController.h>
+#import "FHHomeMainViewController.h"
 #import <FHHouseBase/FHHomeScrollBannerView.h>
-//#import <FHMinisdkManager.h>
-//#import "FHSpringHangView.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -59,8 +57,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
-//春节活动运营位
-//@property (nonatomic, strong) FHSpringHangView *springView;
 
 @end
 
@@ -92,6 +88,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.adColdHadJump = NO;
     self.adUGCHadJump = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    [FHEnvContext sharedInstance].isShowingHomeHouseFind = YES;
     
     [self registerNotifications];
     
@@ -241,7 +238,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     UIEdgeInsets inset = self.mainTableView.contentInset;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
-        
+    WeakSelf;
     [self.notifyBar showMessage:message
               actionButtonTitle:@""
                       delayHide:YES
@@ -249,7 +246,7 @@ static CGFloat const kSectionHeaderHeight = 38;
             bgButtonClickAction:nil
          actionButtonClickBlock:nil
                    didHideBlock:nil
-                  willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {                      
+                  willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
                       [UIView animateWithDuration:0.3 animations:^{
                           UIEdgeInsets inset = self.mainTableView.contentInset;
                           inset.top = 0;
@@ -261,14 +258,16 @@ static CGFloat const kSectionHeaderHeight = 38;
                               self.isShowRefreshTip = NO;
                           }
                       }];
-                      
+
     }];
 }
 
 - (void)hideImmediately
 {
-    [self.notifyBar hideImmediately];
-    self.isShowRefreshTip = NO;
+    if(!self.notifyBar.hidden){
+        [self.notifyBar hideImmediately];
+        self.isShowRefreshTip = NO;
+    }
 }
 
 - (void)retryLoadData
@@ -361,9 +360,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     }
     
     self.stayTime = [[NSDate date] timeIntervalSince1970];
-
-    //春节活动
-//    [[FHMinisdkManager sharedInstance] goSpring];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -377,18 +373,12 @@ static CGFloat const kSectionHeaderHeight = 38;
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
     }
     
-    [self addStayCategoryLog:self.ttTrackStayTime];
+//    [self addStayCategoryLog:self.ttTrackStayTime];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-//    //春节活动运营位
-//    if([FHEnvContext isSpringHangOpen]){
-//        [self addSpringView];
-//        [self.springView show:[FHEnvContext enterTabLogName]];
-//    }
-    
     //开屏广告启动不会展示，保留逻辑代码
     if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
         self.adColdHadJump = YES;
@@ -423,16 +413,16 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
-    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
-    NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
-    [tracerDict setValue:@"main" forKey:@"tab_name"];
-    [tracerDict setValue:@(0) forKey:@"with_tips"];
-    [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
-    tracerDict[@"stay_time"] = @((int)duration);
-    
-    if (((int)duration) > 0) {
-        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
-    }
+//    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+//    NSTimeInterval duration = ([[NSDate date] timeIntervalSince1970] -  self.stayTime) * 1000.0;
+//    [tracerDict setValue:@"main" forKey:@"tab_name"];
+//    [tracerDict setValue:@(0) forKey:@"with_tips"];
+//    [tracerDict setValue:[FHEnvContext sharedInstance].isClickTab ? @"click_tab" : @"default" forKey:@"enter_type"];
+//    tracerDict[@"stay_time"] = @((int)duration);
+//
+//    if (((int)duration) > 0) {
+//        [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+//    }
 }
 
 - (void)traceJump2AdEvent:(NSString *)urlString
@@ -501,12 +491,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
-    
-//    //春节活动运营位
-//    if([FHEnvContext isSpringHangOpen]){
-//        [self addSpringView];
-//        [self.springView show:[FHEnvContext enterTabLogName]];
-//    }
 }
 
 - (void)dealloc

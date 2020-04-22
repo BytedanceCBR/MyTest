@@ -6,7 +6,7 @@
 //
 
 #import "FHUGCCellUserInfoView.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHFeedOperationView.h"
@@ -21,8 +21,8 @@
 #import "TTAccountManager.h"
 #import <FHUGCConfig.h>
 #import "FHFeedOperationResultModel.h"
-#import <TTCommentDataManager.h>
-#import <TTAssetModel.h>
+#import "TTCommentDataManager.h"
+#import "TTAssetModel.h"
 
 @interface FHUGCCellUserInfoView()
 
@@ -93,6 +93,15 @@
      UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
     [_userName addGestureRecognizer:tap1];
     
+    self.userAuthLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor colorWithHexStr:@"#929292"]];
+    self.userAuthLabel.layer.borderWidth = 0.5;
+    self.userAuthLabel.layer.borderColor = [UIColor colorWithHexStr:@"#d6d6d6"].CGColor;
+    self.userAuthLabel.layer.cornerRadius = 2;
+    self.userAuthLabel.layer.masksToBounds = YES;
+    self.userAuthLabel.backgroundColor = [UIColor themeGray7];
+    self.userAuthLabel.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:_userAuthLabel];
+    
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self addSubview:_descLabel];
     
@@ -140,6 +149,12 @@
         make.height.mas_equalTo(22);
     }];
     
+    [self.userAuthLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.userName);
+        make.left.equalTo(self.userName.mas_right).offset(4);
+        make.height.mas_equalTo(16);
+    }];
+    
     CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10;
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.icon);
@@ -158,6 +173,32 @@
     [self.editingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.editLabel);
     }];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
+    
+    CGRect userAuthLabelFrame = self.userAuthLabel.frame;
+    userAuthLabelFrame.size.width += 10;
+    
+    CGFloat maxUserNameWidth = self.frame.size.width - 40 - 50 - (self.userAuthLabel.hidden ? 0 : (self.userAuthLabel.frame.size.width + 9));
+    if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
+        // 置顶加精移动位置
+        if(self.cellModel.isInNeighbourhoodCommentsList){
+            maxUserNameWidth -= 56;
+        }
+    }
+    
+    CGRect userNameFrame = self.userName.frame;
+    if(userNameFrame.size.width > maxUserNameWidth){
+        userNameFrame.size.width = maxUserNameWidth;
+        self.userName.frame = userNameFrame;
+    }
+    
+    userAuthLabelFrame.origin.x = CGRectGetMaxX(self.userName.frame) + 4;
+    self.userAuthLabel.frame = userAuthLabelFrame;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -583,7 +624,7 @@
 }
 
 - (void)goToPersonalHomePage {
-    if(self.cellModel.user.schema){
+    if(!isEmptyString(self.cellModel.user.schema)){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

@@ -7,9 +7,9 @@
 
 #import "FHPriceValuationResultView.h"
 #import "UIFont+House.h"
-#import <Masonry.h>
+#import "Masonry.h"
 #import "UIColor+Theme.h"
-#import <PNChart.h>
+#import "PNChart.h"
 #import "TTDeviceHelper.h"
 #import "UIView+House.h"
 #import "FHDetailPriceMarkerView.h"
@@ -78,7 +78,7 @@
     }
     [self addSubview:_scrollView];
     
-    UIImage *headerImage = [UIImage imageNamed:@"price_valuation_result_header_image"];
+    UIImage *headerImage = [UIImage imageNamed:@"price_valuation_result_header_image_orange"];
     self.headerImageView = [[UIImageView alloc] init];
     _headerImageView.image = headerImage;
     [self.scrollView addSubview:_headerImageView];
@@ -106,7 +106,7 @@
     [_titleBtn addTarget:self action:@selector(goToNeiborhoodDetail) forControlEvents:UIControlEventTouchUpInside];
     [self.cardView addSubview:_titleBtn];
 
-    self.priceLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeRed1]];
+    self.priceLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeOrange1]];
     [self.cardView addSubview:_priceLabel];
     
     self.middleSpLine = [[UIView alloc] init];
@@ -127,7 +127,7 @@
     [self.cardView addSubview:_toLastMonthLabel];
     
     self.moreInfoBtn = [[UIButton alloc] init];
-    _moreInfoBtn.backgroundColor = [UIColor themeRed1];
+    _moreInfoBtn.backgroundColor = [UIColor themeOrange4];
     [_moreInfoBtn setTitle:@"补全信息，结果更精确" forState:UIControlStateNormal];
     [_moreInfoBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _moreInfoBtn.titleLabel.font = [UIFont themeFontRegular:16];
@@ -198,11 +198,11 @@
     [self addSubview:_bottomView];
     
     self.bottomBtn = [[UIButton alloc] init];
-    _bottomBtn.backgroundColor = [UIColor themeRed1];
+    _bottomBtn.backgroundColor = [UIColor themeOrange4];
     [_bottomBtn setTitle:@"我要卖房" forState:UIControlStateNormal];
     [_bottomBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _bottomBtn.titleLabel.font = [UIFont themeFontRegular:16];
-    _bottomBtn.layer.cornerRadius = 4;
+    _bottomBtn.layer.cornerRadius = 22; //4;
     _bottomBtn.layer.masksToBounds = YES;
     [_bottomBtn addTarget:self action:@selector(houseSale) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomView addSubview:_bottomBtn];
@@ -668,13 +668,13 @@
             return [UIColor themeRed1];
             break;
         case 1:
-            return [UIColor colorWithHexString:@"#bebebe"];
+            return [UIColor colorWithHexString:@"#ffc464"];
             break;
         case 2:
-            return [UIColor themeGray5];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
         default:
-            return [UIColor themeGray5];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
     }
 }

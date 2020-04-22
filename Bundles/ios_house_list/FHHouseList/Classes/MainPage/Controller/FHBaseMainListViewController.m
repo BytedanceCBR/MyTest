@@ -98,7 +98,14 @@
 -(void)initNavbar
 {
     // FHFakeInputNavbarTypeMessageAndMap 二手房大类页显示消息和小红点
-    FHFakeInputNavbarType type = (_houseType == FHHouseTypeSecondHandHouse ? FHFakeInputNavbarTypeMessageAndMap : FHFakeInputNavbarTypeDefault);
+    FHFakeInputNavbarType type ;
+    if (_houseType == FHHouseTypeRentHouse || _houseType == FHHouseTypeNewHouse) {
+        type = FHFakeInputNavbarTypeMessageSingle;
+    }else if(_houseType == FHHouseTypeSecondHandHouse){
+        type = FHFakeInputNavbarTypeMessageAndMap;
+    }else {
+        type = FHFakeInputNavbarTypeDefault;
+    }
     FHFakeInputNavbarStyle style = FHFakeInputNavbarStyleBorder;
     if (_houseType == FHHouseTypeSecondHandHouse && [FHMainOldTopView showBanner]) {
         style = FHFakeInputNavbarStyleDefault;
@@ -185,7 +192,7 @@
     [self.viewModel refreshMessageDot];
     [self refreshContentOffset:self.tableView.contentOffset];
     self.isViewDidDisapper = NO;
-
+    [self.viewModel viewDidAppear:animated];
 }
 
 -(void)initConstraints
@@ -308,6 +315,17 @@
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    if (self.houseType == FHHouseTypeSecondHandHouse) {
+        NSArray *tableCells = [self.tableView visibleCells];
+        if (tableCells) {
+            [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj respondsToSelector:@selector(resumeVRIcon)]) {
+                        [obj performSelector:@selector(resumeVRIcon)];
+                    }
+            }];
+        }
+    }
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {

@@ -13,7 +13,7 @@
 #import "FHCommunityDetailViewController.h"
 #import "FHPostDetailViewController.h"
 #import "FHWDAnswerPictureTextViewController.h"
-#import <FHEnvContext.h>
+#import "FHEnvContext.h"
 #import "FHUGCGuideHelper.h"
 #import "FHUGCGuideView.h"
 #import "TTForumPostThreadStatusViewModel.h"
@@ -26,10 +26,9 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHBaseCollectionView.h>
-#import <FHMinisdkManager.h>
 #import "UIViewController+Track.h"
-#import "FHSpringHangView.h"
 #import <FHHouseBase/FHPermissionAlertViewController.h>
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 @interface FHCommunityViewController ()
 
@@ -41,9 +40,6 @@
 @property(nonatomic, strong) FHUGCGuideView *guideView;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
-//春节活动运营位
-@property (nonatomic, strong) FHSpringHangView *springView;
-
 @end
 
 @implementation FHCommunityViewController
@@ -74,9 +70,9 @@
             [self initViewModel];
         }
         self.segmentControl.sectionTitles = [self getSegmentTitles];
-        if([FHEnvContext isSpringHangOpen] && self.springView){
-            [self.springView show:[FHEnvContext enterTabLogName]];
-        }
+//        if([FHEnvContext isSpringHangOpen] && self.springView){
+//            [self.springView show:[FHEnvContext enterTabLogName]];
+//        }
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
@@ -87,27 +83,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
-}
-
-- (void)addSpringView {
-    if(!_springView){
-        self.springView = [[FHSpringHangView alloc] initWithFrame:CGRectZero];
-        [self.view addSubview:_springView];
-        _springView.hidden = YES;
-        
-        CGFloat bottom = 49;
-        if (@available(iOS 11.0 , *)) {
-            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-        }
-        
-        [_springView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view).offset(-bottom - 85);
-            make.width.mas_equalTo(82);
-            make.height.mas_equalTo(82);
-            make.right.mas_equalTo(self.view).offset(-11);
-        }];
-    }
 }
 
 - (void)dealloc {
@@ -195,10 +172,6 @@
     [self.view addSubview:_containerView];
 
     [self setupSetmentedControl];
-    
-    if([FHEnvContext isSpringHangOpen]){
-        [self addSpringView];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -228,19 +201,12 @@
             self.hasShowDots = YES;
         }
     }
-    
-    if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
-        //春节活动
-        [[FHMinisdkManager sharedInstance] goSpring];
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
+    [[FHPopupViewManager shared] triggerPopupView];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 
 -(BOOL)shouldAutorotate
@@ -376,13 +342,23 @@
 
     CGFloat top = 0;
     CGFloat safeTop = 0;
-    if (@available(iOS 11.0, *)) {
+    if (@available(iOS 13.0 , *)) {
+        safeTop = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    } else if (@available(iOS 11.0, *)) {
         safeTop = self.view.tt_safeAreaInsets.top;
     }
     if (safeTop > 0) {
         top += safeTop;
     } else {
-        top += [[UIApplication sharedApplication] statusBarFrame].size.height;
+        if([[UIApplication sharedApplication] statusBarFrame].size.height > 0){
+            top += [[UIApplication sharedApplication] statusBarFrame].size.height;
+        }else{
+            if([TTDeviceHelper isIPhoneXSeries]){
+                top += 44;
+            }else{
+                top += 20;
+            }
+        }
     }
 
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -475,13 +451,8 @@
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
-    
 }
 
 - (void)trackStartedByAppWillEnterForground {
-    //春节活动运营位
-    if([FHEnvContext isSpringHangOpen]){
-        [self.springView show:[FHEnvContext enterTabLogName]];
-    }
 }
 @end

@@ -67,21 +67,97 @@
     return self;
 }
 
+- (void)autoClearDBWithCompletion:(void (^)(NSError *error))completion {
+    [self clearExpiredDataForth:YES completion:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) {
+                completion(nil);
+            }
+        });
+    }];
+}
+
+- (void)clearDBWithCompletion:(void (^)(NSError *error))completion {
+    //删除debug_real表中所有的数据
+    dispatch_async(self.serialQueue, ^{
+        NSString *sql = [NSString stringWithFormat:@"DELETE FROM debug_real"];
+        [self.databaseQueue inDatabase:^(FMDatabase *db) {
+            [db executeUpdate:sql];
+        }];
+        
+        //删除以文件形式存储的network数据
+        NSError *error = nil;
+        @synchronized (self.class) {
+            NSString * dictionaryPath = [[self _debugRealPath] stringByAppendingPathComponent:kNetworkDebugRealDirectory];
+            BOOL succ = [[NSFileManager defaultManager] removeItemAtPath:dictionaryPath error:&error];
+            if (succ && ![[NSFileManager defaultManager] fileExistsAtPath:dictionaryPath]) {
+                [[NSFileManager defaultManager] createDirectoryAtPath:dictionaryPath withIntermediateDirectories:YES attributes:nil error:nil];
+            }
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) {
+                completion(error);
+            }
+        });
+    });
+}
+
+- (void)calculateDiskSizeWithCompletion:(void (^)(NSInteger fileCount, long long size))completion {
+    dispatch_async(self.serialQueue, ^{
+        __block long long totalFileSize = 0;
+        __block NSInteger fileCount = 0;
+        NSString * dictionaryPath = [[self _debugRealPath] stringByAppendingPathComponent:kNetworkDebugRealDirectory];
+        @synchronized (self.class) {
+            //计算网络数据大小
+            NSDirectoryEnumerator* en = [[NSFileManager defaultManager] enumeratorAtPath:dictionaryPath];
+            NSError* err = nil;
+            BOOL res;
+            NSArray * fileListRaw = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dictionaryPath error:nil];
+            [fileListRaw enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSString * fileName = [obj stringByDeletingPathExtension];
+                NSString * fullName = [NSString stringWithFormat:@"%@.json",fileName];
+                NSString * filePath = [dictionaryPath stringByAppendingPathComponent:fullName];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                    NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+                    long long filesize = [attributes fileSize];
+                    totalFileSize += (long long)filesize;
+                    fileCount++;
+                }
+            }];
+            
+            //计算db大小
+            NSString * dbPath = [[self _debugRealPath] stringByAppendingPathComponent:kDebugRealDB];
+            if([[NSFileManager defaultManager] fileExistsAtPath:dbPath]) {
+                fileCount++;
+                NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:dbPath error:nil];
+                totalFileSize += [attributes fileSize];
+            }
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) {
+                completion(fileCount, totalFileSize);
+            }
+        });
+    });
+}
+
 - (BOOL)_initalizeDB{
     NSString * filePath = [[self _debugRealPath] stringByAppendingPathComponent:kDebugRealDB];
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:kDebugRealVersionKey] ||
+        [[[NSUserDefaults standardUserDefaults] objectForKey:kDebugRealVersionKey] integerValue]!=[[TTDebugRealStorgeService debugrealVersion] integerValue]) {
+        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+        if([[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil] == NO){
+            return NO;
+        }
+        [[NSUserDefaults standardUserDefaults] setObject:[TTDebugRealStorgeService debugrealVersion] forKey:kDebugRealVersionKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     if([[NSFileManager defaultManager] fileExistsAtPath:filePath] == NO) {
         if([[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil] == NO){
         }
     }else{
-        if (![[NSUserDefaults standardUserDefaults] objectForKey:kDebugRealVersionKey] ||
-            [[[NSUserDefaults standardUserDefaults] objectForKey:kDebugRealVersionKey] integerValue]!=[[TTDebugRealStorgeService debugrealVersion] integerValue]) {
-            [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-            if([[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil] == NO){
-                return NO;
-            }
-            [[NSUserDefaults standardUserDefaults] setObject:[TTDebugRealStorgeService debugrealVersion] forKey:kDebugRealVersionKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
         NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
         if ([attributes fileSize] > 1024*1024*5) {
             [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
@@ -225,11 +301,17 @@
     });
 }
 
+- (NSString *)debugRealPath {
+    return [self _debugRealPath];
+}
+
 - (NSString *)_debugRealPath{
     NSString *docsPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString * dictionaryPath = [docsPath stringByAppendingPathComponent:kDebugRealDirectory];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:dictionaryPath]) {
-        [self _createDebugRealDiectoryIfNeeded];
+    @synchronized (self.class) {
+        if (![[NSFileManager defaultManager] fileExistsAtPath:dictionaryPath]) {
+            [self _createDebugRealDiectoryIfNeeded];
+        }
     }
     return dictionaryPath;
 }
@@ -247,12 +329,14 @@
         return;
     }
     NSString * dictionaryPath = [[self _debugRealPath] stringByAppendingPathComponent:kNetworkDebugRealDirectory];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:dictionaryPath]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:dictionaryPath withIntermediateDirectories:YES attributes:nil error:nil];
+    @synchronized (self.class) {
+        if (![[NSFileManager defaultManager] fileExistsAtPath:dictionaryPath]) {
+            [[NSFileManager defaultManager] createDirectoryAtPath:dictionaryPath withIntermediateDirectories:YES attributes:nil error:nil];
+        }
+        NSString * fileName = [NSString stringWithFormat:@"%@.json",storeId];
+        NSString * filePath = [dictionaryPath stringByAppendingPathComponent:fileName];
+        [data writeToFile:filePath atomically:YES];
     }
-    NSString * fileName = [NSString stringWithFormat:@"%@.json",storeId];
-    NSString * filePath = [dictionaryPath stringByAppendingPathComponent:fileName];
-    [data writeToFile:filePath atomically:YES];
 }
 
 - (NSString *)networkResponseContentForStoreId:(NSString *)storeId{
@@ -266,11 +350,14 @@
     NSString * fileName = [NSString stringWithFormat:@"%@.json",storeId];
     NSString * filePath = [dictionaryPath stringByAppendingPathComponent:fileName];
 
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-        NSData * rawData = [NSData dataWithContentsOfFile:filePath];
-        return [[NSString alloc] initWithData:rawData encoding:NSUTF8StringEncoding];
+    NSString *responseString = nil;
+    @synchronized (self.class) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+            NSData * rawData = [NSData dataWithContentsOfFile:filePath];
+            responseString = [[NSString alloc] initWithData:rawData encoding:NSUTF8StringEncoding];
+        }
     }
-    return nil;
+    return responseString;
 }
 
 - (void)sendDebugRealData:(TTDebugRealConfig *)config{
@@ -348,10 +435,12 @@
         }
     }];
     
-    //数据发完后 网络请求内容json文件也删掉
-    for(NSString * filePath in fileListToDelete){
-        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-            [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+    @synchronized (self.class) {
+        //数据发完后 网络请求内容json文件也删掉
+        for(NSString * filePath in fileListToDelete){
+            if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+            }
         }
     }
 }
@@ -382,22 +471,24 @@
         }
     }];
     NSString * crashDir = [[self _debugRealPath] stringByAppendingPathComponent:kCrashDirectory];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:crashDir]) {
-        NSArray * fileList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:crashDir error:nil];
-        if (fileList && fileList.count>0) {
-            [fileList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                NSString * crashFilePath = [crashDir stringByAppendingPathComponent:obj];
-                if ([[NSFileManager defaultManager] fileExistsAtPath:crashFilePath]) {
-                    NSString * crashContent = [NSString stringWithContentsOfFile:crashFilePath encoding:NSUTF8StringEncoding error:nil];
-                    if (crashContent) {
-                        NSMutableDictionary * crashItem = [[NSMutableDictionary alloc] init];
-                        [crashItem setValue:crashContent forKey:@"crash_value"];
-                        [crashItem setValue:[obj stringByReplacingOccurrencesOfString:@".crash" withString:@""] forKey:@"created_at"];
-                        [[TTMonitor shareManager] trackData:crashItem type:TTMonitorTrackerTypeLocalLog];
+    @synchronized (self.class) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:crashDir]) {
+            NSArray * fileList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:crashDir error:nil];
+            if (fileList && fileList.count>0) {
+                [fileList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    NSString * crashFilePath = [crashDir stringByAppendingPathComponent:obj];
+                    if ([[NSFileManager defaultManager] fileExistsAtPath:crashFilePath]) {
+                        NSString * crashContent = [NSString stringWithContentsOfFile:crashFilePath encoding:NSUTF8StringEncoding error:nil];
+                        if (crashContent) {
+                            NSMutableDictionary * crashItem = [[NSMutableDictionary alloc] init];
+                            [crashItem setValue:crashContent forKey:@"crash_value"];
+                            [crashItem setValue:[obj stringByReplacingOccurrencesOfString:@".crash" withString:@""] forKey:@"created_at"];
+                            [[TTMonitor shareManager] trackData:crashItem type:TTMonitorTrackerTypeLocalLog];
+                        }
                     }
-                }
-            }];
-            [[NSFileManager defaultManager] removeItemAtPath:crashDir error:nil];
+                }];
+                [[NSFileManager defaultManager] removeItemAtPath:crashDir error:nil];
+            }
         }
     }
 }
@@ -465,12 +556,21 @@
 - (void)didEnetrBackground:(NSNotification *)notify{
     self.pauseDataCollect = YES;
     [self _syncMemCahceToDB];
+    [self clearExpiredDataForth:NO completion:nil];
+}
+
+//清理过期数据
+//forth为NO时，会检查是否和上次清理间隔超过10分钟
+- (void)clearExpiredDataForth:(BOOL)forth completion:(void (^)(void))completion {
     dispatch_async(self.serialQueue, ^{
         NSString * filePath = [[self _debugRealPath] stringByAppendingPathComponent:kDebugRealDB];
-        NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+        NSDictionary * attributes = nil;
+        @synchronized (self.class) {
+            attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+        }
         NSTimeInterval lastCheckTimeInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"lastcheckdate"];
         //10分钟触发一次清理
-        if ([[NSDate date] timeIntervalSince1970] - lastCheckTimeInterval < 10*60) {
+        if ([[NSDate date] timeIntervalSince1970] - lastCheckTimeInterval < 10*60 && !forth) {
 #ifndef DEBUG
             return;
 #endif
@@ -483,7 +583,9 @@
             NSString *sql = [NSString stringWithFormat:@"DELETE FROM debug_real WHERE created_at < '%@'", dateStr];
             BOOL result0 = [db executeUpdate:sql];
             if (!result0) {
-                [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+                @synchronized (self.class) {
+                    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+                }
             }
         }];
         
@@ -500,46 +602,49 @@
                 BOOL result3 = [db executeUpdate:deleteDevSql];
 
                 if (!result1 || !result2 || !result3) {
-                    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+                    @synchronized (self.class) {
+                        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+                    }
                 }
                 [db executeUpdate:@"vacuum"];
             }];
         }
         NSString * dictionaryPath = [[self _debugRealPath] stringByAppendingPathComponent:kNetworkDebugRealDirectory];
-        NSDirectoryEnumerator* en = [[NSFileManager defaultManager] enumeratorAtPath:dictionaryPath];
-        NSError* err = nil;
-        BOOL res;
-        NSTimeInterval expiredTimeInterval = [[NSDate dateWithTimeIntervalSinceNow:0] timeIntervalSince1970] - [TTDebugRealConfig sharedInstance].maxCacheAge*(60 * 60 * 24);
-        NSArray * fileListRaw = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dictionaryPath error:nil];
-        NSMutableArray * fileNamedExpired = [[NSMutableArray alloc] init];
-        __block long long totalFileSize = 0.0;
-        [fileListRaw enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSString * fileName = [obj stringByDeletingPathExtension];
-            NSDate * fileCreateDate = [[TTExtensions _dateformatter] dateFromString:fileName];
-            NSTimeInterval createTimeInterval = [fileCreateDate timeIntervalSince1970];
-            if (expiredTimeInterval > createTimeInterval) {
-                [fileNamedExpired addObject:fileName];
+        @synchronized (self.class) {
+            NSDirectoryEnumerator* en = [[NSFileManager defaultManager] enumeratorAtPath:dictionaryPath];
+            NSError* err = nil;
+            BOOL res;
+            NSTimeInterval expiredTimeInterval = [[NSDate dateWithTimeIntervalSinceNow:0] timeIntervalSince1970] - [TTDebugRealConfig sharedInstance].maxCacheAge*(60 * 60 * 24);
+            NSArray * fileListRaw = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dictionaryPath error:nil];
+            NSMutableArray * fileNamedExpired = [[NSMutableArray alloc] init];
+            __block long long totalFileSize = 0.0;
+            [fileListRaw enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSString * fileName = [obj stringByDeletingPathExtension];
+                NSDate * fileCreateDate = [[TTExtensions _dateformatter] dateFromString:fileName];
+                NSTimeInterval createTimeInterval = [fileCreateDate timeIntervalSince1970];
+                if (expiredTimeInterval > createTimeInterval) {
+                    [fileNamedExpired addObject:fileName];
+                }
+                NSString * fullName = [NSString stringWithFormat:@"%@.json",fileName];
+                NSString * filePath = [dictionaryPath stringByAppendingPathComponent:fullName];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                    NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+                    long long filesize = [attributes fileSize];
+                    totalFileSize += (long long)filesize;
+                }
+            }];
+            //删除过期数据
+            for(NSString * fileName in fileNamedExpired){
+                NSString * fullName = [NSString stringWithFormat:@"%@.json",fileName];
+                NSString * filePath = [dictionaryPath stringByAppendingPathComponent:fullName];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                    totalFileSize -= [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
+                    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+                }
             }
-            NSString * fullName = [NSString stringWithFormat:@"%@.json",fileName];
-            NSString * filePath = [dictionaryPath stringByAppendingPathComponent:fullName];
-            if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-                NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
-                long long filesize = [attributes fileSize];
-                totalFileSize += (long long)filesize;
-            }
-        }];
-        //删除过期数据
-        for(NSString * fileName in fileNamedExpired){
-            NSString * fullName = [NSString stringWithFormat:@"%@.json",fileName];
-            NSString * filePath = [dictionaryPath stringByAppendingPathComponent:fullName];
-            if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-                totalFileSize -= [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
-                [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-            }
-        }
-        ////清除一遍后 重新读一遍文件夹下的文件信息
-        long long maxFileSize = [[TTDebugRealConfig sharedInstance] maxCacheSize]*1024*1024;
-        NSArray * fileListAfterExpiredCleared = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dictionaryPath error:nil];
+            ////清除一遍后 重新读一遍文件夹下的文件信息
+            long long maxFileSize = [[TTDebugRealConfig sharedInstance] maxCacheSize]*1024*1024;
+            NSArray * fileListAfterExpiredCleared = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dictionaryPath error:nil];
             NSArray * fileListSorted = [fileListAfterExpiredCleared sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
                 NSString * fileName1 = [obj1 stringByDeletingPathExtension];
                 NSDate * fileCreateDate1 = [[TTExtensions _dateformatter] dateFromString:fileName1];
@@ -559,16 +664,20 @@
                     break;
                 }
             }
-        if (totalFileSize/(1024.0f*1024.0f)>0) {
-            [[TTMonitor shareManager] trackService:@"monitor_new_debugreal_size" value:@(totalFileSize/(1024.0f*1024.0f)) extra:nil];
-        }
-        
-        NSString * crashDir = [[self _debugRealPath] stringByAppendingPathComponent:kCrashDirectory];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:crashDir]) {
-            NSArray * fileList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:crashDir error:nil];
-            if (fileList && fileList.count>10) {
-                [[NSFileManager defaultManager] removeItemAtPath:crashDir error:nil];
+            if (totalFileSize/(1024.0f*1024.0f)>0) {
+                [[TTMonitor shareManager] trackService:@"monitor_new_debugreal_size" value:@(totalFileSize/(1024.0f*1024.0f)) extra:nil];
             }
+            
+            NSString * crashDir = [[self _debugRealPath] stringByAppendingPathComponent:kCrashDirectory];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:crashDir]) {
+                NSArray * fileList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:crashDir error:nil];
+                if (fileList && fileList.count>10) {
+                    [[NSFileManager defaultManager] removeItemAtPath:crashDir error:nil];
+                }
+            }
+        }
+        if (completion) {
+            completion();
         }
     });
 }
@@ -608,10 +717,12 @@
     }
     [self _syncMemCahceToDB];
     NSString * dictionaryPath = [[self _debugRealPath] stringByAppendingPathComponent:kCrashDirectory];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:dictionaryPath]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:dictionaryPath withIntermediateDirectories:YES attributes:nil error:nil];
+    @synchronized (self.class) {
+        if (![[NSFileManager defaultManager] fileExistsAtPath:dictionaryPath]) {
+            [[NSFileManager defaultManager] createDirectoryAtPath:dictionaryPath withIntermediateDirectories:YES attributes:nil error:nil];
+        }
+        NSString * crashFile = [dictionaryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%.0f.crash",[[NSDate date] timeIntervalSince1970]*1000]];
+        [execeptionInfo writeToFile:crashFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
     }
-    NSString * crashFile = [dictionaryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%.0f.crash",[[NSDate date] timeIntervalSince1970]*1000]];
-    [execeptionInfo writeToFile:crashFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
 }
 @end

@@ -247,6 +247,34 @@
 }
 @end
 
+@implementation FHConfigCenterTabImageModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHConfigCenterTabModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
+                           @"staticImage": @"static_image",
+                           @"activationimage": @"activation_image",
+                           @"logPb":@"log_pb",
+                           @"tabId":@"tab_id"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
 @implementation FHRealtorEvaluatioinConfigModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -336,6 +364,7 @@
              @"houseTypeList": @"house_type_list",
              @"opData2": @"op_data_2",
              @"toolboxData":@"toolbox_data",
+             @"mainPageTopOpData":@"main_page_top_op_data",
              @"opData2list": @"op_data_2_list",
              @"opData": @"op_data",
              @"houseOpData2": @"house_op_data_2",
@@ -373,6 +402,7 @@
              @"jump2AdRecommend":@"jump_2_ad_recommend",
              @"ugcCitySwitch":@"ugc_city_switch",
              @"tabConfig": @"tab_config",
+             @"opTab":@"op_tab",
              @"ugcCategoryConfig": @"ugc_category_config",
              @"realtorEvaluationConfig": @"realtor_evaluation",
              @"jumpPageOnStartup":@"jump_page_on_startup",
@@ -386,6 +416,7 @@
              @"opData2list":[FHConfigDataOpData2ListModel class],
              @"entryInfo":[FHConfigDataEntryInfoModel class],
              @"toolboxData":[FHConfigDataOpData2Model class],
+             @"mainPageTopOpData":[FHConfigDataOpData2Model class],
              @"hotCityList":[FHConfigDataHotCityListModel class],
              @"cityList":[FHConfigDataCityListModel class],
              @"banners":[FHConfigDataBannersModel class],
@@ -414,6 +445,7 @@
                       @"op_data_2",
                       @"op_data_2_list",
                       @"toolbox_data",
+                      @"main_page_top_op_data",
                       @"op_data",
                       @"rent_op_data",
                       @"main_page_banner",
@@ -477,6 +509,8 @@
 
 DICT_PROP_GET(FHConfigDataOpData2Model,opData2,@"op_data_2")
 ARRAY_PROP_GET(FHConfigDataOpData2ListModel,opData2list,@"op_data_2_list")
+DICT_PROP_GET(FHConfigDataOpData2Model,toolboxData,@"toolbox_data")
+DICT_PROP_GET(FHConfigDataOpData2Model,mainPageTopOpData,@"main_page_top_op_data")
 DICT_PROP_GET(FHConfigDataOpDataModel,opData,@"op_data")
 DICT_PROP_GET(FHConfigDataOpDataModel,houseOpData2,@"house_op_data_2")
 DICT_PROP_GET(FHConfigDataRentOpDataModel,rentOpData,@"rent_op_data")

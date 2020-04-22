@@ -6,9 +6,12 @@
 //
 
 #import "FHDetailNewHouseNewsCell.h"
-#import <TTRoute.h>
+#import "TTRoute.h"
 
 @interface FHDetailNewHouseNewsCell ()
+
+@property (nonatomic, weak) UIImageView *shadowImage;
+
 @end
 
 @implementation FHDetailNewHouseNewsCell
@@ -18,11 +21,19 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.contentView);
+            make.right.mas_equalTo(self.contentView);
+            make.top.equalTo(self.contentView).offset(-12);
+            make.bottom.equalTo(self.contentView).offset(12);
+        }];
         _headerView = [[FHDetailHeaderView alloc] init];
         [self.contentView addSubview:_headerView];
         [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.top.right.bottom.mas_equalTo(self.contentView);
-            make.height.mas_equalTo(52);// 46 + 6
+            make.top.mas_equalTo(self.shadowImage).offset(30);
+            make.right.mas_equalTo(self.shadowImage).offset(-15);
+            make.left.mas_equalTo(self.shadowImage).offset(15);
+            make.height.mas_equalTo(46);
         }];
         [_headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         [_headerView setBackgroundColor:[UIColor whiteColor]];
@@ -34,7 +45,11 @@
 {
     if ([data isKindOfClass:[FHDetailNewHouseNewsCellModel class]]) {
         self.currentData = data;
+        
         FHDetailNewHouseNewsCellModel *model = (FHDetailNewHouseNewsCellModel *)data;
+
+        adjustImageScopeType(model)
+        
         _headerView.label.text = model.titleText;
         
         _headerView.isShowLoadMore = model.hasMore;

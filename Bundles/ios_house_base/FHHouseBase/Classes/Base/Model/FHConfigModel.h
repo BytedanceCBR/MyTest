@@ -79,6 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
 @protocol FHConfigDataOpData2ListModel<NSObject>
 
 @end
@@ -388,6 +389,31 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *key;
 @end
 
+@protocol FHConfigCenterTabImageModel<NSObject>
+@end
+
+@interface FHConfigCenterTabImageModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *uri;
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *width;
+@property (nonatomic, copy , nullable) NSString *height;
+@end
+
+@protocol FHConfigCenterTabModel<NSObject>
+@end
+
+@interface FHConfigCenterTabModel : JSONModel
+@property (nonatomic, assign) BOOL enable;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSDictionary *logPb;
+@property (nonatomic, copy , nullable) NSString *tabId;
+@property (nonatomic, assign) BOOL isShow;
+@property (nonatomic, strong , nullable) FHConfigCenterTabImageModel *staticImage ;
+@property (nonatomic, strong , nullable) FHConfigCenterTabImageModel *activationimage ;
+@end
+
 @interface FHConfigDataUgcCategoryConfigModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *myJoinList;
@@ -425,6 +451,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHConfigDataOpData2Model *opData2 ;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataOpData2ListModel> *opData2list;
 @property (nonatomic, strong , nullable) FHConfigDataOpData2Model *toolboxData;
+@property (nonatomic, strong , nullable) FHConfigDataOpData2Model *mainPageTopOpData;
 
 //@property (nonatomic, strong , nullable) FHSearchConfigModel *filter ;
 @property (nonatomic, strong , nullable) FHConfigDataOpDataModel *opData ;
@@ -467,6 +494,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSString *diffCode;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataTabConfigModel> *tabConfig;
 @property (nonatomic, strong , nullable) FHConfigDataUgcCategoryConfigModel *ugcCategoryConfig ;
+@property (nonatomic, strong , nullable) FHConfigCenterTabModel *opTab ;
 @property (nonatomic, strong , nullable) FHRealtorEvaluatioinConfigModel *realtorEvaluationConfig ;
 @property (nonatomic, copy , nullable) NSString *jumpPageOnStartup;
 @property (nonatomic, strong , nullable) FHConfigDataTabWidgetModel *tabWidget ;  

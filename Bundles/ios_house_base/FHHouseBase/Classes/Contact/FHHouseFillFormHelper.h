@@ -15,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHHouseFillFormConfigModel,FHFillFormAgencyListItemModel;
 
 @interface FHHouseFillFormHelper : NSObject
-
-+ (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel; // 填表单
+typedef  void(^fillFormSubmit)();
++ (void)fillFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel submitBlock:(fillFormSubmit)submitBlock;   // 填表单
 + (void)fillFormActionWithConfig:(NSDictionary *)config;
 + (void)fillOnlineFormActionWithConfigModel:(FHHouseFillFormConfigModel *)configModel; // 在线联系
 + (void)fillOnlineFormActionWithConfig:(NSDictionary *)config;
@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
 @property (nonatomic, weak) UIViewController *topViewController;
+@property (nonatomic, copy) NSNumber *targetType; // 线索类型
 
 #pragma mark 非必填
 @property (nonatomic, copy) NSString *title; // 非必填

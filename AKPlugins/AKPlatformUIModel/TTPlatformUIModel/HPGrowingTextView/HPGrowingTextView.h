@@ -27,7 +27,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SSThemed.h"
-#import <HPTextViewInternal.h>
+#import "HPTextViewInternal.h"
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
 	// UITextAlignment is deprecated in iOS 6.0+, use NSTextAlignment instead.
