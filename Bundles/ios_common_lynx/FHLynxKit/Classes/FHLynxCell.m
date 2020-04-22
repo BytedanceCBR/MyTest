@@ -50,8 +50,13 @@
 
 - (void)refreshWithData:(id)data {
     // sub implements.........
-    
-    
+    NSString *instr = [NSString stringWithFormat:@"%ld", 0];
+    NSString *prifix = @"recycler";
+    NSString *path = [prifix stringByAppendingString:instr];
+    NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@"js"];
+    NSData *templateData = [NSData dataWithContentsOfFile:templatePath];
+    [self.lynxView loadTemplate:templateData withURL:@"local"];
+     self.lynxView.client = self;
 }
 
 #pragma mark - reload Lynx
