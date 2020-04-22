@@ -21,6 +21,8 @@
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "UIViewController+Track.h"
 #import "FHHomeTopCitySwitchView.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -137,26 +139,25 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 - (void)initCitySwitchView
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-       CGFloat top = 0;
-       CGFloat safeTop = 20;
-       if (@available(iOS 11.0, *)) {
-           safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
-       }
-       
-       self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
-       self.switchCityView.backgroundColor = [UIColor clearColor];
-       if (self.containerView && ![self.containerView.subviews containsObject:self.switchCityView] && [[NSThread currentThread] isMainThread]) {
-           [self.containerView addSubview:self.switchCityView];
-              
-           self.totalNum = 60;
-           self.switchTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(downCounter) userInfo:nil repeats:YES];
-           
-           NSMutableDictionary *popTraceParams = [NSMutableDictionary new];
-           [popTraceParams setValue:@"maintab" forKey:@"page_type"];
-           [popTraceParams setValue:@"city_switch" forKey:@"popup_name"];
-           [FHEnvContext recordEvent:popTraceParams andEventKey:@"popup_show"];
-       }
+        if (self.containerView && ![self.containerView.subviews containsObject:self.switchCityView] && [[NSThread currentThread] isMainThread]) {
+               CGFloat top = 0;
+               CGFloat safeTop = 20;
+               if (@available(iOS 11.0, *)) {
+                   safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+               }
+               self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
+                self.switchCityView.backgroundColor = [UIColor clearColor];
+               [self.containerView addSubview:self.switchCityView];
+               self.totalNum = 60;
+               self.switchTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(downCounter) userInfo:nil repeats:YES];
+               
+               NSMutableDictionary *popTraceParams = [NSMutableDictionary new];
+               [popTraceParams setValue:@"maintab" forKey:@"page_type"];
+               [popTraceParams setValue:@"city_switch" forKey:@"popup_name"];
+               [FHEnvContext recordEvent:popTraceParams andEventKey:@"popup_show"];
+        }
     });
+
 }
 
 - (void)initConstraints {
@@ -202,7 +203,12 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollEnd) name:@"FHHomeMainDidScrollEnd" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL boolSwitchCityHome = [fhSettings tt_boolValueForKey:@"f_home_switch_city_view"];
+    if (!boolSwitchCityHome) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initCitySwitchView) name:@"FHHomeInitSwitchCityTopView" object:nil];
 }
 

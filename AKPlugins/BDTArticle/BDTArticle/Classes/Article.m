@@ -222,6 +222,7 @@
                                                             @"showMaxLine",
                                                             @"picDisplayType",
                                                             @"recommendDict",
+                                                            @"happyKnocking",
                                                             @"commoditys",
                                                             @"payStatus",
                                                             @"titleRichSpanJSONString",
@@ -832,6 +833,10 @@
         
         if ([dataDict objectForKey:@"ugc_recommend"]) {
             self.recommendDict = [dataDict dictionaryValueForKey:@"ugc_recommend" defalutValue:nil];
+        }
+        
+        if ([dataDict objectForKey:@"happy_knocking"]) {
+            self.happyKnocking = [dataDict dictionaryValueForKey:@"happy_knocking" defalutValue:nil];
         }
         
         if ([dataDict objectForKey:@"title_image"]) {

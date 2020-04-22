@@ -32,8 +32,14 @@ typedef void (^Operation)(void);
                                      operation:(Operation)operation
                                       complete:(Complete)complete
                                           task:(Task)task;
-
-- (void)cancel;
+/**
+取消拦截并中止下一步
+*/
+- (void)cancelInterception;
+/**
+跳出拦截直接进行下一步
+*/
+- (void)breakInterception;
 
 @end
 
