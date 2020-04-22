@@ -174,8 +174,8 @@
         }
     }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode:needPush:)]) {
-        [self.delegate sendVerifyCode:self.mobileNumber needPush:NO];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode:needPush:isForBindMobile:)]) {
+        [self.delegate sendVerifyCode:self.mobileNumber needPush:NO isForBindMobile:self.isForBindMobile];
     }
     
     [self.textFieldArray.firstObject becomeFirstResponder];
@@ -225,8 +225,14 @@
     for (UITextField *tf in self.textFieldArray) {
         [smsCode appendString:tf.text?:@""];
     }
-    if (self.delegate && [self.delegate respondsToSelector:@selector(mobileLogin:smsCode:captcha:)]) {
-        [self.delegate mobileLogin:self.mobileNumber smsCode:smsCode captcha:nil];
+    if (self.isForBindMobile) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(mobileBind:smsCode:captcha:)]) {
+            [self.delegate mobileBind:self.mobileNumber smsCode:smsCode captcha:nil];
+        }
+    } else {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(mobileLogin:smsCode:captcha:)]) {
+            [self.delegate mobileLogin:self.mobileNumber smsCode:smsCode captcha:nil];
+        }
     }
 }
 

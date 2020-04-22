@@ -6,6 +6,8 @@
 //
 
 #import "FHLoginContainerViewController.h"
+#import "FHLoginViewModel.h"
+#import "FHLoginDefine.h"
 #import "FHOneKeyLoginView.h"
 #import "FHVerifyCodeInputView.h"
 #import "FHMobileInputView.h"

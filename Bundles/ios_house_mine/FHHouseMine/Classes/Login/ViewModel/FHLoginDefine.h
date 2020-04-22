@@ -20,20 +20,24 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)goToSecretProtocol;
 
 /// 跳转手机登录，内部判断是否支持运营商一键登录，不支持跳转输入手机号界面
-- (void)goToMobileLogin;
+- (void)goToOneKeyLogin;
 
 /// 跳转输入手机号界面
-- (void)goToMobileInput;
+- (void)goToMobileLogin;
+
+/// 跳转一键绑定界面 不支持一键绑定跳转手机号绑定界面
+- (void)goToOneKeyBind;
+
+/// 跳转手机号绑定界面
+- (void)goToMobileBind;
 
 /// 发送验证码
 /// @param mobileNumber 手机号
 /// @param needPush 需要跳转输入验证码页面 needPush:true 如果重新发送验证码:needPush:false
-- (void)sendVerifyCode:(NSString *)mobileNumber needPush:(BOOL )needPush;
+/// @param isForBindMobile ture:绑定手机号发送验证码 false:手机号验证码登录发送验证码
+- (void)sendVerifyCode:(NSString *)mobileNumber needPush:(BOOL )needPush isForBindMobile:(BOOL )isForBindMobile;
 
 #pragma mark - Login
-
-- (void)mobileLogin:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha;
-
 /// 运营商一键登录
 - (void)oneKeyLoginAction;
 
@@ -41,7 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)appleLoginAction;
 
 /// 抖音一键登录
-- (void)awesomeLoginAction;
+- (void)douyinLoginAction;
+
+- (void)mobileLogin:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha;
 
 #pragma mark - Bind
 - (void)bindCancelAction;
@@ -63,6 +69,12 @@ typedef NS_ENUM(NSUInteger, FHLoginViewType) {
     FHLoginViewTypeMobile = 1,
     FHLoginViewTypeVerify = 2,
     FHLoginViewTypeDouYin = 3
+};
+
+typedef NS_ENUM(NSUInteger, FHBindViewType) {
+    FHBindViewTypeOneKey = 0,
+    FHBindViewTypeMobile = 1,
+    FHBindViewTypeVerify = 2,
 };
 
 typedef NS_ENUM(NSUInteger, FHLoginProcessType) {

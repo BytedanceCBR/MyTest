@@ -93,14 +93,14 @@
 }
 
 - (void)douyinLoginButtonAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(awesomeLoginAction)]) {
-        [self.delegate awesomeLoginAction];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginActiondouyinLoginAction)]) {
+        [self.delegate douyinLoginAction];
     }
 }
 
 - (void)otherLoginButtonAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(goToMobileLogin)]) {
-        [self.delegate goToMobileLogin];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(goToOneKeyLogingoToOneKeyLogin)]) {
+        [self.delegate goToOneKeyLogin];
     }
 }
 

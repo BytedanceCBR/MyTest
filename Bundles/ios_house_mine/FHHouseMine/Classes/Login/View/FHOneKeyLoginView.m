@@ -155,14 +155,14 @@
 }
 
 - (void)codeLoginAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(goToMobileInput)]) {
-        [self.delegate goToMobileInput];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(goToMobileLogin)]) {
+        [self.delegate goToMobileLogin];
     }
 }
 
 - (void)douyinLoginAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(awesomeLoginAction)]) {
-        [self.delegate awesomeLoginAction];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginActiondouyinLoginAction)]) {
+        [self.delegate douyinLoginAction];
     }
 }
 

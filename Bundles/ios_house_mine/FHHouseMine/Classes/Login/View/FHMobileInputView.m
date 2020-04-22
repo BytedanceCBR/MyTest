@@ -27,7 +27,6 @@
 
 - (void)dealloc {
     _mobileTextField.delegate = nil;
-    NSLog(@"FHMobileInputView dealloc");
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -55,7 +54,7 @@
             make.right.mas_equalTo(-30);
         }];
         
-        UITextField *mobileTextField = [[FHLoginVerifyCodeTextField alloc] init];
+        UITextField *mobileTextField = [[UITextField alloc] init];
         mobileTextField.font = [UIFont themeFontRegular:20];
         mobileTextField.placeholder = @"请输入手机号";
         mobileTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入手机号" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray5]}];
@@ -160,8 +159,8 @@
 }
 
 - (void)douyinLoginAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(awesomeLoginAction)]) {
-        [self.delegate awesomeLoginAction];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginActiondouyinLoginAction)]) {
+        [self.delegate douyinLoginAction];
     }
 }
 
@@ -175,8 +174,8 @@
     if (self.mobileTextField.text.length < 11) {
         return;
     }
-    if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode:needPush:)]) {
-        [self.delegate sendVerifyCode:self.mobileTextField.text needPush:YES];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode:needPush:isForBindMobile:)]) {
+        [self.delegate sendVerifyCode:self.mobileTextField.text needPush:YES isForBindMobile:NO];
     }
 }
 

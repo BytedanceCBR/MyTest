@@ -9,7 +9,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHLoginViewDelegate;
+
 @interface FHMobileBindingView : UIView
+
+@property(nonatomic , weak) id<FHLoginViewDelegate> delegate;
+
+@property (nonatomic, weak) UITextField *mobileTextField;
 
 @end
 
