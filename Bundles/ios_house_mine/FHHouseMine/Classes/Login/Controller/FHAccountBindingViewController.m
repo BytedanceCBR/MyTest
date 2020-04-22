@@ -53,6 +53,9 @@
     if (@available(iOS 11.0, *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
+    self.tableView.estimatedRowHeight = 0;
+    self.tableView.estimatedSectionHeaderHeight = 0;
+    self.tableView.estimatedSectionFooterHeight = 0;
 }
 - (void)initViewModel {
     self.viewModel = [[FHAccountBindingViewModel alloc] initWithTableView:_tableView controller:self];

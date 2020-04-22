@@ -8,6 +8,7 @@
 #import "FHAccountBindingViewModel.h"
 #import "FHThirdAccountsHeaderView.h"
 #import "TTAccountManager.h"
+#import "TTAccount+PlatformAuthLogin.h"
 #import "FHDouYinBindingCell.h"
 #import "FHPhoneBindingCell.h"
 
@@ -23,7 +24,8 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
     kFHCellTypeBindingDouYin,       //抖音一键登录
 };
 
-@interface FHAccountBindingViewModel ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHAccountBindingViewModel ()<UITableViewDelegate,UITableViewDataSource,
+        FHDouYinBindingCellDelegate>
 
 @property (nonatomic, strong) NSMutableArray *sections;
 @property (nonatomic, weak) UITableView *tableView;
@@ -70,11 +72,15 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
             case kFHCellTypeBindingPhone:{
                 FHPhoneBindingCell *cell = (FHPhoneBindingCell *)[tableView dequeueReusableCellWithIdentifier:@"kFHCellTypeBindingPhone"];
                 cell.contentLabel.text = [self mobilePhoneNumber];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 return cell;
             }
                 break;
             case kFHCellTypeBindingDouYin:{
                 FHDouYinBindingCell *cell = (FHDouYinBindingCell *)[tableView dequeueReusableCellWithIdentifier:@"kFHCellTypeBindingDouYin"];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                cell.delegate = self;
+                [cell refreshSwitch];
                 return cell;
             }
                 break;
@@ -88,13 +94,32 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 50;
 }
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    switch ([self sectionTypeOfIndex:section]) {
+            case kFHSectionTypeBindingInfo:{
+                return 6.0;
+                break;
+            }
+            case kFHSectionTypeThirdAccounts:{
+                return 42.0;
+                break;
+            }
+            default:{
+                return 0.0;
+            }
+                break;
+        }
+        return 0.0;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 0.0;
+}
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *aView = nil;
     switch ([self sectionTypeOfIndex:section]) {
         case kFHSectionTypeBindingInfo:{
             UIView *sectionHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 6.0)];
             aView = sectionHeaderView;
-            aView.backgroundColor = [UIColor redColor];
             break;
         }
         case kFHSectionTypeThirdAccounts:{
@@ -103,26 +128,26 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
             break;
         }
         default:{
-            aView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 0)];
+            aView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 0.0)];
         }
             break;
     }
-    //aView.backgroundColor = [UIColor clearColor];
+    aView.backgroundColor = [UIColor clearColor];
     return aView;
 }
 
+
+
 #pragma mark - UITableViewDelegate
 
-- (UITableViewStyle)tableViewStyle
-{
-    return UITableViewStyleGrouped;
-}
 
 #pragma mark - private methods
 - (NSString *)mobilePhoneNumber
 {
-    return [TTAccountManager currentUser].mobile;
+    return [[TTAccount sharedAccount] user].mobile;
 }
+
+
 
 -(void)initData{
     if (!_sections) {
@@ -182,6 +207,33 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
     }
     return numberOfRows;
 }
+
+#pragma mark - public methods
+- (BOOL)hasDouYinAccount{
+    NSArray<TTAccountPlatformEntity *> *connects = [[TTAccount sharedAccount] user].connects;
+    for (TTAccountPlatformEntity *ent in connects) {
+        if ([ent.platformUID isEqualToString:@"97353843919" ]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+- (BOOL)transformDouYinAccount:(BOOL)isOn{
+    
+    if (!isOn) {
+        [TTAccount requestBindV2ForPlatform:TTAccountAuthTypeDouyin inCustomWebView:NO willBind:^(NSString * _Nonnull Bindinfo){
+            NSLog(@"luowentao Bindinfo:%@",Bindinfo);
+        } completion:^(BOOL success, NSError *error) {
+            NSLog(@"luowentao success = %d error = %@",success,error);
+        }];
+    } else {
+        [TTAccount requestLogoutForPlatform:TTAccountAuthTypeDouyin completion:^(BOOL success, NSError * _Nullable error) {
+            NSLog(@"luowentao success = %d error = %@",success,error);
+        }];
+    }
+
+    return YES;
+};
 
 
 
