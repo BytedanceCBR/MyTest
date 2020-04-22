@@ -96,12 +96,7 @@
         self.hasSubscribeViewHeight = CGFLOAT_MIN;
         return;
     }
-    // 高度计算
-    if (self.subscribeItems.count <= 2) {
-        self.hasSubscribeViewHeight = 124;
-    } else {
-         self.hasSubscribeViewHeight = 194;
-    }
+    self.hasSubscribeViewHeight = 124;
     // 显示右边箭头 可点击
     self.rightButton.hidden = NO;
     self.headerButton.hidden = NO;
@@ -121,7 +116,7 @@
         [self addSubview:itemView];
         [self.tempViews addObject:itemView];
         [self addItemShowTracer:obj index:idx];
-        if (idx >= 3) {
+        if (idx >= 1) {
             *stop = YES;
         }
     }];

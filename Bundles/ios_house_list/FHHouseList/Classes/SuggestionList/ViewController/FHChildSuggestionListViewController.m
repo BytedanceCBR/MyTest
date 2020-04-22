@@ -180,9 +180,9 @@
 }
 
 - (void)setupTableView {
-    self.historyTableView  = [self createTableView];
-    self.historyTableView.tag = 1;
-    self.historyTableView.hidden = NO;
+    self.guessYouWantTableView  = [self createTableView];
+    self.guessYouWantTableView.tag = 1;
+    self.guessYouWantTableView.hidden = NO;
     
     self.suggestTableView  = [self createTableView];
     self.suggestTableView.tag = 2;
@@ -261,7 +261,7 @@
 {
     BOOL hasText = text.length > 0;
     _suggestTableView.hidden = !hasText;
-    _historyTableView.hidden = hasText;
+    _guessYouWantTableView.hidden = hasText;
     if (hasText) {
         [self requestSuggestion:text];
     } else {
@@ -379,8 +379,6 @@
 
 // 执行网络请求
 - (void)requestData {
-    // Sug
-    NSLog(@"----------%ld", self.houseType);
     NSString *text = @"";
     if (self.fatherVC) {
         text = self.fatherVC.naviBar.searchInput.text;
@@ -389,14 +387,22 @@
     if (hasText) {
          [self requestSuggestion:text];
         _suggestTableView.hidden = !hasText;
-        _historyTableView.hidden = hasText;
+        _guessYouWantTableView.hidden = hasText;
     }
     // 历史记录 + 猜你想搜
     [self.viewModel clearHistoryTableView];
     self.viewModel.loadRequestTimes = 0;
     [self requestHistoryFromRemote];
-    [self requestGuessYouWantData];
     [self requestSugSubscribe];
+    [self requestGuessYouWantData];
+}
+
+// 猜你想搜
+- (void)requestGuessYouWantData {
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    if (cityId) {
+        [self.viewModel requestGuessYouWant:cityId houseType:self.houseType];
+    }
 }
 
 // 历史记录
@@ -414,14 +420,6 @@
         [[ToastManager manager] showToast:@"网络异常"];
     } else {
         [self.viewModel requestDeleteHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
-    }
-}
-
-// 猜你想搜
-- (void)requestGuessYouWantData {
-    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
-    if (cityId) {
-        [self.viewModel requestGuessYouWant:cityId houseType:self.houseType];
     }
 }
 

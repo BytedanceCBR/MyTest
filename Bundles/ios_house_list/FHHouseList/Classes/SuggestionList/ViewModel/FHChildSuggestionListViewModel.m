@@ -9,7 +9,7 @@
 #import "FHChildSuggestionListViewController.h"
 #import "ToastManager.h"
 #import "FHHouseTypeManager.h"
-#import "FHGuessYouWantView.h"
+#import "FHHistoryView.h"
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
 #import "FHSugHasSubscribeView.h"
@@ -32,7 +32,7 @@
 @property (nonatomic, strong , nullable) NSMutableArray<FHGuessYouWantResponseDataDataModel> *guessYouWantData;
 
 @property (nonatomic, copy)     NSString       *highlightedText;
-@property (nonatomic, strong)   FHGuessYouWantView *guessYouWantView;
+@property (nonatomic, strong)   FHHistoryView *historyView;
 @property (nonatomic, strong)   FHSugHasSubscribeView *subscribeView;// 已订阅搜索
 @property (nonatomic, strong)   UIView       *sectionHeaderView;
 @property (nonatomic, assign)   NSInteger       totalCount; // 订阅搜索总个数
@@ -57,7 +57,7 @@
         self.sectionHeaderView = [[UIView alloc] init];
         self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
         [self setupSubscribeView];
-        [self setupGuessYouWantView];
+        [self setupHistoryView];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:@"kFHSugSubscribeNotificationName" object:nil];
     }
     return self;
@@ -106,19 +106,19 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)setupGuessYouWantView {
-    self.guessYouWantView = [[FHGuessYouWantView alloc] init];
+- (void)setupHistoryView {
+    self.historyView = [[FHHistoryView alloc] init];
     __weak typeof(self) wself = self;
-    self.guessYouWantView.clickBlk = ^(FHGuessYouWantResponseDataDataModel * _Nonnull model) {
-        [wself guessYouWantItemClick:model];
+    self.historyView.clickBlk = ^(FHSuggestionSearchHistoryResponseDataDataModel * _Nonnull model, NSInteger index) {
+        [wself historyItemClick:model andIndex:index];
     };
-    [self.sectionHeaderView addSubview:self.guessYouWantView];
-    [self.guessYouWantView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.sectionHeaderView addSubview:self.historyView];
+    [self.historyView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.sectionHeaderView);
         make.top.mas_equalTo(self.subscribeView.mas_bottom);
         make.height.mas_equalTo(CGFLOAT_MIN);
     }];
-    self.guessYouWantView.hidden = YES;
+    self.historyView.hidden = YES;
 }
 
 - (void)setHouseType:(FHHouseType)houseType {
@@ -249,48 +249,58 @@
     }
 }
 
-// 猜你想搜点击
-- (void)guessYouWantItemClick:(FHGuessYouWantResponseDataDataModel *)model {
+- (void)historyItemClick:(FHSuggestionSearchHistoryResponseDataDataModel *)model andIndex:(NSInteger)index
+{
+    // 点击埋点
+    NSDictionary *tracerDic = @{
+                                @"word":model.text.length > 0 ? model.text : @"be_null",
+                                @"history_id":model.historyId.length > 0 ? model.historyId : @"be_null",
+                                @"rank":@(index),
+                                @"show_type":@"list"
+                                };
+    [FHUserTracker writeEvent:@"search_history_click" params:tracerDic];
+    
     NSString *jumpUrl = model.openUrl;
     if (jumpUrl.length > 0) {
         NSString *placeHolder = [model.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
         if (placeHolder.length > 0) {
             jumpUrl = [NSString stringWithFormat:@"%@&placeholder=%@",jumpUrl,placeHolder];
         }
-        NSString *queryType = @"hot"; // 猜你想搜
-        NSString *pageType = [self pageTypeString];
-        NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
-        NSDictionary *houseSearchParams = @{
-                                            @"enter_query":queryText,
-                                            @"search_query":queryText,
-                                            @"page_type":pageType.length > 0 ? pageType : @"be_null",
-                                            @"query_type":queryType
-                                            };
-        NSMutableDictionary *infos = [NSMutableDictionary new];
-        infos[@"houseSearch"] = houseSearchParams;
-        if (model.extinfo) {
-            infos[@"suggestion"] = [self createQueryCondition:model.extinfo];
-        }
-        NSMutableDictionary *tracer = [NSMutableDictionary new];
-        tracer[@"enter_type"] = @"click";
-        if (self.listController.tracerDict != NULL) {
-            if (self.listController.tracerDict[@"element_from"]) {
-                tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];
-            }
-            if (self.listController.tracerDict[@"enter_from"]) {
-                tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
-            }
-            if (self.listController.tracerDict[@"origin_from"]) {
-                tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
-            }
-        }
-        infos[@"tracer"] = tracer;
-
-        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:queryText placeholder:queryText infoDict:infos];
     }
+    NSString *queryType = @"history"; // 历史记录
+    NSString *pageType = [self pageTypeString];
+    NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
+    NSDictionary *houseSearchParams = @{
+                                        @"enter_query":queryText,
+                                        @"search_query":queryText,
+                                        @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                        @"query_type":queryType
+                                        };
+    
+    NSMutableDictionary *infos = [NSMutableDictionary new];
+    infos[@"houseSearch"] = houseSearchParams;
+    if (model.extinfo) {
+        infos[@"suggestion"] = [self createQueryCondition:model.extinfo];
+    }
+    NSMutableDictionary *tracer = [NSMutableDictionary new];
+    tracer[@"enter_type"] = @"click";
+    if (self.listController.tracerDict != NULL) {
+        if (self.listController.tracerDict[@"element_from"]) {
+            tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];
+        }
+        if (self.listController.tracerDict[@"enter_from"]) {
+            tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
+        }
+        if (self.listController.tracerDict[@"origin_from"]) {
+            tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
+        }
+    }
+    infos[@"tracer"] = tracer;
+    
+    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
 }
 
-// 历史记录Cell点击
+// 历史记录点击
 - (void)historyCellClick:(FHSuggestionSearchHistoryResponseDataDataModel *)model rank:(NSInteger)rank {
     // 点击埋点
     NSDictionary *tracerDic = @{
@@ -664,7 +674,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (tableView.tag == 1) {
         // 历史记录:猜你想搜 & 已订阅搜索
-        if (self.guessYouWantData.count > 0 || self.subscribeItems.count > 0) {
+        if (self.historyData.count > 0 || self.subscribeItems.count > 0) {
             return self.sectionHeaderView;
         }
     }
@@ -703,11 +713,11 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (tableView.tag == 1) {
         // 历史记录
-        if (self.guessYouWantData.count > 0 && self.subscribeItems.count > 0) {
-            return self.guessYouWantView.guessYouWangtViewHeight + self.subscribeView.hasSubscribeViewHeight;
-        } else if (self.guessYouWantData.count > 0 || self.subscribeItems.count > 0) {
-            if (self.guessYouWantData.count > 0) {
-                return self.guessYouWantView.guessYouWangtViewHeight;
+        if (self.historyData.count > 0 && self.subscribeItems.count > 0) {
+            return self.historyView.historyViewHeight + self.subscribeView.hasSubscribeViewHeight;
+        } else if (self.historyData.count > 0 || self.subscribeItems.count > 0) {
+            if (self.historyData.count > 0) {
+                return self.historyView.historyViewHeight;
             }
             if (self.subscribeItems.count > 0) {
                 return self.subscribeView.hasSubscribeViewHeight;
@@ -826,7 +836,7 @@
     }
     [self.subscribeItems removeAllObjects];
     [self.guessYouWantData removeAllObjects];
-    self.guessYouWantView.hidden = YES;
+    self.historyView.hidden = YES;
     self.subscribeView.hidden = YES;
     [self reloadHistoryTableView];
 }
@@ -841,15 +851,15 @@
 }
 
 - (void)reloadHistoryTableView {
-    if (self.listController.historyTableView != NULL && self.loadRequestTimes >= 3) {
-        if (self.guessYouWantData.count > 0) {
-            [self.guessYouWantView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(self.guessYouWantView.guessYouWangtViewHeight);
+    if (self.loadRequestTimes >= 2) {
+        if (self.historyData.count > 0) {
+            [self.historyView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.historyView.historyViewHeight);
             }];
-            self.guessYouWantView.hidden = NO;
+            self.historyView.hidden = NO;
         } else {
-            self.guessYouWantView.hidden = YES;
-            [self.guessYouWantView mas_updateConstraints:^(MASConstraintMaker *make) {
+            self.historyView.hidden = YES;
+            [self.historyView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(CGFLOAT_MIN);
             }];
         }
@@ -873,9 +883,9 @@
             });
             self.hasShowKeyboard = YES;
         }
-        [self.listController.historyTableView reloadData];
+        [self.listController.guessYouWantTableView reloadData];
         if (self.historyData.count > 0) {
-            [self.listController.historyTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            [self.listController.guessYouWantTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
     }
 }
@@ -892,9 +902,10 @@
         if (model != NULL && error == NULL) {
             // 构建数据源
             wself.historyData = model.data.data;
+            wself.historyView.historyItems = wself.historyData;
             [wself reloadHistoryTableView];
         } else {
-            
+            wself.historyView.historyItems = NULL;
         }
     }];
 }
@@ -939,80 +950,17 @@
         [self.guessHttpTask cancel];
     }
     __weak typeof(self) wself = self;
+
+    
     self.guessHttpTask = [FHHouseListAPI requestGuessYouWant:cityId houseType:houseType class:[FHGuessYouWantResponseModel class] completion:^(FHGuessYouWantResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         if (model != NULL && error == NULL) {
-            // 构建数据源
-            [wself.guessYouWantData removeAllObjects];
-            if (model.data.data.count > 0) {
-                // 把外部传入的轮播词放到前3个位置
-                NSMutableArray *tempData = [[NSMutableArray alloc] initWithArray:model.data.data];
-                if (wself.guessYouWantWords.count > 0) {
-                    NSMutableArray *guessArray = [NSMutableArray new];
-                    [wself.guessYouWantWords enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                        if ([obj isKindOfClass:[NSDictionary class]]) {
-                            NSString *text = obj[@"text"];
-                            NSInteger houseType  = [obj[@"house_type"] integerValue];
-                            NSString *open_url = obj[@"open_url"];
-                            NSString *guess_search_id = obj[@"guess_search_id"];
-                        
-                            if (text.length > 0 && houseType == wself.houseType) {
-                                NSInteger index = 0;
-                                FHGuessYouWantResponseDataDataModel *tempModel  = [[FHGuessYouWantResponseDataDataModel alloc] init];
-                                tempModel.text = text;
-                                tempModel.openUrl = open_url;
-                                tempModel.guessSearchId = guess_search_id;
-                                tempModel.houseType = [NSString stringWithFormat:@"%ld",houseType];
-                                
-                                for (FHGuessYouWantResponseDataDataModel *obj1 in tempData) {
-                                    if ([obj1.text isEqualToString:text] || [obj1.guessSearchId isEqualToString:guess_search_id]) {
-                                        tempModel = obj1;
-                                        tempModel.imageUrl = obj1.imageUrl;
-                                        tempModel.rank = obj1.rank;
-                                        tempModel.type = obj1.type;
-                                        [tempData removeObjectAtIndex:index];
-                                        
-                                        if (open_url) {
-                                            [guessArray addObject:tempModel];
-                                        }
-                                        break;
-                                    }
-                                    index += 1;
-                                }
-                            }
-                        }
-                    }];
-                    
-                    if (guessArray.count > 0) {
-                        if (guessArray.count > 3) {
-                            guessArray = [guessArray subarrayWithRange:NSMakeRange(0, 3)];
-                        }
-                        
-                        FHGuessYouWantFirstWords *firsetWords = [wself.guessYouWantView firstThreeWords:guessArray];
-                        tempData = [wself.guessYouWantView firstLineGreaterThanSecond:firsetWords array:tempData count:1];
-                        NSMutableArray *temp = [NSMutableArray new];
-                        [temp addObjectsFromArray:guessArray];
-                        [temp addObjectsFromArray:tempData];
-                        tempData = temp;
-                    } else {
-                        // 猜你想搜：第一行展示长度大于第二行-逻辑
-                        tempData = [wself.guessYouWantView firstLineGreaterThanSecond:nil array:tempData count:1];
-                    }
-                } else {
-                    // 猜你想搜：第一行展示长度大于第二行-逻辑
-                    tempData = [wself.guessYouWantView firstLineGreaterThanSecond:nil array:tempData count:1];
-                }
-                [wself.guessYouWantData addObjectsFromArray:tempData];
-                wself.guessYouWantView.guessYouWantItems = wself.guessYouWantData;
-            } else {
-                wself.guessYouWantView.guessYouWantItems = NULL;
-            }
-        } else {
-            wself.guessYouWantView.guessYouWantItems = NULL;
+            ;
         }
-        [wself reloadHistoryTableView];
+        
     }];
 }
+
 
 - (void)requestSuggestion:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query {
     if (self.sugHttpTask) {
