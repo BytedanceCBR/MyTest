@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSData *)lynxDataForChannel:(NSString *)channel templateKey:(NSString *)templateKey version:(NSUInteger)version;
 
++ (NSString *)defaultJSFileName;
+
 @end
 
 NS_ASSUME_NONNULL_END

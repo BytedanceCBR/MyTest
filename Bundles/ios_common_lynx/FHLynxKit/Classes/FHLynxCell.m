@@ -11,6 +11,7 @@
 #import <mach/mach_time.h>
 #import "FHLynxCoreBridge.h"
 #import "FHLynxView.h"
+#import "FHLynxManager.h"
 
 @implementation FHLynxCell
 
@@ -49,12 +50,15 @@
 }
 
 - (void)refreshWithData:(id)data {
+    
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"test_ios" templateKey:[FHLynxManager defaultJSFileName] version:0];
+    
     // sub implements.........
-    NSString *instr = [NSString stringWithFormat:@"%ld", 0];
-    NSString *prifix = @"recycler";
-    NSString *path = [prifix stringByAppendingString:instr];
-    NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@"js"];
-    NSData *templateData = [NSData dataWithContentsOfFile:templatePath];
+//    NSString *instr = [NSString stringWithFormat:@"%ld", 0];
+//    NSString *prifix = @"recycler";
+//    NSString *path = [prifix stringByAppendingString:instr];
+//    NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@"js"];
+//    NSData *templateData = [NSData dataWithContentsOfFile:templatePath];
     [self.lynxView loadTemplate:templateData withURL:@"local"];
      self.lynxView.client = self;
 }
