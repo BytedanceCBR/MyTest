@@ -91,8 +91,11 @@
 {
     NSString *urlStr = associateIM.imOpenUrl;
     if (urlStr.length > 0) {
-        // 上报IM点击埋点
-        [self addClickIMLog:associateIM];
+        
+        if(!associateIM.isIgnoreReportClickIM) {
+            // 上报IM点击埋点
+            [self addClickIMLog:associateIM];
+        }
         // 执行跳转
         NSURL *openUrl = [NSURL URLWithString:urlStr];
         NSMutableDictionary *userInfoDict = @{}.mutableCopy;

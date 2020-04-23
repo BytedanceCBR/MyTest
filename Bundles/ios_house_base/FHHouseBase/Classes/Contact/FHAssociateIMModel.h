@@ -25,6 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
 
+#pragma mark 逻辑控制
+@property (nonatomic, assign) BOOL isIgnoreReportClickIM; // 是否不上报im_click埋点
+
 @end
 
 NS_ASSUME_NONNULL_END

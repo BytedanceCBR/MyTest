@@ -264,6 +264,7 @@
         fromIMShare,
     ];
     associateIMModel.imOpenUrl = urlComponents.URL.absoluteString;
+    associateIMModel.isIgnoreReportClickIM = YES;
 
     // 跳转IM
     [FHHouseIMClueHelper jump2SessionPageWithAssociateIM:associateIMModel];
