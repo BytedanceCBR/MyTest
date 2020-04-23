@@ -1603,7 +1603,7 @@ TTEditUserProfileViewControllerDelegate
 }
 
 -(void)openFHAccountBindingSettingDidSelectCell{
-    FHAccountBindingViewController *vc = [[FHAccountBindingViewController alloc] init];
+    FHAccountBindingViewController *vc = [[FHAccountBindingViewController alloc]initWithRouteParamObj:nil];
     UINavigationController *topNav = [TTUIResponderHelper topNavigationControllerFor:self];
     [topNav pushViewController:vc animated:YES];
 }

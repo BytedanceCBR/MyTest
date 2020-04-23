@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (void)initData;
-
+- (BOOL)hasDouYinAccount;
+- (BOOL)transformDouYinAccount:(BOOL)isOn;
 @end
 
 NS_ASSUME_NONNULL_END

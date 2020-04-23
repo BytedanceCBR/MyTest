@@ -7,6 +7,7 @@
 
 #import "FHDouYinBindingCell.h"
 #import "TTAccountManager.h"
+#import "AccountManager.h"
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "Masonry.h"
@@ -46,6 +47,13 @@
     }];
 }
 
+- (void)refreshSwitch{
+    if (_delegate && [self.delegate respondsToSelector:@selector(hasDouYinAccount)]) {
+        _switchButton.on = [_delegate hasDouYinAccount];
+    }
+    
+}
+
 - (UILabel *)titleLabel{
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] init];
@@ -61,13 +69,25 @@
 - (UISwitch *)switchButton {
     if (!_switchButton) {
         _switchButton = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 51, 31)];
+        _switchButton.onTintColor = [UIColor themeOrange4];
         [_switchButton addTarget:self action:@selector(accountSwitchButtonDidTap:) forControlEvents:UIControlEventValueChanged];
-        _switchButton.on = YES;//[TTAccountManager currentUser].canBeFoundByPhone;
+        
     }
     return _switchButton;
 }
+
 - (void)accountSwitchButtonDidTap:(UISwitch *)sender {
-   // [TTAccountManager currentUser].canBeFoundByPhone = sender.isOn;
+    NSArray<TTAccountPlatformEntity *> *connects = [[TTAccount sharedAccount] user].connects;
+    NSLog(@"%ld,luowentao",[connects count]);
+    NSLog(@"%@,luowentao",[connects firstObject].userID);
+    NSLog(@"%@,luowentao",[connects firstObject].platformUID);
+    NSLog(@"%@,luowentao",[connects firstObject].platform);
+    NSLog(@"%@,luowentao",[connects firstObject].platformScreenName);
+    NSLog(@"%@,luowentao",[connects firstObject].expiredTime);
+    
+    if (_delegate && [self.delegate respondsToSelector:@selector(transformDouYinAccount:)]) {
+        [_delegate transformDouYinAccount:sender.isOn];
+    }
 }
 
 @end
