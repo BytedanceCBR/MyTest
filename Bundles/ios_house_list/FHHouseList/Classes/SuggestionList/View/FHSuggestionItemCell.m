@@ -87,6 +87,7 @@
     self.recommendTypeLabel.textAlignment = NSTextAlignmentCenter;
     self.recommendTypeLabel.backgroundColor = [UIColor themeGray7];
     self.recommendTypeLabel.layer.cornerRadius = 9;
+    self.recommendTypeLabel.layer.masksToBounds = YES;
     [self.recommendTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.top.mas_equalTo(17);
