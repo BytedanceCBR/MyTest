@@ -253,8 +253,8 @@
         self.descLabel.attributedText = textAttrStr;
         if (model.saleStatus) {
             self.statusLabel.hidden = NO;
-            UIColor *tagBacColor = [UIColor colorWithHexString:@"#FFEAD3"];
-            UIColor *tagTextColor = [UIColor colorWithHexString:@"#ff9300"];
+            UIColor *tagBacColor = [UIColor colorWithHexString:model.saleStatus.backgroundColor];
+            UIColor *tagTextColor = [UIColor colorWithHexString:model.saleStatus.textColor];
             self.statusLabel.textAlignment = NSTextAlignmentCenter;
             self.statusLabel.backgroundColor = tagBacColor;
             self.statusLabel.textColor = tagTextColor;

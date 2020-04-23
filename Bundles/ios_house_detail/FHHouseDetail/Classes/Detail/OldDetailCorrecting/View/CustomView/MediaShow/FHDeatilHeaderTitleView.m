@@ -151,8 +151,8 @@
         FHHouseTagsModel *tagModel = [tags firstObject];
         [self.nameLabel sizeToFit];
         CGSize itemSize = [self.nameLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, 28)];
-        UIColor *tagBacColor = [UIColor colorWithHexString:@"#FFEAD3"];
-        UIColor *tagTextColor = [UIColor colorWithHexString:@"#ff9300"];
+        UIColor *tagBacColor = [UIColor colorWithHexString:tagModel.backgroundColor];
+        UIColor *tagTextColor = [UIColor colorWithHexString:tagModel.textColor];
         UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
         CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 31;
         CGFloat itemWidth = itemSize.width;
