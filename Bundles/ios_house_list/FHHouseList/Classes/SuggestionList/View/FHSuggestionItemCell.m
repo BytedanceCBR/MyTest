@@ -11,6 +11,7 @@
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "FHExtendHotAreaButton.h"
+#import "FHSuggestionListModel.h"
 
 @interface FHSuggestionItemCell ()
 
@@ -56,6 +57,81 @@
 }
 
 @end
+
+@interface FHGuessYouWantCell()
+
+@property(nonatomic, strong) UILabel *recommendTypeLabel;
+@property(nonatomic, strong) UILabel *displayPriceLabel;
+@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) UILabel *recommendResonLabel;
+
+
+
+@end
+
+@implementation FHGuessYouWantCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI
+{
+    self.recommendTypeLabel = [[UILabel alloc] init];
+    [self.contentView addSubview:_recommendTypeLabel];
+    self.recommendTypeLabel.font = [UIFont themeFontRegular:12];
+    [self.recommendTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(21);
+        make.top.mas_equalTo(18);
+        make.height.mas_equalTo(17);
+    }];
+    
+    self.titleLabel = [[UILabel alloc] init];
+    [self.contentView addSubview:_titleLabel];
+    self.titleLabel.font = [UIFont themeFontSemibold:16];
+    [self.titleLabel sizeToFit];
+    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(_recommendTypeLabel.mas_right).offset(15);
+        make.top.mas_equalTo(15);
+        make.height.mas_equalTo(22);
+    }];
+    
+    self.recommendResonLabel = [[UILabel alloc] init];
+    [self.contentView addSubview:_recommendTypeLabel];
+    self.recommendResonLabel.font = [UIFont themeFontRegular:14];
+    [self.recommendResonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(_titleLabel);
+        make.top.mas_equalTo(_titleLabel.mas_bottom).offset(3);
+        make.height.mas_equalTo(20);
+    }];
+    
+    self.displayPriceLabel = [[UILabel alloc] init];
+    [self.contentView addSubview:_displayPriceLabel];
+    self.displayPriceLabel.font = [UIFont themeFontSemibold:16];
+    self.displayPriceLabel.textColor = [UIColor themeOrange1];
+    self.displayPriceLabel.textAlignment = NSTextAlignmentRight;
+    [self.displayPriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-15);
+        make.top.mas_equalTo(14);
+        make.height.mas_equalTo(22);
+    }];
+}
+
+- (void)refreshData:(id)data
+{
+    FHGuessYouWantResponseDataDataModel *model = data;
+    self.recommendTypeLabel.text = model.recommendType.content;
+    self.titleLabel.text = model.text;
+    self.recommendResonLabel.text = model.recommendReason.content;
+    self.displayPriceLabel.text = model.displayPrice;
+}
+
+@end
+
 
 // --
 @interface FHSuggestionNewHouseItemCell ()
@@ -158,31 +234,16 @@
 - (void)setupUI {
     // label
     _label = [[UILabel alloc] init];
-    _label.text = @"历史记录";
-    _label.font = [UIFont themeFontMedium:14];
+    _label.text = @"猜你想搜";
+    _label.font = [UIFont themeFontMedium:16];
     _label.textColor = [UIColor themeGray1];
     [self.contentView addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.mas_equalTo(20);
+        make.top.mas_equalTo(10);
+        make.left.mas_equalTo(16);
         make.height.mas_equalTo(20);
         make.bottom.mas_equalTo(self.contentView);
     }];
-    // deleteBtn
-    _deleteBtn = [[FHExtendHotAreaButton alloc] init];
-    [_deleteBtn setImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
-    [self.contentView addSubview:_deleteBtn];
-    [_deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.centerY.mas_equalTo(self.label);
-    }];
-    [_deleteBtn addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)buttonClick:(UIButton *)btn {
-    if (self.delClick) {
-        self.delClick();
-    }
 }
 
 @end

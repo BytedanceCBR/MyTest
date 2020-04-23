@@ -16,6 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHGuessYouWantCell : UITableViewCell
+
+- (void)refreshData:(id)data;
+
+@end
+
 @interface FHSuggestionNewHouseItemCell : UITableViewCell
 
 @property (nonatomic, strong)   UILabel       *label;

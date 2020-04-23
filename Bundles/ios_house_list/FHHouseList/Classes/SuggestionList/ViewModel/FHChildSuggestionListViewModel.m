@@ -552,7 +552,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (tableView.tag == 1) {
         // 历史记录
-        return self.historyData.count > 0 ? self.historyData.count + 1 : 0;
+        return self.guessYouWantData.count > 0 ? self.guessYouWantData.count + 1 : 0;
     } else if (tableView.tag == 2) {
         // 联想词
         return self.sugListData.count;
@@ -572,23 +572,11 @@
             };
             return headerCell;
         }
-        FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
+        FHGuessYouWantCell *cell = (FHGuessYouWantCell *)[tableView dequeueReusableCellWithIdentifier:@"guessYouWantCell" forIndexPath:indexPath];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        if (indexPath.row - 1 < self.historyData.count) {
-            FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row - 1];
-            cell.secondaryLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
-            NSAttributedString *text1 = [self processHighlightedDefault:model.listText textColor:[UIColor themeGray1] fontSize:15.0];
-            cell.label.attributedText = text1;
-//            if (indexPath.row - 1 == self.sugListData.count - 1) {
-//                // 末尾
-//                [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
-//                    make.bottom.mas_equalTo(cell.contentView).offset(-20);
-//                }];
-//            } else {
-//                [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
-//                    make.bottom.mas_equalTo(cell.contentView).offset(0);
-//                }];
-//            }
+        if (indexPath.row - 1 < self.guessYouWantData.count) {
+            FHGuessYouWantResponseDataDataModel *model  = self.guessYouWantData[indexPath.row - 1];
+            [cell refreshData:model];
         }
         return cell;
     } else if (tableView.tag == 2) {
@@ -686,9 +674,9 @@
     if (tableView.tag == 1) {
         // 历史记录
         if (indexPath.row == 0) {
-            return 40;
+            return 42;
         } else {
-            return 41;
+            return 76;
         }
     } else if (tableView.tag == 2) {
         // 联想词
@@ -851,7 +839,7 @@
 }
 
 - (void)reloadHistoryTableView {
-    if (self.loadRequestTimes >= 2) {
+    if (self.loadRequestTimes >= 3) {
         if (self.historyData.count > 0) {
             [self.historyView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(self.historyView.historyViewHeight);
@@ -884,7 +872,7 @@
             self.hasShowKeyboard = YES;
         }
         [self.listController.historyTableView reloadData];
-        if (self.historyData.count > 0) {
+        if (self.guessYouWantData.count > 0) {
             [self.listController.historyTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
     }
@@ -955,7 +943,8 @@
     self.guessHttpTask = [FHHouseListAPI requestGuessYouWant:cityId houseType:houseType class:[FHGuessYouWantResponseModel class] completion:^(FHGuessYouWantResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         if (model != NULL && error == NULL) {
-            ;
+            self.guessYouWantData = model.data.data;
+            [wself reloadHistoryTableView];
         }
         
     }];
