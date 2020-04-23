@@ -323,7 +323,8 @@ def appPods
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
     # pod_binary 'TTMonitor','0.7.9.58-rc.3' #这个版本还是有很多问题
-    pod_binary 'Heimdallr','0.7.11', :subspecs => [
+    pod_binary 'MemoryGraphCapture', '1.2.4'
+    pod_binary 'Heimdallr', '0.7.15-rc.16', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
@@ -339,7 +340,7 @@ def appPods
     'CrashCapture',
     'Log',
     'UITracker',
-    'MemorySnapshot',
+#    'MemorySnapshot',
     'Upload',
     'HMDSession',
     'HMDConfig',
@@ -352,6 +353,7 @@ def appPods
     'HMDWatchDog', #
     'Runloop',
     'UserException', #
+    'MemoryGraph',
     'Protect'
     ]
     pod 'TTMacroManager','1.0.1'
@@ -677,21 +679,21 @@ post_install do |installer|
     # 一处是Xcode自带的Copy Bundle Resources，一处是CocoaPods的[CP] Copy Pods Resources
     # 这个问题在Xcode 10上也有小概率发生，现在统一临时Fix下，参考CocoaPods/CocoaPods#8122
     installer.aggregate_targets.each do |target|
-        if ['Pods-f100', 'Pods-NewsLiteInHouse'].include?(target.name)
-            patched = false
-            target.user_targets.first.build_phases.each do |phase|
-                if phase.display_name == '[CP] Copy Pods Resources'
-                    assets_car_path = '${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car'
-                    if !phase.input_paths
-                        phase.input_paths = []
-                    end
-                    if !phase.input_paths.include?(assets_car_path)
-                        phase.input_paths << assets_car_path
-                        patched = true
-                    end
-                end
-            end
-            target.user_project.save if patched
-        end
+#        if ['Pods-f100', 'Pods-NewsLiteInHouse'].include?(target.name)
+#            patched = false
+#            target.user_targets.first.build_phases.each do |phase|
+#                if phase.display_name == '[CP] Copy Pods Resources'
+#                    assets_car_path = '${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car'
+#                    if !phase.input_paths
+#                        phase.input_paths = []
+#                    end
+#                    if !phase.input_paths.include?(assets_car_path)
+#                        phase.input_paths << assets_car_path
+#                        patched = true
+#                    end
+#                end
+#            end
+#            target.user_project.save if patched
+#        end
     end
 end
