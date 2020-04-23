@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic) CGSize size;
 
+@property(nonatomic) CGSize cacheSize;
+
+
 @property (nonatomic, strong) FHLynxViewBaseParams *params;
 
 // 当前cell的模型数据

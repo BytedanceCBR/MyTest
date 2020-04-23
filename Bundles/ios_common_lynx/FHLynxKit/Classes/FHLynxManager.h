@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)defaultJSFileName;
 
++ (NSString *)debugUrlStringConvert:(NSString *)url;
+
 @end
 
 NS_ASSUME_NONNULL_END

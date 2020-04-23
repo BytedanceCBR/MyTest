@@ -13,6 +13,7 @@
 #import "NSDictionary+TTAdditions.h"
 #import "NSData+BTDAdditions.h"
 #import "IESGeckoKit.h"
+#import <mach/mach_time.h>
 
 @interface FHLynxManager()
 
@@ -162,7 +163,6 @@
         if (![channelConfigDict isEqualToDictionary:mutPerConfigDict]) {
             [changedChannels addObject:channel];
         }
-                
      
         NSString *cacheKey = [self cacheKeyForChannel:channel templateKey:[FHLynxManager defaultJSFileName] version:0];
         dispatch_group_async(read_group, self.lynx_io_queue, ^{
@@ -221,6 +221,7 @@
         }
         
     };
+    
     if (isAsync == YES) {
         dispatch_group_notify(read_group, dispatch_get_main_queue(), versionBlock);
     } else {
@@ -229,13 +230,20 @@
     
 }
 
++ (NSString *)debugUrlStringConvert:(NSString *)url{
+    BOOL hasParams = [url rangeOfString:@"?"].location != NSNotFound;
+    NSString* seperator = hasParams ? @"&" : @"?";
+    NSString* urlStr = [url stringByAppendingFormat:@"%@t=%llu", seperator, mach_absolute_time()];
+    return urlStr;
+}
+
 - (NSArray<NSString *> *)allChannelArrays{
     return @[@"test_ios"];
 }
 
 + (NSString *)defaultJSFileName
 {
-    return @"template_key.js";
+    return @"template.js";
 }
 
 @end

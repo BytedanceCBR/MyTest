@@ -13,6 +13,10 @@
 #import "FHLynxView.h"
 #import "FHLynxManager.h"
 
+@interface FHLynxCell()<LynxViewClient>
+
+@end
+
 @implementation FHLynxCell
 
 + (Class)cellViewClass
@@ -40,6 +44,7 @@
           _lynxView.layoutWidthMode = LynxViewSizeModeExact;
           _lynxView.layoutHeightMode = LynxViewSizeModeUndefined;
           _lynxView.preferredLayoutWidth = screenFrame.size.width;
+          _lynxView.client = self;
           _lynxView.preferredMaxLayoutHeight = screenFrame.size.height;
           [_lynxView triggerLayout];
           self.contentView.backgroundColor = [UIColor whiteColor];
@@ -59,8 +64,18 @@
 //    NSString *path = [prifix stringByAppendingString:instr];
 //    NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@"js"];
 //    NSData *templateData = [NSData dataWithContentsOfFile:templatePath];
-    [self.lynxView loadTemplate:templateData withURL:@"local"];
+//    [self.lynxView loadTemplate:templateData withURL:@"local"];
+    NSData *dataTemp = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.249.250:30334/card1/template.js?1587635520991"]];
+    
+//    [self.lynxView loadTemplateFromURL:@"http://10.95.249.250:20002/static/dist/public/9a0e2642e9cb7ee3281ac53e4b57484elepus/card1/template.js"];
+    [self.lynxView loadTemplate:dataTemp withURL:@"local"];
      self.lynxView.client = self;
+    
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{@"crowd":@"21223万",@"content": @"权健真相123123123：调查组进驻调查！线上销售已全面遭到“封禁...调查组进驻调查！线上销售已全面遭到“封禁...调查组进驻调查！线上销售已全面遭到“封禁...调查组进驻调查！线上销售已全面遭到“封禁..."} options:0 error:0];
+    NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
+    [_lynxView updateDataWithTemplateData:dataItem];
 }
 
 #pragma mark - reload Lynx
@@ -121,6 +136,27 @@
 
 - (void)fh_didEndDisplayingCell{
 
+}
+
+//这里接收TTLynxViewClient抛上来的sizeChange事件
+- (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
+    if (CGSizeEqualToSize(self.cacheSize, view.frame.size)) {
+        return;
+    }
+
+    self.cacheSize = view.frame.size;
+    UITableView *tableView = self.superview;
+    if ([tableView isKindOfClass:[UITableView class]]) {
+        NSIndexPath *indexPath = [tableView indexPathForCell:self];
+        if (indexPath) {
+            [CATransaction begin];
+            [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+            
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            
+            [CATransaction commit];
+        }
+    }
 }
 
 @end
