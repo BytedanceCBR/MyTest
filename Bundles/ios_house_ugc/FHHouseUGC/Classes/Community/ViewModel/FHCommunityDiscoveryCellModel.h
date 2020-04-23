@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , assign) FHCommunityCollectionCellType type;
 @property (nonatomic, copy , nullable) NSString *category;
 @property (nonatomic, copy , nullable) NSString *name;
-@property (nonatomic, copy , nullable) NSString *channelId;
 
 + (FHCommunityDiscoveryCellModel *)cellModelForCategory:(FHUGCCategoryDataDataModel *)model;
 

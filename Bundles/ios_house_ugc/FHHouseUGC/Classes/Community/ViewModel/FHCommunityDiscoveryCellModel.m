@@ -24,7 +24,6 @@
     cellModel.type = [FHUGCCategoryManager convertCategoryToType:model.category];
     cellModel.name = model.name;
     cellModel.category = model.category;
-    cellModel.channelId = model.channelId;
     return cellModel;
 }
 
