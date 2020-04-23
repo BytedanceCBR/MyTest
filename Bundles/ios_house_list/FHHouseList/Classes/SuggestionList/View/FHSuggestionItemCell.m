@@ -101,7 +101,7 @@
     }];
     
     self.recommendResonLabel = [[UILabel alloc] init];
-    [self.contentView addSubview:_recommendTypeLabel];
+    [self.contentView addSubview:_recommendResonLabel];
     self.recommendResonLabel.font = [UIFont themeFontRegular:14];
     [self.recommendResonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(_titleLabel);
@@ -131,7 +131,6 @@
 }
 
 @end
-
 
 // --
 @interface FHSuggestionNewHouseItemCell ()

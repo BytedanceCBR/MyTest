@@ -112,6 +112,9 @@
     self.historyView.clickBlk = ^(FHSuggestionSearchHistoryResponseDataDataModel * _Nonnull model, NSInteger index) {
         [wself historyItemClick:model andIndex:index];
     };
+    self.historyView.delClick = ^{
+        [wself deleteHisttoryBtnClick];
+    };
     [self.sectionHeaderView addSubview:self.historyView];
     [self.historyView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.sectionHeaderView);
@@ -300,56 +303,50 @@
     [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
 }
 
-// 历史记录点击
-- (void)historyCellClick:(FHSuggestionSearchHistoryResponseDataDataModel *)model rank:(NSInteger)rank {
-    // 点击埋点
-    NSDictionary *tracerDic = @{
-                                @"word":model.text.length > 0 ? model.text : @"be_null",
-                                @"history_id":model.historyId.length > 0 ? model.historyId : @"be_null",
-                                @"rank":@(rank),
-                                @"show_type":@"list"
-                                };
-    [FHUserTracker writeEvent:@"search_history_click" params:tracerDic];
+- (void)trackClickEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
     
+}
+
+- (void)guessYouWantCellClick:(FHGuessYouWantResponseDataDataModel *)model {
     NSString *jumpUrl = model.openUrl;
     if (jumpUrl.length > 0) {
         NSString *placeHolder = [model.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
         if (placeHolder.length > 0) {
             jumpUrl = [NSString stringWithFormat:@"%@&placeholder=%@",jumpUrl,placeHolder];
         }
-    }
-    NSString *queryType = @"history"; // 历史记录
-    NSString *pageType = [self pageTypeString];
-    NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
-    NSDictionary *houseSearchParams = @{
-                                        @"enter_query":queryText,
-                                        @"search_query":queryText,
-                                        @"page_type":pageType.length > 0 ? pageType : @"be_null",
-                                        @"query_type":queryType
-                                        };
-    
-    NSMutableDictionary *infos = [NSMutableDictionary new];
-    infos[@"houseSearch"] = houseSearchParams;
-    if (model.extinfo) {
-        infos[@"suggestion"] = [self createQueryCondition:model.extinfo];
-    }
-    NSMutableDictionary *tracer = [NSMutableDictionary new];
-    tracer[@"enter_type"] = @"click";
-    if (self.listController.tracerDict != NULL) {
-        if (self.listController.tracerDict[@"element_from"]) {
-            tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];
+        NSString *queryType = @"hot"; // 猜你想搜
+        NSString *pageType = [self pageTypeString];
+        NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
+        NSDictionary *houseSearchParams = @{
+                                            @"enter_query":queryText,
+                                            @"search_query":queryText,
+                                            @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                            @"query_type":queryType
+                                            };
+        NSMutableDictionary *infos = [NSMutableDictionary new];
+        infos[@"houseSearch"] = houseSearchParams;
+        if (model.extinfo) {
+            infos[@"suggestion"] = [self createQueryCondition:model.extinfo];
         }
-        if (self.listController.tracerDict[@"enter_from"]) {
-            tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
+        NSMutableDictionary *tracer = [NSMutableDictionary new];
+        tracer[@"enter_type"] = @"click";
+        if (self.listController.tracerDict != NULL) {
+            if (self.listController.tracerDict[@"element_from"]) {
+                tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];
+            }
+            if (self.listController.tracerDict[@"enter_from"]) {
+                tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
+            }
+            if (self.listController.tracerDict[@"origin_from"]) {
+                tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
+            }
         }
-        if (self.listController.tracerDict[@"origin_from"]) {
-            tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
-        }
+        infos[@"tracer"] = tracer;
+
+        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:queryText placeholder:queryText infoDict:infos];
     }
-    infos[@"tracer"] = tracer;
-    
-    [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
 }
+
 
 // 联想词Cell点击
 - (void)associateWordCellClick:(FHSuggestionResponseDataModel *)model rank:(NSInteger)rank {
@@ -567,9 +564,6 @@
             FHSuggestHeaderViewCell *headerCell = (FHSuggestHeaderViewCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestHeaderCell" forIndexPath:indexPath];
             headerCell.selectionStyle = UITableViewCellSelectionStyleNone;
             __weak typeof(self) wself = self;
-            headerCell.delClick = ^{
-                [wself deleteHisttoryBtnClick];
-            };
             return headerCell;
         }
         FHGuessYouWantCell *cell = (FHGuessYouWantCell *)[tableView dequeueReusableCellWithIdentifier:@"guessYouWantCell" forIndexPath:indexPath];
@@ -646,9 +640,11 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (tableView.tag == 1) {
         // 历史记录
-        if (indexPath.row - 1 < self.historyData.count) {
-            FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row - 1];
-            [self historyCellClick:model rank:indexPath.row - 1];
+        if (indexPath.row - 1 < self.guessYouWantData.count) {
+            FHGuessYouWantResponseDataDataModel *model  = self.guessYouWantData[indexPath.row - 1];
+            [self trackClickEventData:model rank:indexPath.row - 1];
+            [self guessYouWantCellClick:model];
+            
         }
     } else if (tableView.tag == 2) {
         // 联想词

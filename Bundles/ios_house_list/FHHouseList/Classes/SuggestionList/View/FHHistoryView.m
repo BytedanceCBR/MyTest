@@ -13,12 +13,13 @@
 #import "FHUserTracker.h"
 #import "BDImageView.h"
 #import "UIImageView+BDWebImage.h"
+#import "FHExtendHotAreaButton.h"
 
 @interface FHHistoryView ()
 
 @property (nonatomic, strong)   UILabel       *label;
 @property (nonatomic, strong)   NSMutableArray       *tempViews;
-
+@property (nonatomic, strong)   FHExtendHotAreaButton *deleteBtn;
 @end
 
 @implementation FHHistoryView
@@ -47,6 +48,21 @@
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(20);
     }];
+    _deleteBtn = [[FHExtendHotAreaButton alloc] init];
+    [_deleteBtn setImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
+    [self addSubview:_deleteBtn];
+    [_deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(20);
+        make.right.mas_equalTo(-11);
+        make.centerY.mas_equalTo(self.label);
+    }];
+    [_deleteBtn addTarget:self action:@selector(deleteButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)deleteButtonClick:(UIButton *)btn {
+    if (self.delClick) {
+        self.delClick();
+    }
 }
 
 - (void)setHistoryItems:(NSArray *)historyItems {
