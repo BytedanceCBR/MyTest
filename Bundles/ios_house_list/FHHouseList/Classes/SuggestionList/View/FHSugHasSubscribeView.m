@@ -73,17 +73,6 @@
     _rightButton.userInteractionEnabled = NO;
     // headerButton
     
-    //redView;
-    _redView = [[UIView alloc] init];
-    _redView.layer.cornerRadius = 4;
-    _redView.layer.masksToBounds = YES;
-    _redView.backgroundColor = [UIColor themeOrange1];
-    [self addSubview:_redView];
-    [_redView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.width.mas_equalTo(8);
-        make.right.mas_equalTo(_rightButton.mas_left).offset(-2);
-        make.centerY.mas_equalTo(_label);
-    }];
     [_headerButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(10);

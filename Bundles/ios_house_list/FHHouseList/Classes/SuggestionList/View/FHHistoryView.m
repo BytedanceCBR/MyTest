@@ -14,6 +14,7 @@
 #import "BDImageView.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHExtendHotAreaButton.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHHistoryView ()
 
@@ -111,18 +112,19 @@
             if (size.width + limitWidth > remainWidth) {
                 // 下一行
                 if (line >= 2 && _isLimited) {
-                    // 已经添加完成
+                    // 两行加载不完
                     if (currentIndex < self.historyItems.count - 1 || size.width > remainWidth) {
                         FHHistoryButton *moreButton = [[FHHistoryButton alloc] init];
-                        [moreButton setBackgroundImage:[UIImage imageNamed:@"arrow_down_16"] forState:UIControlStateNormal];
-                        
+                        UIImageView *imageView = [[UIImageView alloc] initWithImage:ICON_FONT_IMG(16, @"\U0000e672", [UIColor themeGray3])];
+                        imageView.frame = CGRectMake(8, 8, 16, 16);
+                        [moreButton addSubview:imageView];
                         [self addSubview:moreButton];
                         [moreButton addTarget:self action:@selector(moreButtonClick) forControlEvents:UIControlEventTouchUpInside];
                         [moreButton mas_makeConstraints:^(MASConstraintMaker *make) {
                            make.left.mas_equalTo(leftView.mas_right).offset(10);
                             make.top.mas_equalTo(self).offset(lastTopOffset);
                             make.width.mas_equalTo(32);
-                            make.height.mas_equalTo(29);
+                            make.height.mas_equalTo(32);
                         }];
                         [_tempViews addObject:moreButton];
                         break;
@@ -148,15 +150,27 @@
                 }
                 make.top.mas_equalTo(self).offset(lastTopOffset);
                 make.width.mas_equalTo(size.width);
-                make.height.mas_equalTo(29);
+                make.height.mas_equalTo(32);
             }];
-            
+            [self historyShow:item andRank:currentIndex];
             isFirtItem = NO;
             leftView = button;
             [_tempViews addObject:button];
         }
         currentIndex += 1;
     }
+}
+
+- (void)historyShow:(FHSuggestionSearchHistoryResponseDataDataModel *)model andRank:(NSInteger)rank
+{
+    
+    NSDictionary *tracerDic = @{
+                                @"word":model.text.length > 0 ? model.text : @"be_null",
+                                @"history_id":model.historyId.length > 0 ? model.historyId : @"be_null",
+                                @"rank":@(rank),
+                                @"show_type":@"list"
+                                };
+    [FHUserTracker writeEvent:@"search_history_show" params:tracerDic];
 }
 
 - (CGFloat)historyTextLength:(NSString *)text

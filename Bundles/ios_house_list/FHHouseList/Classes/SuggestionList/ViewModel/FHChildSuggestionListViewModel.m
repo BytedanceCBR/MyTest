@@ -51,7 +51,7 @@
         self.loadRequestTimes = 0;
         self.guessYouWantData = [NSMutableArray new];
         self.subscribeItems = [NSMutableArray new];
-        self.historyShowTracerDic = [NSMutableDictionary new];
+        self.guessYouWantShowTracerDic = [NSMutableDictionary new];
         self.associatedCount = 0;
         self.hasShowKeyboard = NO;
         self.sectionHeaderView = [[UIView alloc] init];
@@ -307,7 +307,17 @@
 }
 
 - (void)trackClickEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
-    
+    NSDictionary *tracerDic = @{
+                                @"event_type":@"house_app2c_v2",
+                                @"word":model.text.length > 0 ? model.text : @"be_null",
+                                @"word_type":@"hot",
+                                @"rank":@(rank),
+                                @"word_id":@"be_null",
+                                @"gid":@"be_null",
+                                @"log_pb":@"be_null",
+                                @"recommend_reason":model.recommendReason.content,
+                                };
+    [FHUserTracker writeEvent:@"hot_word_click" params:tracerDic];
 }
 
 - (void)guessYouWantCellClick:(FHGuessYouWantResponseDataDataModel *)model {
@@ -671,11 +681,15 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView.tag == 1) {
-        // 历史记录
+        // 猜你想搜
         if (indexPath.row == 0) {
             return 42;
         } else {
-            return 76;
+            if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
+                return 76;
+            } else {
+                return 49;
+            }
         }
     } else if (tableView.tag == 2) {
         // 联想词
@@ -728,19 +742,23 @@
     if (tableView.tag == 1) {
         // 历史记录 search_history_show 埋点
         if (indexPath.row - 1 < self.historyData.count) {
-            FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row - 1];
+            FHGuessYouWantResponseDataDataModel *model  = self.guessYouWantData[indexPath.row - 1];
             NSInteger rank = indexPath.row - 1;
             NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
-            if (!self.historyShowTracerDic[recordKey]) {
+            if (!self.guessYouWantShowTracerDic[recordKey]) {
                 // 埋点
-                self.historyShowTracerDic[recordKey] = @(YES);
+                self.guessYouWantShowTracerDic[recordKey] = @(YES);
                 NSDictionary *tracerDic = @{
+                                            @"event_type":@"house_app2c_v2",
                                             @"word":model.text.length > 0 ? model.text : @"be_null",
-                                            @"history_id":model.historyId.length > 0 ? model.historyId : @"be_null",
+                                            @"word_type":@"hot",
                                             @"rank":@(rank),
-                                            @"show_type":@"list"
+                                            @"word_id":@"be_null",
+                                            @"gid":@"be_null",
+                                            @"log_pb":@"be_null",
+                                            @"recommend_reason":model.recommendReason.content,
                                             };
-                [FHUserTracker writeEvent:@"search_history_show" params:tracerDic];
+                [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
             }
         }
     } else if (tableView.tag == 2) {

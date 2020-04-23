@@ -235,7 +235,7 @@
     _houseType = houseType;
     self.viewModel.houseType = self.houseType;
     // 清空埋点key
-    [self.viewModel.historyShowTracerDic removeAllObjects];
+    [self.viewModel.guessYouWantShowTracerDic removeAllObjects];
     // 网络请求
     [self requestData];
 }

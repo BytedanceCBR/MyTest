@@ -84,10 +84,14 @@
     self.recommendTypeLabel = [[UILabel alloc] init];
     [self.contentView addSubview:_recommendTypeLabel];
     self.recommendTypeLabel.font = [UIFont themeFontRegular:12];
+    self.recommendTypeLabel.textAlignment = NSTextAlignmentCenter;
+    self.recommendTypeLabel.backgroundColor = [UIColor themeGray7];
+    self.recommendTypeLabel.layer.cornerRadius = 9;
     [self.recommendTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(21);
-        make.top.mas_equalTo(18);
-        make.height.mas_equalTo(17);
+        make.left.mas_equalTo(15);
+        make.top.mas_equalTo(17);
+        make.height.mas_equalTo(18);
+        make.width.mas_equalTo(36);
     }];
     
     self.titleLabel = [[UILabel alloc] init];
@@ -125,9 +129,18 @@
 {
     FHGuessYouWantResponseDataDataModel *model = data;
     self.recommendTypeLabel.text = model.recommendType.content;
+    [self.recommendTypeLabel sizeToFit];
+    CGSize size = [self.recommendTypeLabel sizeThatFits:CGSizeMake(100, 18)];
+    [self.recommendTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(size.width + 12);
+    }];
+    
     self.titleLabel.text = model.text;
     self.recommendResonLabel.text = model.recommendReason.content;
+    self.recommendResonLabel.textColor = [UIColor themeGray3];
     self.displayPriceLabel.text = model.displayPrice;
+    
+    
 }
 
 @end
