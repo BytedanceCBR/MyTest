@@ -123,6 +123,7 @@
         case FHLoginViewTypeVerify:
         {
             FHVerifyCodeInputView *verifyCodeInputView = [[FHVerifyCodeInputView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds))];
+            verifyCodeInputView.isForBindMobile = NO;
             verifyCodeInputView.delegate = self.viewModel;
             [self.view addSubview:verifyCodeInputView];
             [verifyCodeInputView mas_makeConstraints:^(MASConstraintMaker *make) {

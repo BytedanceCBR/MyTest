@@ -25,7 +25,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.font = [UIFont themeFontRegular:30];
+        titleLabel.font = [UIFont themeFontMedium:30];
         titleLabel.textColor = [UIColor themeGray1];
         titleLabel.text = @"绑定手机号";
         [self addSubview:titleLabel];
@@ -40,6 +40,7 @@
         subTitleLabel.textColor = [UIColor themeGray3];
         subTitleLabel.numberOfLines = 0;
         subTitleLabel.text = @"为了你的账号安全，请先绑定手机，我们会严格保护你的手机号信息";
+        [self addSubview:subTitleLabel];
         [subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(titleLabel.mas_bottom).mas_offset(4);
             make.left.mas_equalTo(titleLabel.mas_left);

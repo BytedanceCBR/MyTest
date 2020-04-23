@@ -159,7 +159,7 @@
 }
 
 - (void)douyinLoginAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginActiondouyinLoginAction)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginAction)]) {
         [self.delegate douyinLoginAction];
     }
 }

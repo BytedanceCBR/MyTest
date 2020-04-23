@@ -82,8 +82,7 @@
 
 - (void)setupUI {
     switch (self.viewType) {
-        case FHBindViewTypeOneKey:
-        {
+        case FHBindViewTypeOneKey: {
             FHOneKeyBindingView *onekeyBindView = [[FHOneKeyBindingView alloc] init];
             onekeyBindView.delegate = self.viewModel;
             [self.view addSubview:onekeyBindView];
@@ -98,10 +97,9 @@
                 make.left.right.equalTo(self.view);
             }];
             [onekeyBindView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType]];
-        }
             break;
-        case FHBindViewTypeMobile:
-        {
+        }
+        case FHBindViewTypeMobile: {
             FHMobileBindingView *mobileInputView = [[FHMobileBindingView alloc] init];
             mobileInputView.delegate = self.viewModel;
             [self.view addSubview:mobileInputView];
@@ -116,12 +114,12 @@
                 make.left.right.equalTo(self.view);
             }];
             self.textField = mobileInputView.mobileTextField;
-        }
             break;
-        case FHBindViewTypeVerify:
-        {
+        }
+        case FHBindViewTypeVerify: {
             FHVerifyCodeInputView *verifyCodeInputView = [[FHVerifyCodeInputView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds))];
             verifyCodeInputView.delegate = self.viewModel;
+            verifyCodeInputView.isForBindMobile = YES;
             [self.view addSubview:verifyCodeInputView];
             [verifyCodeInputView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (@available(iOS 11.0, *)) {
@@ -140,9 +138,8 @@
             [self.viewModel setUpdateTimeCountDownValue:^(NSInteger secondsValue) {
                 [weakCodeView updateTimeCountDownValue:secondsValue];
             }];
-            
-        }
             break;
+        }
         default:
             break;
     }
