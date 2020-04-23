@@ -25,6 +25,8 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import "TTDetailWebviewGIFManager.h"
 #import <KVOController/KVOController.h>
+#import <TTPlatformBaseLib/TTTrackerWrapper.h>
+
 #define kFooterDivKey @"toutiao_ios_footer_div"
 
 #define kFooterDisplayNotManualCloseDistance -30    //点击按钮打开浮层，下啦该距离收起
@@ -553,7 +555,7 @@ static CGFloat kProfileFillBubbleHeight = 66.f;
             [_delegate processRequestOpenWebViewUseURL:requestURL supportRotate:NO];
         }
     }
-    ttTrackEvent(@"detail", @"open_url");
+    wrapperTrackEvent(@"detail", @"open_url");
 }
 
 - (void)DOMContentHeightHasChangedWithRequset:(NSURL *)requestURL {
@@ -635,10 +637,10 @@ static CGFloat kProfileFillBubbleHeight = 66.f;
     
     if (originStatus != _footerStatus) {
         if (_footerStatus == TTDetailWebViewFooterStatusDisplayHalf && originStatus == TTDetailWebViewFooterStatusNoDisplay) {
-            ttTrackEvent(@"detail", @"pull_open_drawer");
+            wrapperTrackEvent(@"detail", @"pull_open_drawer");
         }
         else if (_footerStatus == TTDetailWebViewFooterStatusNoDisplay && originStatus == TTDetailWebViewFooterStatusDisplayHalf) {
-            ttTrackEvent(@"detail", @"pull_close_drawer");
+            wrapperTrackEvent(@"detail", @"pull_close_drawer");
         }
     }
     

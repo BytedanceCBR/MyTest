@@ -952,7 +952,9 @@
     }
     
     // [[TTLCSServerConfig sharedTTLCSServerConfig] updateEnabledFlag:dSettings];
-    [[TTLCSServerConfig sharedInstance] resetServerConfigEnabled:[dSettings tt_boolValueForKey:kTTLCSServerConfigEnabledKey]];
+    
+    // todo zjing test check 
+//    [[TTLCSServerConfig sharedInstance] resetServerConfigEnabled:[dSettings tt_boolValueForKey:kTTLCSServerConfigEnabledKey]];
     
     [[TTWebviewAntiHijackServerConfig sharedTTWebviewAntiHijackServerConfig] updateServerConfig:dSettings];
     

@@ -96,7 +96,7 @@
     if (self.playerStateStore.state.isInDetail) {
         label = @"detail_continue";
     }
-    ttTrackEvent(stopEvent, label);
+    wrapperTrackEvent(stopEvent, label);
 }
 
 - (void)removeCacheForVideoID:(NSString *)videoID

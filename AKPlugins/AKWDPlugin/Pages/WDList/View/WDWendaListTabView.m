@@ -16,6 +16,7 @@
 #import "TTImageView.h"
 #import <KVOController/NSObject+FBKVOController.h>
 #import <TTUIWidget/TTIndicatorView.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface WDWendaListTabView ()
 
@@ -173,7 +174,9 @@
             [TTTracker ttTrackEventWithCustomKeys:@"question" label:@"click_ask_question" value:self.listViewModel.qID source:nil extraDic:self.listViewModel.gdExtJson];
         }
         else if (model.icon_type == WDIconTypeINVITED) {
-            ttTrackEventWithCustomKeys(@"question", @"invite", nil, nil, self.listViewModel.gdExtJson);
+            
+            [BDTrackerProtocol trackEventWithCustomKeys:@"question" label:@"invite" value:nil source:nil extraDic:self.listViewModel.gdExtJson];
+//            ttTrackEventWithCustomKeys(@"question", @"invite", nil, nil, self.listViewModel.gdExtJson);
         }
         
     }

@@ -13,12 +13,12 @@
 #import "TTDefaultJSONResponseSerializer.h"
 #import "TTDefaultBinaryResponseSerializer.h"
 #import "TTDefaultResponseModelResponseSerializer.h"
-#import <TTNetBusiness/TTDefaultResponsePreprocessor.h>
+#import "TTDefaultResponsePreprocessor.h"
 
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTPostDataHttpRequestSerializer.h"
 #import <TTNetBusiness/TTRouteSelectionServerConfig.h>
-#import <TTNetBusiness/TTHttpsControlManager.h>
+
 #import "TTLocationManager.h"  //add by songlu
 #import <CommonCrypto/CommonCrypto.h>
 #import "SSCookieManager.h"
@@ -123,7 +123,6 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
             urlObj = [NSURL URLWithString:urlStr];
         }
 
-        urlObj = [[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:urlObj];
         urlStr = urlObj.absoluteString;
 
         BOOL isHttps = [urlStr hasPrefix:@"https://"];

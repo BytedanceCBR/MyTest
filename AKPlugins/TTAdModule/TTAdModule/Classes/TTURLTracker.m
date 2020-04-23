@@ -22,8 +22,9 @@
 #import <TTBaseLib/TTBusinessManager.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 //#import "TTInstallIDWrapperManager.h"
-#import <TTNetBusiness/TTHttpsControlManager.h>
+
 //#import "SSURLTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kRequsetTimes 5
 
@@ -281,7 +282,6 @@ static NSString *const kTrackFaildURLFileName = @"TTADTrackFailedURLs.plist";
     
     NSURL * url = [TTStringHelper URLWithURLString:sendURLStr];
     
-    url = [[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:url];
     if (!url) {
         return;
     }
@@ -441,7 +441,9 @@ static NSString *const kTrackFaildURLFileName = @"TTADTrackFailedURLs.plist";
 
 - (void)sendEventWithURL:(NSURL *)url statusCode:(NSInteger)statusCode
 {
-    ttTrackEventWithCustomKeys(@"ad_stat", @"track_url", @(statusCode).stringValue, nil, @{@"url" : url.absoluteString});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"ad_stat" label:@"track_url" value:@(statusCode).stringValue source:nil extraDic:@{@"url" : url.absoluteString}];
+
+//    ttTrackEventWithCustomKeys(@"ad_stat", @"track_url", @(statusCode).stringValue, nil, @{@"url" : url.absoluteString});
 }
 
 //trackUrl之后发送adId
@@ -453,7 +455,10 @@ static NSString *const kTrackFaildURLFileName = @"TTADTrackFailedURLs.plist";
     [dict setValue:@(statusCode).stringValue forKey:@"ext_value"];
     [dict setValue:@(connectionType) forKey:@"nt"];
     [dict setValue:@"1" forKey:@"is_ad_event"];
-    ttTrackEventWithCustomKeys(@"embeded_ad", @"track_url",adId, nil, dict);
+    
+    [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"track_url" value:adId source:nil extraDic:dict];
+
+//    ttTrackEventWithCustomKeys(@"embeded_ad", @"track_url",adId, nil, dict);
 }
 
 

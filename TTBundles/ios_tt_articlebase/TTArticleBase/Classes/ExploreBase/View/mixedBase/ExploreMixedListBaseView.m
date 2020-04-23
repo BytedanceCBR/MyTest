@@ -2287,7 +2287,7 @@ TTRefreshViewDelegate
                                     isDisplyView:_isDisplayView
                                         listType:_listType
                                     listLocation:_listLocation
-                                     finishBlock:^(NSArray *increaseItems, id operationContext, NSError *error) {
+                                     finishBlock:^(NSArray *increaseItems, NSDictionary *operationContext, NSError *error) {
                                          
                                          __strong typeof(oldwself) self = oldwself;
                                          __strong typeof(oldwself) wself = oldwself;
@@ -2354,18 +2354,18 @@ TTRefreshViewDelegate
                                          
                                          //fix 5.3:无error时再处理置顶
                                          if (!error) {
-                                             NSDictionary *result = [operationContext objectForKey:kExploreFetchListResponseRemoteDataKey];
+                                             NSDictionary *result = (NSDictionary *)[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey];
                                              weakSelf.movieCommentVideoAPIOffset = [[result objectForKey:@"result"] tt_unsignedIntegerValueForKey:@"offset"];
                                              weakSelf.verticalVideoAPIOffset = [[result objectForKey:@"result"] tt_unsignedIntegerValueForKey:@"offset"];
                                          }
                                          
                                          BOOL isResponseFromRemote = NO;
                                          if (operationContext) {
-                                             isResponseFromRemote = [[operationContext objectForKey:kExploreFetchListIsResponseFromRemoteKey] boolValue];
+                                             isResponseFromRemote = [[(NSDictionary *)operationContext objectForKey:kExploreFetchListIsResponseFromRemoteKey] boolValue];
                                          }
                                          
                                          //获取视频订阅号开关标志信息
-                                         NSDictionary *resultDict = [[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"];
+                                         NSDictionary *resultDict = [(NSDictionary *)[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"];
                                          if ([[resultDict allKeys] containsObject:@"show_top_pgc_list"]) {
                                              NSNumber *showPCGList = resultDict[@"show_top_pgc_list"];
                                              if ([showPCGList isKindOfClass:[NSNumber class]]) {
@@ -2376,9 +2376,9 @@ TTRefreshViewDelegate
                                         
                                          [TTFeedDislikeView enable];
                                          
-                                         NSString *cid = [[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListUnitIDKey];
+                                         NSString *cid = [(NSDictionary *)[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListUnitIDKey];
                                          
-                                         NSString *concernID = [[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListConcernIDKey];
+                                         NSString *concernID = [(NSDictionary *)[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListConcernIDKey];
                                          
                                          NSString *key = !isEmptyString(cid) ? cid : concernID;
                                          
@@ -2659,7 +2659,7 @@ TTRefreshViewDelegate
                                                      }
                                                  }
                                                  
-                                                 NSDictionary *remoteTipResult = [[[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"] objectForKey:@"tips"];
+                                                 NSDictionary *remoteTipResult = [(NSDictionary *)[(NSDictionary *)[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"] objectForKey:@"tips"];
                                                  
                                                  tipModel = [[SSTipModel alloc] initWithDictionary:remoteTipResult];
                                                  NSString * msg = nil;
@@ -2749,7 +2749,7 @@ TTRefreshViewDelegate
                                                      [weakSelf updateCustomTopOffset];
                                                      [weakSelf.listView finishPullDownWithSuccess:!error];
                                                  }
-                                                 NSMutableDictionary * exploreMixedListConsumeTimeStamps = [[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
+                                                 NSMutableDictionary * exploreMixedListConsumeTimeStamps = [(NSMutableDictionary *)[operationContext objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
                                                  [exploreMixedListConsumeTimeStamps setValue:@([NSObject currentUnixTime])
                                                                                       forKey:kExploreFetchListFinishRequestTimeStampKey];
                                                  [weakSelf exploreMixedListTimeConsumingMonitorWithContext:operationContext];

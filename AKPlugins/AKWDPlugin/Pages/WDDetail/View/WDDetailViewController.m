@@ -65,6 +65,7 @@
 #import <TTImpression/TTRelevantDurationTracker.h>
 #import <TTVideoService/TTFFantasyTracker.h>
 #import "TTCommentViewController.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -1620,10 +1621,10 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)p_sendNatantViewVisableTrack
 {
     if ([self.detailView.detailWebView isNatantViewOnOpenStatus]) {
-        ttTrackEvent(kWDDetailViewControllerUMEventName, @"handle_close_drawer");
+        wrapperTrackEvent(kWDDetailViewControllerUMEventName, @"handle_close_drawer");
     }
     else {
-        ttTrackEvent(kWDDetailViewControllerUMEventName, @"handle_open_drawer");
+        wrapperTrackEvent(kWDDetailViewControllerUMEventName, @"handle_open_drawer");
     }
 }
 
@@ -1826,7 +1827,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 {
     NSString *label = [WDShareUtilsHelper labelNameForShareActivity:activity shareState:(error ? NO : YES)];
     if (!isEmptyString(label)) {
-        ttTrackEventWithCustomKeys(kWDDetailViewControllerUMEventName, label, self.detailModel.answerEntity.ansid, nil, self.detailModel.gdExtJsonDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:kWDDetailViewControllerUMEventName label:label value:nil source:self.detailModel.answerEntity.ansid extraDic:self.detailModel.gdExtJsonDict];
+//        ttTrackEventWithCustomKeys(kWDDetailViewControllerUMEventName, label, self.detailModel.answerEntity.ansid, nil, self.detailModel.gdExtJsonDict);
     }
 }
 

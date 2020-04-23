@@ -152,7 +152,7 @@
         if (scenarioType == TTASMSCodeScenarioFindPassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEvent(@"register_new", @"find_password_next_error");
+                wrapperTrackEvent(@"register_new", @"find_password_next_error");
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -162,7 +162,7 @@
         } else if (scenarioType == TTASMSCodeScenarioFindPasswordRetry) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEvent(@"register_new", @"reset_password_next_error");
+                wrapperTrackEvent(@"register_new", @"reset_password_next_error");
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -209,7 +209,7 @@
                 //找回密码输手机号页顺利点下一步
                 // LogV1
                 if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                    ttTrackEvent(@"register_new", @"find_password_next");
+                    wrapperTrackEvent(@"register_new", @"find_password_next");
                 }
                 // LogV3
                 NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -229,7 +229,7 @@
                 //找回密码输手机号页点下一步报错
                 // LogV1
                 if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                    ttTrackEvent(@"register_new", @"find_password_next_error");
+                    wrapperTrackEvent(@"register_new", @"find_password_next_error");
                 }
                 // LogV3
                 NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -268,7 +268,7 @@
             // 重设密码页顺利点下一步
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEvent(@"register_new", @"reset_password_next");
+                wrapperTrackEvent(@"register_new", @"reset_password_next");
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -283,7 +283,7 @@
             // 重设密码页点下一步报错
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEvent(@"register_new", @"reset_password_next_error");
+                wrapperTrackEvent(@"register_new", @"reset_password_next_error");
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -331,7 +331,7 @@
     // 重设密码页点重发验证码
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        ttTrackEvent(@"register_new", @"reset_password_retry");
+        wrapperTrackEvent(@"register_new", @"reset_password_retry");
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];

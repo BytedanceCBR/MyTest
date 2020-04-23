@@ -54,6 +54,7 @@
 #import "WDListBottomButton.h"
 #import "TTAccountManager.h"
 #import "FHUserTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kListBottomBarHeight (self.view.tt_safeAreaInsets.bottom ? self.view.tt_safeAreaInsets.bottom + 44 : 44)
 
@@ -932,7 +933,8 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
         media_id = [self.viewModel.gdExtJson objectForKey:@"ansid"];
     }
     [extraDict setValue:media_id forKey:@"media_id"];
-    ttTrackEventWithCustomKeys(kWDWendaListViewControllerUMEventName, label, self.viewModel.qID, nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:kWDWendaListViewControllerUMEventName label:label value:self.viewModel.qID source:nil extraDic:extraDict];
+//    ttTrackEventWithCustomKeys(kWDWendaListViewControllerUMEventName, label, self.viewModel.qID, nil, extraDict);
 }
 
 #pragma mark - UIScrollViewDelegate

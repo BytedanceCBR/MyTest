@@ -21,6 +21,7 @@
 #import "NSTimer+TTNoRetainRef.h"
 #import <TTAccountSDK/TTAccountAuthWeChat.h>
 #import <TTAccountSDK/TTAccount+PlatformAuthLogin.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 
@@ -590,7 +591,10 @@ UITextFieldDelegate
         if ([[userInfo tt_stringValueForKey:@"source"] isEqualToString:TT_LOGIN_PLATFORM_SINAWEIBO]) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEventWithCustomKeys(@"register_new", @"quick_login_success_weibo", nil, self.source, nil);
+                
+                [BDTrackerProtocol trackEventWithCustomKeys:@"register_new" label:@"quick_login_success_weibo" value:nil source:self.source extraDic:nil];
+
+//                ttTrackEventWithCustomKeys(@"register_new", @"quick_login_success_weibo", nil, self.source, nil);
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -601,7 +605,10 @@ UITextFieldDelegate
         } else if ([[userInfo tt_stringValueForKey:@"source"] isEqualToString:TT_LOGIN_PLATFORM_WECHAT]) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEventWithCustomKeys(@"register_new", @"quick_login_success_weixin", nil, self.source, nil);
+                
+                [BDTrackerProtocol trackEventWithCustomKeys:@"register_new" label:@"quick_login_success_weixin" value:nil source:self.source extraDic:nil];
+
+//                ttTrackEventWithCustomKeys(@"register_new", @"quick_login_success_weixin", nil, self.source, nil);
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -612,7 +619,10 @@ UITextFieldDelegate
         } else if ([[userInfo tt_stringValueForKey:@"source"] isEqualToString:TT_LOGIN_PLATFORM_QZONE]) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEventWithCustomKeys(@"register_new", @"quick_login_success_qq", nil, self.source, nil);
+                
+                [BDTrackerProtocol trackEventWithCustomKeys:@"register_new" label:@"quick_login_success_qq" value:nil source:self.source extraDic:nil];
+
+//                ttTrackEventWithCustomKeys(@"register_new", @"quick_login_success_qq", nil, self.source, nil);
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -859,7 +869,7 @@ UITextFieldDelegate
                         [self.tipBtn setTitle:@"请输入密码" forState:UIControlStateNormal];
                     } else {
                         //绑定手机号时提示已绑定其他账号， 确认放弃原账号
-                        ttTrackEvent(@"login", @"binding_mobile_abandon_confirm");
+                        wrapperTrackEvent(@"login", @"binding_mobile_abandon_confirm");
                         [self phoneNumSwitch];
                     }
                     break;
@@ -872,7 +882,7 @@ UITextFieldDelegate
                         [self.tipBtn setTitle:@"请输入密码" forState:UIControlStateNormal];
                     } else {
                         //绑定手机号时提示已绑定其他账号， 确认放弃原账号
-                        ttTrackEvent(@"login", @"binding_mobile_abandon_confirm");
+                        wrapperTrackEvent(@"login", @"binding_mobile_abandon_confirm");
                         [self phoneNumSwitch];
                     }
                     
@@ -1322,7 +1332,10 @@ UITextFieldDelegate
             
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEventWithCustomKeys(@"register_new", @"quick_login_weixin", nil, self.source, nil);
+                
+                [BDTrackerProtocol trackEventWithCustomKeys:@"register_new" label:@"quick_login_weixin" value:nil source:self.source extraDic:nil];
+
+//                ttTrackEventWithCustomKeys(@"register_new", @"quick_login_weixin", nil, self.source, nil);
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1346,7 +1359,10 @@ UITextFieldDelegate
         
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            ttTrackEventWithCustomKeys(@"register_new", @"quick_login_qq", nil, self.source, nil);
+            
+            [BDTrackerProtocol trackEventWithCustomKeys:@"register_new" label:@"quick_login_qq" value:nil source:self.source extraDic:nil];
+//
+//            ttTrackEventWithCustomKeys(@"register_new", @"quick_login_qq", nil, self.source, nil);
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1366,7 +1382,10 @@ UITextFieldDelegate
         
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            ttTrackEventWithCustomKeys(@"register_new", @"quick_login_weibo", nil, self.source, nil);
+            
+            [BDTrackerProtocol trackEventWithCustomKeys:@"register_new" label:@"quick_login_weibo" value:nil source:self.source extraDic:nil];
+
+//            ttTrackEventWithCustomKeys(@"register_new", @"quick_login_weibo", nil, self.source, nil);
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1583,7 +1602,10 @@ UITextFieldDelegate
             
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                ttTrackEventWithCustomKeys(@"register_new", @"quick_login_mobile", nil, self.source, nil);
+                
+                [BDTrackerProtocol trackEventWithCustomKeys:@"register_new" label:@"quick_login_mobile" value:nil source:self.source extraDic:nil];
+
+//                ttTrackEventWithCustomKeys(@"register_new", @"quick_login_mobile", nil, self.source, nil);
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
