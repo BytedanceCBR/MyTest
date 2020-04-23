@@ -20,6 +20,8 @@
 @property (nonatomic, strong)   UILabel       *label;
 @property (nonatomic, strong)   NSMutableArray       *tempViews;
 @property (nonatomic, strong)   FHExtendHotAreaButton *deleteBtn;
+@property (nonatomic, assign)   BOOL isLimited;
+
 @end
 
 @implementation FHHistoryView
@@ -28,8 +30,9 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _isLimited = YES;
         self.backgroundColor = [UIColor whiteColor];
-        self.historyViewHeight = 128; // 一行是89
+        self.historyViewHeight = 89; // 一行是89
         self.tempViews = [NSMutableArray new];
         [self setupUI];
     }
@@ -71,15 +74,25 @@
     [self reAddViews];
 }
 
+- (void)moreButtonClick
+{
+    _isLimited = NO;
+    if (self.moreClick) {
+        [self reAddViews];
+        self.moreClick();
+    }
+}
+
 - (void)reAddViews {
     for (UIView *v in self.tempViews) {
         [v removeFromSuperview];
     }
+    self.historyViewHeight = 89; 
     [self.tempViews removeAllObjects];
     NSInteger   line = 1;
     CGFloat     lastTopOffset = 50;
     UIView *    leftView = self;
-    CGFloat     remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+    CGFloat     remainWidth = UIScreen.mainScreen.bounds.size.width - 30;
     NSInteger   currentIndex = 0;
     BOOL        isFirtItem = YES;
     for (FHSuggestionSearchHistoryResponseDataDataModel* item in self.historyItems) {
@@ -91,27 +104,45 @@
                 size.width = 200;
             }
             size.width += 12;
+            CGFloat limitWidth = _isLimited ? 42 : 0;
             
             button.tag = currentIndex;
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-            if (size.width > remainWidth) {
+            if (size.width + limitWidth > remainWidth) {
                 // 下一行
-                if (line >= 2) {
+                if (line >= 2 && _isLimited) {
                     // 已经添加完成
-                    break;
+                    if (currentIndex < self.historyItems.count - 1 || size.width > remainWidth) {
+                        FHHistoryButton *moreButton = [[FHHistoryButton alloc] init];
+                        [moreButton setBackgroundImage:[UIImage imageNamed:@"arrow_down_16"] forState:UIControlStateNormal];
+                        
+                        [self addSubview:moreButton];
+                        [moreButton addTarget:self action:@selector(moreButtonClick) forControlEvents:UIControlEventTouchUpInside];
+                        [moreButton mas_makeConstraints:^(MASConstraintMaker *make) {
+                           make.left.mas_equalTo(leftView.mas_right).offset(10);
+                            make.top.mas_equalTo(self).offset(lastTopOffset);
+                            make.width.mas_equalTo(32);
+                            make.height.mas_equalTo(29);
+                        }];
+                        [_tempViews addObject:moreButton];
+                        break;
+                    }
                 }
-                line += 1;
-                lastTopOffset = 89;
-                leftView = self;
-                isFirtItem = YES;
-                remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+                if (size.width > remainWidth) {
+                    line += 1;
+                    lastTopOffset += 39;
+                    _historyViewHeight += 39;
+                    leftView = self;
+                    isFirtItem = YES;
+                    remainWidth = UIScreen.mainScreen.bounds.size.width - 30;
+                }
             }
             remainWidth -= (size.width + 10);
             [self addSubview:button];
             // 布局
             [button mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (isFirtItem) {
-                    make.left.mas_equalTo(self).offset(20);
+                    make.left.mas_equalTo(self).offset(15);
                 } else {
                     make.left.mas_equalTo(leftView.mas_right).offset(10);
                 }
@@ -119,7 +150,6 @@
                 make.width.mas_equalTo(size.width);
                 make.height.mas_equalTo(29);
             }];
-            
             
             isFirtItem = NO;
             leftView = button;

@@ -115,6 +115,9 @@
     self.historyView.delClick = ^{
         [wself deleteHisttoryBtnClick];
     };
+    self.historyView.moreClick = ^{
+        [wself reloadHistoryTableView];
+    };
     [self.sectionHeaderView addSubview:self.historyView];
     [self.historyView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.sectionHeaderView);
