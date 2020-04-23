@@ -113,7 +113,7 @@
         make.left.mas_equalTo(34);
         make.right.mas_equalTo(-34);
         make.top.mas_equalTo(0);
-        make.height.mas_equalTo(1);
+        make.height.mas_equalTo(0.5);
     }];
     
     [self.cellBackView mas_makeConstraints:^(MASConstraintMaker *make) {
