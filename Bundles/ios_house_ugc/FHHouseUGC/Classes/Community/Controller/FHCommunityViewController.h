@@ -20,7 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL isUgcOpen;
 @property(nonatomic, assign) BOOL hasFocusTips;
 
-- (void)showSegmentControl:(BOOL)isShow;
 - (void)hideGuideView;
 - (void)hideRedPoint;
 - (void)updateSpringView;

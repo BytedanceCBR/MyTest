@@ -34,6 +34,7 @@
 #import "FHCommonDefines.h"
 #import "TTAccountManager.h"
 #import "FHHouseUGCHeader.h"
+#import "FHUGCCategoryManager.h"
 
 @interface FHCommunityViewController ()
 
@@ -74,19 +75,25 @@
     }
     [self initConstraints];
 
-    [self onUnreadMessageChange];
-    [self onFocusHaveNewContents];
+    if(!self.isNewDiscovery){
+        [self onUnreadMessageChange];
+        [self onFocusHaveNewContents];
+    }
 
     //切换开关
     WeakSelf;
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id _Nullable x) {
         StrongSelf;
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *) x;
-        if (self.isUgcOpen != xConfigDataModel.ugcCitySwitch) {
-            self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
+        if([FHEnvContext isNewDiscovery]){
             [self initViewModel];
+        }else{
+            if (self.isUgcOpen != xConfigDataModel.ugcCitySwitch) {
+                self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
+                [self initViewModel];
+            }
+            self.segmentControl.sectionTitles = [self getSegmentTitles];
         }
-        self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
@@ -97,6 +104,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSegmentView) name:kUGCCategoryGotFinishedNotification object:nil];
     
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
 }
@@ -444,19 +452,23 @@
     }
 }
 
-- (void)showSegmentControl:(BOOL)isShow {
-    self.segmentControl.hidden = !isShow;
-    self.bottomLineView.hidden = !isShow;
-    self.topView.hidden = !isShow;
-    if (isShow) {
-        _collectionView.backgroundColor = [UIColor themeGray7];
-        [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
+
+
+- (void)updateSegmentView {
+    self.segmentControl.sectionTitles = [self getSegmentTitles];
+    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
+    if(self.isNewDiscovery && segmentContentWidth >= SCREEN_WIDTH){
+        [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(self.topView);
             make.height.mas_equalTo(44);
+            make.bottom.mas_equalTo(self.topView).offset(-8);
         }];
-    } else {
-        _collectionView.backgroundColor = [UIColor whiteColor];
-        [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
+    }else{
+        [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(self.topView);
+            make.width.mas_equalTo(segmentContentWidth);
+            make.height.mas_equalTo(44);
+            make.bottom.mas_equalTo(self.topView).offset(-8);
         }];
     }
 }

@@ -40,6 +40,7 @@
 #import <UserNotifications/UserNotifications.h>
 #import "FHPermissionAlertViewController.h"
 #import <TTAppRuntime/NewsBaseDelegate.h>
+#import "FHUGCCategoryManager.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -108,43 +109,83 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 FHConfigDataModel *configModel = model.data;
                 [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
                 
-                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
-                    //首次请求频道无论成功失败都跳转
-                    if (retryGetLightCount == kGetLightRequestRetryCount) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
-                        
-                        if(completion)
-                        {
-                            completion(YES);
-                        }
-                        [[ToastManager manager] dismissCustomLoading];
-                        
-                        NSString *defaultTabName = [FHEnvContext defaultTabName];
-                        if ([FHEnvContext isUGCOpen] && [FHEnvContext isUGCAdUser]) {
-                            [[FHEnvContext sharedInstance] jumpUGCTab];
-
-                        }else if(defaultTabName.length > 0){
-                            [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
-                        }else{
-                            if (![self isCurrentCityNormalOpen]) {
-                                [[FHEnvContext sharedInstance] jumpUGCTab];
-                            }else
+                if([self isNewDiscovery]){
+                    [[FHUGCCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
+                        //首次请求频道无论成功失败都跳转
+                        if (retryGetLightCount == kGetLightRequestRetryCount) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+                            
+                            if(completion)
                             {
-                                [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
-                                    
-                                }];
+                                completion(YES);
+                            }
+                            [[ToastManager manager] dismissCustomLoading];
+                            
+                            NSString *defaultTabName = [FHEnvContext defaultTabName];
+                            if ([FHEnvContext isUGCOpen] && [FHEnvContext isUGCAdUser]) {
+                                [[FHEnvContext sharedInstance] jumpUGCTab];
+
+                            }else if(defaultTabName.length > 0){
+                                [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
+                            }else{
+                                if (![self isCurrentCityNormalOpen]) {
+                                    [[FHEnvContext sharedInstance] jumpUGCTab];
+                                }else
+                                {
+                                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                                        
+                                    }];
+                                }
                             }
                         }
-                    }
-                    //重试3次请求频道
-                    if (!isSuccessed && (retryGetLightCount > 0)) {
-                        retryGetLightCount--;
-                        [[TTArticleCategoryManager sharedManager] startGetCategory];
-                    }
-                    if ([[paramsExtra description] isKindOfClass:[NSString class]]) {
-                        BDALOG_WARN_TAG(@"get_light_error_reason", [paramsExtra description]);
-                    }
-                }];
+                        //重试3次请求频道
+                        if (!isSuccessed && (retryGetLightCount > 0)) {
+                            retryGetLightCount--;
+                            [[FHUGCCategoryManager sharedManager] startGetCategory];
+                        }
+                        if ([[paramsExtra description] isKindOfClass:[NSString class]]) {
+                            BDALOG_WARN_TAG(@"get_light_error_reason", [paramsExtra description]);
+                        }
+                    }];
+                }else{
+                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
+                        //首次请求频道无论成功失败都跳转
+                        if (retryGetLightCount == kGetLightRequestRetryCount) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+                            
+                            if(completion)
+                            {
+                                completion(YES);
+                            }
+                            [[ToastManager manager] dismissCustomLoading];
+                            
+                            NSString *defaultTabName = [FHEnvContext defaultTabName];
+                            if ([FHEnvContext isUGCOpen] && [FHEnvContext isUGCAdUser]) {
+                                [[FHEnvContext sharedInstance] jumpUGCTab];
+
+                            }else if(defaultTabName.length > 0){
+                                [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
+                            }else{
+                                if (![self isCurrentCityNormalOpen]) {
+                                    [[FHEnvContext sharedInstance] jumpUGCTab];
+                                }else
+                                {
+                                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                                        
+                                    }];
+                                }
+                            }
+                        }
+                        //重试3次请求频道
+                        if (!isSuccessed && (retryGetLightCount > 0)) {
+                            retryGetLightCount--;
+                            [[TTArticleCategoryManager sharedManager] startGetCategory];
+                        }
+                        if ([[paramsExtra description] isKindOfClass:[NSString class]]) {
+                            BDALOG_WARN_TAG(@"get_light_error_reason", [paramsExtra description]);
+                        }
+                    }];
+                }
                 
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:0 extra:paramsExtra];
                 
@@ -213,33 +254,61 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 FHConfigDataModel *configModel = model.data;
                 [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
                 
-                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
-                    //首次请求频道无论成功失败都跳转
-                    if (retryGetLightCount == kGetLightRequestRetryCount) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
-                        
-                        if(completion)
-                        {
-                            completion(YES);
-                        }
-                        [[ToastManager manager] dismissCustomLoading];
-                        
-                        NSString *defaultTabName = [FHEnvContext defaultTabName];
-                        if(defaultTabName.length > 0){
-                            [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
-                        }else{
-                            if ([FHEnvContext isUGCOpen]) {
-                                [[FHEnvContext sharedInstance] jumpUGCTab];
+                if([self isNewDiscovery]){
+                    [[FHUGCCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
+                        //首次请求频道无论成功失败都跳转
+                        if (retryGetLightCount == kGetLightRequestRetryCount) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+                            
+                            if(completion)
+                            {
+                                completion(YES);
+                            }
+                            [[ToastManager manager] dismissCustomLoading];
+                            
+                            NSString *defaultTabName = [FHEnvContext defaultTabName];
+                            if(defaultTabName.length > 0){
+                                [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
+                            }else{
+                                if ([FHEnvContext isUGCOpen]) {
+                                    [[FHEnvContext sharedInstance] jumpUGCTab];
+                                }
                             }
                         }
-                    }
-                    //重试3次请求频道
-                    if (!isSuccessed && (retryGetLightCount > 0)) {
-                        retryGetLightCount--;
-                        [[TTArticleCategoryManager sharedManager] startGetCategory];
-                    }
-                }];
-                
+                        //重试3次请求频道
+                        if (!isSuccessed && (retryGetLightCount > 0)) {
+                            retryGetLightCount--;
+                            [[FHUGCCategoryManager sharedManager] startGetCategory];
+                        }
+                    }];
+                }else{
+                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
+                        //首次请求频道无论成功失败都跳转
+                        if (retryGetLightCount == kGetLightRequestRetryCount) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+                            
+                            if(completion)
+                            {
+                                completion(YES);
+                            }
+                            [[ToastManager manager] dismissCustomLoading];
+                            
+                            NSString *defaultTabName = [FHEnvContext defaultTabName];
+                            if(defaultTabName.length > 0){
+                                [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
+                            }else{
+                                if ([FHEnvContext isUGCOpen]) {
+                                    [[FHEnvContext sharedInstance] jumpUGCTab];
+                                }
+                            }
+                        }
+                        //重试3次请求频道
+                        if (!isSuccessed && (retryGetLightCount > 0)) {
+                            retryGetLightCount--;
+                            [[TTArticleCategoryManager sharedManager] startGetCategory];
+                        }
+                    }];
+                }
             }else
             {
                 if(completion)
@@ -296,25 +365,47 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 FHConfigDataModel *configModel = model.data;
                 [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
                 
-                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
-                    //首次请求频道无论成功失败都跳转
-                    if (retryGetLightCount == kGetLightRequestRetryCount) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
-                        
-                        if(completion)
-                        {
-                            completion(YES);
-                        }
-                        [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                if([self isNewDiscovery]){
+                    [[FHUGCCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
+                        //首次请求频道无论成功失败都跳转
+                        if (retryGetLightCount == kGetLightRequestRetryCount) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
                             
-                        }];
-                    }
-                    //重试3次请求频道
-                    if (!isSuccessed && (retryGetLightCount > 0)) {
-                        retryGetLightCount--;
-                        [[TTArticleCategoryManager sharedManager] startGetCategory];
-                    }
-                }];
+                            if(completion)
+                            {
+                                completion(YES);
+                            }
+                            [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                                
+                            }];
+                        }
+                        //重试3次请求频道
+                        if (!isSuccessed && (retryGetLightCount > 0)) {
+                            retryGetLightCount--;
+                            [[FHUGCCategoryManager sharedManager] startGetCategory];
+                        }
+                    }];
+                }else{
+                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
+                        //首次请求频道无论成功失败都跳转
+                        if (retryGetLightCount == kGetLightRequestRetryCount) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+                            
+                            if(completion)
+                            {
+                                completion(YES);
+                            }
+                            [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                                
+                            }];
+                        }
+                        //重试3次请求频道
+                        if (!isSuccessed && (retryGetLightCount > 0)) {
+                            retryGetLightCount--;
+                            [[TTArticleCategoryManager sharedManager] startGetCategory];
+                        }
+                    }];
+                }
             }else
             {
                 if(completion)
@@ -1043,7 +1134,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isNewDiscovery {
-    return YES;
+    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if([configData.channelType isEqualToString:@"1"]){
+        return YES;
+    }
+    return NO;
 }
 
 + (BOOL)isIntroduceOpen {

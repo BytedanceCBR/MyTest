@@ -182,8 +182,8 @@
 }
 
 - (void)setSectionTitles:(NSArray<NSString *> *)sectionTitles {
-        _sectionTitles = sectionTitles;
-    
+    _sectionTitles = sectionTitles;
+    [self updateSegmentsRects];
     [self setNeedsLayout];
     [self setNeedsDisplay];
 }
