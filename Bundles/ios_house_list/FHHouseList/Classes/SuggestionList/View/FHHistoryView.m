@@ -88,7 +88,7 @@
     for (UIView *v in self.tempViews) {
         [v removeFromSuperview];
     }
-    self.historyViewHeight = 89; 
+    self.historyViewHeight = 94;
     [self.tempViews removeAllObjects];
     NSInteger   line = 1;
     CGFloat     lastTopOffset = 50;
@@ -132,8 +132,8 @@
                 }
                 if (size.width > remainWidth) {
                     line += 1;
-                    lastTopOffset += 39;
-                    _historyViewHeight += 39;
+                    lastTopOffset += 42;
+                    _historyViewHeight += 42;
                     leftView = self;
                     isFirtItem = YES;
                     remainWidth = UIScreen.mainScreen.bounds.size.width - 30;

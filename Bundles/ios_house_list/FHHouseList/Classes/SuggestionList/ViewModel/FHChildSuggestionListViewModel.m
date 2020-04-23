@@ -688,7 +688,7 @@
             if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
                 return 76;
             } else {
-                return 49;
+                return 42;
             }
         }
     } else if (tableView.tag == 2) {
