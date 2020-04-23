@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 //当接口返回空数据的时候是否显示空态页，默认为YES
 @property(nonatomic, assign) BOOL showErrorView;
 //网络请求成功回调
-@property(nonatomic, copy) void (^requestSuccess)(id <FHBaseModelProtocol> model);
+@property(nonatomic, copy) void (^requestSuccess)(BOOL hasFeedData);
 
 //圈子详情页使用
 //空态页具体顶部offset

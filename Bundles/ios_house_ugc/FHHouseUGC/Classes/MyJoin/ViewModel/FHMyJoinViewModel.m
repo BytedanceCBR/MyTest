@@ -52,19 +52,20 @@
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
         _messageViewHeight = 0;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
 
         if([FHEnvContext isNewDiscovery]){
             [_collectionView registerClass:[FHMyJoinCommnityCell class] forCellWithReuseIdentifier:cellId];
         }else{
             [_collectionView registerClass:[FHMyJoinNeighbourhoodCell class] forCellWithReuseIdentifier:cellId];
             [_collectionView registerClass:[FHMyJoinAllNeighbourhoodCell class] forCellWithReuseIdentifier:allCellId];
+            
+             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
+            
+            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onUnreadMessageClick)];
+            [self.viewController.neighbourhoodView.messageView addGestureRecognizer:singleTap];
+            
+            [self onUnreadMessageChange];
         }
-
-        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onUnreadMessageClick)];
-        [self.viewController.neighbourhoodView.messageView addGestureRecognizer:singleTap];
-        
-        [self onUnreadMessageChange];
     }
 
     return self;

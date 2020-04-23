@@ -248,6 +248,10 @@
                 wself.refreshFooter.hidden = YES;
             }
             [wself.tableView reloadData];
+            
+            if(wself.viewController.requestSuccess){
+                wself.viewController.requestSuccess(wself.viewController.hasValidateData);
+            }
 
             NSString *refreshTip = feedListModel.tips.displayInfo;
             if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){

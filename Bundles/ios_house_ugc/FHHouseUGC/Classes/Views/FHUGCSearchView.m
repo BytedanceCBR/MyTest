@@ -36,7 +36,7 @@
     self.backgroundColor = [UIColor whiteColor];
     self.layer.masksToBounds = YES;
     self.layer.borderColor = [[UIColor themeGray6] CGColor];
-    self.layer.borderWidth = 1.0f;
+    self.layer.borderWidth = 0.5f;
     
     self.userInteractionEnabled = YES;
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToSearch)];

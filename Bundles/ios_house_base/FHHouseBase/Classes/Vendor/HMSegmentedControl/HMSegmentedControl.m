@@ -248,10 +248,26 @@
     CGSize size = CGSizeZero;
     BOOL selected = (index == self.selectedSegmentIndex) ? YES : NO;
     if ([title isKindOfClass:[NSString class]] && !self.titleFormatter) {
-        NSDictionary *titleAttrs = selected ? [self resultingSelectedTitleTextAttributes] : [self resultingTitleTextAttributes];
-        size = [(NSString *)title sizeWithAttributes:titleAttrs];
-        UIFont *font = titleAttrs[@"NSFont"];
-        size = CGSizeMake(ceil(size.width), ceil(size.height-font.descender));
+        if(self.shouldFixedSelectPosition){
+            NSDictionary *titleAttrs = [self resultingTitleTextAttributes];
+            NSDictionary *selectedTitleAttrs = [self resultingSelectedTitleTextAttributes];
+            if(selected){
+                //计算item在选中样式下的size，为了获取高度
+                CGSize selectedSize = [(NSString *)title sizeWithAttributes:selectedTitleAttrs];
+                //计算item在正常样式下的size，为了获取宽度
+                size = [(NSString *)title sizeWithAttributes:titleAttrs];
+                size.height = selectedSize.height;
+            }else{
+                size = [(NSString *)title sizeWithAttributes:titleAttrs];
+            }
+            UIFont *font = titleAttrs[@"NSFont"];
+            size = CGSizeMake(ceil(size.width), ceil(size.height-font.descender));
+        }else{
+            NSDictionary *titleAttrs = selected ? [self resultingSelectedTitleTextAttributes] : [self resultingTitleTextAttributes];
+            size = [(NSString *)title sizeWithAttributes:titleAttrs];
+            UIFont *font = titleAttrs[@"NSFont"];
+            size = CGSizeMake(ceil(size.width), ceil(size.height-font.descender));
+        }
     } else if ([title isKindOfClass:[NSString class]] && self.titleFormatter) {
         size = [self.titleFormatter(self, title, index, selected) size];
     } else if ([title isKindOfClass:[NSAttributedString class]]) {

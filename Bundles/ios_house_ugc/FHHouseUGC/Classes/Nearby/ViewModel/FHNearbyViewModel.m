@@ -34,7 +34,7 @@
 - (void)updateJoinProgressView {
     CGRect frame = self.viewController.headerView.frame;
     [self.viewController.headerView.progressView updatePostData];
-    frame.size.height = self.viewController.headerView.progressView.viewHeight;
+    frame.size.height = self.viewController.headerViewHeight + self.viewController.headerView.progressView.viewHeight;
     self.viewController.headerView.frame = frame;
     
     self.viewController.feedVC.tableHeaderView = self.viewController.headerView;

@@ -11,8 +11,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define kUGCCategoryManagerServerLocalCityNameKey   @"kUGCCategoryManagerServerLocalCityNameKey"
+#define kUGCCategoryManagerVersionKey @"kUGCCategoryManagerVersionKey"
+#define kUGCCategoryGotFinishedNotification @"kUGCCategoryGotFinishedNotification"
+
 @interface FHUGCCategoryManager : NSObject
 
+/**
+*  所有频道信息
+*/
 @property(nonatomic, strong) NSMutableArray *allCategories;
 
 /**

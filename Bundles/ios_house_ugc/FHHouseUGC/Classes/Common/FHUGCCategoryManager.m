@@ -14,6 +14,13 @@
 #import "NSDictionary+TTAdditions.h"
 #import "FHMainApi.h"
 #import "TTSandBoxHelper.h"
+#import "JSONAdditions.h"
+
+@interface FHUGCCategoryManager ()
+
+@property(nonatomic, strong) NSMutableArray *defaultCategories;
+
+@end
 
 @implementation FHUGCCategoryManager
 
@@ -31,7 +38,8 @@
 {
     self = [super init];
     if (self) {
-        self.allCategories = [NSMutableArray array];
+        _allCategories = [NSMutableArray array];
+        _defaultCategories = [self generatDefaultCategories];
     }
     return self;
 }
@@ -87,17 +95,9 @@
     //version
     [params setValue:[[self class] fetchGetCategoryVersion] forKey:@"version"];
     
-    //categories
-//    NSString * categorysStr = [self fetchGetCategoryCategoryIDs];
-//    [params setValue:categorysStr forKey:@"categories"];
-
-//    NSString * preFixedCategoryIDStr = [self fetchGetPrefixedCategoryCategoryIDs];
-//    [params setValue:preFixedCategoryIDStr forKey:@"pre_categories"];
-    
-//    if ([categorysStr isEqualToString:@"[\n\n]"]) {
-//        [params setValue: @"0" forKey:@"version"];
-//    }
-    
+    NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
+    extraDic[@"tab_name"] = @"ugc";
+    params[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
     //是否用户主动修改
     [params setValue:@(userChanged) forKey:@"user_modify"];
     
@@ -127,14 +127,14 @@
             model = (id <FHBaseModelProtocol>) [FHMainApi generateModel:obj class:cls error:&backError];
             if([model isKindOfClass:[FHUGCCategoryModel class]]){
                 FHUGCCategoryModel *categoryModel = (FHUGCCategoryModel *)model;
-                
-                [[self class] setHasGotRemoteData];
 
                 NSString * remoteVersion = categoryModel.data.version;
                 [[self class] setGetCategoryVersion:remoteVersion];
                 
-                [self.allCategories removeAllObjects];
-                [self.allCategories addObjectsFromArray:categoryModel.data.data];
+                if(categoryModel.data.data.count > 0){
+                    [_allCategories removeAllObjects];
+                    [_allCategories addObjectsFromArray:categoryModel.data.data];
+                }
 
                 if (self.completionRequest) {
                     self.completionRequest(YES);
@@ -164,7 +164,7 @@
         }
         [FHMainApi addRequestLog:[self subscribedCategoryURLString] startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:kAritlceCategoryGotFinishedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kUGCCategoryGotFinishedNotification object:nil];
     }];
 
 }
@@ -185,7 +185,7 @@
 {
     NSString *result = nil;
     if ([TTArticleCategoryManager hasGotRemoteData]) {//从远端获取到过频道信息， 用频道数据库的信息
-        result = [[NSUserDefaults standardUserDefaults] objectForKey:kArticleCategoryManagerVersionKey];
+        result = [[NSUserDefaults standardUserDefaults] objectForKey:kUGCCategoryManagerVersionKey];
     }
     else {//未从远端获取到过频道信息
         //特殊情况下的客户端段上报：上报内置频道列表时version为2，旧版升级新版时上报版本为1
@@ -201,52 +201,21 @@
 + (void)setGetCategoryVersion:(NSString *)version
 {
     if (isEmptyString(version)) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kArticleCategoryManagerVersionKey];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUGCCategoryManagerVersionKey];
     }
     else {
-        [[NSUserDefaults standardUserDefaults] setObject:version forKey:kArticleCategoryManagerVersionKey];
+        [[NSUserDefaults standardUserDefaults] setObject:version forKey:kUGCCategoryManagerVersionKey];
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-//#pragma mark -- get category categoryIDs
-///**
-// *  返回get_category API发送是携带的category信息
-// *
-// *  @return category ID的array 转换为Json的array
-// */
-//- (NSString *)fetchGetCategoryCategoryIDs
-//{
-//    NSArray *categoryIDs = [self subscribedCategoryIDs];
-//    NSMutableArray *fixCategoryIDs = [NSMutableArray arrayWithArray:categoryIDs];
-//    if ([fixCategoryIDs containsObject:kTTMainCategoryID]) {
-//        [fixCategoryIDs removeObject:kTTMainCategoryID];
-//    }
-//    NSString *result = [fixCategoryIDs tt_JSONRepresentation];
-//    return result;
-//}
-//
-//- (NSString *)fetchGetPrefixedCategoryCategoryIDs {
-//
-//    NSArray *preFixedCategoryIDs = [self prefixedCategoryIDs];
-//    NSMutableArray *fixCategoryIDs = [NSMutableArray arrayWithArray:preFixedCategoryIDs];
-//
-//    if ([fixCategoryIDs containsObject:kTTMainCategoryID]) {
-//        [fixCategoryIDs removeObject:kTTMainCategoryID];
-//    }
-//
-//    NSString *result = [fixCategoryIDs tt_JSONRepresentation];
-//    return result;
-//
-//}
-
 + (void)setServerLocalCityName:(NSString *)name
 {
     if (name == nil) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kArticleCategoryManagerServerLocalCityNameKey];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUGCCategoryManagerServerLocalCityNameKey];
     }
     else {
-        [[NSUserDefaults standardUserDefaults] setValue:name forKey:kArticleCategoryManagerServerLocalCityNameKey];
+        [[NSUserDefaults standardUserDefaults] setValue:name forKey:kUGCCategoryManagerServerLocalCityNameKey];
     }
     
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -254,7 +223,7 @@
 
 + (NSString *)latestServerLocalCity
 {
-    return [[NSUserDefaults standardUserDefaults] valueForKey:kArticleCategoryManagerServerLocalCityNameKey];
+    return [[NSUserDefaults standardUserDefaults] valueForKey:kUGCCategoryManagerServerLocalCityNameKey];
 }
 
 - (NSString *)subscribedCategoryURLString
@@ -263,18 +232,34 @@
     return [NSString stringWithFormat:@"%@/category/get_light/1/", domain];
 }
 
-/**
- *  设置当前版本获取到过远端的频道数据
- */
-+ (void)setHasGotRemoteData
-{
-    NSString * keyStr = [NSString stringWithFormat:@"ArticleCategoryManagerGotRemoteData%@", [TTSandBoxHelper versionName]];
-    [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:keyStr];
+- (NSMutableArray *)allCategories {
+    if(_allCategories.count <= 0){
+        return _defaultCategories;
+    }
+    
+    return _allCategories;
 }
 
-+ (void)clearHasGotRemoteData {
-    NSString * keyStr = [NSString stringWithFormat:@"ArticleCategoryManagerGotRemoteData%@", [TTSandBoxHelper versionName]];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:keyStr];
+//当接口失败时的兜底频道
+- (NSMutableArray *)generatDefaultCategories {
+    NSMutableArray *categories = [NSMutableArray array];
+    [categories addObject:[self generateCategoryDataModel:@"f_news_recommend" name:@"推荐"]];
+    [categories addObject:[self generateCategoryDataModel:@"f_ugc_neighbor" name:@"圈子"]];
+    [categories addObject:[self generateCategoryDataModel:@"f_ugc_follow" name:@"关注"]];
+    [categories addObject:[self generateCategoryDataModel:@"f_house_qa" name:@"问答百科"]];
+//    [categories addObject:[self generateCategoryDataModel:@"f_house_concerns" name:@"楼市关注"]];
+//    [categories addObject:[self generateCategoryDataModel:@"f_house_transaction" name:@"购房交易"]];
+    
+    return categories;
 }
+
+- (FHUGCCategoryDataDataModel *)generateCategoryDataModel:(NSString *)category name:(NSString *)name {
+    FHUGCCategoryDataDataModel *dataModel = [[FHUGCCategoryDataDataModel alloc] init];
+    dataModel.category = category;
+    dataModel.name = name;
+    return dataModel;
+}
+
+
 
 @end

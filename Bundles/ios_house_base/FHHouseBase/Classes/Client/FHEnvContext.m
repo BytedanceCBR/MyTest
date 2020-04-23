@@ -822,7 +822,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     
     if ([self isUGCOpen]) {
-        [tabItem setNormalImage:[UIImage imageNamed:@"tab-ugc"] highlightedImage:[UIImage imageNamed:@"tab-ugc_press"] loadingImage:nil];
+        if([self isNewDiscovery]){
+            [tabItem setNormalImage:[UIImage imageNamed:@"tab-hot-news"] highlightedImage:[UIImage imageNamed:@"tab-hot-news_press"] loadingImage:nil];
+        }else{
+            [tabItem setNormalImage:[UIImage imageNamed:@"tab-ugc"] highlightedImage:[UIImage imageNamed:@"tab-ugc_press"] loadingImage:nil];
+        }
     }else{
         [tabItem setNormalImage:[UIImage imageNamed:@"tab-search"] highlightedImage:[UIImage imageNamed:@"tab-search_press"] loadingImage:nil];
     }

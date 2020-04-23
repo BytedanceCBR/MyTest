@@ -178,122 +178,6 @@
     }
 }
 
-//- (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
-//    if(self.viewController.isLoadingData){
-//        return;
-//    }
-//    
-//    self.viewController.isLoadingData = YES;
-//    
-//    if(self.isRefreshingTip){
-//        [self.tableView finishPullDownWithSuccess:YES];
-//        return;
-//    }
-//    
-//    if(isFirst){
-//        [self.viewController startLoading];
-//    }
-//    
-//    __weak typeof(self) wself = self;
-//    
-//    NSInteger listCount = self.dataList.count;
-//    NSInteger offset = 0;
-//    
-//    if(listCount > 0 && !isFirst){
-//        if(self.feedListModel){
-//            offset = [self.feedListModel.lastOffset integerValue];
-//        }
-//    }
-//    
-//    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId offset:offset loadMore:!isHead completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-//        wself.viewController.isLoadingData = NO;
-//        if(isFirst){
-//            [wself.viewController endLoading];
-//        }
-//        
-//        [wself.tableView finishPullDownWithSuccess:YES];
-//        
-//        FHFeedListModel *feedListModel = (FHFeedListModel *)model;
-//        wself.feedListModel = feedListModel;
-//        
-//        if (!wself) {
-//            return;
-//        }
-//        
-//        if (error) {
-//            //TODO: show handle error
-//            if(isFirst){
-//                if(error.code != -999){
-//                    [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-//                    wself.viewController.showenRetryButton = YES;
-//                }
-//            }else{
-//                [[ToastManager manager] showToast:@"网络异常"];
-//                [wself updateTableViewWithMoreData:YES];
-//            }
-//            return;
-//        }
-//        
-//        if(model){
-//            
-//            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
-//            if(isFirst){
-//                [wself.dataList removeAllObjects];
-//            }
-//            
-//            if(isHead){
-//                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
-//            }else{
-//                [wself.dataList addObjectsFromArray:result];
-//            }
-//            wself.tableView.hasMore = feedListModel.hasMore;
-//            wself.viewController.hasValidateData = wself.dataList.count > 0;
-//            
-//            if(wself.dataList.count > 0){
-//                [wself updateTableViewWithMoreData:feedListModel.hasMore];
-//                [wself.viewController.emptyView hideEmptyView];
-//            }else{
-//                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-//                wself.viewController.showenRetryButton = YES;
-//            }
-//            [wself.tableView reloadData];
-//            
-//            NSString *refreshTip = feedListModel.tips.displayInfo;// 为您更新19d条热帖
-//            // 临时兼容，更新refreshTip，后面版本需要去掉 当前版本：v0.7.5
-//            if (result.count > 0 && isHead) {
-//                if (wself.lastGroupIdArr.count > 0) {
-//                    __block NSInteger refreshTipCount = 0;
-//                    [result enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//                        if ([obj isKindOfClass:[FHFeedUGCCellModel class]]) {
-//                            if (obj.groupId.length > 0) {
-//                                if (![self.lastGroupIdArr containsObject:obj.groupId]) {
-//                                    refreshTipCount += 1;
-//                                }
-//                            }
-//                        }
-//                    }];
-//                    if (refreshTipCount > 0) {
-//                        refreshTip = [NSString stringWithFormat:@"为您更新%ld条热帖",refreshTipCount];
-//                    } else {
-//                        refreshTip = @"";
-//                    }
-//                }
-//            } else {
-//                refreshTip = @"";
-//            }
-//            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-//                wself.isRefreshingTip = YES;
-//                [wself.viewController showNotify:refreshTip completion:^{
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        wself.isRefreshingTip = NO;
-//                    });
-//                }];
-//                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-//            }
-//        }
-//    }];
-//}
-
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     if(self.viewController.isLoadingData){
         return;
@@ -418,6 +302,10 @@
                 }
             }
             [wself.tableView reloadData];
+            
+            if(wself.viewController.requestSuccess){
+                wself.viewController.requestSuccess(wself.viewController.hasValidateData);
+            }
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
             if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){

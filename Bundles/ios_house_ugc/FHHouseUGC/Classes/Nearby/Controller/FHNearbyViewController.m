@@ -15,6 +15,7 @@
 #import "TTArticleTabBarController.h"
 #import "TTTabBarManager.h"
 #import "FHNearbyViewModel.h"
+#import "FHEnvContext.h"
 
 @interface FHNearbyViewController ()
 
@@ -102,9 +103,14 @@
         _feedVC.listType = FHCommunityFeedListTypeNearby;
         _feedVC.currentLocaton = self.currentLocaton;
         _feedVC.tableHeaderView = self.headerView;
-//        _feedVC.hidePublishBtn = YES;
         _feedVC.view.frame = self.view.bounds;
         _feedVC.tracerDict = [self.tracerDict mutableCopy];
+        __weak typeof(self) wself = self;
+        _feedVC.requestSuccess = ^(BOOL hasFeedData) {
+            if(hasFeedData){
+                wself.headerView.hidden = NO;
+            }
+        };
         [self addChildViewController:_feedVC];
         [self.view addSubview:_feedVC.view];
         [self.feedVC viewWillAppear];
@@ -201,7 +207,14 @@
 
 - (FHNearbyHeaderView *)headerView {
     if(!_headerView){
-        _headerView = [[FHNearbyHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 0.001f)];
+        if([FHEnvContext isNewDiscovery]){
+            _headerViewHeight = 49.0f;
+        }else{
+            _headerViewHeight = 0.001f;
+        }
+        _headerView = [[FHNearbyHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _headerViewHeight)];
+        _headerView.searchView.hidden = ![FHEnvContext isNewDiscovery];
+        _headerView.hidden = YES;
     }
     return _headerView;
 }

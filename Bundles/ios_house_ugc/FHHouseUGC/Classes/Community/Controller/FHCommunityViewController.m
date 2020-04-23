@@ -306,6 +306,7 @@
     _segmentControl.selectionIndicatorWidth = 20.0f;
     _segmentControl.selectionIndicatorHeight = 4.0f;
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
+    _segmentControl.shouldFixedSelectPosition = YES;
 //    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
 //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
@@ -326,7 +327,7 @@
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
 
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
-            NSForegroundColorAttributeName: [UIColor themeGray3]};
+            NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
 
     NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
@@ -335,11 +336,12 @@
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentControl.isNeedNetworkCheck = NO;
-    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(9, 10, 0, 14);
+    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(9, 20, 0, 8);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _segmentControl.selectionIndicatorWidth = 20.0f;
     _segmentControl.selectionIndicatorHeight = 4.0f;
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
+    _segmentControl.shouldFixedSelectPosition = YES;
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     
     [self.topView addSubview:_segmentControl];
@@ -402,18 +404,19 @@
         make.left.bottom.right.equalTo(self.topView);
         make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
+    
+    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
 
-    if(self.isNewDiscovery){
+    if(self.isNewDiscovery && segmentContentWidth >= SCREEN_WIDTH){
         [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self.topView);
-//            make.width.mas_equalTo([self.segmentControl totalSegmentedControlWidth]);
             make.height.mas_equalTo(44);
             make.bottom.mas_equalTo(self.topView).offset(-8);
         }];
     }else{
         [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self.topView);
-            make.width.mas_equalTo([self.segmentControl totalSegmentedControlWidth]);
+            make.width.mas_equalTo(segmentContentWidth);
             make.height.mas_equalTo(44);
             make.bottom.mas_equalTo(self.topView).offset(-8);
         }];

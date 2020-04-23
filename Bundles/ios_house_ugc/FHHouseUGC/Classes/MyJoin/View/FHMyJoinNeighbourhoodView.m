@@ -80,7 +80,6 @@
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.alwaysBounceHorizontal = YES;
     _collectionView.backgroundColor = [UIColor themeGray7];
-    
     [self addSubview:_collectionView];
     
     if([FHEnvContext isNewDiscovery]){
