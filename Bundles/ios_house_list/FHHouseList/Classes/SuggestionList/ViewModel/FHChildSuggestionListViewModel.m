@@ -883,9 +883,9 @@
             });
             self.hasShowKeyboard = YES;
         }
-        [self.listController.guessYouWantTableView reloadData];
+        [self.listController.historyTableView reloadData];
         if (self.historyData.count > 0) {
-            [self.listController.guessYouWantTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            [self.listController.historyTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
     }
 }

@@ -180,9 +180,9 @@
 }
 
 - (void)setupTableView {
-    self.guessYouWantTableView  = [self createTableView];
-    self.guessYouWantTableView.tag = 1;
-    self.guessYouWantTableView.hidden = NO;
+    self.historyTableView  = [self createTableView];
+    self.historyTableView.tag = 1;
+    self.historyTableView.hidden = NO;
     
     self.suggestTableView  = [self createTableView];
     self.suggestTableView.tag = 2;
@@ -261,7 +261,7 @@
 {
     BOOL hasText = text.length > 0;
     _suggestTableView.hidden = !hasText;
-    _guessYouWantTableView.hidden = hasText;
+    _historyTableView.hidden = hasText;
     if (hasText) {
         [self requestSuggestion:text];
     } else {
@@ -387,7 +387,7 @@
     if (hasText) {
          [self requestSuggestion:text];
         _suggestTableView.hidden = !hasText;
-        _guessYouWantTableView.hidden = hasText;
+        _historyTableView.hidden = hasText;
     }
     // 历史记录 + 猜你想搜
     [self.viewModel clearHistoryTableView];

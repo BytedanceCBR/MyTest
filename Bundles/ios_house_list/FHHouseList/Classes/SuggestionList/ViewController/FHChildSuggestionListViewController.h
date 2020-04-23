@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHChildSuggestionListViewController : FHBaseViewController
 
 @property (nonatomic, assign)     FHHouseType       houseType;
-@property (nonatomic, strong)   FHSuggectionTableView       *guessYouWantTableView;
+@property (nonatomic, strong)   FHSuggectionTableView       *historyTableView;
 @property (nonatomic, strong)   FHSuggectionTableView       *suggestTableView;
 @property (nonatomic, weak) FHSuggestionListViewController *fatherVC;
 
