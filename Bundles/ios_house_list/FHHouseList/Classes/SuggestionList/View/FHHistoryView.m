@@ -39,12 +39,13 @@
     // label
     _label = [[UILabel alloc] init];
     _label.text = @"历史记录";
-    _label.font = [UIFont themeFontMedium:14];
+    _label.font = [UIFont themeFontMedium:16];
     _label.textColor = [UIColor themeGray1];
     [self addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.mas_equalTo(20);
-        make.height.mas_equalTo(20);
+        make.left.mas_equalTo(16);
+        make.height.mas_equalTo(22);
+        make.top.mas_equalTo(20);
     }];
 }
 

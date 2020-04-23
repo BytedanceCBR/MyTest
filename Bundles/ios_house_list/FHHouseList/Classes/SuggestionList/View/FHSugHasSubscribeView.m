@@ -49,7 +49,7 @@
     // label
     _label = [[UILabel alloc] init];
     _label.text = @"已订阅搜索";
-    _label.font = [UIFont themeFontMedium:19];
+    _label.font = [UIFont themeFontMedium:16];
     _label.textColor = [UIColor themeGray1];
     [_label sizeToFit];
     [self addSubview:_label];
@@ -62,6 +62,7 @@
     _rightButton = [[UIButton alloc] init];
     [_rightButton setImage:[UIImage imageNamed:@"arrowicon-feed"] forState:UIControlStateNormal];
     [_rightButton setImage:[UIImage imageNamed:@"arrowicon-feed"] forState:UIControlStateHighlighted];
+    [_rightButton sizeToFit];
     [self addSubview:_rightButton];
     [_rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-16);
@@ -113,9 +114,9 @@
         return;
     }
     if (self.subscribeItems.count == 1) {
-        self.hasSubscribeViewHeight = 92;
+        self.hasSubscribeViewHeight = 102;
     } else {
-        self.hasSubscribeViewHeight = 132;
+        self.hasSubscribeViewHeight = 142;
     }
     // 显示右边箭头 可点击
     self.rightButton.hidden = NO;
@@ -237,6 +238,5 @@
         make.height.mas_equalTo(20);
     }];
 }
-
 
 @end
