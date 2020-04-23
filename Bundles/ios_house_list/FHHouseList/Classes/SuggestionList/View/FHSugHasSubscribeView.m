@@ -19,6 +19,7 @@
 @property (nonatomic, strong)   UIButton       *headerButton;
 @property (nonatomic, strong)   NSMutableArray       *tempViews;
 @property (nonatomic, strong)   NSMutableDictionary *tracerCacheDic;// 埋点
+@property (nonatomic, strong)   UIView *redView;
 
 @end
 
@@ -29,7 +30,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
-        self.hasSubscribeViewHeight = 194;
         self.totalCount = 0;
         self.tempViews = [NSMutableArray new];
         [self setupUI];
@@ -40,19 +40,23 @@
 - (void)setupUI {
     // 埋点cache
     self.tracerCacheDic = [NSMutableDictionary new];
+    
     // headerButton
     _headerButton = [[UIButton alloc] init];
     _headerButton.backgroundColor = [UIColor whiteColor];
     [self addSubview:_headerButton];
+    
     // label
     _label = [[UILabel alloc] init];
     _label.text = @"已订阅搜索";
-    _label.font = [UIFont themeFontMedium:14];
+    _label.font = [UIFont themeFontMedium:19];
     _label.textColor = [UIColor themeGray1];
+    [_label sizeToFit];
     [self addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.mas_equalTo(20);
-        make.height.mas_equalTo(20);
+        make.left.mas_equalTo(16);
+        make.top.mas_equalTo(22);
+        make.height.mas_equalTo(19);
     }];
     // rightButton
     _rightButton = [[UIButton alloc] init];
@@ -60,17 +64,29 @@
     [_rightButton setImage:[UIImage imageNamed:@"arrowicon-feed"] forState:UIControlStateHighlighted];
     [self addSubview:_rightButton];
     [_rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.height.width.mas_equalTo(20);
+        make.right.mas_equalTo(-16);
+        make.centerY.mas_equalTo(_label);
+        make.height.mas_equalTo(20);
+        make.width.mas_equalTo(20);
     }];
     _rightButton.userInteractionEnabled = NO;
     // headerButton
+    
+    //redView;
+    _redView = [[UIView alloc] init];
+    _redView.layer.cornerRadius = 4;
+    _redView.layer.masksToBounds = YES;
+    _redView.backgroundColor = [UIColor themeOrange1];
+    [self addSubview:_redView];
+    [_redView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.width.mas_equalTo(8);
+        make.right.mas_equalTo(_rightButton.mas_left).offset(-2);
+        make.centerY.mas_equalTo(_label);
+    }];
     [_headerButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(10);
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.height.mas_equalTo(30);
+        make.height.mas_equalTo(42);
     }];
     [_headerButton addTarget:self action:@selector(headerButtonClick:) forControlEvents:UIControlEventTouchUpInside];
 }
@@ -96,24 +112,23 @@
         self.hasSubscribeViewHeight = CGFLOAT_MIN;
         return;
     }
-    self.hasSubscribeViewHeight = 124;
+    if (self.subscribeItems.count == 1) {
+        self.hasSubscribeViewHeight = 92;
+    } else {
+        self.hasSubscribeViewHeight = 132;
+    }
     // 显示右边箭头 可点击
     self.rightButton.hidden = NO;
     self.headerButton.hidden = NO;
     // 添加Views
-    CGFloat itemWidth = ([UIScreen mainScreen].bounds.size.width - 40 - 11) / 2.0;
-    CGFloat topOffset = 54;
+    CGFloat topOffset = 52;
     [self.subscribeItems enumerateObjectsUsingBlock:^(FHSugSubscribeDataDataItemsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSInteger row = idx / 2;
-        NSInteger column = idx % 2;
-        CGRect frame = CGRectMake(20 + column * (itemWidth + 11), topOffset + row * (60 + 10), itemWidth, 60);
-        FHSubscribeView *itemView = [[FHSubscribeView alloc] initWithFrame:frame];
-        itemView.titleLabel.text = obj.title;
+        
+        FHSubscribeView *itemView = [[FHSubscribeView alloc] initWithFrame:CGRectMake(0, topOffset + idx * 40, [[UIScreen mainScreen] bounds].size.width, 40)];
         itemView.sugLabel.text = obj.text;
-        itemView.isValid = obj.status;
         itemView.tag = idx;
-        [itemView addTarget:self action:@selector(subscribeViewClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:itemView];
+         [itemView addTarget:self action:@selector(subscribeViewClick:) forControlEvents:UIControlEventTouchUpInside];
         [self.tempViews addObject:itemView];
         [self addItemShowTracer:obj index:idx];
         if (idx >= 1) {
@@ -203,82 +218,25 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor themeGray7];
-        self.layer.cornerRadius = 4.0;
-        self.isValid = YES;
         [self setupUI];
     }
     return self;
 }
 
 - (void)setupUI {
-    // titleLabel
-    _titleLabel = [[UILabel alloc] init];
-    _titleLabel.text = @"";
-    _titleLabel.font = [UIFont themeFontMedium:14];
-    _titleLabel.textColor = [UIColor themeGray1];
-    [self addSubview:_titleLabel];
-    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(8);
-        make.left.mas_equalTo(14);
-        make.height.mas_equalTo(24);
-    }];
     // sugLabel
     _sugLabel = [[UILabel alloc] init];
     _sugLabel.text = @"";
-    _sugLabel.font = [UIFont themeFontRegular:12];
-    _sugLabel.textColor = [UIColor themeGray3];
+    _sugLabel.font = [UIFont themeFontRegular:14];
+    _sugLabel.textColor = [UIColor blackColor];
+    [_sugLabel sizeToFit];
     [self addSubview:_sugLabel];
     [_sugLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom);
-        make.left.mas_equalTo(14);
-        make.right.mas_equalTo(-14);
+        make.left.mas_equalTo(16);
+        make.centerY.mas_equalTo(0);
         make.height.mas_equalTo(20);
-    }];
-    // unValidLabel
-    _unValidLabel = [[UILabel alloc] init];
-    _unValidLabel.layer.cornerRadius = 2.0;
-    _unValidLabel.layer.borderColor = [UIColor themeGray6].CGColor;
-    _unValidLabel.layer.borderWidth = 0.5;
-    _unValidLabel.text = @"已失效";
-    _unValidLabel.textAlignment = NSTextAlignmentCenter;
-    _unValidLabel.backgroundColor = [UIColor themeGray7];
-    _unValidLabel.font = [UIFont themeFontRegular:10];
-    _unValidLabel.textColor = [UIColor themeGray3];
-    [self addSubview:_unValidLabel];
-    [_unValidLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.titleLabel);
-        make.left.mas_equalTo(self.titleLabel.mas_right).offset(4);
-        make.right.mas_equalTo(self).offset(-14);
-        make.height.mas_equalTo(15);
-        make.width.mas_equalTo(36);
     }];
 }
 
-- (void)setIsValid:(BOOL)isValid {
-    _isValid = isValid;
-    self.enabled = isValid;
-    if (isValid) {
-        self.backgroundColor = [UIColor themeGray7];
-        self.layer.borderColor = [UIColor themeGray7].CGColor;
-        self.layer.borderWidth = 0;
-        _titleLabel.textColor = [UIColor themeGray1];
-        _sugLabel.textColor = [UIColor themeGray3];
-        [self.unValidLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(0);
-            make.right.mas_equalTo(self).offset(-10);
-        }];
-    } else {
-        self.backgroundColor = [UIColor whiteColor];
-        self.layer.borderColor = [UIColor themeGray6].CGColor;
-        self.layer.borderWidth = 0.5;
-        _titleLabel.textColor = [UIColor themeGray3];
-        _sugLabel.textColor = [UIColor themeGray4];
-        [self.unValidLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(36);
-            make.right.mas_equalTo(self).offset(-14);
-        }];
-    }
-}
 
 @end
