@@ -13,6 +13,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHOldDetailDisclaimerCellDelegate <NSObject>
+
+
+@end
+
 // 免责声明
 @interface FHOldDetailDisclaimerCell : FHDetailBaseCell
 

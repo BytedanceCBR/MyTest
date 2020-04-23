@@ -779,9 +779,13 @@
     self.score.hidden = YES;
     self.scoreDescription.hidden = YES;
     [self addSubview:self.agencyBac];
-    [self.agencyBac mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.agency);
+    [self.agency mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.agencyBac).offset(3);
+        make.bottom.mas_equalTo(self.agencyBac).offset(-3);
+        make.left.mas_equalTo(self.agencyBac).offset(5);
+        make.right.mas_equalTo(self.agencyBac).offset(-5);
     }];
+    
     [self bringSubviewToFront:self.agency];
     self.name.font = [UIFont themeFontMedium:16];
     self.name.textColor = [UIColor themeBlack];
@@ -839,14 +843,14 @@
     
     [self.name setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];  //这个好神奇！！！
     
-    [self.agency mas_remakeConstraints:^(MASConstraintMaker *make) {
+    [self.agencyBac mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.name);
         make.height.mas_equalTo(16);
         make.left.mas_equalTo(self.name.mas_right).offset(4);
         make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
     
-    [self.agency setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+    //[self.agency setContentCompressionResistancePriority:UILayoutPriorityDragThatCannotResizeScene forAxis:UILayoutConstraintAxisHorizontal];
     self.agency.textAlignment = NSTextAlignmentCenter;
     
 }

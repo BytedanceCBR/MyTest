@@ -190,7 +190,8 @@
             tag.textColor = model.data.saleStatus.textColor;
             houseTitleModel.tags = @[tag];
         }
-        houseTitleModel.totalPicing = model.data.pricing;
+        houseTitleModel.Picing = model.data.pricing;
+        houseTitleModel.displayPrice = model.data.displayPrice;
         houseTitleModel.isFloorPan = YES;
         headerCellModel.vedioModel = itemModel;
         headerCellModel.contactViewModel = self.contactViewModel;

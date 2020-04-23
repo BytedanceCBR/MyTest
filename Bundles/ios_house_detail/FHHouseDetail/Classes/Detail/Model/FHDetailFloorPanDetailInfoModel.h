@@ -60,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *squaremeter;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
 @property (nonatomic, copy , nullable) NSString *pricing;
+@property (nonatomic, copy , nullable) NSString *displayPrice;
 @property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataRecommendModel> *recommend;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *districtName;

@@ -49,7 +49,7 @@
      if (count > 0) {
          NSMutableArray *singles = [NSMutableArray new];
          __block NSInteger doubleCount = 0;// 两列计数
-         __block CGFloat topOffset = kGrayLineX + 15;// 高度
+         __block CGFloat topOffset = kGrayLineX + 10;// 高度
          __block CGFloat listRowHeight = 29;// 30
          __block CGFloat lastViewLeftOffset = 20;
          __block CGFloat lastTopOffset = 20;
@@ -108,7 +108,7 @@
          // 添加单列数据
          if (singles.count > 0) {
              // 重新计算topOffset
-             topOffset = kGrayLineX + 15 + (doubleCount / 2 + doubleCount % 2) * listRowHeight;
+             topOffset = kGrayLineX + 10 + (doubleCount / 2 + doubleCount % 2) * listRowHeight;
              [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                  FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                  [self.contentView addSubview:v];
@@ -155,10 +155,10 @@
         make.bottom.equalTo(self.contentView).offset(12);
     }];
     [self.grayLineView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).offset(31);
-        make.right.mas_equalTo(self.contentView).offset(- 37);
+        make.left.mas_equalTo(self.contentView).offset(34);
+        make.right.mas_equalTo(self.contentView).offset(- 34);
         make.top.mas_equalTo(self.contentView).offset(kGrayLineX);
-        make.height.mas_equalTo(1);
+        make.height.mas_equalTo(0.5);
     }];
     
     

@@ -96,8 +96,8 @@
     [_subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(_label.mas_right).offset(6);
         make.height.mas_equalTo(16);
-        make.bottom.mas_equalTo(_label);
-        make.right.mas_equalTo(self.loadMore.mas_left).offset(-10);
+        make.bottom.mas_equalTo(_label).offset(-2);
+        make.right.mas_equalTo(self).offset(-12);
     }];
 }
 

@@ -21,7 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *advantage;
 
 @property (nonatomic, assign) BOOL isFloorPan;
-@property (nonatomic, copy) NSString *totalPicing;
+@property (nonatomic, copy) NSString *Picing;
+@property (nonatomic, copy) NSString *displayPrice;
 @end
 
 NS_ASSUME_NONNULL_END
