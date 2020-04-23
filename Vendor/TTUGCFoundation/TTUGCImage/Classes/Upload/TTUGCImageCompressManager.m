@@ -16,6 +16,7 @@
 #import "TTUGCImageCompressHelper.h"
 #import "TTImagePickerDefineHead.h"
 #import "TTImagePickerManager.h"
+#import "TTAsset+FBusiness.h"
 #import <TTKitchen/TTKitchen.h>
 #import "NSData+ImageContentType.h"
 #import <TTKitchenExtension/TTKitchenExtension.h>
@@ -326,9 +327,11 @@
                         }
 
                         task.photoResult = nil;
-                        TTAssetModel *model = [[TTImagePickerManager manager] assetModelWithAsset:task.originalSource
+                        TTAsset *asset = [[TTImagePickerManager manager] assetModelWithAsset:task.originalSource
                                                                                 allowPickingVideo:NO
                                                                                 allowPickingImage:YES];
+                        
+                        TTAssetModel *model = [TTAssetModel convertFromTTAsset:asset];
                         task.assetModel = model;
                         
                         [self getPhotoWithAssetModel:model completion:^(TTImagePickerResult *pickerResult) {
@@ -395,7 +398,7 @@
                 TTImagePickerResult* result = [[TTImagePickerResult alloc] init];
                 result.image = [UIImage imageWithData:data];
                 result.data = data;
-                result.assetModel = [TTAsset generateWithAsset:model.asset type:(TTAssetMediaType)model.type];
+                result.assetModel = [TTAsset convertFromTTAssetModel:model];
                 completion(result);
             }
         }];
@@ -425,11 +428,9 @@
                 }
                 TTImagePickerResult* result = [[TTImagePickerResult alloc] init];
                 result.image = photo;
-                result.assetModel = [TTAsset generateWithAsset:model.asset type:(TTAssetMediaType)model.type];
+                result.assetModel = [TTAsset convertFromTTAssetModel:model];
                 completion(result);
-              
             }
-          
         }];
     }
 }
