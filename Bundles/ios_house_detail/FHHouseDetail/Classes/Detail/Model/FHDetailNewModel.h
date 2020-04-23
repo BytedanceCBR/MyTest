@@ -10,6 +10,7 @@
 #import "FHDetailBaseModel.h"
 #import "FHHouseNewsSocialModel.h"
 #import "FHHouseBaseInfoModel.h"
+#import "FHDetailOldModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -270,6 +271,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *relatedCourtInfo;
 @property (nonatomic, strong , nullable) FHDetailNewSurroundingInfo *surroundingInfo ;
 @property(nonatomic , strong) FHDetailNewTopBanner *topBanner;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
 
 @end
 
