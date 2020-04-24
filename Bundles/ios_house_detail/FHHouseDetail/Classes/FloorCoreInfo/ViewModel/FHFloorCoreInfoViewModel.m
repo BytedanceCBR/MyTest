@@ -16,6 +16,7 @@
 #import "FHFloorPanCorePropertyCell.h"
 #import "FHDetailGrayLineCell.h"
 #import "FHOldDetailDisclaimerCell.h"
+#import "FHFloorPanCorePermitCell.h"
 
 @interface FHFloorCoreInfoViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -23,6 +24,8 @@
 @property (nonatomic , strong) NSMutableArray *currentItems;
 @property (nonatomic , strong) NSString *courtId;
 @property(nonatomic , strong) FHDetailHouseNameModel *houseNameModel;
+
+
 @end
 @implementation FHFloorCoreInfoViewModel
 
@@ -35,12 +38,21 @@
         _courtId = courtId;
         _currentItems = [NSMutableArray new];
         _houseNameModel = model;
+        [self initTracerDic];
         [self configTableView];
-        
         [self startLoadData];
     
     }
     return self;
+}
+
+- (void)initTracerDic
+{
+    self.detailTracerDic = [NSMutableDictionary new];
+    self.detailTracerDic[@"event_type"] = @"house_app2c_v2";
+    self.detailTracerDic[@"enter_from"] = self.detailController.tracerDict[@"enter_from"];
+    self.detailTracerDic[@"page_type"] = @"house_info_detail";
+    self.detailTracerDic[@"origin_from"] = self.detailController.tracerDict[@"origin_from"];
 }
 
 // 注册cell类型
@@ -52,6 +64,8 @@
     [self.infoListTable registerClass:[FHFloorPanCorePropertyCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePropertyCell class])];
 
     [self.infoListTable registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerCell class])];
+    
+    [self.infoListTable registerClass:[FHFloorPanCorePermitCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePermitCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -75,6 +89,10 @@
         return [FHOldDetailDisclaimerCell class];
     }
     
+    //预售许可证
+    if ([model isKindOfClass:[FHFloorPanCorePermitCellModel class]]) {
+        return [FHFloorPanCorePermitCell class];
+    }
     return [FHDetailBaseCell class];
 }
 // cell identifier
@@ -160,7 +178,7 @@
     if (model.data.permitList.count > 0) {
         [self.currentItems addObject:grayLine];
         
-        FHFloorPanCorePropertyCellModel *permitModel = [self createPermitInfoModel:model.data.permitList.firstObject];
+        FHFloorPanCorePropertyCellModel *permitModel = [self createPermitInfoModel:model.data.permitList];
         [self.currentItems addObject:permitModel];
     }
     
@@ -228,7 +246,7 @@
 {
     FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
     
-    NSArray *pNameArray = [NSArray arrayWithObjects:@"物业类型",@"项目特色",@"建筑类别",@"装修状况",@"建筑类型",@"产权年限", nil];
+    NSArray *pNameArray = [NSArray arrayWithObjects:@"物业类型",@"占地面积",@"建筑面积",@"装修状况",@"建筑类型",@"产权年限", nil];
     
     NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
     for (NSInteger i = 0; i < pNameArray.count; i++) {
@@ -239,10 +257,10 @@
                 pItemModel.propertyValue = [self checkPValueStr:model.data.propertyType];
                 break;
             case 1:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.featureDesc];
+                pItemModel.propertyValue = [self checkPValueStr:model.data.areaSquareMeter];
                 break;
             case 2:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.buildingCategory];
+                pItemModel.propertyValue = [self checkPValueStr:model.data.buildingSquareMeter];
                 break;
             case 3:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.decoration];
@@ -326,29 +344,31 @@
     return companyInfoModel;
 }
 
-- (FHFloorPanCorePropertyCellModel *)createPermitInfoModel:(FHDetailNewCoreDetailDataPermitListModel *)model
+- (FHFloorPanCorePermitCellModel *)createPermitInfoModel:(NSArray<FHDetailNewCoreDetailDataPermitListModel> *)items
 {
-    FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
+    FHFloorPanCorePermitCellModel *companyInfoModel = [[FHFloorPanCorePermitCellModel alloc] init];
     
     NSArray *pNameArray = [NSArray arrayWithObjects:@"预售许可证",@"发证信息",@"绑定信息", nil];
     NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
-    for (NSInteger i = 0; i < pNameArray.count; i++) {
-        FHFloorPanCorePropertyCellItemModel *pItemModel = [[FHFloorPanCorePropertyCellItemModel alloc] init];
-        pItemModel.propertyName = pNameArray[i];
-        switch (i) {
-            case 0:
-                pItemModel.propertyValue = [self checkPValueStr:model.permit];
-                break;
-            case 1:
-                pItemModel.propertyValue = [self checkPValueStr:model.permitDate];
-                break;
-            case 2:
-                pItemModel.propertyValue = [self checkPValueStr:model.bindBuilding];
-                break;
-            default:
-                break;
+    for (FHDetailNewCoreDetailDataPermitListModel *model in items) {
+        for (NSInteger i = 0; i < pNameArray.count; i++) {
+            FHFloorPanCorePermitCellItemModel *pItemModel = [[FHFloorPanCorePermitCellItemModel alloc] init];
+            pItemModel.permitName = pNameArray[i];
+            switch (i) {
+                case 0:
+                    pItemModel.permitValue = [self checkPValueStr:model.permit];
+                    break;
+                case 1:
+                    pItemModel.permitValue = [self checkPValueStr:model.permitDate];
+                    break;
+                case 2:
+                    pItemModel.permitValue = [self checkPValueStr:model.bindBuilding];
+                    break;
+                default:
+                    break;
+            }
+            [pItemsArray addObject:pItemModel];
         }
-        [pItemsArray addObject:pItemModel];
     }
     companyInfoModel.list = pItemsArray;
     
@@ -382,6 +402,9 @@
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             cell.backgroundColor = [UIColor themeGray7];
+            if ([cell isKindOfClass:[FHOldDetailDisclaimerCell class]]) {
+                cell.baseViewModel = self;
+            }
             [cell refreshWithData:data];
             return cell;
         }
