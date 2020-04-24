@@ -18,6 +18,7 @@
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
 #import "FHOldSuggestionItemCell.h"
+#import "FHSuggestionEmptyCell.h"
 
 @interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -224,6 +225,8 @@
         [tableView registerClass:[FHOldSuggestionItemCell class] forCellReuseIdentifier:@"FHOldSuggestionItemCell"];
     [tableView registerClass:[FHSuggestHeaderViewCell class] forCellReuseIdentifier:@"suggestHeaderCell"];
     [tableView registerClass:[FHGuessYouWantCell class] forCellReuseIdentifier:@"guessYouWantCell"];
+    [tableView registerClass:[FHSuggestionEmptyCell class] forCellReuseIdentifier:@"suggetEmptyCell"];
+
     if (@available(iOS 11.0 , *)) {
         tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }

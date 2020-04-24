@@ -17,6 +17,7 @@
 #import "FHSugSubscribeListViewModel.h"
 #import "FHOldSuggestionItemCell.h"
 #import "FHSuggestionListViewController.h"
+#import "FHSuggestionEmptyCell.h"
 
 @interface FHChildSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource, FHSugSubscribeListDelegate>
 
@@ -309,16 +310,19 @@
 }
 
 - (void)trackClickEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
-    NSDictionary *tracerDic = @{
+    NSMutableDictionary *tracerDic = @{
                                 @"event_type":@"house_app2c_v2",
-                                @"word":model.text.length > 0 ? model.text : @"be_null",
+                                @"word":model.logPb[@"word"] ? model.logPb[@"word"] : @"be_null",
                                 @"word_type":@"hot",
                                 @"rank":@(rank),
-                                @"word_id":@"be_null",
-                                @"gid":@"be_null",
-                                @"log_pb":@"be_null",
-                                @"recommend_reason":model.recommendReason.content,
+                                @"gid":model.logPb[@"gid"] ? model.logPb[@"gid"] : @"be_null",
                                 };
+    if (model.logPb) {
+        [tracerDic setObject:model.logPb forKey:@"log_pb"];
+    }
+    if (model.recommendReason) {
+        [tracerDic setValue:model.recommendReason forKey:@"recommend_reason"];
+    }
     [FHUserTracker writeEvent:@"hot_word_click" params:tracerDic];
 }
 
@@ -567,6 +571,9 @@
         return self.guessYouWantData.count > 0 ? self.guessYouWantData.count + 1 : 0;
     } else if (tableView.tag == 2) {
         // 联想词
+        if (self.sugListData.count == 0) {
+            return 1;
+        }
         return self.sugListData.count;
     }
     return 0;
@@ -589,6 +596,10 @@
         }
         return cell;
     } else if (tableView.tag == 2) {
+        if (self.sugListData.count == 0) {
+            FHSuggestionEmptyCell *cell = (FHSuggestionEmptyCell *)[tableView dequeueReusableCellWithIdentifier:@"suggetEmptyCell" forIndexPath:indexPath];
+            return cell;
+        }
         // 联想词列表
         if (self.houseType == FHHouseTypeNewHouse) {
             // 新房
@@ -695,6 +706,9 @@
         }
     } else if (tableView.tag == 2) {
         // 联想词
+        if (self.sugListData.count == 0) {
+            return self.listController.suggestTableView.frame.size.height;
+        }
         if (self.houseType == FHHouseTypeNewHouse) {
             // 新房
             return 67;
@@ -742,7 +756,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView.tag == 1) {
-        // 历史记录 search_history_show 埋点
+        //猜你想搜 埋点
         if (indexPath.row - 1 < self.guessYouWantData.count) {
             FHGuessYouWantResponseDataDataModel *model  = self.guessYouWantData[indexPath.row - 1];
             NSInteger rank = indexPath.row - 1;
@@ -750,16 +764,19 @@
             if (!self.guessYouWantShowTracerDic[recordKey] && self.listController.isCanTrack) {
                 // 埋点
                 self.guessYouWantShowTracerDic[recordKey] = @(YES);
-                NSDictionary *tracerDic = @{
+                NSMutableDictionary *tracerDic = @{
                                             @"event_type":@"house_app2c_v2",
-                                            @"word":model.text.length > 0 ? model.text : @"be_null",
+                                            @"word":model.logPb[@"word"] ? model.logPb[@"word"] : @"be_null",
                                             @"word_type":@"hot",
                                             @"rank":@(rank),
-                                            @"word_id":@"be_null",
-                                            @"gid":@"be_null",
-                                            @"log_pb":@"be_null",
-                                            @"recommend_reason":model.recommendReason.content,//判断是否为空
+                                            @"gid":model.logPb[@"gid"] ? model.logPb[@"gid"] : @"be_null",
                                             };
+                if (model.logPb) {
+                    [tracerDic setObject:model.logPb forKey:@"log_pb"];
+                }
+                if (model.recommendReason) {
+                    [tracerDic setObject:model.recommendReason forKey:@"recommend_reason"];
+                }
                 [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
             }
         }
@@ -767,8 +784,6 @@
         // 联想词 associate_word_show 埋点 在 返回数据的地方进行一次性埋点
     }
 }
-
-
 
 // 1、默认
 - (NSAttributedString *)processHighlightedDefault:(NSString *)text textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
