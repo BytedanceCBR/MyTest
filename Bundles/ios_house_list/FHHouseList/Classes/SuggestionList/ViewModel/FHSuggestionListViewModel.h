@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)initCollectionView:(FHBaseCollectionView *) collectionView;
 -(void)textFieldShouldReturn:(NSString *)text;
 -(void)textFieldTextChange:(NSString *)text;
+-(void)updateSubVCTrackStatus;
 @end
 
 NS_ASSUME_NONNULL_END

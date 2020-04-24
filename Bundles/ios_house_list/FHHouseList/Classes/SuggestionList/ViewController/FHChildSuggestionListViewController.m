@@ -39,6 +39,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        _isCanTrack = NO;
         // 1、from_home(native参数)
         if (paramObj.allParams[@"from_home"]) {
             self.fromSource = [paramObj.allParams[@"from_home"] integerValue];
@@ -189,6 +190,14 @@
     self.suggestTableView.hidden = YES;
 }
 
+- (void)setIsCanTrack:(BOOL)isCanTrack
+{
+    _isCanTrack = isCanTrack;
+    if (isCanTrack) {
+        [self.historyTableView reloadData];
+    }
+}
+
 - (FHSuggectionTableView *)createTableView {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
     FHSuggectionTableView *tableView = [[FHSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
@@ -221,7 +230,6 @@
     tableView.estimatedRowHeight = 0;
     tableView.estimatedSectionFooterHeight = 0;
     tableView.estimatedSectionHeaderHeight = 0;
-    
     return tableView;
 }
 

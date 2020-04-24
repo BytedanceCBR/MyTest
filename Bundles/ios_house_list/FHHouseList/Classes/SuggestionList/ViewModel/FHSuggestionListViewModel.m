@@ -34,6 +34,15 @@
     return self;
 }
 
+- (void)updateSubVCTrackStatus
+{
+    NSString *rowStr = [NSString stringWithFormat:@"%ld", _currentTabIndex];
+    FHSuggestionCollectionViewCell *cell = _cellDict[rowStr];
+    if (cell && cell.vc) {
+        cell.vc.isCanTrack = YES;
+    }
+}
+
 - (void)textFieldShouldReturn:(NSString *)text
 {
     NSString *rowStr = [NSString stringWithFormat:@"%ld", _currentTabIndex];
@@ -133,10 +142,11 @@
     }else if (diff < 0){
         tabIndex = ceilf(tabIndex);
     }
+    NSInteger index = (int)tabIndex;
     if (tabIndex != self.listController.segmentControl.selectedSegmentIndex) {
-        self.currentTabIndex = tabIndex;
-        self.listController.segmentControl.selectedSegmentIndex = tabIndex;
-        self.listController.houseType = [self.listController.houseTypeArray[(int)tabIndex] integerValue];
+        self.currentTabIndex = index;
+        self.listController.segmentControl.selectedSegmentIndex = index;
+        self.listController.houseType = [self.listController.houseTypeArray[index] integerValue];
     } else {
         //加载数据
         CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;

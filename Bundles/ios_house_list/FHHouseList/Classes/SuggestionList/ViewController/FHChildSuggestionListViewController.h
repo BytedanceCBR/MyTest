@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   FHSuggectionTableView       *historyTableView;
 @property (nonatomic, strong)   FHSuggectionTableView       *suggestTableView;
 @property (nonatomic, weak) FHSuggestionListViewController *fatherVC;
+@property (nonatomic, assign) BOOL isCanTrack;
 
 - (void)requestDeleteHistory;
 

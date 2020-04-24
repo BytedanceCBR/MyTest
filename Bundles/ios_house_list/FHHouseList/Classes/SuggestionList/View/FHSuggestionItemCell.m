@@ -88,6 +88,7 @@
     self.recommendTypeLabel.backgroundColor = [UIColor themeGray7];
     self.recommendTypeLabel.layer.cornerRadius = 9;
     self.recommendTypeLabel.layer.masksToBounds = YES;
+    self.recommendTypeLabel.hidden = YES;
     [self.recommendTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.top.mas_equalTo(17);
@@ -108,6 +109,7 @@
     self.recommendResonLabel = [[UILabel alloc] init];
     [self.contentView addSubview:_recommendResonLabel];
     self.recommendResonLabel.font = [UIFont themeFontRegular:14];
+    self.recommendResonLabel.hidden = YES;
     [self.recommendResonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(_titleLabel);
         make.top.mas_equalTo(_titleLabel.mas_bottom).offset(3);
@@ -129,16 +131,25 @@
 - (void)refreshData:(id)data
 {
     FHGuessYouWantResponseDataDataModel *model = data;
-    self.recommendTypeLabel.text = model.recommendType.content;
-    [self.recommendTypeLabel sizeToFit];
-    CGSize size = [self.recommendTypeLabel sizeThatFits:CGSizeMake(100, 18)];
-    [self.recommendTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(size.width + 12);
-    }];
+    
+    if (model.recommendType.content.length > 0) {
+        self.recommendTypeLabel.hidden = NO;
+        self.recommendTypeLabel.backgroundColor = [UIColor colorWithHexString:model.recommendType.backgroundColor];
+        self.recommendTypeLabel.textColor = [UIColor colorWithHexString:model.recommendType.textColor];
+        self.recommendTypeLabel.text = model.recommendType.content;
+        [self.recommendTypeLabel sizeToFit];
+        CGSize size = [self.recommendTypeLabel sizeThatFits:CGSizeMake(100, 18)];
+        [self.recommendTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(size.width + 12);
+        }];
+    }
     
     self.titleLabel.text = model.text;
-    self.recommendResonLabel.text = model.recommendReason.content;
-    self.recommendResonLabel.textColor = [UIColor themeGray3];
+    if (model.recommendReason.content > 0) {
+        self.recommendResonLabel.hidden = NO;
+        self.recommendResonLabel.text = model.recommendReason.content;
+        self.recommendResonLabel.textColor = [UIColor themeGray3];
+    }
     self.displayPriceLabel.text = model.displayPrice;
     
     

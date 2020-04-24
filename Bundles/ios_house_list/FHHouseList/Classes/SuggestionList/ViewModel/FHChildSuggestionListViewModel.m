@@ -741,11 +741,11 @@
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView.tag == 1) {
         // 历史记录 search_history_show 埋点
-        if (indexPath.row - 1 < self.historyData.count) {
+        if (indexPath.row - 1 < self.guessYouWantData.count) {
             FHGuessYouWantResponseDataDataModel *model  = self.guessYouWantData[indexPath.row - 1];
             NSInteger rank = indexPath.row - 1;
             NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
-            if (!self.guessYouWantShowTracerDic[recordKey]) {
+            if (!self.guessYouWantShowTracerDic[recordKey] && self.listController.isCanTrack) {
                 // 埋点
                 self.guessYouWantShowTracerDic[recordKey] = @(YES);
                 NSDictionary *tracerDic = @{
@@ -756,7 +756,7 @@
                                             @"word_id":@"be_null",
                                             @"gid":@"be_null",
                                             @"log_pb":@"be_null",
-                                            @"recommend_reason":model.recommendReason.content,
+                                            @"recommend_reason":model.recommendReason.content,//判断是否为空
                                             };
                 [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
             }
@@ -765,6 +765,8 @@
         // 联想词 associate_word_show 埋点 在 返回数据的地方进行一次性埋点
     }
 }
+
+
 
 // 1、默认
 - (NSAttributedString *)processHighlightedDefault:(NSString *)text textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {

@@ -264,8 +264,8 @@
 -(NSArray *)getSegmentTitles
 {
     NSArray *items = @[[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeSecondHandHouse],
-                       [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeRentHouse],
                        [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeNewHouse],
+                       [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeRentHouse],
                        [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeNeighborhood],];
     FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (model) {
@@ -283,6 +283,9 @@
     [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:houseType]];
     _segmentControl.selectedSegmentIndex = [self getSegmentControlIndex];
     self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.viewModel updateSubVCTrackStatus];
+    });
 }
 
 -(NSInteger)getSegmentControlIndex
@@ -301,13 +304,13 @@
         [items addObject: [[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeSecondHandHouse]];
         [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeSecondHandHouse]];
     }
-    if (config.searchTabRentFilter.count > 0) {
-        [items addObject:[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeRentHouse]];
-        [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeRentHouse]];
-    }
     if (config.searchTabCourtFilter.count > 0) {
         [items addObject:[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeNewHouse]];
         [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeNewHouse]];
+    }
+    if (config.searchTabRentFilter.count > 0) {
+        [items addObject:[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeRentHouse]];
+        [self.houseTypeArray addObject:[NSNumber numberWithInt: FHHouseTypeRentHouse]];
     }
     if (config.searchTabNeighborhoodFilter.count > 0) {
         [items addObject:[[FHHouseTypeManager sharedInstance] stringValueForType:FHHouseTypeNeighborhood]];
