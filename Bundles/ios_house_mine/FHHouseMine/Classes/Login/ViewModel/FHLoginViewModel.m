@@ -22,7 +22,7 @@
 #import "FHLoginContainerViewController.h"
 #import "FHBindContainerViewController.h"
 #import <TTRoute/TTRoute.h>
-//#import <BDABTestSDK/BDABTestManager.h>
+#import <BDABTestSDK/BDABTestManager.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -54,8 +54,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (self) {
         _needPopVC = YES;
         _isNeedCheckUGCAdUser = NO;
-        _processType = FHLoginProcessTestB;
+        _processType = FHLoginProcessOrigin;
         _viewController = viewController;
+        id res = [BDABTestManager getExperimentValueForKey:@"f_douyin_login_type" withExposure:YES];
+        if ([res isKindOfClass:[NSNumber class]]) {
+            _processType = [(NSNumber *)res integerValue];
+        }
+//        NSLog(@"BDClientABTest f_douyin_login_type is %@",res);
     }
     return self;
 }
