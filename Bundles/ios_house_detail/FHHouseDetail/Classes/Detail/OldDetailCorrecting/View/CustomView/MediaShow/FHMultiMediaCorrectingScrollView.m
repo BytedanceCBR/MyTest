@@ -63,7 +63,7 @@
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     
-    _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 276/375) collectionViewLayout:layout];
+    _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 281/375) collectionViewLayout:layout];
     _colletionView.backgroundColor = [UIColor whiteColor];
     _colletionView.pagingEnabled = YES;
     _colletionView.showsHorizontalScrollIndicator = NO;
@@ -142,11 +142,11 @@
 -(UIView *)bottomGradientView {
     if(!_bottomGradientView){
         
-        //CGFloat aspect = 20;
+        CGFloat aspect = 375.0 / 25;
         CGFloat width = SCREEN_WIDTH;
         
-        CGFloat height = 20;//round(width / aspect + 0.5);
-        //height -= round([UIScreen mainScreen].bounds.size.width / 375.0f * 30 + 0.5);
+        CGFloat height = round(width / aspect + 0.5);
+//        height -= round([UIScreen mainScreen].bounds.size.width / 375.0f * 30 + 0.5);
         CGRect frame = CGRectMake(0, 0, width, height);
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.frame = frame;
@@ -185,7 +185,7 @@
     //CGFloat minus = round([UIScreen mainScreen].bounds.size.width / 375.0f * 30 + 0.5);
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
-        make.top.equalTo(self.colletionView.mas_bottom).offset(-36);
+        make.top.equalTo(self.colletionView.mas_bottom).offset(-41);
     }];
     [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self);

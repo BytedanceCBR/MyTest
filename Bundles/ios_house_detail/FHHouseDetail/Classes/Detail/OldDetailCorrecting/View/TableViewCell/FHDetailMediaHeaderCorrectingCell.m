@@ -62,7 +62,7 @@
 }
 
 + (CGFloat)cellHeight {
-    CGFloat photoCellHeight = 276;
+    CGFloat photoCellHeight = 281;
     photoCellHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight + 0.5);
     return photoCellHeight;
 }
