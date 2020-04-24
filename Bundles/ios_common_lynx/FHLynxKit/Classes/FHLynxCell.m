@@ -67,7 +67,7 @@
 //    [self.lynxView loadTemplate:templateData withURL:@"local"];
     NSData *dataTemp = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.249.250:30334/card1/template.js?1587635520991"]];
     
-//    [self.lynxView loadTemplateFromURL:@"http://10.95.249.250:20002/static/dist/public/9a0e2642e9cb7ee3281ac53e4b57484elepus/card1/template.js"];
+//    [self.lynxView loadTemplateFromURL:@"http://10.95.249.250:30334/card1/template.js?1587635520991"];
     [self.lynxView loadTemplate:dataTemp withURL:@"local"];
      self.lynxView.client = self;
     
@@ -145,15 +145,15 @@
     }
 
     self.cacheSize = view.frame.size;
-    UITableView *tableView = self.superview;
+    UITableView *tableView = self.tableView;
     if ([tableView isKindOfClass:[UITableView class]]) {
         NSIndexPath *indexPath = [tableView indexPathForCell:self];
         if (indexPath) {
             [CATransaction begin];
             [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-            
+
             [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-            
+
             [CATransaction commit];
         }
     }

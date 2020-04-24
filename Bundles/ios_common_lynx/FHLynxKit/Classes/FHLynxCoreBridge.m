@@ -12,12 +12,12 @@
 @implementation FHLynxCoreBridge
 
 + (NSString *)name {
-    return @"BDLynxCoreBridge";
+    return @"FLynxBridge";
 }
 
 + (NSDictionary<NSString *,NSString *> *)methodLookup {
     return @{
-        @"openSchema" : NSStringFromSelector(@selector(openSchema:)),
+        @"jumpSchema" : NSStringFromSelector(@selector(openSchema:)),
     };
 }
 

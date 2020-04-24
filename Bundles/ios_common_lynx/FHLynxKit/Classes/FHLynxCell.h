@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHLynxCell : UITableViewCell
 
+@property(nonatomic, weak) UITableView* tableView;
+
 @property(nonatomic, strong) LynxView* lynxView;
 
 @property(nonatomic) CGSize size;
@@ -45,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // cell消失
 - (void)fh_didEndDisplayingCell;
+
 
 @end
 
