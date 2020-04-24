@@ -183,7 +183,9 @@
 
 - (void)setSectionTitles:(NSArray<NSString *> *)sectionTitles {
     _sectionTitles = sectionTitles;
+    
     [self updateSegmentsRects];
+    
     [self setNeedsLayout];
     [self setNeedsDisplay];
 }
@@ -248,7 +250,7 @@
     CGSize size = CGSizeZero;
     BOOL selected = (index == self.selectedSegmentIndex) ? YES : NO;
     if ([title isKindOfClass:[NSString class]] && !self.titleFormatter) {
-        if(self.shouldFixedSelectPosition){
+        if(self.shouldFixedSelectPosition && self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic){
             NSDictionary *titleAttrs = [self resultingTitleTextAttributes];
             NSDictionary *selectedTitleAttrs = [self resultingSelectedTitleTextAttributes];
             if(selected){
@@ -396,7 +398,12 @@
                     CGFloat imageWidth = icon.size.width;
                     CGFloat imageHeight = icon.size.height;
                     CGFloat red_y = roundf(CGRectGetMinY(rect)  - imageHeight/2.0f + 3.0f);
-                    CGFloat red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f);
+                    CGFloat red_x = 0;
+                    if(self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic){
+                        red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f - self.segmentEdgeInset.right);
+                    }else{
+                        red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f);
+                    }
                     CGRect redPointRect = CGRectMake(red_x, red_y, imageWidth, imageHeight);
                     
                     CALayer *imageLayer = [CALayer layer];

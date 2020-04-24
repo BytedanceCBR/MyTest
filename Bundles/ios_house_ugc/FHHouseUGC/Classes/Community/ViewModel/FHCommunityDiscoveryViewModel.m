@@ -110,7 +110,8 @@
         FHCommunityDiscoveryCell *cell = (FHCommunityDiscoveryCell *)self.cellArray[self.currentTabIndex];
         cell.enterType = enterType;
         
-        if(self.currentTabIndex == 0){
+        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+        if(self.currentTabIndex == index){
             cell.withTips = self.viewController.hasFocusTips;
         }else{
             cell.withTips = NO;
@@ -129,10 +130,7 @@
         
         _lastCell = cell;
         
-        //切换到关注tab时候去掉红点的显示
-        if(self.currentTabIndex == 0){
-            [self.viewController hideRedPoint];
-        }
+        [self.viewController hideRedPoint];
     }
 }
 

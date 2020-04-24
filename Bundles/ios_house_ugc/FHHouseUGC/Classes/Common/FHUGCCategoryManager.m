@@ -44,6 +44,17 @@
     return self;
 }
 
+- (NSInteger)getCategoryIndex:(NSString *)category {
+    NSInteger index = -1;
+    for (NSInteger i = 0; i < _allCategories.count; i++) {
+        FHUGCCategoryDataDataModel *model = _allCategories[i];
+        if([model.category isEqualToString:category]){
+            return i;
+            break;
+        }
+    }
+    return index;
+}
 
 + (FHCommunityCollectionCellType)convertCategoryToType:(NSString *)category {
     FHCommunityCollectionCellType type = FHCommunityCollectionCellTypeNone;

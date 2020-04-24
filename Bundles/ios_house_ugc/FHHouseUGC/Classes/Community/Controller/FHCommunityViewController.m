@@ -78,6 +78,8 @@
     if(!self.isNewDiscovery){
         [self onUnreadMessageChange];
         [self onFocusHaveNewContents];
+    }else{
+        [self onCommunityHaveNewContents];
     }
 
     //切换开关
@@ -99,7 +101,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
+    if([FHEnvContext isNewDiscovery]){
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCommunityHaveNewContents) name:kFHUGCCommunityTabHasNewNotification object:nil];
+    }else{
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
+    }
     //tabbar双击的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
@@ -163,13 +169,41 @@
     }
 }
 
+- (void)onCommunityHaveNewContents {
+    BOOL hasNew = [FHUGCConfig sharedInstance].ugcCommunityHasNew;
+    NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+    if(self.viewModel.currentTabIndex != index && hasNew && index >= 0){
+        NSMutableArray *redPoints = [NSMutableArray array];
+        for (NSInteger i = 0; i <= index; i++) {
+            if(i == index){
+                redPoints[i] = @1;
+            }else{
+                redPoints[i] = @0;
+            }
+        }
+        _segmentControl.sectionRedPoints = redPoints;
+        self.hasFocusTips = YES;
+    }
+}
+
 - (void)hideRedPoint {
-    if(self.viewModel.currentTabIndex == 0 && self.hasFocusTips){
-        self.hasFocusTips = NO;
-        [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
-        [[FHUGCConfig sharedInstance] recordHideRedPointTime];
-        self.segmentControl.sectionRedPoints = @[@0];
-        [self.viewModel refreshCell:YES];
+    if([FHEnvContext isNewDiscovery]){
+        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+        if(self.viewModel.currentTabIndex == index && self.hasFocusTips){
+            self.hasFocusTips = NO;
+            [FHUGCConfig sharedInstance].ugcCommunityHasNew = NO;
+            [[FHUGCConfig sharedInstance] recordHideCommunityRedPointTime];
+            self.segmentControl.sectionRedPoints = @[@0];
+            [self.viewModel refreshCell:YES];
+        }
+    }else{
+        if(self.viewModel.currentTabIndex == 0 && self.hasFocusTips){
+            self.hasFocusTips = NO;
+            [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+            [[FHUGCConfig sharedInstance] recordHideRedPointTime];
+            self.segmentControl.sectionRedPoints = @[@0];
+            [self.viewModel refreshCell:YES];
+        }
     }
 }
 
@@ -314,7 +348,6 @@
     _segmentControl.selectionIndicatorWidth = 20.0f;
     _segmentControl.selectionIndicatorHeight = 4.0f;
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
-    _segmentControl.shouldFixedSelectPosition = YES;
 //    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
 //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
