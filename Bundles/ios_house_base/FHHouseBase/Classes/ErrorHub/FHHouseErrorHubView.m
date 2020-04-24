@@ -7,6 +7,8 @@
 
 #import "FHHouseErrorHubView.h"
 #import "Masonry.h"
+#import "TTRoute.h"
+#import "UIDevice+BTDAdditions.h"
 @interface FHHouseErrorHubView()
 @property (weak, nonatomic)UIView *contentView;
 @property (weak, nonatomic)UILabel *titleLab;
@@ -22,12 +24,12 @@
     UIViewController *visibleController = [errorHubView findVisibleViewController];
     [visibleController.view addSubview:errorHubView];
     [UIView animateWithDuration:2.5 animations:^{
-        errorHubView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 64);
+        errorHubView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIDevice btd_isIPhoneXSeries]?84:64);
     } completion:^(BOOL finished) {
         if (@available(iOS 10.0, *)) {
             [NSTimer scheduledTimerWithTimeInterval:2 repeats:NO block:^(NSTimer * _Nonnull timer) {
                 [UIView animateWithDuration:2.5 animations:^{
-                    errorHubView.frame = CGRectMake(0, -64, [UIScreen mainScreen].bounds.size.width, 64);
+                    errorHubView.frame = CGRectMake(0,  [UIDevice btd_isIPhoneXSeries]?-84:-64, [UIScreen mainScreen].bounds.size.width,  [UIDevice btd_isIPhoneXSeries]?84:64);
                 } completion:^(BOOL finished) {
                     [errorHubView removeFromSuperview];
                 }];
@@ -50,12 +52,13 @@
         make.top.bottom.left.right.equalTo(self);
     }];
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.equalTo(self).offset(20);
+        make.bottom.top.equalTo(self.subMessageLab.mas_top).offset(-10);
     }];
     [self.subMessageLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.titleLab.mas_bottom).offset(15);
-        make.left.equalTo(self.titleLab);
+        make.bottom.equalTo(self).offset(-10);
     }];
+     UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
+    [self addGestureRecognizer:tapGesturRecognizer];
 }
 
 - (UIView *)contentView {
@@ -83,6 +86,7 @@
         UILabel *subMessageLab = [[UILabel alloc]init];
         subMessageLab.textColor = [UIColor blackColor];
         subMessageLab.font = [UIFont systemFontOfSize:8];
+        subMessageLab.numberOfLines = 0;
         [self.contentView addSubview:subMessageLab];
         _subMessageLab = subMessageLab;
     }
@@ -126,5 +130,9 @@
     }
     
     return currentViewController;
+}
+
+- (void)tapAction:(id)sender {
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://errrorhub_debug"]] userInfo:nil];
 }
 @end

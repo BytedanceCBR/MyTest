@@ -7,6 +7,8 @@
 
 #import "FHHouseErrorHubManager.h"
 #import "FHHouseErrorHubView.h"
+#import "FHEnvContext.h"
+
 
 @implementation FHHouseErrorHubManager
 +(instancetype)sharedInstance
@@ -19,7 +21,7 @@
     return manager;
 }
 
-- (void)checkRequestResponseWithHost:(NSString *)host requestParams:(id)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(FHErrorHubType)errorHubType {
+- (void)checkRequestResponseWithHost:(NSString *)host requestParams:(NSDictionary *)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(FHErrorHubType)errorHubType {
     NSInteger responseCode = -1;
     if (responseStatus.statusCode) {
         responseCode = responseStatus.statusCode;
@@ -28,39 +30,73 @@
                                                                        options:NSJSONReadingAllowFragments
                                                                          error:nil];
     NSDictionary *responseStatusDic = [[NSDictionary alloc]initWithDictionary:responseStatus.allHeaderFields];
-    if ( type !=FHNetworkMonitorTypeSuccess) {
-        NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
-        [outputDic setValue:host forKey:@"HOST"];
-        [outputDic setValue:responseDictionary forKey:@"response"];
-        [outputDic setValue:params forKey:@"params"];
-        [outputDic setValue:responseStatusDic forKey:@"httpStatus"];
-        [outputDic setValue:analysisError forKey:@"analysisError"];
-        [self addLogWithData:outputDic logType:errorHubType];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [FHHouseErrorHubView showErrorHubViewWithTitle:@"核心接口异常" content:[NSString stringWithFormat:@"HOST:%@",host]];
-        });
+            if ( type !=FHNetworkMonitorTypeSuccess) {
+    NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
+    [outputDic setValue:host forKey:@"name"];
+    [outputDic setValue:[self removeNillValue:responseDictionary] forKey:@"response"];
+    [outputDic setValue:[self removeNillValue:params] forKey:@"params"];
+    [outputDic setValue:[self removeNillValue:responseStatusDic] forKey:@"httpStatus"];
+    if (analysisError) {
+        [outputDic setValue:@{@"error_code":@(analysisError.code),
+                              @"error_domain":analysisError.domain,
+                              @"error_info":analysisError.userInfo}  forKey:@"analysisError"];
+        [outputDic setValue:analysisError.userInfo forKey:@"error_info"];
+    }else {
+        [outputDic setValue:@"-1" forKey:@"error_info"];
     }
+    [outputDic setValue:[self getCurrentTimes] forKey:@"currentTime"];
+    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSDictionary *dictSetting  = [self fhSettings];
+    [outputDic setValue: [self removeNillValue:[configDataModel toDictionary]] forKey:@"config_data"];
+    [outputDic setValue:[self removeNillValue:dictSetting] forKey:@"settings_data"];
+    [self addLogWithData:outputDic logType:errorHubType];
+     dispatch_async(dispatch_get_main_queue(), ^{
+                    [FHHouseErrorHubView showErrorHubViewWithTitle:@"核心接口异常" content:[NSString stringWithFormat:@"HOST:%@",host]];
+                });
+            }
 }
 //保存数据
 - (void)addLogWithData:(id)Data logType:(FHErrorHubType)errorHubType {
-    NSMutableArray *dataArr;
-    if ([self loadDataFromLocalDataWithType:errorHubType].count>0) {
-        dataArr = [[self loadDataFromLocalDataWithType:errorHubType] mutableCopy];
-    }else {
-        dataArr = [[NSMutableArray alloc]init];
+    NSMutableArray *dataArr = [self loadDataFromLocalDataWithType:errorHubType].mutableCopy;
+    NSString *keyStr;
+    switch (errorHubType) {
+        case FHErrorHubTypeRequest:
+            if (dataArr.count>9) {
+                [dataArr removeObjectAtIndex:0];
+                [dataArr addObject:Data];
+            }else {
+                [dataArr addObject:Data];
+            }
+            keyStr = @"host_error";
+            break;
+        case FHErrorHubTypeBuryingPoint:
+            [dataArr addObject:Data];
+            keyStr = @"buryingpoint_error";
+            break;
+        case FHErrorHubTypeConfig:
+            [dataArr addObject:Data];
+            keyStr = @"coonfig_settings";
+            break;
+        default:
+            break;
     }
-    if (dataArr.count>9) {
-        [dataArr replaceObjectAtIndex:0 withObject:Data];
-    }else {
-        [dataArr addObject:Data];
-    }
-    NSDictionary *hostError = @{@"host_error":dataArr};
-    [hostError writeToFile:[self localDataPathWithType:errorHubType] atomically:YES];
+    
+    
+    
+    NSDictionary *errorInfo = @{(errorHubType == FHErrorHubTypeRequest? @"host_error" :@"buryingpoint_error"):dataArr};
+    NSData *errordata = [NSJSONSerialization dataWithJSONObject:errorInfo options:0 error:NULL];
+    [errordata writeToFile:[self localDataPathWithType:errorHubType] atomically:YES];
 }
 
 - (NSArray *)loadDataFromLocalDataWithType:(FHErrorHubType)errorHubType {
-    NSDictionary *data = [[NSDictionary alloc]initWithContentsOfFile:[self localDataPathWithType:errorHubType]];
-    NSArray *readArr = [data objectForKey:[[data allKeys] firstObject]];
+    NSData *data = [NSData dataWithContentsOfFile:[self localDataPathWithType:errorHubType]];
+    if (!data) {
+        return @[];
+    }
+    NSDictionary *dictFromData = [NSJSONSerialization JSONObjectWithData:data
+                                                                 options:NSJSONReadingAllowFragments
+                                                                   error:NULL];
+    NSArray *readArr = dictFromData[[dictFromData allKeys].firstObject];
     return readArr;
 }
 
@@ -75,6 +111,9 @@
         case FHErrorHubTypeBuryingPoint:
             strFinalPath = [NSString stringWithFormat:@"%@/buryingPointError.plist",strPath];
             break;
+        case FHErrorHubTypeConfig:
+        strFinalPath = [NSString stringWithFormat:@"%@/configSettingsError.plist",strPath];
+        break;
         default:
             break;
     }
@@ -86,7 +125,7 @@
     NSArray *eventArr = [self localCheckBuryingPointData];
     NSMutableDictionary *errorSaveDic = [[NSMutableDictionary alloc]init];
     [errorSaveDic setValue:eventParams forKey:@"parmas"];
-    [errorSaveDic setValue:eventName forKey:@"event"];
+    [errorSaveDic setValue:eventName forKey:@"name"];
     [eventArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSDictionary *dic = obj;
         if ([[dic objectForKey:@"event"] isEqualToString:eventName]) {
@@ -99,10 +138,10 @@
                     NSArray *rangeArr = paramItem[@"rang"];
                     NSString *level = paramItem[@"error_level"];
                     if (checkValue.length<1) {
-                        [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@为空",checkKey] forKey:@"error"];
+                        [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@为空",checkKey] forKey:@"error_info"];
                     }else {
                         if (![rangeArr containsObject:checkValue]) {
-                            [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@取值范围错误",checkKey] forKey:@"error"];
+                            [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@取值范围错误",checkKey] forKey:@"error_info"];
                         }
                     }
                     NSString *errStr = errorSaveDic[@"error"] ;
@@ -112,6 +151,11 @@
                                 [FHHouseErrorHubView showErrorHubViewWithTitle:@"埋点异常" content:[NSString stringWithFormat:@"event_name:%@",eventName]];
                             });
                         }
+                        FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+                        NSDictionary *dictSetting  = [self fhSettings];
+                        [errorSaveDic setValue:[configDataModel toDictionary] forKey:@"config_data"];
+                        [errorSaveDic setValue:dictSetting forKey:@"settings_data"];
+                        [errorSaveDic setValue:[self getCurrentTimes] forKey:@"currentTime"];
                         [self addLogWithData:errorSaveDic logType:errorHubType];
                     }
                 }
@@ -126,5 +170,73 @@
     NSError *error;
     NSDictionary *dataDict = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle mainBundle] pathForResource:@"buryingPointCheck"ofType:@"plist"] error:&error];
     return dataDict[@"data"];
+}
+
+- (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]){
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
+}
+
+- (NSArray *)getLocalErrorDataWithType:(FHErrorHubType)errorHubType {
+    return  [self loadDataFromLocalDataWithType:errorHubType];
+}
+
+- (NSString*)getCurrentTimes{
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    
+    // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+    
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    
+    //现在时间,你可以输出来看下是什么格式
+    
+    NSDate *datenow = [NSDate date];
+    
+    //----------将nsdate按formatter格式转成nsstring
+    
+    NSString *currentTimeString = [formatter stringFromDate:datenow];
+    
+    NSLog(@"currentTimeString =  %@",currentTimeString);
+    
+    return currentTimeString;
+    
+}
+
+- (NSDictionary *)removeNillValue:(NSDictionary *)inputDic {
+    NSArray *allKeys = inputDic.allKeys;
+    NSMutableDictionary *mutabInputDic = inputDic.mutableCopy;
+    [allKeys enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *key = obj;
+        id dicItem  = mutabInputDic[key];
+        if (!dicItem) {
+            [mutabInputDic removeObjectForKey:key];
+        };
+        if ([dicItem isKindOfClass:[NSDictionary class]]) {
+            [mutabInputDic setValue:[self removeNillValue:dicItem] forKey:key];
+        };
+        if ([dicItem isKindOfClass:[NSArray class]]) {
+            NSMutableArray *dicItems = [(NSArray *)dicItem mutableCopy];
+            [dicItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj isKindOfClass:[NSDictionary class]]) {
+                    [dicItems replaceObjectAtIndex:idx withObject:[self removeNillValue:obj]];
+                }
+            }];
+            [mutabInputDic setValue:dicItems forKey:key];
+        }
+    }];
+    return mutabInputDic;
+}
+
+- (void)saveConfigAndSettings {
+     NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
+    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSDictionary *dictSetting  = [self fhSettings];
+    [outputDic setValue: [self removeNillValue:[configDataModel toDictionary]] forKey:@"config_data"];
+    [outputDic setValue:[self removeNillValue:dictSetting] forKey:@"settings_data"];
+     [self addLogWithData:outputDic logType:FHErrorHubTypeConfig];
 }
 @end

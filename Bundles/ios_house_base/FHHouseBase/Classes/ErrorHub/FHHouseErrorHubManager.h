@@ -12,7 +12,8 @@
 NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger , FHErrorHubType) {
     FHErrorHubTypeRequest = 1, //请求校验
-    FHErrorHubTypeBuryingPoint = 2 //埋点校验
+    FHErrorHubTypeBuryingPoint = 2 ,//埋点校验
+     FHErrorHubTypeConfig = 3 //现场保存
 };
 @interface FHHouseErrorHubManager : NSObject
 
@@ -25,7 +26,7 @@ typedef NS_ENUM(NSInteger , FHErrorHubType) {
 /// @param response 请求返回数据
 /// @param analysisError 解析失败错误信息
 /// @param type 请求成功或者其他错误
-- (void)checkRequestResponseWithHost:(NSString *)host requestParams:(id)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(FHErrorHubType)errorHubType;
+- (void)checkRequestResponseWithHost:(NSString *)host requestParams:(NSDictionary *)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(FHErrorHubType)errorHubType;
 
 /// 核心埋点参数
 /// @param eventName 事件名称
@@ -33,6 +34,12 @@ typedef NS_ENUM(NSInteger , FHErrorHubType) {
 /// @param errorHubType 类型
 - (void)checkBuryingPointWithEvent:(NSString *)eventName Params:(NSDictionary* )eventParams errorHubType:(FHErrorHubType)errorHubType;
 - (UIViewController *)jsd_getRootViewController;
+
+/// 获取本地数据
+/// @param errorHubType 类型
+- (NSArray *)getLocalErrorDataWithType:(FHErrorHubType)errorHubType;
+
+- (void)saveConfigAndSettings;
 @end
 
 NS_ASSUME_NONNULL_END
