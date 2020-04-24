@@ -1135,7 +1135,7 @@
                          layout.marginTop = YGPointValue(1.5);
                          layout.marginLeft = YGPointValue(4);
                          layout.height = YGPointValue(16);
-                   layout.width = YGPointValue(commonModel.titleTag.text.length > 1 ? 32 : 16);
+                   layout.width = YGPointValue(commonModel.titleTag.text.length > 1 ? 28 : 16);
             }];
         } else {
             self.imageTagLabelBgView.hidden = imageTagHidden;
