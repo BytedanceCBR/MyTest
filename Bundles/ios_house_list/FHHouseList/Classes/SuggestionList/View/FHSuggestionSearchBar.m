@@ -48,11 +48,11 @@
     
     // searchIcon
     _searchIcon = [[UIImageView alloc] init];
-    _searchIcon.image = [UIImage imageNamed:@"icon-search-titlebar"];
+    _searchIcon.image = [UIImage imageNamed:@"sug_search_icon"];
     [_searchAreaPanel addSubview:_searchIcon];
     [_searchIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(10);
-        make.height.width.mas_equalTo(8);
+        make.height.width.mas_equalTo(18);
         make.centerY.mas_equalTo(self.searchInput);
     }];
     

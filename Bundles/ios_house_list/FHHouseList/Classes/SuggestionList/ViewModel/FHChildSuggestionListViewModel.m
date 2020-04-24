@@ -310,20 +310,17 @@
 }
 
 - (void)trackClickEventData:(FHGuessYouWantResponseDataDataModel *)model rank:(NSInteger)rank {
-    NSMutableDictionary *tracerDic = @{
-                                @"event_type":@"house_app2c_v2",
-                                @"word":model.logPb[@"word"] ? model.logPb[@"word"] : @"be_null",
-                                @"word_type":@"hot",
-                                @"rank":@(rank),
-                                @"gid":model.logPb[@"gid"] ? model.logPb[@"gid"] : @"be_null",
-                                };
-    if (model.logPb) {
-        [tracerDic setObject:model.logPb forKey:@"log_pb"];
-    }
-    if (model.recommendReason) {
-        [tracerDic setValue:model.recommendReason forKey:@"recommend_reason"];
-    }
-    [FHUserTracker writeEvent:@"hot_word_click" params:tracerDic];
+    NSMutableDictionary *tracerDic = [NSMutableDictionary new];
+    tracerDic[@"event_type"] = @"house_app2c_v2";
+    tracerDic[@"word"] = model.logPb[@"word"] ? model.logPb[@"word"] : @"be_null";
+    tracerDic[@"word_type"] = @"hot";
+    tracerDic[@"rank"] = @(rank);
+    tracerDic[@"gid"] = model.logPb[@"gid"] ? model.logPb[@"gid"] : @"be_null";
+    tracerDic[@"log_pb"] = model.logPb ? model.logPb : @"be_null";
+    
+    tracerDic[@"recommend_reason"] = model.recommendReason ? [model.recommendReason toDictionary] : @"be_null";
+    NSDictionary *TDict = tracerDic.mutableCopy;
+    [FHUserTracker writeEvent:@"hot_word_click" params:TDict];
 }
 
 - (void)guessYouWantCellClick:(FHGuessYouWantResponseDataDataModel *)model {
@@ -764,20 +761,18 @@
             if (!self.guessYouWantShowTracerDic[recordKey] && self.listController.isCanTrack) {
                 // 埋点
                 self.guessYouWantShowTracerDic[recordKey] = @(YES);
-                NSMutableDictionary *tracerDic = @{
-                                            @"event_type":@"house_app2c_v2",
-                                            @"word":model.logPb[@"word"] ? model.logPb[@"word"] : @"be_null",
-                                            @"word_type":@"hot",
-                                            @"rank":@(rank),
-                                            @"gid":model.logPb[@"gid"] ? model.logPb[@"gid"] : @"be_null",
-                                            };
-                if (model.logPb) {
-                    [tracerDic setObject:model.logPb forKey:@"log_pb"];
-                }
-                if (model.recommendReason) {
-                    [tracerDic setObject:model.recommendReason forKey:@"recommend_reason"];
-                }
-                [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
+                NSMutableDictionary *tracerDic = [NSMutableDictionary new];
+                tracerDic[@"event_type"] = @"house_app2c_v2";
+                tracerDic[@"word"] = model.logPb[@"word"] ? model.logPb[@"word"] : @"be_null";
+                tracerDic[@"word_type"] = @"hot";
+                tracerDic[@"rank"] = @(rank);
+                tracerDic[@"gid"] = model.logPb[@"gid"] ? model.logPb[@"gid"] : @"be_null";
+                tracerDic[@"log_pb"] = model.logPb ? model.logPb : @"be_null";
+                
+                tracerDic[@"recommend_reason"] = model.recommendReason ? [model.recommendReason toDictionary] : @"be_null";
+                NSDictionary *TDict = tracerDic.mutableCopy;
+                
+                [FHUserTracker writeEvent:@"hot_word_show" params:TDict];
             }
         }
     } else if (tableView.tag == 2) {

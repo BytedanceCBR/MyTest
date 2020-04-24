@@ -54,7 +54,7 @@
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(16);
         make.height.mas_equalTo(22);
-        make.top.mas_equalTo(20);
+        make.top.mas_equalTo(10);
     }];
     _deleteBtn = [[FHExtendHotAreaButton alloc] init];
     [_deleteBtn setImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];

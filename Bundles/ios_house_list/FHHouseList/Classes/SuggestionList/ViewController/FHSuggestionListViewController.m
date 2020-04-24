@@ -224,7 +224,7 @@
     _segmentControl.selectionIndicatorWidth = 20.0f;
     _segmentControl.selectionIndicatorHeight = 4.0f;
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
-    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -5, 0);
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     [_segmentControl setBackgroundColor:[UIColor clearColor]];
     self.viewModel.segmentControl = _segmentControl;
