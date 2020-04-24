@@ -16,6 +16,7 @@
 #import "FHFloorPanCorePropertyCell.h"
 #import "FHDetailGrayLineCell.h"
 #import "FHOldDetailDisclaimerCell.h"
+#import "FHFloorPanCorePermitCell.h"
 
 @interface FHFloorCoreInfoViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -23,6 +24,8 @@
 @property (nonatomic , strong) NSMutableArray *currentItems;
 @property (nonatomic , strong) NSString *courtId;
 @property(nonatomic , strong) FHDetailHouseNameModel *houseNameModel;
+
+
 @end
 @implementation FHFloorCoreInfoViewModel
 
@@ -52,6 +55,8 @@
     [self.infoListTable registerClass:[FHFloorPanCorePropertyCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePropertyCell class])];
 
     [self.infoListTable registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerCell class])];
+    
+    [self.infoListTable registerClass:[FHFloorPanCorePermitCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePermitCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -75,6 +80,10 @@
         return [FHOldDetailDisclaimerCell class];
     }
     
+    //预售许可证
+    if ([model isKindOfClass:[FHFloorPanCorePermitCellModel class]]) {
+        return [FHFloorPanCorePermitCell class];
+    }
     return [FHDetailBaseCell class];
 }
 // cell identifier
@@ -160,7 +169,7 @@
     if (model.data.permitList.count > 0) {
         [self.currentItems addObject:grayLine];
         
-        FHFloorPanCorePropertyCellModel *permitModel = [self createPermitInfoModel:model.data.permitList.firstObject];
+        FHFloorPanCorePropertyCellModel *permitModel = [self createPermitInfoModel:model.data.permitList];
         [self.currentItems addObject:permitModel];
     }
     
@@ -326,29 +335,31 @@
     return companyInfoModel;
 }
 
-- (FHFloorPanCorePropertyCellModel *)createPermitInfoModel:(FHDetailNewCoreDetailDataPermitListModel *)model
+- (FHFloorPanCorePermitCellModel *)createPermitInfoModel:(NSArray<FHDetailNewCoreDetailDataPermitListModel> *)items
 {
-    FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
+    FHFloorPanCorePermitCellModel *companyInfoModel = [[FHFloorPanCorePermitCellModel alloc] init];
     
     NSArray *pNameArray = [NSArray arrayWithObjects:@"预售许可证",@"发证信息",@"绑定信息", nil];
     NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
-    for (NSInteger i = 0; i < pNameArray.count; i++) {
-        FHFloorPanCorePropertyCellItemModel *pItemModel = [[FHFloorPanCorePropertyCellItemModel alloc] init];
-        pItemModel.propertyName = pNameArray[i];
-        switch (i) {
-            case 0:
-                pItemModel.propertyValue = [self checkPValueStr:model.permit];
-                break;
-            case 1:
-                pItemModel.propertyValue = [self checkPValueStr:model.permitDate];
-                break;
-            case 2:
-                pItemModel.propertyValue = [self checkPValueStr:model.bindBuilding];
-                break;
-            default:
-                break;
+    for (FHDetailNewCoreDetailDataPermitListModel *model in items) {
+        for (NSInteger i = 0; i < pNameArray.count; i++) {
+            FHFloorPanCorePermitCellItemModel *pItemModel = [[FHFloorPanCorePermitCellItemModel alloc] init];
+            pItemModel.permitName = pNameArray[i];
+            switch (i) {
+                case 0:
+                    pItemModel.permitValue = [self checkPValueStr:model.permit];
+                    break;
+                case 1:
+                    pItemModel.permitValue = [self checkPValueStr:model.permitDate];
+                    break;
+                case 2:
+                    pItemModel.permitValue = [self checkPValueStr:model.bindBuilding];
+                    break;
+                default:
+                    break;
+            }
+            [pItemsArray addObject:pItemModel];
         }
-        [pItemsArray addObject:pItemModel];
     }
     companyInfoModel.list = pItemsArray;
     

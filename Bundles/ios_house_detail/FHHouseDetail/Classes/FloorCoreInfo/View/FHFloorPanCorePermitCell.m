@@ -1,26 +1,23 @@
 //
-//  FHDetailNewHouseNewsCell.m
-//  AFgzipRequestSerializer
+//  FHFloorPanCorePermitCell.m
+//  FHHouseDetail
 //
-//  Created by 谢飞 on 2019/2/15.
+//  Created by xubinbin on 2020/4/23.
 //
 
-#import "FHFloorPanCorePropertyCell.h"
-#import "TTRoute.h"
-#import "UIColor+Theme.h"
+#import "FHFloorPanCorePermitCell.h"
 
-@interface FHFloorPanCorePropertyCell ()
+@interface FHFloorPanCorePermitCell()
 
 @property (nonatomic , strong) UIView *containerView;
 
 @end
 
-@implementation FHFloorPanCorePropertyCell
+@implementation FHFloorPanCorePermitCell
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super initWithStyle:style
-                reuseIdentifier:reuseIdentifier];
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self.contentView addSubview:self.containerView];
         [self initConstraints];
@@ -48,25 +45,21 @@
     }];
 }
 
-- (void)maskButtonClick:(UIButton *)button {
-   
-}
-
 - (void)refreshWithData:(id)data
 {
-    if ([data isKindOfClass:[FHFloorPanCorePropertyCellModel class]]) {
-        FHFloorPanCorePropertyCellModel *model = (FHFloorPanCorePropertyCellModel *)data;
+    if ([data isKindOfClass:[FHFloorPanCorePermitCellModel class]]) {
+        FHFloorPanCorePermitCellModel *model = (FHFloorPanCorePermitCellModel *)data;
         UIView *previouseView = nil;
         for (NSInteger i = 0; i < [model.list count]; i++) {
             UIView *itemContenView = [UIView new];
             itemContenView.backgroundColor = [UIColor clearColor];
-            FHFloorPanCorePropertyCellItemModel *itemModel = model.list[i];
+            FHFloorPanCorePermitCellItemModel *itemModel = model.list[i];
             UILabel *nameLabel = [UILabel new];
             nameLabel.font = [UIFont themeFontRegular:14];
             nameLabel.textColor = RGB(0xae, 0xad, 0xad);;
             nameLabel.textAlignment = NSTextAlignmentLeft;
             nameLabel.numberOfLines = 0;
-            nameLabel.text = itemModel.propertyName;
+            nameLabel.text = itemModel.permitName;
             [nameLabel sizeToFit];
             [itemContenView addSubview:nameLabel];
             
@@ -82,7 +75,7 @@
             valueLabel.textColor = [UIColor themeGray2];
             valueLabel.textAlignment = NSTextAlignmentLeft;
             valueLabel.numberOfLines = 0;
-            valueLabel.text = itemModel.propertyValue;
+            valueLabel.text = itemModel.permitValue;
             [valueLabel sizeToFit];
             [itemContenView addSubview:valueLabel];
             
@@ -98,7 +91,12 @@
             
             [itemContenView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (previouseView) {
-                    make.top.equalTo(previouseView.mas_bottom).offset(18);
+                    if (i % 3 == 0 && i >= 3) {
+                        make.top.equalTo(previouseView.mas_bottom).offset(20);
+                    }
+                    else {
+                        make.top.equalTo(previouseView.mas_bottom).offset(18);
+                    }
                 }else
                 {
                     make.top.equalTo(self.contentView).offset(29);
@@ -109,6 +107,18 @@
                 make.left.right.equalTo(self.contentView);
             }];
             previouseView = itemContenView;
+            if (i % 3 == 2 && i != [model.list count] - 1) {
+                UIView *grayline = [[UIView alloc] init];
+                grayline.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
+                [self.contentView addSubview:grayline];
+                [grayline mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(34);
+                    make.right.mas_equalTo(-34);
+                    make.height.mas_equalTo(0.5);
+                    make.top.equalTo(previouseView.mas_bottom).offset(20);
+                }];
+                previouseView = grayline;
+            }
         }
     }
 }
@@ -124,23 +134,12 @@
     [self initConstraints];
 }
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
+@end
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-    
-    // Configure the view for the selected state
-}
+@implementation FHFloorPanCorePermitCellItemModel
 
 @end
 
-@implementation FHFloorPanCorePropertyCellItemModel
-
-@end
-
-@implementation FHFloorPanCorePropertyCellModel
+@implementation FHFloorPanCorePermitCellModel
 
 @end
