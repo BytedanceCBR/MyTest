@@ -56,12 +56,15 @@
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text];
         NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:11],NSForegroundColorAttributeName:[UIColor themeGray4]};
         [attrText addAttributes:attr range:NSMakeRange(0, attrText.length)];
+        __weak typeof(self)wSelf = self;
         [model.disclaimer.richText enumerateObjectsUsingBlock:^(FHDisclaimerModelDisclaimerRichTextModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSRange range = [self rangeOfArray:obj.highlightRange originalLength:text.length];
             UIColor *color = [UIColor themeOrange1];
             __weak typeof(FHDisclaimerModelDisclaimerRichTextModel *) wObj = obj;
             [attrText yy_setTextHighlightRange:range color:color backgroundColor:nil userInfo:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
                 if (wObj.linkUrl.length > 0) {
+                    [wSelf clickFeedbackLog];
+                    
                     NSURL *url = [NSURL URLWithString:wObj.linkUrl];
                     [[TTRoute sharedRoute] openURLByPushViewController:url];
                 }
@@ -120,6 +123,15 @@
         [self hiddenOwnerLabel];
     }
     [self layoutIfNeeded];
+}
+
+-(void)clickFeedbackLog{
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    [tracerDic removeObjectsForKeys:@[@"card_type"]];
+    [tracerDic removeObjectsForKeys:@[@"rank"]];
+    [tracerDic removeObjectsForKeys:@[@"element_from"]];
+    
+    [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
 }
 
 - (NSRange)rangeOfArray:(NSArray *)range originalLength:(NSInteger)originalLength {

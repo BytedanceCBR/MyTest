@@ -151,8 +151,8 @@
         FHHouseTagsModel *tagModel = [tags firstObject];
         [self.nameLabel sizeToFit];
         CGSize itemSize = [self.nameLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, 28)];
-        UIColor *tagBacColor = [UIColor colorWithHexString:@"#FFEAD3"];
-        UIColor *tagTextColor = [UIColor colorWithHexString:@"#ff9300"];
+        UIColor *tagBacColor = [UIColor colorWithHexString:tagModel.backgroundColor];
+        UIColor *tagTextColor = [UIColor colorWithHexString:tagModel.textColor];
         UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
         CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 31;
         CGFloat itemWidth = itemSize.width;
@@ -167,7 +167,7 @@
             make.top.mas_equalTo(self.mas_top).offset(50);
         }];
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
+            make.left.mas_equalTo(self.nameLabel.mas_right).offset(6);
             make.width.mas_equalTo(40);
             make.centerY.mas_equalTo(self.nameLabel);
             make.height.mas_equalTo(20);
@@ -181,30 +181,17 @@
             make.top.mas_equalTo(self.mas_top).offset(50);
         }];
     }
-    NSString *picing = _model.totalPicing;
-    if (picing.length == 0 || [picing isEqualToString:@"暂无售价"]) {
-        self.totalPirce.text = (picing.length == 0) ? @"暂无报价" : picing;
-        NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.totalPirce.text];
-        self.totalPirce.attributedText = noteStr;
-    }else{
-        self.totalPirce.text = [NSString stringWithFormat:@"约%@/套",picing];
-        NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.totalPirce.text];
-        NSString *nowPicing = self.totalPirce.text;
-        unichar c;
-        NSUInteger firstLoc = 1;
-        NSUInteger secondLoc = 1;
-        
-        for (int i=1; i < nowPicing.length; i++) {      //处理出数字区间
-            c = [nowPicing characterAtIndex:i];
-            if (!isdigit(c)) {
-                secondLoc = i;
-                break;
-            }
-        }
-        NSRange range = NSMakeRange(firstLoc, secondLoc - firstLoc);
+    NSString *picing = _model.Picing;
+    NSString *displayPrice = _model.displayPrice;
+    self.totalPirce.text = displayPrice;
+    NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.totalPirce.text];
+    NSRange range = [displayPrice rangeOfString:picing];
+    
+    if (range.location != NSNotFound) {
         [noteStr addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:20] range:range];
-        self.totalPirce.attributedText = noteStr;
     }
+    self.totalPirce.attributedText = noteStr;
+    
     [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(31);
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(10);

@@ -127,7 +127,7 @@
     _containerView = [[UIView alloc] init];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).mas_offset(30);
+        make.top.mas_equalTo(self.headerView.mas_bottom).mas_offset(28);
         make.left.mas_equalTo(self.shadowImage).mas_offset(15);
         make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
         make.bottom.mas_equalTo(self.shadowImage).offset(-20);
@@ -253,8 +253,8 @@
         self.descLabel.attributedText = textAttrStr;
         if (model.saleStatus) {
             self.statusLabel.hidden = NO;
-            UIColor *tagBacColor = [UIColor colorWithHexString:@"#FFEAD3"];
-            UIColor *tagTextColor = [UIColor colorWithHexString:@"#ff9300"];
+            UIColor *tagBacColor = [UIColor colorWithHexString:model.saleStatus.backgroundColor];
+            UIColor *tagTextColor = [UIColor colorWithHexString:model.saleStatus.textColor];
             self.statusLabel.textAlignment = NSTextAlignmentCenter;
             self.statusLabel.backgroundColor = tagBacColor;
             self.statusLabel.textColor = tagTextColor;
@@ -264,8 +264,8 @@
             [self.descLabel sizeToFit];
             CGSize itemSize = [self.descLabel sizeThatFits:CGSizeMake(ITEM_WIDTH, 20)];
             CGFloat itemWidth = itemSize.width;
-            if (itemWidth > ITEM_WIDTH - 42) {
-                itemWidth = ITEM_WIDTH - 42;
+            if (itemWidth > ITEM_WIDTH - 44) {
+                itemWidth = ITEM_WIDTH - 44;
             }
             
             //宽为W,总长度为ITEM_WIDTH 那么标题的右端点就是 ITEM_WIDTH-W 又因为一定要保证销售状态的出现，需要预留42的空间。
@@ -332,7 +332,7 @@
     }];
     
     [self.statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.descLabel.mas_right).offset(2);
+        make.left.equalTo(self.descLabel.mas_right).offset(4);
         make.centerY.equalTo(self.descLabel);
         make.height.mas_equalTo(20);
         make.width.mas_equalTo(40);

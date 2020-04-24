@@ -29,9 +29,9 @@
 @property(nonatomic, strong) UIImageView *noDataImageView;
 @property(nonatomic, strong) UIImage *placeHolder;
 @property(nonatomic, strong) NSArray *medias;
-@property(nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;
+@property(nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;   //图片户型的标签
 
-@property(nonatomic, strong) FHDeatilHeaderTitleView *titleView;
+@property(nonatomic, strong) FHDeatilHeaderTitleView *titleView;            //头图下面的标题栏
 @property(nonatomic, strong) NSMutableArray *itemIndexArray;
 @property(nonatomic, strong) NSMutableArray *itemArray;
 @property(nonatomic, strong) UICollectionViewCell *lastCell;
@@ -144,7 +144,7 @@
         
         CGFloat aspect = 375.0 / 65;
         CGFloat width = SCREEN_WIDTH;
-        CGFloat height = round(width / aspect + 0.5);
+        CGFloat height = round(width / aspect + 0.5) - 18;
         CGRect frame = CGRectMake(0, 0, width, height);
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.frame = frame;
@@ -186,7 +186,7 @@
     }];
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
-        make.top.equalTo(self.colletionView.mas_bottom).offset(-82);
+        make.top.equalTo(self.colletionView.mas_bottom).offset(-82+18);
     }];
     
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -525,6 +525,8 @@
     }else{
         self.itemView.hidden = YES;
     }
+    
+    
 }
 
 - (void)checkVRLoadingAnimate
