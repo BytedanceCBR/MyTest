@@ -306,7 +306,7 @@ def appPods
     'BDPlatformSDK',
     'BDDeprecatedSDK'
     ]
-    pod 'ByteDanceKit', '2.0.8', :subspecs => [
+    pod 'ByteDanceKit', '2.1.0-rc.8', :subspecs => [
     'Foundation',
     'UIKit'
     ]
@@ -440,6 +440,8 @@ def appPods
     pod 'EAccountApiSDK', '1.2.0-alpha.0'
     pod 'BDUGUnionSDK', '0.1.2'
   
+    pod_binary 'BDUIKeyboardImplHook', '1.0.3'
+
     #************业务SDK**********
 
     pod_binary 'YYImage', '1.0.3'
