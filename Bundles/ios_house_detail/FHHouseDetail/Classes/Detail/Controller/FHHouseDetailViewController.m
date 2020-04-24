@@ -899,7 +899,6 @@
 - (void)dealloc
 {
     if (@available(iOS 10.0 , *)) {
-        [_callObserver setDelegate:nil queue:dispatch_get_main_queue()];
         _callObserver = nil;
     }else {
         _callCenter = nil;
