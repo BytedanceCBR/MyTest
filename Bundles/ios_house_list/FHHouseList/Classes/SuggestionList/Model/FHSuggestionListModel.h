@@ -147,6 +147,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHGuessYouWantResponseDataDataModel : JSONModel
 
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, strong , nullable) FHGuessYouWantResponseDataDataRecommendTypeModel *recommendType ;

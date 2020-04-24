@@ -20,6 +20,8 @@
 @property (nonatomic, strong)   NSMutableArray       *tempViews;
 @property (nonatomic, strong)   NSMutableDictionary *tracerCacheDic;// 埋点
 @property (nonatomic, strong)   UIView *redView;
+@property (nonatomic, strong) NSMutableDictionary *dict;
+@property (nonatomic, strong) NSMutableDictionary *isTractedDict;
 
 @end
 
@@ -29,6 +31,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _dict = [NSMutableDictionary new];
+        _isTractedDict = [NSMutableDictionary new];
         self.backgroundColor = [UIColor whiteColor];
         self.totalCount = 0;
         self.tempViews = [NSMutableArray new];
@@ -91,6 +95,14 @@
 - (void)setSubscribeItems:(NSArray<FHSugSubscribeDataDataItemsModel> *)subscribeItems {
     _subscribeItems = subscribeItems;
      [self reAddViews];
+    if (self.vc.isCanTrack) {
+        [self.dict enumerateKeysAndObjectsUsingBlock:^(NSString  *key, NSDictionary *obj, BOOL * _Nonnull stop) {
+            if (!_isTractedDict[key] && [obj isKindOfClass:[NSDictionary class]]) {
+                _isTractedDict[key] = @1;
+                [FHUserTracker writeEvent:@"subscribe_card_show" params:obj];
+            }
+        }];
+    }
 }
 
 - (void)reAddViews {
@@ -155,6 +167,7 @@
             if (self.tracerCacheDic[subscribe_id]) {
                 return;
             }
+            NSString *key = [NSString stringWithFormat:@"%p", item];
             self.tracerCacheDic[subscribe_id] = @"1";
             NSMutableDictionary *tracerDic = @{@"subscribe_id":subscribe_id}.mutableCopy;
             tracerDic[@"title"] = item.title.length > 0 ? item.title : @"be_null";
@@ -162,7 +175,7 @@
             tracerDic[@"word_type"] = [self wordType];
             tracerDic[@"page_type"] = @"search_detail";
             tracerDic[@"rank"] = @(index);
-            [FHUserTracker writeEvent:@"subscribe_card_show" params:tracerDic];
+            _dict[key] = tracerDic;
         }
     }
 }

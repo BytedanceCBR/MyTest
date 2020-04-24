@@ -135,6 +135,7 @@
 
 - (void)setupSubscribeView {
     self.subscribeView = [[FHSugHasSubscribeView alloc] init];
+    self.subscribeView.vc = self.listController;
     self.subscribeView.houseType = self.houseType;
     __weak typeof(self) wself = self;
     self.subscribeView.clickBlk = ^(FHSugSubscribeDataDataItemsModel * _Nonnull model) {
@@ -873,6 +874,7 @@
             }];
         }
         if (self.subscribeItems.count > 0) {
+            self.subscribeView.subscribeItems = self.subscribeItems;
             [self.subscribeView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(self.subscribeView.hasSubscribeViewHeight);
             }];
