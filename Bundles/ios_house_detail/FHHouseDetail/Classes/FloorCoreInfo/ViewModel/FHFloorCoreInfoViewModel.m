@@ -38,12 +38,21 @@
         _courtId = courtId;
         _currentItems = [NSMutableArray new];
         _houseNameModel = model;
+        [self initTracerDic];
         [self configTableView];
-        
         [self startLoadData];
     
     }
     return self;
+}
+
+- (void)initTracerDic
+{
+    self.detailTracerDic = [NSMutableDictionary new];
+    self.detailTracerDic[@"event_type"] = @"house_app2c_v2";
+    self.detailTracerDic[@"enter_from"] = @"new_list";
+    self.detailTracerDic[@"page_type"] = @"house_info_detail";
+    self.detailTracerDic[@"origin_from"] = @"new_list";
 }
 
 // 注册cell类型
@@ -237,7 +246,7 @@
 {
     FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
     
-    NSArray *pNameArray = [NSArray arrayWithObjects:@"物业类型",@"项目特色",@"建筑类别",@"装修状况",@"建筑类型",@"产权年限", nil];
+    NSArray *pNameArray = [NSArray arrayWithObjects:@"物业类型",@"占地面积",@"建筑面积",@"装修状况",@"建筑类型",@"产权年限", nil];
     
     NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
     for (NSInteger i = 0; i < pNameArray.count; i++) {
@@ -248,10 +257,10 @@
                 pItemModel.propertyValue = [self checkPValueStr:model.data.propertyType];
                 break;
             case 1:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.featureDesc];
+                pItemModel.propertyValue = [self checkPValueStr:model.data.areaSquareMeter];
                 break;
             case 2:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.buildingCategory];
+                pItemModel.propertyValue = [self checkPValueStr:model.data.buildingSquareMeter];
                 break;
             case 3:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.decoration];
@@ -393,6 +402,9 @@
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             cell.backgroundColor = [UIColor themeGray7];
+            if ([cell isKindOfClass:[FHOldDetailDisclaimerCell class]]) {
+                cell.baseViewModel = self;
+            }
             [cell refreshWithData:data];
             return cell;
         }
