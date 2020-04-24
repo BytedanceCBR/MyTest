@@ -108,6 +108,7 @@
 
 - (void)setupHistoryView {
     self.historyView = [[FHHistoryView alloc] init];
+    self.historyView.vc = self.listController;
     __weak typeof(self) wself = self;
     self.historyView.clickBlk = ^(FHSuggestionSearchHistoryResponseDataDataModel * _Nonnull model, NSInteger index) {
         [wself historyItemClick:model andIndex:index];
@@ -860,6 +861,7 @@
 - (void)reloadHistoryTableView {
     if (self.loadRequestTimes >= 3) {
         if (self.historyData.count > 0) {
+            self.historyView.historyItems = self.historyData;
             [self.historyView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(self.historyView.historyViewHeight);
             }];

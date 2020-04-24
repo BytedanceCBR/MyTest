@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHSuggestionListModel.h"
+#import "FHChildSuggestionListViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,6 +28,7 @@ typedef void(^FHHistoryItemClick)(FHSuggestionSearchHistoryResponseDataDataModel
 @property (nonatomic, strong)   NSArray<FHSuggestionSearchHistoryResponseDataDataModel>       *historyItems;
 @property (nonatomic, copy)     dispatch_block_t       delClick;
 @property (nonatomic, copy)     dispatch_block_t       moreClick;
+@property (nonatomic, weak)     FHChildSuggestionListViewController *vc;
 @end
 
 @interface FHHistoryButton : UIButton

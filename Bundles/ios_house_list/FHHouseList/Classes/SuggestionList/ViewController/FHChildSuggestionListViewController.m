@@ -194,7 +194,7 @@
 {
     _isCanTrack = isCanTrack;
     if (isCanTrack) {
-        [self.historyTableView reloadData];
+        [self.viewModel reloadHistoryTableView];
     }
 }
 

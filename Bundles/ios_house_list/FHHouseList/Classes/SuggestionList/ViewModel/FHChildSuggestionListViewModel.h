@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestGuessYouWant:(NSInteger)cityId houseType:(NSInteger)houseType;
 - (void)requestDeleteHistoryByHouseType:(NSString *)houseType;
 - (void)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType;
-
+- (void)reloadHistoryTableView;
 @end
 
 NS_ASSUME_NONNULL_END

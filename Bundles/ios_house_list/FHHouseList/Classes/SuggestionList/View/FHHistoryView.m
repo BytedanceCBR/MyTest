@@ -22,6 +22,8 @@
 @property (nonatomic, strong)   NSMutableArray       *tempViews;
 @property (nonatomic, strong)   FHExtendHotAreaButton *deleteBtn;
 @property (nonatomic, assign)   BOOL isLimited;
+@property (nonatomic, strong) NSMutableDictionary *dict;
+@property (nonatomic, strong) NSMutableDictionary *isTractedDict;
 
 @end
 
@@ -32,6 +34,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         _isLimited = YES;
+        _dict = [NSMutableDictionary new];
+        _isTractedDict = [NSMutableDictionary new];
         self.backgroundColor = [UIColor whiteColor];
         self.historyViewHeight = 89; // 一行是89
         self.tempViews = [NSMutableArray new];
@@ -70,9 +74,16 @@
 }
 
 - (void)setHistoryItems:(NSArray *)historyItems {
-    
     _historyItems = historyItems;
     [self reAddViews];
+    if (self.vc.isCanTrack) {
+        [self.dict enumerateKeysAndObjectsUsingBlock:^(NSString  *key, NSDictionary *obj, BOOL * _Nonnull stop) {
+            if (!_isTractedDict[key] && [obj isKindOfClass:[NSDictionary class]]) {
+                _isTractedDict[key] = @1;
+                [FHUserTracker writeEvent:@"search_history_show" params:obj];
+            }
+        }];
+    }
 }
 
 - (void)moreButtonClick
@@ -161,16 +172,17 @@
     }
 }
 
+
 - (void)historyShow:(FHSuggestionSearchHistoryResponseDataDataModel *)model andRank:(NSInteger)rank
 {
-    
+    NSString *key = [NSString stringWithFormat:@"%p", model];
     NSDictionary *tracerDic = @{
                                 @"word":model.text.length > 0 ? model.text : @"be_null",
                                 @"history_id":model.historyId.length > 0 ? model.historyId : @"be_null",
                                 @"rank":@(rank),
                                 @"show_type":@"list"
                                 };
-    [FHUserTracker writeEvent:@"search_history_show" params:tracerDic];
+    _dict[key] = tracerDic;
 }
 
 - (CGFloat)historyTextLength:(NSString *)text
