@@ -94,7 +94,7 @@
     if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
         _photoCellHeight += 40;
     }
-    CGFloat minus = round([UIScreen mainScreen].bounds.size.width / 375.0f * 18 + 0.5);
+    CGFloat minus = round([UIScreen mainScreen].bounds.size.width / 375.0f * 30 + 0.5);
     
     _photoCellHeight += 30 + rect.size.height -67 + minus;    //新下调了18
 
