@@ -112,12 +112,12 @@
             FHHistoryButton *button = [[FHHistoryButton alloc] init];
             button.label.text = item.text;
             CGSize size = [button.label sizeThatFits:CGSizeMake(201, 17)];
-            if (size.width > 200) {
-                size.width = 200;
+            CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width - 42;
+            if (size.width > screenWidth) {
+                size.width = screenWidth;
             }
             size.width += 12;
             CGFloat limitWidth = _isLimited ? 42 : 0;
-            
             button.tag = currentIndex;
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
             if (size.width + limitWidth > remainWidth) {

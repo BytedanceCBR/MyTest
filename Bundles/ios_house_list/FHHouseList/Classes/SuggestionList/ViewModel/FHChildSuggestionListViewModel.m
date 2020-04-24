@@ -695,11 +695,14 @@
         if (indexPath.row == 0) {
             return 42;
         } else {
-            if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
-                return 76;
-            } else {
+            if (self.guessYouWantData.count > 0) {
+                FHGuessYouWantResponseDataDataModel *model = self.guessYouWantData.firstObject;
+                if (model.recommendReason.content.length > 0) {
+                    return 76;
+                }
                 return 42;
             }
+            return 42;
         }
     } else if (tableView.tag == 2) {
         // 联想词

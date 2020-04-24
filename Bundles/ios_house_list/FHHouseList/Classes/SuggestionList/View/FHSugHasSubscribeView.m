@@ -127,7 +127,7 @@
     [self.subscribeItems enumerateObjectsUsingBlock:^(FHSugSubscribeDataDataItemsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         FHSubscribeView *itemView = [[FHSubscribeView alloc] initWithFrame:CGRectMake(0, topOffset + idx * 40, [[UIScreen mainScreen] bounds].size.width, 40)];
-        itemView.sugLabel.text = obj.text;
+        itemView.sugLabel.text = [NSString stringWithFormat:@"%@/%@", obj.title, obj.text];
         itemView.tag = idx;
         [self addSubview:itemView];
          [itemView addTarget:self action:@selector(subscribeViewClick:) forControlEvents:UIControlEventTouchUpInside];
