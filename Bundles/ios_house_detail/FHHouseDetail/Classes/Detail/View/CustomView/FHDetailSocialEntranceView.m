@@ -247,7 +247,7 @@
 {
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc]init];
-        UIImage *img = ICON_FONT_IMG(13, @"\U0000e673", nil);
+        UIImage *img = ICON_FONT_IMG(24, @"\U0000e673", nil);
         [_closeBtn setImage:img forState:UIControlStateNormal];
         [_closeBtn setImage:img forState:UIControlStateHighlighted];
     }
@@ -306,7 +306,7 @@
     _rightBgView = [[UIView alloc] initWithFrame:CGRectZero];
     _rightBgView.layer.cornerRadius = 4;
     _rightBgView.clipsToBounds = YES;
-    _rightBgView.backgroundColor = [UIColor themeRed1];
+    _rightBgView.backgroundColor = [UIColor themeOrange4];
     [self addSubview:_rightBgView];
     
     _messageLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
