@@ -33,7 +33,8 @@
 #import <FHHouseBase/FHRelevantDurationTracker.h>
 #import "FHHouseListBaseItemCell.h"
 #import "FHHouseSimilarManager.h"
-
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 extern NSString *const INSTANT_DATA_KEY;
 
 static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
@@ -1043,8 +1044,11 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         
         
         if (houseType == FHHouseTypeSecondHandHouse) {
+            
+            NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+            BOOL boolIsOpenSimilar = [fhSettings tt_boolValueForKey:@"f_similar_house_close"];
             self.lastClickOffset = indexPath.row;
-            if (![self.cacheSimilarIdsDict.allKeys containsObject:theModel.idx] && ![self.cacheClickIds containsObject:theModel.idx]) {
+            if (![self.cacheSimilarIdsDict.allKeys containsObject:theModel.idx] && ![self.cacheClickIds containsObject:theModel.idx] && !boolIsOpenSimilar) {
                 NSMutableDictionary *parmasIds = [NSMutableDictionary new];
                 [parmasIds setValue:self.currentSearchId forKey:@"search_id"];
                 [parmasIds setValue:theModel.idx forKey:@"house_id"];
