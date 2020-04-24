@@ -50,9 +50,9 @@
 {
     self.detailTracerDic = [NSMutableDictionary new];
     self.detailTracerDic[@"event_type"] = @"house_app2c_v2";
-    self.detailTracerDic[@"enter_from"] = @"new_list";
+    self.detailTracerDic[@"enter_from"] = self.detailController.tracerDict[@"enter_from"];
     self.detailTracerDic[@"page_type"] = @"house_info_detail";
-    self.detailTracerDic[@"origin_from"] = @"new_list";
+    self.detailTracerDic[@"origin_from"] = self.detailController.tracerDict[@"origin_from"];
 }
 
 // 注册cell类型
