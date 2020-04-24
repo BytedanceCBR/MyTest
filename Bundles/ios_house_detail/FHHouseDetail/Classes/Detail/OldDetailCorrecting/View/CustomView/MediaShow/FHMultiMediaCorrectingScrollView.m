@@ -144,7 +144,8 @@
         
         CGFloat aspect = 375.0 / 65;
         CGFloat width = SCREEN_WIDTH;
-        CGFloat height = round(width / aspect + 0.5) - 18;
+        
+        CGFloat height = round(width / aspect + 0.5);
         CGRect frame = CGRectMake(0, 0, width, height);
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.frame = frame;
@@ -178,17 +179,18 @@
     [self.noDataImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self);
     }];
-    
-    [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self);
-        make.bottom.equalTo(self.colletionView);
-        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
-    }];
+
+
+    CGFloat minus = round([UIScreen mainScreen].bounds.size.width / 375.0f * 18 + 0.5);
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
-        make.top.equalTo(self.colletionView.mas_bottom).offset(-82+18);
+        make.top.equalTo(self.colletionView.mas_bottom).offset(-82+minus);
     }];
-    
+    [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self);
+        make.top.equalTo(self.titleView).offset(25.0);
+        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
+    }];
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);//

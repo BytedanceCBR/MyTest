@@ -130,7 +130,8 @@
     [tracerDic removeObjectsForKeys:@[@"card_type"]];
     [tracerDic removeObjectsForKeys:@[@"rank"]];
     [tracerDic removeObjectsForKeys:@[@"element_from"]];
-    
+    [tracerDic removeObjectForKey:@"origin_from"];
+    [tracerDic removeObjectForKey:@"origin_search_id"];
     [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
 }
 

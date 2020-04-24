@@ -94,7 +94,9 @@
     if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
         _photoCellHeight += 40;
     }
-    _photoCellHeight += 30 + rect.size.height -67+18;    //新下调了18
+    CGFloat minus = round([UIScreen mainScreen].bounds.size.width / 375.0f * 18 + 0.5);
+    
+    _photoCellHeight += 30 + rect.size.height -67 + minus;    //新下调了18
 
     if (titleModel.tags.count>0) {
         //这里分别加上标签高度20，标签间隔20，标题间隔20,再减去重叠部分67,得到当前模块高度
