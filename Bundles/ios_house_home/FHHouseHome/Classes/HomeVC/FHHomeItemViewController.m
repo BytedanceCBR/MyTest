@@ -59,7 +59,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 @property (nonatomic, assign) NSInteger lastOffset;
 @property (nonatomic, assign) NSInteger lastClickOffset;
 @property (nonatomic, strong) NSMutableArray *cacheClickIds;
-@property (nonatomic, strong) NSMutableArray *cacheSimilarIds;
+@property (nonatomic, strong) NSMutableDictionary *cacheSimilarIdsDict;
+@property (nonatomic, strong) NSMutableDictionary *cahceHouseRankidsDict;
+@property (nonatomic, strong) NSMutableDictionary *similarTraceParam;
 
 @end
 
@@ -78,7 +80,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     [super viewDidLoad];
     self.houseDataItemsModel = [NSMutableArray new];
     self.cacheClickIds = [NSMutableArray new];
-    self.cacheSimilarIds = [NSMutableArray new];
+    self.cacheSimilarIdsDict = [NSMutableDictionary new];
+    self.cahceHouseRankidsDict = [NSMutableDictionary new];
     
     self.isRetryedPullDownRefresh = NO;
     self.hasMore = YES;
@@ -241,7 +244,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [self.houseDataItemsModel insertObjects:similarItems atIndexes:indexSet];
             [similarItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if ([obj isKindOfClass:[FHHomeHouseDataItemsModel class]] && ((FHHomeHouseDataItemsModel*)obj).idx) {
-                    [self.cacheSimilarIds addObject:((FHHomeHouseDataItemsModel*)obj).idx];
+//                    [self.cacheSimilarIdsDict addObject:((FHHomeHouseDataItemsModel*)obj).idx];
+                    [self.cacheSimilarIdsDict setValue:@(idx) forKey:((FHHomeHouseDataItemsModel*)obj).idx];
                 }
             }];
             NSIndexSet *sectionSet=[[NSIndexSet alloc] initWithIndex:1];
@@ -257,6 +261,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 [self.tableView endUpdates];
                 
                 [[FHHouseSimilarManager sharedInstance] resetSimilarArray];
+                
+                [FHEnvContext recordEvent:self.similarTraceParam andEventKey:@"house_recallable"];
             }
         }
     }
@@ -502,11 +508,20 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             self.houseDataItemsModel = [NSMutableArray arrayWithArray:model.data.items];
             self.lastOffset = model.data.items.count;
             
-            [self.cacheSimilarIds removeAllObjects];
+            [self.houseDataItemsModel enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [self.cahceHouseRankidsDict setValue:@(idx) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+            }];
+            
+            [self.cacheSimilarIdsDict removeAllObjects];
             [self.cacheClickIds removeAllObjects];
         }else
         {
             if (model.data.items && self.houseDataItemsModel && model.data.items.count != 0) {
+                
+                [model.data.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [self.cahceHouseRankidsDict setValue:@(idx + self.houseDataItemsModel.count - self.cacheSimilarIdsDict.allKeys.count) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+                }];
+                
                 [self.houseDataItemsModel addObjectsFromArray:model.data.items];
                 self.lastOffset += model.data.items.count;
             }
@@ -931,7 +946,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             tracerDict[@"group_id"] = cellModel.idx ? : @"be_null";
             tracerDict[@"impr_id"] = cellModel.imprId ? : @"be_null";
             tracerDict[@"search_id"] = cellModel.searchId ? : @"";
-            tracerDict[@"rank"] = @(indexPath.row);
+            tracerDict[@"rank"] = [self getRankFromHouseId:cellModel.idx];
             tracerDict[@"origin_from"] = [self pageTypeString];
             tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
             tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
@@ -982,7 +997,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         traceParam[@"log_pb"] = theModel.logPb;
         traceParam[@"origin_from"] = [self pageTypeString];
         traceParam[@"card_type"] = @"left_pic";
-        traceParam[@"rank"] = @(indexPath.row);
+        traceParam[@"rank"] = [self getRankFromHouseId:theModel.idx];
         traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
         traceParam[@"element_from"] = @"maintab_list";
         traceParam[@"enter_from"] = @"maintab";
@@ -1029,7 +1044,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         
         if (houseType == FHHouseTypeSecondHandHouse) {
             self.lastClickOffset = indexPath.row;
-            if (![self.cacheSimilarIds containsObject:theModel.idx] && ![self.cacheClickIds containsObject:theModel.idx]) {
+            if (![self.cacheSimilarIdsDict.allKeys containsObject:theModel.idx] && ![self.cacheClickIds containsObject:theModel.idx]) {
                 NSMutableDictionary *parmasIds = [NSMutableDictionary new];
                 [parmasIds setValue:self.currentSearchId forKey:@"search_id"];
                 [parmasIds setValue:theModel.idx forKey:@"house_id"];
@@ -1040,6 +1055,18 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 if (theModel.idx) {
                     [self.cacheClickIds addObject:theModel.idx];
                 }
+                
+                NSMutableDictionary *traceParamsSim = [NSMutableDictionary new];
+                traceParamsSim[@"page_type"] = @"old_detail";
+                traceParamsSim[@"card_type"] = @"left_pic";
+                traceParamsSim[@"enter_from"] = @"maintab";
+                traceParamsSim[@"element_from"] = @"be_null";
+                traceParamsSim[@"rank"] = [self getRankFromHouseId:theModel.idx];
+                traceParamsSim[@"origin_from"] = @"old_list";
+                traceParamsSim[@"origin_search_id"] = self.originSearchId;
+                traceParamsSim[@"log_pb"] = theModel.logPb;
+                traceParamsSim[@"group_id"] = theModel.idx;
+                self.similarTraceParam = traceParamsSim;
             }
         }
     }
@@ -1116,6 +1143,17 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     tracerDict[@"element_from"] = @"maintab_list";
     tracerDict[@"click_position"] = @"house_recommend_more";
     TRACK_EVENT(@"click_house_recommend", tracerDict);
+}
+
+
+- (NSNumber *)getRankFromHouseId:(NSString *)houseid{
+    if ([self.cacheSimilarIdsDict.allKeys containsObject:houseid]) {
+        return self.cacheSimilarIdsDict[houseid];
+    }
+    
+    if ([self.cahceHouseRankidsDict.allKeys containsObject:houseid]) {
+        return self.cahceHouseRankidsDict[houseid];
+    }
 }
 
 @end
