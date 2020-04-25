@@ -256,7 +256,6 @@
     WeakSelf;
     self.segmentControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
-        self.viewModel.currentTabIndex = index;
         self.houseType = [self.houseTypeArray[index] integerValue];
     };
 }
@@ -283,9 +282,8 @@
     [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:houseType]];
     _segmentControl.selectedSegmentIndex = [self getSegmentControlIndex];
     self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.viewModel updateSubVCTrackStatus];
-    });
+    [self.collectionView layoutIfNeeded];
+    [self.viewModel updateSubVCTrackStatus];
 }
 
 -(NSInteger)getSegmentControlIndex

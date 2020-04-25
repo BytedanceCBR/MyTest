@@ -91,7 +91,6 @@
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    //子vc segtableview去重
     if ([cell isKindOfClass: [FHSuggestionCollectionViewCell class]]) {
         NSInteger row = indexPath.item;
         NSString *rowStr = [NSString stringWithFormat:@"%ld", row];
