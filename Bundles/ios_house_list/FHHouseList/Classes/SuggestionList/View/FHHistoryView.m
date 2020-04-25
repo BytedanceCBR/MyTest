@@ -117,6 +117,9 @@
                 size.width = screenWidth;
             }
             size.width += 12;
+            if (_isLimited && remainWidth < size.width && size.width + 42 > [UIScreen mainScreen].bounds.size.width - 30 && currentIndex < self.historyItems.count - 1) {
+                size.width -= 42;
+            }
             CGFloat limitWidth = _isLimited ? 42 : 0;
             button.tag = currentIndex;
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
