@@ -99,17 +99,17 @@
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
     if([FHEnvContext isNewDiscovery]){
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCommunityHaveNewContents) name:kFHUGCCommunityTabHasNewNotification object:nil];
     }else{
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kTTMessageNotificationTipsChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCFollowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     }
     //tabbar双击的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onUnreadMessageChange) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSegmentView) name:kUGCCategoryGotFinishedNotification object:nil];
     
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
@@ -255,11 +255,21 @@
     if(self.isUgcOpen){
         //去掉邻里tab的红点
         [FHEnvContext hideFindTabRedDots];
-        //去掉关注红点的同时刷新tab
-        if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].ugcFocusHasNew){
-            self.hasFocusTips = NO;
-            [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
-            [self.viewModel refreshCell:YES];
+        if([FHEnvContext isNewDiscovery]){
+            NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+            //去掉圈子红点的同时刷新tab
+            if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].ugcCommunityHasNew){
+                self.hasFocusTips = NO;
+                [FHUGCConfig sharedInstance].ugcCommunityHasNew = NO;
+                [self.viewModel refreshCell:YES];
+            }
+        }else{
+            //去掉关注红点的同时刷新tab
+            if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].ugcFocusHasNew){
+                self.hasFocusTips = NO;
+                [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+                [self.viewModel refreshCell:YES];
+            }
         }
     }else{
         if (!self.hasShowDots) {
@@ -511,8 +521,15 @@
 }
 
 - (void)changeTab {
-    if (self.navigationController.viewControllers.count <= 1) {
-        [self.viewModel changeTab:1];
+    if([FHEnvContext isNewDiscovery]){
+        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+        if (self.navigationController.viewControllers.count <= 1) {
+            [self.viewModel changeTab:index];
+        }
+    }else{
+        if (self.navigationController.viewControllers.count <= 1) {
+            [self.viewModel changeTab:1];
+        }
     }
 }
 
