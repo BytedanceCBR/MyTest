@@ -116,6 +116,9 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, strong , nullable) id originData;
 //tableview
 @property (nonatomic, weak) UITableView *tableView;
+//cell
+@property (nonatomic, weak) UITableViewCell *cell;
+
 //feedVC
 @property (nonatomic, weak) FHCommunityFeedListController *feedVC;
 //感兴趣的小区

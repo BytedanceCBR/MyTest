@@ -492,6 +492,7 @@
         }
         
         cell.delegate = self;
+        cellModel.cell = cell;
         cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
         
         if(indexPath.row < self.dataList.count){

@@ -1,25 +1,23 @@
 //
-//  FHLynxCell.m
+//  FHUGCLynxBannerCell.m
 //  AKCommentPlugin
 //
-//  Created by 谢飞 on 2020/4/21.
+//  Created by 谢飞 on 2020/4/24.
 //
 
-#import "FHLynxCell.h"
-
+#import "FHUGCLynxBannerCell.h"
 #import <Lynx/LynxView.h>
+
 #import <mach/mach_time.h>
 #import "FHLynxCoreBridge.h"
 #import "FHLynxView.h"
 #import "FHLynxManager.h"
-#import "SDWebImageManager.h"
 
-@interface FHLynxCell()<LynxViewClient>
+@interface FHUGCLynxBannerCell()<LynxViewLifecycle,LynxViewClient>
 
 @end
 
-@implementation FHLynxCell
-
+@implementation FHUGCLynxBannerCell
 + (Class)cellViewClass
 {
     return [self class];
@@ -46,6 +44,7 @@
           _lynxView.layoutHeightMode = LynxViewSizeModeUndefined;
           _lynxView.preferredLayoutWidth = screenFrame.size.width;
           _lynxView.client = self;
+            [_lynxView addLifecycleClient:self];
           _lynxView.preferredMaxLayoutHeight = screenFrame.size.height;
           [_lynxView triggerLayout];
           self.contentView.backgroundColor = [UIColor whiteColor];
@@ -56,54 +55,50 @@
 }
 
 - (void)refreshWithData:(id)data {
+    if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
+        return;
+    }
+    self.currentData = data;
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
+
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
+        
+//    NSData *dataTemp = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://192.168.1.2:30334/operation/template.js?1587745910470"]];
+        
+    //  [self.lynxView loadTemplateFromURL:@"http://10.95.249.250:30334/card1/template.js?1587635520991"];
+    [self.lynxView loadTemplate:templateData withURL:@"local"];
+
+    NSMutableDictionary *dataJson = [NSMutableDictionary new];
+    FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
+    if (imageModel.url) {
+        [dataJson setValue:imageModel.url forKey:@"img_url"];
+    }
     
-//    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"test_ios" templateKey:[FHLynxManager defaultJSFileName] version:0];
-//
-//    // sub implements.........
-////    NSString *instr = [NSString stringWithFormat:@"%ld", 0];
-////    NSString *prifix = @"recycler";
-////    NSString *path = [prifix stringByAppendingString:instr];
-////    NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@"js"];
-////    NSData *templateData = [NSData dataWithContentsOfFile:templatePath];
-////    [self.lynxView loadTemplate:templateData withURL:@"local"];
-//    NSData *dataTemp = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://192.168.1.2:30334/operation/template.js?1587737161908"]];
-//
-////    [self.lynxView loadTemplateFromURL:@"http://10.95.249.250:30334/card1/template.js?1587635520991"];
-//    [self.lynxView loadTemplate:dataTemp withURL:@"local"];
-//     self.lynxView.client = self;
-//
-//
-//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{@"crowd":@"21223万",@"content": @"权健真相123123123：调查组进驻调查！线上销售已全面遭到“封禁...调查组进驻调查！线上销售已全面遭到“封禁...调查组进驻调查！线上销售已全面遭到“封禁...调查组进驻调查！线上销售已全面遭到“封禁..."} options:0 error:0];
-//    NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//    LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
-//    [_lynxView updateDataWithTemplateData:dataItem];
+    [dataJson setValue:cellModel.openUrl forKey:@"jump_url"];
+    CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
+    [dataJson setValue:@(imageWidth * 58.0/335.0) forKey:@"img_height"];
+    [dataJson setValue:@(imageWidth) forKey:@"img_width"];
     
-//      NSData *dataTemp = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://172.20.10.5:30334/operation/template.js?1587740635541"]];
-//        
-//    //    [self.lynxView loadTemplateFromURL:@"http://10.95.249.250:30334/card1/template.js?1587635520991"];
-//        [self.lynxView loadTemplate:dataTemp withURL:@"local"];
-//         self.lynxView.client = self;
-//        
-//                
-//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{@"img_url":@"http://p9.pstatp.com//origin//321b70007ed31a86a98cb",@"img_height":@(58),@"img_width":@(400),@"jump_url":@"xxx"} options:0 error:0];
-//        NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//        LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
-//        [self.lynxView updateDataWithTemplateData:dataItem];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
+    NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
+    [self.lynxView updateDataWithTemplateData:dataItem];
+    
 }
 
 #pragma mark - reload Lynx
 - (void)reloadWithBaseParams:(FHLynxViewBaseParams *)params data:(NSData *)data
 {
-    _params = params;
-    [self.lynxView setHidden:NO];
-    if (data) {
-        [self loadLynxBaseParams:params];
-    }
+//    _params = params;
+//    [self.lynxView setHidden:NO];
+//    if (data) {
+//        [self loadLynxBaseParams:params];
+//    }
 }
 
 - (void)reload
 {
-    [self reloadWithBaseParams:self.params data:self.currentData];
+//    [self reloadWithBaseParams:self.params data:self.currentData];
 }
 
 #pragma mark - load methods
@@ -158,18 +153,6 @@
     }
 
     self.cacheSize = view.frame.size;
-    UITableView *tableView = self.tableView;
-    if ([tableView isKindOfClass:[UITableView class]]) {
-        NSIndexPath *indexPath = [tableView indexPathForCell:self];
-        if (indexPath) {
-            [CATransaction begin];
-            [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-
-            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-
-            [CATransaction commit];
-        }
-    }
 }
 
 - (NSURL*)shouldRedirectImageUrl:(NSURL*)url {
@@ -192,7 +175,26 @@
 
 + (CGFloat)heightForData:(id)data {
     //默认返回cell的默认值44;
-    return 44;
+    
+    CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
+    CGFloat imageHeight = imageWidth * 58.0/335.0;
+   __block CGFloat height = imageHeight + 20 + 25;
+    
+    if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
+        FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
+        if ([model.cell isKindOfClass:[FHUGCLynxBannerCell class]]) {
+            height =  [((FHUGCLynxBannerCell *)model.cell).lynxView intrinsicContentSize].height;
+        }
+     
+    }
+    return height;
 }
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
 
 @end

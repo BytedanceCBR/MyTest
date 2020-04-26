@@ -23,6 +23,8 @@
 #import "FHUGCHotCommunityCell.h"
 #import "FHNeighbourhoodQuestionCell.h"
 #import "FHNeighbourhoodCommentCell.h"
+#import "FHUGCLynxBannerCell.h"
+#import "FHLynxManager.h"
 
 @interface FHUGCCellManager ()
 
@@ -49,6 +51,7 @@
                                 @"FHArticleSingleImageCell",
                                 @"FHArticleMultiImageCell",
                                 @"FHUGCRecommendCell",
+                                @"FHUGCLynxBannerCell",
                                 @"FHUGCBannerCell",
                                 @"FHUGCHotTopicCell",
                                 @"FHUGCVoteCell",
@@ -94,7 +97,7 @@
             return [FHUGCRecommendCell class];
 
         case FHUGCFeedListCellSubTypeUGCBanner:
-            return [FHUGCBannerCell class];
+            return [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName]] ? [FHUGCLynxBannerCell class] : [FHUGCBannerCell class];
             
         case FHUGCFeedListCellSubTypeUGCHotTopic:
             return [FHUGCHotTopicCell class];

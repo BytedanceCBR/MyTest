@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 // cell消失
 - (void)fh_didEndDisplayingCell;
 
++ (CGFloat)heightForData:(id)data;
+
 
 @end
 

@@ -72,7 +72,31 @@
     };
    return data;
 }
-                     
+     
+
+- (BOOL)checkChannelTemplateIsAvalable:(NSString *)channel templateKey:(NSString *)templateKey{
+    NSString *cacheKey = [self cacheKeyForChannel:channel templateKey:templateKey version:0];
+    __block NSData *data = [self.templateCache objectForKey:cacheKey];
+    
+    if (!data) {
+        NSNumber *costTime = @(0);
+        CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
+        
+        //没有的话同步读，用磁盘io的串行队列
+        dispatch_sync(self.lynx_io_queue, ^{
+            data = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
+            if (data) {
+                [self cacheData:data andChannel:channel];
+            }
+        });
+    };
+    
+    if (data) {
+        return YES;
+    }else{
+        return NO;
+    }
+}
 
 
 - (NSString *)cacheKeyForChannel:(NSString *)channel templateKey:(NSString *)templateKey version:(NSUInteger)version {
