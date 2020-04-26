@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   FHEnterSuggestionType       fromPageType;
 @property (nonatomic, copy)     NSString       *pageTypeStr;
 @property (nonatomic, copy)     NSMutableDictionary *associatedTrackDict;
+@property (nonatomic, assign)   BOOL isAssociatedCanTrack;
 
 - (NSString *)pageTypeString;
 - (NSString *)categoryNameByHouseType;
@@ -39,7 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestDeleteHistoryByHouseType:(NSString *)houseType;
 - (void)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType;
 - (void)reloadHistoryTableView;
-- (void)associatedTrack;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -462,14 +462,8 @@
                                 @"element_type":@"search",
                                 @"impr_id":impr_id
                                 };
-    self.associatedTrackDict = tracerDic;
-}
-
-- (void)associatedTrack
-{
-    if (self.associatedTrackDict != nil && self.associatedCount > 0) {
+    if (_isAssociatedCanTrack) {
         [FHUserTracker writeEvent:@"associate_word_show" params:self.associatedTrackDict];
-        self.associatedTrackDict = nil;
     }
 }
 

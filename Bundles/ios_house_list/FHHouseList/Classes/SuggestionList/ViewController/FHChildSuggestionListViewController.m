@@ -283,10 +283,11 @@
     _suggestTableView.hidden = !hasText;
     _historyTableView.hidden = hasText;
     if (hasText) {
-        [self requestSuggestion:text];
+        self.viewModel.isAssociatedCanTrack = NO;
         if (![text isEqualToString:_textFieldText] && isCanTrack) {
-            [self.viewModel associatedTrack];
+            self.viewModel.isAssociatedCanTrack = YES;
         }
+        [self requestSuggestion:text];
     } else {
         // 清空sug列表数据
         _isShowHistory = YES;
