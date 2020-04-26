@@ -238,6 +238,7 @@
         make.left.mas_equalTo(16);
         make.centerY.mas_equalTo(0);
         make.height.mas_equalTo(20);
+        make.width.mas_equalTo(UIScreen.mainScreen.bounds.size.width - 32);
     }];
 }
 
