@@ -104,6 +104,7 @@
         make.left.mas_equalTo(_recommendTypeLabel.mas_right).offset(15);
         make.top.mas_equalTo(15);
         make.height.mas_equalTo(22);
+        make.right.mas_equalTo(self.displayPriceLabel.mas_left).offset(-10);
     }];
     
     self.recommendResonLabel = [[UILabel alloc] init];
