@@ -110,7 +110,7 @@
     self.panBeginAction = ^{
         [weakSelf.naviBar.searchInput resignFirstResponder];
     };
-    [self.viewModel textFieldTextChange:self.naviBar.searchInput.text];
+    //[self.viewModel textFieldTextChange:self.naviBar.searchInput.text];
     self.houseType = self.viewModel.houseType;
 }
 
@@ -284,6 +284,7 @@
     self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
     [self.collectionView layoutIfNeeded];
     [self.viewModel updateSubVCTrackStatus];
+    [self.viewModel textFieldTextChange:self.naviBar.searchInput.text];
 }
 
 -(NSInteger)getSegmentControlIndex

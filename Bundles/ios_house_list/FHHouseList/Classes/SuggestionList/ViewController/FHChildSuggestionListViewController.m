@@ -277,13 +277,16 @@
 }
 
 
-- (void) textFiledTextChange:(NSString *)text andIsCanTrack:(BOOL)isCanTrack
+- (void)textFiledTextChange:(NSString *)text andIsCanTrack:(BOOL)isCanTrack
 {
     BOOL hasText = text.length > 0;
     _suggestTableView.hidden = !hasText;
     _historyTableView.hidden = hasText;
     if (hasText) {
         [self requestSuggestion:text];
+        if (![text isEqualToString:_textFieldText] && isCanTrack) {
+            [self.viewModel associatedTrack];
+        }
     } else {
         // 清空sug列表数据
         _isShowHistory = YES;
@@ -292,7 +295,9 @@
         }
         [self.viewModel clearSugTableView];
     }
-    _textFieldText = text;
+    if (isCanTrack) {
+        _textFieldText = text;
+    }
 }
 
 // 输入框执行搜索

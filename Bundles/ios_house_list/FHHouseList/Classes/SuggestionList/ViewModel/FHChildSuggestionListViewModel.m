@@ -319,8 +319,7 @@
     tracerDic[@"log_pb"] = model.logPb ? model.logPb : @"be_null";
     
     tracerDic[@"recommend_reason"] = model.recommendReason ? [model.recommendReason toDictionary] : @"be_null";
-    NSDictionary *TDict = tracerDic.mutableCopy;
-    [FHUserTracker writeEvent:@"hot_word_click" params:TDict];
+    [FHUserTracker writeEvent:@"hot_word_click" params:tracerDic];
 }
 
 - (void)guessYouWantCellClick:(FHGuessYouWantResponseDataDataModel *)model {
@@ -430,6 +429,10 @@
 // 联想词埋点
 - (void)associateWordShow {
     NSMutableArray *wordList = [NSMutableArray new];
+    if (self.sugListData.count == 0) {
+        self.associatedTrackDict = nil;
+        return;
+    }
     for (NSInteger index = 0; index < self.sugListData.count; index ++) {
         FHSuggestionResponseDataModel *item = self.sugListData[index];
         NSDictionary *dic = @{
@@ -459,7 +462,15 @@
                                 @"element_type":@"search",
                                 @"impr_id":impr_id
                                 };
-    [FHUserTracker writeEvent:@"associate_word_show" params:tracerDic];
+    self.associatedTrackDict = tracerDic;
+}
+
+- (void)associatedTrack
+{
+    if (self.associatedTrackDict != nil && self.associatedCount > 0) {
+        [FHUserTracker writeEvent:@"associate_word_show" params:self.associatedTrackDict];
+        self.associatedTrackDict = nil;
+    }
 }
 
 - (NSString *)createQueryCondition:(NSDictionary *)conditionDic {
@@ -773,9 +784,8 @@
                 tracerDic[@"log_pb"] = model.logPb ? model.logPb : @"be_null";
                 
                 tracerDic[@"recommend_reason"] = model.recommendReason ? [model.recommendReason toDictionary] : @"be_null";
-                NSDictionary *TDict = tracerDic.mutableCopy;
                 
-                [FHUserTracker writeEvent:@"hot_word_show" params:TDict];
+                [FHUserTracker writeEvent:@"hot_word_show" params:tracerDic];
             }
         }
     } else if (tableView.tag == 2) {
@@ -1002,7 +1012,7 @@
             // 埋点 associate_word_show
             [wself associateWordShow];
         } else {
-            
+        
         }
     }];
 }
