@@ -87,16 +87,20 @@
     FHDetailHouseTitleModel *titleModel =  ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel;
     _photoCellHeight = [FHDetailMediaHeaderCorrectingCell cellHeight];
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:24]};
-    CGRect rect = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH-70, CGFLOAT_MAX)
+    CGRect rect = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH-66, CGFLOAT_MAX)
                                               options:NSStringDrawingUsesLineFragmentOrigin
                                            attributes:attributes
                                               context:nil];
     if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
         _photoCellHeight += 40;
     }
-    CGFloat minus = round([UIScreen mainScreen].bounds.size.width / 375.0f * 30 + 0.5);
     
-    _photoCellHeight += 30 + rect.size.height -67 + minus;    //新下调了18
+    CGFloat rectHeight = rect.size.height;
+    if (rectHeight > [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood)? 1: 2)){ //如果超过两行，只显示两行
+        rectHeight = [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood)? 1: 2);
+    }
+    
+    _photoCellHeight += 30 + rectHeight - 37 +13.3;    //新下调了18 这里的13.3是补了高度。。。。
 
     if (titleModel.tags.count>0) {
         //这里分别加上标签高度20，标签间隔20，标题间隔20,再减去重叠部分67,得到当前模块高度
