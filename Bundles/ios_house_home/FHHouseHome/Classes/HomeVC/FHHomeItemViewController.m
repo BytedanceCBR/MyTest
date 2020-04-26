@@ -1056,7 +1056,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
                 [[FHHouseSimilarManager sharedInstance] requestForSimilarHouse:parmasIds];
                 
-                if (theModel.idx) {
+                if (theModel.idx && [FHEnvContext isNetworkConnected]) {
                     [self.cacheClickIds addObject:theModel.idx];
                 }
                 
