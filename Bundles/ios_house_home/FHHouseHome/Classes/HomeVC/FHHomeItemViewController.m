@@ -246,7 +246,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [similarItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if ([obj isKindOfClass:[FHHomeHouseDataItemsModel class]] && ((FHHomeHouseDataItemsModel*)obj).idx) {
 //                    [self.cacheSimilarIdsDict addObject:((FHHomeHouseDataItemsModel*)obj).idx];
-                    [self.cacheSimilarIdsDict setValue:@(idx + 1) forKey:((FHHomeHouseDataItemsModel*)obj).idx];
+                    [self.cacheSimilarIdsDict setValue:@(idx) forKey:((FHHomeHouseDataItemsModel*)obj).idx];
                 }
             }];
             NSIndexSet *sectionSet=[[NSIndexSet alloc] initWithIndex:1];
