@@ -308,6 +308,14 @@ typedef enum : NSInteger {
     FHDetailHouseImageTypeBedroom           = 4, // 卧室
     FHDetailHouseImageTypeKitchen           = 5, // 厨房
     FHDetailHouseImageTypeBathroom          = 6, // 卫生间
+    
+    FHDetailHouseImageTypeEffect            = 1001, // 效果图
+    FHDetailHouseImageTypePrototyperoom     = 1002, // 样板间
+    FHDetailHouseImageTypeLocation          = 1003, // 区位
+    FHDetailHouseImageTypeSandbox           = 1004, // 沙盘
+    FHDetailHouseImageTypePeripheral        = 1005, // 周边配套
+    FHDetailHouseImageTypeRealistic         = 1006, // 实景图
+    FHDetailHouseImageTypeBuildingLicenses  = 1007, //楼盘证照
 } FHDetailHouseImageType;
 
 @interface FHDetailOldDataHouseImageDictListModel : JSONModel

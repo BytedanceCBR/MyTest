@@ -437,6 +437,7 @@
                         [houseImages addObject:groupModel.images[j]];
                     }
                 }
+                houseImageDictList.houseImageTypeName = topImage.name;
                 houseImageDictList.houseImageList = houseImages;
                 houseImageDictList.houseImageType = topImage.type;
                 [houseImageList addObject:houseImageDictList];
