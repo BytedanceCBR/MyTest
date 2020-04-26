@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString *)queryText placeholder:(NSString *)placeholder infoDict:(NSDictionary *)infos;
 - (void)doTextFieldShouldReturn:(NSString *)text;
-- (void)textFiledTextChange:(NSString *)text;
+- (void)textFiledTextChange:(NSString *)text andIsCanTrack:(BOOL)isCanTrack;
 @end
 
 NS_ASSUME_NONNULL_END

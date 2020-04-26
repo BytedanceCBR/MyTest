@@ -277,7 +277,7 @@
 }
 
 
-- (void) textFiledTextChange:(NSString *)text
+- (void) textFiledTextChange:(NSString *)text andIsCanTrack:(BOOL)isCanTrack
 {
     BOOL hasText = text.length > 0;
     _suggestTableView.hidden = !hasText;
@@ -287,14 +287,13 @@
     } else {
         // 清空sug列表数据
         _isShowHistory = YES;
-        if (![_textFieldText isEqualToString:text]) {
-            self.isCanTrack = YES;
+        if (isCanTrack) {
+            self.isCanTrack = isCanTrack;
         }
         [self.viewModel clearSugTableView];
     }
     _textFieldText = text;
 }
-
 
 // 输入框执行搜索
 - (void)doTextFieldShouldReturn:(NSString *)text {

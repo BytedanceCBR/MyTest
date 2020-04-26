@@ -54,7 +54,7 @@
 {
     NSString *rowStr = [NSString stringWithFormat:@"%ld", _currentTabIndex];
     FHSuggestionCollectionViewCell *cell = _cellDict[rowStr];
-    [cell.vc textFiledTextChange:text];
+    [cell.vc textFiledTextChange:text andIsCanTrack:YES];
 }
 
 - (void)initCollectionView:(FHBaseCollectionView *)collectionView
@@ -99,7 +99,7 @@
             [self initCellWithIndex:row];
         }
         FHSuggestionCollectionViewCell *newCell = (FHSuggestionCollectionViewCell *)cell;
-        [newCell.vc textFiledTextChange:self.listController.naviBar.searchInput.text];
+        [newCell.vc textFiledTextChange:self.listController.naviBar.searchInput.text andIsCanTrack:NO];
     }
 }
 
