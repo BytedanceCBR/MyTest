@@ -43,7 +43,6 @@
             make.edges.mas_equalTo(self.contentView);
         }];
     }
-    _vc.houseType = houseType;
 }
 
 - (void)cellDisappear

@@ -165,6 +165,7 @@
             [self.listController addChildViewController:cell.vc];
             cell.vc.fatherVC = self.listController;
         }
+        cell.vc.houseType = [self.listController.houseTypeArray[index] integerValue];
     }
 }
 

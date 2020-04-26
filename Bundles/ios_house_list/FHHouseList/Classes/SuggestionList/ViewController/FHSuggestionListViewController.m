@@ -111,6 +111,7 @@
         [weakSelf.naviBar.searchInput resignFirstResponder];
     };
     [self.viewModel textFieldTextChange:self.naviBar.searchInput.text];
+    self.houseType = self.viewModel.houseType;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -186,7 +187,6 @@
         make.left.right.top.bottom.mas_equalTo(0);
     }];
     [self.viewModel initCollectionView:_collectionView];
-    self.houseType = self.viewModel.houseType;
 }
 
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {

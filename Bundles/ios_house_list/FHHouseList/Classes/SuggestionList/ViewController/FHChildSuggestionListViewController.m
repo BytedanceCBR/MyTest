@@ -33,6 +33,9 @@
 @property (nonatomic, assign)   BOOL       canSearchWithRollData; // 如果为YES，支持placeholder搜索
 @property (nonatomic, assign)   BOOL       hasDismissedVC;
 
+@property (nonatomic, assign)   BOOL isShowHistory;
+@property (nonatomic, copy)     NSString *textFieldText;
+
 @end
 
 @implementation FHChildSuggestionListViewController
@@ -41,6 +44,8 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         _isCanTrack = NO;
+        _isShowHistory = NO;
+        _textFieldText = @"";
         // 1、from_home(native参数)
         if (paramObj.allParams[@"from_home"]) {
             self.fromSource = [paramObj.allParams[@"from_home"] integerValue];
@@ -193,8 +198,11 @@
 
 - (void)setIsCanTrack:(BOOL)isCanTrack
 {
+    if (!_isShowHistory) {
+        return;
+    }
     _isCanTrack = isCanTrack;
-    if (isCanTrack) {
+    if (isCanTrack && self.fatherVC.naviBar.searchInput.text.length == 0) {
         [self.viewModel reloadHistoryTableView];
     }
 }
@@ -278,8 +286,13 @@
         [self requestSuggestion:text];
     } else {
         // 清空sug列表数据
+        _isShowHistory = YES;
+        if (![_textFieldText isEqualToString:text]) {
+            self.isCanTrack = YES;
+        }
         [self.viewModel clearSugTableView];
     }
+    _textFieldText = text;
 }
 
 
