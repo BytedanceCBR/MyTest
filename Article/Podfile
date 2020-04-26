@@ -540,9 +540,9 @@ def appPods
     
     pod_binary 'TTAppStoreStarManager', '1.0.12'
 
-    pod 'Quaterback', '0.0.2-rc.8', :subspecs => [
+    pod_binary 'Quaterback', '1.0.2', :subspecs => [
     'Main/Core',
-    'Main/Default'
+    'Main/News'
     ]
 
 end
@@ -662,7 +662,7 @@ post_install do |installer|
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
           '${PODS_ROOT}/UMengAnalytics/umsdk_IOS_analyics_idfa_v4.1.4',
-          '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/HotSoon/Debug',
+          '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/News/Release',
           ]
         end
 
