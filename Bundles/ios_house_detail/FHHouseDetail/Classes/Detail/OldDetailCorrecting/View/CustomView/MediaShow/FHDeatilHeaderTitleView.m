@@ -182,15 +182,18 @@
         }];
     }
     NSString *picing = _model.Picing;
-    NSString *displayPrice = _model.displayPrice;
-    self.totalPirce.text = displayPrice;
-    NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.totalPirce.text];
-    NSRange range = [displayPrice rangeOfString:picing];
-    
-    if (range.location != NSNotFound) {
-        [noteStr addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:20] range:range];
+    self.totalPirce.text = picing;
+    if (_model.displayPrice.length > 0) {
+        NSString *displayPrice = _model.displayPrice;
+        self.totalPirce.text = displayPrice;
+        NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.totalPirce.text];
+        NSRange range = [displayPrice rangeOfString:picing];
+        
+        if (range.location != NSNotFound) {
+            [noteStr addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:20] range:range];
+        }
+        self.totalPirce.attributedText = noteStr;
     }
-    self.totalPirce.attributedText = noteStr;
     
     [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(31);
