@@ -100,7 +100,7 @@
         rectHeight = [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood)? 1: 2);
     }
     
-    _photoCellHeight += 30 + rectHeight - 37 +13.3;    //新下调了18 这里的13.3是补了高度。。。。
+    _photoCellHeight += 30 + rectHeight - 21;    //
 
     if (titleModel.tags.count>0) {
         //这里分别加上标签高度20，标签间隔20，标题间隔20,再减去重叠部分67,得到当前模块高度
