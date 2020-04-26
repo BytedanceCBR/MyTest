@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHVerifyCodeTextFieldDeleteDelegate <NSObject>
 
+/// 键盘上的删除按钮触发方法
 - (void)didClickBackWard;
 
 @end

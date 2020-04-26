@@ -13,8 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDouYinLoginView : UIView
 
-@property(nonatomic , weak) id<FHLoginViewDelegate> delegate;
+@property(nonatomic, weak) id<FHLoginViewDelegate> delegate;
 
+/// 更新UI数据
+/// @param protocol 协议
 - (void)updateProtocol:(NSAttributedString *)protocol;
 
 @end
