@@ -90,30 +90,30 @@
     CGRect rect = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH-66, CGFLOAT_MAX)
                                               options:NSStringDrawingUsesLineFragmentOrigin
                                            attributes:attributes
-                                              context:nil];
-    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
+                                              context:nil];                     //算出标题的高度
+    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) { //如果头图下面有横幅那么高度增加40
         _photoCellHeight += 40;
     }
     
     CGFloat rectHeight = rect.size.height;
-    if (rectHeight > [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood)? 1: 2)){ //如果超过两行，只显示两行
-        rectHeight = [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood)? 1: 2);
+    if (rectHeight > [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood || titleModel.isFloorPan)? 1: 2)){          //如果超过两行，只显示两行，小区只显示一行，需要特判
+        rectHeight = [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood || titleModel.isFloorPan)? 1: 2);
     }
     
-    _photoCellHeight += 30 + rectHeight - 21;    //
-
+    _photoCellHeight += 30 + rectHeight - 21;//30是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
+    
     if (titleModel.tags.count>0) {
-        //这里分别加上标签高度20，标签间隔20，标题间隔20,再减去重叠部分67,得到当前模块高度
-        if (!titleModel.isFloorPan) {
+        //这里分别加上标签高度20，标签间隔20
+        if (!titleModel.isFloorPan) { //因为户型详情页的标签和标题在同一行所以这里特判户型详情页不加上这部分高度
             _photoCellHeight += 20 + 20;
         }
     }
-    if (titleModel.isFloorPan) {
+    if (titleModel.isFloorPan) {    //户型详情页特有的总价Label
            _photoCellHeight += 20 + 20;
     }
     
     if (((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
-        _photoCellHeight = _photoCellHeight +22;
+        _photoCellHeight = _photoCellHeight +22;       //小区的地址Label高度
     }
     
     [self.mediaView mas_updateConstraints:^(MASConstraintMaker *make) {
