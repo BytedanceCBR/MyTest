@@ -37,10 +37,10 @@
     _searchAreaPanel.layer.cornerRadius = 17;
     _searchAreaPanel.layer.borderWidth = 0.5;
     _searchAreaPanel.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _searchAreaPanel.layer.shadowOffset = CGSizeMake(0, 2);
-    _searchAreaPanel.layer.shadowRadius = 6;
-    _searchAreaPanel.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1].CGColor;
-    _searchAreaPanel.layer.shadowOpacity = 0.8;
+    _searchAreaPanel.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+    _searchAreaPanel.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
+    _searchAreaPanel.layer.shadowOpacity = 1.f;
+    _searchAreaPanel.layer.shadowRadius = 6.f;
     
      [self addSubview:_searchAreaPanel];
     [_searchAreaPanel mas_makeConstraints:^(MASConstraintMaker *make) {
