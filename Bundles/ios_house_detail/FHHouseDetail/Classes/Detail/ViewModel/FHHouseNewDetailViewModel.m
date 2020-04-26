@@ -423,7 +423,7 @@
         FHMultiMediaItemModel *itemModel = nil;
         
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
-        headerCellModel.isShowTopImageTab = [model.data.isShowTopImageTab boolValue];
+        headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;
         if ([model.data.topImages isKindOfClass:[NSArray class]] && model.data.topImages.count > 0) {
             NSMutableArray *houseImageList = @[].mutableCopy;
             headerCellModel.topImages = model.data.topImages;
