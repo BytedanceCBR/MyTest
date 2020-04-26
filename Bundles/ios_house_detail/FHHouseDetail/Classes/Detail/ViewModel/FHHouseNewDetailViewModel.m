@@ -423,7 +423,7 @@
         FHMultiMediaItemModel *itemModel = nil;
         
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
-        
+        headerCellModel.isShowTopImageTab = [model.data.isShowTopImageTab boolValue];
         if ([model.data.topImages isKindOfClass:[NSArray class]] && model.data.topImages.count > 0) {
             NSMutableArray *houseImageList = @[].mutableCopy;
             headerCellModel.topImages = model.data.topImages;
@@ -437,7 +437,9 @@
                         [houseImages addObject:groupModel.images[j]];
                     }
                 }
-                houseImageDictList.houseImageTypeName = topImage.name;
+                if (headerCellModel.isShowTopImageTab) {
+                    houseImageDictList.houseImageTypeName = topImage.name;
+                }
                 houseImageDictList.houseImageList = houseImages;
                 houseImageDictList.houseImageType = topImage.type;
                 [houseImageList addObject:houseImageDictList];

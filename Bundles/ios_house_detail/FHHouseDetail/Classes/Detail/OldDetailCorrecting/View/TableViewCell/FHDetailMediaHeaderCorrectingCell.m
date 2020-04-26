@@ -343,7 +343,7 @@
     
     [vc setMediaHeaderModel:self.currentData mediaImages:images];
     FHDetailMediaHeaderCorrectingModel *model = ((FHDetailMediaHeaderCorrectingModel *)self.currentData);
-    if ([model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
+    if (!model.isShowTopImageTab && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
         FHDetailNewTopImage *topImage = model.topImages.firstObject;
         vc.smallImageInfosModels = topImage.smallImageGroup;
     }

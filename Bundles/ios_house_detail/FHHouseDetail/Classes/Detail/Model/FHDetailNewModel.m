@@ -371,6 +371,7 @@
                            @"surroundingInfo": @"surrounding_info",
                            @"topImages": @"top_images",
                            @"topBanner": @"top_banner",
+                           @"isShowTopImageTab": @"is_show_top_image_tab",
 
 
                            };

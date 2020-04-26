@@ -271,6 +271,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNewSurroundingInfo *surroundingInfo ;
 @property(nonatomic , strong) FHDetailNewTopBanner *topBanner;
 
+@property (nonatomic, strong) NSString *isShowTopImageTab; //是否显示头图的tab标题，如果显示那么隐藏显示全部按钮
 @end
 
 @interface FHDetailNewTimeLineDataModel : JSONModel
