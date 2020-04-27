@@ -11,6 +11,7 @@
 #import "TTShareManager.h"
 #import "TTFontSettingController.h"
 #import "SSThemed.h"
+#import <TTPlatformBaseLib/TTTrackerWrapper.h>
 
 
 NSString * const TTActivityTypeSetFont = @"com.toutiao.UIKit.activity.SetFont";
@@ -69,7 +70,7 @@ NSString * const TTActivityTypeSetFont = @"com.toutiao.UIKit.activity.SetFont";
 
 - (void)performActivityWithCompletion:(TTActivityCompletionHandler)completion
 {
-    ttTrackEvent(@"detail", @"display_setting");
+    wrapperTrackEvent(@"detail", @"display_setting");
 
     [self.activityView show];
 

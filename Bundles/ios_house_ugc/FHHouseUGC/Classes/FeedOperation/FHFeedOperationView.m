@@ -35,6 +35,7 @@
 #import "TTFeedDislikeConfig.h"
 #import "TTSandBoxHelper.h"
 #import "TTIndicatorView.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kMaskViewTag 20141209
 
@@ -196,7 +197,8 @@ static FHFeedOperationView *__visibleDislikeView;
     if (self.dislikeWords.count > 0) {
         [self dismiss];
         
-        ttTrackEventWithCustomKeys(@"dislike", @"confirm_with_reason", __lastGroupID, nil, extValueDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"dislike" label:@"dislike" value:__lastGroupID source:nil extraDic:extValueDic];
+//        ttTrackEventWithCustomKeys(@"dislike", @"confirm_with_reason", __lastGroupID, nil, extValueDic);
         
         __lastDislikedWords = nil;
         __lastGroupID = nil;
@@ -204,7 +206,9 @@ static FHFeedOperationView *__visibleDislikeView;
     } else {
         [self showDislikeButton:NO atPoint:self.origin];
         
-        ttTrackEventWithCustomKeys(@"dislike", @"confirm_no_reason", __lastGroupID, nil, extValueDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"dislike" label:@"confirm_no_reason" value:__lastGroupID source:nil extraDic:extValueDic];
+
+//        ttTrackEventWithCustomKeys(@"dislike", @"confirm_no_reason", __lastGroupID, nil, extValueDic);
     }
 }
 

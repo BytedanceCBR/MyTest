@@ -63,6 +63,7 @@
 //是否拨打电话（不区分是否接通）
 @property (nonatomic, assign) BOOL isPhoneCalled;// 新房UGC留资使用
 @property (nonatomic, assign) CGPoint lastContentOffset;
+@property (nonatomic, strong) NSDictionary *extraInfo;
 
 @end
 
@@ -75,6 +76,14 @@
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.ridcode = paramObj.allParams[@"ridcode"];
         self.realtorId = paramObj.allParams[@"realtor_id"];
+        
+        NSObject *extraInfo = paramObj.allParams[kFHClueExtraInfo];
+        if ([extraInfo isKindOfClass:[NSString class]]) {
+            NSDictionary *extraInfoDict = [self getDictionaryFromJSONString:extraInfo];
+            self.extraInfo = extraInfoDict;
+        }else if ([extraInfo isKindOfClass:[NSDictionary class]]) {
+            self.extraInfo = extraInfo;
+        }
 
         if (!self.houseType) {
             if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
@@ -298,6 +307,7 @@
     // 构建详情页需要的埋点数据，放入baseViewModel中
     self.viewModel.detailTracerDic = [self makeDetailTracerData];
     self.viewModel.source = self.source;
+    self.viewModel.extraInfo = self.extraInfo;
     [self.view addSubview:_tableView];
 
     __weak typeof(self)wself = self;
@@ -415,6 +425,8 @@
     }
     
     [self.view setNeedsUpdateConstraints];
+    
+    
 }
 
 - (void)setupCallCenter

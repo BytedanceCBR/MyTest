@@ -40,7 +40,20 @@
         _houseNameModel = model;
         _disclaimerModel = disClaimerModel;
         [self configTableView];
-        
+        FHDetailBottomBar *bottomBar = [viewController getBottomBar];
+        //        if ([bottomBar isKindOfClass:[FHDetailBottomBar class]]) {
+        //            bottomBar.bottomBarContactBlock = ^{
+        //                StrongSelf;
+        //                [wself contactAction];
+        //            };
+        //            bottomBar.bottomBarImBlock = ^{
+        //                StrongSelf;
+        //                [wself imAction];
+        //            };
+        //        }
+        self.contactViewModel = [viewController getContactViewModel];
+        self.bottomBar = bottomBar;
+        bottomBar.hidden = YES;
         [self startLoadData];
     
     }
@@ -138,6 +151,7 @@
 }
 
 - (void)processDetailData:(FHDetailNewCoreDetailModel *)model {
+    self.detailData = model;
     NSMutableArray *itemsArray = [NSMutableArray new];
     
     // 添加标题
@@ -179,7 +193,24 @@
     if (_disclaimerModel) {
         [self.currentItems addObject:_disclaimerModel];
     }
-    
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    }else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
+    self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
+    self.bottomBar.hidden = NO;
+
     [_infoListTable reloadData];
 }
 

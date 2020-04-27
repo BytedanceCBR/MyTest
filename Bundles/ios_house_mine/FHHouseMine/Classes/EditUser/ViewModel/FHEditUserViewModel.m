@@ -118,14 +118,18 @@
                 [wself reloadViewModel];
             }
         }];
-        
-        [TTAccount getUserInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
+        [TTAccount getUserInfoWithScene:TTAccountRequestNormal completion:^(TTAccountUserEntity * _Nullable userEntity, NSError * _Nullable error) {
             if(!error){
                 wself.userInfo.homePageAuth = [[FHUserInfoManager sharedInstance].userInfo.data.fHomepageAuth integerValue];
-
                 [wself reloadViewModel];
             }
         }];
+//        [TTAccount getUserInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
+//            if(!error){
+//                wself.userInfo.homePageAuth = [[FHUserInfoManager sharedInstance].userInfo.data.fHomepageAuth integerValue];
+//                [wself reloadViewModel];
+//            }
+//        }];
     }
 }
 

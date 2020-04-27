@@ -31,42 +31,42 @@
     [TTAccount registerWithPhone:phoneString SMSCode:codeString password:passwordString captcha:captchaString completion:completedBlock];
 }
 
-+ (void)startLoginWithPhoneNumber:(NSString *)phoneString
-                         password:(NSString *)passwordString
-                          captcha:(NSString *)captchaString
-                       completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock
-{
-    [TTAccount loginWithPhone:phoneString password:passwordString captcha:captchaString completion:completedBlock];
-}
-
-+ (void)startLoginWithMail:(NSString *)mailString
-                  password:(NSString *)passwordString
-                   captcha:(NSString *)captchaString
-                completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock
-{
-    [TTAccount loginWithEmail:mailString password:passwordString captcha:captchaString completion:completedBlock];
-}
-
-+ (void)startQuickLoginWithPhoneNumber:(NSString *)phoneNumber
-                                  code:(NSString *)codeString
-                               captcha:(NSString *)captchaString
-                            completion:(void(^)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completedBlock
-{
-    [TTAccount quickLoginWithPhone:phoneNumber SMSCode:codeString captcha:captchaString completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
-        if (completedBlock) {
-            completedBlock(captchaImage, @([[TTAccount sharedAccount] user].newUser), error);
-        }
-    }];
-}
-
-+ (void)startResetPasswordWithPhoneNumber:(NSString *)phoneString
-                                     code:(NSString *)codeString
-                                 password:(NSString *)passwordString
-                                  captcha:(NSString *)captchaString
-                               completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock
-{
-    [TTAccount resetPasswordWithPhone:phoneString SMSCode:codeString password:passwordString captcha:captchaString completion:completedBlock];
-}
+//+ (void)startLoginWithPhoneNumber:(NSString *)phoneString
+//                         password:(NSString *)passwordString
+//                          captcha:(NSString *)captchaString
+//                       completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock
+//{
+//    [TTAccount loginWithPhone:phoneString password:passwordString captcha:captchaString completion:completedBlock];
+//}
+//
+//+ (void)startLoginWithMail:(NSString *)mailString
+//                  password:(NSString *)passwordString
+//                   captcha:(NSString *)captchaString
+//                completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock
+//{
+//    [TTAccount loginWithEmail:mailString password:passwordString captcha:captchaString completion:completedBlock];
+//}
+//
+//+ (void)startQuickLoginWithPhoneNumber:(NSString *)phoneNumber
+//                                  code:(NSString *)codeString
+//                               captcha:(NSString *)captchaString
+//                            completion:(void(^)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completedBlock
+//{
+//    [TTAccount quickLoginWithPhone:phoneNumber SMSCode:codeString captcha:captchaString completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
+//        if (completedBlock) {
+//            completedBlock(captchaImage, @([[TTAccount sharedAccount] user].newUser), error);
+//        }
+//    }];
+//}
+//
+//+ (void)startResetPasswordWithPhoneNumber:(NSString *)phoneString
+//                                     code:(NSString *)codeString
+//                                 password:(NSString *)passwordString
+//                                  captcha:(NSString *)captchaString
+//                               completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock
+//{
+//    [TTAccount resetPasswordWithPhone:phoneString SMSCode:codeString password:passwordString captcha:captchaString completion:completedBlock];
+//}
 
 + (void)startChangePasswordWithPassword:(NSString *)passwordString
                                    code:(NSString *)codeString
@@ -86,12 +86,12 @@
     [TTAccount bindPhoneWithPhone:phoneString SMSCode:codeString password:passwordString captcha:captchaString unbind:unbindExist completion:completedBlock];
 }
 
-+ (void)startUnbindPhoneWithCode:(NSString *)codeString
-                         captcha:(NSString *)captchaString
-                      completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock
-{
-    [TTAccount unbindPhoneWithCaptcha:captchaString completion:completedBlock];
-}
+//+ (void)startUnbindPhoneWithCode:(NSString *)codeString
+//                         captcha:(NSString *)captchaString
+//                      completion:(void (^)(UIImage *captchaImage, NSError *error))completedBlock
+//{
+//    [TTAccount unbindPhoneWithCaptcha:captchaString completion:completedBlock];
+//}
 
 + (void)startChangePhoneNumber:(NSString *)phoneString // new phone number
                           code:(NSString *)codeString
@@ -101,14 +101,14 @@
     [TTAccount changePhoneNumber:phoneString SMSCode:codeString captcha:captchaString completion:completedBlock];
 }
 
-+ (void)startLogoutUserWithCompletion:(void(^)(BOOL success, NSError *error))completedBlock
-{
-    [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
-        if (completedBlock) {
-            completedBlock(success, error);
-        }
-    }];
-}
+//+ (void)startLogoutUserWithCompletion:(void(^)(BOOL success, NSError *error))completedBlock
+//{
+//    [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
+//        if (completedBlock) {
+//            completedBlock(success, error);
+//        }
+//    }];
+//}
 
 + (void)startRefreshCaptchaWithScenarioType:(TTASMSCodeScenarioType)scenarioType
                                  completion:( void (^)(UIImage *captchaImage, NSError *error))completedBlock
@@ -120,31 +120,31 @@
     }];
 }
 
-+ (void)startGetAccountUserInfoStatus:(BOOL)dispatchExpiration
-                           completion:(void (^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock
-{
-    if (dispatchExpiration) {
-        [TTAccount getUserInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
-            if (!error) {
-                // TODO...
-            }
-            
-            if (completedBlock) {
-                completedBlock(userEntity, error);
-            }
-        }];
-    } else {
-        [TTAccount getUserInfoIgnoreDispatchWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
-            if (!error) {
-                // TODO...
-            }
-            
-            if (completedBlock) {
-                completedBlock(userEntity, error);
-            }
-        }];
-    }
-}
+//+ (void)startGetAccountUserInfoStatus:(BOOL)dispatchExpiration
+//                           completion:(void (^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock
+//{
+//    if (dispatchExpiration) {
+//        [TTAccount getUserInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
+//            if (!error) {
+//                // TODO...
+//            }
+//
+//            if (completedBlock) {
+//                completedBlock(userEntity, error);
+//            }
+//        }];
+//    } else {
+//        [TTAccount getUserInfoIgnoreDispatchWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
+//            if (!error) {
+//                // TODO...
+//            }
+//
+//            if (completedBlock) {
+//                completedBlock(userEntity, error);
+//            }
+//        }];
+//    }
+//}
 
 + (void)startGetAccountUserAuditInfoStatus:(BOOL)dispatchExpiration
                                 completion:(void (^)(TTAccountUserAuditSet *userAuditSet, NSError *error))completedBlock
@@ -164,15 +164,15 @@
     }
 }
 
-+ (void)startUploadUserPhoto:(UIImage *)image
-                  completion:(void(^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock
-{
-    [TTAccount startUploadUserPhoto:image progress:nil completion:^(TTAccountUserEntity * _Nullable userEntity, NSError * _Nullable error) {
-        if (completedBlock) {
-            completedBlock(userEntity, error);
-        }
-    }];
-}
+//+ (void)startUploadUserPhoto:(UIImage *)image
+//                  completion:(void(^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock
+//{
+//    [TTAccount startUploadUserPhoto:image progress:nil completion:^(TTAccountUserEntity * _Nullable userEntity, NSError * _Nullable error) {
+//        if (completedBlock) {
+//            completedBlock(userEntity, error);
+//        }
+//    }];
+//}
 
 + (void)startUploadUserImage:(UIImage *)image
                   completion:(void(^)(TTAccountImageEntity *imageEntity, NSError *error))completedBlock

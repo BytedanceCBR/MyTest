@@ -174,7 +174,7 @@ extern NSString * TTAccountPlatformDidAuthorizeCompletionNotification;
 - (void)logoutAppWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
 {
     // 退出登录
-    [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
+    [TTAccount logoutInScene:TTAccountLogoutSceneNormal completion:^(BOOL success, NSError * _Nullable error) {
         callback(TTRJSBMsgSuccess, @{@"code": @(success ? 1 : 0)});
     }];
 }

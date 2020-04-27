@@ -1676,7 +1676,7 @@ TTAccountMulticastProtocol
         return;
     }
 
-    NSDictionary *exploreMixedListConsumeTimeStamps = [[context objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
+    NSDictionary *exploreMixedListConsumeTimeStamps = [(NSDictionary *)[context objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListRefreshOrLoadMoreConsumeTimeStampsKey];
 
     NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] initWithCapacity:3];
 

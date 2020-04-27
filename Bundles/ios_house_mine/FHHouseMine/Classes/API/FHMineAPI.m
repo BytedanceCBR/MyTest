@@ -138,7 +138,12 @@
 }
 
 + (void)requestQuickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha completion:(void(^_Nullable)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completion {
-    [TTAccountManager startQuickLoginWithPhoneNumber:phoneNumber code:smsCode captcha:captcha completion:completion];
+//    [TTAccountManager startQuickLoginWithPhoneNumber:phoneNumber code:smsCode captcha:captcha completion:completion];
+    [TTAccount quickLoginWithPhone:phoneNumber SMSCode:smsCode captcha:nil jsonObjCompletion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error, id  _Nullable jsonObj) {
+        if (completion) {
+            completion(captchaImage, @([[TTAccount sharedAccount] user].newUser), error);
+        }
+    }];
 }
 
 + (NSString *)errorMessageByErrorCode:(NSError *)error {

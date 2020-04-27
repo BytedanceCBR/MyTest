@@ -14,6 +14,8 @@
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTTracker/TTTracker.h>
 #import <TTRoute/TTRoute.h>
+#import <TTPlatformBaseLib/TTTrackerWrapper.h>
+
 @implementation TTDetailWebViewRequestProcessor
 {
     NSURL * _openPageUrl;
@@ -76,19 +78,19 @@
             NSString *action = [parameters objectForKey:@"action"];
             if([action isEqualToString:@"digg"])
             {
-                ttTrackEvent(@"detail", @"click_digg_users");
+                wrapperTrackEvent(@"detail", @"click_digg_users");
             }
             else if([action isEqualToString:@"bury"])
             {
-                ttTrackEvent(@"detail", @"click_bury_users");
+                wrapperTrackEvent(@"detail", @"click_bury_users");
             }
             else if([action isEqualToString:@"repin"])
             {
-                ttTrackEvent(@"detail", @"click_favorite_users");
+                wrapperTrackEvent(@"detail", @"click_favorite_users");
             }
             else if ([action isEqualToString:@"pgc"])
             {
-                ttTrackEvent(@"detail", @"click_pgc_user_profile");
+                wrapperTrackEvent(@"detail", @"click_pgc_user_profile");
             }
             shouldStartLoad = NO;
         }
@@ -102,7 +104,7 @@
                 [_delegate processRequestOpenWebViewUseURL:[TTStringHelper URLWithURLString:sourceURL] supportRotate:NO];
             }
             shouldStartLoad = NO;
-            ttTrackEvent(@"detail", @"click_source");
+            wrapperTrackEvent(@"detail", @"click_source");
         }
         else if ([requestURL.host isEqualToString:kDownloadAppHost]) {
             NSDictionary * parameters = [TTStringHelper parametersOfURLString:requestURL.query];
@@ -134,7 +136,7 @@
                 [_delegate processRequestShowPGCProfileWithParams:parameters];
             }
             shouldStartLoad = NO;
-            ttTrackEvent(@"detail", @"click_web_header");
+            wrapperTrackEvent(@"detail", @"click_web_header");
         }
         else if ([requestURL.host isEqualToString:kKeyWordsHost]) {
             NSDictionary * parameters = [TTStringHelper parametersOfURLString:requestURL.query];

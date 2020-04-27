@@ -40,6 +40,7 @@
 #import <TTThemed/TTThemeManager.h>
 #import <TTUIWidget/TTBubbleView.h>
 #import <AKCommentPlugin/TTCommentWriteView.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #import "WDDefines.h"
@@ -532,7 +533,9 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
     
     NSString *label = [WDShareUtilsHelper labelNameForShareActivity:activity shareState:(error ? NO : YES)];
     if (!isEmptyString(label)) {
-        ttTrackEventWithCustomKeys(kWDDetailViewControllerUMEventName, label, _currentAnswerCell.detailModel.answerEntity.ansid, nil, _currentAnswerCell.detailModel.gdExtJsonDict);
+        
+        [BDTrackerProtocol trackEventWithCustomKeys:kWDDetailViewControllerUMEventName label:label value:_currentAnswerCell.detailModel.answerEntity.ansid source:nil extraDic:_currentAnswerCell.detailModel.gdExtJsonDict];
+//        ttTrackEventWithCustomKeys(kWDDetailViewControllerUMEventName, label, _currentAnswerCell.detailModel.answerEntity.ansid, nil, _currentAnswerCell.detailModel.gdExtJsonDict);
     }
 }
 
@@ -1232,11 +1235,11 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
     NSString *leaveType;
     if (!_closeButtonTouched) {
         if (_backButtonTouched) {
-            ttTrackEvent(kWDDetailViewControllerUMEventName, @"back_button");
+            [BDTrackerProtocol event:kWDDetailViewControllerUMEventName label:@"back_button"];
             leaveType = @"page_back_button";
         }
         else {
-            ttTrackEvent(kWDDetailViewControllerUMEventName, @"back_gesture");
+            [BDTrackerProtocol event:kWDDetailViewControllerUMEventName label:@"back_gesture"];
             leaveType = @"back_gesture";
         }
     }

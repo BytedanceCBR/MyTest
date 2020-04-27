@@ -1121,7 +1121,7 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
 - (void)processRequestShowImgInPhotoScrollViewAtIndex:(NSUInteger)index withFrameValue:(NSValue *)frameValue
 {
     // show photo scroll view
-    ttTrackEvent(@"image", @"enter_detail");
+    wrapperTrackEvent(@"image", @"enter_detail");
     TTPhotoScrollViewController *showImageViewController = [[TTPhotoScrollViewController alloc] init];
     self.photoScrollViewController = showImageViewController;
     showImageViewController.targetView = self.detailWebView.webView.scrollView;

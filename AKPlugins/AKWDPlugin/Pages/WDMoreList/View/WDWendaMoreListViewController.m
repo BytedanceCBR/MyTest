@@ -34,6 +34,7 @@
 #import "WDMoreListCellLayoutModel.h"
 #import "WDMoreListCellViewModel.h"
 #import "WDListCellDataModel.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 extern NSString * const kWDWendaListViewControllerUMEventName;
 
@@ -282,7 +283,8 @@ extern NSString * const kWDWendaListViewControllerUMEventName;
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
     [extraDict setValue:self.viewModel.qID forKey:@"media_id"];
     
-    ttTrackEventWithCustomKeys(kWDWendaListViewControllerUMEventName, label, self.viewModel.qID, nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:kWDWendaListViewControllerUMEventName label:label value:self.viewModel.qID source:nil extraDic:extraDict];
+//    ttTrackEventWithCustomKeys(kWDWendaListViewControllerUMEventName, label, self.viewModel.qID, nil, extraDict);
 }
 
 #pragma mark frame

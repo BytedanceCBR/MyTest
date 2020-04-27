@@ -10,7 +10,7 @@
 #import "SSThemed.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTTracker/TTTracker.h>
-//#import "TTTrackerWrapper.h"
+#import "TTTrackerWrapper.h"
 
 #import "TTUserSettingsManager+FontSettings.h"
 //#import "TTLogManager.h"
@@ -167,7 +167,7 @@
     } else {
         eventID = fontArray[0];
     }
-    ttTrackEvent(@"detail", eventID);
+    wrapperTrackEvent(@"detail", eventID);
     
     //详情页业务中收到notification后发送
     //    [TTLogManager logEvent:[NSString stringWithFormat:@"set_%@", eventID] context:nil screenName:nil];
