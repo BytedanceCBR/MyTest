@@ -8,6 +8,9 @@
 #import "FHFloorPanCorePropertyCell.h"
 #import "TTRoute.h"
 #import "UIColor+Theme.h"
+#import "TTLabelTextHelper.h"
+#import "ExploreArticleCellViewConsts.h"
+#import "TTBaseMacro.h"
 
 @interface FHFloorPanCorePropertyCell ()
 
@@ -62,28 +65,19 @@
             itemContenView.backgroundColor = [UIColor clearColor];
             FHFloorPanCorePropertyCellItemModel *itemModel = model.list[i];
             UILabel *nameLabel = [UILabel new];
-            nameLabel.font = [UIFont themeFontRegular:14];
-            nameLabel.textColor = RGB(0xae, 0xad, 0xad);;
-            nameLabel.textAlignment = NSTextAlignmentLeft;
             nameLabel.numberOfLines = 0;
-            nameLabel.text = itemModel.propertyName;
-            [nameLabel sizeToFit];
+            nameLabel.attributedText = [self contentAttributeString:itemModel.propertyName textFont:[UIFont themeFontRegular:14] textColor:RGB(0xae, 0xad, 0xad)];
             [itemContenView addSubview:nameLabel];
             
             [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(31);
                 make.width.mas_equalTo(70);
                 make.top.mas_equalTo(0);
-                make.height.mas_equalTo(16);
             }];
             
             UILabel *valueLabel = [UILabel new];
-            valueLabel.font = [UIFont themeFontMedium:14];
-            valueLabel.textColor = [UIColor themeGray2];
-            valueLabel.textAlignment = NSTextAlignmentLeft;
             valueLabel.numberOfLines = 0;
-            valueLabel.text = itemModel.propertyValue;
-            [valueLabel sizeToFit];
+            valueLabel.attributedText = [self contentAttributeString:itemModel.propertyValue textFont:[UIFont themeFontMedium:14] textColor:[UIColor themeGray2]];
             [itemContenView addSubview:valueLabel];
             
             [valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -91,7 +85,6 @@
                 make.top.equalTo(nameLabel);
                 make.right.equalTo(itemContenView).offset(-31);
                 make.bottom.equalTo(itemContenView);
-                make.height.mas_equalTo(16);
             }];
             
             [self.contentView addSubview:itemContenView];
@@ -111,6 +104,22 @@
             previouseView = itemContenView;
         }
     }
+}
+
+- (NSAttributedString *)contentAttributeString:(NSString *) str textFont:(UIFont *)font textColor:(UIColor *)color {
+    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
+       if(!isEmptyString(str)) {
+           NSDictionary *attributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: color};
+           NSAttributedString *content = [[NSAttributedString alloc] initWithString:str attributes: attributes];
+           [attributedText appendAttributedString:content];
+           NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+           CGFloat lineHeight = 16;
+           paragraphStyle.minimumLineHeight = lineHeight;
+           paragraphStyle.maximumLineHeight = lineHeight;
+           paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+           [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+       }
+    return attributedText;
 }
 
 - (void)prepareForReuse
