@@ -110,6 +110,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewDataFloorpanListListModel : JSONModel
 
+@property (nonatomic, copy , nullable) NSString *pricing;
+@property (nonatomic, copy , nullable) NSString *displayPrice;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *roomCount;
 @property (nonatomic, copy , nullable) NSString *title;

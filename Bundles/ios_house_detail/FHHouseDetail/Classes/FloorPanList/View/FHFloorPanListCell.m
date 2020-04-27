@@ -174,7 +174,20 @@
         }
         
         self.priceLabel.text = model.pricingPerSqm;
-        
+        NSString *pricing = model.pricing;
+        self.priceLabel.text = pricing;
+        if (model.displayPrice.length > 0) {
+            NSString *displayPrice = model.displayPrice;
+            self.priceLabel.text = displayPrice;
+            NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:self.priceLabel.text];
+            NSRange range = [displayPrice rangeOfString:pricing];
+            
+            if (range.location != NSNotFound) {
+                [noteStr addAttribute:NSFontAttributeName value:[UIFont themeFontSemibold:16] range:range];
+            }
+            self.priceLabel.attributedText = noteStr;
+        }
+    
         if ([model.images.firstObject isKindOfClass:[FHDetailNewDataFloorpanListListImagesModel class]]) {
             FHDetailNewDataFloorpanListListImagesModel *imageModel = (FHDetailNewDataFloorpanListListImagesModel *)model.images.firstObject;
             if (imageModel.url) {

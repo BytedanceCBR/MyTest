@@ -165,6 +165,7 @@
                            @"searchId": @"search_id",
                            @"groupId": @"group_id",
                            @"imOpenUrl":@"im_openurl",
+                           @"displayPrice": @"display_price"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
