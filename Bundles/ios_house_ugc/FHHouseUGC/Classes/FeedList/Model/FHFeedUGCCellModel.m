@@ -289,7 +289,6 @@
                 cellModel.numberOfLines = 0;
             }
             
-            [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
             cellModel.desc = [self generateArticleDesc:model];
             if(model.openUrl){
                 cellModel.openUrl = model.openUrl;
@@ -318,6 +317,12 @@
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
             }else{
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
+            }
+            
+            if(cellModel.cellSubType == FHUGCFeedListCellSubTypeArticleSingleImage){
+                [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40 - 120 - 15)];
+            }else{
+                [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40)];
             }
         }
     }
