@@ -81,6 +81,7 @@
         FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
         vc.listType = FHCommunityFeedListTypeCustom;
         vc.category = _cellModel.category;
+        vc.needReportEnterCategory = YES;
         self.vc = vc;
     }
     

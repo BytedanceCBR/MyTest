@@ -31,6 +31,8 @@
 @property(nonatomic, strong) FHCommunityFeedListBaseViewModel *viewModel;
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
 @property(nonatomic, assign) NSInteger currentCityId;
+@property(nonatomic, assign) NSTimeInterval enterTabTimestamp;
+@property(nonatomic, assign) BOOL noNeedAddEnterCategorylog;
 
 @end
 
@@ -55,15 +57,36 @@
     
     [[SSImpressionManager shareInstance] addRegist:self];
     [TTAccount addMulticastDelegate:self];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+//    if(self.needReportEnterCategory){
+//        [self addEnterCategoryLog];
+//    }
 }
 
 - (void)dealloc {
     [[SSImpressionManager shareInstance] removeRegist:self];
     [TTAccount removeMulticastDelegate:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillAppear {
     [self.viewModel viewWillAppear];
+    
+    if ([[NSDate date]timeIntervalSince1970] - _enterTabTimestamp > 24*60*60) {
+        //超过一天
+        _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+    }
+    
+    if(!self.noNeedAddEnterCategorylog){
+        if(self.needReportEnterCategory){
+            [self addEnterCategoryLog];
+        }
+    }else{
+        self.noNeedAddEnterCategorylog = NO;
+    }
     
     if(self.viewModel.dataList.count > 0 || self.notLoadDataWhenEmpty){
         if (self.needReloadData) {
@@ -74,11 +97,17 @@
         self.needReloadData = NO;
         [self scrollToTopAndRefreshAllData];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)viewWillDisappear {
     [self.viewModel viewWillDisappear];
+    if(self.needReportEnterCategory){
+        [self addStayCategoryLog];
+    }
     [FHFeedOperationView dismissIfVisible];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)initView {
@@ -286,6 +315,16 @@
     return self.viewModel.dataList;
 }
 
+- (void)applicationDidEnterBackground {
+    if(self.needReportEnterCategory){
+        [self addStayCategoryLog];
+    }
+}
+
+- (void)applicationDidBecomeActive {
+    self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+}
+
 #pragma mark - TTAccountMulticaastProtocol
 
 // 帐号切换
@@ -321,5 +360,27 @@
     }
 }
 
+#pragma mark - 埋点
+
+- (void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"category_name"] = self.category;
+    TRACK_EVENT(@"enter_category", tracerDict);
+    
+    self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+}
+
+- (void)addStayCategoryLog {
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTabTimestamp;
+    if (duration <= 0 || duration >= 24*60*60) {
+        return;
+    }
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[@"category_name"] = self.category;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
+    TRACK_EVENT(@"stay_category", tracerDict);
+    
+    self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+}
 
 @end

@@ -43,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL showErrorView;
 //网络请求成功回调
 @property(nonatomic, copy) void (^requestSuccess)(BOOL hasFeedData);
+//是否需要上报enterCategory和stayCategory埋点，默认不报
+@property(nonatomic, assign) BOOL needReportEnterCategory;
 
 //圈子详情页使用
 //空态页具体顶部offset
