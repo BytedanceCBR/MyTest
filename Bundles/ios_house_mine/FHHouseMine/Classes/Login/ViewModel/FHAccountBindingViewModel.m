@@ -31,8 +31,8 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
 typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     FHAccountBindingOperationWordOther     = 0,      //
     FHAccountBindingOperationCancel        = 1,      // 取消绑定
-    FHAccountBindingOperationFailure       = 2,      // 绑定失败
-    FHAccountBindingOperationUnableFound   = 3,      // 解绑后无法找回该账户
+    FHAccountBindingOperationAlreadyHave   = 2,      // 已经被绑定，绑定失败
+    FHAccountBindingOperationWillLose      = 3,      // 解绑后无法找回该账户
 };
 
 @interface FHAccountBindingViewModel ()<UITableViewDelegate,UITableViewDataSource>
@@ -87,7 +87,7 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 __weak typeof(self) wSelf = self;
                 cell.DouYinBinding = ^(UISwitch * sender) {
-                    [wSelf bindingDouYinAccount:sender];
+                    [wSelf bindingAccountDouYin:sender cancel:NO];
                 };
                 cell.DouYinUnbinding = ^(UISwitch * sender){
                     [wSelf handleItemselected:sender withType:FHAccountBindingOperationCancel];
@@ -234,59 +234,67 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     return NO;
 }
 
-- (void)bindingDouYinAccount:(UISwitch *)sender { //绑定逻辑
+- (void)bindingAccountDouYin:(UISwitch *)sender cancel:(BOOL)cancel { //绑定与解绑逻辑
     __weak typeof(self) wSelf = self;
-    [TTAccount requestBindV2ForPlatform:TTAccountAuthTypeDouyin inCustomWebView:NO willBind:^(NSString * _Nonnull Bindinfo){
-        NSLog(@"luowentao Bindinfo:%@",Bindinfo);
-    } completion:^(BOOL success, NSError *error) {
-        __strong typeof(wSelf) strongSelf = wSelf;
+    if (cancel) {
+        [TTAccount requestLogoutForPlatform:TTAccountAuthTypeDouyin completion:^(BOOL success, NSError * _Nullable error) {
         NSLog(@"luowentao success = %d error = %@",success,error);
-        if (error) {
-            [strongSelf handleBindingResult:error];
-            [sender setOn:!sender.isOn animated:YES];
-        } else {
-            [strongSelf handleBindingResult:error];
-        }
-    }];
+        __strong typeof(wSelf) strongSelf = wSelf;
+            if (error) {
+                [strongSelf handleCancelBindingResult:error];
+                [sender setOn:!sender.isOn animated:YES];
+            } else {
+                [strongSelf handleCancelBindingResult:error];
+            }
+        }];
+    } else {
+        [TTAccount requestBindV2ForPlatform:TTAccountAuthTypeDouyin inCustomWebView:NO willBind:^(NSString * _Nonnull Bindinfo){
+            NSLog(@"luowentao Bindinfo:%@",Bindinfo);
+        } completion:^(BOOL success, NSError *error) {
+            __strong typeof(wSelf) strongSelf = wSelf;
+            NSLog(@"luowentao success = %d error = %@",success,error);
+            if (error) {
+                [strongSelf handleBindingResult:error sender:sender];
+                [sender setOn:!sender.isOn animated:YES];
+            } else {
+                [strongSelf handleBindingResult:error sender:sender];
+            }
+        }];
+    }
 };
 
-- (void)cancelBindingDouYinAccount:(UISwitch *)sender { //解绑逻辑
-    __weak typeof(self) wSelf = self;
-    
-    [TTAccount requestLogoutForPlatform:TTAccountAuthTypeDouyin completion:^(BOOL success, NSError * _Nullable error) {
-        NSLog(@"luowentao success = %d error = %@",success,error);
-        __strong typeof(wSelf) strongSelf = wSelf;
-        if (error) {
-            [strongSelf handleCancelBindingResult:error];
-            [sender setOn:!sender.isOn animated:YES];
-        } else {
-            [strongSelf handleCancelBindingResult:error];
-        }
-    }];
-}
-
 #pragma mark - Remind
-
 
 - (void)handleItemselected:(UISwitch *)sender withType:(FHAccountBindingOperationWordType)type {
     __weak typeof(self) wself = self;
     if (type == FHAccountBindingOperationCancel) {
-        [self showAlert:@"解除绑定" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+        [self showAlert:@"解除绑定？" message:nil cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
             [sender setOn:!sender.isOn animated:YES];
         } confirmBlock:^{
-            [wself cancelBindingDouYinAccount:sender];
+            [wself bindingAccountDouYin:sender cancel:YES];
+        }];
+    } else if (type == FHAccountBindingOperationAlreadyHave) {
+        [self showAlert:@"绑定失败" message:@"绑定失败，此抖音账号已绑定到账号『 』" cancelTitle:@"取消" confirmTitle:@"解绑原账号" cancelBlock:^{
+            [sender setOn:!sender.isOn animated:YES];
+        } confirmBlock:^{
+            
+        }];
+    } else if (type == FHAccountBindingOperationWillLose) {
+        [self showAlert:@"解绑后将无法用此抖音号登录『 』，也可能无法再次找回该账户，确认操作？" message:nil cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+            [sender setOn:!sender.isOn animated:YES];
+        } confirmBlock:^{
+
         }];
     }
 }
 
-
-- (void)showAlert:(NSString *)title cancelTitle:(NSString *)cancelTitle confirmTitle:(NSString *)confirmTitle cancelBlock:(void(^)())cancelBlock confirmBlock:(void(^)())confirmBlock {
+- (void)showAlert:(NSString *)title message:(NSString *)message cancelTitle:(NSString *)cancelTitle confirmTitle:(NSString *)confirmTitle cancelBlock:(void(^)())cancelBlock confirmBlock:(void(^)())confirmBlock {
     __weak typeof(self) wself = self;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
-                                                                   message:nil
+                                                                   message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle
-                                                           style:UIAlertActionStyleCancel
+                                                           style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * _Nonnull action) {
                                                              // 点击取消按钮，调用此block
                                                              if(cancelBlock){
@@ -308,17 +316,23 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
 }
 
 #pragma mark - Handing
-- (void)handleBindingResult:(NSError *)error {
+- (void)handleBindingResult:(NSError *)error sender:(UISwitch *)sender{
     if (!error) {
         [[ToastManager manager] showToast:@"绑定成功"];
     } else {
-        if (error.code == 1041) {
-            [[ToastManager manager] showToast:@"已经绑定了某个账号"];
+        NSString *errorMessage = @"啊哦，服务器开小差了";
+        if (error.code == 6) {
+            errorMessage = @"服务异常";
+        } else if (error.code == 999) {
+            errorMessage = @"服务器出了点小意外，努力修复中";
+        } else if (error.code == 1030) {
+            errorMessage = @"待补充";
+        } else if (error.code == 1041) {
+            errorMessage = @"待补充";
         } else {
-            NSString *errorMessage = @"啊哦，服务器开小差了";
             errorMessage = [FHMineAPI errorMessageByErrorCode:error];
-            [[ToastManager manager] showToast:errorMessage];
         }
+        [[ToastManager manager] showToast:errorMessage];
     }
 }
 
@@ -327,7 +341,15 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
         [[ToastManager manager] showToast:@"解绑成功"];
     } else {
         NSString *errorMessage = @"啊哦，服务器开小差了";
-        errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+        if (error.code == 6) {
+            errorMessage = @"服务异常";
+        } else if (error.code == 999) {
+            errorMessage = @"服务器出了点小意外，努力修复中";
+        } else if (error.code == 1038) {
+            errorMessage = @"最后的登录方式，无法解绑";
+        } else {
+            errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+        }
         [[ToastManager manager] showToast:errorMessage];
     }
 }
