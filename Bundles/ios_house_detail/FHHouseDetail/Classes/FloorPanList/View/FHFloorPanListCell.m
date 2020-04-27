@@ -172,8 +172,6 @@
         {
             self.roomSpaceLabel.text = @"";
         }
-        
-        self.priceLabel.text = model.pricingPerSqm;
         NSString *pricing = model.pricing;
         self.priceLabel.text = pricing;
         if (model.displayPrice.length > 0) {
