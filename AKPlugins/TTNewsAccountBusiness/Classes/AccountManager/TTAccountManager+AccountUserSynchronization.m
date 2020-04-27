@@ -32,8 +32,22 @@
 + (void)startGetAccountStatus:(BOOL)displayExpirationError context:(id)context
 {
     if ([[TTAccount sharedAccount] isLogin]) {
-        [TTAccount getUserInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
-            if (error) {
+        [TTAccount getUserInfoWithScene:TTAccountRequestNormal completion:^(TTAccountUserEntity * _Nullable userEntity, NSError * _Nullable error) {
+            NSMutableDictionary *extra = [NSMutableDictionary dictionary];
+            [extra setValue:error.description forKey:@"error_description"];
+            [extra setValue:@(error.code) forKey:@"error_code"];
+            
+            NSString *msg = [self.class suggestExipredWifiString:error];
+            if (isEmptyString(msg)) {
+                msg = [[error userInfo] objectForKey:TTAccountErrMsgKey];
+                if(isEmptyString(msg)) msg = NSLocalizedString(@"登录失败或账号过期，请选择账号重新登录", nil);
+            }
+            if(displayExpirationError) {
+                [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:msg indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+            }
+        }];
+//        [TTAccount getUserInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
+//            if (error) {
 //                NSMutableDictionary *extra = [NSMutableDictionary dictionary];
 //                [extra setValue:error.description forKey:@"error_description"];
 //                [extra setValue:@(error.code) forKey:@"error_code"];
@@ -46,12 +60,8 @@
 //                if(displayExpirationError) {
 //                    [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:msg indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
 //                }
-            }
-        }];
-
-        [TTAccount getUserAuditInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
-            
-        }];
+//            }
+//        }];
     }
 }
 

@@ -986,60 +986,60 @@ UITextFieldDelegate
 // 快速登录
 - (void)quickLogin
 {
-    __weak typeof(self) wself = self;
-    [TTAccount quickLoginWithPhone:self.phoneNumString SMSCode:self.secondTextField.text captcha:self.captchaString completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
-        
-        BOOL isNewUser = [[TTAccount sharedAccount] user].newUser;
-        
-        if (!error) {
-            [wself hide];
-            if (wself.phoneInputCompletedHandler) {
-                //快捷登录弹窗成功登录
-                wself.phoneInputCompletedHandler(TTAccountAlertCompletionEventTypeDone, wself.phoneNumString);
-            }
-            
-            // 小弹窗登录成功埋点
-            if (!self.source) self.source = @"other";
-            // LogV1
-            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"quick_login_success" dict:@{@"source":self.source}];
-            }
-            // LogV3
-            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-            [extraDict setValue:self.source forKey:@"source"];
-            [extraDict setValue:@"quick" forKey:@"type"];
-            [TTTrackerWrapper eventV3:@"login_quick_click" params:extraDict isDoubleSending:YES];
-            
-            if (isNewUser) {
-                TTAccountLoginEditProfileViewController *editUserInfoVC = [[TTAccountLoginEditProfileViewController alloc] initWithSource:wself.source];
-                // 设置新用户信息
-                [wself.navigationController pushViewController:editUserInfoVC animated:YES];
-            }
-            
-        } else {
-            // 快捷登录弹窗验证码错误点验证
-            if (captchaImage) {
-                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
-                    
-                    if (type == TTAccountAlertCompletionEventTypeDone) {
-                        wself.captchaString = captchaStr;
-                        [wself quickLogin];
-                    }
-                }];
-                [cAlert show];
-                
-            } else {
-                
-                if (wself.alertUIStyle == TTAccountLoginAlertActionTypeLogin) {
-                    [wself.errorLabel setAttributedText:[wself.class attributedStringWithString:@"验证码错误" fontSize:11.0f lineSpacing:0 lineBreakMode:NSLineBreakByWordWrapping textAlignment:NSTextAlignmentLeft]];
-                    // 将doneBtn设置为0.5f灰度透明
-                    wself.doneBtn.alpha = 0.5f;
-                } else {
-                    [wself.phoneErrorLabel setAttributedText:[wself.class attributedStringWithString:error.userInfo[@"description"] fontSize:11.0f lineSpacing:0 lineBreakMode:NSLineBreakByWordWrapping textAlignment:NSTextAlignmentLeft]];
-                }
-            }
-        }
-    }];
+//    __weak typeof(self) wself = self;
+//    [TTAccount quickLoginWithPhone:self.phoneNumString SMSCode:self.secondTextField.text captcha:self.captchaString completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
+//
+//        BOOL isNewUser = [[TTAccount sharedAccount] user].newUser;
+//
+//        if (!error) {
+//            [wself hide];
+//            if (wself.phoneInputCompletedHandler) {
+//                //快捷登录弹窗成功登录
+//                wself.phoneInputCompletedHandler(TTAccountAlertCompletionEventTypeDone, wself.phoneNumString);
+//            }
+//
+//            // 小弹窗登录成功埋点
+//            if (!self.source) self.source = @"other";
+//            // LogV1
+//            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//                [TTTracker category:@"umeng" event:@"register_new" label:@"quick_login_success" dict:@{@"source":self.source}];
+//            }
+//            // LogV3
+//            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//            [extraDict setValue:self.source forKey:@"source"];
+//            [extraDict setValue:@"quick" forKey:@"type"];
+//            [TTTrackerWrapper eventV3:@"login_quick_click" params:extraDict isDoubleSending:YES];
+//
+//            if (isNewUser) {
+//                TTAccountLoginEditProfileViewController *editUserInfoVC = [[TTAccountLoginEditProfileViewController alloc] initWithSource:wself.source];
+//                // 设置新用户信息
+//                [wself.navigationController pushViewController:editUserInfoVC animated:YES];
+//            }
+//
+//        } else {
+//            // 快捷登录弹窗验证码错误点验证
+//            if (captchaImage) {
+//                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
+//
+//                    if (type == TTAccountAlertCompletionEventTypeDone) {
+//                        wself.captchaString = captchaStr;
+//                        [wself quickLogin];
+//                    }
+//                }];
+//                [cAlert show];
+//
+//            } else {
+//
+//                if (wself.alertUIStyle == TTAccountLoginAlertActionTypeLogin) {
+//                    [wself.errorLabel setAttributedText:[wself.class attributedStringWithString:@"验证码错误" fontSize:11.0f lineSpacing:0 lineBreakMode:NSLineBreakByWordWrapping textAlignment:NSTextAlignmentLeft]];
+//                    // 将doneBtn设置为0.5f灰度透明
+//                    wself.doneBtn.alpha = 0.5f;
+//                } else {
+//                    [wself.phoneErrorLabel setAttributedText:[wself.class attributedStringWithString:error.userInfo[@"description"] fontSize:11.0f lineSpacing:0 lineBreakMode:NSLineBreakByWordWrapping textAlignment:NSTextAlignmentLeft]];
+//                }
+//            }
+//        }
+//    }];
 }
 
 - (void)phoneNumSwitch
@@ -1103,92 +1103,92 @@ UITextFieldDelegate
 {
     // 快捷登录窗口，发送短信验证码的量
     // LogV1
-    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker category:@"umeng" event:@"register_new" label:@"quick_login_send_auth" dict:@{@"source":self.source}];
-    }
-    // LogV3
-    NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
-    [extraDict setValue:self.source forKey:@"source"];
-    [extraDict setValue:@"send_auth" forKey:@"action_type"];
-    [TTTrackerWrapper eventV3:@"login_quick_click" params:extraDict isDoubleSending:YES];
-    
-    // 在任何情况下，只要点击了resendBtn，errorLabel不会再显示“验证码错误”，没有显示内容
-    self.errorLabel.text = @"";
-    self.secondTextField.text = @"";
-    
-    if ((self.actionType == TTAccountLoginAlertActionTypeLogin || self.actionType == TTAccountLoginAlertActionTypeBind) && ![self validateMobileNumber:self.firstTextField.text]) {
-        // 点击“发送验证码”按钮，如果验证码无效，判断手机号为错误
-        [self.phoneErrorLabel setAttributedText:[self.class attributedStringWithString:@"手机号错误" fontSize:11.0f lineSpacing:0 lineBreakMode:NSLineBreakByWordWrapping textAlignment:NSTextAlignmentLeft]];
-        [self codeInvalide];
-    } else {
-        // 如果有效，是正确的手机号，phoneErrorLabel没有显示内容, 此时 secondTextField成为第一响应者
-        self.phoneErrorLabel.text = @"";
-        [self.secondTextField becomeFirstResponder];
-        
-        TTASMSCodeScenarioType smsCodeType = TTASMSCodeScenarioBindPhoneRetry;
-        if (self.actionType == TTAccountLoginAlertActionTypeLogin) {
-            //快捷登录弹窗重发验证码
-            smsCodeType = TTASMSCodeScenarioQuickLoginRetry;
-        } else if (self.actionType == TTAccountLoginAlertActionTypePhoneNumSwitch) {
-            smsCodeType = TTASMSCodeScenarioBindPhoneRetry;
-        } else if (self.actionType == TTAccountLoginAlertActionTypeResetPassword) {
-            smsCodeType = TTASMSCodeScenarioChangePasswordRetry;
-        }
-        
-        if (self.actionType == TTAccountLoginAlertActionTypeLogin || self.actionType == TTAccountLoginAlertActionTypeBind) {
-            self.phoneNumString = self.firstTextField.text;
-        }
-        __weak typeof(self) wself = self;
-        [TTAccount sendSMSCodeWithPhone:self.phoneNumString captcha:self.captchaString SMSCodeType:smsCodeType unbindExist:(self.actionType == TTAccountLoginAlertActionTypePhoneNumSwitch ? YES : NO) completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
-            
-            if (!error) {
-                [wself.resendTimer invalidate];
-                wself.resendTimer = nil;
-                wself.resendSecond = kTTAccountResendDuration;
-                
-                if ([wself devieTypeSwitch] == 1) {
-                    wself.resendBtn.titleLabel.font = [UIFont systemFontOfSize:kTTAccountResendBtnFontSizeIphone6s];
-                } else if ([wself devieTypeSwitch] == 0) {
-                    wself.resendBtn.titleLabel.font = [UIFont systemFontOfSize:kTTAccountResendBtnFontSizeIphone5s];
-                } else if ([wself devieTypeSwitch] == -1) {
-                    wself.resendBtn.titleLabel.font = [UIFont systemFontOfSize:kTTAccountResendBtnFontSizeIphone4s];
-                }
-                
-                [wself.resendBtn setTitle:[NSString stringWithFormat:@"重新发送(%@s)",@(wself.resendSecond).stringValue] forState:UIControlStateNormal];
-                wself.resendBtn.titleColorThemeKey = kColorText3;
-                [wself.resendBtn sizeToFit];
-                wself.resendBtn.height = MAX(44, CGRectGetHeight(self.resendBtn.bounds));
-                wself.resendBtn.right = CGRectGetMaxX(self.firstTextField.frame) - 11;
-                wself.resendBtn.centerY = self.firstTextField.centerY;
-                
-                wself.resendTimer = [TTNoRetainRefNSTimer timerWithTimeInterval:1
-                                                                         target:wself
-                                                                       selector:@selector(updateTimeDidFireTimer:)
-                                                                       userInfo:nil
-                                                                        repeats:YES];
-                [[NSRunLoop mainRunLoop] addTimer:wself.resendTimer forMode:NSRunLoopCommonModes];
-                
-            } else {
-                [wself.resendTimer invalidate];
-                wself.resendTimer = nil;
-                wself.resendSecond = 0;
-                [wself updateTimeDidFireTimer:nil];
-                
-                if (captchaImage) {
-                    TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
-                        
-                        if (type == TTAccountAlertCompletionEventTypeDone) {
-                            wself.captchaString = captchaStr;
-                            [wself resendBtnTouched:nil];
-                        }
-                    }];
-                    [cAlert show];
-                } else {
-                    [wself.errorLabel setAttributedText:[wself.class attributedStringWithString:error.userInfo[@"description"] fontSize:11.0f lineSpacing:0 lineBreakMode:NSLineBreakByWordWrapping textAlignment:NSTextAlignmentLeft]];
-                }
-            }
-        }];
-    }
+//    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//        [TTTracker category:@"umeng" event:@"register_new" label:@"quick_login_send_auth" dict:@{@"source":self.source}];
+//    }
+//    // LogV3
+//    NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
+//    [extraDict setValue:self.source forKey:@"source"];
+//    [extraDict setValue:@"send_auth" forKey:@"action_type"];
+//    [TTTrackerWrapper eventV3:@"login_quick_click" params:extraDict isDoubleSending:YES];
+//
+//    // 在任何情况下，只要点击了resendBtn，errorLabel不会再显示“验证码错误”，没有显示内容
+//    self.errorLabel.text = @"";
+//    self.secondTextField.text = @"";
+//
+//    if ((self.actionType == TTAccountLoginAlertActionTypeLogin || self.actionType == TTAccountLoginAlertActionTypeBind) && ![self validateMobileNumber:self.firstTextField.text]) {
+//        // 点击“发送验证码”按钮，如果验证码无效，判断手机号为错误
+//        [self.phoneErrorLabel setAttributedText:[self.class attributedStringWithString:@"手机号错误" fontSize:11.0f lineSpacing:0 lineBreakMode:NSLineBreakByWordWrapping textAlignment:NSTextAlignmentLeft]];
+//        [self codeInvalide];
+//    } else {
+//        // 如果有效，是正确的手机号，phoneErrorLabel没有显示内容, 此时 secondTextField成为第一响应者
+//        self.phoneErrorLabel.text = @"";
+//        [self.secondTextField becomeFirstResponder];
+//
+//        TTASMSCodeScenarioType smsCodeType = TTASMSCodeScenarioBindPhoneRetry;
+//        if (self.actionType == TTAccountLoginAlertActionTypeLogin) {
+//            //快捷登录弹窗重发验证码
+//            smsCodeType = TTASMSCodeScenarioQuickLoginRetry;
+//        } else if (self.actionType == TTAccountLoginAlertActionTypePhoneNumSwitch) {
+//            smsCodeType = TTASMSCodeScenarioBindPhoneRetry;
+//        } else if (self.actionType == TTAccountLoginAlertActionTypeResetPassword) {
+//            smsCodeType = TTASMSCodeScenarioChangePasswordRetry;
+//        }
+//
+//        if (self.actionType == TTAccountLoginAlertActionTypeLogin || self.actionType == TTAccountLoginAlertActionTypeBind) {
+//            self.phoneNumString = self.firstTextField.text;
+//        }
+//        __weak typeof(self) wself = self;
+//        [TTAccount sendSMSCodeWithPhone:self.phoneNumString captcha:self.captchaString SMSCodeType:smsCodeType unbindExist:(self.actionType == TTAccountLoginAlertActionTypePhoneNumSwitch ? YES : NO) completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
+//
+//            if (!error) {
+//                [wself.resendTimer invalidate];
+//                wself.resendTimer = nil;
+//                wself.resendSecond = kTTAccountResendDuration;
+//
+//                if ([wself devieTypeSwitch] == 1) {
+//                    wself.resendBtn.titleLabel.font = [UIFont systemFontOfSize:kTTAccountResendBtnFontSizeIphone6s];
+//                } else if ([wself devieTypeSwitch] == 0) {
+//                    wself.resendBtn.titleLabel.font = [UIFont systemFontOfSize:kTTAccountResendBtnFontSizeIphone5s];
+//                } else if ([wself devieTypeSwitch] == -1) {
+//                    wself.resendBtn.titleLabel.font = [UIFont systemFontOfSize:kTTAccountResendBtnFontSizeIphone4s];
+//                }
+//
+//                [wself.resendBtn setTitle:[NSString stringWithFormat:@"重新发送(%@s)",@(wself.resendSecond).stringValue] forState:UIControlStateNormal];
+//                wself.resendBtn.titleColorThemeKey = kColorText3;
+//                [wself.resendBtn sizeToFit];
+//                wself.resendBtn.height = MAX(44, CGRectGetHeight(self.resendBtn.bounds));
+//                wself.resendBtn.right = CGRectGetMaxX(self.firstTextField.frame) - 11;
+//                wself.resendBtn.centerY = self.firstTextField.centerY;
+//
+//                wself.resendTimer = [TTNoRetainRefNSTimer timerWithTimeInterval:1
+//                                                                         target:wself
+//                                                                       selector:@selector(updateTimeDidFireTimer:)
+//                                                                       userInfo:nil
+//                                                                        repeats:YES];
+//                [[NSRunLoop mainRunLoop] addTimer:wself.resendTimer forMode:NSRunLoopCommonModes];
+//
+//            } else {
+//                [wself.resendTimer invalidate];
+//                wself.resendTimer = nil;
+//                wself.resendSecond = 0;
+//                [wself updateTimeDidFireTimer:nil];
+//
+//                if (captchaImage) {
+//                    TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
+//
+//                        if (type == TTAccountAlertCompletionEventTypeDone) {
+//                            wself.captchaString = captchaStr;
+//                            [wself resendBtnTouched:nil];
+//                        }
+//                    }];
+//                    [cAlert show];
+//                } else {
+//                    [wself.errorLabel setAttributedText:[wself.class attributedStringWithString:error.userInfo[@"description"] fontSize:11.0f lineSpacing:0 lineBreakMode:NSLineBreakByWordWrapping textAlignment:NSTextAlignmentLeft]];
+//                }
+//            }
+//        }];
+//    }
 }
 
 - (void)updateTimeDidFireTimer:(NSTimer *)timer

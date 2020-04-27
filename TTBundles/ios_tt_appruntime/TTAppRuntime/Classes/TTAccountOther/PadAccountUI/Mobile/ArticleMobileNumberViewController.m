@@ -392,288 +392,288 @@
 
 - (void)registerPhoneNumber
 {
-    __weak ArticleMobileNumberViewController *weakSelf = self;
-    void (^registerBlock)(NSString *, NSString *) = ^(NSString *mobile, NSString *captcha) {
-        NSDictionary *previousMobileInformation = [[self class] previousMobileCodeInformation];
-        NSTimeInterval timeInterval = [[previousMobileInformation valueForKey:@"time"] doubleValue];
-        NSInteger retryTime = [[previousMobileInformation valueForKey:@"retryTime"] intValue];
-        NSInteger timeOffset = [[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:timeInterval]];
-        if (([[previousMobileInformation valueForKey:@"mobile"] isEqualToString:mobile] &&
-             ([[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioPhoneRegister ||
-              [[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioPhoneRegisterRetry)) &&
-            (retryTime > timeOffset)) {
-            /// 已经发送过验证码
-            NSNumber *retryTime = [previousMobileInformation valueForKey:@"retryTime"];
-            
-            /////// 友盟统计
-            wrapperTrackEvent(@"login_register", @"register_next");
-
-            ArticleMobileRegisterViewController *viewController = [[ArticleMobileRegisterViewController alloc] init];
-            viewController.mobileNumber = self.mobileField.text;
-            viewController.completion = self.completion;
-            viewController.timeoutInterval = retryTime.intValue;
-            [weakSelf.navigationController pushViewController:viewController animated:YES];
-        } else {
-            [self showWaitingIndicator];
-            
-            [TTTracker eventV3:@"auth_mobile_send_verification_code" params:@{@"source":@"settings"}];
-            
-            [TTAccountManager startSendCodeWithPhoneNumber:mobile captcha:captcha type:TTASMSCodeScenarioPhoneRegister unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
-                weakSelf.captchaImage = captchaImage;
-                weakSelf.captchaValue = nil;
-                weakSelf.error = error;
-                if (!error) {
-                    ArticleMobileRegisterViewController *viewController = [[ArticleMobileRegisterViewController alloc] init];
-                    viewController.completion = weakSelf.completion;
-                    viewController.mobileNumber = self.mobileField.text;
-                    viewController.timeoutInterval = retryTime.intValue;
-                    [weakSelf.navigationController pushViewController:viewController animated:YES];
-                    
-                    /////// 友盟统计
-                    wrapperTrackEvent(@"login_register", @"register_next");
-                    
-                    NSMutableDictionary *information = [NSMutableDictionary dictionaryWithCapacity:2];
-                    [information setValue:@(TTASMSCodeScenarioPhoneRegister) forKey:@"type"];
-                    [information setValue:retryTime forKey:@"retryTime"];
-                    [information setValue:mobile forKey:@"mobile"];
-                    [information setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"time"];
-                    [[self class] setPreviousMobileCodeInformation:information];
-                    [weakSelf dismissWaitingIndicator];
-                } else {
-                    /////// 友盟统计
-                    wrapperTrackEvent(@"login_register", @"register_next_error");
-                    
-                    if (captchaImage) {
-                        [weakSelf dismissWaitingIndicator];
-                        [weakSelf registerPhoneNumber];
-                    } else {
-                        if (error.code == kPRHasRegisteredErrorCode) {
-                            /// 该账号已经注册
-                            NSString *tip = [NSString stringWithFormat:NSLocalizedString(@"手机号%@已注册，可以直接登录", nil),
-                             weakSelf.mobileField.text];
-                            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:tip message:nil preferredType:TTThemedAlertControllerTypeAlert];
-                            [alert addActionWithTitle:NSLocalizedString(@"去登录", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-                                if (weakSelf.navigationController.viewControllers.count >= 2) {
-                                    ArticleMobileLoginViewController *viewController = weakSelf.navigationController.viewControllers[[weakSelf.navigationController.viewControllers indexOfObject:weakSelf] - 1];
-                                    if ([viewController isKindOfClass:[ArticleMobileLoginViewController class]]) {
-                                        viewController.mobileField.text = weakSelf.mobileField.text;
-                                        [weakSelf goBack];
-                                    } else {
-                                        UINavigationController *navigationController = weakSelf.navigationController;
-                                        [weakSelf.navigationController popViewControllerAnimated:NO];
-                                        ArticleMobileLoginViewController *loginViewController = [[ArticleMobileLoginViewController alloc] init];
-                                        loginViewController.completion = weakSelf.completion;
-                                        loginViewController.mobileNumber = weakSelf.mobileField.text;
-                                        [navigationController pushViewController:loginViewController animated:YES];
-                                    }
-                                } else {
-                                    [weakSelf goBack];
-                                }
-                            }];
-                            [alert addActionWithTitle:NSLocalizedString(@"取消", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-                                [weakSelf.mobileField becomeFirstResponder];
-                            }];
-                            [alert showFrom:self animated:YES];
-                            [weakSelf dismissWaitingIndicator];
-                        } else {
-                            [weakSelf dismissWaitingIndicatorWithError:error];
-                        }
-                    }
-                }
-            }];
-        }
-    };
-    
-    void (^alertCaptchaBlock)(UIImage *, NSError *, TTASMSCodeScenarioType) =
-    ^(UIImage *captcha, NSError *error, TTASMSCodeScenarioType scenario) {
-        ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
-        alertView.error = error;
-        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
-            self.captchaValue = alertView.captchaValue;
-            self.captchaImage = alertView.captchaImage;
-            if (alertView.captchaValue.length > 0) {
-                registerBlock(self.mobileField.text, alertView.captchaValue);
-            }
-        }];
-    };
-    
-    if (self.captchaImage && !self.captchaValue) {
-        alertCaptchaBlock(self.captchaImage, self.error, TTASMSCodeScenarioPhoneRegister);
-    } else {
-        registerBlock(self.mobileField.text, self.captchaValue);
-    }
+//    __weak ArticleMobileNumberViewController *weakSelf = self;
+//    void (^registerBlock)(NSString *, NSString *) = ^(NSString *mobile, NSString *captcha) {
+//        NSDictionary *previousMobileInformation = [[self class] previousMobileCodeInformation];
+//        NSTimeInterval timeInterval = [[previousMobileInformation valueForKey:@"time"] doubleValue];
+//        NSInteger retryTime = [[previousMobileInformation valueForKey:@"retryTime"] intValue];
+//        NSInteger timeOffset = [[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:timeInterval]];
+//        if (([[previousMobileInformation valueForKey:@"mobile"] isEqualToString:mobile] &&
+//             ([[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioPhoneRegister ||
+//              [[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioPhoneRegisterRetry)) &&
+//            (retryTime > timeOffset)) {
+//            /// 已经发送过验证码
+//            NSNumber *retryTime = [previousMobileInformation valueForKey:@"retryTime"];
+//
+//            /////// 友盟统计
+//            wrapperTrackEvent(@"login_register", @"register_next");
+//
+//            ArticleMobileRegisterViewController *viewController = [[ArticleMobileRegisterViewController alloc] init];
+//            viewController.mobileNumber = self.mobileField.text;
+//            viewController.completion = self.completion;
+//            viewController.timeoutInterval = retryTime.intValue;
+//            [weakSelf.navigationController pushViewController:viewController animated:YES];
+//        } else {
+//            [self showWaitingIndicator];
+//
+//            [TTTracker eventV3:@"auth_mobile_send_verification_code" params:@{@"source":@"settings"}];
+//
+//            [TTAccountManager startSendCodeWithPhoneNumber:mobile captcha:captcha type:TTASMSCodeScenarioPhoneRegister unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
+//                weakSelf.captchaImage = captchaImage;
+//                weakSelf.captchaValue = nil;
+//                weakSelf.error = error;
+//                if (!error) {
+//                    ArticleMobileRegisterViewController *viewController = [[ArticleMobileRegisterViewController alloc] init];
+//                    viewController.completion = weakSelf.completion;
+//                    viewController.mobileNumber = self.mobileField.text;
+//                    viewController.timeoutInterval = retryTime.intValue;
+//                    [weakSelf.navigationController pushViewController:viewController animated:YES];
+//
+//                    /////// 友盟统计
+//                    wrapperTrackEvent(@"login_register", @"register_next");
+//
+//                    NSMutableDictionary *information = [NSMutableDictionary dictionaryWithCapacity:2];
+//                    [information setValue:@(TTASMSCodeScenarioPhoneRegister) forKey:@"type"];
+//                    [information setValue:retryTime forKey:@"retryTime"];
+//                    [information setValue:mobile forKey:@"mobile"];
+//                    [information setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"time"];
+//                    [[self class] setPreviousMobileCodeInformation:information];
+//                    [weakSelf dismissWaitingIndicator];
+//                } else {
+//                    /////// 友盟统计
+//                    wrapperTrackEvent(@"login_register", @"register_next_error");
+//
+//                    if (captchaImage) {
+//                        [weakSelf dismissWaitingIndicator];
+//                        [weakSelf registerPhoneNumber];
+//                    } else {
+//                        if (error.code == kPRHasRegisteredErrorCode) {
+//                            /// 该账号已经注册
+//                            NSString *tip = [NSString stringWithFormat:NSLocalizedString(@"手机号%@已注册，可以直接登录", nil),
+//                             weakSelf.mobileField.text];
+//                            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:tip message:nil preferredType:TTThemedAlertControllerTypeAlert];
+//                            [alert addActionWithTitle:NSLocalizedString(@"去登录", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+//                                if (weakSelf.navigationController.viewControllers.count >= 2) {
+//                                    ArticleMobileLoginViewController *viewController = weakSelf.navigationController.viewControllers[[weakSelf.navigationController.viewControllers indexOfObject:weakSelf] - 1];
+//                                    if ([viewController isKindOfClass:[ArticleMobileLoginViewController class]]) {
+//                                        viewController.mobileField.text = weakSelf.mobileField.text;
+//                                        [weakSelf goBack];
+//                                    } else {
+//                                        UINavigationController *navigationController = weakSelf.navigationController;
+//                                        [weakSelf.navigationController popViewControllerAnimated:NO];
+//                                        ArticleMobileLoginViewController *loginViewController = [[ArticleMobileLoginViewController alloc] init];
+//                                        loginViewController.completion = weakSelf.completion;
+//                                        loginViewController.mobileNumber = weakSelf.mobileField.text;
+//                                        [navigationController pushViewController:loginViewController animated:YES];
+//                                    }
+//                                } else {
+//                                    [weakSelf goBack];
+//                                }
+//                            }];
+//                            [alert addActionWithTitle:NSLocalizedString(@"取消", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+//                                [weakSelf.mobileField becomeFirstResponder];
+//                            }];
+//                            [alert showFrom:self animated:YES];
+//                            [weakSelf dismissWaitingIndicator];
+//                        } else {
+//                            [weakSelf dismissWaitingIndicatorWithError:error];
+//                        }
+//                    }
+//                }
+//            }];
+//        }
+//    };
+//
+//    void (^alertCaptchaBlock)(UIImage *, NSError *, TTASMSCodeScenarioType) =
+//    ^(UIImage *captcha, NSError *error, TTASMSCodeScenarioType scenario) {
+//        ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
+//        alertView.error = error;
+//        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
+//            self.captchaValue = alertView.captchaValue;
+//            self.captchaImage = alertView.captchaImage;
+//            if (alertView.captchaValue.length > 0) {
+//                registerBlock(self.mobileField.text, alertView.captchaValue);
+//            }
+//        }];
+//    };
+//
+//    if (self.captchaImage && !self.captchaValue) {
+//        alertCaptchaBlock(self.captchaImage, self.error, TTASMSCodeScenarioPhoneRegister);
+//    } else {
+//        registerBlock(self.mobileField.text, self.captchaValue);
+//    }
 }
 
 - (void)retrievePhoneNumber
 {
-    __weak ArticleMobileNumberViewController *weakSelf = self;
-    void (^registerBlock)(NSString *, NSString *) = ^(NSString *mobile, NSString *captcha) {
-        NSDictionary *previousMobileInformation = [[self class] previousMobileCodeInformation];
-        NSTimeInterval timeInterval = [[previousMobileInformation valueForKey:@"time"] doubleValue];
-        NSInteger retryTime = [[previousMobileInformation valueForKey:@"retryTime"] intValue];
-        NSInteger timeOffset = [[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:timeInterval]];
-        
-        if (([[previousMobileInformation valueForKey:@"mobile"] isEqualToString:mobile] &&
-             ([[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioFindPassword ||
-              [[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioFindPasswordRetry)) &&
-            (retryTime > timeOffset)) {
-            /// 已经发送过验证码
-            NSNumber *retryTime = [previousMobileInformation valueForKey:@"retryTime"];
-            /////// 友盟统计
-            // TODO: AccountLog3.0
-            wrapperTrackEvent(@"login_register", @"find_password_next");
-            
-            ArticleMobileRetrieveViewController *viewController = [[ArticleMobileRetrieveViewController alloc] init];
-            viewController.mobileNumber = self.mobileField.text;
-            viewController.timeoutInterval = retryTime.intValue;
-            [weakSelf.navigationController pushViewController:viewController animated:YES];
-        } else {
-            [self showWaitingIndicator];
-            
-            [TTAccountManager startSendCodeWithPhoneNumber:mobile captcha:captcha type:TTASMSCodeScenarioFindPassword unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
-                
-                weakSelf.captchaImage = captchaImage;
-                weakSelf.captchaValue = nil;
-                weakSelf.error = error;
-                if (!error) {
-                    /////// 友盟统计
-                    // TODO: AccountLog3.0
-                    wrapperTrackEvent(@"login_register", @"find_password_next");
-                    
-                    ArticleMobileRetrieveViewController *viewController = [[ArticleMobileRetrieveViewController alloc] init];
-                    viewController.mobileNumber = self.mobileField.text;
-                    viewController.timeoutInterval = retryTime.intValue;
-                    [weakSelf.navigationController pushViewController:viewController animated:YES];
-                    
-                    NSMutableDictionary *information = [NSMutableDictionary dictionaryWithCapacity:2];
-                    [information setValue:@(TTASMSCodeScenarioFindPassword) forKey:@"type"];
-                    [information setValue:retryTime forKey:@"retryTime"];
-                    [information setValue:mobile forKey:@"mobile"];
-                    [information setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"time"];
-                    [[self class] setPreviousMobileCodeInformation:information];
-                    [weakSelf dismissWaitingIndicator];
-                } else {
-                    /////// 友盟统计
-                    // TODO: AccountLog3.0
-                    wrapperTrackEvent(@"login_register", @"find_password_next_error");
-                    if (captchaImage) {
-                        [weakSelf dismissWaitingIndicator];
-                        [weakSelf retrievePhoneNumber];
-                    } else {
-                        [weakSelf dismissWaitingIndicatorWithError:error];
-                    }
-                }
-            }];
-        }
-    };
-    
-    void (^alertCaptchaBlock)(UIImage *, NSError *, TTASMSCodeScenarioType) =
-    ^(UIImage *captcha, NSError *error, TTASMSCodeScenarioType scenario) {
-        ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
-        alertView.error = error;
-        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
-            self.captchaValue = alertView.captchaValue;
-            self.captchaImage = alertView.captchaImage;
-            if (alertView.captchaValue.length > 0) {
-                registerBlock(self.mobileField.text, alertView.captchaValue);
-            }
-        }];
-    };
-    
-    if (self.captchaImage && !self.captchaValue) {
-        alertCaptchaBlock(self.captchaImage, self.error, TTASMSCodeScenarioFindPassword);
-    } else {
-        registerBlock(self.mobileField.text, self.captchaValue);
-    }
+//    __weak ArticleMobileNumberViewController *weakSelf = self;
+//    void (^registerBlock)(NSString *, NSString *) = ^(NSString *mobile, NSString *captcha) {
+//        NSDictionary *previousMobileInformation = [[self class] previousMobileCodeInformation];
+//        NSTimeInterval timeInterval = [[previousMobileInformation valueForKey:@"time"] doubleValue];
+//        NSInteger retryTime = [[previousMobileInformation valueForKey:@"retryTime"] intValue];
+//        NSInteger timeOffset = [[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:timeInterval]];
+//
+//        if (([[previousMobileInformation valueForKey:@"mobile"] isEqualToString:mobile] &&
+//             ([[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioFindPassword ||
+//              [[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioFindPasswordRetry)) &&
+//            (retryTime > timeOffset)) {
+//            /// 已经发送过验证码
+//            NSNumber *retryTime = [previousMobileInformation valueForKey:@"retryTime"];
+//            /////// 友盟统计
+//            // TODO: AccountLog3.0
+//            wrapperTrackEvent(@"login_register", @"find_password_next");
+//
+//            ArticleMobileRetrieveViewController *viewController = [[ArticleMobileRetrieveViewController alloc] init];
+//            viewController.mobileNumber = self.mobileField.text;
+//            viewController.timeoutInterval = retryTime.intValue;
+//            [weakSelf.navigationController pushViewController:viewController animated:YES];
+//        } else {
+//            [self showWaitingIndicator];
+//
+//            [TTAccountManager startSendCodeWithPhoneNumber:mobile captcha:captcha type:TTASMSCodeScenarioFindPassword unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
+//
+//                weakSelf.captchaImage = captchaImage;
+//                weakSelf.captchaValue = nil;
+//                weakSelf.error = error;
+//                if (!error) {
+//                    /////// 友盟统计
+//                    // TODO: AccountLog3.0
+//                    wrapperTrackEvent(@"login_register", @"find_password_next");
+//
+//                    ArticleMobileRetrieveViewController *viewController = [[ArticleMobileRetrieveViewController alloc] init];
+//                    viewController.mobileNumber = self.mobileField.text;
+//                    viewController.timeoutInterval = retryTime.intValue;
+//                    [weakSelf.navigationController pushViewController:viewController animated:YES];
+//
+//                    NSMutableDictionary *information = [NSMutableDictionary dictionaryWithCapacity:2];
+//                    [information setValue:@(TTASMSCodeScenarioFindPassword) forKey:@"type"];
+//                    [information setValue:retryTime forKey:@"retryTime"];
+//                    [information setValue:mobile forKey:@"mobile"];
+//                    [information setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"time"];
+//                    [[self class] setPreviousMobileCodeInformation:information];
+//                    [weakSelf dismissWaitingIndicator];
+//                } else {
+//                    /////// 友盟统计
+//                    // TODO: AccountLog3.0
+//                    wrapperTrackEvent(@"login_register", @"find_password_next_error");
+//                    if (captchaImage) {
+//                        [weakSelf dismissWaitingIndicator];
+//                        [weakSelf retrievePhoneNumber];
+//                    } else {
+//                        [weakSelf dismissWaitingIndicatorWithError:error];
+//                    }
+//                }
+//            }];
+//        }
+//    };
+//
+//    void (^alertCaptchaBlock)(UIImage *, NSError *, TTASMSCodeScenarioType) =
+//    ^(UIImage *captcha, NSError *error, TTASMSCodeScenarioType scenario) {
+//        ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
+//        alertView.error = error;
+//        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
+//            self.captchaValue = alertView.captchaValue;
+//            self.captchaImage = alertView.captchaImage;
+//            if (alertView.captchaValue.length > 0) {
+//                registerBlock(self.mobileField.text, alertView.captchaValue);
+//            }
+//        }];
+//    };
+//
+//    if (self.captchaImage && !self.captchaValue) {
+//        alertCaptchaBlock(self.captchaImage, self.error, TTASMSCodeScenarioFindPassword);
+//    } else {
+//        registerBlock(self.mobileField.text, self.captchaValue);
+//    }
 }
 
 - (void)bindPhoneNumber
 {
-    __weak ArticleMobileNumberViewController *weakSelf = self;
-    void (^bindMobileBlock)(NSString *, NSString *) = ^(NSString *mobile, NSString *captcha) {
-        NSDictionary *previousMobileInformation = [[self class] previousMobileCodeInformation];
-        NSTimeInterval timeInterval = [[previousMobileInformation valueForKey:@"time"] doubleValue];
-        NSInteger retryTime = [[previousMobileInformation valueForKey:@"retryTime"] intValue];
-        NSInteger timeOffset = [[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:timeInterval]];
-        if (([[previousMobileInformation valueForKey:@"mobile"] isEqualToString:mobile] &&
-             ([[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioBindPhone ||
-              [[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioBindPhoneRetry)) &&
-            (retryTime > timeOffset)) {
-            /// 已经发送过验证码
-            NSNumber *retryTime = [previousMobileInformation valueForKey:@"retryTime"];
-            /////// 友盟统计
-            wrapperTrackEvent(@"login_register", @"register_next");
-            
-            ArticleMobileBindViewController *viewController = [[ArticleMobileBindViewController alloc] init];
-            viewController.mobileNumber = weakSelf.mobileField.text;
-            viewController.timeoutInterval = retryTime.intValue;
-            viewController.completion = weakSelf.completion;
-            [weakSelf.navigationController pushViewController:viewController animated:YES];
-        } else {
-            [self showWaitingIndicator];
-            
-            [TTAccountManager startSendCodeWithPhoneNumber:mobile captcha:captcha type:TTASMSCodeScenarioBindPhone unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
-                
-                weakSelf.captchaImage = captchaImage;
-                weakSelf.captchaValue = nil;
-                weakSelf.error = error;
-                if (!error) {
-                    /////// 友盟统计
-                    wrapperTrackEvent(@"login_register", @"register_next");
-                    
-                    ArticleMobileBindViewController *viewController = [[ArticleMobileBindViewController alloc] initWithNibName:nil bundle:nil];
-                    viewController.mobileNumber = self.mobileField.text;
-                    viewController.timeoutInterval = retryTime.intValue;
-                    viewController.completion = weakSelf.completion;
-                    [weakSelf.navigationController pushViewController:viewController animated:YES];
-                    
-                    NSMutableDictionary *information =
-                    [NSMutableDictionary dictionaryWithCapacity:2];
-                    [information setValue:@(TTASMSCodeScenarioBindPhone) forKey:@"type"];
-                    [information setValue:retryTime forKey:@"retryTime"];
-                    [information setValue:mobile forKey:@"mobile"];
-                    [information setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"time"];
-                    [[self class] setPreviousMobileCodeInformation:information];
-                    [weakSelf dismissWaitingIndicator];
-                } else {
-                    
-                    if ([error.userInfo[@"error_code"] intValue] == 1001) {
-                        [weakSelf dismissWaitingIndicator];
-                        [weakSelf switchBind:error];
-                    } else {
-                        /////// 友盟统计
-                        wrapperTrackEvent(@"login_register", @"register_next_error");
-                        
-                        if (captchaImage) {
-                            [weakSelf dismissWaitingIndicator];
-                            [weakSelf bindPhoneNumber];
-                        } else {
-                            [weakSelf dismissWaitingIndicatorWithError:error];
-                        }
-                    }
-                }
-            }];
-        }
-    };
-    
-    void (^alertCaptchaBlock)(UIImage *, NSError *, TTASMSCodeScenarioType) =
-    ^(UIImage *captcha, NSError *error, TTASMSCodeScenarioType scenario) {
-        ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
-        alertView.error = error;
-        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
-            self.captchaValue = alertView.captchaValue;
-            self.captchaImage = alertView.captchaImage;
-            if (alertView.captchaValue.length > 0) {
-                bindMobileBlock(self.mobileField.text, alertView.captchaValue);
-            }
-        }];
-    };
-    
-    if (self.captchaImage && !self.captchaValue) {
-        alertCaptchaBlock(self.captchaImage, self.error, TTASMSCodeScenarioBindPhone);
-    } else {
-        bindMobileBlock(self.mobileField.text, self.captchaValue);
-    }
+//    __weak ArticleMobileNumberViewController *weakSelf = self;
+//    void (^bindMobileBlock)(NSString *, NSString *) = ^(NSString *mobile, NSString *captcha) {
+//        NSDictionary *previousMobileInformation = [[self class] previousMobileCodeInformation];
+//        NSTimeInterval timeInterval = [[previousMobileInformation valueForKey:@"time"] doubleValue];
+//        NSInteger retryTime = [[previousMobileInformation valueForKey:@"retryTime"] intValue];
+//        NSInteger timeOffset = [[NSDate date] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:timeInterval]];
+//        if (([[previousMobileInformation valueForKey:@"mobile"] isEqualToString:mobile] &&
+//             ([[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioBindPhone ||
+//              [[previousMobileInformation valueForKey:@"type"] intValue] == TTASMSCodeScenarioBindPhoneRetry)) &&
+//            (retryTime > timeOffset)) {
+//            /// 已经发送过验证码
+//            NSNumber *retryTime = [previousMobileInformation valueForKey:@"retryTime"];
+//            /////// 友盟统计
+//            wrapperTrackEvent(@"login_register", @"register_next");
+//
+//            ArticleMobileBindViewController *viewController = [[ArticleMobileBindViewController alloc] init];
+//            viewController.mobileNumber = weakSelf.mobileField.text;
+//            viewController.timeoutInterval = retryTime.intValue;
+//            viewController.completion = weakSelf.completion;
+//            [weakSelf.navigationController pushViewController:viewController animated:YES];
+//        } else {
+//            [self showWaitingIndicator];
+//
+//            [TTAccountManager startSendCodeWithPhoneNumber:mobile captcha:captcha type:TTASMSCodeScenarioBindPhone unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
+//
+//                weakSelf.captchaImage = captchaImage;
+//                weakSelf.captchaValue = nil;
+//                weakSelf.error = error;
+//                if (!error) {
+//                    /////// 友盟统计
+//                    wrapperTrackEvent(@"login_register", @"register_next");
+//
+//                    ArticleMobileBindViewController *viewController = [[ArticleMobileBindViewController alloc] initWithNibName:nil bundle:nil];
+//                    viewController.mobileNumber = self.mobileField.text;
+//                    viewController.timeoutInterval = retryTime.intValue;
+//                    viewController.completion = weakSelf.completion;
+//                    [weakSelf.navigationController pushViewController:viewController animated:YES];
+//
+//                    NSMutableDictionary *information =
+//                    [NSMutableDictionary dictionaryWithCapacity:2];
+//                    [information setValue:@(TTASMSCodeScenarioBindPhone) forKey:@"type"];
+//                    [information setValue:retryTime forKey:@"retryTime"];
+//                    [information setValue:mobile forKey:@"mobile"];
+//                    [information setValue:@([[NSDate date] timeIntervalSince1970]) forKey:@"time"];
+//                    [[self class] setPreviousMobileCodeInformation:information];
+//                    [weakSelf dismissWaitingIndicator];
+//                } else {
+//
+//                    if ([error.userInfo[@"error_code"] intValue] == 1001) {
+//                        [weakSelf dismissWaitingIndicator];
+//                        [weakSelf switchBind:error];
+//                    } else {
+//                        /////// 友盟统计
+//                        wrapperTrackEvent(@"login_register", @"register_next_error");
+//
+//                        if (captchaImage) {
+//                            [weakSelf dismissWaitingIndicator];
+//                            [weakSelf bindPhoneNumber];
+//                        } else {
+//                            [weakSelf dismissWaitingIndicatorWithError:error];
+//                        }
+//                    }
+//                }
+//            }];
+//        }
+//    };
+//
+//    void (^alertCaptchaBlock)(UIImage *, NSError *, TTASMSCodeScenarioType) =
+//    ^(UIImage *captcha, NSError *error, TTASMSCodeScenarioType scenario) {
+//        ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captcha];
+//        alertView.error = error;
+//        [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
+//            self.captchaValue = alertView.captchaValue;
+//            self.captchaImage = alertView.captchaImage;
+//            if (alertView.captchaValue.length > 0) {
+//                bindMobileBlock(self.mobileField.text, alertView.captchaValue);
+//            }
+//        }];
+//    };
+//
+//    if (self.captchaImage && !self.captchaValue) {
+//        alertCaptchaBlock(self.captchaImage, self.error, TTASMSCodeScenarioBindPhone);
+//    } else {
+//        bindMobileBlock(self.mobileField.text, self.captchaValue);
+//    }
 }
 
 
@@ -795,6 +795,7 @@
         case TTDeviceMode568: return ceil(size * 0.9);
         case TTDeviceMode480: return ceil(size * 0.9);
     }
+    return ceil(size);
 }
 
 + (CGFloat)fontSizeOfTermButtonTitle

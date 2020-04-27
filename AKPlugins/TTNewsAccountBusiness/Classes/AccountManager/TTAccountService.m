@@ -38,7 +38,10 @@
     
     [TTAccountManager notifyHTSLoginSuccess];
     
-    [TTAccount getUserInfoIgnoreDispatchWithCompletion:nil];
+    [TTAccount getUserInfoWithScene:TTAccountRequestNormal completion:^(TTAccountUserEntity * _Nullable userEntity, NSError * _Nullable error) {
+        
+    }];
+//    [TTAccount getUserInfoIgnoreDispatchWithCompletion:nil];
 }
 
 - (void)onAccountSessionExpired:(NSError *)error

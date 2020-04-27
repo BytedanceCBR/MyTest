@@ -1431,7 +1431,7 @@ TTEditUserProfileViewControllerDelegate
     NSString *userID = [TTAccountManager userID];
     
     WeakSelf;
-    [TTAccountManager startLogoutUserWithCompletion:^(BOOL success, NSError *error) {
+    [TTAccount logoutInScene:TTAccountLogoutSceneNormal completion:^(BOOL success, NSError * _Nullable error) {
         StrongSelf;
         
         BOOL shouldIgnoreError = NO;
@@ -1467,6 +1467,9 @@ TTEditUserProfileViewControllerDelegate
             [sendPhoneNumberCache removeObjectForKey:kFHPLoginhoneNumberCacheKey];
         }
     }];
+//    [TTAccountManager startLogoutUserWithCompletion:^(BOOL success, NSError *error) {
+//        
+//    }];
 }
 
 - (void)feedbackButtonClicked:(id)sender

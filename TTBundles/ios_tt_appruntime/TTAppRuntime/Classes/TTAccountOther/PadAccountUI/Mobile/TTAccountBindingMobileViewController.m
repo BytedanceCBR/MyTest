@@ -614,20 +614,20 @@ UIGestureRecognizerDelegate
                            error:(NSError *)error
                     forSMSCodeOp:(BOOL)smsCodeOp
 {
-    ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captchaImage];
-    alertView.error = error;
-    [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
-        
-        if (alertView.captchaValue.length > 0) {
-            if (smsCodeOp) {
-                [self sendSMSCode:TTASMSCodeScenarioBindPhoneRetry captcha:alertView.captchaValue];
-            } else {
-                [self bindingMobileWithCaptcha:alertView.captchaValue];
-            }
-        } else {
-            NSLog(@"%@-%@ > Error", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
-        }
-    }];
+//    ArticleMobileCaptchaAlertView *alertView = [[ArticleMobileCaptchaAlertView alloc] initWithCaptchaImage:captchaImage];
+//    alertView.error = error;
+//    [alertView showWithDismissBlock:^(ArticleMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
+//        
+//        if (alertView.captchaValue.length > 0) {
+//            if (smsCodeOp) {
+//                [self sendSMSCode:TTASMSCodeScenarioBindPhoneRetry captcha:alertView.captchaValue];
+//            } else {
+//                [self bindingMobileWithCaptcha:alertView.captchaValue];
+//            }
+//        } else {
+//            NSLog(@"%@-%@ > Error", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+//        }
+//    }];
 }
 
 #pragma mark - indicator

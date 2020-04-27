@@ -17,7 +17,7 @@
 #import "SSCommonLogic.h"
 
 #import "NewsBaseDelegate.h"
-#import "TTAccountLoggerImp.h"
+//#import "TTAccountLoggerImp.h"
 #import "TTAccountTestSettings.h"
 #import "CommonURLSetting.h"
 #import <FHHouseBase/FHURLSettings.h>
@@ -91,9 +91,9 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
     
     [TTAccount accountConf].accountMessageFirstResponder = [TTAccountService sharedAccountService];
     
-    TTAccountLoggerImp *delegateImp = [TTAccountLoggerImp new];
-    [TTAccount accountConf].loggerDelegate  = delegateImp;
-    [TTAccount accountConf].monitorDelegate = delegateImp;
+//    TTAccountLoggerImp *delegateImp = [TTAccountLoggerImp new];
+//    [TTAccount accountConf].loggerDelegate  = delegateImp;
+//    [TTAccount accountConf].monitorDelegate = delegateImp;
     
     [SSCookieManager setSessionIDToCookie:[[TTAccount sharedAccount] sessionKey]];
 

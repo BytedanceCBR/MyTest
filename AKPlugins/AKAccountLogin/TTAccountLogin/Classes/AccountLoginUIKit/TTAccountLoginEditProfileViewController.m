@@ -310,9 +310,9 @@ UIImagePickerControllerDelegate
     UIImage *tImage = [info objectForKey:imageType];
     
     if (tImage) {
-        [TTAccount startUploadUserPhoto:tImage progress:nil completion:^(TTAccountUserEntity *userEntity, NSError *error) {
-            [self responseDidUploadUserPhotoCompletionWithImage:tImage error:error];
-        }];
+//        [TTAccount startUploadUserPhoto:tImage progress:nil completion:^(TTAccountUserEntity *userEntity, NSError *error) {
+//            [self responseDidUploadUserPhotoCompletionWithImage:tImage error:error];
+//        }];
     }
 }
 

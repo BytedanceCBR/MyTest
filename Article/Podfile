@@ -224,7 +224,7 @@ def appPods
     pod_binary 'BDTFactoryConfigurator', '0.1.0'
 
     pod_binary 'TencentQQSDK','1.0.0' #QQ SDK降级 iOS13有问题
-    pod        'WechatSDK','0.1.5'
+    pod        'WechatSDK','0.3.0'
 
     #-----免流量统计-----
     pod_binary 'TTFlowStatisticsManager', '0.2.1'
@@ -427,9 +427,9 @@ def appPods
     ]
 
     #-----TTAccountSDK-----
-    pod 'TTAccountSDK', '4.9.1', :inhibit_warnings => false, :subspecs => [
+    pod 'TTAccountSDK', '5.10.1-rc.4', :inhibit_warnings => false, :subspecs => [
     'Account',
-    'Logger',
+#    'Logger',
     'WeChatAccount',
     'OneKeyLogin',
     'ThirdPartyAccountFoundation'
