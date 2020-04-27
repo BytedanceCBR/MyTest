@@ -14,14 +14,13 @@
 
 @interface FHDouYinBindingCell()
 
-@property (nonatomic, strong) UISwitch *switchButton;
 @property (nonatomic, strong) UILabel *titleLabel;
 
 @end
 
 @implementation FHDouYinBindingCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setupUI];
@@ -30,7 +29,7 @@
 }
 
 
-- (void)setupUI{
+- (void)setupUI {
     [self.contentView addSubview:self.titleLabel];
     [self.contentView addSubview:self.switchButton];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -47,14 +46,7 @@
     }];
 }
 
-- (void)refreshSwitch{
-    if (_delegate && [self.delegate respondsToSelector:@selector(hasDouYinAccount)]) {
-        _switchButton.on = [_delegate hasDouYinAccount];
-    }
-    
-}
-
-- (UILabel *)titleLabel{
+- (UILabel *)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.backgroundColor = [UIColor clearColor];
@@ -71,7 +63,6 @@
         _switchButton = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 51, 31)];
         _switchButton.onTintColor = [UIColor themeOrange4];
         [_switchButton addTarget:self action:@selector(accountSwitchButtonDidTap:) forControlEvents:UIControlEventValueChanged];
-        
     }
     return _switchButton;
 }
@@ -85,8 +76,16 @@
     NSLog(@"%@,luowentao",[connects firstObject].platformScreenName);
     NSLog(@"%@,luowentao",[connects firstObject].expiredTime);
     
-    if (_delegate && [self.delegate respondsToSelector:@selector(transformDouYinAccount:)]) {
-        [_delegate transformDouYinAccount:sender.isOn];
+    if (sender.isOn) { //点了之后变成开着代表之前是关着的，所以需要调用绑定抖音流程
+        if (self.DouYinBinding) {
+            //doit
+            self.DouYinBinding(sender);
+        }
+    } else {
+        if (self.DouYinUnbinding) {
+            //doit
+            self.DouYinUnbinding(sender);
+        }
     }
 }
 

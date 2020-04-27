@@ -12,7 +12,7 @@
 
 @implementation FHPhoneBindingCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setupUI];
@@ -20,7 +20,7 @@
     return self;
 }
 
-- (void)setupUI{
+- (void)setupUI {
     _titleLabel = [[UILabel alloc]init];
     _titleLabel.text = @"手机号";
     _titleLabel.font = [UIFont themeFontRegular:16];

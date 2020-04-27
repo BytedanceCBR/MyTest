@@ -6,11 +6,15 @@
 //
 
 #import "FHAccountBindingViewModel.h"
+#import "FHAccountBindingViewController.h"
 #import "FHThirdAccountsHeaderView.h"
 #import "TTAccountManager.h"
 #import "TTAccount+PlatformAuthLogin.h"
 #import "FHDouYinBindingCell.h"
 #import "FHPhoneBindingCell.h"
+#import "ToastManager.h"
+#import "FHMineAPI.h"
+#import "TTUIResponderHelper.h"
 
 typedef NS_ENUM(NSUInteger, FHSectionType) {
     kFHSectionTypeNone,
@@ -24,28 +28,32 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
     kFHCellTypeBindingDouYin,       //抖音一键登录
 };
 
-@interface FHAccountBindingViewModel ()<UITableViewDelegate,UITableViewDataSource,
-        FHDouYinBindingCellDelegate>
+typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
+    FHAccountBindingOperationWordOther     = 0,      //
+    FHAccountBindingOperationCancel        = 1,      // 取消绑定
+    FHAccountBindingOperationFailure       = 2,      // 绑定失败
+    FHAccountBindingOperationUnableFound   = 3,      // 解绑后无法找回该账户
+};
+
+@interface FHAccountBindingViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) NSMutableArray *sections;
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, weak) FHAccountBindingViewController *viewController;
 
-
 @end
 
 @implementation FHAccountBindingViewModel
 
-- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHAccountBindingViewController *)viewController {
+- (instancetype)initWithTableView:(UITableView *)tableView viewController:(FHAccountBindingViewController *)viewController {
     self = [super init];
     if (self) {
         self.tableView = tableView;
-        
         tableView.delegate = self;
         tableView.dataSource = self;
+        self.viewController = viewController;
         [self registerCellClasses];
         
-        self.viewController = viewController;
     }
     return self;
 }
@@ -55,18 +63,16 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
     [self.tableView registerClass:[FHPhoneBindingCell class] forCellReuseIdentifier:@"kFHCellTypeBindingPhone"];
 }
 
-
-
-#pragma mark - UITableViewDataSource
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+#pragma mark - UITableViewDataSource & UITableViewDelegate
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return [self.sections count];
 }
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [self numberOfRowsInSection:section];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section < 2 && indexPath.row < 1) {
         switch ([self cellTypeOfIndexPath:indexPath]) {
             case kFHCellTypeBindingPhone:{
@@ -79,8 +85,14 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
             case kFHCellTypeBindingDouYin:{
                 FHDouYinBindingCell *cell = (FHDouYinBindingCell *)[tableView dequeueReusableCellWithIdentifier:@"kFHCellTypeBindingDouYin"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                cell.delegate = self;
-                [cell refreshSwitch];
+                __weak typeof(self) wSelf = self;
+                cell.DouYinBinding = ^(UISwitch * sender) {
+                    [wSelf bindingDouYinAccount:sender];
+                };
+                cell.DouYinUnbinding = ^(UISwitch * sender){
+                    [wSelf handleItemselected:sender withType:FHAccountBindingOperationCancel];
+                };
+                [cell.switchButton setOn:[self hadDouYinAccount]];
                 return cell;
             }
                 break;
@@ -91,10 +103,11 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
     return [[UITableViewCell alloc]init];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 50;
 }
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     switch ([self sectionTypeOfIndex:section]) {
             case kFHSectionTypeBindingInfo:{
                 return 6.0;
@@ -111,10 +124,12 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
         }
         return 0.0;
 }
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 0.0;
 }
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *aView = nil;
     switch ([self sectionTypeOfIndex:section]) {
         case kFHSectionTypeBindingInfo:{
@@ -136,20 +151,9 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
     return aView;
 }
 
-
-
-#pragma mark - UITableViewDelegate
-
-
 #pragma mark - private methods
-- (NSString *)mobilePhoneNumber
-{
-    return [[TTAccount sharedAccount] user].mobile;
-}
 
-
-
--(void)initData{
+-(void)initData {
     if (!_sections) {
         _sections = [NSMutableArray array];
     }
@@ -164,13 +168,12 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
     });
 }
 
-- (FHSectionType)sectionTypeOfIndex:(NSUInteger)section{
+- (FHSectionType)sectionTypeOfIndex:(NSUInteger)section {
     if (section >= [self.sections count]) return kFHSectionTypeNone;
     return [[self.sections objectAtIndex:section] unsignedIntegerValue];
 }
 
-- (FHCellType)cellTypeOfIndexPath:(NSIndexPath *)indexPath
-{
+- (FHCellType)cellTypeOfIndexPath:(NSIndexPath *)indexPath {
     FHCellType cellType = kFHCellTypeNone;
     switch ([self sectionTypeOfIndex:indexPath.section]) {
         case kFHSectionTypeBindingInfo:
@@ -189,8 +192,7 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
     return cellType;
 }
 
-- (NSInteger)numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)numberOfRowsInSection:(NSInteger)section {
     if (section >= [self.sections count]) {
         return 0;
     }
@@ -208,33 +210,126 @@ typedef NS_ENUM(NSUInteger, FHCellType) {
     return numberOfRows;
 }
 
-#pragma mark - public methods
-- (BOOL)hasDouYinAccount{
+#pragma mark - TTAccount
+- (NSString *)mobilePhoneNumber {
+    NSString *mobile = [[TTAccount sharedAccount] user].mobile;
+    NSRange range = [mobile rangeOfString:@"****"];
+    if (mobile.length != 11) {
+        return @"电话号码异常";
+    }
+    if (mobile.length == 11 && range.location == NSNotFound) {
+        NSString *nowMobile = [NSString stringWithFormat:@"%@****%@",[mobile substringToIndex:3],[mobile substringFromIndex:7]];
+        mobile = nowMobile;
+    }
+    return mobile;
+}
+
+- (BOOL)hadDouYinAccount {
     NSArray<TTAccountPlatformEntity *> *connects = [[TTAccount sharedAccount] user].connects;
     for (TTAccountPlatformEntity *ent in connects) {
-        if ([ent.platformUID isEqualToString:@"97353843919" ]) {
+        if ([ent.platform isEqualToString:@"aweme_v2" ]) {
             return YES;
         }
     }
     return NO;
 }
-- (BOOL)transformDouYinAccount:(BOOL)isOn{
-    
-    if (!isOn) {
-        [TTAccount requestBindV2ForPlatform:TTAccountAuthTypeDouyin inCustomWebView:NO willBind:^(NSString * _Nonnull Bindinfo){
-            NSLog(@"luowentao Bindinfo:%@",Bindinfo);
-        } completion:^(BOOL success, NSError *error) {
-            NSLog(@"luowentao success = %d error = %@",success,error);
-        }];
-    } else {
-        [TTAccount requestLogoutForPlatform:TTAccountAuthTypeDouyin completion:^(BOOL success, NSError * _Nullable error) {
-            NSLog(@"luowentao success = %d error = %@",success,error);
-        }];
-    }
 
-    return YES;
+- (void)bindingDouYinAccount:(UISwitch *)sender { //绑定逻辑
+    __weak typeof(self) wSelf = self;
+    [TTAccount requestBindV2ForPlatform:TTAccountAuthTypeDouyin inCustomWebView:NO willBind:^(NSString * _Nonnull Bindinfo){
+        NSLog(@"luowentao Bindinfo:%@",Bindinfo);
+    } completion:^(BOOL success, NSError *error) {
+        __strong typeof(wSelf) strongSelf = wSelf;
+        NSLog(@"luowentao success = %d error = %@",success,error);
+        if (error) {
+            [strongSelf handleBindingResult:error];
+            [sender setOn:!sender.isOn animated:YES];
+        } else {
+            [strongSelf handleBindingResult:error];
+        }
+    }];
 };
 
+- (void)cancelBindingDouYinAccount:(UISwitch *)sender { //解绑逻辑
+    __weak typeof(self) wSelf = self;
+    
+    [TTAccount requestLogoutForPlatform:TTAccountAuthTypeDouyin completion:^(BOOL success, NSError * _Nullable error) {
+        NSLog(@"luowentao success = %d error = %@",success,error);
+        __strong typeof(wSelf) strongSelf = wSelf;
+        if (error) {
+            [strongSelf handleCancelBindingResult:error];
+            [sender setOn:!sender.isOn animated:YES];
+        } else {
+            [strongSelf handleCancelBindingResult:error];
+        }
+    }];
+}
 
+#pragma mark - Remind
+
+
+- (void)handleItemselected:(UISwitch *)sender withType:(FHAccountBindingOperationWordType)type {
+    __weak typeof(self) wself = self;
+    if (type == FHAccountBindingOperationCancel) {
+        [self showAlert:@"解除绑定" cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+            [sender setOn:!sender.isOn animated:YES];
+        } confirmBlock:^{
+            [wself cancelBindingDouYinAccount:sender];
+        }];
+    }
+}
+
+
+- (void)showAlert:(NSString *)title cancelTitle:(NSString *)cancelTitle confirmTitle:(NSString *)confirmTitle cancelBlock:(void(^)())cancelBlock confirmBlock:(void(^)())confirmBlock {
+    __weak typeof(self) wself = self;
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+                                                             // 点击取消按钮，调用此block
+                                                             if(cancelBlock){
+                                                                 cancelBlock();
+                                                             }
+                                                         }];
+    [alert addAction:cancelAction];
+    
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:confirmTitle
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * _Nonnull action) {
+                                                              // 点击按钮，调用此block
+                                                              if(confirmBlock){
+                                                                  confirmBlock();
+                                                              }
+                                                          }];
+    [alert addAction:defaultAction];
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:alert animated:YES completion:nil];
+}
+
+#pragma mark - Handing
+- (void)handleBindingResult:(NSError *)error {
+    if (!error) {
+        [[ToastManager manager] showToast:@"绑定成功"];
+    } else {
+        if (error.code == 1041) {
+            [[ToastManager manager] showToast:@"已经绑定了某个账号"];
+        } else {
+            NSString *errorMessage = @"啊哦，服务器开小差了";
+            errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+            [[ToastManager manager] showToast:errorMessage];
+        }
+    }
+}
+
+- (void)handleCancelBindingResult:(NSError *)error {
+    if (!error) {
+        [[ToastManager manager] showToast:@"解绑成功"];
+    } else {
+        NSString *errorMessage = @"啊哦，服务器开小差了";
+        errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+        [[ToastManager manager] showToast:errorMessage];
+    }
+}
 
 @end
