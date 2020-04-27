@@ -9,8 +9,9 @@
 #import "TTAccountManager.h"
 #import "TTAccountLoginManager.h"
 #import "AccountKeyChainManager.h"
-
-
+#import "FHMainApi.h"
+#import "FHUserInfoModel.h"
+#import "FHUserInfoManager.h"
 
 @implementation TTAccountManager (AccountUserSynchronization)
 
@@ -33,6 +34,26 @@
 {
     if ([[TTAccount sharedAccount] isLogin]) {
         [TTAccount getUserInfoWithScene:TTAccountRequestNormal completion:^(TTAccountUserEntity * _Nullable userEntity, NSError * _Nullable error) {
+            
+            __block NSError *backError = error;
+            Class cls = NSClassFromString(@"FHUserInfoModel");
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                //参考 TTAccountLoggerImp 赋值 FHUserInfoManager 单例中的
+                //userInfo 对象
+                NSMutableDictionary *userDict = [userEntity toDictionary].mutableCopy;
+                if (userEntity.expendAttrs) {
+                    [userDict addEntriesFromDictionary:userEntity.expendAttrs];
+                }
+                if (userDict) {
+                    NSDictionary *dataDict = @{@"data" : userDict};
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:dataDict options:0 error:&backError];
+                    id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:data class:cls error:&backError];
+                    if(!backError && [model isKindOfClass:[FHUserInfoModel class]]){
+                        [FHUserInfoManager sharedInstance].userInfo = (FHUserInfoModel *)model;
+                    }
+                }
+            });
+            
             NSMutableDictionary *extra = [NSMutableDictionary dictionary];
             [extra setValue:error.description forKey:@"error_description"];
             [extra setValue:@(error.code) forKey:@"error_code"];
@@ -68,7 +89,6 @@
 + (BOOL)tryAssignAccountInfoFromKeychain
 {
     BOOL result = NO;
-#warning NewAccount @zuopengliu
     //    NSDictionary *account = [[AccountKeyChainManager sharedManager] accountFromKeychain];
     //    if(![[NSUserDefaults standardUserDefaults] boolForKey:kHasAssignedInfoFromKeychain] && ![TTAccountManager isLogin]
     //       && [account objectForKey:@"session_id"]) {
