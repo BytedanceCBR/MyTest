@@ -45,7 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void (^requestSuccess)(BOOL hasFeedData);
 //是否需要上报enterCategory和stayCategory埋点，默认不报
 @property(nonatomic, assign) BOOL needReportEnterCategory;
-
+//埋点上报
+@property(nonatomic, strong) NSString *originFrom;
+@property(nonatomic, strong) NSString *enterFrom;
 //圈子详情页使用
 //空态页具体顶部offset
 @property (nonatomic, assign) CGFloat errorViewTopOffset;

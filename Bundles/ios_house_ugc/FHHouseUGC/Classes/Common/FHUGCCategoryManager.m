@@ -259,6 +259,7 @@
     [categories addObject:[self generateCategoryDataModel:@"f_house_qa" name:@"问答百科"]];
     [categories addObject:[self generateCategoryDataModel:@"f_house_concerns" name:@"楼市关注"]];
     [categories addObject:[self generateCategoryDataModel:@"f_house_transaction" name:@"购房交易"]];
+    [categories addObject:[self generateCategoryDataModel:@"f_house_finder" name:@"找好房"]];
     [categories addObject:[self generateCategoryDataModel:@"f_ugc_follow" name:@"关注"]];
     
     return categories;

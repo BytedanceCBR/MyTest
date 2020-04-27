@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) HMSegmentedControl *segmentControl;
 @property(nonatomic, assign) BOOL isUgcOpen;
 @property(nonatomic, assign) BOOL hasFocusTips;
+@property(nonatomic, strong) UIButton *publishBtn;
 
 - (void)hideGuideView;
 - (void)hideRedPoint;

@@ -48,7 +48,6 @@
 @property(nonatomic, assign) BOOL alreadyShowGuide;
 //新的发现页面
 @property(nonatomic, assign) BOOL isNewDiscovery;
-@property(nonatomic, strong) UIButton *publishBtn;
 @property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
 
 @end
@@ -276,6 +275,18 @@
             [FHEnvContext hideFindTabRedDotsLimitCount];
             self.hasShowDots = YES;
         }
+    }
+    
+    //关注tab，没有关注时需要隐藏关注按钮
+    NSInteger index = 0;
+    if([FHEnvContext isNewDiscovery]){
+        index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_follow"];
+    }
+
+    if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].followList.count <= 0){
+        self.publishBtn.hidden = YES;
+    }else{
+        self.publishBtn.hidden = NO;
     }
 }
 

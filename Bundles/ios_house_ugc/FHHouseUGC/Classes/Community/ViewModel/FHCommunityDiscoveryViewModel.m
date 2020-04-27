@@ -14,6 +14,7 @@
 #import "TTDeviceHelper.h"
 #import "FHUGCCategoryManager.h"
 #import "FHCommunityDiscoveryCellModel.h"
+#import "FHUGCConfig.h"
 
 #define kCellId @"cellId"
 
@@ -102,6 +103,14 @@
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        
+        //关注tab，没有关注时需要隐藏关注按钮
+        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_follow"];
+        if(self.currentTabIndex == index && [FHUGCConfig sharedInstance].followList.count <= 0){
+            self.viewController.publishBtn.hidden = YES;
+        }else{
+            self.viewController.publishBtn.hidden = NO;
+        }
     }
 }
 

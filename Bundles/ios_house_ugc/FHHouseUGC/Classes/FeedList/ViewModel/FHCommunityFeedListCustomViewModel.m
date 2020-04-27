@@ -848,4 +848,13 @@
     TRACK_EVENT(@"click_options", dict);
 }
 
+- (void)trackCategoryRefresh:(NSString *)enterType refreshType:(NSString *)refreshType {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"enter_from"] = @"neighborhood_tab";
+    dict[@"refresh_type"] = refreshType;
+    dict[@"enter_type"] = enterType ?: @"default";
+    dict[@"category_name"] = self.categoryId;
+    TRACK_EVENT(@"category_refresh", dict);
+}
+
 @end

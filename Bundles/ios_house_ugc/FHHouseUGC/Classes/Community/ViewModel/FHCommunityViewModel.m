@@ -12,6 +12,7 @@
 #import "FHEnvContext.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
+#import "FHUGCConfig.h"
 
 #define kCellId @"cellId"
 #define maxCellCount 2
@@ -118,6 +119,13 @@
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        
+        //关注tab，没有关注时需要隐藏关注按钮
+        if(self.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
+            self.viewController.publishBtn.hidden = YES;
+        }else{
+            self.viewController.publishBtn.hidden = NO;
+        }
     }
 }
 
