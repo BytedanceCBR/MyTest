@@ -278,12 +278,14 @@ def appPods
     #-----头条网络业务库------
     pod_binary 'TTNetBusiness','0.1.0', :subspecs => [
     'TTRouteSelectionManager',
+    'DNSManager',
     'TTNetworkUtilities'
     ]
 
     #-----授权管理----
-    pod 'FHPushAuthorizationManager','0.1.4'
-    
+   # pod 'FHPushAuthorizationManager','0.1.4'
+        pod 'FHPushAuthorizationManager', git:'git@code.byted.org:fproject/push_authorization_manager.git', :commit => '0941fe9b592ff4f4fa85a5e8b4536108d4c7a17d'
+
     #-----手机通讯录操作库---
     pod_binary 'TTAddressBookService', '0.1.4'
     
