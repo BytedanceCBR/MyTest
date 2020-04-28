@@ -962,8 +962,9 @@
 - (void)trackElementShow:(NSInteger)rank elementType:(NSString *)elementType {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"element_type"] = elementType ? elementType : @"be_null";
-    dict[@"page_type"] = @"hot_discuss_feed";
-    dict[@"enter_from"] = @"neighborhood_tab";
+    dict[@"page_type"] = [self pageType];
+    dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     dict[@"rank"] = @(rank);
     
     TRACK_EVENT(@"element_show", dict);

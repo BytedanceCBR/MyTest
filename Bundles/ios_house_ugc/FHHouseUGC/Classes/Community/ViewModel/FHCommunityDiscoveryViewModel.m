@@ -181,7 +181,7 @@
     self.cellArray[row] = cell;
     
     //第一次初始化的时候
-    if(self.isFirstLoad){
+    if(self.isFirstLoad && self.currentTabIndex != row){
         self.isFirstLoad = NO;
         [self selectCurrentTabIndex];
     }

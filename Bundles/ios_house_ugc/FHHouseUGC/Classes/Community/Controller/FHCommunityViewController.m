@@ -528,7 +528,7 @@
 }
 
 - (void)refreshData {
-    [self.viewModel refreshCell:NO isClick:NO];
+    [self.viewModel refreshCell:NO isClick:YES];
 }
 
 - (void)changeTab {
