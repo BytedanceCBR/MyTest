@@ -41,7 +41,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.paramObj = paramObj;
-        // 2、house_type
+        // 1、house_type
         _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
         _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
         NSInteger hp = [paramObj.allParams[@"house_type"] integerValue];
@@ -50,13 +50,12 @@
         } else {
             _viewModel.houseType = 2;// 默认二手房
         }
-
         
         id dic = paramObj.allParams[@"homepage_roll_data"];
         if (dic) {
             self.homePageRollDic = [NSMutableDictionary dictionaryWithDictionary:dic];
         }
-        // 6、H5页面传入的其他字段 3.18号上 H5放到report_params
+        // 2、H5页面传入的其他字段 3.18号上 H5放到report_params
         NSMutableDictionary *paramDic = [NSMutableDictionary dictionaryWithDictionary:paramObj.allParams];
         NSString *report_params = paramObj.allParams[@"report_params"];
         if ([report_params isKindOfClass:[NSString class]]) {
@@ -66,7 +65,7 @@
             }
         }
    
-        // 7、hint_text：text guess_search_id house_type
+        // 3、hint_text：text guess_search_id house_type
         NSString *hint_text = paramDic[@"hint_text"];
         if (!self.homePageRollDic) {
             self.homePageRollDic = [NSMutableDictionary new];
@@ -110,7 +109,6 @@
     self.panBeginAction = ^{
         [weakSelf.naviBar.searchInput resignFirstResponder];
     };
-    //[self.viewModel textFieldTextChange:self.naviBar.searchInput.text];
     self.houseType = self.viewModel.houseType;
 }
 

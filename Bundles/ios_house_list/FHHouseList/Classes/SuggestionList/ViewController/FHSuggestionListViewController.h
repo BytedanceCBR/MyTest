@@ -8,7 +8,6 @@
 #import <UIKit/UIKit.h>
 #import "FHHouseType.h"
 #import "FHBaseViewController.h"
-#import "FHSuggestionItemCell.h"
 #import "FHHouseSuggestionDelegate.h"
 #import <FHCommonUI/FHSearchBar.h>
 #import "HMSegmentedControl.h"
@@ -46,9 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSuggestionListViewController : FHBaseViewController
 
 @property (nonatomic, strong) HMSegmentedControl *segmentControl;
-@property (nonatomic, strong)   FHSuggectionTableView       *historyTableView;
-@property (nonatomic, strong)   FHSuggectionTableView       *suggestTableView;
-
 @property (nonatomic, strong)     FHSuggestionSearchBar     *naviBar;
 @property (nonatomic, strong) NSMutableArray *houseTypeArray;
 @property (nonatomic, assign)     FHHouseType       houseType;

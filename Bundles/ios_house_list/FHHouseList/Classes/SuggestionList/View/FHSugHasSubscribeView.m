@@ -175,6 +175,7 @@
             tracerDic[@"word_type"] = [self wordType];
             tracerDic[@"page_type"] = @"search_detail";
             tracerDic[@"rank"] = @(index);
+            tracerDic[@"origin_from"] = self.vc.tracerDict[@"origin_from"];
             _dict[key] = tracerDic;
         }
     }
@@ -201,6 +202,7 @@
             tracerDic[@"word_type"] = [self wordType];
             tracerDic[@"page_type"] = @"search_detail";
             tracerDic[@"rank"] = @(index);
+            tracerDic[@"origin_from"] = self.vc.tracerDict[@"origin_from"];
             [FHUserTracker writeEvent:@"subscribe_card_click" params:tracerDic];
         }
     }
