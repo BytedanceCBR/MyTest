@@ -21,6 +21,7 @@
 #define kRecommendSocialGroupListNil @"kRecommendSocialGroupListNil"
 #define kHotTopicListNil @"kHotTopicListNil"
 #define kHotCommunityListNil @"kHotCommunityListNil"
+#define kHotRecommendCircleListNil @"kHotRecommendCircleListNil"
 
 @implementation FHFeedUGCCellCommunityModel
 
@@ -128,7 +129,9 @@
                  type == FHUGCFeedListCellTypeUGCHotTopic ||
                  type == FHUGCFeedListCellTypeUGCVote ||
                  type == FHUGCFeedListCellTypeUGCSmallVideo ||
-                 type == FHUGCFeedListCellTypeUGCVoteInfo){
+                 type == FHUGCFeedListCellTypeUGCVoteInfo ||
+                 type == FHUGCFeedListCellTypeUGCRecommendCircle ||
+                 type == FHUGCFeedListCellTypeUGCEncyclopedias ){
             cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
@@ -266,7 +269,7 @@
             }
             
             cellModel.videoDetailInfo = model.videoDetailInfo;
-
+            
             NSString *dur = model.videoDuration;
             if (dur.length > 0) {
                 double durTime = [dur doubleValue];
@@ -375,9 +378,9 @@
         }
         
         //小区问答数据处理
-//        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
-//        cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑";
-//        cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
+        //        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
+        //        cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑";
+        //        cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeAnswer){
         cellModel.groupId = model.rawData.groupId;
@@ -414,7 +417,7 @@
         }else{
             [FHUGCCellHelper setOriginContentAttributeString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
         }
-    
+        
         if(cellModel.imageList.count == 1){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
         }else if(cellModel.imageList.count > 1){
@@ -520,13 +523,14 @@
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
         cellModel.groupId = model.rawData.groupId;
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBanner;
-        
+        cellModel.hidelLine = model.hidelLine;
+        cellModel.upSpace = model.upSpace;
+        cellModel.downSpace = model.downSpace;
         if(model.imageList){
             cellModel.imageList = model.imageList;
         }else{
             cellModel.imageList = model.rawData.operation.imageList;
         }
-        
         if(model.url){
             cellModel.openUrl = model.url;
         }else{
@@ -544,7 +548,7 @@
                     @"version_code": [TTSandBoxHelper fhVersionCode],
                     @"isEmpty":@(1)
                 } extra:@{
-                  
+                    
                 }];
                 return nil;
             }
@@ -561,7 +565,7 @@
                     @"version_code": [TTSandBoxHelper fhVersionCode],
                     @"isEmpty":@(1)
                 } extra:@{
-                  
+                    
                 }];
                 return nil;
             }
@@ -577,7 +581,7 @@
                 @"version_code": [TTSandBoxHelper fhVersionCode],
                 @"isEmpty":@(1)
             } extra:@{
-              
+                
             }];
             return nil;
         }
@@ -686,8 +690,38 @@
         cellModel.largeImageList = nil;
         
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+    } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCRecommendCircle) {
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommendCircle;
+        cellModel.hotSocialList = model.rawData.hotSocialList;
+        cellModel.groupId = model.rawData.groupId;
+        cellModel.upSpace = model.upSpace;
+        cellModel.downSpace = model.downSpace;
+        cellModel.hidelLine = model.hidelLine;
+        if(cellModel.hotSocialList.count <= 0){
+            [[HMDTTMonitor defaultManager] hmdTrackService:kHotRecommendCircleListNil metric:nil category:@{
+                @"version_code": [TTSandBoxHelper fhVersionCode],
+                @"isEmpty":@(1)
+            } extra:@{
+                
+            }];
+            return nil;
+        }
+    } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias) {
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCEncyclopedias;
+        cellModel.groupId = model.rawData.groupId;
+        cellModel.articleTitle = model.rawData.title;
+        cellModel.openUrl = model.rawData.schema;
+        
+        FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.name = model.rawData.userName;
+        user.avatarUrl = model.rawData.icon;
+        cellModel.user = user;
+        cellModel.content = model.rawData.articleTitle;
+        cellModel.numberOfLines = 3;
+        cellModel.avatar = model.rawData.avatar;
+        cellModel.showLookMore = YES;
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
     }
-    
     return cellModel;
 }
 
@@ -763,7 +797,7 @@
     cellModel.user = user;
     
     NSMutableArray *cellImageList = [NSMutableArray array];
-
+    
     //单图
     if(model.ugcU13CutImageList.count > 0) {
         [cellImageList addObject:[model.ugcU13CutImageList firstObject]];

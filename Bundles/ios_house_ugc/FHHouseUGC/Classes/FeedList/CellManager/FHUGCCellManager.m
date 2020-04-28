@@ -23,6 +23,8 @@
 #import "FHUGCHotCommunityCell.h"
 #import "FHNeighbourhoodQuestionCell.h"
 #import "FHNeighbourhoodCommentCell.h"
+#import "FHUGCRecommendCircleCell.h"
+#import "FHUGCEncyclopediasCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -58,6 +60,8 @@
                                 @"FHUGCHotCommunityCell",
                                 @"FHNeighbourhoodQuestionCell",
                                 @"FHNeighbourhoodCommentCell",
+                                @"FHUGCRecommendCircleCell",
+                                @"FHUGCEncyclopediasCell",
                                 //可扩展
                                  ];
 }
@@ -118,6 +122,10 @@
             return [FHNeighbourhoodQuestionCell class];
         case FHUGCFeedListCellSubTypeUGCNeighbourhoodComments:
             return [FHNeighbourhoodCommentCell class];
+        case FHUGCFeedListCellSubTypeUGCRecommendCircle:
+            return [FHUGCRecommendCircleCell class];
+            case FHUGCFeedListCellSubTypeUGCEncyclopedias:
+            return [FHUGCEncyclopediasCell class];
         default:
             break;
     }
