@@ -111,7 +111,7 @@
 //顶部tabView点击事件
 - (void)segmentViewIndexChanged:(NSInteger)index {
     if(self.currentTabIndex == index){
-        [self refreshCell:NO];
+        [self refreshCell:NO isClick:YES];
     }else{
         self.currentTabIndex = index;
         
@@ -159,10 +159,10 @@
     }
 }
 
-- (void)refreshCell:(BOOL)isHead {
+- (void)refreshCell:(BOOL)isHead isClick:(BOOL)isClick {
     if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
         FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
-        [cell refreshData:isHead];
+        [cell refreshData:isHead isClick:isClick];
     }
 }
 

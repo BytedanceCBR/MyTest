@@ -115,6 +115,19 @@
         return;
     }
     
+    NSString *refreshType = @"be_null";
+    if(isHead){
+        if(self.viewController.isRefreshTypeClicked){
+            refreshType = @"click";
+            self.viewController.isRefreshTypeClicked = NO;
+        }else{
+            refreshType = @"push";
+        }
+    }else{
+        refreshType = @"pre_load_more";
+    }
+    [self trackCategoryRefresh:refreshType];
+    
     self.viewController.isLoadingData = YES;
     
     if(self.isRefreshingTip){
@@ -598,10 +611,13 @@
     if(cellModel.community.socialGroupId){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = cellModel.community.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":[self pageType],
-                            @"enter_type":@"click",
-                            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
-                            @"log_pb":cellModel.logPb ?: @"be_null"};
+        NSString *originFrom = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        dict[@"tracer"] = @{
+            @"origin_from":originFrom,
+            @"enter_from":[self pageType],
+            @"enter_type":@"click",
+            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
+            @"log_pb":cellModel.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
@@ -817,7 +833,8 @@
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"enter_from"] = @"neighborhood_tab";
+    dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+    dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
@@ -848,11 +865,11 @@
     TRACK_EVENT(@"click_options", dict);
 }
 
-- (void)trackCategoryRefresh:(NSString *)enterType refreshType:(NSString *)refreshType {
+- (void)trackCategoryRefresh:(NSString *)refreshType {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"enter_from"] = @"neighborhood_tab";
+    dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+    dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
     dict[@"refresh_type"] = refreshType;
-    dict[@"enter_type"] = enterType ?: @"default";
     dict[@"category_name"] = self.categoryId;
     TRACK_EVENT(@"category_refresh", dict);
 }

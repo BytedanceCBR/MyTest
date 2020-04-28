@@ -20,7 +20,7 @@
 
 #define cellId @"cellId"
 #define allCellId @"allCellId"
-#define maxFollowItem 6
+#define maxFollowItem 3
 #define leaveOffSet 60
 
 @interface FHMyJoinViewModel () <UICollectionViewDelegate, UICollectionViewDataSource, FHMyJoinNeighbourhoodViewDelegate,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate>
@@ -240,10 +240,13 @@
         
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = model.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"my_joined_neighborhood",
-                            @"enter_type":@"click",
-                            @"rank":@(indexPath.row),
-                            @"log_pb":model.logPb ?: @"be_null"};
+        NSString *originFrom = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+        dict[@"tracer"] = @{
+            @"origin_from":originFrom,
+            @"enter_from":@"my_joined_neighborhood",
+            @"enter_type":@"click",
+            @"rank":@(indexPath.row),
+            @"log_pb":model.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

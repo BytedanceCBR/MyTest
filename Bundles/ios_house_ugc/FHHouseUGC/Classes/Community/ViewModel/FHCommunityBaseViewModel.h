@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)viewWillDisappear;
 
-- (void)refreshCell:(BOOL)isHead;
+- (void)refreshCell:(BOOL)isHead isClick:(BOOL)isClick;
 
 - (void)segmentViewIndexChanged:(NSInteger)index;
 

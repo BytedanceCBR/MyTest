@@ -31,7 +31,7 @@
     
 }
 
-- (void)refreshCell:(BOOL)isHead {
+- (void)refreshCell:(BOOL)isHead isClick:(BOOL)isClick {
     
 }
 

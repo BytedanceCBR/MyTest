@@ -193,7 +193,7 @@
             [FHUGCConfig sharedInstance].ugcCommunityHasNew = NO;
             [[FHUGCConfig sharedInstance] recordHideCommunityRedPointTime];
             self.segmentControl.sectionRedPoints = @[@0];
-            [self.viewModel refreshCell:YES];
+            [self.viewModel refreshCell:YES isClick:NO];
         }
     }else{
         if(self.viewModel.currentTabIndex == 0 && self.hasFocusTips){
@@ -201,7 +201,7 @@
             [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
             [[FHUGCConfig sharedInstance] recordHideRedPointTime];
             self.segmentControl.sectionRedPoints = @[@0];
-            [self.viewModel refreshCell:YES];
+            [self.viewModel refreshCell:YES isClick:NO];
         }
     }
 }
@@ -260,14 +260,14 @@
             if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].ugcCommunityHasNew){
                 self.hasFocusTips = NO;
                 [FHUGCConfig sharedInstance].ugcCommunityHasNew = NO;
-                [self.viewModel refreshCell:YES];
+                [self.viewModel refreshCell:YES isClick:NO];
             }
         }else{
             //去掉关注红点的同时刷新tab
             if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].ugcFocusHasNew){
                 self.hasFocusTips = NO;
                 [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
-                [self.viewModel refreshCell:YES];
+                [self.viewModel refreshCell:YES isClick:NO];
             }
         }
     }else{
@@ -381,7 +381,7 @@
     };
     
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
-        [weakSelf.viewModel refreshCell:NO];
+        [weakSelf.viewModel refreshCell:NO isClick:YES];
     };
 }
 
@@ -414,7 +414,7 @@
     };
     
     _segmentControl.indexRepeatBlock = ^(NSInteger index) {
-        [weakSelf.viewModel refreshCell:NO];
+        [weakSelf.viewModel refreshCell:NO isClick:YES];
     };
 }
 
@@ -528,7 +528,7 @@
 }
 
 - (void)refreshData {
-    [self.viewModel refreshCell:NO];
+    [self.viewModel refreshCell:NO isClick:NO];
 }
 
 - (void)changeTab {

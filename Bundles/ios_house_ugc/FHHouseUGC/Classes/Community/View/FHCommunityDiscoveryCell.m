@@ -102,9 +102,10 @@
     return _vc;
 }
 
-- (void)refreshData:(BOOL)isHead {
+- (void)refreshData:(BOOL)isHead isClick:(BOOL)isClick {
     if([self.vc isKindOfClass:[FHNearbyViewController class]]){
         FHNearbyViewController *vc = (FHNearbyViewController *)self.vc;
+        vc.feedVC.isRefreshTypeClicked = isClick;
         if(isHead){
             [vc.feedVC scrollToTopAndRefreshAllData];
         }else{
@@ -112,9 +113,11 @@
         }
     }else if([self.vc isKindOfClass:[FHMyJoinViewController class]]){
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+        vc.feedListVC.isRefreshTypeClicked = isClick;
         [vc refreshFeedListData:isHead];
     }else if([self.vc isKindOfClass:[FHCommunityFeedListController class]]){
         FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
+        vc.isRefreshTypeClicked = isClick;
         if(isHead){
             [vc scrollToTopAndRefreshAllData];
         }else{

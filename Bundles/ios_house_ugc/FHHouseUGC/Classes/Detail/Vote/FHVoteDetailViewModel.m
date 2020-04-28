@@ -367,10 +367,13 @@
     if(cellModel.community.socialGroupId){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = cellModel.community.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":[self pageType],
-                            @"enter_type":@"click",
-                            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
-                            @"log_pb":cellModel.logPb ?: @"be_null"};
+        NSString *originFrom = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        dict[@"tracer"] = @{
+            @"origin_from":originFrom,
+            @"enter_from":[self pageType],
+            @"enter_type":@"click",
+            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
+            @"log_pb":cellModel.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

@@ -18,10 +18,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) NSString *enterType;
 //是否显示小红点，埋点使用
 @property(nonatomic , assign) BOOL withTips;
+//是否是通过点击触发刷新
+@property(nonatomic, assign) BOOL isRefreshTypeClicked;
 
 - (UIViewController *)contentViewController;
 
-- (void)refreshData:(BOOL)isHead;
+- (void)refreshData:(BOOL)isHead isClick:(BOOL)isClick;
 
 - (void)cellDisappear;
 
