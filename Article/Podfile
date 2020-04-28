@@ -470,7 +470,7 @@ def appPods
     'GIF',
     'WebP'
     ]
-    pod_binary 'BDAccountSessionSDK','0.1.11'
+#    pod_binary 'BDAccountSessionSDK','0.1.11'
     pod_binary 'YYText' , '1.0.7'
     pod_source 'AMapLocation' , '2.6.0'
     pod_source 'AMap3DMap' , '6.9.0'
