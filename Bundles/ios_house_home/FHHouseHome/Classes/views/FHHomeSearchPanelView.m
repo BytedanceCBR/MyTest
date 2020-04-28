@@ -16,6 +16,8 @@
 #import "FHHouseBridgeManager.h"
 #import "FHUserTracker.h"
 #import "UIImage+FIconFont.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 
 @interface FHHomeSearchPanelView()
 {
@@ -40,6 +42,13 @@
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor themeHomeColor];
         [self setSearchArea];
+        
+        NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+        BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_home_scroll_title_fps"];
+        if (!boolOffline) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+        }
     }
     
     return self;
@@ -226,6 +235,26 @@
    self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(animateTitle) userInfo:nil repeats:YES];
 }
 
+#pragma mark  埋点
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    [self removeTimer];
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+    if (!_timer) {
+        [self removeTimer];
+        [self setUpRollScreenTimer];
+    }
+}
+
+- (void)removeTimer {
+    if (self.timer != nil) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+}
+
+
 - (void)animateTitle
 {
     if (self.categoryBgView.isHidden) {
@@ -283,6 +312,12 @@
         self.categoryBgView.hidden = YES;
         self.categoryPlaceholderLabel.hidden = NO;
     }
+}
+
+- (void)dealloc
+{
+    [_timer invalidate];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
