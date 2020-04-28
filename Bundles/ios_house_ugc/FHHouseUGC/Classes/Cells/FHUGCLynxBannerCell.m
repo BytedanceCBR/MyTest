@@ -73,24 +73,25 @@
 //    NSData *dataTemp = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://192.168.1.2:30334/operation/template.js?1587745910470"]];
         
     //  [self.lynxView loadTemplateFromURL:@"http://10.95.249.250:30334/card1/template.js?1587635520991"];
-    [self.lynxView loadTemplate:templateData withURL:@"local"];
+    if (templateData) {
+        [self.lynxView loadTemplate:templateData withURL:@"local"];
 
-    NSMutableDictionary *dataJson = [NSMutableDictionary new];
-    FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-    if (imageModel.url) {
-        [dataJson setValue:imageModel.url forKey:@"img_url"];
+        NSMutableDictionary *dataJson = [NSMutableDictionary new];
+        FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
+        if (imageModel.url) {
+            [dataJson setValue:imageModel.url forKey:@"img_url"];
+        }
+        
+        [dataJson setValue:cellModel.openUrl forKey:@"jump_url"];
+        CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
+        [dataJson setValue:@(imageWidth * 58.0/335.0) forKey:@"img_height"];
+        [dataJson setValue:@(imageWidth) forKey:@"img_width"];
+        
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
+        NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
+        [self.lynxView updateDataWithTemplateData:dataItem];
     }
-    
-    [dataJson setValue:cellModel.openUrl forKey:@"jump_url"];
-    CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
-    [dataJson setValue:@(imageWidth * 58.0/335.0) forKey:@"img_height"];
-    [dataJson setValue:@(imageWidth) forKey:@"img_width"];
-    
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
-    NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
-    [self.lynxView updateDataWithTemplateData:dataItem];
-    
 }
 
 #pragma mark - reload Lynx

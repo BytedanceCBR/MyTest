@@ -92,10 +92,14 @@
         //没有的话同步读，用磁盘io的串行队列
         dispatch_sync(self.lynx_io_queue, ^{
             data = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
+            if (!data) {
+                NSString *path = [NSString stringWithFormat:@"LynxLocalChannels/%@/%@",channel,[FHLynxManager defaultJSFileName]];
+                               NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@""];
+                data = [NSData dataWithContentsOfFile:templatePath];
+                [self syncAllChannel];
+            }
             if (data) {
                 [self cacheData:data andChannel:channel];
-            }else{
-                data = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] URLForResource:[FHLynxManager defaultJSFileName] withExtension:nil]];
             }
         });
     };
@@ -139,14 +143,24 @@
     if (self.retryCount > 3) {
         return;
     }
-    NSArray *channelNameArray = [self allLocalChannelsArray];
+    NSArray *localChannels = [self allLocalChannelsArray];
+    NSArray *settingChannels = [self allConfigChannelsArray];
 
+    NSMutableArray *totalChannels = [NSMutableArray new];
+    if (localChannels) {
+        [totalChannels addObjectsFromArray:localChannels];
+    }
+    
+    if (settingChannels) {
+        [totalChannels addObjectsFromArray:settingChannels];
+    }
+    
     WeakSelf;
-    [IESGeckoKit syncResourcesWithAccessKey:[FHIESGeckoManager getGeckoKey] channels:channelNameArray completion:^(BOOL succeed, IESGeckoSyncStatusDict  _Nonnull dict) {
+    [IESGeckoKit syncResourcesWithAccessKey:[FHIESGeckoManager getGeckoKey] channels:totalChannels completion:^(BOOL succeed, IESGeckoSyncStatusDict  _Nonnull dict) {
         StrongSelf;
         if (succeed) {
             self.retryCount = 0;
-            [self activateChannels:channelNameArray];
+            [self activateChannels:totalChannels];
                 
         } else {
             //重试
@@ -300,9 +314,16 @@
 - (void)initLynx{
     NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
     NSDictionary *lynxConfig = [fhSettings tt_objectForKey:@"lynx_config"];
+
     if ([lynxConfig isKindOfClass:[NSDictionary class]]) {
         self.activeChannels = lynxConfig[@"active_channels"];
         self.deprecatedChannels = lynxConfig[@"deprecated_channels"];
+        
+        if ([lynxConfig[@"lynx_enable"] isKindOfClass:[NSNumber class]]) {
+            if (![lynxConfig[@"lynx_enable"] integerValue]) {
+                return;
+            }
+        }
     }
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [[self allLocalChannelsArray] enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
