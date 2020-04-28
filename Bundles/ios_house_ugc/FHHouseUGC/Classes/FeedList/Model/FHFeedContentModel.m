@@ -484,6 +484,9 @@
                            @"hotCellList": @"hot_cell_list",
                            @"cardFooter": @"card_footer",
                            @"cardHeader": @"card_header",
+                           @"hotSocialList":@"hot_social_list",
+                           @"articleTitle":@"article_title",
+                           @"userName":@"user_name"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

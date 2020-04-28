@@ -175,6 +175,16 @@
     }];
 }
 
+- (void)updateMoreBtnWithTitleType {
+    [self.moreBtn setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+    [self.moreBtn setTitle:@"查看更多" forState:UIControlStateNormal];
+    [self.moreBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+    self.moreBtn.titleLabel.font = [UIFont themeFontRegular:12];
+    [self.moreBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+         make.width.height.mas_equalTo(50);
+     }];
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     
