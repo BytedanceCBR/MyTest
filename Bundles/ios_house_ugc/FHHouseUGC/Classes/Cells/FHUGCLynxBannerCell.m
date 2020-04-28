@@ -12,6 +12,8 @@
 #import "FHLynxCoreBridge.h"
 #import "FHLynxView.h"
 #import "FHLynxManager.h"
+#import "HMDTTMonitor.h"
+#import "TTInstallIDManager.h"
 
 @interface FHUGCLynxBannerCell()<LynxViewClient>
 
@@ -143,7 +145,8 @@
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
-    
+   
+      
 }
 
 - (void)fh_willDisplayCell {
@@ -152,6 +155,29 @@
 
 - (void)fh_didEndDisplayingCell{
 
+}
+
+#pragma mark - LynxClient
+- (void)lynxViewDidFirstScreen:(LynxView*)view{
+    [self sendEvent:@"0"];
+}
+
+- (void)lynxView:(LynxView *)view didRecieveError:(NSError *)error{
+    [self sendEvent:@"1"];
+
+}
+
+- (void)lynxView:(LynxView *)view didLoadFailedWithUrl:(NSString *)url error:(NSError *)error{
+    [self sendEvent:@"2"];
+}
+
+- (void)sendEvent:(NSString *)status
+{
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+     [uploadParams setValue:status forKey:@"lynx_page_info"];
+     [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" status:0 extra:paramsExtra];
 }
 
 //这里接收TTLynxViewClient抛上来的sizeChange事件

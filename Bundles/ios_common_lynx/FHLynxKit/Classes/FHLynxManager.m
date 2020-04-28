@@ -15,6 +15,8 @@
 #import "IESGeckoKit.h"
 #import <mach/mach_time.h>
 #import "TTSettingsManager.h"
+#import "HMDTTMonitor.h"
+#import "TTInstallIDManager.h"
 
 @interface FHLynxManager()
 
@@ -75,6 +77,15 @@
     };
    return data;
 }
+
+- (void)sendEvent:(NSString *)status channel:(NSString *)ch
+{
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+     [uploadParams setValue:status forKey:@"error"];
+     [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_error" status:0 extra:paramsExtra];
+}
      
 
 - (BOOL)checkChannelTemplateIsAvalable:(NSString *)channel templateKey:(NSString *)templateKey{
@@ -93,6 +104,8 @@
         dispatch_sync(self.lynx_io_queue, ^{
             data = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
             if (!data) {
+                [self sendEvent:@"1" channel:channel];
+                
                 NSString *path = [NSString stringWithFormat:@"LynxLocalChannels/%@/%@",channel,[FHLynxManager defaultJSFileName]];
                                NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@""];
                 data = [NSData dataWithContentsOfFile:templatePath];
@@ -100,6 +113,8 @@
             }
             if (data) {
                 [self cacheData:data andChannel:channel];
+            }else{
+                [self sendEvent:@"2" channel:channel];
             }
         });
     };
