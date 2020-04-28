@@ -13,9 +13,7 @@
 
 @property (nonatomic, weak) FHSuggestionListViewController *listController;
 @property (nonatomic, weak) FHBaseCollectionView *collectionView;
-@property (nonatomic, strong) FHSuggestionCollectionViewCell *lastCell;
 @property (nonatomic, strong) NSMutableDictionary *cellDict;
-@property (nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
 
@@ -29,7 +27,6 @@
         _currentTabIndex = -1;
         self.listController = viewController;
         self.cellDict = [NSMutableDictionary new];
-        _isFirstLoad = YES;
     }
     return self;
 }
@@ -160,7 +157,6 @@
     NSString *rowStr = [NSString stringWithFormat:@"%ld", index];
     if (index < self.listController.houseTypeArray.count && index >= 0 && self.cellDict[rowStr]) {
         FHSuggestionCollectionViewCell *cell = self.cellDict[rowStr];
-        
         [cell refreshData:self.listController.paramObj andHouseType:[self.listController.houseTypeArray[index] integerValue]];
         if (cell.vc && ![self.listController.childViewControllers containsObject:cell.vc]) {
             [self.listController addChildViewController:cell.vc];

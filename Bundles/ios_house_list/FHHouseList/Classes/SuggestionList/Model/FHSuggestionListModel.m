@@ -158,6 +158,7 @@
 
 //for implementation
 @implementation FHGuessYouWantResponseDataDataRecommendReasonModel
+
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
@@ -168,6 +169,7 @@
      return dict[keyName]?:keyName;
   }];
 }
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
@@ -185,13 +187,16 @@
      return dict[keyName]?:keyName;
   }];
 }
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
 }
+
 @end
 
 @implementation FHGuessYouWantResponseDataDataModel
+
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
@@ -209,22 +214,28 @@
      return dict[keyName]?:keyName;
   }];
 }
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
 }
+
 @end
 
 @implementation FHGuessYouWantResponseModel
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
 }
+
 @end
 
 @implementation FHGuessYouWantResponseDataModel
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
 }
+
 @end

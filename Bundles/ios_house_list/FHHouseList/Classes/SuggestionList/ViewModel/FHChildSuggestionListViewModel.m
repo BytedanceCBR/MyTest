@@ -573,7 +573,7 @@
         return self.guessYouWantData.count > 0 ? self.guessYouWantData.count + 1 : 0;
     } else if (tableView.tag == 2) {
         // 联想词
-        if (self.sugListData.count == 0 && !self.listController.isLoadingData) {
+        if (self.sugListData.count == 0 && !self.listController.isLoadingData && self.listController.fatherVC.naviBar.searchInput.text.length != 0) {
             return 1;
         }
         return self.sugListData.count;
@@ -938,6 +938,10 @@
             [wself reloadHistoryTableView];
         } else {
             wself.historyView.historyItems = NULL;
+            if (error) {
+                self.listController.isLoadingData = NO;
+                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         }
     }];
 }
@@ -1010,7 +1014,10 @@
             // 埋点 associate_word_show
             [wself associateWordShow];
         } else {
-        
+            if (error) {
+                self.listController.isLoadingData = NO;
+                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         }
     }];
 }
@@ -1026,7 +1033,10 @@
             wself.historyData = NULL;
             [wself reloadHistoryTableView];
         } else {
-            [[ToastManager manager] showToast:@"历史记录删除失败"];
+            if (error) {
+                self.listController.isLoadingData = NO;
+                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         }
     }];
 }
