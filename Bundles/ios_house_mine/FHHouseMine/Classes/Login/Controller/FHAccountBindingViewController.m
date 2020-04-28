@@ -20,7 +20,11 @@
 
 @implementation FHAccountBindingViewController
 
-- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj{
+- (void)dealloc {
+    NSLog(@"FHAccountBindingViewController");
+}
+
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         
@@ -33,18 +37,21 @@
     self.view.backgroundColor = [UIColor redColor];
     // Do any additional setup after loading the view.
     [self setupUI];
-    
-}
-
-- (void)setupUI{
-    
-    [self initNavbar];
-    [self configTableView];
-    [self initConstraints];
     [self initViewModel];
     
 }
-- (void) configTableView{
+
+- (void)setupUI {
+    [self initNavbar];
+    [self configTableView];
+}
+
+- (void)initViewModel {
+    self.viewModel = [[FHAccountBindingViewModel alloc] initWithTableView:_tableView viewController:self];
+    [self.viewModel initData];
+}
+
+- (void)configTableView {
     self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     _tableView.separatorStyle = UITableViewScrollPositionNone;
     _tableView.backgroundColor = [UIColor themeGray8];
@@ -56,14 +63,7 @@
     self.tableView.estimatedRowHeight = 0;
     self.tableView.estimatedSectionHeaderHeight = 0;
     self.tableView.estimatedSectionFooterHeight = 0;
-}
-- (void)initViewModel {
-    self.viewModel = [[FHAccountBindingViewModel alloc] initWithTableView:_tableView controller:self];
-    [self.viewModel initData];
-}
-
-
-- (void)initConstraints {
+    
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         if (@available(iOS 11.0, *)) {
             make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
@@ -74,27 +74,11 @@
     }];
 }
 
--(void)initNavbar{
+-(void)initNavbar {
     [self setTitle:@"账号和绑定设置"];
     [self setupDefaultNavBar:NO];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"ic-arrow-left-line"] forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"ic-arrow-left-line"] forState:UIControlStateHighlighted];
     self.customNavBarView.seperatorLine.hidden = YES;
-}
-
-- (void)dealloc{
-    NSLog(@"FHAccountBindingViewController");
-}
-
-- (void)reload{
-//    if (!_sections) {
-//        _sections = [NSMutableArray array];
-//        [self.sections removeAllObjects];
-//        if (isEmptyString([TTAccountManager currentUser].mobile)) {
-//            [self.sections addObjectsFromArray:@[@(kFHCellTypeBindingPhone)]];
-//        } else {
-//
-//        }
-//    }
 }
 @end

@@ -9,18 +9,15 @@
 #import "FHAccountBindingViewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol  FHDouYinBindingCellDelegate<NSObject>
-
-- (BOOL)hasDouYinAccount;
-- (BOOL)transformDouYinAccount:(BOOL)isOn;
-
-@end
-
+typedef void(^FHDouYinBinding)(UISwitch *);
+typedef void(^FHDouYinUnbinding)(UISwitch *);
 @interface FHDouYinBindingCell : UITableViewCell
+@property (nonatomic, strong) UISwitch *switchButton;
 
-@property(nonatomic, weak)FHAccountBindingViewModel *viewModel;
-@property(nonatomic, weak) id<FHDouYinBindingCellDelegate> delegate;
-- (void)refreshSwitch;
+@property(nonatomic, weak) FHAccountBindingViewModel *viewModel;
+@property(nonatomic, copy) FHDouYinBinding DouYinBinding;
+@property(nonatomic, copy) FHDouYinUnbinding DouYinUnbinding;
+
 @end
 
 NS_ASSUME_NONNULL_END

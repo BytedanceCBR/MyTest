@@ -6,16 +6,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FHAccountBindingViewController.h"
 NS_ASSUME_NONNULL_BEGIN
+@class FHAccountBindingViewController;
 
 @interface FHAccountBindingViewModel : NSObject
-- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHAccountBindingViewController *)viewController;
+- (instancetype)initWithTableView:(UITableView *)tableView viewController:(FHAccountBindingViewController *)viewController;
 
 
 - (void)initData;
-- (BOOL)hasDouYinAccount;
-- (BOOL)transformDouYinAccount:(BOOL)isOn;
 @end
 
 NS_ASSUME_NONNULL_END
