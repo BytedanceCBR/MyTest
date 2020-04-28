@@ -14,6 +14,7 @@
  */
 typedef NS_ENUM(NSUInteger, SSImpressionModelType)
 {
+    SSImpressionModelTypeNone                = 0,        //none
     SSImpressionModelTypeGroup                  = 1,        //group item
     SSImpressionModelTypeAD                     = 2,        //ad item
     SSImpressionModelTypeComment                = 20,       //评论
@@ -57,8 +58,8 @@ typedef NS_ENUM(NSUInteger, SSImpressionModelType)
     SSImpressionModelTypeHotNewsSMultiItem       = 86,        //热点要闻  多条样式
     
     //F项目增加
-    SSImpressionModelTypeFeedAwswerItem              = 1001,        //问答问题
-    SSImpressionModelTypeFeedQuestionItem            = 1002,        //问答回答
+    SSImpressionModelTypeFeedAwswerItem              = 1001,        //问答回答
+    SSImpressionModelTypeFeedQuestionItem            = 1002,        //问答问题
     SSImpressionModelTypeFeedCommentItem             = 1003,        //文章评论
     SSImpressionModelTypeFeedVoteItem                = 1004,        //UGC投票
     SSImpressionModelTypeFeedHouseKnowledgeItem      = 1005,        //购房百科

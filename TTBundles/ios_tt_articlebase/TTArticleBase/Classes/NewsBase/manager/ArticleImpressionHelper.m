@@ -277,25 +277,23 @@
     }
 }
 
-+ (void)recordItemWithUniqueID:(NSString *)uniqueID logPb:(NSDictionary *)logPb status:(SSImpressionStatus)status params:(SSImpressionParams *)params
++ (void)recordItemWithUniqueID:(NSString *)uniqueID modelType:(SSImpressionModelType) modelType logPb:(NSDictionary *)logPb status:(SSImpressionStatus)status params:(SSImpressionParams *)params
 {
     NSString *categoryID = params.categoryID;
-    if (isEmptyString(uniqueID) || isEmptyString(categoryID)) {
+    if (isEmptyString(uniqueID) || isEmptyString(categoryID) || modelType == SSImpressionModelTypeNone) {
         return;
     }
     
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
-    [extraDic setValue:@(1) forKey:@"refer"];
+    [extraDic setValue:@(params.refer) forKey:@"refer"];
     if(logPb){
         [extraDic setValue:logPb forKey:@"log_pb"];
     }
 
-    SSImpressionModelType modelType = SSImpressionModelTypeGroup;
-
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     userInfo[@"extra"] = extraDic;
  
-    [[SSImpressionManager shareInstance] recordGroupImpressionCategoryID:categoryID concernID:nil refer:1 modelType:modelType groupID:uniqueID adID:nil status:status userInfo:userInfo];
+    [[SSImpressionManager shareInstance] recordGroupImpressionCategoryID:categoryID concernID:nil refer:params.refer modelType:modelType groupID:uniqueID adID:nil status:status userInfo:userInfo];
 }
 
 
