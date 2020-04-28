@@ -60,10 +60,6 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    
-//    if(self.needReportEnterCategory){
-//        [self addEnterCategoryLog];
-//    }
 }
 
 - (void)dealloc {
@@ -367,7 +363,7 @@
     tracerDict[@"category_name"] = self.category;
     TRACK_EVENT(@"enter_category", tracerDict);
     
-    self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+    self.enterTabTimestamp = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)addStayCategoryLog {

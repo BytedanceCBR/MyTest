@@ -126,6 +126,7 @@
 - (NSDictionary *)traceDic {
     NSString *enterType = self.enterType ? self.enterType : @"default";
     return @{
+             @"origin_from":@"neighborhood_tab",
              @"enter_from":@"neighborhood_tab",
              @"enter_type":enterType,
              };

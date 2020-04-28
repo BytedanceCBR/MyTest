@@ -117,7 +117,7 @@
         _currentView = nil;
     }
     
-    FHCommunityFeedListController *vc =[[FHCommunityFeedListController alloc] init];
+    FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
     vc.listType = FHCommunityFeedListTypeMyJoin;
     vc.showErrorView = NO;
     vc.tableHeaderView = self.neighbourhoodView;
