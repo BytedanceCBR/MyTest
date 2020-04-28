@@ -13,7 +13,7 @@
 #import "FHLynxView.h"
 #import "FHLynxManager.h"
 
-@interface FHUGCLynxBannerCell()<LynxViewLifecycle,LynxViewClient>
+@interface FHUGCLynxBannerCell()<LynxViewClient>
 
 @property(nonatomic ,strong) UIView *bottomSepView;
 
@@ -46,7 +46,6 @@
           _lynxView.layoutHeightMode = LynxViewSizeModeUndefined;
           _lynxView.preferredLayoutWidth = screenFrame.size.width;
           _lynxView.client = self;
-            [_lynxView addLifecycleClient:self];
           _lynxView.preferredMaxLayoutHeight = screenFrame.size.height;
           [_lynxView triggerLayout];
           self.contentView.backgroundColor = [UIColor whiteColor];
@@ -74,6 +73,7 @@
         
     //  [self.lynxView loadTemplateFromURL:@"http://10.95.249.250:30334/card1/template.js?1587635520991"];
     if (templateData) {
+        
         [self.lynxView loadTemplate:templateData withURL:@"local"];
 
         NSMutableDictionary *dataJson = [NSMutableDictionary new];
