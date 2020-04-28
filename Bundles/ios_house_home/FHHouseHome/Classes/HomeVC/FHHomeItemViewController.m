@@ -947,7 +947,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             tracerDict[@"group_id"] = cellModel.idx ? : @"be_null";
             tracerDict[@"impr_id"] = cellModel.imprId ? : @"be_null";
             tracerDict[@"search_id"] = cellModel.searchId ? : @"";
-            tracerDict[@"rank"] = [self getRankFromHouseId:cellModel.idx];
+            tracerDict[@"rank"] = [self getRankFromHouseId:cellModel.idx indexPath:indexPath];
             tracerDict[@"origin_from"] = [self pageTypeString];
             tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
             tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
@@ -1000,7 +1000,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         traceParam[@"log_pb"] = theModel.logPb;
         traceParam[@"origin_from"] = [self pageTypeString];
         traceParam[@"card_type"] = @"left_pic";
-        traceParam[@"rank"] = [self getRankFromHouseId:theModel.idx];
+        traceParam[@"rank"] = [self getRankFromHouseId:theModel.idx indexPath:indexPath];
         traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
         traceParam[@"element_from"] = @"maintab_list";
         traceParam[@"enter_from"] = @"maintab";
@@ -1067,7 +1067,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 traceParamsSim[@"card_type"] = @"left_pic";
                 traceParamsSim[@"enter_from"] = @"maintab";
                 traceParamsSim[@"element_from"] = @"maintab_list";
-                traceParamsSim[@"rank"] = [self getRankFromHouseId:theModel.idx];
+                traceParamsSim[@"rank"] = [self getRankFromHouseId:theModel.idx indexPath:indexPath];
                 traceParamsSim[@"origin_from"] = @"old_list";
                 traceParamsSim[@"origin_search_id"] = self.originSearchId;
                 traceParamsSim[@"log_pb"] = theModel.logPb;
@@ -1152,7 +1152,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 }
 
 
-- (NSNumber *)getRankFromHouseId:(NSString *)houseid{
+- (NSNumber *)getRankFromHouseId:(NSString *)houseid indexPath:(NSIndexPath *)indexPath{
     if ([self.cacheSimilarIdsDict.allKeys containsObject:houseid]) {
         return self.cacheSimilarIdsDict[houseid];
     }
@@ -1160,6 +1160,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     if ([self.cahceHouseRankidsDict.allKeys containsObject:houseid]) {
         return self.cahceHouseRankidsDict[houseid];
     }
+    
+    return @(indexPath.row);
 }
 
 @end
