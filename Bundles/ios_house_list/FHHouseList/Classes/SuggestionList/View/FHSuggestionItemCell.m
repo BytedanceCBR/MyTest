@@ -100,12 +100,6 @@
     [self.contentView addSubview:_titleLabel];
     self.titleLabel.font = [UIFont themeFontSemibold:16];
     [self.titleLabel sizeToFit];
-    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(_recommendTypeLabel.mas_right).offset(15);
-        make.top.mas_equalTo(15);
-        make.height.mas_equalTo(22);
-        make.right.mas_equalTo(self.displayPriceLabel.mas_left).offset(-10);
-    }];
     
     self.recommendResonLabel = [[UILabel alloc] init];
     [self.contentView addSubview:_recommendResonLabel];
@@ -114,6 +108,7 @@
     [self.recommendResonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(_titleLabel);
         make.top.mas_equalTo(_titleLabel.mas_bottom).offset(3);
+        make.right.mas_equalTo(-15);
         make.height.mas_equalTo(20);
     }];
     
@@ -122,37 +117,42 @@
     self.displayPriceLabel.font = [UIFont themeFontSemibold:16];
     self.displayPriceLabel.textColor = [UIColor themeOrange1];
     self.displayPriceLabel.textAlignment = NSTextAlignmentRight;
-    [self.displayPriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-15);
-        make.top.mas_equalTo(14);
-        make.height.mas_equalTo(22);
-    }];
 }
 
 - (void)refreshData:(id)data
 {
-    FHGuessYouWantResponseDataDataModel *model = data;
-    
-    if (model.recommendType.content.length > 0) {
-        self.recommendTypeLabel.hidden = NO;
-        self.recommendTypeLabel.backgroundColor = [UIColor colorWithHexString:model.recommendType.backgroundColor];
-        self.recommendTypeLabel.textColor = [UIColor colorWithHexString:model.recommendType.textColor];
-        self.recommendTypeLabel.text = model.recommendType.content;
-        [self.recommendTypeLabel sizeToFit];
-        CGSize size = [self.recommendTypeLabel sizeThatFits:CGSizeMake(100, 18)];
-        [self.recommendTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(size.width + 12);
+    if ([data isKindOfClass:[FHGuessYouWantResponseDataDataModel class]]) {
+        FHGuessYouWantResponseDataDataModel *model = data;
+        self.displayPriceLabel.text = model.displayPrice;
+        [self.displayPriceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-15);
+            make.top.mas_equalTo(14);
+            make.height.mas_equalTo(22);
         }];
+        if (model.recommendType.content.length > 0) {
+            self.recommendTypeLabel.hidden = NO;
+            self.recommendTypeLabel.backgroundColor = [UIColor colorWithHexString:model.recommendType.backgroundColor];
+            self.recommendTypeLabel.textColor = [UIColor colorWithHexString:model.recommendType.textColor];
+            self.recommendTypeLabel.text = model.recommendType.content;
+            [self.recommendTypeLabel sizeToFit];
+            CGSize size = [self.recommendTypeLabel sizeThatFits:CGSizeMake(100, 18)];
+            [self.recommendTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(size.width + 12);
+            }];
+        }
+        self.titleLabel.text = model.text;
+        [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.recommendTypeLabel.mas_right).offset(15);
+            make.right.mas_equalTo(self.displayPriceLabel.mas_left).offset(-15);
+            make.top.mas_equalTo(15);
+            make.height.mas_equalTo(22);
+        }];
+        if (model.recommendReason.content > 0) {
+            self.recommendResonLabel.hidden = NO;
+            self.recommendResonLabel.text = model.recommendReason.content;
+            self.recommendResonLabel.textColor = [UIColor themeGray3];
+        }
     }
-    
-    self.titleLabel.text = model.text;
-    if (model.recommendReason.content > 0) {
-        self.recommendResonLabel.hidden = NO;
-        self.recommendResonLabel.text = model.recommendReason.content;
-        self.recommendResonLabel.textColor = [UIColor themeGray3];
-    }
-    self.displayPriceLabel.text = model.displayPrice;
-    
     
 }
 
