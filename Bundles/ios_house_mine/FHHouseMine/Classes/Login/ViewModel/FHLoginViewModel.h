@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL present;
 @property (nonatomic, assign) BOOL isOneKeyLogin;
 @property (nonatomic, assign) BOOL isOtherLogin;
+@property (nonatomic, assign) BOOL douyinCanQucikLogin;
 @property (nonatomic, assign)   BOOL  isNeedCheckUGCAdUser;
 @property (nonatomic , copy) NSString *mobileNumber;
 

@@ -15,16 +15,15 @@
 #import "TTInstallIDManager.h"
 #import "TTProjectLogicManager.h"
 #import "SSCommonLogic.h"
-
 #import "NewsBaseDelegate.h"
 //#import "TTAccountLoggerImp.h"
 #import "TTAccountTestSettings.h"
 #import "CommonURLSetting.h"
 #import <FHHouseBase/FHURLSettings.h>
 #import "FHContainerStartupTask.h"
-
 //#import <BDSDKApi+CompanyProduct.h>
 #import "TTLaunchDefine.h"
+#import <TTSettingsManager/TTSettingsManager+Private.h>
 
 DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
 
@@ -62,6 +61,16 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
 
 + (void)configureAccountSDK
 {
+    // 透传SDK Setting， 将业务方setting 接口下发内容透传给SDK。（必须）
+    [[TTAccount sharedAccount] updateSettings:[TTSettingsManager sharedManager].currentSettings];
+    /*
+     前后台切换时是否自动同步用户信息 [Default is NO]；策略是：当前是登录状态，则首次启动或从后台到前台时同步。该接口有session续期的功能，开启后，能在前后台切换时进行session续期，否则可能session 到期后的异常掉线。
+     */
+    [TTAccount accountConf].autoSynchronizeUserInfo = YES;
+    // x_tt_token 长票据功能是否可用,默认开启，可以配置一个开关，控制是否开启
+    [TTAccount accountConf].isXTTTokenActive = YES;
+    // x_tt_token 长票据功能轮询间隔，默认 10 min
+    [TTAccount accountConf].tokenPollingInterveral = TTATokenPollingInterveralTen;
     [TTAccount accountConf].multiThreadSafeEnabled = [TTAccountTestSettings threadSafeSupported];
     if ([TTSandBoxHelper isInHouseApp]) {
         [TTAccount accountConf].sharingKeyChainGroup = @"XXHND5J98K.com.ss.iphone.InHouse.article.News";

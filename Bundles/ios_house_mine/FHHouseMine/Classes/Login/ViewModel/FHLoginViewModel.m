@@ -93,9 +93,16 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self showOneKeyLoginView:NO phoneNum:nil];
         return;
     }
-
+    //TODO: 需要把2个请求接口提前，比如放在切换到第四个tab之后，点击登录按钮之前
     [self.viewController startLoading];
     [self getOneKeyLoginPhoneNum];
+    
+    __weak typeof(self) weakSelf = self;
+    [TTAccount canQuickLoginWithAweme:^(BOOL canQucikLogin, NSError * _Nullable error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        strongSelf.douyinCanQucikLogin = canQucikLogin;
+        [strongSelf updateViewType];
+    }];
 }
 
 
@@ -115,35 +122,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 //    }
     [self addEnterCategoryLog];
     
-    //判断 self.processType
-    
-    FHLoginViewType viewType = FHLoginViewTypeOneKey;
-    
-    switch (self.processType) {
-        case FHLoginProcessOrigin:
-            if (self.isOneKeyLogin) {
-                viewType = FHLoginViewTypeOneKey;
-            } else {
-                viewType = FHLoginViewTypeMobile;
-            }
-            break;
-        case FHLoginProcessTestA:
-            if (self.isOneKeyLogin) {
-                viewType = FHLoginViewTypeOneKey;
-            } else {
-                viewType = FHLoginViewTypeDouYin;
-            }
-            break;
-        case FHLoginProcessTestB:
-            viewType = FHLoginViewTypeDouYin;
-            break;
-        default:
-            break;
-    }
-    
-    if (self.loginViewViewTypeChanged) {
-        self.loginViewViewTypeChanged(viewType);
-    }
+    [self updateViewType];
 }
 
 - (void)checkToEnableConfirmBtn {
@@ -245,6 +224,43 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }];
 }
 
+- (void)updateViewType {
+    //判断 self.processType
+    FHLoginViewType viewType = FHLoginViewTypeOneKey;
+    switch (self.processType) {
+        case FHLoginProcessOrigin:
+            if (self.isOneKeyLogin) {
+                viewType = FHLoginViewTypeOneKey;
+            } else {
+                viewType = FHLoginViewTypeMobile;
+            }
+            break;
+        case FHLoginProcessTestA:
+            if (self.isOneKeyLogin) {
+                viewType = FHLoginViewTypeOneKey;
+            } else if(self.douyinCanQucikLogin) {
+                viewType = FHLoginViewTypeDouYin;
+            } else {
+                viewType = FHLoginViewTypeMobile;
+            }
+            break;
+        case FHLoginProcessTestB:
+            if (self.douyinCanQucikLogin) {
+                viewType = FHLoginViewTypeOneKey;
+            } else if(self.isOneKeyLogin) {
+                viewType = FHLoginViewTypeDouYin;
+            } else {
+                viewType = FHLoginViewTypeMobile;
+            }
+            break;
+        default:
+            break;
+    }
+    if (self.loginViewViewTypeChanged) {
+        self.loginViewViewTypeChanged(viewType);
+    }
+}
+
 #pragma mark - 运营商一键登录
 /// 运营商一键登录开关
 - (BOOL)getOneKeyLoginSwitchOff {
@@ -273,15 +289,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
-- (void)getOneKeyLoginPhoneNum
-{
+- (void)getOneKeyLoginPhoneNum {
     __weak typeof(self)wself = self;
     NSString *serviceName = [TTAccount sharedAccount].service;
     if (serviceName.length < 1) {
         [self showOneKeyLoginView:NO phoneNum:nil];
         return;
     }
-    
     // 注意获取完手机号之后长期不登录的异常结果
     [TTAccount getOneKeyLoginPhoneNumberCompleted:^(NSString * _Nullable phoneNumber, NSString * _Nullable serviceName, NSError * _Nullable error) {
         BOOL showOneKeyLogin = !error && phoneNumber.length > 0;
@@ -498,9 +512,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)douyinLoginAction {
     __weak typeof(self) weakSelf = self;
-    [TTAccount requestLoginForPlatform:TTAccountAuthTypeDouyin willLogin:^(NSString * _Nonnull info) {
-        NSLog(@"info:%@",info);
-    } completion:^(BOOL success, NSError *error) {
+    TTAccountAuthRequest *request = [[TTAccountAuthRequest alloc] init];
+    request.requestReason == TTAccountRequestAuthForLoginWithBindMobile;
+    request.needMobile = YES;
+    request.permissions = [NSOrderedSet orderedSetWithObjects:@"", nil];
+//    request.extraInfo = @{@"skip_tel_num_bind":@(YES)};
+    [TTAccount requestAuthForPlatform:TTAccountAuthTypeDouyin request:request willLogin:^(NSString * _Nonnull platformName) {
+        NSLog(@"platformName:%@",platformName);
+    } completion:^(TTAccountAuthResponse * _Nullable resp, NSError * _Nullable error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (error) {
             //失败则提示
@@ -514,6 +533,22 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             }
         }
     }];
+//    [TTAccount requestLoginForPlatform:TTAccountAuthTypeDouyin willLogin:^(NSString * _Nonnull info) {
+//        NSLog(@"info:%@",info);
+//    } completion:^(BOOL success, NSError *error) {
+//        __strong typeof(weakSelf) strongSelf = weakSelf;
+//        if (error) {
+//            //失败则提示
+//            [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
+//        } else {
+//            if ([TTAccount sharedAccount].user.mobile.length) {
+//                [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
+//            } else {
+//                //登录成功，判定没有手机号，进入绑定流程
+//                [strongSelf goToOneKeyBind];
+//            }
+//        }
+//    }];
 }
 
 - (void)bindCancelAction {
