@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void (^albumImageBtnClickBlock)(NSInteger index);
 
 @property(nonatomic, copy) void (^albumImageStayBlock)(NSInteger index,NSInteger stayTime);
+/**点击头图的tab栏出现的埋点*/
+@property(nonatomic, copy) void (^topImageClickTabBlock)(NSInteger index);
 
 /** 图片数据 */
 

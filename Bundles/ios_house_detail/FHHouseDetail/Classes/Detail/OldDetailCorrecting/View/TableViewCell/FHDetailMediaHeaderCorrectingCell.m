@@ -191,6 +191,8 @@
                     FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
                     itemModel.mediaType = FHMultiMediaTypePicture;
                     itemModel.imageUrl = imageModel.url;
+                    itemModel.pictureType = listModel.houseImageType;
+                    itemModel.pictureTypeName = listModel.houseImageTypeName;
                     itemModel.groupType = groupType;
                     if (instantHouseImageList.count > index) {
                         FHImageModel *instantImgModel = instantHouseImageList[index];
@@ -340,6 +342,9 @@
     vc.albumImageStayBlock = ^(NSInteger index,NSInteger stayTime) {
         [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
     };
+    vc.topImageClickTabBlock = ^(NSInteger index) {
+        [weakSelf trackClickTabWithIndex:index];
+    };
     
     [vc setMediaHeaderModel:self.currentData mediaImages:images];
     FHDetailMediaHeaderCorrectingModel *model = ((FHDetailMediaHeaderCorrectingModel *)self.currentData);
@@ -429,6 +434,31 @@
 }
 
 //埋点
+- (void)trackClickTabWithIndex:(NSInteger )index {
+    index += self.vedioCount;           //如果有视频要+1
+    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vrModel;
+    
+    if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr) {
+        index ++ ;//如果有VR 再加+1
+    }
+    if (index >= 0 && index < _model.medias.count) {//删
+        FHMultiMediaItemModel *itemModel = _model.medias[index];
+        NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+        if(!dict){
+            dict = [NSMutableDictionary dictionary];
+        }
+        if([dict isKindOfClass:[NSDictionary class]]){
+            [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+            dict[@"picture_id"] = itemModel.imageUrl;
+            dict[@"tab_name"] = itemModel.pictureTypeName;;
+            TRACK_EVENT(@"click_tab", dict);
+        }else{
+            NSAssert(NO, @"传入的detailTracerDic不是字典");
+        }
+    }
+}
+
+//埋点
 - (void)trackPictureShowWithIndex:(NSInteger)index {
     FHMultiMediaItemModel *itemModel = _model.medias[index];
     NSString *showType = self.isLarge ? @"large" : @"small";
@@ -447,6 +477,7 @@
     if([dict isKindOfClass:[NSDictionary class]]){
         [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
         dict[@"picture_id"] = itemModel.imageUrl;
+        dict[@"picture_type"] = itemModel.pictureTypeName;
         dict[@"show_type"] = showType;
         TRACK_EVENT(@"picture_show", dict);
     }else{

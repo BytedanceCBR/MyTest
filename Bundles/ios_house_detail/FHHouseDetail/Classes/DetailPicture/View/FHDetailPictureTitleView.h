@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) UICollectionView *colletionView;
 
 @property (nonatomic, strong)   NSArray       *titleNames;
+@property (nonatomic, strong)   NSArray       *tabNames;
 @property (nonatomic, strong)   NSArray       *titleNums;
 
 @property (nonatomic, assign)   NSInteger       selectIndex;// 选中的索引
