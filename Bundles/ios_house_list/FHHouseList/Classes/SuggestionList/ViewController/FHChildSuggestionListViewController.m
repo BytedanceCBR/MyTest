@@ -162,7 +162,15 @@
     self.canSearchWithRollData = NO;
     self.hasDismissedVC = NO;
     [self setupUI];
+    [self addDefaultEmptyViewFullScreen];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+}
+
+- (void)retryLoadData
+{
+    if (!self.isLoadingData) {
+        [self requestData];
+    }
 }
 
 - (void)setFatherVC:(FHSuggestionListViewController *)fatherVC
@@ -414,6 +422,7 @@
         text = self.fatherVC.naviBar.searchInput.text;
     }
     BOOL hasText = text.length > 0;
+    
     if (hasText) {
          [self requestSuggestion:text];
         _suggestTableView.hidden = !hasText;
@@ -438,7 +447,8 @@
 // 历史记录
 - (void)requestHistoryFromRemote {
     if (![FHEnvContext isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
+        //[[ToastManager manager] showToast:@"网络异常"];
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     } else {
         [self.viewModel requestSearchHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
     }
@@ -449,6 +459,7 @@
     if (![FHEnvContext isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
     } else {
+        self.isLoadingData = YES;
         [self.viewModel requestDeleteHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
     }
 }

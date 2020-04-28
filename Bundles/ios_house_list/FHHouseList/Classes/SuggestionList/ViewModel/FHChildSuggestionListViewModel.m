@@ -931,6 +931,7 @@
             // 构建数据源
             wself.historyData = model.data.data;
             wself.historyView.historyItems = wself.historyData;
+            [wself.listController.emptyView hideEmptyView];
             [wself reloadHistoryTableView];
         } else {
             wself.historyView.historyItems = NULL;
