@@ -292,6 +292,20 @@
 }
 
 - (void)moreOperation {
+    if (self.cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias) {
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"];
+        guideDict[@"page_type"] = @"f_news_recommend";
+        guideDict[@"element_type"] = @"encyclopedia";
+        guideDict[@"log_pb"] = self.cellModel.logPb?self.cellModel.logPb:@"br_null";
+        TRACK_EVENT(@"click_more", guideDict);
+        if (!isEmptyString(self.cellModel.allSchema)) {
+            NSURL *openUrl = [NSURL URLWithString:self.cellModel.allSchema];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        }
+
+        return;
+    }
     [self trackClickOptions];
     __weak typeof(self) wself = self;
     FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
@@ -337,6 +351,7 @@
              didDislikeBlock:^(FHFeedOperationView * _Nonnull view) {
                  [wself handleItemselected:view];
              }];
+    
 }
 
 - (void)handleItemselected:(FHFeedOperationView *) view {

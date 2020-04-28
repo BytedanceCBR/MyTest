@@ -553,6 +553,16 @@
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
         [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2 || cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias){
+        if (cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2 || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner) {
+             NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+             guideDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+             guideDict[@"page_type"] = [self pageType];
+             guideDict[@"description"] = cellModel.desc;
+             guideDict[@"item_title"] = cellModel.title;
+             guideDict[@"item_id"] = cellModel.groupId;
+             guideDict[@"rank"] = cellModel.tracerDic[@"rank"];;
+             TRACK_EVENT(@"banner_click", guideDict);
+         }
         //根据url跳转
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
@@ -879,6 +889,17 @@
     
     if(cellModel.attachCardInfo){
         [self trackCardShow:cellModel rank:rank];
+    }
+    
+    if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2) {
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+        guideDict[@"page_type"] = [self pageType];
+        guideDict[@"description"] = cellModel.desc;
+        guideDict[@"item_title"] = cellModel.title;
+        guideDict[@"item_id"] = cellModel.groupId;
+        guideDict[@"rank"] = @(rank);
+        TRACK_EVENT(@"banner_show", guideDict);
     }
 }
 

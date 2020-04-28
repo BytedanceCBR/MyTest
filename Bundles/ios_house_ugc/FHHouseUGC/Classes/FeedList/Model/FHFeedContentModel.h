@@ -692,6 +692,8 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *icon;
 //购房百科内容图片icon
 @property (nonatomic, copy , nullable) NSString *avatar;
+//查看全部
+@property (nonatomic, copy , nullable) NSString *allSchema;
 
 @end
 

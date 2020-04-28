@@ -464,6 +464,16 @@
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
         [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2 || cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias){
+       if (cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2 || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner) {
+            NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+            guideDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+            guideDict[@"page_type"] = [self pageType];
+            guideDict[@"description"] = cellModel.desc;
+            guideDict[@"item_title"] = cellModel.title;
+            guideDict[@"item_id"] = cellModel.groupId;
+            guideDict[@"rank"] = cellModel.tracerDic[@"rank"];;
+            TRACK_EVENT(@"banner_click", guideDict);
+        }
         //根据url跳转
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
@@ -542,7 +552,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = [self pageType];
+    traceParam[@"enter_from"] = self.viewController.tracerDict[@"enter_from"];
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
@@ -792,6 +802,15 @@
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
         [self trackElementShow:rank elementType:@"hot_topic"];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2) {
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] = @"neighborhood_tab";
+        guideDict[@"page_type"] = [self pageType];
+        guideDict[@"description"] = cellModel.desc;
+        guideDict[@"item_title"] = cellModel.title;
+        guideDict[@"item_id"] = cellModel.groupId;
+        guideDict[@"rank"] = @(rank);
+        TRACK_EVENT(@"banner_show", guideDict);
     }
 }
 

@@ -785,6 +785,25 @@
     if(cellModel.attachCardInfo){
         [self trackCardShow:cellModel rank:rank];
     }
+    if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2) {
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] = self.detailController.tracerDict[@"origin_from"];
+        guideDict[@"page_type"] = [self pageType];
+        guideDict[@"description"] = cellModel.desc;
+        guideDict[@"item_title"] = cellModel.title;
+        guideDict[@"item_id"] = cellModel.groupId;
+        guideDict[@"rank"] = @(rank);
+        TRACK_EVENT(@"banner_show", guideDict);
+    }else  if(cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias){
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] =  self.detailController.tracerDict[@"origin_from"];
+        guideDict[@"page_type"] = [self pageType];
+        guideDict[@"card_type"] = @"encyclopedia";
+        guideDict[@"impr_id"] = cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";;
+        guideDict[@"group_id"] = cellModel.groupId;
+        guideDict[@"rank"] = @(rank);
+        TRACK_EVENT(@"card_show", guideDict);
+    }
 }
 
 - (void)trackCardShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
