@@ -314,7 +314,9 @@
     NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
     NSDictionary *lynxConfig = [fhSettings tt_objectForKey:@"lynx_config"];
     if ([lynxConfig isKindOfClass:[NSDictionary class]]) {
-        self.activeChannels = lynxConfig[@"active_channels"];
+        if ([lynxConfig[@"active_channels"] isKindOfClass:[NSArray class]]) {
+            self.activeChannels = lynxConfig[@"active_channels"];
+        }
         self.deprecatedChannels = lynxConfig[@"deprecated_channels"];
     }
     

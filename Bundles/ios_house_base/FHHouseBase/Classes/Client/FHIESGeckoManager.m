@@ -14,6 +14,7 @@
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
 #import "IESGeckoCacheManager.h"
+#import "FHLynxManager.h"
 
 @implementation FHIESGeckoManager
 
@@ -37,8 +38,13 @@
         [localChannels addObject:@"fe_app_c"];
     }
     
-    if (![localChannels containsObject:@"ugc_operation"]) {
-         [localChannels addObject:@"ugc_operation"];
+    if ([[FHLynxManager sharedInstance] allLocalChannelsArray]) {
+        [localChannels addObjectsFromArray:[[FHLynxManager sharedInstance] allLocalChannelsArray]];
+    }
+
+    
+    if ([[FHLynxManager sharedInstance] allConfigChannelsArray]) {
+        [localChannels addObjectsFromArray:[[FHLynxManager sharedInstance] allConfigChannelsArray]];
     }
     
     if ([localChannels isKindOfClass:[NSArray class]] && localChannels.count > 0) {

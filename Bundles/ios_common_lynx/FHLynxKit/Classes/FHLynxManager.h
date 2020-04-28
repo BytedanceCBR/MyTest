@@ -24,6 +24,10 @@ static NSString * kFHLynxUGCOperationChannel = @"ugc_operation"; //UGC 运营位
 - (BOOL)checkChannelTemplateIsAvalable:(NSString *)channel templateKey:(NSString *)templateKey;
 
 - (void)initLynx;
+
+- (NSArray<NSString *> *)allLocalChannelsArray;
+
+- (NSArray<NSString *> *)allConfigChannelsArray;
 @end
 
 NS_ASSUME_NONNULL_END
