@@ -40,6 +40,7 @@
 #import <UserNotifications/UserNotifications.h>
 #import "FHPermissionAlertViewController.h"
 #import <TTAppRuntime/NewsBaseDelegate.h>
+#import "FHLynxManager.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -579,6 +580,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
     dispatch_async(dispatch_get_main_queue(), ^{
         [FHIESGeckoManager configGeckoInfo];
         [FHIESGeckoManager configIESWebFalcon];
+    });
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[FHLynxManager sharedInstance] initLynx];
     });
 }
 
@@ -1155,7 +1160,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
             if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
                 [[UIApplication sharedApplication].delegate application:notificationItem.application didReceiveRemoteNotification:notificationItem.userInfo];
             }
-
         }
         
         FHUNRemoteNOficationStashItem *unnotificationItem = [_stashModel unnotificationItem];
@@ -1171,6 +1175,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     [self startLocation];
     [self check2CityList];
+    
     
     [NewsBaseDelegate startRegisterRemoteNotification];
     

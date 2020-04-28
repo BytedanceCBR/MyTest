@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString * kFHLynxUGCOperationChannel = @"lynx_test"; //UGC 运营位
+static NSString * kFHLynxUGCOperationChannel = @"ugc_operation"; //UGC 运营位
 
 @interface FHLynxManager : NSObject
 
@@ -23,6 +23,7 @@ static NSString * kFHLynxUGCOperationChannel = @"lynx_test"; //UGC 运营位
 
 - (BOOL)checkChannelTemplateIsAvalable:(NSString *)channel templateKey:(NSString *)templateKey;
 
+- (void)initLynx;
 @end
 
 NS_ASSUME_NONNULL_END

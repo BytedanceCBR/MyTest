@@ -14,17 +14,20 @@
 #import "NSData+BTDAdditions.h"
 #import "IESGeckoKit.h"
 #import <mach/mach_time.h>
+#import "TTSettingsManager.h"
 
 @interface FHLynxManager()
 
 @property (nonatomic, strong) dispatch_queue_t lynx_io_queue;
-@property (nonatomic, strong) NSMutableDictionary *templateCache;
+@property (atomic, strong) NSMutableDictionary *templateCache;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, id> *totalConfigDict;
 //@property (nonatomic, strong) NSMutableDictionary<NSString *, Class<FHLynxDefaultTemplateProtocol>> *defaultProviderDict;
 @property (nonatomic, assign) NSUInteger retryCount;
 @property (nonatomic, assign) NSUInteger tryForMissCount;
 @property (nonatomic, assign) BOOL hasRegistGecko;
 @property (nonatomic, assign) BOOL isRetryingSync;
+@property (atomic, strong) NSMutableArray *activeChannels;
+@property (atomic, strong) NSMutableArray *deprecatedChannels;
 
 @end
 
@@ -75,6 +78,10 @@
      
 
 - (BOOL)checkChannelTemplateIsAvalable:(NSString *)channel templateKey:(NSString *)templateKey{
+    if ([self.deprecatedChannels containsObject:channel]) {
+        return NO;
+    }
+    
     NSString *cacheKey = [self cacheKeyForChannel:channel templateKey:templateKey version:0];
     __block NSData *data = [self.templateCache objectForKey:cacheKey];
     
@@ -87,6 +94,8 @@
             data = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
             if (data) {
                 [self cacheData:data andChannel:channel];
+            }else{
+                data = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] URLForResource:[FHLynxManager defaultJSFileName] withExtension:nil]];
             }
         });
     };
@@ -95,6 +104,13 @@
         return YES;
     }else{
         return NO;
+    }
+}
+
+- (void)loadChannelDataCache:(NSString *)channel templateKey:(NSString *)templateKey{
+    NSData * data = [self getGeckoFileDataWithChannel:channel fileName:[FHLynxManager defaultJSFileName]];
+    if (data) {
+       [self cacheData:data andChannel:channel];
     }
 }
 
@@ -123,7 +139,7 @@
     if (self.retryCount > 3) {
         return;
     }
-    NSArray *channelNameArray = [self allChannelArrays];
+    NSArray *channelNameArray = [self allLocalChannelsArray];
 
     WeakSelf;
     [IESGeckoKit syncResourcesWithAccessKey:[FHIESGeckoManager getGeckoKey] channels:channelNameArray completion:^(BOOL succeed, IESGeckoSyncStatusDict  _Nonnull dict) {
@@ -167,7 +183,7 @@
 //这块需要把部分任务拆分到子线程。
 - (void)readGeckoResources {
     //把数据读出来，放到缓存。
-    NSArray<NSString *> *channelConfigArray = [self allChannelArrays];
+    NSArray<NSString *> *channelConfigArray = [self allLocalChannelsArray];
     dispatch_group_t read_group = dispatch_group_create();
     BOOL isAsync = NO;
     CFAbsoluteTime time = CFAbsoluteTimeGetCurrent();
@@ -261,13 +277,42 @@
     return urlStr;
 }
 
-- (NSArray<NSString *> *)allChannelArrays{
-    return @[@"test_ios"];
+- (NSArray<NSString *> *)allLocalChannelsArray{
+    return @[@"ugc_operation"];
+}
+
+- (NSArray<NSString *> *)allConfigChannelsArray{
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSDictionary *lynxConfig = [fhSettings tt_objectForKey:@"lynx_config"];
+    if ([lynxConfig isKindOfClass:[NSDictionary class]]) {
+        self.activeChannels = lynxConfig[@"active_channels"];
+        self.deprecatedChannels = lynxConfig[@"deprecated_channels"];
+    }
+    
+    return self.activeChannels;
 }
 
 + (NSString *)defaultJSFileName
 {
     return @"template.js";
+}
+
+- (void)initLynx{
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSDictionary *lynxConfig = [fhSettings tt_objectForKey:@"lynx_config"];
+    if ([lynxConfig isKindOfClass:[NSDictionary class]]) {
+        self.activeChannels = lynxConfig[@"active_channels"];
+        self.deprecatedChannels = lynxConfig[@"deprecated_channels"];
+    }
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[self allLocalChannelsArray] enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:obj templateKey:[FHLynxManager defaultJSFileName]];
+        }];
+        
+        [self.activeChannels enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop){
+               [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:obj templateKey:[FHLynxManager defaultJSFileName]];
+        }];
+    });
 }
 
 @end

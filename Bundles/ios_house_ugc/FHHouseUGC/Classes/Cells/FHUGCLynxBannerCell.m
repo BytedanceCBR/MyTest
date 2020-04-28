@@ -15,6 +15,8 @@
 
 @interface FHUGCLynxBannerCell()<LynxViewLifecycle,LynxViewClient>
 
+@property(nonatomic ,strong) UIView *bottomSepView;
+
 @end
 
 @implementation FHUGCLynxBannerCell
@@ -49,6 +51,17 @@
           [_lynxView triggerLayout];
           self.contentView.backgroundColor = [UIColor whiteColor];
           [self.contentView addSubview:_lynxView];
+            
+          self.bottomSepView = [[UIView alloc] init];
+          _bottomSepView.backgroundColor = [UIColor themeGray7];
+          [self.contentView addSubview:_bottomSepView];
+            
+            
+           [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.bottom.mas_equalTo(self).offset(20);
+                make.left.right.mas_equalTo(self.contentView);
+                make.height.mas_equalTo(5);
+           }];
         }
     }
     return self;

@@ -37,6 +37,10 @@
         [localChannels addObject:@"fe_app_c"];
     }
     
+    if (![localChannels containsObject:@"ugc_operation"]) {
+         [localChannels addObject:@"ugc_operation"];
+    }
+    
     if ([localChannels isKindOfClass:[NSArray class]] && localChannels.count > 0) {
         [IESGeckoKit registerAccessKey:[FHIESGeckoManager getGeckoKey] appVersion:stringVersion channels:localChannels];
         [IESGeckoKit syncResourcesIfNeeded];// 同步资源文件
