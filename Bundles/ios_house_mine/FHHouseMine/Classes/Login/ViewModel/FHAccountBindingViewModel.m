@@ -17,16 +17,16 @@
 #import "FHUserTracker.h"
 #import "TTUIResponderHelper.h"
 
-typedef NS_ENUM(NSUInteger, FHSectionType) {            //名字优化
-    kFHSectionTypeNone,
-    kFHSectionTypeBindingInfo,      // 绑定修改（手机号、密码等）
-    kFHSectionTypeThirdAccounts,    // 关联帐号
+typedef NS_ENUM(NSUInteger, FHAccountBindingSectionType) {
+    kFHAccountBindingSectionTypeNone,
+    kFHAccountBindingSectionTypeBindingInfo,      // 绑定修改（手机号、密码等）
+    kFHAccountBindingSectionTypeThirdAccounts,    // 关联帐号
 };
 
-typedef NS_ENUM(NSUInteger, FHCellType) {               //名字优化
-    kFHCellTypeNone,
-    kFHCellTypeBindingPhone,        //绑定的手机号
-    kFHCellTypeBindingDouYin,       //抖音一键登录
+typedef NS_ENUM(NSUInteger, FHAccountBindingCellType) {
+    kFHAccountBindingCellTypeNone,
+    kFHAccountBindingCellTypeBindingPhone,        //绑定的手机号
+    kFHAccountBindingCellTypeBindingDouYin,       //抖音一键登录
 };
 
 typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
@@ -58,8 +58,8 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
 }
 
 - (void)registerCellClasses {
-    [self.tableView registerClass:[FHDouYinBindingCell class] forCellReuseIdentifier:@"kFHCellTypeBindingDouYin"];
-    [self.tableView registerClass:[FHPhoneBindingCell class] forCellReuseIdentifier:@"kFHCellTypeBindingPhone"];
+    [self.tableView registerClass:[FHDouYinBindingCell class] forCellReuseIdentifier:@"kFHAccountBindingCellTypeBindingDouYin"];
+    [self.tableView registerClass:[FHPhoneBindingCell class] forCellReuseIdentifier:@"kFHAccountBindingCellTypeBindingPhone"];
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
@@ -74,24 +74,24 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section < 2 && indexPath.row < 1) {
         switch ([self cellTypeOfIndexPath:indexPath]) {
-            case kFHCellTypeBindingPhone:{
-                FHPhoneBindingCell *cell = (FHPhoneBindingCell *)[tableView dequeueReusableCellWithIdentifier:@"kFHCellTypeBindingPhone"];
+            case kFHAccountBindingCellTypeBindingPhone:{
+                FHPhoneBindingCell *cell = (FHPhoneBindingCell *)[tableView dequeueReusableCellWithIdentifier:@"kFHAccountBindingCellTypeBindingPhone"];
                 cell.contentLabel.text = [self mobilePhoneNumber];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 return cell;
             }
                 break;
-            case kFHCellTypeBindingDouYin:{
-                FHDouYinBindingCell *cell = (FHDouYinBindingCell *)[tableView dequeueReusableCellWithIdentifier:@"kFHCellTypeBindingDouYin"];
+            case kFHAccountBindingCellTypeBindingDouYin:{
+                FHDouYinBindingCell *cell = (FHDouYinBindingCell *)[tableView dequeueReusableCellWithIdentifier:@"kFHAccountBindingCellTypeBindingDouYin"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 __weak typeof(self) wSelf = self;
-                cell.DouYinBinding = ^(UISwitch * sender) {
+                cell.douYinBinding = ^(UISwitch * sender) {
                     [wSelf thirdPartyBindLog:!sender.isOn];
-                    [wSelf bindingAccountDouYin:sender cancel:NO];
-                };
-                cell.DouYinUnbinding = ^(UISwitch * sender){
-                    [wSelf thirdPartyBindLog:!sender.isOn];
-                    [wSelf handleItemselected:sender withType:FHAccountBindingOperationCancel withError:nil];
+                    if (sender.isOn) {
+                        [wSelf bindingAccountDouYin:sender cancel:NO];
+                    } else {
+                        [wSelf handleItemselected:sender withType:FHAccountBindingOperationCancel withError:nil];
+                    }
                 };
                 [cell.switchButton setOn:[self hadDouYinAccount]];
                 return cell;
@@ -110,11 +110,11 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     switch ([self sectionTypeOfIndex:section]) {
-            case kFHSectionTypeBindingInfo:{
+            case kFHAccountBindingSectionTypeBindingInfo:{
                 return 6.0;
                 break;
             }
-            case kFHSectionTypeThirdAccounts:{
+            case kFHAccountBindingSectionTypeThirdAccounts:{
                 return 42.0;
                 break;
             }
@@ -133,12 +133,12 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *aView = nil;
     switch ([self sectionTypeOfIndex:section]) {
-        case kFHSectionTypeBindingInfo:{
+        case kFHAccountBindingSectionTypeBindingInfo:{
             UIView *sectionHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 6.0)];
             aView = sectionHeaderView;
             break;
         }
-        case kFHSectionTypeThirdAccounts:{
+        case kFHAccountBindingSectionTypeThirdAccounts:{
             FHThirdAccountsHeaderView *sectionHeaderView = [[FHThirdAccountsHeaderView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 42.0)];
             aView = sectionHeaderView;
             break;
@@ -160,8 +160,8 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     }
     [self.sections removeAllObjects];
     [self.sections addObjectsFromArray:@[
-        @(kFHSectionTypeBindingInfo),
-        @(kFHSectionTypeThirdAccounts)
+        @(kFHAccountBindingSectionTypeBindingInfo),
+        @(kFHAccountBindingSectionTypeThirdAccounts)
     ]
     ];
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -169,22 +169,22 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     });
 }
 
-- (FHSectionType)sectionTypeOfIndex:(NSUInteger)section {
-    if (section >= [self.sections count]) return kFHSectionTypeNone;
+- (FHAccountBindingSectionType)sectionTypeOfIndex:(NSUInteger)section {
+    if (section >= [self.sections count]) return kFHAccountBindingSectionTypeNone;
     return [[self.sections objectAtIndex:section] unsignedIntegerValue];
 }
 
-- (FHCellType)cellTypeOfIndexPath:(NSIndexPath *)indexPath {
-    FHCellType cellType = kFHCellTypeNone;
+- (FHAccountBindingCellType)cellTypeOfIndexPath:(NSIndexPath *)indexPath {
+    FHAccountBindingCellType cellType = kFHAccountBindingCellTypeNone;
     switch ([self sectionTypeOfIndex:indexPath.section]) {
-        case kFHSectionTypeBindingInfo:
+        case kFHAccountBindingSectionTypeBindingInfo:
             if (indexPath.row == 0) {
-                cellType = kFHCellTypeBindingPhone;
+                cellType = kFHAccountBindingCellTypeBindingPhone;
             }
             break;
-        case kFHSectionTypeThirdAccounts:
+        case kFHAccountBindingSectionTypeThirdAccounts:
             if (indexPath.row == 0) {
-                cellType = kFHCellTypeBindingDouYin;
+                cellType = kFHAccountBindingCellTypeBindingDouYin;
             }
             break;
         default:
@@ -199,10 +199,10 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     }
     NSUInteger numberOfRows = 0;
     switch ([self sectionTypeOfIndex:section]) {
-        case kFHSectionTypeBindingInfo:
+        case kFHAccountBindingSectionTypeBindingInfo:
             numberOfRows = 1;
             break;
-        case kFHSectionTypeThirdAccounts:
+        case kFHAccountBindingSectionTypeThirdAccounts:
             numberOfRows = 1;
             break;
         default:
@@ -239,7 +239,6 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     __weak typeof(self) wSelf = self;
     if (cancel) {
         [TTAccount requestLogoutForPlatform:TTAccountAuthTypeDouyin completion:^(BOOL success, NSError * _Nullable error) {
-        NSLog(@"luowentao success = %d error = %@",success,error);
         __strong typeof(wSelf) strongSelf = wSelf;
             if (error) {
                 [strongSelf handleCancelBindingResult:error sender:sender];
@@ -250,10 +249,9 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
         }];
     } else {
         [TTAccount requestBindV2ForPlatform:TTAccountAuthTypeDouyin inCustomWebView:NO willBind:^(NSString * _Nonnull Bindinfo){
-            NSLog(@"luowentao Bindinfo:%@",Bindinfo);
+            
         } completion:^(BOOL success, NSError *error) {
             __strong typeof(wSelf) strongSelf = wSelf;
-            NSLog(@"luowentao success = %d error = %@",success,error);
             if (error) {
                 [strongSelf handleBindingResult:error sender:sender];
             } else {

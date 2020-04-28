@@ -68,24 +68,9 @@
 }
 
 - (void)accountSwitchButtonDidTap:(UISwitch *)sender {
-    NSArray<TTAccountPlatformEntity *> *connects = [[TTAccount sharedAccount] user].connects;
-    NSLog(@"%ld,luowentao",[connects count]);
-    NSLog(@"%@,luowentao",[connects firstObject].userID);
-    NSLog(@"%@,luowentao",[connects firstObject].platformUID);
-    NSLog(@"%@,luowentao",[connects firstObject].platform);
-    NSLog(@"%@,luowentao",[connects firstObject].platformScreenName);
-    NSLog(@"%@,luowentao",[connects firstObject].expiredTime);
-    
-    if (sender.isOn) { //点了之后变成开着代表之前是关着的，所以需要调用绑定抖音流程
-        if (self.DouYinBinding) {
-            //doit
-            self.DouYinBinding(sender);
-        }
-    } else {
-        if (self.DouYinUnbinding) {
-            //doit
-            self.DouYinUnbinding(sender);
-        }
+    if (self.douYinBinding) {
+        //doit
+        self.douYinBinding(sender);
     }
 }
 
