@@ -18,6 +18,8 @@
 @interface FHUGCLynxBannerCell()<LynxViewClient>
 
 @property(nonatomic ,strong) UIView *bottomSepView;
+@property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
+@property(nonatomic ,strong) NSData *currentTemData;
 
 @end
 
@@ -66,34 +68,41 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
-    self.currentData = data;
-    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
+    
+    if (self.currentTemData == data) {
+        return;
+    }
+    
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
 
     NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
         
-//    NSData *dataTemp = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://192.168.1.2:30334/operation/template.js?1587745910470"]];
-        
-    //  [self.lynxView loadTemplateFromURL:@"http://10.95.249.250:30334/card1/template.js?1587635520991"];
-    if (templateData) {
-        
+    if (templateData != self.currentTemData) {
+        NSNumber *costTime = @(0);
+        _loadTime = [[NSDate date] timeIntervalSince1970];
+    
         [self.lynxView loadTemplate:templateData withURL:@"local"];
-
-        NSMutableDictionary *dataJson = [NSMutableDictionary new];
-        FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-        if (imageModel.url) {
-            [dataJson setValue:imageModel.url forKey:@"img_url"];
-        }
-        
-        [dataJson setValue:cellModel.openUrl forKey:@"jump_url"];
-        CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
-        [dataJson setValue:@(imageWidth * 58.0/335.0) forKey:@"img_height"];
-        [dataJson setValue:@(imageWidth) forKey:@"img_width"];
-        
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
-        NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
-        [self.lynxView updateDataWithTemplateData:dataItem];
     }
+    
+    NSMutableDictionary *dataJson = [NSMutableDictionary new];
+    FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
+    if (imageModel.url) {
+        [dataJson setValue:imageModel.url forKey:@"img_url"];
+    }
+    
+    [dataJson setValue:cellModel.openUrl forKey:@"jump_url"];
+    CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
+    [dataJson setValue:@(imageWidth * 58.0/335.0) forKey:@"img_height"];
+    [dataJson setValue:@(imageWidth) forKey:@"img_width"];
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
+    NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
+    [self.lynxView updateDataWithTemplateData:dataItem];
+    
+    self.currentTemData = templateData;
+    
+    self.currentData = data;
 }
 
 #pragma mark - reload Lynx
@@ -159,26 +168,40 @@
 
 #pragma mark - LynxClient
 - (void)lynxViewDidFirstScreen:(LynxView*)view{
-    [self sendEvent:@"0"];
+    NSTimeInterval costTime = [[NSDate date] timeIntervalSince1970] - _loadTime;
+    [self sendCostTimeEvent:costTime andService:@"lynx_page_duration"];
+    [self sendEvent:@"0" andError:nil];
 }
 
 - (void)lynxView:(LynxView *)view didRecieveError:(NSError *)error{
-    [self sendEvent:@"1"];
+    [self sendEvent:@"1" andError:error];
 
 }
 
 - (void)lynxView:(LynxView *)view didLoadFailedWithUrl:(NSString *)url error:(NSError *)error{
-    [self sendEvent:@"2"];
+    [self sendEvent:@"2" andError:error];
 }
 
-- (void)sendEvent:(NSString *)status
+- (void)sendEvent:(NSString *)statusStr andError:(NSError *)error
+{
+    NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
+    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    [uploadParams setValue:error.description forKey:@"error"];
+    [uploadParams setValue:statusStr forKey:@"status"];
+    [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" metric:uploadParams category:nil extra:paramsExtra];
+
+}
+
+- (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
-     [uploadParams setValue:status forKey:@"lynx_page_info"];
-     [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" status:0 extra:paramsExtra];
+     [uploadParams setValue:@(time) forKey:@"lynx_page_duration"];
+    [[HMDTTMonitor defaultManager] hmdTrackService:sevice metric:uploadParams category:nil extra:paramsExtra];
 }
+
 
 //这里接收TTLynxViewClient抛上来的sizeChange事件
 - (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
