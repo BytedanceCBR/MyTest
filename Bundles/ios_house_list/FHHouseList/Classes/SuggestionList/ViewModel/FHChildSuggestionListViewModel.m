@@ -573,7 +573,7 @@
         return self.guessYouWantData.count > 0 ? self.guessYouWantData.count + 1 : 0;
     } else if (tableView.tag == 2) {
         // 联想词
-        if (self.sugListData.count == 0) {
+        if (self.sugListData.count == 0 && !self.listController.isLoadingData) {
             return 1;
         }
         return self.sugListData.count;
@@ -869,6 +869,7 @@
 
 - (void)reloadSugTableView {
     if (self.listController.suggestTableView != NULL) {
+        self.listController.isLoadingData = NO;
         [self.listController.suggestTableView reloadData];
         if (self.sugListData.count > 0) {
             [self.listController.suggestTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
@@ -878,6 +879,9 @@
 
 - (void)reloadHistoryTableView {
     if (self.loadRequestTimes >= 3) {
+        self.listController.hasValidateData = YES;
+        [self.listController.emptyView hideEmptyView];
+        
         if (self.historyData.count > 0) {
             self.historyView.historyItems = self.historyData;
             [self.historyView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -931,7 +935,6 @@
             // 构建数据源
             wself.historyData = model.data.data;
             wself.historyView.historyItems = wself.historyData;
-            [wself.listController.emptyView hideEmptyView];
             [wself reloadHistoryTableView];
         } else {
             wself.historyView.historyItems = NULL;

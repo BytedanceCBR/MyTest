@@ -447,9 +447,11 @@
 // 历史记录
 - (void)requestHistoryFromRemote {
     if (![FHEnvContext isNetworkConnected]) {
-        //[[ToastManager manager] showToast:@"网络异常"];
+        self.isLoadingData = NO;
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     } else {
+        [self startLoading];
+        self.isLoadingData = YES;
         [self.viewModel requestSearchHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
     }
 }
@@ -457,7 +459,8 @@
 // 删除历史记录
 - (void)requestDeleteHistory {
     if (![FHEnvContext isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
+        self.isLoadingData = NO;
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     } else {
         self.isLoadingData = YES;
         [self.viewModel requestDeleteHistoryByHouseType:[NSString stringWithFormat:@"%ld",_houseType]];
@@ -474,9 +477,15 @@
 
 // sug建议
 - (void)requestSuggestion:(NSString *)text {
-    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
-    if (cityId) {
-        [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
+    if (![FHEnvContext isNetworkConnected]) {
+        self.isLoadingData = NO;
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    } else {
+        self.isLoadingData = YES;
+        NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+        if (cityId) {
+            [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
+        }
     }
 }
 
