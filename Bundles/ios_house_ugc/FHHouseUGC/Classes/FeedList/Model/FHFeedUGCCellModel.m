@@ -717,6 +717,8 @@
         user.avatarUrl = model.rawData.icon;
         cellModel.user = user;
         cellModel.content = model.rawData.articleTitle;
+        cellModel.logPb = model.logPb;
+        cellModel.allSchema = model.rawData.allSchema;
         cellModel.numberOfLines = 3;
         cellModel.avatar = model.rawData.avatar;
         cellModel.showLookMore = YES;

@@ -127,6 +127,7 @@
     [self.titleView.icon bd_setImageWithURL:[NSURL URLWithString:model.user.avatarUrl]];
     self.titleView.userName.text = model.user.name;
     self.titleView.descLabel.text = model.articleTitle;
+    self.titleView.cellModel = model;
     self.contentLab.hidden = isEmptyString(model.content);
     [FHUGCCellHelper setRichContent:self.contentLab model:model];
     self.contentLab.height = model.contentHeight;

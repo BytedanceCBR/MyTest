@@ -210,6 +210,9 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *articleTitle;
 //百科图标
 @property (nonatomic, copy , nullable) NSString *avatar;
+//查看全部
+@property (nonatomic, copy , nullable) NSString *allSchema;
+
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 
