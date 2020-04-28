@@ -21,18 +21,18 @@
 }
 
 - (void)setupUI {
-    _titleLabel = [[UILabel alloc]init];
-    _titleLabel.text = @"手机号";
-    _titleLabel.font = [UIFont themeFontRegular:16];
-    _titleLabel.textColor = [UIColor themeBlack];
-    _contentLabel = [[UILabel alloc]init];
-    _contentLabel.text = @"";
-    _contentLabel.font = [UIFont themeFontRegular:14];
-    _contentLabel.textColor = [UIColor themeGray3];
-    _contentLabel.textAlignment = NSTextAlignmentRight;
+    self.titleLabel = [[UILabel alloc]init];
+    self.titleLabel.text = @"手机号";
+    self.titleLabel.font = [UIFont themeFontRegular:16];
+    self.titleLabel.textColor = [UIColor themeBlack];
+    self.contentLabel = [[UILabel alloc]init];
+    self.contentLabel.text = @"";
+    self.contentLabel.font = [UIFont themeFontRegular:14];
+    self.contentLabel.textColor = [UIColor themeGray3];
+    self.contentLabel.textAlignment = NSTextAlignmentRight;
     
-    [self.contentView addSubview:_titleLabel];
-    [self.contentView addSubview:_contentLabel];
+    [self.contentView addSubview:self.titleLabel];
+    [self.contentView addSubview:self.contentLabel];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);

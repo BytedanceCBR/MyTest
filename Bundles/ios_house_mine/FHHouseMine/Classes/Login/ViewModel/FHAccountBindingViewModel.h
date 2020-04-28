@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHAccountBindingViewController;
 
 @interface FHAccountBindingViewModel : NSObject
-- (instancetype)initWithTableView:(UITableView *)tableView viewController:(FHAccountBindingViewController *)viewController;
+- (instancetype)initWithTableView:(UITableView *)tableView ;
 
 
 - (void)initData;
