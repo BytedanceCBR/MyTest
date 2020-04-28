@@ -123,7 +123,7 @@
     
     if (cellModel.bottomMargin) {
         [_cardSliderView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.containerView).offset(cellModel.bottomMargin);
+            make.bottom.mas_equalTo(self.containerView).offset(-cellModel.bottomMargin);
         }];
     }
     
