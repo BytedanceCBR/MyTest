@@ -14,15 +14,16 @@
 #import "FHPhoneBindingCell.h"
 #import "ToastManager.h"
 #import "FHMineAPI.h"
+#import "FHUserTracker.h"
 #import "TTUIResponderHelper.h"
 
-typedef NS_ENUM(NSUInteger, FHSectionType) {
+typedef NS_ENUM(NSUInteger, FHSectionType) {            //名字优化
     kFHSectionTypeNone,
     kFHSectionTypeBindingInfo,      // 绑定修改（手机号、密码等）
     kFHSectionTypeThirdAccounts,    // 关联帐号
 };
 
-typedef NS_ENUM(NSUInteger, FHCellType) {
+typedef NS_ENUM(NSUInteger, FHCellType) {               //名字优化
     kFHCellTypeNone,
     kFHCellTypeBindingPhone,        //绑定的手机号
     kFHCellTypeBindingDouYin,       //抖音一键登录
@@ -39,19 +40,17 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
 
 @property (nonatomic, strong) NSMutableArray *sections;
 @property (nonatomic, weak) UITableView *tableView;
-@property (nonatomic, weak) FHAccountBindingViewController *viewController;
 
 @end
 
 @implementation FHAccountBindingViewModel
 
-- (instancetype)initWithTableView:(UITableView *)tableView viewController:(FHAccountBindingViewController *)viewController {
+- (instancetype)initWithTableView:(UITableView *)tableView {
     self = [super init];
     if (self) {
         self.tableView = tableView;
         tableView.delegate = self;
         tableView.dataSource = self;
-        self.viewController = viewController;
         [self registerCellClasses];
         
     }
@@ -87,10 +86,12 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 __weak typeof(self) wSelf = self;
                 cell.DouYinBinding = ^(UISwitch * sender) {
+                    [wSelf thirdPartyBindLog:!sender.isOn];
                     [wSelf bindingAccountDouYin:sender cancel:NO];
                 };
                 cell.DouYinUnbinding = ^(UISwitch * sender){
-                    [wSelf handleItemselected:sender withType:FHAccountBindingOperationCancel];
+                    [wSelf thirdPartyBindLog:!sender.isOn];
+                    [wSelf handleItemselected:sender withType:FHAccountBindingOperationCancel withError:nil];
                 };
                 [cell.switchButton setOn:[self hadDouYinAccount]];
                 return cell;
@@ -151,7 +152,7 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     return aView;
 }
 
-#pragma mark - private methods
+#pragma mark - data helper
 
 -(void)initData {
     if (!_sections) {
@@ -241,10 +242,10 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
         NSLog(@"luowentao success = %d error = %@",success,error);
         __strong typeof(wSelf) strongSelf = wSelf;
             if (error) {
-                [strongSelf handleCancelBindingResult:error];
-                [sender setOn:!sender.isOn animated:YES];
+                [strongSelf handleCancelBindingResult:error sender:sender];
+                
             } else {
-                [strongSelf handleCancelBindingResult:error];
+                [strongSelf handleCancelBindingResult:error sender:sender];
             }
         }];
     } else {
@@ -255,7 +256,6 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
             NSLog(@"luowentao success = %d error = %@",success,error);
             if (error) {
                 [strongSelf handleBindingResult:error sender:sender];
-                [sender setOn:!sender.isOn animated:YES];
             } else {
                 [strongSelf handleBindingResult:error sender:sender];
             }
@@ -263,33 +263,34 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     }
 };
 
+
 #pragma mark - Remind
 
-- (void)handleItemselected:(UISwitch *)sender withType:(FHAccountBindingOperationWordType)type {
-    __weak typeof(self) wself = self;
+- (void)handleItemselected:(UISwitch *)sender withType:(FHAccountBindingOperationWordType)type withError:(NSError *)error {
+    __weak typeof(self) wSelf = self;
     if (type == FHAccountBindingOperationCancel) {
+        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"操作确认" popType:@"解绑弹窗"];
         [self showAlert:@"解除绑定？" message:nil cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
             [sender setOn:!sender.isOn animated:YES];
         } confirmBlock:^{
-            [wself bindingAccountDouYin:sender cancel:YES];
+            [wSelf bindingAccountDouYin:sender cancel:YES];
         }];
-    } else if (type == FHAccountBindingOperationAlreadyHave) {
-        [self showAlert:@"绑定失败" message:@"绑定失败，此抖音账号已绑定到账号『 』" cancelTitle:@"取消" confirmTitle:@"解绑原账号" cancelBlock:^{
-            [sender setOn:!sender.isOn animated:YES];
-        } confirmBlock:^{
-            
-        }];
-    } else if (type == FHAccountBindingOperationWillLose) {
-        [self showAlert:@"解绑后将无法用此抖音号登录『 』，也可能无法再次找回该账户，确认操作？" message:nil cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
-            [sender setOn:!sender.isOn animated:YES];
-        } confirmBlock:^{
-
-        }];
+//    } else if (type == FHAccountBindingOperationAlreadyHave) {
+//        [self showAlert:@"绑定失败" message:@"绑定失败，此抖音账号已绑定到账号『 』" cancelTitle:@"取消" confirmTitle:@"解绑原账号" cancelBlock:^{
+//            [sender setOn:!sender.isOn animated:YES];
+//        } confirmBlock:^{
+//
+//        }];
+//    } else if (type == FHAccountBindingOperationWillLose) {
+//        [self showAlert:@"解绑后将无法用此抖音号登录『 』，也可能无法再次找回该账户，确认操作？" message:nil cancelTitle:@"取消" confirmTitle:@"确定" cancelBlock:^{
+//            [sender setOn:!sender.isOn animated:YES];
+//        } confirmBlock:^{
+//
+//        }];
     }
 }
 
 - (void)showAlert:(NSString *)title message:(NSString *)message cancelTitle:(NSString *)cancelTitle confirmTitle:(NSString *)confirmTitle cancelBlock:(void(^)())cancelBlock confirmBlock:(void(^)())confirmBlock {
-    __weak typeof(self) wself = self;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
@@ -316,42 +317,74 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
 }
 
 #pragma mark - Handing
-- (void)handleBindingResult:(NSError *)error sender:(UISwitch *)sender{
+- (void)handleBindingResult:(NSError *)error sender:(UISwitch *)sender {
     if (!error) {
+        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"绑定成功" popType:@"绑定弹窗"];
         [[ToastManager manager] showToast:@"绑定成功"];
     } else {
-        NSString *errorMessage = @"啊哦，服务器开小差了";
+        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"绑定失败" popType:@"绑定弹窗"];
+        NSString *errorMessage = nil;
         if (error.code == 6) {
             errorMessage = @"服务异常";
         } else if (error.code == 999) {
             errorMessage = @"服务器出了点小意外，努力修复中";
-        } else if (error.code == 1030) {
-            errorMessage = @"待补充";
-        } else if (error.code == 1041) {
-            errorMessage = @"待补充";
         } else {
             errorMessage = [FHMineAPI errorMessageByErrorCode:error];
         }
+        if (errorMessage.length == 0) {
+            errorMessage = @"啊哦，服务器开小差了";
+        }
         [[ToastManager manager] showToast:errorMessage];
+        [sender setOn:!sender.isOn animated:YES];
     }
 }
 
-- (void)handleCancelBindingResult:(NSError *)error {
+- (void)handleCancelBindingResult:(NSError *)error sender:(UISwitch *)sender {
     if (!error) {
+        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"解绑成功" popType:@"解绑弹窗"];
         [[ToastManager manager] showToast:@"解绑成功"];
     } else {
-        NSString *errorMessage = @"啊哦，服务器开小差了";
+        [self thirdPartyBindTipsLog:!sender.isOn statusInfo:@"解绑失败" popType:@"解绑弹窗"];
+        NSString *errorMessage = nil;
         if (error.code == 6) {
             errorMessage = @"服务异常";
         } else if (error.code == 999) {
             errorMessage = @"服务器出了点小意外，努力修复中";
         } else if (error.code == 1038) {
-            errorMessage = @"最后的登录方式，无法解绑";
+            errorMessage = @"该三方帐号是当前帐号的唯一登录方式，暂不支持解绑操作";
         } else {
             errorMessage = [FHMineAPI errorMessageByErrorCode:error];
         }
+        if (errorMessage.length == 0) {
+            errorMessage = @"啊哦，服务器开小差了";
+        }
         [[ToastManager manager] showToast:errorMessage];
+        [sender setOn:!sender.isOn animated:YES];
     }
 }
+#pragma mark - Log
+- (void)thirdPartyBindLog :(BOOL)isOn {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"status"] = isOn ? @"on":@"off";
+    tracerDict[@"event_page"] = @"account_safe";
+    tracerDict[@"event_type"] = @"click";
+    tracerDict[@"event_belong"] = @"account";
+    tracerDict[@"platform"] = @"aweme_v2";
+    tracerDict[@"params_for_special"] = @"uc_login";
+    TRACK_EVENT(@"third_party_bind", tracerDict);
+}
 
+- (void)thirdPartyBindTipsLog :(BOOL)isOn statusInfo:(NSString *)info popType:(NSString *)type {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"status"] = isOn ? @"on":@"off";
+    tracerDict[@"event_page"] = @"account_safe";
+    tracerDict[@"event_type"] = @"show";
+    tracerDict[@"event_belong"] = @"account";
+    tracerDict[@"show_type"] = @"toast";
+    tracerDict[@"platform"] = @"aweme_v2";
+    tracerDict[@"popup_type"] = type;
+    tracerDict[@"status_info"] = info;
+    tracerDict[@"params_for_special"] = @"uc_login";
+    TRACK_EVENT(@"third_party_bind_tips", tracerDict);
+}
 @end

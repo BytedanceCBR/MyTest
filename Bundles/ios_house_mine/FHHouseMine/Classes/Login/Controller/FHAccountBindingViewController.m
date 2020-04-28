@@ -47,7 +47,7 @@
 }
 
 - (void)initViewModel {
-    self.viewModel = [[FHAccountBindingViewModel alloc] initWithTableView:_tableView viewController:self];
+    self.viewModel = [[FHAccountBindingViewModel alloc] initWithTableView:_tableView ];
     [self.viewModel initData];
 }
 

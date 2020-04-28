@@ -14,7 +14,6 @@ typedef void(^FHDouYinUnbinding)(UISwitch *);
 @interface FHDouYinBindingCell : UITableViewCell
 @property (nonatomic, strong) UISwitch *switchButton;
 
-@property(nonatomic, weak) FHAccountBindingViewModel *viewModel;
 @property(nonatomic, copy) FHDouYinBinding DouYinBinding;
 @property(nonatomic, copy) FHDouYinUnbinding DouYinUnbinding;
 
