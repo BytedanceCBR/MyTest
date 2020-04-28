@@ -277,6 +277,27 @@
     }
 }
 
++ (void)recordItemWithUniqueID:(NSString *)uniqueID logPb:(NSDictionary *)logPb status:(SSImpressionStatus)status params:(SSImpressionParams *)params
+{
+    NSString *categoryID = params.categoryID;
+    if (isEmptyString(uniqueID) || isEmptyString(categoryID)) {
+        return;
+    }
+    
+    NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
+    [extraDic setValue:@(1) forKey:@"refer"];
+    if(logPb){
+        [extraDic setValue:logPb forKey:@"log_pb"];
+    }
+
+    SSImpressionModelType modelType = SSImpressionModelTypeGroup;
+
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    userInfo[@"extra"] = extraDic;
+ 
+    [[SSImpressionManager shareInstance] recordGroupImpressionCategoryID:categoryID concernID:nil refer:1 modelType:modelType groupID:uniqueID adID:nil status:status userInfo:userInfo];
+}
+
 
 //涉及thread的impression，因为转发的原文要单独发
 //+ (void)recordThread:(Thread *)thread groupID:(NSString*)groupID aid:(NSString *)aid status:(SSImpressionStatus)status params:(SSImpressionParams *)params userInfo:(NSDictionary*)userInfo

@@ -55,6 +55,13 @@ typedef NS_ENUM(NSUInteger, SSImpressionModelType)
     SSImpressionModelTypePopularHashtagItem     = 84,               //热门话题
     SSImpressionModelTypeHotNewsSingleItem       = 85,          //热点要闻 单条样式
     SSImpressionModelTypeHotNewsSMultiItem       = 86,        //热点要闻  多条样式
+    
+    //F项目增加
+    SSImpressionModelTypeFeedAwswerItem              = 1001,        //问答问题
+    SSImpressionModelTypeFeedQuestionItem            = 1002,        //问答回答
+    SSImpressionModelTypeFeedCommentItem             = 1003,        //文章评论
+    SSImpressionModelTypeFeedVoteItem                = 1004,        //UGC投票
+    SSImpressionModelTypeFeedHouseKnowledgeItem      = 1005,        //购房百科
 };
 
 /**

@@ -57,4 +57,6 @@ typedef NS_ENUM(NSUInteger, TTWeitoutiaoCellStyle) {
 
 + (void)recordGroupWithUniqueID:(NSString *)uniqueID adID:(NSString *)adID groupModel:(TTGroupModel *)groupModel status:(SSImpressionStatus)status params:(SSImpressionParams *)params;
 
++ (void)recordItemWithUniqueID:(NSString *)uniqueID logPb:(NSDictionary *)logPb status:(SSImpressionStatus)status params:(SSImpressionParams *)params;
+
 @end
