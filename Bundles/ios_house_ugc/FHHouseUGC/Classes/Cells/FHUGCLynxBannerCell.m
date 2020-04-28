@@ -56,12 +56,6 @@
           _bottomSepView.backgroundColor = [UIColor themeGray7];
           [self.contentView addSubview:_bottomSepView];
             
-            
-           [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.bottom.mas_equalTo(self).offset(20);
-                make.left.right.mas_equalTo(self.contentView);
-                make.height.mas_equalTo(5);
-           }];
         }
     }
     return self;
@@ -161,11 +155,15 @@
 
 //这里接收TTLynxViewClient抛上来的sizeChange事件
 - (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
+    
+    self.bottomSepView.frame = CGRectMake(0.0f,self.lynxView.frame.origin.y + view.frame.size.height, [UIScreen mainScreen].bounds.size.height, 5);
+    
     if (CGSizeEqualToSize(self.cacheSize, view.frame.size)) {
         return;
     }
 
     self.cacheSize = view.frame.size;
+
 }
 
 - (NSURL*)shouldRedirectImageUrl:(NSURL*)url {
@@ -196,7 +194,7 @@
     if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
         if ([model.cell isKindOfClass:[FHUGCLynxBannerCell class]]) {
-            height =  [((FHUGCLynxBannerCell *)model.cell).lynxView intrinsicContentSize].height;
+            height =  [((FHUGCLynxBannerCell *)model.cell).lynxView intrinsicContentSize].height + 5;
         }
      
     }
