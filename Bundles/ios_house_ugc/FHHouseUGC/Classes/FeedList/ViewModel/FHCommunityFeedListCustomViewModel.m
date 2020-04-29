@@ -536,6 +536,7 @@
         // 投票
         NSMutableDictionary *dict = @{@"begin_show_comment":@(showComment)}.mutableCopy;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
         traceParam[@"enter_from"] = [self pageType];
         traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
         traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
@@ -552,7 +553,8 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = self.viewController.tracerDict[@"enter_from"];
+    traceParam[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+    traceParam[@"enter_from"] = [self pageType];
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
