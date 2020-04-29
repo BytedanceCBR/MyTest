@@ -42,14 +42,14 @@
         [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.shadowImage).offset(15);
             make.right.mas_equalTo(self.shadowImage).offset(-15);
-            make.top.mas_equalTo(self.shadowImage);
-            make.bottom.equalTo(self.shadowImage);
+            make.top.mas_equalTo(self.shadowImage).offset(12);
+            make.bottom.equalTo(self.shadowImage).offset(-12);
         }];
         _headLine = [UIView new];
 //        _headLine.backgroundColor = [UIColor whiteColor];
         [self.containerView addSubview:_headLine];
         [_headLine mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.right.equalTo(self.contentView);
+            make.top.left.right.equalTo(self.containerView);
             make.height.mas_equalTo(0);
         }];
         
@@ -59,7 +59,7 @@
         [self.containerView addSubview:_timeLabel];
         [_timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(48);
-            make.right.equalTo(self.contentView).offset(-20);
+            make.right.equalTo(self.containerView).offset(-20);
             make.top.equalTo(self.headLine.mas_bottom);
             make.height.mas_equalTo(25);
         }];
@@ -83,7 +83,7 @@
             make.top.equalTo(self.timeLabel.mas_bottom).offset(16);
             make.left.equalTo(self.timeLabel);
             make.height.mas_equalTo(26);
-            make.right.equalTo(self.contentView).offset(-20);
+            make.right.equalTo(self.containerView).offset(-20);
         }];
         
 
@@ -96,8 +96,8 @@
         [_contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.titleLabel.mas_bottom).offset(4);
             make.left.equalTo(self.titleLabel);
-            make.right.equalTo(self.contentView).offset(-20);
-            make.bottom.equalTo(self.contentView).offset(-20);
+            make.right.equalTo(self.containerView).offset(-20);
+            make.bottom.equalTo(self.containerView).offset(-20);
         }];
 
 
@@ -107,7 +107,7 @@
         [_timeLineLeading mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(24);
             make.width.mas_equalTo(1);
-            make.top.equalTo(self.contentView);
+            make.top.equalTo(self.containerView);
             make.bottom.equalTo(self.redDotView.mas_top);
         }];
         
@@ -120,7 +120,7 @@
             make.left.mas_equalTo(24);
             make.width.mas_equalTo(0.5);
             make.top.equalTo(self.redDotView.mas_bottom).offset(4);
-            make.bottom.equalTo(self.contentView);
+            make.bottom.equalTo(self.containerView);
         }];
         
         
@@ -129,7 +129,7 @@
         _maskBtn.backgroundColor = [UIColor clearColor];
         [self.containerView addSubview:_maskBtn];
         [_maskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.contentView);
+            make.edges.equalTo(self.containerView);
         }];
 
     }
@@ -159,8 +159,6 @@
             NSDictionary *dict = [self.baseViewModel subPageParams];
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
-            
-            
         }
     }
 }
@@ -195,15 +193,19 @@
                 make.left.mas_equalTo(24);
                 make.width.mas_equalTo(0.5);
                 make.top.equalTo(self.redDotView.mas_bottom).offset(4);
-                make.bottom.equalTo(self.contentView);
+                make.bottom.equalTo(self.containerView);
             }];
         }else
         {
             _timeLineLeading.hidden = NO;
         }
         if (model.isLastCell) {
+            
+            [_contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.bottom.equalTo(self.containerView).offset(-40);
+            }];
             [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.bottom.equalTo(self.contentView).offset(-40);
+                make.bottom.equalTo(self.containerView).offset(-40);
             }];
         }
     }
