@@ -232,8 +232,8 @@
                 [wself updateTableViewWithMoreData:wself.tableView.hasMore];
                 [wself.viewController.emptyView hideEmptyView];
             }else{
-                [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-                wself.viewController.showenRetryButton = NO;
+                [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
+//                wself.viewController.showenRetryButton = YES;
                 wself.refreshFooter.hidden = YES;
             }
             [wself.tableView reloadData];
@@ -819,6 +819,7 @@
     if(cellModel.attachCardInfo.extra && cellModel.attachCardInfo.extra.event.length > 0){
         //是房源卡片
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"origin_from"] = dic[@"origin_from"] ?: @"be_null";
         dict[@"page_type"] = [self pageType];
         dict[@"enter_from"] = dic[@"enter_from"] ? dic[@"enter_from"] : @"be_null";
         dict[@"group_id"] = cellModel.attachCardInfo.extra.groupId ?: @"be_null";
@@ -829,6 +830,7 @@
         TRACK_EVENT(cellModel.attachCardInfo.extra.event ?: @"card_show", dict);
     }else{
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"origin_from"] = dic[@"origin_from"] ?: @"be_null";
         dict[@"page_type"] = [self pageType];
         dict[@"enter_from"] = dic[@"enter_from"] ? dic[@"enter_from"] : @"be_null";
         dict[@"from_gid"] = cellModel.groupId;
