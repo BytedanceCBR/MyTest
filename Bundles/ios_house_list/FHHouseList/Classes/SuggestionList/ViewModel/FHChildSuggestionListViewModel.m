@@ -941,7 +941,6 @@
         } else {
             wself.historyView.historyItems = NULL;
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
-                
                 self.listController.isLoadingData = NO;
                 [self.listController endLoading];
                 [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -980,6 +979,11 @@
             }
         } else {
             wself.subscribeView.subscribeItems = NULL;
+            if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                self.listController.isLoadingData = NO;
+                [self.listController endLoading];
+                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         }
         [wself reloadHistoryTableView];
     }];
@@ -997,8 +1001,13 @@
         if (model != NULL && error == NULL) {
             self.guessYouWantData = model.data.data;
             [wself reloadHistoryTableView];
+        }  else {
+            if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                self.listController.isLoadingData = NO;
+                [self.listController endLoading];
+                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            }
         }
-        
     }];
 }
 
