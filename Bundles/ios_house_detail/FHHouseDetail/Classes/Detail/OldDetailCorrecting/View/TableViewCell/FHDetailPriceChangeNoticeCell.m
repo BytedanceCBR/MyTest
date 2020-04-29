@@ -227,7 +227,7 @@
             NSDictionary *history = @{@"history":historyData};
             NSDictionary *jsData = @{@"data":history,@"house_id":houseId};
             NSDictionary *jsParams = @{@"requestPageData":jsData};
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"url":url,@"title":@"价格解析",@"fhJSParams":jsParams}];
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"url":url,@"title":@"",@"fhJSParams":jsParams}];
             NSString *jumpUrl = @"sslocal://webview";
             [[TTRoute sharedRoute] openURLByPushViewController:[[NSURL alloc] initWithString:jumpUrl] userInfo:userInfo];
             [self addGoDetailLog];

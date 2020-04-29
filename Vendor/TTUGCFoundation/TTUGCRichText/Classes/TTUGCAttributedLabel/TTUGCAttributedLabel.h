@@ -1,17 +1,17 @@
 // TTUGCAttributedLabel.h
 //
 // Copyright (c) 2011 Mattt Thompson (http://mattt.me)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -156,7 +156,7 @@ IB_DESIGNABLE
 
 /**
  Indicates if links will be detected within an extended area around the touch
- to emulate the link detection behaviour of UIWebView. 
+ to emulate the link detection behaviour of UIWebView.
  Default value is NO. Enabling this may adversely impact performance.
  */
 @property (nonatomic, assign) BOOL extendsLinkTouchArea;
@@ -166,19 +166,19 @@ IB_DESIGNABLE
 ///---------------------------------------
 
 /**
- The shadow blur radius for the label. A value of 0 indicates no blur, while larger values produce correspondingly larger blurring. This value must not be negative. The default value is 0. 
+ The shadow blur radius for the label. A value of 0 indicates no blur, while larger values produce correspondingly larger blurring. This value must not be negative. The default value is 0.
  */
 @property (nonatomic, assign) IBInspectable CGFloat shadowRadius;
 
-/** 
+/**
  The shadow blur radius for the label when the label's `highlighted` property is `YES`. A value of 0 indicates no blur, while larger values produce correspondingly larger blurring. This value must not be negative. The default value is 0.
  */
 @property (nonatomic, assign) IBInspectable CGFloat highlightedShadowRadius;
-/** 
+/**
  The shadow offset for the label when the label's `highlighted` property is `YES`. A size of {0, 0} indicates no offset, with positive values extending down and to the right. The default size is {0, 0}.
  */
 @property (nonatomic, assign) IBInspectable CGSize highlightedShadowOffset;
-/** 
+/**
  The shadow color for the label when the label's `highlighted` property is `YES`. The default value is `nil` (no shadow color).
  */
 @property (nonatomic, strong) IBInspectable UIColor *highlightedShadowColor;
@@ -193,8 +193,8 @@ IB_DESIGNABLE
 ///--------------------------------------------
 
 /**
- The distance, in points, from the leading margin of a frame to the beginning of the 
- paragraph's first line. This value is always nonnegative, and is 0.0 by default. 
+ The distance, in points, from the leading margin of a frame to the beginning of the
+ paragraph's first line. This value is always nonnegative, and is 0.0 by default.
  This applies to the full text, rather than any specific paragraph metrics.
  */
 @property (nonatomic, assign) IBInspectable CGFloat firstLineIndent;
@@ -271,7 +271,7 @@ IB_DESIGNABLE
 
 /**
  * Calculate and return the number of lines that best fits an attributed string, given the specified constraints on size.
- * 
+ *
  * @param attributedString The attributed string.
  * @param width The maximum dimensions.
  * @return numberOfLines
@@ -464,7 +464,7 @@ typedef void (^TTUGCAttributedLabelLinkBlock) (TTUGCAttributedLabel *, TTUGCAttr
 /**
  An `NSTextCheckingResult` representing the link's location and type.
  */
-@property (readonly, nonatomic, strong) NSTextCheckingResult *result;
+@property (nonatomic, strong) NSTextCheckingResult *result;
 
 /**
  A dictionary containing the @c NSAttributedString attributes to be applied to the link.
@@ -483,7 +483,7 @@ typedef void (^TTUGCAttributedLabelLinkBlock) (TTUGCAttributedLabel *, TTUGCAttr
 
 /**
  A block called when this link is tapped.
- If non-nil, tapping on this link will call this block instead of the 
+ If non-nil, tapping on this link will call this block instead of the
  @c TTUGCAttributedLabelDelegate tap methods, which will not be called for this link.
  */
 @property (nonatomic, copy) TTUGCAttributedLabelLinkBlock linkTapBlock;
@@ -521,4 +521,8 @@ typedef void (^TTUGCAttributedLabelLinkBlock) (TTUGCAttributedLabel *, TTUGCAttr
 - (instancetype)initWithAttributesFromLabel:(TTUGCAttributedLabel*)label
                          textCheckingResult:(NSTextCheckingResult *)result;
 
+- (instancetype)initWithAttributes:(NSDictionary * _Nullable)attributes
+                textCheckingResult:(NSTextCheckingResult * _Nullable)result;
+
 @end
+

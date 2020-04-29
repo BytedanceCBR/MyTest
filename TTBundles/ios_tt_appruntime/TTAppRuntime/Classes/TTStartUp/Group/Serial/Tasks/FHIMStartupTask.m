@@ -122,6 +122,16 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     }
                 }
             }
+            @catch(NSException *e) {
+                error = [NSError errorWithDomain:e.reason code:1000 userInfo:e.userInfo ];
+                [monitorParams setValue:error.userInfo forKey:@"json_error"];
+                [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_JSON_ERROR extra:monitorParams];
+            }
+            
+            NSString *phone = @"";
+            BOOL isAssociate = NO;
+            phone = [number stringByReplacingOccurrencesOfString:@"" withString:@""];
+            isAssociate = YES;
             
             if (isEmptyString(userId)) {
                 

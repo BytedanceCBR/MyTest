@@ -47,6 +47,8 @@
 #import "FHHouseListBaseItemCell.h"
 #import "FHHouseListBaseItemModel.h"
 #import "FHDetailNewRelatedCell.h"
+#import "FHDetailNeighborhoodAssessCell.h"
+#import "FHDetailAccessCellModel.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -97,7 +99,8 @@
     //周边新盘上标题
 //    [self.tableView registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])]
     [self.tableView registerClass:[FHDetailNewRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewRelatedCellModel class])];
-
+    //楼盘攻略
+    [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
 }
 
 // cell identifier
@@ -590,6 +593,28 @@
         floorPan.floorPanList = model.data.floorpanList;
         floorPan.houseModelType = FHHouseModelTypeNewFloorPlan;
         [self.items addObject:floorPan];
+    }
+    
+    // 小区评测
+    if (model.data.strategy && model.data.strategy.articleList.count > 0) {
+    
+        FHDetailAccessCellModel *cellModel = [[FHDetailAccessCellModel alloc] init];
+        cellModel.houseModelType = FHHouseModelTypeNewAccess;
+        cellModel.strategy = model.data.strategy;
+        cellModel.bottomMargin = 30;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        paramsDict[@"from_gid"] = self.houseId;
+        paramsDict[@"element_type"] = @"guide";
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        paramsDict[@"search_id"] = searchId.length > 0 ? searchId : @"be_null";
+        paramsDict[@"impr_id"] = imprId.length > 0 ? imprId : @"be_null";
+        cellModel.tracerDic = paramsDict;
+        [self.items addObject:cellModel];
     }
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {

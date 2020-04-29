@@ -10,6 +10,7 @@
 #import "FHDetailBaseModel.h"
 #import "FHHouseNewsSocialModel.h"
 #import "FHHouseBaseInfoModel.h"
+#import "FHDetailOldModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -277,6 +278,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *imageGroupAssociateInfo;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *discountInfoAssociateInfo;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
 
 @end
 

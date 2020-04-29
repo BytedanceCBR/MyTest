@@ -14,6 +14,7 @@
 #import "FHFeedUGCCellModel.h"
 #import "TTVFeedListItem.h"
 #import "AWECommentModel.h"
+#import "TTUGCAsyncLabel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)setRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model;
 
-+ (void)setOriginRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model;
++ (void)setOriginRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model numberOfLines:(NSInteger)numberOfLines;
 
 + (void)setOriginContentAttributeString:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 
@@ -60,6 +61,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)setQuestionRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
 
 + (void)setAnswerRichContentWithModel:(FHFeedUGCCellModel *)model width:(CGFloat)width numberOfLines:(NSInteger)numberOfLines;
+
+////
++ (void)setAsyncRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model;
 
 @end
 
