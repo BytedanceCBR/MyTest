@@ -167,6 +167,11 @@
     if(!_neighbourhoodView){
         _neighbourhoodViewHeight = [FHEnvContext isNewDiscovery] ? 144 : 194;
         _neighbourhoodView = [[FHMyJoinNeighbourhoodView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _neighbourhoodViewHeight)];
+        
+        NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+        [tracerDict addEntriesFromDictionary:self.tracerDict];
+        tracerDict[@"page_type"] = @"my_join_feed";
+        _neighbourhoodView.searchView.tracerDict = tracerDict;
     }
     return _neighbourhoodView;
 }

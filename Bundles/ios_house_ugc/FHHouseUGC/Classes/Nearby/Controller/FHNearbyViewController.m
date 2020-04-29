@@ -213,6 +213,12 @@
             _headerViewHeight = 0.001f;
         }
         _headerView = [[FHNearbyHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, _headerViewHeight)];
+        
+        NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+        [tracerDict addEntriesFromDictionary:self.tracerDict];
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+        _headerView.searchView.tracerDict = tracerDict;
+        
         _headerView.searchView.hidden = ![FHEnvContext isNewDiscovery];
         _headerView.hidden = YES;
     }

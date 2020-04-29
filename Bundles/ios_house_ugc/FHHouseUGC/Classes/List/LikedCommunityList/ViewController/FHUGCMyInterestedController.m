@@ -129,6 +129,12 @@
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 36 + 49)];
     
     FHUGCSearchView *searchView = [[FHUGCSearchView alloc] initWithFrame:CGRectMake(20, 15, [UIScreen mainScreen].bounds.size.width - 40, 34)];
+    
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    [tracerDict addEntriesFromDictionary:self.tracerDict];
+    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"origin_from"] = @"neighborhood_tab";
+    searchView.tracerDict = tracerDict;
     [headerView addSubview:searchView];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 15 + 49, [UIScreen mainScreen].bounds.size.width, 21)];

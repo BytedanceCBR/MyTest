@@ -804,7 +804,7 @@
         [self trackElementShow:rank elementType:@"hot_topic"];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2) {
         NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
-        guideDict[@"origin_from"] = @"neighborhood_tab";
+        guideDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
         guideDict[@"page_type"] = [self pageType];
         guideDict[@"description"] = cellModel.desc;
         guideDict[@"item_title"] = cellModel.title;
@@ -844,7 +844,7 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"element_type"] = elementType ? elementType : @"be_null";
     dict[@"page_type"] = [self pageType];
-    dict[@"enter_from"] = @"neighborhood_tab";
+    dict[@"enter_from"] = self.viewController.tracerDict[@"origin_from"];
     dict[@"rank"] = @(rank);
     
     TRACK_EVENT(@"element_show", dict);

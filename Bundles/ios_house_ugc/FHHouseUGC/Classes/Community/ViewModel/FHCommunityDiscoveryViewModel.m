@@ -116,6 +116,7 @@
 
 - (void)initCell:(NSString *)enterType {
     if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityDiscoveryCell class]]){
+        
         FHCommunityDiscoveryCell *cell = (FHCommunityDiscoveryCell *)self.cellArray[self.currentTabIndex];
         cell.enterType = enterType;
         
@@ -181,9 +182,11 @@
     self.cellArray[row] = cell;
     
     //第一次初始化的时候
-    if(self.isFirstLoad && self.currentTabIndex != row){
+    if(self.isFirstLoad){
         self.isFirstLoad = NO;
-        [self selectCurrentTabIndex];
+        if(self.currentTabIndex != row){
+            [self selectCurrentTabIndex];
+        }
     }
     
     if(row == self.currentTabIndex){

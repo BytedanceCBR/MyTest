@@ -13,12 +13,10 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "FHEnvContext.h"
-#import "FHUGCSearchView.h"
 
 @interface FHMyJoinNeighbourhoodView ()
 
 @property(nonatomic, strong) FHUGCCellHeaderView *headerView;
-@property(nonatomic, strong) FHUGCSearchView *searchView;
 @property(nonatomic, strong) UIView *bottomSepView;
 
 @end

@@ -87,7 +87,11 @@
         StrongSelf;
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *) x;
         if([FHEnvContext isNewDiscovery]){
-            [self initViewModel];
+            if(!self.viewModel.isFirstLoad){
+                [self initViewModel];
+                self.segmentControl.sectionTitles = [self getSegmentTitles];
+                self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
+            }
         }else{
             if (self.isUgcOpen != xConfigDataModel.ugcCitySwitch) {
                 self.isUgcOpen = xConfigDataModel.ugcCitySwitch;

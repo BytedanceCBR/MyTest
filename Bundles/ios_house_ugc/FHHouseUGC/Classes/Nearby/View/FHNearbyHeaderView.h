@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) FHPostUGCProgressView *progressView;
 @property (nonatomic, strong) FHUGCSearchView *searchView;
 
+
 @end
 
 NS_ASSUME_NONNULL_END
