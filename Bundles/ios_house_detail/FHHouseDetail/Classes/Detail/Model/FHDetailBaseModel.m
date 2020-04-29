@@ -121,6 +121,7 @@
                            @"homePage": @"home_page",
                            @"realtorId": @"realtor_id",
                            @"agencyId": @"agency_id",
+                           @"agencyDescription": @"agency_description",
                            @"agencyName": @"agency_name",
                            @"avatarUrl": @"avatar_url",
                            @"showRealtorinfo": @"show_realtorinfo",

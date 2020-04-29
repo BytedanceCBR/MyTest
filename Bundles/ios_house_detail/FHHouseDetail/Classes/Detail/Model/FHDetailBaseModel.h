@@ -83,6 +83,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
     FHRealtorCellShowStyle0,
     FHRealtorCellShowStyle1,
     FHRealtorCellShowStyle2,
+    FHRealtorCellShowStyle3,
 };
 
 @protocol FHRealtorTag<NSObject>
@@ -107,6 +108,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *realtorId;
 @property (nonatomic, copy , nullable) NSString *businessLicense;
 @property (nonatomic, copy , nullable) NSString *agencyId;
+@property (nonatomic, copy , nullable) NSString *agencyDescription;
 @property (nonatomic, copy , nullable) NSString *phone;
 @property (nonatomic, copy , nullable) NSString *agencyName;
 @property (nonatomic, copy , nullable) NSString *realtorName;

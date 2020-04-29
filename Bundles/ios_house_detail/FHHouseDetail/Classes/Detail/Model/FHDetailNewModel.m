@@ -165,6 +165,7 @@
                            @"searchId": @"search_id",
                            @"groupId": @"group_id",
                            @"imOpenUrl":@"im_openurl",
+                           @"displayPrice": @"display_price"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -248,6 +249,7 @@
         @"discountReportSubTitle": @"discount_report_sub_title",
         @"discountButtonText": @"discount_button_text",
         @"discountReportDoneTitle": @"discount_report_done_title",
+        @"discountReportDoneSubTitle":@"discount_report_done_sub_title",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -363,6 +365,7 @@
                            @"chooseAgencyList": @"choose_agency_list",
                            @"recommendedRealtors": @"recommended_realtors",
                            @"recommendedRealtorsTitle": @"recommended_realtors_title",
+                           @"recommendedRealtorsSubTitle":@"recommended_realtors_sub_title",
                            @"socialInfo":@"ugc_social_group",
                            @"houseVideo": @"house_video",
                            @"baseInfo": @"base_info",

@@ -633,6 +633,7 @@
         agentListModel.belongsVC = self.detailController;
         agentListModel.houseModelType = FHHouseModelTypeNewAgentList;
         agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
+        agentListModel.recommendedRealtorsSubTitle = model.data.recommendedRealtorsSubTitle;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         
         /******* 这里的 逻辑   ********/

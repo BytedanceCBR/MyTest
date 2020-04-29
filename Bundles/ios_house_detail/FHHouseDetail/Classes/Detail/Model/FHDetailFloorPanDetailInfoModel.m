@@ -96,7 +96,8 @@
     @"courtId": @"court_id",
     @"highlightedRealtor": @"highlighted_realtor",
     @"chooseAgencyList": @"choose_agency_list",
-    @"saleStatus": @"sale_status"
+    @"saleStatus": @"sale_status",
+    @"displayPrice": @"display_price"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
