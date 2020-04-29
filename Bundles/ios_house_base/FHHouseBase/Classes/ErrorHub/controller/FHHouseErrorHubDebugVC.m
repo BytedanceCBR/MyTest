@@ -10,6 +10,7 @@
 #import "Masonry.h"
 #import "UIDevice+BTDAdditions.h"
 #import "TTBaseMacro.h"
+#import "ToastManager.h"
 
 @interface FHHouseErrorHubDebugVC ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) NSMutableDictionary *dataSource;
@@ -115,6 +116,16 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
      NSDictionary *dic = self.dataSource[indexPath.section == 0 ?@"host_error" :@"buryingpoint_error"][indexPath.row];
+    NSString *copyString = @"";
+    if (indexPath.section == 0) {
+        copyString = [NSString stringWithFormat:@"接口名:%@ ,错误码:%@，logid:%@", dic [@"name"],dic[@"error_info"],dic[@"httpStatus"][@"x-tt-logid"]];
+    }else {
+        copyString = [NSString stringWithFormat:@"接口名:%@ ,错误信息:%@", dic [@"name"],dic[@"error_info"]];
+    }
+    
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = copyString;
+    [[ToastManager manager] showToast:@"已将信息复制到剪切板"];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
