@@ -476,11 +476,11 @@
     self.medias = model.medias;
     [self.colletionView reloadData];
     
-    BOOL isShowBottomBannerView = model.isShowSkyEyeLogo;
-    self.bottomBannerView.hidden = !isShowBottomBannerView;
-    if(isShowBottomBannerView && [self.delegate respondsToSelector:@selector(bottomBannerViewDidShow)]) {
-        [self.delegate bottomBannerViewDidShow];
-    }
+//    BOOL isShowBottomBannerView = model.isShowSkyEyeLogo;
+//    self.bottomBannerView.hidden = !isShowBottomBannerView;
+//    if(isShowBottomBannerView && [self.delegate respondsToSelector:@selector(bottomBannerViewDidShow)]) {
+//        [self.delegate bottomBannerViewDidShow];
+//    }
 //    CGFloat topOffset = 82;
 //    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
 //        topOffset -= 40;

@@ -141,7 +141,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
             }
             @catch(NSException *e) {
                 error = [NSError errorWithDomain:e.reason code:1000 userInfo:e.userInfo ];
-                [monitorParams setValue:error forKey:@"json_error"];
+                [monitorParams setValue:error.userInfo forKey:@"json_error"];
                 [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_JSON_ERROR extra:monitorParams];
             }
             
@@ -166,7 +166,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
             [[UIApplication sharedApplication] openURL:url];
         } else {
             [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
-            [monitorParams setValue:error forKey:@"server_error"];
+            [monitorParams setValue:error.userInfo forKey:@"server_error"];
             [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_SERVER_ERROR extra:monitorParams];
             finishBlock(@"click_call", imprId,true);
             
