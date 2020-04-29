@@ -48,6 +48,7 @@
 @property(nonatomic, assign) BOOL alreadyShowGuide;
 //新的发现页面
 @property(nonatomic, assign) BOOL isNewDiscovery;
+@property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
 
 @end
@@ -81,15 +82,15 @@
         [self onCommunityHaveNewContents];
     }
 
+    self.isFirstLoad = YES;
     //切换开关
     WeakSelf;
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id _Nullable x) {
         StrongSelf;
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *) x;
         if([FHEnvContext isNewDiscovery]){
-            if(!self.viewModel.isFirstLoad){
+            if(!self.isFirstLoad){
                 [self initViewModel];
-                self.segmentControl.sectionTitles = [self getSegmentTitles];
                 self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
             }
         }else{
@@ -116,6 +117,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSegmentView) name:kUGCCategoryGotFinishedNotification object:nil];
     
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
+    self.isFirstLoad = NO;
 }
 
 - (void)dealloc {

@@ -170,7 +170,7 @@
         
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
         [tracerDict addEntriesFromDictionary:self.tracerDict];
-        tracerDict[@"page_type"] = @"my_join_feed";
+        tracerDict[@"page_type"] = @"my_join_list";
         _neighbourhoodView.searchView.tracerDict = tracerDict;
     }
     return _neighbourhoodView;
