@@ -89,7 +89,7 @@
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor whiteColor];
-    
+    _collectionView.showsVerticalScrollIndicator = NO;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
     
@@ -137,6 +137,13 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
+    
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    
     [self.clientShowDict removeAllObjects];
     self.currentData = data;
     
@@ -150,7 +157,7 @@
     if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
         NSArray *dataList = model.hotTopicList;
-        NSInteger row = floor(model.hotTopicList.count / 2.0);
+        NSInteger row = ceil(model.hotTopicList.count / 2.0);
         height += (46 * row);
     }
     return height;
