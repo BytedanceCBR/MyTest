@@ -430,7 +430,6 @@
 - (void)associateWordShow {
     NSMutableArray *wordList = [NSMutableArray new];
     if (self.sugListData.count == 0) {
-        self.associatedTrackDict = nil;
         return;
     }
     for (NSInteger index = 0; index < self.sugListData.count; index ++) {
@@ -600,6 +599,7 @@
         return cell;
     } else if (tableView.tag == 2) {
         if (self.sugListData.count == 0) {
+            //空页面
             FHSuggestionEmptyCell *cell = (FHSuggestionEmptyCell *)[tableView dequeueReusableCellWithIdentifier:@"suggetEmptyCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             return cell;
@@ -669,7 +669,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (tableView.tag == 1) {
-        // 历史记录
+        // 猜你想搜
         if (indexPath.row - 1 < self.guessYouWantData.count) {
             FHGuessYouWantResponseDataDataModel *model  = self.guessYouWantData[indexPath.row - 1];
             [self trackClickEventData:model rank:indexPath.row - 1];
@@ -687,7 +687,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (tableView.tag == 1) {
-        // 历史记录:猜你想搜 & 已订阅搜索
+        // 历史记录 & 已订阅搜索
         if (self.historyData.count > 0 || self.subscribeItems.count > 0) {
             return self.sectionHeaderView;
         }
@@ -941,9 +941,9 @@
         } else {
             wself.historyView.historyItems = NULL;
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
-                self.listController.isLoadingData = NO;
-                [self.listController endLoading];
-                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+                wself.listController.isLoadingData = NO;
+                [wself.listController endLoading];
+                [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
         }
     }];
@@ -980,9 +980,9 @@
         } else {
             wself.subscribeView.subscribeItems = NULL;
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
-                self.listController.isLoadingData = NO;
-                [self.listController endLoading];
-                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+                wself.listController.isLoadingData = NO;
+                [wself.listController endLoading];
+                [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
         }
         [wself reloadHistoryTableView];
@@ -994,18 +994,16 @@
         [self.guessHttpTask cancel];
     }
     __weak typeof(self) wself = self;
-
-    
     self.guessHttpTask = [FHHouseListAPI requestGuessYouWant:cityId houseType:houseType class:[FHGuessYouWantResponseModel class] completion:^(FHGuessYouWantResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         if (model != NULL && error == NULL) {
-            self.guessYouWantData = model.data.data;
+            wself.guessYouWantData = model.data.data;
             [wself reloadHistoryTableView];
         }  else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
-                self.listController.isLoadingData = NO;
-                [self.listController endLoading];
-                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+                wself.listController.isLoadingData = NO;
+                [wself.listController endLoading];
+                [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
         }
     }];
@@ -1029,9 +1027,9 @@
             [wself associateWordShow];
         } else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
-                self.listController.isLoadingData = NO;
-                [self.listController endLoading];
-                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+                wself.listController.isLoadingData = NO;
+                [wself.listController endLoading];
+                [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
         }
     }];
@@ -1050,9 +1048,9 @@
             [wself reloadHistoryTableView];
         } else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
-                self.listController.isLoadingData = NO;
-                [self.listController endLoading];
-                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+                wself.listController.isLoadingData = NO;
+                [wself.listController endLoading];
+                [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
         }
     }];

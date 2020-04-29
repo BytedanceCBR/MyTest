@@ -14,8 +14,8 @@
 @property (nonatomic, weak) FHSuggestionListViewController *listController;
 @property (nonatomic, weak) FHBaseCollectionView *collectionView;
 @property (nonatomic, strong) NSMutableDictionary *cellDict;
-@property(nonatomic , assign) CGPoint beginOffSet;
-@property(nonatomic , assign) CGFloat oldX;
+@property (nonatomic, assign) CGPoint beginOffSet;
+@property (nonatomic, assign) CGFloat oldX;
 
 @end
 
@@ -67,10 +67,8 @@
     if (_currentTabIndex != currentTabIndex) {
         _currentTabIndex = currentTabIndex;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentTabIndex inSection:0];
-
         [self.collectionView layoutIfNeeded];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-        
     }
 }
 

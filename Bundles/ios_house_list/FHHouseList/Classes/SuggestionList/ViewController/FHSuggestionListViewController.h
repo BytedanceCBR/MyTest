@@ -9,9 +9,9 @@
 #import "FHHouseType.h"
 #import "FHBaseViewController.h"
 #import "FHHouseSuggestionDelegate.h"
-#import <FHCommonUI/FHSearchBar.h>
 #import "HMSegmentedControl.h"
 #import "FHSuggestionSearchBar.h"
+
 typedef enum : NSUInteger {
     FHEnterSuggestionTypeDefault       =   0,// H5
     FHEnterSuggestionTypeHome       =   1,// 首页
@@ -21,36 +21,17 @@ typedef enum : NSUInteger {
     FHEnterSuggestionTypeOldMain       =   5,// 二手房大类页
 } FHEnterSuggestionType;
 
-// 特别说明：目前只有房源列表页和找房Tab列表页 需要pop back和回传数据need_back_vc
+//特别说明：埋点逻辑和页面跳转逻辑全在子VC:FHChildSuggestionListViewController实现
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*
- route跳转方式：不需要回传数据可以不带sug_delegate
- 
- NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
- [sugDelegateTable addObject:self];
- NSDictionary *dict = @{@"house_type":@(FHHouseTypeRentHouse) ,
- @"tracer": traceParam,
- @"from_home":@(4),
- @"sug_delegate":sugDelegateTable,
- @"homepage_roll_data":test,
- @"need_back_vc":vc
- };
- TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
- 
- NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
- [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
- */
 @interface FHSuggestionListViewController : FHBaseViewController
 
-@property (nonatomic, strong) HMSegmentedControl *segmentControl;
+@property (nonatomic, strong)     HMSegmentedControl *segmentControl;
 @property (nonatomic, strong)     FHSuggestionSearchBar     *naviBar;
-@property (nonatomic, strong) NSMutableArray *houseTypeArray;
+@property (nonatomic, strong)     NSMutableArray *houseTypeArray;
 @property (nonatomic, assign)     FHHouseType       houseType;
-
-@property (nonatomic, strong) TTRouteParamObj *paramObj;
-
+@property (nonatomic, strong)     TTRouteParamObj *paramObj;
 
 - (void)requestDeleteHistory;
 

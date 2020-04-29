@@ -202,11 +202,9 @@
 
 - (void)setupSegmentedControl {
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
-    
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
                                           NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
-    
     NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;

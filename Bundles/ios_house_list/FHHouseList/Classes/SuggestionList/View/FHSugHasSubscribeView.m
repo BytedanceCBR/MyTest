@@ -19,7 +19,6 @@
 @property (nonatomic, strong)   UIButton       *headerButton;
 @property (nonatomic, strong)   NSMutableArray       *tempViews;
 @property (nonatomic, strong)   NSMutableDictionary *tracerCacheDic;// 埋点
-@property (nonatomic, strong)   UIView *redView;
 @property (nonatomic, strong) NSMutableDictionary *dict;
 @property (nonatomic, strong) NSMutableDictionary *isTractedDict;
 

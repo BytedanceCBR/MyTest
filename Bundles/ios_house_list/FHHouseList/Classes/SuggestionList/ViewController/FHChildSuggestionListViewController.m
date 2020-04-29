@@ -85,11 +85,6 @@
             self.homePageRollDic = [NSMutableDictionary dictionaryWithDictionary:dic];
             self.viewModel.homePageRollDic = self.homePageRollDic;
         }
-        // 4.1、guess_you_want_words 猜你想搜前3个词，外部轮播传入
-        id tempArray = paramObj.allParams[@"guess_you_want_words"];
-        if (tempArray && [tempArray isKindOfClass:[NSArray class]]) {
-            self.viewModel.guessYouWantWords = [[NSMutableArray alloc] initWithArray:tempArray];
-        }
         // 5、tracer（TRACER_KEY）: self.tracerDict 字典
         // 6、H5页面传入的其他字段 3.18号上 H5放到report_params
         NSMutableDictionary *paramDic = [NSMutableDictionary dictionaryWithDictionary:paramObj.allParams];

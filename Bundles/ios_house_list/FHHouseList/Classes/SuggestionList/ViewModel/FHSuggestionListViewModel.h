@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, assign)   NSInteger       associatedCount;
-@property (nonatomic, weak) HMSegmentedControl *segmentControl;
+@property (nonatomic, weak)   HMSegmentedControl *segmentControl;
 @property (nonatomic, assign) NSInteger currentTabIndex;
 
 -(instancetype)initWithController:(FHSuggestionListViewController *)viewController;
