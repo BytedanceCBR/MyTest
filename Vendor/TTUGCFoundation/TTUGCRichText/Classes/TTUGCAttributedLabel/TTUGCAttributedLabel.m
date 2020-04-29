@@ -755,7 +755,7 @@ static inline long CTFramesetterSuggestNumberOfLinesForAttributedStringWithConst
                         self.truncatedTokenRect = CGRectMake(lineOrigin.x + truncatedLineWidth - truncationTokenRect.size.width, lineOrigin.y - descent - self.font.descender - self.font.lineHeight + self.font.pointSize, truncationTokenRect.size.width, truncationTokenRect.size.height + self.font.lineHeight - self.font.pointSize);
 
                         // addLinks will reset attributedText and render again, but have no influence on attributedTruncationToken style.
-                        [self addLinkToURL:[attributedTruncationString attribute:NSLinkAttributeName atIndex:0 effectiveRange:&linkRange] withRange:truncationTokenRange]; 
+                        [self addLinkToURL:[attributedTruncationString attribute:NSLinkAttributeName atIndex:0 effectiveRange:&linkRange] withRange:truncationTokenRange];
                     }
                 }
 
@@ -799,7 +799,9 @@ static inline long CTFramesetterSuggestNumberOfLinesForAttributedStringWithConst
             glyphRunIndex++;
             NSDictionary *runAttributes = (__bridge NSDictionary *) CTRunGetAttributes((__bridge CTRunRef) glyphRun);
             CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[runAttributes valueForKey:(id)kCTRunDelegateAttributeName];
-            if (delegate == nil) continue;
+            if (delegate == nil) {
+                continue;
+            }
 
             TTUGCEmojiTextAttachment *refCon = (TTUGCEmojiTextAttachment *) CTRunDelegateGetRefCon(delegate);
             if (!refCon || ![refCon isKindOfClass:[TTUGCEmojiTextAttachment class]]) {
@@ -818,14 +820,17 @@ static inline long CTFramesetterSuggestNumberOfLinesForAttributedStringWithConst
                     continue;
                 }
                 UIImage *coreTextImage = attachment.coreTextImage;
-                if (!coreTextImage) continue;
-
+                if (!coreTextImage) {
+                    continue;
+                }
                 UIImage *image = nil;
                 if ([coreTextImage isKindOfClass:[UIImage class]]) {
                     image = coreTextImage;
                 }
 
-                if (!image) continue;
+                if (!image) {
+                    continue;
+                }
 
                 CGPoint runPosition = CGPointZero;
                 CTRunGetPositions((__bridge CTRunRef) glyphRun, CFRangeMake(0, 1), &runPosition);
@@ -949,12 +954,12 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
 
 // Fixes crash when loading from a UIStoryboard
 - (UIColor *)textColor {
-	UIColor *color = [super textColor];
-	if (!color) {
-		color = [UIColor blackColor];
-	}
+    UIColor *color = [super textColor];
+    if (!color) {
+        color = [UIColor blackColor];
+    }
 
-	return color;
+    return color;
 }
 
 - (void)setTextColor:(UIColor *)textColor {
@@ -1348,9 +1353,17 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
                  textCheckingResult:result];
 }
 
+- (instancetype)initWithAttributes:(NSDictionary * _Nullable)attributes
+                textCheckingResult:(NSTextCheckingResult * _Nullable)result {
+    return [self initWithAttributes:attributes
+                   activeAttributes:nil
+                 inactiveAttributes:nil
+                 textCheckingResult:result];
+}
+
 @end
 
-#pragma mark - 
+#pragma mark -
 
 static inline CTFontRef CTFontRefFromUIFont(UIFont * font) {
     CTFontRef ctfont = CTFontCreateWithName((__bridge CFStringRef)font.fontName, font.pointSize, NULL);
@@ -1390,3 +1403,4 @@ static inline NSDictionary * convertNSAttributedStringAttributesToCTAttributes(N
 
     return [NSDictionary dictionaryWithDictionary:mutableAttributes];
 }
+
