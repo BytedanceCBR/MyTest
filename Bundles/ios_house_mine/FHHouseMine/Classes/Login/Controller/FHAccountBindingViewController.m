@@ -20,9 +20,6 @@
 
 @implementation FHAccountBindingViewController
 
-- (void)dealloc {
-    NSLog(@"FHAccountBindingViewController");
-}
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
