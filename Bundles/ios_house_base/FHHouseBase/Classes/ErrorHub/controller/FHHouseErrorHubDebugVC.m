@@ -9,6 +9,7 @@
 #import "FHHouseErrorHubManager.h"
 #import "Masonry.h"
 #import "UIDevice+BTDAdditions.h"
+#import "TTBaseMacro.h"
 
 @interface FHHouseErrorHubDebugVC ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) NSMutableDictionary *dataSource;
@@ -29,8 +30,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.dataSource = @{}.mutableCopy;
-    self.dataSource[@"host_error"] = [[FHHouseErrorHubManager sharedInstance]getLocalErrorDataWithType:FHErrorHubTypeRequest];
-    self.dataSource[@"buryingpoint_error"] = [[FHHouseErrorHubManager sharedInstance]getLocalErrorDataWithType:FHErrorHubTypeBuryingPoint];
+    self.dataSource[@"host_error"] = [[FHHouseErrorHubManager sharedInstance] getLocalErrorDataWithType:FHErrorHubTypeRequest];
+    self.dataSource[@"buryingpoint_error"] = [[FHHouseErrorHubManager sharedInstance] getLocalErrorDataWithType:FHErrorHubTypeBuryingPoint];
     [self.errorTab registerClass:[FHHouseErrorHubCell class] forCellReuseIdentifier:@"FHHouseErrorHubCell"];
     [self initUI];
 }
@@ -39,7 +40,7 @@
     [self.errorTab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.equalTo(self.view);
         make.top.equalTo(self.view).offset([UIDevice btd_isIPhoneXSeries]?84:64);
-//        make.bottom.equalTo(self.view).offset([UIDevice btd_isIPhoneXSeries]?-80:-64);
+        //        make.bottom.equalTo(self.view).offset([UIDevice btd_isIPhoneXSeries]?-80:-64);
     }];
     [self setupDefaultNavBar:YES];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(becktToPop)];
@@ -47,6 +48,49 @@
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"save 现场" style:UIBarButtonItemStylePlain target:self action:@selector(saveConfigAction)];
     self.navigationItem.rightBarButtonItem = rightItem;
     
+    UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    lpgr.minimumPressDuration = 1.0; //seconds    设置响应时间
+    lpgr.delegate = self;
+    [self.errorTab addGestureRecognizer:lpgr];
+    
+}
+
+
+-(void)handleLongPress:(UILongPressGestureRecognizer *)gestureRecognizer  //长按响应函数
+{
+    if (gestureRecognizer.state  == UIGestureRecognizerStateEnded ) {
+        CGPoint p = [gestureRecognizer locationInView:self.errorTab ];
+        NSIndexPath *indexPath = [self.errorTab indexPathForRowAtPoint:p];//获取响应的长按的indexpath
+        if (indexPath == nil){
+        }else {
+            [self shareErrorJsonIsRequest:indexPath.section == 0 index:indexPath];
+        }
+    }
+}
+
+- (void)shareErrorJsonIsRequest:(BOOL)isRquest index:(NSIndexPath *)indexPath {
+    NSDictionary *shareDic = self.dataSource[indexPath.section == 0 ?@"host_error" :@"buryingpoint_error"][indexPath.row];
+    [[FHHouseErrorHubManager sharedInstance] addLogWithData:shareDic logType:FHErrorHubTypeShare];
+    NSString *path = [[FHHouseErrorHubManager sharedInstance] localDataPathWithType:FHErrorHubTypeShare];
+    NSURL *url = [NSURL fileURLWithPath:path];
+    NSArray *items = [NSArray arrayWithObjects:url, nil];
+    UIActivityViewController *activityViewController =
+    [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
+    NSArray *excludedActivities = @[UIActivityTypePostToFacebook,
+                                    UIActivityTypePostToTwitter,
+                                    UIActivityTypePostToWeibo,
+                                    UIActivityTypeMessage,
+                                    UIActivityTypeMail,
+                                    UIActivityTypePrint,
+                                    UIActivityTypeCopyToPasteboard,
+                                    UIActivityTypeAssignToContact,
+                                    UIActivityTypeSaveToCameraRoll,
+                                    UIActivityTypeAddToReadingList,
+                                    UIActivityTypePostToFlickr,
+                                    UIActivityTypePostToVimeo,
+                                    UIActivityTypePostToTencentWeibo];
+    activityViewController.excludedActivityTypes = excludedActivities;
+    [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
 - (void)becktToPop {
@@ -68,6 +112,9 @@
     cell.content = dic [@"name"];
     cell.errorMessage = dic[@"error_info"];
     return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+     NSDictionary *dic = self.dataSource[indexPath.section == 0 ?@"host_error" :@"buryingpoint_error"][indexPath.row];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -166,6 +213,10 @@
 }
 
 - (void)setErrorMessage:(NSString *)errorMessage {
-    self.errorLabel.text = errorMessage;
+    if (isEmptyString(errorMessage)) {
+        self.errorLabel.text = @"-1";
+    }else {
+        self.errorLabel.text = errorMessage;
+    }
 }
 @end

@@ -13,7 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger , FHErrorHubType) {
     FHErrorHubTypeRequest = 1, //请求校验
     FHErrorHubTypeBuryingPoint = 2 ,//埋点校验
-     FHErrorHubTypeConfig = 3 //现场保存
+     FHErrorHubTypeConfig = 3, //现场保存
+    FHErrorHubTypeShare = 4 //现场保存
 };
 @interface FHHouseErrorHubManager : NSObject
 
@@ -38,6 +39,17 @@ typedef NS_ENUM(NSInteger , FHErrorHubType) {
 /// 获取本地数据
 /// @param errorHubType 类型
 - (NSArray *)getLocalErrorDataWithType:(FHErrorHubType)errorHubType;
+
+
+/// 读取数据路径
+/// @param errorHubType 类型
+- (NSString *)localDataPathWithType:(FHErrorHubType)errorHubType;
+
+
+/// 添加数据保存
+/// @param Data 数据
+/// @param errorHubType 类型
+- (void)addLogWithData:(id)Data logType:(FHErrorHubType)errorHubType;
 
 - (void)saveConfigAndSettings;
 @end
