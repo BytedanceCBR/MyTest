@@ -15,16 +15,15 @@
 #import "TTAccountManager.h"
 #import "UIButton+TTAdditions.h"
 #import "FHUserTracker.h"
-#import "TTUGCAttributedLabel.h"
 #import "UIImageView+BDWebImage.h"
 #import "TTRoute.h"
 #import "JSONAdditions.h"
 #import "FHUGCCellHelper.h"
 
-@interface FHUGCCellOriginItemView ()<TTUGCAttributedLabelDelegate>
+@interface FHUGCCellOriginItemView ()<TTUGCAsyncLabelDelegate>
 
 @property(nonatomic ,strong) UIImageView *iconView;
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,assign) BOOL isClickLink;
 
 @end
@@ -58,17 +57,17 @@
     _iconView.clipsToBounds = YES;
     [self addSubview:_iconView];
     
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = 2;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor themeGray7];
-    NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-                                     };
-    _contentLabel.linkAttributes = linkAttributes;
-    _contentLabel.activeLinkAttributes = linkAttributes;
-    _contentLabel.inactiveLinkAttributes = linkAttributes;
+//    NSDictionary *linkAttributes = @{
+//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+//                                     };
+//    _contentLabel.linkAttributes = linkAttributes;
+//    _contentLabel.activeLinkAttributes = linkAttributes;
+//    _contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self addSubview:_contentLabel];
 }
@@ -78,6 +77,7 @@
         make.left.mas_equalTo(self).offset(10);
         make.right.mas_equalTo(self).offset(-10);
         make.centerY.mas_equalTo(self);
+        make.height.mas_equalTo(80);
     }];
     
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -91,7 +91,7 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         self.cellModel = cellModel;
-        [FHUGCCellHelper setOriginRichContent:self.contentLabel model:cellModel];
+        [FHUGCCellHelper setOriginRichContent:self.contentLabel model:cellModel numberOfLines:2];
         if(cellModel.originItemModel.imageModel){
             [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.originItemModel.imageModel.url] placeholder:nil];
             _iconView.hidden = NO;
@@ -102,6 +102,7 @@
             _iconView.hidden = YES;
             [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self).offset(10);
+                make.height.mas_equalTo(cellModel.originItemHeight);
             }];
         }
     }
@@ -133,12 +134,12 @@
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    NSLog(@"touch_end");
+//    NSLog(@"touch_end");
 }
 
-#pragma mark - TTUGCAttributedLabelDelegate
+#pragma mark - TTUGCAsyncLabelDelegate
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if(self.goToLinkBlock){
         self.goToLinkBlock(self.cellModel, url);
     }

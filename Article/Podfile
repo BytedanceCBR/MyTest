@@ -543,6 +543,8 @@ def appPods
     'Main/Core',
     'Main/Default'
     ]
+    
+    pod_binary 'BDPainter', '1.0.0'
 
 end
 
