@@ -44,9 +44,9 @@ def fhPods
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
     pod 'ios_house_filter' , '1.0.2'
     
-#    pod 'FHCommonUI', '0.0.0.1'
-#    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
-    pod 'FHCommonUI','0.0.19-rc.1'
+    pod 'FHCommonUI','0.0.19-rc.4'
+#    pod 'FHCommonUI',:path => '../../../ios_common_ui/'
+#    pod 'FHCommonUI', :git => 'https://code.byted.org/fproject/ios_common_ui.git', :commit => 'fef6ed9bea94a343313805b978fda9511cbbf213'
 
 #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
@@ -62,10 +62,10 @@ def fhPods
     # 'DelegateForC'
     # ]
 
-     pod 'ios_house_im' , '0.2.0-rc.9'
+    pod 'ios_house_im' , '0.2.0-rc.13'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
-#    pod 'ios_house_im' , :path => '../../cim1'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '8be3c9a7455bf28049187831ab9996416f4e881b'
+#    pod 'ios_house_im' , :path => '../../cim3'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'ec1d29fed31c70cdf717bc53039580d9801d074d'
 
 end
 
