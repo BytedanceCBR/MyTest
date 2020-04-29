@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems andCourtId:(NSString *)courtId ;
 
+- (NSString *)pageTypeString;
 @end
 
 NS_ASSUME_NONNULL_END

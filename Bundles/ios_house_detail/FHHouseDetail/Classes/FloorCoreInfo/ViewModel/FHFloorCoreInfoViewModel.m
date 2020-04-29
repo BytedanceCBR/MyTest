@@ -410,5 +410,7 @@
 {
     
 }
-
+- (NSString *)pageTypeString {
+    return @"court_detail";
+}
 @end

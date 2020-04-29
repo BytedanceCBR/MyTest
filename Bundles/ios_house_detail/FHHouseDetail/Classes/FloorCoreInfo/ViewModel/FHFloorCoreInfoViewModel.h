@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId houseNameModel:(JSONModel *)model housedisclaimerModel:(JSONModel *)disClaimerModel;
 
 - (void)startLoadData;
-
+- (NSString *)pageTypeString;
 @end
 
 NS_ASSUME_NONNULL_END

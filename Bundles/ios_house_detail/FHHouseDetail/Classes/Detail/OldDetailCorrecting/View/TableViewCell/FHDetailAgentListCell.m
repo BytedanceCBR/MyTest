@@ -296,7 +296,7 @@
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"realtor_position"] = @"detail_related";
-        
+        imExtra[UT_PAGE_TYPE] = [self.baseViewModel pageTypeString];
         switch (self.baseViewModel.houseType) {
             case FHHouseTypeNewHouse:
             {
