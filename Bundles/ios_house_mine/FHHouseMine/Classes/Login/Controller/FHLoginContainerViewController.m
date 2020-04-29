@@ -41,7 +41,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
-    [self initNavbar];
+//    [self initNavbar];
+    [self setupDefaultNavBar:YES];
     [self setupUI];
 }
 
@@ -74,12 +75,12 @@
     }
 }
 
-- (void)initNavbar {
-    [self setupDefaultNavBar:NO];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
-    self.customNavBarView.seperatorLine.hidden = YES;
-}
+//- (void)initNavbar {
+//    [self setupDefaultNavBar:YES];
+//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
+//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
+//    self.customNavBarView.seperatorLine.hidden = YES;
+//}
 
 - (void)setupUI {
     switch (self.viewType) {

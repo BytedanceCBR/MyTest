@@ -23,6 +23,8 @@
 #import "FHBindContainerViewController.h"
 #import <TTRoute/TTRoute.h>
 #import <BDABTestSDK/BDABTestManager.h>
+#import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -172,7 +174,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     //如果是已发送验证码，就不继续发送了，直接进去验证码界面
     if (self.isRequestingSMS) {
         if (isForBindMobile) {
-            [self goToBindContainerController:FHBindViewTypeVerify];
+            [self goToBindContainerController:FHBindViewTypeVerify navigationType:FHBindContainerViewNavigationTypePop];
         } else {
             [self goToLoginContainerController:FHLoginViewTypeVerify];
         }
@@ -191,7 +193,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             strongSelf.isVerifyCodeRetry = YES;
             if (needPushVerifyCodeView) {
                 if (isForBindMobile) {
-                    [strongSelf goToBindContainerController:FHBindViewTypeVerify];
+                    [strongSelf goToBindContainerController:FHBindViewTypeVerify navigationType:FHBindContainerViewNavigationTypePop];
                 } else {
                     [strongSelf goToLoginContainerController:FHLoginViewTypeVerify];
                 }
@@ -443,9 +445,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.viewController.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)goToBindContainerController:(FHBindViewType )viewType {
+- (void)goToBindContainerController:(FHBindViewType )viewType navigationType:(FHBindContainerViewNavigationType )navigationType {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"viewType"] = @(viewType);
+    dict[@"navigationType"] = @(navigationType);
     dict[@"viewModel"] = self;
     FHBindContainerViewController *vc = [[FHBindContainerViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(dict.copy)];
     [self.viewController.navigationController pushViewController:vc animated:YES];
@@ -466,17 +469,16 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)goToOneKeyBind {
     if (self.isOneKeyLogin) {
-        [self goToBindContainerController:FHBindViewTypeOneKey];
+        [self goToBindContainerController:FHBindViewTypeOneKey navigationType:FHBindContainerViewNavigationTypeClose];
     } else {
-        [self goToMobileBind];
+        [self goToBindContainerController:FHBindViewTypeMobile navigationType:FHBindContainerViewNavigationTypeClose];
     }
 }
 
 /// 跳转手机号绑定界面
 - (void)goToMobileBind {
-    [self goToBindContainerController:FHBindViewTypeMobile];
+    [self goToBindContainerController:FHBindViewTypeMobile navigationType:FHBindContainerViewNavigationTypePop];
 }
-
 
 - (void)oneKeyLoginAction {
     [self traceLogin];
@@ -513,9 +515,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)douyinLoginAction {
     __weak typeof(self) weakSelf = self;
     TTAccountAuthRequest *request = [[TTAccountAuthRequest alloc] init];
-    request.requestReason == TTAccountRequestAuthForLoginWithBindMobile;
+    request.requestReason = TTAccountRequestAuthForLoginWithBindMobile;
     request.needMobile = YES;
-    request.permissions = [NSOrderedSet orderedSetWithObjects:@"", nil];
+    request.permissions = [NSOrderedSet orderedSetWithObjects:@"user_info",@"mobile", nil];
 //    request.extraInfo = @{@"skip_tel_num_bind":@(YES)};
     [TTAccount requestAuthForPlatform:TTAccountAuthTypeDouyin request:request willLogin:^(NSString * _Nonnull platformName) {
         NSLog(@"platformName:%@",platformName);
@@ -553,6 +555,36 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)bindCancelAction {
     //登出账号，并且退出所有页面
+    NSString *userID = [TTAccount sharedAccount].user.userID;
+    __weak typeof(self) weakSelf = self;
+    [TTAccount logoutInScene:TTAccountLogoutSceneNormal completion:^(BOOL success, NSError * _Nullable error) {
+        __strong typeof(weakSelf) strongSelf = self;
+        BOOL shouldIgnoreError = NO;
+        //未设置密码也可以退出登录
+        if (error.code == 1037) {
+            shouldIgnoreError = YES;
+        }
+        NSMutableDictionary *extra = [NSMutableDictionary dictionary];
+        [extra setValue:error.description forKey:@"error_description"];
+        [extra setValue:@(error.code) forKey:@"error_code"];
+        [extra setValue:userID forKey:@"user_id"];
+        
+        if (error && !shouldIgnoreError) {
+            [[TTMonitor shareManager] trackService:@"account_logout" status:2 extra:extra];
+            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"退出登录失败，请稍后重试", nil) indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+        } else {
+            [[TTMonitor shareManager] trackService:@"account_logout" status:1 extra:extra];
+            // LogV1
+            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+                wrapperTrackerEvent([TTSandBoxHelper appName], @"xiangping", @"account_setting_signout");
+            }
+            // LogV3
+            [TTTrackerWrapper eventV3:@"login_account_exit" params:nil isDoubleSending:YES];
+            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+            [sendPhoneNumberCache removeObjectForKey:kFHPLoginhoneNumberCacheKey];
+        }
+        [strongSelf popViewController];
+    }];
 }
 
 - (void)oneKeyBindAction {
@@ -560,28 +592,23 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [TTAccount oneKeyBindPhoneWithPassword:nil unbind:NO completed:^(NSError * _Nullable error) {
         [weakSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
     }];
-//    oneKeyBindPhoneWithPassword
 }
 
 - (void)mobileBind:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha {
-    __weak typeof(self) weakSelf = self;
     if (![mobileNumber hasPrefix:@"1"] || mobileNumber.length != 11 || ![self isPureInt:mobileNumber]) {
         [[ToastManager manager] showToast:@"手机号错误"];
         return;
     }
-    
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络错误"];
         return;
     }
-    
     if(smsCode.length == 0){
         [[ToastManager manager] showToast:@"验证码为空"];
         return;
     }
-    
     [[ToastManager manager] showToast:@"正在绑定中"];
-    
+    __weak typeof(self) weakSelf = self;
     [TTAccount bindPhoneWithPhone:mobileNumber SMSCode:smsCode password:nil captcha:captcha unbind:NO completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
         [weakSelf handleLoginResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyLogin:NO];
     }];

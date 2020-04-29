@@ -18,6 +18,8 @@
 
 @property (nonatomic, assign) FHBindViewType viewType;
 
+@property (nonatomic, assign) FHBindContainerViewNavigationType navigationType;
+
 @property (nonatomic, weak) UITextField *textField;
 
 @end
@@ -32,6 +34,7 @@
     if (self = [super initWithRouteParamObj:paramObj]) {
         self.viewModel = paramObj.allParams[@"viewModel"];
         self.viewType = [paramObj.allParams[@"viewType"] integerValue];
+        self.navigationType = [paramObj.allParams[@"navigationType"] integerValue];
 //        self.viewType = FHLoginViewTypeVerify;
     }
     return self;
@@ -41,7 +44,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
-    [self initNavbar];
+    [self setupNavbar];
     [self setupUI];
 }
 
@@ -70,14 +73,35 @@
     }
 }
 
-- (void)initNavbar {
-    [self setupDefaultNavBar:NO];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
-    self.customNavBarView.seperatorLine.hidden = YES;
-    [self.customNavBarView setLeftButtonBlock:^{
-        //弹框提示，并且退出所有绑定页面
-    }];
+- (void)setupNavbar {
+    switch (self.navigationType) {
+        case FHBindContainerViewNavigationTypeClose: {
+            [self setupDefaultNavBar:NO];
+            [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
+            [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
+//            self.customNavBarView.seperatorLine.hidden = YES;
+            __weak typeof(self) weakSelf = self;
+            [self.customNavBarView setLeftButtonBlock:^{
+                //弹框提示，并且退出所有绑定页面
+                [weakSelf cancelBindAction];
+            }];
+            self.ttDisableDragBack = YES;
+            break;
+        }
+        case FHBindContainerViewNavigationTypePop: {
+            [self setupDefaultNavBar:YES];
+            break;
+        }
+        default:
+            break;
+    }
+
+}
+
+- (void)cancelBindAction {
+    if (self.viewModel && [self.viewModel respondsToSelector:@selector(bindCancelAction)]) {
+        [self.viewModel performSelector:@selector(bindCancelAction)];
+    }
 }
 
 - (void)setupUI {

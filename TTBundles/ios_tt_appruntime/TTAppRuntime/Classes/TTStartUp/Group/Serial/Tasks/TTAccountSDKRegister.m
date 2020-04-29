@@ -41,7 +41,7 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
     
     // 需要业务方通过注入的方式，实现打点上报和监控功能
     [FHContainerStartupTask registerInterfaces];
-
+    [self.class logoutIfNoBindMobile];
     [self.class startAccountService];
     [self.class configureAccountSDK];
     [self.class configureAccountLoginManager];
@@ -53,6 +53,22 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
 //{
 //    [BDSDKApi bindConsumerProductType:BDSDKProductTypeToutiao];
 //}
+
+/// 如果没有手机号强制登出账号
++ (void)logoutIfNoBindMobile {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (![TTAccount sharedAccount].user.mobile.length) {
+            [TTAccount logoutInScene:TTAccountLogoutSceneNormal completion:^(BOOL success, NSError * _Nullable error) {
+                if (success) {
+                    NSLog(@"logoutIfNoBindMobile sucess");
+                }
+                if (error) {
+                    NSLog(@"logoutIfNoBindMobile error %@",error);
+                }
+            }];
+        }
+    });
+}
 
 + (void)startAccountService
 {

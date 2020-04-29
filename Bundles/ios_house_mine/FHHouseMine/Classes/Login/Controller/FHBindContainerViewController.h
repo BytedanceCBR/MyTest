@@ -9,6 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, FHBindContainerViewNavigationType) {
+    FHBindContainerViewNavigationTypeClose = 0,
+    FHBindContainerViewNavigationTypePop = 1
+}
+
 @interface FHBindContainerViewController : FHBaseViewController
 
 @end
