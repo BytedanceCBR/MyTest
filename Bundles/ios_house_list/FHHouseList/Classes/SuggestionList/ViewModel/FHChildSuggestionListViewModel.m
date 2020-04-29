@@ -880,7 +880,6 @@
 - (void)reloadHistoryTableView {
     if (self.loadRequestTimes >= 3) {
         self.listController.hasValidateData = YES;
-        [self.listController.emptyView hideEmptyView];
         
         if (self.historyData.count > 0) {
             self.historyView.historyItems = self.historyData;
@@ -935,11 +934,14 @@
             // 构建数据源
             wself.historyData = model.data.data;
             wself.historyView.historyItems = wself.historyData;
+            [wself.listController.emptyView hideEmptyView];
             [wself reloadHistoryTableView];
         } else {
             wself.historyView.historyItems = NULL;
-            if (error) {
+            if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                
                 self.listController.isLoadingData = NO;
+                [self.listController endLoading];
                 [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
         }
@@ -1010,12 +1012,14 @@
         if (model != NULL && error == NULL) {
             // 构建数据源
             wself.sugListData = model.data;
+            [wself.listController.emptyView hideEmptyView];
             [wself reloadSugTableView];
             // 埋点 associate_word_show
             [wself associateWordShow];
         } else {
-            if (error) {
+            if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
                 self.listController.isLoadingData = NO;
+                [self.listController endLoading];
                 [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
         }
@@ -1031,10 +1035,12 @@
     self.delHistoryHttpTask = [FHHouseListAPI requestDeleteSearchHistoryByHouseType:houseType class:[FHSuggestionClearHistoryResponseModel class] completion:^(FHSuggestionClearHistoryResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
             wself.historyData = NULL;
+            [wself.listController.emptyView hideEmptyView];
             [wself reloadHistoryTableView];
         } else {
-            if (error) {
+            if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
                 self.listController.isLoadingData = NO;
+                [self.listController endLoading];
                 [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
         }
