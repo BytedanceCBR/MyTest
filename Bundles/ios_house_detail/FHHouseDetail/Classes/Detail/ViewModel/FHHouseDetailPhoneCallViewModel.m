@@ -76,7 +76,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     reportParams.originSearchId = self.tracerDict[@"origin_search_id"] ? : @"be_null";
     reportParams.rank = (rank.length > 0) ? rank : (self.tracerDict[@"rank"] ? : @"be_null");
     reportParams.cardType = self.tracerDict[@"card_type"] ? : @"be_null";
-    reportParams.pageType = extra[UT_PAGE_TYPE]?:(self.tracerDict[@"page_type"] ?: @"be_null");
+    reportParams.pageType = self.tracerDict[@"page_type"] ?: @"be_null";
     reportParams.realtorId = contactPhone.realtorId;
     reportParams.realtorRank = rank ?: @"0";
     reportParams.realtorLogpb = contactPhone.realtorLogpb;

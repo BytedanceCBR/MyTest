@@ -78,9 +78,8 @@
 {
     FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
-    imExtra[@"source_from"] = [self pageTypeString];
+    imExtra[@"source_from"] = @"house_model_detail";
     imExtra[@"im_open_url"] = contactPhone.imOpenUrl;
-    imExtra[UT_PAGE_TYPE] = [self pageTypeString];
     if(self.currentModel.data.highlightedRealtorAssociateInfo) {
         imExtra[kFHAssociateInfo] = self.currentModel.data.highlightedRealtorAssociateInfo;
     }
@@ -321,7 +320,4 @@
     }
 }
 
-- (NSString *)pageTypeString {
-    return @"house_model_detail";
-}
 @end

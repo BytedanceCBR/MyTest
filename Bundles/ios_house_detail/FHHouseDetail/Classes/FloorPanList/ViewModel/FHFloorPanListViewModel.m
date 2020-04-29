@@ -436,7 +436,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         traceParam[@"card_type"] = @"left_pic";
         traceParam[@"rank"] = @(indexPath.row);
         traceParam[@"element_type"] = @"house_model";
-        traceParam[@"page_type"] = [self pageTypeString];
+        traceParam[@"page_type"] = @"house_model_list";
         [traceParam removeObjectForKey:@"enter_from"];
         [traceParam removeObjectForKey:@"element_from"];
         [traceParam addEntriesFromDictionary:tracer[@"log_pb"]];
@@ -466,7 +466,5 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         [FHEnvContext recordEvent:traceParam andEventKey:@"house_show"];
     }
 }
-- (NSString *)pageTypeString {
-    return @"house_model_list";
-}
+
 @end

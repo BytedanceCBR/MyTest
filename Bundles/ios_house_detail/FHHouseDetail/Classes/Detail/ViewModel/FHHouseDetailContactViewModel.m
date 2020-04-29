@@ -537,9 +537,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             //        if ([extraDict[@"source_from"] isEqualToString:@"loan"]) {
             //           imExtra[@"realtor_position"] = @"loan";
         }
-        if(extraDict[UT_PAGE_TYPE]) {
-            imExtra[UT_PAGE_TYPE] = extraDict[UT_PAGE_TYPE];
-        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
@@ -846,7 +843,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if([self.belongsVC isKindOfClass:FHHouseDetailViewController.class]) {
         FHHouseDetailViewController *houseDetailVC = (FHHouseDetailViewController *)self.belongsVC;
         NSObject *detailData  = houseDetailVC.viewModel.detailData;
-        extraDic[UT_PAGE_TYPE] = [houseDetailVC.viewModel pageTypeString];
         switch(houseDetailVC.viewModel.houseType) {
             case FHHouseTypeNewHouse:
             {
@@ -902,7 +898,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if([self.belongsVC isKindOfClass:FHHouseDetailSubPageViewController.class]) {
         FHHouseDetailSubPageViewController *detailSubPageVC = (FHHouseDetailSubPageViewController *)self.belongsVC;
         NSObject *detailSubData = detailSubPageVC.viewModel.detailData;
-        extraDic[UT_PAGE_TYPE] = [detailSubPageVC.viewModel pageTypeString];
         //新房详情页楼盘信息子页面
         if([detailSubData isKindOfClass:FHDetailNewCoreDetailModel.class]) {
             FHDetailNewCoreDetailModel *detailNewCoreDetailModel = (FHDetailNewCoreDetailModel *)detailSubData;

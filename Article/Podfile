@@ -272,6 +272,8 @@ def appPods
 
     #-----点赞分享顶踩不感兴趣----
     pod_binary 'TTBatchItemAction','0.1.8'
+    #-------AB测库--------
+    pod_binary 'TTABManager', '0.0.7'
     #-----头条网络业务库------
     pod_binary 'TTNetBusiness', '0.0.10'
 
@@ -655,6 +657,7 @@ post_install do |installer|
           '${PODS_ROOT}/GoogleMaps/Maps/Frameworks',
           '${PODS_ROOT}/GoogleMaps/Base/Frameworks',
           '${PODS_ROOT}/BDUGUnionSDK/BDUGUnionSDK/Classes',
+          '${PODS_ROOT}/TTABManager',
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
           '${PODS_ROOT}/UMengAnalytics/umsdk_IOS_analyics_idfa_v4.1.4',
