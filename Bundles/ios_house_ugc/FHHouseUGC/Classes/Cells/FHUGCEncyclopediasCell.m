@@ -108,7 +108,7 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         CGFloat height;
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        height  =  (cellModel.avatar.length>0 ?iconHeight:cellModel.contentHeight) + 40 +sidesMargin *2  + 20;
+        height  =  (cellModel.avatar.length>0 ?iconHeight:(cellModel.contentHeight+20)) + 40 +sidesMargin *2  + 20;
         return height;
     }
     return 100;
