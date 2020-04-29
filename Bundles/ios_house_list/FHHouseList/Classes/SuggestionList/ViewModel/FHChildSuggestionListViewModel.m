@@ -462,8 +462,9 @@
                                 @"element_type":@"search",
                                 @"impr_id":impr_id
                                 };
+
     if (_isAssociatedCanTrack) {
-        [FHUserTracker writeEvent:@"associate_word_show" params:self.associatedTrackDict];
+        [FHUserTracker writeEvent:@"associate_word_show" params:tracerDic];
     }
 }
 
