@@ -46,7 +46,7 @@ def fhPods
     
 #    pod 'FHCommonUI', '0.0.0.1'
 #    pod 'FHCommonUI',:path => '../../library/ios_common_ui/'
-    pod 'FHCommonUI','0.0.19-rc.0'
+    pod 'FHCommonUI','0.0.19-rc.4'
 
 #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
@@ -64,8 +64,8 @@ def fhPods
 
 #    pod 'ios_house_im' , '0.2.0-rc.8'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
-#    pod 'ios_house_im' , :path => '../../cim2'
-     pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'ba6b548cbed33317c2a732de17bfadfc0d145656'
+#     pod 'ios_house_im' , :path => '../../cim2'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'f453b988b09269880bd9e4934402ac0102879bea'
 
 end
 
@@ -272,8 +272,6 @@ def appPods
 
     #-----点赞分享顶踩不感兴趣----
     pod_binary 'TTBatchItemAction','0.1.8'
-    #-------AB测库--------
-    pod_binary 'TTABManager', '0.0.7'
     #-----头条网络业务库------
     pod_binary 'TTNetBusiness', '0.0.10'
 
@@ -657,7 +655,6 @@ post_install do |installer|
           '${PODS_ROOT}/GoogleMaps/Maps/Frameworks',
           '${PODS_ROOT}/GoogleMaps/Base/Frameworks',
           '${PODS_ROOT}/BDUGUnionSDK/BDUGUnionSDK/Classes',
-          '${PODS_ROOT}/TTABManager',
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
           '${PODS_ROOT}/UMengAnalytics/umsdk_IOS_analyics_idfa_v4.1.4',
