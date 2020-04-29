@@ -291,6 +291,10 @@
     return 0;
 }
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+}
+
 - (NSArray *)houseTypeSectionByConfig:(FHConfigDataModel *)config {
     NSMutableArray *items = [[NSMutableArray alloc] init];
     if (config.searchTabFilter.count > 0) {

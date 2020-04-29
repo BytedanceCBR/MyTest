@@ -220,7 +220,7 @@
     FHSuggectionTableView *tableView = [[FHSuggectionTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     __weak typeof(self) weakSelf = self;
     tableView.handleTouch = ^{
-        [weakSelf.view endEditing:YES];
+        [weakSelf.fatherVC.view endEditing:YES];
     };
     tableView.backgroundColor = UIColor.whiteColor;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;

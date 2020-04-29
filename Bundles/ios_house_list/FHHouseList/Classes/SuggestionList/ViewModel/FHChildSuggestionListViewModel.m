@@ -600,6 +600,7 @@
     } else if (tableView.tag == 2) {
         if (self.sugListData.count == 0) {
             FHSuggestionEmptyCell *cell = (FHSuggestionEmptyCell *)[tableView dequeueReusableCellWithIdentifier:@"suggetEmptyCell" forIndexPath:indexPath];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             return cell;
         }
         // 联想词列表
