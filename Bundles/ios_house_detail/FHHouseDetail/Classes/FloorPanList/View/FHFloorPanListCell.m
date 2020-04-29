@@ -158,12 +158,12 @@
         if ([model.squaremeter isKindOfClass:[NSString class]]) {
             if (model.squaremeter.length > 0) {
                 NSString *roomSpace = [NSString stringWithFormat:@"建面 %@",model.squaremeter];
-                if (model.facingDirection.length > 0) {
+                if (model.facingDirection.length > 0 && ![model.facingDirection isEqualToString:@"-"]) {
                     self.roomSpaceLabel.text = [NSString stringWithFormat:@"%@ | %@", roomSpace, model.facingDirection];
                 } else {
                     self.roomSpaceLabel.text = roomSpace;
                 }
-            } else if (model.facingDirection.length > 0) {
+            } else if (model.facingDirection.length > 0 && ![model.facingDirection isEqualToString:@"-"]) {
                 self.roomSpaceLabel.text = model.facingDirection;
             } else {
                 self.roomSpaceLabel.text = @"";
