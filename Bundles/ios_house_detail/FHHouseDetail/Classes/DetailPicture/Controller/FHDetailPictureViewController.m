@@ -67,7 +67,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property (nonatomic, strong)   FHDetailPictureNavView       *naviView;
 @property (nonatomic, strong)   FHDetailPictureTitleView       *pictureTitleView;
 @property (nonatomic, strong)   NSArray       *pictureTitles;
-@property (nonatomic, strong)   NSArray       *tabNames;
 @property (nonatomic, strong)   NSArray       *pictureNumbers;
 
 @property(nonatomic, strong)UIView * bottomBar;
@@ -281,7 +280,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     _pictureTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, 64, self.view.width, 42)];
     _pictureTitleView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_pictureTitleView];
-    self.pictureTitleView.tabNames = self.tabNames;
     self.pictureTitleView.titleNames = self.pictureTitles;
     self.pictureTitleView.titleNums = self.pictureNumbers;
     self.pictureTitleView.currentIndexBlock = ^(NSInteger currentIndex) {
@@ -667,7 +665,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (_mediaHeaderModel != mediaHeaderModel) {
         _mediaHeaderModel = mediaHeaderModel;
         NSMutableArray *titles = [NSMutableArray new];
-        NSMutableArray *tabs = [NSMutableArray new];
         NSMutableArray *numbers = [NSMutableArray new];
         __block BOOL isFirstItem = YES;
         for (FHDetailOldDataHouseImageDictListModel *listModel in mediaHeaderModel.houseImageDictList) {
@@ -680,7 +677,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 }
                 if (tempCount > 0) {
                     [titles addObject:[NSString stringWithFormat:@"%@（%ld）",listModel.houseImageTypeName,tempCount]];
-                    [tabs addObject:listModel.houseImageTypeName];
                     if (isFirstItem) {
                         isFirstItem = NO;
                         tempCount += self.vedioCount; // 把视频添加到第一个图片归类中
@@ -691,7 +687,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
         // 只有一个分类时隐藏
         if (titles.count > 1) {
-            self.tabNames = tabs;
             self.pictureTitles = titles;
             self.pictureNumbers = numbers;
         }

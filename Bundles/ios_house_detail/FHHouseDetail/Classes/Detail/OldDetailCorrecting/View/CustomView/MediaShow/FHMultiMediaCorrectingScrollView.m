@@ -402,8 +402,22 @@
             [self.itemView selectedItem:groupType];
             
             self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
+            [self.infoLabel sizeToFit];
+            CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
+            itemSize.width += 14.0;
+            if (itemSize.width < 44) {
+                itemSize.width = 44;
+            }
+            
+            [self.infoLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(itemSize.width);
+                make.height.mas_equalTo(20);
+                make.right.mas_equalTo(self).offset(-16);
+                make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
+            }];
         }
     }
+    
 }
 
 - (void)updateVideoState {
