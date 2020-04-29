@@ -128,6 +128,12 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
  */
 +(TTHttpTask *)requestHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
 
+
+/**
+ 首页相似推荐房源接口
+ */
++(TTHttpTask *)requestHomeSimilarRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
+
 /**
  频道消息红点
  */

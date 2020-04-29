@@ -1129,6 +1129,14 @@
             self.tagTitleLabel.text = commonModel.titleTag.text;
             self.tagTitleLabel.backgroundColor = [UIColor colorWithHexString:commonModel.titleTag.backgroundColor];
             self.tagTitleLabel.textColor = [UIColor colorWithHexString:commonModel.titleTag.textColor];
+            //修改两字标签
+            [_tagTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                         layout.isEnabled = YES;
+                         layout.marginTop = YGPointValue(1.5);
+                         layout.marginLeft = YGPointValue(4);
+                         layout.height = YGPointValue(16);
+                   layout.width = YGPointValue(commonModel.titleTag.text.length > 1 ? 28 : 16);
+            }];
         } else {
             self.imageTagLabelBgView.hidden = imageTagHidden;
             self.tagTitleLabel.hidden = YES;
