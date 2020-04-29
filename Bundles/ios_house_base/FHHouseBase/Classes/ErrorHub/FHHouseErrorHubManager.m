@@ -22,10 +22,10 @@
 }
 
 - (void)checkRequestResponseWithHost:(NSString *)host requestParams:(NSDictionary *)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(FHErrorHubType)errorHubType {
-    NSInteger responseCode = -1;
-    if (responseStatus.statusCode) {
-        responseCode = responseStatus.statusCode;
-    }
+//    NSInteger responseCode = -1;
+//    if (responseStatus.statusCode) {
+//        responseCode = responseStatus.statusCode;
+//    }
     NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:response
                                                                        options:NSJSONReadingAllowFragments
                                                                          error:nil];
@@ -36,13 +36,13 @@
     [outputDic setValue:[self removeNillValue:responseDictionary] forKey:@"response"];
     [outputDic setValue:[self removeNillValue:params] forKey:@"params"];
     [outputDic setValue:[self removeNillValue:responseStatusDic] forKey:@"httpStatus"];
+    [outputDic setValue:[NSString stringWithFormat:@"%@",@(type)] forKey:@"error_info"]; 
     if (analysisError) {
         [outputDic setValue:@{@"error_code":@(analysisError.code),
                               @"error_domain":analysisError.domain,
                               @"error_info":analysisError.userInfo}  forKey:@"analysisError"];
-        [outputDic setValue:analysisError.userInfo forKey:@"error_info"];
     }else {
-        [outputDic setValue:@"-1" forKey:@"error_info"];
+        [outputDic setValue:@"-1" forKey:@"analysisError"];
     }
     [outputDic setValue:[self getCurrentTimes] forKey:@"currentTime"];
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
