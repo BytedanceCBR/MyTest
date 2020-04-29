@@ -523,9 +523,9 @@
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
         cellModel.groupId = model.rawData.groupId;
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBanner;
-        cellModel.hidelLine = model.hidelLine;
-        cellModel.upSpace = model.upSpace;
-        cellModel.downSpace = model.downSpace;
+        cellModel.hidelLine = model.rawData.hidelLine;
+        cellModel.upSpace = model.rawData.upSpace;
+        cellModel.downSpace = model.rawData.downSpace;
         if(model.imageList){
             cellModel.imageList = model.imageList;
         }else{
@@ -694,9 +694,9 @@
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommendCircle;
         cellModel.hotSocialList = model.rawData.hotSocialList;
         cellModel.groupId = model.rawData.groupId;
-        cellModel.upSpace = model.upSpace;
-        cellModel.downSpace = model.downSpace;
-        cellModel.hidelLine = model.hidelLine;
+        cellModel.upSpace = model.rawData.upSpace;
+        cellModel.downSpace = model.rawData.downSpace;
+        cellModel.hidelLine = model.rawData.hidelLine;
         if(cellModel.hotSocialList.count <= 0){
             [[HMDTTMonitor defaultManager] hmdTrackService:kHotRecommendCircleListNil metric:nil category:@{
                 @"version_code": [TTSandBoxHelper fhVersionCode],

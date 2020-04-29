@@ -695,6 +695,13 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 //查看全部
 @property (nonatomic, copy , nullable) NSString *allSchema;
 
+//cell距离顶部
+@property (nonatomic, copy , nullable) NSString *upSpace;
+//cell距离底部
+@property (nonatomic, copy , nullable) NSString *downSpace;
+//分割线设置
+@property (assign, nonatomic) BOOL hidelLine;
+
 @end
 
 @interface FHFeedContentVideoDetailInfoModel : JSONModel
@@ -786,12 +793,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *sourceDesc;
 @property (nonatomic, strong , nullable) FHFeedContentCommunityModel *community ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
-//cell距离顶部
-@property (nonatomic, copy , nullable) NSString *upSpace;
-//cell距离底部
-@property (nonatomic, copy , nullable) NSString *downSpace;
-//分割线设置
-@property (assign, nonatomic) BOOL hidelLine;
+
 @property (nonatomic, strong , nullable) FHFeedContentRawDataModel *rawData ;
 //临时处理服务器打平的逻辑
 @property (nonatomic, copy , nullable) NSString *articleSchema;

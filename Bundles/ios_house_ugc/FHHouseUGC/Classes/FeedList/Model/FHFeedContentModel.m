@@ -205,7 +205,7 @@
     @"isStick": @"is_stick",
     @"stickStyle": @"stick_style",
     @"originType": @"origin_type",
-    @"subRawDatas": @"sub_raw_datas",
+    @"subRawDatas": @"sub_raw_datas"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -487,7 +487,10 @@
                            @"hotSocialList":@"hot_social_list",
                            @"articleTitle":@"article_title",
                            @"userName":@"user_name",
-                            @"allSchema":@"all_schema"
+                            @"allSchema":@"all_schema",
+                           @"upSpace":@"up_space",
+                           @"downSpace":@"down_space",
+                           @"hidelLine":@"hide_line"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
