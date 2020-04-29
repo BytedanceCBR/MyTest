@@ -578,6 +578,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSString *btnTitle = @"提交";
     NSString *fromStr = nil;
     NSString *position = nil;
+    NSString *marked = nil;
     // position: change_price（变价通知） /   on_sell（开盘通知）
 
     if (actionType == FHFollowActionTypeFloorPan) {
@@ -586,17 +587,21 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         btnTitle = @"提交";
         fromStr = @"app_sellnotice";
         position = @"on_sell";
+        marked = @"订阅成功，稍后会有置业顾问联系您";
+        
     }else if (actionType == FHFollowActionTypePriceChanged) {
         title = @"变价通知";
         subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
         btnTitle = @"提交";
         fromStr = @"app_pricenotice";
         position = @"change_price";
+        marked = @"订阅成功，稍后会有置业顾问联系您";
     }
     FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
     fillFormConfig.houseType = self.houseType;
     fillFormConfig.houseId = self.houseId;
     fillFormConfig.topViewController = self.belongsVC;
+    fillFormConfig.toast = marked;
     if (title.length > 0) {
         fillFormConfig.title = title;
     }
