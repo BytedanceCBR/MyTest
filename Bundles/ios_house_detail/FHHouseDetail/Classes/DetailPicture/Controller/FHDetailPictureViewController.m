@@ -381,7 +381,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     // 是否正在显示 视频
     self.isShowenVideo = _naviView.videoTitle.isSelectVideo;
     // lead_show 埋点
-    if (self.mediaHeaderModel.contactViewModel) {
+    if (self.mediaHeaderModel.contactViewModel && self.bottomBar && self.bottomBar.hidden == NO) {
         [self addLeadShowLog:self.mediaHeaderModel.contactViewModel.contactPhone baseParams:[self.mediaHeaderModel.contactViewModel baseParams]];
     }
 }
