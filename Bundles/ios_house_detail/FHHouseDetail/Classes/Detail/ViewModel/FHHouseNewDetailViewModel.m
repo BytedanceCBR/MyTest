@@ -13,7 +13,7 @@
 #import "FHDetailPhotoHeaderCell.h"
 #import "FHDetailHouseNameCell.h"
 #import "FHDetailNewTimeLineItemCell.h"
-#import "FHDetailNewHouseCoreInfoCell.h"
+//#import "FHDetailNewHouseCoreInfoCell.h"
 #import "FHDetailNewHouseNewsCell.h"
 #import "FHDetailTimelineItemCorrectingCell.h"
 

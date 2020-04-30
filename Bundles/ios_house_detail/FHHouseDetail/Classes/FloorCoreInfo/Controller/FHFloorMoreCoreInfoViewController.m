@@ -39,8 +39,6 @@
     
     [self addDefaultEmptyViewFullScreen];
     
-    self.coreInfoListViewModel = [[FHFloorCoreInfoViewModel alloc] initWithController:self tableView:_infoListTable courtId:_courtId houseNameModel:_houseNameModel housedisclaimerModel:_disclaimerModel];
-    self.viewModel = self.coreInfoListViewModel;
     _coreInfoListViewModel = [[FHFloorCoreInfoViewModel alloc] initWithController:self tableView:_infoListTable courtId:_courtId houseNameModel:_houseNameModel];
     
     [self setNavBarTitle:@"楼盘信息"];
