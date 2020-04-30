@@ -52,7 +52,7 @@
     if ([[[FHHouseBridgeManager sharedInstance] envContextBridge] isOpenWebOffline]) {
         IESFalconManager.interceptionWKHttpScheme = YES;
         IESFalconManager.interceptionEnable = YES;
-        NSString *pattern = @"^(http|https)://.*.(pstatp.com/toutiao|haoduofangs.com/f100/inner|99hdf.com/f100/inner)";
+        NSString *pattern = @"^(http|https)://.*.(pstatp.com/(toutiao)?|haoduofangs.com/f100/inner|99hdf.com/f100/inner)";
         [IESFalconManager registerPattern:pattern forGeckoAccessKey:[FHIESGeckoManager getGeckoKey]];
     }
 }
