@@ -62,6 +62,7 @@
     self.cellArray = [NSMutableArray array];
     NSMutableArray *dataArray = [NSMutableArray array];
     NSArray *categories = [[FHUGCCategoryManager sharedManager] allCategories];
+    self.viewController.categorys = [categories copy];
     for (NSInteger i = 0; i < categories.count; i++) {
         FHUGCCategoryDataDataModel *category = categories[i];
         if(category && category.name.length > 0 && category.category.length > 0){
@@ -103,14 +104,6 @@
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-        
-        //关注tab，没有关注时需要隐藏关注按钮
-        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_follow"];
-        if(self.currentTabIndex == index && [FHUGCConfig sharedInstance].followList.count <= 0){
-            self.viewController.publishBtn.hidden = YES;
-        }else{
-            self.viewController.publishBtn.hidden = NO;
-        }
     }
 }
 

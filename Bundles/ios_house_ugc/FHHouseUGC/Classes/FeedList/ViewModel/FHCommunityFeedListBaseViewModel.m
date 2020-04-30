@@ -117,4 +117,8 @@
     
 }
 
+- (void)updateJoinProgressView {
+    
+}
+
 @end

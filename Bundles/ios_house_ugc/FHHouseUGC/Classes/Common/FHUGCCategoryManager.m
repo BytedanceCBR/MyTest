@@ -272,6 +272,25 @@
     return dataModel;
 }
 
-
+- (BOOL)isSameCategory:(NSArray *)categorys {
+    NSArray *allCategories = [self.allCategories copy];
+    BOOL same = YES;
+    //数量不同
+    if(categorys.count != allCategories.count){
+        same = NO;
+    }else{
+        //数量相同
+        for (NSInteger i = 0; i < categorys.count; i++) {
+            FHUGCCategoryDataDataModel *newData = categorys[i];
+            FHUGCCategoryDataDataModel *oldData = allCategories[i];
+            if(![newData.name isEqualToString:oldData.name] || ![newData.category isEqualToString:oldData.category]){
+                same = NO;
+                break;
+            }
+        }
+    }
+    
+    return same;
+}
 
 @end

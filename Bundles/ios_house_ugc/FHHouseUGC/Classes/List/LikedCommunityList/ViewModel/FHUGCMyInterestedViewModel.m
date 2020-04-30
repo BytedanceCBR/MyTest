@@ -258,6 +258,23 @@
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    if(self.viewController.type == FHUGCMyInterestedTypeEmpty && self.dataList.count > 0){
+        return 1.0f;
+    }else{
+        return 0.001f;
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    if(self.viewController.type == FHUGCMyInterestedTypeEmpty && self.dataList.count > 0){
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 1)];
+        return view;
+    }
+    
+    return [[UIView alloc] initWithFrame:CGRectZero];
+}
+
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {

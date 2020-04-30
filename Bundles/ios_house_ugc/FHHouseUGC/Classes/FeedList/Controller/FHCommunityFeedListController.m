@@ -25,6 +25,7 @@
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHUGCConfig.h"
 #import "ToastManager.h"
+#import "FHFeedCustomHeaderView.h"
 
 @interface FHCommunityFeedListController ()<SSImpressionProtocol>
 
@@ -126,7 +127,7 @@
         _tableView.backgroundColor = [UIColor themeGray7];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         
-        UIView *headerView = self.tableHeaderView ? self.tableHeaderView : [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+        UIView *headerView = self.tableHeaderView ? self.tableHeaderView : [self customTableHeaderView];
         _tableView.tableHeaderView = headerView;
         
         UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
@@ -149,6 +150,22 @@
         
         [self.view addSubview:_tableView];
     }
+}
+
+- (FHFeedCustomHeaderView *)customTableHeaderView {
+    if(!_tableHeaderView){
+        _headerViewHeight = 0.001f;
+        FHFeedCustomHeaderView *tableHeaderView = [[FHFeedCustomHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _headerViewHeight) addProgressView:self.isInsertFeedWhenPublish];
+        if(self.isInsertFeedWhenPublish){
+            WeakSelf;
+            tableHeaderView.progressView.refreshViewBlk = ^{
+                StrongSelf;
+                [self.viewModel updateJoinProgressView];
+            };
+        }
+        _tableHeaderView = tableHeaderView;
+    }
+    return _tableHeaderView;
 }
 
 - (void)setTableHeaderView:(UIView *)tableHeaderView {
@@ -288,7 +305,6 @@
 
 - (void)hideIfNeeds {
     [UIView animateWithDuration:0.3 animations:^{
-        
         if ([TTDeviceHelper isIPhoneXDevice]) {
             self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
         }else{

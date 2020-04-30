@@ -63,6 +63,7 @@
     self.isNewDiscovery = [FHEnvContext isNewDiscovery];
     self.hasShowDots = NO;
     self.isUgcOpen = [FHEnvContext isUGCOpen];
+    self.categorys = [[FHUGCCategoryManager sharedManager].allCategories copy];
     self.alreadyShowGuide = NO;
     self.ttTrackStayEnable = YES;
 
@@ -88,18 +89,19 @@
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id _Nullable x) {
         StrongSelf;
         FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *) x;
-        if([FHEnvContext isNewDiscovery]){
-            if(!self.isFirstLoad){
-                [self initViewModel];
-                self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
-            }
-        }else{
+//        if([FHEnvContext isNewDiscovery]){
+//            BOOL same = [[FHUGCCategoryManager sharedManager] isSameCategory:self.categorys];
+//            if(!self.isFirstLoad && (self.isNewDiscovery != [xConfigDataModel.channelType boolValue] || !same)){
+//                [self initViewModel];
+//                self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
+//            }
+//        }else{
             if (self.isUgcOpen != xConfigDataModel.ugcCitySwitch) {
                 self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
                 [self initViewModel];
             }
             self.segmentControl.sectionTitles = [self getSegmentTitles];
-        }
+//        }
     }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(topVCChange:) name:@"kExploreTopVCChangeNotification" object:nil];
@@ -515,21 +517,27 @@
 
 
 - (void)updateSegmentView {
-    self.segmentControl.sectionTitles = [self getSegmentTitles];
-    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
-    if(self.isNewDiscovery && segmentContentWidth >= SCREEN_WIDTH){
-        [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self.topView);
-            make.height.mas_equalTo(44);
-            make.bottom.mas_equalTo(self.topView).offset(-8);
-        }];
-    }else{
-        [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self.topView);
-            make.width.mas_equalTo(segmentContentWidth);
-            make.height.mas_equalTo(44);
-            make.bottom.mas_equalTo(self.topView).offset(-8);
-        }];
+    BOOL same = [[FHUGCCategoryManager sharedManager] isSameCategory:self.categorys];
+    if(self.isNewDiscovery != [FHEnvContext isNewDiscovery] || !same){
+        [self initViewModel];
+        self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
+        
+        self.segmentControl.sectionTitles = [self getSegmentTitles];
+        CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
+        if(self.isNewDiscovery && segmentContentWidth >= SCREEN_WIDTH){
+            [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.right.mas_equalTo(self.topView);
+                make.height.mas_equalTo(44);
+                make.bottom.mas_equalTo(self.topView).offset(-8);
+            }];
+        }else{
+            [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.mas_equalTo(self.topView);
+                make.width.mas_equalTo(segmentContentWidth);
+                make.height.mas_equalTo(44);
+                make.bottom.mas_equalTo(self.topView).offset(-8);
+            }];
+        }
     }
 }
 
@@ -539,7 +547,7 @@
 
 - (void)changeTab {
     if([FHEnvContext isNewDiscovery]){
-        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
         if (self.navigationController.viewControllers.count <= 1) {
             [self.viewModel changeTab:index];
         }

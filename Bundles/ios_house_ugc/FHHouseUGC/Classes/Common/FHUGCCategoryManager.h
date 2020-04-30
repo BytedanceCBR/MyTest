@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (FHCommunityCollectionCellType)convertCategoryToType:(NSString *)category;
 
 - (NSInteger)getCategoryIndex:(NSString *)category;
+- (BOOL)isSameCategory:(NSArray *)categorys;
 
 - (void)startGetCategory;
 - (void)startGetCategory:(BOOL)userChanged;
