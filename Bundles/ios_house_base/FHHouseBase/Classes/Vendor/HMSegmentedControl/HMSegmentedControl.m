@@ -150,6 +150,8 @@
     self.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     self.userDraggable = YES;
     self.touchEnabled = YES;
+    self.firstLeftMargain = 0;
+    self.lastRightMargin = 0;
     self.verticalDividerEnabled = NO;
     self.type = HMSegmentedControlTypeText;
     self.verticalDividerWidth = 1.0f;
@@ -352,7 +354,7 @@
                 fullRect = CGRectMake(self.segmentWidth * idx, 0, self.segmentWidth, oldRect.size.height);
             } else {
                 // When we are drawing dynamic widths, we need to loop the widths array to calculate the xOffset
-                CGFloat xOffset = 0;
+                CGFloat xOffset = self.firstLeftMargain;
                 NSInteger i = 0;
                 for (NSNumber *width in self.segmentWidthsArray) {
                     if (idx == i)
@@ -740,9 +742,9 @@
                 if (self.selectedSegmentIndex < self.segmentWidthsArray.count) {
                     
                     if (self.selectionIndicatorWidth != CGFLOAT_MIN) {
-                        return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left + ([[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorWidth) / 2, indicatorYOffset, self.selectionIndicatorWidth - (self.selectionIndicatorEdgeInsets.left + self.selectionIndicatorEdgeInsets.right), self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                        return CGRectMake(self.firstLeftMargain +  selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left + ([[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorWidth) / 2, indicatorYOffset, self.selectionIndicatorWidth - (self.selectionIndicatorEdgeInsets.left + self.selectionIndicatorEdgeInsets.right), self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
                     } else {
-                        return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                        return CGRectMake(self.firstLeftMargain + selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
                     }
                 }
             }
@@ -933,7 +935,7 @@
     if (self.type == HMSegmentedControlTypeText && self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleFixed) {
         return self.sectionTitles.count * self.segmentWidth;
     } else if (self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic) {
-        return [[self.segmentWidthsArray valueForKeyPath:@"@sum.self"] floatValue];
+        return [[self.segmentWidthsArray valueForKeyPath:@"@sum.self"] floatValue] +self.firstLeftMargain +self.lastRightMargin;
     } else {
         return self.sectionImages.count * self.segmentWidth;
     }
