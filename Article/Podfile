@@ -43,7 +43,7 @@ def fhPods
     
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
     pod 'ios_house_filter' , '1.0.2'
-    
+
     pod 'FHCommonUI','0.0.19-rc.4'
 #    pod 'FHCommonUI',:path => '../../../ios_common_ui/'
 #    pod 'FHCommonUI', :git => 'https://code.byted.org/fproject/ios_common_ui.git', :commit => 'fef6ed9bea94a343313805b978fda9511cbbf213'
@@ -62,7 +62,7 @@ def fhPods
     # 'DelegateForC'
     # ]
 
-    pod 'ios_house_im' , '0.2.0-rc.13'
+    pod 'ios_house_im' , '0.2.0-rc.14'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #    pod 'ios_house_im' , :path => '../../cim3'
 #    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'ec1d29fed31c70cdf717bc53039580d9801d074d'
@@ -272,8 +272,6 @@ def appPods
 
     #-----点赞分享顶踩不感兴趣----
     pod_binary 'TTBatchItemAction','0.1.8'
-    #-------AB测库--------
-    pod_binary 'TTABManager', '0.0.7'
     #-----头条网络业务库------
     pod_binary 'TTNetBusiness', '0.0.10'
 
@@ -659,7 +657,6 @@ post_install do |installer|
           '${PODS_ROOT}/GoogleMaps/Maps/Frameworks',
           '${PODS_ROOT}/GoogleMaps/Base/Frameworks',
           '${PODS_ROOT}/BDUGUnionSDK/BDUGUnionSDK/Classes',
-          '${PODS_ROOT}/TTABManager',
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
           '${PODS_ROOT}/UMengAnalytics/umsdk_IOS_analyics_idfa_v4.1.4',

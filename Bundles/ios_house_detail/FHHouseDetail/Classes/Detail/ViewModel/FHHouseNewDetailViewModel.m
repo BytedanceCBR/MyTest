@@ -12,7 +12,8 @@
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailPhotoHeaderCell.h"
 #import "FHDetailHouseNameCell.h"
-#import "FHDetailNewHouseCoreInfoCell.h"
+#import "FHDetailNewTimeLineItemCell.h"
+//#import "FHDetailNewHouseCoreInfoCell.h"
 #import "FHDetailNewHouseNewsCell.h"
 #import "FHDetailTimelineItemCorrectingCell.h"
 
@@ -23,7 +24,7 @@
 #import "FHDetailRelatedCourtModel.h"
 #import "FHNewHouseItemModel.h"
 #import "FHDetailDisclaimerCell.h"
-#import "FHDetailNewListSingleImageCell.h"
+
 #import "FHDetailStaticMapCell.h"
 #import "HMDTTMonitor.h"
 #import <FHHouseBase/FHCommonDefines.h>
@@ -73,11 +74,8 @@
 //    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameModel class])];
     
 //    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
-    
-//    [self.tableView registerClass:[FHDetailNewHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseCoreInfoModel class])];
-    
+        
     [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewMutiFloorPanCellModel class])];
-    
     [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCellModel class])];
     
     [self.tableView registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
@@ -86,8 +84,6 @@
     
 //    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     
-    //    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
-//    [self.tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListBaseItemModel class])];
     
     [self.tableView registerClass:[FHOldDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     
@@ -330,7 +326,7 @@
 - (void)startLoadData
 {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             if (model.data) {
                 wSelf.dataModel = model;
@@ -403,6 +399,7 @@
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.contactViewModel.socialInfo = model.data.socialInfo;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
     self.weakSocialInfo = model.data.socialInfo;
     
     __weak typeof(self) wSelf = self;
@@ -426,6 +423,7 @@
         FHMultiMediaItemModel *itemModel = nil;
         
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
+        headerCellModel.houseImageAssociateInfo = model.data.imageGroupAssociateInfo;
         headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;
         if ([model.data.topImages isKindOfClass:[NSArray class]] && model.data.topImages.count > 0) {
             NSMutableArray *houseImageList = @[].mutableCopy;
@@ -581,6 +579,8 @@
     FHDetailNewPriceNotifyCellModel *priceInfo = [[FHDetailNewPriceNotifyCellModel alloc] init];
     priceInfo.houseModelType = FHHouseModelTypeNewCoreInfo;
     priceInfo.contactModel = self.contactViewModel;
+    priceInfo.priceAssociateInfo = model.data.changePriceNotifyAssociateInfo;
+    priceInfo.openAssociateInfo = model.data.beginSellingNotifyAssociateInfo;
     [self.items addObject:priceInfo];
     
     // 优惠信息
@@ -635,7 +635,8 @@
         agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
         agentListModel.recommendedRealtorsSubTitle = model.data.recommendedRealtorsSubTitle;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
-        
+        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
+
         /******* 这里的 逻辑   ********/
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNewHouse houseId:self.houseId];
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
@@ -659,7 +660,7 @@
         socialInfoCM.socialInfo = model.data.socialInfo;
         [self.items addObject:socialInfoCM];
     }
-    
+
     //楼盘动态
     if (model.data.timeline.list.count != 0) {
         

@@ -121,9 +121,17 @@
     FHDetailNewPriceNotifyCellModel *model = (FHDetailNewPriceNotifyCellModel *)self.currentData;
     if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
         FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
-        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithActionType:)]) {
-            [contactViewModel fillFormActionWithActionType:FHFollowActionTypeFloorPan];
-        }
+
+        NSString *title = @"开盘通知";
+        NSString *subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
+        NSString *btnTitle = @"提交";
+        NSMutableDictionary *associateParamDict = @{}.mutableCopy;
+        associateParamDict[kFHAssociateInfo] = model.openAssociateInfo.reportFormInfo;
+        NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
+        reportParamsDict[@"position"] = @"on_sell";
+        associateParamDict[kFHReportParams] = reportParamsDict;
+        
+        [contactViewModel fillFormActionWithParams:associateParamDict];
     }
 }
 - (void)priceChangedNotifyActionClick
@@ -131,9 +139,16 @@
     FHDetailNewPriceNotifyCellModel *model = (FHDetailNewPriceNotifyCellModel *)self.currentData;
     if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
         FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
-        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithActionType:)]) {
-            [contactViewModel fillFormActionWithActionType:FHFollowActionTypePriceChanged];
-        }
+        NSString *title = @"变价通知";
+        NSString *subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
+        NSString *btnTitle = @"提交";
+        NSMutableDictionary *associateParamDict = @{}.mutableCopy;
+        associateParamDict[kFHAssociateInfo] = model.priceAssociateInfo.reportFormInfo;
+        NSMutableDictionary *reportParamsDict = [contactViewModel baseParams].mutableCopy;
+        reportParamsDict[@"position"] = @"change_price";
+        associateParamDict[kFHReportParams] = reportParamsDict;
+        
+        [contactViewModel fillFormActionWithParams:associateParamDict];
     }
 }
 

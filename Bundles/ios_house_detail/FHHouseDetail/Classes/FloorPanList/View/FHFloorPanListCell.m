@@ -198,6 +198,49 @@
                 }
             }
         }
+        
+        if (!model.saleStatus) {
+            self.statusLabel.text = @"";
+            self.statusBGView.backgroundColor = [UIColor clearColor];
+            self.statusLabel.backgroundColor = [UIColor clearColor];
+        }else {
+            self.statusLabel.text = model.saleStatus.content;
+            if ([model.saleStatus.textColor isKindOfClass:[NSString class]]) {
+                self.statusLabel.textColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.textColor]];
+            }else
+            {
+                self.statusLabel.textColor = [UIColor whiteColor];
+            }
+            
+            if ([model.saleStatus.backgroundColor isKindOfClass:[NSString class]]) {
+                self.statusLabel.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
+                _statusBGView.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
+                
+            }else
+            {
+                self.statusLabel.backgroundColor = [UIColor whiteColor];
+                _statusBGView.backgroundColor = [UIColor whiteColor];
+            }
+        }
+
+        
+        if (model.index == 0) {
+            [_iconView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(20);
+                make.bottom.equalTo(self.contentView).offset(-10);
+                make.top.equalTo(self.contentView).offset(20);
+                make.width.mas_equalTo(100);
+                make.height.mas_equalTo(75);
+            }];
+            
+            [_nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(self.iconView.mas_right).offset(12);
+                make.top.mas_equalTo(20);
+                make.right.mas_equalTo(22);
+                make.width.mas_equalTo(100);
+                make.height.mas_equalTo(22);
+            }];
+       }
     }
 }
 

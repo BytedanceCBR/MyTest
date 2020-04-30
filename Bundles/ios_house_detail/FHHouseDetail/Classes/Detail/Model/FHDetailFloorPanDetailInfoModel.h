@@ -4,12 +4,6 @@
 #import "FHDetailNewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@interface FHDetailFloorPanDetailInfoDataUserStatusModel : JSONModel 
-
-@property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
-@property (nonatomic, copy , nullable) NSString *pricingSubStatus;
-@property (nonatomic, assign) NSInteger courtSubStatus;
-@end
 
 @protocol FHDetailFloorPanDetailInfoDataBaseInfoModel<NSObject>
 @end
@@ -50,7 +44,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailFloorPanDetailInfoDataModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *status;
-@property (nonatomic, strong , nullable) FHDetailFloorPanDetailInfoDataUserStatusModel *userStatus ;  
 @property (nonatomic, copy , nullable) NSString *areaId;
 @property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataBaseInfoModel> *baseInfo;
 @property (nonatomic, copy , nullable) NSString *title;
@@ -58,7 +51,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *districtId;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *squaremeter;
-@property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
 @property (nonatomic, copy , nullable) NSString *pricing;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
 @property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataRecommendModel> *recommend;
@@ -68,8 +60,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
+
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
+@property (nonatomic, strong , nullable) FHDetailNewUserStatusModel *userStatus ;
+@property (nonatomic, strong , nullable)  FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
 @property (nonatomic, strong , nullable) FHDetailNewDataDisclaimerModel *disclaimer ;
 
 @end

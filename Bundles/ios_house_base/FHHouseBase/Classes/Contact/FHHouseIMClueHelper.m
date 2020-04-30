@@ -79,6 +79,95 @@
     }
 }
 
++ (void)jump2SessionPageWithAssociateDict:(NSDictionary *)associateDict
+{
+    FHAssociateIMModel *configModel = [[FHAssociateIMModel alloc]initWithDictionary:associateDict error:nil];
+    if (configModel) {
+        [self jump2SessionPageWithAssociateIM:configModel];
+    }
+}
+
++ (void)jump2SessionPageWithAssociateIM:(FHAssociateIMModel *)associateIM
+{
+    NSString *urlStr = associateIM.imOpenUrl;
+    if (urlStr.length > 0) {
+        
+        if(!associateIM.isIgnoreReportClickIM) {
+            // 上报IM点击埋点
+            [self addClickIMLog:associateIM];
+        }
+        // 执行跳转
+        NSURL *openUrl = [NSURL URLWithString:urlStr];
+        NSMutableDictionary *userInfoDict = @{}.mutableCopy;
+        NSMutableDictionary *report_params = [associateIM.reportParams.toDictionary mutableCopy];
+        report_params[UT_ENTER_FROM] = report_params[UT_PAGE_TYPE];
+        userInfoDict[@"report_params"] = report_params;
+        userInfoDict[@"associate_info"] = associateIM.associateInfo.imInfo?:@{}; // 只传入im_info即可
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+        
+        // 静默关注处理
+        [self silentFollowHouseWithAssociateIM:associateIM];
+    }
+}
+
++ (void)silentFollowHouseWithAssociateIM:(FHAssociateIMModel *)associateIM
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    
+    if(associateIM.reportParams.toDictionary) {
+        [params addEntriesFromDictionary:associateIM.reportParams.toDictionary];
+    }
+    
+    if(associateIM.reportParams.extra) {
+        [params addEntriesFromDictionary:associateIM.reportParams.extra];
+    }
+
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc] initWithDictionary:params error:nil];
+    
+    configModel.houseType = associateIM.houseType;
+    configModel.followId = associateIM.houseId;
+    configModel.actionType = associateIM.houseType;
+    configModel.hideToast = YES;
+    // 静默关注功能
+    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel completionBlock:^(BOOL isSuccess) {
+        if(associateIM.slientFollowCallbackBlock) {
+            associateIM.slientFollowCallbackBlock(isSuccess);
+        }
+    }];
+}
+
++ (void)addClickIMLog:(FHAssociateIMModel *)associateIM
+{
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    FHAssociateReportParams *reportParams = associateIM.reportParams;
+    
+    dict[@"enter_from"] = reportParams.enterFrom ? : @"be_null";
+    dict[@"element_from"] = reportParams.elementFrom ? : @"be_null";
+    dict[@"origin_from"] = reportParams.originFrom ? : @"be_null";
+    dict[@"log_pb"] = reportParams.logPb ? : @"be_null";
+    dict[@"origin_search_id"] = reportParams.originSearchId ? : @"be_null";
+    dict[@"rank"] = reportParams.rank ? : @"be_null";
+    dict[@"card_type"] = reportParams.cardType ? : @"be_null";
+    dict[@"page_type"] = reportParams.pageType ?: @"be_null";
+    dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
+    dict[@"realtor_id"] = reportParams.realtorId ? : @"be_null";
+    dict[@"realtor_rank"] = reportParams.realtorRank ?: @"0";
+    dict[@"conversation_id"] = reportParams.conversationId ? : @"be_null";
+    dict[@"realtor_position"] = reportParams.realtorPosition ? : @"be_null";
+    dict[@"realtor_logpb"] = reportParams.realtorLogpb;
+    dict[@"growth_deepevent"] = @(1);
+    dict[@"source_from"] = reportParams.sourceFrom;
+    dict[@"associate_info"] = associateIM.associateInfo.imInfo?:@{}; // 只传im_info即可
+    
+    if(reportParams.extra) {
+        [dict addEntriesFromDictionary:reportParams.extra];
+        dict[@"im_open_url"] = nil;
+    }
+
+    [FHUserTracker writeEvent:@"click_im" params:dict];
+}
+
 @end
 
 @implementation FHHouseIMClueConfigModel

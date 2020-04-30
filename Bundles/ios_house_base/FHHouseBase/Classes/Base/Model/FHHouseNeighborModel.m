@@ -80,6 +80,7 @@
                            @"baseInfo": @"base_info",
                            @"pricePerSqmNum": @"price_per_sqm_num",
                            @"pricePerSqmUnit": @"price_per_sqm_unit",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
