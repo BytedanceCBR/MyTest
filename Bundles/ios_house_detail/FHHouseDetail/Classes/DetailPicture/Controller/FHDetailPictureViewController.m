@@ -285,6 +285,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     self.pictureTitleView.titleNames = self.pictureTitles;
     self.pictureTitleView.titleNums = self.pictureNumbers;
     self.pictureTitleView.currentIndexBlock = ^(NSInteger currentIndex) {
+        
+        if (weakSelf.topImageClickTabBlock) {
+            weakSelf.topImageClickTabBlock(currentIndex);
+        }
         // 选中图片标签
         NSInteger tempIndex = currentIndex;
         if (currentIndex == 0) {

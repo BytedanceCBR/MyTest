@@ -401,8 +401,10 @@
             [self.delegate toolbarDidClickEmojiButton:YES];
             
             [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
-                self.top = self.toolbarViewOrigin.y - EMOJI_INPUT_VIEW_HEIGHT;
-            } completion:nil];
+                self.top = self.toolbarViewOrigin.y - EMOJI_INPUT_VIEW_HEIGHT - 60;
+            } completion:^(BOOL finished) {
+                self.height = [FHUGCToolbar toolbarHeightWithTags:self.tags hasSelected:self.isSelected] + EMOJI_INPUT_VIEW_HEIGHT;
+            }];
         }
     }
 }

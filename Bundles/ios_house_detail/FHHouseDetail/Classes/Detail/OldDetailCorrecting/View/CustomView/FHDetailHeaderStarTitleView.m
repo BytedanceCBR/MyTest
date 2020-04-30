@@ -68,6 +68,10 @@
     }
 }
 
+- (void)hiddenStarImage {
+    self.starImageView.hidden = YES;
+}
+
 - (void)updateTitle:(NSString *)title
 {
     self.titleLabel.text = title;

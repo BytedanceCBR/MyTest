@@ -151,6 +151,7 @@
                            @"groupId": @"group_id",
                            @"imOpenUrl":@"im_openurl",
                            @"associateInfo": @"associate_info",
+                           @"displayPrice": @"display_price"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -235,7 +236,7 @@
         @"discountButtonText": @"discount_button_text",
         @"discountReportDoneTitle": @"discount_report_done_title",
         @"associateInfo": @"associate_info",
-        
+        @"discountReportDoneSubTitle":@"discount_report_done_sub_title",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -360,6 +361,7 @@
                            @"chooseAgencyList": @"choose_agency_list",
                            @"recommendedRealtors": @"recommended_realtors",
                            @"recommendedRealtorsTitle": @"recommended_realtors_title",
+                           @"recommendedRealtorsSubTitle":@"recommended_realtors_sub_title",
                            @"socialInfo":@"ugc_social_group",
                            @"houseVideo": @"house_video",
                            @"baseInfo": @"base_info",
@@ -374,6 +376,7 @@
                            @"imageGroupAssociateInfo": @"image_group_associate_info",
                            @"discountInfoAssociateInfo": @"discount_info_associate_info",
                            @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
+                           @"isShowTopImageTab": @"is_show_top_image_tab",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

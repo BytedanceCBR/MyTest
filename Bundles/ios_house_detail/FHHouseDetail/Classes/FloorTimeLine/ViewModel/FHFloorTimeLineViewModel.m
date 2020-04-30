@@ -113,6 +113,9 @@
     [self updateTableViewWithMoreData:model.data.hasMore];
 
     [self.currentItems addObjectsFromArray:itemsArray];
+    
+    UIView *bottomBar = [self.detailController getBottomBar];
+    bottomBar.hidden = YES;
 
     [_timeLineListTable reloadData];
 }

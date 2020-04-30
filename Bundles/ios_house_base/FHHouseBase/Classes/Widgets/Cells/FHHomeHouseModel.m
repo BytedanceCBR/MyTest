@@ -525,6 +525,7 @@
         @"hasMore": @"has_more",
         @"refreshTip": @"refresh_tip",
         @"searchId": @"search_id",
+        @"triggerTime":@"trigger_time"
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

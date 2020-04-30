@@ -31,4 +31,6 @@ NS_ASSUME_NONNULL_END
 @property (strong, nonatomic) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewTopImage *> *topImages;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;
+@property (nonatomic, assign) BOOL isShowTopImageTab;
+
 @end
