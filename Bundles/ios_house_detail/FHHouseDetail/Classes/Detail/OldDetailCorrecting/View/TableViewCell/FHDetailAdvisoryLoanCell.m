@@ -321,7 +321,7 @@
                          imExtra[kFHAssociateInfo] = model.downPayment.associateInfo;
             }
             [model.contactModel onlineActionWithExtraDict:imExtra];
-        }
+//        }
     }else {
         if ([model.contactModel respondsToSelector:@selector(fillFormActionWithParams:)]) {
             NSMutableDictionary *associateParamDict =  @{
