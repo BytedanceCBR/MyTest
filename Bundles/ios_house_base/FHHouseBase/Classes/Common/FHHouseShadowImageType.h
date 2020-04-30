@@ -68,6 +68,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeNewSales,
     // 新房详情页户型模块
     FHHouseModelTypeNewFloorPlan,
+    ///新房详情页楼盘攻略
+    FHHouseModelTypeNewAccess,
     // 新房详情页优质顾问模块
     FHHouseModelTypeNewAgentList,
     // 新房详情页位置周边模块
@@ -79,6 +81,10 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     
     // 新房详情页楼盘动态
     FHHouseModelTypeNewTimeline,
+    // 户型详情页属性模块
+    FHFloorPanHouseModelTypeCoreInfo,
+    // 户型详情页户型模块
+    FHFloorPanHouseModelTypeFloorPlan,
     
 };
 

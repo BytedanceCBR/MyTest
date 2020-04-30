@@ -10,6 +10,7 @@
 #import "FHDetailBaseModel.h"
 #import "FHHouseNewsSocialModel.h"
 #import "FHHouseBaseInfoModel.h"
+#import "FHDetailOldModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -110,6 +111,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewDataFloorpanListListModel : JSONModel
 
+@property (nonatomic, copy , nullable) NSString *pricing;
+@property (nonatomic, copy , nullable) NSString *displayPrice;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *roomCount;
 @property (nonatomic, copy , nullable) NSString *title;
@@ -206,6 +209,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *discountReportSubTitle;
 @property (nonatomic, copy , nullable) NSString *discountButtonText;
 @property (nonatomic, copy , nullable) NSString *discountReportDoneTitle;
+@property (nonatomic, copy , nullable) NSString *discountReportDoneSubTitle;
 @property (nonatomic, strong) NSNumber *page;
 
 @end
@@ -262,6 +266,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHouseNewsSocialModel *socialInfo ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle; // 推荐经纪人标题文案
+@property (nonatomic, copy , nullable) NSString *recommendedRealtorsSubTitle; // 推荐经纪人副标题文案
 @property (nonatomic, strong , nullable) FHVideoHouseVideoModel *houseVideo ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewTopImage> *topImages;
 @property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
@@ -270,6 +275,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *relatedCourtInfo;
 @property (nonatomic, strong , nullable) FHDetailNewSurroundingInfo *surroundingInfo ;
 @property(nonatomic , strong) FHDetailNewTopBanner *topBanner;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
 
 @end
 

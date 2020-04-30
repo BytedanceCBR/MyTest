@@ -42,9 +42,9 @@
 #define guideViewHeight 17
 #define topMargin 20
 
-@interface FHUGCVideoCell ()<TTUGCAttributedLabelDelegate,TTVFeedPlayMovie,TTVFeedUserOpDataSyncMessage>
+@interface FHUGCVideoCell ()<TTUGCAsyncLabelDelegate,TTVFeedPlayMovie,TTVFeedUserOpDataSyncMessage>
 
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
@@ -86,17 +86,17 @@
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_userInfoView];
     
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
-    NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-                                     };
-    self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = linkAttributes;
-    self.contentLabel.inactiveLinkAttributes = linkAttributes;
+//    NSDictionary *linkAttributes = @{
+//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+//                                     };
+//    self.contentLabel.linkAttributes = linkAttributes;
+//    self.contentLabel.activeLinkAttributes = linkAttributes;
+//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
@@ -201,7 +201,7 @@
             make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(20 + cellModel.contentHeight);
             make.height.mas_equalTo(self.videoViewheight);
         }];
-        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     //处理视频
     self.videoItem = cellModel.videoItem;
@@ -461,9 +461,9 @@
     return NO;
 }
 
-#pragma mark - TTUGCAttributedLabelDelegate
+#pragma mark - TTUGCAsyncLabelDelegate
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
         if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
             [self.delegate lookAllLinkClicked:self.cellModel cell:self];
