@@ -315,42 +315,26 @@
             imExtra[@"source"] = @"app_oldhouse_mortgage";
             imExtra[@"source_from"] = @"loan";
             imExtra[@"im_open_url"] = openUrl;
-            imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldBudget];
+//            imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
+//            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldBudget];
+            if(model.downPayment.associateInfo) {
+                         imExtra[kFHAssociateInfo] = model.downPayment.associateInfo;
+            }
             [model.contactModel onlineActionWithExtraDict:imExtra];
-            // 静默关注功能
-                    NSMutableDictionary *params = @{}.mutableCopy;
-                    if (self.baseViewModel.detailTracerDic) {
-                        [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
-                    }
-                    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-                    configModel.houseType = self.baseViewModel.houseType;
-                    configModel.followId = self.baseViewModel.houseId;
-                    configModel.actionType = self.baseViewModel.houseType;
-                    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
+//        }
     }else {
-        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithExtraDict:)]) {
-            NSDictionary *infoDic =  @{kFHCluePage:@(FHClueFormPageTypeCOldHouseShoufu),
+        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithParams:)]) {
+            NSMutableDictionary *associateParamDict =  @{
                                        @"title":@"首付咨询",
                                        @"subtitle":@"订阅首付咨询，房源首付信息会及时发送到您的手机",
                                        @"position":@"loan",
-                                       @"btn_title":@"提交",
-                                       @"toast":@"提交成功，经纪人将尽快与您联系"
-            };
-            [model.contactModel fillFormActionWithExtraDict:infoDic];
-            __weak typeof(self)WS = self;
-            model.contactModel.fillFormSubmitBlock = ^{
-                  // 静默关注功能
-                   NSMutableDictionary *params = @{}.mutableCopy;
-                   if (WS.baseViewModel.detailTracerDic) {
-                       [params addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
-                   }
-                   FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-                   configModel.houseType = WS.baseViewModel.houseType;
-                   configModel.followId = WS.baseViewModel.houseId;
-                   configModel.actionType = WS.baseViewModel.houseType;
-                   [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
-            };
+                                       @"btn_title":@"提交"
+            }.mutableCopy;
+            associateParamDict[kFHAssociateInfo] = model.downPayment.associateInfo.reportFormInfo;
+            NSMutableDictionary *reportParamsDict = [model.contactModel baseParams].mutableCopy;
+            associateParamDict[kFHReportParams] = reportParamsDict;
+            
+            [model.contactModel fillFormActionWithParams:associateParamDict];
         }
     }
   

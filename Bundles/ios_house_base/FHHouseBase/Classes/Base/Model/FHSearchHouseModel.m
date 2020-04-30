@@ -414,6 +414,7 @@
                            @"fakeReason": @"fake_reason",
                            @"externalInfo": @"external_info",
                            @"skyEyeTag": @"sky_eye_tag",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -582,6 +583,7 @@
                                    @"displayStatusInfo": @"display_status_info",
                                    @"districtAreaName": @"district_area_name",
                                    @"contactModel": @"realtor_info",
+                                   @"associateInfo": @"associate_info",
                                    @"logPb": @"log_pb",
                                    };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

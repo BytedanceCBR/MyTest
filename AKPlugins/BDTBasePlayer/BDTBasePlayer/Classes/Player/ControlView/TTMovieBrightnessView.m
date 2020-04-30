@@ -173,5 +173,4 @@ static const int kBrightViewGridNum = 16;
         view.centerY = _brightView.height / 2;
     }];
 }
-
 @end

@@ -11,6 +11,8 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
+#import "FHDetailNewModel.h"
+#import "FHDetailNeighborhoodModel.h"
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "FHDetailHeaderView.h"
@@ -78,6 +80,12 @@
     }else {
         self.headerView.label.text = (model.houseType == FHHouseTypeNewHouse) ? @"优选顾问" : @"推荐经纪人";
     }
+    if ((model.houseType == FHHouseTypeNewHouse)) {
+        [self.headerView setSubTitleWithTitle:model.recommendedRealtorsSubTitle];
+    }else{
+        [self.headerView removeSubTitleWithTitle];
+    }
+    
     WeakSelf;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
@@ -124,10 +132,12 @@
             }
             
             if (model.realtorCellShow == FHRealtorCellShowStyle0) {
-                               itemView.agency.font = [UIFont themeFontRegular:14];
-                               itemView.identifyView.hidden = YES;
-                   
-               }
+                itemView.agency.font = [UIFont themeFontRegular:14];
+                itemView.identifyView.hidden = YES;
+            }
+            if (model.realtorCellShow == FHRealtorCellShowStyle3){
+                itemView.identifyView.hidden = YES;
+            }
             BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
             [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
             if(obj.realtorEvaluate.length > 0) {
@@ -236,27 +246,42 @@
         if (self.baseViewModel.detailTracerDic) {
             [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
         }
+        NSDictionary *associateInfoDict = model.associateInfo.phoneInfo;
+        extraDict[kFHAssociateInfo] = associateInfoDict;
+        FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+        associatePhone.reportParams = extraDict;
+        associatePhone.associateInfo = associateInfoDict;
+        associatePhone.realtorId = contact.realtorId;
+        associatePhone.searchId = model.searchId;
+        associatePhone.imprId = model.imprId;
 
-        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
-        contactConfig.houseType = self.baseViewModel.houseType;
-        contactConfig.houseId = self.baseViewModel.houseId;
-        contactConfig.phone = contact.phone;
-        contactConfig.realtorId = contact.realtorId;
-        contactConfig.searchId = model.searchId;
-        contactConfig.imprId = model.imprId;
-        contactConfig.realtorType = contact.realtorType;
-        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
-            contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhoodMulrealtor);
-        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
-            contactConfig.cluePage = @(FHClueCallPageTypeCNewHouseMulrealtor);
-        }else {
-            contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
-        }
-        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+        associatePhone.houseType = self.baseViewModel.houseType;
+        associatePhone.houseId = self.baseViewModel.houseId;
+        associatePhone.showLoading = NO;
+        
+        //        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
+//        contactConfig.houseType = self.baseViewModel.houseType;
+//        contactConfig.houseId = self.baseViewModel.houseId;
+//        contactConfig.phone = contact.phone;
+//        contactConfig.realtorId = contact.realtorId;
+//        contactConfig.searchId = model.searchId;
+//        contactConfig.imprId = model.imprId;
+//        contactConfig.realtorType = contact.realtorType;
+//        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
+//            contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhoodMulrealtor);
+//        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
+//            contactConfig.cluePage = @(FHClueCallPageTypeCNewHouseMulrealtor);
+//        }else {
+//            contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+//        }
+        
+        [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+
+//        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
             if(success && [model.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
                 FHHouseDetailViewController *vc = (FHHouseDetailViewController *)model.belongsVC;
                 vc.isPhoneCallShow = YES;
-                vc.phoneCallRealtorId = contactConfig.realtorId;
+                vc.phoneCallRealtorId = contact.realtorId;
                 vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
             }
         }];
@@ -279,14 +304,40 @@
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"realtor_position"] = @"detail_related";
-        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
-            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNeighborhoodMulrealtor];
-        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
-            imExtra[kFHClueEndpoint] = @(FHClueEndPointTypeC);
-            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNewHouseMulrealtor];
-        }else {
-            imExtra[@"from"] = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
+        
+        switch (self.baseViewModel.houseType) {
+            case FHHouseTypeNewHouse:
+            {
+                if([self.baseViewModel.detailData isKindOfClass:FHDetailNewModel.class]) {
+                    FHDetailNewModel *detailNewModel = (FHDetailNewModel *)self.baseViewModel.detailData;
+                    if(detailNewModel.data.recommendRealtorsAssociateInfo) {
+                        imExtra[kFHAssociateInfo] =  detailNewModel.data.recommendRealtorsAssociateInfo;
+                    }
+                }
+            }
+                break;
+            case FHHouseTypeSecondHandHouse:
+            {
+                if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
+                    FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
+                    if(detailOldModel.data.recommendRealtorsAssociateInfo) {
+                        imExtra[kFHAssociateInfo] =  detailOldModel.data.recommendRealtorsAssociateInfo;
+                    }
+                }
+            }
+                break;
+            case FHHouseTypeNeighborhood:
+            {
+                if([self.baseViewModel.detailData isKindOfClass:FHDetailNeighborhoodModel.class]) {
+                    FHDetailNeighborhoodModel *detailNeighborhoodModel = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
+                    if(detailNeighborhoodModel.data.recommendRealtorsAssociateInfo) {
+                        imExtra[kFHAssociateInfo] =  detailNeighborhoodModel.data.recommendRealtorsAssociateInfo;
+                    }
+                }
+            }
+                break;
+            default:
+                break;
         }
         [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
     }
@@ -517,9 +568,9 @@
         case FHHouseTypeSecondHandHouse:
             return @"old_detail_related";
             break;
-         case FHHouseTypeNeighborhood:
+        case FHHouseTypeNeighborhood:
             return @"neighborhood_detail_related";
-            case FHHouseTypeNewHouse:
+        case FHHouseTypeNewHouse:
                return @"new_detail_related";
         default:
             break;
@@ -654,7 +705,37 @@
     return _vSepLine;
 }
 
-
+- (UIImageView *)agencyBac{
+    if (!_agencyBac) {
+        _agencyBac = [[UIImageView alloc]init];
+        _agencyBac.image = [UIImage imageNamed:@"realtor_name_bac"];
+        _agencyBac.layer.borderWidth = 0.5;
+        _agencyBac.layer.borderColor = [[UIColor colorWithHexString:@"#d6d6d6"] CGColor];
+        _agencyBac.layer.cornerRadius = 2.0;
+        _agencyBac.layer.masksToBounds = YES;
+        
+    }
+    return _agencyBac;
+}
+- (UIView *)agencyDescriptionBac{
+    if (!_agencyDescriptionBac) {
+        _agencyDescriptionBac = [[UIView alloc]init];
+        _agencyDescriptionBac.backgroundColor = [UIColor colorWithHexString:@"#fefaf4"];
+        _agencyDescriptionBac.layer.cornerRadius = 2.0;
+        _agencyDescriptionBac.layer.masksToBounds = YES;
+    }
+    return _agencyDescriptionBac;
+}
+- (UILabel *)agencyDescriptionLabel{
+    if (!_agencyDescriptionLabel) {
+        _agencyDescriptionLabel = [[UILabel alloc] init];
+        _agencyDescriptionLabel.font = [UIFont themeFontRegular:10];
+        _agencyDescriptionLabel.backgroundColor = [UIColor clearColor];
+        _agencyDescriptionLabel.textColor = [UIColor themeBlack];
+        _agencyDescriptionLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _agencyDescriptionLabel;
+}
 
 
 -(instancetype)initWithModel:(FHDetailContactModel *)model {
@@ -667,6 +748,9 @@
                 break;
             case FHRealtorCellShowStyle2: // 经纪人名字和公司名字左右排列的样式: 话术
                 [self layoutForStyle2];
+                break;
+            case FHRealtorCellShowStyle3: // 经纪人名字和公司名字左右排列的样式: 公司介绍且公司名字后面有灰色背景
+                [self layoutForStyle3];
                 break;
             case FHRealtorCellShowStyle0: // 经纪人名字和公司名字上下排列的样式
             default:
@@ -732,6 +816,88 @@
 
 }
 
+- (void)layoutForStyle3 {
+    [self setupUI];//realtor_name_bac
+    //
+    self.score.hidden = YES;
+    self.scoreDescription.hidden = YES;
+    [self addSubview:self.agencyBac];
+    [self.agency mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.agencyBac).offset(3);
+        make.bottom.mas_equalTo(self.agencyBac).offset(-3);
+        make.left.mas_equalTo(self.agencyBac).offset(5);
+        make.right.mas_equalTo(self.agencyBac).offset(-5);
+    }];
+    
+    [self bringSubviewToFront:self.agency];
+    self.name.font = [UIFont themeFontMedium:16];
+    self.name.textColor = [UIColor themeBlack];
+    
+    self.agency.textColor = [UIColor colorWithHexString:@"#929292"];
+    self.agency.font = [UIFont themeFontMedium:10];
+    [self newHouseModifiedLayoutNameNeedShowCenter:self.model.agencyDescription.length <= 0];
+    if (self.model.agencyDescription.length > 0) {
+        [self addSubview:self.agencyDescriptionBac];
+        [self addSubview:self.agencyDescriptionLabel];
+        self.agencyDescriptionLabel.text = self.model.agencyDescription;
+        [self.agencyDescriptionLabel sizeToFit];
+        
+        [self.agencyDescriptionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.agencyDescriptionBac).offset(3);
+            make.bottom.mas_equalTo(self.agencyDescriptionBac).offset(-3);
+            make.left.mas_equalTo(self.agencyDescriptionBac).offset(10);
+            make.right.mas_equalTo(self.agencyDescriptionBac).offset(-10);
+        }];
+        [self.agencyDescriptionLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+        
+        [self.agencyDescriptionBac mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.avator.mas_right).offset(8);
+            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left);
+            make.height.mas_equalTo(18);
+            make.bottom.mas_equalTo(self.avator);
+        }];
+    }
+    
+    [self.callBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(26);
+        make.right.mas_equalTo(-15);
+        make.top.mas_equalTo(self.name);
+    }];
+    [self.imBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(26);
+        make.right.mas_equalTo(self.callBtn.mas_left).offset(-38);
+        make.top.mas_equalTo(self.name);
+    }];
+    
+}
+
+-(void) newHouseModifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
+
+    [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.avator.mas_right).offset(10);
+        if (showCenter) {
+            make.centerY.mas_equalTo(self.avator);
+        }
+        else{
+            make.top.mas_equalTo(self.avator);
+        }
+        make.height.mas_equalTo(20);
+    }];
+    
+    [self.name setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];  //这个好神奇！！！
+    
+    [self.agencyBac mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.name);
+        make.height.mas_equalTo(16);
+        make.left.mas_equalTo(self.name.mas_right).offset(4);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+    }];
+    
+    //[self.agency setContentCompressionResistancePriority:UILayoutPriorityDragThatCannotResizeScene forAxis:UILayoutConstraintAxisHorizontal];
+    self.agency.textAlignment = NSTextAlignmentCenter;
+    
+}
+
 -(void)modifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
     
     [self addSubview: self.vSepLine];
@@ -750,9 +916,9 @@
                 make.top.mas_equalTo(self.avator).offset(4);
             }
             make.height.mas_equalTo(20);
-        }];
+    }];
     [self.name setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
-
+    
     [self.agency mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.name);
         make.height.mas_equalTo(20);
@@ -966,3 +1132,4 @@
 }
 
 @end
+

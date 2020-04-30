@@ -175,8 +175,14 @@
         if (itemModel.addDescription) {
             UILabel *titleAddLabel = [UILabel new];
             titleAddLabel.text = itemModel.addDescription;
+            
             if ([TTDeviceHelper isScreenWidthLarge320]) {
-                [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth  - letftPading, titleLabel.frame.origin.y + 6, titleAddLbaelWidth, 11)];
+                CGSize titleSize = [titleLabel sizeThatFits:CGSizeZero];
+                CGFloat addLabelX = titleLabel.frame.origin.x + titleSize.width + 1;
+                if (itemModel.title.length >= 6) {
+                    [titleLabel setFrame:CGRectMake(backImage.frame.origin.x +  5, 14, backImage.frame.size.width - 10, 20)];
+                }
+                [titleAddLabel setFrame:CGRectMake(titleLabel.frame.origin.x + titleSize.width + 1, titleLabel.frame.origin.y + 6, titleAddLbaelWidth, 11)];
             }else
             {
                 [titleAddLabel setFrame:CGRectMake(containView.frame.size.width - titleAddLbaelWidth + 1 - letftPading, titleLabel.frame.origin.y + 5, titleAddLbaelWidth, 11)];

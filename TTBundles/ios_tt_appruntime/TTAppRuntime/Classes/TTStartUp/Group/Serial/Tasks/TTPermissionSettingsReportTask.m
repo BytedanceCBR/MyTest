@@ -15,6 +15,7 @@
 #import "APNsManager.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "TTLaunchDefine.h"
+#import <BDUGLocationKit/BDUGLocationManager.h>
 
 DEC_TASK("TTPermissionSettingsReportTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+14);
 
@@ -59,9 +60,14 @@ DEC_TASK("TTPermissionSettingsReportTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+14
     TTUserSettingsFontSize settingFontSize = [TTUserSettingsManager settingFontSize];
     
     NSInteger locationAuth = 1;
-    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+    
+    BOOL isEnabled = [BDUGLocationManager isAuthorizationStatusEnabled];
+    if (!isEnabled) {
         locationAuth = 0;
     }
+//    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+//        locationAuth = 0;
+//    }
     
     [TTTrackerWrapper eventV3:@"permission_collection" params:@{@"font_size":@(settingFontSize), @"coarse_location":@(locationAuth), @"notification":@(apnNotifyValue), @"network_setting":@(settingType)}];
     [[APNsManager sharedManager] sendAppNoticeStatus];

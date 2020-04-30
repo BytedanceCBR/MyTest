@@ -39,6 +39,8 @@
 @property (nonatomic, strong)   UIButton       *shareButton;// 分享
 @property (nonatomic, assign)   BOOL       isViewAppearing;
 @property (nonatomic, copy)     NSString       *lastPageSocialGroupId;
+//标识来源的入口，是发现过来的（house_thread）还是UGC过来的（ugc_thread）
+@property(nonatomic, copy) NSString *threadDetailSource;
 
 @end
 
@@ -67,6 +69,7 @@
             self.digg_count = [self.detailData.diggCount longLongValue];
             self.detailData.groupId = [NSString stringWithFormat:@"%ld",tid];
         }
+        self.threadDetailSource = params[@"thread_detail_source"];
         // 埋点
         self.tracerDict[@"page_type"] = @"feed_detail";
         self.ttTrackStayEnable = YES;
@@ -131,6 +134,7 @@
     self.weakViewModel.forumID = self.fid;
     self.weakViewModel.category = @"thread_detail";
     self.weakViewModel.lastPageSocialGroupId = self.lastPageSocialGroupId;
+    self.weakViewModel.threadDetailSource = self.threadDetailSource;
     // 导航栏
     [self setupDetailNaviBar];
     // 全部评论

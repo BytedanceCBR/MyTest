@@ -84,7 +84,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import <FHHouseBase/FHEnvContext.h>
 
-#import "TTPushServiceDelegate.h"
+#import <FHCHousePush/TTPushServiceDelegate.h>
 
 #if INHOUSE
 #import "TTStartupDebugGroup.h"

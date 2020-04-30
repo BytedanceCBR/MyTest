@@ -11,6 +11,7 @@
 @interface FHDetailNewHouseNewsCell ()
 
 @property (nonatomic, weak) UIImageView *shadowImage;
+@property (nonatomic, weak) UIView *containerView;
 
 @end
 
@@ -27,16 +28,23 @@
             make.top.equalTo(self.contentView).offset(-12);
             make.bottom.equalTo(self.contentView).offset(12);
         }];
-        _headerView = [[FHDetailHeaderView alloc] init];
-        [self.contentView addSubview:_headerView];
-        [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.shadowImage).offset(30);
-            make.right.mas_equalTo(self.shadowImage).offset(-15);
+        [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.shadowImage).offset(15);
+            make.right.mas_equalTo(self.shadowImage).offset(-15);
+            make.top.mas_equalTo(self.shadowImage).offset(12);
+            make.bottom.equalTo(self.shadowImage).offset(-12);
+        }];
+        _headerView = [[FHDetailHeaderView alloc] init];
+        [self.containerView addSubview:_headerView];
+        [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.containerView).offset(15);
+            make.right.mas_equalTo(self.containerView);
+            make.left.mas_equalTo(self.containerView);
+            make.bottom.equalTo(self.containerView).mas_offset(-12);
             make.height.mas_equalTo(46);
         }];
         [_headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        [_headerView setBackgroundColor:[UIColor whiteColor]];
+//        [_headerView setBackgroundColor:[UIColor whiteColor]];`
     }
     return self;
 }
@@ -77,6 +85,26 @@
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
     }
 
+}
+
+- (UIImageView *)shadowImage {
+    if (!_shadowImage) {
+        UIImageView *shadowImage = [[UIImageView alloc]init];
+        [self.contentView addSubview:shadowImage];
+        _shadowImage = shadowImage;
+    }
+    return  _shadowImage;
+}
+
+- (UIView *)containerView {
+    if (!_containerView) {
+        UIView *containerView = [[UIView alloc]init];
+        containerView.clipsToBounds = YES;
+//        containerView.layer.cornerRadius = 10;
+        [self.contentView addSubview:containerView];
+        _containerView = containerView;
+    }
+    return _containerView;
 }
 
 - (void)awakeFromNib {
