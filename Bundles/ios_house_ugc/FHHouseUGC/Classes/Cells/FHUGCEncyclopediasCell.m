@@ -54,8 +54,9 @@
     }];
     [self.contentLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.iconImage);
-        make.right.equalTo(self.iconImage.mas_left).offset(-15);
+        make.right.equalTo(self.contentView).offset(-20);
         make.left.equalTo(self.contentView).offset(20);
+        make.height.mas_equalTo(0);
     }];
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
@@ -108,7 +109,9 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         CGFloat height;
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        height  =  (cellModel.avatar.length>0 ?iconHeight:(cellModel.contentHeight+20)) + 40 +sidesMargin *2  + 20;
+        
+        
+        height  =  (cellModel.avatar.length > 0 ? iconHeight:cellModel.contentHeight) + 40 + sidesMargin *2 + 10;
         return height;
     }
     return 100;
@@ -130,9 +133,22 @@
     self.titleView.cellModel = model;
     self.contentLab.hidden = isEmptyString(model.content);
     [FHUGCCellHelper setRichContent:self.contentLab model:model];
-    self.contentLab.height = model.contentHeight;
-    self.iconImage.hidden  = isEmptyString(model.avatar);
-    [self.iconImage bd_setImageWithURL:[NSURL URLWithString:model.avatar]];
+//    self.contentLab.height = model.contentHeight;
+    
+    if(isEmptyString(model.avatar)){
+        self.iconImage.hidden = YES;
+        [self.contentLab mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self.contentView).offset(-20);
+            make.height.mas_equalTo(model.contentHeight);
+        }];
+    }else{
+        self.iconImage.hidden = NO;
+        [self.iconImage bd_setImageWithURL:[NSURL URLWithString:model.avatar]];
+        [self.contentLab mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self.contentView).offset(-20 - 120 - 15);
+            make.height.mas_equalTo(model.contentHeight);
+        }];
+    }
 }
 
 #pragma mark - TTUGCAttributedLabelDelegate

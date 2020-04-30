@@ -49,7 +49,7 @@
 
 - (void)initmMainCollection {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 0);
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
     flowLayout.minimumLineSpacing = 8;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     _mainCollection = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.width, 60) collectionViewLayout:flowLayout];
@@ -94,11 +94,8 @@
     }
     self.currentData = data;
     self.dataList = model.hotSocialList;
-    if (model.hidelLine) {
-        self.bottomSepView.hidden = YES;
-    }else {
-        self.bottomSepView.hidden = NO;
-    }
+    self.bottomSepView.hidden = model.hidelLine;
+    
     if (!isEmptyString(model.upSpace) && model.upSpace.integerValue >0) {
         [self.mainCollection setFrame:CGRectMake(0, model.upSpace.integerValue, [UIScreen mainScreen].bounds.size.width, 60)];
     }

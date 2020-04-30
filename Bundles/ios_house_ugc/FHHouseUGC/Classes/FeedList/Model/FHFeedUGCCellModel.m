@@ -722,7 +722,11 @@
         cellModel.numberOfLines = 3;
         cellModel.avatar = model.rawData.avatar;
         cellModel.showLookMore = YES;
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        if(isEmptyString(cellModel.avatar)){
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
+        }else{
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40 - 120 - 15) numberOfLines:cellModel.numberOfLines];
+        }
     }
     return cellModel;
 }

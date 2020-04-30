@@ -38,12 +38,14 @@
         _titleLabel.text = model.name;
         _descLabel.text = model.suggestReason;
         
+        if(model.avatar.length > 0){
+            [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
+        }
+        
         if([model.socialGroupId isEqualToString:@"-1"]){
             self.blackCoverView.hidden = YES;
-            self.icon.image = [UIImage imageNamed:@"fh_ugc_all_bg"];
         }else{
             self.blackCoverView.hidden = NO;
-            [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
         }
     }
 }
