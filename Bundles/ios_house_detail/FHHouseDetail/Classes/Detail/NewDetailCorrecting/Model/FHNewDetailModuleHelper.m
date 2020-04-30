@@ -23,11 +23,13 @@
     NSMutableArray *coreInfos = [[NSMutableArray alloc]init];
     NSMutableArray *sales = [[NSMutableArray alloc]init];
     NSMutableArray *floorPlans = [[NSMutableArray alloc]init];
+    NSMutableArray *access = [[NSMutableArray alloc]init];
     NSMutableArray *agentlist = [[NSMutableArray alloc]init];
     NSMutableArray *locations = [[NSMutableArray alloc]init];
     NSMutableArray *disclaimers = [[NSMutableArray alloc]init];
     NSMutableArray *related = [[NSMutableArray alloc]init];
     NSMutableArray *socialInfo = [[NSMutableArray alloc]init];
+    NSMutableArray *timelines = [[NSMutableArray alloc]init];
 
     [moduleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
@@ -41,6 +43,9 @@
             case FHHouseModelTypeNewFloorPlan:
                 [floorPlans addObject:obj];
                 break;
+            case FHHouseModelTypeNewAccess:
+                            [access addObject:obj];
+                            break;
             case FHHouseModelTypeNewAgentList:
                 [agentlist addObject:obj];
                 break;
@@ -56,6 +61,10 @@
             case FHHouseModelTypeNewSocialInfo:
                 [socialInfo addObject:obj];
                 break;
+                
+            case FHHouseModelTypeNewTimeline:
+                [timelines addObject:obj];
+                break;
             default:
                 break;
         }
@@ -69,6 +78,9 @@
     }
     if (floorPlans.count > 0) {
         [moduleItems addObject:@{@"floorPlans":floorPlans}];
+    }
+    if (access.count > 0) {
+        [moduleItems addObject:@{@"access":access}];
     }
     if (agentlist.count > 0) {
         [moduleItems addObject:@{@"agentlist":agentlist}];
@@ -85,10 +97,13 @@
     if (socialInfo.count > 0) {
         [moduleItems addObject:@{@"socialInfo":socialInfo}];
     }
+    if (timelines.count > 0) {
+        [moduleItems addObject:@{@"timelines":timelines}];
+    }
     [moduleItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *currentItemArr = obj[[obj allKeys][0]];
 //        单个cell模块
-        if([[obj allKeys] containsObject:@"sales"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"floorPlans"] || [[obj allKeys] containsObject:@"socialInfo"]) {
+        if([[obj allKeys] containsObject:@"sales"] || [[obj allKeys] containsObject:@"agentlist"]|| [[obj allKeys] containsObject:@"floorPlans"] || [[obj allKeys] containsObject:@"socialInfo"] || [[obj allKeys] containsObject:@"access"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 model.shadowImageType = FHHouseShdowImageTypeRound;
@@ -103,7 +118,7 @@
 //            }];
 //        }
 //        多个cell模块
-        if ([[obj allKeys] containsObject:@"locations"] || [[obj allKeys] containsObject:@"related"]) {
+        if ([[obj allKeys] containsObject:@"locations"] || [[obj allKeys] containsObject:@"related"] || [[obj allKeys] containsObject:@"timelines"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 if (idx == currentItemArr.count-1 && currentItemArr.count != 1) {

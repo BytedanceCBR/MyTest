@@ -12,9 +12,10 @@
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailPhotoHeaderCell.h"
 #import "FHDetailHouseNameCell.h"
-#import "FHDetailNewHouseCoreInfoCell.h"
-#import "FHDetailNewHouseNewsCell.h"
 #import "FHDetailNewTimeLineItemCell.h"
+//#import "FHDetailNewHouseCoreInfoCell.h"
+#import "FHDetailNewHouseNewsCell.h"
+#import "FHDetailTimelineItemCorrectingCell.h"
 
 #import "FHDetailNewMutiFloorPanCell.h"
 #import "FHDetailRelatedHouseResponseModel.h"
@@ -23,7 +24,7 @@
 #import "FHDetailRelatedCourtModel.h"
 #import "FHNewHouseItemModel.h"
 #import "FHDetailDisclaimerCell.h"
-#import "FHDetailNewListSingleImageCell.h"
+
 #import "FHDetailStaticMapCell.h"
 #import "HMDTTMonitor.h"
 #import <FHHouseBase/FHCommonDefines.h>
@@ -48,6 +49,8 @@
 #import "FHHouseListBaseItemCell.h"
 #import "FHHouseListBaseItemModel.h"
 #import "FHDetailNewRelatedCell.h"
+#import "FHDetailNeighborhoodAssessCell.h"
+#import "FHDetailAccessCellModel.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -71,21 +74,16 @@
 //    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameModel class])];
     
 //    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineModel class])];
-    
-//    [self.tableView registerClass:[FHDetailNewHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseCoreInfoModel class])];
-    
+        
     [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewMutiFloorPanCellModel class])];
-    
-//    [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCellModel class])];
+    [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCellModel class])];
     
     [self.tableView registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
     
-//    [self.tableView registerClass:[FHDetailNewTimeLineItemCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemModel class])];
+    [self.tableView registerClass:[FHDetailTimelineItemCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemCorrectingModel class])];
     
 //    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
     
-    //    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHNewHouseItemModel class])];
-//    [self.tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListBaseItemModel class])];
     
     [self.tableView registerClass:[FHOldDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
     
@@ -104,7 +102,8 @@
     //周边新盘上标题
 //    [self.tableView registerClass:[FHDetailListSectionTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListSectionTitleModel class])]
     [self.tableView registerClass:[FHDetailNewRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewRelatedCellModel class])];
-
+    //楼盘攻略
+    [self.tableView registerClass:[FHDetailNeighborhoodAssessCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAccessCellModel class])];
 }
 
 // cell identifier
@@ -327,7 +326,7 @@
 - (void)startLoadData
 {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             if (model.data) {
                 wSelf.dataModel = model;
@@ -400,6 +399,7 @@
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.contactViewModel.socialInfo = model.data.socialInfo;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
     self.weakSocialInfo = model.data.socialInfo;
     
     __weak typeof(self) wSelf = self;
@@ -423,7 +423,8 @@
         FHMultiMediaItemModel *itemModel = nil;
         
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
-        
+        headerCellModel.houseImageAssociateInfo = model.data.imageGroupAssociateInfo;
+        headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;
         if ([model.data.topImages isKindOfClass:[NSArray class]] && model.data.topImages.count > 0) {
             NSMutableArray *houseImageList = @[].mutableCopy;
             headerCellModel.topImages = model.data.topImages;
@@ -436,6 +437,9 @@
                     for (NSInteger j = 0; j < groupModel.images.count; j++) {
                         [houseImages addObject:groupModel.images[j]];
                     }
+                }
+                if (headerCellModel.isShowTopImageTab) {
+                    houseImageDictList.houseImageTypeName = topImage.name;
                 }
                 houseImageDictList.houseImageList = houseImages;
                 houseImageDictList.houseImageType = topImage.type;
@@ -575,6 +579,8 @@
     FHDetailNewPriceNotifyCellModel *priceInfo = [[FHDetailNewPriceNotifyCellModel alloc] init];
     priceInfo.houseModelType = FHHouseModelTypeNewCoreInfo;
     priceInfo.contactModel = self.contactViewModel;
+    priceInfo.priceAssociateInfo = model.data.changePriceNotifyAssociateInfo;
+    priceInfo.openAssociateInfo = model.data.beginSellingNotifyAssociateInfo;
     [self.items addObject:priceInfo];
     
     // 优惠信息
@@ -595,6 +601,28 @@
         floorPan.houseModelType = FHHouseModelTypeNewFloorPlan;
         [self.items addObject:floorPan];
     }
+    
+    // 小区评测
+    if (model.data.strategy && model.data.strategy.articleList.count > 0) {
+    
+        FHDetailAccessCellModel *cellModel = [[FHDetailAccessCellModel alloc] init];
+        cellModel.houseModelType = FHHouseModelTypeNewAccess;
+        cellModel.strategy = model.data.strategy;
+        cellModel.bottomMargin = 30;
+        NSMutableDictionary *paramsDict = @{}.mutableCopy;
+        if (self.detailTracerDic) {
+            [paramsDict addEntriesFromDictionary:self.detailTracerDic];
+        }
+        paramsDict[@"page_type"] = [self pageTypeString];
+        paramsDict[@"from_gid"] = self.houseId;
+        paramsDict[@"element_type"] = @"guide";
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
+        paramsDict[@"search_id"] = searchId.length > 0 ? searchId : @"be_null";
+        paramsDict[@"impr_id"] = imprId.length > 0 ? imprId : @"be_null";
+        cellModel.tracerDic = paramsDict;
+        [self.items addObject:cellModel];
+    }
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -605,8 +633,10 @@
         agentListModel.belongsVC = self.detailController;
         agentListModel.houseModelType = FHHouseModelTypeNewAgentList;
         agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
+        agentListModel.recommendedRealtorsSubTitle = model.data.recommendedRealtorsSubTitle;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
-        
+        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
+
         /******* 这里的 逻辑   ********/
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNewHouse houseId:self.houseId];
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
@@ -630,33 +660,31 @@
         socialInfoCM.socialInfo = model.data.socialInfo;
         [self.items addObject:socialInfoCM];
     }
-    
+
     //楼盘动态
-    //    if (model.data.timeline.list.count != 0) {
-    //        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-    //        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-    //        [self.items addObject:grayLine];
-    //
-    //        FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
-    //        newsCellModel.hasMore = model.data.timeline.hasMore;
-    //        newsCellModel.titleText = @"楼盘动态";
-    //        newsCellModel.courtId = model.data.coreInfo.id;
-    //        newsCellModel.clickEnable = YES;
-    //
-    //        [self.items addObject:newsCellModel];
-    //
-    //        for (NSInteger i = 0; i < model.data.timeline.list.count; i++) {
-    //            FHDetailNewDataTimelineListModel *itemModel = model.data.timeline.list[i];
-    //            FHDetailNewTimeLineItemModel *item = [[FHDetailNewTimeLineItemModel alloc] init];
-    //            item.desc = itemModel.desc;
-    //            item.title = itemModel.title;
-    //            item.createdTime = itemModel.createdTime;
-    //            item.isFirstCell = (i == 0);
-    //            item.isLastCell = (i == model.data.timeline.list.count - 1);
-    //            item.courtId = model.data.coreInfo.id;
-    //            [self.items addObject:item];
-    //        }
-    //    }
+    if (model.data.timeline.list.count != 0) {
+        
+        FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
+        newsCellModel.hasMore = model.data.timeline.hasMore;
+        newsCellModel.titleText = @"楼盘动态";
+        newsCellModel.courtId = model.data.coreInfo.id;
+        newsCellModel.clickEnable = YES;
+        newsCellModel.houseModelType = FHHouseModelTypeNewTimeline;
+        [self.items addObject:newsCellModel];
+        
+        for (NSInteger i = 0; i < model.data.timeline.list.count; i++) {
+            FHDetailNewDataTimelineListModel *itemModel = model.data.timeline.list[i];
+            FHDetailNewTimeLineItemCorrectingModel *item = [[FHDetailNewTimeLineItemCorrectingModel alloc] init];
+            item.desc = itemModel.desc;
+            item.title = itemModel.title;
+            item.createdTime = itemModel.createdTime;
+            item.isFirstCell = (i == 0);
+            item.isLastCell = (i == model.data.timeline.list.count - 1);
+            item.courtId = model.data.coreInfo.id;
+            item.houseModelType = FHHouseModelTypeNewTimeline;
+            [self.items addObject:item];
+        }
+    }
     
     if (model.data.surroundingInfo) {
         FHDetailCourtInfoCellModel *infoModel = [[FHDetailCourtInfoCellModel alloc] init];

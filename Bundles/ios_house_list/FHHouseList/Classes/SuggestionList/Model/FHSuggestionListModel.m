@@ -157,20 +157,35 @@
 
 
 //for implementation
-@implementation  FHGuessYouWantResponseDataDataModel
+@implementation FHGuessYouWantResponseDataDataRecommendReasonModel
 
 + (JSONKeyMapper*)keyMapper
 {
-    NSDictionary *dict = @{
-                           @"guessSearchType": @"guess_search_type",
-                           @"houseType": @"house_type",
-                           @"openUrl": @"open_url",
-                           @"guessSearchId": @"guess_search_id",
-                           @"imageUrl":@"image_url"
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
+  NSDictionary *dict = @{
+    @"backgroundColor": @"background_color",
+    @"textColor": @"text_color",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHGuessYouWantResponseDataDataRecommendTypeModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"backgroundColor": @"background_color",
+    @"textColor": @"text_color",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
 }
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
@@ -180,8 +195,25 @@
 
 @end
 
+@implementation FHGuessYouWantResponseDataDataModel
 
-@implementation  FHGuessYouWantResponseModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"logPb": @"log_pb",
+    @"openUrl": @"open_url",
+    @"displayPrice": @"display_price",
+    @"recommendType": @"recommend_type",
+    @"imageUrl": @"image_url",
+    @"guessSearchId": @"guess_search_id",
+    @"houseType": @"house_type",
+    @"guessSearchType": @"guess_search_type",
+    @"recommendReason": @"recommend_reason",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
@@ -190,8 +222,16 @@
 
 @end
 
+@implementation FHGuessYouWantResponseModel
 
-@implementation  FHGuessYouWantResponseDataModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHGuessYouWantResponseDataModel
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

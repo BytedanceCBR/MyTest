@@ -12,6 +12,9 @@
 #import "FHVideoViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@class FHClueAssociateInfoModel;
+
 // 支持房源图片以及视频相关功能
 @interface FHDetailPictureViewController : FHBaseViewController
 
@@ -34,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void (^albumImageBtnClickBlock)(NSInteger index);
 
 @property(nonatomic, copy) void (^albumImageStayBlock)(NSInteger index,NSInteger stayTime);
+/**点击头图的tab栏出现的埋点*/
+@property(nonatomic, copy) void (^topImageClickTabBlock)(NSInteger index);
 
 /** 图片数据 */
 
@@ -45,6 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)     NSString       *priceStr;
 @property (nonatomic, copy)     NSString       *infoStr;
 @property (nonatomic, assign)   NSInteger       followStatus;// 收藏状态
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+
 @property(nonatomic , copy) void (^shareActionBlock)(void);
 @property(nonatomic , copy) void (^collectActionBlock)(BOOL followStatus);
 

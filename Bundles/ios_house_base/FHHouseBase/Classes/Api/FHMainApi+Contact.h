@@ -42,7 +42,7 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 中介转接电话
-;
+
 + (TTHttpTask*)requestVirtualNumber:(NSString*)realtorId
                             houseId:(NSString*)houseId
                           houseType:(FHHouseType)houseType
@@ -61,6 +61,25 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                        clueEndpoint:(NSNumber*)clueEndpoint
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
+#pragma mark - associate refactor
++ (TTHttpTask*)requestVirtualNumberWithAssociateInfo:(NSDictionary*)phoneAssociate
+                          realtorId:(NSString*)realtorId
+                            houseId:(NSString*)houseId
+                          houseType:(FHHouseType)houseType
+                           searchId:(NSString*)searchId
+                             imprId:(NSString*)imprId
+                         completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
+// 详情页线索提交表单
++ (TTHttpTask*)requestCallReportByHouseId:(NSString*)houseId
+       phone:(NSString*)phone
+        from:(NSString*)from
+    cluePage:(NSNumber*)cluePage
+clueEndpoint:(NSNumber*)clueEndpoint
+  targetType:(NSNumber *)targetType
+reportAssociate:(NSDictionary*)reportAssociate
+agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
+completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
 // 房源关注
 + (TTHttpTask*)requestFollow:(NSString*)followId
                    houseType:(FHHouseType)houseType
@@ -74,6 +93,9 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                         completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 
+/// 请求线索信息
+/// @param params 接口参数
++ (TTHttpTask *)requestAssoicateEntrance:(NSDictionary *)params completion:(void (^)(NSError *error, id jsonObj))completion;
 @end
 
 NS_ASSUME_NONNULL_END

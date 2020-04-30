@@ -379,6 +379,7 @@
             make.top.equalTo(self.headerView.mas_bottom);
             make.height.mas_offset(0.01);
         }];
+        [self.headerView hiddenStarImage];
         [self.headerView updateTitle:@"均价走势"];
         [self.headerView updateStarsCount:cellModel.priceAnalyze.score.integerValue];
         self.priceView.hidden = YES;

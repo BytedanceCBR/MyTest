@@ -121,6 +121,12 @@
         make.top.mas_equalTo(self.containerView).offset(cellModel.topMargin);
     }];
     
+    if (cellModel.bottomMargin) {
+        [_cardSliderView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.containerView).offset(-cellModel.bottomMargin);
+        }];
+    }
+    
     FHDetailNeighborhoodDataStrategyModel *strategy = cellModel.strategy;
     
     _titleLabel.text = strategy.title.length > 0 ? strategy.title : @"小区攻略";

@@ -12,20 +12,15 @@
 #import "FHHouseDetailSubPageViewController.h"
 #import <FHDetailNewModel.h>
 
-static const NSString *kDefaultLeftFilterStatus = @"0";
 static const NSString *kDefaultTopFilterStatus = @"-1";
 
 @interface FHFloorPanListViewModel()
 @property (nonatomic , weak) UITableView *floorListTable;
-@property (nonatomic , weak) UIScrollView *leftFilterView;
-@property (nonatomic , strong) UILabel *currentTapLabel;
 @property (nonatomic , weak) FHHouseDetailSubPageViewController *floorListVC;
 @property (nonatomic , strong) NSMutableArray <FHDetailNewDataFloorpanListListModel *> *allItems;
 @property (nonatomic , strong) NSMutableArray <FHDetailNewDataFloorpanListListModel *> *currentItems;
-@property (nonatomic , assign) NSInteger leftFilterIndex;
 @property (nonatomic , strong) NSMutableArray *topRoomCountArray;
 @property (nonatomic , weak) HMSegmentedControl *segmentedControl;
-@property (nonatomic , strong) NSArray * nameLeftArray;
 @property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
 @property (nonatomic, strong)   NSString  *currentCourtId;
 
@@ -34,19 +29,30 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
 @implementation FHFloorPanListViewModel
 
--(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems andCourtId:(NSString *)courtId {
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems andCourtId:(NSString *)courtId {
     self = [super init];
     if (self) {
-        _nameLeftArray = @[@"不限",@"在售",@"待售",@"售罄"];
         _floorListTable = tableView;
-        _leftFilterView = leftScrollView;
         _elementShowCaches = [NSMutableDictionary new];
         _allItems = allItems;
         _floorListVC = viewController;
         _segmentedControl = segmentView;
         _currentCourtId = courtId;
         self.detailController = viewController;
-        
+        FHDetailBottomBar *bottomBar = [viewController getBottomBar];
+//        if ([bottomBar isKindOfClass:[FHDetailBottomBar class]]) {
+//            bottomBar.bottomBarContactBlock = ^{
+//                StrongSelf;
+//                [wself contactAction];
+//            };
+//            bottomBar.bottomBarImBlock = ^{
+//                StrongSelf;
+//                [wself imAction];
+//            };
+//        }
+        self.contactViewModel = [viewController getContactViewModel];
+        self.bottomBar = bottomBar;
+        bottomBar.hidden = YES;
         [self startLoadData];
 
     }
@@ -58,83 +64,6 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     _floorListTable.delegate = self;
     _floorListTable.dataSource = self;
     [self registerCellClasses];
-}
-
-- (void)setUpLeftFilterView
-{
-    NSMutableArray *labelsArray = [NSMutableArray new];
-    
-    UIView * previousView = nil;
-    
-    for (NSInteger i = 0; i < self.nameLeftArray.count; i++) {
-        UIView *labelContentView = [[UIView alloc] init];
-        [self.leftFilterView addSubview:labelContentView];
-        
-        if (self.leftFilterView && [self.leftFilterView.subviews containsObject:labelContentView] && labelContentView.superview) {
-            [labelContentView mas_makeConstraints:^(MASConstraintMaker *make) {
-                if (i==0) {
-                    make.top.equalTo(self.leftFilterView);
-                }else
-                {
-                    if (previousView) {
-                        make.top.equalTo(previousView.mas_bottom);
-                    }
-                }
-                
-                make.left.right.equalTo(self.leftFilterView);
-                make.height.mas_equalTo(50);
-            }];
-        }
-        
-        previousView = labelContentView;
-        
-        UILabel *labelClick = [UILabel new];
-        labelClick.text = self.nameLeftArray[i];
-        if (i == 0) {
-            _currentTapLabel = labelClick;
-            labelClick.textColor = [UIColor themeOrange1];
-            labelClick.backgroundColor = [UIColor whiteColor];
-            _leftFilterIndex = 0;
-        }else
-        {
-            labelClick.textColor = [UIColor themeGray1];
-            labelClick.backgroundColor = [UIColor themeGray7];
-        }
-        labelClick.font = [UIFont themeFontRegular:15];
-        labelClick.tag = i;
-        [labelContentView addSubview:labelClick];
-        labelClick.textAlignment = NSTextAlignmentCenter;
-        labelClick.userInteractionEnabled = YES;
-        [labelClick mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.bottom.equalTo(labelContentView);
-            make.height.mas_equalTo(50);
-            make.width.mas_equalTo(80);
-        }];
-        
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(labelClickAction:)];
-        [labelClick addGestureRecognizer:tapGesture];
-        
-        [labelsArray addObject:labelContentView];
-    }
-}
-
-- (void)labelClickAction:(UITapGestureRecognizer *)tap
-{
-    UIView *tapView = tap.view;
-    _leftFilterIndex = tapView.tag;
-
-    if (_currentTapLabel) {
-        _currentTapLabel.textColor = [UIColor themeGray1];
-        _currentTapLabel.backgroundColor = [UIColor themeGray7];
-    }
-    
-    if ([tapView isKindOfClass:[UILabel class]]) {
-          ((UILabel *)tapView).textColor = [UIColor themeOrange1];
-          ((UILabel *)tapView).backgroundColor = [UIColor whiteColor];
-          _currentTapLabel = tapView;
-    }
-    
-    [self refreshCurrentShowList];
 }
 
 - (NSArray *)getSegementViewTitlsArray
@@ -185,7 +114,8 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     if ([_floorListTable numberOfSections] && [_floorListTable numberOfRowsInSection:0]) {
         [_floorListTable scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
-    _floorListTable.contentOffset = CGPointMake(0, 0);
+    _floorListTable.contentOffset = CGPointMake(0, -20);
+    
 }
 
 - (NSArray<FHDetailNewDataFloorpanListListModel *> *)getSelectFilterDataList
@@ -195,47 +125,14 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         roomCuntKey = _topRoomCountArray[_segmentedControl.selectedSegmentIndex - 1];
     }
     
-    NSString *status = kDefaultLeftFilterStatus;
-    if (self.currentTapLabel.tag != 0) {
-       
-        if (self.currentTapLabel.tag == 1) {
-            //在售
-//            status = [NSString stringWithFormat:@"%d",2];
-            status = @"在售";
-        }else if(self.currentTapLabel.tag == 2)
-        {
-            //待售
-//            status = [NSString stringWithFormat:@"%d",1];
-            status = @"待售";
-        }else
-        {
-            //售磬
-//            status = [NSString stringWithFormat:@"%d",self.currentTapLabel.tag];
-            status = @"售罄";
-        }
-    }
-    
     NSMutableArray *currentItemsArray = [NSMutableArray new];
     for(FHDetailNewDataFloorpanListListModel *model in _allItems)
     {
-        if([status isEqualToString:kDefaultLeftFilterStatus] && [roomCuntKey isEqualToString:kDefaultTopFilterStatus])
-        {
+        if([roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
             [currentItemsArray addObject:model];
         }
-        else if([status isEqualToString:kDefaultLeftFilterStatus])
-        {
-            if ([model.roomCount isEqualToString:roomCuntKey]) {
+        else if ([model.roomCount isEqualToString:roomCuntKey]) {
                 [currentItemsArray addObject:model];
-            }
-        }else if ([roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
-            if ([model.saleStatus.content isEqualToString:status]) {
-                [currentItemsArray addObject:model];
-            }
-        }else
-        {
-            if ([model.roomCount isEqualToString:roomCuntKey] && [model.saleStatus.content isEqualToString:status]) {
-                [currentItemsArray addObject:model];
-            }
         }
     }
     return currentItemsArray;
@@ -271,7 +168,6 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         [FHHouseDetailAPI requestFloorPanListSearch:_currentCourtId completion:^(FHDetailFloorPanListResponseModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
-                self.leftFilterView.hidden = NO;
                 self.floorListTable.hidden = NO;
                 self.segmentedControl.hidden = NO;
                 
@@ -288,6 +184,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 }
 
 - (void)processDetailData:(FHDetailFloorPanListResponseModel *)model {
+    self.detailData = model;
     self.allItems = model.data.list;
     self.currentItems = model.data.list;
 
@@ -296,16 +193,30 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     }
     [self configTableView];
     
-    [self setUpLeftFilterView];
-    
     WeakSelf;
     _segmentedControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
-        self.floorListTable.contentOffset = CGPointMake(0, 0);
         [self refreshCurrentShowList];
     };
     
     [self refreshCurrentShowList];
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    }else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
+    self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
+    self.bottomBar.hidden = NO;
 }
 
 #pragma UITableViewDelegate
@@ -328,6 +239,9 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FHFloorPanListCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHFloorPanListCell class])];
+    BOOL isFirst = (indexPath.row == 0);
+    BOOL isLast = (indexPath.row == _currentItems.count - 1);
+    
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass([FHFloorPanListCell class])];
     }
@@ -336,9 +250,10 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             ((FHDetailNewDataFloorpanListListModel *)self.currentItems[indexPath.row]).index = indexPath.row;
         }
         [cell refreshWithData:_currentItems[indexPath.row]];
+        [cell refreshWithData:isFirst andLast:isLast];
         cell.baseViewModel = self;
     }
-    cell.backgroundColor = [UIColor whiteColor];
+    cell.backgroundColor = [UIColor themeGray7];
     return cell;
 }
 
@@ -351,7 +266,6 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 {
     return CGFLOAT_MIN;
 }
-
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

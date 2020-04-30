@@ -192,29 +192,20 @@
     FHDetailPriceNoticeModel *model = (FHDetailPriceNoticeModel *)self.currentData;
     if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
         FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
-        if ([contactViewModel respondsToSelector:@selector(fillFormActionWithExtraDict:)]) {
-            NSDictionary *infoDic =  @{kFHCluePage:@(FHClueFormPageTypeCOldPriceChangeNotice),
-                                       @"title":@"变价通知",
-                                       @"subtitle":@"订阅变价通知，房源变价信息会及时发送到您的手机",
-                                       @"position":@"change_price",
-                                       @"btn_title":@"提交",
-                                       @"toast":@"提交成功，经纪人将尽快与您联系"
-            };
-            [contactViewModel fillFormActionWithExtraDict:infoDic];
-            __weak typeof(self)ws = self;
-            contactViewModel.fillFormSubmitBlock = ^{
-                  // 静默关注功能
-                           NSMutableDictionary *params = @{}.mutableCopy;
-                           if (ws.baseViewModel.detailTracerDic) {
-                               [params addEntriesFromDictionary:ws.baseViewModel.detailTracerDic];
-                           }
-                           FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-                           configModel.houseType = ws.baseViewModel.houseType;
-                           configModel.followId = ws.baseViewModel.houseId;
-                           configModel.actionType = ws.baseViewModel.houseType;
-                           [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
-            };
+        NSMutableDictionary *associateParamDict = @{@"position":@"change_price"
+                                          }.mutableCopy;
+        associateParamDict[@"title"] = @"变价通知";
+        associateParamDict[@"subtitle"] = @"订阅变价通知，房源变价信息会及时发送到您的手机";
+        associateParamDict[@"btn_title"] = @"提交";
+        associateParamDict[kFHAssociateInfo] = model.associateInfo.reportFormInfo;
+        NSMutableDictionary *reportParamsDict = [model.contactModel baseParams].mutableCopy;
+        if (associateParamDict.count > 0) {
+            reportParamsDict[@"position"] = @"change_price";
+            [reportParamsDict addEntriesFromDictionary:associateParamDict];
+            reportParamsDict[kFHAssociateInfo] = model.associateInfo.reportFormInfo;
         }
+        associateParamDict[kFHReportParams] = reportParamsDict;
+        [model.contactModel fillFormActionWithParams:associateParamDict];
     }
 
 }
@@ -236,7 +227,7 @@
             NSDictionary *history = @{@"history":historyData};
             NSDictionary *jsData = @{@"data":history,@"house_id":houseId};
             NSDictionary *jsParams = @{@"requestPageData":jsData};
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"url":url,@"title":@"价格解析",@"fhJSParams":jsParams}];
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"url":url,@"title":@"",@"fhJSParams":jsParams}];
             NSString *jumpUrl = @"sslocal://webview";
             [[TTRoute sharedRoute] openURLByPushViewController:[[NSURL alloc] initWithString:jumpUrl] userInfo:userInfo];
             [self addGoDetailLog];
