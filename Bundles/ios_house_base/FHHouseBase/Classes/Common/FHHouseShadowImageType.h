@@ -79,6 +79,13 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     // 周边新盘
     FHHouseModelTypeNewRelated,
     
+    // 新房详情页楼盘动态
+    FHHouseModelTypeNewTimeline,
+    // 户型详情页属性模块
+    FHFloorPanHouseModelTypeCoreInfo,
+    // 户型详情页户型模块
+    FHFloorPanHouseModelTypeFloorPlan,
+    
 };
 
 //展示范围。是否进行裁剪

@@ -29,7 +29,7 @@
     NSMutableArray *disclaimers = [[NSMutableArray alloc]init];
     NSMutableArray *related = [[NSMutableArray alloc]init];
     NSMutableArray *socialInfo = [[NSMutableArray alloc]init];
-    
+    NSMutableArray *timelines = [[NSMutableArray alloc]init];
 
     [moduleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
@@ -60,6 +60,10 @@
                 break;
             case FHHouseModelTypeNewSocialInfo:
                 [socialInfo addObject:obj];
+                break;
+                
+            case FHHouseModelTypeNewTimeline:
+                [timelines addObject:obj];
                 break;
             default:
                 break;
@@ -93,6 +97,9 @@
     if (socialInfo.count > 0) {
         [moduleItems addObject:@{@"socialInfo":socialInfo}];
     }
+    if (timelines.count > 0) {
+        [moduleItems addObject:@{@"timelines":timelines}];
+    }
     [moduleItems enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray *currentItemArr = obj[[obj allKeys][0]];
 //        单个cell模块
@@ -111,7 +118,7 @@
 //            }];
 //        }
 //        多个cell模块
-        if ([[obj allKeys] containsObject:@"locations"] || [[obj allKeys] containsObject:@"related"]) {
+        if ([[obj allKeys] containsObject:@"locations"] || [[obj allKeys] containsObject:@"related"] || [[obj allKeys] containsObject:@"timelines"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 if (idx == currentItemArr.count-1 && currentItemArr.count != 1) {

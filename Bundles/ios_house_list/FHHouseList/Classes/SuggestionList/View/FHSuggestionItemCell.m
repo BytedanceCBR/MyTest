@@ -11,6 +11,7 @@
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "FHExtendHotAreaButton.h"
+#import "FHSuggestionListModel.h"
 
 @interface FHSuggestionItemCell ()
 
@@ -53,6 +54,106 @@
     }];
     [_secondaryLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_secondaryLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+}
+
+@end
+
+@interface FHGuessYouWantCell()
+
+@property(nonatomic, strong) UILabel *recommendTypeLabel;
+@property(nonatomic, strong) UILabel *displayPriceLabel;
+@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) UILabel *recommendResonLabel;
+
+
+
+@end
+
+@implementation FHGuessYouWantCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI
+{
+    self.recommendTypeLabel = [[UILabel alloc] init];
+    [self.contentView addSubview:_recommendTypeLabel];
+    self.recommendTypeLabel.font = [UIFont themeFontRegular:12];
+    self.recommendTypeLabel.textAlignment = NSTextAlignmentCenter;
+    self.recommendTypeLabel.backgroundColor = [UIColor themeGray7];
+    self.recommendTypeLabel.layer.cornerRadius = 9;
+    self.recommendTypeLabel.layer.masksToBounds = YES;
+    self.recommendTypeLabel.hidden = YES;
+    [self.recommendTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.top.mas_equalTo(17);
+        make.height.mas_equalTo(18);
+        make.width.mas_equalTo(36);
+    }];
+    
+    self.titleLabel = [[UILabel alloc] init];
+    [self.contentView addSubview:_titleLabel];
+    self.titleLabel.font = [UIFont themeFontSemibold:16];
+    [self.titleLabel sizeToFit];
+    
+    self.recommendResonLabel = [[UILabel alloc] init];
+    [self.contentView addSubview:_recommendResonLabel];
+    self.recommendResonLabel.font = [UIFont themeFontRegular:14];
+    self.recommendResonLabel.hidden = YES;
+    [self.recommendResonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(_titleLabel);
+        make.top.mas_equalTo(_titleLabel.mas_bottom).offset(3);
+        make.right.mas_equalTo(-15);
+        make.height.mas_equalTo(20);
+    }];
+    
+    self.displayPriceLabel = [[UILabel alloc] init];
+    [self.contentView addSubview:_displayPriceLabel];
+    self.displayPriceLabel.font = [UIFont themeFontSemibold:16];
+    self.displayPriceLabel.textColor = [UIColor themeOrange1];
+    self.displayPriceLabel.textAlignment = NSTextAlignmentRight;
+}
+
+- (void)refreshData:(id)data
+{
+    if ([data isKindOfClass:[FHGuessYouWantResponseDataDataModel class]]) {
+        FHGuessYouWantResponseDataDataModel *model = data;
+        self.displayPriceLabel.text = model.displayPrice;
+        [self.displayPriceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-15);
+            make.top.mas_equalTo(14);
+            make.height.mas_equalTo(22);
+        }];
+        if (model.recommendType.content.length > 0) {
+            self.recommendTypeLabel.hidden = NO;
+            self.recommendTypeLabel.backgroundColor = [UIColor colorWithHexString:model.recommendType.backgroundColor];
+            self.recommendTypeLabel.textColor = [UIColor colorWithHexString:model.recommendType.textColor];
+            self.recommendTypeLabel.text = model.recommendType.content;
+            [self.recommendTypeLabel sizeToFit];
+            CGSize size = [self.recommendTypeLabel sizeThatFits:CGSizeMake(100, 18)];
+            [self.recommendTypeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(size.width + 12);
+            }];
+        }
+        self.titleLabel.text = model.text;
+        [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.recommendTypeLabel.mas_right).offset(15);
+            make.right.mas_equalTo(self.displayPriceLabel.mas_left).offset(-15);
+            make.top.mas_equalTo(15);
+            make.height.mas_equalTo(22);
+        }];
+        if (model.recommendReason.content > 0) {
+            self.recommendResonLabel.hidden = NO;
+            self.recommendResonLabel.text = model.recommendReason.content;
+            self.recommendResonLabel.textColor = [UIColor themeGray3];
+        }
+    }
+    
 }
 
 @end
@@ -158,31 +259,16 @@
 - (void)setupUI {
     // label
     _label = [[UILabel alloc] init];
-    _label.text = @"历史记录";
-    _label.font = [UIFont themeFontMedium:14];
+    _label.text = @"猜你想搜";
+    _label.font = [UIFont themeFontMedium:16];
     _label.textColor = [UIColor themeGray1];
     [self.contentView addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.mas_equalTo(20);
+        make.top.mas_equalTo(10);
+        make.left.mas_equalTo(16);
         make.height.mas_equalTo(20);
         make.bottom.mas_equalTo(self.contentView);
     }];
-    // deleteBtn
-    _deleteBtn = [[FHExtendHotAreaButton alloc] init];
-    [_deleteBtn setImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
-    [self.contentView addSubview:_deleteBtn];
-    [_deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.centerY.mas_equalTo(self.label);
-    }];
-    [_deleteBtn addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)buttonClick:(UIButton *)btn {
-    if (self.delClick) {
-        self.delClick();
-    }
 }
 
 @end
