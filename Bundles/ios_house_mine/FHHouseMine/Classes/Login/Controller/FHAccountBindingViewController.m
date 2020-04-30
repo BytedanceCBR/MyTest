@@ -20,7 +20,6 @@
 
 @implementation FHAccountBindingViewController
 
-
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
@@ -33,34 +32,16 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor redColor];
     // Do any additional setup after loading the view.
+    [self setupNavbar];
     [self setupUI];
-    [self initViewModel];
-    
 }
 
 - (void)setupUI {
-    [self initNavbar];
-    [self configTableView];
-}
-
-- (void)initViewModel {
-    self.viewModel = [[FHAccountBindingViewModel alloc] initWithTableView:_tableView ];
-    [self.viewModel initData];
-}
-
-- (void)configTableView {
     self.tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    _tableView.separatorStyle = UITableViewScrollPositionNone;
-    _tableView.backgroundColor = [UIColor themeGray8];
-    _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
-    [self.view addSubview:_tableView];
-    if (@available(iOS 11.0, *)) {
-        _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }
-    self.tableView.estimatedRowHeight = 0;
-    self.tableView.estimatedSectionHeaderHeight = 0;
-    self.tableView.estimatedSectionFooterHeight = 0;
-    
+    self.tableView.separatorStyle = UITableViewScrollPositionNone;
+    self.tableView.backgroundColor = [UIColor themeGray8];
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+    [self.view addSubview:self.tableView];    
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         if (@available(iOS 11.0, *)) {
             make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
@@ -69,13 +50,16 @@
         }
         make.left.right.bottom.equalTo(self.view);
     }];
+    
+    self.viewModel = [[FHAccountBindingViewModel alloc] initWithTableView:self.tableView];
+    [self.viewModel loadData];
 }
 
--(void)initNavbar {
+-(void)setupNavbar {
     [self setTitle:@"账号和绑定设置"];
-    [self setupDefaultNavBar:NO];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"ic-arrow-left-line"] forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"ic-arrow-left-line"] forState:UIControlStateHighlighted];
-    self.customNavBarView.seperatorLine.hidden = YES;
+    [self setupDefaultNavBar:YES];
+//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"ic-arrow-left-line"] forState:UIControlStateNormal];
+//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"ic-arrow-left-line"] forState:UIControlStateHighlighted];
+//    self.customNavBarView.seperatorLine.hidden = YES;
 }
 @end

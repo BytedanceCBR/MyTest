@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithTableView:(UITableView *)tableView ;
 
 
-- (void)initData;
+- (void)loadData;
 @end
 
 NS_ASSUME_NONNULL_END

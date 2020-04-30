@@ -115,19 +115,19 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
                 break;
             }
             case kFHAccountBindingSectionTypeThirdAccounts:{
-                return 42.0;
+                return 44.0;
                 break;
             }
             default:{
-                return 0.0;
+                return 0.01;
             }
                 break;
         }
-        return 0.0;
+        return 0.01;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    return 0.0;
+    return 0.01;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -139,12 +139,12 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
             break;
         }
         case kFHAccountBindingSectionTypeThirdAccounts:{
-            FHThirdAccountsHeaderView *sectionHeaderView = [[FHThirdAccountsHeaderView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 42.0)];
+            FHThirdAccountsHeaderView *sectionHeaderView = [[FHThirdAccountsHeaderView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 44.0)];
             aView = sectionHeaderView;
             break;
         }
         default:{
-            aView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 0.0)];
+            aView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 0.01)];
         }
             break;
     }
@@ -152,9 +152,14 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     return aView;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(tableView.frame), 0.01)];
+    return view;
+}
+
 #pragma mark - data helper
 
--(void)initData {
+-(void)loadData {
     if (!_sections) {
         _sections = [NSMutableArray array];
     }

@@ -29,6 +29,128 @@
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
 
+@interface FHLoginSharedModel : NSObject
+
++ (instancetype)sharedModel;
+
+@property (nonatomic, assign) BOOL hasRequestedApis;
+
+- (void)loadOneKayAndDouyinConfigs:(void (^)(void))completion;
+
+@property (nonatomic, assign) BOOL isOneKeyLogin;
+@property (nonatomic, copy) NSString *mobileNumber;
+@property (nonatomic, assign) BOOL *douyinCanQucikLogin;
+@end
+
+@implementation FHLoginSharedModel
+
+static FHLoginSharedModel *_sharedModel = nil;
+
++ (instancetype)sharedModel {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedModel = [[FHLoginSharedModel alloc] init];
+    });
+    return _sharedModel;
+}
+
++ (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]) {
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
+}
+
+- (void)loadOneKayAndDouyinConfigs:(void (^)(void))completion {
+    
+    __weak typeof(self) weakSelf = self;
+    __block NSError *requestError = nil;
+    self.hasRequestedApis = NO;
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter(group);
+    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        BOOL disableOneKeyLogin = [self getOneKeyLoginSwitchOff];
+        if (disableOneKeyLogin) {
+            self.isOneKeyLogin = NO;
+            dispatch_group_leave(group);
+            return;
+        }
+        
+        NSString *serviceName = [TTAccount sharedAccount].service;
+        if (serviceName.length < 1) {
+            self.isOneKeyLogin = NO;
+            dispatch_group_leave(group);
+            return;
+        }
+        // 注意获取完手机号之后长期不登录的异常结果
+        [TTAccount getOneKeyLoginPhoneNumberCompleted:^(NSString * _Nullable phoneNumber, NSString * _Nullable serviceName, NSError * _Nullable error) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            strongSelf.isOneKeyLogin = !error && phoneNumber.length > 0;
+            strongSelf.mobileNumber = phoneNumber;
+            if (error) {
+                requestError = error;
+            }
+            dispatch_group_leave(group);
+        }];
+    });
+    
+    dispatch_group_enter(group);
+    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [TTAccount canQuickLoginWithAweme:^(BOOL canQucikLogin, NSError * _Nullable error) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            strongSelf.douyinCanQucikLogin = canQucikLogin;
+            if (error) {
+                requestError = error;
+            }
+            dispatch_group_leave(group);
+        }];
+    });
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        if (requestError) {
+            self.hasRequestedApis = NO;
+        } else {
+            self.hasRequestedApis = YES;
+        }
+        if (completion) {
+            completion();
+        }
+    });
+
+}
+
+/// 运营商一键登录开关
+- (BOOL)getOneKeyLoginSwitchOff {
+    BOOL disableOneKeyLogin = NO;
+    BOOL disableTelecom = NO;
+    BOOL disableUnicom = NO;
+    BOOL disableMobile = NO;
+    NSDictionary *fhSettings = [self.class fhSettings];
+    NSDictionary *loginSettings = [fhSettings tt_dictionaryValueForKey:@"login_settings"];
+    if (loginSettings) {
+        disableOneKeyLogin = [loginSettings tt_boolValueForKey:@"disable_onekeylogin"];
+        disableTelecom = [loginSettings tt_boolValueForKey:@"disable_telecom"];
+        disableUnicom = [loginSettings tt_boolValueForKey:@"disable_unicom"];
+        disableMobile = [loginSettings tt_boolValueForKey:@"disable_mobile"];
+    }
+    if (disableOneKeyLogin) {
+        return disableOneKeyLogin;
+    }
+    NSString *service = [TTAccount sharedAccount].service;
+    if ([service isEqualToString:TTAccountMobile]) {
+        return disableMobile;
+    }else if ([service isEqualToString:TTAccountUnion]) {
+        return disableUnicom;
+    }else if ([service isEqualToString:TTAccountTelecom]) {
+        return disableTelecom;
+    }
+    return disableOneKeyLogin;
+}
+
+@end
+
 @interface FHLoginViewModel()
 
 @property(nonatomic , weak) FHLoginViewController *viewController;
@@ -41,14 +163,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @end
 
 @implementation FHLoginViewModel
-
-+ (NSDictionary *)fhSettings {
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]) {
-        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
-    } else {
-        return nil;
-    }
-}
 
 - (instancetype)initWithController:(FHLoginViewController *)viewController;
 {
@@ -83,38 +197,44 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
 }
 
-- (void)startLoadData
-{
-    if (![TTReachability isNetworkConnected]) {
-        [self showOneKeyLoginView:NO phoneNum:nil];
-        return;
-    }
-    
-    BOOL isSwitchOff = [self getOneKeyLoginSwitchOff];
-    if (isSwitchOff) {
-        [self showOneKeyLoginView:NO phoneNum:nil];
-        return;
-    }
-    //TODO: 需要把2个请求接口提前，比如放在切换到第四个tab之后，点击登录按钮之前
+- (void)startLoadData {
     [self.viewController startLoading];
-    [self getOneKeyLoginPhoneNum];
+    //TODO: 需要把2个请求接口提前，比如放在切换到第四个tab之后，点击登录按钮之前
+    //如果在一个app开启周期内，重复进入登录页，优先查看是否有记录，这个记录为内存缓存
     
+    if (![TTReachability isNetworkConnected]) {
+        self.douyinCanQucikLogin = NO;
+        self.mobileNumber = nil;
+        self.isOneKeyLogin = NO;
+        [self.viewController endLoading];
+        [self updateViewType];
+        return;
+    }
     __weak typeof(self) weakSelf = self;
-    [TTAccount canQuickLoginWithAweme:^(BOOL canQucikLogin, NSError * _Nullable error) {
+    void(^syncInfoBlock)(void) = ^(void) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        strongSelf.douyinCanQucikLogin = canQucikLogin;
+        strongSelf.douyinCanQucikLogin = [FHLoginSharedModel sharedModel].douyinCanQucikLogin;
+        strongSelf.mobileNumber = [FHLoginSharedModel sharedModel].mobileNumber;
+        strongSelf.isOneKeyLogin = [FHLoginSharedModel sharedModel].isOneKeyLogin;
+        [strongSelf.viewController endLoading];
         [strongSelf updateViewType];
-    }];
-}
+    };
+    
+    if ([FHLoginSharedModel sharedModel].hasRequestedApis) {
+        syncInfoBlock();
+    } else {
+        [[FHLoginSharedModel sharedModel] loadOneKayAndDouyinConfigs:syncInfoBlock];
+    }
 
+}
 
 /// 是否显示运营商一键登录
 /// @param isOneKeyLogin YES：显示运营商一键登录 NO：显示手机号快捷登录
 /// @param phoneNum 手机号
-- (void)showOneKeyLoginView:(BOOL)isOneKeyLogin phoneNum:(NSString *)phoneNum {
-    [self.viewController endLoading];
-    self.isOneKeyLogin = isOneKeyLogin;
-    self.mobileNumber = phoneNum;
+//- (void)showOneKeyLoginView:(BOOL)isOneKeyLogin phoneNum:(NSString *)phoneNum {
+//    [self.viewController endLoading];
+//    self.isOneKeyLogin = isOneKeyLogin;
+//    self.mobileNumber = phoneNum;
 //    [self.view showOneKeyLoginView:isOneKeyLogin];
 //    [self.view updateOneKeyLoginWithPhone:phoneNum service:isOneKeyLogin ? [self serviceNameStr] : nil];
 //    [self.view.acceptCheckBox setSelected:NO];
@@ -122,10 +242,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 //    if (isOneKeyLogin) {
 //        [self.view enableSendVerifyCodeBtn:NO];
 //    }
-    [self addEnterCategoryLog];
-    
-    [self updateViewType];
-}
+//    [self addEnterCategoryLog];
+//
+//    [self updateViewType];
+//}
 
 - (void)checkToEnableConfirmBtn {
 //    BOOL hasPhoneInput = self.view.phoneInput.text.length > 0;
@@ -248,9 +368,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             break;
         case FHLoginProcessTestB:
             if (self.douyinCanQucikLogin) {
-                viewType = FHLoginViewTypeOneKey;
-            } else if(self.isOneKeyLogin) {
                 viewType = FHLoginViewTypeDouYin;
+            } else if(self.isOneKeyLogin) {
+                viewType = FHLoginViewTypeOneKey;
             } else {
                 viewType = FHLoginViewTypeMobile;
             }
@@ -264,46 +384,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 
 #pragma mark - 运营商一键登录
-/// 运营商一键登录开关
-- (BOOL)getOneKeyLoginSwitchOff {
-    BOOL disableOneKeyLogin = NO;
-    BOOL disableTelecom = NO;
-    BOOL disableUnicom = NO;
-    BOOL disableMobile = NO;
-    NSDictionary *fhSettings = [FHLoginViewModel fhSettings];
-    NSDictionary *loginSettings = [fhSettings tt_dictionaryValueForKey:@"login_settings"];
-    if (loginSettings) {
-        disableOneKeyLogin = [loginSettings tt_boolValueForKey:@"disable_onekeylogin"];
-        disableTelecom = [loginSettings tt_boolValueForKey:@"disable_telecom"];
-        disableUnicom = [loginSettings tt_boolValueForKey:@"disable_unicom"];
-        disableMobile = [loginSettings tt_boolValueForKey:@"disable_mobile"];
-    }
-    if (disableOneKeyLogin) {
-        return disableOneKeyLogin;
-    }
-    NSString *service = [TTAccount sharedAccount].service;
-    if ([service isEqualToString:TTAccountMobile]) {
-        return disableMobile;
-    }else if ([service isEqualToString:TTAccountUnion]) {
-        return disableUnicom;
-    }else if ([service isEqualToString:TTAccountTelecom]) {
-        return disableTelecom;
-    }
-}
 
-- (void)getOneKeyLoginPhoneNum {
-    __weak typeof(self)wself = self;
-    NSString *serviceName = [TTAccount sharedAccount].service;
-    if (serviceName.length < 1) {
-        [self showOneKeyLoginView:NO phoneNum:nil];
-        return;
-    }
-    // 注意获取完手机号之后长期不登录的异常结果
-    [TTAccount getOneKeyLoginPhoneNumberCompleted:^(NSString * _Nullable phoneNumber, NSString * _Nullable serviceName, NSError * _Nullable error) {
-        BOOL showOneKeyLogin = !error && phoneNumber.length > 0;
-        [wself showOneKeyLoginView:showOneKeyLogin phoneNum:phoneNumber];
-    }];
-}
 
 - (NSString *)serviceName {
     NSString *service = [TTAccount sharedAccount].service;
@@ -333,8 +414,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         case FHLoginViewTypeDouYin:{
             attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
             [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
-            userProtocolRange = NSMakeRange(7, 7);
-            privacyRange = NSMakeRange(17, 4);
+            userProtocolRange = [attrText.string rangeOfString:@"幸福里用户协议"];
+            if (userProtocolRange.location == NSNotFound) {
+                userProtocolRange = NSMakeRange(7, 7);
+            }
+            privacyRange = [attrText.string rangeOfString:@"隐私政策"];
+            if (privacyRange.location == NSNotFound) {
+                privacyRange = NSMakeRange(17, 4);
+            }
             YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
             [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
             [attrText yy_setTextUnderline:decoration range:userProtocolRange];
@@ -350,21 +437,48 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         case FHLoginViewTypeOneKey:{
             if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {
                 attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国移动认证服务条款》以及\n《幸福里用户协议》和《隐私政策》"];
-                serviceRange = NSMakeRange(7, 10);
-                userProtocolRange = NSMakeRange(21, 7);
-                privacyRange = NSMakeRange(31, 4);
+                serviceRange = [attrText.string rangeOfString:@"中国移动认证服务条款"];
+                if (serviceRange.location == NSNotFound) {
+                    serviceRange = NSMakeRange(7, 10);
+                }
+                userProtocolRange = [attrText.string rangeOfString:@"幸福里用户协议"];
+                if (userProtocolRange.location == NSNotFound) {
+                    userProtocolRange = NSMakeRange(21, 7);
+                }
+                privacyRange = [attrText.string rangeOfString:@"隐私政策"];
+                if (privacyRange.location == NSNotFound) {
+                    privacyRange = NSMakeRange(31, 4);
+                }
                 urlStr = [NSString stringWithFormat:@"https://wap.cmpassport.com/resources/html/contract.html"];
             } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountTelecom]) {
                 attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国电信认证服务协议》以及\n《幸福里用户协议》和《隐私政策》"];
-                serviceRange = NSMakeRange(7, 10);
-                userProtocolRange = NSMakeRange(21, 7);
-                privacyRange = NSMakeRange(31, 4);
+                serviceRange = [attrText.string rangeOfString:@"中国电信认证服务协议"];
+                if (serviceRange.location == NSNotFound) {
+                    serviceRange = NSMakeRange(7, 10);
+                }
+                userProtocolRange = [attrText.string rangeOfString:@"幸福里用户协议"];
+                if (userProtocolRange.location == NSNotFound) {
+                    userProtocolRange = NSMakeRange(21, 7);
+                }
+                privacyRange = [attrText.string rangeOfString:@"隐私政策"];
+                if (privacyRange.location == NSNotFound) {
+                    privacyRange = NSMakeRange(31, 4);
+                }
                 urlStr = [NSString stringWithFormat:@"https://e.189.cn/sdk/agreement/detail.do?hidetop=true"];
             } else if ([[TTAccount sharedAccount].service isEqualToString:TTAccountUnion]) {
                 attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《中国联通服务与隐私协议》以及\n《幸福里用户协议》和《隐私政策》"];
-                serviceRange = NSMakeRange(7, 11);
-                userProtocolRange = NSMakeRange(22, 7);
-                privacyRange = NSMakeRange(32, 4);
+                serviceRange = [attrText.string rangeOfString:@"中国联通服务与隐私协议"];
+                if (serviceRange.location == NSNotFound) {
+                    serviceRange = NSMakeRange(7, 11);
+                }
+                userProtocolRange = [attrText.string rangeOfString:@"幸福里用户协议"];
+                if (userProtocolRange.location == NSNotFound) {
+                    userProtocolRange = NSMakeRange(22, 7);
+                }
+                privacyRange = [attrText.string rangeOfString:@"隐私政策"];
+                if (privacyRange.location == NSNotFound) {
+                    privacyRange = NSMakeRange(32, 4);
+                }
                 urlStr = [NSString stringWithFormat:@"https://opencloud.wostore.cn/authz/resource/html/disclaimer.html?fromsdk=true"];
             }
             [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
@@ -387,18 +501,24 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
         case FHLoginViewTypeMobile:{
             attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
-                       [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
-                       userProtocolRange = NSMakeRange(7, 7);
-                       privacyRange = NSMakeRange(17, 4);
-                       YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
-                       [attrText yy_setTextUnderline:decoration range:userProtocolRange];
-                       [attrText yy_setTextUnderline:decoration range:privacyRange];
-                       [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-                           [wself goToUserProtocol];
-                       }];
-                       [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
-                           [wself goToSecretProtocol];
-                       }];
+            [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
+            userProtocolRange = [attrText.string rangeOfString:@"幸福里用户协议"];
+            if (userProtocolRange.location == NSNotFound) {
+                userProtocolRange = NSMakeRange(7, 7);
+            }
+            privacyRange = [attrText.string rangeOfString:@"隐私政策"];
+            if (privacyRange.location == NSNotFound) {
+                privacyRange = NSMakeRange(17, 4);
+            }
+            YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
+            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
+            [attrText yy_setTextUnderline:decoration range:privacyRange];
+            [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+                [wself goToUserProtocol];
+            }];
+            [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+                [wself goToSecretProtocol];
+            }];
             break;
         }
         default:
