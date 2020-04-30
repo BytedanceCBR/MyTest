@@ -313,8 +313,10 @@
         vc.followStatus = self.baseViewModel.contactViewModel.followStatus;
     }
     
-    //如果是小区，移除按钮
-    if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
+    //如果是小区，移除按钮 或者户型详情页也移除按钮
+    
+    FHDetailMediaHeaderCorrectingModel *model1 = ((FHDetailMediaHeaderCorrectingModel *)self.currentData);
+    if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood || model1.titleDataModel.isFloorPan) {
         vc.isShowAllBtns = NO;
     }
     
