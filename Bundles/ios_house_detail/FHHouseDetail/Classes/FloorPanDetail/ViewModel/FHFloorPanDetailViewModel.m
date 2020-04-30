@@ -75,34 +75,21 @@
 
 - (void)contactAction
 {
-    // todo zjing test
     if (!self.contactViewModel) {
         return;
     }
-    NSMutableDictionary *extraDic = @{}.mutableCopy;
-    NSNumber *cluePage = nil;
-    if(self.contactViewModel.contactPhone.phone.length > 0) {
-        cluePage = @(FHClueCallPageTypeCFloorPlan);
-    }else {
-        cluePage = @(FHClueFormPageTypeCFloorPlan);
-    }
-    if (cluePage) {
-        extraDic[kFHCluePage] = cluePage;
-    }
-
-    [self.contactViewModel contactActionWithExtraDict:extraDic];
+    [self.contactViewModel contactAction];
 }
 
 - (void)imAction
 {
-    // todo zjing test
     FHDetailContactModel *contactPhone = self.contactViewModel.contactPhone;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"source_from"] = @"house_model_detail";
     imExtra[@"im_open_url"] = contactPhone.imOpenUrl;
-    imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeFloorplan];
-    imExtra[@"from"] = @"app_floorplan";
+    if(self.currentModel.data.highlightedRealtorAssociateInfo) {
+        imExtra[kFHAssociateInfo] = self.currentModel.data.highlightedRealtorAssociateInfo;
+    }
     [self.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 
@@ -247,6 +234,7 @@
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
     self.currentItems = [FHFloorPanDetailModuleHelper moduleClassificationMethod:self.currentItems];
     [_infoListTable reloadData];
 }

@@ -33,6 +33,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic,strong)NSTimer *switchTimer;
 @property (nonatomic,assign)NSInteger totalNum;
+@property (nonatomic, assign) BOOL isSendNotification;
 
 @end
 
@@ -48,6 +49,13 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self initCityChangeSubscribe];//城市变化通知
     [self bindTopIndexChanged];//绑定头部选中index变化
     // Do any additional setup after loading the view.
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (!self.isSendNotification) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"kTTFeedDidDisplay" object:nil];
+            self.isSendNotification = YES;
+        }
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated{

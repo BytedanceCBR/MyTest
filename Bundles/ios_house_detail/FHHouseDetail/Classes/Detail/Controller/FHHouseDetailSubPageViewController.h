@@ -7,10 +7,13 @@
 
 #import "FHBaseViewController.h"
 #import "FHHouseDetailContactViewModel.h"
+#import "FHHouseDetailBaseViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailSubPageViewController : FHBaseViewController
+
+@property (nonatomic , strong) FHHouseDetailBaseViewModel *viewModel;
 
 - (void)setNavBarTitle:(NSString *)navTitle;
 //获取导航bar

@@ -28,6 +28,8 @@
 #import "FHDetailVideoInfoView.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHLoadingButton.h"
+#import "FHDetailBaseModel.h"
+
 #define kFHDPTopBarHeight 44.f
 #define kFHDPBottomBarHeight 54.f
 
@@ -450,24 +452,17 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 在线联系点击
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
-        NSString *fromStr = @"app_oldhouse_picview";
-        NSNumber *cluePage = nil;
-        if (_houseType == FHHouseTypeNewHouse) {
-            fromStr = @"app_newhouse_picview";
-            cluePage = @(FHClueIMPageTypeCNewHousePicview);
-        }
-        NSMutableDictionary *extraDic = @{@"realtor_position":@"online",
-                                          @"position":@"online",
-                                          @"element_from":[self elementFrom],
-                                          @"from":fromStr
-                                          }.mutableCopy;
+        NSMutableDictionary *extraDic = @{}.mutableCopy;
+        extraDic[@"realtor_position"] = @"online";
+        extraDic[@"position"] = @"online";
+        extraDic[@"element_from"] = [self elementFrom];
         NSString *vid = [self videoId];
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
         }
-        if (cluePage) {
-            extraDic[kFHCluePage] = cluePage;
-            extraDic[kFHClueEndpoint] = @(FHClueEndPointTypeC);
+        // 头图im入口线索透传
+        if(self.mediaHeaderModel.houseImageAssociateInfo) {
+            extraDic[kFHAssociateInfo] = self.mediaHeaderModel.houseImageAssociateInfo;
         }
         [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }
@@ -476,16 +471,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 // 电话咨询点击
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
-        NSString *fromStr = @"app_oldhouse_picview";
-        NSNumber *cluePage = nil;
-        if (_houseType == FHHouseTypeNewHouse) {
-            fromStr = @"app_newhouse_picview";
-            if(self.mediaHeaderModel.contactViewModel.contactPhone.phone.length > 0) {
-                cluePage = @(FHClueCallPageTypeCNewHousePicview);
-            }else {
-                cluePage = @(FHClueFormPageTypeCNewHousePicview);
-            }
-        }
+//        NSString *fromStr = @"app_oldhouse_picview";
+//        NSNumber *cluePage = nil;
+//        if (_houseType == FHHouseTypeNewHouse) {
+//            fromStr = @"app_newhouse_picview";
+//            if(self.mediaHeaderModel.contactViewModel.contactPhone.phone.length > 0) {
+//                cluePage = @(FHClueCallPageTypeCNewHousePicview);
+//            }else {
+//                cluePage = @(FHClueFormPageTypeCNewHousePicview);
+//            }
+//        }
         NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
                                           @"position":@"report_button",
                                           @"element_from":[self elementFrom]
@@ -494,11 +489,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
         }
-        extraDic[@"from"] = fromStr;
-        if (cluePage) {
-            extraDic[kFHCluePage] = cluePage;
+//        extraDic[@"from"] = fromStr;
+//        if (cluePage) {
+//            extraDic[kFHCluePage] = cluePage;
+//        }
+        NSDictionary *associateInfoDict = nil;
+        FHDetailContactModel *contactPhone = self.mediaHeaderModel.contactViewModel.contactPhone;
+        if (contactPhone.phone.length > 0) {
+            associateInfoDict = self.associateInfo.phoneInfo;
+        }else {
+            associateInfoDict = self.associateInfo.reportFormInfo;
         }
-
+        extraDic[kFHAssociateInfo] = associateInfoDict;
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }

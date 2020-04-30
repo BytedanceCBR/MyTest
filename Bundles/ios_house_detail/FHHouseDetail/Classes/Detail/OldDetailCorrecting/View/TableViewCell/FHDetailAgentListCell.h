@@ -49,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle; // 推荐经纪人标题文案
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsSubTitle; // 推荐经纪人副标题文案
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @property (nonatomic, copy) NSString *searchId;
 @property (nonatomic, copy) NSString *imprId;
 @property (nonatomic, copy)   NSString* houseId; // 房源id

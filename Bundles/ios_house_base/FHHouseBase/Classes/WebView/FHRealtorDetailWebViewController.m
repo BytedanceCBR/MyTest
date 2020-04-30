@@ -14,9 +14,11 @@
 #import "FHUserTracker.h"
 #import "NetworkUtilities.h"
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
-#import <FHHouseBase/FHHouseFillFormHelper.h>
+
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTBaseLib/TTDeviceHelper.h>
+#import <FHHouseBase/FHUtils.h>
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 @interface FHRealtorDetailWebViewController ()
 {
@@ -65,13 +67,43 @@ static NSString *s_oldAgent = nil;
         self.houseId = params[@"house_id"];
 
         self.tracerDict[@"pageType"] = @"realtor_detail";
-        NSDictionary *reportParams = params[@"reportParams"];
-        [self callWithPhone:phone extraDict:reportParams completion:completion];
+        NSDictionary *reportParams = nil;
+        
+        if ([params[@"reportParams"] isKindOfClass:[NSString class]]) {
+            reportParams = params[@"reportParams"];
+        }else if ([params[@"reportParams"] isKindOfClass:[NSString class]]) {
+            NSString *reportParamsStr = [params btd_stringValueForKey:@"reportParams"];
+            if (reportParamsStr) {
+                NSMutableString *processString= [NSMutableString stringWithString:reportParamsStr];
+                NSString *character = nil;
+                for (int i = 0; i < processString.length; i ++) {
+                    character = [processString substringWithRange:NSMakeRange(i, 1)];
+                    
+                    if ([character isEqualToString:@"\\"])
+                        [processString deleteCharactersInRange:NSMakeRange(i, 1)];
+                }
+                reportParams = [FHUtils dictionaryWithJsonString:processString];
+            }
+        }
+        NSDictionary *associateInfoDict = nil;
+        NSString *associateInfoStr = [params btd_stringValueForKey:@"phone_info"];
+        if (associateInfoStr) {
+            NSMutableString *processString= [NSMutableString stringWithString:associateInfoStr];
+            NSString *character = nil;
+            for (int i = 0; i < processString.length; i ++) {
+                character = [processString substringWithRange:NSMakeRange(i, 1)];
+                
+                if ([character isEqualToString:@"\\"])
+                    [processString deleteCharactersInRange:NSMakeRange(i, 1)];
+            }
+            associateInfoDict = [FHUtils dictionaryWithJsonString:processString];
+        }
+        [self callWithPhone:phone extraDict:reportParams phoneInfo:associateInfoDict completion:completion];
     } forMethodName:@"phoneSwitch"];
     [FHUserTracker writeEvent:@"go_detail" params:[self goDetailParams]];
 }
 
-- (void)callWithPhone:(NSString *)phone extraDict:(NSDictionary *)extraDict completion:(TTRJSBResponse)completion {
+- (void)callWithPhone:(NSString *)phone extraDict:(NSDictionary *)extraDict phoneInfo:(NSDictionary *)phoneInfo completion:(TTRJSBResponse)completion {
     
     NSMutableDictionary *params = @{}.mutableCopy;
     if (self.tracerDict) {
@@ -80,13 +112,34 @@ static NSString *s_oldAgent = nil;
     if (extraDict) {
         [params addEntriesFromDictionary:extraDict];
     }
-    FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:params error:nil];
-    contactConfig.houseType = self.houseType ? self.houseType : 9;
-    contactConfig.houseId = self.houseId;
-    contactConfig.phone = phone;
-    contactConfig.realtorId = self->_realtorId;
-    contactConfig.from = @"app_realtor_mainpage";
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+//    FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:params error:nil];
+//    contactConfig.houseType = self.houseType ? self.houseType : 9;
+//    contactConfig.houseId = self.houseId;
+//    contactConfig.phone = phone;
+//    contactConfig.realtorId = self->_realtorId;
+//    contactConfig.from = @"app_realtor_mainpage";
+//    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+//        if (success) {
+//            completion(TTRJSBMsgSuccess, @{});
+//        }else {
+//            completion(TTRJSBMsgFailed, @{});
+//        }
+//    }];
+    
+    params[kFHAssociateInfo] = phoneInfo;
+    FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+    associatePhone.reportParams = params;
+    associatePhone.associateInfo = phoneInfo;
+    associatePhone.realtorId = self->_realtorId;
+    if (params[@"log_pb"]) {
+        NSDictionary *logPb = params[@"log_pb"];
+        associatePhone.searchId = logPb[@"search_id"];
+        associatePhone.imprId = logPb[@"impr_id"];
+    }
+    associatePhone.houseType = self.houseType ? self.houseType : 9;
+    associatePhone.houseId = self.houseId;
+    associatePhone.showLoading = NO;
+    [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         if (success) {
             completion(TTRJSBMsgSuccess, @{});
         }else {

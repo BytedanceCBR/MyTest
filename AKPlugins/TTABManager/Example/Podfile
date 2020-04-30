@@ -1,0 +1,13 @@
+source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+source 'https://github.com/CocoaPods/Specs.git'
+#use_frameworks!
+
+target 'TTABManager_Example' do
+  pod 'TTABManager', :path => '../'
+
+  target 'TTABManager_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

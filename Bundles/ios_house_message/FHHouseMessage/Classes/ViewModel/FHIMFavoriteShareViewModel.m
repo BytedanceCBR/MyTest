@@ -14,6 +14,7 @@
 #import "FHHouseListModel.h"
 #import "FHDetailBaseModel.h"
 #import "TTSandBoxHelper.h"
+#import "TTAccount.h"
 
 @interface FHIMFavoriteShareModel : NSObject
 @property (nonatomic, assign) NSInteger houseType;
@@ -23,6 +24,7 @@
 @property (nonatomic, copy) NSString* displaySubTitle;
 @property (nonatomic, copy) NSString* displayPrice;
 @property (nonatomic, copy) NSString* displayPricePerSqm;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
 @implementation FHIMFavoriteShareModel
@@ -90,18 +92,26 @@
             houseTag = @"租房";
         }
         NSString *channel = [TTSandBoxHelper getCurrentChannel];
-        NSDictionary *extra = @{
-                                KSCHEMA_HOUSE_TAG: houseTag,
-                                KSCHEMA_HOUSE_COVER: obj.cover ? : @"",
-                                KSCHEMA_HOUSE_ID:obj.houseId ? : @"",
-                                KSCHEMA_HOUSE_TYPE:[@(obj.houseType) stringValue],
-                                KSCHEMA_HOUSE_TITLE:obj.displayTitle ? : @"",
-                                KSCHEMA_HOUSE_DES:obj.displaySubTitle ? : @"",
-                                KSCHEMA_HOUSE_PRICE:obj.displayPrice ? : @"",
-                                KSCHEMA_HOUSE_AVG_PRICE:obj.displayPricePerSqm ? : @"",
-                                KSCHEMA_HOUSE_FROM:@"app_liked_house",
-                                KSCHEMA_HOUSE_CHANNEL:[self getChannel] ? : @"local_test",
-                                };
+        NSMutableDictionary *extra = @{}.mutableCopy;
+        extra[KSCHEMA_HOUSE_TAG] = houseTag;
+        extra[KSCHEMA_HOUSE_COVER] =  obj.cover ? : @"";
+        extra[KSCHEMA_HOUSE_ID] = obj.houseId ? : @"";
+        extra[KSCHEMA_HOUSE_TYPE] = [@(obj.houseType) stringValue];
+        extra[KSCHEMA_HOUSE_TITLE] = obj.displayTitle ? : @"";
+        extra[KSCHEMA_HOUSE_DES] = obj.displaySubTitle ? : @"";
+        extra[KSCHEMA_HOUSE_PRICE] = obj.displayPrice ? : @"";
+        extra[KSCHEMA_HOUSE_AVG_PRICE] = obj.displayPricePerSqm ? : @"";
+        extra[KSCHEMA_HOUSE_CHANNEL] = [self getChannel] ? : @"local_test";
+        
+        // 线索相关参数
+        NSDictionary *imInfo = obj.associateInfo.imInfo;
+        extra[KSCHEMA_HOUSE_FROM] = [imInfo tta_stringForKey:KSCHEMA_HOUSE_FROM];
+        extra[KSCHEMA_HOUSE_CLUE_ENDPOINT] = [imInfo tta_stringForKey:KSCHEMA_HOUSE_CLUE_ENDPOINT];
+        extra[KSCHEMA_HOUSE_CLUE_PAGE] = [imInfo tta_stringForKey:KSCHEMA_HOUSE_CLUE_PAGE];
+        extra[KSCHEMA_TARGET_ID] = [imInfo tta_stringForKey:KSCHEMA_TARGET_ID];
+        extra[KSCHEMA_TARGET_TYPE] = [imInfo tta_stringForKey:KSCHEMA_TARGET_TYPE];
+        // ---
+        
         houseMsg.extraDic = extra;
         [manager.messageService sendMessage:houseMsg ofConversationId:conversactionId];
     }];
@@ -134,6 +144,7 @@
     result.displaySubTitle = model.displayDescription;
     result.displayPrice = model.displayPricePerSqm;
     result.displayPricePerSqm = model.displayPricePerSqm;
+    result.associateInfo = model.associateInfo;
     return result;
 }
 
@@ -149,6 +160,7 @@
     result.displaySubTitle = model.displaySubtitle;
     result.displayPrice = model.displayPrice;
     result.displayPricePerSqm = model.displayPricePerSqm;
+    result.associateInfo = model.associateInfo;
     return result;
 }
 
@@ -163,6 +175,7 @@
     result.displayTitle = model.title;
     result.displaySubTitle = model.subtitle;
     result.displayPrice = model.pricing;
+    result.associateInfo = model.associateInfo;
     return result;
 }
 @end

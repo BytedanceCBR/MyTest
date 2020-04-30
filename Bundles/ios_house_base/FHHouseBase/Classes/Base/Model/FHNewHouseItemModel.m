@@ -96,6 +96,7 @@
                            @"globalPricing":@"global_pricing",
                            @"floorpanList":@"floorpan_list",
                            @"userStatus":@"user_status",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
