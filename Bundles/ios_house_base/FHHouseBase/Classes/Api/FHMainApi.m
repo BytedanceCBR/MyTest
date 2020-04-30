@@ -427,6 +427,56 @@
     }];
 }
 
++(TTHttpTask *)requestHomeSimilarRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion{
+    NSString *url = QURL(@"/f100/api/similar_house?");
+       
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+           if (!completion) {
+               return ;
+           }
+           NSDate *backDate = [NSDate date];
+           __block NSError *backError = error;
+           dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+               FHHomeHouseModel *model = (FHHomeHouseModel *)[self generateModel:obj class:[FHHomeHouseModel class] error:&backError];
+               NSDate *serDate = [NSDate date];
+               FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+               NSInteger code = 0;
+               NSString *errMsg = nil;
+               NSMutableDictionary *extraDict = nil;
+               NSDictionary *exceptionDict = nil;
+               NSInteger responseCode = -1;
+               if (response.statusCode) {
+                   responseCode = response.statusCode;
+               }
+               if (response.statusCode == 200  && [model isKindOfClass:[FHHomeHouseModel class]]) {
+                   if ([model respondsToSelector:@selector(status)]) {
+                       NSString *status = [model performSelector:@selector(status)];
+                       if (status.integerValue != 0 || error != nil || model.data.items.count == 0) {
+                           extraDict = @{}.mutableCopy;
+                           extraDict[@"request_url"] = response.URL.absoluteString;
+                           extraDict[@"response_headers"] = response.allHeaderFields;
+                           extraDict[@"error"] = error.domain;
+                           
+                           code = [status integerValue];
+                           errMsg = error.domain;
+                           
+                           NSInteger houseType = [[param valueForKey:@"house_type"] integerValue];
+                           resultType = FHNetworkMonitorTypeBizFailed+houseType;
+                           exceptionDict = @{@"data_type":(param[@"house_type"]?:@"-1")};
+                       }
+                   }
+               }else{
+                   code = response.statusCode;
+                   resultType = FHNetworkMonitorTypeNetFailed;
+               }
+               [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:serDate resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict exceptionDict:exceptionDict responseCode:responseCode];
+               dispatch_async(dispatch_get_main_queue(), ^{
+                   completion(model,backError);
+               });
+           });
+     }];
+}
 
 +(void)addRequestLog:(NSString *)path startDate:(NSDate *)startData backDate:(NSDate *)backDate serializeDate:(NSDate *)serializeDate resultType:(FHNetworkMonitorType)type errorCode:(NSInteger)errorCode errorMsg:(NSString *)errorMsg extra:(NSDictionary *)extraDict responseCode:(NSInteger)responseCode
 {

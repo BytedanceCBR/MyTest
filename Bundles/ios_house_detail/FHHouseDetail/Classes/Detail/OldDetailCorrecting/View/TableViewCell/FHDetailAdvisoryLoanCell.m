@@ -307,9 +307,8 @@
 
 - (void)tapConsultation:(UIButton *)sender {
     FHDetailAdvisoryLoanModel *model = (FHDetailAdvisoryLoanModel *)self.currentData;
-    if (model.contactModel.contactPhone.phone.length>0) {
-        NSString *openUrl = model.downPayment.openUrl;
-        if (openUrl.length > 0) {
+    NSString *openUrl = model.downPayment.openUrl;
+    if (openUrl.length>0) {
             NSURL *url = [NSURL URLWithString:openUrl];
             NSMutableDictionary *imExtra = @{}.mutableCopy;
             imExtra[@"from"] = @"app_oldhouse_mortgage";
@@ -322,7 +321,7 @@
                          imExtra[kFHAssociateInfo] = model.downPayment.associateInfo;
             }
             [model.contactModel onlineActionWithExtraDict:imExtra];
-        }
+//        }
     }else {
         if ([model.contactModel respondsToSelector:@selector(fillFormActionWithParams:)]) {
             NSMutableDictionary *associateParamDict =  @{

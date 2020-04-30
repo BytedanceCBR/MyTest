@@ -99,7 +99,9 @@
         // 执行跳转
         NSURL *openUrl = [NSURL URLWithString:urlStr];
         NSMutableDictionary *userInfoDict = @{}.mutableCopy;
-        userInfoDict[@"report_params"] = associateIM.reportParams.toDictionary;
+        NSMutableDictionary *report_params = [associateIM.reportParams.toDictionary mutableCopy];
+        report_params[UT_ENTER_FROM] = report_params[UT_PAGE_TYPE];
+        userInfoDict[@"report_params"] = report_params;
         userInfoDict[@"associate_info"] = associateIM.associateInfo.imInfo?:@{}; // 只传入im_info即可
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];

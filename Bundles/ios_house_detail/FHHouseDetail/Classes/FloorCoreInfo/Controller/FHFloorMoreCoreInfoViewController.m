@@ -18,7 +18,6 @@
 @property (nonatomic , strong) FHFloorCoreInfoViewModel *coreInfoListViewModel;
 @property (nonatomic , strong) NSString *courtId;
 @property(nonatomic , strong) FHDetailHouseNameModel *houseNameModel;
-@property(nonatomic , strong) FHDetailDisclaimerModel *disclaimerModel;
 
 @end
 
@@ -29,7 +28,6 @@
     if (self) {
         _courtId = paramObj.allParams[@"court_id"];
         _houseNameModel = paramObj.userInfo.allInfo[@"courtInfo"];
-        _disclaimerModel = paramObj.userInfo.allInfo[@"disclaimerInfo"];
     }
     return self;
 }
@@ -41,8 +39,7 @@
     
     [self addDefaultEmptyViewFullScreen];
     
-    self.coreInfoListViewModel = [[FHFloorCoreInfoViewModel alloc] initWithController:self tableView:_infoListTable courtId:_courtId houseNameModel:_houseNameModel housedisclaimerModel:_disclaimerModel];
-    self.viewModel = self.coreInfoListViewModel;
+    _coreInfoListViewModel = [[FHFloorCoreInfoViewModel alloc] initWithController:self tableView:_infoListTable courtId:_courtId houseNameModel:_houseNameModel];
     
     [self setNavBarTitle:@"楼盘信息"];
     [self.view bringSubviewToFront:[self getNaviBar]];
@@ -64,7 +61,8 @@
         _infoListTable.estimatedSectionFooterHeight = 0;
         _infoListTable.estimatedSectionHeaderHeight = 0;
     }
-    [_infoListTable setBackgroundColor:[UIColor whiteColor]];
+    [_infoListTable setBackgroundColor:[UIColor themeGray7]];
+    _infoListTable.contentInset = UIEdgeInsetsMake(15, 0, 0, 0);
     [self.view addSubview:_infoListTable];
     
     [_infoListTable mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -72,8 +70,6 @@
         make.left.right.equalTo(self.view);
         make.bottom.equalTo([self getBottomBar].mas_top);
     }];
-    
-    [_infoListTable setBackgroundColor:[UIColor whiteColor]];
     
 }
 

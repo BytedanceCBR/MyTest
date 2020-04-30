@@ -325,7 +325,10 @@
         return;
     }
     self.currentData = data;
-    
+    if (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) {
+                [self.headerView hiddenStarImage];
+    };
+    [self.headerView hiddenStarImage];
     [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.shadowImage).offset(-dataModel.bottomMargin);
     }];
@@ -357,6 +360,9 @@
         [self.headerView updateTitle:dataModel.title];
     }
     [self.headerView updateStarsCount:[dataModel.score integerValue]];
+    if (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) {
+        [self.headerView hiddenStarImage];
+    }
     
     if ([self isPoiSearchDone:self.curCategory]) {
         [self showPoiResultInfo];

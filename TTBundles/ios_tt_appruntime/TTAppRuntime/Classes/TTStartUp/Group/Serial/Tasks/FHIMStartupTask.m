@@ -343,7 +343,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     return YES;
 }
 
-- (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {    
+- (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     if ([SSCommonLogic imCanStart]) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];

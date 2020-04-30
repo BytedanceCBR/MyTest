@@ -26,9 +26,9 @@
 #define guideViewHeight 17
 #define topMargin 20
 
-@interface FHUGCSmallVideoCell ()<TTUGCAttributedLabelDelegate>
+@interface FHUGCSmallVideoCell ()<TTUGCAsyncLabelDelegate>
 
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
@@ -67,17 +67,17 @@
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
     [self.contentView addSubview:_userInfoView];
     
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
-    NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-                                     };
-    self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = linkAttributes;
-    self.contentLabel.inactiveLinkAttributes = linkAttributes;
+//    NSDictionary *linkAttributes = @{
+//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+//                                     };
+//    self.contentLabel.linkAttributes = linkAttributes;
+//    self.contentLabel.activeLinkAttributes = linkAttributes;
+//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
@@ -253,7 +253,7 @@
         self.contentLabel.hidden = NO;
         self.contentLabel.height = cellModel.contentHeight;
         self.videoImageView.top = self.contentLabel.bottom + 10;
-        [FHUGCCellHelper setRichContent:self.contentLabel model:cellModel];
+        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     
     self.bottomView.top = self.videoImageView.bottom + 10;
@@ -340,9 +340,9 @@
     }
 }
 
-#pragma mark - TTUGCAttributedLabelDelegate
+#pragma mark - TTUGCAsyncLabelDelegate
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
         if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
             [self.delegate lookAllLinkClicked:self.cellModel cell:self];

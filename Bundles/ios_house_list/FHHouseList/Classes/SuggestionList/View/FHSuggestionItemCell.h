@@ -16,6 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHGuessYouWantCell : UITableViewCell
+
+- (void)refreshData:(id)data;
+
+@end
+
 @interface FHSuggestionNewHouseItemCell : UITableViewCell
 
 @property (nonatomic, strong)   UILabel       *label;
@@ -29,8 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)   UILabel       *label;
 @property (nonatomic, strong)   UIButton       *deleteBtn;
-
-@property (nonatomic, copy)     dispatch_block_t       delClick;
 
 @end
 

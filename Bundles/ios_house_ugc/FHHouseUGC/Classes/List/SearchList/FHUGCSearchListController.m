@@ -163,7 +163,6 @@
     [self setupNaviBar];
 
     CGFloat height = [FHFakeInputNavbar perferredHeight];
-
     [self configTableView];
     [self.view addSubview:_tableView];
     _tableView.dataSource = self;
@@ -174,6 +173,9 @@
         make.top.mas_equalTo(self.view).offset(height);
         make.bottom.mas_equalTo(self.view);
     }];
+    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapEmptyViewAction:)];
+    [self.emptyView addGestureRecognizer:tapGesturRecognizer];
 }
 
 - (void)configTableView {
@@ -193,6 +195,10 @@
     if ([TTDeviceHelper isIPhoneXDevice]) {
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
+}
+
+- (void)tapEmptyViewAction:(id)sender {
+    [self.naviBar.searchInput resignFirstResponder];
 }
 
 - (void)startLoadData {
@@ -250,10 +256,15 @@
             [weakSelf.items removeAllObjects];
             FHUGCSearchModel *tModel = model;
             if (tModel.data.count > 0 && weakSelf.searchText.length > 0)  {
+                [weakSelf.emptyView hideEmptyView];
                 [weakSelf.items addObjectsFromArray:tModel.data];
             }
             [weakSelf addAssociateCommunityShowLog];
             [weakSelf.tableView reloadData];
+            
+            if (weakSelf.items.count == 0) {
+                [weakSelf.emptyView showEmptyWithTip:@"暂无搜索结果" errorImageName:@"ugc_search_list_null" showRetry:NO];
+            };
         }
     }];
 }
