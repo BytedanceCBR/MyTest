@@ -220,6 +220,10 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
  */
 @property (nonatomic, assign) CGFloat borderWidth;
 
+@property (nonatomic) CGFloat firstLeftMargain;
+
+@property (nonatomic) CGFloat lastRightMargin;
+
 /**
  Default is YES. Set to NO to deny scrolling by dragging the scrollView by the user.
  */

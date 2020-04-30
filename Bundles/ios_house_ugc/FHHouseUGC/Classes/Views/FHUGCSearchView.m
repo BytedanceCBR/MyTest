@@ -43,7 +43,7 @@
     [self addGestureRecognizer:singleTap];
     
     self.icon = [[UIImageView alloc] init];
-    _icon.image = ICON_FONT_IMG(16,@"\U0000e675",[UIColor themeGray7]);
+    _icon.image = ICON_FONT_IMG(16,@"\U0000e675",[UIColor themeGray3]);
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     [self addSubview:_icon];
     

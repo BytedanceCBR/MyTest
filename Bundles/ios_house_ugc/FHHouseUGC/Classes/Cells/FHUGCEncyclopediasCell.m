@@ -36,10 +36,10 @@
 
 - (void)initUI {
     
-//    self.titleView.top = self.contentView.top +20;
-//    self.titleView.width = [UIScreen mainScreen].bounds.size.width;
-//    self.titleView.right = self.contentView.right;
-//    self.titleView.height = 40;
+    //    self.titleView.top = self.contentView.top +20;
+    //    self.titleView.width = [UIScreen mainScreen].bounds.size.width;
+    //    self.titleView.right = self.contentView.right;
+    //    self.titleView.height = 40;
     
     
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -131,9 +131,12 @@
     self.titleView.userName.text = model.user.name;
     self.titleView.descLabel.text = model.articleTitle;
     self.titleView.cellModel = model;
+    self.titleView.userName.userInteractionEnabled = model.user &&model.user.schema;
+    self.titleView.icon.userInteractionEnabled = model.user &&model.user.schema;
+    self.titleView.descLabel.userInteractionEnabled = model.user &&model.user.schema;
     self.contentLab.hidden = isEmptyString(model.content);
     [FHUGCCellHelper setRichContent:self.contentLab model:model];
-//    self.contentLab.height = model.contentHeight;
+    //    self.contentLab.height = model.contentHeight;
     
     if(isEmptyString(model.avatar)){
         self.iconImage.hidden = YES;
