@@ -58,6 +58,7 @@
 #import "FHDetailNeighborhoodQACell.h"
 #import "FHDetailNeighborhoodAssessCell.h"
 #import "FHDetailNeighborhoodCommentsCell.h"
+#import "FHDetailRecommendedNeighborhoodCell.h"
 #import "FHDetailQACellModel.h"
 #import "FHDetailAccessCellModel.h"
 #import "FHDetailCommentsCellModel.h"
@@ -104,6 +105,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     //同小区房源
     [self.tableView registerClass:[FHDetailSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSameNeighborhoodHouseModel class])];
     [self.tableView registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
+    //推荐新盘
+    [self.tableView registerClass:[FHDetailRecommendedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRecommendedNeighborhoodModel class])];
     //价格指数
     [self.tableView registerClass:[FHDetailPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceTrendCellModel class])];
     //小区详情上标题
