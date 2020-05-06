@@ -723,6 +723,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self requestHouseInSameNeighborhoodSearch:neighborhoodId];
         // 周边小区
         [self requestRelatedNeighborhoodSearch:neighborhoodId];
+    } else {
+        self.requestRelatedCount = 2;
     }
     // 周边房源
     [self requestRelatedHouseSearch];
