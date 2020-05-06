@@ -27,6 +27,7 @@
 #import "FHLynxManager.h"
 #import "FHUGCRecommendCircleCell.h"
 #import "FHUGCEncyclopediasCell.h"
+#import "FHUGCLynxCommonCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -65,6 +66,7 @@
                                 @"FHNeighbourhoodCommentCell",
                                 @"FHUGCRecommendCircleCell",
                                 @"FHUGCEncyclopediasCell",
+                                @"FHUGCLynxCommonCell",
                                 //可扩展
                                  ];
 }
@@ -133,6 +135,8 @@
         case FHUGCFeedListCellSubTypeUGCEncyclopedias:
             return [FHUGCEncyclopediasCell class];
             
+        case FHUGCFeedListCellSubTypeUGCLynx:
+            return [FHUGCLynxCommonCell class];
         default:
             break;
     }
