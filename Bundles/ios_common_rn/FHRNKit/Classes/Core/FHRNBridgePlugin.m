@@ -128,6 +128,7 @@
     
     NSString *houseType = [param tt_stringValueForKey:@"houseType"];
     NSString *realtorId = [param tt_stringValueForKey:@"realtorId"];
+    NSString *houseId = [param tt_stringValueForKey:@"house_id"];
 
     //    NSString *reportParams = [param tt_stringValueForKey:@"report_params"];
     NSString *reportParamsStr = [param tt_stringValueForKey:@"report_params"];
@@ -139,8 +140,21 @@
         if ([character isEqualToString:@"\\"])
             [processString deleteCharactersInRange:NSMakeRange(i, 1)];
     }
-    
     NSDictionary *reportParamsDict = [FHUtils dictionaryWithJsonString:processString];
+    
+    NSDictionary *associateInfoDict = nil;
+    NSString *associateInfoStr = [param tt_stringValueForKey:@"phone_info"];
+    if (associateInfoStr) {
+        NSMutableString *processString= [NSMutableString stringWithString:associateInfoStr];
+        NSString *character = nil;
+        for (int i = 0; i < processString.length; i ++) {
+            character = [processString substringWithRange:NSMakeRange(i, 1)];
+            
+            if ([character isEqualToString:@"\\"])
+                [processString deleteCharactersInRange:NSMakeRange(i, 1)];
+        }
+        associateInfoDict = [FHUtils dictionaryWithJsonString:processString];
+    }
     NSMutableDictionary *callParams = [NSMutableDictionary new];
     
     if ([param isKindOfClass:[NSDictionary class]]) {
@@ -175,8 +189,23 @@
     if ([callParams[@"log_pb"] isKindOfClass:[NSString class]]) {
         callParams[@"log_pb"] = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
     }
-    callParams[@"from"] = @"app_realtor_mainpage";
-    [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+//    callParams[@"from"] = @"app_realtor_mainpage";
+    callParams[kFHAssociateInfo] = associateInfoDict;
+    FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc]init];
+    associatePhone.reportParams = reportParamsDict;
+    associatePhone.associateInfo = associateInfoDict;
+    associatePhone.realtorId = realtorId;
+    if (reportParamsDict[@"log_pb"]) {
+        NSDictionary *logPb = reportParamsDict[@"log_pb"];
+        associatePhone.searchId = logPb[@"search_id"];
+        associatePhone.imprId = logPb[@"impr_id"];
+    }
+    associatePhone.houseType = houseType.integerValue;
+    associatePhone.houseId = houseId;
+    associatePhone.showLoading = YES;
+    [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
+
+//    [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         if (callback) {
             callback(TTBridgeMsgSuccess, nil,nil);
         }

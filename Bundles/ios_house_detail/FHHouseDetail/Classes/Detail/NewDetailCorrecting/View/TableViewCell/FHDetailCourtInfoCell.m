@@ -232,9 +232,14 @@
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"source_from"] = @"education_type";
         imExtra[@"im_open_url"] = model.surroundingInfo.surrounding.chatOpenurl;
-        imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-        imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCNewHouseLocation];
-        imExtra[@"from"] = @"app_newhouse_askneighbourhood";
+        
+        if([self.baseViewModel.detailData isKindOfClass:FHDetailNewModel.class]) {
+            FHDetailNewModel *detailNewModel = (FHDetailNewModel *)self.baseViewModel.detailData;
+            if(detailNewModel.data.surroundingInfo.associateInfo) {
+                imExtra[kFHAssociateInfo] = detailNewModel.data.surroundingInfo.associateInfo;
+            }
+        }
+        
         [model.contactViewModel onlineActionWithExtraDict:imExtra];
         if ([self.baseViewModel respondsToSelector:@selector(addClickOptionLog:)]) {
             [self.baseViewModel addClickOptionLog:@"education_type"];

@@ -43,7 +43,8 @@ def fhPods
     
     #pod 'ios_house_filter' , :git => 'git@code.bytged.org:fproject/ios_house_filter.git', :commit => '2e67ee5d7ef8b99e3399bdab0190ce1240899d45' #:branch => 'feature/develop'filter-triangle-open-highlighted
     pod 'ios_house_filter' , '1.0.2'
-    
+
+
     pod 'FHCommonUI','0.0.19-rc.4'
 #    pod 'FHCommonUI',:path => '../../../ios_common_ui/'
 #    pod 'FHCommonUI', :git => 'https://code.byted.org/fproject/ios_common_ui.git', :commit => 'fef6ed9bea94a343313805b978fda9511cbbf213'
@@ -62,7 +63,7 @@ def fhPods
     # 'DelegateForC'
     # ]
 
-#    pod 'ios_house_im' , '0.2.0-rc.9'
+#    pod 'ios_house_im' , '0.2.0-rc.14'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #    pod 'ios_house_im' , :path => '../../cim1'
      pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '1a6e4843befdebd411282584b77e2033e371219b'
@@ -273,7 +274,10 @@ def appPods
     #-----点赞分享顶踩不感兴趣----
     pod_binary 'TTBatchItemAction','0.1.8'
     #-------AB测库--------
+    #pod 'TTABManager', :path => '../AKPlugins/TTABManager', :inhibit_warnings => false
+
     pod_binary 'TTABManager', '0.0.7'
+
     #-----头条网络业务库------
     pod_binary 'TTNetBusiness', '0.0.10'
 
@@ -306,7 +310,7 @@ def appPods
     'BDPlatformSDK',
     'BDDeprecatedSDK'
     ]
-    pod 'ByteDanceKit', '2.0.8', :subspecs => [
+    pod 'ByteDanceKit', '2.1.0-rc.8', :subspecs => [
     'Foundation',
     'UIKit'
     ]
@@ -323,7 +327,8 @@ def appPods
     pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
     # pod_binary 'TTMonitor','0.7.9.58-rc.3' #这个版本还是有很多问题
-    pod_binary 'Heimdallr','0.7.11', :subspecs => [
+    pod_binary 'MemoryGraphCapture', '1.2.4'
+    pod_binary 'Heimdallr', '0.7.15-rc.16', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
@@ -339,7 +344,7 @@ def appPods
     'CrashCapture',
     'Log',
     'UITracker',
-    'MemorySnapshot',
+#    'MemorySnapshot',
     'Upload',
     'HMDSession',
     'HMDConfig',
@@ -352,6 +357,7 @@ def appPods
     'HMDWatchDog', #
     'Runloop',
     'UserException', #
+    'MemoryGraph',
     'Protect'
     ]
     pod 'TTMacroManager','1.0.1'
@@ -438,6 +444,8 @@ def appPods
     pod 'EAccountApiSDK', '1.2.0-alpha.0'
     pod 'BDUGUnionSDK', '0.1.2'
   
+    pod_binary 'BDUIKeyboardImplHook', '1.0.3'
+
     #************业务SDK**********
 
     pod_binary 'YYImage', '1.0.3'
@@ -538,11 +546,9 @@ def appPods
     
     pod_binary 'TTAppStoreStarManager', '1.0.12'
 
-    pod_binary 'BDDiamond20', '1.0.2', :subspecs => ['minisdk']
-
-    pod 'Quaterback', '0.0.2-rc.8', :subspecs => [
+    pod_binary 'Quaterback', '1.0.2', :subspecs => [
     'Main/Core',
-    'Main/Default'
+    'Main/News'
     ]
     
     pod_binary 'BDPainter', '1.0.0'
@@ -664,7 +670,7 @@ post_install do |installer|
           '${PODS_ROOT}/TTNetBusiness/ios',
           '${PODS_ROOT}/TencentQQSDK/TencentQQSDK/Classes',
           '${PODS_ROOT}/UMengAnalytics/umsdk_IOS_analyics_idfa_v4.1.4',
-          '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/HotSoon/Debug',
+          '${PODS_ROOT}/Quaterback/BDDynamically/Frameworks/News/Release',
           ]
         end
 
@@ -680,21 +686,21 @@ post_install do |installer|
     # 一处是Xcode自带的Copy Bundle Resources，一处是CocoaPods的[CP] Copy Pods Resources
     # 这个问题在Xcode 10上也有小概率发生，现在统一临时Fix下，参考CocoaPods/CocoaPods#8122
     installer.aggregate_targets.each do |target|
-        if ['Pods-f100', 'Pods-NewsLiteInHouse'].include?(target.name)
-            patched = false
-            target.user_targets.first.build_phases.each do |phase|
-                if phase.display_name == '[CP] Copy Pods Resources'
-                    assets_car_path = '${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car'
-                    if !phase.input_paths
-                        phase.input_paths = []
-                    end
-                    if !phase.input_paths.include?(assets_car_path)
-                        phase.input_paths << assets_car_path
-                        patched = true
-                    end
-                end
-            end
-            target.user_project.save if patched
-        end
+#        if ['Pods-f100', 'Pods-NewsLiteInHouse'].include?(target.name)
+#            patched = false
+#            target.user_targets.first.build_phases.each do |phase|
+#                if phase.display_name == '[CP] Copy Pods Resources'
+#                    assets_car_path = '${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car'
+#                    if !phase.input_paths
+#                        phase.input_paths = []
+#                    end
+#                    if !phase.input_paths.include?(assets_car_path)
+#                        phase.input_paths << assets_car_path
+#                        patched = true
+#                    end
+#                end
+#            end
+#            target.user_project.save if patched
+#        end
     end
 end

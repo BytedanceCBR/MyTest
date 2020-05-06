@@ -118,7 +118,7 @@
 - (void)startLoadData {    
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId logPB:self.listLogPB query:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId logPB:self.listLogPB query:nil extraInfo:self.extraInfo completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
@@ -197,6 +197,7 @@
     self.contactViewModel.shareInfo = model.data.shareInfo;
 //    self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
 
 
 
@@ -455,6 +456,7 @@
         agentListModel.houseModelType = FHPlotHouseModelTypeAgentlist;
         agentListModel.recommendedRealtorsTitle = model.data.recommendedRealtorsTitle;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+        agentListModel.associateInfo = model.data.recommendRealtorsAssociateInfo;
 
         /******* 这里的 逻辑   ********/
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNeighborhood houseId:self.houseId];
