@@ -589,7 +589,8 @@
         
         cell.delegate = self;
         cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
-        
+        cellModel.cell = cell;
+
         if(indexPath.row < self.dataList.count){
             [cell refreshWithData:cellModel];
         }

@@ -14,7 +14,6 @@
 #import "FHLynxManager.h"
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
-
 @interface FHUGCLynxCommonCell()<LynxViewClient>
 
 @property(nonatomic ,strong) UIView *bottomSepView;
@@ -74,8 +73,18 @@
     }
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-
-    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
+    FHFeedUGCContentModel *contentModel = cellModel.originData;
+    NSDictionary *lynxData = contentModel.rawData.lynxData;
+    NSString *channeName = nil;
+    if ([lynxData isKindOfClass:[NSDictionary class]]) {
+        channeName = lynxData[@"channel_name"];
+    }
+    
+    if (!channeName) {
+        return;
+    }
+    
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channeName templateKey:[FHLynxManager defaultJSFileName] version:0];
         
     if (templateData != self.currentTemData) {
         NSNumber *costTime = @(0);
@@ -85,15 +94,19 @@
     }
     
     NSMutableDictionary *dataJson = [NSMutableDictionary new];
-    FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-    if (imageModel.url) {
-        [dataJson setValue:imageModel.url forKey:@"img_url"];
-    }
+//    FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
+//    if (imageModel.url) {
+//        [dataJson setValue:imageModel.url forKey:@"img_url"];
+//    }
+//
+//    [dataJson setValue:cellModel.openUrl forKey:@"jump_url"];
+//    CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
+//    [dataJson setValue:@(imageWidth * 58.0/335.0) forKey:@"img_height"];
+//    [dataJson setValue:@(imageWidth) forKey:@"img_width"];
     
-    [dataJson setValue:cellModel.openUrl forKey:@"jump_url"];
-    CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
-    [dataJson setValue:@(imageWidth * 58.0/335.0) forKey:@"img_height"];
-    [dataJson setValue:@(imageWidth) forKey:@"img_width"];
+    if(lynxData){
+        [dataJson addEntriesFromDictionary:lynxData];
+    }
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
     NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -236,16 +249,14 @@
 + (CGFloat)heightForData:(id)data {
     //默认返回cell的默认值44;
     
-    CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
-    CGFloat imageHeight = imageWidth * 58.0/335.0;
-   __block CGFloat height = imageHeight + 20 + 25;
+    CGFloat imageHeight = 0;
+   __block CGFloat height = imageHeight + 5;
     
     if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
         if ([model.cell isKindOfClass:[FHUGCLynxCommonCell class]]) {
             height =  [((FHUGCLynxCommonCell *)model.cell).lynxView intrinsicContentSize].height + 5;
         }
-     
     }
     return height;
 }

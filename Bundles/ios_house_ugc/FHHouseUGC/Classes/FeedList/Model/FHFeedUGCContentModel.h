@@ -337,6 +337,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *ugcU13CutImageList;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *thumbImageList;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *largeImageList;
+@property (nonatomic, strong , nullable) NSDictionary *lynxData;
 @end
 
 @interface FHFeedUGCContentModel : JSONModel 
