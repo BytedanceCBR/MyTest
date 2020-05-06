@@ -791,6 +791,7 @@
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
     commentManager.enterFrom = @"feed_detail";
     commentManager.enter_type = @"submit_comment";
+    commentManager.reportParams = self.tracerDict.mutableCopy;
     
     self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
     

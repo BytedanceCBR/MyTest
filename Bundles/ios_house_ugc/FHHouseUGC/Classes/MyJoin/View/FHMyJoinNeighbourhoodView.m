@@ -12,10 +12,12 @@
 #import "FHUGCCellHeaderView.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
+#import "FHEnvContext.h"
 
 @interface FHMyJoinNeighbourhoodView ()
 
 @property(nonatomic, strong) FHUGCCellHeaderView *headerView;
+@property(nonatomic, strong) UIView *bottomSepView;
 
 @end
 
@@ -32,22 +34,34 @@
 }
 
 - (void)initViews {
-    
-//    self.backgroundColor = [UIColor themeGray7];
-//    self.progressView = [FHPostUGCProgressView sharedInstance];
-//    [self addSubview:self.progressView];
-    
     self.headerView = [[FHUGCCellHeaderView alloc] initWithFrame:CGRectZero];
     _headerView.titleLabel.text = @"我的关注";
     _headerView.titleLabel.backgroundColor = [UIColor themeGray7];
     _headerView.moreBtn.hidden = YES;
     [self addSubview:_headerView];
     
+    self.searchView = [[FHUGCSearchView alloc] initWithFrame:CGRectZero];
+    _searchView.backgroundColor = [UIColor themeGray7];
+    _searchView.hidden = YES;
+    [self addSubview:_searchView];
+    
     [self initCollectionView];
     
     self.messageView = [[FHUGCMessageView alloc] initWithFrame:CGRectZero];
     _messageView.hidden = YES;
     [self addSubview:_messageView];
+    
+    self.bottomSepView = [[UIView alloc] init];
+    _bottomSepView.backgroundColor = [UIColor themeGray7];
+    _bottomSepView.hidden = YES;
+    [self addSubview:_bottomSepView];
+    
+    if([FHEnvContext isNewDiscovery]){
+        self.backgroundColor = [UIColor whiteColor];
+        _headerView.hidden = YES;
+        _searchView.hidden = NO;
+        _bottomSepView.hidden = NO;
+    }
 }
 
 - (void)initCollectionView {
@@ -55,13 +69,20 @@
     flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 0);
     flowLayout.minimumLineSpacing = 8;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    if([FHEnvContext isNewDiscovery]){
+        flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
+        flowLayout.minimumLineSpacing = 4;
+    }
 
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.alwaysBounceHorizontal = YES;
     _collectionView.backgroundColor = [UIColor themeGray7];
-    
     [self addSubview:_collectionView];
+    
+    if([FHEnvContext isNewDiscovery]){
+        _collectionView.backgroundColor = [UIColor whiteColor];
+    }
 }
 
 - (void)initConstraints {
@@ -71,10 +92,11 @@
         make.height.mas_equalTo(50);
     }];
     
-    [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.right.mas_equalTo(self);
-        make.height.mas_equalTo(128);
+    [self.searchView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self).offset(15);
+        make.left.mas_equalTo(self).offset(20);
+        make.right.mas_equalTo(self).offset(-20);
+        make.height.mas_equalTo(34);
     }];
     
     [self.messageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -83,6 +105,25 @@
         make.width.mas_equalTo(180);
         make.height.mas_equalTo(42);
     }];
+    
+    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self);
+        make.height.mas_equalTo(5);
+    }];
+    
+    if([FHEnvContext isNewDiscovery]){
+        [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.searchView.mas_bottom).offset(15);
+            make.left.right.mas_equalTo(self);
+            make.height.mas_equalTo(60);
+        }];
+    }else{
+        [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.headerView.mas_bottom);
+            make.left.right.mas_equalTo(self);
+            make.height.mas_equalTo(128);
+        }];
+    }
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {

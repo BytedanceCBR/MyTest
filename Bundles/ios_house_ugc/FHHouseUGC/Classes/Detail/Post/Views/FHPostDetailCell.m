@@ -279,9 +279,13 @@
         NSDictionary *log_pb = cellModel.tracerDic[@"log_pb"];
         dict[@"community_id"] = cellModel.community.socialGroupId;
         NSString *enter_from = cellModel.tracerDic[@"page_type"] ?: @"be_null";
-        dict[@"tracer"] = @{@"enter_from":enter_from,
-                            @"enter_type":@"click",
-                            @"log_pb":log_pb ?: @"be_null"};
+        NSString *originFrom = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        dict[@"tracer"] = @{
+            @"origin_from":originFrom,
+            @"enter_from":enter_from,
+            @"enter_type":@"click",
+            @"log_pb":log_pb ?: @"be_null"
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         // 跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];

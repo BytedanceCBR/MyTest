@@ -710,6 +710,20 @@
         //根据url跳转
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2 || cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias){
+        if (cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2 || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner) {
+             NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+             guideDict[@"origin_from"] = self.detailController.tracerDict[@"origin_from"];
+             guideDict[@"page_type"] = [self pageType];
+             guideDict[@"description"] = cellModel.desc;
+             guideDict[@"item_title"] = cellModel.title;
+             guideDict[@"item_id"] = cellModel.groupId;
+             guideDict[@"rank"] = cellModel.tracerDic[@"rank"];;
+             TRACK_EVENT(@"banner_click", guideDict);
+         }
+        //根据url跳转
+        NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         // 评论
         NSMutableDictionary *dict = [NSMutableDictionary new];
@@ -931,12 +945,33 @@
     if(cellModel.attachCardInfo){
         [self trackCardShow:cellModel rank:rank];
     }
+    
+    if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2) {
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] = self.detailController.tracerDict[@"origin_from"] ;
+        guideDict[@"page_type"] = [self pageType];
+        guideDict[@"description"] = cellModel.desc;
+        guideDict[@"item_title"] = cellModel.title;
+        guideDict[@"item_id"] = cellModel.groupId;
+        guideDict[@"rank"] = @(rank);
+        TRACK_EVENT(@"banner_show", guideDict);
+    }else  if(cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias){
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] = self.detailController.tracerDict[@"origin_from"] ;
+        guideDict[@"page_type"] = [self pageType];
+        guideDict[@"card_type"] = @"encyclopedia";
+        guideDict[@"impr_id"] = cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";;
+        guideDict[@"group_id"] = cellModel.groupId;
+        guideDict[@"rank"] = @(rank);
+        TRACK_EVENT(@"card_show", guideDict);
+    }
 }
 
 - (void)trackCardShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     if(cellModel.attachCardInfo.extra && cellModel.attachCardInfo.extra.event.length > 0){
         //是房源卡片
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ? cellModel.tracerDic[@"origin_from"] : @"be_null";
         dict[@"page_type"] = [self pageType];
         dict[@"enter_from"] = self.enter_from.length > 0 ? self.enter_from : @"be_null";
         dict[@"group_id"] = cellModel.attachCardInfo.extra.groupId ?: @"be_null";
@@ -947,6 +982,7 @@
         TRACK_EVENT(cellModel.attachCardInfo.extra.event ?: @"card_show", dict);
     }else{
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ? cellModel.tracerDic[@"origin_from"] : @"be_null";
         dict[@"page_type"] = [self pageType];
         dict[@"enter_from"] = self.enter_from.length > 0 ? self.enter_from : @"be_null";
         dict[@"from_gid"] = cellModel.groupId;
@@ -995,8 +1031,9 @@
     SSImpressionParams *params = [[SSImpressionParams alloc] init];
     params.categoryID = self.categoryName;
     params.refer = self.refer;
+    SSImpressionModelType modelType = [FHUGCCellManager impressModelTypeWithCellType:cellModel.cellType];
     TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:uniqueID itemID:itemID impressionID:nil aggrType:[cellModel.aggrType integerValue]];
-    [ArticleImpressionHelper recordGroupWithUniqueID:uniqueID adID:nil groupModel:groupModel status:status params:params];
+    [ArticleImpressionHelper recordItemWithUniqueID:uniqueID modelType:modelType logPb:cellModel.logPb status:status params:params];
 }
 
 #pragma mark -- SSImpressionProtocol

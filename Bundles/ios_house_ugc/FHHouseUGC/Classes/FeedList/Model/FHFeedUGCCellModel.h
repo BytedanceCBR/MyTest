@@ -13,6 +13,7 @@
 #import "TTRichSpanText+Emoji.h"
 #import "TTVFeedItem+Extension.h"
 #import "TTVFeedListItem.h"
+#import "FHUGCScialGroupModel.h"
 
 @class FHCommunityFeedListController;
 
@@ -201,6 +202,20 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, assign) CGFloat bottomLineRightMargin;
 //底部卡片
 @property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoModel *attachCardInfo ;
+@property (nonatomic, strong, nullable) NSArray<FHUGCScialGroupDataModel> *hotSocialList;
+//cell距离顶部
+@property (nonatomic, copy , nullable) NSString *upSpace;
+//cell距离底部
+@property (nonatomic, copy , nullable) NSString *downSpace;
+//分割线设置
+@property (assign, nonatomic) BOOL hidelLine;
+//百科内容
+@property (nonatomic, copy , nullable) NSString *articleTitle;
+//百科图标
+@property (nonatomic, copy , nullable) NSString *avatar;
+//查看全部
+@property (nonatomic, copy , nullable) NSString *allSchema;
+
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 

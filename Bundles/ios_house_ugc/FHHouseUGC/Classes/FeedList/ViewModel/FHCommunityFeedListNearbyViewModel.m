@@ -44,8 +44,10 @@
     if (self) {
         self.dataList = [[NSMutableArray alloc] init];
         [self configTableView];
-        // 发帖成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
+        if(![FHEnvContext isNewDiscovery]){
+            // 发帖成功
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
+        }
         // 删帖成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 编辑成功
@@ -122,6 +124,19 @@
     if(self.viewController.isLoadingData){
         return;
     }
+    
+    NSString *refreshType = @"be_null";
+    if(isHead){
+        if(self.viewController.isRefreshTypeClicked){
+            refreshType = @"click";
+            self.viewController.isRefreshTypeClicked = NO;
+        }else{
+            refreshType = @"push";
+        }
+    }else{
+        refreshType = @"pre_load_more";
+    }
+    [self trackCategoryRefresh:refreshType];
     
     self.viewController.isLoadingData = YES;
     
@@ -248,6 +263,10 @@
                 wself.refreshFooter.hidden = YES;
             }
             [wself.tableView reloadData];
+            
+            if(wself.viewController.requestSuccess){
+                wself.viewController.requestSuccess(wself.viewController.hasValidateData);
+            }
 
             NSString *refreshTip = feedListModel.tips.displayInfo;
             if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
@@ -275,7 +294,7 @@
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-//    //fake
+    //fake
 //    if(isHead){
 //        [resultArray addObject:[FHFeedUGCCellModel modelFromFake]];
 //        [self removeDuplicaionModel:[FHFeedUGCCellModel modelFromFake].groupId];
@@ -567,10 +586,33 @@
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGC){
         [self jumpToPostDetail:cellModel showComment:showComment enterType:enterType];
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2){
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2 || cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias){
+        if (cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2 || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner) {
+            NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+            guideDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+            guideDict[@"page_type"] = [self pageType];
+            guideDict[@"description"] = cellModel.desc;
+            guideDict[@"item_title"] = cellModel.title;
+            guideDict[@"item_id"] = cellModel.groupId;
+            guideDict[@"rank"] = cellModel.tracerDic[@"rank"];;
+            TRACK_EVENT(@"banner_click", guideDict);
+        }
+        NSMutableDictionary *dict = nil;
+        if (cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias) {
+            dict = [NSMutableDictionary new];
+            NSMutableDictionary *traceParam = @{}.mutableCopy;
+            traceParam[@"enter_from"] =  self.viewController.tracerDict[@"enter_from"];
+            traceParam[@"element_from"] = @"encyclopedia";
+            traceParam[@"page_type"] = [self pageType];
+            traceParam[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+            traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+            traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+            traceParam[@"log_pb"] = cellModel.logPb;
+            dict[TRACER_KEY] = traceParam;
+        }
         //根据url跳转
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:dict];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         // 评论
         NSMutableDictionary *dict = [NSMutableDictionary new];
@@ -630,7 +672,8 @@
         // 投票
         NSMutableDictionary *dict = @{@"begin_show_comment":@(showComment)}.mutableCopy;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = @"hot_discuss_feed";
+        traceParam[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+        traceParam[@"enter_from"] = [self pageType];
         traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
         traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
         traceParam[@"log_pb"] = cellModel.logPb;
@@ -646,7 +689,8 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = @"hot_discuss_feed";
+    traceParam[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+    traceParam[@"enter_from"] = [self pageType];
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
@@ -720,10 +764,14 @@
     if(cellModel.community.socialGroupId){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = cellModel.community.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"hot_discuss_feed",
-                            @"enter_type":@"click",
-                            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
-                            @"log_pb":cellModel.logPb ?: @"be_null"};
+        
+        NSString *originFrom = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        dict[@"tracer"] = @{
+            @"origin_from":originFrom,
+            @"enter_from":[self pageType],
+            @"enter_type":@"click",
+            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
+            @"log_pb":cellModel.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
@@ -910,6 +958,15 @@
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCHotTopic){
         [self trackElementShow:rank elementType:@"hot_topic"];
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCBanner || cellModel.cellType == FHUGCFeedListCellTypeUGCBanner2) {
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+        guideDict[@"page_type"] = [self pageType];
+        guideDict[@"description"] = cellModel.desc;
+        guideDict[@"item_title"] = cellModel.title;
+        guideDict[@"item_id"] = cellModel.groupId;
+        guideDict[@"rank"] = @(rank);
+        TRACK_EVENT(@"banner_show", guideDict);
     }
 }
 
@@ -918,6 +975,7 @@
     if(cellModel.attachCardInfo.extra && cellModel.attachCardInfo.extra.event.length > 0){
         //是房源卡片
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"origin_from"] = dic[@"origin_from"] ?: @"be_null";
         dict[@"page_type"] = [self pageType];
         dict[@"enter_from"] = dic[@"enter_from"] ? dic[@"enter_from"] : @"be_null";
         dict[@"group_id"] = cellModel.attachCardInfo.extra.groupId ?: @"be_null";
@@ -928,6 +986,7 @@
         TRACK_EVENT(cellModel.attachCardInfo.extra.event ?: @"card_show", dict);
     }else{
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"origin_from"] = dic[@"origin_from"] ?: @"be_null";
         dict[@"page_type"] = [self pageType];
         dict[@"enter_from"] = dic[@"enter_from"] ? dic[@"enter_from"] : @"be_null";
         dict[@"from_gid"] = cellModel.groupId;
@@ -942,8 +1001,9 @@
 - (void)trackElementShow:(NSInteger)rank elementType:(NSString *)elementType {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"element_type"] = elementType ? elementType : @"be_null";
-    dict[@"page_type"] = @"hot_discuss_feed";
-    dict[@"enter_from"] = @"neighborhood_tab";
+    dict[@"page_type"] = [self pageType];
+    dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     dict[@"rank"] = @(rank);
     
     TRACK_EVENT(@"element_show", dict);
@@ -951,6 +1011,7 @@
 
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     dict[@"enter_from"] = @"nearby_list";
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
@@ -980,6 +1041,15 @@
         dict[@"click_position"] = @"vote_content";
     }
     TRACK_EVENT(@"click_options", dict);
+}
+
+- (void)trackCategoryRefresh:(NSString *)refreshType {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
+    dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    dict[@"refresh_type"] = refreshType;
+    dict[@"category_name"] = self.categoryId;
+    TRACK_EVENT(@"category_refresh", dict);
 }
 
 @end

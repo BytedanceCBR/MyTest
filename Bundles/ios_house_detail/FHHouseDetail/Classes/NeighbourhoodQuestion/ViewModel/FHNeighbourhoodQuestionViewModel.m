@@ -492,7 +492,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
-    traceParam[@"enter_from"] = @"hot_discuss_feed";
+    traceParam[@"enter_from"] = [self pageType];
     traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
     traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
     traceParam[@"log_pb"] = cellModel.logPb;
@@ -565,7 +565,7 @@
     if(cellModel.community.socialGroupId){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = cellModel.community.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"hot_discuss_feed",
+        dict[@"tracer"] = @{@"enter_from":[self pageType],
                             @"enter_type":@"click",
                             @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
                             @"log_pb":cellModel.logPb ?: @"be_null"};

@@ -58,6 +58,8 @@ typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
 @interface FHUGCScialGroupDataModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *announcement;
+@property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, copy , nullable) NSString *announcementUrl;
 @property (nonatomic, copy , nullable) NSString *contentCount;
 @property (nonatomic, copy , nullable) NSString *socialGroupName;
