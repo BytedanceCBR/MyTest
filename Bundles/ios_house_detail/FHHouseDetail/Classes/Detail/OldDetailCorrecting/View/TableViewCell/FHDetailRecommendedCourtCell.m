@@ -155,7 +155,7 @@
         // 周边小区跳转
 
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-        NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://related_neighborhood_list"];
+        NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_recommend_cout"];
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];

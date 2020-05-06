@@ -18,6 +18,8 @@ typedef enum : NSUInteger {
     FHNeighborListVCTypeNeighborRent                    = 6,         // 小区-小区房源-租房
     FHNeighborListVCTypeRentSameNeighbor                = 7,         // 租房-同小区房源
     FHNeighborListVCTypeRentNearBy                      = 8,         // 租房-周边房源
+         
+    FHHouseListRecommendCout                            = 9,         // 二手房-推荐新盘
 } FHNeighborListVCType;
 
 NS_ASSUME_NONNULL_BEGIN

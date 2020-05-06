@@ -22,13 +22,17 @@
 #import "FHHouseListBaseItemCell.h"
 #import "FHHouseListBaseItemModel.h"
 #import "FHHomePlaceHolderCell.h"
-
+#import "FHHouseListAPI.h"
+#import "FHHouseListBaseItemModel.h"
+#import "FHHouseDetailAPI.h"
+#import "FHRecommendCoutCell.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
 
 @interface FHNeighborListViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
+@property (nonatomic, strong) FHListResultHouseModel *relatedHouseData;
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHNeighborListViewController *listController;
 @property(nonatomic , weak) TTHttpTask *httpTask;
@@ -64,6 +68,7 @@
 //    [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
     [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
     [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
+    [_tableView registerClass:[FHRecommendCoutCell class] forCellReuseIdentifier:NSStringFromClass([FHRecommendCoutCell class])];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -194,6 +199,11 @@
     if (self.listController.hasValidateData == YES) {
         if (self.houseList.count > indexPath.row) {
 //            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCoutItem class]]) {
+                FHRecommendCoutCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHRecommendCoutCell class])];
+                [cell refreshWithData:self.houseList[indexPath.row]];
+                return cell;
+            }
              FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
             
 //            if (cellModel.isRealHouseTopCell) {
@@ -253,6 +263,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    return;
     if (self.listController.hasValidateData == YES && indexPath.row < self.houseList.count) {
         NSInteger rank = indexPath.row - 1;
         NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
@@ -270,6 +281,10 @@
         
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         if (indexPath.row < self.houseList.count) {
+            
+            if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCoutItem class]]) {
+                return 104;
+            }
             FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
             
 //            if (cellModel.isRealHouseTopCell) {
@@ -418,6 +433,19 @@
 
 }
 
+- (void)processDetailRelatedData {
+    self.listController.hasValidateData = YES;
+    if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0) {
+        __weak typeof(self) wself = self;
+        [self.relatedHouseData.data.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            FHRecommendCoutItem *data = [[FHRecommendCoutItem alloc] init];
+            data.item = obj;
+            [wself.houseList addObject:data];
+            [wself.tableView reloadData];
+        }];
+     }
+}
+
 #pragma mark - Request
 
 - (void)requestHouseInSameNeighborhoodSearch:(NSString *)neighborhoodId houseId:(NSString *)houseId offset:(NSInteger)offset
@@ -460,6 +488,18 @@
     __weak typeof(self) wself = self;
     self.httpTask = [FHHouseListAPI requestRentHouseSearchWithQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHListResultHouseModel class] completion:^(FHListResultHouseModel * _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
+    }];
+}
+
+- (void)requestOldRecommendCout:(NSString *)houseId offset:(NSInteger)offset
+{
+    if (self.httpTask) {
+        [self.httpTask cancel];
+    }
+    __weak typeof(self) wself = self;
+    self.httpTask = [FHHouseDetailAPI requestRelatedFloorSearch:@"6809833616537976840" offset:@"0" query:nil count:0 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
+        wself.relatedHouseData = model;
+        [wself processDetailRelatedData];
     }];
 }
 
