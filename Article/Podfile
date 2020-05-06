@@ -61,12 +61,12 @@ def fhPods
     # pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
     # 'Core',
     # 'DelegateForC'
-    # ]
+     ]
 
 #    pod 'ios_house_im' , '0.2.0-rc.14'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #     pod 'ios_house_im' , :path => '../../cim1'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'cd7160a809248abce05c65d395f343fe2a39d193'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '1e5d282cf15594f0339df19fbbcd8badad154833'
 
 end
 
