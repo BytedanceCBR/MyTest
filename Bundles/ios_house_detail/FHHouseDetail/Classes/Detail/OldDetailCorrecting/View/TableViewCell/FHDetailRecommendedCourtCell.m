@@ -1,11 +1,11 @@
 //
-//  FHDetailRecommendedNeighborhoodCell.m
+//  FHDetailRecommendedCourtCell.m
 //  FHHouseDetail
 //
 //  Created by luowentao on 2020/5/3.
 //
 
-#import "FHDetailRecommendedNeighborhoodCell.h"
+#import "FHDetailRecommendedCourtCell.h"
 #import "FHDetailSurroundingAreaCell.h"
 #import "FHOldDetailMultitemCollectionView.h"
 #import "Masonry.h"
@@ -16,7 +16,7 @@
 #import "FHDetailHeaderView.h"
 #import "UILabel+House.h"
 
-@interface FHDetailRecommendedNeighborhoodCell ()
+@interface FHDetailRecommendedCourtCell ()
 
 @property (nonatomic, strong) FHDetailHeaderView    *headerView;
 @property (nonatomic, weak)   UIImageView           *shadowImage;
@@ -24,7 +24,7 @@
 
 @end
 
-@implementation FHDetailRecommendedNeighborhoodCell
+@implementation FHDetailRecommendedCourtCell
 
 
 - (void)awakeFromNib {
@@ -39,37 +39,38 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailRecommendedNeighborhoodModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailRecommendedCourtModel class]]) {
         return;
     }
     self.currentData = data;
     for (UIView *v in self.containerView.subviews) {
         [v removeFromSuperview];
     }
-    FHDetailRecommendedNeighborhoodModel *model = (FHDetailRecommendedNeighborhoodModel *)data;
+    FHDetailRecommendedCourtModel *model = (FHDetailRecommendedCourtModel *)data;
     adjustImageScopeType(model);
     
-    if (model.relatedNeighborhoodData) {
-        self.headerView.label.text = [NSString stringWithFormat:@"推荐新盘 (%@)",model.relatedNeighborhoodData.total];
-        self.headerView.isShowLoadMore = model.relatedNeighborhoodData.hasMore;
-        NSMutableArray *dataArr = [[NSMutableArray alloc] initWithArray:model.relatedNeighborhoodData.items];
-        if (model.relatedNeighborhoodData.hasMore && dataArr.count>5) {
+    if (model.recommendedCourtData) {
+        self.headerView.label.text = [NSString stringWithFormat:@"推荐新盘 (%@)",model.recommendedCourtData.total];
+        self.headerView.isShowLoadMore = model.recommendedCourtData.hasMore;
+        NSMutableArray *dataArr = [[NSMutableArray alloc] initWithArray:model.recommendedCourtData.items];
+        if (model.recommendedCourtData.hasMore && dataArr.count>5) {
             FHDetailMoreItemModel *moreItem = [[FHDetailMoreItemModel alloc]init];
             [dataArr addObject:moreItem];
         }
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-        flowLayout.minimumLineSpacing = 10;
+        flowLayout.minimumLineSpacing = 0;
+        flowLayout.minimumInteritemSpacing = 0;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        NSString *identifier = NSStringFromClass([FHDetailRelatedNeighborhoodResponseDataItemsModel class]);
+        NSString *identifier = NSStringFromClass([FHHouseListBaseItemModel class]);
         NSString *moreIdentifier = NSStringFromClass([FHDetailMoreItemModel class]);
         FHOldDetailMultitemCollectionView *colView = [[FHOldDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 datas:dataArr];
-        [colView registerCell:[FHDetailRecommendedNeighborhoodItemCollectionCell class] forIdentifier:identifier];
+        [colView registerCell:[FHDetailRecommendedCourtItemCollectionCell class] forIdentifier:identifier];
         [colView registerCell:[FHDetailMoreItemCollectionCell class] forIdentifier:moreIdentifier];
         [self.containerView addSubview:colView];
         __weak typeof(self) wSelf = self;
         colView.clickBlk = ^(NSInteger index) {
-            if (index == model.relatedNeighborhoodData.items.count) {
+            if (index == model.recommendedCourtData.items.count) {
                 [wSelf moreButtonClick];
             }else {
                 [wSelf collectionCellClick:index];
@@ -79,11 +80,11 @@
             [wSelf collectionDisplayCell:index];
         };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(20);
-            make.left.mas_equalTo(self.containerView);
-            make.right.mas_equalTo(self.containerView);
-            make.bottom.mas_equalTo(self.containerView).offset(-28);
-        }];
+             make.top.mas_equalTo(20);
+             make.left.mas_equalTo(self.containerView).offset(15);
+             make.right.mas_equalTo(self.containerView).offset(-15);
+             make.bottom.mas_equalTo(self.containerView).offset(-10);
+         }];
         [colView reloadData];
     }
     [self layoutIfNeeded];
@@ -120,9 +121,8 @@
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.mas_equalTo(self.contentView).offset(15);
-        make.right.mas_equalTo(self.contentView).offset(-15);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-12);
+        make.left.right.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-32);
     }];
     
 }
@@ -136,10 +136,10 @@
 }
 // 查看更多
 - (void)moreButtonClick {
-    FHDetailRecommendedNeighborhoodModel *model = (FHDetailRecommendedNeighborhoodModel *)self.currentData;
-    if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.hasMore) {
+    FHDetailRecommendedCourtModel *model = (FHDetailRecommendedCourtModel *)self.currentData;
+    if (model.recommendedCourtData && model.recommendedCourtData.hasMore) {
         
-        NSString *searchId = model.relatedNeighborhoodData.searchId;
+        NSString *searchId = model.recommendedCourtData.searchId;
         
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
@@ -153,9 +153,6 @@
         infoDict[@"house_type"] = @(FHHouseTypeNeighborhood);
         infoDict[@"title"] = @"推荐新盘";
         // 周边小区跳转
-        if (model.neighborhoodId.length > 0) {
-            infoDict[@"neighborhood_id"] = model.neighborhoodId;
-        }
 
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
         NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://related_neighborhood_list"];
@@ -168,19 +165,19 @@
 
 // cell 点击
 - (void)collectionCellClick:(NSInteger)index {
-    FHDetailRecommendedNeighborhoodModel *model = (FHDetailRecommendedNeighborhoodModel *)self.currentData;
-    if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.items.count > 0 && index >= 0 && index < model.relatedNeighborhoodData.items.count) {
-        // 点击cell处理
-        FHDetailRelatedNeighborhoodResponseDataItemsModel *dataItem = model.relatedNeighborhoodData.items[index];
+    FHDetailRecommendedCourtModel *model = (FHDetailRecommendedCourtModel *)self.currentData;
+    
+    if (model.recommendedCourtData && model.recommendedCourtData.items.count > 0 && index >= 0 && index < model.recommendedCourtData.items.count) {
+        FHHouseListBaseItemModel *dataItem = model.recommendedCourtData.items[index];
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"slide";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
-        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNeighborhood];
-        tracerDic[@"element_from"] = @"neighborhood_nearby";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
+        tracerDic[@"element_from"] = @"related";
         tracerDic[@"enter_from"] = @"old_detail";
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNeighborhood)}];
-        NSString * urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",dataItem.id];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNewHouse)}];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",dataItem.houseid];
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
@@ -189,42 +186,42 @@
 }
 
 // 不重复调用
-- (void)collectionDisplayCell:(NSInteger)index
+- (void)collectionDisplayCell:(NSInteger)index //注意联调时测试
 {
-    FHDetailRecommendedNeighborhoodModel *model = (FHDetailRecommendedNeighborhoodModel *)self.currentData;
-    if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.items.count > 0 && index >= 0 && index < model.relatedNeighborhoodData.items.count) {
+    FHDetailRecommendedCourtModel *model = (FHDetailRecommendedCourtModel *)self.currentData;
+    if (model.recommendedCourtData && model.recommendedCourtData.items.count > 0 && index >= 0 && index < model.recommendedCourtData.items.count) {
         // 点击cell处理
-        FHDetailRelatedNeighborhoodResponseDataItemsModel *itemModel = model.relatedNeighborhoodData.items[index];
+        FHHouseListBaseItemModel *dataItem = model.recommendedCourtData.items[index];
         // house_show
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"slide";
-        tracerDic[@"log_pb"] = itemModel.logPb ? itemModel.logPb : @"be_null";
+        tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNeighborhood];
         tracerDic[@"element_type"] = @"neighborhood_nearby";
-        tracerDic[@"search_id"] = itemModel.searchId.length > 0 ? itemModel.searchId : @"be_null";
-        tracerDic[@"group_id"] = itemModel.groupId.length > 0 ? itemModel.groupId : (itemModel.id ? itemModel.id : @"be_null");
-        tracerDic[@"impr_id"] = itemModel.imprId.length > 0 ? itemModel.imprId : @"be_null";
+        tracerDic[@"search_id"] = dataItem.searchId.length > 0 ? dataItem.searchId : @"be_null";
+        tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.id ? dataItem.id : @"be_null");
+        tracerDic[@"impr_id"] = dataItem.imprId.length > 0 ? dataItem.imprId : @"be_null";
         [tracerDic removeObjectsForKeys:@[@"element_from"]];
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"recommended_neighborhood"; // 周边小区
+    return @"recommended_court"; // 推荐新盘
 }
 
 @end
 
-#pragma mark - FHDetailRecommendedNeighborhoodItemCollectionCell
+#pragma mark - FHDetailRecommendedCourtItemCollectionCell
 
-@interface FHDetailRecommendedNeighborhoodItemCollectionCell()
+@interface FHDetailRecommendedCourtItemCollectionCell()
 
 @property(nonatomic, strong) UIImageView *imageBacView;
 
 @end
 
-@implementation FHDetailRecommendedNeighborhoodItemCollectionCell
+@implementation FHDetailRecommendedCourtItemCollectionCell
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -236,14 +233,14 @@
 }
 
 - (void)refreshWithData:(id)data{
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailRelatedNeighborhoodResponseDataItemsModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHHouseListBaseItemModel class]]) {
         return;
     }
     self.currentData = data;
-    FHDetailRelatedNeighborhoodResponseDataItemsModel *model = (FHDetailRelatedNeighborhoodResponseDataItemsModel *)data;
+    FHHouseListBaseItemModel *model = (FHHouseListBaseItemModel *)data;
     if (model) {
         if (model.images.count > 0) {
-            FHDetailRelatedNeighborhoodResponseDataItemsImagesModel *imageModel = model.images[0];
+            FHImageModel *imageModel = model.houseImage.firstObject;
             NSString *urlStr = imageModel.url;
             if ([urlStr length] > 0) {
                 [self.icon bd_setImageWithURL:[NSURL URLWithString:urlStr] placeholder:[UIImage imageNamed:@"default_image"]];
@@ -255,7 +252,7 @@
         }
         self.nameLabel.text = model.displayTitle;
         self.priceLabel.text = model.displayPricePerSqm;
-        self.spaceLabel.text = model.displayBuiltYear;
+        self.spaceLabel.text = model.displayDescription;
     }
     [self layoutIfNeeded];
 }
@@ -276,21 +273,22 @@
     _icon.layer.masksToBounds = YES;
     _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     _icon.layer.borderWidth = 0.5;
-    [self addSubview:_icon];
+    [self.contentView addSubview:_icon];
     
     _nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     _nameLabel.font = [UIFont themeFontMedium:16];
     _nameLabel.textColor = [UIColor themeGray1];
-    [self addSubview:_nameLabel];
+    [self.contentView addSubview:_nameLabel];
     
     _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _spaceLabel.font = [UIFont themeFontRegular:12];
     _spaceLabel.textColor = [UIColor themeGray3];
-    [self addSubview:_spaceLabel];
+    [self.contentView addSubview:_spaceLabel];
     
     _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     _priceLabel.font = [UIFont themeFontMedium:16];
     _priceLabel.textColor = [UIColor themeOrange1];
+    [self.contentView addSubview:_priceLabel];
     
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
@@ -323,7 +321,7 @@
 
 @end
 
-@implementation FHDetailRecommendedNeighborhoodModel
+@implementation FHDetailRecommendedCourtModel
 
 
 @end

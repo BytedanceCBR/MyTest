@@ -392,6 +392,26 @@
     
 }
 
+// 二手房-推荐新盘
++(TTHttpTask*)requestOldHouseRecommendedCourtSearch:(NSString*)houseId
+                                 offset:(NSString *)offset
+                                  query:(NSString*)query
+                                  count:(NSInteger)count
+                             completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_court?court_id=%@&offset=%@",houseId,offset];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (query.length > 0) {
+        url = [NSString stringWithFormat:@"%@&%@",url,query];
+    }
+    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_COURT;
+    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHListResultHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+
 // 新房-周边新盘
 +(TTHttpTask*)requestRelatedFloorSearch:(NSString*)houseId
                                  offset:(NSString *)offset

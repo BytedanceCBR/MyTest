@@ -8,20 +8,20 @@
 #import "FHDetailBaseCell.h"
 #import "FHDetailBaseModel.h"
 #import "FHDetailRelatedNeighborhoodResponseModel.h"
-
+#import "FHHouseListBaseItemModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHDetailRecommendedNeighborhoodCell : FHDetailBaseCell
+@interface FHDetailRecommendedCourtCell : FHDetailBaseCell
 
 @end
 
-@interface FHDetailRecommendedNeighborhoodModel : FHDetailBaseModel
-@property (nonatomic, strong, nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;
-@property (nonatomic, copy , nullable) NSString *neighborhoodId;
+@interface FHDetailRecommendedCourtModel : FHDetailBaseModel
+@property (nonatomic, strong, nullable) FHHouseListDataModel *recommendedCourtData;
+
 @end
 
 #pragma mark - collectionCell
-@interface FHDetailRecommendedNeighborhoodItemCollectionCell : FHDetailBaseCollectionCell
+@interface FHDetailRecommendedCourtItemCollectionCell : FHDetailBaseCollectionCell
 
 @property (nonatomic, strong)    UIImageView     *icon;
 @property (nonatomic, strong)    UILabel         *nameLabel;
