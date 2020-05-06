@@ -24,7 +24,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.emptyImageView = [[UIImageView alloc] init];
-        self.emptyImageView.image = [UIImage imageNamed:@"suggestion_empty"];
+        self.emptyImageView.image = [UIImage imageNamed:@"group-9"];
         [self.contentView addSubview: _emptyImageView];
         [self.emptyImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(70);
