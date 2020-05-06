@@ -95,6 +95,14 @@
     [dataJson setValue:@(imageWidth * 58.0/335.0) forKey:@"img_height"];
     [dataJson setValue:@(imageWidth) forKey:@"img_width"];
     
+    if (!isEmptyString(cellModel.upSpace) && cellModel.upSpace.integerValue >0) {
+        [dataJson setValue:@(cellModel.upSpace.integerValue) forKey:@"upSpace"];
+    }
+    
+    if (!isEmptyString(cellModel.downSpace) && cellModel.downSpace.integerValue >0 ) {
+        [dataJson setValue:@(cellModel.upSpace.integerValue) forKey:@"downSpace"];
+    }
+    
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
     NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
@@ -239,15 +247,15 @@
     
     CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
     CGFloat imageHeight = imageWidth * 58.0/335.0;
-   __block CGFloat height = imageHeight + 20 + 25;
+   __block CGFloat height = imageHeight + 5;
     
     if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
-        FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
-        if ([model.cell isKindOfClass:[FHUGCLynxBannerCell class]]) {
-            height =  [((FHUGCLynxBannerCell *)model.cell).lynxView intrinsicContentSize].height + 5;
+        FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        if ([cellModel.cell isKindOfClass:[FHUGCLynxBannerCell class]]) {
+            height =  [((FHUGCLynxBannerCell *)cellModel.cell).lynxView intrinsicContentSize].height + 5;
         }
-     
     }
+        
     return height;
 }
 
