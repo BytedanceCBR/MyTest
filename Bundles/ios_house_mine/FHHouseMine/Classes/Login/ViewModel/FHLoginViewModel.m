@@ -814,12 +814,16 @@ static FHLoginSharedModel *_sharedModel = nil;
                 [self goToMobileLogin];
             }];
             [alertController showFrom:self.viewController animated:YES];
-        }else {
+        } else {
             NSString *errorMessage = @"啊哦，服务器开小差了";
             if (!isOneKeyLogin) {
                 errorMessage = [FHMineAPI errorMessageByErrorCode:error];
             }
             [[ToastManager manager] showToast:errorMessage];
+            if (error.code == TTAccountErrCodeSMSCodeError && self.clearVerifyCodeWhenError) {
+                //验证码错误
+                self.clearVerifyCodeWhenError();
+            }
         }
     }
 }

@@ -84,8 +84,7 @@
 
 - (void)setupUI {
     switch (self.viewType) {
-        case FHLoginViewTypeOneKey:
-        {
+        case FHLoginViewTypeOneKey: {
             FHOneKeyLoginView *onekeyLoginView = [[FHOneKeyLoginView alloc] init];
             onekeyLoginView.delegate = self.viewModel;
             [self.view addSubview:onekeyLoginView];
@@ -100,10 +99,9 @@
                 make.left.right.equalTo(self.view);
             }];
             [onekeyLoginView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType]];
-        }
             break;
-        case FHLoginViewTypeMobile:
-        {
+        }
+        case FHLoginViewTypeMobile: {
             FHMobileInputView *mobileInputView = [[FHMobileInputView alloc] init];
             mobileInputView.delegate = self.viewModel;
             [self.view addSubview:mobileInputView];
@@ -119,10 +117,9 @@
             }];
             self.textField = mobileInputView.mobileTextField;
             [mobileInputView updateProtocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType]];
-        }
             break;
-        case FHLoginViewTypeVerify:
-        {
+        }
+        case FHLoginViewTypeVerify: {
             FHVerifyCodeInputView *verifyCodeInputView = [[FHVerifyCodeInputView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds))];
             verifyCodeInputView.isForBindMobile = NO;
             verifyCodeInputView.delegate = self.viewModel;
@@ -139,14 +136,15 @@
             }];
             self.textField = verifyCodeInputView.textFieldArray.firstObject;
             [verifyCodeInputView updateMobileNumber:self.viewModel.mobileNumber];
-            
             __weak FHVerifyCodeInputView * weakCodeView = verifyCodeInputView;
             [self.viewModel setUpdateTimeCountDownValue:^(NSInteger secondsValue) {
                 [weakCodeView updateTimeCountDownValue:secondsValue];
             }];
-            
-        }
+            [self.viewModel setClearVerifyCodeWhenError:^{
+                [weakCodeView clearTextFieldText];
+            }];
             break;
+        }
         default:
             break;
     }

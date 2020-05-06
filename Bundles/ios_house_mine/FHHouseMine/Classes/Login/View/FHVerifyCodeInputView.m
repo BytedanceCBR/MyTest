@@ -133,6 +133,9 @@
     textField.textColor = [UIColor themeGray1];
     textField.keyboardType = UIKeyboardTypeNumberPad;
     textField.returnKeyType = UIReturnKeyDone;
+    if (@available(iOS 12.0, *)) {
+        textField.textContentType = UITextContentTypeOneTimeCode;
+    }
     textField.deleteDelegate = self;
     textField.delegate = self;
 //    [textField addTarget:self action:@selector(textFiledDidChange:) forControlEvents:UIControlEventEditingChanged];
@@ -202,6 +205,16 @@
     }
 }
 
+- (void)clearTextFieldText {
+    for (UITextField *textField in self.textFieldArray) {
+        if (textField.isFirstResponder) {
+            [textField resignFirstResponder];
+        }
+        textField.text = @"";
+    }
+    [self.textFieldArray.firstObject becomeFirstResponder];
+}
+
 //- (void)textFiledDidChange:(UITextField *)textField {
 //    // 这个地方再考虑一下，可以使用一个 string 来保存 smsCode 的更改，来判断 应该哪个 textField 弹键盘
 //    if (textField == self.codeTextFieldOne) {
@@ -264,26 +277,25 @@
             self.textFieldArray[index].text = string;
             [self.textFieldArray[index + 1] becomeFirstResponder];
         }
-        //来自键盘的快捷提示
-        if (string.length >= 4) {
-            return NO;
-            //TODO:放到外面，延迟设置
-            for (NSUInteger i = 0; i < self.textFieldArray.count; i++) {
-                NSString *number = [string substringWithRange:NSMakeRange(i, 1)];
-                UITextField *tf = self.textFieldArray[i];
-                tf.delegate = nil;
-                tf.text = number;
-                tf.delegate = self;
-                if (tf.isFirstResponder) {
-                    [tf resignFirstResponder];
-                }
-            }
-            [self.textFieldArray[self.textFieldArray.count - 1] becomeFirstResponder];
-            [self beginLoginWithMobile];
-            return NO;
-        }
-
     }
+        //来自键盘的快捷提示
+//        if (string.length >= 4) {
+//            return NO;
+//            //放到外面，延迟设置
+//            for (NSUInteger i = 0; i < self.textFieldArray.count; i++) {
+//                NSString *number = [string substringWithRange:NSMakeRange(i, 1)];
+//                UITextField *tf = self.textFieldArray[i];
+//                tf.delegate = nil;
+//                tf.text = number;
+//                tf.delegate = self;
+//                if (tf.isFirstResponder) {
+//                    [tf resignFirstResponder];
+//                }
+//            }
+//            [self.textFieldArray[self.textFieldArray.count - 1] becomeFirstResponder];
+//            [self beginLoginWithMobile];
+//            return NO;
+//        }
     return NO;
 }
 

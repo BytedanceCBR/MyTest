@@ -157,10 +157,13 @@
             }];
             self.textField = verifyCodeInputView.textFieldArray.firstObject;
             [verifyCodeInputView updateMobileNumber:self.viewModel.mobileNumber];
-            
             __weak FHVerifyCodeInputView * weakCodeView = verifyCodeInputView;
+            //在绑定页面重置了block，登录已经用不到了
             [self.viewModel setUpdateTimeCountDownValue:^(NSInteger secondsValue) {
                 [weakCodeView updateTimeCountDownValue:secondsValue];
+            }];
+            [self.viewModel setClearVerifyCodeWhenError:^{
+                [weakCodeView clearTextFieldText];
             }];
             break;
         }

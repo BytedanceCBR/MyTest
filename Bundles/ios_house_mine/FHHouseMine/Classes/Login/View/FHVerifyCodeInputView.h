@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param countdownSeconds 倒数计时
 - (void)updateTimeCountDownValue:(NSInteger )countdownSeconds;
 
+- (void)clearTextFieldText;
+
 @end
 
 NS_ASSUME_NONNULL_END

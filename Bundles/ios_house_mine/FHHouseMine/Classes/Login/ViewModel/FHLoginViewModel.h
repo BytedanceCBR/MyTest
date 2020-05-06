@@ -39,6 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 验证码页面的回调
 @property (nonatomic, copy) void (^updateTimeCountDownValue)(NSInteger secondsValue);
 
+/// 验证码错误回调，需要清除验证码
+@property (nonatomic, copy) void (^clearVerifyCodeWhenError)(void);
+
 /// 请求运营商和抖音登录的权限
 - (void)startLoadData;
 - (void)addEnterCategoryLog;
