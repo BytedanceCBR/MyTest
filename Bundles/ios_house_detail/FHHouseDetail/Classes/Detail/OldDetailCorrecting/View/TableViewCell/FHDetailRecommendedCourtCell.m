@@ -53,7 +53,7 @@
         self.headerView.label.text = [NSString stringWithFormat:@"推荐新盘 (%@)",model.recommendedCourtData.total];
         self.headerView.isShowLoadMore = model.recommendedCourtData.hasMore;
         NSMutableArray *dataArr = [[NSMutableArray alloc] initWithArray:model.recommendedCourtData.items];
-        if (model.recommendedCourtData.hasMore && dataArr.count>5) {
+        if (model.recommendedCourtData.hasMore && [model.recommendedCourtData.total intValue] > 5) {
             FHDetailMoreItemModel *moreItem = [[FHDetailMoreItemModel alloc]init];
             [dataArr addObject:moreItem];
         }
@@ -252,7 +252,7 @@
         }
         self.nameLabel.text = model.displayTitle;
         self.priceLabel.text = model.displayPricePerSqm;
-        self.spaceLabel.text = model.displayDescription;
+        self.spaceLabel.text = model.buildingSquareMeter;
     }
     [self layoutIfNeeded];
 }
