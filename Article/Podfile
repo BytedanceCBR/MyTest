@@ -66,7 +66,7 @@ def fhPods
 #    pod 'ios_house_im' , '0.2.0-rc.14'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #     pod 'ios_house_im' , :path => '../../cim1'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '88bc7b96a7ac56cf62e8a892c19d261ee52909d6'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'e836255651a99838f7603c188b060836ab1c05e0'
 
 end
 
@@ -559,7 +559,7 @@ end
 def testPods
     pod 'BDSSOAuthSDK'
     pod_binary 'TTDebugAssistant', '0.2.33'
-    pod_binary 'FLEX', '2.4.0'#, :configurations=>['Debug']
+    pod_binary 'FLEX', '3.1.2'#, :configurations=>['Debug']
 #    pod_source 'BDNetworkDevMonitor', '0.1.6'
     pod_binary 'TTSettingsManager/Debug'
     pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
