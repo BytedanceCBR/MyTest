@@ -64,11 +64,16 @@
 {
     self.detailTracerDic = [NSMutableDictionary new];
     self.detailTracerDic[@"event_type"] = @"house_app2c_v2";
-    self.detailTracerDic[@"enter_from"] = self.detailController.tracerDict[@"enter_from"];
+    self.detailTracerDic[@"enter_from"] = self.detailController.tracerDict[@"enter_from"] ?: @"be_null";
     self.detailTracerDic[@"page_type"] = @"house_info_detail";
-    self.detailTracerDic[@"origin_from"] = self.detailController.tracerDict[@"origin_from"];
-    NSDictionary *dict = self.detailController.tracerDict[@"log_pb"];
-    self.detailTracerDic[@"group_id"] = dict[@"group_id"];
+    self.detailTracerDic[@"origin_from"] = self.detailController.tracerDict[@"origin_from"] ?: @"be_null";
+    if (self.detailController.tracerDict[@"log_pb"]) {
+        NSDictionary *dict = self.detailController.tracerDict[@"log_pb"];
+        self.detailTracerDic[@"group_id"] = dict[@"group_id"] ?: @"be_null";
+    } else {
+        self.detailTracerDic[@"group_id"] = @"be_null";
+    }
+
 }
 
 // 注册cell类型
