@@ -8,6 +8,8 @@
 #import "FHHouseErrorHubManager.h"
 #import "FHHouseErrorHubView.h"
 #import "FHEnvContext.h"
+#import "HMDTTMonitor.h"
+
 
 
 @implementation FHHouseErrorHubManager
@@ -30,7 +32,7 @@
                                                                        options:NSJSONReadingAllowFragments
                                                                          error:nil];
     NSDictionary *responseStatusDic = [[NSDictionary alloc]initWithDictionary:responseStatus.allHeaderFields];
-    //            if ( type !=FHNetworkMonitorTypeSuccess) {
+                if ( type !=FHNetworkMonitorTypeSuccess) {
     NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
     [outputDic setValue:host forKey:@"name"];
     [outputDic setValue:[self removeNillValue:responseDictionary] forKey:@"response"];
@@ -53,7 +55,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [FHHouseErrorHubView showErrorHubViewWithTitle:@"核心接口异常" content:[NSString stringWithFormat:@"HOST:%@",host]];
     });
-    //            }
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"err_hub" metric:nil category:@{@"status" : @(1)} extra:@{@"errorHubType" : @"request",@"eventName":host,@"error_info":@(type),@"currentTime":[self getCurrentTimes],@"logID":[[self removeNillValue:responseStatusDic]objectForKey:@"x-tt-logid"]}];
+    }
 }
 //保存数据
 - (void)addLogWithData:(id)Data logType:(FHErrorHubType)errorHubType {
@@ -163,6 +166,7 @@
                         [errorSaveDic setValue:dictSetting forKey:@"settings_data"];
                         [errorSaveDic setValue:[self getCurrentTimes] forKey:@"currentTime"];
                         [self addLogWithData:errorSaveDic logType:errorHubType];
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"err_hub" metric:nil category:@{@"status" : @(2)} extra:@{@"errorHubType" : @"buryingPoint",@"eventName":eventName,@"error_info":errorSaveDic[@"error_info"],@"currentTime":[self getCurrentTimes]}];
                     }
                 }
             }];
