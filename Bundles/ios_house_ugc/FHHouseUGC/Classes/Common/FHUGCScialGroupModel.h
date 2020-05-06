@@ -71,6 +71,7 @@ typedef NS_ENUM(NSUInteger, UserCoversationStatus) {
 @property (nonatomic, copy , nullable) NSString *socialGroupId;
 @property (nonatomic, copy , nullable) NSString *hasFollow;
 @property (nonatomic, copy , nullable) NSString *showStatus;
+@property (nonatomic, copy , nullable) NSString *tagIcon;
 @property (nonatomic, strong, nullable) FHUGCSocialGroupOperationModel *operation;
 @property (nonatomic, assign) UserAuthType userAuth;
 @property (nonatomic, strong, nullable) NSArray <FHUGCConfigDataPermissionModel> *permission;
