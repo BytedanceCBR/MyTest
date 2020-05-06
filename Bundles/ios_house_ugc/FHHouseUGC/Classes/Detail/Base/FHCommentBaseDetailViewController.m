@@ -714,6 +714,7 @@
 //    [mdict setValue:self.detailModel.article forKey:@"group"];
     
     [mdict setValue:@"favorite" forKey:@"categoryID"];
+    mdict[@"extraDic"] = self.tracerDict;
     
     self.wCommentModel = mdict[@"commentModel"];
     if (self.wCommentModel && [self.wCommentModel isKindOfClass:[TTCommentModel class]]) {

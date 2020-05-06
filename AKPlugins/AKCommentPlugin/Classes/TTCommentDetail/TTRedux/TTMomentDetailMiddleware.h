@@ -18,5 +18,6 @@
 @property (nonatomic, strong) NSDictionary *logPb;
 @property (nonatomic, copy) NSString *ansid;
 @property (nonatomic, copy) NSString *qid;
+@property (nonatomic, strong) NSDictionary *extraDic;
 
 @end
