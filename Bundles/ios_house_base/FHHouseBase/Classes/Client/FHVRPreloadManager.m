@@ -49,24 +49,32 @@
         NSURL *urlImageLoader = [NSURL URLWithString:obj];
         NSString *imageRootPath = [IESGeckoKit rootDirForAccessKey:[FHVRPreloadManager getGeckoKey] channel:kFHVrImagePreLoadChannel];
         NSRange imageUrlRange = [imageStr rangeOfString:@"/img/"];
-        NSString *imageName = [imageStr substringFromIndex:imageUrlRange.location + imageUrlRange.length];
-        NSString *imageFileS = [NSString stringWithFormat:@"%@/%@",imageRootPath,imageName];
-        
-        NSArray <NSString *>*arrayString = [imageName componentsSeparatedByString:@"/"];
-        
-        NSString *dirStr = [NSString stringWithFormat:@"%@/%@",imageRootPath,arrayString.firstObject];
-        
-        if (![[NSFileManager defaultManager] fileExistsAtPath:dirStr]) {
-              [[NSFileManager defaultManager] createDirectoryAtPath:dirStr withIntermediateDirectories:YES attributes:nil error:nil];
+        if (imageUrlRange.location == 0) {
+            return;
         }
-        
-        [[SDWebImageManager sharedManager] loadImageWithURL:urlImageLoader options:SDWebImageLowPriority progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-            
-        } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-            [data writeToFile:imageFileS atomically:YES];
-        }];
+        if (imageStr.length > (imageUrlRange.location + imageUrlRange.length)) {
+            NSString *imageName = [imageStr substringFromIndex:imageUrlRange.location + imageUrlRange.length];
+             NSString *imageFileS = [NSString stringWithFormat:@"%@/%@",imageRootPath,imageName];
+             
+             NSArray <NSString *>*arrayString = [imageName componentsSeparatedByString:@"/"];
+             
+            if (arrayString) {
+                NSString *dirStr = [NSString stringWithFormat:@"%@/%@",imageRootPath,arrayString.firstObject];
+                      
+                if (![[NSFileManager defaultManager] fileExistsAtPath:dirStr]) {
+                            [[NSFileManager defaultManager] createDirectoryAtPath:dirStr withIntermediateDirectories:YES attributes:nil error:nil];
+                }
+                
+                if (urlImageLoader) {
+                    [[SDWebImageManager sharedManager] loadImageWithURL:urlImageLoader options:SDWebImageLowPriority progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+                                        
+                              } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+                                        [data writeToFile:imageFileS atomically:YES];
+                              }];
+                    }
+                }
+            }
     }];
-
 }
 
 /**
