@@ -245,7 +245,8 @@
 
     if(tabIndex != self.viewController.segmentControl.selectedSegmentIndex){
         self.currentTabIndex = tabIndex;
-        self.viewController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
+//        self.viewController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
+        [self.viewController.segmentControl setSelectedSegmentIndex:self.currentTabIndex animated:YES];
     }
     else{
         if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (self.viewController.segmentControl.sectionTitles.count - 1)){
