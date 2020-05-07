@@ -231,7 +231,7 @@
     extraDic[@"title"] = title;
     extraDic[@"subtitle"] = subtitle;
     extraDic[@"btn_title"] = btnTitle;
-    extraDic[@"toast"] = @"领取成功，稍后会有置业顾问联系您";
+    extraDic[@"toast"] = toast;
 
     NSMutableDictionary *associateParamDict = @{}.mutableCopy;
     associateParamDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
