@@ -134,6 +134,7 @@
         make.left.mas_equalTo(_iconView.mas_right).offset(13);
         make.top.mas_equalTo(32);
         make.height.mas_equalTo(19);
+        make.right.mas_equalTo(self.priceLabel.mas_left);
     }];
     
     [_roomSpaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -141,12 +142,14 @@
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(8);
         make.right.mas_equalTo(-15);
         make.height.mas_equalTo(14);
+        make.right.mas_equalTo(self.priceLabel.mas_left);
     }];
 
     [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-31);
         make.top.mas_equalTo(32);
         make.height.mas_equalTo(19);
+        make.width.mas_equalTo(110);
     }];
 }
 
@@ -222,25 +225,6 @@
                 _statusBGView.backgroundColor = [UIColor whiteColor];
             }
         }
-
-        
-        if (model.index == 0) {
-            [_iconView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(20);
-                make.bottom.equalTo(self.contentView).offset(-10);
-                make.top.equalTo(self.contentView).offset(20);
-                make.width.mas_equalTo(100);
-                make.height.mas_equalTo(75);
-            }];
-            
-            [_nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(self.iconView.mas_right).offset(12);
-                make.top.mas_equalTo(20);
-                make.right.mas_equalTo(22);
-                make.width.mas_equalTo(100);
-                make.height.mas_equalTo(22);
-            }];
-       }
     }
 }
 
