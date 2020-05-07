@@ -38,11 +38,11 @@
     return self;
 }
 
--(void)initUI
+- (void)initUI
 {
+    self.contentView.backgroundColor = [UIColor themeGray7];
     self.containerView = [[UIView alloc] init];
-    self.containerView.layer.cornerRadius = 10;
-    self.containerView.layer.masksToBounds = YES;
+    self.containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
@@ -109,6 +109,28 @@
     }];
 }
 
+- (CAShapeLayer *)maskLayer:(UIRectCorner)rectCorner
+{
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 104) byRoundingCorners:rectCorner cornerRadii:CGSizeMake(10, 10)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-30, 104);
+    maskLayer.path = maskPath.CGPath;
+    return maskLayer;
+}
+
+- (void)refreshWithData:(bool)isFirst andLast:(BOOL)isLast
+{
+    if (isFirst && isLast) {
+        self.containerView.layer.mask = [self maskLayer:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft | UIRectCornerBottomRight];
+    } else if (isFirst) {
+        self.containerView.layer.mask = [self maskLayer:UIRectCornerTopLeft | UIRectCornerTopRight];
+    } else if (isLast) {
+         self.containerView.layer.mask = [self maskLayer:UIRectCornerBottomLeft | UIRectCornerBottomRight];
+    } else {
+        self.containerView.layer.mask = nil;
+    }
+}
+
 - (void)refreshWithData:(id)data
 {
     self.data = data;
@@ -116,7 +138,6 @@
     FHImageModel *imageModel = model.houseImage.firstObject;
     [self.houseImage bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"default_image"]];
     self.mainTitleLabel.text = model.title;
-    //self.pricePerSqmLabel.text = model.pricePerSqm;
     self.subTitleLabel.text = model.displaySubtitle;
     if (model.originPrice) {
         self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];

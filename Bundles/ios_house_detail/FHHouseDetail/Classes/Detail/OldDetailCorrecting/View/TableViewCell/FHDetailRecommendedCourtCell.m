@@ -150,12 +150,12 @@
         
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
         infoDict[@"tracer"] = tracerDic;
-        infoDict[@"house_type"] = @(FHHouseTypeNeighborhood);
+        infoDict[@"house_type"] = @(FHHouseTypeNewHouse);
         infoDict[@"title"] = @"推荐新盘";
         // 周边小区跳转
 
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-        NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_recommend_cout"];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://house_list_recommend_court"];
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];

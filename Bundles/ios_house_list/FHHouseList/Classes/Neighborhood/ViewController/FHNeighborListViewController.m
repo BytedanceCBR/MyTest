@@ -78,8 +78,8 @@
                     self.tracerDict[@"category_name"] = self.tracerModel.categoryName;
                 }
 
-            } else if ([paramObj.host isEqualToString:@"house_list_recommend_cout"]) {
-                self.neighborListVCType = FHHouseListRecommendCout;
+            } else if ([paramObj.host isEqualToString:@"house_list_recommend_court"]) {
+                self.neighborListVCType = FHNeighborListVCTypeRecommendCourt;
                 self.tracerModel.categoryName = [self categoryName];
                 if (self.tracerDict) {
                     self.tracerDict[@"category_name"] = self.tracerModel.categoryName;
@@ -97,6 +97,8 @@
         return @"related_list";
     }else if ([_paramObj.host isEqualToString:@"house_list_same_neighborhood"]) {
         return @"same_neighborhood_list";
+    } else if ([_paramObj.host isEqualToString:@"house_list_recommend_court"]) {
+        return @"recommend_new_list";
     }
     return @"";
 }
@@ -107,7 +109,7 @@
         return @"周边房源";
     }else if ([_paramObj.host isEqualToString:@"house_list_same_neighborhood"]) {
         return @"同小区房源";
-    } else if ([_paramObj.host isEqualToString:@"house_list_recommend_cout"]) {
+    } else if ([_paramObj.host isEqualToString:@"house_list_recommend_court"]) {
         return @"推荐新盘";
     }
     return @"";
@@ -172,11 +174,7 @@
 
     id<FHHouseFilterBridge> bridge = [[FHHouseBridgeManager sharedInstance] filterBridge];
     self.houseFilterBridge = bridge;
-    if (self.neighborListVCType != FHHouseListRecommendCout) {
-        self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:NO showSort:NO];
-    } else {
-        self.houseFilterViewModel = [bridge filterViewModelWithType:1 showAllCondition:YES showSort:YES];
-    }
+    self.houseFilterViewModel = [bridge filterViewModelWithType:self.houseType showAllCondition:NO showSort:NO];
     self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
     self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
     self.houseFilterViewModel = bridge;
@@ -205,6 +203,9 @@
     _tableView.estimatedSectionHeaderHeight = 0;
     if ([TTDeviceHelper isIPhoneXDevice]) {
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    }
+    if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
+        _tableView.backgroundColor = [UIColor themeGray7];
     }
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
@@ -276,8 +277,8 @@
         [self.viewModel requestRelatedHouseSearch:self.neighborhoodId houseId:self.houseId offset:offset];
     } else if (self.neighborListVCType == FHNeighborListVCTypeRentNearBy) {
         [self.viewModel requestRentRelatedHouseSearch:self.neighborhoodId houseId:self.houseId offset:offset];
-    } else if (self.neighborListVCType == FHHouseListRecommendCout) {
-        [self.viewModel requestOldRecommendCout:self.houseId offset:offset];
+    } else if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
+        [self.viewModel requestOldRecommendCourt:self.houseId offset:offset];
     }
 }
 

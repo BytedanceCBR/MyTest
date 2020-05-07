@@ -201,6 +201,9 @@
 //            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
             if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCoutItem class]]) {
                 FHRecommendCoutCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHRecommendCoutCell class])];
+                BOOL isFirst = (indexPath.row == 0);
+                BOOL isLast = (indexPath.row == _houseList.count - 1);
+                [cell refreshWithData:isFirst andLast:isLast];
                 [cell refreshWithData:self.houseList[indexPath.row]];
                 return cell;
             }
@@ -441,8 +444,8 @@
             FHRecommendCoutItem *data = [[FHRecommendCoutItem alloc] init];
             data.item = obj;
             [wself.houseList addObject:data];
-            [wself.tableView reloadData];
         }];
+        [wself.tableView reloadData];
      }
 }
 
@@ -491,13 +494,13 @@
     }];
 }
 
-- (void)requestOldRecommendCout:(NSString *)houseId offset:(NSInteger)offset
+- (void)requestOldRecommendCourt:(NSString *)houseId offset:(NSInteger)offset
 {
     if (self.httpTask) {
         [self.httpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.httpTask = [FHHouseDetailAPI requestRelatedFloorSearch:@"6809833616537976840" offset:@"0" query:nil count:0 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
+    self.httpTask = [FHHouseDetailAPI requestOldHouseRecommendedCourtSearch:@"6809833616537976840" offset:@"0" query:self.condition count:0 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
         wself.relatedHouseData = model;
         [wself processDetailRelatedData];
     }];

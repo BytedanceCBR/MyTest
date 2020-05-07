@@ -430,7 +430,6 @@
             completion(model,error);
         }
     }];
-    
 }
 
 // 新房-楼盘动态

@@ -98,6 +98,7 @@ completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))co
                                   query:(NSString*)query
                                   count:(NSInteger)count
                              completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion;
+
 // 新房-周边新盘
 +(TTHttpTask*)requestRelatedFloorSearch:(NSString*)houseId
                                  offset:(NSString *)offset

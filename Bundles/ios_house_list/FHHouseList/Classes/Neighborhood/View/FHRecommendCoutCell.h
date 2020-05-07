@@ -11,6 +11,8 @@
 
 @interface FHRecommendCoutCell : FHDetailBaseCell
 
+- (void)refreshWithData:(bool)isFirst andLast:(BOOL)isLast;
+
 @end
 
 @interface FHRecommendCoutItem : JSONModel
