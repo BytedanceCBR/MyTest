@@ -749,6 +749,9 @@
         NSDictionary *dict = @{@"is_jump_comment":@(jump_comment)};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        if(showComment && cellModel.commentSchema.length > 0){
+            openUrl = [NSURL URLWithString:cellModel.commentSchema];
+        }
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     } if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
         //小视频

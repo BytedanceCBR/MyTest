@@ -391,6 +391,7 @@
         cellModel.groupId = model.rawData.groupId;
         cellModel.content = model.rawData.content.answer.abstractText;
         cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
+        cellModel.commentSchema = model.rawData.content.commentSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
         
