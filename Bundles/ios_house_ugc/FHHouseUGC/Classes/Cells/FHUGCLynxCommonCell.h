@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic) CGSize cacheSize;
 
+@property(nonatomic ,strong) NSData *currentTemData;
+
 @end
 
 NS_ASSUME_NONNULL_END

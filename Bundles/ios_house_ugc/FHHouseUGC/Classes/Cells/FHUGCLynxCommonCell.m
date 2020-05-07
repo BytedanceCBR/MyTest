@@ -18,7 +18,6 @@
 
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
-@property(nonatomic ,strong) NSData *currentTemData;
 
 @end
 
@@ -64,6 +63,7 @@
 }
 
 - (void)refreshWithData:(id)data {
+    return;
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
@@ -85,6 +85,10 @@
     }
     
     NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channeName templateKey:[FHLynxManager defaultJSFileName] version:0];
+    
+    if (!templateData) {
+        return;
+    }
         
     if (templateData != self.currentTemData) {
         NSNumber *costTime = @(0);
@@ -257,6 +261,10 @@
         if ([model.cell isKindOfClass:[FHUGCLynxCommonCell class]]) {
             height =  [((FHUGCLynxCommonCell *)model.cell).lynxView intrinsicContentSize].height + 5;
         }
+    }
+    
+    if (height == 5) {
+        height = 0;
     }
     return height;
 }

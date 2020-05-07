@@ -76,7 +76,11 @@
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
 
     NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
-        
+    
+    if (!templateData) {
+        return;
+    }
+    
     if (templateData != self.currentTemData) {
         NSNumber *costTime = @(0);
         _loadTime = [[NSDate date] timeIntervalSince1970];
@@ -254,6 +258,10 @@
         if ([cellModel.cell isKindOfClass:[FHUGCLynxBannerCell class]]) {
             height =  [((FHUGCLynxBannerCell *)cellModel.cell).lynxView intrinsicContentSize].height + 5;
         }
+    }
+    
+    if (height == 5) {
+        height = 0;
     }
         
     return height;
