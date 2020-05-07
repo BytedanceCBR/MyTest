@@ -37,6 +37,8 @@
     
     self.currentTabIndex = 0;
     
+    [collectionView registerClass:[FHCommunityDiscoveryCell class] forCellWithReuseIdentifier:kCellId];
+    
     collectionView.delegate = self;
     collectionView.dataSource = self;
     
@@ -168,9 +170,9 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *cellIdentifier = [NSString stringWithFormat:@"cell_%ld", [indexPath row]];
-    [collectionView registerClass:[FHCommunityDiscoveryCell class] forCellWithReuseIdentifier:cellIdentifier];
-    FHCommunityDiscoveryCell *cell = (FHCommunityDiscoveryCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+//    NSString *cellIdentifier = [NSString stringWithFormat:@"cell_%ld", [indexPath row]];
+//    [collectionView registerClass:[FHCommunityDiscoveryCell class] forCellWithReuseIdentifier:cellIdentifier];
+    FHCommunityDiscoveryCell *cell = (FHCommunityDiscoveryCell *)[collectionView dequeueReusableCellWithReuseIdentifier:kCellId forIndexPath:indexPath];
     NSInteger row = indexPath.row;
     self.cellArray[row] = cell;
     

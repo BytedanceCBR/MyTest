@@ -21,6 +21,7 @@
 @property(nonatomic, strong) UIImageView *descIcon;
 @property(nonatomic, strong) UIImageView *icon;
 @property(nonatomic, strong) UIView *blackCoverView;
+@property(nonatomic, strong) UIView *descView;
 
 @end
 @implementation FHUGCRecommendCircleSubCell
@@ -43,19 +44,16 @@
             [self.icon bd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholder:nil];
         }
         
-        if (model.tagIcon.length >0) {
+        if (model.tagIcon.length > 0 && ![model.socialGroupId isEqualToString:@"-1"]) {
+            self.descIcon.hidden = NO;
             [self.descIcon bd_setImageWithURL:[NSURL URLWithString:model.tagIcon] placeholder:nil];
-            [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.titleLabel.mas_bottom);
-                make.height.mas_equalTo(14);
-                make.centerX.mas_equalTo(self.contentView).offset(10);
+            [self.descIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(11);
             }];
-        }else {
-            [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.titleLabel.mas_bottom);
-                make.left.mas_equalTo(self.contentView).offset(10);
-                make.right.mas_equalTo(self.contentView).offset(-10);
-                make.height.mas_equalTo(14);
+        }else{
+            self.descIcon.hidden = YES;
+            [self.descIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
             }];
         }
         
@@ -81,22 +79,25 @@
     _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self.contentView addSubview:_icon];
     
-    self.descIcon = [[UIImageView alloc] init];
-    [self.contentView addSubview:_descIcon];
-    
     self.blackCoverView = [[UIView alloc] init];
     _blackCoverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     _blackCoverView.hidden = YES;
     [self.contentView addSubview:_blackCoverView];
     
+    self.descView = [[UIView alloc] init];
+    [self.contentView addSubview:_descView];
+    
+    self.descIcon = [[UIImageView alloc] init];
+    [_descView addSubview:_descIcon];
+    
+    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor whiteColor]];
+    _descLabel.textAlignment = NSTextAlignmentCenter;
+    [_descView addSubview:_descLabel];
+    
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor whiteColor]];
     _titleLabel.textAlignment = NSTextAlignmentCenter;
     _titleLabel.numberOfLines = 2;
     [self.contentView addSubview:_titleLabel];
-    
-    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor whiteColor]];
-    _descLabel.textAlignment = NSTextAlignmentCenter;
-    [self.contentView addSubview:_descLabel];
 }
 
 - (void)initConstains {
@@ -109,22 +110,30 @@
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self).offset(13);
+        make.top.mas_equalTo(self.contentView).offset(13);
         make.left.mas_equalTo(self.contentView).offset(10);
         make.right.mas_equalTo(self.contentView).offset(-10);
         make.height.mas_equalTo(20);
     }];
     
-    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.descView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.titleLabel.mas_bottom);
-        make.left.mas_equalTo(self.contentView).offset(10);
-        make.right.mas_equalTo(self.contentView).offset(-10);
+        make.centerX.mas_equalTo(self.contentView);
+        make.width.mas_lessThanOrEqualTo(100);
         make.height.mas_equalTo(14);
     }];
+    
+    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.right.mas_equalTo(self.descView);
+        make.left.mas_equalTo(self.descIcon.mas_right);
+    }];
+    
     [self.descIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.descView);
         make.centerY.mas_equalTo(self.descLabel);
-        make.right.equalTo(self.descLabel.mas_left).offset(-1);
-        make.size.mas_equalTo(CGSizeMake(11, 12));
+        make.right.equalTo(self.descLabel.mas_left);
+        make.width.mas_equalTo(11);
+        make.height.mas_equalTo(12);
     }];
 }
 
