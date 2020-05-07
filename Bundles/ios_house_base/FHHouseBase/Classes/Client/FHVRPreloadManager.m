@@ -37,11 +37,15 @@
     [imageArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSString *imageStr = obj;
         
-        NSRange imageUrlRangeTest = [imageStr rangeOfString:@"/f100-image/"];
-        NSString *imageNameTest = [imageStr substringFromIndex:imageUrlRangeTest.location + imageUrlRangeTest.length];
-        NSString *imageStrTest = [NSString stringWithFormat:@"%@/%@%@",@"https://sf1-ttcdn-tos.pstatp.com/img/f100-image",imageNameTest,@"~1024x0.jpg"];
-        imageStr = imageStrTest;
-        
+        if([imageStr isKindOfClass:[NSString class]] && [imageStr containsString:@".jpg"]){
+//            NSRange imageUrlRangeTest = [imageStr rangeOfString:@"/f100-image/"];
+//            NSString *imageNameTest = [imageStr substringFromIndex:imageUrlRangeTest.location + imageUrlRangeTest.length];
+//            NSString *imageStrTest = [NSString stringWithFormat:@"%@/%@%@",@"https://sf1-ttcdn-tos.pstatp.com/img/f100-image",imageNameTest,@"~1024x0.jpg"];
+//            imageStr = imageStrTest;
+        }else{
+            return ;
+        }
+      
         NSURL *urlImageLoader = [NSURL URLWithString:obj];
         NSString *imageRootPath = [IESGeckoKit rootDirForAccessKey:[FHVRPreloadManager getGeckoKey] channel:kFHVrImagePreLoadChannel];
         NSRange imageUrlRange = [imageStr rangeOfString:@"/img/"];
