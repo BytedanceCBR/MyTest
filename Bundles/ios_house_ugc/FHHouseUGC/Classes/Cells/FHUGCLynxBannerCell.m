@@ -96,11 +96,11 @@
     [dataJson setValue:@(imageWidth) forKey:@"img_width"];
     
     if (!isEmptyString(cellModel.upSpace) && cellModel.upSpace.integerValue >0) {
-        [dataJson setValue:@(cellModel.upSpace.integerValue) forKey:@"upSpace"];
+        [dataJson setValue:@(cellModel.upSpace.integerValue) forKey:@"padding_top"];
     }
     
     if (!isEmptyString(cellModel.downSpace) && cellModel.downSpace.integerValue >0 ) {
-        [dataJson setValue:@(cellModel.upSpace.integerValue) forKey:@"downSpace"];
+        [dataJson setValue:@(cellModel.upSpace.integerValue) forKey:@"padding_bottom"];
     }
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
