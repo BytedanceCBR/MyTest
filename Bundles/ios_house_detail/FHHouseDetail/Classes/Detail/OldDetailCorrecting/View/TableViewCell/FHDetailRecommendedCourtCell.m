@@ -144,11 +144,14 @@
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
         tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
-        tracerDic[@"category_name"] = @"neighborhood_nearby_list";
+        tracerDic[@"category_name"] = @"recommend_new_list";
         tracerDic[@"element_type"] = @"be_null";
-        tracerDic[@"element_from"] = @"neighborhood_nearby";
+        tracerDic[@"element_from"] = @"be_null";
+        tracerDic[@"enter_from"] = @"recommend_new_list";
+        tracerDic[@"page_type"] = @"recommend_new_list";
         
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
+        infoDict[@"house_id"] = self.baseViewModel.houseId;
         infoDict[@"tracer"] = tracerDic;
         infoDict[@"house_type"] = @(FHHouseTypeNewHouse);
         infoDict[@"title"] = @"推荐新盘";

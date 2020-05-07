@@ -137,7 +137,9 @@
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
     self.ttNeedHideBottomLine = YES;
-    
+    if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
+        [self.customNavBarView.seperatorLine setHidden:YES];
+    }
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
     [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -201,9 +203,15 @@
     _tableView.estimatedRowHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
+    CGFloat bottom = 0;
     if ([TTDeviceHelper isIPhoneXDevice]) {
-        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+        bottom = 34;
     }
+    CGFloat top = 0;
+    if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
+        top = 15;
+    }
+    _tableView.contentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
     if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
         _tableView.backgroundColor = [UIColor themeGray7];
     }
