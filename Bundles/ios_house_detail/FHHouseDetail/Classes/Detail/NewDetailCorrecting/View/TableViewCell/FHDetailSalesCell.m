@@ -231,12 +231,13 @@
     extraDic[@"title"] = title;
     extraDic[@"subtitle"] = subtitle;
     extraDic[@"btn_title"] = btnTitle;
-    extraDic[@"toast"] = toast;
+    extraDic[@"toast"] = @"领取成功，稍后会有置业顾问联系您";
+
     NSMutableDictionary *associateParamDict = @{}.mutableCopy;
     associateParamDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
     NSMutableDictionary *reportParamsDict = [model.contactViewModel baseParams].mutableCopy;
     if (extraDic.count > 0) {
-        [reportParamsDict addEntriesFromDictionary:extraDic];
+        [associateParamDict addEntriesFromDictionary:extraDic];
         reportParamsDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
     }
     associateParamDict[kFHReportParams] = reportParamsDict;

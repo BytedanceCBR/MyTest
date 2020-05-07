@@ -131,6 +131,11 @@
         reportParamsDict[@"position"] = @"on_sell";
         associateParamDict[kFHReportParams] = reportParamsDict;
         
+        associateParamDict[@"title"] = title;
+        associateParamDict[@"subtitle"] = subtitle;
+        associateParamDict[@"btn_title"] = btnTitle;
+        associateParamDict[@"toast"] = @"领取成功，稍后会有置业顾问联系您";
+
         [contactViewModel fillFormActionWithParams:associateParamDict];
     }
 }
@@ -148,6 +153,11 @@
         reportParamsDict[@"position"] = @"change_price";
         associateParamDict[kFHReportParams] = reportParamsDict;
         
+        associateParamDict[@"title"] = title;
+        associateParamDict[@"subtitle"] = subtitle;
+        associateParamDict[@"btn_title"] = btnTitle;
+        associateParamDict[@"toast"] = @"领取成功，稍后会有置业顾问联系您";
+
         [contactViewModel fillFormActionWithParams:associateParamDict];
     }
 }
