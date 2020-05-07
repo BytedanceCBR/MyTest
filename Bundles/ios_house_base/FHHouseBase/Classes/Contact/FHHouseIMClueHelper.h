@@ -9,6 +9,7 @@
 #import "FHHouseContactDefines.h"
 #import <JSONModel/JSONModel.h>
 #import "FHHouseType.h"
+#import "FHAssociateIMModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,12 +17,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseIMClueHelper : NSObject
 
-+ (void)jump2SessionPageWithConfigModel:(FHHouseIMClueConfigModel *)configModel;
-+ (void)jump2SessionPageWithConfig:(NSDictionary *)configDict;
++ (void)jump2SessionPageWithConfigModel:(FHHouseIMClueConfigModel *)configModel __deprecated_msg("已不再使用，请使用jump2SessionPageWithAssociateIM");
++ (void)jump2SessionPageWithConfig:(NSDictionary *)configDict __deprecated_msg("已不再使用，请使用jump2SessionPageWithAssociateDict");
 
++ (void)jump2SessionPageWithAssociateIM:(FHAssociateIMModel *)associateIM;
++ (void)jump2SessionPageWithAssociateDict:(NSDictionary *)associateDict;
 
 @end
 
+NS_DEPRECATED_IOS(2_0, 2_0, "use FHAssociateIMModel instead")
 @interface FHHouseIMClueConfigModel : JSONModel
 
 #pragma mark 必填

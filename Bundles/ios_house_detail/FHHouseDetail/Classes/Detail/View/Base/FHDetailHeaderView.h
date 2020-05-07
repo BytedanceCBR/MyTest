@@ -15,11 +15,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)   UILabel       *label;
 
+@property (nonatomic, strong)   UILabel       *subTitleLabel;
 
 @property (nonatomic, strong)   UILabel       *loadMore;
 
 @property (nonatomic, assign)   BOOL       isShowLoadMore;
 
+-(void)setSubTitleWithTitle:(NSString *)subTitle;
+- (void)removeSubTitleWithTitle;
 @end
 
 NS_ASSUME_NONNULL_END

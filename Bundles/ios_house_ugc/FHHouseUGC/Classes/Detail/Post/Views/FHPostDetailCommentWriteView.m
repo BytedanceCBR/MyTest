@@ -116,9 +116,9 @@ static struct timeval kFHCommentTimeval;
     [super layoutSubviews];
     CGFloat bottomSafeInset = self.tt_safeAreaInsets.bottom;
     CGFloat minHeight = [TTDeviceUIUtils tt_newPadding:32 + 10 + 10] + EMOJI_INPUT_VIEW_HEIGHT;
-    if ([TTAccountManager isLogin]){
-        minHeight += [TTDeviceUIUtils tt_newPadding:33];
-    }
+//    if ([TTAccountManager isLogin]){
+//        minHeight += [TTDeviceUIUtils tt_newPadding:33];
+//    }
     if (self.containerView.height <= minHeight){
         self.containerView.height = minHeight + bottomSafeInset;
         self.emojiInputView.top = self.textInputView.bottom;

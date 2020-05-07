@@ -9,7 +9,7 @@
 #import "FHPriceValuationNeiborhoodSearchController.h"
 #import "ToastManager.h"
 #import "FHHouseTypeManager.h"
-#import "FHGuessYouWantView.h"
+#import "FHHistoryView.h"
 #import "FHUserTracker.h"
 #import "TTReachability.h"
 #import "FHPriceValuationNSCell.h"

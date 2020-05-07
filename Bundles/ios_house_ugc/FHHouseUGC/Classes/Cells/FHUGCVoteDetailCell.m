@@ -260,6 +260,13 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
+    
+    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    if(self.currentData == data && !cellModel.ischanged){
+        return;
+    }
+    
     self.currentData = data;
     self.cellModel = data;
     //设置userInfo

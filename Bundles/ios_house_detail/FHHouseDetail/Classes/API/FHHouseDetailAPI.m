@@ -38,6 +38,7 @@
 
 +(TTHttpTask*)requestNewDetail:(NSString*)houseId
                          logPB:(NSDictionary *)logPB
+                         extraInfo:(NSDictionary *)extraInfo
                     completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -48,7 +49,13 @@
     }
     paramDic[@"court_id"] = houseId ?: @"";
     paramDic[@"house_type"] = @(FHHouseTypeNewHouse);
-    
+    if (extraInfo) {
+        NSData *data = [NSJSONSerialization dataWithJSONObject:extraInfo options:0 error:nil];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (data && string) {
+            paramDic[kFHClueExtraInfo] = string;
+        }
+    }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailNewModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion((FHDetailNewModel *)model,error);
@@ -60,6 +67,7 @@
                          ridcode:(NSString *)ridcode
                        realtorId:(NSString *)realtorId
                          logPB:(NSDictionary *)logPB
+                     extraInfo:(NSDictionary *)extraInfo
                     completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion
 {
 
@@ -77,7 +85,13 @@
     if (realtorId.length > 0) {
         paramDic[@"realtor_id"] = realtorId;
     }
-    
+    if (extraInfo) {
+        NSData *data = [NSJSONSerialization dataWithJSONObject:extraInfo options:0 error:nil];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (data && string) {
+            paramDic[kFHClueExtraInfo] = string;
+        }
+    }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailOldModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion(model,error);
@@ -88,6 +102,7 @@
 +(TTHttpTask*)requestNeighborhoodDetail:(NSString*)neighborhoodId
                                   logPB:(NSDictionary *)logPB
                                   query:(NSString*)query
+                              extraInfo:(NSDictionary *)extraInfo
                              completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -99,6 +114,13 @@
     if ([logPB isKindOfClass:[NSDictionary class]]) {
         [paramDic addEntriesFromDictionary:logPB];
     }
+    if (extraInfo) {
+        NSData *data = [NSJSONSerialization dataWithJSONObject:extraInfo options:0 error:nil];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (data && string) {
+            paramDic[kFHClueExtraInfo] = string;
+        }
+    }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailNeighborhoodModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion((FHDetailNeighborhoodModel *)model,error);
@@ -108,6 +130,7 @@
 
 // 租房详情页请求
 +(TTHttpTask*)requestRentDetail:(NSString*)rentCode
+                      extraInfo:(NSDictionary *)extraInfo
                      completion:(void(^)(FHRentDetailResponseModel *model , NSError *error))completion {
     
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
@@ -116,7 +139,13 @@
     if (rentCode.length > 0) {
         paramDic[@"rental_f_code"] = rentCode;
     }
-    
+    if (extraInfo) {
+        NSData *data = [NSJSONSerialization dataWithJSONObject:extraInfo options:0 error:nil];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (data && string) {
+            paramDic[kFHClueExtraInfo] = string;
+        }
+    }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHRentDetailResponseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
             completion((FHRentDetailResponseModel *)model,error);

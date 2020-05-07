@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface  FHDetailPriceNoticeModel: FHDetailBaseModel
 @property (nonatomic, weak)     FHHouseDetailBaseViewModel       *baseViewModel;
 @property (nonatomic, strong , nullable) FHDetailPriceChangeNoticeModel *priceChangeNotice;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 @property (nonatomic, weak) UIViewController *belongsVC;
 @property (nonatomic, weak)   id contactModel;
