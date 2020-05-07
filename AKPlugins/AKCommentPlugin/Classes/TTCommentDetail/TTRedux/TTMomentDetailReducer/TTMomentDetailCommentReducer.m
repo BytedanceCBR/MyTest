@@ -319,10 +319,13 @@
         action.replyCommentModel.diggCount -= 1;
         action.replyCommentModel.diggCount = MAX(0, action.replyCommentModel.diggCount);
         action.replyCommentModel.userDigg = NO;
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setValue:state.detailModel.commentID forKey:@"comment_id"];
-        [params setValue:action.replyCommentModel.user.ID forKey:@"user_id"];
-        [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+//        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+//        [params setValue:state.detailModel.commentID forKey:@"comment_id"];
+//        [params setValue:action.replyCommentModel.user.ID forKey:@"user_id"];
+//        
+//        
+//        
+//        [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
     } else {
         //点赞
         action.replyCommentModel.diggCount += 1;

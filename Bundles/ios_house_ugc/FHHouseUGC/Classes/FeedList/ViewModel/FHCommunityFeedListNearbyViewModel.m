@@ -596,6 +596,16 @@
             guideDict[@"item_id"] = cellModel.groupId;
             guideDict[@"rank"] = cellModel.tracerDic[@"rank"];;
             TRACK_EVENT(@"banner_click", guideDict);
+        }else {
+            NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+                guideDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+                guideDict[@"page_type"] = [self pageType];
+                guideDict[@"description"] = cellModel.desc;
+                guideDict[@"item_title"] = cellModel.title;
+                guideDict[@"item_id"] = cellModel.groupId;
+                guideDict[@"log_pb"] = cellModel.logPb;
+                guideDict[@"rank"] = cellModel.tracerDic[@"rank"];;
+                TRACK_EVENT(@"card_click", guideDict);
         }
         NSMutableDictionary *dict = nil;
         if (cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias) {

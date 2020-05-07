@@ -148,7 +148,6 @@
     [self.clientShowDict removeAllObjects];
     self.currentData = data;
     
-    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     self.cellModel = cellModel;
     self.dataList = cellModel.hotTopicList;
     [self.collectionView reloadData];

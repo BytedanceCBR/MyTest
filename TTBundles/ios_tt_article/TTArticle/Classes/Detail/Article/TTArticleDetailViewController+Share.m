@@ -607,6 +607,25 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
             [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
             [params setValue:@"detail" forKey:@"position"];
+            
+            if(self.detailModel.reportParams.count > 0){
+                if(self.detailModel.reportParams[@"log_pb"]){
+                    params[@"log_pb"] = self.detailModel.reportParams[@"log_pb"];
+                }
+                
+                if(self.detailModel.reportParams[@"origin_from"]){
+                    params[@"origin_from"] = self.detailModel.reportParams[@"origin_from"];
+                }
+                
+                if(self.detailModel.reportParams[@"page_type"]){
+                    params[@"page_type"] = self.detailModel.reportParams[@"page_type"];
+                }
+                
+                if(self.detailModel.reportParams[@"enter_from"]){
+                    params[@"category_name"] = self.detailModel.reportParams[@"enter_from"];
+                }
+            }
+            
             [TTTrackerWrapper eventV3:@"rt_favourite" params:params];
             // 加入收藏吊起登录弹窗的代码
             TTAccountLoginAlertTitleType type = TTAccountLoginAlertTitleTypeFavor;

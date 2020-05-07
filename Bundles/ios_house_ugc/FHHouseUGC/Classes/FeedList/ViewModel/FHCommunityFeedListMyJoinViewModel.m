@@ -563,10 +563,33 @@
              guideDict[@"item_id"] = cellModel.groupId;
              guideDict[@"rank"] = cellModel.tracerDic[@"rank"];;
              TRACK_EVENT(@"banner_click", guideDict);
+         }else {
+             NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+                 guideDict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+                 guideDict[@"page_type"] = [self pageType];
+                 guideDict[@"description"] = cellModel.desc;
+                 guideDict[@"item_title"] = cellModel.title;
+                 guideDict[@"item_id"] = cellModel.groupId;
+                 guideDict[@"log_pb"] = cellModel.logPb;
+                 guideDict[@"rank"] = cellModel.tracerDic[@"rank"];;
+                 TRACK_EVENT(@"card_click", guideDict);
+         }
+        NSMutableDictionary *dict = nil;
+         if (cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias) {
+             dict = [NSMutableDictionary new];
+             NSMutableDictionary *traceParam = @{}.mutableCopy;
+             traceParam[@"enter_from"] =  self.viewController.tracerDict[@"enter_from"];
+             traceParam[@"element_from"] = @"encyclopedia";
+             traceParam[@"page_type"] = [self pageType];
+             traceParam[@"origin_from"] = self.viewController.tracerDict[@"origin_from"];
+             traceParam[@"enter_type"] = enterType ? enterType : @"be_null";
+             traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+             traceParam[@"log_pb"] = cellModel.logPb;
+             dict[TRACER_KEY] = traceParam;
          }
         //根据url跳转
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:dict];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2 ){
         // 评论
         NSMutableDictionary *dict = [NSMutableDictionary new];
