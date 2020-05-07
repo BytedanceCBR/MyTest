@@ -621,7 +621,8 @@
         }
         //根据url跳转
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:dict];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         // 评论
         NSMutableDictionary *dict = [NSMutableDictionary new];

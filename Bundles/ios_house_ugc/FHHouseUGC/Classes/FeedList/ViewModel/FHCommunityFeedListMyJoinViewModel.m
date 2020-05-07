@@ -587,8 +587,9 @@
              dict[TRACER_KEY] = traceParam;
          }
         //根据url跳转
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2 ){
         // 评论
         NSMutableDictionary *dict = [NSMutableDictionary new];
