@@ -152,6 +152,7 @@
         infoDict[@"tracer"] = tracerDic;
         infoDict[@"house_type"] = @(FHHouseTypeNewHouse);
         infoDict[@"title"] = @"推荐新盘";
+        infoDict[@"house_id"] = self.baseViewModel.houseId;
         // 周边小区跳转
 
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
