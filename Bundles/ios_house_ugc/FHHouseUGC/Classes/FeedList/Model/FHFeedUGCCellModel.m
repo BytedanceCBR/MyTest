@@ -716,7 +716,7 @@
         cellModel.groupId = model.rawData.groupId;
         cellModel.articleTitle = model.rawData.title;
         cellModel.openUrl = model.rawData.schema;
-        
+        cellModel.logPb = model.logPb;
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.name = model.rawData.userName;
         user.avatarUrl = model.rawData.icon;
