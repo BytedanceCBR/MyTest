@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "FHSugSubscribeModel.h"
 #import "FHHouseType.h"
+#import "FHChildSuggestionListViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,6 +24,7 @@ typedef void(^FHSugHasSubscribeItemClick)(FHSugSubscribeDataDataItemsModel *mode
 @property (nonatomic, copy)     dispatch_block_t       clickHeader;
 @property (nonatomic, assign)   NSInteger       totalCount;// 总个数
 @property (nonatomic, strong , nullable) NSArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
+@property (nonatomic, weak)     FHChildSuggestionListViewController *vc;
 
 @end
 

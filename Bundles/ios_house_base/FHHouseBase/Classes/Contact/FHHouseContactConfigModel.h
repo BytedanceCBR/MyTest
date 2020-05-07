@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error, FHDetailVirtualNumModel* virtualPhoneNumberModel);
 
+NS_DEPRECATED_IOS(2_0, 2_0,"use FHAssociatePhoneModel instead")
 @interface FHHouseContactConfigModel : JSONModel
 
 // 全部用search_id下划线这种格式

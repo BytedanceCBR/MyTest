@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, strong, nullable) FHHouseItemHouseVideo* houseVideo;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+
 
 - (FHHouseNeighborDataItemsModel *)toHouseNeighborModel;
 

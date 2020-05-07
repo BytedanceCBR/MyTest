@@ -17,10 +17,30 @@
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TTLaunchDefine.h"
+#import <TTKitchen/TTKitchen.h>
+#import <BDUIKeyboardImplHook/BDUIKeyboardImplHook.h>
+#import "GAIAEngine+TTBase.h"
+
+static NSString *const kHookSystemKeyboardMethodPlanType = @"f_settings.hook_system_keyboard_method_plan_type";
 
 DEC_TASK("TTCleanDatabaseTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+8);
 
 @implementation TTCleanDatabaseTask
+
++ (void)registerKitchen {
+    TTRegisterKitchenMethod
+    TTKitchenRegisterBlock(^{
+        TTKConfigInt(kHookSystemKeyboardMethodPlanType, @"系统键盘私有方法hook方案类型", -1);
+    });
+}
+
+TTFeedDidDisplayFunction() {
+    
+    NSInteger planType = [TTKitchen getInt:kHookSystemKeyboardMethodPlanType];
+    if (planType == 0 || planType == 1) {
+        [BDUIKeyboardImplHook applyHookForPlanType:planType];
+    }
+}
 
 - (NSString *)taskIdentifier {
     return @"CleanDatabase";

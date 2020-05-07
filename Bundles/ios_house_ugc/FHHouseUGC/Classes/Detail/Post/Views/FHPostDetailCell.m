@@ -28,9 +28,9 @@
 #define originViewHeight 80
 #define attachCardViewHeight 57
 
-@interface FHPostDetailCell ()<TTUGCAttributedLabelDelegate>
+@interface FHPostDetailCell ()<TTUGCAsyncLabelDelegate>
 
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) UIView *bottomSepView;
@@ -84,16 +84,16 @@
         [viewModel.detailController goBack];
     };
     
-    self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = 0;
     _contentLabel.delegate = self;
-    NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-                                     };
-    self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = linkAttributes;
-    self.contentLabel.inactiveLinkAttributes = linkAttributes;
+//    NSDictionary *linkAttributes = @{
+//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+//                                     };
+//    self.contentLabel.linkAttributes = linkAttributes;
+//    self.contentLabel.activeLinkAttributes = linkAttributes;
+//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     [self.contentView addSubview:_contentLabel];
     
     UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressContentLabel:)];
@@ -159,7 +159,7 @@
     }];
     
     [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
         make.left.mas_equalTo(self.contentView).offset(leftMargin);
         make.right.mas_equalTo(self.contentView).offset(-rightMargin);
         make.height.mas_equalTo(self.multiImageView.viewHeight);
@@ -298,7 +298,7 @@
         return;
     }
     self.currentData = data;
-    //
+    
     for (UIView *v in self.contentView.subviews) {
         [v removeFromSuperview];
     }
@@ -318,24 +318,24 @@
     [self.userInfoView updateEditState];
     [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     // 内容
-    [self.contentLabel setText:cellModel.contentAStr];
-    NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
-    for (TTRichSpanLink *richSpanLink in richSpanLinks) {
-        NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
-        if (NSMaxRange(range) <= self.contentLabel.attributedText.length) {
-            if(cellModel.supportedLinkType){
-                if(cellModel.supportedLinkType.count > 0 && [cellModel.supportedLinkType containsObject:@(richSpanLink.type)]){
-                    [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
-                }
-            }else{
-                //不设置默认全部支持
-                [self.contentLabel addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
-            }
-        }
+    if(isEmptyString(cellModel.content)){
+        self.contentLabel.hidden = YES;
+        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+        [self.multiImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
+        }];
+    }else{
+        self.contentLabel.hidden = NO;
+        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(cellModel.contentHeight);
+        }];
+        [self.multiImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(20 + cellModel.contentHeight);
+        }];
+        [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
-    [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(cellModel.contentHeight);
-    }];
     // 图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     if(self.imageCount == 1) {
@@ -402,8 +402,9 @@
     return 44;
 }
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label
-   didSelectLinkWithURL:(NSURL *)url {
+#pragma mark - TTUGCAsyncLabelDelegate
+
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if (url) {
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
         if (cellModel) {
@@ -420,7 +421,7 @@
     }
 }
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label didLongPressLinkWithURL:(NSURL *)url atPoint:(CGPoint)point {
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didLongPressLinkWithURL:(NSURL *)url atPoint:(CGPoint)point {
     [self didLongPress];
 }
 

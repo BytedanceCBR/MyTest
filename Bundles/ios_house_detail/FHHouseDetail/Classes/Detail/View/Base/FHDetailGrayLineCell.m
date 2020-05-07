@@ -82,4 +82,13 @@
     return self;
 }
 
+- (instancetype)initWithHeight:(CGFloat)height
+{
+    self = [super init];
+    if (self) {
+        _lineHeight = height;
+    }
+    return self;
+}
+
 @end

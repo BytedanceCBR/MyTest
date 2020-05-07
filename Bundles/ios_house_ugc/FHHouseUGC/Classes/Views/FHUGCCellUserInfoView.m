@@ -80,6 +80,9 @@
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
     _icon.layer.cornerRadius = 20;
+    _icon.layer.borderWidth = 1;
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
+    
     [self addSubview:_icon];
     
     _icon.userInteractionEnabled = YES;

@@ -303,11 +303,8 @@
     if (model.neighborhoodInfo.useSchoolIm && model.neighborhoodInfo.schoolConsult.openUrl.length > 0) {
         
         NSMutableDictionary *imExtra = @{}.mutableCopy;
-        imExtra[@"from"] = @"app_oldhouse_school";
         imExtra[@"source_from"] = @"education_type";
         imExtra[@"im_open_url"] = model.neighborhoodInfo.schoolConsult.openUrl;
-        imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-        imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldSchool];
         [model.contactViewModel onlineActionWithExtraDict:imExtra];
         if (self.baseViewModel) {
             [self.baseViewModel addClickOptionLog:@"education_type"];

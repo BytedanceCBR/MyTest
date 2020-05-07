@@ -330,6 +330,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *total;
 @property (nonatomic, copy , nullable) NSString *refreshTip;
 @property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, copy , nullable) NSNumber *triggerTime;
 
 @end
 

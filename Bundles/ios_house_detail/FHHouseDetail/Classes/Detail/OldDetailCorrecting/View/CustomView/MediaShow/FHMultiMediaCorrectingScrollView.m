@@ -29,9 +29,9 @@
 @property(nonatomic, strong) UIImageView *noDataImageView;
 @property(nonatomic, strong) UIImage *placeHolder;
 @property(nonatomic, strong) NSArray *medias;
-@property(nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;
+@property(nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;   //图片户型的标签
 
-@property(nonatomic, strong) FHDeatilHeaderTitleView *titleView;
+@property(nonatomic, strong) FHDeatilHeaderTitleView *titleView;            //头图下面的标题栏
 @property(nonatomic, strong) NSMutableArray *itemIndexArray;
 @property(nonatomic, strong) NSMutableArray *itemArray;
 @property(nonatomic, strong) UICollectionViewCell *lastCell;
@@ -63,7 +63,7 @@
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     
-    _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 276/375) collectionViewLayout:layout];
+    _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 281/375) collectionViewLayout:layout];
     _colletionView.backgroundColor = [UIColor whiteColor];
     _colletionView.pagingEnabled = YES;
     _colletionView.showsHorizontalScrollIndicator = NO;
@@ -142,9 +142,11 @@
 -(UIView *)bottomGradientView {
     if(!_bottomGradientView){
         
-        CGFloat aspect = 375.0 / 65;
+        CGFloat aspect = 375.0 / 25;
         CGFloat width = SCREEN_WIDTH;
+        
         CGFloat height = round(width / aspect + 0.5);
+//        height -= round([UIScreen mainScreen].bounds.size.width / 375.0f * 30 + 0.5);
         CGRect frame = CGRectMake(0, 0, width, height);
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
         gradientLayer.frame = frame;
@@ -178,17 +180,18 @@
     [self.noDataImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self);
     }];
-    
+
+
+    //CGFloat minus = round([UIScreen mainScreen].bounds.size.width / 375.0f * 30 + 0.5);
+    [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.equalTo(self);
+        make.top.equalTo(self.colletionView.mas_bottom).offset(-41);
+    }];
     [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self);
         make.bottom.equalTo(self.colletionView);
         make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
     }];
-    [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self);
-        make.top.equalTo(self.colletionView.mas_bottom).offset(-82);
-    }];
-    
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);//
@@ -402,8 +405,22 @@
             [self.itemView selectedItem:groupType];
             
             self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
+            [self.infoLabel sizeToFit];
+            CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
+            itemSize.width += 14.0;
+            if (itemSize.width < 44) {
+                itemSize.width = 44;
+            }
+            
+            [self.infoLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(itemSize.width);
+                make.height.mas_equalTo(20);
+                make.right.mas_equalTo(self).offset(-16);
+                make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
+            }];
         }
     }
+    
 }
 
 - (void)updateVideoState {
@@ -462,11 +479,11 @@
     self.medias = model.medias;
     [self.colletionView reloadData];
     
-    BOOL isShowBottomBannerView = model.isShowSkyEyeLogo;
-    self.bottomBannerView.hidden = !isShowBottomBannerView;
-    if(isShowBottomBannerView && [self.delegate respondsToSelector:@selector(bottomBannerViewDidShow)]) {
-        [self.delegate bottomBannerViewDidShow];
-    }
+//    BOOL isShowBottomBannerView = model.isShowSkyEyeLogo;
+//    self.bottomBannerView.hidden = !isShowBottomBannerView;
+//    if(isShowBottomBannerView && [self.delegate respondsToSelector:@selector(bottomBannerViewDidShow)]) {
+//        [self.delegate bottomBannerViewDidShow];
+//    }
 //    CGFloat topOffset = 82;
 //    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
 //        topOffset -= 40;
@@ -525,6 +542,8 @@
     }else{
         self.itemView.hidden = YES;
     }
+    
+    
 }
 
 - (void)checkVRLoadingAnimate

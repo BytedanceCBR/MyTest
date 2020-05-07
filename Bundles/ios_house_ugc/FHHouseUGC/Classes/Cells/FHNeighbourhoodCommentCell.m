@@ -25,10 +25,10 @@
 #define minImageCount 1
 #define maxImageCount 3
 
-@interface FHNeighbourhoodCommentCell ()<TTUGCAttributedLabelDelegate>
+@interface FHNeighbourhoodCommentCell ()<TTUGCAsyncLabelDelegate>
 
 @property(nonatomic ,strong) UIView *contentContainer;
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
@@ -65,17 +65,17 @@
     [self.contentContainer addSubview:self.userInfoView];
     
     // 文本区
-    self.contentLabel = [TTUGCAttributedLabel new];
+    self.contentLabel = [TTUGCAsyncLabel new];
     self.contentLabel.numberOfLines = maxLines;
     self.contentLabel.layer.masksToBounds = YES;
     self.contentLabel.backgroundColor = [UIColor whiteColor];
-    NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-                                     };
-    self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = linkAttributes;
-    self.contentLabel.inactiveLinkAttributes = linkAttributes;
+//    NSDictionary *linkAttributes = @{
+//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+//                                     };
+//    self.contentLabel.linkAttributes = linkAttributes;
+//    self.contentLabel.activeLinkAttributes = linkAttributes;
+//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     self.contentLabel.delegate = self;
     [self.contentContainer addSubview:self.contentLabel];
     
@@ -214,7 +214,7 @@
     BOOL isContentEmpty = isEmptyString(self.cellModel.content);
     self.contentLabel.hidden = isContentEmpty;
     self.contentLabel.height = isContentEmpty ? 0 : self.cellModel.contentHeight;
-    [FHUGCCellHelper setRichContent:self.contentLabel model:self.cellModel];
+    [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:self.cellModel];
     
     // 设置图片
     CGFloat imageViewTop = isContentEmpty ? (self.userInfoView.bottom + vGap) : self.userInfoView.bottom + vGap + self.cellModel.contentHeight + vGap;
@@ -300,9 +300,9 @@
     }
 }
 
-#pragma mark - TTUGCAttributedLabelDelegate
+#pragma mark - TTUGCAsyncLabelDelegate
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
         if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
             [self.delegate lookAllLinkClicked:self.cellModel cell:self];
@@ -315,4 +315,5 @@
         }
     }
 }
+
 @end

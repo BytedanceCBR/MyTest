@@ -23,6 +23,7 @@
 @property (nonatomic, copy)   NSString* floorPanId; // 房源id
 @property (nonatomic , strong) UITableView *infoListTable;
 @property (nonatomic , strong) FHFloorPanDetailViewModel *coreInfoListViewModel;
+@property (nonatomic, assign) CGPoint lastContentOffset;
 
 @end
 
@@ -41,9 +42,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.isViewDidDisapper = NO;
+    FHDetailNavBar *navbar = [self  getNaviBar];
+    [navbar refreshAlpha:0];
     [self setUpinfoListTable];
-    
     [self addDefaultEmptyViewFullScreen];
 
     _coreInfoListViewModel = [[FHFloorPanDetailViewModel alloc] initWithController:self tableView:_infoListTable floorPanId:_floorPanId];
@@ -52,6 +54,35 @@
     
     [_coreInfoListViewModel addGoDetailLog];
     [self.view bringSubviewToFront:[self getNaviBar]];
+    __weak typeof(self) wSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [wSelf updateStatusBar:wSelf.infoListTable.contentOffset];
+    });
+}
+
+- (void)refreshContentOffset:(CGPoint)contentOffset
+{
+    CGFloat alpha = contentOffset.y / 139 * 2;
+    
+    FHDetailNavBar *navbar = [self  getNaviBar];
+    [navbar refreshAlpha:alpha];
+    
+    if ((contentOffset.y <= 0 && _lastContentOffset.y <= 0) || (contentOffset.y > 0 && _lastContentOffset.y > 0)) {
+        return;
+    }
+    _lastContentOffset = contentOffset;
+    [self updateStatusBar:contentOffset];
+}
+
+- (void)updateStatusBar:(CGPoint)contentOffset
+{
+    UIStatusBarStyle style = UIStatusBarStyleLightContent;
+    if (contentOffset.y > 0) {
+        style = UIStatusBarStyleDefault;
+    }
+    if (!self.isViewDidDisapper) {
+        [[UIApplication sharedApplication]setStatusBarStyle:style];
+    }
 }
 
 - (void)retryLoadData
@@ -67,8 +98,16 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+     self.isViewDidDisapper = YES;
     [self.coreInfoListViewModel addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
+}
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.isViewDidDisapper = NO;
+    [self updateStatusBar:self.infoListTable.contentOffset];
+    [self.view endEditing:YES];
+    [self.coreInfoListViewModel vc_viewDidAppear:animated];
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol
@@ -189,16 +228,13 @@
         _infoListTable.estimatedSectionFooterHeight = 0;
         _infoListTable.estimatedSectionHeaderHeight = 0;
     }
-    [_infoListTable setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:_infoListTable];
     
     [_infoListTable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo([self getNaviBar].mas_bottom);
-        make.left.right.equalTo(self.view);
+        make.top.left.right.mas_equalTo(self.view);
         make.bottom.equalTo([self getBottomBar].mas_top);
     }];
-    
-    [_infoListTable setBackgroundColor:[UIColor whiteColor]];
+    _infoListTable.backgroundColor = [UIColor themeGray7];
     
 }
 

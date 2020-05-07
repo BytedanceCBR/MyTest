@@ -210,7 +210,7 @@
         tracerDict[UT_ELEMENT_FROM] = [self elementTypeString:FHHouseTypeNeighborhood] ?: @"be_null";
         dict[TRACER_KEY] = tracerDict;
         dict[@"neighborhood_id"] = cellModel.neighborhoodId;
-        dict[@"post_content_hint"] = @"说说你对该小区的评价，小区物业、配套、停车、周边学校、邻居关系等方面都可以哦~";
+        dict[@"post_content_hint"] = @"说说你对该小区的评价，小区物业、配套、停车、周边学校、邻居关系等方面都可以~最少要写10个字以上哦";
         dict[@"title"] = @"发布点评";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
@@ -429,6 +429,7 @@
     dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
     dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
     dict[@"tid"] = cellModel.groupId;
+    dict[@"thread_detail_source"] = @"ugc_thread";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     FHFeedUGCContentModel *contentModel = cellModel.originData;
     NSString *routeUrl = @"sslocal://thread_detail";
