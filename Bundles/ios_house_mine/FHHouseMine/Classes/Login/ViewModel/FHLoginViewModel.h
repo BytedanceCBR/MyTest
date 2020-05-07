@@ -31,7 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   BOOL  isNeedCheckUGCAdUser;
 @property (nonatomic , copy) NSString *mobileNumber;
 
-
 /// 这个回调，是请求判断是否支持运营商登录，请求判断是否支持抖音一键登录以后的回调
 /// 只适用于FHLoginViewController 回调，type变化后view会跟着变化
 @property (nonatomic, copy) void (^loginViewViewTypeChanged)(FHLoginViewType type);

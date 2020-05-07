@@ -25,6 +25,7 @@
 #import <BDABTestSDK/BDABTestManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import <FHWebView/SSWebViewController.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -160,6 +161,8 @@ static FHLoginSharedModel *_sharedModel = nil;
 //是否重新是重新发送验证码
 @property(nonatomic , assign) BOOL isVerifyCodeRetry;
 
+/// 首推登录方式 douyin_one_click 、one_click、phone_sms
+@property (nonatomic, copy) NSString *login_suggest_method;
 @end
 
 @implementation FHLoginViewModel
@@ -381,6 +384,23 @@ static FHLoginSharedModel *_sharedModel = nil;
     if (self.loginViewViewTypeChanged) {
         self.loginViewViewTypeChanged(viewType);
     }
+    switch (viewType) {
+        case FHLoginViewTypeDouYin:
+            self.login_suggest_method = @"douyin_one_click";
+            break;
+        case FHLoginViewTypeOneKey:
+            self.login_suggest_method = @"one_click";
+            break;
+        case FHLoginViewTypeMobile:
+            self.login_suggest_method = @"phone_sms";
+            break;
+        default:
+            break;
+    }
+    
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict].mutableCopy;
+    tracerDict[@"login_suggest_method"] = self.login_suggest_method?:@"";
+    [FHLoginTrackHelper loginShow:tracerDict];
 }
 
 #pragma mark - 运营商一键登录
@@ -575,6 +595,9 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)goToOneKeyLogin {
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"login_suggest_method"] = self.login_suggest_method?:@"";
+    [FHLoginTrackHelper loginMore:tracerDict];
     if (self.isOneKeyLogin) {
         [self goToLoginContainerController:FHLoginViewTypeOneKey];
     } else {
@@ -602,22 +625,41 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 - (void)oneKeyLoginAction {
     [self traceLogin];
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"login_method"] = @"one_click";
+    [FHLoginTrackHelper loginSubmit:tracerDict];
+
 //    if (!self.view.acceptCheckBox.selected) {
 //        [[ToastManager manager] showToast:@"请阅读并同意《隐私政策》和相关协议"];
 //        return;
 //    }
+    [[NSUserDefaults standardUserDefaults] setObject:@"one_click" forKey:FHLoginTrackLastLoginMethodKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     __weak typeof(self) wself = self;
     [[ToastManager manager] showToast:@"正在登录中"];
     [TTAccount oneKeyLoginWithCompleted:^(NSError *_Nullable error) {
         //运营商一键登录，自带手机号，不需要绑定流程
         [wself handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:YES];
+        [FHLoginTrackHelper loginResult:tracerDict error:error];
     }];
 }
 
 - (void)appleLoginAction {
+    ssOpenWebView([NSURL URLWithString:@"http://m.haoduofangs.com/passport/auth_bind_conflict/index/"], @"test", self.viewController.navigationController, NO, @{});
+    return;
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"login_method"] = @"apple_login";
+    [FHLoginTrackHelper loginSubmit:tracerDict];
+
+    [[NSUserDefaults standardUserDefaults] setObject:@"apple_login" forKey:FHLoginTrackLastLoginMethodKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     __weak typeof(self) weakSelf = self;
     [TTAccount requestLoginForPlatform:TTAccountAuthTypeApple completion:^(BOOL success, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (error && error.code == TTAccountErrCodeAuthUserCancel) {
+            tracerDict[@"status"] = @"cancel";
+        }
+        [FHLoginTrackHelper loginResult:tracerDict error:error];
         if (error) {
             //失败则提示
             [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
@@ -633,6 +675,7 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)douyinLoginAction {
+    //douyin_one_click or douyin icon
     __weak typeof(self) weakSelf = self;
     TTAccountAuthRequest *request = [[TTAccountAuthRequest alloc] init];
     request.requestReason = TTAccountRequestAuthForLoginWithBindMobile;
@@ -643,6 +686,17 @@ static FHLoginSharedModel *_sharedModel = nil;
         NSLog(@"platformName:%@",platformName);
     } completion:^(TTAccountAuthResponse * _Nullable resp, NSError * _Nullable error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
+        NSMutableDictionary *tracerDict = [strongSelf.viewController.tracerModel logDict];
+        tracerDict[@"is_native"] = resp.sdkAuth ? @(1):@(0);
+        tracerDict[@"login_method"] = @"douyin_one_click";
+        [FHLoginTrackHelper loginSubmit:tracerDict.copy];
+        if (error && error.code == TTAccountErrCodeAuthUserCancel) {
+            tracerDict[@"status"] = @"cancel";
+        }
+        [FHLoginTrackHelper loginResult:tracerDict error:error];
+        [[NSUserDefaults standardUserDefaults] setObject:@"douyin_one_click" forKey:FHLoginTrackLastLoginMethodKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
         if (error) {
             //失败则提示
             [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
@@ -671,6 +725,13 @@ static FHLoginSharedModel *_sharedModel = nil;
 //            }
 //        }
 //    }];
+}
+
+- (void)loginCancelAction {
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"login_suggest_method"] = self.login_suggest_method?:@"";
+    [FHLoginTrackHelper loginExit:tracerDict];
+    [self popViewController];
 }
 
 - (void)bindCancelAction {
@@ -755,7 +816,8 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)mobileLogin:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha {
-
+    [[NSUserDefaults standardUserDefaults] setObject:@"phone_sms" forKey:FHLoginTrackLastLoginMethodKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     __weak typeof(self) weakSelf = self;
     if (![mobileNumber hasPrefix:@"1"] || mobileNumber.length != 11 || ![self isPureInt:mobileNumber]) {
         [[ToastManager manager] showToast:@"手机号错误"];
@@ -773,6 +835,9 @@ static FHLoginSharedModel *_sharedModel = nil;
     }
     
     [self traceLogin];
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"login_method"] = @"phone_sms";
+    [FHLoginTrackHelper loginSubmit:tracerDict];
 //    if (!self.view.acceptCheckBox.selected) {
 //        [[ToastManager manager] showToast:@"请阅读并同意《用户协议》和《隐私政策》"];
 //        return;
@@ -782,6 +847,7 @@ static FHLoginSharedModel *_sharedModel = nil;
     
     [FHMineAPI requestQuickLogin:mobileNumber smsCode:smsCode captcha:captcha completion:^(UIImage *_Nonnull captchaImage, NSNumber *_Nonnull newUser, NSError *_Nonnull error) {
         [weakSelf handleLoginResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyLogin:NO];
+        [FHLoginTrackHelper loginResult:tracerDict error:error];
     }];
 }
 

@@ -83,9 +83,19 @@ typedef NS_ENUM(NSUInteger, FHLoginProcessType) {
     FHLoginProcessTestB = 2, //优先抖音一键登录 -> 运营商一键登录 -> 手机号验证码登录
 };
 
+FOUNDATION_EXPORT NSString *const FHLoginTrackLastLoginMethodKey;
+
 @interface FHLoginTrackHelper : NSObject
 
 + (void)loginShow:(NSDictionary *)dict;
+
++ (void)loginSubmit:(NSDictionary *)dict;
+
++ (void)loginResult:(NSDictionary *)dict error:(NSError *)error;
+
++ (void)loginMore:(NSDictionary *)dict;
+
++ (void)loginExit:(NSDictionary *)dict;
 
 @end
 
