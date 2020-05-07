@@ -399,10 +399,10 @@
                     UIImage *icon = [UIImage imageNamed:@"seg_red_point"];
                     CGFloat imageWidth = icon.size.width;
                     CGFloat imageHeight = icon.size.height;
-                    CGFloat red_y = roundf(CGRectGetMinY(rect)  - imageHeight/2.0f + 3.0f);
+                    CGFloat red_y = roundf(CGRectGetMinY(rect)  - imageHeight + 4.0f);
                     CGFloat red_x = 0;
                     if(self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic){
-                        red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f - self.segmentEdgeInset.right);
+                        red_x = roundf(CGRectGetMaxX(rect)  - imageWidth - self.segmentEdgeInset.right);
                     }else{
                         red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f);
                     }
