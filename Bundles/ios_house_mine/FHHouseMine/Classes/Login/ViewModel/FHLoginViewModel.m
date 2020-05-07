@@ -645,8 +645,6 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)appleLoginAction {
-    ssOpenWebView([NSURL URLWithString:@"http://m.haoduofangs.com/passport/auth_bind_conflict/index/"], @"test", self.viewController.navigationController, NO, @{});
-    return;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     tracerDict[@"login_method"] = @"apple_login";
     [FHLoginTrackHelper loginSubmit:tracerDict];
@@ -699,7 +697,12 @@ static FHLoginSharedModel *_sharedModel = nil;
 
         if (error) {
             //失败则提示
-            [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
+            //登录冲突处理
+            if (error.code == TTAccountErrCodeAuthPlatformBoundForbid) {
+                ssOpenWebView([NSURL URLWithString:@"http://m.haoduofangs.com/passport/auth_bind_conflict/index/"], @"test", self.viewController.navigationController, NO, @{});
+            } else {
+                [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
+            }
         } else {
             if ([TTAccount sharedAccount].user.mobile.length) {
                 [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
