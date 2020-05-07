@@ -173,8 +173,8 @@
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"slide";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
-        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
-        tracerDic[@"element_from"] = @"related";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNewHouse];
+        tracerDic[@"element_from"] = @"recommend_new";
         tracerDic[@"enter_from"] = @"old_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNewHouse)}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",dataItem.houseid];
@@ -197,8 +197,8 @@
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"slide";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
-        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNeighborhood];
-        tracerDic[@"element_type"] = @"neighborhood_nearby";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNewHouse];
+        tracerDic[@"element_type"] = @"recommend_new";
         tracerDic[@"search_id"] = dataItem.searchId.length > 0 ? dataItem.searchId : @"be_null";
         tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.id ? dataItem.id : @"be_null");
         tracerDic[@"impr_id"] = dataItem.imprId.length > 0 ? dataItem.imprId : @"be_null";
@@ -208,7 +208,7 @@
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"recommended_court"; // 推荐新盘
+    return @"recommend_new"; // 推荐新盘
 }
 
 @end

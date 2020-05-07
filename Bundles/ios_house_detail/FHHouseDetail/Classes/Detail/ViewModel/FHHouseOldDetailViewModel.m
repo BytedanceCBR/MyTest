@@ -824,7 +824,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 //推荐新房
 - (void)requestOldHouseRecommendedCourtSearch {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestOldHouseRecommendedCourtSearch:@"6809833616537976840" offset:@"0" query:nil count:5 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestOldHouseRecommendedCourtSearch:self.houseId offset:@"0" query:nil count:5 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
         wSelf.OldHouseRecommendedCourtData = model.data;
         [wSelf processDetailRelatedData];
