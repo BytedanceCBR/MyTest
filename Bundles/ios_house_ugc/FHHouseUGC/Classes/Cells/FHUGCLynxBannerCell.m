@@ -258,12 +258,16 @@
         if ([cellModel.cell isKindOfClass:[FHUGCLynxBannerCell class]]) {
             height =  [((FHUGCLynxBannerCell *)cellModel.cell).lynxView intrinsicContentSize].height + 5;
         }
+        
+        if (cellModel.hidelLine) {
+            height -= 5;
+        }
     }
     
     if (height == 5) {
         height = 0;
     }
-        
+    
     return height;
 }
 
