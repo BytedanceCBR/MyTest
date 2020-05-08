@@ -118,7 +118,7 @@
             marginTop = marginTop +vHeight;
 
             itemView.name.text = obj.realtorName;
-            if (obj.realtorName.length >5) {
+            if (obj.realtorName.length >5 && obj.realtorCellShow == FHRealtorCellShowStyle3) {
                 itemView.name.text = [NSString stringWithFormat:@"%@...",[obj.realtorName substringToIndex:5]];
             }
             itemView.agency.text = obj.agencyName;
