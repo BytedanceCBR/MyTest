@@ -23,12 +23,12 @@
     
     UIViewController *visibleController = [errorHubView findVisibleViewController];
     [visibleController.view addSubview:errorHubView];
-    [UIView animateWithDuration:2.5 animations:^{
+    [UIView animateWithDuration:0.25 animations:^{
         errorHubView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIDevice btd_isIPhoneXSeries]?84:64);
     } completion:^(BOOL finished) {
         if (@available(iOS 10.0, *)) {
             [NSTimer scheduledTimerWithTimeInterval:2 repeats:NO block:^(NSTimer * _Nonnull timer) {
-                [UIView animateWithDuration:2.5 animations:^{
+                [UIView animateWithDuration:0.25 animations:^{
                     errorHubView.frame = CGRectMake(0,  [UIDevice btd_isIPhoneXSeries]?-84:-64, [UIScreen mainScreen].bounds.size.width,  [UIDevice btd_isIPhoneXSeries]?84:64);
                 } completion:^(BOOL finished) {
                     [errorHubView removeFromSuperview];
