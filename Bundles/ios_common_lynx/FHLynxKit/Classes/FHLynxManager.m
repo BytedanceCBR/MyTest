@@ -18,6 +18,11 @@
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
 
+static NSString * const kFHLynxSettingControlKey = @"lynx_config";
+static NSString * const kFHLynxActiveChannelsKey = @"active_channels";
+static NSString * const kFHLynxDeprecatedChannelsKey = @"deprecated_channels";
+
+
 @interface FHLynxManager()
 
 @property (nonatomic, strong) dispatch_queue_t lynx_io_queue;
@@ -312,12 +317,12 @@
 
 - (NSArray<NSString *> *)allConfigChannelsArray{
     NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
-    NSDictionary *lynxConfig = [fhSettings tt_objectForKey:@"lynx_config"];
+    NSDictionary *lynxConfig = [fhSettings tt_objectForKey:kFHLynxSettingControlKey];
     if ([lynxConfig isKindOfClass:[NSDictionary class]]) {
-        if ([lynxConfig[@"active_channels"] isKindOfClass:[NSArray class]]) {
-            self.activeChannels = lynxConfig[@"active_channels"];
+        if ([lynxConfig[kFHLynxActiveChannelsKey] isKindOfClass:[NSArray class]]) {
+            self.activeChannels = lynxConfig[kFHLynxActiveChannelsKey];
         }
-        self.deprecatedChannels = lynxConfig[@"deprecated_channels"];
+        self.deprecatedChannels = lynxConfig[kFHLynxDeprecatedChannelsKey];
     }
     
     return self.activeChannels;
@@ -330,11 +335,11 @@
 
 - (void)initLynx{
     NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
-    NSDictionary *lynxConfig = [fhSettings tt_objectForKey:@"lynx_config"];
+    NSDictionary *lynxConfig = [fhSettings tt_objectForKey:kFHLynxSettingControlKey];
 
     if ([lynxConfig isKindOfClass:[NSDictionary class]]) {
-        self.activeChannels = lynxConfig[@"active_channels"];
-        self.deprecatedChannels = lynxConfig[@"deprecated_channels"];
+        self.activeChannels = lynxConfig[kFHLynxActiveChannelsKey];
+        self.deprecatedChannels = lynxConfig[kFHLynxDeprecatedChannelsKey];
         
         if ([lynxConfig[@"lynx_enable"] isKindOfClass:[NSNumber class]]) {
             if (![lynxConfig[@"lynx_enable"] integerValue]) {
