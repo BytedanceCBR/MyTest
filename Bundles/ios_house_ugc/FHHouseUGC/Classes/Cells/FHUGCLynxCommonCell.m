@@ -63,7 +63,7 @@
 }
 
 - (void)refreshWithData:(id)data {
-    return;
+    
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
