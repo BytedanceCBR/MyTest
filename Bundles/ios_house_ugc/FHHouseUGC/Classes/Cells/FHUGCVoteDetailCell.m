@@ -104,6 +104,7 @@
                     }
                 }];
                 // 更新UI
+                self.cellModel.ischanged = YES;
                 [self refreshWithData:self.cellModel];
             }
         }
