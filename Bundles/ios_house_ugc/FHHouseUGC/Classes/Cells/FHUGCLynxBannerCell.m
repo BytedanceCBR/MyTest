@@ -69,7 +69,7 @@
         return;
     }
     
-    if (self.currentTemData == data) {
+    if (self.currentData == data) {
         return;
     }
     
