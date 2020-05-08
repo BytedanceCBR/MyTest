@@ -687,7 +687,7 @@
         if (error) {
             [[ToastManager manager] showToast:error.domain];
             if(error.code == 1005){ //过期
-                weakSelf.voteInfo.selected = NO;
+                weakSelf.voteInfo.selected = YES;
                 weakSelf.voteInfo.voteState = FHUGCVoteStateExpired;
                 weakSelf.voteInfo.deadLineContent = @"";
                 for (FHUGCVoteInfoVoteInfoItemsModel *item in weakSelf.voteInfo.items) {
