@@ -238,6 +238,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer;
 @property (nonatomic, copy, nullable) NSString *reportUrl;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
+@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo;
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataUserStatusModel* userStatus;
 @property (nonatomic, assign) NSInteger status;
@@ -245,6 +246,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
 @property (nonatomic, strong , nullable) FHRentDetailImShareInfoModel *imShareInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *middleSubscriptionAssociateInfo;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
 
 @end
 

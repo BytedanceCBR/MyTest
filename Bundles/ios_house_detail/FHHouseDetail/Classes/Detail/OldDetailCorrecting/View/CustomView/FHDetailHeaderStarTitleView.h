@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateStarsCount:(NSInteger)scoreValue;
 - (void)updateTitle:(NSString *)title;
+- (void)hiddenStarImage;
 
 @end
 

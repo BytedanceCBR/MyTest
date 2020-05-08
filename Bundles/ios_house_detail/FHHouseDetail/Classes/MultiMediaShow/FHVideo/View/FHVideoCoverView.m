@@ -56,7 +56,7 @@
 //    }];
     [self.startImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(52);
-        make.top.mas_equalTo(104);
+        make.top.mas_equalTo(110);
         make.centerX.mas_equalTo(self);
     }];
 }

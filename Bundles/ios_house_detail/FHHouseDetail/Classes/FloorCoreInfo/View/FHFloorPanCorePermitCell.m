@@ -1,124 +1,152 @@
 //
 //  FHFloorPanCorePermitCell.m
-//  AFgzipRequestSerializer
+//  FHHouseDetail
 //
-//  Created by 谢飞 on 2019/2/19.
+//  Created by xubinbin on 2020/4/23.
 //
 
 #import "FHFloorPanCorePermitCell.h"
+#import "TTBaseMacro.h"
 
-@interface FHFloorPanCorePermitCell ()
+@interface FHFloorPanCorePermitCell()
 
-@property (nonatomic, strong) UIView *headerView;
-@property (nonatomic, strong) UIView *listView;
+@property (nonatomic , strong) UIView *containerView;
 
 @end
 
 @implementation FHFloorPanCorePermitCell
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super initWithStyle:style
-                reuseIdentifier:reuseIdentifier];
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-       _headerView = [UIView new];
-       [self.contentView addSubview:_headerView];
-        [_headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView).offset(5);
-            make.left.right.equalTo(self.contentView);
-        }];
-        
-       NSArray *nameArray = @[@"预售许可证",@"发证信息",@"绑定信息"];
-        
-       for (NSInteger i = 0; i < [nameArray count]; i++) {
-            NSString *stringName = nameArray[i];
-            UILabel *labelName = [UILabel new];
-            labelName.font = [UIFont themeFontRegular:15];
-            labelName.textColor = [UIColor themeGray3];
-            labelName.textAlignment = NSTextAlignmentCenter;
-            labelName.text = stringName;
-            [_headerView addSubview:labelName];
-           
-           [labelName mas_makeConstraints:^(MASConstraintMaker *make) {
-               make.centerY.equalTo(labelName);
-               make.left.mas_equalTo([UIScreen mainScreen].bounds.size.width / 3 * i);
-               make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width / 3);
-               make.height.mas_equalTo(30);
-           }];
-        }
-        
-        _listView = [UIView new];
-        [self.contentView addSubview:_listView];
-        [_listView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.headerView.mas_bottom);
-            make.left.right.equalTo(self.contentView);
-            make.bottom.equalTo(self.contentView).offset(-10);
-        }];
+        [self.contentView addSubview:self.containerView];
+        [self initConstraints];
     }
     return self;
 }
 
-- (void)refreshWithData:(id)data
+- (UIView *)containerView
 {
-    if([data isKindOfClass:[FHFloorPanCorePermitCellModel class]])
-    {
-        
-        NSArray<FHDetailNewCoreDetailDataPermitListModel *>*nameArray = ((FHFloorPanCorePermitCellModel *)data).permitList;
-        
-        for (NSInteger i = 0; i < 3; i++) {
-            FHDetailNewCoreDetailDataPermitListModel *modelItem = (FHDetailNewCoreDetailDataPermitListModel *)nameArray.firstObject;
-            if ([modelItem isKindOfClass:[FHDetailNewCoreDetailDataPermitListModel class]]) {
-                UILabel *labelName = [UILabel new];
-                labelName.font = [UIFont themeFontRegular:15];
-                labelName.textColor = [UIColor themeGray1];
-                labelName.numberOfLines = 0;
-                labelName.textAlignment = NSTextAlignmentCenter;
-                switch (i) {
-                    case 0:
-                        labelName.text = modelItem.permit ? modelItem.permit : @"-";
-                        break;
-                    case 1:
-                        labelName.text = modelItem.permitDate ? modelItem.permitDate : @"-";
-                        break;
-                    case 2:
-                        labelName.text = modelItem.bindBuilding ? modelItem.bindBuilding : @"-";
-                        break;
-                    default:
-                        break;
-                }
-                [_listView addSubview:labelName];
-                
-                [labelName mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.bottom.top.equalTo(self.listView);
-                    make.left.mas_equalTo([UIScreen mainScreen].bounds.size.width / 3 * i);
-                    make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width / 3);
-                }];
-            }
-        }
+    if (!_containerView) {
+        _containerView = [[UIView alloc] init];
+        _containerView.backgroundColor = [UIColor whiteColor];
+        _containerView.layer.cornerRadius = 10;
+        _containerView.layer.masksToBounds = YES;
     }
-    
-    [_listView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.headerView.mas_bottom).offset(30);
-        make.left.right.equalTo(self.contentView);
-        make.bottom.equalTo(self.contentView).offset(-10);
+    return _containerView;
+}
+
+-(void)initConstraints
+{
+    [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.top.bottom.mas_equalTo(0);
     }];
 }
 
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
+- (void)refreshWithData:(id)data
+{
+    if ([data isKindOfClass:[FHFloorPanCorePermitCellModel class]]) {
+        FHFloorPanCorePermitCellModel *model = (FHFloorPanCorePermitCellModel *)data;
+        UIView *previouseView = nil;
+        for (NSInteger i = 0; i < [model.list count]; i++) {
+            UIView *itemContenView = [UIView new];
+            itemContenView.backgroundColor = [UIColor clearColor];
+            FHFloorPanCorePermitCellItemModel *itemModel = model.list[i];
+            UILabel *nameLabel = [UILabel new];
+            nameLabel.numberOfLines = 0;
+            nameLabel.attributedText = [self contentAttributeString:itemModel.permitName textFont:[UIFont themeFontRegular:14] textColor:RGB(0xae, 0xad, 0xad)];
+            [itemContenView addSubview:nameLabel];
+            
+            [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(31);
+                make.width.mas_equalTo(70);
+                make.top.mas_equalTo(0);
+            }];
+            
+            UILabel *valueLabel = [UILabel new];
+            valueLabel.numberOfLines = 0;
+            valueLabel.attributedText = [self contentAttributeString:itemModel.permitValue textFont:[UIFont themeFontMedium:14] textColor:[UIColor themeGray2]];
+            [itemContenView addSubview:valueLabel];
+            
+            [valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(nameLabel.mas_right).offset(14);
+                make.top.equalTo(nameLabel);
+                make.right.equalTo(itemContenView).offset(-31);
+                make.bottom.equalTo(itemContenView);
+            }];
+            
+            [self.contentView addSubview:itemContenView];
+            
+            [itemContenView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (previouseView) {
+                    if (i % 3 == 0 && i >= 3) {
+                        make.top.equalTo(previouseView.mas_bottom).offset(20);
+                    }
+                    else {
+                        make.top.equalTo(previouseView.mas_bottom).offset(18);
+                    }
+                }else
+                {
+                    make.top.equalTo(self.contentView).offset(29);
+                }
+                if (i == [model.list count] - 1) {
+                    make.bottom.equalTo(self.contentView).offset(-29);
+                }
+                make.left.right.equalTo(self.contentView);
+            }];
+            previouseView = itemContenView;
+            if (i % 3 == 2 && i != [model.list count] - 1) {
+                UIView *grayline = [[UIView alloc] init];
+                grayline.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
+                [self.contentView addSubview:grayline];
+                [grayline mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(34);
+                    make.right.mas_equalTo(-34);
+                    make.height.mas_equalTo(0.5);
+                    make.top.equalTo(previouseView.mas_bottom).offset(20);
+                }];
+                previouseView = grayline;
+            }
+        }
+    }
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
+- (NSAttributedString *)contentAttributeString:(NSString *) str textFont:(UIFont *)font textColor:(UIColor *)color {
+    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
+       if(!isEmptyString(str)) {
+           NSDictionary *attributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: color};
+           NSAttributedString *content = [[NSAttributedString alloc] initWithString:str attributes: attributes];
+           [attributedText appendAttributedString:content];
+           NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+           CGFloat lineHeight = 16;
+           paragraphStyle.minimumLineHeight = lineHeight;
+           paragraphStyle.maximumLineHeight = lineHeight;
+           paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+           [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
+       }
+    return attributedText;
+}
 
-    // Configure the view for the selected state
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    for (UIView *view in self.contentView.subviews) {
+        [view removeFromSuperview];
+    }
+    [self.contentView addSubview:self.containerView];
+    [self initConstraints];
 }
 
 @end
 
-@implementation FHFloorPanCorePermitCellModel
+@implementation FHFloorPanCorePermitCellItemModel
 
+@end
+
+@implementation FHFloorPanCorePermitCellModel
 
 @end

@@ -15,6 +15,7 @@
 #import "YYText.h"
 #import "TTRichSpanText+Link.h"
 #import "TTUGCEmojiParser.h"
+#import "TTUGCTextRender.h"
 
 @implementation FHUGCCellHelper
 
@@ -59,7 +60,10 @@
         }
         NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
-            UIFont *font = [UIFont themeFontRegular:16];
+            CGFloat fontSize = 16.0f;
+            UIFont *font = [UIFont themeFontRegular:fontSize];
+            CGFloat lineHeight = ceil(fontSize * 1.4);
+            
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
             [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
@@ -67,8 +71,8 @@
             
             NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         
-            paragraphStyle.minimumLineHeight = 21;
-            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.minimumLineHeight = lineHeight;
+            paragraphStyle.maximumLineHeight = lineHeight;
             paragraphStyle.lineSpacing = 2;
             
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -104,6 +108,7 @@
         }
         NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:(font.pointSize - 2) needParseCount:parseEmojiCount];
         if (attrStr) {
+            CGFloat lineHeight = ceil(font.pointSize * 1.4);
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
             [attributes setValue:color forKey:NSForegroundColorAttributeName];
@@ -111,8 +116,8 @@
             
             if(numberOfLines != 1){
                 NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-                paragraphStyle.minimumLineHeight = 21;
-                paragraphStyle.maximumLineHeight = 21;
+                paragraphStyle.minimumLineHeight = lineHeight;
+                paragraphStyle.maximumLineHeight = lineHeight;
                 paragraphStyle.lineSpacing = 2;
                 paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
                 [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
@@ -144,13 +149,13 @@
     }
     
     if (!isEmptyString(threadContent.text)) {
-        NSInteger parseEmojiCount = -1;
-        if (model.numberOfLines > 0) {
-            parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
-        }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
+        
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:16 topAdjust:1.5];
+        
         if (attrStr) {
-            UIFont *font = [UIFont themeFontRegular:16];
+            CGFloat fontSize = 16.0f;
+            UIFont *font = [UIFont themeFontRegular:fontSize];
+            CGFloat lineHeight = ceil(fontSize * 1.4);
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
             [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
@@ -158,18 +163,18 @@
             
             NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             
-            paragraphStyle.minimumLineHeight = 21;
-            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.minimumLineHeight = lineHeight;
+            paragraphStyle.maximumLineHeight = lineHeight;
             paragraphStyle.lineSpacing = 2;
             
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
             [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
             
             [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
             
             model.contentAStr = mutableAttributedString;
             
-            CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
+            CGSize size = [self sizeThatFitsAsyncAttributedString:mutableAttributedString
                                                               withConstraints:CGSizeMake(width, FLT_MAX)
                                                              maxNumberOfLines:numberOfLines
                                                        limitedToNumberOfLines:&numberOfLines];
@@ -191,13 +196,13 @@
     }
     
     if (!isEmptyString(threadContent.text)) {
-        NSInteger parseEmojiCount = -1;
-        if (model.numberOfLines > 0) {
-            parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
-        }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:16 topAdjust:1.5];
+        
         if (attrStr) {
-            UIFont *font = [UIFont themeFontRegular:16];
+            CGFloat fontSize = 16.0f;
+            UIFont *font = [UIFont themeFontRegular:fontSize];
+            CGFloat lineHeight = ceil(fontSize * 1.4);
+
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
             [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
@@ -205,20 +210,20 @@
             
             NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             
-            paragraphStyle.minimumLineHeight = 21;
-            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.minimumLineHeight = lineHeight;
+            paragraphStyle.maximumLineHeight = lineHeight;
             paragraphStyle.lineSpacing = 2;
             
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
             [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
             
             [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
             
             model.contentAStr = mutableAttributedString;
             
-            NSInteger numberOfLines = 3;
+            NSInteger numberOfLines = model.numberOfLines;
             
-            CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
+            CGSize size = [self sizeThatFitsAsyncAttributedString:mutableAttributedString
                                              withConstraints:CGSizeMake(width, FLT_MAX)
                                             maxNumberOfLines:numberOfLines
                                       limitedToNumberOfLines:&numberOfLines];
@@ -256,26 +261,86 @@
     }
 }
 
-+ (void)setOriginRichContent:(TTUGCAttributedLabel *)label model:(FHFeedUGCCellModel *)model {
++ (void)setAsyncRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model {
     //内容
-    [label setText:model.originItemModel.contentAStr];
+    TTUGCTextRender *textRender = [[TTUGCTextRender alloc] initWithAttributedText:model.contentAStr];
+    textRender.maximumNumberOfLines = model.numberOfLines;
+    textRender.font = [UIFont themeFontRegular:16];
+    if(model.showLookMore){
+        textRender.truncatedToken = [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:16]
+                                                       contentColor:[UIColor themeGray1]
+                                                              color:[UIColor themeRed3]];
+    }
     
-    if(model.needLinkSpan && model.originItemModel.richContent){
-        NSArray <TTRichSpanLink *> *richSpanLinks = [model.originItemModel.richContent richSpanLinksOfAttributedString];
+    NSMutableArray *linkModels = [NSMutableArray array];
+    if(model.needLinkSpan && model.richContent){
+        NSArray <TTRichSpanLink *> *richSpanLinks = [model.richContent richSpanLinksOfAttributedString];
         for (TTRichSpanLink *richSpanLink in richSpanLinks) {
             NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
-            if (NSMaxRange(range) <= label.attributedText.length) {
+            UIColor *linkColor = [UIColor themeRed3];
+            if (range.location + range.length <= model.contentAStr.length) {
                 if(model.supportedLinkType){
                     if(model.supportedLinkType.count > 0 && [model.supportedLinkType containsObject:@(richSpanLink.type)]){
-                        [label addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                        NSTextCheckingResult *checkingResult = [NSTextCheckingResult linkCheckingResultWithRange:range URL:[NSURL URLWithString:richSpanLink.link]];
+                        TTUGCAsyncLabelLink *link =
+                        [[TTUGCAsyncLabelLink alloc] initWithAttributes:linkColor ? @{NSForegroundColorAttributeName : linkColor} : nil
+                                                     textCheckingResult:checkingResult];
+                        link.linkURL = [NSURL URLWithString:richSpanLink.link];//非图片的都可以这么用。
+                        [linkModels addObject:link];
                     }
                 }else{
                     //不设置默认全部支持
-                    [label addLinkToURL:[NSURL URLWithString:richSpanLink.link] withRange:range];
+                    NSTextCheckingResult *checkingResult = [NSTextCheckingResult transitInformationCheckingResultWithRange:range components:@{}];
+                    TTUGCAsyncLabelLink *link =
+                    [[TTUGCAsyncLabelLink alloc] initWithAttributes:linkColor ? @{NSForegroundColorAttributeName : linkColor} : nil
+                                                 textCheckingResult:checkingResult];
+                    link.linkURL = [NSURL URLWithString:richSpanLink.link];//非图片的都可以这么用。
+                    [linkModels addObject:link];
                 }
             }
         }
     }
+    
+    [textRender addLinks:linkModels];
+    label.textRender = textRender;
+}
+
++ (void)setOriginRichContent:(TTUGCAsyncLabel *)label model:(FHFeedUGCCellModel *)model numberOfLines:(NSInteger)numberOfLines  {
+    TTUGCTextRender *textRender = [[TTUGCTextRender alloc] initWithAttributedText:model.originItemModel.contentAStr];
+    textRender.maximumNumberOfLines = numberOfLines;
+    textRender.font = [UIFont themeFontRegular:16];
+        
+    NSMutableArray *linkModels = [NSMutableArray array];
+    if(model.needLinkSpan && model.richContent){
+        NSArray <TTRichSpanLink *> *richSpanLinks = [model.originItemModel.richContent richSpanLinksOfAttributedString];
+        for (TTRichSpanLink *richSpanLink in richSpanLinks) {
+            NSRange range = NSMakeRange(richSpanLink.start, richSpanLink.length);
+            UIColor *linkColor = [UIColor themeRed3];
+            if (range.location + range.length <= model.originItemModel.contentAStr.length) {
+                if(model.supportedLinkType){
+                    if(model.supportedLinkType.count > 0 && [model.supportedLinkType containsObject:@(richSpanLink.type)]){
+                        NSTextCheckingResult *checkingResult = [NSTextCheckingResult linkCheckingResultWithRange:range URL:[NSURL URLWithString:richSpanLink.link]];
+                        TTUGCAsyncLabelLink *link =
+                        [[TTUGCAsyncLabelLink alloc] initWithAttributes:linkColor ? @{NSForegroundColorAttributeName : linkColor} : nil
+                                                     textCheckingResult:checkingResult];
+                        link.linkURL = [NSURL URLWithString:richSpanLink.link];//非图片的都可以这么用。
+                        [linkModels addObject:link];
+                    }
+                }else{
+                    //不设置默认全部支持
+                    NSTextCheckingResult *checkingResult = [NSTextCheckingResult transitInformationCheckingResultWithRange:range components:@{}];
+                    TTUGCAsyncLabelLink *link =
+                    [[TTUGCAsyncLabelLink alloc] initWithAttributes:linkColor ? @{NSForegroundColorAttributeName : linkColor} : nil
+                                                 textCheckingResult:checkingResult];
+                    link.linkURL = [NSURL URLWithString:richSpanLink.link];//非图片的都可以这么用。
+                    [linkModels addObject:link];
+                }
+            }
+        }
+    }
+    
+    [textRender addLinks:linkModels];
+    label.textRender = textRender;
 }
 
 + (CGSize)sizeThatFitsAttributedString:(NSAttributedString *)attrStr
@@ -291,6 +356,21 @@
     return [TTUGCAttributedLabel sizeThatFitsAttributedString:attrStr
                                               withConstraints:CGSizeMake(size.width, FLT_MAX)
                                        limitedToNumberOfLines:*numberOfLines];
+}
+
++ (CGSize)sizeThatFitsAsyncAttributedString:(NSAttributedString *)attrStr
+                       withConstraints:(CGSize)size
+                      maxNumberOfLines:(NSUInteger)maxLine
+                limitedToNumberOfLines:(NSUInteger*)numberOfLines {
+    long lines = [TTUGCTextRender numberOfLinesAttributedString:attrStr constraintsWidth:size.width];
+    
+    if (lines <= maxLine) { //用最大行数能显示全，就用最大行数显示
+        *numberOfLines = maxLine;
+    }
+
+    return [TTUGCTextRender sizeThatFitsAttributedString:attrStr
+                                         constraintsSize:CGSizeMake(size.width, CGFLOAT_MAX)
+                                  limitedToNumberOfLines:*numberOfLines];;
 }
 
 //问答回答和文章优质评论
@@ -334,13 +414,11 @@
     if (!isEmptyString(text)) {
         [threadContent appendRichSpanText:richContent];
         
-        NSInteger parseEmojiCount = -1;
-        if (model.numberOfLines > 0) {
-            parseEmojiCount = (100 * (model.numberOfLines + 1));// 只需解析这么多，其他解析无用~~
-        }
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:threadContent.text fontSize:15 needParseCount:parseEmojiCount];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:16 topAdjust:1.5];
         if (attrStr) {
-            UIFont *font = [UIFont themeFontRegular:16];
+            CGFloat fontSize = 16.0f;
+            UIFont *font = [UIFont themeFontRegular:fontSize];
+            CGFloat lineHeight = ceil(fontSize * 1.4);
             
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
 
@@ -350,11 +428,11 @@
             
             NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             
-            paragraphStyle.minimumLineHeight = 21;
-            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.minimumLineHeight = lineHeight;
+            paragraphStyle.maximumLineHeight = lineHeight;
             paragraphStyle.lineSpacing = 2;
             
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
             [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
             
             //类型
@@ -373,11 +451,11 @@
 
             model.originItemModel.contentAStr = mutableAttributedString;
             
-            CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
+            CGSize size = [self sizeThatFitsAsyncAttributedString:mutableAttributedString
                                              withConstraints:CGSizeMake(width, FLT_MAX)
                                             maxNumberOfLines:numberOfLines
                                       limitedToNumberOfLines:&numberOfLines];
-            model.originItemHeight = size.height + 36;
+            model.originItemHeight = size.height + 30;
         }
     }else{
         model.originItemHeight = 0;
@@ -516,7 +594,10 @@
         NSInteger parseEmojiCount = -1;
         NSAttributedString *attrStr = [TTUGCEmojiParser parseInCoreTextContext:richContent.text fontSize:15 needParseCount:parseEmojiCount];
         if (attrStr) {
-            UIFont *font = [UIFont themeFontRegular:16];
+            CGFloat fontSize = 16.0f;
+            UIFont *font = [UIFont themeFontRegular:fontSize];
+            CGFloat lineHeight = ceil(fontSize * 1.4);
+            
             mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
             [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];
@@ -524,8 +605,8 @@
             
             NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             
-            paragraphStyle.minimumLineHeight = 21;
-            paragraphStyle.maximumLineHeight = 21;
+            paragraphStyle.minimumLineHeight = lineHeight;
+            paragraphStyle.maximumLineHeight = lineHeight;
             paragraphStyle.lineSpacing = 2;
             
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;

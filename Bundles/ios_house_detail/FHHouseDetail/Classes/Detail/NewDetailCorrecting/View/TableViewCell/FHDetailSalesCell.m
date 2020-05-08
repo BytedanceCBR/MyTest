@@ -41,7 +41,7 @@
     [self addSubview:self.submitBtn];
     
     [self.tagView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(0);
+        make.left.top.mas_equalTo(3);
         make.width.mas_equalTo(30);
         make.height.mas_equalTo(18);
     }];
@@ -223,7 +223,7 @@
 
     NSString *title = itemInfo.discountReportTitle;
     NSString *subtitle = itemInfo.discountReportSubTitle;
-    NSString *toast = itemInfo.discountReportDoneTitle;
+    NSString *toast = [NSString stringWithFormat:@"%@，%@",itemInfo.discountReportDoneTitle,itemInfo.discountReportDoneSubTitle];
     NSString *btnTitle = itemInfo.discountButtonText;
     NSMutableDictionary *extraDic = @{@"position":@"coupon"
                                       }.mutableCopy;
@@ -233,7 +233,17 @@
     extraDic[@"btn_title"] = btnTitle;
     extraDic[@"toast"] = toast;
 
-    [model.contactViewModel fillFormActionWithExtraDict:extraDic];
+    NSMutableDictionary *associateParamDict = @{}.mutableCopy;
+    associateParamDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
+    NSMutableDictionary *reportParamsDict = [model.contactViewModel baseParams].mutableCopy;
+    if (extraDic.count > 0) {
+        [associateParamDict addEntriesFromDictionary:extraDic];
+        reportParamsDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
+    }
+    associateParamDict[kFHReportParams] = reportParamsDict;
+    
+    [model.contactViewModel fillFormActionWithParams:associateParamDict];
+//    [model.contactViewModel fillFormActionWithExtraDict:extraDic];
 }
 
 
