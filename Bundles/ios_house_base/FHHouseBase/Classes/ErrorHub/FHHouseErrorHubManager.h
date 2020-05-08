@@ -15,7 +15,7 @@ typedef NS_ENUM(NSInteger , FHErrorHubType) {
     FHErrorHubTypeBuryingPoint = 2 ,//埋点校验
      FHErrorHubTypeConfig = 3, //现场保存
     FHErrorHubTypeShare = 4 ,//分享相关
-    FHErrorHubTypeCustom = 5 ,//保存每种类型相应的key用于后续读取所有保存内容
+    FHErrorHubTypeCustom = 5 ,//通用保存
 };
 @interface FHHouseErrorHubManager : NSObject
 +(instancetype)sharedInstance;
