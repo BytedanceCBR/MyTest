@@ -56,7 +56,17 @@
           self.bottomSepView = [[UIView alloc] init];
           _bottomSepView.backgroundColor = [UIColor themeGray7];
           [self.contentView addSubview:_bottomSepView];
+        
+           NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:reuseIdentifier templateKey:[FHLynxManager defaultJSFileName] version:0];
             
+           if (templateData) {
+                if (templateData != self.currentTemData) {
+                   NSNumber *costTime = @(0);
+                   _loadTime = [[NSDate date] timeIntervalSince1970];
+                    self.currentTemData = templateData;
+                   [self.lynxView loadTemplate:templateData withURL:@"local"];
+                }
+            }
         }
     }
     return self;
@@ -68,13 +78,12 @@
         return;
     }
     
-    if (self.currentTemData == data) {
+    if (self.currentData == data) {
         return;
     }
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-    FHFeedUGCContentModel *contentModel = cellModel.originData;
-    NSDictionary *lynxData = contentModel.rawData.lynxData;
+    NSDictionary *lynxData = cellModel.lynxData;
     NSString *channeName = nil;
     if ([lynxData isKindOfClass:[NSDictionary class]]) {
         channeName = lynxData[@"channel_name"];

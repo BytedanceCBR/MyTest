@@ -136,10 +136,13 @@
             return [FHUGCEncyclopediasCell class];
             
         case FHUGCFeedListCellSubTypeUGCLynx:
+            
             return [FHUGCLynxCommonCell class];
         default:
             break;
     }
+    
+    
     
     return [FHUGCPureTitleCell class];
 }

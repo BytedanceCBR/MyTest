@@ -545,6 +545,14 @@
         }
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCCommonLynx || 1200 < cellModel.cellType < 1300){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCLynx;
+        if(model.rawData.groupId){
+            cellModel.groupId = model.rawData.groupId;
+        }
+        
+        if (!cellModel.groupId) {
+            cellModel.groupId = [model.rawData.lynxData[@"group_id"] description];
+        }
+        cellModel.lynxData = model.rawData.lynxData;
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
         cellModel.groupId = model.rawData.groupId;

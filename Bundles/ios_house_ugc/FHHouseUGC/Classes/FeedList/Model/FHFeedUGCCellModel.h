@@ -216,6 +216,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 //查看全部
 @property (nonatomic, copy , nullable) NSString *allSchema;
 
+@property (nonatomic, strong , nullable) NSDictionary *lynxData;
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 
