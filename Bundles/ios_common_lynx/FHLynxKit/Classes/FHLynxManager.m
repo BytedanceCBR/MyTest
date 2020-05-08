@@ -21,7 +21,7 @@
 static NSString * const kFHLynxSettingControlKey = @"lynx_config";
 static NSString * const kFHLynxActiveChannelsKey = @"active_channels";
 static NSString * const kFHLynxDeprecatedChannelsKey = @"deprecated_channels";
-
+static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
 
 @interface FHLynxManager()
 
@@ -112,7 +112,7 @@ static NSString * const kFHLynxDeprecatedChannelsKey = @"deprecated_channels";
                 [self sendEvent:@"1" channel:channel];
                 
                 NSString *path = [NSString stringWithFormat:@"LynxLocalChannels/%@/%@",channel,[FHLynxManager defaultJSFileName]];
-                               NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@""];
+                NSString *templatePath = [[NSBundle mainBundle] pathForResource:path ofType:@""];
                 data = [NSData dataWithContentsOfFile:templatePath];
                 [self syncAllChannel];
             }
@@ -340,9 +340,8 @@ static NSString * const kFHLynxDeprecatedChannelsKey = @"deprecated_channels";
     if ([lynxConfig isKindOfClass:[NSDictionary class]]) {
         self.activeChannels = lynxConfig[kFHLynxActiveChannelsKey];
         self.deprecatedChannels = lynxConfig[kFHLynxDeprecatedChannelsKey];
-        
-        if ([lynxConfig[@"lynx_enable"] isKindOfClass:[NSNumber class]]) {
-            if (![lynxConfig[@"lynx_enable"] integerValue]) {
+        if ([lynxConfig[kFHLynxEnableControlKey] isKindOfClass:[NSNumber class]]) {
+            if (![lynxConfig[kFHLynxEnableControlKey] integerValue]) {
                 return;
             }
         }
@@ -351,7 +350,6 @@ static NSString * const kFHLynxDeprecatedChannelsKey = @"deprecated_channels";
         [[self allLocalChannelsArray] enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:obj templateKey:[FHLynxManager defaultJSFileName]];
         }];
-        
         [self.activeChannels enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop){
                [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:obj templateKey:[FHLynxManager defaultJSFileName]];
         }];
