@@ -18,7 +18,7 @@
 
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
-
+@property (nonatomic, strong) NSString *currentReuseIdentifier;
 @end
 
 @implementation FHUGCLynxCommonCell
@@ -64,6 +64,7 @@
                    NSNumber *costTime = @(0);
                    _loadTime = [[NSDate date] timeIntervalSince1970];
                     self.currentTemData = templateData;
+                    self.currentReuseIdentifier = reuseIdentifier;
                    [self.lynxView loadTemplate:templateData withURL:@"local"];
                 }
             }
@@ -86,7 +87,7 @@
     NSDictionary *lynxData = cellModel.lynxData;
     
     if (!self.currentTemData) {
-        NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
+        NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:self.currentReuseIdentifier templateKey:[FHLynxManager defaultJSFileName] version:0];
         if (!templateData) {
             return;
         }

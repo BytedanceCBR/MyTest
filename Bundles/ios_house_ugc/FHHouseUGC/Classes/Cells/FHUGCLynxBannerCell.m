@@ -75,20 +75,20 @@
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     NSDictionary *lynxData = cellModel.lynxData;
-    NSString *channeName = nil;
-    if ([lynxData isKindOfClass:[NSDictionary class]]) {
-        channeName = lynxData[@"channel_name"];
-    }
+
     
-    if (!channeName) {
-        return;
-    }
-    
-    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channeName templateKey:[FHLynxManager defaultJSFileName] version:0];
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
     
     if (!templateData) {
         return;
     }
+    
+  
+     self.currentTemData = templateData;
+     NSNumber *costTime = @(0);
+     _loadTime = [[NSDate date] timeIntervalSince1970];
+ 
+     [self.lynxView loadTemplate:templateData withURL:@"local"];
     
     NSMutableDictionary *dataJson = [NSMutableDictionary new];
     FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];

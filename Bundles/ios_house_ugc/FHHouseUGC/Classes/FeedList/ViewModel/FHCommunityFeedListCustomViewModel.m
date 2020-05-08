@@ -453,8 +453,8 @@
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
         if (cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCLynx && cellModel.lynxData[@"channel_name"]) {
-                  [tableView registerClass:NSClassFromString(cellIdentifier) forCellReuseIdentifier:cellModel.lynxData[@"channel_name"]];
-                  cellIdentifier = cellModel.lynxData[@"channel_name"];
+              [tableView registerClass:NSClassFromString(cellIdentifier) forCellReuseIdentifier:cellModel.lynxData[@"channel_name"]];
+              cellIdentifier = cellModel.lynxData[@"channel_name"];
         }
         
         FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
