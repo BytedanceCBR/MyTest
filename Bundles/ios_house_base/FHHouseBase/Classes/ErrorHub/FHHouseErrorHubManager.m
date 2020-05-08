@@ -20,20 +20,15 @@
     });
     return manager;
 }
-
 - (void)checkRequestResponseWithHost:(NSString *)host requestParams:(NSDictionary *)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(FHErrorHubType)errorHubType {
     if (![[self getChannel] isEqualToString:@"local_test"]) {
         return;
     }
-    //    NSInteger responseCode = -1;
-    //    if (responseStatus.statusCode) {
-    //        responseCode = responseStatus.statusCode;
-    //    }
-    NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:response
-                                                                       options:NSJSONReadingAllowFragments
-                                                                         error:nil];
-    NSDictionary *responseStatusDic = [[NSDictionary alloc]initWithDictionary:responseStatus.allHeaderFields];
     if ( type !=FHNetworkMonitorTypeSuccess) {
+        NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:response
+                                                                           options:NSJSONReadingAllowFragments
+                                                                             error:nil];
+        NSDictionary *responseStatusDic = [[NSDictionary alloc]initWithDictionary:responseStatus.allHeaderFields];
         NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
         [outputDic setValue:host forKey:@"name"];
         [outputDic setValue:[self removeNillValue:responseDictionary] forKey:@"response"];
@@ -65,7 +60,6 @@
             [extra setValue:[[self removeNillValue:responseStatusDic]objectForKey:@"x-tt-logid"] forKey:@"logID"];
             [[HMDTTMonitor defaultManager] hmdTrackService:@"slardar_local_test_err" metric:nil category:@{@"status" : @(1)} extra:extra];
     }
-    
 }
 //保存数据
 - (void)addLogWithData:(id)Data logType:(FHErrorHubType)errorHubType {
@@ -94,8 +88,6 @@
             [dataArr addObject:Data];
             keyStr = @"error_share";
             break;
-            
-        default:
             break;
     }
     NSDictionary *errorInfo = @{keyStr:dataArr};
@@ -103,6 +95,7 @@
     [errordata writeToFile:[self localDataPathWithType:errorHubType] atomically:YES];
 }
 
+//通过类型读取数据
 - (NSArray *)loadDataFromLocalDataWithType:(FHErrorHubType)errorHubType {
     NSData *data = [NSData dataWithContentsOfFile:[self localDataPathWithType:errorHubType]];
     if (!data) {
@@ -131,6 +124,9 @@
             break;
         case FHErrorHubTypeShare:
             strFinalPath = [NSString stringWithFormat:@"%@/errorShare.plist",strPath];
+            break;
+        case FHErrorHubTypeCustom:
+            strFinalPath = [NSString stringWithFormat:@"%@/errorCustom.plist",strPath];
             break;
         default:
             break;
@@ -259,4 +255,5 @@
 -(NSString*)getChannel {
     return [TTSandBoxHelper getCurrentChannel];
 }
+
 @end

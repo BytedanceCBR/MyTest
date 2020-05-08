@@ -14,10 +14,10 @@ typedef NS_ENUM(NSInteger , FHErrorHubType) {
     FHErrorHubTypeRequest = 1, //请求校验
     FHErrorHubTypeBuryingPoint = 2 ,//埋点校验
      FHErrorHubTypeConfig = 3, //现场保存
-    FHErrorHubTypeShare = 4 //分享相关
+    FHErrorHubTypeShare = 4 ,//分享相关
+    FHErrorHubTypeCustom = 5 ,//保存每种类型相应的key用于后续读取所有保存内容
 };
 @interface FHHouseErrorHubManager : NSObject
-
 +(instancetype)sharedInstance;
 
 /// 校验核心接口请求
@@ -40,14 +40,13 @@ typedef NS_ENUM(NSInteger , FHErrorHubType) {
 /// @param errorHubType 类型
 - (NSArray *)getLocalErrorDataWithType:(FHErrorHubType)errorHubType;
 
-
 /// 读取数据路径
 /// @param errorHubType 类型
 - (NSString *)localDataPathWithType:(FHErrorHubType)errorHubType;
 
 
 /// 添加数据保存
-/// @param Data 数据
+/// @param Data 数据 （必须包含name和error_info）用于展示和复制
 /// @param errorHubType 类型
 - (void)addLogWithData:(id)Data logType:(FHErrorHubType)errorHubType;
 

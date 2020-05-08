@@ -14,6 +14,7 @@
 
 @interface FHHouseErrorHubDebugVC ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) NSMutableDictionary *dataSource;
+@property (nonatomic, strong) NSArray *keyArr;
 @property (nonatomic, weak) UITableView *errorTab;
 @property(nonatomic, strong) TTRouteParamObj *paramObj;
 @end
@@ -31,8 +32,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.dataSource = @{}.mutableCopy;
+    self.keyArr = @[@"host_error",@"buryingpoint_error",@"custom_error"];
     self.dataSource[@"host_error"] = [[FHHouseErrorHubManager sharedInstance] getLocalErrorDataWithType:FHErrorHubTypeRequest];
     self.dataSource[@"buryingpoint_error"] = [[FHHouseErrorHubManager sharedInstance] getLocalErrorDataWithType:FHErrorHubTypeBuryingPoint];
+    self.dataSource[@"custom_error"] = [[FHHouseErrorHubManager sharedInstance] getLocalErrorDataWithType:FHErrorHubTypeCustom];
     [self.errorTab registerClass:[FHHouseErrorHubCell class] forCellReuseIdentifier:@"FHHouseErrorHubCell"];
     [self initUI];
 }
@@ -70,7 +73,7 @@
 }
 
 - (void)shareErrorJsonIsRequest:(BOOL)isRquest index:(NSIndexPath *)indexPath {
-    NSDictionary *shareDic = self.dataSource[indexPath.section == 0 ?@"host_error" :@"buryingpoint_error"][indexPath.row];
+    NSDictionary *shareDic = self.dataSource[self.keyArr[indexPath.section]][indexPath.row];
     [[FHHouseErrorHubManager sharedInstance] addLogWithData:shareDic logType:FHErrorHubTypeShare];
     NSString *path = [[FHHouseErrorHubManager sharedInstance] localDataPathWithType:FHErrorHubTypeShare];
     NSURL *url = [NSURL fileURLWithPath:path];
@@ -102,25 +105,31 @@
     [[FHHouseErrorHubManager sharedInstance] saveConfigAndSettings];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSArray *dataArr = self.dataSource[self.dataSource.allKeys[section]];
+    NSArray *dataArr = self.dataSource[self.keyArr[section]];
     return dataArr.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *dic = self.dataSource[indexPath.section == 0 ?@"host_error" :@"buryingpoint_error"][indexPath.row];
+    NSDictionary *dic = self.dataSource[self.keyArr[indexPath.section]][indexPath.row];
     FHHouseErrorHubCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseErrorHubCell"];
-    cell.title = indexPath.section == 0 ?@"核心接口错误" :@"核心埋点错误";
+    if (indexPath.section == 0) {
+        cell.title = @"核心接口错误" ;
+    }else if(indexPath.section == 1) {
+        cell.title = @"核心埋点错误" ;
+    }else {
+        cell.title = @"自定义错误" ;
+    }
     cell.content = dic [@"name"];
     cell.errorMessage = dic[@"error_info"];
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-     NSDictionary *dic = self.dataSource[indexPath.section == 0 ?@"host_error" :@"buryingpoint_error"][indexPath.row];
+     NSDictionary *dic = self.dataSource[self.keyArr[indexPath.section]][indexPath.row];
     NSString *copyString = @"";
     if (indexPath.section == 0) {
         copyString = [NSString stringWithFormat:@"接口名:%@ ,错误码:%@，logid:%@", dic [@"name"],dic[@"error_info"],dic[@"httpStatus"][@"x-tt-logid"]];
     }else {
-        copyString = [NSString stringWithFormat:@"接口名:%@ ,错误信息:%@", dic [@"name"],dic[@"error_info"]];
+        copyString = [NSString stringWithFormat:@"错误名:%@ ,错误信息:%@", dic [@"name"],dic[@"error_info"]];
     }
     
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
@@ -133,7 +142,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.dataSource.allKeys.count;
+    return self.keyArr.count;
 }
 
 - (UITableView *)errorTab {
