@@ -52,13 +52,13 @@
             [FHHouseErrorHubView showErrorHubViewWithTitle:@"核心接口异常" content:[NSString stringWithFormat:@"HOST:%@",host]];
         });
         //添加请求监控
-            NSMutableDictionary *extra = @{}.mutableCopy;
-            [extra setValue:@"request" forKey:@"errorHubType"];
-            [extra setValue:host forKey:@"eventName"];
-            [extra setValue:@(type) forKey:@"errorHubType"];
-            [extra setValue:[self getCurrentTimes] forKey:@"currentTime"];
-            [extra setValue:[[self removeNillValue:responseStatusDic]objectForKey:@"x-tt-logid"] forKey:@"logID"];
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"slardar_local_test_err" metric:nil category:@{@"status" : @(1)} extra:extra];
+        NSMutableDictionary *extra = @{}.mutableCopy;
+        [extra setValue:@"request" forKey:@"errorHubType"];
+        [extra setValue:host forKey:@"eventName"];
+        [extra setValue:@(type) forKey:@"errorHubType"];
+        [extra setValue:[self getCurrentTimes] forKey:@"currentTime"];
+        [extra setValue:[[self removeNillValue:responseStatusDic]objectForKey:@"x-tt-logid"] forKey:@"logID"];
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"slardar_local_test_err" metric:nil category:@{@"status" : @(1)} extra:extra];
     }
 }
 //保存数据
@@ -87,6 +87,10 @@
             [dataArr removeAllObjects];
             [dataArr addObject:Data];
             keyStr = @"error_share";
+            break;
+        case FHErrorHubTypeCustom:
+            [dataArr addObject:Data];
+            keyStr = @"custom_error";
             break;
             break;
     }
