@@ -319,10 +319,7 @@
         FHDetailNeighborhoodModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
     }
     
-    //如果是小区，移除按钮
-    if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
-        vc.isShowAllBtns = NO;
-    }
+
     
     // 分享
     vc.shareActionBlock = ^{
@@ -368,6 +365,11 @@
     if (!model.isShowTopImageTab && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
         FHDetailNewTopImage *topImage = model.topImages.firstObject;
         vc.smallImageInfosModels = topImage.smallImageGroup;
+    }
+    //如果是小区，移除按钮 或者户型详情页也移除按钮
+    
+    if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood || model.titleDataModel.isFloorPan) {
+        vc.isShowAllBtns = NO;
     }
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
