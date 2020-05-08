@@ -151,7 +151,11 @@
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
         infoDict[@"tracer"] = tracerDic;
         infoDict[@"house_type"] = @(FHHouseTypeNewHouse);
-        infoDict[@"title"] = @"推荐新盘";
+        if (model.recommendedCourtData.total.length > 0) {
+            infoDict[@"title"] = [NSString stringWithFormat:@"推荐新盘 (%@)",model.recommendedCourtData.total];
+        } else {
+            infoDict[@"title"] = @"推荐新盘";
+        }
         infoDict[@"house_id"] = self.baseViewModel.houseId;
         // 周边小区跳转
 
