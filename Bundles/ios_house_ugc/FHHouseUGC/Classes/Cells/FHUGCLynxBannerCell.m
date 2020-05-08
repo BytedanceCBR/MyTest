@@ -277,5 +277,13 @@
     // Configure the view for the selected state
 }
 
+- (void)deleteCell {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
+        if ([self.currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
+            FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
+            [self.delegate deleteCell:cellModel];
+        }
+    }
+}
 
 @end
