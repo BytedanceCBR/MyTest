@@ -194,11 +194,10 @@
 }
 
 // 不重复调用
-- (void)collectionDisplayCell:(NSInteger)index //注意联调时测试
+- (void)collectionDisplayCell:(NSInteger)index
 {
     FHDetailRecommendedCourtModel *model = (FHDetailRecommendedCourtModel *)self.currentData;
     if (model.recommendedCourtData && model.recommendedCourtData.items.count > 0 && index >= 0 && index < model.recommendedCourtData.items.count) {
-        // 点击cell处理
         FHHouseListBaseItemModel *dataItem = model.recommendedCourtData.items[index];
         // house_show
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
