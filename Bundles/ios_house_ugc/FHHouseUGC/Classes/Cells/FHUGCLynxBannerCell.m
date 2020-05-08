@@ -74,18 +74,20 @@
     }
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-
-    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
+    NSDictionary *lynxData = cellModel.lynxData;
+    NSString *channeName = nil;
+    if ([lynxData isKindOfClass:[NSDictionary class]]) {
+        channeName = lynxData[@"channel_name"];
+    }
     
-    if (!templateData) {
+    if (!channeName) {
         return;
     }
     
-    if (templateData != self.currentTemData) {
-        NSNumber *costTime = @(0);
-        _loadTime = [[NSDate date] timeIntervalSince1970];
+    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channeName templateKey:[FHLynxManager defaultJSFileName] version:0];
     
-        [self.lynxView loadTemplate:templateData withURL:@"local"];
+    if (!templateData) {
+        return;
     }
     
     NSMutableDictionary *dataJson = [NSMutableDictionary new];
@@ -119,12 +121,12 @@
     }
 
     
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
-    NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
-    [self.lynxView updateDataWithTemplateData:dataItem];
-    
-    self.currentTemData = templateData;
+   if (dataJson) {
+       NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
+       NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+       LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
+       [self.lynxView updateDataWithTemplateData:dataItem];
+    }
     
     self.currentData = data;
 }

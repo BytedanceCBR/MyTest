@@ -84,22 +84,13 @@
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     NSDictionary *lynxData = cellModel.lynxData;
-    NSString *channeName = nil;
-    if ([lynxData isKindOfClass:[NSDictionary class]]) {
-        channeName = lynxData[@"channel_name"];
-    }
     
-    if (!channeName) {
-        return;
-    }
-    
-    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channeName templateKey:[FHLynxManager defaultJSFileName] version:0];
-    
-    if (!templateData) {
-        return;
-    }
-        
-    if (templateData != self.currentTemData) {
+    if (!self.currentTemData) {
+        NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
+        if (!templateData) {
+            return;
+        }
+        self.currentTemData = templateData;
         NSNumber *costTime = @(0);
         _loadTime = [[NSDate date] timeIntervalSince1970];
     
@@ -107,17 +98,8 @@
     }
     
     NSMutableDictionary *dataJson = [NSMutableDictionary new];
-//    FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-//    if (imageModel.url) {
-//        [dataJson setValue:imageModel.url forKey:@"img_url"];
-//    }
-//
-//    [dataJson setValue:cellModel.openUrl forKey:@"jump_url"];
-//    CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
-//    [dataJson setValue:@(imageWidth * 58.0/335.0) forKey:@"img_height"];
-//    [dataJson setValue:@(imageWidth) forKey:@"img_width"];
-    
-    if(lynxData){
+
+    if([lynxData isKindOfClass:[NSDictionary class]]){
         [dataJson addEntriesFromDictionary:lynxData];
     }
     
@@ -132,12 +114,13 @@
         [dataJson setValue:reprotPamrams forKey:@"report_params"];
     }
     
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
-    NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
-    [self.lynxView updateDataWithTemplateData:dataItem];
-    
-    self.currentTemData = templateData;
+    if (dataJson) {
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
+        NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
+        [self.lynxView updateDataWithTemplateData:dataItem];
+    }
+
     
     self.currentData = data;
 }
