@@ -106,7 +106,13 @@
     if (indexPath.row >= self.houseList.count) {
         return;
     }
-    FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
+    FHHouseListBaseItemModel *cellModel = nil;
+    if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCoutItem class]]) {
+        FHRecommendCoutItem  *data = (FHRecommendCoutItem *)self.houseList[indexPath.row];
+        cellModel = data.item;
+    } else {
+        cellModel = self.houseList[indexPath.row];
+    }
     if (cellModel) {
         NSString *origin_from = self.listController.tracerDict[@"origin_from"];
         NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
@@ -126,6 +132,8 @@
 //            if (theModel) {
                 urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",cellModel.houseid];
 //            }
+        } else if (self.listController.houseType == FHHouseTypeNewHouse) {
+                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@", cellModel.houseid];
         } else {
             urlStr = @"";
         }
@@ -266,7 +274,6 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return;
     if (self.listController.hasValidateData == YES && indexPath.row < self.houseList.count) {
         NSInteger rank = indexPath.row - 1;
         NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
@@ -437,16 +444,39 @@
 }
 
 - (void)processDetailRelatedData {
-    self.listController.hasValidateData = YES;
-    if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0) {
-        __weak typeof(self) wself = self;
+    
+    BOOL hasMore = NO;
+    hasMore = _relatedHouseData.data.hasMore;
+    NSString *searchId = _relatedHouseData.data.searchId;
+     self.currentOffset = _relatedHouseData.data.offset;
+    if(_relatedHouseData.data && _relatedHouseData.data.items.count > 0) {
+        self.listController.hasValidateData = YES;
+        [self.listController.emptyView hideEmptyView];
         [self.relatedHouseData.data.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHRecommendCoutItem *data = [[FHRecommendCoutItem alloc] init];
             data.item = obj;
-            [wself.houseList addObject:data];
+            [self.houseList addObject:data];
         }];
-        [wself.tableView reloadData];
-     }
+        [self.tableView reloadData];
+        [self updateTableViewWithMoreData:hasMore];
+    } else {
+        self.lastHasMore = hasMore;
+        [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
+    }
+    if (searchId.length > 0) {
+        self.searchId = searchId;
+    }
+    if (!self.hasEnterCategory) {
+        [self addEnterCategoryLog];
+        self.hasEnterCategory = YES;
+    }
+    if (self.firstRequestData && self.houseList.count > 0) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    }
+    
+    if (!hasMore && self.houseList.count < 10) {
+        self.tableView.mj_footer.hidden = YES;
+    }
 }
 
 #pragma mark - Request
@@ -500,9 +530,13 @@
         [self.httpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.httpTask = [FHHouseDetailAPI requestOldHouseRecommendedCourtSearch:@"6809833616537976840" offset:@"0" query:self.condition count:0 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
-        wself.relatedHouseData = model;
-        [wself processDetailRelatedData];
+    self.httpTask = [FHHouseDetailAPI requestOldHouseRecommendedCourtSearch:houseId offset:[NSString stringWithFormat:@"%ld", offset] query:self.condition count:15 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
+        if (model != NULL && error == NULL) {
+            wself.relatedHouseData = model;
+            [wself processDetailRelatedData];
+        } else {
+            [wself processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
+        }
     }];
 }
 
@@ -516,8 +550,13 @@
     if (!self.listController.hasValidateData) {
         return;
     }
-    FHHouseListBaseItemModel * cellModel = self.houseList[indexPath.row];
-    
+    FHHouseListBaseItemModel *cellModel = nil;
+    if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCoutItem class]]) {
+        FHRecommendCoutItem  *data = (FHRecommendCoutItem *)self.houseList[indexPath.row];
+        cellModel = data.item;
+    } else {
+        cellModel = self.houseList[indexPath.row];
+    }
     if (!cellModel) {
         return;
     }
