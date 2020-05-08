@@ -25,7 +25,7 @@
 #import "FHHouseListAPI.h"
 #import "FHHouseListBaseItemModel.h"
 #import "FHHouseDetailAPI.h"
-#import "FHRecommendCoutCell.h"
+#import "FHRecommendCourtCell.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -68,7 +68,7 @@
 //    [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
     [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
     [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
-    [_tableView registerClass:[FHRecommendCoutCell class] forCellReuseIdentifier:NSStringFromClass([FHRecommendCoutCell class])];
+    [_tableView registerClass:[FHRecommendCourtCell class] forCellReuseIdentifier:NSStringFromClass([FHRecommendCourtCell class])];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -107,8 +107,8 @@
         return;
     }
     FHHouseListBaseItemModel *cellModel = nil;
-    if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCoutItem class]]) {
-        FHRecommendCoutItem  *data = (FHRecommendCoutItem *)self.houseList[indexPath.row];
+    if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
+        FHRecommendCourtItem  *data = (FHRecommendCourtItem *)self.houseList[indexPath.row];
         cellModel = data.item;
     } else {
         cellModel = self.houseList[indexPath.row];
@@ -207,8 +207,8 @@
     if (self.listController.hasValidateData == YES) {
         if (self.houseList.count > indexPath.row) {
 //            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-            if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCoutItem class]]) {
-                FHRecommendCoutCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHRecommendCoutCell class])];
+            if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
+                FHRecommendCourtCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHRecommendCourtCell class])];
                 BOOL isFirst = (indexPath.row == 0);
                 BOOL isLast = (indexPath.row == _houseList.count - 1);
                 [cell refreshWithData:isFirst andLast:isLast];
@@ -292,7 +292,7 @@
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         if (indexPath.row < self.houseList.count) {
             
-            if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCoutItem class]]) {
+            if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
                 return 104;
             }
             FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
@@ -453,7 +453,7 @@
         self.listController.hasValidateData = YES;
         [self.listController.emptyView hideEmptyView];
         [self.relatedHouseData.data.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            FHRecommendCoutItem *data = [[FHRecommendCoutItem alloc] init];
+            FHRecommendCourtItem *data = [[FHRecommendCourtItem alloc] init];
             data.item = obj;
             [self.houseList addObject:data];
         }];
@@ -551,8 +551,8 @@
         return;
     }
     FHHouseListBaseItemModel *cellModel = nil;
-    if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCoutItem class]]) {
-        FHRecommendCoutItem  *data = (FHRecommendCoutItem *)self.houseList[indexPath.row];
+    if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
+        FHRecommendCourtItem  *data = (FHRecommendCourtItem *)self.houseList[indexPath.row];
         cellModel = data.item;
     } else {
         cellModel = self.houseList[indexPath.row];

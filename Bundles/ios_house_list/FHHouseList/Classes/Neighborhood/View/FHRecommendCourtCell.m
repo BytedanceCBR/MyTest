@@ -5,7 +5,7 @@
 //  Created by xubinbin on 2020/5/6.
 //
 
-#import "FHRecommendCoutCell.h"
+#import "FHRecommendCourtCell.h"
 #import "FHHouseListBaseItemModel.h"
 #import <Masonry/Masonry.h>
 #import <YYText/YYLabel.h>
@@ -13,9 +13,9 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHHouseListBaseItemCell.h"
 
-@interface FHRecommendCoutCell()
+@interface FHRecommendCourtCell()
 
-@property(nonatomic, strong) FHRecommendCoutItem *data;
+@property(nonatomic, strong) FHRecommendCourtItem *data;
 
 @property(nonatomic, strong) UILabel *mainTitleLabel; //主title lable
 @property(nonatomic, strong) UILabel *subTitleLabel; // sub title lable
@@ -26,7 +26,7 @@
 
 @end
 
-@implementation FHRecommendCoutCell
+@implementation FHRecommendCourtCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -164,7 +164,7 @@
 
 @end
 
-@implementation FHRecommendCoutItem
+@implementation FHRecommendCourtItem
 
 
 @end
