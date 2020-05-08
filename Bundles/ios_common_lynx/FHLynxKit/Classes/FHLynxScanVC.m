@@ -122,7 +122,8 @@ static NSString* kUrlInTextFieldKey = @"url_in_text_field";
 - (void)pushDemoVCWithUrl:(NSString *)url {
   [History recordScanResult:url];
   FHLynxDebugVC *demoVC = [FHLynxDebugVC new];
-  demoVC.url = [self processUrl:url];
+  demoVC.url = @"local";
+  demoVC.data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
   [[self navigationController] pushViewController:demoVC animated:YES];
 }
 

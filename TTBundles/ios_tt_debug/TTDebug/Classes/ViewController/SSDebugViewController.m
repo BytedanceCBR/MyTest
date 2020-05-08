@@ -101,6 +101,7 @@
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "IMManager.h"
 #import "FHLynxScanVC.h"
+#import "FHLynxDebugVC.h"
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);

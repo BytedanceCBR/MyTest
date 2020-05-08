@@ -251,7 +251,7 @@
     
     CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
     CGFloat imageHeight = imageWidth * 58.0/335.0;
-   __block CGFloat height = imageHeight + 5;
+    CGFloat height = imageHeight + 5;
     
     if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;

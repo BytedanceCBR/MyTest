@@ -111,7 +111,7 @@
     _lynxView.client = _delegate;
   }
   if (self.data) {
-    [_lynxView loadTemplate:self.data withURL:self.url];
+    [_lynxView loadTemplate:self.data withURL:@"local"];
   } else if (self.url) {
     // Add params to url for reload url from remote without cache
     BOOL hasParams = [self.url rangeOfString:@"?"].location != NSNotFound;

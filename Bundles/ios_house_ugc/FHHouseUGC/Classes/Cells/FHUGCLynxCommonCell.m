@@ -254,8 +254,8 @@
     //默认返回cell的默认值44;
     
     CGFloat imageHeight = 0;
-   __block CGFloat height = imageHeight + 5;
-    
+    CGFloat height = imageHeight + 5;
+
     if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
         if ([model.cell isKindOfClass:[FHUGCLynxCommonCell class]]) {
