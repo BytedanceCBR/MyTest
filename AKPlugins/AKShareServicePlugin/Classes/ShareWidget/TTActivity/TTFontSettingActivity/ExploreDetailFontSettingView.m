@@ -9,7 +9,7 @@
 #import "ExploreDetailFontSettingView.h"
 #import "SSThemed.h"
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTTrackerWrapper.h"
 
 #import "TTUserSettingsManager+FontSettings.h"

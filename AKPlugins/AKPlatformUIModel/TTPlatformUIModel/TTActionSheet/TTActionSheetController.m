@@ -17,7 +17,8 @@
 #import "TTDeviceHelper.h"
 #import "TTBaseMacro.h"
 #import "TTThemeConst.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 //UIWindow的rootViewController

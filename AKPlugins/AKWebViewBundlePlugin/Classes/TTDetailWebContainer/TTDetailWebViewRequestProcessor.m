@@ -12,7 +12,7 @@
 #import "TTURLTracker.h"
 
 #import <TTBaseLib/TTStringHelper.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTRoute/TTRoute.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 

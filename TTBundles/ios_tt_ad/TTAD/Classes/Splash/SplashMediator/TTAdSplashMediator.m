@@ -161,7 +161,7 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
         [params setValue:[TTSandBoxHelper getCurrentChannel] forKey:@"app_channel"];
         [params setValue:[FHLocManager sharedInstance].currentReGeocode.city forKey:@"city_name"];
         [params setValue:[FHLocManager sharedInstance].currentReGeocode.province forKey:@"province_name"];
-        [TTTracker eventV3:event params:params];
+        [BDTrackerProtocol eventV3:event params:params];
     }
 }
 

@@ -262,7 +262,7 @@ extern NSString * const kWDWendaListViewControllerUMEventName;
     NSString *label = [WDShareUtilsHelper labelNameForShareActivity:activity];
     NSMutableDictionary *dict = [self.viewModel.gdExtJson mutableCopy];
     [dict setValue:self.viewModel.qID forKey:@"source"];
-    [TTTracker category:@"umeng" event:kWDWendaListViewControllerUMEventName label:label dict:[dict copy]];
+    [BDTrackerProtocol category:@"umeng" event:kWDWendaListViewControllerUMEventName label:label dict:[dict copy]];
     
     TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.viewModel.qID];
     TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
@@ -326,7 +326,7 @@ extern NSString * const kWDWendaListViewControllerUMEventName;
     if (isEmptyString(label)) {
         return;
     }
-    [TTTracker event:kWDWendaListViewControllerUMEventName label:label];
+    [BDTrackerProtocol event:kWDWendaListViewControllerUMEventName label:label];
 }
 
 #pragma mark -- showing util

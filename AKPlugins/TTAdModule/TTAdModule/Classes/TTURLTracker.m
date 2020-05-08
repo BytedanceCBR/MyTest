@@ -12,7 +12,8 @@
 #import <TTBaseLib/NetworkUtilities.h>
 #import <TTBaseLib/TTNetWorkHelper.h>
 #import <TTTracker/TTTrackerProxy.h>
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import <TTTracker/TTLogServer.h>
 #import <TTBaseLib/NSString+URLEncoding.h>
 #import <TTInstallService/TTInstallIDManager.h>

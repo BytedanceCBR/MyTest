@@ -13,7 +13,8 @@
 #import "UIImage+TTThemeExtension.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTImagePreviewAnimateManager.h"
 #import "ALAssetsLibrary+TTImagePicker.h"
 #import "UIColor+Theme.h"
@@ -1788,7 +1789,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             self.containerView.alpha = 0;
             [self resetStatusStyle];
             [self finished];
-            [TTTracker ttTrackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
+            [BDTrackerProtocol trackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
             break;
         case TTPreviewAnimateStateWillCancel:
             break;

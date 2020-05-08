@@ -104,7 +104,7 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
         NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.startLoadDate];
         [dict setValue:[NSString stringWithFormat:@"%.0f", timeInterval*1000] forKey:@"load_time"];
         [dict setValue:self.detailModel.answerEntity.ansid forKey:@"item_id"];
-        [TTTracker eventData:dict];
+        [BDTrackerProtocol eventData:dict];
     }
 }
 
@@ -142,7 +142,7 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
         else {
             [dict setValue:@"" forKey:@"log_extra"];
         }
-        [TTTracker eventData:dict];
+        [BDTrackerProtocol eventData:dict];
         // 这里要把这个变成空的，下次如果看到时间是空的，则不重新发送统计。
         [self tt_resetStartLoadDate];
     }
@@ -176,7 +176,7 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     }
     [dict removeObjectForKey:@"origin_source"];
 //    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//        [TTTracker eventData:dict];
+//        [BDTrackerProtocol eventData:dict];
 //    }
     
     //Wenda_V3_DoubleSending
@@ -206,7 +206,7 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
         [v3Dic setValue:@"answer" forKey:@"page_type"];
     }
 
-    [TTTracker eventV3:@"read_pct" params:v3Dic isDoubleSending:NO];
+    [BDTrackerProtocol eventV3:@"read_pct" params:v3Dic isDoubleSending:NO];
 }
 
 - (void)tt_sendStayTimeImpresssion
@@ -1257,6 +1257,6 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
     if (adID.longLongValue > 0) {
         [dict setValue:adID forKey:@"ad_id"];
     }
-    [TTTracker eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 @end

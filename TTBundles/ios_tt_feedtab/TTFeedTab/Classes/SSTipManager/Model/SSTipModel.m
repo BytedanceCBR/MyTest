@@ -131,7 +131,7 @@
     if (extra.count > 0) {
         [params addEntriesFromDictionary:extra];
     }
-    [TTTracker eventV3:label params:params];
+    [BDTrackerProtocol eventV3:label params:params];
 }
 
 @end

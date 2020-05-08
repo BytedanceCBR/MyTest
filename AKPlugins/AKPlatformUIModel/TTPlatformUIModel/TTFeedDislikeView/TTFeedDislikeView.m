@@ -17,7 +17,8 @@
 #import "TTDeviceHelper.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceUIUtils.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "UIColor+Theme.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 

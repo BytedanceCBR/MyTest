@@ -26,7 +26,7 @@
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTUIWidget/UIView+Refresh_ErrorHandler.h>
 #import <TTTracker/TTTrackerProxy.h>
-#import <TTtracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTRoute/TTRoute.h>
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "FHWebViewConfig.h"
@@ -251,7 +251,7 @@
     
     if ([request.URL.scheme isEqualToString:@"sslocal"] && [request.URL.host isEqualToString:@"refresh_user_info"]) {
         // 登录
-        //        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_refresh_user_info"}];
+        //        [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_refresh_user_info"}];
         //        [TTAccountManager setIsLogin:YES];
         //        [TTAccountManager startGetAccountStatus:NO];
         
@@ -343,7 +343,7 @@
             self.tmpSaveImgURLString = nil;
         }
         else {
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_savephoto"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_savephoto"}];
             [[TTNetworkManager shareInstance] requestForBinaryWithURL:_tmpSaveImgURLString params:nil method:@"GET" needCommonParams:NO callback:^(NSError *error, id obj) {
                 if (![obj isKindOfClass:[NSData class]]) {
                     return;

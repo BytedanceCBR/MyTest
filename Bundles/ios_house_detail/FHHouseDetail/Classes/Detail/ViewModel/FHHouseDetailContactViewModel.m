@@ -29,7 +29,8 @@
 #import "TTRoute.h"
 #import "ToastManager.h"
 #import "IMManager.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import <FHHouseBase/FHUserTracker.h>
 #import "FHEnvContext.h"
 #import "FHMessageManager.h"
@@ -319,7 +320,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
     [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
     [params setValue: [[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount] >0?@"1":@"0" forKey:@"with_tips"];
-    [TTTracker eventV3:@"click_im_message" params:params];
+    [BDTrackerProtocol eventV3:@"click_im_message" params:params];
     
     
     NSString *messageSchema = @"sslocal://message_conversation_list";
@@ -435,7 +436,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
         [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
         params[@"enter_from"] = _tracerDict[@"enter_from"];
-        [TTTracker eventV3:@"element_show" params:params];
+        [BDTrackerProtocol eventV3:@"element_show" params:params];
     }
 }
 

@@ -12,7 +12,7 @@
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTRexxar/TTRJSBForwarding.h>
 //#import <AKPay/SSPayManager.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //#import <AKPay/TTInAppPurchaseManager.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>

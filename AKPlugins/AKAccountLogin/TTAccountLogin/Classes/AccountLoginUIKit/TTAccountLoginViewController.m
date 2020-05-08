@@ -153,7 +153,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_close" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_close" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -164,7 +164,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
             
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_close" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_close" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -371,7 +371,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
     if (!isEmptyString(self.captchaInput.field.text) || !isEmptyString(self.mobileInput.field.text)) {
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"cancel_register_dialog_show" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"cancel_register_dialog_show" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -385,7 +385,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
             //放弃注册
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"cancel_register_click_confirm" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"cancel_register_click_confirm" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -399,7 +399,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
             //继续注册流程
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"cancel_register_click_continue" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"cancel_register_click_continue" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -432,7 +432,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         // 在 [账号密码登录页] 点击switchButton后切换到 [账号短信验证码页], 记录该点击量
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_to_mobile" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_to_mobile" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -449,7 +449,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
     } else if (self.loginStyle == TTAccountLoginStylePassword) {
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_to_password" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_to_password" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -482,7 +482,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 {
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_show" dict:@{@"source":self.source}];
+        [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_show" dict:@{@"source":self.source}];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -494,7 +494,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 {
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_show" dict:@{@"source":self.source}];
+        [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_show" dict:@{@"source":self.source}];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -508,7 +508,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 //    if (self.loginStyle == TTAccountLoginStyleCaptcha) {
 //        // LogV1
 //        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//            [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_send_auth" dict:@{@"source":self.source}];
+//            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_send_auth" dict:@{@"source":self.source}];
 //        }
 //        // LogV3
 //        NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -535,7 +535,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 //        // 进入 [账号密码登录页]后，点击"找回密码量"
 //        // LogV1
 //        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//            [TTTracker category:@"umeng" event:@"register_new" label:@"click_find_password" dict:@{@"source":self.source}];
+//            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"click_find_password" dict:@{@"source":self.source}];
 //        }
 //        // LogV3
 //        NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -605,7 +605,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 //
 //            // LogV1
 //            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_success" dict:@{@"source":self.source}];
+//                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_success" dict:@{@"source":self.source}];
 //            }
 //            // LogV3
 //            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -704,7 +704,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 //
 //            // LogV1
 //            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_success" dict:@{@"source":self.source}];
+//                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_success" dict:@{@"source":self.source}];
 //            }
 //            // LogV3
 //            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -784,7 +784,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 //            
 //            // LogV1
 //            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_success" dict:@{@"source":self.source}];
+//                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_success" dict:@{@"source":self.source}];
 //            }
 //            // LogV3
 //            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -881,7 +881,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
     if (self.loginStyle == TTAccountLoginStyleCaptcha) {
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_confirm" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_confirm" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -892,7 +892,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         // 进入[账号密码登录页] 点击 “进入头条量”
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_confirm" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_confirm" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -996,7 +996,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle != TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click" dict:@{@"source":self.source}];
             }
             
             // LogV3
@@ -1143,7 +1143,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 - (void)trackLoginSuccessByThirdPartyPlatform:(NSString *)platformName
 {
     // LogV1
-    [TTTracker category:@"umeng" event:@"register_new" label:self.thirdPartySource dict:@{@"source":self.source}];
+    [BDTrackerProtocol category:@"umeng" event:@"register_new" label:self.thirdPartySource dict:@{@"source":self.source}];
     // LogV3
     NSString *loginStyleEventString = nil;
     if (self.loginStyle == TTAccountLoginStyleCaptcha) {
@@ -1218,7 +1218,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         //发一个埋点
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"email_password_error" dict:@{@"source":self.source}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_password_error" dict:@{@"source":self.source}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1429,7 +1429,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_sinaweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_sinaweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1440,7 +1440,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_sinaweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_sinaweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1451,7 +1451,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_sinaweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_sinaweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1465,7 +1465,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_qq" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_qq" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1476,7 +1476,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_qq" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_qq" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1487,7 +1487,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_qq" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_qq" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1501,7 +1501,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_weixin" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_weixin" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1512,7 +1512,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_weixin" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_weixin" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1523,7 +1523,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_weixin" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_weixin" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1537,7 +1537,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_qqweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_qqweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1548,7 +1548,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_qqweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_qqweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1559,7 +1559,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_qqweibo" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_qqweibo" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1573,7 +1573,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_renren" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_renren" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1584,7 +1584,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_renren" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_renren" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1595,7 +1595,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_renren" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_renren" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1609,7 +1609,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         if (self.loginStyle == TTAccountLoginStylePassword) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"password_login_click_telecom" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"password_login_click_telecom" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1620,7 +1620,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleCaptcha) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"mobile_login_click_telecom" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"mobile_login_click_telecom" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1631,7 +1631,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         else if (self.loginStyle == TTAccountLoginStyleEmail) {
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                [TTTracker category:@"umeng" event:@"register_new" label:@"email_login_click_telecom" dict:@{@"source":self.source}];
+                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"email_login_click_telecom" dict:@{@"source":self.source}];
             }
             // LogV3
             NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1737,7 +1737,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
      
      // LogV1
      if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-     [TTTracker category:@"umeng" event:@"register_new" label:(oldLogLabelString ? : @"") dict:@{@"source":self.source}];
+     [BDTrackerProtocol category:@"umeng" event:@"register_new" label:(oldLogLabelString ? : @"") dict:@{@"source":self.source}];
      }
      // LogV3
      NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];

@@ -564,7 +564,7 @@
     [traceParams setValue:dictVideo[@"duration"] forKey:@"duration"];
     [traceParams setValue:dictVideo[@"percent"] forKey:@"percent"];
     
-    [TTTracker eventV3:@"video_over" params:traceParams];
+    [BDTrackerProtocol eventV3:@"video_over" params:traceParams];
 }
 
 - (void)sendFHVideoPlayEventWithLabel:(NSString *)dataLabel{

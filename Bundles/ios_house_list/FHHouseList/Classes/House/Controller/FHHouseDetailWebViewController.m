@@ -10,7 +10,7 @@
 #import "TTRStaticPlugin.h"
 #import <FHHouseDetail/FHHouseDetailPhoneCallViewModel.h>
 #import "TTRoute.h"
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHUserTracker.h"
 #import "NetworkUtilities.h"
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
@@ -57,7 +57,8 @@
         [paramsDict setValue:@"outside_detail" forKey:@"page_type"];
         [paramsDict removeObjectForKey:@"log_pb"];
         [paramsDict removeObjectForKey:@"search_id"];
-        [paramsDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+        // todo zjing test
+        [paramsDict setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
         
         NSString *getParamStr = [FHUtils getUrlFormStrFromDict:paramsDict andFirstChar:YES];
         if ([getParamStr isKindOfClass:[NSString class]] && _url && _backUrl) {
