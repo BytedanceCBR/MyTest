@@ -14,7 +14,7 @@ typedef NS_ENUM(NSInteger , FHErrorHubType) {
     FHErrorHubTypeRequest = 1, //请求校验
     FHErrorHubTypeBuryingPoint = 2 ,//埋点校验
      FHErrorHubTypeConfig = 3, //现场保存
-    FHErrorHubTypeShare = 4 //现场保存
+    FHErrorHubTypeShare = 4 //分享相关
 };
 @interface FHHouseErrorHubManager : NSObject
 
