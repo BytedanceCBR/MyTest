@@ -116,7 +116,11 @@
                 make.height.mas_equalTo(vHeight);
             }];
             marginTop = marginTop +vHeight;
+
             itemView.name.text = obj.realtorName;
+            if (obj.realtorName.length >5 && obj.realtorCellShow == FHRealtorCellShowStyle3) {
+                itemView.name.text = [NSString stringWithFormat:@"%@...",[obj.realtorName substringToIndex:5]];
+            }
             itemView.agency.text = obj.agencyName;
             if (obj.avatarUrl.length > 0) {
                 [itemView.avator bd_setImageWithURL:[NSURL URLWithString:obj.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
