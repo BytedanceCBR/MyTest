@@ -9,9 +9,7 @@
 #import "FHHouseErrorHubView.h"
 #import "FHEnvContext.h"
 #import "HMDTTMonitor.h"
-
-
-
+#import "TTSandBoxHelper.h"
 @implementation FHHouseErrorHubManager
 +(instancetype)sharedInstance
 {
@@ -24,6 +22,9 @@
 }
 
 - (void)checkRequestResponseWithHost:(NSString *)host requestParams:(NSDictionary *)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(FHErrorHubType)errorHubType {
+    if (![[self getChannel] isEqualToString:@"local_test"]) {
+        return;
+    }
     //    NSInteger responseCode = -1;
     //    if (responseStatus.statusCode) {
     //        responseCode = responseStatus.statusCode;
@@ -139,6 +140,9 @@
 }
 
 - (void)checkBuryingPointWithEvent:(NSString *)eventName Params:(NSDictionary* )eventParams errorHubType:(FHErrorHubType)errorHubType {
+    if (![[self getChannel] isEqualToString:@"local_test"]) {
+        return;
+    }
     NSArray *eventArr = [self localCheckBuryingPointData];
     NSMutableDictionary *errorSaveDic = [[NSMutableDictionary alloc]init];
     [errorSaveDic setValue:eventParams forKey:@"parmas"];
@@ -250,5 +254,9 @@
     [outputDic setValue: [self removeNillValue:[configDataModel toDictionary]] forKey:@"config_data"];
     [outputDic setValue:[self removeNillValue:dictSetting] forKey:@"settings_data"];
     [self addLogWithData:outputDic logType:FHErrorHubTypeConfig];
+}
+
+-(NSString*)getChannel {
+    return [TTSandBoxHelper getCurrentChannel];
 }
 @end
