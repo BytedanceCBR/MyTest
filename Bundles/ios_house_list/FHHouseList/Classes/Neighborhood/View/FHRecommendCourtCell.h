@@ -9,13 +9,13 @@
 #import "FHHouseListBaseItemModel.h"
 
 
-@interface FHRecommendCoutCell : FHDetailBaseCell
+@interface FHRecommendCourtCell : FHDetailBaseCell
 
 - (void)refreshWithData:(bool)isFirst andLast:(BOOL)isLast;
 
 @end
 
-@interface FHRecommendCoutItem : JSONModel
+@interface FHRecommendCourtItem : JSONModel
 
 @property(nonatomic, strong) FHHouseListBaseItemModel *item;
 
