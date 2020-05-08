@@ -267,7 +267,6 @@
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
         if(isFirst){
-            [wself.viewController endLoading];
             wself.tableView.scrollEnabled = YES;
         }
         
@@ -277,12 +276,16 @@
         wself.feedListModel = feedListModel;
         
         if (!wself) {
+            if(isFirst){
+                [wself.viewController endLoading];
+            }
             return;
         }
         
         if (error) {
             //TODO: show handle error
             if(isFirst){
+                [wself.viewController endLoading];
                 if(error.code != -999){
                     [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
                     wself.viewController.showenRetryButton = YES;
@@ -296,14 +299,6 @@
         }
         
         if(model){
-//            if(isHead){
-//                if(feedListModel.hasMore){
-//                    [wself.dataList removeAllObjects];
-//                }
-//                wself.tableView.hasMore = YES;
-//            }else{
-//                wself.tableView.hasMore = feedListModel.hasMore;
-//            }
             if(isHead){
                 [wself.dataList removeAllObjects];
             }
@@ -327,8 +322,6 @@
                 [wself.dataList addObjectsFromArray:result];
             }
             
-            wself.viewController.hasValidateData = wself.dataList.count > 0;
-            
             //第一次拉取数据过少时，在多拉一次loadmore
             if(self.dataList.count > 0 && self.dataList.count < 5 && self.tableView.hasMore && self.retryCount < 1){
                 self.retryCount += 1;
@@ -336,6 +329,7 @@
                 return;
             }
         
+            wself.viewController.hasValidateData = wself.dataList.count > 0;
             [wself reloadTableViewData];
             
             if(wself.viewController.requestSuccess){
