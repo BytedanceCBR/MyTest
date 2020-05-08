@@ -146,7 +146,7 @@
         tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
         tracerDic[@"category_name"] = @"recommend_new_list";
         tracerDic[@"element_type"] = @"be_null";
-        tracerDic[@"element_from"] = @"be_null";
+        tracerDic[@"element_from"] = @"recommend_new";
         tracerDic[@"enter_from"] = @"recommend_new_list";
         tracerDic[@"page_type"] = @"recommend_new_list";
         

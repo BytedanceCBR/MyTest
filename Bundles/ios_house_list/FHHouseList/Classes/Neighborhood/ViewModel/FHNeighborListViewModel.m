@@ -446,9 +446,10 @@
 - (void)processDetailRelatedData {
     
     BOOL hasMore = NO;
-    if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0) {
-        hasMore = self.relatedHouseData.data.hasMore;
-        NSString *searchId = self.relatedHouseData.data.searchId;
+    hasMore = _relatedHouseData.data.hasMore;
+    NSString *searchId = _relatedHouseData.data.searchId;
+     self.currentOffset = _relatedHouseData.data.offset;
+    if(_relatedHouseData.data && _relatedHouseData.data.items.count > 0) {
         self.listController.hasValidateData = YES;
         [self.listController.emptyView hideEmptyView];
         [self.relatedHouseData.data.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -461,6 +462,9 @@
     } else {
         self.lastHasMore = hasMore;
         [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
+    }
+    if (searchId.length > 0) {
+        self.searchId = searchId;
     }
     if (!self.hasEnterCategory) {
         [self addEnterCategoryLog];
