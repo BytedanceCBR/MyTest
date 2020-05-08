@@ -112,6 +112,17 @@
         [dataJson addEntriesFromDictionary:lynxData];
     }
     
+    if (cellModel.tracerDic) {
+        NSMutableDictionary *reprotPamrams = [NSMutableDictionary new];
+        if ([cellModel.tracerDic isKindOfClass:[NSDictionary class]])  {
+            [reprotPamrams addEntriesFromDictionary:cellModel.tracerDic];
+        }
+        reprotPamrams[@"description"] = cellModel.desc;
+        reprotPamrams[@"item_title"] = cellModel.title;
+        reprotPamrams[@"item_id"] = cellModel.groupId;
+        [dataJson setValue:reprotPamrams forKey:@"report_params"];
+    }
+    
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataJson options:0 error:0];
     NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     LynxTemplateData *dataItem = [[LynxTemplateData alloc] initWithJson:dataStr];
@@ -206,7 +217,7 @@
     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     [uploadParams setValue:error.description forKey:@"error"];
     [uploadParams setValue:statusStr forKey:@"status"];
-    [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" metric:uploadParams category:nil extra:paramsExtra];
+    [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_error" metric:uploadParams category:nil extra:paramsExtra];
 }
 
 - (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
