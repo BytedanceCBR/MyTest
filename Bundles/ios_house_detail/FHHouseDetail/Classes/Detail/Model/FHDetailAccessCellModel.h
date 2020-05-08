@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
 @property (nonatomic, strong , nullable) NSArray<FHCardSliderCellModel *> *cards;
 @property (nonatomic, strong , nullable) NSDictionary *tracerDic;
+@property (nonatomic, assign) CGFloat topMargin;
+@property (nonatomic, assign) CGFloat bottomMargin;
 
 @end
 

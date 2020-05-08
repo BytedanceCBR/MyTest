@@ -127,40 +127,52 @@ NS_ASSUME_NONNULL_BEGIN
 
 // FHGuessYouWantResponseModel
 @protocol FHGuessYouWantResponseDataDataModel<NSObject>
-
 @end
 
+@interface FHGuessYouWantResponseDataDataRecommendTypeModel : JSONModel
 
-@interface  FHGuessYouWantResponseDataDataModel  : JSONModel
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@end
 
+@interface FHGuessYouWantResponseDataDataRecommendReasonModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@end
+
+@interface FHGuessYouWantResponseDataDataModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *text;
-@property (nonatomic, copy , nullable) NSString *guessSearchId;
-@property (nonatomic, copy , nullable) NSString *guessSearchType;
-@property (nonatomic, copy , nullable) NSString *houseType;
-@property (nonatomic, copy , nullable) NSString *extinfo;
+@property (nonatomic, strong , nullable) FHGuessYouWantResponseDataDataRecommendTypeModel *recommendType ;
 @property (nonatomic, copy , nullable) NSString *imageUrl;
+@property (nonatomic, copy , nullable) NSString *guessSearchId;
+@property (nonatomic, copy , nullable) NSString *displayPrice;
+@property (nonatomic, copy , nullable) NSString *guessSearchType;
+@property (nonatomic, strong , nullable) FHGuessYouWantResponseDataDataRecommendReasonModel *recommendReason ;
+@property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, assign ) NSInteger type;
 @property (nonatomic, assign ) NSInteger rank;
+@property (nonatomic, copy , nullable) NSString *extinfo;
 @property (nonatomic, copy , nullable) NSString *id;
-
 @end
 
-
-@interface  FHGuessYouWantResponseDataModel  : JSONModel
+@interface FHGuessYouWantResponseDataModel : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHGuessYouWantResponseDataDataModel> *data;
-
 @end
 
-
-@interface  FHGuessYouWantResponseModel  : JSONModel<FHBaseModelProtocol>
+@interface FHGuessYouWantResponseModel : JSONModel<FHBaseModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHGuessYouWantResponseDataModel *data ;
-
 @end
-
 
 NS_ASSUME_NONNULL_END

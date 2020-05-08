@@ -501,6 +501,7 @@
     dict[@"data"] = cellModel;
     dict[@"begin_show_comment"] = showComment ? @"1" : @"0";
     dict[@"social_group_id"] = cellModel.community.socialGroupId ?: @"";
+    dict[@"thread_detail_source"] = @"ugc_thread";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     FHFeedUGCContentModel *contentModel = cellModel.originData;
     NSString *routeUrl = @"sslocal://thread_detail";
@@ -759,7 +760,7 @@
 }
 
 - (NSString *)pageType {
-    return @"neigborhood_question_list";
+    return @"neighborhood_question_list";
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {

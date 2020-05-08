@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNewPriceNotifyCellModel : FHDetailBaseModel
 
 @property (nonatomic, weak)   id contactModel;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *priceAssociateInfo;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *openAssociateInfo;
 
 @end
 

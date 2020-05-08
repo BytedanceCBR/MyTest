@@ -25,10 +25,10 @@
 #define minImageCount 1
 #define maxImageCount 3
 
-@interface FHNeighbourhoodCommentCell ()<TTUGCAttributedLabelDelegate>
+@interface FHNeighbourhoodCommentCell ()<TTUGCAsyncLabelDelegate>
 
 @property(nonatomic ,strong) UIView *contentContainer;
-@property(nonatomic ,strong) TTUGCAttributedLabel *contentLabel;
+@property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
@@ -65,17 +65,17 @@
     [self.contentContainer addSubview:self.userInfoView];
     
     // 文本区
-    self.contentLabel = [TTUGCAttributedLabel new];
+    self.contentLabel = [TTUGCAsyncLabel new];
     self.contentLabel.numberOfLines = maxLines;
     self.contentLabel.layer.masksToBounds = YES;
     self.contentLabel.backgroundColor = [UIColor whiteColor];
-    NSDictionary *linkAttributes = @{
-                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-                                     };
-    self.contentLabel.linkAttributes = linkAttributes;
-    self.contentLabel.activeLinkAttributes = linkAttributes;
-    self.contentLabel.inactiveLinkAttributes = linkAttributes;
+//    NSDictionary *linkAttributes = @{
+//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
+//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
+//                                     };
+//    self.contentLabel.linkAttributes = linkAttributes;
+//    self.contentLabel.activeLinkAttributes = linkAttributes;
+//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     self.contentLabel.delegate = self;
     [self.contentContainer addSubview:self.contentLabel];
     
@@ -150,8 +150,15 @@
             NSInteger count = (cellModel.imageList.count == 1) ? 1 : 3;
             CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:count width:[UIScreen mainScreen].bounds.size.width - leftMargin - leftPadding - rightMargin - rightPadding];
             height += imageViewheight;
+            
+            if(cellModel.isInNeighbourhoodCommentsList){
+                height += vGap;
+            }
         }
-        height += vGap;
+        
+        if(cellModel.isInNeighbourhoodCommentsList){
+            height += vGap;
+        }
 //        height += bottomViewHeight;
 
         return height;
@@ -207,7 +214,7 @@
     BOOL isContentEmpty = isEmptyString(self.cellModel.content);
     self.contentLabel.hidden = isContentEmpty;
     self.contentLabel.height = isContentEmpty ? 0 : self.cellModel.contentHeight;
-    [FHUGCCellHelper setRichContent:self.contentLabel model:self.cellModel];
+    [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:self.cellModel];
     
     // 设置图片
     CGFloat imageViewTop = isContentEmpty ? (self.userInfoView.bottom + vGap) : self.userInfoView.bottom + vGap + self.cellModel.contentHeight + vGap;
@@ -256,11 +263,20 @@
     
     if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
         // 置顶加精移动位置
-        CGFloat decorationHeight = topPadding + userInfoViewHeight;
-        CGFloat decorationWidth = decorationHeight;
-        CGFloat decorationRightOffset = 10;
-        self.decorationImageView.frame = CGRectMake(leftMargin + self.contentContainer.width - decorationRightOffset - decorationWidth, topMargin, decorationWidth, decorationHeight);
-        [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence"]];
+//        CGFloat decorationHeight = topPadding + userInfoViewHeight;
+//        CGFloat decorationWidth = decorationHeight;
+//        CGFloat decorationRightOffset = 10;
+    
+        if(self.cellModel.isInNeighbourhoodCommentsList){
+            self.decorationImageView.frame = CGRectMake(cellWidth - rightMargin - 66, topMargin, 66, 66);
+            [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence"]];
+        }else{
+            self.decorationImageView.width = 44;
+            self.decorationImageView.height = 44;
+            self.decorationImageView.centerY = self.userInfoView.centerY;
+            self.decorationImageView.right = self.userInfoView.right - 20;
+            [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence_small"]];
+        }
     }
 }
 
@@ -284,9 +300,9 @@
     }
 }
 
-#pragma mark - TTUGCAttributedLabelDelegate
+#pragma mark - TTUGCAsyncLabelDelegate
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
         if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
             [self.delegate lookAllLinkClicked:self.cellModel cell:self];
@@ -299,4 +315,5 @@
         }
     }
 }
+
 @end

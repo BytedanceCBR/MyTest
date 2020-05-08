@@ -18,16 +18,20 @@
 #import "FHDetailMultitemCollectionView.h"
 #import <TTAccountSDK/TTAccount.h>
 #import <FHHouseBase/FHHouseIMClueHelper.h>
+#import "FHEnvContext.h"
 
 #define ITEM_HEIGHT 242
 #define ITEM_BOTTOM_HEIGHT 35
 #define ITEM_WIDTH  184
 
-@interface FHDetailNewMutiFloorPanCell ()
+@interface FHDetailNewMutiFloorPanCell ()<FHDetailScrollViewDidScrollProtocol>
 
 @property (nonatomic, strong) FHDetailHeaderView *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong) UIImageView *shadowImage;
+@property (nonatomic, strong)   NSMutableDictionary *houseShowCache;
+@property (nonatomic, strong)   NSMutableDictionary *subHouseShowCache;
+@property (strong, nonatomic)  FHDetailMultitemCollectionView *colView;
 
 @end
 
@@ -39,6 +43,8 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setupUI];
+        self.houseShowCache = [NSMutableDictionary new];
+        self.subHouseShowCache = [NSMutableDictionary new];
     }
     return self;
 }
@@ -92,26 +98,27 @@
         flowLayout.minimumLineSpacing = 10;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         NSString *identifier = NSStringFromClass([FHDetailNewMutiFloorPanCollectionCell class]);
-        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:itemHeight cellIdentifier:identifier cellCls:[FHDetailNewMutiFloorPanCollectionCell class] datas:model.list];
-        colView.tag = 100;
-        [self.containerView addSubview:colView];
+        _colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:itemHeight cellIdentifier:identifier cellCls:[FHDetailNewMutiFloorPanCollectionCell class] datas:model.list];
+        _colView.tag = 100;
+        _colView.isNewHouseFloorPan = YES;
+        [self.containerView addSubview:_colView];
         __weak typeof(self) wSelf = self;
-        colView.clickBlk = ^(NSInteger index) {
+        _colView.clickBlk = ^(NSInteger index) {
             [wSelf collectionCellClick:index];
         };
-        colView.itemClickBlk = ^(NSInteger index, UIView *itemView, FHDetailBaseCollectionCell *cell) {
+        _colView.itemClickBlk = ^(NSInteger index, UIView *itemView, FHDetailBaseCollectionCell *cell) {
             [wSelf collectionCellItemClick:index item:itemView cell: cell];
         };
-        colView.displayCellBlk = ^(NSInteger index) {
+        _colView.displayCellBlk = ^(NSInteger index) {
             [wSelf collectionDisplayCell:index];
         };
-        [colView mas_makeConstraints:^(MASConstraintMaker *make) {
+        [_colView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
             make.left.right.mas_equalTo(self.containerView);
 //            make.height.mas_equalTo(242);
             make.bottom.mas_equalTo(self.containerView).mas_offset(-30);
         }];
-        [colView reloadData];
+        [_colView reloadData];
     }
     
     [self layoutIfNeeded];
@@ -258,31 +265,37 @@
     if (![floorPanInfoModel isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
         return;
     }
-    FHHouseIMClueConfigModel *configModel = [[FHHouseIMClueConfigModel alloc]init];
-    configModel.houseId = self.baseViewModel.houseId;
-    configModel.houseType = self.baseViewModel.houseType;
-    configModel.enterFrom = self.baseViewModel.detailTracerDic[@"enter_from"];
-    configModel.elementFrom = @"house_model";
-    configModel.logPb = floorPanInfoModel.logPb;
-    configModel.originFrom = self.baseViewModel.detailTracerDic[@"origin_from"];
-    configModel.rank = self.baseViewModel.detailTracerDic[@"rank"];
-    configModel.originSearchId = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-    configModel.searchId = self.baseViewModel.detailTracerDic[@"search_id"];
-    configModel.imprId = floorPanInfoModel.imprId;
-    configModel.pageType = [self.baseViewModel pageTypeString];
+    
+    // IM 透传数据模型
+    FHAssociateIMModel *associateIMModel = [FHAssociateIMModel new];
+    associateIMModel.houseId = self.baseViewModel.houseId;
+    associateIMModel.houseType = self.baseViewModel.houseType;
+    associateIMModel.associateInfo = floorPanInfoModel.associateInfo;
+
+    // IM 相关埋点上报参数
+    FHAssociateReportParams *reportParams = [FHAssociateReportParams new];
+    reportParams.enterFrom = self.baseViewModel.detailTracerDic[@"enter_from"];
+    reportParams.elementFrom = @"house_model";
+    reportParams.logPb = floorPanInfoModel.logPb;
+    reportParams.originFrom = self.baseViewModel.detailTracerDic[@"origin_from"];
+    reportParams.rank = self.baseViewModel.detailTracerDic[@"rank"];
+    reportParams.originSearchId = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+    reportParams.searchId = self.baseViewModel.detailTracerDic[@"search_id"];
+    reportParams.pageType = [self.baseViewModel pageTypeString];
     FHDetailContactModel *contactPhone = self.baseViewModel.contactViewModel.contactPhone;
-    configModel.realtorId = contactPhone.realtorId;
-    configModel.realtorRank = @"0";
-    configModel.conversationId = @"be_null";// todo zjing test
-    configModel.realtorLogpb = contactPhone.realtorLogpb;
-    configModel.from = @"app_newhouse_floorplan";
-    configModel.realtorPosition = @"house_model";
-    configModel.sourceFrom = @"house_model";// todo zjing test
-    configModel.clueEndpoint = @(FHClueEndPointTypeC);
-    configModel.cluePage = @(FHClueIMPageTypeCNewHouseApartmentConsult);
-    configModel.imOpenUrl = floorPanInfoModel.imOpenUrl;
-    configModel.extraInfo = @{@"house_model_rank":@(index)};
-    [FHHouseIMClueHelper jump2SessionPageWithConfigModel:configModel];
+    reportParams.realtorId = contactPhone.realtorId;
+    reportParams.realtorRank = @"0";
+    reportParams.conversationId = @"be_null";
+    reportParams.realtorLogpb = contactPhone.realtorLogpb;
+    reportParams.realtorPosition = @"house_model";
+    reportParams.sourceFrom = @"house_model";
+    reportParams.extra = @{@"house_model_rank":@(index)};
+    associateIMModel.reportParams = reportParams;
+    
+    // IM跳转链接
+    associateIMModel.imOpenUrl = floorPanInfoModel.imOpenUrl;
+    // 跳转IM
+    [FHHouseIMClueHelper jump2SessionPageWithAssociateIM:associateIMModel];
 }
 
 - (UIImageView *)shadowImage
@@ -291,6 +304,30 @@
         _shadowImage = [[UIImageView alloc]init];
     }
     return _shadowImage;
+}
+
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
+        if (vcParentView) {
+            UIWindow* window = [UIApplication sharedApplication].keyWindow;
+            CGFloat SH = [UIScreen mainScreen].bounds.size.height;
+            CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+            CGFloat bottombarHight =  self.baseViewModel.houseType ==FHHouseTypeRentHouse? 64:80;
+            if (SH -bottombarHight >point.y) {
+              if ([self.houseShowCache valueForKey:@"isShowFloorPan"]) {
+                    return;
+              }else {
+                  NSMutableArray * visibles = self.colView.collectionContainer.indexPathsForVisibleItems;
+                  [self.houseShowCache setValue:@(YES) forKey:@"isShowFloorPan"];
+                  [visibles enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                      NSIndexPath *indexPath = (NSIndexPath *)obj;
+                      [self collectionDisplayCell:indexPath.row];
+                      NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+                      [self.subHouseShowCache setValue:@(YES) forKey:tempKey];
+                  }];
+                  _colView.subHouseShowCache = self.subHouseShowCache;
+              }
+            }
+    }
 }
 
 @end

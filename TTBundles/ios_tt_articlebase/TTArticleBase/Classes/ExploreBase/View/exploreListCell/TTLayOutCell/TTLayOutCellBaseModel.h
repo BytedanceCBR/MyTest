@@ -113,6 +113,11 @@
 @property (nonatomic, assign) CGRect typeLabelFrame;
 @property (nonatomic, assign) BOOL typeLabelHidden;
 @property (nonatomic, strong) NSString *typeLabelStr;
+//图片来源标签
+@property (nonatomic, assign) CGRect customSourceImageViewFrame;
+@property (nonatomic, assign) BOOL customSourceImageViewHidden;
+@property (nonatomic, assign) BOOL customSourceImageViewCanClick;
+@property (nonatomic, strong) NSString *customSourceImageUrl;
 //摘要
 @property (nonatomic, assign) CGRect abstractLabelFrame;
 @property (nonatomic, assign) BOOL abstractLabelHidden;

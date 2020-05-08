@@ -12,7 +12,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        
+        _topMargin = 30.0f;
     }
     return self;
 }

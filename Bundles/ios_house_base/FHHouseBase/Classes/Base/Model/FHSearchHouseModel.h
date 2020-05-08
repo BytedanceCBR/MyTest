@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @class FHHouseNeighborAgencyModel;
-@class FHDetailContactModel;
+@class FHDetailContactModel,FHClueAssociateInfoModel;
 @protocol FHSearchHouseDataItemsModel<NSObject>
 
 @end
@@ -236,6 +236,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsSkyEyeTagModel *skyEyeTag ;
 
 @property (nonatomic, assign) BOOL isRecommendCell;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 
@@ -343,6 +344,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSDictionary *tracerDict;
 @property(nonatomic, weak) UIViewController *belongsVC;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 

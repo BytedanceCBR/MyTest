@@ -165,7 +165,8 @@
     @"groupId": @"group_id",
     @"salesInfo": @"sales_info",
     @"desc": @"description",
-    @"houseVideo": @"house_video"
+    @"houseVideo": @"house_video",
+    @"associateInfo": @"associate_info",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -189,6 +190,7 @@
     houseItemsModel.displayPricePerSqm = self.pricePerSqm;
     houseItemsModel.displayStatsInfo = self.salesInfo;
     houseItemsModel.images = self.images;
+    houseItemsModel.associateInfo = self.associateInfo;
     
     return houseItemsModel;
 }
@@ -209,7 +211,7 @@
     houseItemsModel.houseImage = self.images;
     houseItemsModel.tags = self.tags;
     houseItemsModel.houseVideo = self.houseVideo;
-    
+    houseItemsModel.associateInfo = self.associateInfo;
     return houseItemsModel;
 }
 
@@ -225,6 +227,7 @@
     houseItemsModel.displayPricePerSqm = self.pricePerSqm;
     houseItemsModel.images = self.images;
     houseItemsModel.tags = self.tags;
+    houseItemsModel.associateInfo = self.associateInfo;
     
     return houseItemsModel;
 }
@@ -241,7 +244,7 @@
     houseItemsModel.pricing = self.price;
     houseItemsModel.houseImage = self.images;
     houseItemsModel.tags = self.tags;
-    
+    houseItemsModel.associateInfo = self.associateInfo;
     return houseItemsModel;
 }
 

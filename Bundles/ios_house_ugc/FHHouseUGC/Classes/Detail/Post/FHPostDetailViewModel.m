@@ -330,6 +330,9 @@
         if (self.lastPageSocialGroupId.length > 0) {
             [param setValue:self.lastPageSocialGroupId forKey:@"social_group_id"];
         }
+        if(self.threadDetailSource.length > 0){
+            param[@"thread_detail_source"] = self.threadDetailSource;
+        }
         uint64_t startTime = [NSObject currentUnixTime];
         WeakSelf;
         NSString *host = [FHURLSettings baseURL];
@@ -371,7 +374,7 @@
                         if (jsonData) {
                             Class cls = [FHFeedUGCContentModel class];
                             FHFeedUGCContentModel * model = (id<FHBaseModelProtocol>)[FHMainApi generateModel:jsonData class:[FHFeedUGCContentModel class] error:&jsonParseError];
-                            if (model.ugcStatus == 0) {
+                            if (model.ugcStatus && [model.ugcStatus integerValue] == 0) {
                                 // 说明被删除
                                 error = [NSError errorWithDomain:NSURLErrorDomain code:-10001 userInfo:nil];
                                 [self.detailController remove_comment_vc];

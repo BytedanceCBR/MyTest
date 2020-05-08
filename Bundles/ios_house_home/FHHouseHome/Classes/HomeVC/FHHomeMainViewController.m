@@ -21,6 +21,8 @@
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "UIViewController+Track.h"
 #import "FHHomeTopCitySwitchView.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -31,6 +33,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic,strong)NSTimer *switchTimer;
 @property (nonatomic,assign)NSInteger totalNum;
+@property (nonatomic, assign) BOOL isSendNotification;
 
 @end
 
@@ -46,6 +49,13 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [self initCityChangeSubscribe];//城市变化通知
     [self bindTopIndexChanged];//绑定头部选中index变化
     // Do any additional setup after loading the view.
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (!self.isSendNotification) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"kTTFeedDidDisplay" object:nil];
+            self.isSendNotification = YES;
+        }
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -136,25 +146,26 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)initCitySwitchView
 {
-    CGFloat top = 0;
-    CGFloat safeTop = 20;
-    if (@available(iOS 11.0, *)) {
-        safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
-    }
-    
-    self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
-    self.switchCityView.backgroundColor = [UIColor clearColor];
-    if (self.containerView) {
-        [self.containerView addSubview:self.switchCityView];
-           
-        self.totalNum = 60;
-        self.switchTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(downCounter) userInfo:nil repeats:YES];
-        
-        NSMutableDictionary *popTraceParams = [NSMutableDictionary new];
-        [popTraceParams setValue:@"maintab" forKey:@"page_type"];
-        [popTraceParams setValue:@"city_switch" forKey:@"popup_name"];
-        [FHEnvContext recordEvent:popTraceParams andEventKey:@"popup_show"];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.containerView && ![self.containerView.subviews containsObject:self.switchCityView] && [[NSThread currentThread] isMainThread]) {
+               CGFloat top = 0;
+               CGFloat safeTop = 20;
+               if (@available(iOS 11.0, *)) {
+                   safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+               }
+               self.switchCityView = [[FHHomeTopCitySwitchView alloc] initWithFrame:CGRectMake(0.0f, 0.0, MAIN_SCREEN_WIDTH, 42)];
+                self.switchCityView.backgroundColor = [UIColor clearColor];
+               [self.containerView addSubview:self.switchCityView];
+               self.totalNum = 60;
+               self.switchTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(downCounter) userInfo:nil repeats:YES];
+               
+               NSMutableDictionary *popTraceParams = [NSMutableDictionary new];
+               [popTraceParams setValue:@"maintab" forKey:@"page_type"];
+               [popTraceParams setValue:@"city_switch" forKey:@"popup_name"];
+               [FHEnvContext recordEvent:popTraceParams andEventKey:@"popup_show"];
+        }
+    });
+
 }
 
 - (void)initConstraints {
@@ -200,6 +211,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mainCollectionScrollEnd) name:@"FHHomeMainDidScrollEnd" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL boolSwitchCityHome = [fhSettings tt_boolValueForKey:@"f_home_switch_city_view"];
+    if (!boolSwitchCityHome) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initCitySwitchView) name:@"FHHomeInitSwitchCityTopView" object:nil];
 }
@@ -229,6 +245,16 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     }
 }
 
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    if (self.switchCityView) {
+        [self.switchTimer invalidate];
+        self.switchTimer = nil;
+        [self.switchCityView removeFromSuperview];
+        self.switchCityView = nil;
+    }
+}
+
+
 - (void)bindTopIndexChanged
 {
     WeakSelf;
@@ -243,7 +269,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             
             [FHEnvContext sharedInstance].isShowingHomeHouseFind = (index == 0);
         }
-        
     };
 }
 
@@ -358,7 +383,6 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)downCounter
 {
-    
     if (!self.isShowing) {
         return ;
     }

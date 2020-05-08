@@ -32,7 +32,6 @@
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
 #define QURL(QPATH) [[self host] stringByAppendingString:QPATH]
-#define kInterceptionUserFollows @"kInterceptionUserFollows"
 
 @implementation FHHouseUGCAPI
 
@@ -290,6 +289,7 @@
         if (!isEmptyString(deviceID)) {
             [ExploreExtenstionDataHelper saveSharedDeviceID:deviceID];
         }
+        
     } failure:nil];
 }
 

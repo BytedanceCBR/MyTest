@@ -49,7 +49,7 @@
         self.title = [params objectForKey:@"title"];
         
         // 埋点
-        self.tracerDict[@"page_type"] = @"neiborhood_comment_list";
+        self.tracerDict[@"page_type"] = @"neighborhood_comment_list";
         // 取链接中的埋点数据
         NSString *enterFrom = params[@"tracer"][@"enter_from"];
         if (enterFrom.length > 0) {

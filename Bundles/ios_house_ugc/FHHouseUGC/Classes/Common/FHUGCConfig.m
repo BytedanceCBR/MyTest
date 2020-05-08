@@ -18,6 +18,7 @@
 #import "TTBusinessManager+StringUtils.h"
 #import "FHUtils.h"
 #import "HMDTTMonitor.h"
+#import "FHInterceptionManager.h"
 
 //默认轮训间隔时间5分钟
 #define defaultFocusTimerInterval 300
@@ -93,6 +94,13 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     //    static NSString *const kFHUGCDelPostNotification = @"k_fh_ugc_del_post_finish";
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delPostThreadSuccess:) name:kFHUGCDelPostNotification object:nil];
+    
+    //获取到did之后取消拦截
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceDidRefreshed:) name:@"kFHTrackerDidRefreshDeviceId" object:nil];
+}
+
+- (void)deviceDidRefreshed:(NSNotification *)noti {
+    [[FHInterceptionManager sharedInstance] breakInterception:kInterceptionUserFollows];
 }
 
 // 发帖成功通知

@@ -59,6 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 
@@ -216,6 +217,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *coverImage;
 @property (nonatomic, copy , nullable) NSString *description;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
 //@protocol FHVideoHouseVideoVideoInfosModel<NSObject>
@@ -332,6 +334,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *extraContent;
 @property (nonatomic, copy , nullable) NSString *baseContent;
 @property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 
@@ -341,6 +344,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *baseContent;
 @property (nonatomic, copy , nullable) NSString *extraContent;
 @property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 
@@ -350,6 +354,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *realtorId;
 @property (nonatomic, copy , nullable) NSString *autoText;
 @property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *associateInfo;
 
 @end
 
@@ -416,6 +421,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHDetailPriceChangeNoticeModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *priceAnalysisUrl;
+@property (nonatomic, assign) NSInteger showType;
+@property (nonatomic, copy , nullable) NSString *changeTitle;
+@property (nonatomic, copy , nullable) NSString *analysisTitle;
+@property (nonatomic, strong , nullable) NSArray *history;
+@end
+
+@interface FHDetailDownPaymentModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *minDownPayment;
+@property (nonatomic, copy , nullable) NSString *monthlyPayment;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *calculatorUrl;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+@end
+
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, assign) NSInteger status;
@@ -461,10 +483,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailCommunityEntryModel *ugcSocialGroup;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseReviewCommentModel> *houseReviewComment;
 @property (nonatomic, strong , nullable) FHDetailDataQuickQuestionModel *quickQuestion;
+@property (nonatomic, strong , nullable) FHDetailPriceChangeNoticeModel *priceChangeNotice;
+@property (nonatomic, strong , nullable) FHDetailDownPaymentModel *downPaymentInfo;
+
 @property (nonatomic, copy , nullable) NSString *recommendedHouseTitle;
 @property (nonatomic, copy , nullable) NSString *subscriptionToast;
 @property (nonatomic, copy , nullable) NSString *reportToast;
 @property (nonatomic, copy , nullable) NSString *reportDoneToast;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *middleSubscriptionAssociateInfo;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *recommendRealtorsAssociateInfo;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseReviewCommentAssociateInfo;
+@property (nonatomic, strong ,nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionModel *question;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataCommentsModel *comments;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyModel *strategy;
 
 @end
 

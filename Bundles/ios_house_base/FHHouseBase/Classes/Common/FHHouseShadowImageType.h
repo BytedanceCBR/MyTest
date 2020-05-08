@@ -19,6 +19,9 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeDefault = 0,
     ///二手房房源属性模块
     FHHouseModelTypeCoreInfo,
+    ///二手房房源首付及月供
+    FHHouseModelTypeAdvisoryLoan,
+    
     ///二手房订阅房源动态模块
     FHHouseModelTypeSubscribe,
     ///二手房房源概况
@@ -29,6 +32,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeAgentlist,
     ///二手房房源评价
     FHHouseModelTypeHousingEvaluation,
+    ///小区信息
+    FHHouseModelTypeNeighborhoodInfo,
     ///二手房位置周边
     FHHouseModelTypeLocationPeriphery,
     ///二手房购房建议
@@ -48,6 +53,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHPlotHouseModelTypeNeighborhoodQA,
     ///小区详情页小区点评
     FHPlotHouseModelTypeNeighborhoodComment,
+    ///小区详情页小区攻略
+    FHPlotHouseModelTypeNeighborhoodStrategy,
     ///小区详情页推荐经纪人
      FHPlotHouseModelTypeAgentlist,
     ///小区详情页已售房源
@@ -61,6 +68,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeNewSales,
     // 新房详情页户型模块
     FHHouseModelTypeNewFloorPlan,
+    ///新房详情页楼盘攻略
+    FHHouseModelTypeNewAccess,
     // 新房详情页优质顾问模块
     FHHouseModelTypeNewAgentList,
     // 新房详情页位置周边模块
@@ -69,6 +78,13 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeNewSocialInfo,
     // 周边新盘
     FHHouseModelTypeNewRelated,
+    
+    // 新房详情页楼盘动态
+    FHHouseModelTypeNewTimeline,
+    // 户型详情页属性模块
+    FHFloorPanHouseModelTypeCoreInfo,
+    // 户型详情页户型模块
+    FHFloorPanHouseModelTypeFloorPlan,
     
 };
 

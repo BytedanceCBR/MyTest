@@ -11,6 +11,7 @@
 #import "FHHouseBaseInfoModel.h"
 #import "FHHouseCoreInfoModel.h"
 #import "FHRentFacilitiesModel.h"
+#import "FHDetailBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -52,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
 @property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *coreInfo;
 @property (nonatomic, strong , nullable) NSArray<FHRentFacilitiesModel> *facilities;
-
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
 

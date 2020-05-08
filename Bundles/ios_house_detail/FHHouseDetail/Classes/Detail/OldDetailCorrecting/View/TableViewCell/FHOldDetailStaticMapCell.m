@@ -137,7 +137,7 @@
     //初始化poi信息列表
     [self setUpLocationListTableView];
    
-    CGFloat headerTop = (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 30 : 0;
+    CGFloat headerTop = (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 30 : dataModel.topMargin;
     CGFloat headerHeight = (dataModel.houseType.integerValue == FHHouseTypeSecondHandHouse || dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 38 : 0;
     
     self.headerView.frame = CGRectMake(15, headerTop, self.cellWidth, headerHeight);
@@ -325,6 +325,14 @@
         return;
     }
     self.currentData = data;
+    if (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) {
+                [self.headerView hiddenStarImage];
+    };
+    [self.headerView hiddenStarImage];
+    [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.shadowImage).offset(-dataModel.bottomMargin);
+    }];
+    
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
     
     NSDictionary *fhSettings = [self fhSettings];
@@ -352,6 +360,9 @@
         [self.headerView updateTitle:dataModel.title];
     }
     [self.headerView updateStarsCount:[dataModel.score integerValue]];
+    if (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) {
+        [self.headerView hiddenStarImage];
+    }
     
     if ([self isPoiSearchDone:self.curCategory]) {
         [self showPoiResultInfo];

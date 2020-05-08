@@ -77,8 +77,8 @@
                     }];
                     v.keyLabel.text = obj.attr;
                     v.valueLabel.text = obj.value;
-                    v.keyLabel.font = [UIFont themeFontRegular:AdaptFont(12)];
-                    v.valueLabel.font = [UIFont themeFontMedium:AdaptFont(12)];
+                    v.keyLabel.font = [UIFont themeFontRegular:12];
+                    v.valueLabel.font = [UIFont themeFontMedium:12];
                     v.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
                     lastView = v;
                     lastViewLeftOffset = 20;
@@ -98,8 +98,8 @@
                     }];
                     v.keyLabel.text = obj.attr;
                     v.valueLabel.text = obj.value;
-                    v.keyLabel.font = [UIFont themeFontRegular:AdaptFont(12)];
-                    v.valueLabel.font = [UIFont themeFontMedium:AdaptFont(12)];
+                    v.keyLabel.font = [UIFont themeFontRegular:12];
+                    v.valueLabel.font = [UIFont themeFontMedium:12];
                     v.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
                     lastView = v;
                     lastViewLeftOffset = 20 + viewWidth;
@@ -129,8 +129,8 @@
                 }];
                 v.keyLabel.text = obj.attr;
                 v.valueLabel.text = obj.value;
-                v.keyLabel.font = [UIFont themeFontRegular:AdaptFont(12)];
-                v.valueLabel.font = [UIFont themeFontMedium:AdaptFont(12)];
+                v.keyLabel.font = [UIFont themeFontRegular:12];
+                v.valueLabel.font = [UIFont themeFontMedium:12];
                 v.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
                 lastView = v;
                 lastViewLeftOffset = 20;
@@ -160,7 +160,6 @@
     }
     FHHouseBaseInfoModel *obj = model.baseInfo[index];
     if (obj.openUrl.length > 0) {
-       // todo zjing test
         NSURL *url = [NSURL URLWithString:obj.openUrl];
         [[TTRoute sharedRoute]openURLByPushViewController:url];
     }

@@ -80,6 +80,9 @@
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
     _icon.layer.cornerRadius = 20;
+    _icon.layer.borderWidth = 1;
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
+    
     [self addSubview:_icon];
     
     _icon.userInteractionEnabled = YES;
@@ -100,7 +103,7 @@
     self.userAuthLabel.layer.masksToBounds = YES;
     self.userAuthLabel.backgroundColor = [UIColor themeGray7];
     self.userAuthLabel.textAlignment = NSTextAlignmentCenter;
-    [self addSubview:self.userAuthLabel];
+    [self addSubview:_userAuthLabel];
     
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self addSubview:_descLabel];
@@ -178,10 +181,27 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
+    self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
+    
     CGRect userAuthLabelFrame = self.userAuthLabel.frame;
     userAuthLabelFrame.size.width += 10;
+    
+    CGFloat maxUserNameWidth = self.frame.size.width - 40 - 50 - (self.userAuthLabel.hidden ? 0 : (self.userAuthLabel.frame.size.width + 9));
+    if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
+        // 置顶加精移动位置
+        if(self.cellModel.isInNeighbourhoodCommentsList){
+            maxUserNameWidth -= 56;
+        }
+    }
+    
+    CGRect userNameFrame = self.userName.frame;
+    if(userNameFrame.size.width > maxUserNameWidth){
+        userNameFrame.size.width = maxUserNameWidth;
+        self.userName.frame = userNameFrame;
+    }
+    
+    userAuthLabelFrame.origin.x = CGRectGetMaxX(self.userName.frame) + 4;
     self.userAuthLabel.frame = userAuthLabelFrame;
-    self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
