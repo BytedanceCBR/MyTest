@@ -26,14 +26,25 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import <FHWebView/SSWebViewController.h>
+#import <ByteDanceKit/NSString+BTDAdditions.h>
+#import "FHLoginConflictBridgePlugin.h"
+#import <TTInstallService/TTInstallIDManager.h>
+#import <TTBaseLib/TTStringHelper.h>
+#import <TTBaseLib/TTUIResponderHelper.h>
+#import "FHLoginConflictBridgePlugin.h"
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
+
+NSString * const kFHLoginSIMStatusChangeNotification = @"kFHLoginSIMStatusChangeNotification";
 
 @interface FHLoginSharedModel : NSObject
 
 + (instancetype)sharedModel;
 
+@property (nonatomic, assign) BOOL hasPushedLoginProcess;
 @property (nonatomic, assign) BOOL hasRequestedApis;
 
 - (void)loadOneKayAndDouyinConfigs:(void (^)(void))completion;
@@ -41,9 +52,16 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property (nonatomic, assign) BOOL isOneKeyLogin;
 @property (nonatomic, copy) NSString *mobileNumber;
 @property (nonatomic, assign) BOOL *douyinCanQucikLogin;
+
+@property (nonatomic, strong) CTTelephonyNetworkInfo *telephoneInfo;
 @end
 
 @implementation FHLoginSharedModel
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    _telephoneInfo = nil;
+}
 
 static FHLoginSharedModel *_sharedModel = nil;
 
@@ -55,6 +73,28 @@ static FHLoginSharedModel *_sharedModel = nil;
     return _sharedModel;
 }
 
+- (instancetype)init {
+    if (self = [super init]) {
+        _telephoneInfo = [[CTTelephonyNetworkInfo alloc] init];
+        if (@available(iOS 12.0, *)) {
+            [_telephoneInfo setServiceSubscriberCellularProvidersDidUpdateNotifier:^(NSString * _Nonnull info) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFHLoginSIMStatusChangeNotification object:nil];
+                });
+            }];
+        } else {
+            [_telephoneInfo setSubscriberCellularProviderDidUpdateNotifier:^(CTCarrier *carrier){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFHLoginSIMStatusChangeNotification object:nil];
+                });
+            }];
+        }
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(netReachabilityChanged:) name:TTReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(simChanedNotification:) name:kFHLoginSIMStatusChangeNotification object:nil];
+    }
+    return self;
+}
+
 + (NSDictionary *)fhSettings {
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]) {
         return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
@@ -64,6 +104,17 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)loadOneKayAndDouyinConfigs:(void (^)(void))completion {
+    
+    //如果在一个app开启周期内，重复进入登录页，优先查看是否有记录，这个记录为内存缓存
+    if (![TTReachability isNetworkConnected]) {
+        self.douyinCanQucikLogin = NO;
+        self.mobileNumber = nil;
+        self.isOneKeyLogin = NO;
+        if (completion) {
+            completion();
+        }
+        return;
+    }
     
     __weak typeof(self) weakSelf = self;
     __block NSError *requestError = nil;
@@ -150,11 +201,26 @@ static FHLoginSharedModel *_sharedModel = nil;
     return disableOneKeyLogin;
 }
 
+- (void)netReachabilityChanged:(NSNotification *)aNotification {
+    self.hasRequestedApis = NO;
+    if (self.hasPushedLoginProcess) {
+        [self loadOneKayAndDouyinConfigs:nil];
+    }
+}
+
+- (void)simChanedNotification:(NSNotification *)aNotification {
+    self.hasRequestedApis = NO;
+    if (self.hasPushedLoginProcess) {
+        [self loadOneKayAndDouyinConfigs:nil];
+    }
+}
+
 @end
 
 @interface FHLoginViewModel()
 
 @property(nonatomic , weak) FHLoginViewController *viewController;
+@property (nonatomic, assign) FHLoginViewType currentViewType;
 @property(nonatomic , assign) BOOL isRequestingSMS;
 @property(nonatomic , strong) NSTimer *timer;
 @property(nonatomic , assign) NSInteger verifyCodeRetryTime;
@@ -163,14 +229,21 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 /// 首推登录方式 douyin_one_click 、one_click、phone_sms
 @property (nonatomic, copy) NSString *login_suggest_method;
+@property (nonatomic, assign) BOOL isOtherLogin;
 @end
 
 @implementation FHLoginViewModel
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [FHLoginSharedModel sharedModel].hasPushedLoginProcess = NO;
+}
 
 - (instancetype)initWithController:(FHLoginViewController *)viewController;
 {
     self = [super init];
     if (self) {
+        [FHLoginSharedModel sharedModel].hasPushedLoginProcess = YES;
         _needPopVC = YES;
         _isNeedCheckUGCAdUser = NO;
         _processType = FHLoginProcessOrigin;
@@ -180,11 +253,18 @@ static FHLoginSharedModel *_sharedModel = nil;
             _processType = [(NSNumber *)res integerValue];
         }
 //        NSLog(@"BDClientABTest f_douyin_login_type is %@",res);
+        [self addObserver];
     }
     return self;
 }
 
 #pragma mark - UI
+- (void)addObserver {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginConflictResolvedSuccess:) name:kFHLoginConflictResolvedSuccess object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginConflictResolvedFail:) name:kFHLoginConflictResolvedFail object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginConflictResolvedBindMobile:) name:kFHLoginConflictResolvedBindMobile object:nil];
+}
+
 - (void)viewWillAppear {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
@@ -202,23 +282,11 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 - (void)startLoadData {
     [self.viewController startLoading];
-    //TODO: 需要把2个请求接口提前，比如放在切换到第四个tab之后，点击登录按钮之前
-    //如果在一个app开启周期内，重复进入登录页，优先查看是否有记录，这个记录为内存缓存
-    
-    if (![TTReachability isNetworkConnected]) {
-        self.douyinCanQucikLogin = NO;
-        self.mobileNumber = nil;
-        self.isOneKeyLogin = NO;
-        [self.viewController endLoading];
-        [self updateViewType];
-        return;
-    }
+
     __weak typeof(self) weakSelf = self;
     void(^syncInfoBlock)(void) = ^(void) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        strongSelf.douyinCanQucikLogin = [FHLoginSharedModel sharedModel].douyinCanQucikLogin;
         strongSelf.mobileNumber = [FHLoginSharedModel sharedModel].mobileNumber;
-        strongSelf.isOneKeyLogin = [FHLoginSharedModel sharedModel].isOneKeyLogin;
         [strongSelf.viewController endLoading];
         [strongSelf updateViewType];
     };
@@ -354,25 +422,25 @@ static FHLoginSharedModel *_sharedModel = nil;
     FHLoginViewType viewType = FHLoginViewTypeOneKey;
     switch (self.processType) {
         case FHLoginProcessOrigin:
-            if (self.isOneKeyLogin) {
+            if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
                 viewType = FHLoginViewTypeOneKey;
             } else {
                 viewType = FHLoginViewTypeMobile;
             }
             break;
         case FHLoginProcessTestA:
-            if (self.isOneKeyLogin) {
+            if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
                 viewType = FHLoginViewTypeOneKey;
-            } else if(self.douyinCanQucikLogin) {
+            } else if([FHLoginSharedModel sharedModel].douyinCanQucikLogin) {
                 viewType = FHLoginViewTypeDouYin;
             } else {
                 viewType = FHLoginViewTypeMobile;
             }
             break;
         case FHLoginProcessTestB:
-            if (self.douyinCanQucikLogin) {
+            if ([FHLoginSharedModel sharedModel].douyinCanQucikLogin) {
                 viewType = FHLoginViewTypeDouYin;
-            } else if(self.isOneKeyLogin) {
+            } else if([FHLoginSharedModel sharedModel].isOneKeyLogin) {
                 viewType = FHLoginViewTypeOneKey;
             } else {
                 viewType = FHLoginViewTypeMobile;
@@ -381,6 +449,7 @@ static FHLoginSharedModel *_sharedModel = nil;
         default:
             break;
     }
+    self.currentViewType = viewType;
     if (self.loginViewViewTypeChanged) {
         self.loginViewViewTypeChanged(viewType);
     }
@@ -598,7 +667,7 @@ static FHLoginSharedModel *_sharedModel = nil;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     tracerDict[@"login_suggest_method"] = self.login_suggest_method?:@"";
     [FHLoginTrackHelper loginMore:tracerDict];
-    if (self.isOneKeyLogin) {
+    if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
         [self goToLoginContainerController:FHLoginViewTypeOneKey];
     } else {
         [self goToMobileLogin];
@@ -611,7 +680,7 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)goToOneKeyBind {
-    if (self.isOneKeyLogin) {
+    if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
         [self goToBindContainerController:FHBindViewTypeOneKey navigationType:FHBindContainerViewNavigationTypeClose];
     } else {
         [self goToBindContainerController:FHBindViewTypeMobile navigationType:FHBindContainerViewNavigationTypeClose];
@@ -699,7 +768,47 @@ static FHLoginSharedModel *_sharedModel = nil;
             //失败则提示
             //登录冲突处理
             if (error.code == TTAccountErrCodeAuthPlatformBoundForbid) {
-                ssOpenWebView([NSURL URLWithString:@"http://m.haoduofangs.com/passport/auth_bind_conflict/index/"], @"test", self.viewController.navigationController, NO, @{});
+                void(^goDetailBlock)(void) = ^(void) {
+                    NSString *profileKey = error.userInfo[@"profile_key"];
+                    NSString *mobile = error.userInfo[@"mobile"];
+                    NSString *screen_name = error.userInfo[@"screen_name"];
+                    NSString *avatar_url = error.userInfo[@"avatar_url"];
+                    avatar_url = [avatar_url btd_stringByURLEncode];
+                    NSString *platform_screen_name_current = error.userInfo[@"platform_screen_name_current"];
+                    NSString *platform_screen_name_conflict = error.userInfo[@"platform_screen_name_conflict"];
+                    NSInteger last_login_time = [error.userInfo[@"last_login_time"] integerValue];
+                    NSString *enter_from = tracerDict[@"enter_from"];
+                    NSString *device_id = [[TTInstallIDManager sharedInstance] deviceID];
+                    NSString *URLString = [NSString stringWithFormat:@" http://m.haoduofangs.com/passport/auth_bind_conflict/index/?aid=1370&enter_from=%@&mobile=%@&screen_name=%@&avatar_url=%@&last_login_time=%@&platform_screen_name_current=%@&platform_screen_name_conflict=%@&profile_key=%@&device_id=%@",enter_from, mobile, screen_name, avatar_url, @(last_login_time), platform_screen_name_current, platform_screen_name_conflict, profileKey, device_id];
+                    
+                    ssOpenWebView([TTStringHelper URLWithURLString:URLString], nil, strongSelf.viewController.navigationController, NO, @{@"hide_nav_bar":@"1"});
+                };
+                NSString *message = @"";
+                if ([error.userInfo[@"screen_name"] isKindOfClass:[NSString class]] && [error.userInfo[@"mobile"] isKindOfClass:[NSString class]] ) {
+                    message = [NSString stringWithFormat:@"检查到%@已绑定\n幸福里帐号【%@】",error.userInfo[@"mobile"], error.userInfo[@"screen_name"]];
+                }
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"帐号冲突提醒"
+                                                                               message:message
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消授权"
+                                                                       style:UIAlertActionStyleCancel
+                                                                     handler:^(UIAlertAction * _Nonnull action) {
+                                                                         // 点击取消按钮，调用此block
+                                                                     }];
+                [alertController addAction:cancelAction];
+                
+                UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"查看详情"
+                                                                        style:UIAlertActionStyleDefault
+                                                                      handler:^(UIAlertAction * _Nonnull action) {
+                                                                          // 点击按钮，调用此block
+                                                                          if(goDetailBlock){
+                                                                              goDetailBlock();
+                                                                          }
+                                                                      }];
+                [alertController addAction:defaultAction];
+                [[TTUIResponderHelper visibleTopViewController] presentViewController:alertController animated:YES completion:nil];
+                
+
             } else {
                 [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
             }
@@ -712,22 +821,6 @@ static FHLoginSharedModel *_sharedModel = nil;
             }
         }
     }];
-//    [TTAccount requestLoginForPlatform:TTAccountAuthTypeDouyin willLogin:^(NSString * _Nonnull info) {
-//        NSLog(@"info:%@",info);
-//    } completion:^(BOOL success, NSError *error) {
-//        __strong typeof(weakSelf) strongSelf = weakSelf;
-//        if (error) {
-//            //失败则提示
-//            [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
-//        } else {
-//            if ([TTAccount sharedAccount].user.mobile.length) {
-//                [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
-//            } else {
-//                //登录成功，判定没有手机号，进入绑定流程
-//                [strongSelf goToOneKeyBind];
-//            }
-//        }
-//    }];
 }
 
 - (void)loginCancelAction {
@@ -773,9 +866,15 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 - (void)oneKeyBindAction {
     __weak typeof(self) weakSelf = self;
-    [TTAccount oneKeyBindPhoneWithPassword:nil unbind:NO completed:^(NSError * _Nullable error) {
-        [weakSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
-    }];
+    if (self.profileKey.length) {
+        [TTAccount oneKeyBindPhoneWithProfileKey:self.profileKey completed:^(NSError * _Nullable error) {
+            [weakSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
+        }];
+    } else {
+        [TTAccount oneKeyBindPhoneWithPassword:nil unbind:NO completed:^(NSError * _Nullable error) {
+            [weakSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
+        }];
+    }
 }
 
 - (void)mobileBind:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha {
@@ -793,9 +892,15 @@ static FHLoginSharedModel *_sharedModel = nil;
     }
     [[ToastManager manager] showToast:@"正在绑定中"];
     __weak typeof(self) weakSelf = self;
-    [TTAccount bindPhoneWithPhone:mobileNumber SMSCode:smsCode password:nil captcha:captcha unbind:NO completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
-        [weakSelf handleLoginResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyLogin:NO];
-    }];
+    if (self.profileKey.length) {
+        [TTAccount requesetBindAndLogingWithPhonenumber:mobileNumber SMSCode:smsCode profileKey:self.profileKey SMSCodeType:TTASMSCodeScenarioBindPhoneSubmit captcha:captcha completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
+            [weakSelf handleLoginResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyLogin:NO];
+        }];
+    } else {
+        [TTAccount bindPhoneWithPhone:mobileNumber SMSCode:smsCode password:nil captcha:captcha unbind:NO completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
+            [weakSelf handleLoginResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyLogin:NO];
+        }];
+    }
 }
 
 - (void)goToServiceProtocol:(NSString *)urlStr {
@@ -920,7 +1025,7 @@ static FHLoginSharedModel *_sharedModel = nil;
     }];
 }
 
-#pragma mark - 键盘通知
+#pragma mark - Notification
 - (void)keyboardWillShowNotifiction:(NSNotification *)notification {
     if (_isHideKeyBoard) {
         return;
@@ -954,6 +1059,57 @@ static FHLoginSharedModel *_sharedModel = nil;
     }];
 }
 
+- (void)loginConflictResolvedSuccess:(NSNotification *)aNotification {
+    if ([TTAccount sharedAccount].user.mobile.length) {
+        [self handleLoginResult:nil phoneNum:nil smsCode:nil error:nil isOneKeyLogin:NO];
+    } else {
+        //登录成功，判定没有手机号，进入绑定流程
+        [self goToOneKeyBind];
+    }
+}
+
+- (void)loginConflictResolvedFail:(NSNotification *)aNotification {
+    //冲突处理失败，没有用户信息，需要跳转手机号登录或者运营商一键登录
+    [self.viewController.navigationController popViewControllerAnimated:NO];
+    if ([self.viewController.navigationController.viewControllers containsObject:self.viewController]) {
+        NSUInteger index = [self.viewController.navigationController.viewControllers indexOfObject:self.viewController];
+        if (index > 0) {
+            if (self.currentViewType != FHLoginViewTypeDouYin) {
+                [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:YES];
+            }else {
+                [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:NO];
+                [self goToOneKeyLogin];
+            }
+        }
+        
+    } else {
+        [self.viewController.navigationController popToRootViewControllerAnimated:NO];
+        [FHLoginSharedModel sharedModel].douyinCanQucikLogin = NO;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"enter_from"] = @"minetab";
+            dict[@"enter_type"] = @"login";
+            dict[@"isCheckUGCADUser"] = @(1);
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        });
+    }
+}
+
+- (void)loginConflictResolvedBindMobile:(NSNotification *)aNotification {
+    if (aNotification.object && [aNotification.object isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *info = (NSDictionary *)aNotification.object;
+        if (info[@"profile_key"]) {
+            NSString *profileKey = [info btd_stringValueForKey:@"profile_key"];
+            if (profileKey.length) {
+                self.profileKey = profileKey;
+                [self goToOneKeyBind];
+            }
+        }
+    }
+}
+
 #pragma mark - textFieldDidChange
 
 - (void)textFieldDidChange:(NSNotification *)notification {
@@ -984,7 +1140,7 @@ static FHLoginSharedModel *_sharedModel = nil;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict].mutableCopy;
     tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
     tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
-    if (self.isOneKeyLogin) {
+    if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
         tracerDict[@"login_type"] = @"quick_login";
     }else {
         tracerDict[@"login_type"] = @"other_login";
@@ -1001,7 +1157,7 @@ static FHLoginSharedModel *_sharedModel = nil;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
     tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
-    if (self.isOneKeyLogin) {
+    if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
         tracerDict[@"click_position"] = @"quick_login";
     }else {
         tracerDict[@"login_type"] = @"other_login";
@@ -1041,7 +1197,7 @@ static FHLoginSharedModel *_sharedModel = nil;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
     tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
-    if (self.isOneKeyLogin) {
+    if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
         tracerDict[@"click_position"] = @"quick_login";
     }else {
         tracerDict[@"login_type"] = @"other_login";
@@ -1064,7 +1220,7 @@ static FHLoginSharedModel *_sharedModel = nil;
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     tracerDict[@"origin_enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
     tracerDict[@"origin_enter_type"] = tracerDict[@"enter_type"] ? : @"be_null";
-    if (self.isOneKeyLogin) {
+    if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
         tracerDict[@"login_type"] = @"quick_login";
     }else {
         tracerDict[@"login_type"] = @"other_login";

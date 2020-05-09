@@ -25,11 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL needPopVC;
 @property (nonatomic, assign) BOOL noDismissVC;
 @property (nonatomic, assign) BOOL present;
-@property (nonatomic, assign) BOOL isOneKeyLogin;
-@property (nonatomic, assign) BOOL isOtherLogin;
-@property (nonatomic, assign) BOOL douyinCanQucikLogin;
 @property (nonatomic, assign)   BOOL  isNeedCheckUGCAdUser;
-@property (nonatomic , copy) NSString *mobileNumber;
+@property (nonatomic, copy) NSString *mobileNumber;
+
+/// 抖音登录冲突，选择绑定手机号流程，保存profilekey参数
+@property (nonatomic, copy) NSString *profileKey;
+
 
 /// 这个回调，是请求判断是否支持运营商登录，请求判断是否支持抖音一键登录以后的回调
 /// 只适用于FHLoginViewController 回调，type变化后view会跟着变化
