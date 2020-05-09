@@ -33,16 +33,6 @@
 
 @implementation BDDYCClient
 
-+ (void)load
-{
-#if BDDYC_HAS_SETTINGS
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(relaunchDidReceiveSettingsNotification:) name:TTSettingsManagerDidUpdateNotification object:nil];
-    });
-#endif
-}
-
 + (void)start
 {
 #ifdef BDDYC_ENABLED
@@ -104,15 +94,6 @@
 {
     
 }
-
-#if BDDYC_HAS_SETTINGS
-
-+ (void)relaunchDidReceiveSettingsNotification:(NSNotification *)note
-{
-    [self start];
-}
-
-#endif
 
 @end
 
