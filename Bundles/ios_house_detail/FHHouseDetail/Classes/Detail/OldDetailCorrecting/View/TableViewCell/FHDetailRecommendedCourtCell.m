@@ -147,8 +147,8 @@
         tracerDic[@"category_name"] = @"recommend_new_list";
         tracerDic[@"element_type"] = @"be_null";
         tracerDic[@"element_from"] = @"recommend_new";
-        tracerDic[@"enter_from"] = @"recommend_new_list";
         tracerDic[@"page_type"] = @"recommend_new_list";
+        tracerDic[@"enter_from"] = @"old_detail";
         
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
         infoDict[@"house_id"] = self.baseViewModel.houseId;
