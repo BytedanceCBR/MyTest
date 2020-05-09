@@ -34,6 +34,7 @@
 #import "FHLoginConflictBridgePlugin.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import <ByteDanceKit/BTDWeakProxy.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHPLoginhoneNumberCacheKey;
@@ -265,21 +266,6 @@ static FHLoginSharedModel *_sharedModel = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginConflictResolvedBindMobile:) name:kFHLoginConflictResolvedBindMobile object:nil];
 }
 
-- (void)viewWillAppear {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
-}
-
-- (void)viewWillDisappear {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    if (self.noDismissVC) {
-        self.noDismissVC = NO;
-    } else {
-        [self stopTimer];
-    }
-}
-
 - (void)startLoadData {
     [self.viewController startLoading];
 
@@ -318,17 +304,17 @@ static FHLoginSharedModel *_sharedModel = nil;
 //    [self updateViewType];
 //}
 
-- (void)checkToEnableConfirmBtn {
+//- (void)checkToEnableConfirmBtn {
 //    BOOL hasPhoneInput = self.view.phoneInput.text.length > 0;
 //    BOOL hasVerifyCodeInput = self.view.varifyCodeInput.text.length > 0;
 //    BOOL confirmEnable = hasPhoneInput && (self.view.isOneKeyLogin || hasVerifyCodeInput);
 //    [self.view enableConfirmBtn:confirmEnable];
-}
+//}
 
-- (void)acceptCheckBoxChange:(BOOL)selected {
+//- (void)acceptCheckBoxChange:(BOOL)selected {
 //    self.view.acceptCheckBox.selected = !selected;
-    [self checkToEnableConfirmBtn];
-}
+//    [self checkToEnableConfirmBtn];
+//}
 
 - (void)popViewController {
     if(self.present){
@@ -631,16 +617,13 @@ static FHLoginSharedModel *_sharedModel = nil;
     [self sendVerifyCodeWithCaptcha:nil needPushVerifyCodeView:needPush isForBindMobile:isForBindMobile];
 }
 
-- (void)goToUserProtocol
-{
-    self.noDismissVC = YES;
+- (void)goToUserProtocol {
     NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
 - (void)goToSecretProtocol {
-    self.noDismissVC = YES;
     NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@/f100/download/private_policy.html&title=隐私政策&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
@@ -904,7 +887,6 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)goToServiceProtocol:(NSString *)urlStr {
-    self.noDismissVC = YES;
     NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@",urlStr]];
     NSString *title = @"";
     if ([[TTAccount sharedAccount].service isEqualToString:TTAccountMobile]) {
@@ -1026,39 +1008,6 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 #pragma mark - Notification
-- (void)keyboardWillShowNotifiction:(NSNotification *)notification {
-    if (_isHideKeyBoard) {
-        return;
-    }
-    
-    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
-    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
-    
-    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions) [curve integerValue] animations:^{
-        
-        [UIView setAnimationBeginsFromCurrentState:YES];
-//        self.view.scrollView.contentOffset = CGPointMake(0, 120);
-//        self.viewController.customNavBarView.title.hidden = NO;
-        
-    }completion:^(BOOL finished) {
-        
-    }];
-}
-
-- (void)keyboardWillHideNotifiction:(NSNotification *)notification {
-    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
-    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
-    
-    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
-        [UIView setAnimationBeginsFromCurrentState:YES];
-//        self.view.scrollView.contentOffset = CGPointMake(0, 0);
-//        self.viewController.customNavBarView.title.hidden = YES;
-        
-    } completion:^(BOOL finished) {
-        
-    }];
-}
-
 - (void)loginConflictResolvedSuccess:(NSNotification *)aNotification {
     if ([TTAccount sharedAccount].user.mobile.length) {
         [self handleLoginResult:nil phoneNum:nil smsCode:nil error:nil isOneKeyLogin:NO];
@@ -1112,7 +1061,7 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 #pragma mark - textFieldDidChange
 
-- (void)textFieldDidChange:(NSNotification *)notification {
+//- (void)textFieldDidChange:(NSNotification *)notification {
 //    UITextField *textField = (UITextField *)notification.object;
 //    if (textField != self.view.phoneInput && textField != self.view.varifyCodeInput) {
 //        return;
@@ -1132,8 +1081,8 @@ static FHLoginSharedModel *_sharedModel = nil;
 //        textField.text = [text substringToIndex:limit];
 //    }
     //设置登录和获取验证码是否可点击
-    [self checkToEnableConfirmBtn];
-}
+//    [self checkToEnableConfirmBtn];
+//}
 
 #pragma mark - 埋点
 - (void)traceAnnounceAgreement {
@@ -1292,7 +1241,7 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 - (NSTimer *)timer {
     if (!_timer) {
-        _timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(setVerifyCodeButtonCountDown) userInfo:nil repeats:YES];
+        _timer = [NSTimer timerWithTimeInterval:1 target:[BTDWeakProxy proxyWithTarget:self] selector:@selector(setVerifyCodeButtonCountDown) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
     }
     return _timer;
