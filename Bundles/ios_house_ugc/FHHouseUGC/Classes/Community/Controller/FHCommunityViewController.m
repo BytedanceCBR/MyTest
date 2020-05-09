@@ -286,15 +286,12 @@
     }
     
     //关注tab，没有关注时需要隐藏关注按钮
-    NSInteger index = 0;
-    if([FHEnvContext isNewDiscovery]){
-        index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_follow"];
-    }
-
-    if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].followList.count <= 0){
-        self.publishBtn.hidden = YES;
-    }else{
-        self.publishBtn.hidden = NO;
+    if(![FHEnvContext isNewDiscovery]){
+        if(self.viewModel.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
+            self.publishBtn.hidden = YES;
+        }else{
+            self.publishBtn.hidden = NO;
+        }
     }
 }
 
