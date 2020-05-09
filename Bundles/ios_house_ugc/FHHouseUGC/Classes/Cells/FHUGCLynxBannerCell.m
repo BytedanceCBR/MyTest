@@ -59,6 +59,18 @@
           _bottomSepView.backgroundColor = [UIColor themeGray7];
           [self.contentView addSubview:_bottomSepView];
             
+
+               
+           NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
+           
+            if (templateData) {
+                 NSNumber *costTime = @(0);
+                    _loadTime = [[NSDate date] timeIntervalSince1970];
+                
+                [self.lynxView loadTemplate:templateData withURL:@"local"];
+                
+                self.currentTemData = templateData;
+            }
         }
     }
     return self;
@@ -74,21 +86,20 @@
     }
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-    NSDictionary *lynxData = cellModel.lynxData;
-
-    
-    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
-    
-    if (!templateData) {
-        return;
+    if (!self.currentTemData) {
+           NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
+           
+           if (!templateData) {
+               return;
+           }
+           
+         
+            self.currentTemData = templateData;
+            NSNumber *costTime = @(0);
+            _loadTime = [[NSDate date] timeIntervalSince1970];
+        
+            [self.lynxView loadTemplate:templateData withURL:@"local"];
     }
-    
-  
-     self.currentTemData = templateData;
-     NSNumber *costTime = @(0);
-     _loadTime = [[NSDate date] timeIntervalSince1970];
- 
-     [self.lynxView loadTemplate:templateData withURL:@"local"];
     
     NSMutableDictionary *dataJson = [NSMutableDictionary new];
     FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
