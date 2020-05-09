@@ -53,6 +53,11 @@
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"save 现场" style:UIBarButtonItemStylePlain target:self action:@selector(saveConfigAction)];
     self.navigationItem.rightBarButtonItem = rightItem;
     
+    UISwitch *switchs = [[UISwitch alloc]init];
+    switchs.on = [self errorHubSwitch];
+    [switchs addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+    self.navigationItem.titleView = switchs;
+    
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     lpgr.minimumPressDuration = 1.0; //seconds    设置响应时间
     lpgr.delegate = self;
@@ -156,6 +161,15 @@
     }
     return  _errorTab;
 }
+
+- (void)switchAction:(UISwitch *)switchs {
+    [[NSUserDefaults standardUserDefaults] setBool:switchs.on forKey:@"_errorHubSwitch"];
+}
+
+- (BOOL)errorHubSwitch {
+     return [[NSUserDefaults standardUserDefaults] boolForKey:@"_errorHubSwitch"];
+}
+
 
 @end
 

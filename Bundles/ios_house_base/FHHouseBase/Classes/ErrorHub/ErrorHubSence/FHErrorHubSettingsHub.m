@@ -17,7 +17,7 @@
 - (NSDictionary *)returunAbnormalReportData {
      NSDictionary *dictSetting  = [self fhSettings];
     dictSetting = [FHErrorHubDataReadWrite  removeNillValue:dictSetting];
-    return @{@"settings_data":dictSetting};
+    return @{@"settings_data":dictSetting?dictSetting:@{}};
 }
 
 - (NSDictionary *)fhSettings {

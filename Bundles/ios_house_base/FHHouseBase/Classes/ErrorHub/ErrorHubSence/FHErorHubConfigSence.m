@@ -19,7 +19,7 @@
 - (NSDictionary *)returunAbnormalReportData {
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     NSDictionary *configDic = [FHErrorHubDataReadWrite  removeNillValue:[configDataModel toDictionary]];
-    return @{@"config_data":configDic};
+    return @{@"config_data":configDic?configDic:@{}};
 }
 
 - (NSString *)associatedKey {
