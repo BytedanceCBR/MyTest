@@ -619,6 +619,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (toast.length > 0) {
         associateReport.toast = toast;
     }
+    if (btnTitle.length > 0) {
+        associateReport.btnTitle = btnTitle;
+    }
     associateReport.houseType = self.houseType;
     associateReport.houseId = self.houseId;
     associateReport.topViewController = self.belongsVC;

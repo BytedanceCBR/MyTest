@@ -174,7 +174,7 @@
             
             model.contentAStr = mutableAttributedString;
             
-            CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
+            CGSize size = [self sizeThatFitsAsyncAttributedString:mutableAttributedString
                                                               withConstraints:CGSizeMake(width, FLT_MAX)
                                                              maxNumberOfLines:numberOfLines
                                                        limitedToNumberOfLines:&numberOfLines];
@@ -223,7 +223,7 @@
             
             NSInteger numberOfLines = model.numberOfLines;
             
-            CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
+            CGSize size = [self sizeThatFitsAsyncAttributedString:mutableAttributedString
                                              withConstraints:CGSizeMake(width, FLT_MAX)
                                             maxNumberOfLines:numberOfLines
                                       limitedToNumberOfLines:&numberOfLines];
@@ -347,16 +347,27 @@
                        withConstraints:(CGSize)size
                       maxNumberOfLines:(NSUInteger)maxLine
                 limitedToNumberOfLines:(NSUInteger*)numberOfLines {
-//    long lines = [TTUGCAttributedLabel numberOfLinesAttributedString:attrStr withConstraints:size.width];
-    long lines = [TTUGCTextRender numberOfLinesAttributedString:attrStr constraintsWidth:size.width];
+    long lines = [TTUGCAttributedLabel numberOfLinesAttributedString:attrStr withConstraints:size.width];
     
     if (lines <= maxLine) { //用最大行数能显示全，就用最大行数显示
         *numberOfLines = maxLine;
     }
     
-//    return [TTUGCAttributedLabel sizeThatFitsAttributedString:attrStr
-//                                              withConstraints:CGSizeMake(size.width, FLT_MAX)
-//                                       limitedToNumberOfLines:*numberOfLines];
+    return [TTUGCAttributedLabel sizeThatFitsAttributedString:attrStr
+                                              withConstraints:CGSizeMake(size.width, FLT_MAX)
+                                       limitedToNumberOfLines:*numberOfLines];
+}
+
++ (CGSize)sizeThatFitsAsyncAttributedString:(NSAttributedString *)attrStr
+                       withConstraints:(CGSize)size
+                      maxNumberOfLines:(NSUInteger)maxLine
+                limitedToNumberOfLines:(NSUInteger*)numberOfLines {
+    long lines = [TTUGCTextRender numberOfLinesAttributedString:attrStr constraintsWidth:size.width];
+    
+    if (lines <= maxLine) { //用最大行数能显示全，就用最大行数显示
+        *numberOfLines = maxLine;
+    }
+
     return [TTUGCTextRender sizeThatFitsAttributedString:attrStr
                                          constraintsSize:CGSizeMake(size.width, CGFLOAT_MAX)
                                   limitedToNumberOfLines:*numberOfLines];;
@@ -440,7 +451,7 @@
 
             model.originItemModel.contentAStr = mutableAttributedString;
             
-            CGSize size = [self sizeThatFitsAttributedString:mutableAttributedString
+            CGSize size = [self sizeThatFitsAsyncAttributedString:mutableAttributedString
                                              withConstraints:CGSizeMake(width, FLT_MAX)
                                             maxNumberOfLines:numberOfLines
                                       limitedToNumberOfLines:&numberOfLines];

@@ -34,7 +34,7 @@
 }
 
 - (void)refreshData:(id)data andHouseType:(FHHouseType)houseType
-{//cell加标记是否已经请求数据成功
+{
     _houseType = houseType;
     if (!_vc) {
         _vc = [[FHChildSuggestionListViewController alloc] initWithRouteParamObj:data];
@@ -42,13 +42,6 @@
         [_vc.view mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.contentView);
         }];
-    }
-}
-
-- (void)cellDisappear
-{
-    if (_vc) {
-        ;
     }
 }
 
