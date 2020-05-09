@@ -566,16 +566,16 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         FHDetailCommentsCellModel *commentsModel = [[FHDetailCommentsCellModel alloc] init];
         commentsModel.neighborhoodId = model.data.neighborhoodInfo.id;
         commentsModel.houseId = self.houseId;
-        commentsModel.topMargin = 12;
-        commentsModel.bottomMargin = 22.0f;
-        commentsModel.comments = model.data.comments;
-        commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
         if (self.detailTracerDic) {
             [paramsDict addEntriesFromDictionary:self.detailTracerDic];
         }
         paramsDict[@"page_type"] = [self pageTypeString];
         commentsModel.tracerDict = paramsDict;
+        commentsModel.topMargin = 12;
+        commentsModel.bottomMargin = 22.0f;
+        commentsModel.comments = model.data.comments;
+        commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
         [self.items addObject:commentsModel];
     }
     
@@ -584,15 +584,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
         qaModel.neighborhoodId = model.data.neighborhoodInfo.id;
-        qaModel.topMargin = 0.0f;
-        qaModel.question = model.data.question;
-        qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
         NSMutableDictionary *paramsDict = @{}.mutableCopy;
         if (self.detailTracerDic) {
             [paramsDict addEntriesFromDictionary:self.detailTracerDic];
         }
         paramsDict[@"page_type"] = [self pageTypeString];
         qaModel.tracerDict = paramsDict;
+        qaModel.topMargin = 0.0f;
+        qaModel.question = model.data.question;
+        qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
         [self.items addObject:qaModel];
     }
     
