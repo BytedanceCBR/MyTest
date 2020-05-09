@@ -232,11 +232,12 @@
     extraDic[@"subtitle"] = subtitle;
     extraDic[@"btn_title"] = btnTitle;
     extraDic[@"toast"] = toast;
+
     NSMutableDictionary *associateParamDict = @{}.mutableCopy;
     associateParamDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
     NSMutableDictionary *reportParamsDict = [model.contactViewModel baseParams].mutableCopy;
     if (extraDic.count > 0) {
-        [reportParamsDict addEntriesFromDictionary:extraDic];
+        [associateParamDict addEntriesFromDictionary:extraDic];
         reportParamsDict[kFHAssociateInfo] = itemInfo.associateInfo.reportFormInfo;
     }
     associateParamDict[kFHReportParams] = reportParamsDict;

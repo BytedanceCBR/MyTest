@@ -25,6 +25,7 @@
 #import "MJRefresh.h"
 #import "FHRefreshCustomFooter.h"
 #import "UIScrollView+Refresh.h"
+#import "TTReachability.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -674,7 +675,7 @@
         }
     }
     
-    if (self.voteInfo.voteId.length <= 0 || options.count <= 0) {
+    if (self.voteInfo.voteId.length <= 0 || options.count <= 0 || ![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"投票失败"];
         return;
     }
@@ -685,7 +686,11 @@
     [FHHouseUGCAPI requestVoteSubmit:self.voteInfo.voteId optionIDs:options optionNum:optionNum class:FHUGCVoteResponseModel.class completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         [weakSelf.voteButton stopLoading];
         if (error) {
-            [[ToastManager manager] showToast:error.domain];
+            if([self isChinese:error.domain]){
+                [[ToastManager manager] showToast:error.domain];
+            }else{
+                [[ToastManager manager] showToast:@"投票失败"];
+            }
             if(error.code == 1005){ //过期
                 weakSelf.voteInfo.selected = YES;
                 weakSelf.voteInfo.voteState = FHUGCVoteStateExpired;
@@ -702,7 +707,6 @@
             }else{
                 weakSelf.voteInfo.voteState = FHUGCVoteStateNone;
             }
-            
         } else {
             FHUGCVoteResponseModel *responseModel = (FHUGCVoteResponseModel *)model;
             if ([responseModel.status isEqualToString:@"0"]) {
@@ -742,6 +746,12 @@
     }];
 }
 
+- (BOOL)isChinese:(NSString *)str {
+    NSString *match = @"(^[\u4e00-\u9fa5]+$)";
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF matches %@", match];
+    return [predicate evaluateWithObject:str];
+}
+
 // 编辑按钮点击
 - (void)editButtonClick:(UIButton *)btn {
     // 先登录
@@ -749,7 +759,7 @@
         [self gotoLogin];
         return;
     }
-    if (self.voteInfo.voteId.length <= 0) {
+    if (self.voteInfo.voteId.length <= 0 || ![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"取消投票失败"];
         return;
     }
@@ -788,7 +798,7 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
         } else {
             weakSelf.voteInfo.voteState = FHUGCVoteStateComplete;
-            if (error) {
+            if (error && [self isChinese:error.domain]) {
                 [[ToastManager manager] showToast:error.domain];
             } else {
                 [[ToastManager manager] showToast:@"取消投票失败"];
