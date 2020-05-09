@@ -420,7 +420,10 @@
                                                     count:(NSInteger)count
                                                completion:(void (^)(FHListResultHouseModel * _Nullable, NSError * _Nullable))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_court?house_id=%@&offset=%@&search_id=%@",houseId, offset, searchId];
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_court?house_id=%@&offset=%@",houseId, offset];
+    if (searchId.length > 0) {
+        url = [NSString stringWithFormat:@"%@&search_id=%@", url, searchId];
+    }
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (query.length > 0) {
         url = [NSString stringWithFormat:@"%@&%@",url,query];
