@@ -530,7 +530,8 @@
         [self.httpTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.httpTask = [FHHouseDetailAPI requestOldHouseRecommendedCourtSearch:houseId offset:[NSString stringWithFormat:@"%ld", offset] query:self.condition count:15 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
+    NSString *searchId = self.listController.tracerDict[@"origin_search_id"] ? : @"";
+    self.httpTask = [FHHouseDetailAPI requestOldHouseRecommendedCourtSearchList:houseId searchId:searchId offset:[NSString stringWithFormat:@"%ld", offset] query:self.condition count:15 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
         if (model != NULL && error == NULL) {
             wself.relatedHouseData = model;
             [wself processDetailRelatedData];
