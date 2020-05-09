@@ -101,6 +101,7 @@ completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))co
 // 二手房-推荐新盘列表页
 +(TTHttpTask*)requestOldHouseRecommendedCourtSearchList:(NSString*)houseId
                                            searchId:(NSString*)searchId
+                                             cityId:(NSInteger)cityId
                                              offset:(NSString*)offset
                                               query:(NSString*)query
                                               count:(NSInteger)count

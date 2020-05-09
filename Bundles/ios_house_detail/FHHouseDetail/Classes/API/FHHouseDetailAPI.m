@@ -415,6 +415,7 @@
 
 + (TTHttpTask *)requestOldHouseRecommendedCourtSearchList:(NSString *)houseId
                                                  searchId:(NSString *)searchId
+                                                   cityId:(NSInteger)cityId
                                                    offset:(NSString *)offset
                                                     query:(NSString *)query
                                                     count:(NSInteger)count
@@ -423,6 +424,9 @@
     NSString* url = [host stringByAppendingFormat:@"/f100/api/related_court?house_id=%@&offset=%@",houseId, offset];
     if (searchId.length > 0) {
         url = [NSString stringWithFormat:@"%@&search_id=%@", url, searchId];
+    }
+    if (cityId) {
+        url = [NSString stringWithFormat:@"%@&city_id=%ld", url, cityId];
     }
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (query.length > 0) {

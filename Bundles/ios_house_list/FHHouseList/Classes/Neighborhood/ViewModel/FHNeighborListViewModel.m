@@ -26,6 +26,7 @@
 #import "FHHouseListBaseItemModel.h"
 #import "FHHouseDetailAPI.h"
 #import "FHRecommendCourtCell.h"
+#import "FHEnvContext.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -536,7 +537,8 @@
     } else if (offset > 0) {
         searchId = self.searchId;
     }
-    self.httpTask = [FHHouseDetailAPI requestOldHouseRecommendedCourtSearchList:houseId searchId:searchId offset:[NSString stringWithFormat:@"%ld", offset] query:self.condition count:15 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    self.httpTask = [FHHouseDetailAPI requestOldHouseRecommendedCourtSearchList:houseId searchId:searchId cityId:cityId offset:[NSString stringWithFormat:@"%ld", offset] query:self.condition count:15 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
         if (model != NULL && error == NULL) {
             wself.relatedHouseData = model;
             [wself processDetailRelatedData];
