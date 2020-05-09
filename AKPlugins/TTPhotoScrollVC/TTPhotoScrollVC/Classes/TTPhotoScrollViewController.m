@@ -24,6 +24,7 @@
 #import <Photos/Photos.h>
 #import "HTSDeviceManager.h"
 #import "UIViewController+BanTip.h"
+#import <FHPopupViewCenter/FHPopupViewManager.h>
 
 #define indexPromptLabelTextSize 16.f
 #define indexPromptLabelBottomPadding 5.f
@@ -940,6 +941,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
     alreadyFinished = YES;
     
     [self banTip:NO];
+    [[FHPopupViewManager shared] triggerPendant];
 }
 
 - (void)selectButtonClicked:(id)sender
@@ -1292,6 +1294,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
 - (void)presentPhotoScrollViewWithDismissBlock:(TTPhotoScrollViewDismissBlock)block
 {
     [self banTip:YES];
+    [[FHPopupViewManager shared] hidePendant];
     
     staticPhotoBrowserAtTop = YES;
     //统计
@@ -1384,6 +1387,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
 - (void)dismissSelf
 {
     [self banTip:NO];
+    [[FHPopupViewManager shared] triggerPendant];
     
     //统计
     if (_mode == PhotosScrollViewSupportDownloadMode) {

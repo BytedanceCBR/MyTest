@@ -85,7 +85,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
    //属性模块
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoModel class])];
     [self.tableView registerClass:[FHDetailPropertyListCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCorrectingModel class])];
-//    [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryModel class])];
+    [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryModel class])];
      [self.tableView registerClass:[FHDetailPriceChangeNoticeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceNoticeModel class])];
     
     //首付及月供
@@ -321,17 +321,17 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         coreInfoModel.houseModelType = FHHouseModelTypeCoreInfo;
         [self.items addObject:coreInfoModel];
     }
-//    // 价格变动
-//    if (model.data.priceChangeHistory) {
-//        FHDetailPriceChangeHistoryModel *priceChangeHistoryModel = [[FHDetailPriceChangeHistoryModel alloc] init];
-//        priceChangeHistoryModel.priceChangeHistory = model.data.priceChangeHistory;
-//        priceChangeHistoryModel.houseModelType = FHHouseModelTypeCoreInfo;
-//        priceChangeHistoryModel.baseViewModel = self;
-//        [self.items addObject:priceChangeHistoryModel];
-//    }
+    // 价格变动
+    if (model.data.priceChangeHistory && !model.data.priceChangeNotice) {
+        FHDetailPriceChangeHistoryModel *priceChangeHistoryModel = [[FHDetailPriceChangeHistoryModel alloc] init];
+        priceChangeHistoryModel.priceChangeHistory = model.data.priceChangeHistory;
+        priceChangeHistoryModel.houseModelType = FHHouseModelTypeCoreInfo;
+        priceChangeHistoryModel.baseViewModel = self;
+        [self.items addObject:priceChangeHistoryModel];
+    }
     
         // 价格变动
-        if (model.data.priceChangeNotice) {
+        if (model.data.priceChangeNotice && model.data.priceChangeNotice.showType != 0) {
             FHDetailPriceNoticeModel *priceChangeNoticeModel = [[FHDetailPriceNoticeModel alloc] init];
             priceChangeNoticeModel.priceChangeNotice = model.data.priceChangeNotice;
             priceChangeNoticeModel.houseModelType = FHHouseModelTypeCoreInfo;
@@ -723,6 +723,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self requestHouseInSameNeighborhoodSearch:neighborhoodId];
         // 周边小区
         [self requestRelatedNeighborhoodSearch:neighborhoodId];
+    } else {
+        self.requestRelatedCount = 2;
     }
     // 周边房源
     [self requestRelatedHouseSearch];

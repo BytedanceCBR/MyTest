@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewCoreDetailDataModel : JSONModel 
 
+@property (nonatomic, copy , nullable) NSString *areaSquareMeter;
+@property (nonatomic, copy , nullable) NSString *buildingSquareMeter;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *powerWaterGasDesc;
 @property (nonatomic, copy , nullable) NSString *decoration;
