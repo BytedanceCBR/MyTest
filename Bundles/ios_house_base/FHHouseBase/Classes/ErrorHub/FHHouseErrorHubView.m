@@ -51,12 +51,15 @@
     [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.left.right.equalTo(self);
     }];
-    [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.top.equalTo(self.subMessageLab.mas_top).offset(-10);
-    }];
     [self.subMessageLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self).offset(-10);
+        make.left.equalTo(self).offset(10);
     }];
+    [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.bottom.equalTo(self.subMessageLab.mas_top).offset(-10);
+        make.left.equalTo(self).offset(10);
+    }];
+
      UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
     [self addGestureRecognizer:tapGesturRecognizer];
 }
@@ -74,7 +77,7 @@
 - (UILabel *)titleLab {
     if (!_titleLab) {
         UILabel *titleLab = [[UILabel alloc]init];
-        titleLab.textColor = [UIColor redColor];
+        titleLab.textColor = [UIColor blackColor];
         titleLab.font = [UIFont systemFontOfSize:12];
         [self.contentView addSubview:titleLab];
         _titleLab = titleLab;

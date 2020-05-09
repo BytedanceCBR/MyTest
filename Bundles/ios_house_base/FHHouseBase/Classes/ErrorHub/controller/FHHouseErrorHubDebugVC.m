@@ -6,9 +6,10 @@
 //
 
 #import "FHHouseErrorHubDebugVC.h"
-#import "FHHouseErrorHubManager.h"
+#import "FHErrorHubDataReadWrite.h"
 #import "Masonry.h"
 #import "UIDevice+BTDAdditions.h"
+#import "FHHouseErrorHubManager.h"
 #import "TTBaseMacro.h"
 #import "ToastManager.h"
 
@@ -33,9 +34,9 @@
     [super viewDidLoad];
     self.dataSource = @{}.mutableCopy;
     self.keyArr = @[@"host_error",@"buryingpoint_error",@"custom_error"];
-    self.dataSource[@"host_error"] = [[FHHouseErrorHubManager sharedInstance] getLocalErrorDataWithType:FHErrorHubTypeRequest];
-    self.dataSource[@"buryingpoint_error"] = [[FHHouseErrorHubManager sharedInstance] getLocalErrorDataWithType:FHErrorHubTypeBuryingPoint];
-    self.dataSource[@"custom_error"] = [[FHHouseErrorHubManager sharedInstance] getLocalErrorDataWithType:FHErrorHubTypeCustom];
+    self.dataSource[@"host_error"] = [FHErrorHubDataReadWrite getLocalErrorDataWithType:FHErrorHubTypeRequest];
+    self.dataSource[@"buryingpoint_error"] = [FHErrorHubDataReadWrite getLocalErrorDataWithType:FHErrorHubTypeBuryingPoint];
+    self.dataSource[@"custom_error"] = [FHErrorHubDataReadWrite getLocalErrorDataWithType:FHErrorHubTypeCustom];
     [self.errorTab registerClass:[FHHouseErrorHubCell class] forCellReuseIdentifier:@"FHHouseErrorHubCell"];
     [self initUI];
 }
@@ -74,8 +75,8 @@
 
 - (void)shareErrorJsonIsRequest:(BOOL)isRquest index:(NSIndexPath *)indexPath {
     NSDictionary *shareDic = self.dataSource[self.keyArr[indexPath.section]][indexPath.row];
-    [[FHHouseErrorHubManager sharedInstance] addLogWithData:shareDic logType:FHErrorHubTypeShare];
-    NSString *path = [[FHHouseErrorHubManager sharedInstance] localDataPathWithType:FHErrorHubTypeShare];
+    [FHErrorHubDataReadWrite addLogWithData:shareDic logType:FHErrorHubTypeShare];
+    NSString *path = [FHErrorHubDataReadWrite localDataPathWithType:FHErrorHubTypeShare];
     NSURL *url = [NSURL fileURLWithPath:path];
     NSArray *items = [NSArray arrayWithObjects:url, nil];
     UIActivityViewController *activityViewController =

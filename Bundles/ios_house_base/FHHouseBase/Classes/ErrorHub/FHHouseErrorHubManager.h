@@ -8,15 +8,10 @@
 #import <Foundation/Foundation.h>
 #import "FHMainApi.h"
 #import "TTNetworkManager.h"
+#import "FHErrorHubDataReadWrite.h"
 
 NS_ASSUME_NONNULL_BEGIN
-typedef NS_ENUM(NSInteger , FHErrorHubType) {
-    FHErrorHubTypeRequest = 1, //请求校验
-    FHErrorHubTypeBuryingPoint = 2 ,//埋点校验
-     FHErrorHubTypeConfig = 3, //现场保存
-    FHErrorHubTypeShare = 4 ,//分享相关
-    FHErrorHubTypeCustom = 5 ,//通用保存
-};
+
 @interface FHHouseErrorHubManager : NSObject
 +(instancetype)sharedInstance;
 
@@ -27,30 +22,32 @@ typedef NS_ENUM(NSInteger , FHErrorHubType) {
 /// @param response 请求返回数据
 /// @param analysisError 解析失败错误信息
 /// @param type 请求成功或者其他错误
+/// @param senceDic 关联现场
 - (void)checkRequestResponseWithHost:(NSString *)host requestParams:(NSDictionary *)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(FHErrorHubType)errorHubType;
 
 /// 核心埋点参数
 /// @param eventName 事件名称
 /// @param params 埋点参数
 /// @param errorHubType 类型
+/// @param senceDic 关联现场
 - (void)checkBuryingPointWithEvent:(NSString *)eventName Params:(NSDictionary* )eventParams errorHubType:(FHErrorHubType)errorHubType;
 - (UIViewController *)jsd_getRootViewController;
 
-/// 获取本地数据
-/// @param errorHubType 类型
-- (NSArray *)getLocalErrorDataWithType:(FHErrorHubType)errorHubType;
-
-/// 读取数据路径
-/// @param errorHubType 类型
-- (NSString *)localDataPathWithType:(FHErrorHubType)errorHubType;
-
-
-/// 添加数据保存
-/// @param Data 数据 （必须包含name和error_info）用于展示和复制
-/// @param errorHubType 类型
-- (void)addLogWithData:(id)Data logType:(FHErrorHubType)errorHubType;
-
 - (void)saveConfigAndSettings;
+
+
+/// 注册需要上报自己信息的类
+/// @param cls 类
+- (void)registerFHErrorHubProcotolClass:(Class)cls;
+
+
+/// 保存自定义错误
+/// @param data 自定义错误内容
+/// @param eventName 错误名
+/// @param errorInfo 错误信息
+/// @param extr 上报数据
+- (void)saveCustomerData:(id)data WithEventName:(NSString *)eventName errorMessage:(NSString *)errorInfo extr:(NSDictionary *)extr;
+
 @end
 
 NS_ASSUME_NONNULL_END

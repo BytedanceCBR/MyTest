@@ -7,11 +7,16 @@
 
 #import "FHHouseErrorHubManager.h"
 #import "FHHouseErrorHubView.h"
-#import "FHEnvContext.h"
-#import "HMDTTMonitor.h"
+#import "FHErrorHubMonitor.h"
 #import "TTSandBoxHelper.h"
+#import "FHErrorHubProcotol.h"
+#import "FHErrorHubSenceKeys.h"
+@interface FHHouseErrorHubManager()
+@property (strong, nonatomic) NSMutableArray *procotalClassArr;
+@end
 @implementation FHHouseErrorHubManager
-+(instancetype)sharedInstance
+
++ (instancetype)sharedInstance
 {
     static FHHouseErrorHubManager *manager = nil;
     static dispatch_once_t onceToken;
@@ -20,18 +25,36 @@
     });
     return manager;
 }
+
+- (NSMutableArray *)procotalClassArr {
+    if (!_procotalClassArr) {
+        NSMutableArray *procotalClassArr = [[NSMutableArray alloc]init];
+        _procotalClassArr = procotalClassArr;
+    }
+    return _procotalClassArr;
+}
+
+- (void)registerFHErrorHubProcotolClass:(Class)cls {
+    [self.procotalClassArr addObject:cls];
+}
+
 - (void)checkRequestResponseWithHost:(NSString *)host requestParams:(NSDictionary *)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(FHErrorHubType)errorHubType {
     if (![[self getChannel] isEqualToString:@"local_test"]) {
         return;
     }
-    if ( type !=FHNetworkMonitorTypeSuccess) {
-        NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:response
-                                                                           options:NSJSONReadingAllowFragments
-                                                                             error:nil];
+    NSInteger status = -1;
+    NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:response
+                                                                       options:NSJSONReadingAllowFragments
+                                                                         error:nil];
+    if ([responseDictionary.allKeys containsObject:@"status"]) {
+        status = [NSString stringWithFormat:@"%@",responseDictionary[@"status"]].integerValue;
+    }
+    if ( type !=FHNetworkMonitorTypeSuccess || status != 0) {
         NSDictionary *responseStatusDic = [[NSDictionary alloc]initWithDictionary:responseStatus.allHeaderFields];
         NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
         [outputDic setValue:host forKey:@"name"];
         [outputDic setValue:[self removeNillValue:responseDictionary] forKey:@"response"];
+        [outputDic setValue:[self removeNillValue:params] forKey:@"params"];
         [outputDic setValue:[self removeNillValue:params] forKey:@"params"];
         [outputDic setValue:[self removeNillValue:responseStatusDic] forKey:@"httpStatus"];
         [outputDic setValue:[NSString stringWithFormat:@"%@",@(type)] forKey:@"error_info"];
@@ -42,12 +65,9 @@
         }else {
             [outputDic setValue:@"-1" forKey:@"analysisError"];
         }
+        [outputDic addEntriesFromDictionary:[self returnSenceDicWithSenceArr:[FHErrorHubSenceKeys returnSenceNameArrFromEventName:@"request"]]];
         [outputDic setValue:[self getCurrentTimes] forKey:@"currentTime"];
-        FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-        NSDictionary *dictSetting  = [self fhSettings];
-        [outputDic setValue: [self removeNillValue:[configDataModel toDictionary]] forKey:@"config_data"];
-        [outputDic setValue:[self removeNillValue:dictSetting] forKey:@"settings_data"];
-        [self addLogWithData:outputDic logType:errorHubType];
+        [FHErrorHubDataReadWrite addLogWithData:outputDic logType:errorHubType];
         dispatch_async(dispatch_get_main_queue(), ^{
             [FHHouseErrorHubView showErrorHubViewWithTitle:@"核心接口异常" content:[NSString stringWithFormat:@"HOST:%@",host]];
         });
@@ -58,85 +78,8 @@
         [extra setValue:@(type) forKey:@"errorHubType"];
         [extra setValue:[self getCurrentTimes] forKey:@"currentTime"];
         [extra setValue:[[self removeNillValue:responseStatusDic]objectForKey:@"x-tt-logid"] forKey:@"logID"];
-        [[HMDTTMonitor defaultManager] hmdTrackService:@"slardar_local_test_err" metric:nil category:@{@"status" : @(1)} extra:extra];
+           [FHErrorHubMonitor errorErrorReportingMessage:@"接口错误" extr:extra];
     }
-}
-//保存数据
-- (void)addLogWithData:(id)Data logType:(FHErrorHubType)errorHubType {
-    NSMutableArray *dataArr = [self loadDataFromLocalDataWithType:errorHubType].mutableCopy;
-    NSString *keyStr;
-    switch (errorHubType) {
-        case FHErrorHubTypeRequest:
-            if (dataArr.count>9) {
-                [dataArr removeObjectAtIndex:0];
-                [dataArr addObject:Data];
-            }else {
-                [dataArr addObject:Data];
-            }
-            keyStr = @"host_error";
-            break;
-        case FHErrorHubTypeBuryingPoint:
-            [dataArr addObject:Data];
-            keyStr = @"buryingpoint_error";
-            break;
-        case FHErrorHubTypeConfig:
-            [dataArr addObject:Data];
-            keyStr = @"coonfig_settings";
-            break;
-        case FHErrorHubTypeShare:
-            [dataArr removeAllObjects];
-            [dataArr addObject:Data];
-            keyStr = @"error_share";
-            break;
-        case FHErrorHubTypeCustom:
-            [dataArr addObject:Data];
-            keyStr = @"custom_error";
-            break;
-            break;
-    }
-    NSDictionary *errorInfo = @{keyStr:dataArr};
-    NSData *errordata = [NSJSONSerialization dataWithJSONObject:errorInfo options:0 error:NULL];
-    [errordata writeToFile:[self localDataPathWithType:errorHubType] atomically:YES];
-}
-
-//通过类型读取数据
-- (NSArray *)loadDataFromLocalDataWithType:(FHErrorHubType)errorHubType {
-    NSData *data = [NSData dataWithContentsOfFile:[self localDataPathWithType:errorHubType]];
-    if (!data) {
-        return @[];
-    }
-    NSDictionary *dictFromData = [NSJSONSerialization JSONObjectWithData:data
-                                                                 options:NSJSONReadingAllowFragments
-                                                                   error:NULL];
-    NSArray *readArr = dictFromData[[dictFromData allKeys].firstObject];
-    return readArr;
-}
-
-- (NSString *)localDataPathWithType:(FHErrorHubType)errorHubType {
-    NSArray *pathArr=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *strPath=[pathArr lastObject];
-    NSString *strFinalPath;
-    switch (errorHubType) {
-        case FHErrorHubTypeRequest:
-            strFinalPath = [NSString stringWithFormat:@"%@/requestErrorHub.plist",strPath];
-            break;
-        case FHErrorHubTypeBuryingPoint:
-            strFinalPath = [NSString stringWithFormat:@"%@/buryingPointError.plist",strPath];
-            break;
-        case FHErrorHubTypeConfig:
-            strFinalPath = [NSString stringWithFormat:@"%@/configSettingsError.plist",strPath];
-            break;
-        case FHErrorHubTypeShare:
-            strFinalPath = [NSString stringWithFormat:@"%@/errorShare.plist",strPath];
-            break;
-        case FHErrorHubTypeCustom:
-            strFinalPath = [NSString stringWithFormat:@"%@/errorCustom.plist",strPath];
-            break;
-        default:
-            break;
-    }
-    ;
-    return strFinalPath;
 }
 
 - (void)checkBuryingPointWithEvent:(NSString *)eventName Params:(NSDictionary* )eventParams errorHubType:(FHErrorHubType)errorHubType {
@@ -153,11 +96,14 @@
             NSArray *params = dic[@"params"];
             [params enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 NSDictionary *paramItem = obj;
+                NSString *checkValue = @"";
+                NSString *checkKey = paramItem[@"param_name"]?:@"";
+                if ([eventParams.allKeys containsObject:checkKey]) {
+                    checkValue =  [NSString stringWithFormat:@"%@",eventParams[checkKey]?:@""];
+                }
+                NSArray *rangeArr = paramItem[@"range"]?:@[];
+                NSString *level = paramItem[@"error_level"]?:@"";
                 if ([paramItem[@"type"] isEqualToString:@"mandatory"]) {
-                    NSString *checkKey = paramItem[@"param_name"]?:@"";
-                    NSString *checkValue = [NSString stringWithFormat:@"%@",eventParams[checkKey]?:@""];
-                    NSArray *rangeArr = paramItem[@"range"]?:@[];
-                    NSString *level = paramItem[@"error_level"]?:@"";
                     if (checkValue.length<1) {
                         [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@为空",checkKey] forKey:@"error_info"];
                     }else {
@@ -165,27 +111,28 @@
                             [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@取值范围错误",checkKey] forKey:@"error_info"];
                         }
                     }
-                    NSString *errStr = errorSaveDic[@"error"] ;
-                    if (errStr.length>0) {
-                        if ([level isEqualToString:@"critical"]) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [FHHouseErrorHubView showErrorHubViewWithTitle:@"埋点异常" content:[NSString stringWithFormat:@"event_name:%@",eventName]];
-                            });
-                        }
-                        FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-                        NSDictionary *dictSetting  = [self fhSettings];
-                        [errorSaveDic setValue:[configDataModel toDictionary] forKey:@"config_data"];
-                        [errorSaveDic setValue:dictSetting forKey:@"settings_data"];
-                        [errorSaveDic setValue:[self getCurrentTimes] forKey:@"currentTime"];
-                        [self addLogWithData:errorSaveDic logType:errorHubType];
-                        //添加埋点监控
-                        NSMutableDictionary *extra = @{}.mutableCopy;
-                        [extra setValue:@"buryingPoint" forKey:@"errorHubType"];
-                        [extra setValue:eventName forKey:@"eventName"];
-                        [extra setValue:errorSaveDic[@"error_info"] forKey:@"error_info"];
-                        [extra setValue:[self getCurrentTimes] forKey:@"currentTime"];
-                        [[HMDTTMonitor defaultManager] hmdTrackService:@"slardar_local_test_err" metric:nil category:@{@"status" : @(0)} extra:extra];
+                }else {
+                    if (![rangeArr containsObject:checkValue]) {
+                        [errorSaveDic setValue:[NSString stringWithFormat:@"埋点关键字段%@取值范围错误",checkKey] forKey:@"error_info"];
                     }
+                }
+                NSString *errStr = errorSaveDic[@"error_info"] ;
+                if (errStr.length>0) {
+                    if ([level isEqualToString:@"critical"]) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [FHHouseErrorHubView showErrorHubViewWithTitle:@"埋点异常" content:[NSString stringWithFormat:@"event_name:%@ error:%@",eventName,errStr]];
+                        });
+                    }
+                    [errorSaveDic addEntriesFromDictionary:[self returnSenceDicWithSenceArr:[FHErrorHubSenceKeys returnSenceNameArrFromEventName:@"buryingPoint"]]];
+                    [errorSaveDic setValue:[self getCurrentTimes] forKey:@"currentTime"];
+                    [FHErrorHubDataReadWrite addLogWithData:errorSaveDic logType:errorHubType];
+                    //添加埋点监控
+                    NSMutableDictionary *extra = @{}.mutableCopy;
+                    [extra setValue:@"buryingPoint" forKey:@"errorHubType"];
+                    [extra setValue:eventName forKey:@"eventName"];
+                    [extra setValue:errorSaveDic[@"error_info"] forKey:@"error_info"];
+                    [extra setValue:[self getCurrentTimes] forKey:@"currentTime"];
+                    [FHErrorHubMonitor errorErrorReportingMessage:@"埋点错误" extr:extra];
                 }
             }];
         }
@@ -207,10 +154,6 @@
     } else {
         return nil;
     }
-}
-
-- (NSArray *)getLocalErrorDataWithType:(FHErrorHubType)errorHubType {
-    return  [self loadDataFromLocalDataWithType:errorHubType];
 }
 
 - (NSString*)getCurrentTimes{
@@ -247,17 +190,37 @@
     return mutabInputDic;
 }
 
-- (void)saveConfigAndSettings {
+- (void)saveConfigAndSettingsSence {
     NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
-    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    NSDictionary *dictSetting  = [self fhSettings];
-    [outputDic setValue: [self removeNillValue:[configDataModel toDictionary]] forKey:@"config_data"];
-    [outputDic setValue:[self removeNillValue:dictSetting] forKey:@"settings_data"];
-    [self addLogWithData:outputDic logType:FHErrorHubTypeConfig];
+    [outputDic addEntriesFromDictionary:[self returnSenceDicWithSenceArr:[FHErrorHubSenceKeys returnSenceNameArrFromEventName:@"config&&settings"]]];
+    [FHErrorHubDataReadWrite addLogWithData:outputDic logType:FHErrorHubTypeConfig];
 }
 
 -(NSString*)getChannel {
     return [TTSandBoxHelper getCurrentChannel];
 }
 
+- (NSDictionary *)returnSenceDicWithSenceArr:(NSArray *)senceArr {
+    NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
+    [_procotalClassArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        id <FHeErrorHubProtocol> associatedSence = [[obj alloc]init];
+        if ([associatedSence respondsToSelector:@selector(returunAbnormalReportData)]) {
+            if ([associatedSence respondsToSelector:@selector(associatedKey)]) {
+                NSString *associatedKey = [associatedSence associatedKey];
+                if ([senceArr containsObject:associatedKey]) {
+                    NSDictionary *dic = [associatedSence returunAbnormalReportData];
+                    [outputDic addEntriesFromDictionary:dic];
+                }
+            }
+        }
+    }];
+    return outputDic;
+}
+- (void)saveCustomerData:(id)data WithEventName:(NSString *)eventName errorMessage:(nonnull NSString *)errorInfo extr:(nonnull NSDictionary *)extr {
+    NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
+    [outputDic addEntriesFromDictionary:[self returnSenceDicWithSenceArr:[FHErrorHubSenceKeys returnSenceNameArrFromEventName:@"request"]]];
+    [FHErrorHubDataReadWrite addLogWithData:outputDic logType:FHErrorHubTypeCustom];
+//      [[HMDTTMonitor defaultManager] hmdTrackService:@"slardar_local_test_err" metric:nil category:@{@"status" : errorInfo} extra:extr];
+     [FHErrorHubMonitor errorErrorReportingMessage:errorInfo extr:extr];
+}
 @end
