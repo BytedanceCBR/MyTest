@@ -10,7 +10,6 @@
 #import "FHErrorHubMonitor.h"
 #import "TTSandBoxHelper.h"
 #import "FHErrorHubProcotol.h"
-#import "FHErrorHubSenceKeys.h"
 @interface FHHouseErrorHubManager()
 @property (strong, nonatomic) NSMutableArray *procotalClassArr;
 @end
@@ -43,7 +42,7 @@
         return;
     }
     NSInteger status = -1;
-    NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:response
+    NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:response?response:@{}
                                                                        options:NSJSONReadingAllowFragments
                                                                          error:nil];
     if ([responseDictionary.allKeys containsObject:@"status"]) {
@@ -65,12 +64,7 @@
         }else {
             [outputDic setValue:@"-1" forKey:@"analysisError"];
         }
-        [outputDic addEntriesFromDictionary:[self returnSenceDicWithSenceArr:[FHErrorHubSenceKeys returnSenceNameArrFromEventName:@"request"]]];
         [outputDic setValue:[self getCurrentTimes] forKey:@"currentTime"];
-        [FHErrorHubDataReadWrite addLogWithData:outputDic logType:errorHubType];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [FHHouseErrorHubView showErrorHubViewWithTitle:@"核心接口异常" content:[NSString stringWithFormat:@"HOST:%@",host]];
-        });
         //添加请求监控
         NSMutableDictionary *extra = @{}.mutableCopy;
         [extra setValue:@"request" forKey:@"errorHubType"];
@@ -78,14 +72,23 @@
         [extra setValue:@(type) forKey:@"errorHubType"];
         [extra setValue:[self getCurrentTimes] forKey:@"currentTime"];
         [extra setValue:[[self removeNillValue:responseStatusDic]objectForKey:@"x-tt-logid"] forKey:@"logID"];
-        [FHErrorHubMonitor errorErrorReportingMessage:@"接口错误" extr:extra];
+        //关联现场
+        NSArray *senceArr = @[@"config",@"settings"];
+         //创建问题对象
+        FHHouseErrorHub *errorHub = [FHHouseErrorHub initFHHouseErrorHubWithEventname:host errorInfo:@"接口错误" saveDic:outputDic senceArr:senceArr extra:extra type:errorHubType];
+        [self saveDicWithErrorHub:errorHub];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [FHHouseErrorHubView showErrorHubViewWithTitle:@"核心接口异常" content:[NSString stringWithFormat:@"HOST:%@",host]];
+        });
+        [FHErrorHubMonitor errorErrorReportingMessage:errorHub];
     }
 }
 
 - (void)checkBuryingPointWithEvent:(NSString *)eventName Params:(NSDictionary* )eventParams errorHubType:(FHErrorHubType)errorHubType {
     if (![[self getChannel] isEqualToString:@"local_test"] || ![self errorHubSwitch]) {
         return;
-    }        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+    }
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSArray *eventArr = [self localCheckBuryingPointData];
         NSMutableDictionary *errorSaveDic = [[NSMutableDictionary alloc]init];
         [errorSaveDic setValue:eventParams forKey:@"parmas"];
@@ -123,16 +126,17 @@
                                 [FHHouseErrorHubView showErrorHubViewWithTitle:@"埋点异常" content:[NSString stringWithFormat:@"event_name:%@ error:%@",eventName,errStr]];
                             });
                         }
-                        [errorSaveDic addEntriesFromDictionary:[self returnSenceDicWithSenceArr:[FHErrorHubSenceKeys returnSenceNameArrFromEventName:@"buryingPoint"]]];
                         [errorSaveDic setValue:[self getCurrentTimes] forKey:@"currentTime"];
-                        [FHErrorHubDataReadWrite addLogWithData:errorSaveDic logType:errorHubType];
                         //添加埋点监控
                         NSMutableDictionary *extra = @{}.mutableCopy;
                         [extra setValue:@"buryingPoint" forKey:@"errorHubType"];
                         [extra setValue:eventName forKey:@"eventName"];
                         [extra setValue:errorSaveDic[@"error_info"] forKey:@"error_info"];
                         [extra setValue:[self getCurrentTimes] forKey:@"currentTime"];
-                        [FHErrorHubMonitor errorErrorReportingMessage:@"埋点错误" extr:extra];
+                        NSArray *senceArr = @[@"config",@"settings"];
+                        FHHouseErrorHub *errorHub = [FHHouseErrorHub initFHHouseErrorHubWithEventname:eventName errorInfo:@"埋点错误" saveDic:errorSaveDic senceArr:senceArr extra:extra type:errorHubType];
+                        [self saveDicWithErrorHub:errorHub];
+                        [FHErrorHubMonitor errorErrorReportingMessage:errorHub];
                     }
                 }];
             }
@@ -195,9 +199,9 @@
         return;
     }
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
-        [outputDic addEntriesFromDictionary:[self returnSenceDicWithSenceArr:[FHErrorHubSenceKeys returnSenceNameArrFromEventName:@"config&&settings"]]];
-        [FHErrorHubDataReadWrite addLogWithData:outputDic logType:FHErrorHubTypeConfig];
+        NSArray *senceArr = @[@"config",@"settings"];
+        FHHouseErrorHub *errorHub = [FHHouseErrorHub initFHHouseErrorHubWithEventname:@"settings&&config保存" errorInfo:@"saveSettings&&Config" saveDic:@{} senceArr:senceArr extra:@{} type:FHErrorHubTypeConfig];
+        [self saveDicWithErrorHub:errorHub];
     });
     
 }
@@ -206,6 +210,7 @@
     return [TTSandBoxHelper getCurrentChannel];
 }
 
+//返回现场数据
 - (NSDictionary *)returnSenceDicWithSenceArr:(NSArray *)senceArr {
     NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
     [_procotalClassArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -222,17 +227,40 @@
     }];
     return outputDic;
 }
-- (void)saveCustomerData:(id)data WithEventName:(NSString *)eventName errorMessage:(nonnull NSString *)errorInfo extr:(nonnull NSDictionary *)extr {
+
+/// 返回问题现场名数组
+- (NSArray *)returnSenceArr {
+    NSMutableArray *senceNameArr = [[NSMutableArray alloc]init];
+    [_procotalClassArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        id <FHeErrorHubProtocol> associatedSence = [[obj alloc]init];
+            if ([associatedSence respondsToSelector:@selector(associatedKey)]) {
+                NSString *associatedKey = [associatedSence associatedKey];
+                [senceNameArr addObject:associatedKey];
+                }
+    }];
+    return senceNameArr;
+}
+
+//现场保存
+- (void)saveCustomErrorHubSence:(FHHouseErrorHub *)errorHub {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSMutableDictionary *outputDic = [[NSMutableDictionary alloc]init];
-        [outputDic addEntriesFromDictionary:[self returnSenceDicWithSenceArr:[FHErrorHubSenceKeys returnSenceNameArrFromEventName:eventName]]];    [outputDic addEntriesFromDictionary:data];
-        [FHErrorHubDataReadWrite addLogWithData:outputDic logType:FHErrorHubTypeCustom];
-        [FHErrorHubMonitor errorErrorReportingMessage:errorInfo extr:extr];
+        [self saveDicWithErrorHub:errorHub];
+        [FHErrorHubMonitor errorErrorReportingMessage:errorHub];
     });
 }
 
+//现场开关
 - (BOOL)errorHubSwitch {
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"_errorHubSwitch"];
 }
+
+//现场保存
+- (void)saveDicWithErrorHub:(FHHouseErrorHub *)errorHub {
+    NSMutableDictionary *saveDic = [[NSMutableDictionary alloc]init];
+    [saveDic addEntriesFromDictionary:errorHub.saveDic];
+    [saveDic addEntriesFromDictionary:[self returnSenceDicWithSenceArr:errorHub.senceArr]];
+    [FHErrorHubDataReadWrite addLogWithData:saveDic logType:errorHub.type];
+}
+
 
 @end

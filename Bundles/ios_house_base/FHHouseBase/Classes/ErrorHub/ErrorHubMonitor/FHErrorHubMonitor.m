@@ -9,7 +9,7 @@
 #import "HMDTTMonitor.h"
 @implementation FHErrorHubMonitor
 
-+ (void)errorErrorReportingMessage:(NSString *)errorInfo extr:(NSDictionary *)extr {
-     [[HMDTTMonitor defaultManager] hmdTrackService:@"slardar_local_test_err" metric:nil category:@{@"status" : errorInfo} extra:extr];
++ (void)errorErrorReportingMessage:(FHHouseErrorHub *)errorHub {
+     [[HMDTTMonitor defaultManager] hmdTrackService:@"slardar_local_test_err" metric:nil category:@{@"status" : errorHub.errorInfo} extra:errorHub.extra];
 }
 @end

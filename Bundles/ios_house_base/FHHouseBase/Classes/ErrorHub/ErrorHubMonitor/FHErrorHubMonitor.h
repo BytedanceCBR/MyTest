@@ -6,11 +6,11 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "FHHouseErrorHub.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHErrorHubMonitor : NSObject
- + (void)errorErrorReportingMessage:(NSString *)errorInfo extr:(NSDictionary *)extr;
++ (void)errorErrorReportingMessage:(FHHouseErrorHub *)errorHub;
 @end
 
 NS_ASSUME_NONNULL_END

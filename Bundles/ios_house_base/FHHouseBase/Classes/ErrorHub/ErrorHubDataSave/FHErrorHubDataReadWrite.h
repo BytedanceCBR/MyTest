@@ -6,15 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "FHHouseErrorHub.h"
 NS_ASSUME_NONNULL_BEGIN
-typedef NS_ENUM(NSInteger , FHErrorHubType) {
-    FHErrorHubTypeRequest = 1, //请求校验
-    FHErrorHubTypeBuryingPoint = 2 ,//埋点校验
-     FHErrorHubTypeConfig = 3, //现场保存
-    FHErrorHubTypeShare = 4 ,//分享相关
-    FHErrorHubTypeCustom = 5 ,//通用保存
-};
+
 
 @interface FHErrorHubDataReadWrite : NSObject
 

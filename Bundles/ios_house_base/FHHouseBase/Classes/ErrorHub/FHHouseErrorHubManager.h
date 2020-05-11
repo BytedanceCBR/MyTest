@@ -9,6 +9,7 @@
 #import "FHMainApi.h"
 #import "TTNetworkManager.h"
 #import "FHErrorHubDataReadWrite.h"
+#import "FHHouseErrorHub.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -36,17 +37,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)saveConfigAndSettings;
 
 
-/// 注册需要上报自己信息的类
+/// 注册需要上报自己信息的类也就是现场
 /// @param cls 类
 - (void)registerFHErrorHubProcotolClass:(Class)cls;
 
-
 /// 保存自定义错误
-/// @param data 自定义错误内容
-/// @param eventName 错误名
-/// @param errorInfo 错误信息
-/// @param extr 上报数据
-- (void)saveCustomerData:(id)data WithEventName:(NSString *)eventName errorMessage:(NSString *)errorInfo extr:(NSDictionary *)extr;
+/// @param errorHub 错误信息对象
+- (void)saveCustomErrorHubSence:(FHHouseErrorHub *)errorHub;
+
+/// 返回问题现场名数组
+- (NSArray *)returnSenceArr;
 
 @end
 
