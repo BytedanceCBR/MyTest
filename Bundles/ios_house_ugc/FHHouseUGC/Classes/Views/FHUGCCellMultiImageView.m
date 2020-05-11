@@ -16,6 +16,7 @@
 #import "TTInteractExitHelper.h"
 #import "TTImageView+TrafficSave.h"
 #import "FHUGCCellHelper.h"
+#import "UIViewAdditions.h"
 
 #define itemPadding 4
 #define kMaxCount 9
@@ -28,6 +29,7 @@
 @property(nonatomic, strong) NSArray *largeImageList;
 @property(nonatomic, strong) NSArray *imageList;
 @property(nonatomic, strong) UILabel *infoLabel;
+@property(nonatomic, assign) NSInteger currentCount;
 
 @end
 
@@ -38,10 +40,10 @@
     if (self) {
         _imageViewList = [[NSMutableArray alloc] init];
         _count = count;
-        
         if(_count > kMaxCount){
             _count = kMaxCount;
         }
+        _currentCount = count;
         
         [self initViews];
         [self initConstraints];
@@ -90,27 +92,26 @@
         _imageWidth = self.bounds.size.width;
         _viewHeight = self.imageWidth * 9.0f/16.0f;
         UIImageView *imageView = [self.imageViewList firstObject];
-        [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.mas_equalTo(self);
-            make.width.mas_equalTo(self.imageWidth);
-            make.height.mas_equalTo(self.imageWidth * 9.0f/16.0f);
-        }];
+        
+        imageView.top = 0;
+        imageView.left = 0;
+        imageView.width = self.imageWidth;
+        imageView.height = self.imageWidth * 9.0f/16.0f;
+        
     }else if(self.count == 2){
         _imageWidth = (self.bounds.size.width - itemPadding)/2;
         _viewHeight = self.imageWidth * 124.0f/165.0f;
         UIView *firstView = self;
         for (UIImageView *imageView in self.imageViewList) {
-            [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self);
-                if(firstView == self){
-                    make.left.mas_equalTo(firstView);
-//                    make.bottom.mas_equalTo(firstView);
-                }else{
-                    make.left.mas_equalTo(firstView.mas_right).offset(itemPadding);
-                }
-                make.width.mas_equalTo(self.imageWidth);
-                make.height.mas_equalTo(self.imageWidth * 124.0f/165.0f);
-            }];
+            imageView.top = 0;
+            if(firstView == self){
+                imageView.left = 0;
+            }else{
+                imageView.left = firstView.right + itemPadding;
+            }
+            imageView.width = self.imageWidth;
+            imageView.height = self.imageWidth * 124.0f/165.0f;
+            
             firstView = imageView;
         }
     }else if(self.count == 4){
@@ -124,12 +125,11 @@
             NSInteger column = i%2; //0,1,2
             CGFloat topMargin = row * _imageWidth + itemPadding * row;
             CGFloat leftMargin = column * _imageWidth + itemPadding * column;
-            [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self).offset(topMargin);
-                make.left.mas_equalTo(self).offset(leftMargin);
-                make.width.mas_equalTo(self.imageWidth);
-                make.height.mas_equalTo(self.imageWidth);
-            }];
+
+            imageView.top = topMargin;
+            imageView.left = leftMargin;
+            imageView.width = self.imageWidth;
+            imageView.height = self.imageWidth;
         }
     }else if(self.count >= 3){
         _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
@@ -144,19 +144,61 @@
             NSInteger column = i%3; //0,1,2
             CGFloat topMargin = row * _imageWidth + itemPadding * row;
             CGFloat leftMargin = column * _imageWidth + itemPadding * column;
-            [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self).offset(topMargin);
-                make.left.mas_equalTo(self).offset(leftMargin);
-                make.width.mas_equalTo(self.imageWidth);
-                make.height.mas_equalTo(self.imageWidth);
-            }];
+            
+            imageView.top = topMargin;
+            imageView.left = leftMargin;
+            imageView.width = self.imageWidth;
+            imageView.height = self.imageWidth;
         }
     }else{
         
     }
 }
 
+- (void)updateConstraintsWithCount:(NSInteger)count {
+    if(count == 1){
+        _imageWidth = self.bounds.size.width;
+        _viewHeight = self.imageWidth * 9.0f/16.0f;
+        UIImageView *imageView = [self.imageViewList firstObject];
+        imageView.top = 0;
+        imageView.left = 0;
+        imageView.width = self.imageWidth;
+        imageView.height = self.imageWidth * 9.0f/16.0f;
+        
+    }else if(count > 1){
+        _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
+        
+        NSInteger row = (self.count - 1)/3;
+        _viewHeight = _imageWidth * (row + 1) + itemPadding * row;
+        
+        UIView *topView = self;
+        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+            UIImageView *imageView = self.imageViewList[i];
+            NSInteger row = i/3; // 0,1,2
+            NSInteger column = i%3; //0,1,2
+            CGFloat topMargin = row * _imageWidth + itemPadding * row;
+            CGFloat leftMargin = column * _imageWidth + itemPadding * column;
+            
+            imageView.top = topMargin;
+            imageView.left = leftMargin;
+            imageView.width = self.imageWidth;
+            imageView.height = self.imageWidth;
+        }
+    }else{
+        for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+            UIImageView *imageView = self.imageViewList[i];
+            imageView.hidden = YES;
+        }
+    }
+}
+
 - (void)updateImageView:(NSArray *)imageList largeImageList:(NSArray *)largeImageList {
+    NSInteger count = imageList.count < _count ? imageList.count : _count;
+    if(count != _currentCount){
+        [self updateConstraintsWithCount:count];
+        _currentCount = count;
+    }
+    
     self.largeImageList = largeImageList;
     
     for (NSInteger i = 0; i < self.imageViewList.count; i++) {
@@ -184,9 +226,7 @@
             //只对单图做重新布局，多图都是1：1
             if(self.count == 1 && !self.fixedSingleImage){
                 self.viewHeight = self.imageWidth * height/width;
-                [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.height.mas_equalTo(self.viewHeight);
-                }];
+                imageView.height = self.viewHeight;
             }
         }else{
             imageView.hidden = YES;

@@ -424,14 +424,11 @@
             [FHUGCCellHelper setOriginContentAttributeString:cellModel width:([UIScreen mainScreen].bounds.size.width - 60) numberOfLines:2];
         }
         
-        if(cellModel.imageList.count == 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
-        }else if(cellModel.imageList.count > 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
-        }else{
-            cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
+        cellModel.cellSubType = FHUGCFeedListCellSubTypePost;
+        if(cellModel.imageList.count <= 0){
             cellModel.numberOfLines = 3;
         }
+
         if (model.isFromDetail) {
             cellModel.numberOfLines = 0;
         }
@@ -512,17 +509,16 @@
             cellModel.originItemHeight = 80;
         }
         
-        if(cellModel.imageList.count == 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
-        }else if(cellModel.imageList.count > 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
-        }else{
-            cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
+        cellModel.cellSubType = FHUGCFeedListCellSubTypePost;
+        
+        if(cellModel.imageList.count <= 0){
             cellModel.numberOfLines = 5;
         }
+        
         if (model.isFromDetail) {
             cellModel.numberOfLines = 0;
         }
+        
         [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
         
     }
@@ -846,13 +842,7 @@
     
     [FHUGCCellHelper setRichContentWithModel:cellModel width:([UIScreen mainScreen].bounds.size.width - 40) numberOfLines:cellModel.numberOfLines];
     
-    if(cellModel.imageList.count == 1){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypeSingleImage;
-    }else if(cellModel.imageList.count > 1){
-        cellModel.cellSubType = FHUGCFeedListCellSubTypeMultiImage;
-    }else{
-        cellModel.cellSubType = FHUGCFeedListCellSubTypePureTitle;
-    }
+    cellModel.cellSubType = FHUGCFeedListCellSubTypePost;
     
     return cellModel;
 }

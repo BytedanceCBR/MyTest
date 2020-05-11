@@ -6,10 +6,6 @@
 //
 
 #import "FHUGCCellManager.h"
-
-#import "FHUGCPureTitleCell.h"
-#import "FHUGCSingleImageCell.h"
-#import "FHUGCMultiImageCell.h"
 #import "FHArticlePureTitleCell.h"
 #import "FHArticleSingleImageCell.h"
 #import "FHArticleMultiImageCell.h"
@@ -25,6 +21,7 @@
 #import "FHNeighbourhoodCommentCell.h"
 #import "FHUGCRecommendCircleCell.h"
 #import "FHUGCEncyclopediasCell.h"
+#import "FHUGCPostCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -44,9 +41,7 @@
 
 - (void)initSupportCellTypeList {
     self.supportCellTypeList = @[
-                                @"FHUGCPureTitleCell",
-                                @"FHUGCSingleImageCell",
-                                @"FHUGCMultiImageCell",
+                                @"FHUGCPostCell",
                                 @"FHArticlePureTitleCell",
                                 @"FHArticleSingleImageCell",
                                 @"FHArticleMultiImageCell",
@@ -75,16 +70,9 @@
 - (Class)cellClassFromCellViewType:(FHUGCFeedListCellSubType)cellType data:(nullable id)data {
     //这里这样写是为了以后一个key可能对应不同cell的变化
     switch (cellType) {
-            
-        case FHUGCFeedListCellSubTypePureTitle:
-            return [FHUGCPureTitleCell class];
-            
-        case FHUGCFeedListCellSubTypeSingleImage:
-            return [FHUGCSingleImageCell class];
-            
-        case FHUGCFeedListCellSubTypeMultiImage:
-            return [FHUGCMultiImageCell class];
-            
+        case FHUGCFeedListCellSubTypePost:
+            return [FHUGCPostCell class];
+                
         case FHUGCFeedListCellSubTypeArticlePureTitle:
             return [FHArticlePureTitleCell class];
             
@@ -134,7 +122,7 @@
             break;
     }
     
-    return [FHUGCPureTitleCell class];
+    return [FHUGCPostCell class];
 }
 
 + (SSImpressionModelType)impressModelTypeWithCellType:(FHUGCFeedListCellType)cellType {

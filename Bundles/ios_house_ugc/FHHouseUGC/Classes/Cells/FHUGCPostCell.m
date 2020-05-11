@@ -1,11 +1,11 @@
 //
-//  FHUGCPureTitleCell.m
-//  FHHouseUGC
+//  FHUGCPostCell.m
+//  AKCommentPlugin
 //
-//  Created by 谢思铭 on 2019/6/3.
+//  Created by 谢思铭 on 2020/5/11.
 //
 
-#import "FHUGCMultiImageCell.h"
+#import "FHUGCPostCell.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
@@ -22,6 +22,7 @@
 #define leftMargin 20
 #define rightMargin 20
 #define maxLines 3
+#define maxPicCount 3
 
 #define userInfoViewHeight 40
 #define bottomViewHeight 49
@@ -30,7 +31,7 @@
 #define originViewHeight 80
 #define attachCardViewHeight 57
 
-@interface FHUGCMultiImageCell ()<TTUGCAsyncLabelDelegate>
+@interface FHUGCPostCell ()<TTUGCAsyncLabelDelegate>
 
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
@@ -43,7 +44,7 @@
 
 @end
 
-@implementation FHUGCMultiImageCell
+@implementation FHUGCPostCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -75,19 +76,12 @@
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
-//    NSDictionary *linkAttributes = @{
-//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-//                                     };
-//    self.contentLabel.linkAttributes = linkAttributes;
-//    self.contentLabel.activeLinkAttributes = linkAttributes;
-//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:3];
+    self.imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:maxPicCount width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
+    self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, self.imageViewheight) count:maxPicCount];
     [self.contentView addSubview:_multiImageView];
-    self.imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
     
     self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _originView.hidden = YES;
@@ -126,21 +120,38 @@
     self.multiImageView.left = leftMargin;
     self.multiImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.multiImageView.height = self.imageViewheight;
-
-    self.bottomView.top = self.multiImageView.bottom + 10;
-    self.bottomView.left = 0;
-    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
-    self.bottomView.height = bottomViewHeight;
     
-    self.originView.top = self.multiImageView.bottom + 10;
+    self.originView.top = self.contentLabel.bottom + 10;
     self.originView.left = leftMargin;
     self.originView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.originView.height = originViewHeight;
     
-    self.attachCardView.top = self.multiImageView.bottom + 10;
+    self.attachCardView.top = self.contentLabel.bottom + 10;
     self.attachCardView.left = leftMargin;
     self.attachCardView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.attachCardView.height = attachCardViewHeight;
+    
+    self.bottomView.top = self.contentLabel.bottom + 10;
+    self.bottomView.left = 0;
+    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomView.height = bottomViewHeight;
+    
+    //
+
+//    self.bottomView.top = self.multiImageView.bottom + 10;
+//    self.bottomView.left = 0;
+//    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
+//    self.bottomView.height = bottomViewHeight;
+    
+//    self.originView.top = self.multiImageView.bottom + 10;
+//    self.originView.left = leftMargin;
+//    self.originView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+//    self.originView.height = originViewHeight;
+    
+//    self.attachCardView.top = self.multiImageView.bottom + 10;
+//    self.attachCardView.left = leftMargin;
+//    self.attachCardView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+//    self.attachCardView.height = attachCardViewHeight;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -183,28 +194,37 @@
         [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
     }
     [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
+    
+    CGFloat topOffset = 10;
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
         self.contentLabel.height = 0;
-        self.multiImageView.top = self.userInfoView.bottom + 10;
+//        self.multiImageView.top = self.userInfoView.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
         self.contentLabel.height = cellModel.contentHeight;
-        self.multiImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
+//        self.multiImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
+        topOffset += cellModel.contentHeight;
+        topOffset += 10;
     }
     //图片
+    NSInteger count = cellModel.imageList.count <= 1 ? cellModel.imageList.count : maxPicCount;
+    self.imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:count width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
+    self.multiImageView.height = self.imageViewheight;
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
-    
-    UIView *lastView = self.multiImageView;
-    CGFloat topOffset = 10;
+    if(self.imageViewheight > 0){
+        self.multiImageView.top = self.userInfoView.bottom + topOffset;
+        topOffset += self.imageViewheight;
+        topOffset += 10;
+    }
      //origin
     if(cellModel.originItemModel){
         self.originView.hidden = NO;
         [self.originView refreshWithdata:cellModel];
-        self.originView.top = lastView.bottom + topOffset;
+        self.originView.top = self.userInfoView.bottom + topOffset;
         self.originView.height = cellModel.originItemHeight;
         topOffset += cellModel.originItemHeight;
         topOffset += 10;
@@ -215,14 +235,14 @@
     if(cellModel.attachCardInfo){
         self.attachCardView.hidden = NO;
         [self.attachCardView refreshWithdata:cellModel];
-        self.attachCardView.top = lastView.bottom + topOffset;
+        self.attachCardView.top = self.userInfoView.bottom + topOffset;
         topOffset += attachCardViewHeight;
         topOffset += 10;
     }else{
         self.attachCardView.hidden = YES;
     }
     
-    self.bottomView.top = lastView.bottom + topOffset;
+    self.bottomView.top = self.userInfoView.bottom + topOffset;
     
     [self showGuideView];
 }
@@ -230,14 +250,17 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 30;
+        CGFloat height = userInfoViewHeight + bottomViewHeight + topMargin + 10;
         
-        if(isEmptyString(cellModel.content)){
-            height -= 10;
+        if(!isEmptyString(cellModel.content)){
+            height += (cellModel.contentHeight + 10);
         }
         
-        CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-        height += imageViewheight;
+        NSInteger count = cellModel.imageList.count <= 1 ? cellModel.imageList.count : maxPicCount;
+        CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:count width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
+        if(imageViewheight > 0){
+            height += (imageViewheight + 10);
+        }
         
         if(cellModel.originItemModel){
             height += (cellModel.originItemHeight + 10);
@@ -317,4 +340,5 @@
 }
 
 @end
+
 
