@@ -314,6 +314,7 @@
             imExtra[@"from"] = @"app_oldhouse_mortgage";
             imExtra[@"source"] = @"app_oldhouse_mortgage";
             imExtra[@"source_from"] = @"loan";
+            imExtra[@"realtor_position"] = @"loan";
             imExtra[@"im_open_url"] = openUrl;
 //            imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
 //            imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCOldBudget];
@@ -332,6 +333,7 @@
             }.mutableCopy;
             associateParamDict[kFHAssociateInfo] = model.downPayment.associateInfo.reportFormInfo;
             NSMutableDictionary *reportParamsDict = [model.contactModel baseParams].mutableCopy;
+            reportParamsDict[@"position"] = @"loan";
             associateParamDict[kFHReportParams] = reportParamsDict;
             
             [model.contactModel fillFormActionWithParams:associateParamDict];
