@@ -117,7 +117,7 @@
             textField.text = [textField.text substringToIndex:(textField.text.length-1)];
         }
         self.textNumber = textField.text.length;
-        self.confirmButton.alpha = 1;
+        self.confirmButton.alpha = 0.3;
     }
 }
 

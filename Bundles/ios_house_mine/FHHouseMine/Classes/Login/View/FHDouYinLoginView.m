@@ -106,8 +106,8 @@
 }
 
 - (void)douyinLoginButtonAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginAction)]) {
-        [self.delegate douyinLoginAction];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginActionByIcon:)]) {
+        [self.delegate douyinLoginActionByIcon:NO];
     }
 }
 

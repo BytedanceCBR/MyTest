@@ -34,15 +34,35 @@
 
 @implementation FHLoginViewController
 
+- (void)dealloc
+{
+    if (self.isFromUGC) {
+        // UGC过来的，关闭登录页面后需要同步关注状态
+        if (![TTAccountManager isLogin]) {
+            if (self.loginDelegate.completeAlert) {
+                self.loginDelegate.completeAlert(TTAccountAlertCompletionEventTypeCancel,nil);
+            }
+        }
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (![TTAccountManager isLogin]) {
+                [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+            }
+        });
+    }
+}
+
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj
 {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         NSDictionary *params = paramObj.allParams;
         self.needPopVC = YES;
-        self.tracerModel = [[FHTracerModel alloc] init];
-        self.tracerModel.enterFrom = params[@"enter_from"];
-        self.tracerModel.enterType = params[@"enter_type"];
+        if (params[@"enter_from"]) {
+            self.tracerModel.enterFrom = params[@"enter_from"];
+        }
+        if (params[@"enter_type"]) {
+            self.tracerModel.enterType = params[@"enter_type"];
+        }
         if ([params[@"isCheckUGCADUser"] isKindOfClass:[NSNumber class]]) {
             self.isFromMineTab = [params[@"isCheckUGCADUser"] boolValue];
         }else
@@ -92,22 +112,16 @@
 //    self.customNavBarView.backgroundColor = [UIColor clearColor];
 //    self.customNavBarView.seperatorLine.hidden = YES;
     [self.customNavBarView cleanStyle:YES];
+    [self.customNavBarView setNaviBarTransparent:YES];
+    __weak typeof(self) weakSelf = self;
+    [self.customNavBarView setLeftButtonBlock:^{
+        [weakSelf cancelLoginAction];
+    }];
 }
 
-- (void)dealloc
-{
-    if (self.isFromUGC) {
-        // UGC过来的，关闭登录页面后需要同步关注状态
-        if (![TTAccountManager isLogin]) {
-            if (self.loginDelegate.completeAlert) {
-                self.loginDelegate.completeAlert(TTAccountAlertCompletionEventTypeCancel,nil);
-            }
-        }
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (![TTAccountManager isLogin]) {
-                [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
-            }
-        });
+- (void)cancelLoginAction {
+    if (self.viewModel && [self.viewModel respondsToSelector:@selector(loginCancelAction)]) {
+        [self.viewModel performSelector:@selector(loginCancelAction)];
     }
 }
 

@@ -16,6 +16,7 @@
 #import "FHMineAPI.h"
 #import "FHUserTracker.h"
 #import "TTUIResponderHelper.h"
+#import "FHLoginDefine.h"
 
 typedef NS_ENUM(NSUInteger, FHAccountBindingSectionType) {
     kFHAccountBindingSectionTypeNone,
@@ -372,7 +373,7 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     tracerDict[@"event_page"] = @"account_safe";
     tracerDict[@"event_type"] = @"click";
     tracerDict[@"event_belong"] = @"account";
-    tracerDict[@"platform"] = @"aweme_v2";
+    tracerDict[@"platform"] = @"aweme";
     tracerDict[@"params_for_special"] = @"uc_login";
     TRACK_EVENT(@"third_party_bind", tracerDict);
 }
@@ -384,7 +385,7 @@ typedef NS_ENUM(NSUInteger, FHAccountBindingOperationWordType) {
     tracerDict[@"event_type"] = @"show";
     tracerDict[@"event_belong"] = @"account";
     tracerDict[@"show_type"] = @"toast";
-    tracerDict[@"platform"] = @"aweme_v2";
+    tracerDict[@"platform"] = @"aweme";
     tracerDict[@"popup_type"] = type;
     tracerDict[@"status_info"] = info;
     tracerDict[@"params_for_special"] = @"uc_login";

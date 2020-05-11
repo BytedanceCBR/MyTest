@@ -64,7 +64,15 @@ extern NSString * TTAccountPlatformDidAuthorizeCompletionNotification;
     if (isAK && [platform isEqualToString:@"weixin"]) {
         NSURL *url = [NSURL URLWithString:@"sslocal://flogin"];
         if ([[TTRoute sharedRoute] canOpenURL:url]) {
-            [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"tracer"] = @{
+                @"enter_from": @"web",
+                @"enter_method": @"web_click",
+                @"enter_type": @"login",
+                @"trigger": @"user"
+            };
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByViewController:url userInfo:userInfo];
             return;
         }
     }

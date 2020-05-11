@@ -126,7 +126,7 @@
             textField.text = [textField.text substringToIndex:(textField.text.length-1)];
         }
         self.textNumber = textField.text.length;
-        self.confirmButton.alpha = 1;
+        self.confirmButton.alpha = 0.3;
     }
 }
 
@@ -186,8 +186,8 @@
 }
 
 - (void)douyinLoginAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginAction)]) {
-        [self.delegate douyinLoginAction];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginActionByIcon:)]) {
+        [self.delegate douyinLoginActionByIcon:YES];
     }
 }
 

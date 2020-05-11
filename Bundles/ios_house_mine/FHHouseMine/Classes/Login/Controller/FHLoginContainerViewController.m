@@ -12,6 +12,7 @@
 #import "FHVerifyCodeInputView.h"
 #import "FHMobileInputView.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <FHHouseBase/FHTracerModel.h>
 
 @interface FHLoginContainerViewController ()
 
@@ -82,11 +83,16 @@
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
 //    self.customNavBarView.seperatorLine.hidden = YES;
     [self.customNavBarView cleanStyle:YES];
+    [self.customNavBarView setNaviBarTransparent:YES];
 }
 
 - (void)setupUI {
+    
+    NSString *login_suggest_method = @"";
+    NSMutableDictionary *tracerDict = [self.tracerModel logDict].mutableCopy;
     switch (self.viewType) {
         case FHLoginViewTypeOneKey: {
+            tracerDict[@"carrier_one_click_show"] = @(1);
             FHOneKeyLoginView *onekeyLoginView = [[FHOneKeyLoginView alloc] init];
             onekeyLoginView.delegate = self.viewModel;
             [self.view addSubview:onekeyLoginView];
@@ -104,6 +110,7 @@
             break;
         }
         case FHLoginViewTypeMobile: {
+            tracerDict[@"phone_show"] = @(1);
             FHMobileInputView *mobileInputView = [[FHMobileInputView alloc] init];
             mobileInputView.delegate = self.viewModel;
             [self.view addSubview:mobileInputView];
@@ -122,6 +129,7 @@
             break;
         }
         case FHLoginViewTypeVerify: {
+            tracerDict[@"phone_sms_show"] = @(1);
             FHVerifyCodeInputView *verifyCodeInputView = [[FHVerifyCodeInputView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds))];
             verifyCodeInputView.isForBindMobile = NO;
             verifyCodeInputView.delegate = self.viewModel;
@@ -150,6 +158,8 @@
         default:
             break;
     }
+    
+    [FHLoginTrackHelper loginShow:tracerDict];
 }
 
 @end

@@ -82,6 +82,7 @@
             [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateHighlighted];
 //            self.customNavBarView.seperatorLine.hidden = YES;
             [self.customNavBarView cleanStyle:YES];
+            [self.customNavBarView setNaviBarTransparent:YES];
             __weak typeof(self) weakSelf = self;
             [self.customNavBarView setLeftButtonBlock:^{
                 //弹框提示，并且退出所有绑定页面
@@ -96,6 +97,7 @@
             [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
 //            self.customNavBarView.seperatorLine.hidden = YES;
             [self.customNavBarView cleanStyle:YES];
+            [self.customNavBarView setNaviBarTransparent:YES];
             break;
         }
         default:

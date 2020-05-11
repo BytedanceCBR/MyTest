@@ -333,16 +333,4 @@
     self.sendVerifyCodeBtn.enabled = enabled;
 }
 
-- (void)douyinLoginAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginAction)]) {
-        [self.delegate douyinLoginAction];
-    }
-}
-
-- (void)appleLoginAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(appleLoginAction)]) {
-        [self.delegate appleLoginAction];
-    }
-}
-
 @end

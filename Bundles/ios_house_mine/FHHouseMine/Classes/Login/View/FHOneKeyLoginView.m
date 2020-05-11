@@ -45,7 +45,7 @@
         [self addSubview:logoImageView];
         [logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self);
-            make.top.mas_equalTo(60);
+            make.top.mas_equalTo(94);
         }];
         
         self.phoneNumberLabel = [[UILabel alloc] init];
@@ -185,8 +185,8 @@
 }
 
 - (void)douyinLoginAction {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginAction)]) {
-        [self.delegate douyinLoginAction];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(douyinLoginActionByIcon:)]) {
+        [self.delegate douyinLoginActionByIcon:YES];
     }
 }
 

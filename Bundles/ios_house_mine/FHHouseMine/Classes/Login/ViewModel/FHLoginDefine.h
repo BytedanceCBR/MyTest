@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)appleLoginAction;
 
 /// 抖音一键登录
-- (void)douyinLoginAction;
+- (void)douyinLoginActionByIcon:(BOOL )isDouyinIcon;
 
 - (void)mobileLogin:(NSString *)mobileNumber smsCode:(NSString *)smsCode captcha:(NSString *)captcha;
 
@@ -84,6 +84,7 @@ typedef NS_ENUM(NSUInteger, FHLoginProcessType) {
 };
 
 FOUNDATION_EXPORT NSString *const FHLoginTrackLastLoginMethodKey;
+FOUNDATION_EXPORT NSString *const FHLoginTrackLoginSuggestMethodKey;
 
 @interface FHLoginTrackHelper : NSObject
 
@@ -96,6 +97,10 @@ FOUNDATION_EXPORT NSString *const FHLoginTrackLastLoginMethodKey;
 + (void)loginMore:(NSDictionary *)dict;
 
 + (void)loginExit:(NSDictionary *)dict;
+
++ (void)loginPopup:(NSDictionary *)dict error:(NSError *)error;
+
++ (void)loginPopupClick:(NSDictionary *)dict error:(NSError *)error;
 
 @end
 

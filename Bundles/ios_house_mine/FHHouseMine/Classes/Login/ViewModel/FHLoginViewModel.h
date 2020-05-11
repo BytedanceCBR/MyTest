@@ -40,7 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 请求运营商和抖音登录的权限
 - (void)startLoadData;
-- (void)addEnterCategoryLog;
 
 /// 用户协议
 /// @param viewType 根据 type 不同返回不同的协议

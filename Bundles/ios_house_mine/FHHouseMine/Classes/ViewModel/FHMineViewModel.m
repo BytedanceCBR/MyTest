@@ -150,9 +150,13 @@
         TRACK_EVENT(@"click_minetab", clickTrackDic);
         
         NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"enter_from"] = @"minetab";
-        dict[@"enter_type"] = @"login";
         dict[@"isCheckUGCADUser"] = @(1);
+        dict[TRACER_KEY] = @{
+            @"enter_from": @"minetab",
+            @"enter_method": @"click_mine",
+            @"enter_type": @"login",
+            @"trigger": @"user"
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
         NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];

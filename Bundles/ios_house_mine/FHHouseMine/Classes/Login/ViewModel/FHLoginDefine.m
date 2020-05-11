@@ -11,6 +11,7 @@
 #import <TTAccountSDK/TTAccount.h>
 
 NSString *const FHLoginTrackLastLoginMethodKey = @"FHLoginTrackLastLoginMethodKey";
+NSString *const FHLoginTrackLoginSuggestMethodKey = @"FHLoginTrackLoginSuggestMethodKey";
 
 @implementation FHLoginTrackHelper
 
@@ -19,11 +20,21 @@ NSString *const FHLoginTrackLastLoginMethodKey = @"FHLoginTrackLastLoginMethodKe
         return;
     }
     NSMutableDictionary *trackDict = [dict mutableCopy];
-    trackDict[@"trigger"] = @"user";
+    if (!trackDict[@"trigger"]) {
+        trackDict[@"trigger"] = @"user";
+    }
+    if (!trackDict[@"enter_method"] && trackDict[@"enter_type"]) {
+        trackDict[@"enter_method"] = trackDict[@"enter_type"];
+    }
+    
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *lastLoginMethod = [userDefaults stringForKey:FHLoginTrackLastLoginMethodKey];
     if (lastLoginMethod) {
         trackDict[@"last_login_method"] = lastLoginMethod;
+    }
+    NSString *suggestLoginMethod = [userDefaults stringForKey:FHLoginTrackLoginSuggestMethodKey];
+    if (suggestLoginMethod) {
+        trackDict[@"login_suggest_method"] = suggestLoginMethod;
     }
     trackDict[@"params_for_special"] = @"uc_login";
     TRACK_EVENT(@"uc_login_notify", trackDict.copy);
@@ -34,7 +45,9 @@ NSString *const FHLoginTrackLastLoginMethodKey = @"FHLoginTrackLastLoginMethodKe
         return;
     }
     NSMutableDictionary *trackDict = [dict mutableCopy];
-    trackDict[@"trigger"] = @"user";
+    if (!trackDict[@"trigger"]) {
+        trackDict[@"trigger"] = @"user";
+    }
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *lastLoginMethod = [userDefaults stringForKey:FHLoginTrackLastLoginMethodKey];
     if (lastLoginMethod) {
@@ -49,7 +62,9 @@ NSString *const FHLoginTrackLastLoginMethodKey = @"FHLoginTrackLastLoginMethodKe
         return;
     }
     NSMutableDictionary *trackDict = [dict mutableCopy];
-    trackDict[@"trigger"] = @"user";
+    if (!trackDict[@"trigger"]) {
+        trackDict[@"trigger"] = @"user";
+    }
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *lastLoginMethod = [userDefaults stringForKey:FHLoginTrackLastLoginMethodKey];
     if (lastLoginMethod) {
@@ -81,6 +96,10 @@ NSString *const FHLoginTrackLastLoginMethodKey = @"FHLoginTrackLastLoginMethodKe
     if (lastLoginMethod) {
         trackDict[@"last_login_method"] = lastLoginMethod;
     }
+    NSString *suggestLoginMethod = [userDefaults stringForKey:FHLoginTrackLoginSuggestMethodKey];
+    if (suggestLoginMethod) {
+        trackDict[@"login_suggest_method"] = suggestLoginMethod;
+    }
     trackDict[@"params_for_special"] = @"uc_login";
     TRACK_EVENT(@"uc_login_more", trackDict.copy);
 }
@@ -96,8 +115,45 @@ NSString *const FHLoginTrackLastLoginMethodKey = @"FHLoginTrackLastLoginMethodKe
     if (lastLoginMethod) {
         trackDict[@"last_login_method"] = lastLoginMethod;
     }
+    NSString *suggestLoginMethod = [userDefaults stringForKey:FHLoginTrackLoginSuggestMethodKey];
+    if (suggestLoginMethod) {
+        trackDict[@"login_suggest_method"] = suggestLoginMethod;
+    }
     trackDict[@"params_for_special"] = @"uc_login";
     TRACK_EVENT(@"uc_login_exit", trackDict.copy);
 }
+
++ (void)loginPopup:(NSDictionary *)dict error:(NSError *)error{
+    if (!dict) {
+        return;
+    }
+    NSMutableDictionary *trackDict = [dict mutableCopy];
+    trackDict[@"trigger"] = @"user";
+
+    if (error) {
+        trackDict[@"error_code"] = [@(error.code) stringValue];
+        trackDict[@"fail_info"] = error.localizedDescription;
+    }
+    trackDict[@"popup_type"] = @"抖音带手机号绑定冲突";
+    trackDict[@"params_for_special"] = @"uc_login";
+    TRACK_EVENT(@"uc_login_popup", trackDict.copy);
+}
+
++ (void)loginPopupClick:(NSDictionary *)dict error:(NSError *)error{
+    if (!dict) {
+        return;
+    }
+    NSMutableDictionary *trackDict = [dict mutableCopy];
+    trackDict[@"trigger"] = @"user";
+
+    if (error) {
+        trackDict[@"error_code"] = [@(error.code) stringValue];
+        trackDict[@"fail_info"] = error.localizedDescription;
+    }
+    trackDict[@"popup_type"] = @"抖音带手机号绑定冲突";
+    trackDict[@"params_for_special"] = @"uc_login";
+    TRACK_EVENT(@"uc_login_popup_click", trackDict.copy);
+}
+
 
 @end

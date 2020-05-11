@@ -12,8 +12,7 @@
 #import <TTSettingsManager/TTSettingsManager.h>
 #import <TTKitchen/TTKitchen.h>
 #import <FHHouseBase/FHUserTracker.h>
-
-
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 @implementation FHContainerStartupTask
 
@@ -30,9 +29,43 @@
     BDUG_BIND_CLASS_PROTOCOL([FHContainerStartupTask class], BDUGSettingsInterface);
 }
 
-- (void)event:(NSString *)event params:(NSDictionary *)params
-{
+- (void)event:(NSString *)event params:(NSDictionary *)params {
+
     [FHUserTracker writeEvent:event params:params];
+    if ([event isEqualToString:@"tt_account_didDropOrignalaccount"] || [event isEqualToString:@"tt_account_switchBindAlertView"]) {
+        //绑定冲突 取消 tt_account_didDropOrignalaccount param.cancel = 1
+        //绑定冲突 放弃原账号 tt_account_didDropOrignalaccount param.cancel = 0
+        //绑定冲突 解绑原账号 取消 tt_account_switchBindAlertView param.cancel = 1
+        //绑定冲突 解绑原账号 确定 tt_account_switchBindAlertView param.cancel = 0
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[@"event_page"] = @"account_safe";
+        tracerDict[@"event_type"] = @"click";
+        tracerDict[@"event_belong"] = @"account";
+        tracerDict[@"platform"] = @"aweme";
+        tracerDict[@"params_for_special"] = @"uc_login";
+        if ([event isEqualToString:@"tt_account_switchBindAlertView"] && [params btd_intValueForKey:@"cancel"] == 0) {
+            tracerDict[@"status"] = @"on";
+        } else {
+            tracerDict[@"status"] = @"off";
+        }
+        if ([event isEqualToString:@"tt_account_didDropOrignalaccount"]) {
+            tracerDict[@"popup_type"] = @"冲突弹框";
+            if ([params btd_intValueForKey:@"cancel"] == 0) {
+                tracerDict[@"click_button"] = @"放弃原账号";
+            } else {
+                tracerDict[@"click_button"] = @"取消";
+            }
+        }
+        if ([event isEqualToString:@"tt_account_switchBindAlertView"]) {
+            tracerDict[@"popup_type"] = @"冲突二次确认";
+            if ([params btd_intValueForKey:@"cancel"] == 0) {
+                tracerDict[@"click_button"] = @"确定";
+            } else {
+                tracerDict[@"click_button"] = @"取消";
+            }
+        }
+        TRACK_EVENT(@"third_party_bind_popup_click", tracerDict);
+    }
 }
 
 - (void)trackService:(NSString *)serviceName attributes:(NSDictionary *)attributes {
