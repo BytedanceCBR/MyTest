@@ -9,8 +9,7 @@
 #import "TTAccountManager.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHAccountBindingViewModel.h"
-
-
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHAccountBindingViewController ()
 
@@ -58,9 +57,11 @@
 
 -(void)setupNavbar {
     [self setTitle:@"账号和绑定设置"];
-    [self setupDefaultNavBar:YES];
-//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"ic-arrow-left-line"] forState:UIControlStateNormal];
-//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"ic-arrow-left-line"] forState:UIControlStateHighlighted];
-//    self.customNavBarView.seperatorLine.hidden = YES;
+    [self setupDefaultNavBar:NO];
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
+    self.customNavBarView.seperatorLine.hidden = YES;
+//    [self.customNavBarView cleanStyle:YES];
+//    [self.customNavBarView setNaviBarTransparent:YES];
 }
 @end
