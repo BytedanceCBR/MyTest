@@ -673,7 +673,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
                 }
             }
         }
-        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_setBrowserOpBtnVisible"}];
+        [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_setBrowserOpBtnVisible"}];
     } forMethodName:@"setBrowserOpBtnVisible"];
     
     [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
@@ -720,7 +720,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationPortrait)
                                         forKey:@"orientation"];
         }
-        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_requestChangeOrientation"}];
+        [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_requestChangeOrientation"}];
     } forMethodName:@"requestChangeOrientation"];
     
     // 控制页面顶部状态条风格和返回按钮颜色
@@ -968,7 +968,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
             break;
         case SSWebViewBackButtonPositionTypeTopRight:
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_tr"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_tr"}];
             [_backButton setImageEdgeInsets:UIEdgeInsetsMake(0, 44, 0, 0)];
             if (_shouldHideNavigationBar) {
                 _backButton.right = frame.size.width - 12;
@@ -977,14 +977,14 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
             break;
         case SSWebViewBackButtonPositionTypeBottomLeft:
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_bl"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_bl"}];
             _backButton.left = 12;
             _backButton.bottom = frame.size.height - 2;
             [_backButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 44)];
             [self.view addSubview:_backButton];
             break;
         case SSWebViewBackButtonPositionTypeBottomRight:
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_br"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_br"}];
             _backButton.right = frame.size.width - 12;
             _backButton.bottom = frame.size.height - 2;
             [_backButton setImageEdgeInsets:UIEdgeInsetsMake(0, 44, 0, 0)];

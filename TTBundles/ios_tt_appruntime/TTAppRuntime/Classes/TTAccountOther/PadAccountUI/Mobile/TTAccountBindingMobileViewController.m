@@ -14,7 +14,8 @@
 #import "NSTimer+TTNoRetainRef.h"
 #import "NSString+TextValidation.h"
 #import "UITextField+TTTouchAreaAddition.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTAccountAlertView.h"
 #import "UIApplication+UserPrivacyPolicy.h"
 
@@ -220,7 +221,7 @@ UIGestureRecognizerDelegate
         [self.mobileTextField becomeFirstResponder];
     }
     
-    [TTTracker eventV3:@"auth_mobile_show" params:self.trackParams];
+    [BDTrackerProtocol eventV3:@"auth_mobile_show" params:self.trackParams];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -466,7 +467,7 @@ UIGestureRecognizerDelegate
     [self showWaitingIndicator];
     
     //统计埋点
-    [TTTracker eventV3:@"auth_mobile_send_verification_code" params:self.trackParams];
+    [BDTrackerProtocol eventV3:@"auth_mobile_send_verification_code" params:self.trackParams];
     
     WeakSelf;
     [TTAccountManager startSendCodeWithPhoneNumber:mobileString captcha:captchaString type:TTASMSCodeScenarioBindPhone unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
@@ -528,7 +529,7 @@ UIGestureRecognizerDelegate
     [self showWaitingIndicator];
     
     //埋点
-    [TTTracker eventV3:@"auth_mobile_verify_confirm" params:self.trackParams];
+    [BDTrackerProtocol eventV3:@"auth_mobile_verify_confirm" params:self.trackParams];
     
     WeakSelf;
     [TTAccountManager startBindPhoneNumber:mobileString code:smsCodeString password:nil captcha:captchaString unbindExist:NO completion:^(UIImage *captchaImage, NSError *error) {
@@ -582,14 +583,14 @@ UIGestureRecognizerDelegate
         if (type == TTAccountAlertCompletionEventTypeDone) {
             //绑定手机号时提示已绑定其他账号，点击放弃原账号
             
-            [TTTracker eventV3:@"auth_mobile_bindaccount_tip_next" params:self.trackParams];
+            [BDTrackerProtocol eventV3:@"auth_mobile_bindaccount_tip_next" params:self.trackParams];
             
             TTAccountLoginAlert *loginAlert = [[TTAccountLoginAlert alloc] initPhoneNumberVerifyAlertWithActionType:TTAccountLoginAlertActionTypePhoneNumSwitch phoneNum:self.mobileTextField.text title:@"输入验证码" placeholder:nil tip:[NSString stringWithFormat:@"已向手机号 %@ 发送验证码", self.mobileTextField.text] cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type) {
                 
                 if (type == TTAccountAlertCompletionEventTypeDone) {
                     //绑定手机号时提示已绑定其他账号，成功放弃原账号
                     
-                    [TTTracker eventV3:@"auth_mobile_relieve_confirm" params:self.trackParams];
+                    [BDTrackerProtocol eventV3:@"auth_mobile_relieve_confirm" params:self.trackParams];
                     
                     if (self.bindingCompletionCallback) {
                         self.bindingCompletionCallback(YES, NO);
@@ -597,14 +598,14 @@ UIGestureRecognizerDelegate
                     [self dismissSelf];
                 } else if (type == TTAccountAlertCompletionEventTypeCancel) {
                     
-                    [TTTracker eventV3:@"auth_mobile_relieve_cancel" params:self.trackParams];
+                    [BDTrackerProtocol eventV3:@"auth_mobile_relieve_cancel" params:self.trackParams];
                 }
             }];
             [loginAlert show];
         } else if (type == TTAccountAlertCompletionEventTypeCancel) {
             //绑定手机号时提示已绑定其他账号,点击取消
             
-            [TTTracker eventV3:@"auth_mobile_bindaccount_tip_cancel" params:self.trackParams];
+            [BDTrackerProtocol eventV3:@"auth_mobile_bindaccount_tip_cancel" params:self.trackParams];
         }
     }];
     [alert show];
@@ -761,7 +762,7 @@ UIGestureRecognizerDelegate
                                                               }];
 
             //埋点
-            [TTTracker eventV3:@"auth_mobile_verify_cancel" params:self.trackParams];
+            [BDTrackerProtocol eventV3:@"auth_mobile_verify_cancel" params:self.trackParams];
         }
     }];
     

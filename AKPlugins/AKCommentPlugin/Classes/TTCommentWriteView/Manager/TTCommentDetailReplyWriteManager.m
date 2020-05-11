@@ -19,6 +19,7 @@
 #import "TTCommentDataManager.h"
 #import "TTCommentWriteView.h"
 #import "FHTraceEventUtils.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
 #define PersistenceDraftKey @"PersistenceDraftKey"
@@ -460,7 +461,7 @@ static bool isTTCommentPublishing = NO;
         [paramsDict addEntriesFromDictionary:self.extraDic];
     }
     
-    [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
+    [BDTrackerProtocol eventV3:@"rt_post_reply" params:paramsDict];
     
     NSMutableDictionary *userInfoDic = [[NSMutableDictionary alloc] init];
     if ([self.commentDetailModel respondsToSelector:@selector(groupModel)]) {

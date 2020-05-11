@@ -584,7 +584,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                         [paramsDict addEntriesFromDictionary:self.reportParams];
                     }
                     
-                    [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
+                    [BDTrackerProtocol eventV3:@"rt_post_comment" params:paramsDict];
                 }
 
                 if (self.publishStatusForTrack == 1) {

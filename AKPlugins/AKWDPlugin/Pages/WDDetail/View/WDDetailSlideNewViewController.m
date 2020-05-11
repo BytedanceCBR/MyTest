@@ -559,7 +559,7 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
     //是0的情况下，可以删掉 @尹浩已确认
     //    [TTAdManageInstance share_showInAdPage:@"0" groupId:_currentAnswerCell.detailModel.answerEntity.ansid];
     
-    [TTTracker category:@"umeng" event:kWDDetailViewControllerUMEventName label:@"more_clicked" dict:_currentAnswerCell.detailModel.gdExtJsonDict];
+    [BDTrackerProtocol category:@"umeng" event:kWDDetailViewControllerUMEventName label:@"more_clicked" dict:_currentAnswerCell.detailModel.gdExtJsonDict];
 }
 
 - (void)wdDetailSlideNaviViewTitleButtonTapped {
@@ -598,7 +598,7 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
 
 - (void)bottomView:(WDBottomToolView *)bottomView diggButtonClicked:(SSThemedButton *)diggButton {
     if (_currentAnswerCell.detailModel.answerEntity.isDigg) {
-        [TTTracker event:kWDDetailViewControllerUMEventName label:@"digg"];
+        [BDTrackerProtocol event:kWDDetailViewControllerUMEventName label:@"digg"];
     } else {
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:_currentAnswerCell.detailModel.gdExtJsonDict];
         WDAnswerEntity *answerEntity = _currentAnswerCell.detailModel.answerEntity;
@@ -607,7 +607,7 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
         [dict setValue:answerEntity.user.userID forKey:@"user_id"];
         [dict setValue:@(10) forKey:@"group_source"];
         [dict setValue:@"detail" forKey:@"position"];
-        [TTTracker eventV3:@"rt_unlike" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"rt_unlike" params:[dict copy]];
     }
 }
 
@@ -619,7 +619,7 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
     [dict setValue:kWDDetailViewControllerUMEventName forKey:@"tag"];
     [dict setValue:@"click_next_answer" forKey:@"label"];
     [dict setValue:_currentAnswerCell.detailModel.answerEntity.ansid forKey:@"value"];
-    [TTTracker eventData:[dict copy]];
+    [BDTrackerProtocol eventData:[dict copy]];
 }
 
 - (void)bottomView:(nonnull WDBottomToolView *)bottomView emojiButtonClicked:(nonnull SSThemedButton *)wirteButton {
@@ -676,7 +676,7 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
     [params setValue:[self.slideViewModel.currentDetailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
     [params setValue:[self.slideViewModel.currentDetailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
     [params setValue:[self.slideViewModel.currentDetailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
-    [TTTracker eventV3:@"rt_post_comment" params:params];
+    [BDTrackerProtocol eventV3:@"rt_post_comment" params:params];
     
     [self.currentAnswerCell commentView:commentView sucessWithCommentWriteManager:commentWriteManager responsedData:responseData];
 }
@@ -908,7 +908,7 @@ static NSString * const kkHasShownCommentPolicyIndicatorViewKey = @"HasShownCome
         NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithCapacity:2];
         [extra setValue:_currentAnswerCell.detailModel.answerEntity.ansid forKey:@"item_id"];
         [extra setValue:[_currentAnswerCell getDetailViewUserID] forKey:@"user_id"];
-        [TTTracker event:kWDDetailViewControllerUMEventName label:@"show_titlebar_pgc" value:@(_currentAnswerCell.detailModel.answerEntity.ansid.longLongValue) extValue:nil extValue2:nil dict:extra];
+        [BDTrackerProtocol event:kWDDetailViewControllerUMEventName label:@"show_titlebar_pgc" value:@(_currentAnswerCell.detailModel.answerEntity.ansid.longLongValue) extValue:nil extValue2:nil dict:extra];
     }
 }
 

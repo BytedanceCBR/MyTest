@@ -167,11 +167,11 @@
 
         if (model.icon_type == WDIconTypeCHANNEL) {
             
-            [TTTracker ttTrackEventWithCustomKeys:@"channel_detail" label:@"enter_question_and_answer" value:self.listViewModel.qID source:nil extraDic:self.listViewModel.gdExtJson];
+            [BDTrackerProtocol trackEventWithCustomKeys:@"channel_detail" label:@"enter_question_and_answer" value:self.listViewModel.qID source:nil extraDic:self.listViewModel.gdExtJson];
         }
         else if (model.icon_type == WDIconTypeQUESTION_POST) {
             
-            [TTTracker ttTrackEventWithCustomKeys:@"question" label:@"click_ask_question" value:self.listViewModel.qID source:nil extraDic:self.listViewModel.gdExtJson];
+            [BDTrackerProtocol trackEventWithCustomKeys:@"question" label:@"click_ask_question" value:self.listViewModel.qID source:nil extraDic:self.listViewModel.gdExtJson];
         }
         else if (model.icon_type == WDIconTypeINVITED) {
             

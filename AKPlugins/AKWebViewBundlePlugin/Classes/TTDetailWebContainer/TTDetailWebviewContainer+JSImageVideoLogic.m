@@ -16,7 +16,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTImage/TTWebImageManager.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTRoute/TTRoute.h>
 #import <TTUserSettings/TTUserSettingsManager+NetworkTraffic.h>
 #import "TTDetailWebviewGIFManager.h"

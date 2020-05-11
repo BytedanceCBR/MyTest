@@ -39,6 +39,7 @@
 #import "SSMyUserModel.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "UIColor+Theme.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"
@@ -426,7 +427,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     [dic setValue:@"detail" forKey:@"position"];
     [dic setValue:@(time).stringValue forKey:@"stay_time"];
     
-    [TTTracker eventV3:@"comment_close" params:dic];
+    [BDTrackerProtocol eventV3:@"comment_close" params:dic];
 
     [self trySendCurrentPageStayTime];
 }
@@ -717,7 +718,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
         [params setValue:@"comment_detail" forKey:@"position"];
         [params setValue:commentId forKey:@"comment_id"];
-        [TTTracker eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
     }
 //    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
 //    TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
@@ -846,9 +847,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     }
     [params setValue:[self.commentModel.commentID stringValue] forKey:@"comment_id"];
     if (!self.pageState.detailModel.userDigg) {
-        [TTTracker eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
     } else {
-         [TTTracker eventV3:@"rt_unlike" params:params];
+         [BDTrackerProtocol eventV3:@"rt_unlike" params:params];
     }
     
     SSUserModel *userModel;
@@ -1015,7 +1016,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     }
     
     if (!model.userDigg) {
-        [TTTracker eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
     }
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithReplyCommentModel:model];
     action.commentDetailModel = self.pageState.detailModel;

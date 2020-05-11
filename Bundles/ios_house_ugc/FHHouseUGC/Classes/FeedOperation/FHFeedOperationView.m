@@ -16,7 +16,8 @@
 #import "TTDeviceHelper.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceUIUtils.h"
-#import "TTTracker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 #import "TTFriendRelationService.h"
 #import "TTAccessibilityElement.h"
 
@@ -1215,7 +1216,7 @@ didDislikeWithOptionBlock:(TTFeedDislikeOptionBlock)didDislikeWithOptionBlock {
     if (extraParameters) {
         [parameters addEntriesFromDictionary:extraParameters];
     }
-    [TTTracker eventV3:event params:parameters];
+    [BDTrackerProtocol eventV3:event params:parameters];
 }
 
 @end

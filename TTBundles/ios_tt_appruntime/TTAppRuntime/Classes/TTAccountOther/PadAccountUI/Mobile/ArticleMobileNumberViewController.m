@@ -88,7 +88,7 @@
         [self configureMobileRegisterOrRetrieveView];
     }
     
-    [TTTracker eventV3:@"auth_mobile_show" params:@{@"source":@"settings"}];
+    [BDTrackerProtocol eventV3:@"auth_mobile_show" params:@{@"source":@"settings"}];
 }
 
 - (void)configureMobileBindView
@@ -416,7 +416,7 @@
 //        } else {
 //            [self showWaitingIndicator];
 //
-//            [TTTracker eventV3:@"auth_mobile_send_verification_code" params:@{@"source":@"settings"}];
+//            [BDTrackerProtocol eventV3:@"auth_mobile_send_verification_code" params:@{@"source":@"settings"}];
 //
 //            [TTAccountManager startSendCodeWithPhoneNumber:mobile captcha:captcha type:TTASMSCodeScenarioPhoneRegister unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
 //                weakSelf.captchaImage = captchaImage;
@@ -685,26 +685,26 @@
     TTAccountAlertView *alert = [[TTAccountAlertView alloc] initWithTitle:[error.userInfo objectForKey:@"description"] message:[error.userInfo objectForKey:@"dialog_tips"] cancelBtnTitle:@"取消" confirmBtnTitle:@"放弃原账号" animated:YES tapCompletion:^(TTAccountAlertCompletionEventType type) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             //绑定手机号时提示已绑定其他账号，点击放弃原账号
-            [TTTracker eventV3:@"auth_mobile_bindaccount_tip_next" params:@{@"source":@"settings"}];
+            [BDTrackerProtocol eventV3:@"auth_mobile_bindaccount_tip_next" params:@{@"source":@"settings"}];
             
             TTAccountLoginAlert *loginAlert = [[TTAccountLoginAlert alloc] initPhoneNumberVerifyAlertWithActionType:TTAccountLoginAlertActionTypePhoneNumSwitch phoneNum:wself.mobileField.text title:@"输入验证码" placeholder:nil tip:[NSString stringWithFormat:@"已向手机号 %@ 发送验证码",wself.mobileField.text] cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type) {
                 
                 if (type == TTAccountAlertCompletionEventTypeDone) {
                     //绑定手机号时提示已绑定其他账号，成功放弃原账号
-                    [TTTracker eventV3:@"auth_mobile_relieve_confirm" params:@{@"source":@"settings"}];
+                    [BDTrackerProtocol eventV3:@"auth_mobile_relieve_confirm" params:@{@"source":@"settings"}];
                     if (wself.completion) {
                         wself.completion(ArticleLoginStateMobileBind);
                     }
                     [wself.navigationController popViewControllerAnimated:YES];
                     
                 } else if (type == TTAccountAlertCompletionEventTypeCancel) {
-                    [TTTracker eventV3:@"auth_mobile_relieve_cancel" params:@{@"source":@"settings"}];
+                    [BDTrackerProtocol eventV3:@"auth_mobile_relieve_cancel" params:@{@"source":@"settings"}];
                 }
             }];
             [loginAlert show];
         } else if (type == TTAccountAlertCompletionEventTypeCancel) {
             //绑定手机号时提示已绑定其他账号,点击取消
-            [TTTracker eventV3:@"auth_mobile_bindaccount_tip_cancel" params:@{@"source":@"settings"}];
+            [BDTrackerProtocol eventV3:@"auth_mobile_bindaccount_tip_cancel" params:@{@"source":@"settings"}];
         }
     }];
     

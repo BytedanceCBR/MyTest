@@ -953,7 +953,7 @@
     
     // [[TTLCSServerConfig sharedTTLCSServerConfig] updateEnabledFlag:dSettings];
     
-    // todo zjing test check 
+    // todo zjing test check 已和高海东确认只要TTKitchen正常获取settings，则不影响
 //    [[TTLCSServerConfig sharedInstance] resetServerConfigEnabled:[dSettings tt_boolValueForKey:kTTLCSServerConfigEnabledKey]];
     
     [[TTWebviewAntiHijackServerConfig sharedTTWebviewAntiHijackServerConfig] updateServerConfig:dSettings];

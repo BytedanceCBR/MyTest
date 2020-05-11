@@ -15,7 +15,7 @@
 #import <TTAdSplashSDK/TTAdSplashManager.h>
 #import <TTBatchItemAction/DetailActionRequestManager.h>
 #import <FHPushAuthorizationManager/TTAuthorizeManager.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTLaunchOrientationHelper.h"
 #import <TTMonitor/TTMonitor.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
@@ -181,10 +181,10 @@ typedef void(^NotificationActionCompletionBlock) (void);
     if ([TTAuthorizeManager sharedManager].pushObj.authorizeModel.isPushAuthorizeDetermined == NO) {
         wrapperTrackEvent(@"pop", @"push_permission_show");
         if (!response.success) {
-            [TTTracker eventV3:@"push_anthorize_popup" params:@{@"is_anthorized" : @"0"}];
+            [BDTrackerProtocol eventV3:@"push_anthorize_popup" params:@{@"is_anthorized" : @"0"}];
             wrapperTrackEvent(@"pop", @"push_permission_cancel");
         } else {
-            [TTTracker eventV3:@"push_anthorize_popup" params:@{@"is_anthorized" : @"1"}];
+            [BDTrackerProtocol eventV3:@"push_anthorize_popup" params:@{@"is_anthorized" : @"1"}];
             wrapperTrackEvent(@"pop", @"push_permission_confirm");
         }
         [TTAuthorizeManager sharedManager].pushObj.authorizeModel.isPushAuthorizeDetermined = YES;

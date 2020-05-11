@@ -16,7 +16,7 @@
 
 #import <TTServiceKit/TTModuleBridge.h>
 #import <TTTracker/TTTrackerSessionHandler.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/TTURLUtils.h>
 #import <TTBaseLib/TTUIResponderHelper.h>

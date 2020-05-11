@@ -70,7 +70,7 @@ UIImagePickerControllerDelegate
     // 在账号个人设置页中，获取PV
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker category:@"umeng" event:@"register_new" label:@"profile_settings_show" dict:@{@"source":self.source}];
+        [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"profile_settings_show" dict:@{@"source":self.source}];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -185,7 +185,7 @@ UIImagePickerControllerDelegate
 {
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker category:@"umeng" event:@"register_new" label:@"profile_settings_click_confirm" dict:@{@"source":self.source}];
+        [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"profile_settings_click_confirm" dict:@{@"source":self.source}];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -233,7 +233,7 @@ UIImagePickerControllerDelegate
 {
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker category:@"umeng" event:@"register_new" label:@"profile_settings_click_skip" dict:@{@"source":self.source}];
+        [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"profile_settings_click_skip" dict:@{@"source":self.source}];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];

@@ -63,10 +63,10 @@ def fhPods
     # 'DelegateForC'
     # ]
 
-    pod 'ios_house_im' , '0.2.0-rc.15'
+#    pod 'ios_house_im' , '0.2.0-rc.15'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #    pod 'ios_house_im' , :path => '../../cim3'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'ec1d29fed31c70cdf717bc53039580d9801d074d'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '423b4f5492b8a1a8a7767b29572977955790ae90'
 
 end
 
@@ -217,8 +217,8 @@ def appPods
     pod 'BDUGSettingsInterface' , '1.1.0'
     pod 'BDUGKit' , '1.3.3'
     
-    pod 'Gaia','1.0.7-rc.1'
-    pod 'TTGaiaExtension','0.4.2'
+    pod_binary 'Gaia','3.1.0-rc.5'
+    pod_binary 'TTGaiaExtension','0.4.7'
     pod 'BDAssert','2.0.0',:subspecs => [
     'Core'
     ]
@@ -288,7 +288,7 @@ def appPods
 
     #-----授权管理----
    # pod 'FHPushAuthorizationManager','0.1.4'
-        pod 'FHPushAuthorizationManager', git:'git@code.byted.org:fproject/push_authorization_manager.git', :commit => '0941fe9b592ff4f4fa85a5e8b4536108d4c7a17d'
+        pod 'FHPushAuthorizationManager', git:'git@code.byted.org:fproject/push_authorization_manager.git', :commit => '9e4474f01e3fd53497c4bfee294eaa030eb20335'
 
     #-----手机通讯录操作库---
     pod_binary 'TTAddressBookService', '0.1.4'
@@ -373,9 +373,7 @@ def appPods
     pod 'BDAlogProtocol','0.1.7'
 
     #----- 长连接 & IM -----
-    pod_binary 'TTLCSService', '0.1.10' # 依赖于 'TTPushManager' 和 'TTReachability'
-#    pod 'TTPushManager', '0.0.13.4'
-    #pod_binary 'TTReachability', '0.8.1'
+    pod_binary 'TTLCSService','0.1.11' # 依赖于 'TTPushManager' 和 'TTReachability'
     pod_binary 'TTReachability','0.10.1'
     pod_binary 'Protobuf', '3.6.1.2'
     #----- 存储库 -----
@@ -397,7 +395,7 @@ def appPods
     #-----头条交互式退出手势----
     pod_binary 'TTImagePreviewAnimateManager', '1.0.13'
     #-----头条日志库-----
-    pod_binary 'TTTracker','1.3.19'
+    pod_binary 'TTTracker','1.3.20'
 #    pod_binary 'BDTracker','1.3.1',:subspecs => [
 #    'Network',
 #    'Base',
@@ -447,6 +445,7 @@ def appPods
     pod 'TYRZApiSDK' , '1.2.2-rc.0'
     pod 'EAccountApiSDK', '1.2.0-alpha.0'
     pod 'BDUGUnionSDK', '0.1.2'
+
     pod_binary 'BDUIKeyboardImplHook', '1.0.3'
 
     #************业务SDK**********

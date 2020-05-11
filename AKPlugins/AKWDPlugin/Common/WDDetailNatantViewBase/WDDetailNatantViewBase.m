@@ -51,7 +51,7 @@
 {
     if (!self.hasShow) {
         if (!isEmptyString(groupID)) {
-            [TTTracker category:@"umeng"
+            [BDTrackerProtocol category:@"umeng"
                           event:@"detail"
                           label:label
                            dict:@{@"value":groupID}];

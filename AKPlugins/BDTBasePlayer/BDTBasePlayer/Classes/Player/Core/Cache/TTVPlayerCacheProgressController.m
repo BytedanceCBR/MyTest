@@ -8,7 +8,8 @@
 
 #import "TTVPlayerCacheProgressController.h"
 #import "KVOController.h"
-#import "TTTRacker.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+
 
 @interface TTVPlayerCacheProgressObject : NSObject
 

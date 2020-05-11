@@ -21,7 +21,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTTracker/TTTrackerSessionHandler.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>

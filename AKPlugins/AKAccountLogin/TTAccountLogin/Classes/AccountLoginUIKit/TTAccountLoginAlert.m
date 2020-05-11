@@ -417,7 +417,7 @@ UITextFieldDelegate
         // 快捷登录弹窗PV,记录
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTracker category:@"umeng" event:@"register_new" label:@"quick_login_show" dict:@{@"source":self.source ? : @"other"}];
+            [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"quick_login_show" dict:@{@"source":self.source ? : @"other"}];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -714,7 +714,7 @@ UITextFieldDelegate
     // 快捷登录界面，记录 点击“更多登录方式”的量
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker category:@"umeng" event:@"register_new" label:@"quick_login_click_more" dict:@{@"source":self.source}];
+        [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"quick_login_click_more" dict:@{@"source":self.source}];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -751,7 +751,7 @@ UITextFieldDelegate
     // 快捷登录界面，记录 点击“关闭小弹窗”的量
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker category:@"umeng" event:@"register_new" label:@"quick_login_close" dict:@{@"source":self.source }];
+        [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"quick_login_close" dict:@{@"source":self.source }];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -777,7 +777,7 @@ UITextFieldDelegate
     // 快捷登录弹窗，记录 点击“进入头条”的量
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker category:@"umeng" event:@"register_new" label:@"quick_login_click_confirm" dict:@{@"source":self.source}];
+        [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"quick_login_click_confirm" dict:@{@"source":self.source}];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1002,7 +1002,7 @@ UITextFieldDelegate
 //            if (!self.source) self.source = @"other";
 //            // LogV1
 //            if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//                [TTTracker category:@"umeng" event:@"register_new" label:@"quick_login_success" dict:@{@"source":self.source}];
+//                [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"quick_login_success" dict:@{@"source":self.source}];
 //            }
 //            // LogV3
 //            NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1104,7 +1104,7 @@ UITextFieldDelegate
     // 快捷登录窗口，发送短信验证码的量
     // LogV1
 //    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//        [TTTracker category:@"umeng" event:@"register_new" label:@"quick_login_send_auth" dict:@{@"source":self.source}];
+//        [BDTrackerProtocol category:@"umeng" event:@"register_new" label:@"quick_login_send_auth" dict:@{@"source":self.source}];
 //    }
 //    // LogV3
 //    NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
