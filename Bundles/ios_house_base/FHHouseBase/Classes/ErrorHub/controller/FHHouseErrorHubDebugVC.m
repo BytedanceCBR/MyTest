@@ -212,7 +212,7 @@
         });
     }];
     
-    action.backgroundColor = [UIColor redColor];
+    action.backgroundColor = [UIColor colorWithHexStr:@"ed5a65"];
     UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[action]];
     config.performsFirstActionWithFullSwipe = NO;
     return config;
