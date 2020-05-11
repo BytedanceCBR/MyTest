@@ -38,7 +38,7 @@
 }
 
 - (void)checkRequestResponseWithHost:(NSString *)host requestParams:(NSDictionary *)params responseStatus:(TTHttpResponse *)responseStatus response:(id)response analysisError:(NSError *)analysisError changeModelType:(FHNetworkMonitorType )type errorHubType:(FHErrorHubType)errorHubType {
-    if (![[self getChannel] isEqualToString:@"local_test"] || ![self errorHubSwitch]) {
+    if (![[self getChannel] isEqualToString:@"local_test"] || [self errorHubSwitch]) {
         return;
     }
     NSInteger status = -1;
@@ -85,7 +85,7 @@
 }
 
 - (void)checkBuryingPointWithEvent:(NSString *)eventName Params:(NSDictionary* )eventParams errorHubType:(FHErrorHubType)errorHubType {
-    if (![[self getChannel] isEqualToString:@"local_test"] || ![self errorHubSwitch]) {
+    if (![[self getChannel] isEqualToString:@"local_test"] || [self errorHubSwitch]) {
         return;
     }
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -195,7 +195,7 @@
 }
 
 - (void)saveConfigAndSettingsSence {
-    if (![[self getChannel] isEqualToString:@"local_test"] || ![self errorHubSwitch]) {
+    if (![[self getChannel] isEqualToString:@"local_test"] || [self errorHubSwitch]) {
         return;
     }
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
