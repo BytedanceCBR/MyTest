@@ -44,7 +44,7 @@
             [self.errorTab reloadData];
         });
     });
-
+    
 }
 
 - (void)initUI {
@@ -130,14 +130,14 @@
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-     NSDictionary *dic = self.dataSource[self.keyArr[indexPath.section]][indexPath.row];
+    NSDictionary *dic = self.dataSource[self.keyArr[indexPath.section]][indexPath.row];
     NSString *copyString = @"";
     if (indexPath.section == 0) {
         copyString = [NSString stringWithFormat:@"接口名:%@ ,错误码:%@，logid:%@", dic [@"name"],dic[@"error_info"],dic[@"httpStatus"][@"x-tt-logid"]];
     }else {
         copyString = [NSString stringWithFormat:@"错误名:%@ ,错误信息:%@", dic [@"name"],dic[@"error_info"]];
     }
-
+    
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = copyString;
     [[ToastManager manager] showToast:@"已将信息复制到剪切板"];
@@ -152,14 +152,14 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-        return YES;
+    return YES;
 }
- 
+
 // 定义编辑样式
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     return UITableViewCellEditingStyleDelete;
 }
- 
+
 // 进入编辑模式，按下出现的编辑按钮后,进行删除操作
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
@@ -181,10 +181,41 @@
         });
     }
 }
- 
+
 // 修改编辑按钮文字
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @"删除";
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return nil;
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    __weak typeof(self) wself = self;
+    UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"s删除" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        NSDictionary *dic = self.dataSource[self.keyArr[indexPath.section]][indexPath.row];
+        FHErrorHubType type;
+        if (indexPath.section == 0) {
+            type = FHErrorHubTypeRequest;
+        }else if (indexPath.section == 1) {
+            type = FHErrorHubTypeBuryingPoint;
+        }else {
+            type = FHErrorHubTypeCustom;
+        }
+        NSMutableArray *dataArr = [self.dataSource[self.keyArr[indexPath.section]] mutableCopy];
+        [dataArr removeObject:dic];
+        self.dataSource[self.keyArr[indexPath.section]] = dataArr;
+        [self.errorTab reloadData];
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [FHErrorHubDataReadWrite removeLogWithData:dic logType:type];
+        });
+    }];
+    
+    action.backgroundColor = [UIColor themeRed1];
+    UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[action]];
+    config.performsFirstActionWithFullSwipe = NO;
+    return config;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -205,12 +236,12 @@
     headerLabel.font = [UIFont boldSystemFontOfSize:15.0];
     headerLabel.textColor = [UIColor whiteColor];
     if (section == 0) {
-         headerLabel.text = @"核心接口错误";
-     }else if(section == 1) {
-         headerLabel.text = @"核心埋点错误" ;
-     }else {
-         headerLabel.text = @"自定义错误" ;
-     }
+        headerLabel.text = @"核心接口错误";
+    }else if(section == 1) {
+        headerLabel.text = @"核心埋点错误" ;
+    }else {
+        headerLabel.text = @"自定义错误" ;
+    }
     [headerView addSubview:headerLabel];
     return headerView;
 }
@@ -233,7 +264,7 @@
 }
 
 - (BOOL)errorHubSwitch {
-     return [[NSUserDefaults standardUserDefaults] boolForKey:@"_errorHubSwitch"];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"_errorHubSwitch"];
 }
 
 
