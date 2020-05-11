@@ -64,13 +64,14 @@
         mobileTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入手机号" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray5]}];
         mobileTextField.keyboardType = UIKeyboardTypePhonePad;
         mobileTextField.returnKeyType = UIReturnKeyDone;
+        mobileTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
 //        mobileTextField.delegate = self;
         [mobileTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
         [self addSubview:mobileTextField];
         self.mobileTextField = mobileTextField;
         [self.mobileTextField mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.agreementLabel.mas_bottom).offset(40);
-            make.left.mas_equalTo(titleLabel.mas_left);
+            make.left.mas_equalTo(30);
             make.right.mas_equalTo(-30);
             make.height.mas_equalTo(56);
         }];
@@ -79,7 +80,7 @@
         singleLine.backgroundColor = [UIColor themeGray6];
         [self addSubview:singleLine];
         [singleLine mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.mobileTextField.mas_bottom).offset(11);
+            make.top.mas_equalTo(self.mobileTextField.mas_bottom).offset(1);
             make.left.mas_equalTo(30);
             make.right.mas_equalTo(-30);
             make.height.mas_equalTo(1.0/UIScreen.mainScreen.scale);

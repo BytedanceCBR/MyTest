@@ -88,8 +88,8 @@
         [self addSubview:confirmButton];
         [confirmButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(lineView.mas_bottom).offset(40);
-            make.left.mas_equalTo(57);
-            make.right.mas_equalTo(-57);
+            make.left.mas_equalTo(15);
+            make.right.mas_equalTo(-15);
             make.height.mas_equalTo(46);
         }];
         
@@ -104,8 +104,8 @@
         [self addSubview:otherLoginButton];
         [otherLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(confirmButton.mas_bottom).offset(20);
-            make.left.mas_equalTo(57);
-            make.right.mas_equalTo(-57);
+            make.left.mas_equalTo(15);
+            make.right.mas_equalTo(-15);
             make.height.mas_equalTo(46);
         }];
         

@@ -211,36 +211,6 @@
 //    [_acceptCheckBox setImage:[UIImage imageNamed:@"ic-filter-normal"] forState:UIControlStateNormal];
 //    [_acceptCheckBox addTarget:self action:@selector(acceptCheckBoxChange) forControlEvents:UIControlEventTouchUpInside];
 //    [self.scrollView addSubview:_acceptCheckBox];
-    
-    UIStackView *stackView = [[UIStackView alloc] init];
-//    stackView.distribution = UIStackViewDistributionEqualSpacing;
-    stackView.alignment = UIStackViewAlignmentCenter;
-    stackView.axis = UILayoutConstraintAxisHorizontal;
-    [self.scrollView addSubview:stackView];
-    [stackView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.otherLoginBtn.mas_bottom).mas_offset(20);
-        make.width.mas_equalTo(40+138+20);
-        make.height.mas_equalTo(40);
-        make.centerX.mas_equalTo(self);
-    }];
-    
-    UIButton *douyinLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [douyinLoginButton setImage:[UIImage imageNamed:@"douyin_login_common_icon"] forState:UIControlStateNormal];
-    [douyinLoginButton addTarget:self action:@selector(douyinLoginAction) forControlEvents:UIControlEventTouchUpInside];
-    [douyinLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(40, 40));
-    }];
-    [stackView addArrangedSubview:douyinLoginButton];
-    
-    UIButton *appleLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [appleLoginButton setImage:[UIImage imageNamed:@"apple_login_icon"] forState:UIControlStateNormal];
-    [appleLoginButton addTarget:self action:@selector(appleLoginAction) forControlEvents:UIControlEventTouchUpInside];
-    [appleLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(138, 40));
-    }];
-    [stackView addArrangedSubview:appleLoginButton];
-    
-
 }
 
 - (void)showOneKeyLoginView:(BOOL)isOneKeyLogin {

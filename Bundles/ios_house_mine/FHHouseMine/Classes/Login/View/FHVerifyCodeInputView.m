@@ -57,10 +57,13 @@
         [changeNumberButton setTitleColor:[UIColor themeGray2] forState:UIControlStateNormal];
         changeNumberButton.titleLabel.font = [UIFont themeFontRegular:14];
         [changeNumberButton addTarget:self action:@selector(changeNumberAction) forControlEvents:UIControlEventTouchUpInside];
+        changeNumberButton.titleEdgeInsets = UIEdgeInsetsMake(0, 4, 0, 0);
         [self addSubview:changeNumberButton];
+        [changeNumberButton sizeToFit];
         [changeNumberButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.mobileNumberLabel.mas_right).mas_offset(6);
             make.centerY.mas_equalTo(self.mobileNumberLabel.mas_centerY);
+            make.width.mas_equalTo(changeNumberButton.frame.size.width + 4);
         }];
         
         self.sendVerifyCodeButton = [UIButton buttonWithType:UIButtonTypeCustom] ;

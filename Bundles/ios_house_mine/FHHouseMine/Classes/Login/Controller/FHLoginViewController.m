@@ -87,9 +87,11 @@
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
+    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateHighlighted];
+//    self.customNavBarView.backgroundColor = [UIColor clearColor];
 //    self.customNavBarView.seperatorLine.hidden = YES;
+    [self.customNavBarView cleanStyle:YES];
 }
 
 - (void)dealloc
@@ -138,10 +140,10 @@
             [self.view addSubview:self.onekeyLoginView];
             [self.onekeyLoginView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (@available(iOS 11.0, *)) {
-                    make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
+                    make.top.mas_equalTo(self.mas_topLayoutGuide).offset(0);
                     make.bottom.mas_equalTo(self.mas_bottomLayoutGuide);
                 } else {
-                    make.top.mas_equalTo(64);
+                    make.top.mas_equalTo(24);
                     make.bottom.mas_equalTo(-20);
                 }
                 make.left.right.equalTo(self.view);
@@ -188,10 +190,10 @@
             [self.view addSubview:self.douyinLoginView];
             [self.douyinLoginView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (@available(iOS 11.0, *)) {
-                    make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
+                    make.top.mas_equalTo(self.mas_topLayoutGuide);
                     make.bottom.mas_equalTo(self.mas_bottomLayoutGuide);
                 } else {
-                    make.top.mas_equalTo(64);
+                    make.top.mas_equalTo(24);
                     make.bottom.mas_equalTo(-20);
                 }
                 make.left.right.equalTo(self.view);

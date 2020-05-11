@@ -11,6 +11,7 @@
 #import "FHOneKeyBindingView.h"
 #import "FHMobileBindingView.h"
 #import "FHVerifyCodeInputView.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHBindContainerViewController ()
 
@@ -77,9 +78,10 @@
     switch (self.navigationType) {
         case FHBindContainerViewNavigationTypeClose: {
             [self setupDefaultNavBar:NO];
-            [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
-            [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
+            [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateNormal];
+            [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"douyin_login_close"] forState:UIControlStateHighlighted];
 //            self.customNavBarView.seperatorLine.hidden = YES;
+            [self.customNavBarView cleanStyle:YES];
             __weak typeof(self) weakSelf = self;
             [self.customNavBarView setLeftButtonBlock:^{
                 //弹框提示，并且退出所有绑定页面
@@ -89,7 +91,11 @@
             break;
         }
         case FHBindContainerViewNavigationTypePop: {
-            [self setupDefaultNavBar:YES];
+            [self setupDefaultNavBar:NO];
+            [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
+            [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
+//            self.customNavBarView.seperatorLine.hidden = YES;
+            [self.customNavBarView cleanStyle:YES];
             break;
         }
         default:

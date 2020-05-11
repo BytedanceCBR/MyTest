@@ -26,11 +26,17 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        UIImageView *logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_logo_onekey"]];
-        [self addSubview:logoImageView];
-        [logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self);
-            make.top.mas_equalTo(60);
+        
+        UIImageView *topImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"douyin_login_bg_top"]];
+        [self addSubview:topImageView];
+        [topImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.and.right.mas_equalTo(0);
+        }];
+        
+        UIImageView *bottomImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"douyin_login_bg_bottom"]];
+        [self addSubview:bottomImageView];
+        [bottomImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.and.bottom.mas_equalTo(0);
         }];
         
         self.douyinLoginButton = [UIButton buttonWithType:UIButtonTypeCustom] ;
@@ -43,7 +49,7 @@
         [self.douyinLoginButton setTitle:@"抖音一键登录" forState:UIControlStateNormal];
         [self addSubview:self.douyinLoginButton];
         [self.douyinLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(logoImageView.mas_bottom).offset(87);
+            make.centerY.mas_equalTo(self).offset(-(10+23+12));
             make.left.mas_equalTo(57);
             make.right.mas_equalTo(-57);
             make.height.mas_equalTo(46);
@@ -63,6 +69,13 @@
             make.left.mas_equalTo(57);
             make.right.mas_equalTo(-57);
             make.height.mas_equalTo(46);
+        }];
+        
+        UIImageView *logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_logo_onekey"]];
+        [self addSubview:logoImageView];
+        [logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(self);
+            make.bottom.mas_equalTo(self.douyinLoginButton.mas_top).mas_offset(-60);
         }];
         
         self.agreementLabel = [[YYLabel alloc] init];

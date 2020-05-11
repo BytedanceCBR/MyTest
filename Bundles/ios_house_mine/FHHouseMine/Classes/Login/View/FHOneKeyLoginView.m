@@ -28,20 +28,24 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
+        
+        UIImageView *topImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"douyin_login_bg_top"]];
+        [self addSubview:topImageView];
+        [topImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.and.right.mas_equalTo(0);
+        }];
+        
+        UIImageView *bottomImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"douyin_login_bg_bottom"]];
+        [self addSubview:bottomImageView];
+        [bottomImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.and.bottom.mas_equalTo(0);
+        }];
+        
         UIImageView *logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_logo_onekey"]];
         [self addSubview:logoImageView];
         [logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self);
             make.top.mas_equalTo(60);
-        }];
-        
-        self.serviceLabel = [[UILabel alloc] init];
-        self.serviceLabel.font = [UIFont themeFontRegular:14];
-        self.serviceLabel.textColor = [UIColor themeGray3];
-        [self addSubview:self.serviceLabel];
-        [self.serviceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(logoImageView.mas_bottom).mas_offset(105);
-            make.centerX.mas_equalTo(self);
         }];
         
         self.phoneNumberLabel = [[UILabel alloc] init];
@@ -50,9 +54,19 @@
         [self addSubview:self.phoneNumberLabel];
         [self.phoneNumberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self);
-            make.top.mas_equalTo(self.serviceLabel.mas_bottom).mas_offset(4);
+            make.top.mas_equalTo(logoImageView.mas_bottom).mas_offset(90);
+            make.height.mas_equalTo(42);
         }];
         
+        self.serviceLabel = [[UILabel alloc] init];
+        self.serviceLabel.font = [UIFont themeFontRegular:12];
+        self.serviceLabel.textColor = [UIColor themeGray3];
+        [self addSubview:self.serviceLabel];
+        [self.serviceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.phoneNumberLabel.mas_bottom).mas_offset(0);
+            make.centerX.mas_equalTo(self);
+        }];
+                
         self.confirmButton = [UIButton buttonWithType:UIButtonTypeCustom] ;
         self.confirmButton.backgroundColor = [UIColor themeOrange4];
         self.confirmButton.alpha = 0.6;
@@ -63,7 +77,7 @@
         [self.confirmButton setTitle:@"一键登录" forState:UIControlStateNormal];
         [self addSubview:self.confirmButton];
         [self.confirmButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.phoneNumberLabel.mas_bottom).offset(30);
+            make.top.mas_equalTo(self.serviceLabel.mas_bottom).offset(31);
             make.left.mas_equalTo(57);
             make.right.mas_equalTo(-57);
             make.height.mas_equalTo(46);

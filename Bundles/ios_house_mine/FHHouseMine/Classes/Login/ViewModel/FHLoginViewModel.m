@@ -504,6 +504,7 @@ static FHLoginSharedModel *_sharedModel = nil;
                                       NSFontAttributeName: [UIFont themeFontRegular:13],
                                       NSForegroundColorAttributeName: [UIColor themeGray3],
                                       };
+    UIColor *linkTextColor = [UIColor themeGray2];
     switch (viewType) {
         case FHLoginViewTypeDouYin:{
             attrText = [[NSMutableAttributedString alloc] initWithString:@"登录即同意 《幸福里用户协议》及《隐私政策》"];
@@ -516,14 +517,14 @@ static FHLoginSharedModel *_sharedModel = nil;
             if (privacyRange.location == NSNotFound) {
                 privacyRange = NSMakeRange(17, 4);
             }
-            YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
+//            YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
             [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
-            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
-            [attrText yy_setTextUnderline:decoration range:privacyRange];
-            [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+//            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
+//            [attrText yy_setTextUnderline:decoration range:privacyRange];
+            [attrText yy_setTextHighlightRange:userProtocolRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
                 [wself goToUserProtocol];
             }];
-            [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+            [attrText yy_setTextHighlightRange:privacyRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
                 [wself goToSecretProtocol];
             }];
             break;
@@ -577,18 +578,18 @@ static FHLoginSharedModel *_sharedModel = nil;
             }
             [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
             [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
-            YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
-            [attrText yy_setTextUnderline:decoration range:serviceRange];
-            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
-            [attrText yy_setTextUnderline:decoration range:privacyRange];
+//            YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
+//            [attrText yy_setTextUnderline:decoration range:serviceRange];
+//            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
+//            [attrText yy_setTextUnderline:decoration range:privacyRange];
             
-            [attrText yy_setTextHighlightRange:serviceRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+            [attrText yy_setTextHighlightRange:serviceRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
                 [wself goToServiceProtocol:urlStr];
             }];
-            [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+            [attrText yy_setTextHighlightRange:userProtocolRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
                 [wself goToUserProtocol];
             }];
-            [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+            [attrText yy_setTextHighlightRange:privacyRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
                 [wself goToSecretProtocol];
             }];
             break;
@@ -604,13 +605,13 @@ static FHLoginSharedModel *_sharedModel = nil;
             if (privacyRange.location == NSNotFound) {
                 privacyRange = NSMakeRange(17, 4);
             }
-            YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
-            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
-            [attrText yy_setTextUnderline:decoration range:privacyRange];
-            [attrText yy_setTextHighlightRange:userProtocolRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+//            YYTextDecoration *decoration = [YYTextDecoration decorationWithStyle:YYTextLineStyleSingle];
+//            [attrText yy_setTextUnderline:decoration range:userProtocolRange];
+//            [attrText yy_setTextUnderline:decoration range:privacyRange];
+            [attrText yy_setTextHighlightRange:userProtocolRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
                 [wself goToUserProtocol];
             }];
-            [attrText yy_setTextHighlightRange:privacyRange color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
+            [attrText yy_setTextHighlightRange:privacyRange color:linkTextColor backgroundColor:nil tapAction:^(UIView *_Nonnull containerView, NSAttributedString *_Nonnull text, NSRange range, CGRect rect) {
                 [wself goToSecretProtocol];
             }];
             break;
@@ -783,7 +784,7 @@ static FHLoginSharedModel *_sharedModel = nil;
                     NSString *device_id = [[TTInstallIDManager sharedInstance] deviceID];
                     NSString *URLString = [NSString stringWithFormat:@" http://m.haoduofangs.com/passport/auth_bind_conflict/index/?aid=1370&enter_from=%@&mobile=%@&screen_name=%@&avatar_url=%@&last_login_time=%@&platform_screen_name_current=%@&platform_screen_name_conflict=%@&profile_key=%@&device_id=%@",enter_from, mobile, screen_name, avatar_url, @(last_login_time), platform_screen_name_current, platform_screen_name_conflict, profileKey, device_id];
                     
-                    ssOpenWebView([TTStringHelper URLWithURLString:URLString], nil, strongSelf.viewController.navigationController, NO, @{@"hide_nav_bar":@"1"});
+                    ssOpenWebView([TTStringHelper URLWithURLString:URLString], nil, strongSelf.viewController.navigationController, NO, @{@"hide_nav_bar": @"1",@"hide_back_button": @"1"});
                 };
                 NSString *message = @"";
                 if ([error.userInfo[@"screen_name"] isKindOfClass:[NSString class]] && [error.userInfo[@"mobile"] isKindOfClass:[NSString class]] ) {
@@ -811,6 +812,12 @@ static FHLoginSharedModel *_sharedModel = nil;
                 [[TTUIResponderHelper visibleTopViewController] presentViewController:alertController animated:YES completion:nil];
                 
 
+            } else if (error.code == 1060) {
+                NSString *profileKey = error.userInfo[@"profile_key"];
+                if (profileKey.length) {
+                    strongSelf.profileKey = profileKey;
+                    [strongSelf goToOneKeyBind];
+                }
             } else {
                 [strongSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
             }

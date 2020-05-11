@@ -11,6 +11,7 @@
 #import "FHOneKeyLoginView.h"
 #import "FHVerifyCodeInputView.h"
 #import "FHMobileInputView.h"
+#import <FHHouseBase/UIImage+FIconFont.h>
 
 @interface FHLoginContainerViewController ()
 
@@ -41,8 +42,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
-//    [self initNavbar];
-    [self setupDefaultNavBar:YES];
+    [self setupNavbar];
+//    [self setupDefaultNavBar:YES];
     [self setupUI];
 }
 
@@ -75,12 +76,13 @@
     }
 }
 
-//- (void)initNavbar {
-//    [self setupDefaultNavBar:YES];
-//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
-//    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"close"] forState:UIControlStateHighlighted];
+- (void)setupNavbar {
+    [self setupDefaultNavBar:NO];
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];
 //    self.customNavBarView.seperatorLine.hidden = YES;
-//}
+    [self.customNavBarView cleanStyle:YES];
+}
 
 - (void)setupUI {
     switch (self.viewType) {
@@ -90,10 +92,10 @@
             [self.view addSubview:onekeyLoginView];
             [onekeyLoginView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (@available(iOS 11.0, *)) {
-                    make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
+                    make.top.mas_equalTo(self.mas_topLayoutGuide).offset(0);
                     make.bottom.mas_equalTo(self.mas_bottomLayoutGuide);
                 } else {
-                    make.top.mas_equalTo(64);
+                    make.top.mas_equalTo(24);
                     make.bottom.mas_equalTo(-20);
                 }
                 make.left.right.equalTo(self.view);

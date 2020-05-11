@@ -18,6 +18,8 @@
 
 @property (nonatomic, strong) UIButton *confirmButton;
 
+@property (nonatomic, assign) NSUInteger textNumber;
+
 @end
 
 @implementation FHMobileBindingView
@@ -53,15 +55,26 @@
         mobileTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入手机号" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray5]}];
         mobileTextField.keyboardType = UIKeyboardTypePhonePad;
         mobileTextField.returnKeyType = UIReturnKeyDone;
+        mobileTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
 //        mobileTextField.delegate = self;
         [mobileTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
         [self addSubview:mobileTextField];
         self.mobileTextField = mobileTextField;
         [self.mobileTextField mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(subTitleLabel.mas_bottom).offset(40);
-            make.left.mas_equalTo(titleLabel.mas_left);
+            make.left.mas_equalTo(30);
             make.right.mas_equalTo(-30);
             make.height.mas_equalTo(56);
+        }];
+        
+        UIView *singleLine = [[UIView alloc] init];
+        singleLine.backgroundColor = [UIColor themeGray6];
+        [self addSubview:singleLine];
+        [singleLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.mobileTextField.mas_bottom).offset(1);
+            make.left.mas_equalTo(30);
+            make.right.mas_equalTo(-30);
+            make.height.mas_equalTo(1.0/UIScreen.mainScreen.scale);
         }];
         
         self.confirmButton = [UIButton buttonWithType:UIButtonTypeCustom] ;
@@ -78,21 +91,33 @@
         }];
         
         self.mobileTextField.inputAccessoryView = self.confirmButton;
+        self.textNumber = 0;
     }
     return self;
 }
 
 - (void)textFieldDidChange:(UITextField *)textField {
-    NSString *text = textField.text;
-    NSInteger limit = 11;
-    if(text.length > limit){
-        textField.text = [text substringToIndex:limit];
-    }
     
-    if (text.length >= limit) {
-        self.confirmButton.alpha = 1;
+    if (textField.text.length > self.textNumber) {
+        if (textField.text.length == 4 || textField.text.length == 9 ) {//输入
+            NSMutableString * str = [[NSMutableString alloc ] initWithString:textField.text];
+            [str insertString:@" " atIndex:(textField.text.length-1)];
+            textField.text = str;
+        }
+        if (textField.text.length >= 13 ) {//输入完成
+            textField.text = [textField.text substringToIndex:13];
+            self.confirmButton.alpha = 1;
+        } else {
+            self.confirmButton.alpha = 0.3;
+        }
+        self.textNumber = textField.text.length;
     } else {
-        self.confirmButton.alpha = 0.3;
+        if (textField.text.length == 4 || textField.text.length == 9) {
+            textField.text = [NSString stringWithFormat:@"%@",textField.text];
+            textField.text = [textField.text substringToIndex:(textField.text.length-1)];
+        }
+        self.textNumber = textField.text.length;
+        self.confirmButton.alpha = 1;
     }
 }
 
