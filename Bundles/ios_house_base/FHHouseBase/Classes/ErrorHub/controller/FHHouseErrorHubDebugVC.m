@@ -193,7 +193,7 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     __weak typeof(self) wself = self;
-    UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"s删除" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+    UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"删除" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         NSDictionary *dic = self.dataSource[self.keyArr[indexPath.section]][indexPath.row];
         FHErrorHubType type;
         if (indexPath.section == 0) {
@@ -212,7 +212,7 @@
         });
     }];
     
-    action.backgroundColor = [UIColor themeRed1];
+    action.backgroundColor = [UIColor redColor];
     UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[action]];
     config.performsFirstActionWithFullSwipe = NO;
     return config;
