@@ -63,10 +63,10 @@ def fhPods
     # 'DelegateForC'
     # ]
 
-    pod 'ios_house_im' , '0.2.0-rc.15'
+#    pod 'ios_house_im' , '0.2.0-rc.15'
 #    pod 'ios_house_im' , :path => '../../ios_house_im'
 #    pod 'ios_house_im' , :path => '../../cim3'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'ec1d29fed31c70cdf717bc53039580d9801d074d'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '423b4f5492b8a1a8a7767b29572977955790ae90'
 
 end
 
@@ -288,7 +288,7 @@ def appPods
 
     #-----授权管理----
    # pod 'FHPushAuthorizationManager','0.1.4'
-        pod 'FHPushAuthorizationManager', git:'git@code.byted.org:fproject/push_authorization_manager.git', :commit => '0941fe9b592ff4f4fa85a5e8b4536108d4c7a17d'
+        pod 'FHPushAuthorizationManager', git:'git@code.byted.org:fproject/push_authorization_manager.git', :commit => '9e4474f01e3fd53497c4bfee294eaa030eb20335'
 
     #-----手机通讯录操作库---
     pod_binary 'TTAddressBookService', '0.1.4'
