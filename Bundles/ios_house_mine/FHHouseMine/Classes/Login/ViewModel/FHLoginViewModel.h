@@ -49,6 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 如果是运营商，返回运营商名称
 - (NSString *)serviceName;
 
+/// 包含苹果登录，如果没有抖音登录，则没有三方登录
+- (BOOL)shouldShowDouyinIcon;
+
 @end
 
 NS_ASSUME_NONNULL_END

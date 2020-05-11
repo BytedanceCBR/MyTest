@@ -98,7 +98,7 @@
                 }
                 make.left.right.equalTo(self.view);
             }];
-            [onekeyLoginView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType]];
+            [onekeyLoginView updateOneKeyLoginWithPhone:self.viewModel.mobileNumber service:[self.viewModel serviceName] protocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType] showDouyinIcon:[self.viewModel shouldShowDouyinIcon]];
             break;
         }
         case FHLoginViewTypeMobile: {
@@ -116,7 +116,7 @@
                 make.left.right.equalTo(self.view);
             }];
             self.textField = mobileInputView.mobileTextField;
-            [mobileInputView updateProtocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType]];
+            [mobileInputView updateProtocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:self.viewType] showDouyinIcon:[self.viewModel shouldShowDouyinIcon]];
             break;
         }
         case FHLoginViewTypeVerify: {

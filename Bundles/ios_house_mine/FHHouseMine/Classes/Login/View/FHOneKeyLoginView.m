@@ -19,7 +19,8 @@
 @property (nonatomic, strong) UILabel *serviceLabel;
 @property (nonatomic, strong) UILabel *phoneNumberLabel;
 @property (nonatomic, strong) UIButton *confirmButton;
-@property(nonatomic, strong) YYLabel *agreementLabel;
+@property (nonatomic, strong) YYLabel *agreementLabel;
+@property (nonatomic, strong) UIStackView *stackView;
 
 @end
 
@@ -80,12 +81,30 @@
             make.right.mas_equalTo(-30);
             make.height.mas_equalTo(0);
         }];
-        
-        UIStackView *stackView = [[UIStackView alloc] init];
-        stackView.distribution = UIStackViewDistributionEqualSpacing;
-        stackView.alignment = UIStackViewAlignmentCenter;
-        stackView.axis = UILayoutConstraintAxisHorizontal;
-        [self addSubview:stackView];
+    }
+    return self;
+}
+
+- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service protocol:(NSAttributedString *)protocol showDouyinIcon:(BOOL )showDouyinIcon{
+    if (phoneNum.length >= 11) {
+        self.phoneNumberLabel.text = [NSString stringWithFormat:@"%@ **** %@",[phoneNum substringWithRange:NSMakeRange(0, 3)],[phoneNum substringWithRange:NSMakeRange(7, 4)]];
+    } else {
+        self.phoneNumberLabel.text = phoneNum;
+    }
+    self.serviceLabel.text = service;
+    
+    self.agreementLabel.attributedText = protocol;
+    CGFloat height = [protocol.string btd_heightWithFont:protocol.yy_font width:CGRectGetWidth(UIScreen.mainScreen.bounds) - 60];
+    [self.agreementLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(height);
+    }];
+    [self enableConfirmBtn:phoneNum.length > 0];
+    if (!self.stackView) {
+        self.stackView = [[UIStackView alloc] init];
+        self.stackView.distribution = UIStackViewDistributionEqualSpacing;
+        self.stackView.alignment = UIStackViewAlignmentCenter;
+        self.stackView.axis = UILayoutConstraintAxisHorizontal;
+        [self addSubview:self.stackView];
         
         CGFloat stackViewWidth = 0;
         
@@ -95,49 +114,40 @@
         [codeLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(38, 38));
         }];
-        [stackView addArrangedSubview:codeLoginButton];
+        [self.stackView addArrangedSubview:codeLoginButton];
         stackViewWidth += 38;
         
-        UIButton *douyinLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [douyinLoginButton setImage:[UIImage imageNamed:@"douyin_login_common_icon"] forState:UIControlStateNormal];
-        [douyinLoginButton addTarget:self action:@selector(douyinLoginAction) forControlEvents:UIControlEventTouchUpInside];
-        [douyinLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(38, 38));
-        }];
-        [stackView addArrangedSubview:douyinLoginButton];
-        stackViewWidth += (38+20);
-        
-        if (@available(iOS 13.0, *)) {
-            UIButton *appleLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [appleLoginButton setImage:[UIImage imageNamed:@"apple_login_icon"] forState:UIControlStateNormal];
-            [appleLoginButton addTarget:self action:@selector(appleLoginAction) forControlEvents:UIControlEventTouchUpInside];
-            [appleLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.size.mas_equalTo(CGSizeMake(138, 38));
+        if (showDouyinIcon) {
+            
+            UIButton *douyinLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [douyinLoginButton setImage:[UIImage imageNamed:@"douyin_login_common_icon"] forState:UIControlStateNormal];
+            [douyinLoginButton addTarget:self action:@selector(douyinLoginAction) forControlEvents:UIControlEventTouchUpInside];
+            [douyinLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.size.mas_equalTo(CGSizeMake(38, 38));
             }];
-            [stackView addArrangedSubview:appleLoginButton];
-            stackViewWidth += (138+20);
+            [self.stackView addArrangedSubview:douyinLoginButton];
+            stackViewWidth += (38+20);
+            
+            if (@available(iOS 13.0, *)) {
+                UIButton *appleLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                [appleLoginButton setImage:[UIImage imageNamed:@"apple_login_icon"] forState:UIControlStateNormal];
+                [appleLoginButton addTarget:self action:@selector(appleLoginAction) forControlEvents:UIControlEventTouchUpInside];
+                [appleLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.size.mas_equalTo(CGSizeMake(138, 38));
+                }];
+                [self.stackView addArrangedSubview:appleLoginButton];
+                stackViewWidth += (138+20);
+            }
         }
         
-        [stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(stackViewWidth);
             make.height.mas_equalTo(40);
             make.centerX.mas_equalTo(self);
             make.bottom.mas_equalTo(self.agreementLabel.mas_top).mas_offset(-20);
         }];
     }
-    return self;
-}
-
-- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service protocol:(NSAttributedString *)protocol{
-    self.phoneNumberLabel.text = phoneNum;
-    self.serviceLabel.text = service;
     
-    self.agreementLabel.attributedText = protocol;
-    CGFloat height = [protocol.string btd_heightWithFont:protocol.yy_font width:CGRectGetWidth(UIScreen.mainScreen.bounds) - 60];
-    [self.agreementLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(height);
-    }];
-    [self enableConfirmBtn:phoneNum.length > 0];
 }
 
 - (void)enableConfirmBtn:(BOOL)enabled {

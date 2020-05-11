@@ -32,6 +32,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor redColor];
     // Do any additional setup after loading the view.
+    self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupNavbar];
     [self setupUI];
 }
@@ -41,7 +42,7 @@
     self.tableView.separatorStyle = UITableViewScrollPositionNone;
     self.tableView.backgroundColor = [UIColor themeGray8];
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
-    [self.view addSubview:self.tableView];    
+    [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         if (@available(iOS 11.0, *)) {
             make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);

@@ -93,8 +93,8 @@
 #import "AKTaskSettingHelper.h"
 #import "FHUserTracker.h"
 #import "FHUserTrackerDefine.h"
-
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 
 #define kCellHeight     43.f
@@ -217,10 +217,19 @@ TTEditUserProfileViewControllerDelegate
  */
 @property (nonatomic, assign) BOOL resetPasswordAlertShowed; // default is NO
 @property (nonatomic, assign) BOOL airDownloading;
+@property (nonatomic, assign) BOOL disableDouyinIconLoginSetting;
 
 @end
 
 @implementation SettingView
+
++ (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]) {
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
+}
 
 - (void)dealloc {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
@@ -243,6 +252,13 @@ TTEditUserProfileViewControllerDelegate
         // _shouldShowADRegisterEntrance = ![TTSettingMineTabManager sharedInstance_tt].hadDisplayedADRegisterEntrance;
         // 产品要求暂时去除该入口
         _shouldShowADRegisterEntrance = NO;
+        
+        NSDictionary *fhSettings = [self.class fhSettings];
+        NSDictionary *loginSettings = [fhSettings btd_dictionaryValueForKey:@"login_settings"];
+        if (loginSettings) {
+            self.disableDouyinIconLoginSetting = [loginSettings btd_boolValueForKey:@"disable_douyin_icon" default:NO];
+//            self.disableDouyinIconLoginSetting = YES;
+        }
 
         
         // table view
@@ -838,7 +854,7 @@ TTEditUserProfileViewControllerDelegate
                                                                       @(SettingCellTypeUserProtocol),
                                                                       @(SettingCellTypePrivacyProtocol),
                                                                      @(SettingCellTypeBusinessLicense),]];
-            if ([TTAccountManager isLogin]) {
+            if ([TTAccountManager isLogin] && !self.disableDouyinIconLoginSetting) {
                 [array addObject:@(SettingCellTypeFHAccountBindingSetting)];
             }
             return array;

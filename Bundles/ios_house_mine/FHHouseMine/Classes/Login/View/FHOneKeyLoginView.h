@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param phoneNum 手机号
 /// @param service 运营商名称
 /// @param protocol 协议
-- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service protocol:(NSAttributedString *)protocol;
+- (void)updateOneKeyLoginWithPhone:(NSString *)phoneNum service:(NSString *)service protocol:(NSAttributedString *)protocol showDouyinIcon:(BOOL )showDouyinIcon;
 @end
 
 NS_ASSUME_NONNULL_END

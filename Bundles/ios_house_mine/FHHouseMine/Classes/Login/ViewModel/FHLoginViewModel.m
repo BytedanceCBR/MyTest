@@ -50,6 +50,9 @@ NSString * const kFHLoginSIMStatusChangeNotification = @"kFHLoginSIMStatusChange
 
 - (void)loadOneKayAndDouyinConfigs:(void (^)(void))completion;
 
+@property (nonatomic, assign) BOOL disableDouyinOneClickLoginSetting;
+@property (nonatomic, assign) BOOL disableDouyinIconLoginSetting;
+
 @property (nonatomic, assign) BOOL isOneKeyLogin;
 @property (nonatomic, copy) NSString *mobileNumber;
 @property (nonatomic, assign) BOOL *douyinCanQucikLogin;
@@ -92,6 +95,13 @@ static FHLoginSharedModel *_sharedModel = nil;
         }
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(netReachabilityChanged:) name:TTReachabilityChangedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(simChanedNotification:) name:kFHLoginSIMStatusChangeNotification object:nil];
+        
+        NSDictionary *fhSettings = [self.class fhSettings];
+        NSDictionary *loginSettings = [fhSettings btd_dictionaryValueForKey:@"login_settings"];
+        if (loginSettings) {
+            self.disableDouyinIconLoginSetting = [loginSettings btd_boolValueForKey:@"disable_douyin_icon" default:NO];
+            self.disableDouyinOneClickLoginSetting = [loginSettings btd_boolValueForKey:@"disable_douyin_oneclick" default:NO];
+        }
     }
     return self;
 }
@@ -417,14 +427,14 @@ static FHLoginSharedModel *_sharedModel = nil;
         case FHLoginProcessTestA:
             if ([FHLoginSharedModel sharedModel].isOneKeyLogin) {
                 viewType = FHLoginViewTypeOneKey;
-            } else if([FHLoginSharedModel sharedModel].douyinCanQucikLogin) {
+            } else if([FHLoginSharedModel sharedModel].douyinCanQucikLogin && ![FHLoginSharedModel sharedModel].disableDouyinOneClickLoginSetting) {
                 viewType = FHLoginViewTypeDouYin;
             } else {
                 viewType = FHLoginViewTypeMobile;
             }
             break;
         case FHLoginProcessTestB:
-            if ([FHLoginSharedModel sharedModel].douyinCanQucikLogin) {
+            if ([FHLoginSharedModel sharedModel].douyinCanQucikLogin && ![FHLoginSharedModel sharedModel].disableDouyinOneClickLoginSetting) {
                 viewType = FHLoginViewTypeDouYin;
             } else if([FHLoginSharedModel sharedModel].isOneKeyLogin) {
                 viewType = FHLoginViewTypeOneKey;
@@ -458,9 +468,18 @@ static FHLoginSharedModel *_sharedModel = nil;
     [FHLoginTrackHelper loginShow:tracerDict];
 }
 
+- (BOOL)shouldShowDouyinIcon {
+    if (self.processType == FHLoginProcessOrigin) {
+        return NO;
+    }else {
+        if ([FHLoginSharedModel sharedModel].disableDouyinIconLoginSetting) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 #pragma mark - 运营商一键登录
-
-
 - (NSString *)serviceName {
     NSString *service = [TTAccount sharedAccount].service;
     if ([service isEqualToString:TTAccountMobile]) {
@@ -970,6 +989,9 @@ static FHLoginSharedModel *_sharedModel = nil;
                 [self goToMobileLogin];
             }];
             [alertController showFrom:self.viewController animated:YES];
+        } else if (isOneKeyLogin) {
+            //如果是运营商一键登录失败，则跳转手机号验证码登录
+            [self goToMobileLogin];
         } else {
             NSString *errorMessage = @"啊哦，服务器开小差了";
             if (!isOneKeyLogin) {

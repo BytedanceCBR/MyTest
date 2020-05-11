@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 更新UI数据
 /// @param protocol 协议
-- (void)updateProtocol:(NSAttributedString *)protocol;
+- (void)updateProtocol:(NSAttributedString *)protocol showDouyinIcon:(BOOL )showDouyinIcon;
 
 @end
 

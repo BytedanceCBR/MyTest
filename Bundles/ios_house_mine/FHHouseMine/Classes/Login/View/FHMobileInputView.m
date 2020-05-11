@@ -21,6 +21,10 @@
 
 @property (nonatomic, strong) UIButton *confirmButton;
 
+@property (nonatomic, strong) UIStackView *stackView;
+
+@property (nonatomic, assign) NSUInteger textNumber;
+
 @end
 
 @implementation FHMobileInputView
@@ -71,49 +75,14 @@
             make.height.mas_equalTo(56);
         }];
         
-        UILabel *otherLabel = [[UILabel alloc] init];
-        otherLabel.font = [UIFont themeFontRegular:14];
-        otherLabel.textColor = [UIColor themeGray3];
-        otherLabel.text = @"其他登录";
-        [self addSubview:otherLabel];
-        [otherLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.mobileTextField.mas_bottom).mas_offset(26);
-            make.left.mas_equalTo(titleLabel.mas_left);
-        }];
-        
-        UIStackView *stackView = [[UIStackView alloc] init];
-        stackView.distribution = UIStackViewDistributionEqualSpacing;
-        stackView.alignment = UIStackViewAlignmentCenter;
-        stackView.axis = UILayoutConstraintAxisHorizontal;
-        [self addSubview:stackView];
-        
-        CGFloat stackViewWidth = 0;
-        
-        UIButton *douyinLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [douyinLoginButton setImage:[UIImage imageNamed:@"douyin_login_common_icon"] forState:UIControlStateNormal];
-        [douyinLoginButton addTarget:self action:@selector(douyinLoginAction) forControlEvents:UIControlEventTouchUpInside];
-        [douyinLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(38, 38));
-        }];
-        [stackView addArrangedSubview:douyinLoginButton];
-        stackViewWidth += (38);
-        
-        if (@available(iOS 13.0, *)) {
-            UIButton *appleLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [appleLoginButton setImage:[UIImage imageNamed:@"apple_login_icon"] forState:UIControlStateNormal];
-            [appleLoginButton addTarget:self action:@selector(appleLoginAction) forControlEvents:UIControlEventTouchUpInside];
-            [appleLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.size.mas_equalTo(CGSizeMake(138, 38));
-            }];
-            [stackView addArrangedSubview:appleLoginButton];
-            stackViewWidth += (138+20);
-        }
-        
-        [stackView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(stackViewWidth);
-            make.height.mas_equalTo(40);
-            make.centerY.mas_equalTo(otherLabel.mas_centerY);
-            make.left.mas_equalTo(otherLabel.mas_right).mas_offset(18);
+        UIView *singleLine = [[UIView alloc] init];
+        singleLine.backgroundColor = [UIColor themeGray6];
+        [self addSubview:singleLine];
+        [singleLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.mobileTextField.mas_bottom).offset(11);
+            make.left.mas_equalTo(30);
+            make.right.mas_equalTo(-30);
+            make.height.mas_equalTo(1.0/UIScreen.mainScreen.scale);
         }];
         
         self.confirmButton = [UIButton buttonWithType:UIButtonTypeCustom] ;
@@ -130,32 +99,89 @@
         }];
         
         self.mobileTextField.inputAccessoryView = self.confirmButton;
+        self.textNumber = 0;
     }
     return self;
 }
 
 - (void)textFieldDidChange:(UITextField *)textField {
-    NSString *text = textField.text;
-    NSInteger limit = 11;
-    if(text.length > limit){
-        textField.text = [text substringToIndex:limit];
-    }
     
-    if (text.length >= limit) {
-        self.confirmButton.alpha = 1;
+    if (textField.text.length > self.textNumber) {
+        if (textField.text.length == 4 || textField.text.length == 9 ) {//输入
+            NSMutableString * str = [[NSMutableString alloc ] initWithString:textField.text];
+            [str insertString:@" " atIndex:(textField.text.length-1)];
+            textField.text = str;
+        }
+        if (textField.text.length >= 13 ) {//输入完成
+            textField.text = [textField.text substringToIndex:13];
+            self.confirmButton.alpha = 1;
+        } else {
+            self.confirmButton.alpha = 0.3;
+        }
+        self.textNumber = textField.text.length;
     } else {
-        self.confirmButton.alpha = 0.3;
+        if (textField.text.length == 4 || textField.text.length == 9) {
+            textField.text = [NSString stringWithFormat:@"%@",textField.text];
+            textField.text = [textField.text substringToIndex:(textField.text.length-1)];
+        }
+        self.textNumber = textField.text.length;
+        self.confirmButton.alpha = 1;
     }
-
 }
 
-- (void)updateProtocol:(NSAttributedString *)protocol{
+- (void)updateProtocol:(NSAttributedString *)protocol showDouyinIcon:(BOOL )showDouyinIcon{
     self.agreementLabel.attributedText = protocol;
     CGFloat height = [protocol.string btd_heightWithFont:protocol.yy_font width:CGRectGetWidth(UIScreen.mainScreen.bounds) - 60];
     [self.agreementLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];
 
+    if (showDouyinIcon && !self.stackView) {
+        UILabel *otherLabel = [[UILabel alloc] init];
+        otherLabel.font = [UIFont themeFontRegular:14];
+        otherLabel.textColor = [UIColor themeGray3];
+        otherLabel.text = @"其他登录";
+        [self addSubview:otherLabel];
+        [otherLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.mobileTextField.mas_bottom).mas_offset(26);
+            make.left.mas_equalTo(30);
+        }];
+        
+        self.stackView = [[UIStackView alloc] init];
+        self.stackView.distribution = UIStackViewDistributionEqualSpacing;
+        self.stackView.alignment = UIStackViewAlignmentCenter;
+        self.stackView.axis = UILayoutConstraintAxisHorizontal;
+        [self addSubview:self.stackView];
+        
+        CGFloat stackViewWidth = 0;
+        
+        UIButton *douyinLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [douyinLoginButton setImage:[UIImage imageNamed:@"douyin_login_common_icon"] forState:UIControlStateNormal];
+        [douyinLoginButton addTarget:self action:@selector(douyinLoginAction) forControlEvents:UIControlEventTouchUpInside];
+        [douyinLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(30, 30));
+        }];
+        [self.stackView addArrangedSubview:douyinLoginButton];
+        stackViewWidth += (30);
+        
+        if (@available(iOS 13.0, *)) {
+            UIButton *appleLoginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [appleLoginButton setImage:[UIImage imageNamed:@"apple_login_icon_small"] forState:UIControlStateNormal];
+            [appleLoginButton addTarget:self action:@selector(appleLoginAction) forControlEvents:UIControlEventTouchUpInside];
+            [appleLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.size.mas_equalTo(CGSizeMake(134, 30));
+            }];
+            [self.stackView addArrangedSubview:appleLoginButton];
+            stackViewWidth += (134+20);
+        }
+        
+        [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(stackViewWidth);
+            make.height.mas_equalTo(30);
+            make.centerY.mas_equalTo(otherLabel.mas_centerY);
+            make.left.mas_equalTo(otherLabel.mas_right).mas_offset(18);
+        }];
+    }
 }
 
 - (void)douyinLoginAction {
@@ -174,8 +200,10 @@
     if (self.mobileTextField.text.length < 11) {
         return;
     }
+    NSString *mobileNumber = [self.mobileTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
+
     if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode:needPush:isForBindMobile:)]) {
-        [self.delegate sendVerifyCode:self.mobileTextField.text needPush:YES isForBindMobile:NO];
+        [self.delegate sendVerifyCode:mobileNumber needPush:YES isForBindMobile:NO];
     }
 }
 
