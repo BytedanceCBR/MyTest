@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy, nonatomic) NSString *title;
 @property (copy, nonatomic) NSString *content;
 @property (copy, nonatomic) NSString *errorMessage;
+@property (copy, nonatomic) NSString *currentTime;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -110,4 +110,12 @@
     return  [self loadDataFromLocalDataWithType:errorHubType];
 }
 
++ (void)removeLogWithData:(NSDictionary *)data logType:(FHErrorHubType)errorHubType {
+    NSMutableArray  *dataArr = [self loadDataFromLocalDataWithType:errorHubType].mutableCopy;
+    [dataArr removeObject:data];
+    NSDictionary *errorInfo = @{@"error_hub":dataArr};
+    NSData *errordata = [NSJSONSerialization dataWithJSONObject:errorInfo options:0 error:NULL];
+    [errordata writeToFile:[self localDataPathWithType:errorHubType] atomically:YES];
+}
+
 @end

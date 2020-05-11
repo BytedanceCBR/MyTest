@@ -33,12 +33,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.dataSource = @{}.mutableCopy;
-    self.keyArr = @[@"host_error",@"buryingpoint_error",@"custom_error"];
-    self.dataSource[@"host_error"] = [FHErrorHubDataReadWrite getLocalErrorDataWithType:FHErrorHubTypeRequest];
-    self.dataSource[@"buryingpoint_error"] = [FHErrorHubDataReadWrite getLocalErrorDataWithType:FHErrorHubTypeBuryingPoint];
-    self.dataSource[@"custom_error"] = [FHErrorHubDataReadWrite getLocalErrorDataWithType:FHErrorHubTypeCustom];
-    [self.errorTab registerClass:[FHHouseErrorHubCell class] forCellReuseIdentifier:@"FHHouseErrorHubCell"];
     [self initUI];
+    [self.errorTab registerClass:[FHHouseErrorHubCell class] forCellReuseIdentifier:@"FHHouseErrorHubCell"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        self.dataSource[@"host_error"] = [FHErrorHubDataReadWrite getLocalErrorDataWithType:FHErrorHubTypeRequest];
+        self.dataSource[@"buryingpoint_error"] = [FHErrorHubDataReadWrite getLocalErrorDataWithType:FHErrorHubTypeBuryingPoint];
+        self.dataSource[@"custom_error"] = [FHErrorHubDataReadWrite getLocalErrorDataWithType:FHErrorHubTypeCustom];
+        self.keyArr = @[@"host_error",@"buryingpoint_error",@"custom_error"];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.errorTab reloadData];
+        });
+    });
+
 }
 
 - (void)initUI {
@@ -118,15 +124,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *dic = self.dataSource[self.keyArr[indexPath.section]][indexPath.row];
     FHHouseErrorHubCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseErrorHubCell"];
-    if (indexPath.section == 0) {
-        cell.title = @"核心接口错误" ;
-    }else if(indexPath.section == 1) {
-        cell.title = @"核心埋点错误" ;
-    }else {
-        cell.title = @"自定义错误" ;
-    }
     cell.content = dic [@"name"];
     cell.errorMessage = dic[@"error_info"];
+    cell.title = dic[@"currentTime"];
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -137,18 +137,82 @@
     }else {
         copyString = [NSString stringWithFormat:@"错误名:%@ ,错误信息:%@", dic [@"name"],dic[@"error_info"]];
     }
-    
+
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = copyString;
     [[ToastManager manager] showToast:@"已将信息复制到剪切板"];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 100;
+    return 80;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.keyArr.count;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+        return YES;
+}
+ 
+// 定义编辑样式
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+}
+ 
+// 进入编辑模式，按下出现的编辑按钮后,进行删除操作
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        NSDictionary *dic = self.dataSource[self.keyArr[indexPath.section]][indexPath.row];
+        FHErrorHubType type;
+        if (indexPath.section == 0) {
+            type = FHErrorHubTypeRequest;
+        }else if (indexPath.section == 1) {
+            type = FHErrorHubTypeBuryingPoint;
+        }else {
+            type = FHErrorHubTypeCustom;
+        }
+        NSMutableArray *dataArr = [self.dataSource[self.keyArr[indexPath.section]] mutableCopy];
+        [dataArr removeObject:dic];
+        self.dataSource[self.keyArr[indexPath.section]] = dataArr;
+        [self.errorTab reloadData];
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [FHErrorHubDataReadWrite removeLogWithData:dic logType:type];
+        });
+    }
+}
+ 
+// 修改编辑按钮文字
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return @"删除";
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 30;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 0.01;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 30)];//创建一个视图
+    headerView.backgroundColor = [UIColor colorWithHexStr:@"2d2e36"];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 30)];
+    headerLabel.textAlignment = NSTextAlignmentCenter;
+    headerLabel.backgroundColor = [UIColor clearColor];
+    headerLabel.font = [UIFont boldSystemFontOfSize:15.0];
+    headerLabel.textColor = [UIColor whiteColor];
+    if (section == 0) {
+         headerLabel.text = @"核心接口错误";
+     }else if(section == 1) {
+         headerLabel.text = @"核心埋点错误" ;
+     }else {
+         headerLabel.text = @"自定义错误" ;
+     }
+    [headerView addSubview:headerLabel];
+    return headerView;
 }
 
 - (UITableView *)errorTab {
@@ -156,6 +220,8 @@
         UITableView *errorTab = [[UITableView alloc]init];
         errorTab.dataSource = self;
         errorTab.delegate = self;
+        errorTab.sectionIndexColor = [UIColor whiteColor];
+        errorTab.sectionIndexBackgroundColor = [UIColor colorWithHexStr:@"c04851"];
         [self.view addSubview:errorTab];
         _errorTab = errorTab;
     }
@@ -177,6 +243,8 @@
 @property (weak, nonatomic) UILabel *titleLable;
 @property (weak, nonatomic) UILabel *contentLabel;
 @property (weak, nonatomic) UILabel *errorLabel;
+@property (weak, nonatomic) UILabel *timeLab;
+
 @end
 
 @implementation FHHouseErrorHubCell
@@ -194,6 +262,10 @@
         make.left.equalTo(self.contentView).offset(15);
         make.top.equalTo(self.contentView).offset(10);
     }];
+    [self.timeLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.contentView).offset(-15);
+        make.centerY.equalTo(self.titleLable);
+    }];
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).offset(15);
         make.right.equalTo(self.contentView).offset(-15);
@@ -208,7 +280,7 @@
 - (UILabel *)titleLable {
     if (!_titleLable) {
         UILabel *titleLable = [[UILabel alloc]init];
-        titleLable.font = [UIFont systemFontOfSize:18];
+        titleLable.font = [UIFont systemFontOfSize:12];
         titleLable.textColor = [UIColor blackColor];
         [self.contentView addSubview:titleLable];
         _titleLable = titleLable;
@@ -216,10 +288,21 @@
     return _titleLable;
 }
 
+- (UILabel *)timeLab {
+    if (!_timeLab) {
+        UILabel *timeLab = [[UILabel alloc]init];
+        timeLab.font = [UIFont systemFontOfSize:12];
+        timeLab.textColor = [UIColor blackColor];
+        [self.contentView addSubview:timeLab];
+        _timeLab = timeLab;
+    }
+    return _timeLab;
+}
+
 - (UILabel *)contentLabel {
     if (!_contentLabel) {
         UILabel *contentLabel = [[UILabel alloc]init];
-        contentLabel.font = [UIFont systemFontOfSize:15];
+        contentLabel.font = [UIFont systemFontOfSize:12];
         contentLabel.textColor = [UIColor blackColor];
         contentLabel.numberOfLines = 0;
         [self.contentView addSubview:contentLabel];
@@ -231,7 +314,7 @@
 - (UILabel *)errorLabel {
     if (!_errorLabel) {
         UILabel *errorLabel = [[UILabel alloc]init];
-        errorLabel.font = [UIFont systemFontOfSize:15];
+        errorLabel.font = [UIFont systemFontOfSize:12];
         errorLabel.textColor = [UIColor blackColor];
         [self.contentView addSubview:errorLabel];
         _errorLabel = errorLabel;
@@ -253,5 +336,9 @@
     }else {
         self.errorLabel.text = errorMessage;
     }
+}
+
+- (void)setCurrentTime:(NSString *)currentTime {
+    self.timeLab.text = currentTime;
 }
 @end

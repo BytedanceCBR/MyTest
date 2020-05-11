@@ -31,6 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)addLogWithData:(id)Data logType:(FHErrorHubType)errorHubType;
 
 
+/// 删除某一行数据
+/// @param data 删除数据
+/// @param errorHubType 错误类型
++ (void)removeLogWithData:(NSDictionary *)data logType:(FHErrorHubType)errorHubType;
 @end
 
 NS_ASSUME_NONNULL_END
