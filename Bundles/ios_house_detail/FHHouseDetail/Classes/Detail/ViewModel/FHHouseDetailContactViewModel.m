@@ -549,11 +549,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSDictionary *associateInfoDict = associatePhone.associateInfo;
     NSDictionary *reportParamsDict = associatePhone.reportParams;
     // 圈子电话咨询数据备份
-    // todo zjing test
     self.socialContactConfig = nil;
     if (associatePhone.houseType == FHHouseTypeNewHouse) {
         // 拨打电话 弹窗显示的话 本数据保留，否则 删除 nil
-        // todo zjing test
         self.socialContactConfig = [[FHAssociatePhoneModel alloc]init];
         
         self.socialContactConfig.houseType = associatePhone.houseType;
@@ -567,7 +565,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if(success && [wself.phoneCallViewModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *)wself.phoneCallViewModel.belongsVC;
             vc.isPhoneCallShow = YES;
-            // todo zjing test
             vc.phoneCallRealtorId = realtorId;
             
             vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
@@ -575,7 +572,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             wself.socialContactConfig = nil;
         }
     }];
-    // todo zjing test
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:reportParamsDict error:nil];
     configModel.houseType = associatePhone.houseType;
     configModel.followId = associatePhone.houseId;

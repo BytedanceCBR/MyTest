@@ -57,7 +57,6 @@
         [paramsDict setValue:@"outside_detail" forKey:@"page_type"];
         [paramsDict removeObjectForKey:@"log_pb"];
         [paramsDict removeObjectForKey:@"search_id"];
-        // todo zjing test
         [paramsDict setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
         
         NSString *getParamStr = [FHUtils getUrlFormStrFromDict:paramsDict andFirstChar:YES];
