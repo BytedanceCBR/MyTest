@@ -16,11 +16,14 @@
 #import "TTInstallIDManager.h"
 #import <SDWebImage/SDWebImageManager.h>
 #import "UIDevice+BTDAdditions.h"
+#import "IESGeckoKit.h"
+#import <FHHouseBase/FHIESGeckoManager.h>
 
 @interface FHLynxViewController ()<LynxViewClient>
 @property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
 @property(nonatomic ,strong) NSData *currentTemData;
 @property(nonatomic ,strong) NSString *titleStr;
+@property(nonatomic ,strong) NSString *channelName;
 
 @end
 
@@ -58,6 +61,7 @@
                        
           _titleStr = paramObj.allParams[@"title"];
           NSString *channelName = paramObj.allParams[@"channel_name"];
+          _channelName = channelName;
             
           NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channelName templateKey:[FHLynxManager defaultJSFileName] version:0];
 //          templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.249.250:30334/common_question/template.js?1589254996582"]];
@@ -212,19 +216,25 @@
                     size:(CGSize)targetSize
               completion:(nonnull LynxImageLoadCompletionBlock)completionBlock {
     
-//    if(url.host && [url.host isEqualToString:@"gecko"]){
-//        
-//    }
+    if([url.absoluteString containsString:@"gecko:"]){
+                
+        NSString * imageStr = url.absoluteString;
+        
+        NSString *imageRootPath = [IESGeckoKit rootDirForAccessKey:[FHIESGeckoManager getGeckoKey] channel:nil];
+        NSString *imageUrlPath = [imageStr substringFromIndex:8];
+        NSString *filePath = [NSString stringWithFormat:@"%@/%@",imageRootPath,imageUrlPath];
+        NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+        
+      [[SDWebImageManager sharedManager] loadImageWithURL:fileURL
+          options:0
+          progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL* _Nullable targetURL) {
 
-  [[SDWebImageManager sharedManager] loadImageWithURL:url
-      options:0
-      progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL* _Nullable targetURL) {
-
-      }
-      completed:^(UIImage* _Nullable image, NSData* _Nullable data, NSError* _Nullable error,
-                  SDImageCacheType cacheType, BOOL finished, NSURL* _Nullable imageURL) {
-        completionBlock(image, error, url);
-      }];
+          }
+          completed:^(UIImage* _Nullable image, NSData* _Nullable data, NSError* _Nullable error,
+                      SDImageCacheType cacheType, BOOL finished, NSURL* _Nullable imageURL) {
+            completionBlock(image, error, url);
+        }];
+    }
 }
 //
 //- (dispatch_block_t)loadImageWithURL:(NSURL*)url
