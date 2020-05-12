@@ -33,7 +33,7 @@
 
 @interface FHNeighborListViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
-@property (nonatomic, strong) FHListResultHouseModel *relatedHouseData;
+@property(nonatomic , strong) FHListResultHouseModel *recommendCourtData;
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHNeighborListViewController *listController;
 @property(nonatomic , weak) TTHttpTask *httpTask;
@@ -444,16 +444,16 @@
 
 }
 
-- (void)processDetailRelatedData {
+- (void)processRecommendCourtData {
     
     BOOL hasMore = NO;
-    hasMore = _relatedHouseData.data.hasMore;
-    NSString *searchId = _relatedHouseData.data.searchId;
-     self.currentOffset = _relatedHouseData.data.offset;
-    if(_relatedHouseData.data && _relatedHouseData.data.items.count > 0) {
+    hasMore = _recommendCourtData.data.hasMore;
+    NSString *searchId = _recommendCourtData.data.searchId;
+     self.currentOffset = _recommendCourtData.data.offset;
+    if(_recommendCourtData.data && _recommendCourtData.data.items.count > 0) {
         self.listController.hasValidateData = YES;
         [self.listController.emptyView hideEmptyView];
-        [self.relatedHouseData.data.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.recommendCourtData.data.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHRecommendCourtItem *data = [[FHRecommendCourtItem alloc] init];
             data.item = obj;
             [self.houseList addObject:data];
@@ -540,8 +540,8 @@
     NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
     self.httpTask = [FHHouseDetailAPI requestOldHouseRecommendedCourtSearchList:houseId searchId:searchId cityId:cityId offset:[NSString stringWithFormat:@"%ld", offset] query:self.condition count:15 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
         if (model != NULL && error == NULL) {
-            wself.relatedHouseData = model;
-            [wself processDetailRelatedData];
+            wself.recommendCourtData = model;
+            [wself processRecommendCourtData];
         } else {
             [wself processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
         }
