@@ -118,6 +118,7 @@
 "test_detail"           = "FHHouseDetailViewController";
 
 "react" = "FHRNBaseViewController";
+"sample_lynx_page" = "FHLynxViewController";
 
 //im 单聊
 "open_single_chat" = "ChatRootViewController";
