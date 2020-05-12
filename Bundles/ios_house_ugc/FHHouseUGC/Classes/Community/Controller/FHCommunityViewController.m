@@ -587,6 +587,7 @@
     [self gotoPostThreadVC];
     
     NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
     params[UT_ELEMENT_TYPE] = @"feed_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);
@@ -594,6 +595,7 @@
 
 - (void)gotoVotePublish {
     NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
     params[UT_ELEMENT_TYPE] = @"vote_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);
@@ -607,6 +609,7 @@
 
 - (void)gotoWendaPublish {
     NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
     params[UT_ELEMENT_TYPE] = @"question_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);

@@ -272,5 +272,20 @@
     [self initCell:@"flip"];
 }
 
+- (NSString *)pageType {
+    NSString *page_type = UT_BE_NULL;
+    if(self.currentTabIndex < self.dataArray.count){
+        FHCommunityDiscoveryCellModel *cellModel = self.dataArray[self.currentTabIndex];
+        if (cellModel.type == FHCommunityCollectionCellTypeMyJoin) {
+            page_type = @"my_join_list";
+        } else if (cellModel.type == FHCommunityCollectionCellTypeNearby) {
+            page_type = @"nearby_list";
+        }else if (cellModel.type == FHCommunityCollectionCellTypeCustom) {
+            page_type = cellModel.category;
+        }
+    }
+    return page_type;
+}
+
 @end
 
