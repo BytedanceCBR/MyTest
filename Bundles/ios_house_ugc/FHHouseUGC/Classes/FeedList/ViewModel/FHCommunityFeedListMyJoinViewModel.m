@@ -1012,7 +1012,7 @@
     dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
     dict[@"refresh_type"] = refreshType;
-    dict[@"category_name"] = self.categoryId;
+    dict[@"category_name"] = [self pageType];
     TRACK_EVENT(@"category_refresh", dict);
 }
 
