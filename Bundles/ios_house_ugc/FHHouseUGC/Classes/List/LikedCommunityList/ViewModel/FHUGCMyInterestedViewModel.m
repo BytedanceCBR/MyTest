@@ -144,6 +144,7 @@
     
     tracerDict[@"category_name"] = @"my_join_list";
     tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"origin_from"] = @"neighborhood_tab";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"show_type"] = @"feed_blank_select";
     [tracerDict setValue:@(0) forKey:@"with_tips"];
@@ -161,6 +162,7 @@
     
     tracerDict[@"category_name"] = @"my_join_list";
     tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"origin_from"] = @"neighborhood_tab";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"show_type"] = @"feed_blank_select";
     [tracerDict setValue:@(0) forKey:@"with_tips"];
