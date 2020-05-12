@@ -38,6 +38,10 @@
         [localChannels addObject:@"fe_app_c"];
     }
     
+    if (![localChannels containsObject:@"img"]) {
+        [localChannels addObject:@"img"];
+    }
+    
     if ([[FHLynxManager sharedInstance] allLocalChannelsArray]) {
         [localChannels addObjectsFromArray:[[FHLynxManager sharedInstance] allLocalChannelsArray]];
     }
@@ -46,6 +50,7 @@
     if ([[FHLynxManager sharedInstance] allConfigChannelsArray]) {
         [localChannels addObjectsFromArray:[[FHLynxManager sharedInstance] allConfigChannelsArray]];
     }
+
     
     if ([localChannels isKindOfClass:[NSArray class]] && localChannels.count > 0) {
         [IESGeckoKit registerAccessKey:[FHIESGeckoManager getGeckoKey] appVersion:stringVersion channels:localChannels];
@@ -58,7 +63,7 @@
     if ([[[FHHouseBridgeManager sharedInstance] envContextBridge] isOpenWebOffline]) {
         IESFalconManager.interceptionWKHttpScheme = YES;
         IESFalconManager.interceptionEnable = YES;
-        NSString *pattern = @"^(http|https)://.*.(pstatp.com/toutiao|haoduofangs.com/f100/inner|99hdf.com/f100/inner)";
+        NSString *pattern = @"^(http|https)://.*.(pstatp.com/(toutiao)?|haoduofangs.com/f100/inner|99hdf.com/f100/inner)";
         [IESFalconManager registerPattern:pattern forGeckoAccessKey:[FHIESGeckoManager getGeckoKey]];
     }
 }

@@ -63,6 +63,7 @@
 #import "FHDetailCommentsCellModel.h"
 #import "FHDetailAdvisoryLoanCell.h"
 #import "FHDetailPriceChangeNoticeCell.h"
+#import "FHVRPreloadManager.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -237,6 +238,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     if (model.data.vrData && model.data.vrData.hasVr) {
         hasVR = YES;
+        
+        [[FHVRPreloadManager sharedInstance] requestForSimilarHouseId:model.data.id];
     }
     
     if (model.data.houseImageDictList.count > 0 || hasVideo || hasVR) {
