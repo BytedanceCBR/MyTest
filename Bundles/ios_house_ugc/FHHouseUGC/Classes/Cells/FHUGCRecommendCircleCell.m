@@ -186,6 +186,7 @@
     tracerDict[@"element_type"] = @"top_operation_position";
     tracerDict[@"page_type"] = self.cellModel.tracerDic[@"page_type"];
     tracerDict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"];
+    tracerDict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"];
     tracerDict[@"rank"] = @(rank);
     tracerDict[@"group_id"] = model.socialGroupId;
     tracerDict[@"log_pb"] = model.logPb;
