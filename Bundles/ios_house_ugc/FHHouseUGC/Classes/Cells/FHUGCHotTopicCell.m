@@ -172,7 +172,7 @@
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ENTER_TYPE] = @"click";
     traceParam[UT_ELEMENT_FROM] = @"hot_topic";
-    traceParam[UT_ENTER_FROM] = @"nearby_list";
+    traceParam[UT_ENTER_FROM] = @"hot_discuss_feed";
     dict[@"tracer"] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_topic_list"];

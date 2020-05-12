@@ -277,9 +277,9 @@
     if(self.currentTabIndex < self.dataArray.count){
         FHCommunityDiscoveryCellModel *cellModel = self.dataArray[self.currentTabIndex];
         if (cellModel.type == FHCommunityCollectionCellTypeMyJoin) {
-            page_type = @"my_join_list";
+            page_type = @"my_join_feed";
         } else if (cellModel.type == FHCommunityCollectionCellTypeNearby) {
-            page_type = @"nearby_list";
+            page_type = @"hot_discuss_feed";
         }else if (cellModel.type == FHCommunityCollectionCellTypeCustom) {
             page_type = cellModel.category;
         }

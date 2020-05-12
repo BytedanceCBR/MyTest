@@ -157,22 +157,6 @@
     }
 }
 
-//- (void)gotoMore:(NSString *)enterType {
-////    [self trackMore];
-//    NSMutableDictionary *dict = @{}.mutableCopy;
-//    dict[@"action_type"] = @(FHCommunityListTypeFollow);
-//    dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
-//    NSMutableDictionary *traceParam = @{}.mutableCopy;
-//    traceParam[@"enter_type"] = enterType;
-//    traceParam[@"enter_from"] = @"my_join_list";
-//    traceParam[@"element_from"] = @"my_joined_neighborhood";
-//    dict[@"tracer"] = traceParam;
-//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
-//    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-//}
-
-
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return CGSizeMake(120, 60);
 }
