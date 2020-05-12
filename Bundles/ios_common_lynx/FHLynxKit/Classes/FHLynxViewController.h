@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) LynxView* lynxView;
 
+- (void)updateStatusPage:(NSNumber *)status;
+
 @end
 
 NS_ASSUME_NONNULL_END

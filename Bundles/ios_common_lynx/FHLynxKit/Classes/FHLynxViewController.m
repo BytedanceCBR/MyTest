@@ -18,6 +18,8 @@
 #import "UIDevice+BTDAdditions.h"
 #import "IESGeckoKit.h"
 #import <FHHouseBase/FHIESGeckoManager.h>
+#import "FHLynxPageBridge.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
 
 @interface FHLynxViewController ()<LynxViewClient>
 @property (nonatomic, assign) NSTimeInterval loadTime; //页面加载时间
@@ -26,6 +28,7 @@
 @property(nonatomic ,strong) NSString *channelName;
 @property(nonatomic ,strong) NSString *requestParams;
 @property(nonatomic ,strong) NSString *reportParams;
+@property(nonatomic ,strong) NSString *dataParmasStr;
 
 @end
 
@@ -51,6 +54,7 @@
                  builder.isUIRunningMode = YES;
                  builder.config = [[LynxConfig alloc] initWithProvider:LynxConfig.globalConfig.templateProvider];
                  [builder.config registerModule:[FHLynxCoreBridge class]];
+                 [builder.config registerModule:[FHLynxPageBridge class] param:self];
                  builder.frame = CGRectMake(0, top, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - top);
 
             }];
@@ -69,7 +73,7 @@
           _reportParams = paramObj.allParams[@"report_params"];
 
           NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channelName templateKey:[FHLynxManager defaultJSFileName] version:0];
-//          templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.249.250:30334/common_question/template.js?1589254996582"]];
+          templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.249.250:30334/common_question/template.js?1589254996582"]];
             
           
           NSMutableDictionary *dataParams = [NSMutableDictionary new];
@@ -102,9 +106,9 @@
                    _loadTime = [[NSDate date] timeIntervalSince1970];
                     self.currentTemData = templateData;
                    [self.lynxView loadTemplate:templateData withURL:@"local"];
-              
                     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataParams options:0 error:0];
                     NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                    _dataParmasStr = dataStr;
                     [self.lynxView updateDataWithString:dataStr];
                 }
           }
@@ -123,13 +127,53 @@
     
     self.title = _titleStr;
     
+    
  
+    [self tt_startUpdate];
+    
+    
+    [self addDefaultEmptyViewFullScreen];
     // Do any additional setup after loading the view.
+}
+
+- (void)updateStatusPage:(NSNumber *)status{
+    if ([status isKindOfClass:[NSNumber class]]) {
+        switch (status.integerValue) {
+            case 0:
+                {
+                    [self tt_endUpdataData];
+                }
+                break;
+                
+            case 1:
+            {
+                self.emptyView.hidden = NO;
+            }
+            break;
+                
+            default:
+                break;
+        }
+    }
+    
+}
+
+- (void)retryLoadData{
+    if (self.currentTemData) {
+        [self tt_startUpdate];
+        
+         NSNumber *costTime = @(0);
+         _loadTime = [[NSDate date] timeIntervalSince1970];
+         [self.lynxView loadTemplate:self.currentTemData withURL:@"local"];
+    
+        if (_dataParmasStr) {
+            [self.lynxView updateDataWithString:_dataParmasStr];
+        }
+        }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
     [self.lynxView onEnterForeground];
 }
 
