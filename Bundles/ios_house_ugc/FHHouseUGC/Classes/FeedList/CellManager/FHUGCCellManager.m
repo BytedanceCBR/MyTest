@@ -6,7 +6,6 @@
 //
 
 #import "FHUGCCellManager.h"
-#import "FHArticlePureTitleCell.h"
 #import "FHArticleSingleImageCell.h"
 #import "FHArticleMultiImageCell.h"
 #import "FHUGCRecommendCell.h"
@@ -42,7 +41,6 @@
 - (void)initSupportCellTypeList {
     self.supportCellTypeList = @[
                                 @"FHUGCPostCell",
-                                @"FHArticlePureTitleCell",
                                 @"FHArticleSingleImageCell",
                                 @"FHArticleMultiImageCell",
                                 @"FHUGCRecommendCell",
@@ -73,9 +71,6 @@
         case FHUGCFeedListCellSubTypePost:
             return [FHUGCPostCell class];
                 
-//        case FHUGCFeedListCellSubTypeArticlePureTitle:
-//            return [FHArticlePureTitleCell class];
-            
         case FHUGCFeedListCellSubTypeArticleSingleImage:
             return [FHArticleSingleImageCell class];
             
