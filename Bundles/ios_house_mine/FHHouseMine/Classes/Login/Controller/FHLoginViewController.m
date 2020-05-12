@@ -62,6 +62,9 @@
         }
         if (params[@"enter_type"]) {
             self.tracerModel.enterType = params[@"enter_type"];
+            if (!self.tracerDict[@"enter_method"]) {
+                self.tracerDict[@"enter_method"] = params[@"enter_type"];
+            }
         }
         if ([params[@"isCheckUGCADUser"] isKindOfClass:[NSNumber class]]) {
             self.isFromMineTab = [params[@"isCheckUGCADUser"] boolValue];
