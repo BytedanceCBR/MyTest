@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
 //    FHUGCFeedListCellSubTypeSingleImage,                           //单图
 //    FHUGCFeedListCellSubTypeTwoImage,                              //两图
 //    FHUGCFeedListCellSubTypeMultiImage,                            //多图
-    FHUGCFeedListCellSubTypeArticlePureTitle,                      //文章纯文本
+//    FHUGCFeedListCellSubTypeArticlePureTitle,                      //文章纯文本
     FHUGCFeedListCellSubTypeArticleSingleImage,                    //文章单图
     FHUGCFeedListCellSubTypeArticleMultiImage,                     //文章多图
     FHUGCFeedListCellSubTypeUGCRecommend,                          //小区推荐

@@ -73,8 +73,8 @@
         case FHUGCFeedListCellSubTypePost:
             return [FHUGCPostCell class];
                 
-        case FHUGCFeedListCellSubTypeArticlePureTitle:
-            return [FHArticlePureTitleCell class];
+//        case FHUGCFeedListCellSubTypeArticlePureTitle:
+//            return [FHArticlePureTitleCell class];
             
         case FHUGCFeedListCellSubTypeArticleSingleImage:
             return [FHArticleSingleImageCell class];

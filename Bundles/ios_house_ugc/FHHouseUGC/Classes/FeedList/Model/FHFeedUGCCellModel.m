@@ -316,10 +316,8 @@
             
             if(cellModel.imageList.count == 1){
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleSingleImage;
-            }else if(cellModel.imageList.count > 1){
-                cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
             }else{
-                cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
             }
             
             if(cellModel.cellSubType == FHUGCFeedListCellSubTypeArticleSingleImage){
@@ -367,11 +365,12 @@
         
         if(cellModel.imageList.count == 1){
             cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleSingleImage;
-        }else if(cellModel.imageList.count > 1){
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
         }else{
-            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
+            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticleMultiImage;
         }
+//        else{
+//            cellModel.cellSubType = FHUGCFeedListCellSubTypeArticlePureTitle;
+//        }
         
         //小区问答数据处理
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
