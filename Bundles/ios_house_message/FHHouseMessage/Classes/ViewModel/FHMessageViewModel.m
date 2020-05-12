@@ -129,9 +129,7 @@
 }
 
 - (void)dataLoaded:(FHUnreadMsgModel *)unreadMsg error:(NSError *)error ugcUnread:(FHUnreadMsgDataUnreadModel *)ugcUnread {
-    
-    BOOL isLogin = [TTAccount sharedAccount].isLogin;
-    if(isLogin) {
+    if([[IMManager shareInstance] isClientLogin]) {
         NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
         [_combiner resetConversations:allConversations];
     };
