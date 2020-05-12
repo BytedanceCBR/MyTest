@@ -24,6 +24,8 @@
 @property(nonatomic ,strong) NSData *currentTemData;
 @property(nonatomic ,strong) NSString *titleStr;
 @property(nonatomic ,strong) NSString *channelName;
+@property(nonatomic ,strong) NSString *requestParams;
+@property(nonatomic ,strong) NSString *reportParams;
 
 @end
 
@@ -60,9 +62,12 @@
           [_lynxView triggerLayout];
                        
           _titleStr = paramObj.allParams[@"title"];
-          NSString *channelName = paramObj.allParams[@"channel_name"];
+          NSString *channelName = paramObj.allParams[@"channel"];
           _channelName = channelName;
             
+          _requestParams = paramObj.allParams[@"request_params"];
+          _reportParams = paramObj.allParams[@"report_params"];
+
           NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channelName templateKey:[FHLynxManager defaultJSFileName] version:0];
 //          templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.249.250:30334/common_question/template.js?1589254996582"]];
             
@@ -72,12 +77,25 @@
           [dataCommonparmas setValue:@(screenFrame.size.height - top) forKey:@"display_height"];
           [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"display_width"];
           [dataCommonparmas setValue:@([UIDevice btd_isIPhoneXSeries]) forKey:@"iOS_iPhoneXSeries"];
+          [dataCommonparmas setValue:channelName forKey:@"app_channel"];
+          [dataCommonparmas setValue:@(top) forKey:@"status_bar_height"];
+          NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+          [dataCommonparmas setValue:buildVersionRaw forKey:@"update_version_code"];
+          [dataCommonparmas setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+          [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
+          [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
+          [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];
+          [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"dscreen_width"];
+            
           [dataParams setValue:dataCommonparmas forKey:@"common_params"];
             
           if (paramObj.allParams) {
               [dataParams addEntriesFromDictionary:paramObj.allParams];
           }
-          
+    
+          [dataParams setValue:_requestParams forKey:@"request_params"];
+          [dataParams setValue:_reportParams forKey:@"report_params"];
+
           if (templateData) {
                 if (templateData != self.currentTemData) {
                    NSNumber *costTime = @(0);
