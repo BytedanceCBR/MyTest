@@ -594,7 +594,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                         [paramsDict setValue:self.reportParams[@"enter_from"] forKey:@"category_name"];
                     }
                     
-                    [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]]  forKey:@"enter_from"];
+//                    [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]]  forKey:@"enter_from"];
                     
                     [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
                 }

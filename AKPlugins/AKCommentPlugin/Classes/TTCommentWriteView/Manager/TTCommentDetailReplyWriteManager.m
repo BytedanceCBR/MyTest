@@ -136,7 +136,7 @@ static bool isTTCommentPublishing = NO;
     //上报埋点
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"click_position"] = @"submit_comment";
-    params[@"page_type"] = self.extraDic[@"page_type"] ?: @"be_null";
+    params[@"page_type"] = @"update_detail";
     params[@"origin_from"] = self.extraDic[@"origin_from"] ?: @"be_null";
     [TTTrackerWrapper eventV3:@"click_submit_comment" params:params];
     
@@ -468,9 +468,9 @@ static bool isTTCommentPublishing = NO;
         }
     }
     
-    if (self.enterFrom.length > 0) {
-        [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName] enterFrom:[self enterFrom]]  forKey:@"enter_from"];
-    }
+//    if (self.enterFrom.length > 0) {
+//        [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName] enterFrom:[self enterFrom]]  forKey:@"enter_from"];
+//    }
     
     [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
     
