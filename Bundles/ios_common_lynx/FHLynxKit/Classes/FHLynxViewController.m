@@ -72,24 +72,10 @@
           _requestParams = paramObj.allParams[@"request_params"];
           _reportParams = paramObj.allParams[@"report_params"];
 
-          NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channelName templateKey:[FHLynxManager defaultJSFileName] version:0];
-          templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.249.250:30334/common_question/template.js?1589254996582"]];
-            
+          NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channelName templateKey:[FHLynxManager defaultJSFileName] version:0];            
           
           NSMutableDictionary *dataParams = [NSMutableDictionary new];
-          NSMutableDictionary *dataCommonparmas = [NSMutableDictionary new];
-          [dataCommonparmas setValue:@(screenFrame.size.height - top) forKey:@"display_height"];
-          [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"display_width"];
-          [dataCommonparmas setValue:@([UIDevice btd_isIPhoneXSeries]) forKey:@"iOS_iPhoneXSeries"];
-          [dataCommonparmas setValue:channelName forKey:@"app_channel"];
-          [dataCommonparmas setValue:@(top) forKey:@"status_bar_height"];
-          NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
-          [dataCommonparmas setValue:buildVersionRaw forKey:@"update_version_code"];
-          [dataCommonparmas setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-          [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
-          [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
-          [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];
-          [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"dscreen_width"];
+          NSMutableDictionary *dataCommonparmas = [self getCommonParams];
             
           [dataParams setValue:dataCommonparmas forKey:@"common_params"];
             
@@ -297,6 +283,34 @@
             completionBlock(image, error, url);
         }];
     }
+}
+
+- (NSMutableDictionary *)getCommonParams{
+       CGRect screenFrame = [UIScreen mainScreen].bounds;
+       CGFloat top = 0;
+       if (@available(iOS 13.0 , *)) {
+         top = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+       } else if (@available(iOS 11.0 , *)) {
+         top = MAX(65, self.view.safeAreaInsets.top);
+       } else {
+         top = 65;
+       }
+    
+      NSMutableDictionary *dataCommonparmas = [NSMutableDictionary new];
+      [dataCommonparmas setValue:@(screenFrame.size.height - top) forKey:@"display_height"];
+      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"display_width"];
+      [dataCommonparmas setValue:@([UIDevice btd_isIPhoneXSeries]) forKey:@"iOS_iPhoneXSeries"];
+      [dataCommonparmas setValue:_channelName forKey:@"app_channel"];
+      [dataCommonparmas setValue:@(top) forKey:@"status_bar_height"];
+      NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+      [dataCommonparmas setValue:buildVersionRaw forKey:@"update_version_code"];
+      [dataCommonparmas setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+      [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
+      [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
+      [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];
+      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"dscreen_width"];
+    
+    return dataCommonparmas;
 }
 //
 //- (dispatch_block_t)loadImageWithURL:(NSURL*)url
