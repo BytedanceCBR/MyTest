@@ -12,7 +12,6 @@
 #import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
-#import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "UIViewAdditions.h"

@@ -61,49 +61,47 @@
     _contentLabel.numberOfLines = 2;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor themeGray7];
-//    NSDictionary *linkAttributes = @{
-//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-//                                     };
-//    _contentLabel.linkAttributes = linkAttributes;
-//    _contentLabel.activeLinkAttributes = linkAttributes;
-//    _contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self addSubview:_contentLabel];
 }
 
 - (void)initConstraints {
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(10);
-        make.right.mas_equalTo(self).offset(-10);
-        make.centerY.mas_equalTo(self);
-        make.height.mas_equalTo(80);
-    }];
-    
-    [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(10);
-        make.centerY.mas_equalTo(self);
-        make.width.height.mas_equalTo(60);
-    }];
+    self.contentLabel.left = 10;
+    self.contentLabel.width = self.width - 20;
+    self.contentLabel.height = 80;
+    self.contentLabel.centerY = self.height/2;
+
+    self.iconView.left = 10;
+    self.iconView.width = 60;
+    self.iconView.height = 60;
+    self.iconView.centerY = self.height/2;
 }
 
 - (void)refreshWithdata:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+        
+        if(self.cellModel == cellModel && !cellModel.ischanged){
+            return;
+        }
+        
         self.cellModel = cellModel;
         [FHUGCCellHelper setOriginRichContent:self.contentLabel model:cellModel numberOfLines:2];
         if(cellModel.originItemModel.imageModel){
             [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.originItemModel.imageModel.url] placeholder:nil];
             _iconView.hidden = NO;
-            [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(self).offset(80);
-            }];
+            
+            self.contentLabel.left = 80;
+            self.contentLabel.width = self.width - 90;
+            self.contentLabel.height = 80;
+            self.contentLabel.centerY = self.height/2;
         }else{
             _iconView.hidden = YES;
-            [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(self).offset(10);
-                make.height.mas_equalTo(cellModel.originItemHeight);
-            }];
+            
+            self.contentLabel.left = 10;
+            self.contentLabel.width = self.width - 20;
+            self.contentLabel.height = 80;
+            self.contentLabel.centerY = self.height/2;
         }
     }
 }

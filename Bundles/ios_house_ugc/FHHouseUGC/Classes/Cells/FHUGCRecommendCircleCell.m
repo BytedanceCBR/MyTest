@@ -41,10 +41,6 @@
         make.right.left.bottom.equalTo(self.contentView);
         make.height.mas_offset(5);
     }];
-//    self.bottomSepView.bottom = self.contentView.bottom;
-//    self.bottomSepView.left = 0;
-//    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width ;
-//    self.bottomSepView.height = 5;
 }
 
 - (void)initmMainCollection {
@@ -126,10 +122,6 @@
         [cell refreshWithData:self.dataList[indexPath.row]];
         
     }
-    //
-    //    if((indexPath.row == self.dataList.count - 1) && ![FHEnvContext isNewDiscovery]){
-    //        self.allCell = (FHMyJoinAllNeighbourhoodCell *)cell;
-    //    }
     
     return cell;
 }
@@ -138,11 +130,6 @@
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
     if(indexPath.row < self.dataList.count){
         FHUGCScialGroupDataModel *model = self.dataList[indexPath.row];
-        //        if([model.socialGroupId isEqualToString:@"-1"]){
-        ////            [self trackClickOptions:@"all_community"];
-        //            [self gotoMore:@"click"];
-        //            return;
-        //        }
         
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = model.socialGroupId;
@@ -156,22 +143,6 @@
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
-
-//- (void)gotoMore:(NSString *)enterType {
-////    [self trackMore];
-//    NSMutableDictionary *dict = @{}.mutableCopy;
-//    dict[@"action_type"] = @(FHCommunityListTypeFollow);
-//    dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
-//    NSMutableDictionary *traceParam = @{}.mutableCopy;
-//    traceParam[@"enter_type"] = enterType;
-//    traceParam[@"enter_from"] = @"my_join_list";
-//    traceParam[@"element_from"] = @"my_joined_neighborhood";
-//    dict[@"tracer"] = traceParam;
-//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-//    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_list"];
-//    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-//}
-
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return CGSizeMake(120, 60);
@@ -208,4 +179,5 @@
     
     TRACK_EVENT(@"community_group_show", tracerDict);
 }
+
 @end

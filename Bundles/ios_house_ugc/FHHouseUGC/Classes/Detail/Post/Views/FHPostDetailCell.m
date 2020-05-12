@@ -121,7 +121,7 @@
     [_position setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_positionView addSubview:_position];
     
-    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectZero];
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 80)];
     _originView.hidden = YES;
     _originView.goToLinkBlock = ^(FHFeedUGCCellModel * _Nonnull cellModel, NSURL * _Nonnull url) {
         if(weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){

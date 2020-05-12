@@ -16,9 +16,9 @@
 #define iconHeight 90
 #define sidesMargin 20
 #define maxLines 3
-@interface FHUGCEncyclopediasCell () <TTUGCAttributedLabelDelegate>
-@property (weak, nonatomic)FHUGCCellUserInfoView *titleView;
-@property (weak, nonatomic)TTUGCAttributedLabel *contentLab;
+@interface FHUGCEncyclopediasCell () <TTUGCAsyncLabelDelegate>
+@property (weak, nonatomic) FHUGCCellUserInfoView *titleView;
+@property (weak, nonatomic) TTUGCAsyncLabel *contentLab;
 @property (weak, nonatomic) UIImageView *iconImage;
 @property (strong, nonatomic) FHFeedUGCCellModel *cellModel;
 @property (strong, nonatomic) UIButton *moreBtn;
@@ -35,13 +35,6 @@
 }
 
 - (void)initUI {
-    
-    //    self.titleView.top = self.contentView.top +20;
-    //    self.titleView.width = [UIScreen mainScreen].bounds.size.width;
-    //    self.titleView.right = self.contentView.right;
-    //    self.titleView.height = 40;
-    
-    
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
         make.top.equalTo(self.contentView).offset(20);
@@ -94,7 +87,7 @@
 
 - (TTUGCAttributedLabel *)contentLab {
     if (!_contentLab) {
-        TTUGCAttributedLabel *contentLab = [[TTUGCAttributedLabel alloc]initWithFrame:CGRectZero];
+        TTUGCAttributedLabel *contentLab = [[TTUGCAsyncLabel alloc]initWithFrame:CGRectZero];
         contentLab.numberOfLines = maxLines;
         contentLab.layer.masksToBounds = YES;
         contentLab.delegate = self;
@@ -135,9 +128,8 @@
     self.titleView.icon.userInteractionEnabled = model.user &&model.user.schema;
     self.titleView.descLabel.userInteractionEnabled = model.user &&model.user.schema;
     self.contentLab.hidden = isEmptyString(model.content);
-    [FHUGCCellHelper setRichContent:self.contentLab model:model];
-    //    self.contentLab.height = model.contentHeight;
-    
+    [FHUGCCellHelper setAsyncRichContent:self.contentLab model:model];
+
     if(isEmptyString(model.avatar)){
         self.iconImage.hidden = YES;
         [self.contentLab mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -156,7 +148,7 @@
 
 #pragma mark - TTUGCAttributedLabelDelegate
 
-- (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+- (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if([url.absoluteString isEqualToString:defaultTruncationLinkURLString]){
         if(self.delegate && [self.delegate respondsToSelector:@selector(lookAllLinkClicked:cell:)]){
             [self.delegate lookAllLinkClicked:self.cellModel cell:self];

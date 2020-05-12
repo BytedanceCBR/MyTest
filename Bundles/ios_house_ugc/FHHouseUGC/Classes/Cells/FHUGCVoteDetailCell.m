@@ -13,7 +13,6 @@
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
 #import "FHCommentBaseDetailViewModel.h"
-#import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "UIViewAdditions.h"

@@ -83,7 +83,7 @@
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, self.imageViewheight) count:maxPicCount];
     [self.contentView addSubview:_multiImageView];
     
-    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 80)];
     _originView.hidden = YES;
     _originView.goToLinkBlock = ^(FHFeedUGCCellModel * _Nonnull cellModel, NSURL * _Nonnull url) {
         if(wself.delegate && [wself.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){
@@ -135,23 +135,6 @@
     self.bottomView.left = 0;
     self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
     self.bottomView.height = bottomViewHeight;
-    
-    //
-
-//    self.bottomView.top = self.multiImageView.bottom + 10;
-//    self.bottomView.left = 0;
-//    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
-//    self.bottomView.height = bottomViewHeight;
-    
-//    self.originView.top = self.multiImageView.bottom + 10;
-//    self.originView.left = leftMargin;
-//    self.originView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-//    self.originView.height = originViewHeight;
-    
-//    self.attachCardView.top = self.multiImageView.bottom + 10;
-//    self.attachCardView.left = leftMargin;
-//    self.attachCardView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-//    self.attachCardView.height = attachCardViewHeight;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -201,11 +184,9 @@
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
         self.contentLabel.height = 0;
-//        self.multiImageView.top = self.userInfoView.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
         self.contentLabel.height = cellModel.contentHeight;
-//        self.multiImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
         topOffset += cellModel.contentHeight;
         topOffset += 10;
@@ -223,9 +204,9 @@
      //origin
     if(cellModel.originItemModel){
         self.originView.hidden = NO;
-        [self.originView refreshWithdata:cellModel];
         self.originView.top = self.userInfoView.bottom + topOffset;
         self.originView.height = cellModel.originItemHeight;
+        [self.originView refreshWithdata:cellModel];
         topOffset += cellModel.originItemHeight;
         topOffset += 10;
     }else{
