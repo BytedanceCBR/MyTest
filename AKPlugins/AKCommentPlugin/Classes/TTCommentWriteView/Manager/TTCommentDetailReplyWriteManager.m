@@ -19,6 +19,7 @@
 #import "TTCommentDataManager.h"
 #import "TTCommentWriteView.h"
 #import "FHTraceEventUtils.h"
+#import "FHUserTracker.h"
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
 #define PersistenceDraftKey @"PersistenceDraftKey"
@@ -138,7 +139,7 @@ static bool isTTCommentPublishing = NO;
     params[@"click_position"] = @"submit_comment";
     params[@"page_type"] = @"update_detail";
     params[@"origin_from"] = self.extraDic[@"origin_from"] ?: @"be_null";
-    [TTTrackerWrapper eventV3:@"click_submit_comment" params:params];
+    [FHUserTracker writeEvent:@"click_submit_comment" params:params];
     
     isTTCommentPublishing = YES;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

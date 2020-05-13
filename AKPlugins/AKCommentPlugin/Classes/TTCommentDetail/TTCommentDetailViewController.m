@@ -1023,7 +1023,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         }
     }
     
-    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+//    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
     
     if (!model.userDigg) {
         [params setValue:@"feed_like" forKey:@"click_position"];

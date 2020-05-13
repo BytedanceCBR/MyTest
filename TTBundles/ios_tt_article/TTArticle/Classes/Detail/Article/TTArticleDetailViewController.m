@@ -2656,7 +2656,7 @@
             }
         }
         
-        [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
+//        [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
         
         [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
     } else {

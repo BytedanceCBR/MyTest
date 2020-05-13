@@ -27,6 +27,7 @@
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
 #import "FHTraceEventUtils.h"
+#import "FHUserTracker.h"
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
 #define PersistenceGroupDraftKey @"PersistenceGroupDraftKey" // 对应文章、帖子
@@ -416,7 +417,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
     params[@"click_position"] = @"submit_comment";
     params[@"page_type"] = self.reportParams[@"page_type"] ?: @"be_null";
     params[@"origin_from"] = self.reportParams[@"origin_from"] ?: @"be_null";
-    [TTTrackerWrapper eventV3:@"click_submit_comment" params:params];
+    [FHUserTracker writeEvent:@"click_submit_comment" params:params];
     
     isTTArticleWritePublishing = YES;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -585,6 +586,8 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                 }
                 [paramsDict setValue:[self categoryName] forKey:@"category_name"];
                 [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
+                [paramsDict setValue:@"submit_comment"  forKey:@"click_position"];
+                
                 if (self.enterFrom.length > 0 || self.reportParams) {
                     if([self.reportParams isKindOfClass:[NSDictionary class]]){
                         [paramsDict addEntriesFromDictionary:self.reportParams];
