@@ -87,7 +87,7 @@
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
     NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
-    searchTracerDict[@"element_type"] = @"community_search";
+    searchTracerDict[@"element_type"] = @"community_group";
     searchTracerDict[@"enter_from"] = self.tracerDict[@"page_type"] ?: @"be_null";
     searchTracerDict[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     paramDic[@"tracer"] = searchTracerDict;

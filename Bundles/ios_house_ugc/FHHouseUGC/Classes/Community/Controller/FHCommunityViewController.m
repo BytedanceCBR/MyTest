@@ -740,7 +740,7 @@
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
     NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
-    searchTracerDict[@"element_type"] = @"community_search";
+    searchTracerDict[@"element_type"] = @"community_group";
     searchTracerDict[@"enter_from"] = @"neighborhood_tab";
     searchTracerDict[@"origin_from"] = @"neighborhood_tab";
     paramDic[@"tracer"] = searchTracerDict;
