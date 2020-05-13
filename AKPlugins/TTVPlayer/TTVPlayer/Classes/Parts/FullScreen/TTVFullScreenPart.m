@@ -120,6 +120,7 @@
 -(void)rotateToLandscapeFullScreenVideo{
     self.isTransitioning = YES;
     TTVLandscapeFullScreenViewController * horizontallyVideoVC = [[TTVLandscapeFullScreenViewController alloc] init];
+    horizontallyVideoVC.modalPresentationStyle = UIModalPresentationFullScreen;
     horizontallyVideoVC.transitioningDelegate = self.customAnimator;
     self.customAnimator.frameBeforePresent = self.customAnimator.rotateView?self.customAnimator.rotateView.frame:self.player.view.frame;
 
