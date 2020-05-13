@@ -417,6 +417,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
     params[@"click_position"] = @"submit_comment";
     params[@"page_type"] = self.reportParams[@"page_type"] ?: @"be_null";
     params[@"origin_from"] = self.reportParams[@"origin_from"] ?: @"be_null";
+    params[@"group_id"] = self.groupModel.groupID ?: @"be_null";
     [FHUserTracker writeEvent:@"click_submit_comment" params:params];
     
     isTTArticleWritePublishing = YES;

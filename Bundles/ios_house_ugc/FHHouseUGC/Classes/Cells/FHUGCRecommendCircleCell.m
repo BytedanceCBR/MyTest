@@ -138,20 +138,31 @@
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
     if(indexPath.row < self.dataList.count){
         FHUGCScialGroupDataModel *model = self.dataList[indexPath.row];
-        //        if([model.socialGroupId isEqualToString:@"-1"]){
-        ////            [self trackClickOptions:@"all_community"];
-        //            [self gotoMore:@"click"];
-        //            return;
-        //        }
         
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"community_id"] = model.socialGroupId;
-        dict[@"tracer"] = @{@"enter_from":@"my_joined_neighborhood",
-                            @"enter_type":@"click",
-                            @"rank":@(indexPath.row),
-                            @"log_pb":model.logPb ?: @"be_null"};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        //跳转到圈子详情页
+        TTRouteUserInfo *userInfo = nil;
+        if([model.socialGroupId isEqualToString:@"-1"]){
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"action_type"] = @(FHCommunityListTypeFollow);
+            dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
+            NSMutableDictionary *traceParam = @{}.mutableCopy;
+            traceParam[@"enter_type"] = @"click";
+            traceParam[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+            traceParam[@"element_from"] = @"top_operation_position";
+            dict[@"tracer"] = traceParam;
+            userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        }else{
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"community_id"] = self.cellModel.community.socialGroupId;
+            dict[@"tracer"] = @{
+                @"origin_from":self.cellModel.tracerDic[@"origin_from"] ?: @"be_null",
+                @"enter_from":self.cellModel.tracerDic[@"page_type"] ?: @"be_null",
+                @"enter_type":@"click",
+                @"element_from":@"top_operation_position",
+                @"rank":self.cellModel.tracerDic[@"rank"] ?: @"be_null",
+                @"log_pb":self.cellModel.logPb ?: @"be_null"};
+            userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        }
+    
         NSURL *openUrl = [NSURL URLWithString:model.schema];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }

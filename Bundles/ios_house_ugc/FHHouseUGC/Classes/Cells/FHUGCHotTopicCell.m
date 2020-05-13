@@ -184,6 +184,7 @@
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)self.currentData;
         NSMutableDictionary *tracerDict = [NSMutableDictionary new];
         tracerDict[@"element_type"] = @"hot_topic";
+        tracerDict[@"rank"] = self.cellModel.tracerDic[@"rank"] ?: @"be_null";
         tracerDict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
         tracerDict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
         tracerDict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
@@ -227,7 +228,7 @@
         NSMutableDictionary *traceParam = @{}.mutableCopy;
         traceParam[@"enter_type"] = @"click";
         traceParam[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
-        traceParam[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+        traceParam[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
         traceParam[@"element_from"] = @"hot_topic";
         traceParam[@"enter_type"] = @"click";
         traceParam[@"rank"] = @(indexPath.row);
@@ -237,6 +238,7 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到话题详情页
         if(model.schema.length > 0){
+            model.schema = [model.schema stringByReplacingOccurrencesOfString:@"nearby_list" withString:(self.cellModel.tracerDic[@"page_type"] ?: @"be_null")];
             NSURL *openUrl = [NSURL URLWithString:model.schema];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         }
