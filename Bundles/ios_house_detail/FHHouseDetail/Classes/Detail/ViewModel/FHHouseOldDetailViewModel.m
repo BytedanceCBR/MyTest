@@ -64,6 +64,7 @@
 #import "FHDetailAdvisoryLoanCell.h"
 #import "FHDetailPriceChangeNoticeCell.h"
 #import "FHVRPreloadManager.h"
+#import "TTSettingsManager.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -239,7 +240,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (model.data.vrData && model.data.vrData.hasVr) {
         hasVR = YES;
         
-        [[FHVRPreloadManager sharedInstance] requestForSimilarHouseId:model.data.id];
+        NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+        BOOL boolSwitchCityHome = [fhSettings tt_boolValueForKey:@"f_webview_preload_close"];
+        
+        if(!boolSwitchCityHome){
+            [[FHVRPreloadManager sharedInstance] requestForSimilarHouseId:model.data.id];
+        }
     }
     
     if (model.data.houseImageDictList.count > 0 || hasVideo || hasVR) {
