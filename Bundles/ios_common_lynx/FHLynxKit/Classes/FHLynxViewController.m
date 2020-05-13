@@ -40,14 +40,7 @@
       
         CGRect screenFrame = [UIScreen mainScreen].bounds;
         
-        CGFloat top = 0;
-         if (@available(iOS 13.0 , *)) {
-           top = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
-         } else if (@available(iOS 11.0 , *)) {
-           top = MAX(65, self.view.safeAreaInsets.top);
-         } else {
-           top = 65;
-         }
+        CGFloat top = [self getSafeTop];
         
         if (!_lynxView) {
           _lynxView = [[LynxView alloc] initWithBuilderBlock:^(LynxViewBuilder* builder) {
@@ -57,7 +50,7 @@
                  [builder.config registerModule:[FHLynxPageBridge class] param:self];
                  builder.frame = CGRectMake(0, top, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - top);
 
-            }];
+          }];
           _lynxView.layoutWidthMode = LynxViewSizeModeExact;
           _lynxView.layoutHeightMode = LynxViewSizeModeUndefined;
           _lynxView.preferredLayoutWidth = screenFrame.size.width;
@@ -73,11 +66,8 @@
           _reportParams = paramObj.allParams[@"report_params"];
 
           NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:channelName templateKey:[FHLynxManager defaultJSFileName] version:0];            
-          
           NSMutableDictionary *dataParams = [NSMutableDictionary new];
-          NSMutableDictionary *dataCommonparmas = [self getCommonParams];
-            
-          [dataParams setValue:dataCommonparmas forKey:@"common_params"];
+    
             
           if (paramObj.allParams) {
               [dataParams addEntriesFromDictionary:paramObj.allParams];
@@ -92,6 +82,10 @@
                    _loadTime = [[NSDate date] timeIntervalSince1970];
                     self.currentTemData = templateData;
                    [self.lynxView loadTemplate:templateData withURL:@"local"];
+                    
+                    NSMutableDictionary *dataCommonparmas = [self getCommonParams];
+                    [dataParams setValue:dataCommonparmas forKey:@"common_params"];
+                    
                     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataParams options:0 error:0];
                     NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
                     _dataParmasStr = dataStr;
@@ -99,6 +93,8 @@
                 }
           }
         }
+        
+        [self.view addSubview:_lynxView];
     }
     return self;
 }
@@ -107,12 +103,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.view addSubview:_lynxView];
 
     [self setupDefaultNavBar:YES];
     
     self.title = _titleStr;
-    
     
  
     [self tt_startUpdate];
@@ -263,7 +257,6 @@
 - (void)loadImageWithURL:(nonnull NSURL*)url
                     size:(CGSize)targetSize
               completion:(nonnull LynxImageLoadCompletionBlock)completionBlock {
-    
     if([url.absoluteString containsString:@"gecko:"]){
                 
         NSString * imageStr = url.absoluteString;
@@ -273,28 +266,40 @@
         NSString *filePath = [NSString stringWithFormat:@"%@/%@",imageRootPath,imageUrlPath];
         NSURL *fileURL = [NSURL fileURLWithPath:filePath];
         
-      [[SDWebImageManager sharedManager] loadImageWithURL:fileURL
+        [[SDWebImageManager sharedManager] loadImageWithURL:fileURL
           options:0
           progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL* _Nullable targetURL) {
 
           }
           completed:^(UIImage* _Nullable image, NSData* _Nullable data, NSError* _Nullable error,
                       SDImageCacheType cacheType, BOOL finished, NSURL* _Nullable imageURL) {
-            completionBlock(image, error, url);
+            if (error) {
+                UIImage *imagePlaceholder = [UIImage imageNamed:@"house_cell_placeholder"];
+                if (imagePlaceholder) {
+                    completionBlock(imagePlaceholder, nil, url);
+                }
+            }else{
+                completionBlock(image, error, url);
+            }
         }];
     }
 }
 
+- (CGFloat)getSafeTop{
+    CGFloat top = 0;
+         if (@available(iOS 13.0 , *)) {
+           top = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+         } else if (@available(iOS 11.0 , *) && [UIDevice btd_isIPhoneXSeries]) {
+           top = 84;
+         } else {
+           top = 65;
+         }
+    return top;
+}
+
 - (NSMutableDictionary *)getCommonParams{
        CGRect screenFrame = [UIScreen mainScreen].bounds;
-       CGFloat top = 0;
-       if (@available(iOS 13.0 , *)) {
-         top = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
-       } else if (@available(iOS 11.0 , *)) {
-         top = MAX(65, self.view.safeAreaInsets.top);
-       } else {
-         top = 65;
-       }
+      CGFloat top = [self getSafeTop];
     
       NSMutableDictionary *dataCommonparmas = [NSMutableDictionary new];
       [dataCommonparmas setValue:@(screenFrame.size.height - top) forKey:@"display_height"];
@@ -308,7 +313,7 @@
       [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
       [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
       [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];
-      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"dscreen_width"];
+      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"screen_width"];
     
     return dataCommonparmas;
 }

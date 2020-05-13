@@ -12,6 +12,19 @@
 #import "FHEnvContext.h"
 #import "TTKitchen.h"
 #import "ToastManager.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+BTDAdditions.h"
+#import "NetworkUtilities.h"
+#import "NSDictionary+TTAdditions.h"
+#import "TTNetworkManager.h"
+#import "FHRNHTTPRequestSerializer.h"
+#import "FHUtils.h"
+
+#define FHLynxBridgeMsgSuccess @(1)
+#define FHLynxBridgeMsgFailed @(0)
+
+typedef void(^FHLynxBridgeCallback)(NSString *response);
+
 
 @implementation FHLynxCoreBridge
 
@@ -30,6 +43,8 @@
         @"getBoolSetting" : NSStringFromSelector(@selector(getBoolSetting:)),
         @"getStringSetting" : NSStringFromSelector(@selector(getStringSetting:)),
         @"showToast" : NSStringFromSelector(@selector(showToast:)),
+        @"log" : NSStringFromSelector(@selector(log:logInfo:)),
+        @"fetch" : NSStringFromSelector(@selector(fetchWithParam:callback:)),
 //        @"dispatchEvent": NSStringFromSelector(@selector(dispatchEvent:label:params:)),
     };
 }
@@ -87,6 +102,137 @@
 - (void)showToast:(NSString *)toast{
     if ([toast isKindOfClass:[NSString class]] && toast.length > 0) {
         [[ToastManager manager] showToast:toast];
+    }
+}
+
+- (void)log:(NSString *)logKey logInfo:(NSString *)logInfo{
+    NSLog(@"[FHLynx] %@:%@",logKey,logInfo);
+}
+
+- (NSString *)getStringSetting:(NSString *)key {
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSString *getSettingStr = [fhSettings btd_stringValueForKey:key] ? : @"";
+    return getSettingStr;
+}
+
+- (NSInteger)getIntSetting:(NSString *)key {
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    NSInteger getSettingStr = [fhSettings btd_intValueForKey:key];
+    return getSettingStr;
+}
+
+
+- (void)fetchWithParam:(NSString *)paramStr callback:(FHLynxBridgeCallback)callback
+{
+    if (!TTNetworkConnected()) {
+         NSString *stringRes = @"\{\"message\": \"failed\"\}";
+         callback(stringRes);
+        return;
+    }
+    
+    NSDictionary *param = nil;
+    
+    if ([paramStr isKindOfClass:[NSString class]]) {
+        NSString *stringJson = (NSString *)paramStr;
+        //json字符串
+        NSData *jsonData = [stringJson dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *err;
+        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                            options:NSJSONReadingMutableContainers
+                                                              error:&err];
+        if(!err){
+            param = dic;
+        }
+    }
+    
+    if (!param) {
+        NSString *stringRes = @"\{\"message\": \"failed\"\}";
+        callback(stringRes);
+        return;
+    }
+
+    NSString *url = [param tt_stringValueForKey:@"url"];
+    NSString *method = [param stringValueForKey:@"method" defaultValue:@"GET"];
+    method = [method.uppercaseString isEqualToString:@"POST"]? @"POST": @"GET";
+
+    NSDictionary *header = [param tt_dictionaryValueForKey:@"header"];
+    NSString *stringKey = [method isEqualToString:@"GET"] ? @"params" : @"data";
+
+    NSDictionary *params = [param tt_objectForKey:stringKey];
+
+    BOOL needCommonParams = [param tt_boolValueForKey:@"needCommonParams"];
+
+    if (!url.length) {
+        NSString *stringRes = @"\{\"message\": \"failed\"\}";
+        callback(stringRes);
+        return;
+    }
+
+    if (![params isKindOfClass:[NSDictionary class]]) {
+        if ([params isKindOfClass:[NSString class]]) {
+            NSString *stringJson = (NSString *)params;
+            //json字符串
+            NSData *jsonData = [stringJson dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *err;
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                                options:NSJSONReadingMutableContainers
+                                                                  error:&err];
+            if(!err){
+                params = dic;
+            }
+        }else
+        {
+            return;
+        }
+    }
+
+    NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
+    if ([method isEqualToString:@"GET"]) {
+        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
+            NSString *result = @"";
+
+            if([obj isKindOfClass:[NSData class]]){
+                result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
+            }
+
+            if (!result || error) {
+                result = @"\{\"message\": \"failed\"\}";
+            }
+
+//            NSMutableDictionary *resultDict = [NSMutableDictionary new];
+//            [resultDict setValue:(response.allHeaderFields ? response.allHeaderFields : @"") forKey:@"headers"];
+//            [resultDict setValue:result forKey:@"response"];
+//            [resultDict setValue:@(response.statusCode) forKey:@"status"];
+//            [resultDict setValue:error?@(0): @(1) forKey:@"code"];
+//            [resultDict setValue:startTime forKey:@"beginReqNetTime"];
+
+            if (callback) {
+                callback(result);
+            }
+        }];
+    }else
+    {
+        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHRNHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+            if (callback) {
+                NSString *result = @"";
+                if([obj isKindOfClass:[NSData class]]){
+                    result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
+                }
+
+                if (!result || error) {
+                    result = @"\{\"message\": \"failed\"\}";
+                }
+
+//                NSMutableDictionary *resultDict = [NSMutableDictionary new];
+//                [resultDict setValue:(response.allHeaderFields ? response.allHeaderFields : @"") forKey:@"headers"];
+//                [resultDict setValue:result forKey:@"response"];
+//                [resultDict setValue:@(response.statusCode) forKey:@"status"];
+//                [resultDict setValue:error?@(0): @(1) forKey:@"code"];
+//                [resultDict setValue:startTime forKey:@"beginReqNetTime"];
+
+                callback(result);
+            }
+        }];
     }
 }
 
