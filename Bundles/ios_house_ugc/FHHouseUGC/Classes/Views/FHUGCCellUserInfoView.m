@@ -184,8 +184,15 @@
     [self.moreBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     self.moreBtn.titleLabel.font = [UIFont themeFontRegular:12];
     [self.moreBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-         make.width.height.mas_equalTo(50);
+         make.width.mas_equalTo(50);
      }];
+    [self.userName mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 200);
+    }];
+    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10 -100;
+    [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(maxWidth);
+    }];
 }
 
 - (void)layoutSubviews {

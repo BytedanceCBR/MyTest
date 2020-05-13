@@ -722,7 +722,7 @@
     if(cellModel.isInsertGuideCell){
         NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
         guideDict[@"element_type"] = @"feed_community_guide_notice";
-        guideDict[@"page_type"] = @"nearby_list";
+        guideDict[@"page_type"] = [self pageType];
         guideDict[@"enter_from"] = @"neighborhood_tab";
         TRACK_EVENT(@"element_show", guideDict);
     }
@@ -788,7 +788,7 @@
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
-    dict[@"enter_from"] = @"nearby_list";
+    dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
@@ -824,7 +824,7 @@
     dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
     dict[@"refresh_type"] = refreshType;
-    dict[@"category_name"] = self.categoryId;
+    dict[@"category_name"] = [self pageType];
     TRACK_EVENT(@"category_refresh", dict);
 }
 

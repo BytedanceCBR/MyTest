@@ -453,6 +453,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"source_from"] = isFloorAction?@"floor_type":@"loan";
     imExtra[@"im_open_url"] = openUrl;
+    imExtra[@"realtor_position"] = isFloorAction?@"floor_type":@"loan";
     if([self.baseViewModel.detailData isKindOfClass:FHDetailOldModel.class]) {
         FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
         

@@ -537,6 +537,10 @@
                 make.bottom.mas_equalTo(self.topView).offset(-8);
             }];
         }
+    }else{
+        self.viewModel.currentTabIndex = 0;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
     }
 }
 
@@ -583,6 +587,7 @@
     [self gotoPostThreadVC];
     
     NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
     params[UT_ELEMENT_TYPE] = @"feed_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);
@@ -590,6 +595,7 @@
 
 - (void)gotoVotePublish {
     NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
     params[UT_ELEMENT_TYPE] = @"vote_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);
@@ -603,6 +609,7 @@
 
 - (void)gotoWendaPublish {
     NSMutableDictionary *params = @{}.mutableCopy;
+    params[UT_ORIGIN_FROM] = @"neighborhood_tab";
     params[UT_ELEMENT_TYPE] = @"question_icon";
     params[UT_PAGE_TYPE] = [self.viewModel pageType];
     TRACK_EVENT(@"click_options", params);
@@ -733,8 +740,9 @@
     NSURL *openUrl = [NSURL URLWithString:routeUrl];
     NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
     NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
-    searchTracerDict[@"element_type"] = @"community_search";
+    searchTracerDict[@"element_type"] = @"community_group";
     searchTracerDict[@"enter_from"] = @"neighborhood_tab";
+    searchTracerDict[@"origin_from"] = @"neighborhood_tab";
     paramDic[@"tracer"] = searchTracerDict;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];

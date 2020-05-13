@@ -269,7 +269,7 @@
 - (void)trackMore {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"element_type"] = @"my_joined_neighborhood";
-    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"page_type"] = [self pageType];
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     TRACK_EVENT(@"click_more", tracerDict);
 }
@@ -317,7 +317,7 @@
     dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"enter_type"] = enterType;
-    traceParam[@"enter_from"] = @"my_join_list";
+    traceParam[@"enter_from"] = [self pageType];
     traceParam[@"element_from"] = @"my_joined_neighborhood";
     dict[TRACER_KEY] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -330,7 +330,7 @@
 - (void)trackElementShow {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"element_type"] = @"feed_message_tips_card";
-    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"page_type"] = [self pageType];
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     TRACK_EVENT(@"element_show", tracerDict);
 }
@@ -338,7 +338,7 @@
 - (void)trackClickOptions:(NSString *)position {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"click_position"] = position;
-    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"page_type"] = [self pageType];
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     TRACK_EVENT(@"click_options", tracerDict);
 }
@@ -370,9 +370,13 @@
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     
     tracerDict[@"element_type"] = @"all_community";
-    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"page_type"] = [self pageType];
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     TRACK_EVENT(@"element_show", tracerDict);
+}
+
+- (NSString *)pageType {
+    return @"my_join_feed";
 }
 
 @end
