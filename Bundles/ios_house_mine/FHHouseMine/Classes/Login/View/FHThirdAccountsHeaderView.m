@@ -18,7 +18,7 @@
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         _titleLabel = [[UILabel alloc]init];
-        _titleLabel.text = @"社交平台账号绑定";
+        _titleLabel.text = @"社交平台帐号绑定";
         _titleLabel.font = [UIFont themeFontMedium:14];
         _titleLabel.textColor = [UIColor themeGray3];
         [_titleLabel sizeToFit];

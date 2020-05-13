@@ -742,12 +742,12 @@ TTEditUserProfileViewControllerDelegate
         [itemCell reloadWithProfileItem:item];
     }
     else if (cellType == SettingCellTypeAccountBindingSetting) {
-        cell.textLabel.text = NSLocalizedString(@"账号和隐私设置", nil);
+        cell.textLabel.text = NSLocalizedString(@"帐号和隐私设置", nil);
         UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }else if(cellType == SettingCellTypeFHAccountBindingSetting){
-        cell.textLabel.text = NSLocalizedString(@"账号设置", nil);
+        cell.textLabel.text = NSLocalizedString(@"帐号设置", nil);
         UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;

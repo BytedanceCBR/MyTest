@@ -56,7 +56,7 @@
 }
 
 -(void)setupNavbar {
-    [self setTitle:@"账号和绑定设置"];
+    [self setTitle:@"帐号和绑定设置"];
     [self setupDefaultNavBar:NO];
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:ICON_FONT_IMG(24, @"\U0000e68a", [UIColor themeGray1]) forState:UIControlStateHighlighted];

@@ -504,6 +504,36 @@ static FHLoginSharedModel *_sharedModel = nil;
     return YES;
 }
 
+- (void)downgradeLoginToMobile {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if ([self.viewController.navigationController.viewControllers containsObject:self.viewController]) {
+            NSUInteger index = [self.viewController.navigationController.viewControllers indexOfObject:self.viewController];
+            if (index > 0) {
+                if (self.currentViewType != FHLoginViewTypeDouYin) {
+                    [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:YES];
+                }else {
+                    [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:NO];
+                    [self goToOneKeyLogin];
+                }
+            }
+        } else {
+            [self.viewController.navigationController popToRootViewControllerAnimated:NO];
+            [FHLoginSharedModel sharedModel].douyinCanQucikLogin = NO;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                NSMutableDictionary *dict = @{}.mutableCopy;
+                dict[TRACER_KEY] = @{
+                    @"enter_from": @"web_conflict",
+                    @"enter_method": @"change_other",
+                    @"trigger": @"user"
+                };
+                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+            });
+        }
+    });
+}
+
 #pragma mark - 运营商一键登录
 - (NSString *)serviceName {
     NSString *service = [TTAccount sharedAccount].service;
@@ -823,7 +853,10 @@ static FHLoginSharedModel *_sharedModel = nil;
                 };
                 NSString *message = @"";
                 if ([error.userInfo[@"screen_name"] isKindOfClass:[NSString class]] && [error.userInfo[@"mobile"] isKindOfClass:[NSString class]] ) {
-                    message = [NSString stringWithFormat:@"检查到%@已绑定\n幸福里帐号【%@】",error.userInfo[@"mobile"], error.userInfo[@"screen_name"]];
+                    //皮皮虾冲突格式
+                    //message = [NSString stringWithFormat:@"检查到%@已绑定\n幸福里帐号【%@】",error.userInfo[@"mobile"], error.userInfo[@"screen_name"]];
+                    //检查到该手机号已绑定幸福里帐号「昵称」
+                    message = [NSString stringWithFormat:@"检查到该手机号已绑定幸福里帐号「%@」", error.userInfo[@"screen_name"]];
                 }
                 UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"帐号冲突提醒"
                                                                                message:message
@@ -834,6 +867,7 @@ static FHLoginSharedModel *_sharedModel = nil;
                     // 点击取消按钮，调用此block
                     tracerDict[@"click_button"] = @"取消授权";
                     [FHLoginTrackHelper loginPopupClick:tracerDict error:error];
+                    [strongSelf downgradeLoginToMobile];
                 }];
                 [alertController addAction:cancelAction];
                 
@@ -904,7 +938,7 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)bindCancelAction {
-    //登出账号，并且退出所有页面
+    //登出帐号，并且退出所有页面
     NSString *userID = [TTAccount sharedAccount].user.userID;
     __weak typeof(self) weakSelf = self;
     [TTAccount logoutInScene:TTAccountLogoutSceneNormal completion:^(BOOL success, NSError * _Nullable error) {
@@ -1112,33 +1146,7 @@ static FHLoginSharedModel *_sharedModel = nil;
 - (void)loginConflictResolvedFail:(NSNotification *)aNotification {
     //冲突处理失败，没有用户信息，需要跳转手机号登录或者运营商一键登录
     [self.viewController.navigationController popViewControllerAnimated:NO];
-    if ([self.viewController.navigationController.viewControllers containsObject:self.viewController]) {
-        NSUInteger index = [self.viewController.navigationController.viewControllers indexOfObject:self.viewController];
-        if (index > 0) {
-            if (self.currentViewType != FHLoginViewTypeDouYin) {
-                [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:YES];
-            }else {
-                [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:NO];
-                [self goToOneKeyLogin];
-            }
-        }
-        
-    } else {
-        [self.viewController.navigationController popToRootViewControllerAnimated:NO];
-        [FHLoginSharedModel sharedModel].douyinCanQucikLogin = NO;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSMutableDictionary *dict = @{}.mutableCopy;
-            dict[@"isCheckUGCADUser"] = @(1);
-            dict[TRACER_KEY] = @{
-                @"enter_from": @"web_conflict",
-                @"enter_method": @"change_other",
-                @"trigger": @"user"
-            };
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-            NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-        });
-    }
+    [self downgradeLoginToMobile];
 }
 
 - (void)loginConflictResolvedBindMobile:(NSNotification *)aNotification {

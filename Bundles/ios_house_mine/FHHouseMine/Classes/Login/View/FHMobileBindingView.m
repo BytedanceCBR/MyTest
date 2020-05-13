@@ -41,7 +41,7 @@
         subTitleLabel.font = [UIFont themeFontRegular:14];
         subTitleLabel.textColor = [UIColor themeGray3];
         subTitleLabel.numberOfLines = 0;
-        subTitleLabel.text = @"为了你的账号安全，请先绑定手机，我们会严格保护你的手机号信息";
+        subTitleLabel.text = @"为了你的帐号安全，请先绑定手机，我们会严格保护你的手机号信息";
         [self addSubview:subTitleLabel];
         [subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(titleLabel.mas_bottom).mas_offset(4);
