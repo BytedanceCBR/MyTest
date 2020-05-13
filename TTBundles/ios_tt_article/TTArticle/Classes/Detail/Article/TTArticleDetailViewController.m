@@ -2679,7 +2679,7 @@
             }
         }
         
-        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
+//        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
         
         [TTTrackerWrapper eventV3:@"rt_like" params:params];
     }
