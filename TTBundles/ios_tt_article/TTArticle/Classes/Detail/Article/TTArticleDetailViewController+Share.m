@@ -609,21 +609,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             [params setValue:@"detail" forKey:@"position"];
             
             if(self.detailModel.reportParams.count > 0){
-                if(self.detailModel.reportParams[@"log_pb"]){
-                    params[@"log_pb"] = self.detailModel.reportParams[@"log_pb"];
-                }
-                
-                if(self.detailModel.reportParams[@"origin_from"]){
-                    params[@"origin_from"] = self.detailModel.reportParams[@"origin_from"];
-                }
-                
-                if(self.detailModel.reportParams[@"page_type"]){
-                    params[@"page_type"] = self.detailModel.reportParams[@"page_type"];
-                }
-                
-                if(self.detailModel.reportParams[@"enter_from"]){
-                    params[@"category_name"] = self.detailModel.reportParams[@"enter_from"];
-                }
+                [params addEntriesFromDictionary:self.detailModel.reportParams];
             }
             
             [TTTrackerWrapper eventV3:@"rt_favourite" params:params];
