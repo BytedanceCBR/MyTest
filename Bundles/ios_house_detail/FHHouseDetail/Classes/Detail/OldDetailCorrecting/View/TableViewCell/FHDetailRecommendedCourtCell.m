@@ -160,7 +160,6 @@
             infoDict[@"title"] = @"推荐新盘";
         }
         infoDict[@"house_id"] = self.baseViewModel.houseId;
-        // 周边小区跳转
 
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://house_list_recommend_court"];

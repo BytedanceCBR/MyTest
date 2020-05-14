@@ -24,7 +24,6 @@
 #import "FHHomePlaceHolderCell.h"
 #import "FHHouseListAPI.h"
 #import "FHHouseListBaseItemModel.h"
-#import "FHHouseDetailAPI.h"
 #import "FHRecommendCourtCell.h"
 #import "FHEnvContext.h"
 
@@ -538,7 +537,7 @@
         searchId = self.searchId;
     }
     NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
-    self.httpTask = [FHHouseDetailAPI requestOldHouseRecommendedCourtSearchList:houseId searchId:searchId cityId:cityId offset:[NSString stringWithFormat:@"%ld", offset] query:self.condition count:15 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
+    self.httpTask = [FHHouseListAPI requestOldHouseRecommendedCourtSearchList:houseId searchId:searchId cityId:cityId offset:[NSString stringWithFormat:@"%ld", offset] query:self.condition count:15 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
         if (model != NULL && error == NULL) {
             wself.recommendCourtData = model;
             [wself processRecommendCourtData];
