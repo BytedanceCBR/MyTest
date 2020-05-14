@@ -756,9 +756,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [self.items addObject:infoModel];
         }
         // 推荐新房
-        if (self.OldHouseRecommendedCourtData && self.OldHouseRecommendedCourtData.items.count >0) {
+        if (self.oldHouseRecommendedCourtData && self.oldHouseRecommendedCourtData.items.count >0) {
             FHDetailRecommendedCourtModel *infoModel = [[FHDetailRecommendedCourtModel alloc] init];
-            infoModel.recommendedCourtData = self.OldHouseRecommendedCourtData;
+            infoModel.recommendedCourtData = self.oldHouseRecommendedCourtData;
             infoModel.houseModelType = FHHouseeModelTypeOldHouseRecommendedCourt;
             [self.items addObject:infoModel];
 
@@ -826,7 +826,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestOldHouseRecommendedCourtSearch:self.houseId offset:@"0" query:nil count:5 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
-        wSelf.OldHouseRecommendedCourtData = model.data;
+        wSelf.oldHouseRecommendedCourtData = model.data;
         [wSelf processDetailRelatedData];
     }];
 }
