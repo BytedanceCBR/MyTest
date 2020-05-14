@@ -205,7 +205,7 @@
                 make.left.right.equalTo(self.view);
             }];
             self.currentShowView = self.mobileInputView;
-            self.textField = mobileInputView.mobileTextField;
+            self.textField = self.mobileInputView.mobileTextField;
             [self.mobileInputView updateProtocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:type] showDouyinIcon:[self.viewModel shouldShowDouyinIcon]];
         }
             break;
