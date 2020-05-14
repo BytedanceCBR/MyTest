@@ -124,8 +124,8 @@ typedef void(^FHLynxBridgeCallback)(NSString *response);
 
 - (void)fetchWithParam:(NSString *)paramStr callback:(FHLynxBridgeCallback)callback
 {
+    NSString *stringRes = [self getFetchDefaultString];
     if (!TTNetworkConnected()) {
-         NSString *stringRes = @"\{\"message\": \"failed\"\}";
          callback(stringRes);
         return;
     }
@@ -146,7 +146,6 @@ typedef void(^FHLynxBridgeCallback)(NSString *response);
     }
     
     if (!param) {
-        NSString *stringRes = @"\{\"message\": \"failed\"\}";
         callback(stringRes);
         return;
     }
@@ -163,7 +162,6 @@ typedef void(^FHLynxBridgeCallback)(NSString *response);
     BOOL needCommonParams = [param tt_boolValueForKey:@"needCommonParams"];
 
     if (!url.length) {
-        NSString *stringRes = @"\{\"message\": \"failed\"\}";
         callback(stringRes);
         return;
     }
@@ -196,15 +194,8 @@ typedef void(^FHLynxBridgeCallback)(NSString *response);
             }
 
             if (!result || error) {
-                result = @"\{\"message\": \"failed\"\}";
+                result = [self getFetchDefaultString];;
             }
-
-//            NSMutableDictionary *resultDict = [NSMutableDictionary new];
-//            [resultDict setValue:(response.allHeaderFields ? response.allHeaderFields : @"") forKey:@"headers"];
-//            [resultDict setValue:result forKey:@"response"];
-//            [resultDict setValue:@(response.statusCode) forKey:@"status"];
-//            [resultDict setValue:error?@(0): @(1) forKey:@"code"];
-//            [resultDict setValue:startTime forKey:@"beginReqNetTime"];
 
             if (callback) {
                 callback(result);
@@ -220,20 +211,16 @@ typedef void(^FHLynxBridgeCallback)(NSString *response);
                 }
 
                 if (!result || error) {
-                    result = @"\{\"message\": \"failed\"\}";
+                    result = [self getFetchDefaultString];;
                 }
-
-//                NSMutableDictionary *resultDict = [NSMutableDictionary new];
-//                [resultDict setValue:(response.allHeaderFields ? response.allHeaderFields : @"") forKey:@"headers"];
-//                [resultDict setValue:result forKey:@"response"];
-//                [resultDict setValue:@(response.statusCode) forKey:@"status"];
-//                [resultDict setValue:error?@(0): @(1) forKey:@"code"];
-//                [resultDict setValue:startTime forKey:@"beginReqNetTime"];
-
                 callback(result);
             }
         }];
     }
+}
+
+- (NSString *)getFetchDefaultString{
+    return  @"\{\"message\": \"failed\",\"status\": \"1\"\}";
 }
 
 
