@@ -29,7 +29,7 @@
 @property (nonatomic, assign)   BOOL       isFromUGC;
 @property (nonatomic, assign)   BOOL       present;
 @property (nonatomic, assign)   BOOL       isFromMineTab;
-
+@property (nonatomic, weak) UITextField *textField;
 @end
 
 @implementation FHLoginViewController
@@ -102,10 +102,24 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    if (self.textField) {
+        [self.textField becomeFirstResponder];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    if (self.textField) {
+        [self.textField resignFirstResponder];
+    }
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
+        [self.view endEditing:YES];
+    }
 }
 
 - (void)initNavbar {
@@ -191,6 +205,7 @@
                 make.left.right.equalTo(self.view);
             }];
             self.currentShowView = self.mobileInputView;
+            self.textField = mobileInputView.mobileTextField;
             [self.mobileInputView updateProtocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:type] showDouyinIcon:[self.viewModel shouldShowDouyinIcon]];
         }
             break;

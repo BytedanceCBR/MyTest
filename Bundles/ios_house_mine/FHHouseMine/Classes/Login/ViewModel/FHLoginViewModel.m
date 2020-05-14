@@ -504,19 +504,23 @@ static FHLoginSharedModel *_sharedModel = nil;
     return YES;
 }
 
+/// 降级登录，主要是针对之前使用抖音登录失败，降级使用手机号登录的策略
 - (void)downgradeLoginToMobile {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if ([self.viewController.navigationController.viewControllers containsObject:self.viewController]) {
             NSUInteger index = [self.viewController.navigationController.viewControllers indexOfObject:self.viewController];
             if (index > 0) {
                 if (self.currentViewType != FHLoginViewTypeDouYin) {
+                    //当前vc不是抖音登录，说明使用的抖音icon登录，不用跳转
                     [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:YES];
                 }else {
+                    //退出到登录首页，进入手机登录授权页
                     [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:NO];
                     [self goToOneKeyLogin];
                 }
             }
         } else {
+            //navigationController找不到登录页面的情况，使用路由跳转
             [self.viewController.navigationController popToRootViewControllerAnimated:NO];
             [FHLoginSharedModel sharedModel].douyinCanQucikLogin = NO;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -1083,7 +1087,6 @@ static FHLoginSharedModel *_sharedModel = nil;
         if (self.isNeedCheckUGCAdUser) {
             [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:YES];
         }
-        
     } else if (captchaImage) {
         [self loginShowCaptcha:captchaImage error:error phoneNumber:phoneNumber smsCode:smsCode];
     } else {
@@ -1093,9 +1096,6 @@ static FHLoginSharedModel *_sharedModel = nil;
                 [self goToMobileLogin];
             }];
             [alertController showFrom:self.viewController animated:YES];
-        } else if (isOneKeyLogin) {
-            //如果是运营商一键登录失败，则跳转手机号验证码登录
-            [self goToMobileLogin];
         } else {
             NSString *errorMessage = @"啊哦，服务器开小差了";
             if (!isOneKeyLogin) {
@@ -1105,6 +1105,11 @@ static FHLoginSharedModel *_sharedModel = nil;
             if (error.code == TTAccountErrCodeSMSCodeError && self.clearVerifyCodeWhenError) {
                 //验证码错误
                 self.clearVerifyCodeWhenError();
+            }
+            if (isOneKeyLogin) {
+                //如果是运营商一键登录失败，则跳转手机号验证码登录
+                //之前没有的逻辑，参照头条，皮皮虾等app等登录错误处理逻辑新增
+                [self goToMobileLogin];
             }
         }
     }
