@@ -187,9 +187,9 @@
          make.width.mas_equalTo(50);
      }];
     [self.userName mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 200);
+        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 150);
     }];
-    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10 -100;
+    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10 -50;
     [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(maxWidth);
     }];
