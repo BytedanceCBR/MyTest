@@ -512,10 +512,14 @@ static FHLoginSharedModel *_sharedModel = nil;
             if (index > 0) {
                 if (self.currentViewType != FHLoginViewTypeDouYin) {
                     //当前vc不是抖音登录，说明使用的抖音icon登录，不用跳转
-                    [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:YES];
+                    if (self.viewController != self.viewController.navigationController.viewControllers.lastObject) {
+                        [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:YES];
+                    }
                 }else {
                     //退出到登录首页，进入手机登录授权页
-                    [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:NO];
+                    if (self.viewController != self.viewController.navigationController.viewControllers.lastObject) {
+                        [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:NO];
+                    }
                     [self goToOneKeyLogin];
                 }
             }
@@ -871,7 +875,10 @@ static FHLoginSharedModel *_sharedModel = nil;
                     // 点击取消按钮，调用此block
                     tracerDict[@"click_button"] = @"取消授权";
                     [FHLoginTrackHelper loginPopupClick:tracerDict error:error];
-                    [strongSelf downgradeLoginToMobile];
+                    if (!isDouyinIcon) {
+                        //如果不是抖音icon登录的话，需要登录降级策略
+                        [strongSelf downgradeLoginToMobile];
+                    }
                 }];
                 [alertController addAction:cancelAction];
                 
