@@ -94,10 +94,10 @@ completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))co
                                                         completion:(void(^)(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model , NSError * _Nullable error))completion;
 // 二手房-推荐新盘
 +(TTHttpTask*)requestOldHouseRecommendedCourtSearch:(NSString*)houseId
-                                 offset:(NSString *)offset
-                                  query:(NSString*)query
-                                  count:(NSInteger)count
-                             completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion;
+                                             offset:(NSString *)offset
+                                              query:(NSString*)query
+                                              count:(NSInteger)count
+                                         completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 新房-周边新盘
 +(TTHttpTask*)requestRelatedFloorSearch:(NSString*)houseId
