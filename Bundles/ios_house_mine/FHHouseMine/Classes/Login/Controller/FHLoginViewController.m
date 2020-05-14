@@ -237,6 +237,7 @@
         default:
             break;
     }
+    [self.view bringSubviewToFront:self.customNavBarView];
 }
 
 @end
