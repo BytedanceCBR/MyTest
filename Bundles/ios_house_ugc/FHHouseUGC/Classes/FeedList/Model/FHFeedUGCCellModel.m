@@ -544,7 +544,7 @@
         }else{
             cellModel.openUrl = model.rawData.operation.url;
         }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCCommonLynx || 1200 < cellModel.cellType < 1300){
+    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCCommonLynx || 1200 <= cellModel.cellType < 1300){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCLynx;
         if(model.rawData.groupId){
             cellModel.groupId = model.rawData.groupId;
