@@ -34,6 +34,8 @@
 
 @property(nonatomic, assign) BOOL needDealFollowData;
 @property (nonatomic, strong)   NSMutableArray       *lastGroupIdArr;
+//当第一刷数据不足5个，同时feed还有新内容时，会继续刷下一刷的数据，这个值用来记录请求的次数
+@property(nonatomic, assign) NSInteger retryCount;
 
 @end
 
@@ -205,6 +207,7 @@
     
     if(isFirst){
         [self.viewController startLoading];
+        self.retryCount = 0;
     }
     
     __weak typeof(self) wself = self;
@@ -240,9 +243,6 @@
     
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
-        if(isFirst){
-            [wself.viewController endLoading];
-        }
         
         [wself.tableView finishPullDownWithSuccess:YES];
         
@@ -250,12 +250,16 @@
         wself.feedListModel = feedListModel;
         
         if (!wself) {
+            if(isFirst){
+                [wself.viewController endLoading];
+            }
             return;
         }
         
         if (error) {
             //TODO: show handle error
             if(isFirst){
+                [wself.viewController endLoading];
                 if(error.code != -999){
                     [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
                     wself.viewController.showenRetryButton = YES;
@@ -281,12 +285,12 @@
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
             
             if(isFirst){
-                [self.clientShowDict removeAllObjects];
+                [wself.clientShowDict removeAllObjects];
                 [wself.dataList removeAllObjects];
             }
             if(isHead){
                 // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-                [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
                     cellModel.isStick = NO;
                 }];
                 // 头部插入新数据
@@ -295,6 +299,14 @@
                 [wself.dataList addObjectsFromArray:result];
             }
             
+            //第一次拉取数据过少时，在多拉一次loadmore
+            if(wself.dataList.count > 0 && wself.dataList.count < 5 && wself.tableView.hasMore && wself.retryCount < 1){
+                wself.retryCount += 1;
+                [wself requestData:NO first:NO];
+                return;
+            }
+            
+            wself.retryCount = 0;
             wself.viewController.hasValidateData = wself.dataList.count > 0;
             
             if(wself.dataList.count > 0){
@@ -594,8 +606,9 @@
              dict[TRACER_KEY] = traceParam;
          }
         //根据url跳转
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2 ){
         // 评论
         NSMutableDictionary *dict = [NSMutableDictionary new];
@@ -621,6 +634,9 @@
         NSDictionary *dict = @{@"is_jump_comment":@(jump_comment)};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        if(showComment && cellModel.commentSchema.length > 0){
+            openUrl = [NSURL URLWithString:cellModel.commentSchema];
+        }
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
         [self goToVoteDetail:cellModel value:0];
@@ -755,6 +771,7 @@
             @"origin_from":originFrom,
             @"enter_from":[self pageType],
             @"enter_type":@"click",
+            @"group_id":cellModel.groupId ?: @"be_null",
             @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
             @"log_pb":cellModel.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -967,7 +984,7 @@
 - (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
-    dict[@"enter_from"] = @"my_join_list";
+    dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
     dict[@"page_type"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
     dict[@"rank"] = @(rank);
@@ -1003,7 +1020,7 @@
     dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
     dict[@"refresh_type"] = refreshType;
-    dict[@"category_name"] = self.categoryId;
+    dict[@"category_name"] = [self pageType];
     TRACK_EVENT(@"category_refresh", dict);
 }
 

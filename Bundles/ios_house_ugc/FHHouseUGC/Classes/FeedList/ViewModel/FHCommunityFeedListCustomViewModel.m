@@ -30,6 +30,9 @@
 
 @interface FHCommunityFeedListCustomViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
+//当第一刷数据不足5个，同时feed还有新内容时，会继续刷下一刷的数据，这个值用来记录请求的次数
+@property(nonatomic, assign) NSInteger retryCount;
+
 @end
 
 @implementation FHCommunityFeedListCustomViewModel
@@ -97,7 +100,7 @@
                 BOOL isStickTop = cellModel.isStick && (cellModel.stickStyle == FHFeedContentStickStyleTop || cellModel.stickStyle == FHFeedContentStickStyleTopAndGood);
                 
                 //这里的只是针对推荐tab，而且后面的类型根据实际需求改变
-                if(!isStickTop && cellModel.cellSubType != FHUGCFeedListCellSubTypeUGCRecommendCircle) {
+                if(!isStickTop && cellModel.cellSubType != FHUGCFeedListCellSubTypeUGCRecommendCircle && cellModel.cellSubType != FHUGCFeedListCellSubTypeUGCBanner) {
                     index = idx;
                     *stop = YES;
                 }
@@ -209,6 +212,7 @@
 
     if(isFirst){
         [self.viewController startLoading];
+        self.retryCount = 0;
     }
     
     __weak typeof(self) wself = self;
@@ -243,9 +247,6 @@
 
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
-        if(isFirst){
-            [wself.viewController endLoading];
-        }
 
         [wself.tableView finishPullDownWithSuccess:YES];
 
@@ -253,12 +254,16 @@
         wself.feedListModel = feedListModel;
 
         if (!wself) {
+            if(isFirst){
+                [wself.viewController endLoading];
+            }
             return;
         }
 
         if (error) {
             //TODO: show handle error
             if(isFirst){
+                [wself.viewController endLoading];
                 if(error.code != -999){
                     [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
                     wself.viewController.showenRetryButton = YES;
@@ -284,12 +289,12 @@
             NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
 
             if(isFirst){
-                [self.clientShowDict removeAllObjects];
+                [wself.clientShowDict removeAllObjects];
                 [wself.dataList removeAllObjects];
             }
             if(isHead){
                 // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-                [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
                     cellModel.isStick = NO;
                 }];
                 // 头部插入新数据
@@ -297,7 +302,15 @@
             }else{
                 [wself.dataList addObjectsFromArray:result];
             }
-        
+            
+            //第一次拉取数据过少时，在多拉一次loadmore
+            if(wself.dataList.count > 0 && wself.dataList.count < 5 && wself.tableView.hasMore && wself.retryCount < 1){
+                wself.retryCount += 1;
+                [wself requestData:NO first:NO];
+                return;
+            }
+            
+            wself.retryCount = 0;
             wself.viewController.hasValidateData = wself.dataList.count > 0;
 
             if(wself.dataList.count > 0){
@@ -305,7 +318,6 @@
                 [wself.viewController.emptyView hideEmptyView];
             }else{
                 [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
-//                wself.viewController.showenRetryButton = YES;
                 wself.refreshFooter.hidden = YES;
             }
             [wself.tableView reloadData];
@@ -576,8 +588,9 @@
              dict[TRACER_KEY] = traceParam;
          }
         //根据url跳转
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeArticleComment || cellModel.cellType == FHUGCFeedListCellTypeArticleComment2){
         // 评论
         NSMutableDictionary *dict = [NSMutableDictionary new];
@@ -599,6 +612,9 @@
         NSDictionary *dict = @{@"is_jump_comment":@(showComment)};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        if(showComment && cellModel.commentSchema.length > 0){
+            openUrl = [NSURL URLWithString:cellModel.commentSchema];
+        }
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCVote){
         [self goToVoteDetail:cellModel value:0];
@@ -729,6 +745,7 @@
             @"origin_from":originFrom,
             @"enter_from":[self pageType],
             @"enter_type":@"click",
+            @"group_id":cellModel.groupId ?: @"be_null",
             @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
             @"log_pb":cellModel.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

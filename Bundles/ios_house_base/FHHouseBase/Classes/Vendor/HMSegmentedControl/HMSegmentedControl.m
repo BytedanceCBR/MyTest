@@ -399,10 +399,10 @@
                     UIImage *icon = [UIImage imageNamed:@"seg_red_point"];
                     CGFloat imageWidth = icon.size.width;
                     CGFloat imageHeight = icon.size.height;
-                    CGFloat red_y = roundf(CGRectGetMinY(rect)  - imageHeight/2.0f + 3.0f);
+                    CGFloat red_y = roundf(CGRectGetMinY(rect)  - imageHeight + 4.0f);
                     CGFloat red_x = 0;
                     if(self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic){
-                        red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f - self.segmentEdgeInset.right);
+                        red_x = roundf(CGRectGetMaxX(rect)  - imageWidth - self.segmentEdgeInset.right);
                     }else{
                         red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f);
                     }
@@ -896,7 +896,7 @@
             segment = (touchLocation.x + self.scrollView.contentOffset.x) / self.segmentWidth;
         } else if (self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic) {
             // To know which segment the user touched, we need to loop over the widths and substract it from the x position.
-            CGFloat widthLeft = (touchLocation.x + self.scrollView.contentOffset.x);
+            CGFloat widthLeft = (touchLocation.x + self.scrollView.contentOffset.x) - self.firstLeftMargain;
             for (NSNumber *width in self.segmentWidthsArray) {
                 widthLeft = widthLeft - [width floatValue];
                 

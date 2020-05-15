@@ -245,7 +245,8 @@
 
     if(tabIndex != self.viewController.segmentControl.selectedSegmentIndex){
         self.currentTabIndex = tabIndex;
-        self.viewController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
+//        self.viewController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
+        [self.viewController.segmentControl setSelectedSegmentIndex:self.currentTabIndex animated:YES];
     }
     else{
         if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (self.viewController.segmentControl.sectionTitles.count - 1)){
@@ -269,6 +270,21 @@
     }
     
     [self initCell:@"flip"];
+}
+
+- (NSString *)pageType {
+    NSString *page_type = UT_BE_NULL;
+    if(self.currentTabIndex < self.dataArray.count){
+        FHCommunityDiscoveryCellModel *cellModel = self.dataArray[self.currentTabIndex];
+        if (cellModel.type == FHCommunityCollectionCellTypeMyJoin) {
+            page_type = @"my_join_feed";
+        } else if (cellModel.type == FHCommunityCollectionCellTypeNearby) {
+            page_type = @"hot_discuss_feed";
+        }else if (cellModel.type == FHCommunityCollectionCellTypeCustom) {
+            page_type = cellModel.category;
+        }
+    }
+    return page_type;
 }
 
 @end

@@ -108,7 +108,7 @@
 -(void)onCloseGuideClick{
     NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
     tracerDic[@"element_type"] = @"feed_community_guide_notice";
-    tracerDic[@"page_type"] = @"nearby_list";
+    tracerDic[@"page_type"] = @"hot_discuss_feed";
     tracerDic[@"enter_from"] = @"neighborhood_tab";
     tracerDic[@"click_position"] = @"cancel";
     [FHUserTracker writeEvent:@"click_options" params:tracerDic];

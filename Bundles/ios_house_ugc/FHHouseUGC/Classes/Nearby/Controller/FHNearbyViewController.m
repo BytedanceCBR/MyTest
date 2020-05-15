@@ -249,7 +249,7 @@
 }
 
 - (NSString *)categoryName {
-    return @"nearby_list";
+    return @"hot_discuss_feed";
 }
 
 - (void)trackLocationAuthShow {

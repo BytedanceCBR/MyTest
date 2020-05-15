@@ -910,10 +910,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
         }
         [tabItem setTitle:name];
     }else{
-        if ([self isUGCOpen]) {
-            [tabItem setTitle:@"邻里"];
+        if([self isNewDiscovery]){
+            [tabItem setTitle:@"热点"];
         }else{
-            [tabItem setTitle:@"找房"];
+            if ([self isUGCOpen]) {
+                [tabItem setTitle:@"邻里"];
+            }else{
+                [tabItem setTitle:@"找房"];
+            }
         }
     }
     

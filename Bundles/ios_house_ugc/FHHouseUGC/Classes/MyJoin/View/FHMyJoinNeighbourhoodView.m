@@ -151,7 +151,7 @@
 - (void)trackElementShow {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     tracerDict[@"element_type"] = @"my_joined_neighborhood";
-    tracerDict[@"page_type"] = @"my_join_list";
+    tracerDict[@"page_type"] = @"my_join_feed";
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"card_type"] = @"large";
     TRACK_EVENT(@"element_show", tracerDict);
