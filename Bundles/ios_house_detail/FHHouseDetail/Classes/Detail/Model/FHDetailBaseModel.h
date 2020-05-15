@@ -17,6 +17,7 @@
 
 @class FHDetailHouseTitleModel;
 @class FHDetailNewDataSmallImageGroupModel;
+@class FHClueAssociateInfoModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -65,6 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *shareUrl;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 @end
 
 @interface FHDetailContactImageTagModel : JSONModel
@@ -95,6 +97,13 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *fontColor;
 @property (nonatomic, copy , nullable) NSString *borderColor;
 @end
+
+@interface FHClueAssociateInfoModel: JSONModel
+@property (nonatomic, strong, nullable) NSDictionary *imInfo;
+@property (nonatomic, strong, nullable) NSDictionary *phoneInfo;
+@property (nonatomic, strong, nullable) NSDictionary *reportFormInfo;
+@end
+
 
 @protocol FHDetailContactModel<NSObject>
 @end
@@ -135,6 +144,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 
 @property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @property (nonatomic, strong , nullable) NSDictionary *realtorLogpb;
+
 - (nonnull id)copyWithZone:(nullable NSZone *)zone;
 
 - (void)encodeWithCoder:(nonnull NSCoder *)aCoder;
@@ -310,6 +320,14 @@ typedef enum : NSInteger {
     FHDetailHouseImageTypeBedroom           = 4, // 卧室
     FHDetailHouseImageTypeKitchen           = 5, // 厨房
     FHDetailHouseImageTypeBathroom          = 6, // 卫生间
+    
+    FHDetailHouseImageTypeEffect            = 1001, // 效果图
+    FHDetailHouseImageTypePrototyperoom     = 1002, // 样板间
+    FHDetailHouseImageTypeLocation          = 1003, // 区位
+    FHDetailHouseImageTypeSandbox           = 1004, // 沙盘
+    FHDetailHouseImageTypePeripheral        = 1005, // 周边配套
+    FHDetailHouseImageTypeRealistic         = 1006, // 实景图
+    FHDetailHouseImageTypeBuildingLicenses  = 1007, //楼盘证照
 } FHDetailHouseImageType;
 
 @interface FHDetailOldDataHouseImageDictListModel : JSONModel
@@ -328,6 +346,13 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *businessTag;
 @property (nonatomic, copy , nullable) NSString *advantage;
 
+@end
+
+@interface FHDetailNewUserStatusModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
+@property (nonatomic, copy , nullable) NSString *pricingSubStatus;
+@property (nonatomic, assign) NSInteger courtSubStatus;
 @end
 
 

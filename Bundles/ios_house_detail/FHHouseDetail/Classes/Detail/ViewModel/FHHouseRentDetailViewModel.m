@@ -135,7 +135,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
 
-    [FHHouseDetailAPI requestRentDetail:self.houseId completion:^(FHRentDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestRentDetail:self.houseId extraInfo:self.extraInfo completion:^(FHRentDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
@@ -229,8 +229,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)processDetailData:(FHRentDetailResponseModel *)model {
 
     //当前IM全是非B端注册经纪人
-    model.data.contact.unregistered = YES;
-    FHDetailContactModel *contactPhone = model.data.contact;
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    }else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
     if (contactPhone.phone.length > 0) {
         
         if ([self isShowSubscribe]) {
@@ -245,6 +250,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
     self.detailData = model;
     if (model.data.status != -1) {
         [self addDetailCoreInfoExcetionLog];
@@ -300,6 +306,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if([self isShowSubscribe]){
         FHDetailHouseSubscribeModel *subscribeModel = [[FHDetailHouseSubscribeModel alloc] init];
         subscribeModel.tableView = self.tableView;
+        subscribeModel.associateInfo = model.data.middleSubscriptionAssociateInfo;
         [self.items addObject:subscribeModel];
         
         __weak typeof(self) wSelf = self;
@@ -518,8 +525,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     NSString *houseId = self.houseId;
-    NSString *from = @"app_renthouse_subscription";
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+//    NSString *from = @"app_renthouse_subscription";\\
+    
+    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+
+
+//    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];

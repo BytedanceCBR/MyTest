@@ -1,5 +1,5 @@
 //
-//  FHDetailNewHouseNewsCell.m
+//  FHFloorPanCorePropertyCell.m
 //  AFgzipRequestSerializer
 //
 //  Created by 谢飞 on 2019/2/15.
@@ -58,6 +58,7 @@
 - (void)refreshWithData:(id)data
 {
     if ([data isKindOfClass:[FHFloorPanCorePropertyCellModel class]]) {
+        CGFloat diff = 11.0 / 6;  //根据系统默认行高重新计算布局
         FHFloorPanCorePropertyCellModel *model = (FHFloorPanCorePropertyCellModel *)data;
         UIView *previouseView = nil;
         for (NSInteger i = 0; i < [model.list count]; i++) {
@@ -66,7 +67,9 @@
             FHFloorPanCorePropertyCellItemModel *itemModel = model.list[i];
             UILabel *nameLabel = [UILabel new];
             nameLabel.numberOfLines = 0;
-            nameLabel.attributedText = [self contentAttributeString:itemModel.propertyName textFont:[UIFont themeFontRegular:14] textColor:RGB(0xae, 0xad, 0xad)];
+            nameLabel.font = [UIFont themeFontRegular:14];
+            nameLabel.textColor = RGB(0xae, 0xad, 0xad);
+            nameLabel.text = itemModel.propertyName;
             [itemContenView addSubview:nameLabel];
             
             [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -77,7 +80,9 @@
             
             UILabel *valueLabel = [UILabel new];
             valueLabel.numberOfLines = 0;
-            valueLabel.attributedText = [self contentAttributeString:itemModel.propertyValue textFont:[UIFont themeFontMedium:14] textColor:[UIColor themeGray2]];
+            valueLabel.font = [UIFont themeFontMedium:14];
+            valueLabel.textColor = [UIColor themeGray2];
+            valueLabel.text = itemModel.propertyValue;
             [itemContenView addSubview:valueLabel];
             
             [valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -91,35 +96,19 @@
             
             [itemContenView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (previouseView) {
-                    make.top.equalTo(previouseView.mas_bottom).offset(18);
+                    make.top.equalTo(previouseView.mas_bottom).offset(18 - diff * 2);
                 }else
                 {
-                    make.top.equalTo(self.contentView).offset(29);
+                    make.top.equalTo(self.contentView).offset(29 - diff);
                 }
                 if (i == [model.list count] - 1) {
-                    make.bottom.equalTo(self.contentView).offset(-29);
+                    make.bottom.equalTo(self.contentView).offset(-29 + diff);
                 }
                 make.left.right.equalTo(self.contentView);
             }];
             previouseView = itemContenView;
         }
     }
-}
-
-- (NSAttributedString *)contentAttributeString:(NSString *) str textFont:(UIFont *)font textColor:(UIColor *)color {
-    NSMutableAttributedString *attributedText = [NSMutableAttributedString new];
-       if(!isEmptyString(str)) {
-           NSDictionary *attributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: color};
-           NSAttributedString *content = [[NSAttributedString alloc] initWithString:str attributes: attributes];
-           [attributedText appendAttributedString:content];
-           NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-           CGFloat lineHeight = 16;
-           paragraphStyle.minimumLineHeight = lineHeight;
-           paragraphStyle.maximumLineHeight = lineHeight;
-           paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
-           [attributedText addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedText.length)];
-       }
-    return attributedText;
 }
 
 - (void)prepareForReuse

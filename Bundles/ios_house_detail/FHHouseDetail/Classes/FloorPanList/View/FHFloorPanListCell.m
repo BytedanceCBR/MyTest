@@ -134,6 +134,7 @@
         make.left.mas_equalTo(_iconView.mas_right).offset(13);
         make.top.mas_equalTo(32);
         make.height.mas_equalTo(19);
+        make.right.mas_equalTo(self.priceLabel.mas_left);
     }];
     
     [_roomSpaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -141,12 +142,14 @@
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(8);
         make.right.mas_equalTo(-15);
         make.height.mas_equalTo(14);
+        make.right.mas_equalTo(self.priceLabel.mas_left);
     }];
 
     [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-31);
         make.top.mas_equalTo(32);
         make.height.mas_equalTo(19);
+        make.width.mas_equalTo(110);
     }];
 }
 
@@ -196,6 +199,30 @@
                 {
                     _iconView.image = [UIImage imageNamed:@"default_image"];
                 }
+            }
+        }
+        
+        if (!model.saleStatus) {
+            self.statusLabel.text = @"";
+            self.statusBGView.backgroundColor = [UIColor clearColor];
+            self.statusLabel.backgroundColor = [UIColor clearColor];
+        }else {
+            self.statusLabel.text = model.saleStatus.content;
+            if ([model.saleStatus.textColor isKindOfClass:[NSString class]]) {
+                self.statusLabel.textColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.textColor]];
+            }else
+            {
+                self.statusLabel.textColor = [UIColor whiteColor];
+            }
+            
+            if ([model.saleStatus.backgroundColor isKindOfClass:[NSString class]]) {
+                self.statusLabel.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
+                _statusBGView.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
+                
+            }else
+            {
+                self.statusLabel.backgroundColor = [UIColor whiteColor];
+                _statusBGView.backgroundColor = [UIColor whiteColor];
             }
         }
     }

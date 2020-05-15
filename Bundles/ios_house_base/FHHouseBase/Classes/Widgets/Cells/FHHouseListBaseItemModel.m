@@ -47,7 +47,7 @@
         @"externalInfo": @"external_info",
         @"skyEyeTag": @"sky_eye_tag",
         @"advantageDescription":@"advantage_description",
-        
+        @"buildingSquareMeter":@"building_square_meter",
         @"pricePerSqmNum": @"price_per_sqm_num",
         @"pricePerSqmUnit": @"price_per_sqm_unit",
         @"globalPricing":@"global_pricing",
@@ -105,7 +105,8 @@
     _tags = tags;
     if (tags.count >0) {
         //当数组对象只有一个时，表示非新房标签，需要合并
-        if (tags.count == 1) {
+        FHHouseTagsModel *checkElement = tags[0];
+        if (tags.count == 1 &&( [checkElement.backgroundColor isEqualToString:@"#ffffff"] ||[checkElement.backgroundColor isEqualToString:@"#FFFFFF"])) {
             FHHouseTagsModel *element = tags[0];
             if (element.content && element.textColor && element.backgroundColor) {
                 CGSize textSize =  [element.content sizeWithFont: [UIFont themeFontRegular:12] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];

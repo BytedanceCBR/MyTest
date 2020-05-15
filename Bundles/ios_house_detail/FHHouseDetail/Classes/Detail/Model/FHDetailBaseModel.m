@@ -66,6 +66,7 @@
                            @"isVideo": @"is_video",
                            @"shareUrl": @"share_url",
                            @"desc": @"description",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -111,6 +112,24 @@
 }
 @end
 
+@implementation FHClueAssociateInfoModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
++(JSONKeyMapper *)keyMapper {
+    return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        NSDictionary *dict = @{
+                               @"imInfo": @"im_info",
+                               @"phoneInfo": @"phone_info",
+                               @"reportFormInfo":@"report_form_info",
+                               };
+        return dict[keyName]?:keyName;
+    }];
+}
+@end
+
+
 @implementation FHDetailContactModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -137,7 +156,7 @@
                            @"realtorTags":@"realtor_tags",
                            @"realtorEvaluate":@"realtor_evaluate",
                            @"realtorScoreDisplay":@"realtor_score_display",
-                           @"realtorScoreDescription":@"realtor_score_description"
+                           @"realtorScoreDescription":@"realtor_score_description",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -427,4 +446,22 @@
     return YES;
 }
 
+@end
+
+@implementation FHDetailNewUserStatusModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"courtOpenSubStatus": @"court_open_sub_status",
+    @"pricingSubStatus": @"pricing_sub_status",
+    @"courtSubStatus": @"court_sub_status",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
 @end

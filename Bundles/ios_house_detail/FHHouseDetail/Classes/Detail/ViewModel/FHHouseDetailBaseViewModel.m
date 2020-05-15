@@ -202,17 +202,16 @@
 
 - (void)imAction:(FHDetailDataQuickQuestionItemModel *)model
 {
-    if (![model isKindOfClass:[FHDetailDataQuickQuestionItemModel class]]) {
-        return;
-    }
-    NSMutableDictionary *imExtra = @{}.mutableCopy;
-    imExtra[@"realtor_position"] = @"be_null";
-    imExtra[@"source_from"] = @"house_ask_question";
-    imExtra[@"im_open_url"] = model.openUrl;
-    imExtra[kFHClueEndpoint] = [NSString stringWithFormat:@"%ld",FHClueEndPointTypeC];
-    imExtra[kFHCluePage] = [NSString stringWithFormat:@"%ld",FHClueIMPageTypeCQuickQuestion];
-    imExtra[@"question_id"] = model.id;
-    [self.contactViewModel onlineActionWithExtraDict:imExtra];
+    // 快捷提问已经下线，后期可以考虑下掉相关代码，因为模块涉及的代码量大，本期只下掉im入口
+//    if (![model isKindOfClass:[FHDetailDataQuickQuestionItemModel class]]) {
+//        return;
+//    }
+//    NSMutableDictionary *imExtra = @{}.mutableCopy;
+//    imExtra[@"realtor_position"] = @"be_null";
+//    imExtra[@"source_from"] = @"house_ask_question";
+//    imExtra[@"im_open_url"] = model.openUrl;
+//    imExtra[@"question_id"] = model.id;
+//    [self.contactViewModel onlineActionWithExtraDict:imExtra];
 }
 
 #pragma mark - 需要子类实现的方法
@@ -343,6 +342,9 @@
             NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
             tracerDic[@"element_type"] = element_type;
             [tracerDic removeObjectForKey:@"element_from"];
+            if ([element_type isEqualToString:@"recommend_new"]) {
+                tracerDic[@"event_tracking_id"] = @"234883";
+            }
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
         }
         NSArray *element_array = [tempCell elementTypeStringArray:self.houseType];
@@ -517,6 +519,7 @@
     if (self.houseType == FHHouseTypeNeighborhood || self.houseType == FHHouseTypeSecondHandHouse) {
         params[@"growth_deepevent"] = @(1);
     }
+    params[kFHClueExtraInfo] = self.extraInfo;
     [FHUserTracker writeEvent:@"go_detail" params:params];
     
 }
@@ -597,6 +600,7 @@
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:self.detailTracerDic];
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    params[kFHClueExtraInfo] = self.extraInfo;
     [FHUserTracker writeEvent:@"stay_page" params:params];
     
 }

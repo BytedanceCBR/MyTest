@@ -40,6 +40,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeTips,
     ///二手房同小区房源+小区
     FHHouseModelTypePlot,
+    ///二手房推荐新房
+    FHHouseeModelTypeOldHouseRecommendedCourt,
     ///二手房周边房源
     FHHouseModelTypePeriphery,
     ///二手房免责声明
@@ -79,6 +81,8 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     // 周边新盘
     FHHouseModelTypeNewRelated,
     
+    // 新房详情页楼盘动态
+    FHHouseModelTypeNewTimeline,
     // 户型详情页属性模块
     FHFloorPanHouseModelTypeCoreInfo,
     // 户型详情页户型模块

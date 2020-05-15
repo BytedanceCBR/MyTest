@@ -40,6 +40,20 @@
         _houseNameModel = model;
         [self initTracerDic];
         [self configTableView];
+        FHDetailBottomBar *bottomBar = [viewController getBottomBar];
+        //        if ([bottomBar isKindOfClass:[FHDetailBottomBar class]]) {
+        //            bottomBar.bottomBarContactBlock = ^{
+        //                StrongSelf;
+        //                [wself contactAction];
+        //            };
+        //            bottomBar.bottomBarImBlock = ^{
+        //                StrongSelf;
+        //                [wself imAction];
+        //            };
+        //        }
+        self.contactViewModel = [viewController getContactViewModel];
+        self.bottomBar = bottomBar;
+        bottomBar.hidden = YES;
         [self startLoadData];
     
     }
@@ -50,11 +64,16 @@
 {
     self.detailTracerDic = [NSMutableDictionary new];
     self.detailTracerDic[@"event_type"] = @"house_app2c_v2";
-    self.detailTracerDic[@"enter_from"] = self.detailController.tracerDict[@"enter_from"];
+    self.detailTracerDic[@"enter_from"] = self.detailController.tracerDict[@"enter_from"] ?: @"be_null";
     self.detailTracerDic[@"page_type"] = @"house_info_detail";
-    self.detailTracerDic[@"origin_from"] = self.detailController.tracerDict[@"origin_from"];
-    NSDictionary *dict = self.detailController.tracerDict[@"log_pb"];
-    self.detailTracerDic[@"group_id"] = dict[@"group_id"];
+    self.detailTracerDic[@"origin_from"] = self.detailController.tracerDict[@"origin_from"] ?: @"be_null";
+    if (self.detailController.tracerDict[@"log_pb"]) {
+        NSDictionary *dict = self.detailController.tracerDict[@"log_pb"];
+        self.detailTracerDic[@"group_id"] = dict[@"group_id"] ?: @"be_null";
+    } else {
+        self.detailTracerDic[@"group_id"] = @"be_null";
+    }
+
 }
 
 // 注册cell类型
@@ -147,6 +166,7 @@
 }
 
 - (void)processDetailData:(FHDetailNewCoreDetailModel *)model {
+    self.detailData = model;
     NSMutableArray *itemsArray = [NSMutableArray new];
     
     // 添加标题
@@ -194,7 +214,24 @@
         oldDisclaimerModel.contact = nil;
         [self.currentItems addObject:oldDisclaimerModel];
     }
-    
+    FHDetailContactModel *contactPhone = nil;
+    if (model.data.highlightedRealtor) {
+        contactPhone = model.data.highlightedRealtor;
+    }else {
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
+    }
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
+    self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
+    self.bottomBar.hidden = NO;
+
     [_infoListTable reloadData];
     _infoListTable.contentOffset = CGPointMake(0, -15);
 }

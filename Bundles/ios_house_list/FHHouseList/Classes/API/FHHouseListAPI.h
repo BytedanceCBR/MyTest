@@ -11,6 +11,7 @@
 #import <FHHouseBase/FHHouseType.h>
 #import <FHHouseBase/FHMainApi.h>
 #import "FHCommuteType.h"
+#import "FHHouseListBaseItemModel.h"
 
 @class TTHttpTask;
 
@@ -31,6 +32,14 @@ NS_ASSUME_NONNULL_BEGIN
 // 周边房源（租房）
 + (TTHttpTask *)requestRentHouseSearchWithQuery:(NSString *)query neighborhoodId:(NSString *)neighborhoodId houseId:(NSString *)houseId searchId:(NSString *)searchId offset:(NSInteger)offset count:(NSInteger)count class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 
+// 二手房-推荐新盘列表页
++(TTHttpTask*)requestOldHouseRecommendedCourtSearchList:(NSString*)houseId
+                                           searchId:(NSString*)searchId
+                                             cityId:(NSInteger)cityId
+                                             offset:(NSString*)offset
+                                              query:(NSString*)query
+                                              count:(NSInteger)count
+                                         completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion;
 
 /*
  *  二手房列表请求

@@ -89,6 +89,7 @@
 {
     NSDictionary *dict = @{
                            @"openUrl": @"open_url",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -380,6 +381,7 @@
                            @"baseContent":@"base_content",
                            @"extraContent":@"extra_content",
                            @"openUrl":@"open_url",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -399,6 +401,7 @@
                            @"realtorId":@"base_id",
                            @"autoText":@"auto_text",
                            @"openUrl":@"open_url",
+                           @"associateInfo":@"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -454,6 +457,7 @@
                            @"baseContent":@"base_content",
                            @"extraContent":@"extra_content",
                            @"openUrl":@"open_url",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -572,7 +576,7 @@
                            @"priceAnalysisUrl": @"price_analysis_url",
                            @"showType": @"show_type",
                            @"changeTitle": @"change_title",
-                           @"analysisTitle": @"analysis_title",
+                           @"analysisTitle": @"analysis_title"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -595,6 +599,7 @@
                            @"monthlyPayment": @"monthly_payment",
                            @"openUrl": @"open_url",
                            @"calculatorUrl": @"calculator_url",
+                           @"associateInfo": @"associate_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -649,6 +654,12 @@
                            @"subscriptionToast": @"subscription_toast",
                            @"reportToast": @"report_toast",
                            @"reportDoneToast": @"report_done_toast",
+                           @"middleSubscriptionAssociateInfo":@"middle_subscription_associate_info",
+                           @"houseImageAssociateInfo": @"house_image_associate_info",
+                           @"recommendRealtorsAssociateInfo": @"recommend_realtors_associate_info",
+                           @"houseReviewCommentAssociateInfo": @"house_review_comment_associate_info",
+                           @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
+
                            @"priceChangeNotice":@"price_change_notice",
                            @"downPaymentInfo":@"down_payment_info",
                            };
@@ -747,7 +758,8 @@
     NSDictionary *dict = @{
                            @"coverImage": @"cover_image",
                            @"shareUrl": @"share_url",
-                           };
+                           @"associateInfo": @"associate_info",
+    };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];

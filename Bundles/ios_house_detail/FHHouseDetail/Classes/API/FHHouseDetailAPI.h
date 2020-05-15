@@ -26,23 +26,27 @@ NS_ASSUME_NONNULL_BEGIN
 // 新房详情页请求
 +(TTHttpTask*)requestNewDetail:(NSString*)houseId
                          logPB:(NSDictionary *)logPB
+                     extraInfo:(NSDictionary *)extraInfo
                      completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 二手房详情页请求
-+(TTHttpTask*)requestOldDetail:(NSString*)houseId
-                       ridcode:(NSString *)ridcode
-                     realtorId:(NSString *)realtorId
-                         logPB:(NSDictionary *)logPB
-                    completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion;
++(TTHttpTask*)requestOldDetail:(NSString *)houseId
+     ridcode:(NSString *)ridcode
+   realtorId:(NSString *)realtorId
+     logPB:(NSDictionary *)logPB
+ extraInfo:(NSDictionary *)extraInfo
+completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 小区详情页请求
 +(TTHttpTask*)requestNeighborhoodDetail:(NSString*)neighborhoodId
                                   logPB:(NSDictionary *)logPB
                                   query:(NSString*)query
+                              extraInfo:(NSDictionary *)extraInfo
                     completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 租房详情页请求
 +(TTHttpTask*)requestRentDetail:(NSString*)rentCode
+                      extraInfo:(NSDictionary *)extraInfo
                      completion:(void(^)(FHRentDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 租房-周边房源
@@ -88,6 +92,13 @@ completion:(void(^)(id<FHBaseModelProtocol> _Nullable model , NSError *error))co
                                                              query:(NSString*)query
                                                              count:(NSInteger)count
                                                         completion:(void(^)(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model , NSError * _Nullable error))completion;
+// 二手房-推荐新盘
++(TTHttpTask*)requestOldHouseRecommendedCourtSearch:(NSString*)houseId
+                                             offset:(NSString *)offset
+                                              query:(NSString*)query
+                                              count:(NSInteger)count
+                                         completion:(void(^)(FHListResultHouseModel * _Nullable model , NSError * _Nullable error))completion;
+
 // 新房-周边新盘
 +(TTHttpTask*)requestRelatedFloorSearch:(NSString*)houseId
                                  offset:(NSString *)offset
