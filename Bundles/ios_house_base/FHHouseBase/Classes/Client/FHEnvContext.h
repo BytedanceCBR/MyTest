@@ -255,6 +255,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isSpringHangOpen;
 
 /*
+是否开启发现和UGC合并，默认NO
+ */
++ (BOOL)isNewDiscovery;
+
+/*
 判断开启首次安装用户引导，默认YES
  */
 + (BOOL)isIntroduceOpen;
