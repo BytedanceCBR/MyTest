@@ -795,6 +795,7 @@
             @"origin_from":originFrom,
             @"enter_from":[self pageType],
             @"enter_type":@"click",
+            @"group_id":cellModel.groupId ?: @"be_null",
             @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
             @"log_pb":cellModel.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
