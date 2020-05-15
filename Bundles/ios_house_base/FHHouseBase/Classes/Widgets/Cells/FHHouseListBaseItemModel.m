@@ -47,7 +47,7 @@
         @"externalInfo": @"external_info",
         @"skyEyeTag": @"sky_eye_tag",
         @"advantageDescription":@"advantage_description",
-        
+        @"buildingSquareMeter":@"building_square_meter",
         @"pricePerSqmNum": @"price_per_sqm_num",
         @"pricePerSqmUnit": @"price_per_sqm_unit",
         @"globalPricing":@"global_pricing",
