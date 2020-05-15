@@ -72,17 +72,10 @@
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
-//    NSDictionary *linkAttributes = @{
-//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-//                                     };
-//    self.contentLabel.linkAttributes = linkAttributes;
-//    self.contentLabel.activeLinkAttributes = linkAttributes;
-//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    self.originView = [[FHUGCCellOriginItemView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, originViewHeight)];
     _originView.hidden = YES;
     _originView.goToLinkBlock = ^(FHFeedUGCCellModel * _Nonnull cellModel, NSURL * _Nonnull url) {
         if(wself.delegate && [wself.delegate respondsToSelector:@selector(gotoLinkUrl:url:)]){
