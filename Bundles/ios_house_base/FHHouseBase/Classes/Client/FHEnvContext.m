@@ -668,12 +668,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self.messageManager startSyncMessage];
     });
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [FHIESGeckoManager configGeckoInfo];
         [FHIESGeckoManager configIESWebFalcon];
-    });
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
         [[FHLynxManager sharedInstance] initLynx];
     });
 }
