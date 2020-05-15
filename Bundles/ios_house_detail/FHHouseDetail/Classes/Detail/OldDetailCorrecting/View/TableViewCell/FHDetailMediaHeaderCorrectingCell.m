@@ -94,6 +94,7 @@
         self.weakDetailVC = ((FHDetailMediaHeaderCorrectingModel *)data).weakVC;
     }
     
+    /* 一期预加载方案，先注释
     NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
     BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_webview_preload_close"];
     if (!boolOffline) {
@@ -101,6 +102,7 @@
             [self  createVRPreloadWebview];
         });
     }
+     */
 //    [self performSelector:@selector(createVRPreloadWebview) withObject:nil afterDelay:1];
 }
 
@@ -312,9 +314,9 @@
             
             [self trackClickOptions:@"house_vr_icon"];
             
-            if ([self.preloadRouteObj.instance isKindOfClass:[UIViewController class]] && [self.weakDetailVC isKindOfClass:[UIViewController class]]) {
-                [self.weakDetailVC.navigationController pushViewController:self.preloadRouteObj.instance animated:YES];
-            }else{
+//            if ([self.preloadRouteObj.instance isKindOfClass:[UIViewController class]] && [self.weakDetailVC isKindOfClass:[UIViewController class]]) {
+//                [self.weakDetailVC.navigationController pushViewController:self.preloadRouteObj.instance animated:YES];
+//            }else{
                 NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
                 NSMutableDictionary *param = [NSMutableDictionary new];
                 param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
@@ -327,7 +329,7 @@
                 NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@",vrModel.openUrl,reportParams];
                 self.isHasClickVR = YES;
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[openUrl URLEncodedString]]]];
-            }
+//            }
         }
         return;
     }
