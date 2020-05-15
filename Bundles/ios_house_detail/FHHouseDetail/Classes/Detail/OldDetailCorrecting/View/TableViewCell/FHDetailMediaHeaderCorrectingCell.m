@@ -20,7 +20,7 @@
 #import "FHCommonDefines.h"
 #import "FHDetailNewModel.h"
 #import <FHVRDetailWebViewController.h>
-#import "FHVRCacheManager.h"
+//#import "FHVRCacheManager.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
 
@@ -59,7 +59,7 @@
     if(self.vedioCount > 0){
         [self.mediaView.videoVC close];
     }
-    [[FHVRCacheManager sharedInstance] removeVRPreloadCache:self.hash];
+//    [[FHVRCacheManager sharedInstance] removeVRPreloadCache:self.hash];
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
@@ -107,42 +107,7 @@
 }
 
 - (void)createVRPreloadWebview{
-    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
-     NSMutableDictionary *param = [NSMutableDictionary new];
-     param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
-     param[@"enter_from"] = tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
-     param[UT_ELEMENT_FROM] = tracerDict[UT_ELEMENT_FROM]?:UT_BE_NULL;
-     param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
-     param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
-     param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;
-     NSString *reportParams = [FHUtils getJsonStrFrom:param];
 
-
-    FHDetailHouseVRDataModel *vrModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).vrModel;
-    //VR
-    if (vrModel && [vrModel isKindOfClass:[FHDetailHouseVRDataModel class]] && vrModel.hasVr && [FHVRCacheManager sharedInstance].currentVRPreloadCount == 0 && !self.isHasClickVR){
-        NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@&type=preload",vrModel.openUrl,reportParams];
-        NSString *resultOpenURl = [NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[openUrl URLEncodedString]];
-        
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:nil];
-        TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:[NSURL URLWithString:resultOpenURl] userInfo:userInfo];
-        self.preloadRouteObj = routeObj;
-        [[FHVRCacheManager sharedInstance] addVRPreloadCache:self.hash];
-    }
-    
-    
-//      if ([routeAgentObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
-//          [self.belongsVC.navigationController pushViewController:routeAgentObj.instance animated:YES];
-//      }else
-//      {
-//          TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO extra:extra];
-//          if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
-//              [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
-//          }else
-//          {
-//              [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES extra:extra];
-//          }
-//      }
          
 }
 
