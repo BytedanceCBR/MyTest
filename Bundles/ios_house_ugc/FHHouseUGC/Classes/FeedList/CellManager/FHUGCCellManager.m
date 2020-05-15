@@ -23,6 +23,8 @@
 #import "FHUGCHotCommunityCell.h"
 #import "FHNeighbourhoodQuestionCell.h"
 #import "FHNeighbourhoodCommentCell.h"
+#import "FHUGCRecommendCircleCell.h"
+#import "FHUGCEncyclopediasCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -58,6 +60,8 @@
                                 @"FHUGCHotCommunityCell",
                                 @"FHNeighbourhoodQuestionCell",
                                 @"FHNeighbourhoodCommentCell",
+                                @"FHUGCRecommendCircleCell",
+                                @"FHUGCEncyclopediasCell",
                                 //可扩展
                                  ];
 }
@@ -116,13 +120,57 @@
             
         case FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion:
             return [FHNeighbourhoodQuestionCell class];
+            
         case FHUGCFeedListCellSubTypeUGCNeighbourhoodComments:
             return [FHNeighbourhoodCommentCell class];
+            
+        case FHUGCFeedListCellSubTypeUGCRecommendCircle:
+            return [FHUGCRecommendCircleCell class];
+            
+        case FHUGCFeedListCellSubTypeUGCEncyclopedias:
+            return [FHUGCEncyclopediasCell class];
+            
         default:
             break;
     }
     
     return [FHUGCPureTitleCell class];
+}
+
++ (SSImpressionModelType)impressModelTypeWithCellType:(FHUGCFeedListCellType)cellType {
+    SSImpressionModelType type = SSImpressionModelTypeNone;
+    switch (cellType) {
+        case FHUGCFeedListCellTypeArticle:
+            type = SSImpressionModelTypeGroup;
+            break;
+        case FHUGCFeedListCellTypeUGC:
+            type = SSImpressionModelTypeThread;
+            break;
+        case FHUGCFeedListCellTypeUGCSmallVideo:
+            type = SSImpressionModelTypeUGCVideo;
+            break;
+        case FHUGCFeedListCellTypeAnswer:
+            type = SSImpressionModelTypeFeedAwswerItem;
+            break;
+        case FHUGCFeedListCellTypeQuestion:
+            type = SSImpressionModelTypeFeedQuestionItem;
+            break;
+        case FHUGCFeedListCellTypeArticleComment:
+        case FHUGCFeedListCellTypeArticleComment2:
+            type = SSImpressionModelTypeFeedCommentItem;
+            break;
+        case FHUGCFeedListCellTypeUGCVoteInfo:
+            type = SSImpressionModelTypeFeedVoteItem;
+            break;
+        case FHUGCFeedListCellTypeUGCEncyclopedias:
+            type = SSImpressionModelTypeFeedHouseKnowledgeItem;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return type;
 }
 
 @end

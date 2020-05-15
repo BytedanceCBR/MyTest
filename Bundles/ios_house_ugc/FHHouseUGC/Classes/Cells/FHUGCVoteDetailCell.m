@@ -244,9 +244,14 @@
         NSDictionary *log_pb = cellModel.tracerDic[@"log_pb"];
         dict[@"community_id"] = cellModel.community.socialGroupId;
         NSString *enter_from = cellModel.tracerDic[@"page_type"] ?: @"be_null";
-        dict[@"tracer"] = @{@"enter_from":enter_from,
-                            @"enter_type":@"click",
-                            @"log_pb":log_pb ?: @"be_null"};
+        NSString *originFrom = cellModel.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
+        dict[@"tracer"] = @{
+            @"origin_from":originFrom,
+            @"enter_from":enter_from,
+            @"enter_type":@"click",
+            @"group_id":cellModel.groupId ?: @"be_null",
+            @"log_pb":log_pb ?: @"be_null"
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         // 跳转到圈子详情页
         NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
@@ -687,7 +692,22 @@
             }else{
                 [[ToastManager manager] showToast:@"投票失败"];
             }
-            weakSelf.voteInfo.voteState = FHUGCVoteStateNone;
+            if(error.code == 1005){ //过期
+                weakSelf.voteInfo.selected = YES;
+                weakSelf.voteInfo.voteState = FHUGCVoteStateExpired;
+                weakSelf.voteInfo.deadLineContent = @"";
+                for (FHUGCVoteInfoVoteInfoItemsModel *item in weakSelf.voteInfo.items) {
+                    if (item.selected) {
+                        item.selected = NO;
+                    }
+                }
+                [weakSelf refreshWithData:weakSelf.voteInfo];
+                NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+                userInfo[@"vote_info"] = weakSelf.voteInfo;
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCPostVoteSuccessNotification object:nil userInfo:userInfo];
+            }else{
+                weakSelf.voteInfo.voteState = FHUGCVoteStateNone;
+            }
         } else {
             FHUGCVoteResponseModel *responseModel = (FHUGCVoteResponseModel *)model;
             if ([responseModel.status isEqualToString:@"0"]) {

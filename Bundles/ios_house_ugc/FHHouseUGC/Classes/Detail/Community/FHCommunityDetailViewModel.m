@@ -441,7 +441,7 @@
     feedListController.scrollViewDelegate = self;
     feedListController.listType = FHCommunityFeedListTypePostDetail;
     feedListController.forumId = self.viewController.communityId;
-    feedListController.hidePublishBtn = YES;
+//    feedListController.hidePublishBtn = YES;
     feedListController.tabName = tabName;
     feedListController.isResetStatusBar = NO;
     //错误页高度
@@ -1096,8 +1096,9 @@
 
 - (void)addGoDetailLog {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"click";
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
@@ -1112,8 +1113,9 @@
         return;
     }
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"be_null";
+    params[@"enter_type"] = self.tracerDict[@"enter_type"] ?: @"click";
     params[@"log_pb"] = self.tracerDict[@"log_pb"] ?: @"be_null";
     params[@"rank"] = self.tracerDict[@"rank"] ?: @"be_null";
     params[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";

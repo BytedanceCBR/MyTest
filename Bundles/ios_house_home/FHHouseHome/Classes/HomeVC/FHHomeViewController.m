@@ -313,7 +313,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
     
     //首次无网启动点击加载重试，增加拉取频道
-    if ([TTSandBoxHelper isAPPFirstLaunch]) {
+    if ([TTSandBoxHelper isAPPFirstLaunch] && ![FHEnvContext isNewDiscovery]) {
         [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
             
         }];

@@ -51,7 +51,11 @@
         TTDetailContainerViewModel * viewModel = [[TTDetailContainerViewModel alloc] initWithRouteParamObj:paramObj];
         if([paramObj.allParams[@"report_params"] isKindOfClass:[NSString class]])
         {
-            NSDictionary *reportDict = [FHUtils dictionaryWithJsonString:paramObj.allParams[@"report_params"]];
+            NSMutableDictionary *reportDict = [[FHUtils dictionaryWithJsonString:paramObj.allParams[@"report_params"]] mutableCopy];
+            //这里强插入categoryName
+            if(reportDict[@"enter_from"]){
+                reportDict[@"category_name"] = reportDict[@"enter_from"];
+            }
             
             if([reportDict isKindOfClass:[NSDictionary class]])
             {

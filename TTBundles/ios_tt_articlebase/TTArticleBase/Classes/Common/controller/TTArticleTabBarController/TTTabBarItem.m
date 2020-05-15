@@ -160,6 +160,9 @@ static TTPersistence *tabBarItemPersistence;
 
 - (void)layoutBadgeView {
     CGFloat paddingX = self.ttBadgeView.badgeNumber == -1 ? 10.f : 0;
+    if(self.ttBadgeView.badgeNumber == TTBadgeNumberPoint){
+        paddingX = -7;
+    }
     self.ttBadgeView.centerX = ceilf(self.imageView.right) + paddingX;
     CGFloat offsetV = self.ttBadgeOffsetV != MAXFLOAT ? self.ttBadgeOffsetV : offsetRedDotV;
     self.ttBadgeView.centerY = ceilf(self.imageView.top + offsetV);
@@ -252,7 +255,7 @@ static TTPersistence *tabBarItemPersistence;
 - (TTBadgeNumberView*)ttBadgeView {
     if (!_ttBadgeView) {
         _ttBadgeView = [[TTBadgeNumberView alloc] init];
-        _ttBadgeView.badgeViewStyle = TTBadgeNumberViewStyleDefault;
+        _ttBadgeView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
         [self addSubview:_ttBadgeView];
     }
     
