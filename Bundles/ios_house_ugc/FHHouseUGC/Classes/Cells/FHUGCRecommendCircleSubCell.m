@@ -57,6 +57,24 @@
             }];
         }
         
+        if (model.suggestReason.length >0) {
+            self.descLabel.hidden = NO;
+            [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.contentView).offset(13);
+                make.left.mas_equalTo(self.contentView).offset(10);
+                make.right.mas_equalTo(self.contentView).offset(-10);
+                make.height.mas_equalTo(20);
+            }];
+        }else {
+            self.descLabel.hidden = YES;
+            [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.mas_equalTo(self.contentView);
+                make.left.mas_equalTo(self.contentView).offset(10);
+                make.right.mas_equalTo(self.contentView).offset(-10);
+                make.height.mas_equalTo(20);
+            }];
+        }
+        
         if([model.socialGroupId isEqualToString:@"-1"]){
             self.blackCoverView.hidden = YES;
         }else{
