@@ -305,7 +305,7 @@ def appPods
     pod_binary 'TTThemed','0.1.36'
 
     #-----头条UI组件库-----
-    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '534a843030a01478c6112a0c168c7fd5360c4832'
+    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => 'b9fc582c92fe8a0377676890beee95571a3ff737'
     
     pod 'Bytedancebase','1.4.0-rc.0', :subspecs => [
     'BDPlatformSDK',
