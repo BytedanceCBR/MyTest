@@ -14,6 +14,7 @@
 @property (nonatomic , strong) UILabel *nameLabel;
 @property (nonatomic , strong) UILabel *roomSpaceLabel;
 @property (nonatomic , strong) UILabel *priceLabel;
+@property (nonatomic , strong) UIView  *tagBacView;
 @property (nonatomic , strong) UIButton *mapMaskBtn;
 @property (nonatomic , strong) UIView *statusBGView;
 @property (nonatomic , strong) UILabel *statusLabel;
@@ -61,6 +62,9 @@
         _priceLabel.textColor = [UIColor themeOrange1];
         _priceLabel.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:_priceLabel];
+        
+        _tagBacView = [UIView new];
+        [self.contentView addSubview:_tagBacView];
         
         [self initConstaints];
 
@@ -132,7 +136,7 @@
     
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(_iconView.mas_right).offset(13);
-        make.top.mas_equalTo(32);
+        make.top.mas_equalTo(20);
         make.height.mas_equalTo(19);
         make.right.mas_equalTo(self.priceLabel.mas_left);
     }];
@@ -147,15 +151,24 @@
 
     [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-31);
-        make.top.mas_equalTo(32);
+        make.top.mas_equalTo(20);
         make.height.mas_equalTo(19);
         make.width.mas_equalTo(110);
+    }];
+    [_tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(_iconView.mas_right).offset(13);
+        make.right.mas_equalTo(-31);
+        make.height.mas_equalTo(16);
+        make.bottom.mas_equalTo(_iconView);
     }];
 }
 
 - (void)refreshWithData:(id)data
 {
     if ([data isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
+        for (UIView *v in self.tagBacView.subviews) {
+            [v removeFromSuperview];
+        }
         FHDetailNewDataFloorpanListListModel *model = (FHDetailNewDataFloorpanListListModel*)data;
         self.nameLabel.text = model.title;
         if ([model.squaremeter isKindOfClass:[NSString class]]) {
@@ -201,31 +214,41 @@
                 }
             }
         }
-        
-        if (!model.saleStatus) {
-            self.statusLabel.text = @"";
-            self.statusBGView.backgroundColor = [UIColor clearColor];
-            self.statusLabel.backgroundColor = [UIColor clearColor];
-        }else {
-            self.statusLabel.text = model.saleStatus.content;
-            if ([model.saleStatus.textColor isKindOfClass:[NSString class]]) {
-                self.statusLabel.textColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.textColor]];
-            }else
-            {
-                self.statusLabel.textColor = [UIColor whiteColor];
-            }
-            
-            if ([model.saleStatus.backgroundColor isKindOfClass:[NSString class]]) {
-                self.statusLabel.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
-                _statusBGView.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
-                
-            }else
-            {
-                self.statusLabel.backgroundColor = [UIColor whiteColor];
-                _statusBGView.backgroundColor = [UIColor whiteColor];
-            }
+        CGFloat left = 0.0;
+        if (model.saleStatus) {
+            UILabel *saleLabel = [self createLabelWithText:model.saleStatus.content bacColor:model.saleStatus.backgroundColor textColor:model.saleStatus.textColor];
+            CGFloat width = [self getTagBackWidth:saleLabel];
+            [self.tagBacView addSubview:saleLabel];
+            [saleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(left);
+                make.width.mas_equalTo(width);
+                make.height.mas_equalTo(16.0);
+                make.top.mas_equalTo(0);
+            }];
+            left += width + 4.0;
         }
     }
+    [self layoutIfNeeded];
+}
+
+- (UILabel *)createLabelWithText:(NSString *)text bacColor:(NSString *)bacStr textColor:(NSString *)textStr {
+    UIColor *tagBacColor = [UIColor colorWithHexString:bacStr];
+    UIColor *tagTextColor = [UIColor colorWithHexString:textStr];
+    UILabel *label = [[UILabel alloc]init];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.backgroundColor = tagBacColor;
+    label.textColor = tagTextColor;
+    label.layer.cornerRadius = 2;
+    label.layer.masksToBounds = YES;
+    label.text = text;
+    label.font = [UIFont themeFontMedium:10];
+    return label;
+}
+
+- (CGFloat)getTagBackWidth:(UILabel *)label {
+    [label sizeToFit];
+    CGSize itemSize = [label sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, 16.0)];
+    return itemSize.width + 8.0;
 }
 
 - (void)awakeFromNib {

@@ -90,7 +90,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             NSInteger total = 0;
 
             for (NSInteger j = 0; j < self.allItems.count ; j++) {
-                if ([self.allItems[i].roomCount isKindOfClass:[NSString class]] && [_topRoomCountArray[i] isKindOfClass:[NSString class]]) {
+                if ([self.allItems[j].roomCount isKindOfClass:[NSString class]] && [_topRoomCountArray[i] isKindOfClass:[NSString class]]) {
                         if ([self.allItems[j].roomCount integerValue] == [_topRoomCountArray[i] integerValue]) {
                             total++;
                     }
