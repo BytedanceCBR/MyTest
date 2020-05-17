@@ -89,7 +89,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
      [uploadParams setValue:status forKey:@"error"];
-     [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_error" status:0 extra:paramsExtra];
+     [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_source" status:[status integerValue] extra:paramsExtra];
 }
      
 
