@@ -38,14 +38,14 @@
         NSString *imageStr = obj;
         
         if([imageStr isKindOfClass:[NSString class]] && [imageStr containsString:@".jpg"]){
-//            NSRange imageUrlRangeTest = [imageStr rangeOfString:@"/f100-image/"];
-//            NSString *imageNameTest = [imageStr substringFromIndex:imageUrlRangeTest.location + imageUrlRangeTest.length];
-//            NSString *imageStrTest = [NSString stringWithFormat:@"%@/%@%@",@"https://sf1-ttcdn-tos.pstatp.com/img/f100-image",imageNameTest,@"~1024x0.jpg"];
-//            imageStr = imageStrTest;
+            //            NSRange imageUrlRangeTest = [imageStr rangeOfString:@"/f100-image/"];
+            //            NSString *imageNameTest = [imageStr substringFromIndex:imageUrlRangeTest.location + imageUrlRangeTest.length];
+            //            NSString *imageStrTest = [NSString stringWithFormat:@"%@/%@%@",@"https://sf1-ttcdn-tos.pstatp.com/img/f100-image",imageNameTest,@"~1024x0.jpg"];
+            //            imageStr = imageStrTest;
         }else{
             return ;
         }
-      
+        
         NSURL *urlImageLoader = [NSURL URLWithString:obj];
         NSString *imageRootPath = [IESGeckoKit rootDirForAccessKey:[FHVRPreloadManager getGeckoKey] channel:kFHVrImagePreLoadChannel];
         NSRange imageUrlRange = [imageStr rangeOfString:@"/img/"];
@@ -54,26 +54,26 @@
         }
         if (imageStr.length > (imageUrlRange.location + imageUrlRange.length)) {
             NSString *imageName = [imageStr substringFromIndex:imageUrlRange.location + imageUrlRange.length];
-             NSString *imageFileS = [NSString stringWithFormat:@"%@/%@",imageRootPath,imageName];
-             
-             NSArray <NSString *>*arrayString = [imageName componentsSeparatedByString:@"/"];
-             
+            NSString *imageFileS = [NSString stringWithFormat:@"%@/%@",imageRootPath,imageName];
+            
+            NSArray <NSString *>*arrayString = [imageName componentsSeparatedByString:@"/"];
+            
             if (arrayString) {
                 NSString *dirStr = [NSString stringWithFormat:@"%@/%@",imageRootPath,arrayString.firstObject];
-                      
+                
                 if (![[NSFileManager defaultManager] fileExistsAtPath:dirStr]) {
-                            [[NSFileManager defaultManager] createDirectoryAtPath:dirStr withIntermediateDirectories:YES attributes:nil error:nil];
+                    [[NSFileManager defaultManager] createDirectoryAtPath:dirStr withIntermediateDirectories:YES attributes:nil error:nil];
                 }
                 
                 if (urlImageLoader) {
                     [[SDWebImageManager sharedManager] loadImageWithURL:urlImageLoader options:SDWebImageLowPriority progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-                                        
-                              } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-                                        [data writeToFile:imageFileS atomically:YES];
-                              }];
-                    }
+                        
+                    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+                        [data writeToFile:imageFileS atomically:YES];
+                    }];
                 }
             }
+        }
     }];
 }
 
@@ -135,27 +135,31 @@
         if ([dataDict isKindOfClass:[NSDictionary class]]) {
             NSDictionary *vrDataDict = [dataDict tt_objectForKey:@"Data"];
             NSString *vrDataStr = [vrDataDict tt_objectForKey:@"VrData"];
-            NSDictionary *vrStrDataDict = [FHUtils dictionaryWithJsonString:vrDataStr];
-            if (vrStrDataDict) {
-                NSString *defaultId = [vrStrDataDict tt_objectForKey:@"Default_hotSpotId"];
-                NSArray *vrImageArra = [vrStrDataDict tt_objectForKey:@"HotSpots"];
-               __block NSDictionary *imagesDict = nil;
-                [vrImageArra enumerateObjectsUsingBlock:^(NSDictionary *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if ([obj isKindOfClass:[NSDictionary class]]) {
-                        NSString *idStr = obj[@"ID"];
-                        if ([idStr isKindOfClass:[NSString class]]) {
-                            if ([idStr isEqualToString:defaultId]) {
-                                imagesDict = obj;
+            if ([vrDataStr isKindOfClass:[NSString class]]) {
+                NSDictionary *vrStrDataDict = [FHUtils dictionaryWithJsonString:vrDataStr];
+                if (vrStrDataDict) {
+                    NSString *defaultId = [vrStrDataDict tt_objectForKey:@"Default_hotSpotId"];
+                    NSArray *vrImageArra = [vrStrDataDict tt_objectForKey:@"HotSpots"];
+                    __block NSDictionary *imagesDict = nil;
+                    if([vrImageArra isKindOfClass:[NSArray class]] && [defaultId isKindOfClass:[NSString class]]){
+                        [vrImageArra enumerateObjectsUsingBlock:^(NSDictionary *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            if ([obj isKindOfClass:[NSDictionary class]]) {
+                                NSString *idStr = obj[@"ID"];
+                                if ([idStr isKindOfClass:[NSString class]]) {
+                                    if ([idStr isEqualToString:defaultId]) {
+                                        imagesDict = obj;
+                                    }
+                                }
                             }
-                        }
+                        }];
                     }
-                }];
-                
-                NSArray *imageUrls = imagesDict[@"TileImageUrl"];
-                [self startCacheVRImage:imageUrls];
+                    NSArray *imageUrls = imagesDict[@"TileImageUrl"];
+                    if ([imageUrls isKindOfClass:[NSArray class]]) {
+                        [self startCacheVRImage:imageUrls];
+                    }
+                }
             }
         }
-
     }];
 }
 
