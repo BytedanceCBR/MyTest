@@ -112,6 +112,15 @@
 
 }
 
+- (void)setExtraDic:(NSDictionary *)extraDic {
+    _extraDic = extraDic;
+    if ([self.middleware isKindOfClass:[TTMomentDetailMiddleware class]]) {
+        
+        TTMomentDetailMiddleware *middleware = (TTMomentDetailMiddleware *)self.middleware;
+        middleware.extraDic = extraDic;
+    }
+}
+
 - (void)dispatch:(Action *)action {
     if (action.shouldMiddlewareHandle) {
         action.shouldMiddlewareHandle = NO;

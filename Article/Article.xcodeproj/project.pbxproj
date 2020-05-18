@@ -128,6 +128,8 @@
 		D37495E123965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */; };
 		D37495E223965409006D44D2 /* gaode_house_detail_style.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DF23965409006D44D2 /* gaode_house_detail_style.data */; };
 		D37495E323965409006D44D2 /* gaode_house_detail_style.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DF23965409006D44D2 /* gaode_house_detail_style.data */; };
+		D45F59FC2458039F00A14982 /* LynxLocalChannels in Resources */ = {isa = PBXBuildFile; fileRef = D45F59FB2458039E00A14982 /* LynxLocalChannels */; };
+		D45F59FD2458039F00A14982 /* LynxLocalChannels in Resources */ = {isa = PBXBuildFile; fileRef = D45F59FB2458039E00A14982 /* LynxLocalChannels */; };
 		D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		D55B84DD2CCDEBDD13DAD9FD /* libPods-serviceNofExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CFA1F540F85DFB96DD4FB618 /* libPods-serviceNofExtension.a */; };
@@ -390,6 +392,7 @@
 		D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CommonResource.xcassets; sourceTree = "<group>"; };
 		D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_house_detail_style_extra.data; sourceTree = "<group>"; };
 		D37495DF23965409006D44D2 /* gaode_house_detail_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_house_detail_style.data; sourceTree = "<group>"; };
+		D45F59FB2458039E00A14982 /* LynxLocalChannels */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LynxLocalChannels; sourceTree = "<group>"; };
 		D48E93C0233CF142005A42CD /* VRImageLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VRImageLoading.json; sourceTree = "<group>"; };
 		D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoResource.xcassets; sourceTree = "<group>"; };
 		EF3B84B5173BDC690017F4E7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -735,6 +738,7 @@
 				D37495DF23965409006D44D2 /* gaode_house_detail_style.data */,
 				7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */,
 				D48E93C0233CF142005A42CD /* VRImageLoading.json */,
+				D45F59FB2458039E00A14982 /* LynxLocalChannels */,
 				3D7D2F3722704CAA00A95FAF /* AppIcon */,
 				8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */,
 				01FA60521E9F5D7300CE6FD3 /* area.plist */,
@@ -1059,6 +1063,7 @@
 				B373CEC62174587A008F9905 /* FrameworkResource.xcassets in Resources */,
 				3DC75FFA23BB4ABE00614BFF /* permission_tip.txt in Resources */,
 				B373CEC82174587A008F9905 /* Account.xcassets in Resources */,
+				D45F59FD2458039F00A14982 /* LynxLocalChannels in Resources */,
 				FBA5894023AB87200053EC79 /* images in Resources */,
 				B373CEC92174587A008F9905 /* NewsInHouseTodayExtenstion.release.xcconfig in Resources */,
 				B373CECA2174587A008F9905 /* NewsInHouse.release.xcconfig in Resources */,
@@ -1127,6 +1132,7 @@
 				D37495E023965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */,
 				FEFA5A21205FB1A8001F50D8 /* AuthorizeHintResource.xcassets in Resources */,
 				FEFA5A22205FB1A8001F50D8 /* default_profile_background_image.jpg in Resources */,
+				D45F59FC2458039F00A14982 /* LynxLocalChannels in Resources */,
 				B388CB272142652A00653188 /* Assets.xcassets in Resources */,
 				3DB49F8A2265E34900A0780E /* ProjectDayModeThemeUISetting.strings in Resources */,
 				3DB49F862265E34900A0780E /* IPhoneProjectLogicSetting.strings in Resources */,

@@ -23,6 +23,11 @@
 #import "FHUGCHotCommunityCell.h"
 #import "FHNeighbourhoodQuestionCell.h"
 #import "FHNeighbourhoodCommentCell.h"
+#import "FHUGCLynxBannerCell.h"
+#import "FHLynxManager.h"
+#import "FHUGCRecommendCircleCell.h"
+#import "FHUGCEncyclopediasCell.h"
+#import "FHUGCLynxCommonCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -49,6 +54,7 @@
                                 @"FHArticleSingleImageCell",
                                 @"FHArticleMultiImageCell",
                                 @"FHUGCRecommendCell",
+                                @"FHUGCLynxBannerCell",
                                 @"FHUGCBannerCell",
                                 @"FHUGCHotTopicCell",
                                 @"FHUGCVoteCell",
@@ -58,6 +64,9 @@
                                 @"FHUGCHotCommunityCell",
                                 @"FHNeighbourhoodQuestionCell",
                                 @"FHNeighbourhoodCommentCell",
+                                @"FHUGCRecommendCircleCell",
+                                @"FHUGCEncyclopediasCell",
+                                @"FHUGCLynxCommonCell",
                                 //可扩展
                                  ];
 }
@@ -94,7 +103,7 @@
             return [FHUGCRecommendCell class];
 
         case FHUGCFeedListCellSubTypeUGCBanner:
-            return [FHUGCBannerCell class];
+            return [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName]] ? [FHUGCLynxBannerCell class] : [FHUGCBannerCell class];
             
         case FHUGCFeedListCellSubTypeUGCHotTopic:
             return [FHUGCHotTopicCell class];
@@ -116,13 +125,62 @@
             
         case FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion:
             return [FHNeighbourhoodQuestionCell class];
+            
         case FHUGCFeedListCellSubTypeUGCNeighbourhoodComments:
             return [FHNeighbourhoodCommentCell class];
+            
+        case FHUGCFeedListCellSubTypeUGCRecommendCircle:
+            return [FHUGCRecommendCircleCell class];
+            
+        case FHUGCFeedListCellSubTypeUGCEncyclopedias:
+            return [FHUGCEncyclopediasCell class];
+            
+        case FHUGCFeedListCellSubTypeUGCLynx:
+            
+            return [FHUGCLynxCommonCell class];
         default:
             break;
     }
     
+    
+    
     return [FHUGCPureTitleCell class];
+}
+
++ (SSImpressionModelType)impressModelTypeWithCellType:(FHUGCFeedListCellType)cellType {
+    SSImpressionModelType type = SSImpressionModelTypeNone;
+    switch (cellType) {
+        case FHUGCFeedListCellTypeArticle:
+            type = SSImpressionModelTypeGroup;
+            break;
+        case FHUGCFeedListCellTypeUGC:
+            type = SSImpressionModelTypeThread;
+            break;
+        case FHUGCFeedListCellTypeUGCSmallVideo:
+            type = SSImpressionModelTypeUGCVideo;
+            break;
+        case FHUGCFeedListCellTypeAnswer:
+            type = SSImpressionModelTypeFeedAwswerItem;
+            break;
+        case FHUGCFeedListCellTypeQuestion:
+            type = SSImpressionModelTypeFeedQuestionItem;
+            break;
+        case FHUGCFeedListCellTypeArticleComment:
+        case FHUGCFeedListCellTypeArticleComment2:
+            type = SSImpressionModelTypeFeedCommentItem;
+            break;
+        case FHUGCFeedListCellTypeUGCVoteInfo:
+            type = SSImpressionModelTypeFeedVoteItem;
+            break;
+        case FHUGCFeedListCellTypeUGCEncyclopedias:
+            type = SSImpressionModelTypeFeedHouseKnowledgeItem;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return type;
 }
 
 @end

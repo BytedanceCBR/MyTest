@@ -17,6 +17,7 @@
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "FHMultiMediaVRImageCell.h"
 #import "FHDeatilHeaderTitleView.h"
+#import "UIViewAdditions.h"
 
 #define k_VIDEOCELLID @"video_cell_id"
 #define k_IMAGECELLID @"image_cell_id"
@@ -199,12 +200,12 @@
         make.height.mas_equalTo(20);
     }];
     
-    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(44);
-        make.height.mas_equalTo(20);
-        make.right.mas_equalTo(self).offset(-16);
-        make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
-    }];
+    [self layoutIfNeeded];
+    
+    self.infoLabel.width = 44;
+    self.infoLabel.height = 20;
+    self.infoLabel.left = self.width - self.infoLabel.width - 16;
+    self.infoLabel.bottom = self.titleView.top + 5;
 }
 
 - (void)selectItem:(NSInteger)index {
@@ -224,7 +225,8 @@
         if (curPage == 0 ){
             curPage = 1;
         }
-        self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
+      
+        [self setInfoLabelText:[NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count]];
         
         if(self.delegate && [self.delegate respondsToSelector:@selector(selectItem:)]){
             [self.delegate selectItem:self.itemArray[index]];
@@ -240,9 +242,9 @@
             [self.videoVC pause];
         }
 
-        if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVPlaybackState_Paused){
-            [self.videoVC play];
-        }
+//        if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVPlaybackState_Paused){
+//            [self.videoVC play];
+//        }
         self.lastCell = currentCell;
     }
 }
@@ -403,24 +405,23 @@
             FHMultiMediaItemModel *itemModel = self.medias[index];
             NSString *groupType = itemModel.groupType;
             [self.itemView selectedItem:groupType];
-            
-            self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
-            [self.infoLabel sizeToFit];
-            CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
-            itemSize.width += 14.0;
-            if (itemSize.width < 44) {
-                itemSize.width = 44;
-            }
-            
-            [self.infoLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(itemSize.width);
-                make.height.mas_equalTo(20);
-                make.right.mas_equalTo(self).offset(-16);
-                make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
-            }];
+            [self setInfoLabelText:[NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count]];
         }
     }
+}
+
+- (void)setInfoLabelText:(NSString *)text {
+    self.infoLabel.text = text;
+    [self.infoLabel sizeToFit];
+    CGSize itemSize = [self.infoLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 20)];
+    CGFloat width = itemSize.width;
+    width += 14.0;
+    if (width < 44) {
+        width = 44;
+    }
     
+    self.infoLabel.width = width;
+    self.infoLabel.left = self.width - self.infoLabel.width - 16;
 }
 
 - (void)updateVideoState {
@@ -494,7 +495,7 @@
 //    }];
     self.titleView.model = titleModel;
     if (_medias.count > 0) {
-        self.infoLabel.text = [NSString stringWithFormat:@"%d/%ld",1,_medias.count];
+        [self setInfoLabelText:[NSString stringWithFormat:@"%d/%ld",1,_medias.count]];
         self.infoLabel.hidden = NO;
         self.colletionView.hidden = NO;
         self.noDataImageView.hidden = YES;

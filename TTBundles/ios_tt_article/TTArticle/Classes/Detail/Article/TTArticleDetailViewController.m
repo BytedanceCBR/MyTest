@@ -2645,13 +2645,20 @@
         [params setValue:model.userID.stringValue forKey:@"user_id"];
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
-        [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
+        [params setValue:@"comment" forKey:@"position"];
+        [params setValue:@"feed_dislike" forKey:@"click_position"];
         
         if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
             [params addEntriesFromDictionary:self.detailModel.reportParams];
+            
+            if(self.detailModel.reportParams[@"enter_from"]){
+                params[@"category_name"] = self.detailModel.reportParams[@"enter_from"];
+            }
         }
         
-        [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+//        [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
+        
+        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
     } else {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
         [params setValue:@"house_app2c_v2" forKey:@"event_type"];
@@ -2661,12 +2668,18 @@
 //        [params setValue:model.userID.stringValue forKey:@"user_id"];
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
-        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
         [params setValue:@"comment" forKey:@"position"];
+        [params setValue:@"feed_like" forKey:@"click_position"];
         
         if([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]){
             [params addEntriesFromDictionary:self.detailModel.reportParams];
+            
+            if(self.detailModel.reportParams[@"enter_from"]){
+                params[@"category_name"] = self.detailModel.reportParams[@"enter_from"];
+            }
         }
+        
+//        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
         
         [TTTrackerWrapper eventV3:@"rt_like" params:params];
     }
@@ -2734,6 +2747,7 @@
         [mdict setValue:[self pageType] forKey:@"enterFrom"];
     }
     [mdict setValue:self.detailModel.logPb forKey:@"logPb"];
+    [mdict setValue:self.detailModel.reportParams forKey:@"extraDic"];
 
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
     
