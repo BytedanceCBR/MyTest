@@ -87,6 +87,9 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
     [TTAccount accountConf].isXTTTokenActive = YES;
     // x_tt_token 长票据功能轮询间隔，默认 10 min
     [TTAccount accountConf].tokenPollingInterveral = TTATokenPollingInterveralTen;
+    // 设置需要票据的域名（必须）
+    NSArray *domainWhiteList = @[@".haoduofangs.com"];
+    [TTAccount accountConf].needTokenDomins = domainWhiteList;
     [TTAccount accountConf].multiThreadSafeEnabled = [TTAccountTestSettings threadSafeSupported];
     if ([TTSandBoxHelper isInHouseApp]) {
         [TTAccount accountConf].sharingKeyChainGroup = @"XXHND5J98K.com.ss.iphone.InHouse.article.News";
