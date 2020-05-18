@@ -62,12 +62,11 @@ def fhPods
     # pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => '819997a3afbc7eb3e1eaf2b0d8cc3ecb488b71c1', :subspecs => [
     # 'Core',
     # 'DelegateForC'
-    # ]
+    #]
 
-    pod 'ios_house_im' , '0.2.0-rc.18'
-#    pod 'ios_house_im' , :path => '../../ios_house_im'
-#     pod 'ios_house_im' , :path => '../../cim3'
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'ec1d29fed31c70cdf717bc53039580d9801d074d'
+    pod 'ios_house_im' , '0.2.0-rc.19'
+#     pod 'ios_house_im' , :path => '../../../ios_house_im'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '212a5046deb7cef04268ff184689acbcdcb6353d'
 
 end
 
@@ -514,6 +513,7 @@ def appPods
         'Feature_Core_ConversationInfo',
         'Feature_Core_Config',
         'Feature_Core_Setting',
+        'Feature_Core_ReadReceipt',
         'Feature_Core',
         'Feature_ApplicationStatus',
         'Protocols',
@@ -568,7 +568,7 @@ end
 def testPods
     pod 'BDSSOAuthSDK'
     pod_binary 'TTDebugAssistant', '0.2.33'
-    pod_binary 'FLEX', '2.4.0'#, :configurations=>['Debug']
+    pod_binary 'FLEX', '3.1.2'#, :configurations=>['Debug']
 #    pod_source 'BDNetworkDevMonitor', '0.1.6'
     pod_binary 'TTSettingsManager/Debug'
     pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
