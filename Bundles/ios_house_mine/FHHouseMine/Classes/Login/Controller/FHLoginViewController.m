@@ -103,9 +103,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
-    if (self.textField) {
+    if (self.textField && !self.textField.isFirstResponder) {
         [self.textField becomeFirstResponder];
     }
+    [self.viewModel viewWillAppear];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -207,6 +208,7 @@
             self.currentShowView = self.mobileInputView;
             self.textField = self.mobileInputView.mobileTextField;
             [self.mobileInputView updateProtocol:[self.viewModel protocolAttrTextByIsOneKeyLoginViewType:type] showDouyinIcon:[self.viewModel shouldShowDouyinIcon]];
+            [self.textField becomeFirstResponder];
         }
             break;
         case FHLoginViewTypeDouYin:

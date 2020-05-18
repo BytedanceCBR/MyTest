@@ -244,6 +244,8 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 /// 是否展示了抖音登录
 @property (nonatomic, assign) BOOL hasShowDouyinLogin;
+
+@property (nonatomic, copy) void (^douyinLoginConflictHandlerBlock)(void);
 @end
 
 @implementation FHLoginViewModel
@@ -540,6 +542,12 @@ static FHLoginSharedModel *_sharedModel = nil;
             });
         }
     });
+}
+
+- (void)viewWillAppear {
+    if (self.douyinLoginConflictHandlerBlock) {
+        self.douyinLoginConflictHandlerBlock();
+    }
 }
 
 #pragma mark - 运营商一键登录
@@ -842,60 +850,64 @@ static FHLoginSharedModel *_sharedModel = nil;
             //失败则提示
             //登录冲突处理
             if (error.code == TTAccountErrCodeAuthPlatformBoundForbid) {
-                
-                [FHLoginTrackHelper loginPopup:tracerDict.copy error:error];
-                void(^goDetailBlock)(void) = ^(void) {
-                    NSString *profileKey = error.userInfo[@"profile_key"];
-                    NSString *mobile = error.userInfo[@"mobile"];
-                    NSString *screen_name = error.userInfo[@"screen_name"];
-                    NSString *avatar_url = error.userInfo[@"avatar_url"];
-                    avatar_url = [avatar_url btd_stringByURLEncode];
-                    NSString *platform_screen_name_current = error.userInfo[@"platform_screen_name_current"];
-                    NSString *platform_screen_name_conflict = error.userInfo[@"platform_screen_name_conflict"];
-                    NSInteger last_login_time = [error.userInfo[@"last_login_time"] integerValue];
-                    NSString *enter_from = tracerDict[@"enter_from"];
-                    NSString *device_id = [[TTInstallIDManager sharedInstance] deviceID];
-                    NSString *URLString = [NSString stringWithFormat:@" http://m.haoduofangs.com/passport/auth_bind_conflict/index/?aid=1370&enter_from=%@&mobile=%@&screen_name=%@&avatar_url=%@&last_login_time=%@&platform_screen_name_current=%@&platform_screen_name_conflict=%@&profile_key=%@&device_id=%@",enter_from, mobile, screen_name, avatar_url, @(last_login_time), platform_screen_name_current, platform_screen_name_conflict, profileKey, device_id];
+                self.douyinLoginConflictHandlerBlock = ^{
+                    [FHLoginTrackHelper loginPopup:tracerDict.copy error:error];
+                    void(^goDetailBlock)(void) = ^(void) {
+                        NSString *profileKey = error.userInfo[@"profile_key"];
+                        NSString *mobile = error.userInfo[@"mobile"];
+                        NSString *screen_name = error.userInfo[@"screen_name"];
+                        NSString *avatar_url = error.userInfo[@"avatar_url"];
+                        avatar_url = [avatar_url btd_stringByURLEncode];
+                        NSString *platform_screen_name_current = error.userInfo[@"platform_screen_name_current"];
+                        NSString *platform_screen_name_conflict = error.userInfo[@"platform_screen_name_conflict"];
+                        NSInteger last_login_time = [error.userInfo[@"last_login_time"] integerValue];
+                        NSString *enter_from = tracerDict[@"enter_from"];
+                        NSString *device_id = [[TTInstallIDManager sharedInstance] deviceID];
+                        NSString *URLString = [NSString stringWithFormat:@" http://m.haoduofangs.com/passport/auth_bind_conflict/index/?aid=1370&enter_from=%@&mobile=%@&screen_name=%@&avatar_url=%@&last_login_time=%@&platform_screen_name_current=%@&platform_screen_name_conflict=%@&profile_key=%@&device_id=%@",enter_from, mobile, screen_name, avatar_url, @(last_login_time), platform_screen_name_current, platform_screen_name_conflict, profileKey, device_id];
+                        
+                        ssOpenWebView([TTStringHelper URLWithURLString:URLString], nil, strongSelf.viewController.navigationController, NO, @{@"hide_nav_bar": @"1",@"hide_back_button": @"1"});
+                    };
+                    NSString *message = @"";
+                    if ([error.userInfo[@"screen_name"] isKindOfClass:[NSString class]] && [error.userInfo[@"mobile"] isKindOfClass:[NSString class]] ) {
+                        //皮皮虾冲突格式
+                        //message = [NSString stringWithFormat:@"检查到%@已绑定\n幸福里帐号【%@】",error.userInfo[@"mobile"], error.userInfo[@"screen_name"]];
+                        //检查到该手机号已绑定幸福里帐号「昵称」
+                        message = [NSString stringWithFormat:@"检查到该手机号已绑定幸福里帐号「%@」", error.userInfo[@"screen_name"]];
+                    }
+                    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"帐号冲突提醒"
+                                                                                   message:message
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消授权"
+                                                                           style:UIAlertActionStyleCancel
+                                                                         handler:^(UIAlertAction * _Nonnull action) {
+                        // 点击取消按钮，调用此block
+                        tracerDict[@"click_button"] = @"取消授权";
+                        [FHLoginTrackHelper loginPopupClick:tracerDict error:error];
+                        strongSelf.douyinLoginConflictHandlerBlock = nil;
+                        if (!isDouyinIcon) {
+                            //如果不是抖音icon登录的话，需要登录降级策略
+                            [strongSelf downgradeLoginToMobile];
+                        }
+                    }];
+                    [alertController addAction:cancelAction];
                     
-                    ssOpenWebView([TTStringHelper URLWithURLString:URLString], nil, strongSelf.viewController.navigationController, NO, @{@"hide_nav_bar": @"1",@"hide_back_button": @"1"});
+                    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"查看详情"
+                                                                            style:UIAlertActionStyleDefault
+                                                                          handler:^(UIAlertAction * _Nonnull action) {
+                        // 点击按钮，调用此block
+                        tracerDict[@"click_button"] = @"查看详情";
+                        [FHLoginTrackHelper loginPopupClick:tracerDict error:error];
+                        if(goDetailBlock){
+                            goDetailBlock();
+                        }
+                    }];
+                    [alertController addAction:defaultAction];
+                    [[TTUIResponderHelper visibleTopViewController] presentViewController:alertController animated:YES completion:nil];
                 };
-                NSString *message = @"";
-                if ([error.userInfo[@"screen_name"] isKindOfClass:[NSString class]] && [error.userInfo[@"mobile"] isKindOfClass:[NSString class]] ) {
-                    //皮皮虾冲突格式
-                    //message = [NSString stringWithFormat:@"检查到%@已绑定\n幸福里帐号【%@】",error.userInfo[@"mobile"], error.userInfo[@"screen_name"]];
-                    //检查到该手机号已绑定幸福里帐号「昵称」
-                    message = [NSString stringWithFormat:@"检查到该手机号已绑定幸福里帐号「%@」", error.userInfo[@"screen_name"]];
+                
+                if (self.douyinLoginConflictHandlerBlock) {
+                    self.douyinLoginConflictHandlerBlock();
                 }
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"帐号冲突提醒"
-                                                                               message:message
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消授权"
-                                                                       style:UIAlertActionStyleCancel
-                                                                     handler:^(UIAlertAction * _Nonnull action) {
-                    // 点击取消按钮，调用此block
-                    tracerDict[@"click_button"] = @"取消授权";
-                    [FHLoginTrackHelper loginPopupClick:tracerDict error:error];
-                    if (!isDouyinIcon) {
-                        //如果不是抖音icon登录的话，需要登录降级策略
-                        [strongSelf downgradeLoginToMobile];
-                    }
-                }];
-                [alertController addAction:cancelAction];
-                
-                UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"查看详情"
-                                                                        style:UIAlertActionStyleDefault
-                                                                      handler:^(UIAlertAction * _Nonnull action) {
-                    // 点击按钮，调用此block
-                    tracerDict[@"click_button"] = @"查看详情";
-                    [FHLoginTrackHelper loginPopupClick:tracerDict error:error];
-                    if(goDetailBlock){
-                        goDetailBlock();
-                    }
-                }];
-                [alertController addAction:defaultAction];
-                [[TTUIResponderHelper visibleTopViewController] presentViewController:alertController animated:YES completion:nil];
-                
-
             } else if (error.code == 1060) {
                 NSString *profileKey = error.userInfo[@"profile_key"];
                 if (profileKey.length) {
@@ -1147,6 +1159,7 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 #pragma mark - Notification
 - (void)loginConflictResolvedSuccess:(NSNotification *)aNotification {
+    self.douyinLoginConflictHandlerBlock = nil;
     if ([TTAccount sharedAccount].user.mobile.length) {
         [self handleLoginResult:nil phoneNum:nil smsCode:nil error:nil isOneKeyLogin:NO];
     } else {
@@ -1157,11 +1170,13 @@ static FHLoginSharedModel *_sharedModel = nil;
 
 - (void)loginConflictResolvedFail:(NSNotification *)aNotification {
     //冲突处理失败，没有用户信息，需要跳转手机号登录或者运营商一键登录
+    self.douyinLoginConflictHandlerBlock = nil;
     [self.viewController.navigationController popViewControllerAnimated:NO];
     [self downgradeLoginToMobile];
 }
 
 - (void)loginConflictResolvedBindMobile:(NSNotification *)aNotification {
+    self.douyinLoginConflictHandlerBlock = nil;
     if (aNotification.object && [aNotification.object isKindOfClass:[NSDictionary class]]) {
         NSDictionary *info = (NSDictionary *)aNotification.object;
         if (info[@"profile_key"]) {
