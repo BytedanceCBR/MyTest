@@ -19,9 +19,9 @@
 #import <TTAccountSDK/TTAccount.h>
 #import <FHHouseBase/FHHouseIMClueHelper.h>
 #import "FHEnvContext.h"
-
-#define ITEM_HEIGHT 242
-#define ITEM_BOTTOM_HEIGHT 35
+//242+34
+#define ITEM_HEIGHT 276
+#define ITEM_BOTTOM_HEIGHT 45
 #define ITEM_WIDTH  184
 
 @interface FHDetailNewMutiFloorPanCell ()<FHDetailScrollViewDidScrollProtocol>
@@ -354,9 +354,11 @@
     }
     self.currentData = data;
     FHDetailNewDataFloorpanListListModel *model = (FHDetailNewDataFloorpanListListModel *)data;
+    for (UIView *v in self.tagBacView.subviews) {
+        [v removeFromSuperview];
+    }
     if (model) {
         if (model.images.count > 0) {
-            
             FHDetailNewDataFloorpanListListImagesModel *imageModel = model.images.firstObject;
             NSString *urlStr = imageModel.url;
             if ([urlStr length] > 0) {
@@ -374,6 +376,56 @@
         self.consultDetailButton.hidden = model.imOpenUrl.length > 0 ? NO : YES;
         self.descLabel.text = model.title;
         self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@ 朝向 %@",model.squaremeter,model.facingDirection];
+        
+        /*
+         mock
+         */
+        model.pricing = @"约2000万/套";
+        FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
+        tag.content = rand()%2 == 0?@"啊啊啊":@"哈哈哈";
+        tag.backgroundColor = @"#63A59F9C";
+        tag.textColor = @"#a49a92";
+        NSMutableArray *arr = [NSMutableArray arrayWithObject:tag];
+        model.tags = arr.copy;
+        
+        //mock数据，删去这里到上面的注释，切记~~~~！！
+        self.priceLabel.text = model.pricing;
+        
+        CGFloat width = [self getLabelWidth:self.descLabel withHeight:19.0];
+        [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(width);
+        }];
+        CGFloat left = 0.0;
+        if (model.saleStatus) {
+            UIColor *bacColor = [UIColor colorWithARGBHexString:model.saleStatus.backgroundColor];
+            UIColor *texColor = [UIColor colorWithARGBHexString:model.saleStatus.textColor];
+            UILabel *saleLabel = [self createLabelWithText:model.saleStatus.content tagBacColor:bacColor tagTextColor:texColor];
+            CGFloat width = [self getLabelWidth:saleLabel withHeight:16.0];
+            width += 8;
+            [self.tagBacView addSubview:saleLabel];
+            [saleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(left);
+                make.width.mas_equalTo(width);
+                make.height.mas_equalTo(16.0);
+                make.top.mas_equalTo(0);
+            }];
+            left += width + 4;
+        }
+        if (model.tags.count > 0) {
+            FHHouseTagsModel *tag = [model.tags firstObject];
+            UIColor *bacColor = [UIColor colorWithARGBHexString:tag.backgroundColor];
+            UIColor *texColor = [UIColor colorWithARGBHexString:tag.textColor];
+            UILabel *tagLabel = [self createLabelWithText:tag.content tagBacColor:bacColor tagTextColor:texColor];
+            CGFloat width = [self getLabelWidth:tagLabel withHeight:16.0];
+            width += 8;
+            [self.tagBacView addSubview:tagLabel];
+            [tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(left);
+                make.width.mas_equalTo(width);
+                make.height.mas_equalTo(16.0);
+                make.top.mas_equalTo(0);
+            }];
+        }
     }
     [self layoutIfNeeded];
 }
@@ -397,9 +449,18 @@
     _descLabel.textColor = [UIColor themeGray1];
     [self addSubview:_descLabel];
     
+    _tagBacView = [UIView new];
+    _tagBacView.clipsToBounds = YES;
+    [self addSubview:_tagBacView];
+    
     _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _spaceLabel.textColor = [UIColor themeGray3];
     [self addSubview:_spaceLabel];
+    
+    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:19];
+    _priceLabel.textColor = [UIColor themeOrange1];
+    _priceLabel.font = [UIFont themeFontSemibold:16];
+    [self addSubview:_priceLabel];
     
     _consultDetailButton = [[UIButton alloc] init];
     [_consultDetailButton setTitle:@"一键咨询户型详情" forState:UIControlStateNormal];
@@ -413,8 +474,8 @@
     _consultDetailButton.hidden = YES;
     
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self);
-        make.left.right.equalTo(self);
+        make.top.equalTo(self.contentView);
+        make.left.right.equalTo(self.contentView);
         make.width.height.mas_equalTo(ITEM_WIDTH);
     }];
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -423,20 +484,30 @@
     }];
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.iconView.mas_bottom).mas_offset(10);
-        make.left.right.equalTo(self);
+        make.left.equalTo(self.contentView);
         make.height.mas_equalTo(20);
-        
+        make.width.mas_equalTo(0);
+    }];
+    [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.descLabel.mas_right).offset(4);
+        make.right.mas_equalTo(self.iconView);
+        make.bottom.mas_equalTo(self.descLabel);
+        make.height.mas_equalTo(16);
     }];
     [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.descLabel.mas_bottom).offset(6);
+        make.top.equalTo(self.descLabel.mas_bottom).offset(7);
         make.left.equalTo(self.descLabel);
-        make.right.equalTo(self);
+        make.right.equalTo(self.contentView);
         make.height.mas_equalTo(15);
     }];
-    
+    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.spaceLabel.mas_bottom).offset(8);
+        make.left.right.equalTo(self.contentView);
+        make.height.mas_equalTo(20);
+    }];
     [self.consultDetailButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.spaceLabel.mas_bottom).offset(10);
-        make.left.right.equalTo(self);
+        make.top.equalTo(self.priceLabel.mas_bottom).offset(16);
+        make.left.right.equalTo(self.contentView);
         make.height.mas_equalTo(32);
     }];
 }
@@ -446,6 +517,24 @@
     if(self.delegate && [self.delegate respondsToSelector:@selector(clickCellItem:onCell:)]) {
         [self.delegate clickCellItem:sender onCell:self];
     }
+}
+
+- (UILabel *)createLabelWithText:(NSString *)text tagBacColor:(UIColor *)tagBacColor tagTextColor:(UIColor *)tagTextColor {
+    UILabel *label = [[UILabel alloc]init];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.backgroundColor = tagBacColor;
+    label.textColor = tagTextColor;
+    label.layer.cornerRadius = 2;
+    label.layer.masksToBounds = YES;
+    label.text = text;
+    label.font = [UIFont themeFontMedium:10];
+    return label;
+}
+
+- (CGFloat)getLabelWidth:(UILabel *)label withHeight:(CGFloat)height {
+    [label sizeToFit];
+    CGSize itemSize = [label sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, height)];
+    return itemSize.width;
 }
 
 @end

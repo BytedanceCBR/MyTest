@@ -22,10 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 楼盘item
 @interface FHDetailNewMutiFloorPanCollectionCell : FHDetailBaseCollectionCell
 
-@property (nonatomic, strong)   UIView       *iconView;
-@property (nonatomic, strong)   UIImageView       *icon;
+@property (nonatomic, strong)   UIView        *iconView;
+@property (nonatomic, strong)   UIImageView   *icon;
 @property (nonatomic, strong)   UILabel       *descLabel;
-@property (nonatomic, strong)   UILabel       *statusLabel;
+@property (nonatomic, strong)   UIView        *tagBacView;
 @property (nonatomic, strong)   UILabel       *priceLabel;
 @property (nonatomic, strong)   UILabel       *spaceLabel;
 @property (nonatomic, strong)   UIButton      *consultDetailButton;
