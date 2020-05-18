@@ -53,7 +53,7 @@
 - (void)resetDataArray
 {
     if ([FHEnvContext isCurrentCityNormalOpen]) {
-        self.dataArray = @[@(kFHHomeMainCellTypeHouse),@(kFHHomeMainCellTypeFeed)];
+        self.dataArray = [FHEnvContext isNewDiscovery] ? @[@(kFHHomeMainCellTypeHouse)] : @[@(kFHHomeMainCellTypeHouse),@(kFHHomeMainCellTypeFeed)];
     }else
     {
         self.dataArray = @[@(kFHHomeMainCellTypeFeed)];

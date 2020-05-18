@@ -1,6 +1,7 @@
 //GENERATED CODE , DON'T EDIT
 #import "JSONModel.h"
 #import "FHUGCVoteInfoModel.h"
+#import "FHUGCScialGroupModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
@@ -681,6 +682,27 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 //专题页
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCardFooterModel *cardFooter ;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCardHeaderModel *cardHeader ;
+@property (nonatomic, strong, nullable) NSArray<FHUGCScialGroupDataModel> *hotSocialList;
+@property (nonatomic, copy , nullable) NSString *articleTitle;
+
+@property (nonatomic, copy , nullable) NSString *schema;
+//购房百科标题
+@property (nonatomic, copy , nullable) NSString *userName;
+//购房百科icon
+@property (nonatomic, copy , nullable) NSString *icon;
+//购房百科内容图片icon
+@property (nonatomic, copy , nullable) NSString *avatar;
+//查看全部
+@property (nonatomic, copy , nullable) NSString *allSchema;
+
+//cell距离顶部
+@property (nonatomic, copy , nullable) NSString *upSpace;
+//cell距离底部
+@property (nonatomic, copy , nullable) NSString *downSpace;
+//分割线设置
+@property (assign, nonatomic) BOOL hidelLine;
+
+@property (nonatomic, strong, nullable) NSDictionary *lynxData;
 
 @end
 
@@ -773,6 +795,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *sourceDesc;
 @property (nonatomic, strong , nullable) FHFeedContentCommunityModel *community ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
+
 @property (nonatomic, strong , nullable) FHFeedContentRawDataModel *rawData ;
 //临时处理服务器打平的逻辑
 @property (nonatomic, copy , nullable) NSString *articleSchema;
