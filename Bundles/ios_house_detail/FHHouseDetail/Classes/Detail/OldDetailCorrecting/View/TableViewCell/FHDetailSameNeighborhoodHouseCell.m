@@ -422,6 +422,7 @@
     }];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.icon);
+        make.right.mas_equalTo(self.icon);
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(self.spaceLabel.mas_bottom).offset(8);
     }];

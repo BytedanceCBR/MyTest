@@ -34,15 +34,11 @@
     _coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [self addSubview:_coverView];
     
-    self.startImage = [[UIImageView alloc]init];
-    self.startImage.image = [UIImage imageNamed:@"detail_video_start"];
-    [self addSubview:_startImage];
-    
-//    self.startBtn = [[UIButton alloc] init];
-//    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateNormal];
-//    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateHighlighted];
-//    [_startBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
-//    [self addSubview:_startBtn];
+    self.startBtn = [[UIButton alloc] init];
+    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateNormal];
+    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateHighlighted];
+    [_startBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_startBtn];
 }
 
 - (void)initConstaints {
@@ -50,21 +46,10 @@
         make.edges.mas_equalTo(self);
     }];
     
-//    [self.startBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//             make.width.height.mas_equalTo(60);
-//            make.center.equalTo(self);
-//    }];
-    [self.startImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(52);
-        make.top.mas_equalTo(110);
-        make.centerX.mas_equalTo(self);
+    [self.startBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+             make.width.height.mas_equalTo(60);
+            make.center.equalTo(self);
     }];
-}
-
-- (void)setHouseType:(FHMultiMediaCellHouseType)houseType {
-    _houseType = houseType;
-//        self.startBtn.hidden = _houseType == FHMultiMediaCellHouseSecond;
-//        self.startImage.hidden != _houseType == FHMultiMediaCellHouseSecond;
 }
 
 -(void)showWithImageUrl:(NSString *)imageUrl placeHoder:(UIImage *)placeHolder

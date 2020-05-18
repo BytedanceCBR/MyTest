@@ -47,6 +47,7 @@
     @"shareInfo":@"share_info",
     @"tabInfo": @"tab_info",
     @"showStatus": @"show_status",
+    @"tagIcon":@"tag_icon"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

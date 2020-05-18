@@ -150,6 +150,8 @@
     self.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     self.userDraggable = YES;
     self.touchEnabled = YES;
+    self.firstLeftMargain = 0;
+    self.lastRightMargin = 0;
     self.verticalDividerEnabled = NO;
     self.type = HMSegmentedControlTypeText;
     self.verticalDividerWidth = 1.0f;
@@ -182,7 +184,9 @@
 }
 
 - (void)setSectionTitles:(NSArray<NSString *> *)sectionTitles {
-        _sectionTitles = sectionTitles;
+    _sectionTitles = sectionTitles;
+    
+    [self updateSegmentsRects];
     
     [self setNeedsLayout];
     [self setNeedsDisplay];
@@ -248,10 +252,26 @@
     CGSize size = CGSizeZero;
     BOOL selected = (index == self.selectedSegmentIndex) ? YES : NO;
     if ([title isKindOfClass:[NSString class]] && !self.titleFormatter) {
-        NSDictionary *titleAttrs = selected ? [self resultingSelectedTitleTextAttributes] : [self resultingTitleTextAttributes];
-        size = [(NSString *)title sizeWithAttributes:titleAttrs];
-        UIFont *font = titleAttrs[@"NSFont"];
-        size = CGSizeMake(ceil(size.width), ceil(size.height-font.descender));
+        if(self.shouldFixedSelectPosition && self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic){
+            NSDictionary *titleAttrs = [self resultingTitleTextAttributes];
+            NSDictionary *selectedTitleAttrs = [self resultingSelectedTitleTextAttributes];
+            if(selected){
+                //计算item在选中样式下的size，为了获取高度
+                CGSize selectedSize = [(NSString *)title sizeWithAttributes:selectedTitleAttrs];
+                //计算item在正常样式下的size，为了获取宽度
+                size = [(NSString *)title sizeWithAttributes:titleAttrs];
+                size.height = selectedSize.height;
+            }else{
+                size = [(NSString *)title sizeWithAttributes:titleAttrs];
+            }
+            UIFont *font = titleAttrs[@"NSFont"];
+            size = CGSizeMake(ceil(size.width), ceil(size.height-font.descender));
+        }else{
+            NSDictionary *titleAttrs = selected ? [self resultingSelectedTitleTextAttributes] : [self resultingTitleTextAttributes];
+            size = [(NSString *)title sizeWithAttributes:titleAttrs];
+            UIFont *font = titleAttrs[@"NSFont"];
+            size = CGSizeMake(ceil(size.width), ceil(size.height-font.descender));
+        }
     } else if ([title isKindOfClass:[NSString class]] && self.titleFormatter) {
         size = [self.titleFormatter(self, title, index, selected) size];
     } else if ([title isKindOfClass:[NSAttributedString class]]) {
@@ -334,7 +354,7 @@
                 fullRect = CGRectMake(self.segmentWidth * idx, 0, self.segmentWidth, oldRect.size.height);
             } else {
                 // When we are drawing dynamic widths, we need to loop the widths array to calculate the xOffset
-                CGFloat xOffset = 0;
+                CGFloat xOffset = self.firstLeftMargain;
                 NSInteger i = 0;
                 for (NSNumber *width in self.segmentWidthsArray) {
                     if (idx == i)
@@ -379,8 +399,13 @@
                     UIImage *icon = [UIImage imageNamed:@"seg_red_point"];
                     CGFloat imageWidth = icon.size.width;
                     CGFloat imageHeight = icon.size.height;
-                    CGFloat red_y = roundf(CGRectGetMinY(rect)  - imageHeight/2.0f + 3.0f);
-                    CGFloat red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f);
+                    CGFloat red_y = roundf(CGRectGetMinY(rect)  - imageHeight + 4.0f);
+                    CGFloat red_x = 0;
+                    if(self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic){
+                        red_x = roundf(CGRectGetMaxX(rect)  - imageWidth - self.segmentEdgeInset.right);
+                    }else{
+                        red_x = roundf(CGRectGetMaxX(rect)  - imageWidth/2.0f);
+                    }
                     CGRect redPointRect = CGRectMake(red_x, red_y, imageWidth, imageHeight);
                     
                     CALayer *imageLayer = [CALayer layer];
@@ -717,9 +742,9 @@
                 if (self.selectedSegmentIndex < self.segmentWidthsArray.count) {
                     
                     if (self.selectionIndicatorWidth != CGFLOAT_MIN) {
-                        return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left + ([[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorWidth) / 2, indicatorYOffset, self.selectionIndicatorWidth - (self.selectionIndicatorEdgeInsets.left + self.selectionIndicatorEdgeInsets.right), self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                        return CGRectMake(self.firstLeftMargain +  selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left + ([[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorWidth) / 2, indicatorYOffset, self.selectionIndicatorWidth - (self.selectionIndicatorEdgeInsets.left + self.selectionIndicatorEdgeInsets.right), self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
                     } else {
-                        return CGRectMake(selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
+                        return CGRectMake(self.firstLeftMargain + selectedSegmentOffset + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue] - self.selectionIndicatorEdgeInsets.right, self.selectionIndicatorHeight + self.selectionIndicatorEdgeInsets.bottom);
                     }
                 }
             }
@@ -871,7 +896,7 @@
             segment = (touchLocation.x + self.scrollView.contentOffset.x) / self.segmentWidth;
         } else if (self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic) {
             // To know which segment the user touched, we need to loop over the widths and substract it from the x position.
-            CGFloat widthLeft = (touchLocation.x + self.scrollView.contentOffset.x);
+            CGFloat widthLeft = (touchLocation.x + self.scrollView.contentOffset.x) - self.firstLeftMargain;
             for (NSNumber *width in self.segmentWidthsArray) {
                 widthLeft = widthLeft - [width floatValue];
                 
@@ -910,7 +935,7 @@
     if (self.type == HMSegmentedControlTypeText && self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleFixed) {
         return self.sectionTitles.count * self.segmentWidth;
     } else if (self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic) {
-        return [[self.segmentWidthsArray valueForKeyPath:@"@sum.self"] floatValue];
+        return [[self.segmentWidthsArray valueForKeyPath:@"@sum.self"] floatValue] +self.firstLeftMargain +self.lastRightMargin;
     } else {
         return self.sectionImages.count * self.segmentWidth;
     }

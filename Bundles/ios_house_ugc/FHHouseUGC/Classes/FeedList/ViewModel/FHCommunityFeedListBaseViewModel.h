@@ -70,6 +70,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)endDisplay;
 
 - (void)showCustomErrorView:(FHEmptyMaskViewType)type;
+// 更新发帖进度视图
+- (void)updateJoinProgressView;
 
 @end
 
