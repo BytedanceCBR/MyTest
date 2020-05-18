@@ -58,12 +58,14 @@
 #import "FHDetailNeighborhoodQACell.h"
 #import "FHDetailNeighborhoodAssessCell.h"
 #import "FHDetailNeighborhoodCommentsCell.h"
+#import "FHDetailRecommendedCourtCell.h"
 #import "FHDetailQACellModel.h"
 #import "FHDetailAccessCellModel.h"
 #import "FHDetailCommentsCellModel.h"
 #import "FHDetailAdvisoryLoanCell.h"
 #import "FHDetailPriceChangeNoticeCell.h"
 #import "FHVRPreloadManager.h"
+#import "TTSettingsManager.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -73,6 +75,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodHouseData;
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;
 @property (nonatomic, strong , nullable) FHDetailRelatedHouseResponseDataModel *relatedHouseData;
+@property (nonatomic, strong , nullable) FHHouseListDataModel *oldHouseRecommendedCourtData;
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 @property (nonatomic, weak , nullable) FHDetailAgentListModel *agentListModel;
 @end
@@ -87,10 +90,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoModel class])];
     [self.tableView registerClass:[FHDetailPropertyListCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCorrectingModel class])];
     [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryModel class])];
-     [self.tableView registerClass:[FHDetailPriceChangeNoticeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceNoticeModel class])];
+    [self.tableView registerClass:[FHDetailPriceChangeNoticeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceNoticeModel class])];
     
     //首付及月供
-     [self.tableView registerClass:[FHDetailAdvisoryLoanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAdvisoryLoanModel class])];
+    [self.tableView registerClass:[FHDetailAdvisoryLoanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAdvisoryLoanModel class])];
     //推荐经纪人
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListModel class])];
     //用户房源评价
@@ -105,6 +108,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     //同小区房源
     [self.tableView registerClass:[FHDetailSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSameNeighborhoodHouseModel class])];
     [self.tableView registerClass:[FHOldDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHOldDetailDisclaimerModel class])];
+    //推荐新盘
+    [self.tableView registerClass:[FHDetailRecommendedCourtCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRecommendedCourtModel class])];
     //价格指数
     [self.tableView registerClass:[FHDetailPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceTrendCellModel class])];
     //小区详情上标题
@@ -114,7 +119,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     // 房源榜单
     [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceModel class])];
     //表单订阅
-     [self.tableView registerClass:[FHDetailHouseSubscribeCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCorrectingModel class])];
+    [self.tableView registerClass:[FHDetailHouseSubscribeCorrectingCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCorrectingModel class])];
     //均价对比
     [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonModel class])];
     [self.tableView registerClass:[FHOldDetailStaticMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailStaticMapCellModel class])];
@@ -239,7 +244,12 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (model.data.vrData && model.data.vrData.hasVr) {
         hasVR = YES;
         
-        [[FHVRPreloadManager sharedInstance] requestForSimilarHouseId:model.data.id];
+        NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+        BOOL boolSwitchCityHome = [fhSettings tt_boolValueForKey:@"f_webview_preload_close"];
+        
+        if(!boolSwitchCityHome){
+            [[FHVRPreloadManager sharedInstance] requestForSimilarHouseId:model.data.id];
+        }
     }
     
     if (model.data.houseImageDictList.count > 0 || hasVideo || hasVR) {
@@ -731,11 +741,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     // 周边房源
     [self requestRelatedHouseSearch];
+    // 推荐新房
+    [self requestOldHouseRecommendedCourtSearch];
 }
 
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
-    if (self.requestRelatedCount >= 3) {
+    if (self.requestRelatedCount >= 4) {
         self.detailController.isLoadingData = NO;
         //  同小区房源
         if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
@@ -751,6 +763,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             infoModel.houseModelType = FHHouseModelTypePlot;
             infoModel.neighborhoodId = self.neighborhoodId;
             [self.items addObject:infoModel];
+        }
+        // 推荐新房
+        if (self.oldHouseRecommendedCourtData && self.oldHouseRecommendedCourtData.items.count >0) {
+            FHDetailRecommendedCourtModel *infoModel = [[FHDetailRecommendedCourtModel alloc] init];
+            infoModel.recommendedCourtData = self.oldHouseRecommendedCourtData;
+            infoModel.houseModelType = FHHouseeModelTypeOldHouseRecommendedCourt;
+            [self.items addObject:infoModel];
+
         }
         // 周边房源
         if (self.relatedHouseData && self.relatedHouseData.items.count > 0) {
@@ -806,6 +826,16 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [FHHouseDetailAPI requestRelatedHouseSearch:self.houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
         wSelf.relatedHouseData = model.data;
+        [wSelf processDetailRelatedData];
+    }];
+}
+
+//推荐新房
+- (void)requestOldHouseRecommendedCourtSearch {
+    __weak typeof(self) wSelf = self;
+    [FHHouseDetailAPI requestOldHouseRecommendedCourtSearch:self.houseId offset:@"0" query:nil count:5 completion:^(FHListResultHouseModel * _Nullable model, NSError * _Nullable error) {
+        wSelf.requestRelatedCount += 1;
+        wSelf.oldHouseRecommendedCourtData = model.data;
         [wSelf processDetailRelatedData];
     }];
 }

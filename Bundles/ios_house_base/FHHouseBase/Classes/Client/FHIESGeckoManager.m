@@ -45,7 +45,6 @@
     if ([[FHLynxManager sharedInstance] allLocalChannelsArray]) {
         [localChannels addObjectsFromArray:[[FHLynxManager sharedInstance] allLocalChannelsArray]];
     }
-
     
     if ([[FHLynxManager sharedInstance] allConfigChannelsArray]) {
         [localChannels addObjectsFromArray:[[FHLynxManager sharedInstance] allConfigChannelsArray]];

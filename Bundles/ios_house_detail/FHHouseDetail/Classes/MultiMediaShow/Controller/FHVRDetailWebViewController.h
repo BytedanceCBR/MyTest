@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHVRDetailWebViewController : UIViewController
+@interface FHVRDetailWebViewController : SSWebViewController
 
 @end
 

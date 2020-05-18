@@ -582,6 +582,7 @@
             @"origin_from":originFrom,
             @"enter_from":[self pageType],
             @"enter_type":@"click",
+            @"group_id":cellModel.groupId ?: @"be_null",
             @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
             @"log_pb":cellModel.logPb ?: @"be_null"};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -683,6 +684,9 @@
         NSDictionary *dict = @{@"is_jump_comment":@(jump_comment)};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+        if(showComment && cellModel.commentSchema.length > 0){
+            openUrl = [NSURL URLWithString:cellModel.commentSchema];
+        }
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     } if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo){
         //小视频

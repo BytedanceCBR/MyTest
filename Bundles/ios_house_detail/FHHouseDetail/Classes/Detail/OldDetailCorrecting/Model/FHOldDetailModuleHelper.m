@@ -32,6 +32,7 @@
     NSMutableArray *locationPeripherys = [[NSMutableArray alloc]init];
     NSMutableArray *tips = [[NSMutableArray alloc]init];
     NSMutableArray *plots = [[NSMutableArray alloc]init];
+    NSMutableArray *recommendedCourt = [[NSMutableArray alloc] init];
     NSMutableArray *peripherys = [[NSMutableArray alloc]init];
     NSMutableArray *disclaimers = [[NSMutableArray alloc]init];
     [moduleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -79,6 +80,8 @@
             case FHHouseModelTypePlot:
                 [plots addObject:obj];
                 break;
+            case FHHouseeModelTypeOldHouseRecommendedCourt:
+                [recommendedCourt addObject:obj];
             case FHHouseModelTypePeriphery:
                 [peripherys addObject:obj];
                 break;
@@ -123,6 +126,9 @@
     if (plots.count > 0) {
         [moduleItems addObject:@{@"plots":plots}];
     }
+    if (recommendedCourt.count > 0) {
+        [moduleItems addObject:@{@"recommendedCourt":recommendedCourt}];
+    }
     if (peripherys.count > 0) {
         [moduleItems addObject:@{@"peripherys":peripherys}];
     }
@@ -134,7 +140,8 @@
 //        单个cell模块
         if([[obj allKeys] containsObject:@"subscribes"] || [[obj allKeys] containsObject:@"outlineInfo"]
            || [[obj allKeys] containsObject:@"billBoard"] || [[obj allKeys] containsObject:@"agentlist"]
-           || [[obj allKeys] containsObject:@"tips"] || [[obj allKeys] containsObject:@"peripherys"] || [[obj allKeys] containsObject:@"advisoryLoans"]) {
+           || [[obj allKeys] containsObject:@"tips"] || [[obj allKeys] containsObject:@"peripherys"]
+           || [[obj allKeys] containsObject:@"advisoryLoans"] || [[obj allKeys] containsObject:@"recommendedCourt"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 model.shadowImageType = FHHouseShdowImageTypeRound;;

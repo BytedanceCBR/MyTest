@@ -73,7 +73,7 @@
     [self addSubview:_spLine];
     
     self.button = [[UIButton alloc] init];
-    [_button setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [_button setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     _button.titleLabel.font = [UIFont themeFontRegular:14];
     [_button setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_button setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];

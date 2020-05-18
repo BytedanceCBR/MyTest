@@ -89,7 +89,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
     [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
      [uploadParams setValue:status forKey:@"error"];
-     [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_error" status:0 extra:paramsExtra];
+     [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_source" status:[status integerValue] extra:paramsExtra];
 }
      
 
@@ -180,7 +180,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
         StrongSelf;
         if (succeed) {
             self.retryCount = 0;
-            [self activateChannels:totalChannels];
+//            [self activateChannels:totalChannels];
                 
         } else {
             //重试
@@ -198,20 +198,20 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
 }
 
 - (void)activateChannels:(NSArray<NSString *> *)channelArray {
-    dispatch_group_t activateGroup = dispatch_group_create();
-    for (NSString *channel in channelArray) {
-        dispatch_group_enter(activateGroup);
-        [IESGeckoKit applyInactivePackageForAccessKey:[FHIESGeckoManager getGeckoKey] channel:channel completion:^(BOOL succeed, IESGeckoSyncStatus status) {
-            dispatch_group_leave(activateGroup);
-        }];
-    }
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        dispatch_group_wait(activateGroup, dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC));
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self readGeckoResources];
-        });
-        
-    });
+//    dispatch_group_t activateGroup = dispatch_group_create();
+//    for (NSString *channel in channelArray) {
+//        dispatch_group_enter(activateGroup);
+//        [IESGeckoKit applyInactivePackageForAccessKey:[FHIESGeckoManager getGeckoKey] channel:channel completion:^(BOOL succeed, IESGeckoSyncStatus status) {
+//            dispatch_group_leave(activateGroup);
+//        }];
+//    }
+//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//        dispatch_group_wait(activateGroup, dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC));
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self readGeckoResources];
+//        });
+//
+//    });
 }
 
 //这块需要把部分任务拆分到子线程。
@@ -346,6 +346,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
             }
         }
     }
+    
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [[self allLocalChannelsArray] enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:obj templateKey:[FHLynxManager defaultJSFileName]];

@@ -170,7 +170,7 @@
         
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
         [tracerDict addEntriesFromDictionary:self.tracerDict];
-        tracerDict[@"page_type"] = @"my_join_list";
+        tracerDict[@"page_type"] = [self categoryName];
         _neighbourhoodView.searchView.tracerDict = tracerDict;
     }
     return _neighbourhoodView;
@@ -227,7 +227,7 @@
 }
 
 - (NSString *)categoryName {
-    return @"my_join_list";
+    return @"my_join_feed";
 }
 
 @end

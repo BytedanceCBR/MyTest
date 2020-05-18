@@ -296,9 +296,9 @@
     if(self.currentTabIndex < self.dataArray.count){
         FHCommunityCollectionCellType type = [self.dataArray[self.currentTabIndex] integerValue];
         if (type == FHCommunityCollectionCellTypeMyJoin) {
-            page_type = @"my_join_list";
+            page_type = @"my_join_feed";
         } else  if (type == FHCommunityCollectionCellTypeNearby) {
-            page_type = @"nearby_list";
+            page_type = @"hot_discuss_feed";
         }
     }
     return page_type;

@@ -240,6 +240,7 @@
         self.tracerParams = [NSMutableDictionary new];
         //
         self.tracerParams[@"page_type"] = self.tracerDic[@"page_type"] ?: @"be_null";
+        self.tracerParams[@"origin_from"] = self.tracerDic[@"origin_from"] ?: @"be_null";
         self.tracerParams[@"enter_from"] = self.tracerDic[@"enter_from"] ?: @"be_null";
         self.tracerParams[@"enter_type"] = self.tracerDic[@"enter_type"] ?: @"be_null";
         self.tracerParams[@"rank"] = self.tracerDic[@"rank"] ?: @"be_null";

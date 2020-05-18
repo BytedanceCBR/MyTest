@@ -109,8 +109,7 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         CGFloat height;
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        
-        
+        // avatar 百科右侧图片
         height  =  (cellModel.avatar.length > 0 ? iconHeight:cellModel.contentHeight) + 40 + sidesMargin *2 + 10;
         return height;
     }

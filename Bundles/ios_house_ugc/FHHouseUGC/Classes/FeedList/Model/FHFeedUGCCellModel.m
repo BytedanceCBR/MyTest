@@ -393,6 +393,7 @@
         cellModel.groupId = model.rawData.groupId;
         cellModel.content = model.rawData.content.answer.abstractText;
         cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
+        cellModel.commentSchema = model.rawData.content.commentSchema;
         cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
         
@@ -543,7 +544,7 @@
         }else{
             cellModel.openUrl = model.rawData.operation.url;
         }
-    }else if(cellModel.cellType == FHUGCFeedListCellTypeUGCCommonLynx || 1200 < cellModel.cellType < 1300){
+    }else if((cellModel.cellType == FHUGCFeedListCellTypeUGCCommonLynx || (1200 <= cellModel.cellType && cellModel.cellType < 1300)) && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCLynx;
         if(model.rawData.groupId){
             cellModel.groupId = model.rawData.groupId;
