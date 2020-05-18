@@ -227,6 +227,32 @@
             }];
             left += width + 4.0;
         }
+        FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
+        /*mock数据*/
+        tag.content = rand()%2 == 0?@"啊啊啊":@"哈哈哈";
+        tag.backgroundColor = @"#f4f3f2";
+        tag.textColor = @"#a49a92";
+        NSMutableArray *arr = [NSMutableArray arrayWithObject:tag];
+        [arr addObject:tag];
+        [arr addObject:tag];
+        [arr addObject:tag];
+        model.tags = arr.copy;
+        /*mock数据*/
+        if (model.tags && model.tags.count > 0) {
+            for (NSUInteger i = 0; i < MIN(model.tags.count, 3); i++) {
+                FHHouseTagsModel *tag = model.tags[i];
+                UILabel *tagLabel = [self createLabelWithText:tag.content bacColor:tag.backgroundColor textColor:tag.textColor];
+                CGFloat width = [self getTagBackWidth:tagLabel];
+                [self.tagBacView addSubview:tagLabel];
+                [tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(left);
+                    make.width.mas_equalTo(width);
+                    make.height.mas_equalTo(16.0);
+                    make.top.mas_equalTo(0);
+                }];
+                left += width + 4.0;
+            }
+        }
     }
     [self layoutIfNeeded];
 }

@@ -383,7 +383,7 @@
         model.pricing = @"约2000万/套";
         FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
         tag.content = rand()%2 == 0?@"啊啊啊":@"哈哈哈";
-        tag.backgroundColor = @"#63A59F9C";
+        tag.backgroundColor = @"#f4f3f2";
         tag.textColor = @"#a49a92";
         NSMutableArray *arr = [NSMutableArray arrayWithObject:tag];
         model.tags = arr.copy;
@@ -397,11 +397,11 @@
         }];
         CGFloat left = 0.0;
         if (model.saleStatus) {
-            UIColor *bacColor = [UIColor colorWithARGBHexString:model.saleStatus.backgroundColor];
-            UIColor *texColor = [UIColor colorWithARGBHexString:model.saleStatus.textColor];
+            UIColor *bacColor = [UIColor colorWithHexString:model.saleStatus.backgroundColor];
+            UIColor *texColor = [UIColor colorWithHexString:model.saleStatus.textColor];
             UILabel *saleLabel = [self createLabelWithText:model.saleStatus.content tagBacColor:bacColor tagTextColor:texColor];
             CGFloat width = [self getLabelWidth:saleLabel withHeight:16.0];
-            width += 8;
+            width += 8.0;
             [self.tagBacView addSubview:saleLabel];
             [saleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(left);
@@ -409,15 +409,15 @@
                 make.height.mas_equalTo(16.0);
                 make.top.mas_equalTo(0);
             }];
-            left += width + 4;
+            left += width + 4.0;
         }
         if (model.tags.count > 0) {
             FHHouseTagsModel *tag = [model.tags firstObject];
-            UIColor *bacColor = [UIColor colorWithARGBHexString:tag.backgroundColor];
-            UIColor *texColor = [UIColor colorWithARGBHexString:tag.textColor];
+            UIColor *bacColor = [UIColor colorWithHexString:tag.backgroundColor];
+            UIColor *texColor = [UIColor colorWithHexString:tag.textColor];
             UILabel *tagLabel = [self createLabelWithText:tag.content tagBacColor:bacColor tagTextColor:texColor];
             CGFloat width = [self getLabelWidth:tagLabel withHeight:16.0];
-            width += 8;
+            width += 8.0;
             [self.tagBacView addSubview:tagLabel];
             [tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(left);
@@ -524,7 +524,7 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = tagBacColor;
     label.textColor = tagTextColor;
-    label.layer.cornerRadius = 2;
+    label.layer.cornerRadius = 2.0;
     label.layer.masksToBounds = YES;
     label.text = text;
     label.font = [UIFont themeFontMedium:10];
