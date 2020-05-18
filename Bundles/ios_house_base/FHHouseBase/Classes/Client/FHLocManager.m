@@ -30,7 +30,6 @@
 
 #import <BDUGLocationKit/BDUGAmapGeocoder.h>
 #import <BDUGLocationKit/BDUGLocationManager.h>
-#import <BDUGLocationKit/BDUGSystemGeocoder.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
