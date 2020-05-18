@@ -78,6 +78,10 @@
         if (enter_from.length > 0) {
             self.tracerDict[@"enter_from"] = enter_from;
         }
+        NSString *origin_from = params[@"origin_from"];
+        if (origin_from.length > 0) {
+            self.tracerDict[@"origin_from"] = origin_from;
+        }
         NSString *enter_type = params[@"enter_type"];
         if (enter_type.length > 0) {
             self.tracerDict[@"enter_type"] = enter_type;

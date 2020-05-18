@@ -102,7 +102,6 @@
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor whiteColor]];
     _titleLabel.textAlignment = NSTextAlignmentLeft;
-    _titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
     _titleLabel.numberOfLines = 2;
     [self.bgView addSubview:_titleLabel];
     

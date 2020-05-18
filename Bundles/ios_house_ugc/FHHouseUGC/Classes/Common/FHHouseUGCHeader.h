@@ -14,6 +14,7 @@ typedef NS_ENUM(NSInteger, FHCommunityFeedListType)
     FHCommunityFeedListTypeMyJoin,
     FHCommunityFeedListTypePostDetail,
     FHCommunityFeedListTypeSpecialTopic,
+    FHCommunityFeedListTypeCustom,
 };
 
 typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
@@ -21,8 +22,7 @@ typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
     FHCommunityCollectionCellTypeNone = -1,
     FHCommunityCollectionCellTypeMyJoin = 0,
     FHCommunityCollectionCellTypeNearby,
-    FHCommunityCollectionCellTypeDiscovery,
-    FHCommunityCollectionCellTypeFindHouse,
+    FHCommunityCollectionCellTypeCustom,
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
@@ -45,6 +45,9 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
     FHUGCFeedListCellSubTypeUGCHotCommunity,                       //UGC附近顶部 主推圈子
     FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion,              //小区问答
     FHUGCFeedListCellSubTypeUGCNeighbourhoodComments,              //小区点评
+    FHUGCFeedListCellSubTypeUGCRecommendCircle,                    //推荐圈子
+    FHUGCFeedListCellSubTypeUGCEncyclopedias,                      //百科
+    FHUGCFeedListCellSubTypeUGCLynx,                               //Lynx卡片
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
@@ -62,6 +65,9 @@ typedef NS_ENUM(NSInteger, FHUGCFeedListCellType)
     FHUGCFeedListCellTypeUGCVote = 1103,                   //投票pk
     FHUGCFeedListCellTypeUGCSmallVideo = 333,              //小视频
     FHUGCFeedListCellTypeUGCVoteInfo = 1107,               //UGC投票，新投票类型
+    FHUGCFeedListCellTypeUGCRecommendCircle = 1108,        //推荐圈子
+    FHUGCFeedListCellTypeUGCEncyclopedias = 1109,          //百科
+    FHUGCFeedListCellTypeUGCCommonLynx = 1200,             //Lynx卡片
 };
 
 typedef NS_ENUM(NSInteger, FHUGCMyInterestedType)
