@@ -7,6 +7,22 @@
 }
 @end
 
+@implementation FHDetailNewCoreDetailDataPermitListImageModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"urlList": @"url_list",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailNewCoreDetailDataDisclaimerModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -44,6 +60,9 @@
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
+    @"buyFieldTime": @"buy_field_time",
+    @"plannedBuilding": @"planned_building",
+    @"plannedFamily": @"planned_family",
     @"areaSquareMeter": @"area_square_meter",
     @"buildingSquareMeter": @"building_square_meter",
     @"pricingPerSqm": @"pricing_per_sqm",

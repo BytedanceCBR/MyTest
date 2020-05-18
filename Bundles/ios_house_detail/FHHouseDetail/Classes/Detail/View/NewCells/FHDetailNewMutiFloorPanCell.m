@@ -397,8 +397,8 @@
         }];
         CGFloat left = 0.0;
         if (model.saleStatus) {
-            UIColor *bacColor = [UIColor colorWithHexString:model.saleStatus.backgroundColor];
-            UIColor *texColor = [UIColor colorWithHexString:model.saleStatus.textColor];
+            UIColor *bacColor = [UIColor colorWithHexStr:model.saleStatus.backgroundColor];
+            UIColor *texColor = [UIColor colorWithHexStr:model.saleStatus.textColor];
             UILabel *saleLabel = [self createLabelWithText:model.saleStatus.content tagBacColor:bacColor tagTextColor:texColor];
             CGFloat width = [self getLabelWidth:saleLabel withHeight:16.0];
             width += 8.0;
@@ -413,8 +413,8 @@
         }
         if (model.tags.count > 0) {
             FHHouseTagsModel *tag = [model.tags firstObject];
-            UIColor *bacColor = [UIColor colorWithHexString:tag.backgroundColor];
-            UIColor *texColor = [UIColor colorWithHexString:tag.textColor];
+            UIColor *bacColor = [UIColor colorWithHexStr:tag.backgroundColor];
+            UIColor *texColor = [UIColor colorWithHexStr:tag.textColor];
             UILabel *tagLabel = [self createLabelWithText:tag.content tagBacColor:bacColor tagTextColor:texColor];
             CGFloat width = [self getLabelWidth:tagLabel withHeight:16.0];
             width += 8.0;
