@@ -19,6 +19,10 @@
 #import "FHMultiMediaModel.h"
 #import "FHCommonDefines.h"
 #import "FHDetailNewModel.h"
+#import <FHVRDetailWebViewController.h>
+//#import "FHVRCacheManager.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+TTAdditions.h"
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -27,11 +31,14 @@
 @property(nonatomic, strong) NSMutableArray *imageList;
 @property(nonatomic, strong) NSMutableDictionary *pictureShowDict;
 @property(nonatomic, assign) BOOL isLarge;
+@property(nonatomic, assign) BOOL isHasClickVR;
 @property(nonatomic, assign) NSInteger currentIndex;
 @property(nonatomic, assign) NSTimeInterval enterTimestamp;
 @property (nonatomic, assign)   NSInteger       vedioCount;
 @property (nonatomic, assign)   CGFloat       photoCellHeight;
 @property (nonatomic, weak)     UIView       *vcParentView;
+@property (nonatomic, strong , nullable)TTRouteObject *preloadRouteObj;
+@property (nonatomic, weak , nullable)UIViewController *weakDetailVC;
 
 @end
 
@@ -52,6 +59,7 @@
     if(self.vedioCount > 0){
         [self.mediaView.videoVC close];
     }
+//    [[FHVRCacheManager sharedInstance] removeVRPreloadCache:self.hash];
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
@@ -81,6 +89,26 @@
         self.mediaView.tracerDic = [self tracerDic];
     }
     [self reckoncollectionHeightWithData:data];
+    
+    if (((FHDetailMediaHeaderCorrectingModel *)data).weakVC) {
+        self.weakDetailVC = ((FHDetailMediaHeaderCorrectingModel *)data).weakVC;
+    }
+    
+    /* 一期预加载方案，先注释
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_webview_preload_close"];
+    if (!boolOffline) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self  createVRPreloadWebview];
+        });
+    }
+     */
+//    [self performSelector:@selector(createVRPreloadWebview) withObject:nil afterDelay:1];
+}
+
+- (void)createVRPreloadWebview{
+
+         
 }
 
 - (void)reckoncollectionHeightWithData:(id)data {
@@ -251,19 +279,23 @@
             
             [self trackClickOptions:@"house_vr_icon"];
             
-            NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
-            NSMutableDictionary *param = [NSMutableDictionary new];
-            param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
-            param[@"enter_from"] = tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
-            param[UT_ELEMENT_FROM] = tracerDict[UT_ELEMENT_FROM]?:UT_BE_NULL;
-            param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
-            param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
-            param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;
-            NSString *reportParams = [FHUtils getJsonStrFrom:param];
-            NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@",vrModel.openUrl,reportParams];
-            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[openUrl URLEncodedString]]]];
+//            if ([self.preloadRouteObj.instance isKindOfClass:[UIViewController class]] && [self.weakDetailVC isKindOfClass:[UIViewController class]]) {
+//                [self.weakDetailVC.navigationController pushViewController:self.preloadRouteObj.instance animated:YES];
+//            }else{
+                NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
+                NSMutableDictionary *param = [NSMutableDictionary new];
+                param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
+                param[@"enter_from"] = tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
+                param[UT_ELEMENT_FROM] = tracerDict[UT_ELEMENT_FROM]?:UT_BE_NULL;
+                param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+                param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
+                param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;
+                NSString *reportParams = [FHUtils getJsonStrFrom:param];
+                NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@",vrModel.openUrl,reportParams];
+                self.isHasClickVR = YES;
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[openUrl URLEncodedString]]]];
+//            }
         }
-        
         return;
     }
     
@@ -709,6 +741,7 @@
         [self.mediaView.videoVC pause];
     }
 }
+
 
 @end
 
