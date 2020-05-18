@@ -40,6 +40,7 @@
 @property (nonatomic, weak) UILabel *displayDescriptionLabel;
 @property (nonatomic, weak) YYLabel *tagLabel; // 标签 label
 @property (nonatomic, weak) UIButton *closeBtn; //x按钮
+@property (nonatomic, assign) BOOL isHomePage;
 
 @property (nonatomic, copy) NSString *reuseIdentifier;
 @end
@@ -55,6 +56,11 @@
               [self initNewHouseUI];
         //首页页插入新房
         }else if([self.reuseIdentifier isEqualToString:@"FHSynchysisNewHouseCell"] || [self.reuseIdentifier isEqualToString:@"FHListSynchysisNewHouseCell"]){
+            if([self.reuseIdentifier isEqualToString:@"FHSynchysisNewHouseCell"]) {
+                _isHomePage = YES;
+            } else {
+                _isHomePage = NO;
+            }
             [self initSynchysisNewHouseUI];
         }else {
               [self initUI];
@@ -96,7 +102,8 @@
     }];
     [self.maintitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainIma.mas_right).offset(12);
-        make.top.equalTo(self.mainIma).offset(-5);
+        make.top.equalTo(self.mainIma);
+        make.height.mas_equalTo(18);
         make.right.equalTo(self.contentView).offset(-30);
     }];
     [self.displayDescriptionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -105,11 +112,13 @@
         make.right.mas_equalTo(-49);
         make.height.mas_equalTo(14);
     }];
+    CGFloat rightMargin = 3 + (_isHomePage ? 20 : 12);
+    NSLog(@"%f", rightMargin);
     [self.unitPrice mas_makeConstraints:^(MASConstraintMaker *make) {
         //make.left.equalTo(self.maintitle);
         //make.top.equalTo(self.maintitle.mas_bottom);
         make.bottom.mas_equalTo(-12);
-        make.right.mas_equalTo(-19);
+        make.right.mas_equalTo(-rightMargin);
         make.height.mas_equalTo(19);
     }];
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -526,6 +535,9 @@
         [self.mainImaTag bd_setImageWithURL:[NSURL URLWithString:tagimageModel.url]];
         //self.positionInformation.text = model.displayDescription;
         self.displayDescriptionLabel.text = model.displayDescription;
+        if (model.buildingSquareMeter.length > 0) {
+            self.displayDescriptionLabel.text = [NSString stringWithFormat:@"%@/%@", model.displayDescription, model.buildingSquareMeter];
+        }
         if (model.displayPriceColor) {
             self.unitPrice.textColor = [UIColor colorWithHexStr:model.displayPriceColor];
         }else {
@@ -560,6 +572,9 @@
         [self.mainImaTag bd_setImageWithURL:[NSURL URLWithString:tagimageModel.url]];
         //self.positionInformation.text = model.displayDescription;
         self.displayDescriptionLabel.text = model.displayDescription;
+        if (model.buildingSquareMeter.length > 0) {
+            self.displayDescriptionLabel.text = [NSString stringWithFormat:@"%@/%@", model.displayDescription, model.buildingSquareMeter];
+        }
         if (model.displayPriceColor) {
             self.unitPrice.textColor = [UIColor colorWithHexStr:model.displayPriceColor];
         }else {
@@ -604,10 +619,6 @@
     {
         self.houseCellBackView.layer.mask = nil;
     }
-}
-
-- (void)dislike {
-    
 }
 
 -(CGFloat)contentSmallImageMaxWidth:(CGFloat)width
