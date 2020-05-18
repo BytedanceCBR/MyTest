@@ -6,6 +6,7 @@
 //
 
 #import "FHDetailBaseCell.h"
+#import "FHDetailNewCoreDetailModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *permitName;
 @property (nonatomic, copy , nullable) NSString *permitValue;
+@property (nonatomic, strong , nullable) FHDetailNewCoreDetailDataPermitListImageModel *image ;
 
 @end
 

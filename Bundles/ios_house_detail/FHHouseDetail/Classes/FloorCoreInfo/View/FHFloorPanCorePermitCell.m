@@ -52,6 +52,7 @@
         CGFloat diff = 11.0 / 6;    //根据系统默认行高重新计算布局
         FHFloorPanCorePermitCellModel *model = (FHFloorPanCorePermitCellModel *)data;
         UIView *previouseView = nil;
+        
         for (NSInteger i = 0; i < [model.list count]; i++) {
             UIView *itemContenView = [UIView new];
             itemContenView.backgroundColor = [UIColor clearColor];

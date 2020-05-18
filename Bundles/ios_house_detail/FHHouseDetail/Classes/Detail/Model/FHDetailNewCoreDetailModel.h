@@ -10,8 +10,17 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailNewCoreDetailDataPermitListModel<NSObject>
 @end
 
-@interface FHDetailNewCoreDetailDataPermitListModel : JSONModel 
+@interface FHDetailNewCoreDetailDataPermitListImageModel : JSONModel
 
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *width;
+@property (nonatomic, strong , nullable) NSArray *urlList;
+@property (nonatomic, copy , nullable) NSString *uri;
+@property (nonatomic, copy , nullable) NSString *height;
+@end
+
+@interface FHDetailNewCoreDetailDataPermitListModel : JSONModel 
+@property (nonatomic, strong , nullable) FHDetailNewCoreDetailDataPermitListImageModel *image ;
 @property (nonatomic, copy , nullable) NSString *permitDate;
 @property (nonatomic, copy , nullable) NSString *bindBuilding;
 @property (nonatomic, copy , nullable) NSString *permit;
@@ -34,6 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewCoreDetailDataModel : JSONModel 
 
+@property (nonatomic, copy , nullable) NSString *buyFieldTime;
+@property (nonatomic, copy , nullable) NSString *plannedBuilding;
+@property (nonatomic, copy , nullable) NSString *plannedFamily;
 @property (nonatomic, copy , nullable) NSString *areaSquareMeter;
 @property (nonatomic, copy , nullable) NSString *buildingSquareMeter;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
