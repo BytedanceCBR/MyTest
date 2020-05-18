@@ -70,7 +70,6 @@
                 make.width.mas_equalTo(70);
                 make.top.mas_equalTo(0);
             }];
-            
             UILabel *valueLabel = [UILabel new];
             valueLabel.numberOfLines = 0;
             valueLabel.font = [UIFont themeFontMedium:14];
@@ -84,6 +83,15 @@
                 make.right.equalTo(itemContenView).offset(-31);
                 make.bottom.equalTo(itemContenView);
             }];
+            
+            if (i % 3 == 0) {
+                valueLabel.textColor = [UIColor colorWithHexStr:@"ff9629"];
+                  valueLabel.userInteractionEnabled = YES;
+                  [valueLabel addGestureRecognizer:({
+                      UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click)];
+                      gesture;
+                  })];
+              }
             
             [self.contentView addSubview:itemContenView];
             
@@ -119,6 +127,10 @@
             }
         }
     }
+}
+
+- (void)click {
+    
 }
 
 - (void)prepareForReuse
