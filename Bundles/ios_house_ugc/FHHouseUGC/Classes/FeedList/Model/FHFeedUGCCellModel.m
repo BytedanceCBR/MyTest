@@ -133,6 +133,8 @@
                  type == FHUGCFeedListCellTypeUGCRecommendCircle ||
                  type == FHUGCFeedListCellTypeUGCEncyclopedias ){
             cls = [FHFeedContentModel class];
+        }else if(type >= FHUGCFeedListCellTypeUGCCommonLynx || 1200 < type < 1300){
+            cls = [FHFeedContentModel class];
         }else{
             //其他类型直接过滤掉
             return cellModel;
@@ -542,6 +544,16 @@
         }else{
             cellModel.openUrl = model.rawData.operation.url;
         }
+    }else if((cellModel.cellType == FHUGCFeedListCellTypeUGCCommonLynx || (1200 <= cellModel.cellType && cellModel.cellType < 1300)) && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCLynx;
+        if(model.rawData.groupId){
+            cellModel.groupId = model.rawData.groupId;
+        }
+        
+        if (!cellModel.groupId) {
+            cellModel.groupId = [model.rawData.lynxData[@"group_id"] description];
+        }
+        cellModel.lynxData = model.rawData.lynxData;
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){
         cellModel.groupId = model.rawData.groupId;

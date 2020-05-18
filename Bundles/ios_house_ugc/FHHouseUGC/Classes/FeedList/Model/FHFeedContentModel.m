@@ -490,6 +490,7 @@
                             @"allSchema":@"all_schema",
                            @"upSpace":@"up_space",
                            @"downSpace":@"down_space",
+                           @"lynxData":@"lynx_data",
                            @"hidelLine":@"hide_line"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
