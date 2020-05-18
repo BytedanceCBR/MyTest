@@ -714,6 +714,7 @@
 //    [mdict setValue:self.detailModel.article forKey:@"group"];
     
     [mdict setValue:@"favorite" forKey:@"categoryID"];
+    mdict[@"extraDic"] = self.tracerDict;
     
     self.wCommentModel = mdict[@"commentModel"];
     if (self.wCommentModel && [self.wCommentModel isKindOfClass:[TTCommentModel class]]) {
@@ -791,6 +792,7 @@
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
     commentManager.enterFrom = @"feed_detail";
     commentManager.enter_type = @"submit_comment";
+    commentManager.reportParams = self.tracerDict.mutableCopy;
     
     self.commentWriteView = [[FHPostDetailCommentWriteView alloc] initWithCommentManager:commentManager];
     

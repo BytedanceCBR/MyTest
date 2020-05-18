@@ -12,17 +12,15 @@
 #import "FHEnvContext.h"
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
+#import "FHUGCConfig.h"
 
 #define kCellId @"cellId"
 #define maxCellCount 2
 
 @interface FHCommunityViewModel ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
-@property(nonatomic , strong) UICollectionView *collectionView;
-@property(nonatomic , weak) FHCommunityViewController *viewController;
 @property(nonatomic , strong) NSMutableArray *cellArray;
 @property(nonatomic , strong) NSArray *dataArray;
-@property(nonatomic , assign) BOOL isFirstLoad;
 
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
@@ -33,22 +31,16 @@
 
 @implementation FHCommunityViewModel
 
-- (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(UIViewController *)viewController {
-    self = [super init];
-    if (self) {
-        self.currentTabIndex = 1;
-        self.isFirstLoad = YES;
-        
-        self.collectionView = collectionView;
-        collectionView.delegate = self;
-        collectionView.dataSource = self;
-
-        self.viewController = (FHCommunityViewController *)viewController;
-        
-        [self initDataArray];
-        
-        [self showUGC:self.viewController.isUgcOpen];
-    }
+- (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(FHCommunityViewController *)viewController {
+    self = [super initWithCollectionView:collectionView controller:viewController];
+    
+    self.currentTabIndex = 1;
+    
+    collectionView.delegate = self;
+    collectionView.dataSource = self;
+    
+    [self initDataArray];
+    
     return self;
 }
 
@@ -65,22 +57,6 @@
     }
 }
 
-- (void)showUGC:(BOOL)isShow {
-    if(isShow){
-    self.currentTabIndex = 1;
-        self.dataArray = @[
-                           @(FHCommunityCollectionCellTypeMyJoin),
-                           @(FHCommunityCollectionCellTypeNearby),
-                           ];
-    }else{
-        self.currentTabIndex = 0;
-        self.dataArray = @[
-                           @(FHCommunityCollectionCellTypeFindHouse)
-                           ];
-    }
-    [self.viewController showSegmentControl:isShow];
-}
-
 - (void)initDataArray {
     self.cellArray = [NSMutableArray array];
     
@@ -94,6 +70,37 @@
                        ];
 }
 
+- (NSArray *)getSegmentTitles {
+    NSMutableArray *titles = [NSMutableArray array];
+    
+    NSDictionary *ugcTitles = [FHEnvContext ugcTabName];
+    if(ugcTitles[kUGCTitleMyJoinList]){
+        NSString *name = ugcTitles[kUGCTitleMyJoinList];
+        if(name.length > 2){
+            name = [name substringToIndex:2];
+        }
+        [titles addObject:name];
+    }else{
+        [titles addObject:@"关注"];
+    }
+    
+    if(ugcTitles[kUGCTitleNearbyList]){
+        NSString *name = ugcTitles[kUGCTitleNearbyList];
+        if(name.length > 2){
+            name = [name substringToIndex:2];
+        }
+        [titles addObject:name];
+    }else{
+        [titles addObject:@"附近"];
+    }
+    
+    if(titles.count == 2){
+        return titles;
+    }
+    
+    return @[@"关注", @"附近"];
+}
+
 - (void)selectCurrentTabIndex {
     self.viewController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
     
@@ -101,15 +108,10 @@
     [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 }
 
-- (void)setCurrentTabIndex:(NSInteger)currentTabIndex {
-    _currentTabIndex = currentTabIndex;
-    self.searchBtn.hidden = NO;
-}
-
 //顶部tabView点击事件
 - (void)segmentViewIndexChanged:(NSInteger)index {
     if(self.currentTabIndex == index){
-        [self refreshCell:NO];
+        [self refreshCell:NO isClick:YES];
     }else{
         self.currentTabIndex = index;
         
@@ -117,6 +119,13 @@
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        
+        //关注tab，没有关注时需要隐藏关注按钮
+        if(self.currentTabIndex == 0 && [FHUGCConfig sharedInstance].followList.count <= 0){
+            self.viewController.publishBtn.hidden = YES;
+        }else{
+            self.viewController.publishBtn.hidden = NO;
+        }
     }
 }
 
@@ -150,10 +159,10 @@
     }
 }
 
-- (void)refreshCell:(BOOL)isHead {
+- (void)refreshCell:(BOOL)isHead isClick:(BOOL)isClick {
     if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityCollectionCell class]]){
         FHCommunityCollectionCell *cell = (FHCommunityCollectionCell *)self.cellArray[self.currentTabIndex];
-        [cell refreshData:isHead];
+        [cell refreshData:isHead isClick:isClick];
     }
 }
 
@@ -280,6 +289,19 @@
     }
     
     [self initCell:@"flip"];
+}
+
+- (NSString *)pageType {
+    NSString *page_type = UT_BE_NULL;
+    if(self.currentTabIndex < self.dataArray.count){
+        FHCommunityCollectionCellType type = [self.dataArray[self.currentTabIndex] integerValue];
+        if (type == FHCommunityCollectionCellTypeMyJoin) {
+            page_type = @"my_join_feed";
+        } else  if (type == FHCommunityCollectionCellTypeNearby) {
+            page_type = @"hot_discuss_feed";
+        }
+    }
+    return page_type;
 }
 
 @end

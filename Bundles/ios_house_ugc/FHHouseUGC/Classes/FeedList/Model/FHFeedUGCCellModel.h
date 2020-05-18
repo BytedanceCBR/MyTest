@@ -13,6 +13,7 @@
 #import "TTRichSpanText+Emoji.h"
 #import "TTVFeedItem+Extension.h"
 #import "TTVFeedListItem.h"
+#import "FHUGCScialGroupModel.h"
 
 @class FHCommunityFeedListController;
 
@@ -84,6 +85,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *aggrType;
 //问答跳转链接，优先使用这个值跳转
 @property (nonatomic, copy , nullable) NSString *openUrl;
+//点击评论跳转，目前只有问答使用了
+@property (nonatomic, copy , nullable) NSString *commentSchema;
 //列表页小图
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel *> *imageList;
 //点击小图放大后的大图
@@ -198,6 +201,20 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, assign) CGFloat bottomLineRightMargin;
 //底部卡片
 @property (nonatomic, strong , nullable) FHFeedUGCContentAttachCardInfoModel *attachCardInfo ;
+@property (nonatomic, strong, nullable) NSArray<FHUGCScialGroupDataModel> *hotSocialList;
+//cell距离顶部
+@property (nonatomic, copy , nullable) NSString *upSpace;
+//cell距离底部
+@property (nonatomic, copy , nullable) NSString *downSpace;
+//分割线设置
+@property (assign, nonatomic) BOOL hidelLine;
+//百科内容
+@property (nonatomic, copy , nullable) NSString *articleTitle;
+//百科图标
+@property (nonatomic, copy , nullable) NSString *avatar;
+//查看全部
+@property (nonatomic, copy , nullable) NSString *allSchema;
+
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 
