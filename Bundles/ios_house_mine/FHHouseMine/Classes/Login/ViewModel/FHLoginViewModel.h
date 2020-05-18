@@ -51,6 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 包含苹果登录，如果没有抖音登录，则没有三方登录
 - (BOOL)shouldShowDouyinIcon;
 
+- (void)viewWillAppear;
+
 @end
 
 NS_ASSUME_NONNULL_END

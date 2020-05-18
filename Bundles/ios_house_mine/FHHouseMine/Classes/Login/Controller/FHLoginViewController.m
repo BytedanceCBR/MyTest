@@ -106,6 +106,7 @@
     if (self.textField) {
         [self.textField becomeFirstResponder];
     }
+    [self.viewModel viewWillAppear];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
