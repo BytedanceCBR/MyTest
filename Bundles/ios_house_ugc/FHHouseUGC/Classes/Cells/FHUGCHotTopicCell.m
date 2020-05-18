@@ -28,6 +28,7 @@
 @property(nonatomic ,strong) NSArray *dataList;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 @property(nonatomic ,strong) UIView *seprateLine;
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
 
@@ -147,8 +148,8 @@
     [self.clientShowDict removeAllObjects];
     self.currentData = data;
     
-    FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
-    self.dataList = model.hotTopicList;
+    self.cellModel = cellModel;
+    self.dataList = cellModel.hotTopicList;
     [self.collectionView reloadData];
 }
 
@@ -171,7 +172,7 @@
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ENTER_TYPE] = @"click";
     traceParam[UT_ELEMENT_FROM] = @"hot_topic";
-    traceParam[UT_ENTER_FROM] = @"nearby_list";
+    traceParam[UT_ENTER_FROM] = @"hot_discuss_feed";
     dict[@"tracer"] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_topic_list"];
@@ -181,11 +182,13 @@
 - (void)trackClickMore {
     if([self.currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)self.currentData;
-        NSMutableDictionary *param = [NSMutableDictionary new];
-        param[@"element_type"] = @"hot_topic";
-        param[@"page_type"] = @"hot_discuss_feed";
-        param[@"enter_from"] = @"neighborhood_tab";
-        TRACK_EVENT(@"click_more", param);
+        NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+        tracerDict[@"element_type"] = @"hot_topic";
+        tracerDict[@"rank"] = self.cellModel.tracerDic[@"rank"] ?: @"be_null";
+        tracerDict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+        tracerDict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        tracerDict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
+        TRACK_EVENT(@"click_more", tracerDict);
     }
 }
 
@@ -223,7 +226,9 @@
         NSMutableDictionary *dict = @{}.mutableCopy;
         // 埋点
         NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"enter_from"] = @"nearby_list";
+        traceParam[@"enter_type"] = @"click";
+        traceParam[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+        traceParam[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
         traceParam[@"element_from"] = @"hot_topic";
         traceParam[@"enter_type"] = @"click";
         traceParam[@"rank"] = @(indexPath.row);
@@ -233,6 +238,7 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         //跳转到话题详情页
         if(model.schema.length > 0){
+            model.schema = [model.schema stringByReplacingOccurrencesOfString:@"nearby_list" withString:(self.cellModel.tracerDic[@"page_type"] ?: @"be_null")];
             NSURL *openUrl = [NSURL URLWithString:model.schema];
             [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
         }
@@ -270,8 +276,9 @@
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
 
     tracerDict[@"element_type"] = @"hot_topic";
-    tracerDict[@"page_type"] = @"hot_discuss_feed";
-    tracerDict[@"enter_from"] = @"neighborhood_tab";
+    tracerDict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
+    tracerDict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
+    tracerDict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
     tracerDict[@"rank"] = @(rank);
     tracerDict[@"concern_id"] = model.forumId;
     tracerDict[@"log_pb"] = model.logPb;

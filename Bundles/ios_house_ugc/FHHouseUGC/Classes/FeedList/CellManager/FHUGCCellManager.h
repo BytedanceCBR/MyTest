@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHHouseUGCHeader.h"
+#import "SSImpression_Emums.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)registerAllCell:(UITableView *)tableView;
 
 - (Class)cellClassFromCellViewType:(FHUGCFeedListCellSubType)cellType data:(nullable id)data;
+
++ (SSImpressionModelType)impressModelTypeWithCellType:(FHUGCFeedListCellType)cellType;
 
 @end
 

@@ -220,6 +220,10 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
  */
 @property (nonatomic, assign) CGFloat borderWidth;
 
+@property (nonatomic) CGFloat firstLeftMargain;
+
+@property (nonatomic) CGFloat lastRightMargin;
+
 /**
  Default is YES. Set to NO to deny scrolling by dragging the scrollView by the user.
  */
@@ -283,6 +287,10 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
  Default is YES. Set to NO to disable animation during user selection.
  */
 @property (nonatomic) BOOL shouldAnimateUserSelection;
+/**
+ Default is NO. 当item为宽度为动态的时候，如果normal和selected的字体大小不一致，会出现切换时候item的位置出现偏移，当这个属性为YES时，可以去掉这个偏移，by xsm
+ */
+@property (nonatomic) BOOL shouldFixedSelectPosition;
 
 - (id)initWithSectionTitles:(NSArray<NSString *> *)sectiontitles;
 - (id)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages;

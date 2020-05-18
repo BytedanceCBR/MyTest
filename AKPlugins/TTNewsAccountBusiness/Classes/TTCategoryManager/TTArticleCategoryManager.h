@@ -15,6 +15,16 @@
 #define kArticleCategoryTipNewChangedNotification @"kArticleCategoryTipNewChangedNotification"
 #define kArticleLocalCategoryConcernIDHasChangeNotification @"kArticleLocalCategoryConcernIDHasChangeNotification"
 
+//用于存储category的version值
+#define kArticleCategoryManagerVersionKey @"kArticleCategoryManagerVersionKey"
+
+#define kCategoryStoreVersion 2
+
+#define KArticleCategoryManagerHasNewTipKey [NSString stringWithFormat:@"KArticleCategoryManagerHasNewTip%i", kCategoryStoreVersion]
+
+#define kArticleCategoryManagerUserSelectedLocalCityKey @"kArticleCategoryManagerUserSelectedLocalCityKey"
+#define kArticleCategoryManagerServerLocalCityNameKey   @"kArticleCategoryManagerServerLocalCityNameKey"
+
 extern NSString *const kTTInsertCategoryToLastPositionNotification;
 extern NSString *const kTTInsertCategoryNotificationCategoryKey;
 extern NSString *const kTTInsertCategoryNotificationPositionKey;

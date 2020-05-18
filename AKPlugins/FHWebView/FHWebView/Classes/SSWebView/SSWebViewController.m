@@ -613,12 +613,14 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     }else
     {
         if (!IESFalconManager.interceptionWKHttpScheme) {
-            IESFalconManager.interceptionWKHttpScheme = [SSCommonLogic configSwitchFWebOffline];
-            IESFalconManager.interceptionEnable = [SSCommonLogic configSwitchFWebOffline];
-                
-            NSString *pattern = @"^(http|https)://.*.(pstatp.com/toutiao|haoduofangs.com/f101/client|99hdf.com/f101/client)";
-        //        [IESFalconManager registerPattern:pattern forGurdAccessKey:[FHIESGeckoManager getGeckoKey]];
-            [IESFalconManager registerPattern:pattern forGeckoAccessKey:[FHIESGeckoManager getGeckoKey]];
+            if (IESFalconManager.interceptionWKHttpScheme != [SSCommonLogic configSwitchFWebOffline]) {
+                    IESFalconManager.interceptionWKHttpScheme = [SSCommonLogic configSwitchFWebOffline];
+                    IESFalconManager.interceptionEnable = [SSCommonLogic configSwitchFWebOffline];
+                        
+                    NSString *pattern = @"^(http|https)://.*.(pstatp.com/toutiao|haoduofangs.com/f101/client|99hdf.com/f101/client)";
+                //        [IESFalconManager registerPattern:pattern forGurdAccessKey:[FHIESGeckoManager getGeckoKey]];
+                    [IESFalconManager registerPattern:pattern forGeckoAccessKey:[FHIESGeckoManager getGeckoKey]];
+            }
         }
     }
 }

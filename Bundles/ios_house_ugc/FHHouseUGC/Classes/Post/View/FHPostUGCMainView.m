@@ -151,7 +151,7 @@
     }];
     
     [self.tagView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.nameLabel.mas_right).offset(20);
+        make.left.equalTo(self.nameLabel.mas_right).offset(0);
         make.centerY.equalTo(self.nameLabel);
         make.right.lessThanOrEqualTo(self.rightImageView.mas_left).offset(-5);
         make.height.mas_equalTo(32);
