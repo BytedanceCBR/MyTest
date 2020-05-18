@@ -192,8 +192,8 @@
     }];
 
     self.otherLoginBtn = [[UIButton alloc] init];
-    [self setButtonContent:@"其他方式登录" font:[UIFont themeFontRegular:14] color:[UIColor themeGray2] state:UIControlStateNormal btn:self.otherLoginBtn];
-    [self setButtonContent:@"其他方式登录" font:[UIFont themeFontRegular:14] color:[UIColor themeGray2] state:UIControlStateHighlighted btn:self.otherLoginBtn];
+    [self setButtonContent:@"其它方式登录" font:[UIFont themeFontRegular:14] color:[UIColor themeGray2] state:UIControlStateNormal btn:self.otherLoginBtn];
+    [self setButtonContent:@"其它方式登录" font:[UIFont themeFontRegular:14] color:[UIColor themeGray2] state:UIControlStateHighlighted btn:self.otherLoginBtn];
     [self.scrollView addSubview:self.otherLoginBtn];
     [self.otherLoginBtn addTarget:self action:@selector(otherLoginBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     self.otherLoginBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);

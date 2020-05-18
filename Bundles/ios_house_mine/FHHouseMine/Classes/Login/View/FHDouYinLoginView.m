@@ -62,7 +62,7 @@
         [self.otherLoginButton addTarget:self action:@selector(otherLoginButtonAction) forControlEvents:UIControlEventTouchUpInside];
         self.otherLoginButton.titleLabel.font = [UIFont themeFontRegular:16];
         [self.otherLoginButton setTitleColor:[UIColor themeGray2] forState:UIControlStateNormal];
-        [self.otherLoginButton setTitle:@"其他方式登录" forState:UIControlStateNormal];
+        [self.otherLoginButton setTitle:@"其它方式登录" forState:UIControlStateNormal];
         [self addSubview:self.otherLoginButton];
         [self.otherLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.douyinLoginButton.mas_bottom).offset(20);

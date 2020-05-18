@@ -141,7 +141,7 @@
         UILabel *otherLabel = [[UILabel alloc] init];
         otherLabel.font = [UIFont themeFontRegular:14];
         otherLabel.textColor = [UIColor themeGray3];
-        otherLabel.text = @"其他登录";
+        otherLabel.text = @"其它登录";
         [self addSubview:otherLabel];
         [otherLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.mobileTextField.mas_bottom).mas_offset(26);

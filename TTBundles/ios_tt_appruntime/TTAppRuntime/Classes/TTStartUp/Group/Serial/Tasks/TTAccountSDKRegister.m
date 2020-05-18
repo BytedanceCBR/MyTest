@@ -57,14 +57,14 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
 /// 如果没有手机号强制登出账号
 + (void)logoutIfNoBindMobile {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (![TTAccount sharedAccount].user.mobile.length) {
+        if ([TTAccount sharedAccount].isLogin && ![TTAccount sharedAccount].user.mobile.length) {
             [TTAccount logoutInScene:TTAccountLogoutSceneNormal completion:^(BOOL success, NSError * _Nullable error) {
-                if (success) {
-                    NSLog(@"logoutIfNoBindMobile sucess");
-                }
-                if (error) {
-                    NSLog(@"logoutIfNoBindMobile error %@",error);
-                }
+//                if (success) {
+//                    NSLog(@"logoutIfNoBindMobile sucess");
+//                }
+//                if (error) {
+//                    NSLog(@"logoutIfNoBindMobile error %@",error);
+//                }
             }];
         }
     });
