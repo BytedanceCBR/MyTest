@@ -208,6 +208,7 @@
                            @"thumbImageList":@"thumb_image_list",
                            @"largeImageList":@"large_image_list",
                            @"threadId":@"thread_id",
+                           @"lynxData":@"lynx_data",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

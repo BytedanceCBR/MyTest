@@ -40,6 +40,7 @@
 #import <UserNotifications/UserNotifications.h>
 #import "FHPermissionAlertViewController.h"
 #import <TTAppRuntime/NewsBaseDelegate.h>
+#import "FHLynxManager.h"
 #import "FHUGCCategoryManager.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
@@ -667,9 +668,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self.messageManager startSyncMessage];
     });
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [FHIESGeckoManager configGeckoInfo];
         [FHIESGeckoManager configIESWebFalcon];
+        [[FHLynxManager sharedInstance] initLynx];
     });
 }
 
@@ -791,8 +794,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
     NSString * buildVersionNew = [buildVersionRaw stringByReplacingOccurrencesOfString:@"." withString:@""];
     
     NSString * versionFirst = @"6";
-    NSString * versionMiddle = @"7";
-    NSString * versionEnd = @"0";
+    NSString * versionMiddle = @"9";
+    NSString * versionEnd = @"7";
     
     if ([buildVersionNew isKindOfClass:[NSString class]] && buildVersionNew.length > 3) {
         versionFirst = [buildVersionNew substringWithRange:NSMakeRange(0, 1)];
@@ -1262,7 +1265,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
             if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
                 [[UIApplication sharedApplication].delegate application:notificationItem.application didReceiveRemoteNotification:notificationItem.userInfo];
             }
-
         }
         
         FHUNRemoteNOficationStashItem *unnotificationItem = [_stashModel unnotificationItem];
@@ -1278,6 +1280,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     [self startLocation];
     [self check2CityList];
+    
     
     [NewsBaseDelegate startRegisterRemoteNotification];
     
