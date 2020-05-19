@@ -135,7 +135,7 @@
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
-    _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 30)];
+    _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 36)];
     if ([TTReachability isNetworkConnected]) {
         [_notNetHeader setHidden:YES];
     } else {
@@ -189,7 +189,7 @@
     } else {
         [_notNetHeader setHidden:NO];
         [_notNetHeader mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(30);
+            make.height.mas_equalTo(36);
         }];
     }
 //    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -226,7 +226,7 @@
         if ([TTReachability isNetworkConnected]) {
             make.height.mas_equalTo(0);
         }else {
-            make.height.mas_equalTo(30);
+            make.height.mas_equalTo(36);
         }
     }];
     BOOL isEnabled = [FHPushAuthorizeManager isMessageTipEnabled];
