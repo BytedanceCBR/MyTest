@@ -402,7 +402,7 @@
     //099 户型详情页 显示底部按钮
     
     if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {// || model.titleDataModel.isFloorPan
-        pictureDetailViewController.isShowAllBtns = NO;
+        pictureDetailViewController.isShowBottomBar = NO;
     }
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];

@@ -31,7 +31,7 @@
 #import "FHDetailBaseModel.h"
 
 #define kFHDPTopBarHeight 44.f
-#define kFHDPBottomBarHeight 54.f
+#define kFHDPBottomBarHeight 60.f
 
 #define kFHDPMoveDirectionStartOffset 20.f
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
@@ -106,7 +106,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _longPressToSave = YES;
         _disableAutoPlayVideo = NO;
         _didEnterFullscreen = NO;
-        _isShowAllBtns = YES;
+        _isShowBottomBar = YES;
         
         self.ttHideNavigationBar = YES;
         
@@ -233,19 +233,31 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (topInset < 1) {
         topInset = 20;
     }
-    _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset)];
-    _topBar.backgroundColor = [UIColor colorWithHexString:@"#000000" alpha:0.3]; // [UIColor clearColor];
-    [self.view addSubview:_topBar];
+    self.topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset)];
+    self.topBar.backgroundColor = [UIColor clearColor]; //[UIColor colorWithHexString:@"#000000" alpha:0.3];
+    [self.view addSubview:self.topBar];
+    [self.topBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(0);
+        make.height.mas_equalTo(kFHDPTopBarHeight + topInset + 42);
+    }];
+    
+    UIImageView *topBgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"picture_detail_header_bg"]];
+    topBgImageView.frame = self.topBar.bounds;
+    [self.topBar addSubview:topBgImageView];
+    [topBgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
+    
     __weak typeof(self) weakSelf = self;
-    _naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
-    _naviView.showAlbum = self.smallImageInfosModels > 0;
-    _naviView.backActionBlock = ^{
+    self.naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
+    self.naviView.showAlbum = self.smallImageInfosModels > 0;
+    self.naviView.backActionBlock = ^{
         [weakSelf finished];
     };
-    _naviView.albumActionBlock  = ^{
+    self.naviView.albumActionBlock  = ^{
         [weakSelf albumBtnClick];
     };
-    _naviView.videoTitle.currentTitleBlock = ^(NSInteger currentIndex) {
+    self.naviView.videoTitle.currentTitleBlock = ^(NSInteger currentIndex) {
         // 1 视频 2 图片
         if (weakSelf.vedioCount > 0) {
             NSInteger tempIndex = 0;
@@ -263,25 +275,35 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             }
         }
     };
-    _naviView.hasVideo = self.vedioCount > 0;
+    self.naviView.hasVideo = self.vedioCount > 0;
     if (self.vedioCount > 0) {
         // 有视频
         if (_startWithIndex < self.vedioCount) {
-            _naviView.videoTitle.isSelectVideo = YES;
+            self.naviView.videoTitle.isSelectVideo = YES;
         } else {
-            _naviView.videoTitle.isSelectVideo = NO;
+            self.naviView.videoTitle.isSelectVideo = NO;
         }
         // 特殊处理，如果只有视频
         if (self.photoCount == self.vedioCount) {
-            _naviView.hasVideo = NO;
-            _naviView.titleLabel.text = @"视频";
+            self.naviView.hasVideo = NO;
+            self.naviView.titleLabel.text = @"视频";
         }
     }
-    [_topBar addSubview:_naviView];
+    [self.topBar addSubview:self.naviView];
+    [self.naviView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(topInset);
+        make.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(kFHDPTopBarHeight);
+    }];
     
-    _pictureTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, 64, self.view.width, 42)];
-    _pictureTitleView.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:_pictureTitleView];
+    self.pictureTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, topInset + kFHDPTopBarHeight, self.view.width, 42)];
+    self.pictureTitleView.backgroundColor = [UIColor clearColor];
+    [self.topBar addSubview:self.pictureTitleView];
+    [self.pictureTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(42);
+        make.top.mas_equalTo(self.naviView.mas_bottom);
+    }];
     self.pictureTitleView.titleNames = self.pictureTitles;
     self.pictureTitleView.titleNums = self.pictureNumbers;
     self.pictureTitleView.currentIndexBlock = ^(NSInteger currentIndex) {
@@ -301,7 +323,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         }
     };
     
-    if (self.vedioCount > 0 && _isShowAllBtns) {
+    if (self.vedioCount > 0 && _isShowBottomBar) {
         _videoInfoView = [[FHDetailVideoInfoView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 67)];
         _videoInfoView.hidden = _startWithIndex >= self.vedioCount;
         [self.view addSubview:_videoInfoView];
@@ -312,44 +334,70 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         self.videoInfoView.collectActionBlock = self.collectActionBlock;
     }
     
-    if (self.isShowAllBtns) {
+    if (self.isShowBottomBar) {
         self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height - kFHDPBottomBarHeight, self.view.width, kFHDPBottomBarHeight)];
         self.bottomBar.backgroundColor = [UIColor clearColor];
         [self.view addSubview:self.bottomBar];
+        [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.bottom.right.mas_equalTo(0);
+            make.height.mas_equalTo(60 + bottomInset);
+        }];
+        
+        UIImageView *bottomBgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"picture_detail_bottombar_bg"]];
+        bottomBgImageView.frame = self.topBar.bounds;
+        [self.topBar addSubview:bottomBgImageView];
+        [bottomBgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsZero);
+        }];
         
         if (self.mediaHeaderModel.contactViewModel) {
-            CGFloat itemWidth = self.view.width - 40;
+            CGFloat itemWidth = self.view.width - 30;
             BOOL showenOnline = self.mediaHeaderModel.contactViewModel.showenOnline;
             if (showenOnline) {
                 itemWidth = (itemWidth - 15) / 2.0;
                 // 在线联系
-                UIButton *online = self.onlineBtn;
                 if (self.mediaHeaderModel.contactViewModel.onLineName.length > 0) {
                     NSString *title = self.mediaHeaderModel.contactViewModel.onLineName;
-                    [online setTitle:title forState:UIControlStateNormal];
-                    [online setTitle:title forState:UIControlStateHighlighted];
+                    [self.onlineBtn setTitle:title forState:UIControlStateNormal];
+                    [self.onlineBtn setTitle:title forState:UIControlStateHighlighted];
                 }
-                online.frame = CGRectMake(20, 0, itemWidth, 44);
-                [self.bottomBar addSubview:online];
+                self.onlineBtn.frame = CGRectMake(15, 0, itemWidth, 44);
+                [self.bottomBar addSubview:self.onlineBtn];
+                [self.onlineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(15);
+                    make.top.mas_equalTo(30);
+                    make.width.mas_equalTo(itemWidth);
+                    make.height.mas_equalTo(44);
+                }];
                 // 电话咨询
-                UIButton *contact = self.contactBtn;
                 if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
                     NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
-                    [contact setTitle:title forState:UIControlStateNormal];
-                    [contact setTitle:title forState:UIControlStateHighlighted];
+                    [self.contactBtn setTitle:title forState:UIControlStateNormal];
+                    [self.contactBtn setTitle:title forState:UIControlStateHighlighted];
                 }
-                contact.frame = CGRectMake(20 + itemWidth + 10, 0, itemWidth, 44);
-                [self.bottomBar addSubview:contact];
+                self.contactBtn.frame = CGRectMake(20 + itemWidth + 10, 0, itemWidth, 44);
+                [self.bottomBar addSubview:self.contactBtn];
+                [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.right.mas_equalTo(-15);
+                    make.top.mas_equalTo(self.onlineBtn.mas_top);
+                    make.width.mas_equalTo(self.onlineBtn.mas_width);
+                    make.height.mas_equalTo(self.onlineBtn.mas_height);
+                }];
             } else {
                 // 电话咨询
-                UIButton *contact = self.contactBtn;
                 if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
                     NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
-                    [contact setTitle:title forState:UIControlStateNormal];
-                    [contact setTitle:title forState:UIControlStateHighlighted];
+                    [self.contactBtn setTitle:title forState:UIControlStateNormal];
+                    [self.contactBtn setTitle:title forState:UIControlStateHighlighted];
                 }
-                contact.frame = CGRectMake(20, 0, itemWidth, 44);
-                [self.bottomBar addSubview:contact];
+                self.contactBtn.frame = CGRectMake(15, 0, itemWidth, 44);
+                [self.bottomBar addSubview:self.contactBtn];
+                [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(15);
+                    make.top.mas_equalTo(30);
+                    make.width.mas_equalTo(itemWidth);
+                    make.height.mas_equalTo(44);
+                }];
             }
         }
     }
@@ -507,11 +555,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (UIButton *)onlineBtn {
     if (!_onlineBtn) {
         _onlineBtn = [[UIButton alloc] init];
-        _onlineBtn.layer.cornerRadius = 4;
+        _onlineBtn.layer.cornerRadius = 22;
+        _onlineBtn.layer.borderColor = [UIColor colorWithWhite:1.0 alpha:0.3].CGColor;
+        _onlineBtn.layer.borderWidth = 1.0/UIScreen.mainScreen.scale;
         _onlineBtn.titleLabel.font = [UIFont themeFontRegular:16];
-        _onlineBtn.backgroundColor = [UIColor colorWithHexStr:@"#151515"];
-        [_onlineBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateNormal];
-        [_onlineBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateHighlighted];
+        _onlineBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
+        [_onlineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_onlineBtn setTitle:@"在线联系" forState:UIControlStateNormal];
         [_onlineBtn setTitle:@"在线联系" forState:UIControlStateHighlighted];
         [_onlineBtn addTarget:self action:@selector(onlineButtonClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -522,11 +571,12 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (FHLoadingButton *)contactBtn {
     if (!_contactBtn) {
         _contactBtn = [[FHLoadingButton alloc]init];
-        _contactBtn.layer.cornerRadius = 4;
+        _contactBtn.layer.cornerRadius = 22;
+        _contactBtn.layer.borderColor = [UIColor colorWithWhite:1.0 alpha:0.3].CGColor;
+        _contactBtn.layer.borderWidth = 1.0/UIScreen.mainScreen.scale;
         _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
-        _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#151515"];
-        [_contactBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateNormal];
-        [_contactBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateHighlighted];
+        _contactBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
+        [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
         [_contactBtn addTarget:self action:@selector(contactButtonClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -549,10 +599,17 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (topInset < 1) {
         topInset = 20;
     }
-    self.bottomBar.frame = CGRectMake(0, self.view.height - kFHDPBottomBarHeight - bottomInset, self.view.width, kFHDPBottomBarHeight);
-    self.topBar.frame = CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset);
-    self.naviView.frame = CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight);
-    self.pictureTitleView.frame = CGRectMake(0, topInset + kFHDPTopBarHeight, self.view.width, 42);
+    [self.topBar mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(kFHDPTopBarHeight + topInset + 42);
+    }];
+    
+    [self.naviView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(topInset);
+    }];
+
+    [self.bottomBar mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(60 + bottomInset);
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated

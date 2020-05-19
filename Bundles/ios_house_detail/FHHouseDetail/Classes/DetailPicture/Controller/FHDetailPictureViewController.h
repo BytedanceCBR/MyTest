@@ -71,8 +71,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** 是否支持长按保存，默认YES */
 @property (nonatomic, assign)BOOL longPressToSave;
 
-/** 是否显示所有按钮，默认YES */
-@property (nonatomic, assign)BOOL isShowAllBtns;
+/** 是否显示底部bottombar以及按钮，默认YES */
+@property (nonatomic, assign)BOOL isShowBottomBar;
 
 // Extended by lizhuoli to support drag down and drag up to close
 

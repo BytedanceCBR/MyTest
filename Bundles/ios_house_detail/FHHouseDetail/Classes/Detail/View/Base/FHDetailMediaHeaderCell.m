@@ -269,7 +269,7 @@
     
     //如果是小区，移除按钮
     if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
-        vc.isShowAllBtns = NO;
+        vc.isShowBottomBar = NO;
     }
     
     // 分享
