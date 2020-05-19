@@ -67,6 +67,10 @@
         self.tracerDict[@"page_type"] = @"vote_detail";
         self.ttTrackStayEnable = YES;
         // 取链接中的埋点数据
+        NSString *origin_from = params[@"origin_from"];
+        if (origin_from.length > 0) {
+            self.tracerDict[@"origin_from"] = origin_from;
+        }
         NSString *enter_from = params[@"enter_from"];
         if (enter_from.length > 0) {
             self.tracerDict[@"enter_from"] = enter_from;

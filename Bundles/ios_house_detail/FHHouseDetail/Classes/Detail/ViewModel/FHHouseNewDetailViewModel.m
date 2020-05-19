@@ -430,7 +430,7 @@
             headerCellModel.topImages = model.data.topImages;
             for (NSInteger index = 0; index < model.data.topImages.count; index++) {
                 FHDetailNewTopImage *topImage = model.data.topImages[index];
-                FHDetailOldDataHouseImageDictListModel *houseImageDictList = [[FHDetailOldDataHouseImageDictListModel alloc] init];
+                FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
                 NSMutableArray *houseImages = [NSMutableArray new];
                 for (NSInteger i = 0; i < topImage.imageGroup.count; i++) {
                     FHDetailNewDataImageGroupModel * groupModel = topImage.imageGroup[i];
@@ -441,6 +441,7 @@
                 if (headerCellModel.isShowTopImageTab) {
                     houseImageDictList.houseImageTypeName = topImage.name;
                 }
+                houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeNew;
                 houseImageDictList.houseImageList = houseImages;
                 houseImageDictList.houseImageType = topImage.type;
                 [houseImageList addObject:houseImageDictList];

@@ -23,13 +23,14 @@ NS_ASSUME_NONNULL_BEGIN
 NS_ASSUME_NONNULL_END
 
 @interface FHDetailMediaHeaderCorrectingModel : FHDetailBaseModel
-@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataHouseImageDictListModel> *houseImageDictList;// 图片数据
+@property (nonatomic, strong , nullable) NSArray<FHHouseDetailImageListDataModel> *houseImageDictList;// 图片数据
 @property (nonatomic, strong, nullable)   FHMultiMediaItemModel       *vedioModel;// 视频模型
 @property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, assign) BOOL isInstantData;
 @property (nonatomic, strong, nullable)   FHDetailHouseVRDataModel  *vrModel;// 视频模型
 @property (strong, nonatomic) FHDetailHouseTitleModel *titleDataModel;//标题，标签模型
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewTopImage *> *topImages;
+@property (nonatomic, weak) UIViewController *weakVC;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *houseImageAssociateInfo;
 @property (nonatomic, assign) BOOL isShowTopImageTab;
 

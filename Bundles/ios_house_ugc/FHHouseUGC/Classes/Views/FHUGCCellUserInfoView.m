@@ -178,6 +178,23 @@
     }];
 }
 
+- (void)updateMoreBtnWithTitleType {
+    [self.moreBtn setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+    [self.moreBtn setTitle:@"查看更多" forState:UIControlStateNormal];
+    [self.moreBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
+    self.moreBtn.titleLabel.font = [UIFont themeFontRegular:12];
+    [self.moreBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+         make.width.mas_equalTo(50);
+     }];
+    [self.userName mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 150);
+    }];
+    CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width - 40 - 40 - 10 - 20 - 10 -50;
+    [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(maxWidth);
+    }];
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     
@@ -285,6 +302,20 @@
 }
 
 - (void)moreOperation {
+    if (self.cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias) {
+        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
+        guideDict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"];
+        guideDict[@"page_type"] = @"f_news_recommend";
+        guideDict[@"element_type"] = @"encyclopedia";
+        guideDict[@"log_pb"] = self.cellModel.logPb?self.cellModel.logPb:@"br_null";
+        TRACK_EVENT(@"click_more", guideDict);
+        if (!isEmptyString(self.cellModel.allSchema)) {
+            NSURL *openUrl = [NSURL URLWithString:self.cellModel.allSchema];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+        }
+
+        return;
+    }
     [self trackClickOptions];
     __weak typeof(self) wself = self;
     FHFeedOperationView *dislikeView = [[FHFeedOperationView alloc] init];
@@ -330,6 +361,7 @@
              didDislikeBlock:^(FHFeedOperationView * _Nonnull view) {
                  [wself handleItemselected:view];
              }];
+    
 }
 
 - (void)handleItemselected:(FHFeedOperationView *) view {

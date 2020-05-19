@@ -39,7 +39,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger index;
 @end
 
+@protocol FHFloorPanDetailImageListImageDictListModel<NSObject>
+@end
 
+
+@interface FHFloorPanDetailImageListImageDictListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *imageType;
+@property (nonatomic, strong , nullable) NSArray<FHImageModel> *imageList;
+@property (nonatomic, copy , nullable) NSString *imageTypeName;
+@end
 
 @interface FHDetailFloorPanDetailInfoDataModel : JSONModel 
 
@@ -68,6 +77,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable)  FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
 @property (nonatomic, strong , nullable) FHDetailNewDataDisclaimerModel *disclaimer ;
 
+/// 099 新增楼盘详情页 户型和样板间展示UI
+//@property (nonatomic, copy) NSArray<FHImageModel> *imageDictList;
+@property (nonatomic, strong , nullable) NSArray<FHFloorPanDetailImageListImageDictListModel> *imageDictList;
 @end
 
 @interface FHDetailFloorPanDetailInfoModel : JSONModel 

@@ -156,36 +156,39 @@
     
     self.currentModel = model;
     //头部轮播图
-    if (1) {
-        FHMultiMediaItemModel *itemModel = nil;
-        FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
-        if ([model.data.images isKindOfClass:[NSArray class]] && model.data.images.count > 0) {
-            NSMutableArray *houseImageList = @[].mutableCopy;
-            FHDetailOldDataHouseImageDictListModel *houseImageDictList = [[FHDetailOldDataHouseImageDictListModel alloc] init];
-            NSMutableArray *houseImages = model.data.images;
-            houseImageDictList.houseImageList = houseImages;
+    FHMultiMediaItemModel *itemModel = nil;
+    FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
+    if (model.data.imageDictList && [model.data.imageDictList isKindOfClass:[NSArray class]] && model.data.imageDictList.count > 0) {
+        NSMutableArray *houseImageList = [NSMutableArray array];
+        for (FHFloorPanDetailImageListImageDictListModel *imageInfo in model.data.imageDictList) {
+            FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
+            houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeFloorPan;
+            houseImageDictList.houseImageType = [imageInfo.imageType integerValue];
+            houseImageDictList.houseImageTypeName = imageInfo.imageTypeName;
+            houseImageDictList.houseImageList = imageInfo.imageList.copy;
             [houseImageList addObject:houseImageDictList];
-            headerCellModel.houseImageDictList = houseImageList;
         }
-        FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
-        houseTitleModel.titleStr = model.data.title;
-        if (model.data.saleStatus) {
-            FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
-            tag.backgroundColor = model.data.saleStatus.backgroundColor;
-            tag.content = model.data.saleStatus.content;
-            tag.id = model.data.saleStatus.id;
-            tag.textColor = model.data.saleStatus.textColor;
-            houseTitleModel.tags = @[tag];
-        }
-        houseTitleModel.Picing = model.data.pricing;
-        houseTitleModel.displayPrice = model.data.displayPrice;
-        houseTitleModel.isFloorPan = YES;
-        headerCellModel.vedioModel = itemModel;
-        headerCellModel.contactViewModel = self.contactViewModel;
-        headerCellModel.isInstantData = nil;
-        headerCellModel.titleDataModel = houseTitleModel;
-        [self.currentItems addObject:headerCellModel];
+        headerCellModel.houseImageDictList = houseImageList.copy;
     }
+    FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
+    houseTitleModel.titleStr = model.data.title;
+    if (model.data.saleStatus) {
+        FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
+        tag.backgroundColor = model.data.saleStatus.backgroundColor;
+        tag.content = model.data.saleStatus.content;
+        tag.id = model.data.saleStatus.id;
+        tag.textColor = model.data.saleStatus.textColor;
+        houseTitleModel.tags = @[tag];
+    }
+    houseTitleModel.Picing = model.data.pricing;
+    houseTitleModel.displayPrice = model.data.displayPrice;
+    houseTitleModel.isFloorPan = YES;
+    headerCellModel.vedioModel = itemModel;
+    headerCellModel.contactViewModel = self.contactViewModel;
+    headerCellModel.isInstantData = nil;
+    headerCellModel.titleDataModel = houseTitleModel;
+    [self.currentItems addObject:headerCellModel];
+    
     //基础信息
     if (model.data.baseInfo) {
         FHFloorPanDetailPropertyListModel *propertyModel = [[FHFloorPanDetailPropertyListModel alloc] init];

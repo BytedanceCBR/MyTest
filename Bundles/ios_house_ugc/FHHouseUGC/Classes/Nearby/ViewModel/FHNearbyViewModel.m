@@ -6,6 +6,7 @@
 //
 
 #import "FHNearbyViewModel.h"
+#import "FHEnvContext.h"
 
 @interface FHNearbyViewModel ()
 
@@ -19,12 +20,15 @@
     self = [super init];
     if (self) {
         _viewController = viewController;
-        //防止第一次进入headview高度不对的问题
         [self updateJoinProgressView];
-        __weak typeof(self) weakSelf = self;
-        self.viewController.headerView.progressView.refreshViewBlk = ^{
-            [weakSelf updateJoinProgressView];
-        };
+        
+        if(![FHEnvContext isNewDiscovery]){
+            //防止第一次进入headview高度不对的问题
+            __weak typeof(self) weakSelf = self;
+            self.viewController.headerView.progressView.refreshViewBlk = ^{
+                [weakSelf updateJoinProgressView];
+            };
+        }
     }
     
     return self;
@@ -34,7 +38,7 @@
 - (void)updateJoinProgressView {
     CGRect frame = self.viewController.headerView.frame;
     [self.viewController.headerView.progressView updatePostData];
-    frame.size.height = self.viewController.headerView.progressView.viewHeight;
+    frame.size.height = self.viewController.headerViewHeight + self.viewController.headerView.progressView.viewHeight;
     self.viewController.headerView.frame = frame;
     
     self.viewController.feedVC.tableHeaderView = self.viewController.headerView;

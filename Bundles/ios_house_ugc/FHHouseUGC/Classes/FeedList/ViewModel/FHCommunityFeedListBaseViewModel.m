@@ -78,8 +78,9 @@
     SSImpressionParams *params = [[SSImpressionParams alloc] init];
     params.categoryID = self.categoryId;
     params.refer = self.refer;
+    SSImpressionModelType modelType = [FHUGCCellManager impressModelTypeWithCellType:cellModel.cellType];
     TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:uniqueID itemID:itemID impressionID:nil aggrType:[cellModel.aggrType integerValue]];
-    [ArticleImpressionHelper recordGroupWithUniqueID:uniqueID adID:nil groupModel:groupModel status:status params:params];
+    [ArticleImpressionHelper recordItemWithUniqueID:uniqueID modelType:modelType logPb:cellModel.logPb status:status params:params];
 }
 
 - (UIView *)currentSelectSmallVideoView {
@@ -113,6 +114,10 @@
 }
 
 - (void)showCustomErrorView:(FHEmptyMaskViewType)type {
+    
+}
+
+- (void)updateJoinProgressView {
     
 }
 

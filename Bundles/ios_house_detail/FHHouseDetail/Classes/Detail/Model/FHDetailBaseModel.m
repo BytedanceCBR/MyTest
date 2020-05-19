@@ -409,7 +409,7 @@
 }
 @end
 
-@implementation FHDetailOldDataHouseImageDictListModel
+@implementation FHHouseDetailImageListDataModel
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
