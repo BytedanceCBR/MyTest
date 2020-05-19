@@ -19,6 +19,7 @@
 #import "ToastManager.h"
 #import "FHUserTracker.h"
 #import "Masonry.h"
+#import "FHEnvContext.h"
 
 @interface FHPostUGCProgressView ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -205,7 +206,11 @@
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_type"] = @"publish_failed_toast";
-    tracerDict[@"page_type"] = @"my_join_list";
+    if([FHEnvContext isNewDiscovery]){
+        tracerDict[@"page_type"] = @"f_news_recommend";
+    }else{
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+    }
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"card_type"] = @"left";
     
@@ -340,7 +345,11 @@
 - (void)retryBtnClick {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"element_from"] = @"publish_failed_toast";
-    tracerDict[@"page_type"] = @"my_join_list";
+    if([FHEnvContext isNewDiscovery]){
+        tracerDict[@"page_type"] = @"f_news_recommend";
+    }else{
+        tracerDict[@"page_type"] = @"hot_discuss_feed";
+    }
     tracerDict[@"enter_from"] = @"neighborhood_tab";
     tracerDict[@"card_type"] = @"left";
     tracerDict[@"click_position"] = @"try_again_publish";
@@ -358,7 +367,11 @@
     if (self.statusModel) {
         NSMutableDictionary *tracerDict = @{}.mutableCopy;
         tracerDict[@"element_from"] = @"publish_failed_toast";
-        tracerDict[@"page_type"] = @"my_join_list";
+        if([FHEnvContext isNewDiscovery]){
+            tracerDict[@"page_type"] = @"f_news_recommend";
+        }else{
+            tracerDict[@"page_type"] = @"hot_discuss_feed";
+        }
         tracerDict[@"enter_from"] = @"neighborhood_tab";
         tracerDict[@"card_type"] = @"left";
         tracerDict[@"click_position"] = @"delete_publish";

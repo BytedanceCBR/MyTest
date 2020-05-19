@@ -28,6 +28,7 @@
 @property(nonatomic ,strong) NSMutableArray *dataList;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 @property(nonatomic, strong) FHUGCHotCommunityLayout *flowLayout;
+@property(nonatomic, strong) FHFeedUGCCellModel *cellModel;
 
 @end
 
@@ -118,6 +119,7 @@
     self.currentData = data;
     
     FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
+    self.cellModel = model;
     self.dataList = model.hotCellList;
     self.flowLayout.dataList = _dataList;
     
@@ -136,7 +138,8 @@
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ENTER_TYPE] = @"click";
     traceParam[UT_ELEMENT_FROM] = @"hot_topic";
-    traceParam[UT_ENTER_FROM] = @"nearby_list";
+    traceParam[UT_ENTER_FROM] = self.cellModel.tracerDic[UT_PAGE_TYPE] ?: @"be_null";
+
     dict[@"tracer"] = traceParam;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_post_topic_list"];
@@ -148,8 +151,8 @@
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)self.currentData;
         NSMutableDictionary *param = [NSMutableDictionary new];
         param[@"element_type"] = @"hot_topic";
-        param[@"page_type"] = @"nearby_list";
-        param[@"enter_from"] = @"neighborhood_tab";
+        param[@"page_type"] = self.cellModel.tracerDic[UT_PAGE_TYPE] ?: @"be_null";
+        param[@"enter_from"] = self.cellModel.tracerDic[UT_ENTER_FROM] ?: @"be_null";
         param[@"rank"] = model.tracerDic[@"rank"];
         TRACK_EVENT(@"click_more", param);
     }
@@ -194,12 +197,13 @@
             dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdRecommend);
             NSMutableDictionary *traceParam = @{}.mutableCopy;
             traceParam[@"enter_type"] = @"click";
-            traceParam[@"enter_from"] = @"hot_discuss_feed";
+            traceParam[@"enter_from"] = self.cellModel.tracerDic[UT_PAGE_TYPE] ?: @"be_null";
             traceParam[@"element_from"] = @"top_operation_position";
             dict[@"tracer"] = traceParam;
         }else{
             NSMutableDictionary *traceParam = @{}.mutableCopy;
-            traceParam[@"enter_from"] = @"hot_discuss_feed";
+            traceParam[@"origin_from"] = self.cellModel.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
+            traceParam[@"enter_from"] = self.cellModel.tracerDic[UT_PAGE_TYPE] ?: @"be_null";
             traceParam[@"element_from"] = @"top_operation_position";
             traceParam[@"rank"] = @(indexPath.row);
             if(model.logPb){
@@ -244,16 +248,18 @@
     if([model.hotCellType isEqualToString:youwenbida]){
         eventName = @"element_show";
         tracerDict[@"element_type"] = @"buyer_experts_group";
-        tracerDict[@"page_type"] = @"hot_discuss_feed";
-        tracerDict[@"enter_from"] = @"neighborhood_tab";
+        tracerDict[@"page_type"] = self.cellModel.tracerDic[UT_PAGE_TYPE] ?: @"be_null";
+        tracerDict[@"enter_from"] = self.cellModel.tracerDic[UT_ENTER_FROM] ?: @"be_null";
+        tracerDict[@"origin_from"] = self.cellModel.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
         if(model.logPb){
             tracerDict[@"log_pb"] = model.logPb;
         }
     }else if([model.hotCellType isEqualToString:social]){
         eventName = @"community_group_show";
         tracerDict[@"element_type"] = @"top_operation_position";
-        tracerDict[@"page_type"] = @"hot_discuss_feed";
-        tracerDict[@"enter_from"] = @"neighborhood_tab";
+        tracerDict[@"page_type"] = self.cellModel.tracerDic[UT_PAGE_TYPE] ?: @"be_null";
+        tracerDict[@"enter_from"] = self.cellModel.tracerDic[UT_ENTER_FROM] ?: @"be_null";
+        tracerDict[@"origin_from"] = self.cellModel.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
         tracerDict[@"rank"] = @(rank);
         if(model.id){
             tracerDict[@"group_id"] = model.id;
@@ -272,8 +278,8 @@
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     if([model.hotCellType isEqualToString:youwenbida]){
         tracerDict[@"element_type"] = @"buyer_experts_group";
-        tracerDict[@"page_type"] = @"hot_discuss_feed";
-        tracerDict[@"enter_from"] = @"neighborhood_tab";
+        tracerDict[@"page_type"] = self.cellModel.tracerDic[UT_PAGE_TYPE] ?: @"be_null";
+        tracerDict[@"enter_from"] = self.cellModel.tracerDic[UT_ENTER_FROM] ?: @"be_null";
     }
     TRACK_EVENT(@"click_options", tracerDict);
 }

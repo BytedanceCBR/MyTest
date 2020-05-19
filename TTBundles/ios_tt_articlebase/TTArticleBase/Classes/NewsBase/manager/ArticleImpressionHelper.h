@@ -57,4 +57,9 @@ typedef NS_ENUM(NSUInteger, TTWeitoutiaoCellStyle) {
 
 + (void)recordGroupWithUniqueID:(NSString *)uniqueID adID:(NSString *)adID groupModel:(TTGroupModel *)groupModel status:(SSImpressionStatus)status params:(SSImpressionParams *)params;
 
+/**
+ UGC Feed列表埋点上报 by xsm
+*/
++ (void)recordItemWithUniqueID:(NSString *)uniqueID modelType:(SSImpressionModelType) modelType logPb:(NSDictionary *)logPb status:(SSImpressionStatus)status params:(SSImpressionParams *)params;
+
 @end

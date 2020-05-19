@@ -100,6 +100,8 @@
 #import "BDTFPSBar.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "IMManager.h"
+#import "FHLynxScanVC.h"
+#import "FHLynxDebugVC.h"
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
@@ -181,6 +183,10 @@ extern NSString *const BOE_OPEN_KEY ;
         STTableViewCellItem *rnBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"RN_Debug" target:self action:@selector(_openRNBridge)];
         rnBridgeDebugItem.switchStyle = NO;
         [itemArray addObject:rnBridgeDebugItem];
+        
+        STTableViewCellItem *lynxDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Lynx_Debug" target:self action:@selector(_openLynxBridge)];
+               lynxDebugItem.switchStyle = NO;
+        [itemArray addObject:lynxDebugItem];
         
         STTableViewCellItem *ssoDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"SSO重新验证测试" target:self action:@selector(_ssoDebugClick)];
         ssoDebugItem.switchStyle = NO;
@@ -913,6 +919,12 @@ extern NSString *const BOE_OPEN_KEY ;
     self.ttRNKit.delegate = self;
     FHRNDebugViewController *vc = [[FHRNDebugViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)_openLynxBridge
+{
+    FHLynxScanVC* scanVC = [FHLynxScanVC new];
+    [self.navigationController pushViewController:scanVC animated:YES];
 }
 
 - (void)_ugcDebugTest:(UISwitch *)uiswitch {

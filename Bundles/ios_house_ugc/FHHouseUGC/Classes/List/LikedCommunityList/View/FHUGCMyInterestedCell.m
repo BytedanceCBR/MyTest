@@ -112,8 +112,6 @@
         FHUGCMyInterestDataRecommendSocialGroupsModel *model = (FHUGCMyInterestDataRecommendSocialGroupsModel *)data;
         _titleLabel.text = model.socialGroup.socialGroupName;
         _descLabel.text = model.socialGroup.countText;
-//        _sourceLabel.text = model.socialGroup.suggestReason;
-        _postDescLabel.text = model.threadInfo.content;
         
         if(isEmptyString(model.socialGroup.announcement)){
             self.announcementLabel.hidden = YES;
