@@ -1405,6 +1405,9 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 //经纪人评价弹窗是否强制使用
 +(BOOL)isForceEnableRealtorConfirmBtn;
 
+//是否允许webview 白屏检测
++(BOOL)enableWebViewBlankDetect;
+
 @end
 
 
