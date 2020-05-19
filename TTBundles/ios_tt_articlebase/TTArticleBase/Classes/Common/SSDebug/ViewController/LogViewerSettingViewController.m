@@ -9,6 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <TTTracker/TTTracker.h>
 #import <TTBaseLib/TTBaseMacro.h>
+#import "SSNavigationBar.h"
 
 #define ScreenHeight [UIScreen mainScreen].bounds.size.height
 #define ScreenWidth [UIScreen mainScreen].bounds.size.width
@@ -27,7 +28,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView: [SSNavigationBar navigationBackButtonWithTarget:self action:@selector(back:)]];
 #if TARGET_OS_SIMULATOR
     [self configForSimulator];
 #else

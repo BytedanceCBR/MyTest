@@ -800,8 +800,10 @@ extern NSString *const BOE_OPEN_KEY ;
     
     self.dataSource = [self _constructDataSource];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(_cancelActionFired:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfLeft withTitle:@"关闭" target:self action:@selector(_cancelActionFired:)]];
+    
     [self _reloadRightBarItem];
+    
     self.tableView.tableHeaderView = self.tableViewHeaderView;
 
 }
@@ -843,7 +845,7 @@ extern NSString *const BOE_OPEN_KEY ;
 
 - (void)_reloadRightBarItem {
     if ([TTLogServer logEnable]) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设备信息" style:UIBarButtonItemStylePlain target:self action:@selector(_sendDeviceActionFired:)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:@"设备信息" target:self action:@selector(_sendDeviceActionFired:)]];
     }
 }
 
