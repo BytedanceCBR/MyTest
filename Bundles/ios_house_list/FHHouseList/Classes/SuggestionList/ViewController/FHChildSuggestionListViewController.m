@@ -174,6 +174,12 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    if (self.homePageRollDic) {
+         NSString *text = self.homePageRollDic[@"text"];
+         if (text.length > 0) {
+             self.canSearchWithRollData = YES;
+         }
+     }
     [super viewWillAppear:animated];
 }
 
