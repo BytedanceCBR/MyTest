@@ -704,6 +704,11 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)sendVerifyCode:(NSString *)mobileNumber needPush:(BOOL)needPush isForBindMobile:(BOOL)isForBindMobile{
+    if (![self.mobileNumber isEqualToString:mobileNumber]) {
+        //不同手机号发送验证码，重置计时器
+        self.isRequestingSMS = NO;
+        [self stopTimer];
+    }
     self.mobileNumber = mobileNumber;
     [self sendVerifyCodeWithCaptcha:nil needPushVerifyCodeView:needPush isForBindMobile:isForBindMobile];
 }
