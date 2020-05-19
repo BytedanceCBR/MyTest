@@ -289,7 +289,6 @@
     
     [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
 
-//    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         if (success && [cellModel.belongsVC isKindOfClass:[FHHouseDetailViewController class]]) {
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *) cellModel.belongsVC;
             vc.isPhoneCallShow = YES;
