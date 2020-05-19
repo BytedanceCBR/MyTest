@@ -48,6 +48,40 @@
 }
 @end
 
+@implementation FHFloorPanDetailImageListModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"imageDictList": @"image_dict_list",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHFloorPanDetailImageListImageDictListModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"imageType": @"image_type",
+    @"imageList": @"image_list",
+    @"imageTypeName": @"image_type_name",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailFloorPanDetailInfoDataBaseInfoModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -77,13 +111,13 @@
     @"pricingPerSqm": @"pricing_per_sqm",
     @"districtName": @"district_name",
     @"courtId": @"court_id",
-    
     @"userStatus": @"user_status",
     @"highlightedRealtor": @"highlighted_realtor",
     @"chooseAgencyList": @"choose_agency_list",
     @"saleStatus": @"sale_status",
     @"highlightedRealtorAssociateInfo":@"highlighted_realtor_associate_info",
-    @"displayPrice": @"display_price"
+    @"displayPrice": @"display_price",
+    @"imageDictList": @"image_dict_list"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

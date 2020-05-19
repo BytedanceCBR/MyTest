@@ -236,17 +236,16 @@
         
         
         FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
-        FHDetailOldDataHouseImageDictListModel *houseImageDictList = [[FHDetailOldDataHouseImageDictListModel alloc] init];
-        
-        
+        FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
+        houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeNeighborhood;
         if ([model.data.neighborhoodImage isKindOfClass:[NSArray class]] && model.data.neighborhoodImage.count > 0) {
             houseImageDictList.houseImageList = model.data.neighborhoodImage;
             houseImageDictList.houseImageTypeName = @"图片";
-            if ([houseImageDictList isKindOfClass:[FHDetailOldDataHouseImageDictListModel class]]) {
+            if ([houseImageDictList isKindOfClass:[FHHouseDetailImageListDataModel class]]) {
                 headerCellModel.houseImageDictList = @[houseImageDictList];
             }
             if (!isInstant) {
-                FHDetailOldDataHouseImageDictListModel *imgModel = [headerCellModel.houseImageDictList firstObject];
+                FHHouseDetailImageListDataModel *imgModel = [headerCellModel.houseImageDictList firstObject];
                 imgModel.instantHouseImageList = [self instantHouseImages];
             }
         }

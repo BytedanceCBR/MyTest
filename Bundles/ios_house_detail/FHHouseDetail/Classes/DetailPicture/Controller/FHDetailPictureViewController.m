@@ -313,45 +313,44 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
     
     if (self.isShowAllBtns) {
-        _bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height - kFHDPBottomBarHeight, self.view.width, kFHDPBottomBarHeight)];
-        _bottomBar.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:_bottomBar];
-    }
-    
-    
-    if (self.mediaHeaderModel.contactViewModel) {
-        CGFloat itemWidth = self.view.width - 40;
-        BOOL showenOnline = self.mediaHeaderModel.contactViewModel.showenOnline;
-        if (showenOnline) {
-            itemWidth = (itemWidth - 15) / 2.0;
-            // 在线联系
-            UIButton *online = self.onlineBtn;
-            if (self.mediaHeaderModel.contactViewModel.onLineName.length > 0) {
-                NSString *title = self.mediaHeaderModel.contactViewModel.onLineName;
-                [online setTitle:title forState:UIControlStateNormal];
-                [online setTitle:title forState:UIControlStateHighlighted];
+        self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height - kFHDPBottomBarHeight, self.view.width, kFHDPBottomBarHeight)];
+        self.bottomBar.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:self.bottomBar];
+        
+        if (self.mediaHeaderModel.contactViewModel) {
+            CGFloat itemWidth = self.view.width - 40;
+            BOOL showenOnline = self.mediaHeaderModel.contactViewModel.showenOnline;
+            if (showenOnline) {
+                itemWidth = (itemWidth - 15) / 2.0;
+                // 在线联系
+                UIButton *online = self.onlineBtn;
+                if (self.mediaHeaderModel.contactViewModel.onLineName.length > 0) {
+                    NSString *title = self.mediaHeaderModel.contactViewModel.onLineName;
+                    [online setTitle:title forState:UIControlStateNormal];
+                    [online setTitle:title forState:UIControlStateHighlighted];
+                }
+                online.frame = CGRectMake(20, 0, itemWidth, 44);
+                [self.bottomBar addSubview:online];
+                // 电话咨询
+                UIButton *contact = self.contactBtn;
+                if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
+                    NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
+                    [contact setTitle:title forState:UIControlStateNormal];
+                    [contact setTitle:title forState:UIControlStateHighlighted];
+                }
+                contact.frame = CGRectMake(20 + itemWidth + 10, 0, itemWidth, 44);
+                [self.bottomBar addSubview:contact];
+            } else {
+                // 电话咨询
+                UIButton *contact = self.contactBtn;
+                if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
+                    NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
+                    [contact setTitle:title forState:UIControlStateNormal];
+                    [contact setTitle:title forState:UIControlStateHighlighted];
+                }
+                contact.frame = CGRectMake(20, 0, itemWidth, 44);
+                [self.bottomBar addSubview:contact];
             }
-            online.frame = CGRectMake(20, 0, itemWidth, 44);
-            [self.bottomBar addSubview:online];
-            // 电话咨询
-            UIButton *contact = self.contactBtn;
-            if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
-                NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
-                [contact setTitle:title forState:UIControlStateNormal];
-                [contact setTitle:title forState:UIControlStateHighlighted];
-            }
-            contact.frame = CGRectMake(20 + itemWidth + 10, 0, itemWidth, 44);
-            [self.bottomBar addSubview:contact];
-        } else {
-            // 电话咨询
-            UIButton *contact = self.contactBtn;
-            if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
-                NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
-                [contact setTitle:title forState:UIControlStateNormal];
-                [contact setTitle:title forState:UIControlStateHighlighted];
-            }
-            contact.frame = CGRectMake(20, 0, itemWidth, 44);
-            [self.bottomBar addSubview:contact];
         }
     }
     
@@ -670,7 +669,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         NSMutableArray *titles = [NSMutableArray new];
         NSMutableArray *numbers = [NSMutableArray new];
         __block BOOL isFirstItem = YES;
-        for (FHDetailOldDataHouseImageDictListModel *listModel in mediaHeaderModel.houseImageDictList) {
+        for (FHHouseDetailImageListDataModel *listModel in mediaHeaderModel.houseImageDictList) {
             if (listModel.houseImageTypeName.length > 0) {
                 NSInteger tempCount = 0;
                 for (FHImageModel *imageModel in listModel.houseImageList) {
