@@ -74,6 +74,10 @@ NS_ASSUME_NONNULL_BEGIN
 /** 是否显示底部bottombar以及按钮，默认YES */
 @property (nonatomic, assign)BOOL isShowBottomBar;
 
+//099户型详情 查看大图新增 title & 售卖 状态字段
+@property (nonatomic, copy) NSString *bottomBarTitle;
+@property (nonatomic, copy) NSString *saleStatus;
+
 // Extended by lizhuoli to support drag down and drag up to close
 
 /** 是否禁止上拉和下拉关闭，默认NO */

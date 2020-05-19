@@ -172,6 +172,9 @@
     }
     FHDetailHouseTitleModel *houseTitleModel = [[FHDetailHouseTitleModel alloc] init];
     houseTitleModel.titleStr = model.data.title;
+    houseTitleModel.squaremeter = model.data.squaremeter;
+    houseTitleModel.facingDirection = model.data.facingDirection;
+    houseTitleModel.saleStatus = model.data.saleStatus.content;
     if (model.data.saleStatus) {
         FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
         tag.backgroundColor = model.data.saleStatus.backgroundColor;
