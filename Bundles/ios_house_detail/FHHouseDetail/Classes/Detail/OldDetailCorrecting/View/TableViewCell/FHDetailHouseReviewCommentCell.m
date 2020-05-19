@@ -139,7 +139,7 @@
             _foldButton = nil;
         }
 //        _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部" upText:@"收起" isFold:YES];
-        _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部房评" upText:@"收起" isFold:YES];
+        _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看更多房评" upText:@"收起" isFold:YES];
         _foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
         _foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];
         _foldButton.keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
