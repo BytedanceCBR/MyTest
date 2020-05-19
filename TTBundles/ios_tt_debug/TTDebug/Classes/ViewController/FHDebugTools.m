@@ -21,8 +21,13 @@
     
     //设置过滤条件，一些系统的误报在这里添加过滤白名单，by xsm
     NSDictionary *filters = @{
-        @"TTAlphaThemedButton":@[@"__associated_object"],
-        @"SSThemedButton":@[@"__associated_object"],
+        @"TTAlphaThemedButton" : @[@"__associated_object"],
+        @"SSThemedButton" : @[@"__associated_object"],
+        @"UIModernBarButton" : @[@"__associated_object"],
+        @"SSDebugViewController" : @[@"_navigationItem", @"_navigationController", @"ttNavigationBar"],
+        @"UIButtonBarStackView" : @[@"_subviewCache", @"_alignmentArrangement" , @"_mutableLayoutArrangements" , @"_distributionArrangement"],
+        @"UIButtonBarButton" : @[@"_subviewCache"],
+        @"TTNavigationBar" : @[@"_viewController", @"_subviews"],
     };
     
 //    {
