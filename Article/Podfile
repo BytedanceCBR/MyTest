@@ -376,7 +376,7 @@ def appPods
     pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod_binary 'TTImage', '0.8.4'
-    pod_binary 'BDWebImage', '1.0.20',:subspecs => [
+    pod_binary 'BDWebImage', '1.0.21',:subspecs => [
     'Core',
     'Decoder',
     'Download',
@@ -386,6 +386,8 @@ def appPods
     'SDAdapter',
     'Monitor'
     ]
+    pod_binary 'MMKV', '1.0.23'
+
     pod_binary 'FLAnimatedImage' , '1.0.12'
     #-----头条交互式退出手势----
     pod_binary 'TTImagePreviewAnimateManager', '1.0.13'
