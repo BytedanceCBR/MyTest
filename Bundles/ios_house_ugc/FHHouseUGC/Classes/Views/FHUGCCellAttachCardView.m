@@ -73,7 +73,7 @@
     [self addSubview:_spLine];
     
     self.button = [[UIButton alloc] init];
-    [_button setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [_button setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     _button.titleLabel.font = [UIFont themeFontRegular:14];
     [_button setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_button setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
@@ -160,6 +160,7 @@
     if(cellModel.attachCardInfo.extra && cellModel.attachCardInfo.extra.event.length > 0){
         //是房源卡片
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
         dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
         dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
         dict[@"group_id"] = cellModel.attachCardInfo.extra.groupId ?: @"be_null";
@@ -170,6 +171,7 @@
         TRACK_EVENT(cellModel.attachCardInfo.extra.event ?: @"card_show", dict);
     }else{
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
         dict[@"page_type"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
         dict[@"enter_from"] = self.cellModel.tracerDic[@"enter_from"] ?: @"be_null";
         dict[@"from_gid"] = cellModel.groupId;
@@ -268,6 +270,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     
     NSMutableDictionary *traceParam = [NSMutableDictionary new];
+    traceParam[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
     traceParam[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
     traceParam[@"log_pb"] = self.cellModel.tracerDic[@"log_pb"] ?: @"be_null";
     traceParam[@"card_type"] = @"left_pic";
@@ -287,6 +290,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点
     NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
     traceParam[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";
     traceParam[@"element_from"] = [self elementFrom];
     traceParam[@"enter_type"] = @"click";

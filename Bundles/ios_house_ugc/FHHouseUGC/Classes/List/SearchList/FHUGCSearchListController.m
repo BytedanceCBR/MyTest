@@ -309,6 +309,7 @@
         tracerDic[@"card_type"] = @"left_pic";
         tracerDic[@"page_type"] = @"community_search";
         tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+        tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
         tracerDic[@"rank"] = @(row);
         tracerDic[@"click_position"] = @"join_like";
         tracerDic[@"log_pb"] = data.logPb ?: @"be_null";
@@ -413,15 +414,17 @@
     if (self.items.count > 0) {
         FHUGCScialGroupDataModel *item = self.items[0];
         logPb = item.logPb;
+        NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+        tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+        tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
+        tracerDic[@"community_list"] = wordListStr ?: @"be_null";
+        tracerDic[@"associate_cnt"] = @(self.associatedCount);
+        tracerDic[@"associate_type"] = @"community_group";
+        tracerDic[@"community_cnt"] = @(wordList.count);
+        tracerDic[@"element_type"] = self.tracerDict[@"element_type"] ?: @"be_null";
+        tracerDic[@"log_pb"] = logPb;
+        [FHUserTracker writeEvent:@"associate_community_show" params:tracerDic];
     }
-    NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
-    tracerDic[@"community_list"] = wordListStr ?: @"be_null";
-    tracerDic[@"associate_cnt"] = @(self.associatedCount);
-    tracerDic[@"associate_type"] = @"community_group";
-    tracerDic[@"community_cnt"] = @(wordList.count);
-    tracerDic[@"element_type"] = self.tracerDict[@"element_type"] ?: @"be_null";
-    tracerDic[@"log_pb"] = logPb;
-    [FHUserTracker writeEvent:@"associate_community_show" params:tracerDic];
 }
 
 - (void)addCommunityClickLog:(FHUGCScialGroupDataModel *)model rank:(NSInteger)rank  {
@@ -447,6 +450,8 @@
     }
 
     NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+    tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+    tracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";
     tracerDic[@"community_list"] = wordListStr ?: @"be_null";
     tracerDic[@"associate_cnt"] = @(self.associatedCount);
     tracerDic[@"associate_type"] = @"community_group";

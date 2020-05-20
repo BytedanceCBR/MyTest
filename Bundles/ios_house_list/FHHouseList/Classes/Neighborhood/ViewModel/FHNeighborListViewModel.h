@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)requestRentRelatedHouseSearch:(NSString *)neighborhoodId houseId:(NSString *)houseId offset:(NSInteger)offset;
 
+- (void)requestOldRecommendCourt:(NSString *)houseId offset:(NSInteger)offset;
+
 -(void)addCategoryRefreshLog;
 -(void)addStayCategoryLog;
 
