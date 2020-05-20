@@ -18,6 +18,7 @@
 #import "FHMultiMediaVRImageCell.h"
 #import "FHDeatilHeaderTitleView.h"
 #import "UIViewAdditions.h"
+#import "FHHouseDetailHeaderMoreStateView.h"
 
 #define k_VIDEOCELLID @"video_cell_id"
 #define k_IMAGECELLID @"image_cell_id"
@@ -31,7 +32,6 @@
 @property(nonatomic, strong) UIImage *placeHolder;
 @property(nonatomic, strong) NSArray *medias;
 @property(nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;   //图片户型的标签
-
 @property(nonatomic, strong) FHDeatilHeaderTitleView *titleView;            //头图下面的标题栏
 @property(nonatomic, strong) NSMutableArray *itemIndexArray;
 @property(nonatomic, strong) NSMutableArray *itemArray;
@@ -41,6 +41,7 @@
 @property(nonatomic, assign) CGFloat beginX;
 @property(nonatomic, strong) UIView *bottomBannerView;
 @property(nonatomic, strong) UIView *bottomGradientView;
+@property (nonatomic, strong) FHHouseDetailHeaderMoreStateView *headerMoreStateView;
 @end
 
 @implementation FHMultiMediaCorrectingScrollView
@@ -373,10 +374,28 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self updateItemAndInfoLabel];
+    //新房详情新增查看更多样式
+    if (self.isShowTopImageTab) {
+        //调用更多样式state变化
+        if (scrollView.contentOffset.x >= 52) {
+            self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateRelease;
+        } else {
+            self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateBegin;
+        }
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [self updateVideoState];
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    //房源详情 左滑 超过 52px，松手，进入图片列表页
+    if (self.isShowTopImageTab) {
+        if (scrollView.contentOffset.x >= 52) {
+            NSLog(@"push picture list");
+        }
+    }
 }
 
 - (void)updateItemAndInfoLabel {
@@ -478,6 +497,19 @@
 
 - (void)updateModel:(FHMultiMediaModel *)model withTitleModel:(FHDetailHouseTitleModel *)titleModel{
     self.medias = model.medias;
+    //如果新房详情 并且 isShowTopImageTab = true 取第一张图
+    self.colletionView.alwaysBounceHorizontal = NO;
+    if (titleModel.housetype == FHHouseTypeNewHouse && self.isShowTopImageTab) {
+        self.colletionView.alwaysBounceHorizontal = YES;
+        self.medias = @[model.medias.firstObject];
+        if (!self.headerMoreStateView) {
+            self.headerMoreStateView = [[FHHouseDetailHeaderMoreStateView alloc] init];
+            self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateBegin;
+            [self.colletionView addSubview:self.headerMoreStateView];
+            self.headerMoreStateView.frame = CGRectMake(CGRectGetMaxX(self.colletionView.frame), 0, 52, CGRectGetHeight(self.colletionView.frame));
+        }
+//        self.colletionView
+    }
     [self.colletionView reloadData];
     
 //    BOOL isShowBottomBannerView = model.isShowSkyEyeLogo;

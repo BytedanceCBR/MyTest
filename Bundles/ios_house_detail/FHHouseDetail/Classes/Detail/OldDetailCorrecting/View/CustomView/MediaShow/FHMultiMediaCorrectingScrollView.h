@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) id<FHMultiMediaCorrectingScrollViewDelegate> delegate;
 @property(nonatomic, strong) NSDictionary *tracerDic;
 @property (nonatomic, weak) FHHouseDetailBaseViewModel *baseViewModel;
+@property (nonatomic, assign) BOOL isShowTopImageTab; //新房详情 展示新UI
 
 - (void)updateModel:(FHMultiMediaModel *)model withTitleModel:(FHDetailHouseTitleModel *)titleModel;
 

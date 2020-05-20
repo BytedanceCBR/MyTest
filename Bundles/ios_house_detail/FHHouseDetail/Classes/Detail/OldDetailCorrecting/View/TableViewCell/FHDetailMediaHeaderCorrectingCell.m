@@ -82,6 +82,7 @@
     [self.imageList removeAllObjects];
     self.currentData = data;
     [self generateModel];
+    self.mediaView.isShowTopImageTab = [(FHDetailMediaHeaderCorrectingModel *)self.currentData isShowTopImageTab];
     [self.mediaView updateModel:self.model withTitleModel: ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel];
     self.mediaView.baseViewModel = self.baseViewModel;
     //有视频才传入埋点
