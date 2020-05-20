@@ -12,7 +12,7 @@
 @interface FHFloorPanCorePermitCell()<TTPhotoScrollViewControllerDelegate>
 
 @property (nonatomic , strong) UIView *containerView;
-@property (nonatomic , strong) NSMutableDictionary *images;
+@property (nonatomic , strong) NSMutableArray *imageList;
 
 @end
 
@@ -22,7 +22,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.images = [NSMutableDictionary new];
+        self.imageList = [NSMutableArray new];
         [self.contentView addSubview:self.containerView];
         [self initConstraints];
     }
@@ -53,6 +53,7 @@
 {
     if ([data isKindOfClass:[FHFloorPanCorePermitCellModel class]]) {
         CGFloat diff = 11.0 / 6;    //根据系统默认行高重新计算布局
+        NSInteger imageIndex = 0;
         FHFloorPanCorePermitCellModel *model = (FHFloorPanCorePermitCellModel *)data;
         UIView *previouseView = nil;
         
@@ -74,7 +75,6 @@
                 make.top.mas_equalTo(0);
             }];
             UILabel *valueLabel = [UILabel new];
-            valueLabel.tag = i / 3;
             valueLabel.numberOfLines = 0;
             valueLabel.font = [UIFont themeFontMedium:14];
             valueLabel.textColor = [UIColor themeGray2];
@@ -88,16 +88,17 @@
                 make.bottom.equalTo(itemContenView);
             }];
             
-            if (i % 3 == 0) {
-                [self.images setValue:@"https://p3.pstatp.com/origin/aadd0005a7015a9f529c" forKey:[NSString stringWithFormat:@"%d", i / 3]];
+            if (i % 3 == 0 && itemModel.image.url.length > 0) {
+                valueLabel.tag = imageIndex;
+                imageIndex++;
+                [self.imageList addObject:itemModel.image];
                 valueLabel.textColor = [UIColor colorWithHexStr:@"ff9629"];
-                  valueLabel.userInteractionEnabled = YES;
-                  [valueLabel addGestureRecognizer:({
+                valueLabel.userInteractionEnabled = YES;
+                [valueLabel addGestureRecognizer:({
                       UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click:)];
                       gesture;
-                  })];
-              }
-            
+                })];
+            }
             [self.contentView addSubview:itemContenView];
             
             [itemContenView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -136,42 +137,45 @@
 
 - (void)click:(UITapGestureRecognizer *)gesture {
     __weak typeof(self) weakSelf = self;
-    NSString *url = _images[[NSString stringWithFormat:@"%ld", (long)gesture.view.tag]];
     TTPhotoScrollViewController *vc = [[TTPhotoScrollViewController alloc] init];
     vc.dragToCloseDisabled = YES;
     vc.mode = PhotosScrollViewSupportDownloadMode;
-    vc.startWithIndex = 0;
-    vc.isShowAlbumAndCloseButton = TRUE;
+    vc.startWithIndex = gesture.view.tag;
     
-    NSMutableDictionary *dict = [NSMutableDictionary new];
-    dict[@"url"] = url;
-    NSMutableArray *dictUrlList = [[NSMutableArray alloc] initWithCapacity:1];
-    [dictUrlList addObject:@{@"url":url}];
-    dict[@"url_list"] = dictUrlList;
-    
-    TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithDictionary:dict];
-    model.imageType = TTImageTypeLarge;
-    NSMutableArray *models = [NSMutableArray arrayWithCapacity:1];
-    [models addObject:model];
+    NSMutableArray *models = [NSMutableArray arrayWithCapacity:_imageList.count];
+    for (FHDetailNewCoreDetailDataPermitListImageModel *image in _imageList) {
+        NSMutableDictionary *dict = [NSMutableDictionary new];
+        [dict setValue:image.uri forKey:kTTImageURIKey];
+        [dict setValue:image.url forKey:TTImageInfosModelURL];
+        [dict setValue:image.width forKey:kTTImageWidthKey];
+        [dict setValue:image.height forKey:kTTImageHeightKey];
+        NSMutableArray *urlList = [[NSMutableArray alloc] initWithCapacity:image.urlList.count];
+        for (NSString *url in image.urlList) {
+            if (!isEmptyString(url)) {
+                [urlList addObject:@{TTImageInfosModelURL : url}];
+            }
+        }
+        [dict setValue:urlList forKey:kTTImageURLListKey];
+        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithDictionary:dict];
+        model.imageType = TTImageTypeLarge;
+        [models addObject:model];
+    }
     vc.imageInfosModels = models;
-    
+    [vc setStartWithIndex:gesture.view.tag];
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
-    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
-    CGRect frame = [self convertRect:self.bounds toView:window];
-    NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:1];
-    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:1];
-    [placeholders addObject:placeholder];
-    NSValue *frameValue = [NSValue valueWithCGRect:frame];
-    [frames addObject:frameValue];
-    vc.placeholderSourceViewFrames = frames;
+    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:_imageList.count];
+    for (NSInteger i = 0 ; i < _imageList.count; i++) {
+        [placeholders addObject:placeholder];
+    }
     vc.placeholders = placeholders;
+    [vc presentPhotoScrollView];
     
 }
 
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    [self.images removeAllObjects];
+    [self.imageList removeAllObjects];
     for (UIView *view in self.contentView.subviews) {
         [view removeFromSuperview];
     }
