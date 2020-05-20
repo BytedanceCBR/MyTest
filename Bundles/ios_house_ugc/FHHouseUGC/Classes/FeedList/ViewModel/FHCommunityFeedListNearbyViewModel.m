@@ -269,8 +269,7 @@
                 [wself.viewController.emptyView hideEmptyView];
                 [wself insertGuideCell];
             }else{
-                [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-                wself.viewController.showenRetryButton = NO;
+                [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
                 wself.refreshFooter.hidden = YES;
             }
             [wself.tableView reloadData];
