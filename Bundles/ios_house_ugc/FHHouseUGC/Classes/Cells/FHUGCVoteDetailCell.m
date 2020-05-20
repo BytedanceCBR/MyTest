@@ -248,6 +248,7 @@
             @"origin_from":originFrom,
             @"enter_from":enter_from,
             @"enter_type":@"click",
+            @"group_id":cellModel.groupId ?: @"be_null",
             @"log_pb":log_pb ?: @"be_null"
         };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];

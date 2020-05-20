@@ -23,8 +23,11 @@
 #import "FHUGCHotCommunityCell.h"
 #import "FHNeighbourhoodQuestionCell.h"
 #import "FHNeighbourhoodCommentCell.h"
+#import "FHUGCLynxBannerCell.h"
+#import "FHLynxManager.h"
 #import "FHUGCRecommendCircleCell.h"
 #import "FHUGCEncyclopediasCell.h"
+#import "FHUGCLynxCommonCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -51,6 +54,7 @@
                                 @"FHArticleSingleImageCell",
                                 @"FHArticleMultiImageCell",
                                 @"FHUGCRecommendCell",
+                                @"FHUGCLynxBannerCell",
                                 @"FHUGCBannerCell",
                                 @"FHUGCHotTopicCell",
                                 @"FHUGCVoteCell",
@@ -62,6 +66,7 @@
                                 @"FHNeighbourhoodCommentCell",
                                 @"FHUGCRecommendCircleCell",
                                 @"FHUGCEncyclopediasCell",
+                                @"FHUGCLynxCommonCell",
                                 //可扩展
                                  ];
 }
@@ -98,7 +103,7 @@
             return [FHUGCRecommendCell class];
 
         case FHUGCFeedListCellSubTypeUGCBanner:
-            return [FHUGCBannerCell class];
+            return [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName]] ? [FHUGCLynxBannerCell class] : [FHUGCBannerCell class];
             
         case FHUGCFeedListCellSubTypeUGCHotTopic:
             return [FHUGCHotTopicCell class];
@@ -130,9 +135,14 @@
         case FHUGCFeedListCellSubTypeUGCEncyclopedias:
             return [FHUGCEncyclopediasCell class];
             
+        case FHUGCFeedListCellSubTypeUGCLynx:
+            
+            return [FHUGCLynxCommonCell class];
         default:
             break;
     }
+    
+    
     
     return [FHUGCPureTitleCell class];
 }

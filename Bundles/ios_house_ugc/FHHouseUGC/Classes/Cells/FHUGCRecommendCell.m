@@ -394,6 +394,7 @@
             @"origin_from":@"originFrom",
             @"enter_from":@"like_neighborhood",
             @"enter_type":@"click",
+            @"group_id":self.model.groupId ?: @"be_null",
             @"rank":@(indexPath.row),
             @"log_pb":model.logPb ?: @"be_null"
         };

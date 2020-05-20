@@ -470,6 +470,7 @@ static bool isTTCommentPublishing = NO;
         }
     }
     
+    [paramsDict setValue:@"update_detail" forKey:@"page_type"];
 //    if (self.enterFrom.length > 0) {
 //        [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName] enterFrom:[self enterFrom]]  forKey:@"enter_from"];
 //    }

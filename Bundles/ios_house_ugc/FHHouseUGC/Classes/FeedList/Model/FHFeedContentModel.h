@@ -702,6 +702,8 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 //分割线设置
 @property (assign, nonatomic) BOOL hidelLine;
 
+@property (nonatomic, strong, nullable) NSDictionary *lynxData;
+
 @end
 
 @interface FHFeedContentVideoDetailInfoModel : JSONModel

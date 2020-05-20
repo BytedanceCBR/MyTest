@@ -263,7 +263,6 @@
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    [self trackClientShow];
     return @"neighborhood_comment";
 }
 
@@ -408,26 +407,6 @@
 
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
-}
-
-- (void)trackClientShow {
-    FHDetailCommentsCellModel *cellModel = (FHDetailCommentsCellModel *)self.currentData;
-    for (NSInteger i = 0; i < self.dataList.count; i++) {
-        FHFeedUGCCellModel *cm = self.dataList[i];
-        NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-        tracerDict[UT_ORIGIN_FROM] = cellModel.tracerDict[@"origin_from"] ?: @"be_null";
-        tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"enter_from"] ?: @"be_null";
-        tracerDict[UT_PAGE_TYPE] = cellModel.tracerDict[@"page_type"] ?: @"be_null";
-        tracerDict[UT_RANK] = @(i);
-        tracerDict[UT_GROUP_ID] = cm.groupId;
-        tracerDict[@"impr_id"] = cellModel.tracerDict[@"log_pb"][@"impr_id"] ?: @"be_null";
-        if(cellModel.houseId){
-            tracerDict[@"from_gid"] = cellModel.houseId;
-        }else if(cellModel.neighborhoodId){
-            tracerDict[@"from_gid"] = cellModel.neighborhoodId;
-        }
-        TRACK_EVENT(@"feed_client_show", tracerDict);
-    }
 }
 
 @end

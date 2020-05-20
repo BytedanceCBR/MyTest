@@ -135,7 +135,7 @@
         if([model.socialGroupId isEqualToString:@"-1"]){
             NSMutableDictionary *dict = @{}.mutableCopy;
             dict[@"action_type"] = @(FHCommunityListTypeFollow);
-            dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdFollow);
+            dict[@"select_district_tab"] = @(FHUGCCommunityDistrictTabIdRecommend);
             NSMutableDictionary *traceParam = @{}.mutableCopy;
             traceParam[@"enter_type"] = @"click";
             traceParam[@"enter_from"] = self.cellModel.tracerDic[@"page_type"] ?: @"be_null";

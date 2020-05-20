@@ -100,6 +100,8 @@
 #import "BDTFPSBar.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "IMManager.h"
+#import "FHLynxScanVC.h"
+#import "FHLynxDebugVC.h"
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
@@ -182,6 +184,10 @@ extern NSString *const BOE_OPEN_KEY ;
         rnBridgeDebugItem.switchStyle = NO;
         [itemArray addObject:rnBridgeDebugItem];
         
+        STTableViewCellItem *lynxDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Lynx_Debug" target:self action:@selector(_openLynxBridge)];
+               lynxDebugItem.switchStyle = NO;
+        [itemArray addObject:lynxDebugItem];
+        
         STTableViewCellItem *ssoDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"SSO重新验证测试" target:self action:@selector(_ssoDebugClick)];
         ssoDebugItem.switchStyle = NO;
         [itemArray addObject:ssoDebugItem];
@@ -248,8 +254,8 @@ extern NSString *const BOE_OPEN_KEY ;
             [itemArray addObject:item_Inhouse_clearDid];
         }
 
-        STTableViewCellItem *item_001 = [[STTableViewCellItem alloc] initWithTitle:@"Settings调试选项" target:self action:@selector(_openSettingsBrowserVC)];
-        [itemArray addObject:item_001];
+//        STTableViewCellItem *item_001 = [[STTableViewCellItem alloc] initWithTitle:@"Settings调试选项" target:self action:@selector(_openSettingsBrowserVC)];
+//        [itemArray addObject:item_001];
         
         STTableViewCellItem *item_002 = [[STTableViewCellItem alloc] initWithTitle:@"客户端ABTest试验详情" target:self action:@selector(_openClientABTestVC)];
         
@@ -794,8 +800,10 @@ extern NSString *const BOE_OPEN_KEY ;
     
     self.dataSource = [self _constructDataSource];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(_cancelActionFired:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfLeft withTitle:@"关闭" target:self action:@selector(_cancelActionFired:)]];
+    
     [self _reloadRightBarItem];
+    
     self.tableView.tableHeaderView = self.tableViewHeaderView;
 
 }
@@ -837,7 +845,7 @@ extern NSString *const BOE_OPEN_KEY ;
 
 - (void)_reloadRightBarItem {
     if ([TTLogServer logEnable]) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设备信息" style:UIBarButtonItemStylePlain target:self action:@selector(_sendDeviceActionFired:)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:@"设备信息" target:self action:@selector(_sendDeviceActionFired:)]];
     }
 }
 
@@ -913,6 +921,12 @@ extern NSString *const BOE_OPEN_KEY ;
     self.ttRNKit.delegate = self;
     FHRNDebugViewController *vc = [[FHRNDebugViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)_openLynxBridge
+{
+    FHLynxScanVC* scanVC = [FHLynxScanVC new];
+    [self.navigationController pushViewController:scanVC animated:YES];
 }
 
 - (void)_ugcDebugTest:(UISwitch *)uiswitch {

@@ -512,7 +512,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        
         NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
+        if (cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCLynx && cellModel.lynxData[@"channel_name"]) {
+            [tableView registerClass:NSClassFromString(cellIdentifier) forCellReuseIdentifier:cellModel.lynxData[@"channel_name"]];
+            cellIdentifier = cellModel.lynxData[@"channel_name"];
+        }
+        
         FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         
         if (cell == nil) {
@@ -522,6 +528,7 @@
         }
         
         cell.delegate = self;
+        cellModel.cell = cell;
         cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
         
         if(indexPath.row < self.dataList.count){
