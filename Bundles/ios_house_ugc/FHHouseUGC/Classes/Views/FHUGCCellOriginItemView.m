@@ -86,7 +86,6 @@
         }
         
         self.cellModel = cellModel;
-        [FHUGCCellHelper setOriginRichContent:self.contentLabel model:cellModel numberOfLines:2];
         if(cellModel.originItemModel.imageModel){
             [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.originItemModel.imageModel.url] placeholder:nil];
             _iconView.hidden = NO;
@@ -97,12 +96,12 @@
             self.contentLabel.centerY = self.height/2;
         }else{
             _iconView.hidden = YES;
-            
             self.contentLabel.left = 10;
             self.contentLabel.width = self.width - 20;
-            self.contentLabel.height = 80;
-            self.contentLabel.centerY = self.height/2;
+            self.contentLabel.height = cellModel.originItemHeight;
+            self.contentLabel.top = 0;
         }
+        [FHUGCCellHelper setOriginRichContent:self.contentLabel model:cellModel numberOfLines:2];
     }
 }
 
