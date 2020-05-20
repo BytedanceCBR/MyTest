@@ -23,11 +23,6 @@
     NSDictionary *filters = @{
         @"TTAlphaThemedButton" : @[@"__associated_object"],
         @"SSThemedButton" : @[@"__associated_object"],
-//        @"UIModernBarButton" : @[@"__associated_object"],
-//        @"SSDebugViewController" : @[@"_navigationItem", @"_ttNavigationBar", @"_view" ,@"_navigationController"],
-//        @"UIButtonBarStackView" : @[@"_subviewCache", @"_alignmentArrangement" , @"_mutableLayoutArrangements" , @"_distributionArrangement"],
-//        @"UIButtonBarButton" : @[@"_subviewCache"],
-//        @"TTNavigationBar" : @[@"_viewController", @"_subviews", @"item"],
     };
 
 //    {
