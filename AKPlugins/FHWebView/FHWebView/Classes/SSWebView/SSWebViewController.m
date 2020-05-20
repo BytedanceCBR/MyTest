@@ -606,21 +606,12 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     if (!_geckoEnable) {
         IESFalconManager.interceptionWKHttpScheme = NO;
         IESFalconManager.interceptionEnable = NO;
-        
-        NSString *pattern = @"^(http|https)://.*.(pstatp.com/toutiao|haoduofangs.com/f101/client|99hdf.com/f101/client)";
-//        [IESFalconManager registerPattern:pattern forGurdAccessKey:[FHIESGeckoManager getGeckoKey]];
-        [IESFalconManager registerPattern:pattern forGeckoAccessKey:[FHIESGeckoManager getGeckoKey]];
+
     }else
     {
-        if (!IESFalconManager.interceptionWKHttpScheme) {
-            if (IESFalconManager.interceptionWKHttpScheme != [SSCommonLogic configSwitchFWebOffline]) {
-                    IESFalconManager.interceptionWKHttpScheme = [SSCommonLogic configSwitchFWebOffline];
-                    IESFalconManager.interceptionEnable = [SSCommonLogic configSwitchFWebOffline];
-                        
-                    NSString *pattern = @"^(http|https)://.*.(pstatp.com/toutiao|haoduofangs.com/f101/client|99hdf.com/f101/client)";
-                //        [IESFalconManager registerPattern:pattern forGurdAccessKey:[FHIESGeckoManager getGeckoKey]];
-                    [IESFalconManager registerPattern:pattern forGeckoAccessKey:[FHIESGeckoManager getGeckoKey]];
-            }
+        if (IESFalconManager.interceptionWKHttpScheme != [SSCommonLogic configSwitchFWebOffline]) {
+                IESFalconManager.interceptionWKHttpScheme = [SSCommonLogic configSwitchFWebOffline];
+                IESFalconManager.interceptionEnable = [SSCommonLogic configSwitchFWebOffline];
         }
     }
 }
