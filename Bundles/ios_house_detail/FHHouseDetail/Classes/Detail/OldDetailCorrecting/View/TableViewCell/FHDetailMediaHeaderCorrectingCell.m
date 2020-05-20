@@ -404,6 +404,20 @@
     if (vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {// || model.titleDataModel.isFloorPan
         pictureDetailViewController.isShowBottomBar = NO;
     }
+    if (model.titleDataModel.isFloorPan && model.titleDataModel.titleStr.length) {
+        NSMutableString *bottomBarTitle = model.titleDataModel.titleStr.mutableCopy;
+        if (model.titleDataModel.squaremeter.length) {
+            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.squaremeter];
+        }
+        if (model.titleDataModel.facingDirection.length) {
+            [bottomBarTitle appendFormat:@" %@",model.titleDataModel.facingDirection];
+        }
+        pictureDetailViewController.bottomBarTitle = bottomBarTitle.copy;
+        
+        if (model.titleDataModel.saleStatus.length && [model.titleDataModel.saleStatus isEqualToString:@"在售"]) {
+            pictureDetailViewController.saleStatus = model.titleDataModel.saleStatus;
+        }
+    }
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
     CGRect frame = [self convertRect:self.bounds toView:window];

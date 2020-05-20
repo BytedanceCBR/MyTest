@@ -105,6 +105,7 @@
     @"areaId": @"area_id",
     @"baseInfo": @"base_info",
     @"logPb": @"log_pb",
+    @"facingDirection": @"facing_direction",
     @"saleStatus": @"sale_status",
     @"areaName": @"area_name",
     @"districtId": @"district_id",

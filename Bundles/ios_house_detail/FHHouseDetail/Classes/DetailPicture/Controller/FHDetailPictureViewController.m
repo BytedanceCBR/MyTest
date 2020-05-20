@@ -340,15 +340,44 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [self.view addSubview:self.bottomBar];
         [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.bottom.right.mas_equalTo(0);
-            make.height.mas_equalTo(60 + bottomInset);
+            make.height.mas_equalTo(120 + bottomInset);
         }];
         
         UIImageView *bottomBgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"picture_detail_bottombar_bg"]];
         bottomBgImageView.frame = self.topBar.bounds;
-        [self.topBar addSubview:bottomBgImageView];
+        [self.bottomBar addSubview:bottomBgImageView];
         [bottomBgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(UIEdgeInsetsZero);
         }];
+        
+        if (self.bottomBarTitle.length) {
+            UILabel *bottomTitleLabel = [[UILabel alloc] init];
+            bottomTitleLabel.text = self.bottomBarTitle;
+            bottomTitleLabel.font = [UIFont themeFontSemibold:20];
+            bottomTitleLabel.textColor = [UIColor whiteColor];
+            [self.bottomBar addSubview:bottomTitleLabel];
+            [bottomTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(20);
+                make.height.mas_equalTo(60);
+                make.top.mas_equalTo(0);
+            }];
+            if (self.saleStatus.length) {
+                UILabel *saleStatusLabel = [[UILabel alloc] init];
+                saleStatusLabel.text = self.saleStatus;
+                saleStatusLabel.textAlignment = NSTextAlignmentCenter;
+                saleStatusLabel.textColor = [UIColor colorWithHexStr:@"#ff9300"];
+                saleStatusLabel.font = [UIFont themeFontMedium:12];
+                saleStatusLabel.layer.cornerRadius = 10;
+                saleStatusLabel.layer.masksToBounds = YES;
+                saleStatusLabel.backgroundColor = [UIColor colorWithRed:255/255.0 green:234/255.0 blue:211/255.0 alpha:0.2];
+                [self.bottomBar addSubview:saleStatusLabel];
+                [saleStatusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.centerY.mas_equalTo(bottomTitleLabel.mas_centerY);
+                    make.size.mas_equalTo(CGSizeMake(40, 20));
+                    make.left.mas_equalTo(bottomTitleLabel.mas_right).mas_offset(8);
+                }];
+            }
+        }
         
         if (self.mediaHeaderModel.contactViewModel) {
             CGFloat itemWidth = self.view.width - 30;
@@ -365,7 +394,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 [self.bottomBar addSubview:self.onlineBtn];
                 [self.onlineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(15);
-                    make.top.mas_equalTo(30);
+                    make.top.mas_equalTo(60);
                     make.width.mas_equalTo(itemWidth);
                     make.height.mas_equalTo(44);
                 }];
@@ -394,7 +423,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                 [self.bottomBar addSubview:self.contactBtn];
                 [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(15);
-                    make.top.mas_equalTo(30);
+                    make.top.mas_equalTo(60);
                     make.width.mas_equalTo(itemWidth);
                     make.height.mas_equalTo(44);
                 }];
@@ -557,7 +586,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _onlineBtn = [[UIButton alloc] init];
         _onlineBtn.layer.cornerRadius = 22;
         _onlineBtn.layer.borderColor = [UIColor colorWithWhite:1.0 alpha:0.3].CGColor;
-        _onlineBtn.layer.borderWidth = 1.0/UIScreen.mainScreen.scale;
+        _onlineBtn.layer.borderWidth = 1.0;///UIScreen.mainScreen.scale;
         _onlineBtn.titleLabel.font = [UIFont themeFontRegular:16];
         _onlineBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
         [_onlineBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -573,7 +602,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _contactBtn = [[FHLoadingButton alloc]init];
         _contactBtn.layer.cornerRadius = 22;
         _contactBtn.layer.borderColor = [UIColor colorWithWhite:1.0 alpha:0.3].CGColor;
-        _contactBtn.layer.borderWidth = 1.0/UIScreen.mainScreen.scale;
+        _contactBtn.layer.borderWidth = 1.0;///UIScreen.mainScreen.scale;
         _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
         _contactBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
         [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -608,7 +637,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }];
 
     [self.bottomBar mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(60 + bottomInset);
+        make.height.mas_equalTo(120 + bottomInset);
     }];
 }
 
@@ -701,6 +730,23 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [self scrollToIndex:_currentIndex];
 }
 
+- (void)updateNavHeaderTitle {
+    NSInteger count = 0;
+    NSInteger currentTitleIndex;
+    NSInteger titleIndex = 0;
+    for (int i = 0; i < self.pictureNumbers.count; i++) {
+        NSNumber *num = self.pictureNumbers[i];
+        NSInteger tempCount = [num integerValue];
+        count += tempCount;
+        if (self.currentIndex < count) {
+            titleIndex = i;
+            currentTitleIndex = count - self.currentIndex;
+            break;
+        }
+    }
+    NSNumber *num = self.pictureNumbers[titleIndex];
+    self.naviView.titleLabel.text = [NSString stringWithFormat:@"%d/%d",num.unsignedIntValue - currentTitleIndex + 1,num.unsignedIntValue];
+}
 
 #pragma mark - Setter & Getter
 // 设置初始化数据入口
@@ -976,6 +1022,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
     
     _currentIndex = newIndex;
+    [self updateNavHeaderTitle];
     self.pictureTitleView.selectIndex = newIndex;
     self.naviView.videoTitle.isSelectVideo = newIndex < self.vedioCount;
     self.isShowenVideo = self.naviView.videoTitle.isSelectVideo;
