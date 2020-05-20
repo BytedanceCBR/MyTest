@@ -156,15 +156,10 @@
     vc.imageInfosModels = models;
     
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
-    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
-    CGRect frame = [self convertRect:self.bounds toView:window];
-    NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:1];
     NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:1];
     [placeholders addObject:placeholder];
-    NSValue *frameValue = [NSValue valueWithCGRect:frame];
-    [frames addObject:frameValue];
-    vc.placeholderSourceViewFrames = frames;
     vc.placeholders = placeholders;
+    [vc presentPhotoScrollView];
     
 }
 
