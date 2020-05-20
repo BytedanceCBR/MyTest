@@ -587,7 +587,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 {
     NSString *title = nil;
     NSString *subtitle = self.subTitle;
-    NSString *btnTitle = @"提交";
+    NSString *btnTitle = @"获取底价";
     NSString *toast = self.toast;
     NSDictionary *associateInfoDict = formParamsDict[kFHAssociateInfo];
     NSDictionary *reportParamsDict = formParamsDict[kFHReportParams];
