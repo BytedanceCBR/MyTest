@@ -41,6 +41,8 @@
     
     _coreInfoListViewModel = [[FHFloorCoreInfoViewModel alloc] initWithController:self tableView:_infoListTable courtId:_courtId houseNameModel:_houseNameModel];
     
+    self.viewModel = self.coreInfoListViewModel; // IM线索使用，不可以删除
+    
     [self setNavBarTitle:@"楼盘信息"];
     [self.view bringSubviewToFront:[self getNaviBar]];
 }
