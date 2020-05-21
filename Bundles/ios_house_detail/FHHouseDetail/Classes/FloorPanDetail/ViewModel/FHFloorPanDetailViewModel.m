@@ -163,9 +163,9 @@
         for (FHHouseDetailImageListDataModel *imageInfo in model.data.imageDictList) {
             FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
             houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeFloorPan;
-            houseImageDictList.houseImageType = [imageInfo.imageType integerValue];
-            houseImageDictList.houseImageTypeName = imageInfo.imageTypeName;
-            houseImageDictList.houseImageList = imageInfo.imageList.copy;
+            houseImageDictList.houseImageType = imageInfo.houseImageType;
+            houseImageDictList.houseImageTypeName = imageInfo.houseImageTypeName;
+            houseImageDictList.houseImageList = imageInfo.houseImageList.copy;
             [houseImageList addObject:houseImageDictList];
         }
         headerCellModel.houseImageDictList = houseImageList.copy;
