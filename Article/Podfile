@@ -409,9 +409,9 @@ def appPods
     
     pod 'Lynx','0.2.2',:subspecs =>[
     'Framework',
-    'InspectorFramework',
+#    'InspectorFramework',
     'Native',
-    'InspectorNative',
+#    'InspectorNative',
     'JSRuntime',
     'ReleaseResource',
     'DebugResource']
