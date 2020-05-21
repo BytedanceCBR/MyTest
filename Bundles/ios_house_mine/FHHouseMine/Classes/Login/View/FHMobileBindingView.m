@@ -125,8 +125,9 @@
     if (self.mobileTextField.text.length < 11) {
         return;
     }
+    NSString *mobileNumber = [self.mobileTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
     if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode:needPush:isForBindMobile:)]) {
-        [self.delegate sendVerifyCode:self.mobileTextField.text needPush:YES isForBindMobile:YES];
+        [self.delegate sendVerifyCode:mobileNumber needPush:YES isForBindMobile:YES];
     }
 }
 

@@ -20,6 +20,7 @@
 #import "TTCommentWriteView.h"
 #import "FHTraceEventUtils.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import "FHUserTracker.h"
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
 #define PersistenceDraftKey @"PersistenceDraftKey"
@@ -133,6 +134,15 @@ static bool isTTCommentPublishing = NO;
     if (isTTCommentPublishing){
         return;
     }
+    
+    //上报埋点
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"click_position"] = @"submit_comment";
+    params[@"page_type"] = @"update_detail";
+    params[@"origin_from"] = self.extraDic[@"origin_from"] ?: @"be_null";
+    params[@"group_id"] = self.commentDetailModel.groupModel.groupID ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_submit_comment" params:params];
+    
     isTTCommentPublishing = YES;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         isTTCommentPublishing = NO;
@@ -453,13 +463,18 @@ static bool isTTCommentPublishing = NO;
     [paramsDict setValue:self.element_from forKey:@"element_from"];
     [paramsDict setValue:self.ansid forKey:@"ansid"];
     [paramsDict setValue:self.qid forKey:@"qid"];
-    if (self.enterFrom.length > 0) {
-        [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName] enterFrom:[self enterFrom]]  forKey:@"enter_from"];
-    }
     
     if(self.extraDic.count > 0){
         [paramsDict addEntriesFromDictionary:self.extraDic];
+        if(self.extraDic[@"enter_from"]){
+            paramsDict[@"category_name"] = self.extraDic[@"enter_from"];
+        }
     }
+
+    [paramsDict setValue:@"update_detail" forKey:@"page_type"];
+//    if (self.enterFrom.length > 0) {
+//        [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName] enterFrom:[self enterFrom]]  forKey:@"enter_from"];
+//    }
     
     [BDTrackerProtocol eventV3:@"rt_post_reply" params:paramsDict];
     

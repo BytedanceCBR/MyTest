@@ -129,9 +129,9 @@
                                  };
         [FHUserTracker writeEvent:@"stay_page_link" params:params];
         
-        self.tracking = NO;
         [self.eventArray removeAllObjects];
     }
+    self.tracking = NO;
 }
 
 @end

@@ -704,6 +704,11 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)sendVerifyCode:(NSString *)mobileNumber needPush:(BOOL)needPush isForBindMobile:(BOOL)isForBindMobile{
+    if (![self.mobileNumber isEqualToString:mobileNumber]) {
+        //不同手机号发送验证码，重置计时器
+        self.isRequestingSMS = NO;
+        [self stopTimer];
+    }
     self.mobileNumber = mobileNumber;
     [self sendVerifyCodeWithCaptcha:nil needPushVerifyCodeView:needPush isForBindMobile:isForBindMobile];
 }
@@ -998,11 +1003,11 @@ static FHLoginSharedModel *_sharedModel = nil;
     __weak typeof(self) weakSelf = self;
     if (self.profileKey.length) {
         [TTAccount oneKeyBindPhoneWithProfileKey:self.profileKey completed:^(NSError * _Nullable error) {
-            [weakSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
+            [weakSelf handleBindingResult:nil phoneNum:nil smsCode:nil error:error isOneKeyBinding:YES];
         }];
     } else {
         [TTAccount oneKeyBindPhoneWithPassword:nil unbind:NO completed:^(NSError * _Nullable error) {
-            [weakSelf handleLoginResult:nil phoneNum:nil smsCode:nil error:error isOneKeyLogin:NO];
+            [weakSelf handleBindingResult:nil phoneNum:nil smsCode:nil error:error isOneKeyBinding:YES];
         }];
     }
 }
@@ -1024,11 +1029,11 @@ static FHLoginSharedModel *_sharedModel = nil;
     __weak typeof(self) weakSelf = self;
     if (self.profileKey.length) {
         [TTAccount requesetBindAndLogingWithPhonenumber:mobileNumber SMSCode:smsCode profileKey:self.profileKey SMSCodeType:TTASMSCodeScenarioBindPhoneSubmit captcha:captcha completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
-            [weakSelf handleLoginResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyLogin:NO];
+            [weakSelf handleBindingResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyBinding:NO];
         }];
     } else {
         [TTAccount bindPhoneWithPhone:mobileNumber SMSCode:smsCode password:nil captcha:captcha unbind:NO completion:^(UIImage * _Nullable captchaImage, NSError * _Nullable error) {
-            [weakSelf handleLoginResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyLogin:NO];
+            [weakSelf handleBindingResult:captchaImage phoneNum:mobileNumber smsCode:smsCode error:error isOneKeyBinding:NO];
         }];
     }
 }
@@ -1089,25 +1094,43 @@ static FHLoginSharedModel *_sharedModel = nil;
     }];
 }
 
+- (void)handleLoginSuccess:(NSString *)phoneNumber {
+    if (phoneNumber.length > 0) {
+        YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+        //            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+        [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
+    }
+    if (self.needPopVC) {
+        [self popViewController];
+    }
+    [self loginSuccessedWithPhoneNum:phoneNumber];
+    
+    if (self.isNeedCheckUGCAdUser) {
+        [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:YES];
+    }
+}
+
+- (void)handleLoginError:(NSError *)error isOneKey:(BOOL )isOneKey {
+    NSString *errorMessage = @"啊哦，服务器开小差了";
+    if (!isOneKey) {
+        errorMessage = [FHMineAPI errorMessageByErrorCode:error];
+    }
+    [[ToastManager manager] showToast:errorMessage];
+    if (error.code == TTAccountErrCodeSMSCodeError && self.clearVerifyCodeWhenError) {
+        //验证码错误
+        self.clearVerifyCodeWhenError();
+    }
+}
+
 - (void)handleLoginResult:(UIImage *)captchaImage phoneNum:(NSString *)phoneNumber smsCode:(NSString *)smsCode error:(NSError *)error isOneKeyLogin:(BOOL)isOneKeyLogin {
-        
     if (!error) {
         [[ToastManager manager] showToast:@"登录成功"];
-        if (phoneNumber.length > 0) {
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-//            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
-            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
-        }
-        if (self.needPopVC) {
-            [self popViewController];
-        }
-        [self loginSuccessedWithPhoneNum:phoneNumber];
-        
-        if (self.isNeedCheckUGCAdUser) {
-            [[FHEnvContext sharedInstance] checkUGCADUserIsLaunch:YES];
-        }
+        [self handleLoginSuccess:phoneNumber];
     } else if (captchaImage) {
-        [self loginShowCaptcha:captchaImage error:error phoneNumber:phoneNumber smsCode:smsCode];
+        __weak typeof(self) weakSelf = self;
+        [self loginShowCaptcha:captchaImage error:error phoneNumber:phoneNumber smsCode:smsCode completion:^(NSString *captchaValue) {
+            [weakSelf mobileLogin:phoneNumber smsCode:smsCode captcha:captchaValue];
+        }];
     } else {
         if (error.code == 1039) {
             TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"登录信息" message:[error.userInfo objectForKey:@"toutiao.account.errmsg_key"] preferredType:TTThemedAlertControllerTypeAlert];
@@ -1116,15 +1139,7 @@ static FHLoginSharedModel *_sharedModel = nil;
             }];
             [alertController showFrom:self.viewController animated:YES];
         } else {
-            NSString *errorMessage = @"啊哦，服务器开小差了";
-            if (!isOneKeyLogin) {
-                errorMessage = [FHMineAPI errorMessageByErrorCode:error];
-            }
-            [[ToastManager manager] showToast:errorMessage];
-            if (error.code == TTAccountErrCodeSMSCodeError && self.clearVerifyCodeWhenError) {
-                //验证码错误
-                self.clearVerifyCodeWhenError();
-            }
+            [self handleLoginError:error isOneKey:isOneKeyLogin];
             if (isOneKeyLogin) {
                 //如果是运营商一键登录失败，则跳转手机号验证码登录
                 //之前没有的逻辑，参照头条，皮皮虾等app等登录错误处理逻辑新增
@@ -1134,19 +1149,47 @@ static FHLoginSharedModel *_sharedModel = nil;
     }
 }
 
+- (void)handleBindingResult:(UIImage *)captchaImage phoneNum:(NSString *)phoneNumber smsCode:(NSString *)smsCode error:(NSError *)error isOneKeyBinding:(BOOL)isOneKeyBinding {
+        if (!error) {
+            [[ToastManager manager] showToast:@"绑定成功"];
+            [self handleLoginSuccess:phoneNumber];
+        } else if (captchaImage) {
+            __weak typeof(self) weakSelf = self;
+            [self loginShowCaptcha:captchaImage error:error phoneNumber:phoneNumber smsCode:smsCode completion:^(NSString *captchaValue) {
+                [weakSelf mobileBind:phoneNumber smsCode:smsCode captcha:captchaValue];
+            }];
+        } else {
+            if (error.code == 1039) {
+                TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"登录信息" message:[error.userInfo objectForKey:@"toutiao.account.errmsg_key"] preferredType:TTThemedAlertControllerTypeAlert];
+                [alertController addActionWithTitle:@"确认" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+                    [self goToMobileBind];
+                }];
+                [alertController showFrom:self.viewController animated:YES];
+            } else {
+                [self handleLoginError:error isOneKey:isOneKeyBinding];
+                if (isOneKeyBinding) {
+                    //如果是运营商一键登录失败，则跳转手机号验证码登录
+                    //之前没有的逻辑，参照头条，皮皮虾等app等登录错误处理逻辑新增
+                    [self goToMobileBind];
+                }
+            }
+        }
+}
+
 - (void)loginSuccessedWithPhoneNum:(NSString *)phoneNumber {
     if (self.loginDelegate.completeAlert) {
         self.loginDelegate.completeAlert(TTAccountAlertCompletionEventTypeDone, phoneNumber);
     }
 }
 
-- (void)loginShowCaptcha:(UIImage *)captchaImage error:(NSError *)error phoneNumber:(NSString *)phoneNumber smsCode:(NSString *)smsCode {
+- (void)loginShowCaptcha:(UIImage *)captchaImage error:(NSError *)error phoneNumber:(NSString *)phoneNumber smsCode:(NSString *)smsCode completion:(void(^)(NSString *captchaValue))completion {
     TTAccountMobileCaptchaAlertView *alertView = [[TTAccountMobileCaptchaAlertView alloc] initWithCaptchaImage:captchaImage];
     alertView.error = error;
-    __weak typeof(self) wself = self;
     [alertView showWithDismissBlock:^(TTAccountMobileCaptchaAlertView *alertView, NSInteger buttonIndex) {
         if (alertView.captchaValue.length > 0) {
-            [wself mobileLogin:phoneNumber smsCode:smsCode captcha:alertView.captchaValue];
+            if (completion) {
+                completion(alertView.captchaValue);
+            }
         }
 #if DEBUG
         else {

@@ -289,7 +289,7 @@
 
 - (void)setupUI {
      _iconView = [[UIView alloc]init];
-     _iconView.layer.borderWidth = 1.0;
+     _iconView.layer.borderWidth = 0.5;
      _iconView.layer.borderColor = [[UIColor colorWithHexString:@"#ededed"] CGColor];
      _iconView.layer.cornerRadius = 10.0;
       _iconView.layer.masksToBounds = YES;

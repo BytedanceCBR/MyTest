@@ -123,7 +123,7 @@
     
     double longitude = [FHLocManager sharedInstance].currentLocaton.coordinate.longitude;
     double latitude = [FHLocManager sharedInstance].currentLocaton.coordinate.latitude;
-    NSString *gCityId = [FHLocManager sharedInstance].currentReGeocode.citycode;
+    NSString *gCityId = [FHLocManager sharedInstance].currentReGeocode.cityCode;
     NSString *gCityName = [FHLocManager sharedInstance].currentReGeocode.city;
     
     TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
