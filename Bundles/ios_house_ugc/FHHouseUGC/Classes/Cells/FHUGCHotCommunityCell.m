@@ -13,6 +13,7 @@
 #import "FHUserTracker.h"
 #import "FHUGCHotCommunityLayout.h"
 #import "FHCommunityList.h"
+#import "UIViewAdditions.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -85,16 +86,26 @@
 }
 
 - (void)initConstraints {
-    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(15);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(188);
-    }];
+    self.collectionView.top = 15;
+    self.collectionView.left = 0;
+    self.collectionView.width = [UIScreen mainScreen].bounds.size.width;
+    self.collectionView.height = 188;
     
-    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(bottomSepViewHeight);
-    }];
+    self.bottomSepView.top = 223 - bottomSepViewHeight;
+    self.bottomSepView.left = 0;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomSepView.height = bottomSepViewHeight;
+//    223
+//    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.contentView).offset(15);
+//        make.left.right.mas_equalTo(self.contentView);
+//        make.height.mas_equalTo(188);
+//    }];
+    
+//    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.left.right.mas_equalTo(self.contentView);
+//        make.height.mas_equalTo(bottomSepViewHeight);
+//    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
