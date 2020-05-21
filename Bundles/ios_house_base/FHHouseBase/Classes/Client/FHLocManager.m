@@ -320,21 +320,19 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
 
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
 {
-//    [self.locManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
-//
-//    [self.locManager setLocationTimeout:2];
-//
-//    [self.locManager setReGeocodeTimeout:2];
-//    __weak typeof(self) wSelf = self;
-    NSMutableArray *geocoders = [[NSMutableArray alloc] init];
-    //    [BDUGAmapGeocoder sharedGeocoder].apiKey = kAmapKey;
-        [geocoders addObject:[BDUGAmapGeocoder sharedGeocoder]];
-        [geocoders addObject:[BDUGSystemGeocoder sharedGeocoder]];
-
+        [BDUGLocationManager sharedManager].baseUrl = [FHMainApi host];
+        BDUGLocationAppConfig *config = [[BDUGLocationAppConfig alloc] init];
+        config.oversea = NO;
+        config.appID = @"1370";
+        config.deviceID = [[TTInstallIDManager sharedInstance] deviceID];
+        config.appVersion =  [FHEnvContext getToutiaoVersionCode];
+        config.devicePlatform = @"iPhone";
+        [BDUGLocationManager sharedManager].hostAppConfig = config;
+    
         __weak typeof(self) wSelf = self;
-        [[BDUGLocationManager sharedManager]requestLocationWithDesiredAccuracy:BDUGLocationAccuracyHundredMeters geocoders:geocoders timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
+        [[BDUGLocationManager sharedManager]requestLocationWithDesiredAccuracy:BDUGLocationAccuracyHundredMeters geocoders:nil timeout:4 completion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
                     
-        BDUGBasePlacemark *location = (BDUGBasePlacemark*) locationInfo.placemarkMap[BDUGPlacemarkSystemKey];
+        BDUGBasePlacemark *location = locationInfo.placeMark;
         
         if (showAlert)
             {
@@ -360,7 +358,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                 statusNum = 3;
             }
             
-            if (error.code == AMapLocationErrorLocateFailed) {
+            if (error) {
                 
                 NSNumber *statusNumber = [NSNumber numberWithInteger:[self isHaveLocationAuthorization] ? 1 : 0];
                 
@@ -375,9 +373,6 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" status:statusNum extra:paramsExtra];
                 
                 NSLog(@"定位错误:%@",error.localizedDescription);
-            }else if (error.code == AMapLocationErrorReGeocodeFailed || error.code == AMapLocationErrorTimeOut || error.code == AMapLocationErrorCannotFindHost || error.code == AMapLocationErrorBadURL || error.code == AMapLocationErrorNotConnectedToInternet || error.code == AMapLocationErrorCannotConnectToHost)
-            {
-                NSLog(@"逆地理错误:%@",error.localizedDescription);
             }else
             {
                 if (location) {
@@ -389,12 +384,12 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             
             amapInfo[@"sub_locality"] = location.district;
             amapInfo[@"locality"] = location.city;
-            if (locationInfo.coordinate.latitude) {
-                amapInfo[@"latitude"] = @(locationInfo.coordinate.latitude);
+            if (locationInfo.location.coordinate.latitude) {
+                amapInfo[@"latitude"] = @(locationInfo.location.coordinate.latitude);
             }
             
-            if (locationInfo.coordinate.longitude) {
-                amapInfo[@"longitude"] = @(locationInfo.coordinate.longitude);
+            if (locationInfo.location.coordinate.longitude) {
+                amapInfo[@"longitude"] = @(locationInfo.location.coordinate.longitude);
             }
             
             [[[FHHouseBridgeManager sharedInstance] envContextBridge] setUpLocationInfo:amapInfo];
@@ -404,7 +399,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             }
             
             if (locationInfo) {
-                wSelf.currentLocaton = [[CLLocation alloc] initWithLatitude:locationInfo.coordinate.latitude longitude:locationInfo.coordinate.longitude];
+                wSelf.currentLocaton = [[CLLocation alloc] initWithLatitude:locationInfo.location.coordinate.latitude longitude:locationInfo.location.coordinate.longitude];
             }
         
         // 存储当前定位信息
@@ -419,7 +414,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
             if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
                 cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
             }
-            [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:locationInfo.coordinate gaodeCityId:location.cityCode gaodeCityName:location.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
+            [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:locationInfo.location.coordinate gaodeCityId:location.cityCode gaodeCityName:location.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
                 if (!model || error) {
                     wSelf.retryConfigCount -= 1;
                     if (wSelf.retryConfigCount >= 0)
