@@ -354,9 +354,7 @@
     }
     self.currentData = data;
     FHDetailNewDataFloorpanListListModel *model = (FHDetailNewDataFloorpanListListModel *)data;
-    for (UIView *v in self.tagBacView.subviews) {
-        [v removeFromSuperview];
-    }
+    [self.tagBacView removeAllTag];
     if (model) {
         if (model.images.count > 0) {
             FHDetailNewDataFloorpanListListImagesModel *imageModel = model.images.firstObject;
@@ -374,58 +372,32 @@
             }
         }
         self.consultDetailButton.hidden = model.imOpenUrl.length > 0 ? NO : YES;
-        self.descLabel.text = model.title;
         self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@ 朝向 %@",model.squaremeter,model.facingDirection];
-        
-        /*
-         mock
-         */
-        model.pricing = @"约2000万/套";
-        FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
-        tag.content = rand()%2 == 0?@"啊啊啊":@"哈哈哈";
-        tag.backgroundColor = @"#f4f3f2";
-        tag.textColor = @"#a49a92";
-        NSMutableArray *arr = [NSMutableArray arrayWithObject:tag];
-        model.tags = arr.copy;
-        
-        //mock数据，删去这里到上面的注释，切记~~~~！！
         self.priceLabel.text = model.pricing;
+        NSMutableArray *tagArr = [NSMutableArray array];
+        self.descLabel.text = model.title;
+        [self.descLabel sizeToFit];
+        CGSize itemSize = [self.descLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, 19.0)];
+        CGFloat width = itemSize.width;
         
-        CGFloat width = [self getLabelWidth:self.descLabel withHeight:19.0];
         [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(width);
         }];
-        CGFloat left = 0.0;
+        NSUInteger maxNum = 0;
         if (model.saleStatus) {
-            UIColor *bacColor = [UIColor colorWithHexStr:model.saleStatus.backgroundColor];
-            UIColor *texColor = [UIColor colorWithHexStr:model.saleStatus.textColor];
-            UILabel *saleLabel = [self createLabelWithText:model.saleStatus.content tagBacColor:bacColor tagTextColor:texColor];
-            CGFloat width = [self getLabelWidth:saleLabel withHeight:16.0];
-            width += 8.0;
-            [self.tagBacView addSubview:saleLabel];
-            [saleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(left);
-                make.width.mas_equalTo(width);
-                make.height.mas_equalTo(16.0);
-                make.top.mas_equalTo(0);
-            }];
-            left += width + 4.0;
+            FHHouseTagsModel *tag = [[FHHouseTagsModel alloc] init];
+            tag.backgroundColor = model.saleStatus.backgroundColor;
+            tag.content = model.saleStatus.content;
+            tag.id = model.saleStatus.id;
+            tag.textColor = model.saleStatus.textColor;
+            [tagArr addObject:tag];
+            maxNum ++;
         }
         if (model.tags.count > 0) {
-            FHHouseTagsModel *tag = [model.tags firstObject];
-            UIColor *bacColor = [UIColor colorWithHexStr:tag.backgroundColor];
-            UIColor *texColor = [UIColor colorWithHexStr:tag.textColor];
-            UILabel *tagLabel = [self createLabelWithText:tag.content tagBacColor:bacColor tagTextColor:texColor];
-            CGFloat width = [self getLabelWidth:tagLabel withHeight:16.0];
-            width += 8.0;
-            [self.tagBacView addSubview:tagLabel];
-            [tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(left);
-                make.width.mas_equalTo(width);
-                make.height.mas_equalTo(16.0);
-                make.top.mas_equalTo(0);
-            }];
+            [tagArr addObjectsFromArray:model.tags];
+            maxNum ++;
         }
+        [self.tagBacView refreshWithTags:tagArr.copy withNum:maxNum withmaxLen:ITEM_WIDTH - width - 4];
     }
     [self layoutIfNeeded];
 }
@@ -449,8 +421,7 @@
     _descLabel.textColor = [UIColor themeGray1];
     [self addSubview:_descLabel];
     
-    _tagBacView = [UIView new];
-    _tagBacView.clipsToBounds = YES;
+    _tagBacView = [[FHDetailTagBackgroundView alloc] init];
     [self addSubview:_tagBacView];
     
     _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
@@ -518,25 +489,6 @@
         [self.delegate clickCellItem:sender onCell:self];
     }
 }
-
-- (UILabel *)createLabelWithText:(NSString *)text tagBacColor:(UIColor *)tagBacColor tagTextColor:(UIColor *)tagTextColor {
-    UILabel *label = [[UILabel alloc]init];
-    label.textAlignment = NSTextAlignmentCenter;
-    label.backgroundColor = tagBacColor;
-    label.textColor = tagTextColor;
-    label.layer.cornerRadius = 2.0;
-    label.layer.masksToBounds = YES;
-    label.text = text;
-    label.font = [UIFont themeFontMedium:10];
-    return label;
-}
-
-- (CGFloat)getLabelWidth:(UILabel *)label withHeight:(CGFloat)height {
-    [label sizeToFit];
-    CGSize itemSize = [label sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, height)];
-    return itemSize.width;
-}
-
 @end
 
 @implementation FHDetailNewMutiFloorPanCellModel
