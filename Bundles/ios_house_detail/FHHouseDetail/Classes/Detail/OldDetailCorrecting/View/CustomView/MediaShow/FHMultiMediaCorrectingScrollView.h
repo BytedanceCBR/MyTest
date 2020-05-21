@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)bottomBannerViewDidShow;
 
+- (void)goToPictureList;
+
 @end
 
 @interface FHMultiMediaCorrectingScrollView : UIView
