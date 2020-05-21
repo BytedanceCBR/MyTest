@@ -727,7 +727,7 @@
     } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCEncyclopedias) {
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCEncyclopedias;
         cellModel.groupId = model.rawData.groupId;
-        cellModel.articleTitle = model.rawData.title;
+        cellModel.desc = [[NSAttributedString alloc] initWithString:model.rawData.title];
         cellModel.openUrl = model.rawData.schema;
         cellModel.logPb = model.logPb;
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];

@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 //购房百科样式morebtn:
 - (void)updateMoreBtnWithTitleType;
 
+- (void)refreshWithData:(FHFeedUGCCellModel *)cellModel;
+
 @end
 
 NS_ASSUME_NONNULL_END

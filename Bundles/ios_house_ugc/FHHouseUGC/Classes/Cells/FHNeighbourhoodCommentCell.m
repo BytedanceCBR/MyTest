@@ -46,7 +46,6 @@
 }
 
 - (void)initViews {
-    
     // Cell本身配置
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.backgroundColor = [UIColor clearColor];
@@ -58,7 +57,7 @@
     [self.contentView addSubview:self.contentContainer];
 
     // 用户信息区
-    self.userInfoView = [FHUGCCellUserInfoView new];
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentContainer addSubview:self.userInfoView];
     
     // 文本区
@@ -66,13 +65,6 @@
     self.contentLabel.numberOfLines = maxLines;
     self.contentLabel.layer.masksToBounds = YES;
     self.contentLabel.backgroundColor = [UIColor whiteColor];
-//    NSDictionary *linkAttributes = @{
-//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-//                                     };
-//    self.contentLabel.linkAttributes = linkAttributes;
-//    self.contentLabel.activeLinkAttributes = linkAttributes;
-//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     self.contentLabel.delegate = self;
     [self.contentContainer addSubview:self.contentLabel];
     
@@ -89,7 +81,6 @@
 }
 
 - (void)refreshWithData:(id)data {
-    
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
     }
@@ -189,12 +180,15 @@
     // 用户信息
     self.userInfoView.frame = CGRectMake(0, topPadding, self.contentContainer.width, userInfoViewHeight);
     //设置userInfo
-    self.userInfoView.cellModel = self.cellModel;
-    self.userInfoView.userName.text = self.cellModel.user.name;
+//    self.userInfoView.cellModel = self.cellModel;
+//    self.userInfoView.userName.text = self.cellModel.user.name;
     self.userInfoView.userAuthLabel.text = self.cellModel.user.userAuthInfo;
-    [self.userInfoView updateDescLabel];
-    [self.userInfoView updateEditState];
-    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+//    [self.userInfoView updateDescLabel];
+//    [self.userInfoView updateEditState];
+//    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    
+    [self.userInfoView refreshWithData:self.cellModel];
+    
     self.userInfoView.moreBtn.hidden = YES;
     
     // 文本内容标签
@@ -230,32 +224,7 @@
     //图片
     [self.multiImageView updateImageView:self.cellModel.imageList largeImageList:self.cellModel.largeImageList];
     
-//    //设置底部
-//    self.bottomView.cellModel = self.cellModel;
-//    BOOL showCommunity = self.cellModel.showCommunity && !isEmptyString(self.cellModel.community.name);
-//    self.bottomView.position.text = self.cellModel.community.name;
-//    [self.bottomView showPositionView:showCommunity];
-//
-//    NSInteger commentCount = [self.cellModel.commentCount integerValue];
-//    if(commentCount == 0){
-//        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
-//    }else{
-//        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
-//    }
-//    [self.bottomView updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
-//    CGFloat bottomViewWidth = self.cellModel.isInNeighbourhoodCommentsList ? (self.contentContainer.width - rightPadding) : self.contentContainer.width;
-//    self.bottomView.frame = CGRectMake(0, imageViewTop + self.imageViewheight + vGap, bottomViewWidth, bottomViewHeight);
-//    // 隐藏分割线
-//    [self.bottomView.bottomSepView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.height.mas_equalTo(0);
-//    }];
-    
     if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
-        // 置顶加精移动位置
-//        CGFloat decorationHeight = topPadding + userInfoViewHeight;
-//        CGFloat decorationWidth = decorationHeight;
-//        CGFloat decorationRightOffset = 10;
-    
         if(self.cellModel.isInNeighbourhoodCommentsList){
             self.decorationImageView.frame = CGRectMake(cellWidth - rightMargin - 66, topMargin, 66, 66);
             [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence"]];

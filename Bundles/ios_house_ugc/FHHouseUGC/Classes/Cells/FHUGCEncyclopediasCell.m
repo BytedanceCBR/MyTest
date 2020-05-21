@@ -62,7 +62,7 @@
 
 - (FHUGCCellUserInfoView *)titleView {
     if (!_titleView) {
-        FHUGCCellUserInfoView *titleView = [[FHUGCCellUserInfoView alloc]init];
+        FHUGCCellUserInfoView *titleView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 40)];
         titleView.backgroundColor = [UIColor whiteColor];
         [titleView updateMoreBtnWithTitleType];
         [self.contentView addSubview:titleView];
@@ -119,13 +119,16 @@
     }
     self.currentData = data;
     self.cellModel = model;
-    [self.titleView.icon bd_setImageWithURL:[NSURL URLWithString:model.user.avatarUrl]];
-    self.titleView.userName.text = model.user.name;
-    self.titleView.descLabel.text = model.articleTitle;
-    self.titleView.cellModel = model;
-    self.titleView.userName.userInteractionEnabled = model.user &&model.user.schema;
-    self.titleView.icon.userInteractionEnabled = model.user &&model.user.schema;
-    self.titleView.descLabel.userInteractionEnabled = model.user &&model.user.schema;
+//    [self.titleView.icon bd_setImageWithURL:[NSURL URLWithString:model.user.avatarUrl]];
+//    self.titleView.userName.text = model.user.name;
+//    self.titleView.descLabel.text = model.articleTitle;
+//    self.titleView.cellModel = model;
+    
+    [self.titleView refreshWithData:model];
+    
+    self.titleView.userName.userInteractionEnabled = model.user && model.user.schema;
+    self.titleView.icon.userInteractionEnabled = model.user && model.user.schema;
+    self.titleView.descLabel.userInteractionEnabled = model.user && model.user.schema;
     self.contentLab.hidden = isEmptyString(model.content);
     [FHUGCCellHelper setAsyncRichContent:self.contentLab model:model];
 

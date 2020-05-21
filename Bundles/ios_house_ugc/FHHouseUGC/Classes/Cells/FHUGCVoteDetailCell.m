@@ -119,7 +119,7 @@
 - (void)setupViews {
     __weak typeof(self) wself = self;
     
-    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
     
     self.contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30 * 2, 0)];
@@ -272,10 +272,11 @@
     self.currentData = data;
     self.cellModel = data;
     //设置userInfo
-    self.userInfoView.cellModel = self.cellModel;
-    self.userInfoView.userName.text = !isEmptyString(self.cellModel.user.name) ? self.cellModel.user.name : @"用户";
-    self.userInfoView.descLabel.attributedText = self.cellModel.desc;
-    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    [self.userInfoView refreshWithData:cellModel];
+//    self.userInfoView.cellModel = self.cellModel;
+//    self.userInfoView.userName.text = !isEmptyString(self.cellModel.user.name) ? self.cellModel.user.name : @"用户";
+//    self.userInfoView.descLabel.attributedText = self.cellModel.desc;
+//    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     __weak typeof(self) weakSelf = self;
     self.userInfoView.deleteCellBlock = ^{
         FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
