@@ -394,6 +394,9 @@
     if (self.isShowTopImageTab) {
         if (scrollView.contentOffset.x >= 52) {
             NSLog(@"push picture list");
+            if ([self.delegate respondsToSelector:@selector(goToPictureList)]) {
+                [self.delegate goToPictureList];
+            }
         }
     }
 }
@@ -501,7 +504,9 @@
     self.colletionView.alwaysBounceHorizontal = NO;
     if (titleModel.housetype == FHHouseTypeNewHouse && self.isShowTopImageTab) {
         self.colletionView.alwaysBounceHorizontal = YES;
-        self.medias = @[model.medias.firstObject];
+        if (model.medias.count) {
+            self.medias = @[model.medias.firstObject];
+        }
         if (!self.headerMoreStateView) {
             self.headerMoreStateView = [[FHHouseDetailHeaderMoreStateView alloc] init];
             self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateBegin;

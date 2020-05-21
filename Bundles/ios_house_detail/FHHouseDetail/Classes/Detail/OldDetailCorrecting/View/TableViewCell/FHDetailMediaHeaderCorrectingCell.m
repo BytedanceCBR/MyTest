@@ -721,6 +721,11 @@
     TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
 }
 
+//进入图片页面页
+- (void)goToPictureList {
+    
+}
+
 #pragma mark - FHDetailScrollViewDidScrollProtocol
 
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {

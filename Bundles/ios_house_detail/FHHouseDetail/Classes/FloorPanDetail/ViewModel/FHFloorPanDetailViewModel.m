@@ -160,12 +160,12 @@
     FHDetailMediaHeaderCorrectingModel *headerCellModel = [[FHDetailMediaHeaderCorrectingModel alloc] init];
     if (model.data.imageDictList && [model.data.imageDictList isKindOfClass:[NSArray class]] && model.data.imageDictList.count > 0) {
         NSMutableArray *houseImageList = [NSMutableArray array];
-        for (FHFloorPanDetailImageListImageDictListModel *imageInfo in model.data.imageDictList) {
+        for (FHHouseDetailImageListDataModel *imageInfo in model.data.imageDictList) {
             FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
             houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeFloorPan;
-            houseImageDictList.houseImageType = [imageInfo.imageType integerValue];
-            houseImageDictList.houseImageTypeName = imageInfo.imageTypeName;
-            houseImageDictList.houseImageList = imageInfo.imageList.copy;
+            houseImageDictList.houseImageType = imageInfo.houseImageType;
+            houseImageDictList.houseImageTypeName = imageInfo.houseImageTypeName;
+            houseImageDictList.houseImageList = imageInfo.houseImageList.copy;
             [houseImageList addObject:houseImageDictList];
         }
         headerCellModel.houseImageDictList = houseImageList.copy;

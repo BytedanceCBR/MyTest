@@ -47,26 +47,6 @@
     return YES;
 }
 @end
-
-
-@implementation FHFloorPanDetailImageListImageDictListModel
-+ (JSONKeyMapper*)keyMapper
-{
-  NSDictionary *dict = @{
-    @"imageType": @"image_type",
-    @"imageList": @"image_list",
-    @"imageTypeName": @"image_type_name",
-  };
-  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-     return dict[keyName]?:keyName;
-  }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
 @implementation FHDetailFloorPanDetailInfoDataBaseInfoModel
 + (JSONKeyMapper*)keyMapper
 {

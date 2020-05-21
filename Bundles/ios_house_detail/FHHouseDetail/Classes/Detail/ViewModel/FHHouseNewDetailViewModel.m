@@ -427,7 +427,10 @@
         headerCellModel.isShowTopImageTab = model.data.isShowTopImageTab;
         if ([model.data.topImages isKindOfClass:[NSArray class]] && model.data.topImages.count > 0) {
             NSMutableArray *houseImageList = @[].mutableCopy;
+            //只有新房详情传递了 topImages 数据，用户对接图片列表页页
             headerCellModel.topImages = model.data.topImages;
+            //这个地方组合的图片列表，如果isShowTopImageTab为true，头图只显示一张图片，大图详情和图片列表需要重新组合
+            //false的话提供给头图使用，以及大图详情
             for (NSInteger index = 0; index < model.data.topImages.count; index++) {
                 FHDetailNewTopImage *topImage = model.data.topImages[index];
                 FHHouseDetailImageListDataModel *houseImageDictList = [[FHHouseDetailImageListDataModel alloc] init];
@@ -438,9 +441,7 @@
                         [houseImages addObject:groupModel.images[j]];
                     }
                 }
-                if (headerCellModel.isShowTopImageTab) {
-                    houseImageDictList.houseImageTypeName = topImage.name;
-                }
+                houseImageDictList.houseImageTypeName = topImage.name;
                 houseImageDictList.usedSceneType = FHHouseDetailImageListDataUsedSceneTypeNew;
                 houseImageDictList.houseImageList = houseImages;
                 houseImageDictList.houseImageType = topImage.type;

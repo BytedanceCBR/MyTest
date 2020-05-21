@@ -312,10 +312,13 @@
                 break;
             case 6:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.buyFieldTime];
+                break;
             case 7:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.plannedBuilding];
+                break;
             case 8:
                 pItemModel.propertyValue = [self checkPValueStr:model.data.plannedFamily];
+                break;
                 
             default:
                 break;
