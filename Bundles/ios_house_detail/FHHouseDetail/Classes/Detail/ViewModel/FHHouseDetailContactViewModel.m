@@ -505,7 +505,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     // 目前需要添加：realtor_position element_from item_id
     NSMutableDictionary *imExtra = @{}.mutableCopy;
     imExtra[@"realtor_position"] = realtor_pos;
-    imExtra[@"from"] = params[@"from"] ?: (self.contactPhone.realtorType == FHRealtorTypeNormal ? @"app_oldhouse" : @"app_oldhouse_expert");
+    imExtra[@"from"] = params[@"from"];
     if (params[@"source"]) {
         imExtra[@"source"] = params[@"source"];
     }
