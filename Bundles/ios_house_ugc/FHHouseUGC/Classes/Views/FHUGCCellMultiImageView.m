@@ -14,8 +14,8 @@
 #import "TTPhotoScrollViewController.h"
 #import "TTBaseMacro.h"
 #import "TTInteractExitHelper.h"
-#import "TTImageView+TrafficSave.h"
 #import "FHUGCCellHelper.h"
+#import "UIViewAdditions.h"
 
 #define itemPadding 4
 #define kMaxCount 9
@@ -51,9 +51,9 @@
 
 - (void)initViews {
     for (NSInteger i = 0; i < self.count; i++) {
-        TTImageView *imageView = [[TTImageView alloc] initWithFrame:CGRectZero];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         imageView.clipsToBounds = YES;
-        imageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
         imageView.layer.borderWidth = 0.5;
@@ -80,37 +80,37 @@
 }
 
 - (void)initConstraints {
-    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.bottom.mas_equalTo(self).offset(-4);
-        make.width.mas_equalTo(38);
-        make.height.mas_equalTo(22);
-    }];
+//    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.right.bottom.mas_equalTo(self).offset(-4);
+//        make.width.mas_equalTo(38);
+//        make.height.mas_equalTo(22);
+//    }];
     
     if(self.count == 1){
         _imageWidth = self.bounds.size.width;
         _viewHeight = self.imageWidth * 9.0f/16.0f;
         UIImageView *imageView = [self.imageViewList firstObject];
-        [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.left.mas_equalTo(self);
-            make.width.mas_equalTo(self.imageWidth);
-            make.height.mas_equalTo(self.imageWidth * 9.0f/16.0f);
-        }];
+        
+        imageView.top = 0;
+        imageView.left = 0;
+        imageView.width = self.imageWidth;
+        imageView.height = self.viewHeight;
     }else if(self.count == 2){
         _imageWidth = (self.bounds.size.width - itemPadding)/2;
         _viewHeight = self.imageWidth * 124.0f/165.0f;
         UIView *firstView = self;
         for (UIImageView *imageView in self.imageViewList) {
-            [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self);
-                if(firstView == self){
-                    make.left.mas_equalTo(firstView);
-//                    make.bottom.mas_equalTo(firstView);
-                }else{
-                    make.left.mas_equalTo(firstView.mas_right).offset(itemPadding);
-                }
-                make.width.mas_equalTo(self.imageWidth);
-                make.height.mas_equalTo(self.imageWidth * 124.0f/165.0f);
-            }];
+            
+            imageView.top = 0;
+            if(firstView == self){
+                imageView.left = 0;
+            }else{
+                imageView.left = firstView.right + itemPadding;
+            }
+
+            imageView.width = self.imageWidth;
+            imageView.height = self.viewHeight;
+            
             firstView = imageView;
         }
     }else if(self.count == 4){
@@ -124,12 +124,11 @@
             NSInteger column = i%2; //0,1,2
             CGFloat topMargin = row * _imageWidth + itemPadding * row;
             CGFloat leftMargin = column * _imageWidth + itemPadding * column;
-            [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self).offset(topMargin);
-                make.left.mas_equalTo(self).offset(leftMargin);
-                make.width.mas_equalTo(self.imageWidth);
-                make.height.mas_equalTo(self.imageWidth);
-            }];
+            
+            imageView.top = topMargin;
+            imageView.left = leftMargin;
+            imageView.width = self.imageWidth;
+            imageView.height = self.imageWidth;
         }
     }else if(self.count >= 3){
         _imageWidth = (self.bounds.size.width - itemPadding * 2)/3;
@@ -144,23 +143,35 @@
             NSInteger column = i%3; //0,1,2
             CGFloat topMargin = row * _imageWidth + itemPadding * row;
             CGFloat leftMargin = column * _imageWidth + itemPadding * column;
-            [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self).offset(topMargin);
-                make.left.mas_equalTo(self).offset(leftMargin);
-                make.width.mas_equalTo(self.imageWidth);
-                make.height.mas_equalTo(self.imageWidth);
-            }];
+            
+            imageView.top = topMargin;
+            imageView.left = leftMargin;
+            imageView.width = self.imageWidth;
+            imageView.height = self.imageWidth;
         }
     }else{
         
     }
+    
+//    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    //        make.right.bottom.mas_equalTo(self).offset(-4);
+    //        make.width.mas_equalTo(38);
+    //        make.height.mas_equalTo(22);
+    //    }];
+    
+    self.infoLabel.width = 38;
+    self.infoLabel.height = 22;
+    self.infoLabel.top = self.viewHeight - self.infoLabel.height - 4;
+    self.infoLabel.left = self.frame.size.width - self.infoLabel.width - 4;
+        
+    
 }
 
 - (void)updateImageView:(NSArray *)imageList largeImageList:(NSArray *)largeImageList {
     self.largeImageList = largeImageList;
     
     for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-        TTImageView *imageView = self.imageViewList[i];
+        UIImageView *imageView = self.imageViewList[i];
         if(i < imageList.count){
             FHFeedContentImageListModel *imageModel = imageList[i];
             
@@ -173,20 +184,14 @@
                     continue;
                 }
             }
-//            [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+
             if (imageModel && imageModel.url.length > 0) {
-                TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
-                __weak typeof(imageView) wImageView = imageView;
-                [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-                    [wImageView setImage:nil];
-                }];
+                [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
             }
             //只对单图做重新布局，多图都是1：1
             if(self.count == 1 && !self.fixedSingleImage){
                 self.viewHeight = self.imageWidth * height/width;
-                [imageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.height.mas_equalTo(self.viewHeight);
-                }];
+                imageView.height = self.viewHeight;
             }
         }else{
             imageView.hidden = YES;
@@ -221,8 +226,8 @@
         return;
     }
     
-    TTImageView *view = (UIImageView *)tap.view;
-    if (view.imageView.image == nil) {
+    UIImageView *view = (UIImageView *)tap.view;
+    if (view.image == nil) {
         return;
     }
     [self imageTouched:tap.view];
@@ -260,7 +265,7 @@
     [controller setStartWithIndex:sender.tag];
     
     NSMutableArray * frames = [NSMutableArray arrayWithCapacity:9];
-    for (TTImageView *view in self.imageViewList) {
+    for (UIImageView *view in self.imageViewList) {
         CGRect frame = [view convertRect:view.bounds toView:nil];
         [frames addObject:[NSValue valueWithCGRect:frame]];
     }
@@ -277,10 +282,10 @@
     }
     for (NSInteger i = 0; i < picCount; i++) {
         if(i < self.imageViewList.count){
-            TTImageView *view = self.imageViewList[i];
+            UIImageView *view = self.imageViewList[i];
             //  此处需要优化
-            if (view.imageView.image) {
-                [photoObjs addObject:view.imageView.image];
+            if (view.image) {
+                [photoObjs addObject:view.image];
             }
         }
     }

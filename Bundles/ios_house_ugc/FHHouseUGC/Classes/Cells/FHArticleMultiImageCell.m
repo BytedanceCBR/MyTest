@@ -10,7 +10,6 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
-//#import "TTImageView+TrafficSave.h"
 #import "UIViewAdditions.h"
 
 #define maxLines 3
@@ -174,11 +173,6 @@
                 imageView.hidden = NO;
                 if (imageModel && imageModel.url.length > 0) {
                     [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
-//                    TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
-//                    __weak typeof(imageView) wImageView = imageView;
-//                    [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
-//                        [wImageView setImage:nil];
-//                    }];
                 }
             }else{
                 imageView.hidden = YES;

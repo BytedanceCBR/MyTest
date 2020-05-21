@@ -9,6 +9,7 @@
 #import "FHArticleCellBottomView.h"
 #import "FHUGCCellHelper.h"
 #import "TTBaseMacro.h"
+#import "UIViewAdditions.h"
 
 #define maxLines 3
 #define bottomViewHeight 39
@@ -66,19 +67,15 @@
 }
 
 - (void)initConstraints {
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(15);
-        make.left.mas_equalTo(self.contentView).offset(20);
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.height.mas_equalTo(0);
-    }];
+    self.contentLabel.top = 15;
+    self.contentLabel.left = 20;
+    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - 40;
+    self.contentLabel.height = 0;
     
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(10);
-        make.height.mas_equalTo(39);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView);
-    }];
+    self.bottomView.top = self.contentLabel.bottom + 10;
+    self.bottomView.left = 0;
+    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomView.height = 39;
 }
 
 -(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -100,17 +97,14 @@
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.title)){
         self.contentLabel.hidden = YES;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
+        self.contentLabel.height = 0;
     }else{
         self.contentLabel.hidden = NO;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(cellModel.contentHeight);
-        }];
+        self.contentLabel.height = cellModel.contentHeight;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     
+    self.bottomView.top = self.contentLabel.bottom + 10;
     self.bottomView.cellModel = cellModel;
     self.bottomView.descLabel.attributedText = cellModel.desc;
     
@@ -137,13 +131,9 @@
 
 - (void)showGuideView {
     if(_cellModel.isInsertGuideCell){
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(bottomViewHeight + guideViewHeight);
-        }];
+        self.bottomView.height = bottomViewHeight + guideViewHeight;
     }else{
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(bottomViewHeight);
-        }];
+        self.bottomView.height = bottomViewHeight;
     }
 }
 

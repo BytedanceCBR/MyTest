@@ -9,7 +9,6 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHeaderView.h"
 #import "FHUGCCellUserInfoView.h"
-#import "FHUGCCellBottomView.h"
 #import "FHUGCCellMultiImageView.h"
 #import "FHUGCCellHelper.h"
 #import "TTRoute.h"
@@ -30,7 +29,6 @@
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
-@property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,assign) CGFloat imageViewheight;
 
@@ -81,14 +79,6 @@
     // 图片区
     self.multiImageView = [FHUGCCellMultiImageView new];
     [self.contentContainer addSubview:self.multiImageView];
-
-//    // 底部圈子、点赞、评论区
-//    self.bottomView = [FHUGCCellBottomView new];
-//    [self.bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
-//    [self.bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
-//    [self.contentContainer addSubview:self.bottomView];
-//    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-//    [self.bottomView.positionView addGestureRecognizer:tap];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
