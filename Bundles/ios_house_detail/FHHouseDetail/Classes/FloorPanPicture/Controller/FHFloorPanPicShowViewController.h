@@ -6,6 +6,8 @@
 //
 
 #import "FHBaseViewController.h"
+#import <FHHouseBase/FHHouseType.h>
+#import "FHDetailNewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void (^albumImageBtnClickBlock)(NSInteger index);
 @property(nonatomic, copy) void (^albumImageStayBlock)(NSInteger index,NSInteger stayTime);
 
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewTopImage *> *topImages;
 @end
 
 NS_ASSUME_NONNULL_END

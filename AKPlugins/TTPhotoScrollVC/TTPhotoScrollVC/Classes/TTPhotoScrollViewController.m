@@ -384,6 +384,7 @@
     }
     
     FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
+    showVC.modalPresentationStyle = UIModalPresentationFullScreen;
     showVC.pictsArray = _smallImageInfosModels;
     __weak TTPhotoScrollViewController * weakSelf = self;
     showVC.albumImageBtnClickBlock = ^(NSInteger index){

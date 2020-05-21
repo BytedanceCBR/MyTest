@@ -1260,20 +1260,25 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         self.albumImageBtnClickBlock(self.currentIndex);
     }
     
-    FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
-    showVC.pictsArray = self.smallImageInfosModels;
-    __weak typeof(self)weakSelf = self;
-    showVC.albumImageBtnClickBlock = ^(NSInteger index){
-        if (index >= 0) {
-            [weakSelf.photoScrollView setContentOffset:CGPointMake(self.view.frame.size.width * index, 0) animated:NO];
-        }
-    };
-    
-    showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-        [self stayCallBack:stayTime];
-    };
-    
-    [self presentViewController:showVC animated:NO completion:nil];
+    if (self.allPhotoActionBlock) {
+        self.allPhotoActionBlock();
+    } else {
+        FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
+        showVC.modalPresentationStyle = UIModalPresentationFullScreen;
+        showVC.pictsArray = self.smallImageInfosModels;
+        __weak typeof(self)weakSelf = self;
+        showVC.albumImageBtnClickBlock = ^(NSInteger index){
+            if (index >= 0) {
+                [weakSelf.photoScrollView setContentOffset:CGPointMake(self.view.frame.size.width * index, 0) animated:NO];
+            }
+        };
+        
+        showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
+            [self stayCallBack:stayTime];
+        };
+        
+        [self presentViewController:showVC animated:NO completion:nil];
+    }
 }
 
 - (void)backButtonClicked

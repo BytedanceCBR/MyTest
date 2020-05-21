@@ -55,6 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^shareActionBlock)(void);
 @property(nonatomic , copy) void (^collectActionBlock)(BOOL followStatus);
 
+/// 查看全部图片的block，如果没有block，执行默认操作
+@property(nonatomic , copy) void (^allPhotoActionBlock)();
+
 /** 图片URL数组*/
 @property(nonatomic, strong)NSArray * imageURLs; //every item also is array, and it contains url and header infos
 

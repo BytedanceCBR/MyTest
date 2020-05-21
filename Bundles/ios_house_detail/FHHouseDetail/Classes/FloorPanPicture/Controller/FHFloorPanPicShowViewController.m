@@ -27,6 +27,18 @@
 
 @implementation FHFloorPanPicShowViewController
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    if (@available(iOS 13.0, *)) {
+        return UIStatusBarStyleDarkContent;
+    }
+    return UIStatusBarStyleDefault;
+}
+
+- (void)setTopImages:(NSArray<FHDetailNewTopImage *> *)topImages {
+    _topImages = topImages;
+    [self processImagesList];
+}
+
 - (instancetype)init
 {
     self = [super init];
@@ -99,6 +111,36 @@
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
     [self.customNavBarView setNaviBarTransparent:NO];
 }
+
+- (void)processImagesList {
+    NSMutableArray *smallImageGroup = [NSMutableArray array];
+    for (FHDetailNewTopImage *topImage in self.topImages) {
+        FHDetailNewDataSmallImageGroupModel *smallImageGroupModel = [[FHDetailNewDataSmallImageGroupModel alloc] init];
+        smallImageGroupModel.type = [@(topImage.type) stringValue];
+        smallImageGroupModel.name = topImage.name;
+
+        NSMutableArray *smallImageList = [NSMutableArray array];
+        for (FHDetailNewDataImageGroupModel * groupModel in topImage.smallImageGroup) {
+            for (NSInteger j = 0; j < groupModel.images.count; j++) {
+                [smallImageList addObject:groupModel.images[j]];
+            }
+            if (topImage.type == FHDetailHouseImageTypeApartment) {
+                smallImageGroupModel.name = groupModel.name;
+                smallImageGroupModel.images = smallImageList.copy;
+                [smallImageGroup addObject:smallImageGroupModel];
+                [smallImageList removeAllObjects];
+                continue;
+            }
+        }
+        
+        if (smallImageList.count) {
+            smallImageGroupModel.images = smallImageList.copy;
+            [smallImageGroup addObject:smallImageGroupModel];
+        }
+    }
+    self.pictsArray = smallImageGroup.copy;
+}
+
 
 #pragma mark collectionView代理方法
 //返回section个数

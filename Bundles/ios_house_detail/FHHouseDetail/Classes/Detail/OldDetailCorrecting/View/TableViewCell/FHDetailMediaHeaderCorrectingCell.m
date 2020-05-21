@@ -23,6 +23,8 @@
 //#import "FHVRCacheManager.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
+#import "FHFloorPanPicShowViewController.h"
+#import <TTBaseLib/TTUIResponderHelper.h>
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -395,7 +397,8 @@
     
     [pictureDetailViewController setMediaHeaderModel:self.currentData mediaImages:images];
     FHDetailMediaHeaderCorrectingModel *model = ((FHDetailMediaHeaderCorrectingModel *)self.currentData);
-    if (!model.isShowTopImageTab && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
+    //去除flag判断，改为判断详情页type
+    if (self.baseViewModel.houseType == FHHouseTypeNewHouse && [model.topImages isKindOfClass:[NSArray class]] && model.topImages.count > 0) {
         FHDetailNewTopImage *topImage = model.topImages.firstObject;
         pictureDetailViewController.smallImageInfosModels = topImage.smallImageGroup;
     }
@@ -724,6 +727,37 @@
 //进入图片页面页
 - (void)goToPictureList {
     
+    FHDetailMediaHeaderCorrectingModel *data = (FHDetailMediaHeaderCorrectingModel *)self.currentData;
+    FHFloorPanPicShowViewController *pictureListViewController = [[FHFloorPanPicShowViewController alloc] init];
+    pictureListViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    if (data.isShowTopImageTab) {
+        pictureListViewController.topImages = data.topImages;
+    } else {
+        if (data.topImages.count) {
+            FHDetailNewTopImage *topImage = data.topImages.firstObject;
+            pictureListViewController.pictsArray = topImage.smallImageGroup;
+        }
+    }
+    __weak typeof(self)weakSelf = self;
+    pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index){
+        
+//        if (index >= 0) {
+//            [weakSelf.photoScrollView setContentOffset:CGPointMake(self.view.frame.size.width * index, 0) animated:NO];
+//        }
+    };
+
+    pictureListViewController.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
+//        [self stayCallBack:stayTime];
+    };
+    UIViewController *presentedVC = data.weakVC;
+    if (!presentedVC) {
+        presentedVC = [TTUIResponderHelper visibleTopViewController];
+    }
+    if (presentedVC.navigationController) {
+        [presentedVC.navigationController pushViewController:pictureListViewController animated:YES];
+    } else {
+        [presentedVC presentViewController:pictureListViewController animated:YES completion:nil];
+    }
 }
 
 #pragma mark - FHDetailScrollViewDidScrollProtocol
