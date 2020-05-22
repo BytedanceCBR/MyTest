@@ -47,7 +47,6 @@
     return YES;
 }
 @end
-
 @implementation FHDetailFloorPanDetailInfoDataBaseInfoModel
 + (JSONKeyMapper*)keyMapper
 {

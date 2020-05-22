@@ -8,13 +8,15 @@
 #import "FHFloorPanListCell.h"
 #import "FHDetailNewModel.h"
 #import "BDWebImage.h"
+#import "FHDetailTagBackgroundView.h"
+#import "FHCommonDefines.h"
 
 @interface FHFloorPanListCell ()
 @property (nonatomic , strong) UIImageView *iconView;
 @property (nonatomic , strong) UILabel *nameLabel;
 @property (nonatomic , strong) UILabel *roomSpaceLabel;
 @property (nonatomic , strong) UILabel *priceLabel;
-@property (nonatomic , strong) UIView  *tagBacView;
+@property (nonatomic, strong) FHDetailTagBackgroundView        *tagBacView;
 @property (nonatomic , strong) UIButton *mapMaskBtn;
 @property (nonatomic , strong) UIView *statusBGView;
 @property (nonatomic , strong) UILabel *statusLabel;
@@ -63,7 +65,9 @@
         _priceLabel.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:_priceLabel];
         
-        _tagBacView = [UIView new];
+        _tagBacView = [[FHDetailTagBackgroundView alloc] initWithLabelHeight:16.0 withCornerRadius:2.0];
+        [_tagBacView setMarginWithTagMargin:4.0 withInsideMargin:4.0];
+        _tagBacView.textFont = [UIFont themeFontMedium:10.0];
         [self.contentView addSubview:_tagBacView];
         
         [self initConstaints];
@@ -166,9 +170,7 @@
 - (void)refreshWithData:(id)data
 {
     if ([data isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
-        for (UIView *v in self.tagBacView.subviews) {
-            [v removeFromSuperview];
-        }
+        [self.tagBacView removeAllTag];
         FHDetailNewDataFloorpanListListModel *model = (FHDetailNewDataFloorpanListListModel*)data;
         self.nameLabel.text = model.title;
         if ([model.squaremeter isKindOfClass:[NSString class]]) {
@@ -214,68 +216,11 @@
                 }
             }
         }
-        CGFloat left = 0.0;
-        if (model.saleStatus) {
-            UILabel *saleLabel = [self createLabelWithText:model.saleStatus.content bacColor:model.saleStatus.backgroundColor textColor:model.saleStatus.textColor];
-            CGFloat width = [self getTagBackWidth:saleLabel];
-            [self.tagBacView addSubview:saleLabel];
-            [saleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(left);
-                make.width.mas_equalTo(width);
-                make.height.mas_equalTo(16.0);
-                make.top.mas_equalTo(0);
-            }];
-            left += width + 4.0;
-        }
-        FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
-        /*mock数据*/
-        tag.content = rand()%2 == 0?@"啊啊啊":@"哈哈哈";
-        tag.backgroundColor = @"#f4f3f2";
-        tag.textColor = @"#a49a92";
-        NSMutableArray *arr = [NSMutableArray arrayWithObject:tag];
-        [arr addObject:tag];
-        [arr addObject:tag];
-        [arr addObject:tag];
-        model.tags = arr.copy;
-        /*mock数据*/
-        if (model.tags && model.tags.count > 0) {
-            for (NSUInteger i = 0; i < MIN(model.tags.count, 3); i++) {
-                FHHouseTagsModel *tag = model.tags[i];
-                UILabel *tagLabel = [self createLabelWithText:tag.content bacColor:tag.backgroundColor textColor:tag.textColor];
-                CGFloat width = [self getTagBackWidth:tagLabel];
-                [self.tagBacView addSubview:tagLabel];
-                [tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.left.mas_equalTo(left);
-                    make.width.mas_equalTo(width);
-                    make.height.mas_equalTo(16.0);
-                    make.top.mas_equalTo(0);
-                }];
-                left += width + 4.0;
-            }
-        }
+        [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:SCREEN_WIDTH - 31 - 66 - 13 - 31];
     }
     [self layoutIfNeeded];
 }
 
-- (UILabel *)createLabelWithText:(NSString *)text bacColor:(NSString *)bacStr textColor:(NSString *)textStr {
-    UIColor *tagBacColor = [UIColor colorWithHexString:bacStr];
-    UIColor *tagTextColor = [UIColor colorWithHexString:textStr];
-    UILabel *label = [[UILabel alloc]init];
-    label.textAlignment = NSTextAlignmentCenter;
-    label.backgroundColor = tagBacColor;
-    label.textColor = tagTextColor;
-    label.layer.cornerRadius = 2;
-    label.layer.masksToBounds = YES;
-    label.text = text;
-    label.font = [UIFont themeFontMedium:10];
-    return label;
-}
-
-- (CGFloat)getTagBackWidth:(UILabel *)label {
-    [label sizeToFit];
-    CGSize itemSize = [label sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, 16.0)];
-    return itemSize.width + 8.0;
-}
 
 - (void)awakeFromNib {
     [super awakeFromNib];
