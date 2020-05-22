@@ -179,17 +179,6 @@
     //图片
     FHFeedContentImageListModel *imageModel = [[FHFeedContentImageListModel alloc] init];
     imageModel.url = cellModel.user.avatarUrl;
-    
-    if (imageModel && imageModel.url.length > 0) {
-        TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:cellModel.attachCardInfo.imageModel];
-        __weak typeof(self) wSelf = self;
-        [self.icon setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:[UIImage imageNamed:@"fh_mine_avatar"] success:nil failure:^(NSError *error) {
-            [wSelf.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
-        }];
-    }else{
-        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
-    }
-    
     NSMutableArray *urlList = [NSMutableArray array];
     for (NSInteger i = 0; i < 3; i++) {
         FHFeedContentImageListUrlListModel *urlListModel = [[FHFeedContentImageListUrlListModel alloc] init];
@@ -198,8 +187,15 @@
     }
     imageModel.urlList = urlList;
     
-    
-    
+    if (imageModel && imageModel.url.length > 0) {
+        TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
+        __weak typeof(self) wSelf = self;
+        [self.icon setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:[UIImage imageNamed:@"fh_mine_avatar"] success:nil failure:^(NSError *error) {
+            [wSelf.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
+        }];
+    }else{
+        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
+    }
 //    [self.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
     self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;

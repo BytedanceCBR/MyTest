@@ -89,13 +89,6 @@
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
-//    NSDictionary *linkAttributes = @{
-//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-//                                     };
-//    self.contentLabel.linkAttributes = linkAttributes;
-//    self.contentLabel.activeLinkAttributes = linkAttributes;
-//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
@@ -170,11 +163,6 @@
     self.currentData = data;
     self.cellModel = cellModel;
     //设置userInfo
-//    self.userInfoView.cellModel = cellModel;
-//    self.userInfoView.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
-//    [self.userInfoView updateDescLabel];
-//    [self.userInfoView updateEditState];
-//    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     [self.userInfoView refreshWithData:cellModel];
     //设置底部
     self.bottomView.cellModel = cellModel;
@@ -199,7 +187,6 @@
         }];
         [self.videoView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(20 + cellModel.contentHeight);
-            make.height.mas_equalTo(self.videoViewheight);
         }];
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
