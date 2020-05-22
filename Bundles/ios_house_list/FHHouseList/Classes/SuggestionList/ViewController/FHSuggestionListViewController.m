@@ -15,9 +15,9 @@
 #import "FHSugSubscribeListViewController.h"
 #import "FHOldSuggestionItemCell.h"
 #import "HMSegmentedControl.h"
-#import "FHBaseCollectionView.h"
 #import "FHSuggestionSearchBar.h"
 #import "FHSuggestionCollectionViewCell.h"
+#import "FHSuggestionCollectionView.h"
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -27,7 +27,7 @@
 @property (nonatomic, strong)   NSMutableDictionary       *homePageRollDic;
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, strong) UIView *containerView;
-@property (nonatomic, strong) FHBaseCollectionView *collectionView;
+@property (nonatomic, strong) FHSuggestionCollectionView *collectionView;
 
 @end
 
@@ -169,7 +169,7 @@
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     //2.初始化collectionView
-    self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.collectionView = [[FHSuggestionCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
     _collectionView.bounces = NO;
