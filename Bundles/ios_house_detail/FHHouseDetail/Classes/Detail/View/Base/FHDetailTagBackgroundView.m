@@ -34,7 +34,6 @@
         _tagMargin = 4.0;
         _insideMargin = 4.0;
         _labelHeight = 16.0;
-        _fontHeight = 10.0;
         _cornerRadius = 2.0;
         _textFont = [UIFont themeFontMedium:10];
         _containerView = [UIView new];
