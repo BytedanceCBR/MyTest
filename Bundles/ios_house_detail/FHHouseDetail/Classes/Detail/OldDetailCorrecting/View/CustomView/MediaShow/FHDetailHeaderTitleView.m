@@ -5,7 +5,7 @@
 //  Created by liuyu on 2019/11/26.
 //
 
-#import "FHDeatilHeaderTitleView.h"
+#import "FHDetailHeaderTitleView.h"
 #import "FHHouseTagsModel.h"
 #import <TTThemed/SSThemed.h>
 #import "Masonry.h"
@@ -15,7 +15,7 @@
 #import "FHDetailTopBannerView.h"
 
 
-@interface FHDeatilHeaderTitleView ()
+@interface FHDetailHeaderTitleView ()
 @property (nonatomic, weak) UIImageView *shadowImage;
 @property (nonatomic, weak) UIButton *mapBtn;//仅小区展示
 @property (nonatomic, weak) UIView *tagBacView;
@@ -27,7 +27,7 @@
 @property (nonatomic, strong) FHDetailTopBannerView *topBanner;
 
 @end
-@implementation FHDeatilHeaderTitleView
+@implementation FHDetailHeaderTitleView
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -147,30 +147,38 @@
 
 - (void)setFloorPanModel{
     NSArray *tags = _model.tags;
+    CGFloat tagHeight = tags.count > 0 ? 20 : 0.01;
+    CGFloat tagTop = tags.count > 0 ? 20 : 8;
     if (tags) {
         FHHouseTagsModel *tagModel = [tags firstObject];
         [self.nameLabel sizeToFit];
         CGSize itemSize = [self.nameLabel sizeThatFits:CGSizeMake([UIScreen mainScreen].bounds.size.width, 28)];
-        UIColor *tagBacColor = [UIColor colorWithHexString:tagModel.backgroundColor];
-        UIColor *tagTextColor = [UIColor colorWithHexString:tagModel.textColor];
-        UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
-        CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 31;
-        CGFloat itemWidth = itemSize.width;
-        if (itemWidth > tagWidth - 31 - 40 -4) {
-            itemWidth = tagWidth - 31 - 40 -4;
-        }
-        [self addSubview:label];
+//        UIColor *tagBacColor = [UIColor colorWithHexString:tagModel.backgroundColor];
+//        UIColor *tagTextColor = [UIColor colorWithHexString:tagModel.textColor];
+//        UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
+//        CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 31;
+//        CGFloat itemWidth = itemSize.width;
+//        if (itemWidth > tagWidth - 31 - 40 -4) {
+//            itemWidth = tagWidth - 31 - 40 -4;
+//        }
+//        [self addSubview:label];
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(31);
-            make.width.mas_equalTo(itemWidth);
+            make.right.mas_equalTo(self).offset(-35);
             make.height.mas_equalTo(28);
-            make.top.mas_equalTo(self.mas_top).offset(50);
+            make.top.mas_equalTo(self.mas_top).offset(40);
         }];
-        [label mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.nameLabel.mas_right).offset(6);
-            make.width.mas_equalTo(40);
-            make.centerY.mas_equalTo(self.nameLabel);
-            make.height.mas_equalTo(20);
+//        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(self.nameLabel.mas_right).offset(6);
+//            make.width.mas_equalTo(40);
+//            make.centerY.mas_equalTo(self.nameLabel);
+//            make.height.mas_equalTo(20);
+//        }];
+        [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(15);
+            make.right.mas_equalTo(self).offset(-15);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(9);
+            make.height.mas_offset(tagHeight);
         }];
     }
     else{
@@ -179,6 +187,13 @@
             make.right.mas_equalTo(self).offset(-35);
             make.height.mas_equalTo(28);
             make.top.mas_equalTo(self.mas_top).offset(50);
+        }];
+        
+        [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(15);
+            make.right.mas_equalTo(self).offset(-15);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(9);
+            make.height.mas_offset(tagHeight);
         }];
     }
     NSString *picing = _model.Picing;
@@ -197,12 +212,48 @@
     
     [self.totalPirce mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(31);
-        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
         make.right.mas_equalTo(self).offset(- 35);
         make.height.mas_equalTo(24);
         make.bottom.mas_equalTo(self);
     }];
     
+    __block UIView *lastView = self.tagBacView;
+
+    __block CGFloat maxWidth = 30;
+    [tags enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        FHHouseTagsModel *tagModel = obj;
+        CGSize itemSize = [tagModel.content sizeWithAttributes:@{
+                                                                 NSFontAttributeName: [UIFont themeFontRegular:12]
+                                                                 }];
+        UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#FFEAD3"]:[UIColor colorWithHexString:@"#F2F1EF"];
+        UIColor *tagTextColor = idx == 0 ?[UIColor colorWithHexString:@"#ff9300"]:[UIColor colorWithHexString:@"#a49a92"];
+        UILabel *label = [self createLabelWithText:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
+                
+        CGFloat inset = 10;
+        if (self.model.housetype == FHHouseTypeNewHouse) {
+            inset = 4;
+        }
+        CGFloat itemWidth = itemSize.width + 18;
+        maxWidth += itemWidth + inset;
+        CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 30;
+        if (maxWidth >= tagWidth) {
+            *stop = YES;
+        }else {
+            [self.tagBacView addSubview:label];
+            [label mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (idx == 0) {
+                    make.left.equalTo(lastView).offset(16);
+                }else {
+                    make.left.equalTo(lastView.mas_right).offset(inset);
+                }
+                make.top.equalTo(self.tagBacView);
+                make.width.mas_offset(itemWidth);
+                make.height.equalTo(self.tagBacView);
+            }];
+            lastView = label;
+        }
+    }];
 }
 
 - (void)setModel:(FHDetailHouseTitleModel *)model {

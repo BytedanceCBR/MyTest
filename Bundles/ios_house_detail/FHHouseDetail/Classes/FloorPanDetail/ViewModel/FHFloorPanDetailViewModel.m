@@ -175,14 +175,15 @@
     houseTitleModel.squaremeter = model.data.squaremeter;
     houseTitleModel.facingDirection = model.data.facingDirection;
     houseTitleModel.saleStatus = model.data.saleStatus.content;
-    if (model.data.saleStatus) {
-        FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
-        tag.backgroundColor = model.data.saleStatus.backgroundColor;
-        tag.content = model.data.saleStatus.content;
-        tag.id = model.data.saleStatus.id;
-        tag.textColor = model.data.saleStatus.textColor;
-        houseTitleModel.tags = @[tag];
-    }
+    houseTitleModel.tags = model.data.tags;
+//    if (model.data.tags) {
+//        FHHouseTagsModel *tag = [[FHHouseTagsModel alloc]init];
+//        tag.backgroundColor = model.data.saleStatus.backgroundColor;
+//        tag.content = model.data.saleStatus.content;
+//        tag.id = model.data.saleStatus.id;
+//        tag.textColor = model.data.saleStatus.textColor;
+//        houseTitleModel.tags = @[tag];
+//    }
     houseTitleModel.Picing = model.data.pricing;
     houseTitleModel.displayPrice = model.data.displayPrice;
     houseTitleModel.isFloorPan = YES;
