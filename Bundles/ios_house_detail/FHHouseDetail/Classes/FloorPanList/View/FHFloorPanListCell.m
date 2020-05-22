@@ -9,6 +9,7 @@
 #import "FHDetailNewModel.h"
 #import "BDWebImage.h"
 #import "FHDetailTagBackgroundView.h"
+#import "FHCommonDefines.h"
 
 @interface FHFloorPanListCell ()
 @property (nonatomic , strong) UIImageView *iconView;
@@ -215,23 +216,7 @@
                 }
             }
         }
-        NSMutableArray *tagArr = [NSMutableArray array];
-        NSUInteger maxNum = 0;
-        
-        if (model.saleStatus) {
-            FHHouseTagsModel *tag = [[FHHouseTagsModel alloc] init];
-            tag.backgroundColor = model.saleStatus.backgroundColor;
-            tag.content = model.saleStatus.content;
-            tag.id = model.saleStatus.id;
-            tag.textColor = model.saleStatus.textColor;
-            [tagArr addObject:tag];
-            maxNum ++;
-        }
-        if (model.tags.count > 0) {
-            [tagArr addObjectsFromArray:model.tags];
-            maxNum += 3;
-        }
-        [self.tagBacView refreshWithTags:tagArr.copy withNum:maxNum withmaxLen:MAXFLOAT];
+        [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:SCREEN_WIDTH - 31 - 66 - 13 - 31];
     }
     [self layoutIfNeeded];
 }

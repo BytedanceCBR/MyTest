@@ -14,8 +14,10 @@
 @interface FHDetailTagBackgroundView ()
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong)   NSArray      *tags;
-@property (nonatomic, assign)   NSUInteger   maxNum,nowNum;
-@property (nonatomic, assign)   CGFloat      left,maxLen;
+@property (nonatomic, assign)   NSUInteger   maxNum;
+@property (nonatomic, assign)   NSUInteger   nowNum;
+@property (nonatomic, assign)   CGFloat      left;
+@property (nonatomic, assign)   CGFloat      maxLen;
 
 @end
 
@@ -73,7 +75,7 @@
     _maxLen = 0.0;
 }
 
-- (void)refreshWithTags:(NSArray *)tags withNum:(NSUInteger)num withmaxLen:(CGFloat)maxLen{
+- (void)refreshWithTags:(NSArray *)tags withNum:(NSUInteger)num withMaxLen:(CGFloat)maxLen{
     _tags = tags;
     _maxNum = num;
     _maxLen = maxLen;
@@ -86,7 +88,7 @@
         UILabel *tagLabel = [self createLabelWithText:tag.content bacColor:tag.backgroundColor textColor:tag.textColor];
         CGFloat width = [self getLabelWidth:tagLabel];
         if (_left + width > maxLen) {
-            continue;
+            break;
         }
         [self.containerView addSubview:tagLabel];
         [tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -95,7 +97,6 @@
             make.height.mas_equalTo(self.labelHeight);
             make.top.mas_equalTo(0);
         }];
-        
         _left += width + _tagMargin;
         _nowNum ++;
     }

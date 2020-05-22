@@ -383,21 +383,7 @@
         [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(width);
         }];
-        NSUInteger maxNum = 0;
-        if (model.saleStatus) {
-            FHHouseTagsModel *tag = [[FHHouseTagsModel alloc] init];
-            tag.backgroundColor = model.saleStatus.backgroundColor;
-            tag.content = model.saleStatus.content;
-            tag.id = model.saleStatus.id;
-            tag.textColor = model.saleStatus.textColor;
-            [tagArr addObject:tag];
-            maxNum ++;
-        }
-        if (model.tags.count > 0) {
-            [tagArr addObjectsFromArray:model.tags];
-            maxNum ++;
-        }
-        [self.tagBacView refreshWithTags:tagArr.copy withNum:maxNum withmaxLen:ITEM_WIDTH - width - 4];
+        [self.tagBacView refreshWithTags:model.tags withNum:model.tags.count withMaxLen:ITEM_WIDTH - width - 4];
     }
     [self layoutIfNeeded];
 }

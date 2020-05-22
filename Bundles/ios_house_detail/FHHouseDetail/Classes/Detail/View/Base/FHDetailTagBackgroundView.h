@@ -11,10 +11,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailTagBackgroundView : UIView
 @property (nonatomic, copy)     UIFont    *textFont;
-@property (nonatomic, assign)   CGFloat   fontHeight,labelHeight,cornerRadius,tagMargin,insideMargin;
+@property (nonatomic, assign)   CGFloat   labelHeight;
+@property (nonatomic, assign)   CGFloat   cornerRadius;
+@property (nonatomic, assign)   CGFloat   tagMargin;
+@property (nonatomic, assign)   CGFloat   insideMargin;
 
 - (void)removeAllTag;
-- (void)refreshWithTags:(NSArray *)tags withNum:(NSUInteger)num withmaxLen:(CGFloat)maxLen;
+- (void)refreshWithTags:(NSArray *)tags withNum:(NSUInteger)num withMaxLen:(CGFloat)maxLen;
 - (instancetype)initWithLabelHeight:(CGFloat)labelHeight withCornerRadius:(CGFloat)cornerRadius;
 - (void)setMarginWithTagMargin:(CGFloat)tagMargin withInsideMargin:(CGFloat)insideMargin;
 @end
