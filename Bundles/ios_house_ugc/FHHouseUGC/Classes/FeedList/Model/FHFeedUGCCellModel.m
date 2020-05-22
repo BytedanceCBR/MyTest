@@ -758,6 +758,19 @@
     
     if(model.attachCardInfo && model.attachCardInfo.title.length > 0){
         cellModel.attachCardInfo = model.attachCardInfo;
+        //这里转一下图片的模型
+        FHFeedContentImageListModel *imageModel = [[FHFeedContentImageListModel alloc] init];
+        imageModel.url = cellModel.attachCardInfo.coverImage.url;
+        imageModel.uri = cellModel.attachCardInfo.coverImage.uri;
+        
+        NSMutableArray *urlList = [NSMutableArray array];
+        for (NSInteger i = 0; i < 3; i++) {
+            FHFeedContentImageListUrlListModel *urlListModel = [[FHFeedContentImageListUrlListModel alloc] init];
+            urlListModel.url = cellModel.attachCardInfo.coverImage.url;
+            [urlList addObject:urlListModel];
+        }
+        imageModel.urlList = urlList;
+        cellModel.attachCardInfo.imageModel = imageModel;
     }
     
     cellModel.isStick = (model.isStick || model.rawData.isStick);

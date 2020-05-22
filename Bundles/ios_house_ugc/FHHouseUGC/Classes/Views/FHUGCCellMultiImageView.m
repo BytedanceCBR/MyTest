@@ -16,6 +16,7 @@
 #import "TTInteractExitHelper.h"
 #import "FHUGCCellHelper.h"
 #import "UIViewAdditions.h"
+#import "TTImageView+TrafficSave.h"
 
 #define itemPadding 4
 #define kMaxCount 9
@@ -51,9 +52,9 @@
 
 - (void)initViews {
     for (NSInteger i = 0; i < self.count; i++) {
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        TTImageView *imageView = [[TTImageView alloc] initWithFrame:CGRectZero];
         imageView.clipsToBounds = YES;
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.imageContentMode = TTImageViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
         imageView.layer.borderWidth = 0.5;
@@ -80,12 +81,6 @@
 }
 
 - (void)initConstraints {
-//    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.right.bottom.mas_equalTo(self).offset(-4);
-//        make.width.mas_equalTo(38);
-//        make.height.mas_equalTo(22);
-//    }];
-    
     if(self.count == 1){
         _imageWidth = self.bounds.size.width;
         _viewHeight = self.imageWidth * 9.0f/16.0f;
@@ -153,25 +148,17 @@
         
     }
     
-//    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-    //        make.right.bottom.mas_equalTo(self).offset(-4);
-    //        make.width.mas_equalTo(38);
-    //        make.height.mas_equalTo(22);
-    //    }];
-    
     self.infoLabel.width = 38;
     self.infoLabel.height = 22;
     self.infoLabel.top = self.viewHeight - self.infoLabel.height - 4;
     self.infoLabel.left = self.frame.size.width - self.infoLabel.width - 4;
-        
-    
 }
 
 - (void)updateImageView:(NSArray *)imageList largeImageList:(NSArray *)largeImageList {
     self.largeImageList = largeImageList;
     
     for (NSInteger i = 0; i < self.imageViewList.count; i++) {
-        UIImageView *imageView = self.imageViewList[i];
+        TTImageView *imageView = self.imageViewList[i];
         if(i < imageList.count){
             FHFeedContentImageListModel *imageModel = imageList[i];
             
@@ -186,7 +173,12 @@
             }
 
             if (imageModel && imageModel.url.length > 0) {
-                [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+//                [imageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
+                TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:imageModel];
+                __weak typeof(imageView) wImageView = imageView;
+                [imageView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
+                    [wImageView setImage:nil];
+                }];
             }
             //只对单图做重新布局，多图都是1：1
             if(self.count == 1 && !self.fixedSingleImage){
@@ -226,8 +218,8 @@
         return;
     }
     
-    UIImageView *view = (UIImageView *)tap.view;
-    if (view.image == nil) {
+    TTImageView *view = (UIImageView *)tap.view;
+    if (view.imageView.image == nil) {
         return;
     }
     [self imageTouched:tap.view];
@@ -265,7 +257,7 @@
     [controller setStartWithIndex:sender.tag];
     
     NSMutableArray * frames = [NSMutableArray arrayWithCapacity:9];
-    for (UIImageView *view in self.imageViewList) {
+    for (TTImageView *view in self.imageViewList) {
         CGRect frame = [view convertRect:view.bounds toView:nil];
         [frames addObject:[NSValue valueWithCGRect:frame]];
     }
@@ -282,10 +274,10 @@
     }
     for (NSInteger i = 0; i < picCount; i++) {
         if(i < self.imageViewList.count){
-            UIImageView *view = self.imageViewList[i];
+            TTImageView *view = self.imageViewList[i];
             //  此处需要优化
-            if (view.image) {
-                [photoObjs addObject:view.image];
+            if (view.imageView.image) {
+                [photoObjs addObject:view.imageView.image];
             }
         }
     }

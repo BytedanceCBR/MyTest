@@ -84,7 +84,7 @@
     };
     [self.contentView addSubview:_originView];
     
-    self.attachCardView = [[FHUGCCellAttachCardView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    self.attachCardView = [[FHUGCCellAttachCardView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, attachCardViewHeight)];
     _attachCardView.hidden = YES;
     [self.contentView addSubview:_attachCardView];
     

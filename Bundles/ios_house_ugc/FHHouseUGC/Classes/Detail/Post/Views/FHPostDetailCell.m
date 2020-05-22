@@ -132,7 +132,7 @@
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoCommunityDetail)];
     [self.positionView addGestureRecognizer:singleTap];
     
-    self.attachCardView = [[FHUGCCellAttachCardView alloc] initWithFrame:CGRectZero];
+    self.attachCardView = [[FHUGCCellAttachCardView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, attachCardViewHeight)];
     _attachCardView.hidden = YES;
     [self.contentView addSubview:_attachCardView];
     

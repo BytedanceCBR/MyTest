@@ -25,6 +25,7 @@
 #import "TTAssetModel.h"
 #import "UIViewAdditions.h"
 #import "UIImageView+BDWebImage.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHUGCCellUserInfoView()
 
@@ -77,9 +78,9 @@
 }
 
 - (void)initViews {
-    self.icon = [[UIImageView alloc] init];
+    self.icon = [[TTImageView alloc] init];
     _icon.backgroundColor = [UIColor themeGray7];
-    _icon.contentMode = UIViewContentModeScaleAspectFill;
+    _icon.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;
     _icon.layer.cornerRadius = 20;
     _icon.layer.borderWidth = 1;
@@ -175,8 +176,31 @@
 - (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
     //设置userInfo
     self.cellModel = cellModel;
+    //图片
+    FHFeedContentImageListModel *imageModel = [[FHFeedContentImageListModel alloc] init];
+    imageModel.url = cellModel.user.avatarUrl;
     
-    [self.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    if (imageModel && imageModel.url.length > 0) {
+        TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:cellModel.attachCardInfo.imageModel];
+        __weak typeof(self) wSelf = self;
+        [self.icon setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:[UIImage imageNamed:@"fh_mine_avatar"] success:nil failure:^(NSError *error) {
+            [wSelf.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
+        }];
+    }else{
+        [self.icon setImage:[UIImage imageNamed:@"fh_mine_avatar"]];
+    }
+    
+    NSMutableArray *urlList = [NSMutableArray array];
+    for (NSInteger i = 0; i < 3; i++) {
+        FHFeedContentImageListUrlListModel *urlListModel = [[FHFeedContentImageListUrlListModel alloc] init];
+        urlListModel.url = cellModel.user.avatarUrl;
+        [urlList addObject:urlListModel];
+    }
+    imageModel.urlList = urlList;
+    
+    
+    
+//    [self.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
     self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
     [self updateDescLabel];

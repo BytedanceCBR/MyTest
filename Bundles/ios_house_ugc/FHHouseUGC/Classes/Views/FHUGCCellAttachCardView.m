@@ -23,10 +23,11 @@
 #import "FHUserTracker.h"
 #import "FHHouseContactDefines.h"
 #import "UIViewAdditions.h"
+#import "TTImageView+TrafficSave.h"
 
 @interface FHUGCCellAttachCardView ()
 
-@property(nonatomic ,strong) UIImageView *iconView;
+@property(nonatomic ,strong) TTImageView *iconView;
 @property(nonatomic ,strong) UILabel *titleLabel;
 @property(nonatomic ,strong) UILabel *descLabel;
 @property(nonatomic ,strong) UIView *spLine;
@@ -55,9 +56,9 @@
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToDetail)];
     [self addGestureRecognizer:singleTap];
     
-    self.iconView = [[UIImageView alloc] init];
+    self.iconView = [[TTImageView alloc] init];
     _iconView.backgroundColor = [UIColor whiteColor];
-    _iconView.contentMode = UIViewContentModeScaleAspectFill;
+    _iconView.imageContentMode = TTImageViewContentModeScaleAspectFill;
     _iconView.layer.cornerRadius = 4;
     _iconView.layer.masksToBounds = YES;
     _iconView.clipsToBounds = YES;
@@ -76,6 +77,10 @@
     self.button = [[UIButton alloc] init];
     [_button setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
     _button.titleLabel.font = [UIFont themeFontRegular:14];
+    _button.backgroundColor = [UIColor themeGray7];
+    _button.layer.masksToBounds = YES;
+    _button.titleLabel.backgroundColor = [UIColor themeGray7];
+    _button.titleLabel.layer.masksToBounds = YES;
     [_button setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_button setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_button addTarget:self action:@selector(buttonClick) forControlEvents:UIControlEventTouchUpInside];
@@ -83,38 +88,30 @@
 }
 
 - (void)initConstraints {
-    [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(10);
-        make.centerY.mas_equalTo(self);
-        make.width.height.mas_equalTo(40);
-    }]; 
+    self.iconView.left = 10;
+    self.iconView.width = 40;
+    self.iconView.height = 40;
+    self.iconView.top = (self.height - self.iconView.height)/2;
     
-    [self.button mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self).offset(-15);
-        make.top.bottom.mas_equalTo(self);
-        make.width.mas_lessThanOrEqualTo(60);
-    }];
+    self.titleLabel.left = self.iconView.right + 8;
+    self.titleLabel.width = self.width - 58 - 75 - 10.5 - 5;
+    self.titleLabel.top = 9;
+    self.titleLabel.height = 22;
     
-    [self.spLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.button.mas_left).offset(-9.5);
-        make.centerY.mas_equalTo(self);
-        make.width.mas_equalTo(1);
-        make.height.mas_equalTo(17);
-    }];
+    self.descLabel.left = self.titleLabel.left;
+    self.descLabel.top = self.titleLabel.bottom;
+    self.descLabel.width = self.titleLabel.width;
+    self.descLabel.height = 17;
     
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.iconView.mas_right).offset(8);
-        make.right.mas_equalTo(self.spLine.mas_left).offset(-5);
-        make.top.mas_equalTo(self).offset(9);
-        make.height.mas_equalTo(22);
-    }];
+    self.spLine.width = 1;
+    self.spLine.height = 17;
+    self.spLine.left = self.titleLabel.right + 5;
+    self.spLine.centerY = self.iconView.centerY;
     
-    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.titleLabel.mas_left);
-        make.right.mas_equalTo(self.titleLabel.mas_right);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom);
-        make.height.mas_equalTo(17);
-    }];
+    self.button.width = 60;
+    self.button.height = self.height;
+    self.button.top = 0;
+    self.button.left = self.spLine.right + 9.5;
 }
 
 - (void)refreshWithdata:(id)data {
@@ -127,7 +124,17 @@
         
         self.cellModel = cellModel;
         
-        [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.attachCardInfo.coverImage.url] placeholder:nil];
+//        [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.attachCardInfo.coverImage.url] placeholder:nil];
+        
+        if (cellModel.attachCardInfo.imageModel && cellModel.attachCardInfo.imageModel.url.length > 0) {
+            TTImageInfosModel *imageInfoModel = [FHUGCCellHelper convertTTImageInfosModel:cellModel.attachCardInfo.imageModel];
+            __weak typeof(self) wSelf = self;
+            [self.iconView setImageWithModelInTrafficSaveMode:imageInfoModel placeholderImage:nil success:nil failure:^(NSError *error) {
+                [wSelf.iconView setImage:nil];
+            }];
+        }else{
+            [self.iconView setImage:nil];
+        }
         self.titleLabel.text = cellModel.attachCardInfo.title;
         self.descLabel.text = cellModel.attachCardInfo.desc;
         
@@ -139,21 +146,21 @@
                 buttonTitle = [buttonTitle substringToIndex:4];
             }
             [_button setTitle:buttonTitle forState:UIControlStateNormal];
-            [self.button mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_lessThanOrEqualTo(60);
-            }];
-            [self.spLine mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(self.button.mas_left).offset(-9.5);
-            }];
+            [_button sizeToFit];
+            
+            self.titleLabel.width = self.width - 58 - 15 - self.button.width - 10.5 - 5;
+            self.descLabel.width = self.titleLabel.width;
+            self.spLine.left = self.titleLabel.right + 5;
+            self.button.height = self.height;
+            self.button.left = self.spLine.right + 9.5;
         }else{
             self.button.hidden = YES;
             self.spLine.hidden = YES;
-            [self.button mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_lessThanOrEqualTo(0);
-            }];
-            [self.spLine mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(self.button.mas_left).offset(0);
-            }];
+            
+            self.titleLabel.width = self.width - 58 - 15;
+            self.descLabel.width = self.titleLabel.width;
+            self.spLine.left = self.titleLabel.right + 5;
+            self.button.width = 0;
         }
         
         if(cellModel.isFromDetail){
@@ -192,6 +199,8 @@
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
+    label.backgroundColor = [UIColor themeGray7];
+    label.layer.masksToBounds = YES;
     label.textColor = textColor;
     return label;
 }

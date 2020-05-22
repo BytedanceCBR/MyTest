@@ -8,6 +8,7 @@
 #import "FHUGCBannerCell.h"
 #import "FHArticleCellBottomView.h"
 #import "UIImageView+BDWebImage.h"
+#import "UIViewAdditions.h"
 
 #define topMargin 20
 
@@ -61,18 +62,15 @@
 - (void)initConstraints {
     self.imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
     
-    [self.bannerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(topMargin);
-        make.left.mas_equalTo(self.contentView).offset(20);
-        make.width.mas_equalTo(self.imageWidth);
-        make.height.mas_equalTo(self.imageWidth * 58.0/335.0);
-    }];
+    self.bannerImageView.top = topMargin;
+    self.bannerImageView.left = 20;
+    self.bannerImageView.width = self.imageWidth;
+    self.bannerImageView.height = self.imageWidth * 58.0/335.0;
     
-    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.contentView);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(5);
-    }];
+    self.bottomSepView.top = self.bannerImageView.bottom + 20;
+    self.bottomSepView.left = 0;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomSepView.height = 5;
 }
 
 -(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -95,14 +93,13 @@
     if(imageModel){
         [self.bannerImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:nil];
     }
+    self.bottomSepView.hidden = cellModel.hidelLine;
     if (!isEmptyString(cellModel.upSpace) && cellModel.upSpace.integerValue >0) {
-        [self.bannerImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentView).offset(cellModel.upSpace.integerValue);
-        }];
+        self.bannerImageView.top = cellModel.upSpace.integerValue;
+        self.bottomSepView.top = self.bannerImageView.bottom + 20;
     }else {
-        [self.bannerImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentView).offset(topMargin);
-        }];
+        self.bannerImageView.top = topMargin;
+        self.bottomSepView.top = self.bannerImageView.bottom + 20;
     }
 }
 

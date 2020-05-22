@@ -7,12 +7,13 @@
 
 #import <UIKit/UIKit.h>
 #import "FHFeedUGCCellModel.h"
+#import "TTImageView+TrafficSave.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCCellUserInfoView : UIView
 
-@property(nonatomic ,strong) UIImageView *icon;
+@property(nonatomic ,strong) TTImageView *icon;
 @property(nonatomic ,strong) UILabel *userName;
 @property(nonatomic ,strong) UILabel *userAuthLabel;
 @property(nonatomic ,strong) UILabel *descLabel;
