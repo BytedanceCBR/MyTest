@@ -273,79 +273,82 @@
         }
         
         if(model){
-            if(isHead){
-                if(feedListModel.hasMore){
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                if(isHead && feedListModel.hasMore){
                     [wself.dataList removeAllObjects];
                 }
-                wself.tableView.hasMore = YES;
-            }else{
-                wself.tableView.hasMore = feedListModel.hasMore;
-            }
-            
-            NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
-            
-            if(isFirst){
-                [wself.clientShowDict removeAllObjects];
-                [wself.dataList removeAllObjects];
-            }
-            if(isHead){
-                // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-                [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                    cellModel.isStick = NO;
-                }];
-                // 头部插入新数据
-                [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
-            }else{
-                [wself.dataList addObjectsFromArray:result];
-            }
-            
-            //第一次拉取数据过少时，在多拉一次loadmore
-            if(wself.dataList.count > 0 && wself.dataList.count < 5 && wself.tableView.hasMore && wself.retryCount < 1){
-                wself.retryCount += 1;
-                [wself requestData:NO first:NO];
-                return;
-            }
-            
-            wself.retryCount = 0;
-            wself.viewController.hasValidateData = wself.dataList.count > 0;
-            
-            if(wself.dataList.count > 0){
-                [wself updateTableViewWithMoreData:wself.tableView.hasMore];
-                [wself.viewController.emptyView hideEmptyView];
-            }else{
-                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-                wself.viewController.showenRetryButton = YES;
-                wself.refreshFooter.hidden = YES;
-                // 关注列表为空时上报监控数据
-                if (isHead) {
-                    // 下拉
-                    if (![[[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"] isEqualToString:@"local_test"]) {
-                        // 线上App Store
-                        NSString *categoryName = wself.categoryId ?: @"f_ugc_follow";
-                        [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_feed_empty" metric:nil category:@{@"status":@(1)} extra:@{@"category":categoryName}];
-                    }
+                NSArray *result = [wself convertModel:feedListModel.data isHead:isHead];
+                if(isFirst){
+                    [wself.clientShowDict removeAllObjects];
+                    [wself.dataList removeAllObjects];
                 }
-            }
-            [wself.tableView reloadData];
-            
-            if(wself.viewController.requestSuccess){
-                wself.viewController.requestSuccess(wself.viewController.hasValidateData);
-            }
-            
-            NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-                wself.isRefreshingTip = YES;
-                [wself.viewController showNotify:refreshTip completion:^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        wself.isRefreshingTip = NO;
-                    });
-                }];
-                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-            } else {
-                UIEdgeInsets contentInset = wself.tableView.originContentInset;
-                contentInset.top = 0;
-                wself.tableView.originContentInset = contentInset;
-            }
+                if(isHead){
+                    // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
+                    [wself.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
+                        cellModel.isStick = NO;
+                    }];
+                    // 头部插入新数据
+                    [wself.dataList insertObjects:result atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, result.count)]];
+                }else{
+                    [wself.dataList addObjectsFromArray:result];
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(isHead){
+                        wself.tableView.hasMore = YES;
+                    }else{
+                        wself.tableView.hasMore = feedListModel.hasMore;
+                    }
+
+                    //第一次拉取数据过少时，在多拉一次loadmore
+                    if(wself.dataList.count > 0 && wself.dataList.count < 5 && wself.tableView.hasMore && wself.retryCount < 1){
+                        wself.retryCount += 1;
+                        [wself requestData:NO first:NO];
+                        return;
+                    }
+                    
+                    wself.retryCount = 0;
+                    wself.viewController.hasValidateData = wself.dataList.count > 0;
+
+                    if(wself.dataList.count > 0){
+                        [wself updateTableViewWithMoreData:wself.tableView.hasMore];
+                        [wself.viewController.emptyView hideEmptyView];
+                    }else{
+                        [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                        wself.viewController.showenRetryButton = YES;
+                        wself.refreshFooter.hidden = YES;
+                        // 关注列表为空时上报监控数据
+                        if (isHead) {
+                            // 下拉
+                            if (![[[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"] isEqualToString:@"local_test"]) {
+                                // 线上App Store
+                                NSString *categoryName = wself.categoryId ?: @"f_ugc_follow";
+                                [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_feed_empty" metric:nil category:@{@"status":@(1)} extra:@{@"category":categoryName}];
+                            }
+                        }
+                    }
+                    [wself.tableView reloadData];
+                    
+                    if(wself.viewController.requestSuccess){
+                        wself.viewController.requestSuccess(wself.viewController.hasValidateData);
+                    }
+                    
+                    NSString *refreshTip = feedListModel.tips.displayInfo;
+                    if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
+                        wself.isRefreshingTip = YES;
+                        [wself.viewController showNotify:refreshTip completion:^{
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                wself.isRefreshingTip = NO;
+                            });
+                        }];
+                        [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+                    } else {
+                        UIEdgeInsets contentInset = wself.tableView.originContentInset;
+                        contentInset.top = 0;
+                        wself.tableView.originContentInset = contentInset;
+                    }
+                });
+            });
         }
     }];
 }
