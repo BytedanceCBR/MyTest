@@ -94,10 +94,8 @@
                 [self.imageList addObject:itemModel.image];
                 valueLabel.textColor = [UIColor colorWithHexStr:@"ff9629"];
                 valueLabel.userInteractionEnabled = YES;
-                [valueLabel addGestureRecognizer:({
-                      UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click:)];
-                      gesture;
-                })];
+                UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click:)];
+                [valueLabel addGestureRecognizer:gesture];
             }
             [self.contentView addSubview:itemContenView];
             
@@ -143,7 +141,7 @@
     vc.startWithIndex = gesture.view.tag;
     
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:_imageList.count];
-    for (FHDetailNewCoreDetailDataPermitListImageModel *image in _imageList) {
+    for (FHImageModel *image in _imageList) {
         NSMutableDictionary *dict = [NSMutableDictionary new];
         [dict setValue:image.uri forKey:kTTImageURIKey];
         [dict setValue:image.url forKey:TTImageInfosModelURL];

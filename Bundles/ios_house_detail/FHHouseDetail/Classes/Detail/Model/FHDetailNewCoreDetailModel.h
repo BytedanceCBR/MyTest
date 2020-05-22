@@ -5,22 +5,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 
-@class FHDetailContactModel,FHFillFormAgencyListItemModel,FHDetailNewUserStatusModel;
+@class FHDetailContactModel,FHFillFormAgencyListItemModel,FHDetailNewUserStatusModel, FHImageModel;
 
 @protocol FHDetailNewCoreDetailDataPermitListModel<NSObject>
 @end
 
-@interface FHDetailNewCoreDetailDataPermitListImageModel : JSONModel
 
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-@end
 
 @interface FHDetailNewCoreDetailDataPermitListModel : JSONModel 
-@property (nonatomic, strong , nullable) FHDetailNewCoreDetailDataPermitListImageModel *image ;
+@property (nonatomic, strong , nullable) FHImageModel *image ;
 @property (nonatomic, copy , nullable) NSString *permitDate;
 @property (nonatomic, copy , nullable) NSString *bindBuilding;
 @property (nonatomic, copy , nullable) NSString *permit;

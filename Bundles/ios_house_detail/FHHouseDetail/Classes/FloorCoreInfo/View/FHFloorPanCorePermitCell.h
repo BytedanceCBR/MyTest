@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *permitName;
 @property (nonatomic, copy , nullable) NSString *permitValue;
-@property (nonatomic, strong , nullable) FHDetailNewCoreDetailDataPermitListImageModel *image ;
+@property (nonatomic, strong , nullable) FHImageModel *image ;
 
 @end
 
